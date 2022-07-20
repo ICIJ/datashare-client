@@ -1,20 +1,28 @@
 import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import Api from '@/api'
 import { Core } from '@/core'
 import DocumentContent from '@/components/DocumentContent'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { getOS } from '@/utils/utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { letTextContent } from 'tests/unit/api_mock'
-import axios from 'axios'
 
+jest.mock('axios')
 jest.mock('@/utils/utils', () => {
   return {
     getOS: jest.fn()
   }
 })
-jest.mock('axios')
+
+// Disable lodash throttle to avoid side-effets
+jest.mock('lodash', () => {
+  return {
+    ...jest.requireActual('lodash'),
+    throttle: cb => cb
+  }
+})
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
@@ -118,138 +126,158 @@ describe('DocumentContent.vue', () => {
   })
 
   describe('search term', () => {
-    it('should not sticky the toolbox by default', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('this is a full full content')
-        .withNer('ner', 0))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
+    describe('witg 1 occurence', () => {
+      beforeAll(() => {
+        jest.spyOn(Api.prototype, 'searchDocument')
+          .mockImplementation(() => {
+            return Promise.resolve({ count: 1, offsets: [10] })
+          })
       })
 
-      await wrapper.vm.$nextTick()
-      expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeFalsy()
+      afterAll(async () => {
+        // Ensure all promise are flushed before clearing the mocks
+        await new Promise(resolve => setTimeout(resolve, 0))
+        jest.clearAllMocks()
+      })
+
+      it('should support regex', async () => {
+        await letData(es).have(new IndexedDocument(id, index)
+          .withContent('this is a test.\nFor testing purpose.'))
+          .commit()
+        await store.dispatch('document/get', { id, index })
+        await store.dispatch('document/getContent')
+        const wrapper = shallowMount(DocumentContent, {
+          i18n,
+          localVue,
+          store,
+          propsData: {
+            document: store.state.document.doc
+          }
+        })
+
+        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'test.*', regex: true })
+        await wrapper.vm.transformContent()
+
+        expect(wrapper.vm.localSearchOccurrences).toEqual(1)
+      })
     })
 
-    it('should highlight the first occurrence of the searched term', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('this is a full full content'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
+    describe('with 2 occurences', () => {
+      let wrapper
+
+      beforeAll(() => {
+        jest.spyOn(Api.prototype, 'searchDocument')
+          .mockImplementation(() => {
+            return Promise.resolve({ count: 2, offsets: [10, 15] })
+          })
       })
 
-      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
-      await wrapper.vm.transformContent()
+      beforeEach(async () => {
+        // Create a document
+        await letData(es).have(new IndexedDocument(id, index)
+          .withContent('this is a full full content'))
+          .commit()
+        // Get the document and its content
+        await store.dispatch('document/get', { id, index })
+        await store.dispatch('document/getContent')
+        // Mount the DocumentContent with this specific document
+        const document = store.state.document.doc
+        const propsData = { document }
+        wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+        // Use vm.$set method to set nested value reactivly
+        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
+        await wrapper.vm.$nextTick()
+      })
 
-      expect(wrapper.find('.document-content__body').element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term">full</mark> content</p>')
+      afterAll(async () => {
+        // Ensure all promise are flushed before clearing the mocks
+        await new Promise(resolve => setTimeout(resolve, 0))
+        jest.clearAllMocks()
+      })
+
+      it('should not sticky the toolbox by default', () => {
+        expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeFalsy()
+      })
+
+      it('should highlight the first occurrence of the searched term', async () => {
+        await wrapper.vm.transformContent()
+        const { innerHTML } = wrapper.find('.document-content__body').element
+        expect(innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
+      })
+
+      it('should find the previous and next occurrence, as a loop', async () => {
+        await wrapper.vm.transformContent()
+        const { element } = wrapper.find('.document-content__body')
+
+        expect(wrapper.vm.localSearchIndex).toEqual(1)
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
+
+        wrapper.vm.findNextLocalSearchTerm()
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.vm.localSearchIndex).toEqual(2)
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term local-search-term--active">full</mark> content</p>')
+
+        wrapper.vm.findPreviousLocalSearchTerm()
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.vm.localSearchIndex).toEqual(1)
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
+
+        wrapper.vm.findNextLocalSearchTerm()
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.vm.localSearchIndex).toEqual(2)
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term local-search-term--active">full</mark> content</p>')
+      })
     })
 
-    it('should be case insensitive', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('this is a full FulL content fuLL'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
+    describe('with 3 occurences', () => {
+      beforeAll(() => {
+        jest.spyOn(Api.prototype, 'searchDocument')
+          .mockImplementation(() => {
+            return Promise.resolve({ count: 3, offsets: [10, 15, 28] })
+          })
       })
 
-      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
-      await wrapper.vm.transformContent()
-
-      expect(wrapper.vm.localSearchOccurrences).toEqual(3)
-    })
-
-    it('should find the previous and next occurrence, as a loop', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('this is a full full content'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
+      afterAll(async () => {
+        // Ensure all promise are flushed before clearing the mocks
+        await new Promise(resolve => setTimeout(resolve, 0))
+        jest.clearAllMocks()
       })
 
-      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
-      await wrapper.vm.transformContent()
-      wrapper.vm.jumpToActiveLocalSearchTerm()
+      it('should be case insensitive', async () => {
+        // Create a document
+        await letData(es).have(new IndexedDocument(id, index)
+          .withContent('this is a full FulL content fuLL'))
+          .commit()
 
-      expect(wrapper.vm.localSearchIndex).toEqual(1)
-      expect(wrapper.find('.document-content__body').element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
+        // Get the document and its content
+        await store.dispatch('document/get', { id, index })
+        await store.dispatch('document/getContent')
 
-      wrapper.vm.findNextLocalSearchTerm()
-      await wrapper.vm.$nextTick()
+        // Mount the DocumentContent with this specific document
+        const document = store.state.document.doc
+        const propsData = { document }
+        const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
 
-      expect(wrapper.vm.localSearchIndex).toEqual(2)
-      expect(wrapper.find('.document-content__body').element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term local-search-term--active">full</mark> content</p>')
+        // Use vm.$set method to set nested value reactivly
+        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
+        await wrapper.vm.transformContent()
 
-      wrapper.vm.findPreviousLocalSearchTerm()
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.localSearchIndex).toEqual(1)
-      expect(wrapper.find('.document-content__body').element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
-
-      wrapper.vm.findNextLocalSearchTerm()
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.localSearchIndex).toEqual(2)
-      expect(wrapper.find('.document-content__body').element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term local-search-term--active">full</mark> content</p>')
-    })
-
-    it('should support regex', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('this is a test.\nFor testing purpose.'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
+        expect(wrapper.vm.localSearchOccurrences).toEqual(3)
       })
-
-      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'test.*', regex: true })
-      await wrapper.vm.transformContent()
-
-      expect(wrapper.vm.localSearchOccurrences).toEqual(1)
     })
   })
 
   describe('document content lazy loading', () => {
-    afterEach(() => {
-      jest.unmock('axios')
+    afterEach(async () => {
+      // Ensure all promise are flushed before clearing the mocks
+      await new Promise(resolve => setTimeout(resolve, 0))
+      jest.clearAllMocks()
     })
 
-    it('should load the document', async () => {
+    it('should lazy load the entire document', async () => {
       // Create a document with a small content text length
       const indexedDocument = new IndexedDocument(id, index)
       indexedDocument.withContent('this is a content')
@@ -258,6 +286,7 @@ describe('DocumentContent.vue', () => {
       // Save and get the document from Elasticsearch
       await letData(es).have(indexedDocument).commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/setContent', null)
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
@@ -270,63 +299,84 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should lazy load 2 slices of 10 caracters of a long text document', async () => {
-      const content = letTextContent()
-        .withContent('this is a ')
-        .withLimit(10)
-        .withMaxOffset(2e5)
-      axios.request.mockResolvedValue({ data: content.getResponse() })
-
       // Create a document with a huge content text length
       const indexedDocument = new IndexedDocument(id, index)
-      indexedDocument.withContent('this is a content from Elastic search doc')
-      indexedDocument.setContentTextLength(2e5)
+        .withContent('this is a content from Elastic search doc')
+        .setContentTextLength(2e5)
 
       // Save and get the document from Elasticsearch
       await letData(es).have(indexedDocument).commit()
+
+      // Mock the first text content slice
+      const firstContentSlice = letTextContent()
+        .withContent('this is a ')
+        .withLimit(10)
+        .withMaxOffset(2e5)
+        .getResponse()
+
+      jest.spyOn(Api.prototype, 'getDocumentSlice')
+        .mockImplementation(() => Promise.resolve(firstContentSlice))
+
+      // Get the document fields (except content)
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/setContent', null)
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
-      const propsData = { document }
-
+      // Limit the document
+      const pageSize = 10
+      const propsData = { document, pageSize }
       const wrapper = await shallowMount(DocumentContent, { i18n, localVue, store, propsData })
-      await wrapper.setData({
-        pageSize: 10
-      })
-      expect(document.content).toBeFalsy()
-      await new Promise(resolve => setTimeout(resolve, 0))
 
+      // Load the first slice
+      await wrapper.vm.loadContent()
       expect(document.content).toBe('this is a ')
-      const nextSliceContent = letTextContent()
+
+      // Mock the second text content slice
+      const secondContentSlice = letTextContent()
         .withContent('content fr')
         .withOffset(10)
         .withLimit(10)
         .withMaxOffset(2e5)
-      axios.request.mockResolvedValue({ data: nextSliceContent.getResponse() })
+        .getResponse()
+
+      jest.spyOn(Api.prototype, 'getDocumentSlice')
+        .mockImplementation(() => Promise.resolve(secondContentSlice))
+
+      // Continue to load content
       await wrapper.vm.loadContent()
       expect(document.content).toBe('this is a content fr')
     })
 
-    it('should use Datashare API to lazy load the long text document', async () => {
-      const content = letTextContent()
+    it('should lazy load the entire text of a document', async () => {
+      // Create a document with a small content text length
+      const indexedDocument = new IndexedDocument(id, index)
         .withContent('this is a content lazy loaded from the mocked API')
-        .withMaxOffset(2e5)
-      axios.request.mockResolvedValue({ data: content.getResponse() })
+        .setContentTextLength(25e5)
 
-      // Create a document with a huge content text length and
       // Save and get the document from Elasticsearch
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('this is a content from Elastic search doc')
-        .setContentTextLength(2e5))
-        .commit()
+      await letData(es).have(indexedDocument).commit()
+
+      // Mock the first text content slice
+      const firstContentSlice = letTextContent()
+        .withContent('this is a content lazy loaded from the mocked API')
+        .withMaxOffset(25e5)
+        .getResponse()
+
+      jest.spyOn(Api.prototype, 'getDocumentSlice')
+        .mockImplementation(() => Promise.resolve(firstContentSlice))
+
+      // Get the document fields (except content)
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/setContent', null)
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
       const propsData = { document }
-      shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+
       expect(document.content).toBeFalsy()
-      await new Promise(resolve => setTimeout(resolve, 0))
+      await wrapper.vm.loadContent()
       expect(document.content).toBe('this is a content lazy loaded from the mocked API')
     })
   })
@@ -334,8 +384,8 @@ describe('DocumentContent.vue', () => {
   it('should emit an event "document::content-loaded" when document is loaded', async () => {
     // Create a document with a small content text length
     const indexedDocument = new IndexedDocument(id, index)
-    indexedDocument.withContent('this is a content')
-    indexedDocument.setContentTextLength(20)
+      .withContent('this is a content')
+      .setContentTextLength(20)
 
     // Save and get the document from Elasticsearch
     await letData(es).have(indexedDocument).commit()
