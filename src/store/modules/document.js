@@ -196,6 +196,7 @@ export const actions = {
       const { index } = state.doc
       return api.searchDocument(index, id, query, targetLanguage, routing)
     }
+    return { count: 0, offsets: [] }
   },
   async getParent ({ commit, state }) {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {

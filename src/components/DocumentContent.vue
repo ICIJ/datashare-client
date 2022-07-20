@@ -1,5 +1,5 @@
 <script>
-import { pick, throttle, uniqueId, get, noop } from 'lodash'
+import { pick, throttle, uniqueId, get, noop, reduce, setWith } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
@@ -45,11 +45,19 @@ export default {
     q: {
       type: String,
       default: ''
+    },
+    /**
+     * Page size when loading the document in slices
+     */
+    pageSize: {
+      type: Number,
+      default: 2500
     }
   },
   data () {
     return {
       hasStickyToolbox: false,
+      contentSlices: {},
       localSearchIndex: 0,
       localSearchIndexes: [],
       localSearchOccurrences: 0,
@@ -61,8 +69,7 @@ export default {
       infiniteScrollId: uniqueId('infinite-scroll-'),
       offset: 0,
       maxOffset: 0,
-      maxOffsetTranslations: { },
-      pageSize: 2500
+      maxOffsetTranslations: { }
     }
   },
   async mounted () {
@@ -97,33 +104,62 @@ export default {
     }
   },
   methods: {
-    replaceBetween (origin, start, end, what) {
+    replaceBetween (origin = '', start = 0, end = 0, what = '') {
       return origin.substring(0, start) + what + origin.substring(end)
     },
     async getMaxOffset (contentTranslation) {
       const currentContent = contentTranslation ?? 'original'
-      this.maxOffsetTranslations[currentContent] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage: contentTranslation })
+      const targetLanguage = contentTranslation
+      this.maxOffsetTranslations[currentContent] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
       return this.maxOffsetTranslations[currentContent]
     },
+    setContentSlice ({ offset = 0, limit = 2500, targetLanguage = null, content = '' } = {}) {
+      const path = [offset, limit, targetLanguage || 'original']
+      // We use `setWith` from lodash which allows to set nested object
+      // value using a customizer function. This customizer function uses
+      // the $set method which allow to reactivly set the value.
+      return setWith(this.contentSlices, path, content, (nsValue, key, nsObject) => {
+        return this.$set(nsObject, key, nsValue)
+      })
+    },
+    getContentSlice ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
+      return get(this.contentSlices, [offset, limit, targetLanguage || 'original'], null)
+    },
+    hasContentSlice ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
+      return !!this.getContentSlice({ offset, limit, targetLanguage })
+    },
+    async loadContentSlice ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
+      const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
+      this.setContentSlice({ offset, limit, targetLanguage, content })
+      return content
+    },
+    async loadContentSliceOnce ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
+      if (!this.hasContentSlice({ offset, limit, targetLanguage })) {
+        await this.loadContentSlice({ offset, limit, targetLanguage })
+      }
+      return this.getContentSlice({ offset, limit, targetLanguage })
+    },
     async loadSlice () {
-      const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize, targetLanguage: this.contentTranslation })
-
+      const offset = this.offset
+      const limit = this.actualPageSize
+      const targetLanguage = this.contentTranslation
+      await this.loadContentSliceOnce({ offset, limit, targetLanguage })
+      await this.$store.dispatch('document/setContent', this.allContentSlices)
       if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
-        const content = this.replaceBetween(this.content, this.offset, this.actualNextOffset, slice.content)
-        await this.$store.dispatch('document/setContent', content)
         this.offset = this.actualNextOffset
       }
     },
     async loadContent () {
-      if (!this.useContentTextLazyLoading && !this.document.hasContent) {
-        await this.$store.dispatch('document/getContent')
-      }
+      // Load content slice by slice
       if (this.useContentTextLazyLoading) {
         if (!this.document.hasContent) {
           this.offset = 0
           this.maxOffset = await this.getMaxOffset(this.contentTranslation)
         }
         await this.loadSlice()
+      // Load all the content at once
+      } else if (!this.document.hasContent) {
+        await this.$store.dispatch('document/getContent')
       }
       this.$root.$emit('document::content-loaded')
 
@@ -148,12 +184,13 @@ export default {
     },
     async retrieveTotalOccurrences () {
       try {
-        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences',
-          { query: this.localSearchTerm.label, targetLanguage: this.contentTranslation })
+        const query = this.localSearchTerm.label
+        const targetLanguage = this.contentTranslation
+        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences', { query, targetLanguage })
         this.localSearchIndexes = offsets
         this.localSearchOccurrences = count
         this.localSearchIndex = Number(!!count)
-      } catch (error) {
+      } catch (_) {
         this.localSearchIndexes = []
         this.localSearchOccurrences = 0
       }
@@ -183,18 +220,17 @@ export default {
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
     async jumpToActiveLocalSearchTerm () {
-      const searchTerms = this.$el.querySelectorAll('.local-search-term')
-      const activeSearchTerm = searchTerms[this.localSearchIndex - 1]
+      let searchTerms = this.$el.querySelectorAll('.local-search-term')
+      let activeSearchTerm = searchTerms[this.localSearchIndex - 1]
       searchTerms.forEach(term => term.classList.remove('local-search-term--active'))
-      // TODO pb with local search marks is that the pipeline is not applied to
-      // the new loaded slice
 
-      // while (activeSearchTerm === undefined && this.localSearchIndex !== this.localSearchIndexes.length) {
-      //   this.offset = Math.min(this.localSearchIndexes[this.localSearchIndex - 1] - 1000, 0)
-      //   await this.transformContent()
-      //   searchTerms = this.$el.querySelectorAll('.local-search-term')
-      //   activeSearchTerm = searchTerms[this.localSearchIndex - 1]
-      // }
+      while (activeSearchTerm === undefined && this.localSearchIndex !== this.localSearchIndexes.length) {
+        this.offset = Math.min(this.localSearchIndexes[this.localSearchIndex - 1] - 1000, 0)
+        await this.transformContent()
+        searchTerms = this.$el.querySelectorAll('.local-search-term')
+        activeSearchTerm = searchTerms[this.localSearchIndex - 1]
+      }
+
       if (activeSearchTerm) {
         activeSearchTerm.classList.add('local-search-term--active')
         activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
@@ -225,6 +261,14 @@ export default {
         return this.document.translatedContentIn(this.contentTranslation)
       }
       return null
+    },
+    allContentSlices () {
+      return reduce(this.contentSlices, (all, limits, offset) => {
+        return reduce(limits, (all, translations, limit) => {
+          const slice = get(translations, this.contentTranslation || 'original', '')
+          return this.replaceBetween(all, offset, offset + limit, slice)
+        }, all)
+      }, '')
     },
     content: {
       // Document's content is not a reactive property yet so we cannot use
