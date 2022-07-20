@@ -75,15 +75,13 @@ export default class Api {
   untagDocuments (project, docIds, tags) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/untag`, { method: 'POST', data: { docIds, tags } })
   }
-  getDocumentSlice (project, documentId, offset, limit, targetLanguage = null, routingId = null) {
-    const routing = routingId ? `routing=${routingId}&` : ''
-    const target = targetLanguage ? `targetLanguage=${targetLanguage}&` : ''
-    return this.sendAction(`/api/${project}/documents/content/${documentId}?${routing}${target}offset=${offset}&limit=${limit}`)
+  getDocumentSlice (project, documentId, offset, limit, targetLanguage = null, routing = null) {
+    const params = { limit, offset, routing, targetLanguage }
+    return this.sendAction(`/api/${project}/documents/content/${documentId}`, { method: 'GET', params })
   }
-  searchDocument (project, documentId, query, targetLanguage, routingId = null) {
-    const routing = routingId ? `routing=${routingId}&` : ''
-    const target = targetLanguage ? `targetLanguage=${targetLanguage}&` : ''
-    return this.sendAction(`/api/${project}/documents/searchContent/${documentId}?${routing}${target}query=${query}`)
+  searchDocument (project, documentId, query, targetLanguage, routing = null) {
+    const params = { query, routing, targetLanguage }
+    return this.sendAction(`/api/${project}/documents/searchContent/${documentId}`, { method: 'GET', params })
   }
   batchSearch (name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
     const data = new FormData()
