@@ -1,16 +1,16 @@
 <script>
-import { pick, throttle, uniqueId, get, noop, reduce, setWith } from 'lodash'
+import { findLastIndex, flattenDeep, get, pick, range, throttle } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
+import DocumentContentSlices from '@/components/DocumentContentSlices'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.worker'
 
-import { addLocalSearchMarksClassSensitive } from '@/utils/strings.js'
-import InfiniteLoading from 'vue-infinite-loading'
+import { addLocalSearchMarksClassByOffsets } from '@/utils/strings.js'
 
 /**
  * Display a document's extract text after applying a series of transformation with a pipeline.
@@ -19,10 +19,10 @@ export default {
   name: 'DocumentContent',
   components: {
     DocumentAttachments,
+    DocumentContentSlices,
     DocumentGlobalSearchTermsTags,
     DocumentLocalSearchInput,
-    Hook,
-    InfiniteLoading
+    Hook
   },
   mixins: [utils],
   props: {
@@ -66,14 +66,13 @@ export default {
       localSearchWorkerInProgress: false,
       transformedContent: '',
       rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
-      infiniteScrollId: uniqueId('infinite-scroll-'),
-      offset: 0,
       maxOffset: 0,
       maxOffsetTranslations: { }
     }
   },
   async mounted () {
     // Apply the transformation pipeline once
+    await this.loadContent()
     await this.transformContent()
     // Initial local query, we need to jump to the result
     if (this.q) {
@@ -85,13 +84,14 @@ export default {
     this.terminateLocalSearchWorker()
   },
   watch: {
-    localSearchTerm: throttle(async function () {
+    localSearchTerm: throttle(async function (t) {
       await this.retrieveTotalOccurrences()
       await this.transformContent()
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
+      await this.cookAllContentSlices()
+      await this.$nextTick()
+      await this.jumpToActiveLocalSearchTerm()
     }, 300),
     async contentTranslation (value) {
-      this.offset = 0
       this.maxOffset = await this.getMaxOffset(value)
       await this.$store.dispatch('document/setContent', '')
       return this.transformContent()
@@ -104,73 +104,81 @@ export default {
     }
   },
   methods: {
-    replaceBetween (origin = '', start = 0, end = 0, what = '') {
-      return origin.substring(0, start) + what + origin.substring(end)
+    async getMaxOffset (contentTranslation = this.contentTranslation) {
+      const contentTranslationKey = contentTranslation ?? 'original'
+      this.maxOffsetTranslations[contentTranslationKey] ??= await this.$store.dispatch('document/getContentMaxOffset', { contentTranslation })
+      return this.maxOffsetTranslations[contentTranslationKey]
     },
-    async getMaxOffset (contentTranslation) {
-      const currentContent = contentTranslation ?? 'original'
-      const targetLanguage = contentTranslation
-      this.maxOffsetTranslations[currentContent] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
-      return this.maxOffsetTranslations[currentContent]
+    findContentSliceIndexArround (desiredOffset) {
+      return findLastIndex(this.offsets, offset => offset <= desiredOffset)
     },
-    setContentSlice ({ offset = 0, limit = 2500, targetLanguage = null, content = '' } = {}) {
-      const path = [offset, limit, targetLanguage || 'original']
-      // We use `setWith` from lodash which allows to set nested object
-      // value using a customizer function. This customizer function uses
-      // the $set method which allow to reactivly set the value.
-      return setWith(this.contentSlices, path, content, (nsValue, key, nsObject) => {
-        return this.$set(nsObject, key, nsValue)
+    setContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation, content = '', cookedContent = '' } = {}) {
+      const obj = this.contentSlices
+      const contentTranslationKey = contentTranslation || 'original'
+      // Reactivly set the nested values of contentSlices
+      this.$set(obj, offset, obj[offset] || {})
+      this.$set(obj[offset], limit, obj[offset][limit] || {})
+      this.$set(obj[offset][limit], contentTranslationKey, { content, cookedContent })
+      return { content, cookedContent }
+    },
+    async cookContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation, content = '' } = {}) {
+      const contentOffset = offset
+      const cookedContent = await this.contentPipeline(content, { contentOffset, ...this.contentPipelineParams })
+      this.setContentSlice({ offset, limit, contentTranslation, content, cookedContent })
+    },
+    cookAllContentSlices () {
+      const promises = Object.entries(this.contentSlices).map(([offset, limits]) => {
+        return Object.entries(limits).map(([limit, contentTranslations]) => {
+          return Object.entries(contentTranslations).map(([contentTranslation, { content }]) => {
+            return this.cookContentSlice({ offset, limit, contentTranslation, content })
+          })
+        })
       })
+      return Promise.all(flattenDeep(promises))
     },
-    getContentSlice ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
-      return get(this.contentSlices, [offset, limit, targetLanguage || 'original'], null)
+    getContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
+      // Ensure the limit is not beyond limit
+      limit = Math.min(limit, this.maxOffset - offset)
+      const contentTranslationKey = contentTranslation || 'original'
+      return get(this.contentSlices, [offset, limit, contentTranslationKey], null)
     },
-    hasContentSlice ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
-      return !!this.getContentSlice({ offset, limit, targetLanguage })
+    hasContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
+      return !!this.getContentSlice({ offset, limit, contentTranslation })
     },
-    async loadContentSlice ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
-      const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
-      this.setContentSlice({ offset, limit, targetLanguage, content })
-      return content
+    loadContentSliceArround (desiredOffset) {
+      const desiredOffsetIndex = this.findContentSliceIndexArround(desiredOffset)
+      const offset = this.offsets[desiredOffsetIndex]
+      return this.loadContentSliceOnce({ offset })
     },
-    async loadContentSliceOnce ({ offset = 0, limit = 2500, targetLanguage = null } = {}) {
-      if (!this.hasContentSlice({ offset, limit, targetLanguage })) {
-        await this.loadContentSlice({ offset, limit, targetLanguage })
+    async loadContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
+      // Ensure the limit is not beyond limit
+      limit = Math.min(limit, this.maxOffset - offset)
+      const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, contentTranslation })
+      return this.cookContentSlice({ offset, limit, contentTranslation, content })
+    },
+    async loadContentSliceOnce ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
+      if (!this.hasContentSlice({ offset, limit, contentTranslation })) {
+        await this.loadContentSlice({ offset, limit, contentTranslation })
       }
-      return this.getContentSlice({ offset, limit, targetLanguage })
-    },
-    async loadSlice () {
-      const offset = this.offset
-      const limit = this.actualPageSize
-      const targetLanguage = this.contentTranslation
-      await this.loadContentSliceOnce({ offset, limit, targetLanguage })
-      await this.$store.dispatch('document/setContent', this.allContentSlices)
-      if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
-        this.offset = this.actualNextOffset
-      }
+      return this.getContentSlice({ offset, limit, contentTranslation })
     },
     async loadContent () {
       // Load content slice by slice
       if (this.useContentTextLazyLoading) {
+        // Only load the maximum offset, virtual scroll will load
+        // the necessary content slice during load
         if (!this.document.hasContent) {
-          this.offset = 0
-          this.maxOffset = await this.getMaxOffset(this.contentTranslation)
+          this.maxOffset = await this.getMaxOffset()
         }
-        await this.loadSlice()
       // Load all the content at once
       } else if (!this.document.hasContent) {
         await this.$store.dispatch('document/getContent')
       }
       this.$root.$emit('document::content-loaded')
-
       return this.content
     },
     async transformContent () {
       const transformedContent = await this.applyContentPipeline()
-      const body = this.$el.querySelector('.document-content__body')
-      if (this.rightToLeftLanguages.includes(this.document.source.language)) {
-        body.classList.add('document-content__body--rtl')
-      }
       this.$set(this, 'transformedContent', transformedContent)
     },
     terminateLocalSearchWorker () {
@@ -185,8 +193,8 @@ export default {
     async retrieveTotalOccurrences () {
       try {
         const query = this.localSearchTerm.label
-        const targetLanguage = this.contentTranslation
-        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences', { query, targetLanguage })
+        const contentTranslation = this.contentTranslation
+        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences', { query, contentTranslation })
         this.localSearchIndexes = offsets
         this.localSearchOccurrences = count
         this.localSearchIndex = Number(!!count)
@@ -195,15 +203,14 @@ export default {
         this.localSearchOccurrences = 0
       }
     },
-    addLocalSearchMarks (content) {
+    addLocalSearchMarks (content, { contentOffset: delta = 0 } = {}) {
       if (!this.hasLocalSearchTerms) {
         return content
       }
-      this.localSearchWorkerInProgress = true
-      const markedSearch = addLocalSearchMarksClassSensitive(content, this.localSearchTerm)
-      this.localSearchWorkerInProgress = false
 
-      return Promise.resolve(markedSearch.content)
+      const offsets = this.localSearchIndexes
+      const term = this.localSearchTerm.label
+      return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
     },
     async applyContentPipeline () {
       const content = await this.loadContent()
@@ -219,29 +226,54 @@ export default {
       this.$set(this, 'localSearchIndex', localSearchIndex)
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
-    async jumpToActiveLocalSearchTerm () {
-      let searchTerms = this.$el.querySelectorAll('.local-search-term')
-      let activeSearchTerm = searchTerms[this.localSearchIndex - 1]
-      searchTerms.forEach(term => term.classList.remove('local-search-term--active'))
-
-      while (activeSearchTerm === undefined && this.localSearchIndex !== this.localSearchIndexes.length) {
-        this.offset = Math.min(this.localSearchIndexes[this.localSearchIndex - 1] - 1000, 0)
-        await this.transformContent()
-        searchTerms = this.$el.querySelectorAll('.local-search-term')
-        activeSearchTerm = searchTerms[this.localSearchIndex - 1]
-      }
-
-      if (activeSearchTerm) {
-        activeSearchTerm.classList.add('local-search-term--active')
-        activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
-      }
+    clearActiveLocalSearchTerm () {
+      const activeTerms = this.$el.querySelectorAll('.local-search-term--active')
+      activeTerms.forEach(term => term.classList.remove('local-search-term--active'))
     },
-    async nextLoadData ($infiniteLoadingState) {
-      await this.transformContent()
-      // Did we reach the end?
-      const method = this.reachedTheEnd ? 'complete' : 'loaded'
-      // Call the right method (with "noop" as safety net in case the method can't be found)
-      return get($infiniteLoadingState, method, noop)()
+    async jumpToActiveLocalSearchTerm () {
+      // Delete all existing "local-search-term--active" classes from other element
+      this.clearActiveLocalSearchTerm()
+      const activeTermOffset = this.localSearchIndexes[this.localSearchIndex - 1]
+      // Lazy loading might require to load extra content
+      if (this.useContentTextLazyLoading) {
+        // Load missing content slice (if needed)
+        this.loadContentSliceArround(activeTermOffset)
+        // Move to the content slice containing the term
+        const activeTermContentSlice = this.findContentSliceIndexArround(activeTermOffset)
+        this.$refs.slices.scrollToContentSlice(activeTermContentSlice)
+      }
+      // Find the active search term according to `localSearchIndex`
+      const activeTermSelector = `.local-search-term[data-offset="${activeTermOffset}"]`
+      const activeTerm = this.$el.querySelector(activeTermSelector)
+      // Add the correct class and scroll the element into view
+      activeTerm?.classList.add('local-search-term--active')
+      activeTerm?.scrollIntoView({ block: 'center', inline: 'nearest' })
+    },
+    onContentSlicePlaceholderVisible ({ offset, limit }) {
+      return this.loadContentSliceOnce({ offset, limit })
+    },
+    getContentSlicePageOffset (page) {
+      return (page - 1) * this.pageSize
+    },
+    getVirtualContentSlicePlaceholder (page) {
+      const id = `document-content-slice-placeholder-${page}`
+      const limit = this.pageSize
+      const offset = this.getContentSlicePageOffset(page)
+      const placeholder = true
+      return { placeholder, id, offset, limit }
+    },
+    getVirtualContentSlice (page) {
+      const offset = this.getContentSlicePageOffset(page)
+      // To return the actual content slice, the content must exists
+      if (this.hasContentSlice({ offset })) {
+        // Share the content in a getter function to avoid copying huge
+        // chunks of text into each virtual slice
+        const { pageSize: limit, contentTranslation } = this
+        const get = () => this.getContentSlice({ offset, limit, contentTranslation })
+        const id = `document-content-slice-${page}`
+        return { id, get }
+      }
+      return this.getVirtualContentSlicePlaceholder(page)
     }
   },
   computed: {
@@ -253,6 +285,10 @@ export default {
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms'
     }),
+    isRightToLeft () {
+      const language = get(this.document, 'source.language', null)
+      return this.rightToLeftLanguages.includes(language)
+    },
     contentPipelineFunctions () {
       return this.getFullPipelineChain('extracted-text')
     },
@@ -262,13 +298,13 @@ export default {
       }
       return null
     },
-    allContentSlices () {
-      return reduce(this.contentSlices, (all, limits, offset) => {
-        return reduce(limits, (all, translations, limit) => {
-          const slice = get(translations, this.contentTranslation || 'original', '')
-          return this.replaceBetween(all, offset, offset + limit, slice)
-        }, all)
-      }, '')
+    offsets () {
+      return range(0, this.maxOffset, this.pageSize)
+    },
+    virtualContentSlices () {
+      return this.offsets.map((_, index) => {
+        return this.getVirtualContentSlice(index + 1)
+      })
     },
     content: {
       // Document's content is not a reactive property yet so we cannot use
@@ -293,24 +329,6 @@ export default {
     },
     hasLocalSearchTerms () {
       return this.localSearchTerm.label && this.localSearchTerm.label.length > 0
-    },
-    reachedTheEnd () {
-      return this.useContentTextLazyLoading && (this.document.hasContent && this.offset >= this.maxOffset)
-    },
-    nextOffset () {
-      return this.offset + this.pageSize
-    },
-    actualNextOffset () {
-      return this.nextOffset > this.maxOffset ? this.maxOffset : this.nextOffset
-    },
-    lastPageSize () {
-      return this.maxOffset % this.pageSize
-    },
-    actualPageSize () {
-      return this.nextOffset > this.maxOffset ? this.lastPageSize : this.pageSize
-    },
-    useInfiniteScroll () {
-      return this.infiniteScrollId && this.offset > 0 && !this.reachedTheEnd
     }
   }
 }
@@ -319,38 +337,46 @@ export default {
 <template>
   <div class="document-content">
     <hook name="document.content:before"></hook>
-      <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
-        <hook name="document.content.toolbox:before"></hook>
-        <document-global-search-terms-tags
-          :document="document"
-          @select="localSearchTerm = $event"
-          class="p-3 w-100"></document-global-search-terms-tags>
-        <document-local-search-input class="ml-auto"
-          v-model="localSearchTerm"
-          v-bind:activated.sync="hasStickyToolbox"
-          @next="findNextLocalSearchTerm"
-          @previous="findPreviousLocalSearchTerm"
-          :search-occurrences="localSearchOccurrences"
-          :search-index="localSearchIndex"
-          :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
-        <hook name="document.content.toolbox:after"></hook>
-      </div>
-      <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3">
-        <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
-        <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-        <hook name="document.content.togglers:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-        <hook name="document.content.togglers:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
-        <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
-      </div>
-      <hook name="document.content.body:before"></hook>
-      <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
-      <infinite-loading @infinite="nextLoadData" v-if="useInfiniteScroll" :identifier="infiniteScrollId">
-          <span slot="spinner"></span>
-          <span slot="no-more"></span>
-          <span slot="no-results"></span>
-      </infinite-loading>
-      <hook name="document.content.body:after"></hook>
-      <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
+    <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
+      <hook name="document.content.toolbox:before"></hook>
+      <document-global-search-terms-tags
+        :document="document"
+        @select="localSearchTerm = $event"
+        class="p-3 w-100"></document-global-search-terms-tags>
+      <document-local-search-input class="ml-auto"
+        v-model="localSearchTerm"
+        v-bind:activated.sync="hasStickyToolbox"
+        @next="findNextLocalSearchTerm"
+        @previous="findPreviousLocalSearchTerm"
+        :search-occurrences="localSearchOccurrences"
+        :search-index="localSearchIndex"
+        :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
+      <hook name="document.content.toolbox:after"></hook>
+    </div>
+    <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3">
+      <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
+      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
+      <hook name="document.content.togglers:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
+      <hook name="document.content.togglers:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
+      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
+    </div>
+    <hook name="document.content.body:before"></hook>
+
+    <document-content-slices
+      :class="{ 'document-content__body--rtl': isRightToLeft }"
+      :slices="virtualContentSlices"
+      @placeholder-visible="onContentSlicePlaceholderVisible"
+      class="document-content__body document-content__body--sliced container-fluid py-3"
+      ref="slices"
+      v-if="useContentTextLazyLoading" />
+    <div
+      :class="{ 'document-content__body--rtl': isRightToLeft }"
+      class="document-content__body container-fluid py-3"
+      v-html="transformedContent"
+      v-else></div>
+
+    <hook name="document.content.body:after"></hook>
+    <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
     <hook name="document.content:after"></hook>
   </div>
 </template>

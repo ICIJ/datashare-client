@@ -186,7 +186,7 @@ describe('DocumentContent.vue', () => {
         wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
         // Use vm.$set method to set nested value reactivly
         wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
-        await wrapper.vm.$nextTick()
+        await new Promise(resolve => setTimeout(resolve, 0))
       })
 
       afterAll(async () => {
@@ -200,9 +200,9 @@ describe('DocumentContent.vue', () => {
       })
 
       it('should highlight the first occurrence of the searched term', async () => {
-        await wrapper.vm.transformContent()
         const { innerHTML } = wrapper.find('.document-content__body').element
-        expect(innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
+        expect(wrapper.vm.localSearchIndex).toEqual(1)
+        expect(innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
       })
 
       it('should find the previous and next occurrence, as a loop', async () => {
@@ -210,25 +210,25 @@ describe('DocumentContent.vue', () => {
         const { element } = wrapper.find('.document-content__body')
 
         expect(wrapper.vm.localSearchIndex).toEqual(1)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
 
         wrapper.vm.findNextLocalSearchTerm()
         await wrapper.vm.$nextTick()
 
         expect(wrapper.vm.localSearchIndex).toEqual(2)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term local-search-term--active">full</mark> content</p>')
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>')
 
         wrapper.vm.findPreviousLocalSearchTerm()
         await wrapper.vm.$nextTick()
 
         expect(wrapper.vm.localSearchIndex).toEqual(1)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active">full</mark> <mark class="local-search-term">full</mark> content</p>')
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
 
         wrapper.vm.findNextLocalSearchTerm()
         await wrapper.vm.$nextTick()
 
         expect(wrapper.vm.localSearchIndex).toEqual(2)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term local-search-term--active">full</mark> content</p>')
+        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>')
       })
     })
 
@@ -292,6 +292,7 @@ describe('DocumentContent.vue', () => {
       const document = store.state.document.doc
       const propsData = { document }
       const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(document.content).toBeFalsy()
       await wrapper.vm.loadContent()
@@ -301,7 +302,7 @@ describe('DocumentContent.vue', () => {
     it('should lazy load 2 slices of 10 caracters of a long text document', async () => {
       // Create a document with a huge content text length
       const indexedDocument = new IndexedDocument(id, index)
-        .withContent('this is a content from Elastic search doc')
+        .withContent('this is a content from Elastic search doc which looks huge')
         .setContentTextLength(2e5)
 
       // Save and get the document from Elasticsearch
@@ -319,18 +320,18 @@ describe('DocumentContent.vue', () => {
 
       // Get the document fields (except content)
       await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/setContent', null)
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
       // Limit the document
       const pageSize = 10
       const propsData = { document, pageSize }
-      const wrapper = await shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      await new Promise(resolve => setTimeout(resolve, 0))
 
       // Load the first slice
-      await wrapper.vm.loadContent()
-      expect(document.content).toBe('this is a ')
+      await wrapper.vm.loadContentSlice({ offset: 0 })
+      expect(wrapper.vm.getContentSlice({ offset: 0 }).content).toBe('this is a ')
 
       // Mock the second text content slice
       const secondContentSlice = letTextContent()
@@ -344,8 +345,8 @@ describe('DocumentContent.vue', () => {
         .mockImplementation(() => Promise.resolve(secondContentSlice))
 
       // Continue to load content
-      await wrapper.vm.loadContent()
-      expect(document.content).toBe('this is a content fr')
+      await wrapper.vm.loadContentSlice({ offset: 10 })
+      expect(wrapper.vm.getContentSlice({ offset: 10 }).content).toBe('content fr')
     })
 
     it('should lazy load the entire text of a document', async () => {
@@ -368,16 +369,19 @@ describe('DocumentContent.vue', () => {
 
       // Get the document fields (except content)
       await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/setContent', null)
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
       const propsData = { document }
       const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(document.content).toBeFalsy()
       await wrapper.vm.loadContent()
-      expect(document.content).toBe('this is a content lazy loaded from the mocked API')
+      expect(document.content).toBeFalsy()
+
+      await wrapper.vm.loadContentSlice({ offset: 0 })
+      expect(wrapper.vm.getContentSlice({ offset: 0 }).content).toBe('this is a content lazy loaded from the mocked API')
     })
   })
 
