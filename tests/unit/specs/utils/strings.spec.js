@@ -1,4 +1,4 @@
-import { addLocalSearchMarksClass, isUrl } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl } from '@/utils/strings'
 
 describe('strings', () => {
   describe('addLocalSearchMarksClass', () => {
@@ -87,6 +87,41 @@ describe('strings', () => {
 
       expect(localSearchOccurrences).toBe(1)
       expect(content).toBe('content content <mark class="local-search-term">Donald Trump</mark> content')
+    })
+  })
+
+  describe('addLocalSearchMarksClassByOffsets', () => {
+    it('should replace "ipsum" using its offset', () => {
+      const content = 'lorem ipsum'
+      const term = 'ipsum'
+      const offsets = [6]
+      const marked = addLocalSearchMarksClassByOffsets({ content, offsets, term })
+      expect(marked).toBe('lorem <mark class="local-search-term" data-offset="6">ipsum</mark>')
+    })
+
+    it('should replace "lorem" using its offset', () => {
+      const content = 'lorem ipsum'
+      const term = 'lorem'
+      const offsets = [0]
+      const marked = addLocalSearchMarksClassByOffsets({ content, offsets, term })
+      expect(marked).toBe('<mark class="local-search-term" data-offset="0">lorem</mark> ipsum')
+    })
+
+    it('should replace "i" using theirs offsets', () => {
+      const content = 'ICIJ'
+      const term = 'i'
+      const offsets = [0, 2]
+      const marked = addLocalSearchMarksClassByOffsets({ content, offsets, term })
+      expect(marked).toBe('<mark class="local-search-term" data-offset="0">I</mark>C<mark class="local-search-term" data-offset="2">I</mark>J')
+    })
+
+    it('should replace "dolor" using its offset minus the given delta', () => {
+      const content = 'lorem ipsum dolor sit amet'
+      const term = 'dolor'
+      const offsets = [100]
+      const delta = 88
+      const marked = addLocalSearchMarksClassByOffsets({ content, offsets, term, delta })
+      expect(marked).toBe('lorem ipsum <mark class="local-search-term" data-offset="100">dolor</mark> sit amet')
     })
   })
 

@@ -8,6 +8,23 @@ export function slugger (value = '') {
     .replace(/\s/g, '-')
 }
 
+export function addLocalSearchMarksClassByOffsets ({ content = '', term = '', offsets = [], delta = 0 } = {}) {
+  // Create one chunk for each letter
+  const chunks = content.split('')
+  // Add mark tag to the corresponding letters
+  offsets.forEach(offset => {
+    const start = offset - delta
+    const end = start + term.length - 1
+    // Only replace by offset in existing chunk
+    if (chunks[start] && chunks[end]) {
+      chunks[start] = `<mark class="local-search-term" data-offset="${offset}">${chunks[start]}`
+      chunks[end] = `${chunks[end]}</mark>`
+    }
+  })
+  // Then merge letters again
+  return chunks.join('')
+}
+
 export function addLocalSearchMarksClassSensitive (content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
   // In case the searched term is split on 2 lines in the content
@@ -18,9 +35,10 @@ export function addLocalSearchMarksClassSensitive (content = '<div></div>', loca
   try {
     if (localSearchOccurrences === 0) throw new Error()
     const needle = new RegExp(`(${escapedLocalSearchTermAsRegex})`, 'gms')
-    const replacedContent = content.replace(needle,
-      m => `<mark class="local-search-term">${m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')}</mark>`
-    )
+    const replacedContent = content.replace(needle, m => {
+      const term = m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')
+      return `<mark class="local-search-term">${term}</mark>`
+    })
 
     return {
       content: replacedContent,
@@ -32,6 +50,7 @@ export function addLocalSearchMarksClassSensitive (content = '<div></div>', loca
     return { content, localSearchIndex, localSearchOccurrences }
   }
 }
+
 export function addLocalSearchMarksClass (content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
   // In case the searched term is split on 2 lines in the content
@@ -42,9 +61,10 @@ export function addLocalSearchMarksClass (content = '<div></div>', localSearchTe
   try {
     if (localSearchOccurrences === 0) throw new Error()
     const needle = new RegExp(`(${escapedLocalSearchTermAsRegex})`, 'gims')
-    const replacedContent = content.replace(needle,
-      m => `<mark class="local-search-term">${m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')}</mark>`
-    )
+    const replacedContent = content.replace(needle, m => {
+      const term = m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')
+      return `<mark class="local-search-term">${term}</mark>`
+    })
 
     return {
       content: replacedContent,
