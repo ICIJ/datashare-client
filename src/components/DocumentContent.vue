@@ -35,7 +35,7 @@ export default {
     /**
      * The language to translate the content to
      */
-    contentTranslation: {
+    targetLanguage: {
       type: String,
       default: null
     },
@@ -91,7 +91,7 @@ export default {
       await this.$nextTick()
       await this.jumpToActiveLocalSearchTerm()
     }, 300),
-    async contentTranslation (value) {
+    async targetLanguage (value) {
       this.maxOffset = await this.getMaxOffset(value)
       await this.$store.dispatch('document/setContent', '')
       return this.transformContent()
@@ -104,63 +104,63 @@ export default {
     }
   },
   methods: {
-    async getMaxOffset (contentTranslation = this.contentTranslation) {
-      const contentTranslationKey = contentTranslation ?? 'original'
-      this.maxOffsetTranslations[contentTranslationKey] ??= await this.$store.dispatch('document/getContentMaxOffset', { contentTranslation })
-      return this.maxOffsetTranslations[contentTranslationKey]
+    async getMaxOffset (targetLanguage = this.targetLanguage) {
+      const targetLanguageKey = targetLanguage ?? 'original'
+      this.maxOffsetTranslations[targetLanguageKey] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
+      return this.maxOffsetTranslations[targetLanguageKey]
     },
     findContentSliceIndexArround (desiredOffset) {
       return findLastIndex(this.offsets, offset => offset <= desiredOffset)
     },
-    setContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation, content = '', cookedContent = '' } = {}) {
+    setContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '', cookedContent = '' } = {}) {
       const obj = this.contentSlices
-      const contentTranslationKey = contentTranslation || 'original'
+      const targetLanguageKey = targetLanguage || 'original'
       // Reactivly set the nested values of contentSlices
       this.$set(obj, offset, obj[offset] || {})
       this.$set(obj[offset], limit, obj[offset][limit] || {})
-      this.$set(obj[offset][limit], contentTranslationKey, { content, cookedContent })
+      this.$set(obj[offset][limit], targetLanguageKey, { content, cookedContent })
       return { content, cookedContent }
     },
-    async cookContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation, content = '' } = {}) {
+    async cookContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '' } = {}) {
       const contentOffset = offset
       const cookedContent = await this.contentPipeline(content, { contentOffset, ...this.contentPipelineParams })
-      this.setContentSlice({ offset, limit, contentTranslation, content, cookedContent })
+      this.setContentSlice({ offset, limit, targetLanguage, content, cookedContent })
     },
     cookAllContentSlices () {
       const promises = Object.entries(this.contentSlices).map(([offset, limits]) => {
-        return Object.entries(limits).map(([limit, contentTranslations]) => {
-          return Object.entries(contentTranslations).map(([contentTranslation, { content }]) => {
-            return this.cookContentSlice({ offset, limit, contentTranslation, content })
+        return Object.entries(limits).map(([limit, targetLanguages]) => {
+          return Object.entries(targetLanguages).map(([targetLanguage, { content }]) => {
+            return this.cookContentSlice({ offset, limit, targetLanguage, content })
           })
         })
       })
       return Promise.all(flattenDeep(promises))
     },
-    getContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
+    getContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       // Ensure the limit is not beyond limit
       limit = Math.min(limit, this.maxOffset - offset)
-      const contentTranslationKey = contentTranslation || 'original'
-      return get(this.contentSlices, [offset, limit, contentTranslationKey], null)
+      const targetLanguageKey = targetLanguage || 'original'
+      return get(this.contentSlices, [offset, limit, targetLanguageKey], null)
     },
-    hasContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
-      return !!this.getContentSlice({ offset, limit, contentTranslation })
+    hasContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+      return !!this.getContentSlice({ offset, limit, targetLanguage })
     },
     loadContentSliceArround (desiredOffset) {
       const desiredOffsetIndex = this.findContentSliceIndexArround(desiredOffset)
       const offset = this.offsets[desiredOffsetIndex]
       return this.loadContentSliceOnce({ offset })
     },
-    async loadContentSlice ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
+    async loadContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       // Ensure the limit is not beyond limit
       limit = Math.min(limit, this.maxOffset - offset)
-      const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, contentTranslation })
-      return this.cookContentSlice({ offset, limit, contentTranslation, content })
+      const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
+      return this.cookContentSlice({ offset, limit, targetLanguage, content })
     },
-    async loadContentSliceOnce ({ offset = 0, limit = this.pageSize, contentTranslation = this.contentTranslation } = {}) {
-      if (!this.hasContentSlice({ offset, limit, contentTranslation })) {
-        await this.loadContentSlice({ offset, limit, contentTranslation })
+    async loadContentSliceOnce ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+      if (!this.hasContentSlice({ offset, limit, targetLanguage })) {
+        await this.loadContentSlice({ offset, limit, targetLanguage })
       }
-      return this.getContentSlice({ offset, limit, contentTranslation })
+      return this.getContentSlice({ offset, limit, targetLanguage })
     },
     async loadContent () {
       // Load content slice by slice
@@ -193,8 +193,8 @@ export default {
     async retrieveTotalOccurrences () {
       try {
         const query = this.localSearchTerm.label
-        const contentTranslation = this.contentTranslation
-        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences', { query, contentTranslation })
+        const targetLanguage = this.targetLanguage
+        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences', { query, targetLanguage })
         this.localSearchIndexes = offsets
         this.localSearchOccurrences = count
         this.localSearchIndex = Number(!!count)
@@ -268,8 +268,8 @@ export default {
       if (this.hasContentSlice({ offset })) {
         // Share the content in a getter function to avoid copying huge
         // chunks of text into each virtual slice
-        const { pageSize: limit, contentTranslation } = this
-        const get = () => this.getContentSlice({ offset, limit, contentTranslation })
+        const { pageSize: limit, targetLanguage } = this
+        const get = () => this.getContentSlice({ offset, limit, targetLanguage })
         const id = `document-content-slice-${page}`
         return { id, get }
       }
@@ -293,8 +293,8 @@ export default {
       return this.getFullPipelineChain('extracted-text')
     },
     translatedContent () {
-      if (this.isTranslatedContentLoaded && this.contentTranslation !== null) {
-        return this.document.translatedContentIn(this.contentTranslation)
+      if (this.isTranslatedContentLoaded && this.targetLanguage !== null) {
+        return this.document.translatedContentIn(this.targetLanguage)
       }
       return null
     },

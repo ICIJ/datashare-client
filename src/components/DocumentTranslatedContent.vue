@@ -16,7 +16,7 @@
             {{ $t(showTranslatedContent ? 'documentTranslatedContent.viewOriginal' : 'documentTranslatedContent.viewTranslated') }}
           </button>
         </div>
-        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :q="q" :content-translation="contentTranslation" />
+        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :q="q" :target-language="targetLanguage" />
       </div>
     </template>
     <template v-else>
@@ -83,7 +83,7 @@ export default {
       'useContentTextLazyLoading',
       'showTranslatedContent'
     ]),
-    contentTranslation () {
+    targetLanguage () {
       if (this.showTranslatedContent) {
         return this.language
       }
