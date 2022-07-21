@@ -8,7 +8,7 @@ import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 describe('DocumentTranslatedContent.vue', () => {
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-  const index = toLower('DocumentTabDetails')
+  const index = toLower('DocumentTranslatedContent')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper = null
