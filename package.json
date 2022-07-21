@@ -36,6 +36,7 @@
     "elasticsearch-browser": "16.7.1",
     "es6-promise": "^4.2.8",
     "fuse.js": "^6.6.2",
+    "intersection-observer": "^0.12.2",
     "json-formatter-js": "^2.2.1",
     "lodash": "^4.17.19",
     "lucene": "^2.1.0",
