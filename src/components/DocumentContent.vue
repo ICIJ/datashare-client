@@ -67,7 +67,7 @@ export default {
     }
   },
   async mounted () {
-    this.maxOffset = await this.getMaxOffset()
+    this.maxOffset = await this.loadMaxOffset()
     // Initial local query, we need to jump to the result
     if (this.q) {
       this.hasStickyToolbox = true
@@ -82,12 +82,12 @@ export default {
       await this.jumpToActiveLocalSearchTerm()
     }, 300),
     async targetLanguage (value) {
-      this.maxOffset = await this.getMaxOffset(value)
+      this.maxOffset = await this.loadMaxOffset(value)
       await this.cookAllContentSlices()
     }
   },
   methods: {
-    async getMaxOffset (targetLanguage = this.targetLanguage) {
+    async loadMaxOffset (targetLanguage = this.targetLanguage) {
       const targetLanguageKey = targetLanguage ?? 'original'
       this.maxOffsetTranslations[targetLanguageKey] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
       return this.maxOffsetTranslations[targetLanguageKey]
