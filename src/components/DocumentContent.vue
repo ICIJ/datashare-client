@@ -8,7 +8,6 @@ import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTerm
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
 import utils from '@/mixins/utils'
-import LocalSearchWorker from '@/utils/local-search.worker'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings.js'
 
@@ -62,8 +61,6 @@ export default {
       localSearchIndexes: [],
       localSearchOccurrences: 0,
       localSearchTerm: { label: this.q },
-      localSearchWorker: null,
-      localSearchWorkerInProgress: false,
       rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
       maxOffset: 0,
       maxOffsetTranslations: { }
@@ -76,9 +73,6 @@ export default {
       this.hasStickyToolbox = true
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     }
-  },
-  beforeDestroy () {
-    this.terminateLocalSearchWorker()
   },
   watch: {
     localSearchTerm: throttle(async function (t) {
@@ -150,15 +144,6 @@ export default {
         await this.loadContentSlice({ offset, limit, targetLanguage })
       }
       return this.getContentSlice({ offset, limit, targetLanguage })
-    },
-    terminateLocalSearchWorker () {
-      if (this.localSearchWorker !== null) {
-        this.localSearchWorker.terminate()
-      }
-    },
-    createLocalSearchWorker () {
-      this.terminateLocalSearchWorker()
-      this.localSearchWorker = new LocalSearchWorker()
     },
     async retrieveTotalOccurrences () {
       try {
@@ -276,8 +261,7 @@ export default {
         'globalSearchTerms',
         'localSearchIndex',
         'localSearchOccurrences',
-        'localSearchTerm',
-        'localSearchWorkerInProgress'
+        'localSearchTerm'
       ])
     },
     hasLocalSearchTerms () {
@@ -295,15 +279,14 @@ export default {
       <document-global-search-terms-tags
         :document="document"
         @select="localSearchTerm = $event"
-        class="p-3 w-100"></document-global-search-terms-tags>
+        class="p-3 w-100" />
       <document-local-search-input class="ml-auto"
         v-model="localSearchTerm"
         v-bind:activated.sync="hasStickyToolbox"
         @next="findNextLocalSearchTerm"
         @previous="findPreviousLocalSearchTerm"
         :search-occurrences="localSearchOccurrences"
-        :search-index="localSearchIndex"
-        :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
+        :search-index="localSearchIndex" />
       <hook name="document.content.toolbox:after"></hook>
     </div>
     <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3">

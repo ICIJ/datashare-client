@@ -37,9 +37,9 @@ export default {
       default: 0
     },
     /**
-     * True if a worker is currently searching for the term
+     * Switch to loading state
      */
-    searchWorkerInProgress: {
+    loading: {
       type: Boolean
     }
   },
@@ -125,7 +125,7 @@ export default {
       <div class="input-group">
         <input type="search" :value="searchTerm.label" @input="$emit('input', { label: $event.target.value })" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="getKeys('findInDocument')" @shortkey="getAction('findInDocument')" />
         <div class="document-local-search-input__count input-group-append w-25" v-if="searchTerm.label.length > 0">
-          <span v-if="searchWorkerInProgress" class="input-group-text w-100 text-center d-inline-block">
+          <span v-if="loading" class="input-group-text w-100 text-center d-inline-block">
             <fa icon="circle-notch" spin></fa>
           </span>
           <span v-else class="input-group-text w-100 text-center d-inline-block px-0 text-truncate" :title="searchLabel">
