@@ -1,4 +1,3 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
@@ -8,10 +7,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('WidgetDocumentsByCreationDateByPath.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { index: project } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { widget: { title: 'Hello world' } }
-  const project = toLower('WidgetDocumentsByCreationDateByPath')
-  const anotherProject = toLower('AnotherWidgetDocumentsByCreationDateByPath')
-  esConnectionHelper([project, anotherProject])
   let wrapper = null
 
   beforeAll(() => {

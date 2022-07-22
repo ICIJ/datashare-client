@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
@@ -23,9 +22,7 @@ async function createView (es, project, content = '', query = '', metadata = '',
 }
 
 describe('DocumentGlobalSearchTermsTags.vue', () => {
-  const project = toLower('DocumentGlobalSearchTermsTags')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
   let wrapper = null
 
   afterEach(() => {

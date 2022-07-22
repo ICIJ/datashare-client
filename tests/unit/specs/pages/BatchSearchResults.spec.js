@@ -86,15 +86,13 @@ describe('BatchSearchResults.vue', () => {
       }
     ]
   })
-  const project = 'batchsearchresults'
-  const anotherProject = 'anotherbatchsearchresults'
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { uuid: '12', indices: project.concat(',', anotherProject) }
-  esConnectionHelper([project, anotherProject])
 
   beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
   beforeEach(async () => {
-    const es = esConnectionHelper.es
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()

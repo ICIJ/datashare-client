@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import TreeView from '@/components/TreeView'
@@ -7,9 +6,7 @@ import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { Core } from '@/core'
 
 describe('TreeView.vue', () => {
-  const index = toLower('TreeView')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
 
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = {

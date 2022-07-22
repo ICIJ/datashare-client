@@ -1,4 +1,3 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
@@ -19,9 +18,7 @@ async function createView (query = '*', from = 0, size = 25) {
 }
 
 describe('SearchResultsList.vue', () => {
-  const index = toLower('SearchResultsList')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   let wrapper
 
   beforeAll(() => {

@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
@@ -74,10 +73,8 @@ jest.mock('@/api', () => {
 
 describe('BatchSearchResultsFilters.vue', () => {
   const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
-  const project = toLower('BatchSearchResultsFilters')
-  const anotherProject = toLower('AnotherBatchSearchResultsFilters')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   let wrapper = null
 
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))

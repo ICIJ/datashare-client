@@ -1,4 +1,4 @@
-import { cloneDeep, find, omit, toLower } from 'lodash'
+import { cloneDeep, find, omit } from 'lodash'
 
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
@@ -10,10 +10,8 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('axios')
 
 describe('SearchStore', () => {
-  const project = toLower('SearchStore')
-  const anotherProject = toLower('AnotherSearchStore')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
 
   beforeAll(() => store.commit('search/index', project))
 

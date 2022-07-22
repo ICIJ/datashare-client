@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import elasticsearch from '@/api/elasticsearch'
@@ -8,9 +7,7 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('elasticsearch', () => {
-  const index = toLower('elasticsearch')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
 
   it('should return backend response to a POST request for searchDocs', async () => {
     const spy = jest.spyOn(elasticsearch, 'search').mockResolvedValue({ foo: 'bar' })

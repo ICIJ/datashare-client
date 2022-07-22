@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
@@ -9,9 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('DocumentTabNamedEntities.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const index = toLower('DocumentTabNamedEntities')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const id = 'document'
   let document = null
   let wrapper = null

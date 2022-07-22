@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import axios from 'axios'
 
 import Api from '@/api'
@@ -8,8 +7,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('axios')
 
 describe('RecommendedStore', () => {
-  const index = toLower('recommendedStore')
-  esConnectionHelper([index])
+  const { index } = esConnectionHelper.build()
 
   afterAll(() => jest.unmock('axios'))
   beforeAll(() => store.commit('search/index', index))

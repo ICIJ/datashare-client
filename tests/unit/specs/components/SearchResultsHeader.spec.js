@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import SearchResultsHeader from '@/components/SearchResultsHeader'
@@ -17,10 +16,8 @@ jest.mock('axios', () => {
 
 describe('SearchResultsHeader.vue', () => {
   const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
-  const index = toLower('SearchResultsHeader')
-  const anotherIndex = toLower('AnotherSearchResultsHeader')
-  esConnectionHelper([index, anotherIndex])
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
+  const { index: anotherIndex } = esConnectionHelper.build()
   let wrapper = null
 
   beforeAll(() => store.commit('search/index', index))
@@ -117,12 +114,7 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   it('should send api request when batch download method is called', async () => {
-    const project = toLower('SearchResultsHeader')
-    const anotherProject = toLower('AnotherSearchResultsHeader')
     const query = 'bar'
-
-    wrapper.setProps({ index: project, anotherIndex: anotherProject })
-
     axios.request.mockClear()
 
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent(query)).commit()
@@ -136,7 +128,12 @@ describe('SearchResultsHeader.vue', () => {
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchDownload'),
       method: 'POST',
-      data: { options: { projectIds: [project, anotherProject], query: { bool: { must: [{ match_all: {} }, { bool: { should: [{ query_string: { query: 'bar' } }] } }, { match: { type: 'Document' } }] } } } }
+      data: {
+        options: {
+          projectIds: [index, anotherIndex],
+          query: { bool: { must: [{ match_all: {} }, { bool: { should: [{ query_string: { query: 'bar' } }] } }, { match: { type: 'Document' } }] } }
+        }
+      }
     }))
   })
 

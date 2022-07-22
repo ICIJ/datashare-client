@@ -1,5 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 import LocalesMenu from '@/components/LocalesMenu'
 import { Core } from '@/core'

@@ -1,5 +1,4 @@
 import find from 'lodash/find'
-import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
@@ -11,8 +10,7 @@ const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('FilterDateRange.vue', () => {
-  const index = toLower('FilterDateRange')
-  esConnectionHelper(index)
+  const { index } = esConnectionHelper.build()
   const name = 'creationDate'
   const filter = store.getters['search/getFilter']({ name })
   let wrapper = null

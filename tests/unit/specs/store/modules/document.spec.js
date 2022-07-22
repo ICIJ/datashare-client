@@ -1,4 +1,4 @@
-import { indexOf, orderBy, toLower, uniqueId } from 'lodash'
+import { indexOf, orderBy, uniqueId } from 'lodash'
 import axios from 'axios'
 
 import Api from '@/api'
@@ -14,9 +14,7 @@ jest.mock('axios', () => {
 })
 
 describe('DocumentStore', () => {
-  const index = toLower('DocumentStore')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const id = 'document'
 
   afterEach(() => store.commit('document/reset'))

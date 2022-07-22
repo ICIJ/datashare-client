@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -8,9 +7,7 @@ import { Core } from '@/core'
 
 describe('DocumentTabPreview.vue', () => {
   const { localVue } = Core.init(createLocalVue()).useAll()
-  const index = toLower('DocumentTabPreview')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const id = 'document'
   const disabled = true
 

@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import Api from '@/api'
@@ -13,9 +12,7 @@ import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 describe('DocumentTranslatedContent.vue', () => {
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-  const index = toLower('DocumentTranslatedContent')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
 
   function mockedDocumentContentFactory (id, content = '') {
     // Index the document

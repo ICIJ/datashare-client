@@ -1,5 +1,4 @@
 import find from 'lodash/find'
-import toLower from 'lodash/toLower'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueI18n from 'vue-i18n'
@@ -13,10 +12,8 @@ import messagesFr from '@/lang/fr'
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterText.vue', () => {
-  const index = toLower('FilterText')
-  const anotherIndex = toLower('AnotherFilterText')
-  esConnectionHelper([index, anotherIndex])
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
+  const { index: anotherIndex } = esConnectionHelper.build()
   const name = 'contentType'
   const filter = store.getters['search/getFilter']({ name })
   let wrapper = null

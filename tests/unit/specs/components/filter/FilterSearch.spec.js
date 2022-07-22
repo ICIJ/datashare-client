@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import FilterSearch from '@/components/filter/FilterSearch'
@@ -15,13 +14,12 @@ filters.methods.refreshRoute = jest.fn()
 
 describe('FilterSearch.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const project = toLower('FilterSearch')
-  esConnectionHelper(project)
+  const { index } = esConnectionHelper.build()
   let wrapper = null
 
   beforeEach(() => {
     store.commit('search/reset')
-    store.commit('search/index', project)
+    store.commit('search/index', index)
     const filter = store.getters['search/getFilter']({ name: 'contentType' })
 
     wrapper = mount(FilterSearch, {

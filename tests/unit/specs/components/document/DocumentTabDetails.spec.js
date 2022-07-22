@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
@@ -11,9 +10,7 @@ jest.mock('axios')
 
 describe('DocumentTabDetails.vue', () => {
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-  const index = toLower('DocumentTabDetails')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const id = 'document'
   let wrapper = null
 

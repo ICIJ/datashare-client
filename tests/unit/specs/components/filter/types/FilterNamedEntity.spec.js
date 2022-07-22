@@ -1,4 +1,4 @@
-import { noop, toLower } from 'lodash'
+import { noop } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 
@@ -23,9 +23,7 @@ mixin.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterNamedEntity.vue', () => {
   const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
-  const index = toLower('FilterNamedEntity')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const id = 'document'
   const name = 'namedEntityPerson'
   const filter = store.getters['search/getFilter']({ name })

@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
 import Api from '@/api'
@@ -20,11 +19,9 @@ jest.mock('lodash', () => {
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('DocumentContent.vue', () => {
-  const index = toLower('DocumentContent')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
-  const id = 'document'
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  const { index, es } = esConnectionHelper.build()
+  const id = 'document'
 
   async function mockDocumentContentSlice (content = '', { language = 'ENGLISH' } = {}) {
     const contentSlice = letTextContent()

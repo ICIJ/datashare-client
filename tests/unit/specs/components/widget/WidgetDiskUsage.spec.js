@@ -1,4 +1,3 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
@@ -9,11 +8,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('WidgetDiskUsage.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { widget: { title: 'Hello world' } }
-  const project = toLower('WidgetDiskUsage')
-  const anotherProject = toLower('AnotherWidgetDiskUsage')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
   let wrapper = null
 
   beforeEach(() => {

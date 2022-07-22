@@ -1,4 +1,3 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
@@ -19,9 +18,7 @@ jest.mock('axios', () => {
 FilterStarred.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterStarred.vue', () => {
-  const index = toLower('FilterStarred')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const filter = store.getters['search/getFilter']({ name: 'starred' })
   let wrapper
   jest.setTimeout(1e4)

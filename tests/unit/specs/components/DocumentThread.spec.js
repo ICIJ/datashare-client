@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import DocumentThread from '@/components/DocumentThread'
@@ -8,9 +7,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('DocumentThread.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const index = toLower('DocumentThread')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   let wrapper = null
 
   describe('getThread', () => {

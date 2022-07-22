@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 import { removeCookie, setCookie } from 'tiny-cookie'
@@ -14,13 +13,11 @@ jest.mock('axios')
 
 describe('DocumentNavbar.vue', () => {
   const { i18n, localVue, store, router } = Core.init(createLocalVue()).useAll()
-  const project = toLower('DocumentNavbar')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   let wrapper = null
 
   beforeAll(() => {
-    store.commit('search/index', project)
+    store.commit('search/index', index)
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
@@ -37,8 +34,8 @@ describe('DocumentNavbar.vue', () => {
 
   describe('Mark as recommmended button', () => {
     beforeAll(async () => {
-      await letData(es).have(new IndexedDocument('doc_01', project)).commit()
-      await store.dispatch('document/get', { id: 'doc_01', index: project })
+      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+      await store.dispatch('document/get', { id: 'doc_01', index })
     })
 
     it('should display a "Mark as recommended" button', () => {
@@ -52,7 +49,7 @@ describe('DocumentNavbar.vue', () => {
 
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/recommend`),
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/recommend`),
         method: 'POST',
         data: ['doc_01']
       }))
@@ -61,7 +58,7 @@ describe('DocumentNavbar.vue', () => {
         url: Api.getFullUrl('/api/users/recommendations'),
         method: 'GET',
         params: {
-          project: project
+          project: index
         }
       }))
       expect(store.state.recommended.byUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
@@ -76,7 +73,7 @@ describe('DocumentNavbar.vue', () => {
 
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/unrecommend`),
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unrecommend`),
         method: 'POST',
         data: ['doc_01']
       }))
@@ -85,7 +82,7 @@ describe('DocumentNavbar.vue', () => {
         url: Api.getFullUrl('/api/users/recommendations'),
         method: 'GET',
         params: {
-          project: project
+          project: index
         }
       }))
       expect(store.state.recommended.byUsers).toEqual([])
@@ -93,15 +90,15 @@ describe('DocumentNavbar.vue', () => {
   })
 
   it('should display the number of recommendedBy', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index: project })
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index })
 
     expect(wrapper.find('.document-navbar__recommended-by-number').exists()).toBeTruthy()
   })
 
   it('should display document title if shrinked', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index: project })
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index })
 
     await wrapper.setProps({ isShrinked: true })
 

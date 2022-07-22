@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
@@ -12,10 +11,9 @@ jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
 describe('BatchSearchForm.vue', () => {
   const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
-  const project = toLower('BatchSearchForm')
-  const anotherProject = toLower('AnotherBatchSearchForm')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
+
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
   const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFilter: jest.fn() } } } })

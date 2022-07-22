@@ -1,13 +1,11 @@
-import { cloneDeep, toLower } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 import store from '@/store'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('SearchFilters', () => {
-  const project = toLower('SearchFilters')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
 
   beforeAll(() => store.commit('search/index', project))
 

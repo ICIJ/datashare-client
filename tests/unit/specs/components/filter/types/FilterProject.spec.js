@@ -1,5 +1,4 @@
 import find from 'lodash/find'
-import toLower from 'lodash/toLower'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
@@ -21,9 +20,8 @@ describe('FilterProject.vue', () => {
   localVue.mixin({ created () {} })
   const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
   localVue.config.optionMergeStrategies.created = (parent, _) => mergeCreatedStrategy(parent)
-  const project = toLower('FilterProject')
-  const anotherProject = toLower('AnotherFilterProject')
-  esConnectionHelper([project, anotherProject])
+  const { index: project } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   let wrapper = null
 
   beforeAll(() => {

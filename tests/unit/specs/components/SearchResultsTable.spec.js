@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 import VueRouter from 'vue-router'
@@ -18,9 +17,7 @@ jest.mock('axios', () => {
 describe('SearchResultsTable.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const project = toLower('SearchResultsTable')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
   let wrapper = null
 
   beforeAll(() => store.commit('search/index', project))

@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
@@ -25,9 +24,7 @@ jest.mock('axios', () => {
 describe('DocumentView.vue', () => {
   const core = Core.init(createLocalVue()).useAll()
   const { i18n, localVue, router, store, wait } = core
-  const project = toLower('DocumentView')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
   const id = 'document'
   const parentId = 'parent_document'
   const propsData = { index: project, id, routing: parentId }

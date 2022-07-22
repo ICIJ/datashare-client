@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import axios from 'axios'
 
 import store from '@/store'
@@ -8,9 +7,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('axios')
 
 describe('StarredStore', () => {
-  const index = toLower('StarredStore')
-  esConnectionHelper([index])
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const filter = store.getters['search/getFilter']({ name: 'starred' })
 
   beforeEach(() => {

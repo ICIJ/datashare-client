@@ -8,10 +8,7 @@ import { Core } from '@/core'
 import BatchSearchActions from '@/components/BatchSearchActions'
 
 Api.getFullUrl = jest.fn() // mock static function
-
-jest.mock('@/api', () => {
-  return jest.fn()
-})
+jest.mock('@/api', () => jest.fn())
 
 describe('BatchSearchActions.vue', () => {
   let wrapper

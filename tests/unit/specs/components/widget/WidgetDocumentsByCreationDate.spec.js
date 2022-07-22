@@ -1,4 +1,3 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
@@ -8,11 +7,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { widget: { title: 'Hello world' } }
-  const project = toLower('WidgetDocumentsByCreationDate')
-  const anotherProject = toLower('AnotherWidgetDocumentsByCreationDate')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
   let wrapper = null
 
   beforeAll(() => store.commit('insights/project', project))

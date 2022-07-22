@@ -1,7 +1,6 @@
 import axios from 'axios'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
-import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
@@ -26,9 +25,7 @@ async function createView ({ es, project, tags = [], documentId = 'document', di
 }
 
 describe('DocumentTagsForm.vue', () => {
-  const project = toLower('DocumentTagsForm')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
   const id = 'document'
   let wrapper
 
