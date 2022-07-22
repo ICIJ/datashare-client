@@ -2,6 +2,10 @@ import { merge } from 'lodash'
 import fs from 'fs'
 import { join } from 'path'
 
+export function flushPromises () {
+  return new Promise(resolve => setTimeout(resolve, 0))
+}
+
 export function responseWithJson (body = {}, status = 200, headers = {}) {
   const mockResponse = new Response(JSON.stringify(body), {
     status,
