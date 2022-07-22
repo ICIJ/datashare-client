@@ -75,7 +75,7 @@ export default {
     }
   },
   watch: {
-    localSearchTerm: throttle(async function (t) {
+    localSearchTerm: throttle(async function () {
       await this.retrieveTotalOccurrences()
       await this.cookAllContentSlices()
       await this.$nextTick()
@@ -156,6 +156,7 @@ export default {
       } catch (_) {
         this.localSearchIndexes = []
         this.localSearchOccurrences = 0
+        this.localSearchIndex = 0
       }
     },
     addLocalSearchMarks (content, { contentOffset: delta = 0 } = {}) {
@@ -299,6 +300,7 @@ export default {
 
     <hook name="document.content.body:before"></hook>
     <document-content-slices
+      :bufferize-all="!!localSearchOccurrences"
       :class="{ 'document-content__body--rtl': isRightToLeft }"
       :slices="virtualContentSlices"
       @placeholder-visible="onContentSlicePlaceholderVisible"

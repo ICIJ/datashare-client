@@ -3,6 +3,7 @@
     <dynamic-scroller
       :buffer="scrollBuffer"
       :items="slices"
+      :key="version"
       :min-item-size="85"
       ref="scroller"
       page-mode>
@@ -37,6 +38,19 @@ export default {
     slices: {
       type: Array,
       default: () => ([])
+    },
+    bufferizeAll: {
+      type: Boolean
+    }
+  },
+  data () {
+    return { 
+      version: 0
+    }
+  },
+  watch: {
+    bufferizeAll () {
+      this.version++
     }
   },
   filters: {
@@ -47,7 +61,7 @@ export default {
   computed: {
     scrollBuffer () {
       // Huge buffer to ensure all views are created
-      return 9e3 * this.slices.length
+      return this.bufferizeAll ? 9e3 * this.slices.length : 300
     }
   },
   methods: {

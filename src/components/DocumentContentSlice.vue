@@ -9,7 +9,7 @@ export default {
   },
   computed: {
     cookedContent () {
-      return this.slice.get().cookedContent
+      return this.slice.get(this.slice).cookedContent
     }
   }
 }
