@@ -1,6 +1,6 @@
 <script>
 import { findLastIndex, flattenDeep, get, pick, range, throttle } from 'lodash'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
 import DocumentContentSlices from '@/components/DocumentContentSlices'
@@ -64,16 +64,13 @@ export default {
       localSearchTerm: { label: this.q },
       localSearchWorker: null,
       localSearchWorkerInProgress: false,
-      transformedContent: '',
       rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
       maxOffset: 0,
       maxOffsetTranslations: { }
     }
   },
   async mounted () {
-    // Apply the transformation pipeline once
-    await this.loadContent()
-    await this.transformContent()
+    this.maxOffset = await this.getMaxOffset()
     // Initial local query, we need to jump to the result
     if (this.q) {
       this.hasStickyToolbox = true
@@ -86,21 +83,13 @@ export default {
   watch: {
     localSearchTerm: throttle(async function (t) {
       await this.retrieveTotalOccurrences()
-      await this.transformContent()
       await this.cookAllContentSlices()
       await this.$nextTick()
       await this.jumpToActiveLocalSearchTerm()
     }, 300),
     async targetLanguage (value) {
       this.maxOffset = await this.getMaxOffset(value)
-      await this.$store.dispatch('document/setContent', '')
-      return this.transformContent()
-    },
-    contentPipelineFunctions () {
-      return this.transformContent()
-    },
-    useContentTextLazyLoading () {
-      this.transformContent()
+      await this.cookAllContentSlices()
     }
   },
   methods: {
@@ -162,25 +151,6 @@ export default {
       }
       return this.getContentSlice({ offset, limit, targetLanguage })
     },
-    async loadContent () {
-      // Load content slice by slice
-      if (this.useContentTextLazyLoading) {
-        // Only load the maximum offset, virtual scroll will load
-        // the necessary content slice during load
-        if (!this.document.hasContent) {
-          this.maxOffset = await this.getMaxOffset()
-        }
-      // Load all the content at once
-      } else if (!this.document.hasContent) {
-        await this.$store.dispatch('document/getContent')
-      }
-      this.$root.$emit('document::content-loaded')
-      return this.content
-    },
-    async transformContent () {
-      const transformedContent = await this.applyContentPipeline()
-      this.$set(this, 'transformedContent', transformedContent)
-    },
     terminateLocalSearchWorker () {
       if (this.localSearchWorker !== null) {
         this.localSearchWorker.terminate()
@@ -212,10 +182,6 @@ export default {
       const term = this.localSearchTerm.label
       return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
     },
-    async applyContentPipeline () {
-      const content = await this.loadContent()
-      return this.contentPipeline(content, this.contentPipelineParams)
-    },
     findNextLocalSearchTerm () {
       const localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
       this.$set(this, 'localSearchIndex', localSearchIndex)
@@ -230,18 +196,20 @@ export default {
       const activeTerms = this.$el.querySelectorAll('.local-search-term--active')
       activeTerms.forEach(term => term.classList.remove('local-search-term--active'))
     },
+    scrollToContentSlice (activeTermContentSlice = 0) {
+      if (this.$refs?.slices?.scrollToContentSlice) {
+        this.$refs?.slices?.scrollToContentSlice(activeTermContentSlice)
+      }
+    },
     async jumpToActiveLocalSearchTerm () {
       // Delete all existing "local-search-term--active" classes from other element
       this.clearActiveLocalSearchTerm()
       const activeTermOffset = this.localSearchIndexes[this.localSearchIndex - 1]
-      // Lazy loading might require to load extra content
-      if (this.useContentTextLazyLoading) {
-        // Load missing content slice (if needed)
-        this.loadContentSliceArround(activeTermOffset)
-        // Move to the content slice containing the term
-        const activeTermContentSlice = this.findContentSliceIndexArround(activeTermOffset)
-        this.$refs.slices.scrollToContentSlice(activeTermContentSlice)
-      }
+      // Load missing content slice (if needed)
+      this.loadContentSliceArround(activeTermOffset)
+      // Move to the content slice containing the term
+      const activeTermContentSlice = this.findContentSliceIndexArround(activeTermOffset)
+      this.scrollToContentSlice(activeTermContentSlice)
       // Find the active search term according to `localSearchIndex`
       const activeTermSelector = `.local-search-term[data-offset="${activeTermOffset}"]`
       const activeTerm = this.$el.querySelector(activeTermSelector)
@@ -266,18 +234,17 @@ export default {
       const offset = this.getContentSlicePageOffset(page)
       // To return the actual content slice, the content must exists
       if (this.hasContentSlice({ offset })) {
+        const { pageSize: limit, targetLanguage } = this
         // Share the content in a getter function to avoid copying huge
         // chunks of text into each virtual slice
-        const { pageSize: limit, targetLanguage } = this
-        const get = () => this.getContentSlice({ offset, limit, targetLanguage })
+        const get = this.getContentSlice.bind(this)
         const id = `document-content-slice-${page}`
-        return { id, get }
+        return { id, get, offset, limit, targetLanguage }
       }
       return this.getVirtualContentSlicePlaceholder(page)
     }
   },
   computed: {
-    ...mapState('document', ['isTranslatedContentLoaded', 'useContentTextLazyLoading']),
     ...mapGetters('pipelines', {
       getPipelineChain: 'applyPipelineChainByCategory',
       getFullPipelineChain: 'getFullPipelineChainByCategory'
@@ -292,12 +259,6 @@ export default {
     contentPipelineFunctions () {
       return this.getFullPipelineChain('extracted-text')
     },
-    translatedContent () {
-      if (this.isTranslatedContentLoaded && this.targetLanguage !== null) {
-        return this.document.translatedContentIn(this.targetLanguage)
-      }
-      return null
-    },
     offsets () {
       return range(0, this.maxOffset, this.pageSize)
     },
@@ -305,14 +266,6 @@ export default {
       return this.offsets.map((_, index) => {
         return this.getVirtualContentSlice(index + 1)
       })
-    },
-    content: {
-      // Document's content is not a reactive property yet so we cannot use
-      // vue caching mechanism here.
-      cache: false,
-      get () {
-        return this.translatedContent || this.document.content || ''
-      }
     },
     contentPipeline () {
       return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
@@ -360,22 +313,16 @@ export default {
       <hook name="document.content.togglers:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
       <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
     </div>
-    <hook name="document.content.body:before"></hook>
 
+    <hook name="document.content.body:before"></hook>
     <document-content-slices
       :class="{ 'document-content__body--rtl': isRightToLeft }"
       :slices="virtualContentSlices"
       @placeholder-visible="onContentSlicePlaceholderVisible"
-      class="document-content__body document-content__body--sliced container-fluid py-3"
-      ref="slices"
-      v-if="useContentTextLazyLoading" />
-    <div
-      :class="{ 'document-content__body--rtl': isRightToLeft }"
       class="document-content__body container-fluid py-3"
-      v-html="transformedContent"
-      v-else></div>
-
+      ref="slices" />
     <hook name="document.content.body:after"></hook>
+
     <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
     <hook name="document.content:after"></hook>
   </div>

@@ -79,10 +79,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('document', [
-      'useContentTextLazyLoading',
-      'showTranslatedContent'
-    ]),
+    ...mapState('document', ['showTranslatedContent']),
     targetLanguage () {
       if (this.showTranslatedContent) {
         return this.language
