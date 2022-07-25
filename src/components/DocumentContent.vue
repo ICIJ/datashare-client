@@ -62,12 +62,11 @@ export default {
       localSearchOccurrences: 0,
       localSearchTerm: { label: this.q },
       rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
-      maxOffset: 0,
       maxOffsetTranslations: { }
     }
   },
   async mounted () {
-    this.maxOffset = await this.loadMaxOffset()
+    await this.loadMaxOffset()
     // Initial local query, we need to jump to the result
     if (this.q) {
       this.hasStickyToolbox = true
@@ -82,7 +81,7 @@ export default {
       await this.jumpToActiveLocalSearchTerm()
     }, 300),
     async targetLanguage (value) {
-      this.maxOffset = await this.loadMaxOffset(value)
+      await this.loadMaxOffset(value)
       await this.cookAllContentSlices()
     }
   },
@@ -90,8 +89,9 @@ export default {
     async loadMaxOffset (targetLanguage = this.targetLanguage) {
       const key = targetLanguage ?? 'original'
       // Ensure we load the map offset only once
-      this.maxOffsetTranslations[key] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
-      return this.maxOffsetTranslations[key]
+      const offset = await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
+      this.$set(this.maxOffsetTranslations, key, offset)
+      return offset
     },
     findContentSliceIndexArround (desiredOffset) {
       return findLastIndex(this.offsets, offset => offset <= desiredOffset)
@@ -280,6 +280,9 @@ export default {
     },
     contentPipelineFunctions () {
       return this.getFullPipelineChain('extracted-text')
+    },
+    maxOffset () {
+      return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
     },
     offsets () {
       return range(0, this.maxOffset, this.pageSize)

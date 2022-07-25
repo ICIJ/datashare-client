@@ -39,7 +39,7 @@ describe('DocumentTranslatedContent.vue', () => {
         const document = store.state.document.doc
         // Finally flush all promises and return all necessary values
         await flushPromises()
-        return { content, contentSlice, document }
+        return { content, contentSlice, document, id }
       }
     }
   }
@@ -63,6 +63,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const { document } = await mocked.commit()
     const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
     await wrapper.vm.loadAvailableTranslations()
+    await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
     await wrapper.vm.$refs.content.cookAllContentSlices()
     await flushPromises()
@@ -75,6 +76,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const { document } = await mocked.commit()
     const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
     await wrapper.vm.loadAvailableTranslations()
+    await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
     await wrapper.vm.$refs.content.cookAllContentSlices()
     await flushPromises()
@@ -87,6 +89,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const { document } = await mocked.commit()
     const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
     await wrapper.vm.loadAvailableTranslations()
+    await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
     await wrapper.vm.$refs.content.cookAllContentSlices()
     await flushPromises()
