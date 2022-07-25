@@ -1,5 +1,5 @@
 <script>
-import { findLastIndex, flattenDeep, get, pick, range, throttle } from 'lodash'
+import { findLastIndex, entries, get, pick, range, throttle } from 'lodash'
 import { mapGetters } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
@@ -50,7 +50,7 @@ export default {
      */
     pageSize: {
       type: Number,
-      default: 1000
+      default: 2500
     }
   },
   data () {
@@ -96,35 +96,66 @@ export default {
     findContentSliceIndexArround (desiredOffset) {
       return findLastIndex(this.offsets, offset => offset <= desiredOffset)
     },
-    setContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '', cookedContent = '' } = {}) {
+    findAdjacentContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage }, defaultValue = null) {
+      const adjacentOffset = Number(offset) + Number(limit)
+      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }) || defaultValue
+    },
+    findPrecedingContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage }, defaultValue = null) {
+      const adjacentOffset = Number(offset) - Number(limit)
+      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }) || defaultValue
+    },
+    setContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '', cookedContent = '', ...rest } = {}) {
       const obj = this.contentSlices
       const targetLanguageKey = targetLanguage || 'original'
       // Reactivly set the nested values of contentSlices
       this.$set(obj, offset, obj[offset] || {})
       this.$set(obj[offset], limit, obj[offset][limit] || {})
-      this.$set(obj[offset][limit], targetLanguageKey, { content, cookedContent })
-      return { content, cookedContent }
+      this.$set(obj[offset][limit], targetLanguageKey, { ...rest, content, cookedContent })
+      return { ...rest, content, cookedContent }
+    },
+    makeContentSliceOrganic ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '' } = {}) {
+      // Find if the preceding content slice to know if it has an organic tail already
+      const { organicTail: organicHead = true } = this.findPrecedingContentSlice({ offset, limit, targetLanguage }, { })
+      // Find the adjacent content slice to add missing tailing content add the end of a line
+      const { content: adjacentContent = '\n' } = this.findAdjacentContentSlice({ offset, limit, targetLanguage }, { })
+      // The slice ends with a new line or its adjacent slice starts with a new line
+      const organicTail = content.endsWith('\n') || adjacentContent.startsWith('\n')
+      // Extract the content suffix from the adjacent content
+      const missingTailingContent = organicTail ? '' : adjacentContent.split('\n').shift()
+      // If the previous slice is not organic (organicHead), remove the first line from the content
+      const truncatedTailContent = organicHead ? content : content.split('\n').slice(1).join('\n')
+      // Add the missing tailing content (if any)
+      const organicContent = truncatedTailContent + missingTailingContent
+      // The offset of the content is not the same anymore
+      const organicOffset = organicHead ? offset : 1 + Number(offset) + content.split('\n').shift().length
+      return { organicContent, organicHead, organicTail, organicOffset }
     },
     async cookContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '' } = {}) {
-      const contentOffset = offset
-      const cookedContent = await this.contentPipeline(content, { contentOffset, ...this.contentPipelineParams })
-      this.setContentSlice({ offset, limit, targetLanguage, content, cookedContent })
+      // Extract the content after making it "organic"
+      const sliceParams = { offset, limit, targetLanguage, content }
+      const { organicHead, organicTail, organicOffset, organicContent } = this.makeContentSliceOrganic(sliceParams)
+      // Apply the pipeline to on the content is organic
+      const pipelineParams = { organicOffset, ...this.contentPipelineParams }
+      const cookedContent = await this.contentPipeline(organicContent, pipelineParams)
+      // Finally, save the
+      this.setContentSlice({ ...sliceParams, organicOffset, cookedContent, organicHead, organicTail })
     },
-    cookAllContentSlices () {
-      const promises = Object.entries(this.contentSlices).map(([offset, limits]) => {
-        return Object.entries(limits).map(([limit, targetLanguages]) => {
-          return Object.entries(targetLanguages).map(([targetLanguage, { content }]) => {
-            return this.cookContentSlice({ offset, limit, targetLanguage, content })
-          })
-        })
-      })
-      return Promise.all(flattenDeep(promises))
+    async cookAllContentSlices ({ minOffset = 0, maxOffset = this.maxOffset } = {}) {
+      for (const [offset, limits] of entries(this.contentSlices)) {
+        for (const [limit, targetLanguages] of entries(limits)) {
+          for (const [targetLanguage, contentSlice] of entries(targetLanguages)) {
+            if (offset >= minOffset && offset <= maxOffset) {
+              await this.cookContentSlice({ offset, limit, targetLanguage, ...contentSlice })
+            }
+          }
+        }
+      }
     },
-    getContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+    getContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}, defaultValue = null) {
       // Ensure the limit is not beyond limit
       limit = Math.min(limit, this.maxOffset - offset)
       const targetLanguageKey = targetLanguage || 'original'
-      return get(this.contentSlices, [offset, limit, targetLanguageKey], null)
+      return get(this.contentSlices, [offset, limit, targetLanguageKey], defaultValue)
     },
     hasContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       return !!this.getContentSlice({ offset, limit, targetLanguage })
@@ -138,7 +169,7 @@ export default {
       // Ensure the limit is not beyond limit
       limit = Math.min(limit, this.maxOffset - offset)
       const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
-      return this.cookContentSlice({ offset, limit, targetLanguage, content })
+      return this.setContentSlice({ offset, limit, targetLanguage, content })
     },
     async loadContentSliceOnce ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       if (!this.hasContentSlice({ offset, limit, targetLanguage })) {
@@ -160,7 +191,7 @@ export default {
         this.localSearchIndex = 0
       }
     },
-    addLocalSearchMarks (content, { contentOffset: delta = 0 } = {}) {
+    addLocalSearchMarks (content, { organicOffset: delta = 0 } = {}) {
       if (!this.hasLocalSearchTerms) {
         return content
       }
@@ -204,8 +235,12 @@ export default {
       activeTerm?.classList.add('local-search-term--active')
       activeTerm?.scrollIntoView({ block: 'center', inline: 'nearest' })
     },
-    onContentSlicePlaceholderVisible ({ offset, limit }) {
-      return this.loadContentSliceOnce({ offset, limit })
+    async onContentSlicePlaceholderVisible ({ offset, limit }) {
+      await this.loadContentSliceOnce({ offset, limit })
+      // Cook preceding, current and adjacent content slices
+      const minOffset = offset - limit
+      const maxOffset = offset + limit
+      await this.cookAllContentSlices({ minOffset, maxOffset })
     },
     getContentSlicePageOffset (page) {
       return (page - 1) * this.pageSize
