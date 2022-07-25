@@ -50,7 +50,7 @@ export default {
      */
     pageSize: {
       type: Number,
-      default: 2500
+      default: 1000
     }
   },
   data () {
@@ -88,9 +88,10 @@ export default {
   },
   methods: {
     async loadMaxOffset (targetLanguage = this.targetLanguage) {
-      const targetLanguageKey = targetLanguage ?? 'original'
-      this.maxOffsetTranslations[targetLanguageKey] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
-      return this.maxOffsetTranslations[targetLanguageKey]
+      const key = targetLanguage ?? 'original'
+      // Ensure we load the map offset only once
+      this.maxOffsetTranslations[key] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
+      return this.maxOffsetTranslations[key]
     },
     findContentSliceIndexArround (desiredOffset) {
       return findLastIndex(this.offsets, offset => offset <= desiredOffset)
