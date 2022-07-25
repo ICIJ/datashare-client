@@ -98,11 +98,11 @@ export default {
     },
     findAdjacentContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage }, defaultValue = null) {
       const adjacentOffset = Number(offset) + Number(limit)
-      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }) || defaultValue
+      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }, defaultValue)
     },
     findPrecedingContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage }, defaultValue = null) {
       const adjacentOffset = Number(offset) - Number(limit)
-      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }) || defaultValue
+      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }, defaultValue)
     },
     setContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '', cookedContent = '', ...rest } = {}) {
       const obj = this.contentSlices
