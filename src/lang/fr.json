@@ -595,6 +595,7 @@
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
     "title": "Recherches en lot",
     "empty": "Vous n'avez pas encore commencé de recherche en lot. <a href=\"%{howToLink}\">En savoir plus.</a>",
+    "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
     "fileDescription": "Exportez votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Uniquement quand 'Rechercher les termes exacts' n'est pas coché, vous pouvez utiliser AND OR NOT * ? + - et les autres opérateurs de recherche dans votre CSV, et utiliser une Regex entre 2 slashes</li></ul>",
