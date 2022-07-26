@@ -595,6 +595,7 @@
     "lead": "複数の言葉や文書を一度に検索",
     "title": "まとめて検索（バッチサーチ）",
     "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
+    "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "新たなまとめ検索（バッチサーチ）",
     "fileLabel": "CSVファイル",
     "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
