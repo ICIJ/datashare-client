@@ -58,6 +58,12 @@ class IndexedDocuments {
     }
     return this.document
   }
+  commit (es) {
+    return letData(es).have(this).commit()
+  }
+  static build () {
+    return new IndexedDocuments()
+  }
 }
 
 class IndexedDocument {
@@ -76,6 +82,9 @@ class IndexedDocument {
     this.nerTags = []
     this.index = index
     this.extractionLevel = 0
+  }
+  get id () {
+    return this.path
   }
   setContentTextLength (length) {
     this.contentTextLength = length
@@ -165,6 +174,12 @@ class IndexedDocument {
     ner.isHidden = true
     return ner
   }
+  commit (es) {
+    return letData(es).have(this).commit()
+  }
+  static build (path, index) {
+    return new IndexedDocument(path, index)
+  }
 }
 
 class IndexBuilder {
@@ -201,14 +216,10 @@ class IndexBuilder {
         await this.have(doc).commit()
       }
     } else {
-      const docId = this.document.path
-      const index = this.document.index
-      const createRequest = {
-        index: index,
-        refresh: true,
-        id: docId,
-        body: this._omit(this.document, ['nerList'])
-      }
+      const { id, index } = this.document
+      const body = this._omit(this.document, ['nerList'])
+      const createRequest = { index, id, body, refresh: true }
+
       if (this.document.hasParent()) {
         createRequest.routing = this.document.parentDocument
       }
@@ -220,7 +231,7 @@ class IndexBuilder {
           index: index,
           refresh: true,
           id: ner.id,
-          routing: docId,
+          routing: id,
           body: {
             mention: ner.mention,
             mentionNorm: ner.mention,
@@ -228,7 +239,7 @@ class IndexBuilder {
             category: ner.category,
             isHidden: ner.isHidden,
             type: 'NamedEntity',
-            join: { name: 'NamedEntity', parent: docId }
+            join: { name: 'NamedEntity', parent: id }
           }
         })
       }
