@@ -1,7 +1,7 @@
 import {
-  castArray, compact, concat, cloneDeep, each, endsWith, escapeRegExp, flatten,
+  castArray, concat, cloneDeep, each, endsWith, flatten,
   filter as filterCollection, find, findIndex, get, has, includes, isString, join,
-  keys, map, omit, orderBy, range, random, reduce, toString, uniq, values
+  keys, map, omit, orderBy, range, random, reduce, toString, uniq
 } from 'lodash'
 import lucene from 'lucene'
 import Vue from 'vue'
@@ -155,28 +155,6 @@ export const getters = {
   retrieveContentQueryTerms (state, getters) {
     const fields = ['', 'content']
     return filterCollection(getters.retrieveQueryTerms, item => fields.includes(item.field))
-  },
-  retrieveContentQueryTermsInContent (state, getters) {
-    return (text, field) => getters.retrieveContentQueryTerms.map(term => {
-      const regex = new RegExp(term.regex ? term.label : escapeRegExp(term.label).replace(' ', '\\s'), 'gi')
-      term[field] = (text.match(regex) || []).length
-      return term
-    })
-  },
-  retrieveContentQueryTermsInDocument (state, getters) {
-    return document => {
-      map(['content', 'metadata', 'tags'], field => {
-        let extractedField = get(document, ['source', field], '')
-        if (isString(extractedField)) {
-          extractedField = castArray(extractedField)
-        }
-        let text = join(compact(values(extractedField)), ' ')
-        text = text.replace(/\n/g, ' ').replace(/\s\s+/g, ' ')
-        getters.retrieveContentQueryTermsInContent(text, field)
-      })
-      return orderBy(getters.retrieveContentQueryTerms,
-        ['content', 'metadata', 'tags'], ['desc', 'desc', 'desc'])
-    }
   },
   sortBy (state) {
     return find(settings.searchSortFields, { name: state.sort })
