@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
 import BatchSearch from '@/pages/BatchSearch'
+import Vuex from 'vuex'
 
 jest.mock('@/api', () => {
   return jest.fn(() => {
@@ -132,6 +133,28 @@ describe('BatchSearch.vue', () => {
       await wrapper.find('.btn-dark').trigger('submit')
 
       expect(searchSpy).toBeCalledTimes(1)
+    })
+
+    it('should display a \'No result\' message when no items', () => {
+      const state = { batchSearches: [] }
+      const actions = { getBatchSearches: jest.fn() }
+      const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
+
+      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+
+      expect(wrapper.find('.batch-search__items__item__no-item').exists()).toBeTruthy()
+    })
+
+    it('should display a \'No filtered result\' message when no items and filter is on', async () => {
+      const state = { batchSearches: [] }
+      const actions = { getBatchSearches: jest.fn() }
+      const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
+
+      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+      wrapper.setData({ query: 'test' })
+      await wrapper.vm.fetchWithLoader()
+
+      expect(wrapper.find('.batch-search__items__item__no-item-filtered').exists()).toBeTruthy()
     })
   })
 

@@ -49,8 +49,11 @@
             :sort-by="sortBy"
             :sort-desc="orderBy"
             @sort-changed="sortChanged">
-            <template #empty>
-              <p class="text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
+            <template #empty v-if="!this.hasActiveFilter">
+              <p class="batch-search__items__item__no-item text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
+            </template>
+            <template #empty v-else>
+              <p class="batch-search__items__item__no-item-filtered text-center m-0" v-html="$t('batchSearch.emptyWithFilter')"></p>
             </template>
             <template v-slot:cell(name)="{ item }">
               <router-link
@@ -239,6 +242,9 @@ export default {
     hasPendingBatchSearches () {
       const pendingStates = ['RUNNING', 'QUEUED']
       return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
+    },
+    hasActiveFilter () {
+      return this.query !== ''
     }
   },
   watch: {
