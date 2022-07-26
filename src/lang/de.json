@@ -595,6 +595,7 @@
     "lead": "Mehrere Begriffe und Dokumente auf einmal suchen.",
     "title": "Batch-Suche",
     "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
+    "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "Neue Batch-Suche",
     "fileLabel": "CSV-Datei",
     "fileDescription": "Exportieren Sie Ihre Tabelle als CSV mit UTF-8-Kodierung. <ul><li>Nur CSV-Format akzeptiert.</li> <li>CSV-Datei sollte nicht mehr als 60.000 Abfragen enthalten.</li> <li>Die erste und einzige Spalte sollte die Suchbegriffe enthalten.</li> <li>Keine Zeilenumbrüche(n) in Zellen.</li> <li>Ohne 'do phrase match' können Sie die Operatoren AND OR NOT * ? ! + - und weitere Suchoperatoren, sowie reguläre Ausdrücke (RegEx) zwischen zwei Schrägstrichen benutzen</li></ul>",
