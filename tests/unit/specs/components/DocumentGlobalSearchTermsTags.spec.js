@@ -1,39 +1,74 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import Api from '@/api'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import { Core } from '@/core'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+
+import { IndexedDocument } from 'tests/unit/es_utils'
+import { flushPromises } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
-async function createView (es, project, content = '', query = '', metadata = '', tags = []) {
-  const id = 'document'
-  await letData(es).have(new IndexedDocument(id, project).withContent(content).withOtherMetadata(metadata).withTags(tags)).commit()
-  await store.dispatch('document/get', { id, index: project })
-  await store.dispatch('document/getContent', { id, index: project })
-  store.commit('search/query', query)
-  return shallowMount(DocumentGlobalSearchTermsTags, {
-    i18n,
-    localVue,
-    store,
-    propsData: { document: store.state.document.doc }
-  })
-}
-
 describe('DocumentGlobalSearchTermsTags.vue', () => {
-  const { index: project, es } = esConnectionHelper.build()
-  let wrapper = null
+  const { index, es } = esConnectionHelper.build()
 
-  afterEach(() => {
+  function mockedDocumentSearchFactory () {
+    return {
+      terms: { },
+      add ({ term = '', count = 0, offsets = [] } = {}) {
+        this.terms[term] = { count, offsets }
+        return this
+      },
+      commit () {
+        // Mock the `searchDocument` method
+        jest.spyOn(Api.prototype, 'searchDocument')
+          .mockImplementation(async (index, id, term) => {
+            if (term in this.terms) {
+              return this.terms[term]
+            }
+            return { count: 0, offsets: [] }
+          })
+        return this
+      }
+    }
+  }
+
+  async function createView (content = '', query = '', metadata = '', tags = []) {
+    const indexedDocument = await IndexedDocument
+      .build('document-id', index)
+      .withContent(content)
+      .withOtherMetadata(metadata)
+      .withTags(tags)
+      .commit(es)
+    const { id } = indexedDocument.document
+    await store.dispatch('document/get', { id, index })
+    store.commit('search/query', query)
+    const propsData = { document: store.state.document.doc }
+    const wrapper = shallowMount(DocumentGlobalSearchTermsTags, { i18n, localVue, store, propsData })
+    await flushPromises()
+    return wrapper
+  }
+
+  afterEach(async () => {
+    // Ensure all promise are flushed...
+    await flushPromises()
+    // Then clear all mocks
+    jest.clearAllMocks()
+    // Remove document
     store.commit('document/reset')
     store.commit('search/reset')
   })
 
   describe('lists the query terms but the ones about specific field other than "content"', () => {
     it('should display query terms with occurrences in decreasing order', async () => {
-      wrapper = await createView(es, project, 'document result test document test test', 'result test document other')
-      await wrapper.vm.getTerms()
+      mockedDocumentSearchFactory()
+        .add({ term: 'test', count: 3 })
+        .add({ term: 'document', count: 2 })
+        .add({ term: 'result', count: 1 })
+        .add({ term: 'other', count: 0 })
+        .commit()
+      const wrapper = await createView('document result test document test test', 'result test document other')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(4)
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('test')
@@ -47,8 +82,11 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     })
 
     it('should display query terms in tags with specific message and in last position', async () => {
-      wrapper = await createView(es, project, 'message', 'message tag_01', '', ['tag_01', 'tag_02'])
-      await wrapper.vm.getTerms()
+      mockedDocumentSearchFactory()
+        .add({ term: 'message', count: 1 })
+        .add({ term: 'tag_01', count: 0 })
+        .commit()
+      const wrapper = await createView('message', 'message tag_01', '', ['tag_01', 'tag_02'])
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(2)
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('message')
@@ -58,16 +96,22 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     })
 
     it('should not display the query terms on a specific field but content', async () => {
-      wrapper = await createView(es, project, 'term_01', 'content:term_01 field_name:term_02')
-      await wrapper.vm.getTerms()
+      mockedDocumentSearchFactory()
+        .add({ term: 'term_01', count: 1 })
+        .add({ term: 'term_02', count: 0 })
+        .commit()
+      const wrapper = await createView('term_01', 'content:term_01 field_name:term_02')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('term_01')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('1')
     })
 
     it('should not display the negative query terms', async () => {
-      wrapper = await createView(es, project, 'term_01', 'term_01 -term_02')
-      await wrapper.vm.getTerms()
+      mockedDocumentSearchFactory()
+        .add({ term: 'term_01', count: 1 })
+        .add({ term: 'term_02', count: 0 })
+        .commit()
+      const wrapper = await createView('term_01', 'term_01 -term_02')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(1)
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('term_01')
@@ -75,21 +119,12 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     })
 
     it('should highlight the query terms with the same color than in the list', async () => {
-      wrapper = await createView(es, project, 'this is a full full content', 'full content')
-      await wrapper.vm.getTerms()
+      const wrapper = await createView('this is a full full content', 'full content')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item--index-0')).toHaveLength(1)
       expect(wrapper.find('.document-global-search-terms-tags__item--index-0 .document-global-search-terms-tags__item__label').text()).toBe('full')
       expect(wrapper.findAll('.document-global-search-terms-tags__item--index-1')).toHaveLength(1)
       expect(wrapper.find('.document-global-search-terms-tags__item--index-1 .document-global-search-terms-tags__item__label').text()).toBe('content')
     })
-  })
-
-  it('should highlight the query terms while event "document::content-loaded" is emitted', async () => {
-    wrapper = await createView(es, project, 'document result test document test test', 'result test document other')
-    expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(0)
-
-    await wrapper.vm.$root.$emit('document::content-loaded')
-    expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(4)
   })
 })

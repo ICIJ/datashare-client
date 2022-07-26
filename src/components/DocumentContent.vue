@@ -317,9 +317,10 @@ export default {
     <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
       <hook name="document.content.toolbox:before"></hook>
       <document-global-search-terms-tags
+        class="p-3 w-100"
         :document="document"
-        @select="localSearchTerm = $event"
-        class="p-3 w-100" />
+        :target-language="targetLanguage"
+        @select="localSearchTerm = $event" />
       <document-local-search-input class="ml-auto"
         v-model="localSearchTerm"
         v-bind:activated.sync="hasStickyToolbox"
