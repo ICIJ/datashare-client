@@ -595,6 +595,7 @@
     "lead": "Buscar múltiples términos y documentos a la vez.",
     "title": "Búsquedas masivas",
     "empty": "Aún no ha iniciado una búsqueda masiva. <a href=\"%{howToLink}\">Leer más.</a>",
+    "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
     "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. <ul><li>Solo el formato CSV aceptado.</li> <li>El archivo CSV no debe contener más de 60 000 consultas.</li> <li>La primera y única columna debe contener los términos a buscar.</li> <li>No saltos de línea en las células.</li> <li>Solamente cuando 'Hacer la frase coincide exactamente' no esta marcado, puede utilizar operadores (AND OR NOT * ? ! + - etc), y las Regex entre 2 barras.</li></ul>",
