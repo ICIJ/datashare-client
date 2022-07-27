@@ -15,17 +15,17 @@ jest.mock('axios', () => {
 })
 
 describe('SearchResultsTable.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const { index: project, es } = esConnectionHelper.build()
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { index, es } = esConnectionHelper.build()
   let wrapper = null
 
-  beforeAll(() => store.commit('search/index', project))
+  beforeAll(() => store.commit('search/index', index))
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocuments()
       .setBaseName('document')
-      .withIndex(project)
+      .withIndex(index)
       .count(4)).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
     wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store, wait })
@@ -42,23 +42,30 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should display 3 action buttons', async () => {
-    await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }, { id: 'document_02' }])
+    await wrapper.setData({
+      selected: [
+        { id: 'document_01' },
+        { id: 'document_02' }
+      ]
+    })
 
     expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(3)
   })
 
   it('should set each selected document as starred', async () => {
     wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
-    await wrapper.vm.$set(wrapper.vm, 'selected', [
-      { id: 'document_01', index: project },
-      { id: 'document_02', index: project }
-    ])
+    await wrapper.setData({
+      selected: [
+        { id: 'document_01', index },
+        { id: 'document_02', index }
+      ]
+    })
 
     wrapper.findAll('.list-group-item-action').at(1).trigger('click')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/' + project + '/documents/batchUpdate/star'),
+      url: Api.getFullUrl('/api/' + index + '/documents/batchUpdate/star'),
       method: 'POST',
       data: ['document_01', 'document_02']
     }))
