@@ -2,6 +2,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
 import { Core } from '@/core'
+import { flushPromises } from 'tests/unit/tests_utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
@@ -38,8 +39,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   it('should rerun init on project change', async () => {
     const init = jest.spyOn(wrapper.vm, 'init')
     await store.commit('insights/project', anotherProject)
+    await flushPromises()
     expect(init).toBeCalledTimes(1)
     await store.commit('insights/project', project)
+    await flushPromises()
     expect(init).toBeCalledTimes(2)
   })
 
@@ -95,6 +98,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
         .withCreationDate('1968-01-01T00:00:00.000Z')).commit()
 
       await wrapper.vm.loadData()
+      await flushPromises()
 
       expect(wrapper.vm.missing).toBe(2)
     })
