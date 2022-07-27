@@ -1,50 +1,60 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from 'tests/unit/tests_utils'
 
 import TiffViewer from '@/components/document/viewers/TiffViewer'
 import { Core } from '@/core'
 
-jest.mock('@/api', () => {
-  const { responseWithArrayBuffer } = require('tests/unit/tests_utils')
-  return jest.fn(() => {
-    return {
-      getSource: jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
-    }
-  })
-})
+import Api from '@/api'
 
 describe('TiffViewer.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
 
-  beforeEach(() => {
-    wrapper = shallowMount(TiffViewer, { i18n, localVue, propsData: { document: { url: 'image.tiff' } } })
+  describe('with an existing file', () => {
+    let wrapper = null
+
+    beforeAll(async () => {
+      jest.spyOn(Api.prototype, 'getSource')
+        .mockImplementation(({ url }) => {
+          return mockArrayBuffer(url)
+        })
+    })
+
+    beforeEach(async () => {
+      wrapper = shallowMount(TiffViewer, { i18n, localVue, propsData: { document: { url: 'image.tiff' } } })
+      await flushPromises()
+    })
+
+    afterAll(() => jest.clearAllMocks())
+
+    it('should load a tiff content file', () => {
+      expect(wrapper.find('.tiff-viewer__preview__canvas').exists()).toBeTruthy()
+    })
+
+    it('should display a thumbnail for each page', () => {
+      expect(wrapper.find('.tiff-viewer__thumbnails').exists()).toBeTruthy()
+      expect(wrapper.findAll('.tiff-viewer__thumbnails__item')).toHaveLength(3)
+    })
   })
 
-  afterAll(() => jest.unmock('@/api'))
+  describe('with a missing file', () => {
+    let wrapper = null
 
-  it('should display an error message if the document does not exist', async () => {
-    wrapper.setProps({ document: { url: 'nodoc.tiff' } })
+    beforeAll(async () => {
+      jest.spyOn(Api.prototype, 'getSource')
+        .mockImplementation(async ({ url }) => {
+          throw new Error('File not found')
+        })
+    })
 
-    await wrapper.vm.loadPage(1)
-    expect(wrapper.find('.tiff-viewer .alert').text()).toContain('The browser preview of this TIFF file may not show')
-  })
+    beforeEach(async () => {
+      wrapper = shallowMount(TiffViewer, { i18n, localVue, propsData: { document: { url: 'missing.tiff' } } })
+      await flushPromises()
+    })
 
-  it('should display a message while generating the preview', () => {
-    expect(wrapper.find('.tiff-viewer .alert').text()).toBe('Generating preview...')
-  })
+    afterAll(() => jest.clearAllMocks())
 
-  it('should load a tiff content file', async () => {
-    await wrapper.vm.loadPage(1)
-
-    expect(wrapper.find('.tiff-viewer .tiff-viewer__preview').exists()).toBeTruthy()
-    expect(wrapper.find('.tiff-viewer .tiff-viewer__preview .tiff-viewer__preview__pages .form-control').element.value).toBe('1')
-    expect(wrapper.find('.tiff-viewer .tiff-viewer__preview .img-thumbnail .tiff-viewer__canvas').exists()).toBeTruthy()
-  })
-
-  it('should display a thumbnail by page', async () => {
-    await wrapper.vm.loadPage(1)
-
-    expect(wrapper.find('.tiff-viewer .tiff-viewer__header .tiff-viewer__thumbnails').exists()).toBeTruthy()
-    expect(wrapper.findAll('.tiff-viewer .tiff-viewer__header .tiff-viewer__thumbnails img')).toHaveLength(3)
+    it('should display an error message if the document does not exist', () => {
+      expect(wrapper.find('.tiff-viewer__error').text()).toContain('File not found')
+    })
   })
 })

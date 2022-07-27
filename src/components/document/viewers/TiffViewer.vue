@@ -1,46 +1,41 @@
 <template>
-  <div class="tiff-viewer">
-    <template v-if="doc.pages.length > 0">
-      <div class="tiff-viewer__header">
-        <div class="tiff-viewer__thumbnails">
-          <div class="text-center mb-4">{{ doc.active }} / {{ doc.pages.length }}</div>
-          <div v-for="page in doc.pages.length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse">
-            <img class="ml-1 tiff-viewer__canvas img-responsive" :width="thumbWidth" :height="thumbWidth" :src="loadPage(page)" />
-            <span class="d-flex align-items-center">{{ page }}</span>
+  <div class="tiff-viewer w-100 d-flex">
+    <template v-if="pages.length">
+      <div class="tiff-viewer__thumbnails bg-light p-3">
+        <div class="text-center mb-4">{{ active }} / {{ pages.length }}</div>
+        <div class="tiff-viewer__thumbnails__item mb-3" v-for="page in pages.length" :key="page" @click="active = page">
+          <img class="ml-1 img-responsive" :width="thumbWidth" :height="thumbWidth" :src="getPage(page)" />
+          <div class="tiff-viewer__thumbnails__item__page text-center small">
+            <span class="badge badge-dark">{{ page }}</span>
           </div>
         </div>
       </div>
-      <div class="tiff-viewer__preview text-center">
-        <div class="tiff-viewer__preview__pages d-flex flex-row-reverse">
-          <select class="form-control input-sm w-auto mb-3" v-model="doc.active">
-            <option v-for="page in doc.pages.length" v-bind:key="page">
-              {{ page }}
-            </option>
-          </select>
-        </div>
-        <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, -1)">
-          <fa icon="undo" class="float-right" />
-        </button>
-        <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, 1)">
-          <fa icon="redo" class="float-right" />
-        </button>
-        <div class="img-thumbnail">
-          <div class="alert tiff-viewer__warning">
-            <fa icon="exclamation-triangle" />
-            {{ $t('document.tiffLimitations') }}
+      <div class="tiff-viewer__preview text-center flex-grow-1 px-3">
+        <div class="p-3">
+          <div class="btn-group">
+            <button class="btn btn-outline-primary" @click="rotateActivePage(active, -1)">
+              <fa icon="undo" class="float-right" />
+            </button>
+            <button class="btn btn-outline-primary" @click="rotateActivePage(active, 1)">
+              <fa icon="redo" class="float-right" />
+            </button>
           </div>
-          <img class="tiff-viewer__canvas img-responsive" :width="maxWidth" :src="loadPage(doc.active)" />
         </div>
+        <img class="tiff-viewer__preview__canvas mw-100 mb-3" :width="maxWidth" :src="getPage(active)" />
       </div>
     </template>
-    <div v-else class="alert">
+    <div v-else-if="error" class="tiff-viewer__error alert alert-danger m-3">
+      {{ error }}
+    </div>
+    <div v-else class="tiff-viewer__loader alert">
       <fa icon="cog" spin />
-      {{ message }}
+      {{ $t('document.generatingPreview') }}
     </div>
   </div>
 </template>
 
 <script>
+import { range } from 'lodash'
 import Tiff from 'tiff.js'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
@@ -60,61 +55,45 @@ export default {
   mixins: [datashareSourceMixin],
   data () {
     return {
-      message: this.$t('document.generatingPreview'),
+      error: null,
       maxWidth: 750,
       thumbWidth: 80,
       tiff: null,
-      doc: {
-        active: 0,
-        pages: []
-      }
+      active: 1,
+      pages: []
     }
   },
   created () {
     Tiff.initialize({ TOTAL_MEMORY: 16777216 * 10 })
   },
-  mounted () {
-    this.doc.active = 1
-    this.loadPage(1)
+  async mounted () {
+    try {
+      this.tiff = await this.getTiff()
+      for (const page of range(1, this.tiff.countDirectory() + 1)) {
+        this.pages.push(await this.renderPage(page))
+      }
+    } catch (error) {
+      this.error = error.message
+    }
   },
   methods: {
-    loadPage (p) {
-      if (this.doc.pages[p - 1]) {
-        return this.doc.pages[p - 1].toDataURL()
-      } else {
-        return this.render(this.tiff, p).then(canvas => {
-          this.$set(this.doc.pages, p - 1, canvas)
-        }).catch(error => {
-          this.message = error.message
-        })
+    getPage (page = this.active) {
+      if (this.pages[page - 1]) {
+        return this.pages[page - 1].toDataURL()
       }
     },
-    render (tiff, p) {
-      if (tiff !== null) {
-        return new Promise(resolve => {
-          tiff.setDirectory(p - 1)
-          resolve(tiff.toCanvas())
-        })
-      } else {
-        return this.getTiff().then(tiff => {
-          this.tiff = tiff
-          this.doc.pages = new Array(this.tiff.countDirectory())
-          return new Promise(resolve => {
-            tiff.setDirectory(p - 1)
-            resolve(tiff.toCanvas())
-          })
-        })
-      }
+    renderPage (page = this.active) {
+      this.tiff.setDirectory(page - 1)
+      return this.tiff.toCanvas()
     },
-    getTiff () {
-      return this.getSource(this.document)
-        .then(r => r.arrayBuffer())
-        .then(arrayBuffer => new Tiff({ buffer: arrayBuffer }))
+    async getTiff () {
+      const r = await this.getSource(this.document, { responseType: 'blob' })
+      const buffer = await r.arrayBuffer()
+      return new Tiff({ buffer })
     },
-    rotatePage (p, direction = 1) {
-      return this.rotate(this.doc.pages[p - 1], direction).then(canvas => {
-        this.$set(this.doc.pages, p - 1, canvas)
-      })
+    async rotateActivePage (page, direction = 1) {
+      const canvas = await this.rotate(this.pages[page - 1], direction)
+      this.$set(this.pages, page - 1, canvas)
     },
     rotate (canvas, direction = 1) {
       const ctx = canvas.getContext('2d')
@@ -146,7 +125,7 @@ export default {
         }
       })
       // Change the image src to start loading the image
-      img.src = canvas.toDataURL ? canvas.toDataURL() : null
+      img.src = canvas?.toDataURL()
       return promise
     }
   }
@@ -155,21 +134,22 @@ export default {
 
 <style lang="scss">
 .tiff-viewer {
-  position: relative;
+  &__thumbnails {
+    &__item {
+      position: relative;
+      cursor: pointer;
 
-  .tiff-viewer__header {
-    flex: 0 0 15%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow: auto;
-  }
+      &:hover {
+        box-shadow: 0 0 0 1px $input-focus-border-color,
+                    0 0 $spacer * 0.5 0 $input-focus-border-color;
+      }
 
-  .tiff-viewer__preview {
-    flex: 0 0 85%;
-    margin-left: 15%;
-    padding-left: 1em;
+      &__page {
+        position: absolute;
+        bottom: 0.25rem;
+        right: 0.25rem;
+      }
+    }
   }
 }
 </style>
