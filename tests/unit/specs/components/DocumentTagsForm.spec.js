@@ -8,6 +8,7 @@ import Api from '@/api'
 import { Core } from '@/core'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from 'tests/unit/tests_utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import Murmur from '@icij/murmur'
 import settings from '@/utils/settings'
@@ -21,7 +22,9 @@ async function createView ({ es, project, tags = [], documentId = 'document', di
   await letData(es).have(new IndexedDocument(documentId, project).withTags(tags)).commit()
   await store.dispatch('document/get', { id: documentId, index: project })
   await store.dispatch('document/getTags')
-  return shallowMount(DocumentTagsForm, { i18n, localVue, store, propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags, displayForm }, sync: false })
+  const wrapper = shallowMount(DocumentTagsForm, { i18n, localVue, store, propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags, displayForm }, sync: false })
+  await flushPromises()
+  return wrapper
 }
 
 describe('DocumentTagsForm.vue', () => {
@@ -69,7 +72,8 @@ describe('DocumentTagsForm.vue', () => {
   it('should display tags, but not delete button if tag was created by the admin user', async () => {
     Murmur.config.set('userAdmin', 'icij')
     wrapper = await createView({ es, project })
-    await wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'icij' } })
+    wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'icij' } })
+    await flushPromises()
 
     expect(wrapper.findAll('.document-tags-form__tags__tag')).toHaveLength(2)
     expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(1)
@@ -78,7 +82,8 @@ describe('DocumentTagsForm.vue', () => {
   it('should display tags normally if no admin user defined', async () => {
     Murmur.config.set('userAdmin', undefined)
     wrapper = await createView({ es, project })
-    await wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'admin' } })
+    wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'admin' } })
+    await flushPromises()
 
     expect(wrapper.findAll('.document-tags-form__tags__tag')).toHaveLength(2)
     expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(2)
