@@ -17,11 +17,11 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        // Replace the default lodader by dart sass 
+        // Replace the default lodader by dart sass
         // @see https://www.priestch.com/replace-node-sass-with-dart-sass-in-vue-cli3-based-project/
         implementation: require('sass')
-      },
-    },
+      }
+    }
   },
   chainWebpack: config => {
     // Resource loader configuration:
@@ -32,6 +32,9 @@ module.exports = {
         .use('sass-resources-loader')
         .loader('sass-resources-loader')
         .options({
+          // If hoistUseStatements is true, entry file @use imports will
+          // be hoisted. This means the @use statements will go above the inclusion of resources.
+          hoistUseStatements: true,
           resources: [
             resolve('src/utils/settings.scss')
           ]
