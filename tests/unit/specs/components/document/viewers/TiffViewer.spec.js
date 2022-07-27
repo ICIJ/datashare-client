@@ -3,7 +3,6 @@ import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from 'tests
 
 import TiffViewer from '@/components/document/viewers/TiffViewer'
 import { Core } from '@/core'
-
 import Api from '@/api'
 
 describe('TiffViewer.vue', () => {
