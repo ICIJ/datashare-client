@@ -1,11 +1,11 @@
 const frontmatter = require('front-matter')
-const marked = require('marked')
 const filter = require('lodash/filter')
 const find = require('lodash/find')
 const get = require('lodash/get')
 const startCase = require('lodash/startCase')
 const xss = require('xss')
 const { basename, extname, relative } = require('path')
+const { marked } = require('marked')
 
 function slugger (value) {
   return value
@@ -32,7 +32,7 @@ module.exports = function metadataLoader (source) {
       title,
       ...attributes,
       headings: filter(headings, h => h.depth > 1).map(h => {
-        const text = xss(marked(h.text), { stripIgnoreTag: true, whiteList: {} })
+        const text = xss(marked.parse(h.text), { stripIgnoreTag: true, whiteList: {} })
         const id = slugger(text)
         return { text, id }
       })

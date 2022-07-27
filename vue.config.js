@@ -1,7 +1,7 @@
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
 const { join } = require('path')
 const { setCookie } = require('tiny-cookie')
-const marked = require('marked')
+const { marked } = require('marked')
 
 const resolve = filepath => join(__dirname, filepath)
 const gitRevisionPlugin = new GitRevisionPlugin()
