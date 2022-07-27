@@ -1,5 +1,6 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
@@ -34,14 +35,14 @@ describe('FilterPath.vue', () => {
   it('should reinitialize dataDir as path when project change', async () => {
     wrapper.vm.path = '/data/foo'
     await store.commit('search/index', 'OtherProject')
-
+    await flushPromises()
     expect(wrapper.vm.path).toBe('/data')
   })
 
   it('should list selected paths according to the filter', async () => {
     const key = ['/data/foo', '/data/bar']
     await store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
-
+    await flushPromises()
     expect(wrapper.vm.selectedPaths).toContain('/data/foo')
     expect(wrapper.vm.selectedPaths).toContain('/data/bar')
   })
@@ -58,7 +59,6 @@ describe('FilterPath.vue', () => {
   it('should reset search from to 0 when selectedPaths change', () => {
     store.commit('search/from', 25)
     wrapper.vm.$set(wrapper.vm, 'selectedPaths', ['path'])
-
     expect(store.state.search.from).toBe(0)
   })
 
