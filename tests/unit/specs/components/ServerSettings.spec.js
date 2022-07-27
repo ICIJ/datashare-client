@@ -28,9 +28,7 @@ describe('ServerSettings.vue', () => {
   })
 
   it('should display a text input', async () => {
-    wrapper = await shallowMount(ServerSettings, { i18n, localVue, store, wait, stubs: { 'b-form': false } })
-    await wrapper.vm.$set(wrapper.vm, 'settings', { property_01: 'value_01', property_02: 'value_02' })
-
+    await wrapper.setData({ settings: { property_01: 'value_01', property_02: 'value_02' } })
     expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
   })
 
