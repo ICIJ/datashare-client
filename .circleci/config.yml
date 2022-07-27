@@ -79,8 +79,6 @@ jobs:
   generate_doc:
     docker:
       - image: cimg/node:16.16.0
-        environment:
-          - "NPM_CONFIG_PREFIX=~/.local"
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
