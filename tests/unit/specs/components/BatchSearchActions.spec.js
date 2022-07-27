@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import Api from '@/api'
 import { Core } from '@/core'
 import BatchSearchActions from '@/components/BatchSearchActions'
@@ -54,6 +55,7 @@ describe('BatchSearchActions.vue', () => {
 
   beforeEach(async () => {
     await router.push({ name: 'batch-search.results' }).catch(() => {})
+    await flushPromises()
   })
 
   afterEach(() => {
@@ -68,7 +70,7 @@ describe('BatchSearchActions.vue', () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.$core.auth.getUsername()
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--delete').exists()).toBeTruthy()
   })
 
@@ -76,7 +78,7 @@ describe('BatchSearchActions.vue', () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.$core.auth.getUsername()
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--delete').exists()).toBeFalsy()
   })
 
@@ -93,14 +95,14 @@ describe('BatchSearchActions.vue', () => {
   it('should display a button to relaunch the BS', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--relaunch').exists()).toBeTruthy()
   })
 
   it('should NOT display a button to relaunch the BS if it is not mine', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--relaunch').exists()).toBeFalsy()
   })
 
@@ -130,7 +132,7 @@ describe('BatchSearchActions.vue', () => {
     }
 
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--relaunch').exists()).toBeFalsy()
   })
 
