@@ -6,6 +6,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
 
+// Mock all api calls
+jest.mock('@/api')
+
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterPath.vue', () => {
