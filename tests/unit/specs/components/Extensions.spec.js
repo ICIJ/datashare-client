@@ -1,6 +1,7 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import Api from '@/api'
 import Extensions from '@/components/Extensions'
 import { Core } from '@/core'
@@ -64,7 +65,8 @@ describe('Extensions.vue', () => {
   let wrapper = null
 
   beforeEach(async () => {
-    wrapper = await shallowMount(Extensions, { i18n, localVue })
+    wrapper = shallowMount(Extensions, { i18n, localVue })
+    await flushPromises()
   })
 
   afterAll(() => jest.unmock('axios'))
@@ -75,7 +77,8 @@ describe('Extensions.vue', () => {
 
   describe('extension card', () => {
     beforeEach(async () => {
-      wrapper = await mount(Extensions, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      wrapper = mount(Extensions, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      await flushPromises()
     })
 
     describe('extension name', () => {
@@ -186,8 +189,8 @@ describe('Extensions.vue', () => {
   it('should search for matching extensions', async () => {
     axios.request.mockClear()
     await wrapper.setData({ searchTerm: '02_desc' })
-
     await wrapper.vm.search()
+    await flushPromises()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/extensions?filter=.*02_desc.*') })
