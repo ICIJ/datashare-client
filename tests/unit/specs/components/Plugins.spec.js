@@ -1,6 +1,7 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import Api from '@/api'
 import Plugins from '@/components/Plugins'
 import { Core } from '@/core'
@@ -64,7 +65,8 @@ describe('Plugins.vue', () => {
   let wrapper = null
 
   beforeEach(async () => {
-    wrapper = await shallowMount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    wrapper = shallowMount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    await flushPromises()
   })
 
   afterAll(() => jest.unmock('axios'))
@@ -88,7 +90,8 @@ describe('Plugins.vue', () => {
 
   describe('plugin card', () => {
     beforeEach(async () => {
-      wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      wrapper = mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      await flushPromises()
     })
 
     describe('plugin name', () => {
@@ -199,7 +202,6 @@ describe('Plugins.vue', () => {
   it('should search for matching plugins', async () => {
     axios.request.mockClear()
     await wrapper.setData({ searchTerm: '02_desc' })
-
     await wrapper.vm.search()
 
     expect(axios.request).toBeCalledTimes(1)
