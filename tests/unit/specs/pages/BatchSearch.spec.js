@@ -3,6 +3,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import { Core } from '@/core'
 import BatchSearch from '@/pages/BatchSearch'
 import Vuex from 'vuex'
@@ -55,7 +56,7 @@ describe('BatchSearch.vue', () => {
 
   beforeEach(async () => {
     wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
   })
 
   afterAll(() => {
@@ -64,7 +65,10 @@ describe('BatchSearch.vue', () => {
   })
 
   describe('common functions', () => {
-    beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
+    beforeAll(async () => {
+      Murmur.config.merge({ mode: 'SERVER' })
+      await flushPromises()
+    })
 
     it('should display a search bar', () => {
       expect(wrapper.find('.batch-search__search-bar').exists()).toBeTruthy()
@@ -91,13 +95,12 @@ describe('BatchSearch.vue', () => {
       })
     })
 
-    it('should redirect to the batch search page with the new query and the first page', () => {
+    it('should redirect to the batch search page with the new query and the first page', async () => {
       const query = 'this is my new query'
       jest.spyOn(router, 'push')
-      wrapper.vm.$set(wrapper.vm, 'page', 2)
-      wrapper.vm.$set(wrapper.vm, 'search', query)
-
-      wrapper.vm.searchBatchsearches()
+      await wrapper.setData({ page: 2 })
+      await wrapper.setData({ search: query })
+      await wrapper.vm.searchBatchsearches()
 
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
@@ -108,9 +111,7 @@ describe('BatchSearch.vue', () => {
     it('should execute "fetch" on query change', async () => {
       const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
       expect(fetchSpy).not.toBeCalled()
-
-      await wrapper.vm.$set(wrapper.vm, 'query', 'new search')
-
+      await wrapper.setData({ query: 'new search' })
       expect(fetchSpy).toBeCalled()
     })
 
