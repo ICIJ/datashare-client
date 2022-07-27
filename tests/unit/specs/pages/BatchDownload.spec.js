@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import Api from '@/api'
 import BatchDownload from '@/pages/BatchDownload'
 import { Core } from '@/core'
@@ -106,7 +107,8 @@ describe('BatchDownload.vue', () => {
   let wrapper = null
 
   beforeEach(async () => {
-    wrapper = await mount(BatchDownload, { i18n, localVue, store, wait })
+    wrapper = mount(BatchDownload, { i18n, localVue, store, wait })
+    await flushPromises()
   })
 
   afterAll(() => jest.unmock('axios'))
