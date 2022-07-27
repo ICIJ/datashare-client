@@ -73,8 +73,8 @@ describe('BatchSearchForm.vue', () => {
   })
 
   it('should reset the fuzziness to 0 on phraseMatch change', async () => {
-    wrapper.vm.$set(wrapper.vm, 'fuzziness', 12)
-    await wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
+    await wrapper.setData({ fuzziness: 12 })
+    await wrapper.setData({ phraseMatch: false })
 
     expect(wrapper.vm.fuzziness).toBe(0)
   })
@@ -171,52 +171,52 @@ describe('BatchSearchForm.vue', () => {
 
   describe('On project change', () => {
     it('should reset fileType and path', async () => {
-      wrapper.vm.$set(wrapper.vm, 'fileType', 'fileTypeTest')
-      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
+      await wrapper.setData({ fileType: 'fileTypeTest' })
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.fileType).toBe('')
     })
 
     it('should reset fileTypes and paths', async () => {
-      wrapper.vm.$set(wrapper.vm, 'fileTypes', ['fileType_01', 'fileType_02'])
-      wrapper.vm.$set(wrapper.vm, 'paths', ['path_01', 'path_02'])
-      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
+      await wrapper.setData({ fileTypes: ['fileType_01', 'fileType_02'] })
+      await wrapper.setData({ paths: ['path_01', 'path_02'] })
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.fileTypes).toEqual([])
       expect(wrapper.vm.paths).toEqual([])
     })
 
     it('should reset allFileTypes', async () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', ['fileType_01', 'fileType_02'])
-      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
+      await wrapper.setData({ allFileTypes: ['fileType_01', 'fileType_02'] })
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.allFileTypes).toEqual([])
     })
 
     it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
       jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
     })
 
     it('should call retrieveFileTypes', async () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
     })
   })
 
   describe('should load contentTypes from the current project', () => {
-    beforeEach(() => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [])
-      wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
+    beforeEach(async () => {
+      await wrapper.setData({ allFileTypes: [] })
+      await wrapper.setData({ showAdvancedFilters: true })
     })
 
     it('should call retrieveFileTypes on showAdvancedFilters change', async () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', false)
+      await wrapper.setData({ showAdvancedFilters: false })
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
     })
