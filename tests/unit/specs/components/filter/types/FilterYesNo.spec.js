@@ -5,6 +5,7 @@ import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterStarred from '@/components/filter/types/FilterStarred'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 const { i18n, localVue, store, router, wait } = Core.init(createLocalVue()).useAll()
 
@@ -87,20 +88,20 @@ describe('FilterStarred.vue', () => {
   })
 
   it('should fetch the starred documents', async () => {
-    store.commit('starred/documents', [{ index, id: 'document' }])
     await letData(es).have(new IndexedDocument('document', index)).commit()
-
+    store.commit('starred/documents', [{ index, id: 'document' }])
+    await flushPromises()
     expect(wrapper.vm.starredDocuments).toEqual([{ index, id: 'document' }])
   })
 
   it('should display the results count', async () => {
+    await letData(es).have(new IndexedDocument('document_01', index)).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)).commit()
     store.commit('starred/documents', [
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
-    await letData(es).have(new IndexedDocument('document_01', index)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)).commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
 
