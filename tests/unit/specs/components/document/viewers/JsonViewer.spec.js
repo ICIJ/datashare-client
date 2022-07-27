@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import JsonViewer from '@/components/document/viewers/JsonViewer'
 import JsonFormatter from '@/components/JsonFormatter'
 import { Core } from '@/core'
@@ -17,7 +18,7 @@ describe('JsonViewer.vue', () => {
 
   beforeEach(async () => {
     wrapper = shallowMount(JsonViewer, { localVue, propsData: { document: { url: 'document.json' } } })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
   })
 
   afterAll(() => jest.unmock('axios'))
