@@ -150,7 +150,7 @@ export default {
         }
       }
 
-      & /deep/ .card {
+      &::v-deep .card {
         background: $card-bg;
         border-width: 0;
         color: $panel-color;

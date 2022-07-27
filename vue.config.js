@@ -14,6 +14,15 @@ module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
   parallel: process.env.NODE_ENV !== 'production',
+  css: {
+    loaderOptions: {
+      sass: {
+        // Replace the default lodader by dart sass 
+        // @see https://www.priestch.com/replace-node-sass-with-dart-sass-in-vue-cli3-based-project/
+        implementation: require('sass')
+      },
+    },
+  },
   chainWebpack: config => {
     // Resource loader configuration:
     // 4 named rules must include this loader

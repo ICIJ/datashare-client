@@ -124,13 +124,13 @@ export default {
           margin: $spacer;
           visibility: hidden;
 
-          /deep/ .btn {
+          &::v-deep .btn {
             font-size: 0.9rem;
             padding: $spacer * 0.10 $spacer * 0.25;
             transition: none;
           }
 
-          /deep/ .document-actions__star {
+          &::v-deep .document-actions__star {
             &.starred {
               border-color: transparent;
               box-shadow: none;
@@ -142,7 +142,7 @@ export default {
         &:hover &__actions {
           visibility: visible;
 
-          /deep/ .btn {
+          &::v-deep .btn {
             background: white;
             border-color: $primary;
           }

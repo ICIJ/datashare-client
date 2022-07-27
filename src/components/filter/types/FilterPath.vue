@@ -99,7 +99,7 @@ export default {
 
 <style lang="scss" scoped>
   .filter {
-    &__tree-view /deep/ .tree-view {
+    &__tree-view ::v-deep .tree-view {
       &__header {
         background: $light;
         border-radius: $border-radius-sm;

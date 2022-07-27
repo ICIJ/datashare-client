@@ -95,7 +95,7 @@ export default {
       &__error-query {
         font-size: $font-size-lg;
 
-        /deep/ code {
+        &::v-deep code {
           background-color: $light;
           border: 1px gray solid;
           border-radius: 3px;

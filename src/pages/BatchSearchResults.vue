@@ -566,11 +566,11 @@ export default {
 
   &__queries {
 
-    & /deep/ .table-responsive {
+    & ::v-deep .table-responsive {
       margin: 0;
     }
 
-    & /deep/ table {
+    & ::v-deep table {
       margin: 0;
 
       thead tr {

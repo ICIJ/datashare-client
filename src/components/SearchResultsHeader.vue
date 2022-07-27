@@ -255,17 +255,17 @@ export default {
       }
 
       &__size  {
-        /deep/ &__toggler {
+        &::v-deep &__toggler {
           display: flex;
           align-items: center;
           gap: 0.5em;
           width :172px;
-          &__hits{
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-          }
+        }
 
+        &::v-deep &__toogler__hits {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
         }
       }
     }

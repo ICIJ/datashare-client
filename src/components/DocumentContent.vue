@@ -375,26 +375,26 @@ export default {
       text-align: right;
     }
 
-    & /deep/ mark {
+    ::v-deep mark {
       padding: 0;
     }
-
-    & /deep/ .local-search-term {
+    
+    ::v-deep .local-search-term {
       background: $mark-bg;
       color: black;
       padding: 0;
+    }
 
-      &--active {
-        background: #38D878;
-        color: white;
-      }
+    ::v-deep .local-search-term--active {
+      background: #38D878;
+      color: white;
+    }
 
-      > .global-search-term {
-        background: transparent;
-        color: inherit;
-        border-bottom: 2px solid transparent;
-        padding: 0;
-      }
+    ::v-deep .local-search-term > .global-search-term {
+      background: transparent;
+      color: inherit;
+      border-bottom: 2px solid transparent;
+      padding: 0;
     }
   }
 </style>
