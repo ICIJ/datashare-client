@@ -2,6 +2,8 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
+
+import { flushPromises } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 
@@ -29,7 +31,8 @@ describe('AppliedSearchFilters.vue', () => {
     })
 
     it('should display 1 applied filter', async () => {
-      await store.commit('search/setFilterValue', { name: 'contentType', value: 'term_01' })
+      store.commit('search/setFilterValue', { name: 'contentType', value: 'term_01' })
+      await flushPromises()
 
       expect(wrapper.findAll('.applied-search-filters applied-search-filters-item-stub')).toHaveLength(1)
     })
