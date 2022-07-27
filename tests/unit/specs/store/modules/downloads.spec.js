@@ -23,15 +23,15 @@ describe('DownloadsStore', () => {
   describe('mutations', () => {
     it('should set the download status for the given index', async () => {
       expect(store.state.downloads.allowedFor[index]).toBeUndefined()
-      await store.commit('downloads/allowedFor', { index, allowed: true })
+      store.commit('downloads/allowedFor', { index, allowed: true })
       expect(store.state.downloads.allowedFor[index]).toBeDefined()
     })
 
     it('should set the download statuses for the two given indices', async () => {
       expect(store.state.downloads.allowedFor[index]).toBeUndefined()
       expect(store.state.downloads.allowedFor[anotherIndex]).toBeUndefined()
-      await store.commit('downloads/allowedFor', { index, allowed: true })
-      await store.commit('downloads/allowedFor', { index: anotherIndex, allowed: true })
+      store.commit('downloads/allowedFor', { index, allowed: true })
+      store.commit('downloads/allowedFor', { index: anotherIndex, allowed: true })
       expect(store.state.downloads.allowedFor[index]).toBeDefined()
       expect(store.state.downloads.allowedFor[anotherIndex]).toBeDefined()
     })

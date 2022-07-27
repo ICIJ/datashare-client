@@ -29,7 +29,7 @@ describe('IndexingStore', () => {
 
   it('should reset the store state', async () => {
     const initialState = cloneDeep(store.state.indexing)
-    await store.commit('indexing/reset')
+    store.commit('indexing/reset')
 
     expect(store.state.indexing).toEqual(initialState)
   })

@@ -118,7 +118,7 @@ describe('SearchResultsHeader.vue', () => {
     axios.request.mockClear()
 
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent(query)).commit()
-    await store.commit('search/indices', [index, anotherIndex])
+    store.commit('search/indices', [index, anotherIndex])
     await store.dispatch('search/query', query)
 
     wrapper.vm.tag = 'tag_02'

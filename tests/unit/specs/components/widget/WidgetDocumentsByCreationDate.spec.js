@@ -38,10 +38,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
   it('should rerun init on project change', async () => {
     const init = jest.spyOn(wrapper.vm, 'init')
-    await store.commit('insights/project', anotherProject)
+    store.commit('insights/project', anotherProject)
     await flushPromises()
     expect(init).toBeCalledTimes(1)
-    await store.commit('insights/project', project)
+    store.commit('insights/project', project)
     await flushPromises()
     expect(init).toBeCalledTimes(2)
   })

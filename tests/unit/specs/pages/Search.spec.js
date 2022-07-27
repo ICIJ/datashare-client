@@ -49,7 +49,7 @@ describe('Search.vue', () => {
 
   it('should redirect to the complete query', async () => {
     const query = 'this is a query'
-    await store.commit('search/query', query)
+    store.commit('search/query', query)
     await flushPromises()
     expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: query } })
   })
@@ -66,7 +66,7 @@ describe('Search.vue', () => {
     })
 
     it('should display a button to try again if error is RequestTimeout', async () => {
-      await store.commit('search/error', new esErrors.RequestTimeout())
+      store.commit('search/error', new esErrors.RequestTimeout())
       await flushPromises()
       expect(wrapper.find('b-button-stub').exists()).toBeTruthy()
     })
@@ -74,17 +74,17 @@ describe('Search.vue', () => {
 
   describe('the progress bar', () => {
     it('should increase of 2 per second', async () => {
-      await store.commit('search/isReady', false)
+      store.commit('search/isReady', false)
       await new Promise(resolve => setTimeout(resolve, 5500))
       expect(wrapper.vm.$Progress.get()).toBe(10)
       expect(wrapper.vm.intervalId).not.toBe(-1)
-      await store.commit('search/isReady', true)
+      store.commit('search/isReady', true)
     })
 
     it('should be reset', async () => {
-      await store.commit('search/isReady', false)
+      store.commit('search/isReady', false)
       await new Promise(resolve => setTimeout(resolve, 5500))
-      await store.commit('search/isReady', true)
+      store.commit('search/isReady', true)
       await flushPromises()
       expect(wrapper.vm.$Progress.get()).toBe(100)
       expect(wrapper.vm.intervalId).toBe(-1)
