@@ -1,45 +1,28 @@
-# Datashare
+<p align="center">
+<a href="https://datashare.icij.org/">
+  <img src="https://datashare.icij.org/apple-touch-icon.png" width="158px">
+</a>
+<br>
+Web Client for Datashare
+</p>
 
-[![Circle CI](https://circleci.com/gh/ICIJ/datashare-client.png?style=shield)](https://circleci.com/gh/ICIJ/datashare-client)
+<div align="center">
 
-## Download
+| | Status |
+| --: | :-- |
+| **CI checks** | [![CircleCI](https://circleci.com/gh/ICIJ/datashare-client.svg?style=shield)](https://circleci.com/gh/ICIJ/datashare-client) |
+| **Code Climate** | [![Code Climate](https://api.codeclimate.com/v1/badges/0437a49c2dfcbf7d0af7/maintainability)](https://codeclimate.com/github/ICIJ/datashare-client/maintainability) |
+| **Latest version** | [![Latest version](https://img.shields.io/github/v/tag/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
+| **Release date** | [![Release date](https://img.shields.io/github/release-date/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
+| **Open issues** | [![Open issues](https://img.shields.io/github/issues/icij/datashare?style=shield&color=success)](https://github.com/ICIJ/datashare/issues/) |
 
-https://datashare.icij.org/
+</div>
 
+# Installation guide
 
-## Documentation
+## Datashare **Client**
 
-Datashare's user guide can be found here: https://icij.gitbook.io/datashare/
-
-
-## Backend
-
-This repository is only the frontend part of Datashare.
-
-Please find the backend here : https://github.com/ICIJ/datashare.
-
-
-## Requirements
-
-You need [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed on your machine (tested with version 1.9.4).
-
-Vue CLI requires Node.js version 8.9 or above (8.11.0+ recommended) [[source](https://cli.vuejs.org/guide/installation.html)].
-
-Tested with Node.js LTS 10.15.2.
-
-## Install
-
-* Install system dependencies for [canvas support](https://github.com/Automattic/node-canvas) in testing environement:
-
-```
-sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
-```
-
-* Install [Vue CLI](https://cli.vuejs.org/):
-
-```
-sudo yarn global add @vue/cli
-```
+You need [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed on your machine (tested with version 1.22) and Node.js 16 or above (16.16.0 recommended).
 
 * Install dependencies:
 
@@ -52,6 +35,16 @@ yarn
 ```
 yarn serve
 ```
+
+## Datashare **backend**
+
+Datashare backend allows to index, find names and provide file preview or download. It must be run alongside the client for manual testing with the benefits of hot reloading with `yarn serve`.
+
+To run the backend you must:
+
+1. Get and install Datashare from [datashare.icij.org](https://datashare.icij.org/) ;
+1. Refer to the [User Guide](https://icij.gitbook.io/datashare/) if you need help installing Datashare ;
+1. Run Datashare on port `8080` with CORS: `datashare --cors "*" --tcpListenPort 8080`.
 
 
 ## Build Setup
@@ -81,46 +74,3 @@ yarn test
 # generate documentation
 yarn doc
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
-## How to run with datashare backend locally
-
-Datashare backend allows to index, find names and provide file preview or download. It can be run alongside the dev frontend for manual testing with the benefits of hot reloading with `yarn serve`.
-
-You have to either run the backend docker container, or the java code if you are willing to modify the backend code.
-
-There are three parameters to use when using the backend in dev mode :
-
-- run the web server with `-w`
-- allow Cross Origin requests (from the front to the back) with `--cors <pattern>`
-- points to the data directory (where the source files are located, the directory must be called `data`) with `-d`
-
-:warning: Caution : In both case, you need to add "elasticsearch" and "redis" as known hosts in your `/etc/hosts` file, on line 127.0.0.1.
-
-`127.0.0.1 localhost elasticsearch redis`
-
-
-### with docker
-
-You can just use the [datashare.sh](https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/datashare.sh) script that will download and launch the services used by datashare (i.e. redis and elasticsearch) :
-
-```
-cd where/is/your/data
-/path/to/datashare.sh -w --cors '*'
-```
-
-Then the script will ask you where your data is, you can just type enter as by default it is the current directory. And when the NLP models should be stored.
-
-### with java code
-
-There is a shell script [launchBack.sh](https://github.com/ICIJ/datashare/blob/master/launchBack.sh) at the root of the datashare backend repository.
-
-After having compiled java code, you can launch the script with :
-
-```
-./launchBack -d /path/to/data
-```
-
-- ***NOTE 1*** : `/path/to/data` must end with `data`
-- ***NOTE 2*** : the `--cors` is already set in the shell script
