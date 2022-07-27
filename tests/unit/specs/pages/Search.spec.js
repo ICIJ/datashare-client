@@ -4,6 +4,7 @@ import { errors as esErrors } from 'elasticsearch-browser'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import { Core } from '@/core'
 import Search from '@/pages/Search'
 import { state, getters, mutations, actions } from '@/store/modules/search'
@@ -49,7 +50,7 @@ describe('Search.vue', () => {
   it('should redirect to the complete query', async () => {
     const query = 'this is a query'
     await store.commit('search/query', query)
-
+    await flushPromises()
     expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: query } })
   })
 
@@ -66,6 +67,7 @@ describe('Search.vue', () => {
 
     it('should display a button to try again if error is RequestTimeout', async () => {
       await store.commit('search/error', new esErrors.RequestTimeout())
+      await flushPromises()
       expect(wrapper.find('b-button-stub').exists()).toBeTruthy()
     })
   })
@@ -83,6 +85,7 @@ describe('Search.vue', () => {
       await store.commit('search/isReady', false)
       await new Promise(resolve => setTimeout(resolve, 5500))
       await store.commit('search/isReady', true)
+      await flushPromises()
       expect(wrapper.vm.$Progress.get()).toBe(100)
       expect(wrapper.vm.intervalId).toBe(-1)
     })
