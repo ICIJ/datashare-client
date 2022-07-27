@@ -20,13 +20,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @use "sass:math";
+
   .widget--empty {
     width: 100%;
 
     &:before {
       content: "";
       display: block;
-      padding-top: 9/16 * 100%;
+      padding-top: math.div(9, 16) * 100%;
     }
 
     &:after {

@@ -124,6 +124,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @use "sass:math";
+
   .filters-panel {
     $card-bg: darken($app-context-sidebar-bg, 5%);
     $panel-color: $app-sidebar-color;
@@ -141,7 +143,7 @@ export default {
 
       &__toolbar {
         font-size: $font-size-sm;
-        line-height: $line-height-base * (1 - (85 - 95) / 95);
+        line-height: $line-height-base * 1 - math.div(85 - 95, 95);
         padding: $spacer 0 0 $spacer;
 
         .custom-control-input:checked ~ .custom-control-label::before {
@@ -150,7 +152,7 @@ export default {
         }
       }
 
-      &::v-deep .card {
+      &:deep(.card) {
         background: $card-bg;
         border-width: 0;
         color: $panel-color;

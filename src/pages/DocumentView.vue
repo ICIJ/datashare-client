@@ -305,7 +305,7 @@ export default {
         color: white;
       }
 
-      &--has-subject ::v-deep .document-sliced-name {
+      &--has-subject:deep(.document-sliced-name) {
         font-size: 1rem;
         opacity: 0.5;
       }

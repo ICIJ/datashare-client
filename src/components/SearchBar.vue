@@ -298,7 +298,7 @@ export default {
     &__input.form-control {
       border-right: 0;
 
-      &:focus + .input-group-append .search-bar__field &::v-deep .btn,
+      &:focus + .input-group-append .search-bar__field &:deep(.btn),
       &:focus + .input-group-append .search-bar__tips-addon {
         border-bottom-color: $input-focus-border-color;
         border-top-color: $input-focus-border-color;
@@ -324,7 +324,7 @@ export default {
         top: 1px;
       }
 
-      &::v-deep .btn {
+      &:deep(.btn) {
         border: 1px solid $input-border-color;
         border-left: 0;
         box-shadow: $input-box-shadow;
@@ -384,7 +384,7 @@ export default {
       border-radius: 0 0 $input-border-radius $input-border-radius;
       display: block;
       font-size: 0.9rem;
-      padding: $spacer / 2 0 0;
+      padding: $spacer * 0.5 0 0;
       z-index: 100;
     }
 

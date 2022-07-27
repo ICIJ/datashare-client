@@ -380,7 +380,7 @@ export default {
           top: 1px;
         }
 
-        & ::v-deep .btn {
+        &:deep(.btn) {
           border: 1px solid $input-border-color;
           border-left: 0;
           box-shadow: $input-box-shadow;
@@ -399,11 +399,11 @@ export default {
       overflow: hidden;
       position: static;
 
-      & ::v-deep .table-responsive {
+      &:deep(.table-responsive) {
         margin: 0;
       }
 
-      & ::v-deep table {
+      &:deep(table) {
         margin: 0;
 
         thead th {

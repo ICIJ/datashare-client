@@ -96,12 +96,12 @@ export default {
 
 <style scoped lang="scss">
  .filter {
-    & ::v-deep.custom-control-label span {
+    & :deep.custom-control-label span {
       padding: 0 $spacer-xxs;
     }
 
-    & ::v-deep.custom-control-input[disabled]:checked ~ .custom-control-label,
-    & ::v-deep.custom-control-input:disabled:checked ~ .custom-control-label {
+    & :deep.custom-control-input[disabled]:checked ~ .custom-control-label,
+    & :deep.custom-control-input:disabled:checked ~ .custom-control-label {
       color: inherit;
       font-weight: bold;
     }

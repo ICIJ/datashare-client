@@ -179,7 +179,7 @@ export default {
       &__sort {
         z-index: 1001;
 
-        &::v-deep .btn.dropdown-toggle {
+        &:deep(.btn.dropdown-toggle) {
           color: white;
           text-decoration: none;
         }

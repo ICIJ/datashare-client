@@ -85,7 +85,7 @@ export default {
   .widget--duplicates {
     width: 100%;
 
-    & ::v-deep .stacked-bar-chart__groups__item__label {
+    &:deep(.stacked-bar-chart__groups__item__label) {
       display: none;
     }
   }

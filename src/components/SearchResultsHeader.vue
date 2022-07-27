@@ -255,14 +255,14 @@ export default {
       }
 
       &__size  {
-        &::v-deep &__toggler {
+        &:deep(&__toggler) {
           display: flex;
           align-items: center;
           gap: 0.5em;
           width :172px;
         }
 
-        &::v-deep &__toogler__hits {
+        &:deep(&__toogler__hits) {
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;

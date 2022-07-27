@@ -81,6 +81,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @use "sass:math";
+
   .search-results-list {
     background: white;
     border-radius: $card-border-radius;
@@ -89,7 +91,7 @@ export default {
       background: $tertiary;
       color: white;
       font-size: 0.85rem;
-      line-height: $line-height-base * (1 - (85 - 95) / 95);
+      line-height: $line-height-base * (1 - math.div(85 - 95, 95));
       padding: 0.5rem 0;
 
       &.slide-up-enter-active, &.slide-up-leave-active {
@@ -124,13 +126,13 @@ export default {
           margin: $spacer;
           visibility: hidden;
 
-          &::v-deep .btn {
+          &:deep(.btn) {
             font-size: 0.9rem;
             padding: $spacer * 0.10 $spacer * 0.25;
             transition: none;
           }
 
-          &::v-deep .document-actions__star {
+          &:deep(.document-actions__star) {
             &.starred {
               border-color: transparent;
               box-shadow: none;
@@ -142,7 +144,7 @@ export default {
         &:hover &__actions {
           visibility: visible;
 
-          &::v-deep .btn {
+          &:deep(.btn) {
             background: white;
             border-color: $primary;
           }

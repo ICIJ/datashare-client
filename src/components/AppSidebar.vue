@@ -270,7 +270,7 @@ export default {
   .app-sidebar {
     background: $app-sidebar-bg;
     bottom: 0;
-    box-shadow: 0 0 $app-sidebar-width / 2 0 #000;
+    box-shadow: 0 0 $app-sidebar-width * 0.5 0 #000;
     color: $app-sidebar-color;
     height: 100vh;
     left: 0;
@@ -409,7 +409,7 @@ export default {
 
           &:last-of-type &__link--tree:before {
             transform: none;
-            height: calc(50% + #{$item-tree-width / 2});
+            height: calc(50% + #{$item-tree-width * 0.5});
             top: 0;
           }
 
@@ -480,7 +480,7 @@ export default {
               &:before {
                 content: "";
                 position: absolute;
-                right: calc(100% + #{$spacer / 2});
+                right: calc(100% + #{$spacer * 0.5});
                 top: 50%;
                 transform: translateY(-50%);
                 width: $item-tree-width;
@@ -496,7 +496,7 @@ export default {
                 transform: translateY(-50%);
                 height: $item-tree-width;
                 background: $item-tree-color;
-                width: $spacer / 2;
+                width: $spacer * 0.5;
               }
             }
 
