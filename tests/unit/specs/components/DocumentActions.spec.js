@@ -1,10 +1,12 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import DocumentActions from '@/components/DocumentActions'
-import { Core } from '@/core'
+import { flushPromises } from 'tests/unit/tests_utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
+import DocumentActions from '@/components/DocumentActions'
+import { Core } from '@/core'
 
 jest.mock('axios', () => {
   return {
@@ -31,7 +33,8 @@ describe('DocumentActions.vue', () => {
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
-    await store.commit('starred/documents', [document])
+    store.commit('starred/documents', [document])
+    await flushPromises()
 
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
@@ -47,7 +50,8 @@ describe('DocumentActions.vue', () => {
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
-    await store.commit('starred/pushDocument', document)
+    store.commit('starred/pushDocument', document)
+    await flushPromises()
 
     expect(wrapper.vm.starredDocuments).toEqual([{ id: document.id, index: document.index }])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
