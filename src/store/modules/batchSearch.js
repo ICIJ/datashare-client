@@ -48,10 +48,10 @@ export const actions = {
     }
     return commit('batchSearch', batchSearch)
   },
-  async getBatchSearches ({ commit }, { from = 0, size = 100, sort = 'batch_date', order = 'asc', query = '*', field = 'all' }) {
+  async getBatchSearches ({ commit }, { from = 0, size = 100, sort = 'batch_date', order = 'asc', query = '*', field = 'all', batchDate = [] }) {
     let batchSearches = []
     try {
-      batchSearches = await api.getBatchSearches(from, size, sort, order, query, field)
+      batchSearches = await api.getBatchSearches(from, size, sort, order, query, field, batchDate)
     } catch (_) {
       batchSearches = {
         items: [],
