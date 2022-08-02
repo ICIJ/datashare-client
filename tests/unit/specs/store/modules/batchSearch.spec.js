@@ -41,7 +41,7 @@ describe('BatchSearchStore', () => {
 
     it('should retrieve all the batchSearches', async () => {
       axios.request.mockResolvedValue({ data: { items: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'], total: 3 } })
-      const data = { from: 0, size: 10, sort: 'batch_date', order: 'asc', query: '*', field: 'all' }
+      const data = { from: 0, size: 10, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: [] }
 
       await store.dispatch('batchSearch/getBatchSearches', data)
 
@@ -79,7 +79,7 @@ describe('BatchSearchStore', () => {
         url: Api.getFullUrl('/api/batch/search/project1,project2')
       }))
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        data: { from: 0, size: 100, sort: 'batch_date', order: 'asc', query: '*', field: 'all' },
+        data: { from: 0, size: 100, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: [] },
         method: 'POST',
         url: Api.getFullUrl('/api/batch/search')
       }))
