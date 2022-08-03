@@ -44,7 +44,7 @@
             class="card border-top-0"
             tbody-tr-class="batch-search__items__item"
             thead-tr-class="text-nowrap"
-            :fields="fieldsIfAnyItem"
+            :fields="fieldsIfAnyItemOrFilter"
             :items="batchSearches"
             :sort-by="sortBy"
             :sort-desc="orderBy"
@@ -72,6 +72,30 @@
             </template>
             <template v-slot:cell(state)="{ item }">
               <batch-search-status :batch-search="item" />
+            </template>
+            <template v-slot:head(date)="{ field }">
+              <span>
+                {{ field.label }}
+              </span>
+              <b-btn radius variant="outline" id="batch-search__items__header__filter-date-toggle">
+                <fa icon="filter" id="batch-search__items__header__filter-date-toggle"/>
+              </b-btn>
+              <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedDateRange">
+                {{  }}
+              </b-badge>
+              <b-popover custom-class="popover-body-p-0"
+                         lazy
+                         target="batch-search__items__header__filter-date-toggle"
+                         triggers="focus">
+                <date-picker
+                  is-range
+                  color="gray"
+                  v-model="selectedDateRange"
+                  :model-config="{ type: 'number' }"
+                  :locale="locale"
+                  :key="locale">
+                </date-picker>
+              </b-popover>
             </template>
             <template v-slot:cell(date)="{ item }">
               <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
@@ -119,11 +143,13 @@ import UserDisplay from '@/components/UserDisplay'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
+import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
 export default {
   name: 'BatchSearches',
   mixins: [polling, utils],
   components: {
+    DatePicker,
     BatchSearchForm,
     BatchSearchStatus,
     UserDisplay
@@ -136,7 +162,8 @@ export default {
       perPage: settings.batchSearch.size,
       query: '',
       search: '',
-      sort: settings.batchSearch.sort
+      sort: settings.batchSearch.sort,
+      selectedDateRange: null
     }
   },
   computed: {
@@ -188,8 +215,8 @@ export default {
       }
       return options
     },
-    fieldsIfAnyItem () {
-      if (this.batchSearches.length) {
+    fieldsIfAnyItemOrFilter () {
+      if (this.batchSearches.length || this.hasActiveFilter) {
         return this.fields
       }
       return []
@@ -244,7 +271,10 @@ export default {
       return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasActiveFilter () {
-      return this.query !== ''
+      return this.query !== '' || this.selectedDateRange !== null
+    },
+    locale () {
+      return this.$i18n.locale
     }
   },
   watch: {
@@ -259,6 +289,9 @@ export default {
     },
     query () {
       this.fetchWithLoader()
+    },
+    selectedDateRange () {
+      this.fetchWithLoader()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -269,6 +302,9 @@ export default {
       vm.$set(vm, 'query', get(to, 'query.query', vm.query))
       vm.$set(vm, 'field', get(to, 'query.field', vm.field))
       vm.$set(vm, 'search', get(to, 'query.query', vm.search))
+      if (vm.selectedDateRange) {
+        vm.$set(vm, 'batchDate', get(to, 'query.batchDate', [`${vm.selectedDateRange.start}`, `${vm.selectedDateRange.end}`]))
+      }
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -278,6 +314,9 @@ export default {
     this.$set(this, 'query', get(to, 'query.query', this.query))
     this.$set(this, 'field', get(to, 'query.field', this.field))
     this.$set(this, 'search', get(to, 'query.query', this.search))
+    if (this.selectedDateRange) {
+      this.$set(this, 'batchDate', get(to, 'query.batchDate', [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`]))
+    }
     next()
   },
   async mounted () {
@@ -297,11 +336,12 @@ export default {
       sort = this.sort,
       order = this.order,
       query = this.query,
-      field = this.field
+      field = this.field,
+      batchDate = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
     }) {
       return {
         name: 'batch-search',
-        query: { page, sort, order, query, field }
+        query: { page, sort, order, query, field, batchDate }
       }
     },
     sortChanged (ctx) {
@@ -313,7 +353,8 @@ export default {
     async fetch () {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field }
+      const dateRange = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
+      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field, batchDate: dateRange }
       await this.$store.dispatch('batchSearch/getBatchSearches', params)
     },
     async fetchWithLoader () {

@@ -91,7 +91,7 @@ describe('BatchSearch.vue', () => {
       expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all' }
+        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all', batchDate: null }
       })
     })
 
@@ -104,7 +104,7 @@ describe('BatchSearch.vue', () => {
 
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
+        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all', batchDate: null }
       })
     })
 
@@ -156,6 +156,17 @@ describe('BatchSearch.vue', () => {
       await wrapper.vm.fetchWithLoader()
 
       expect(wrapper.find('.batch-search__items__item__no-item-filtered').exists()).toBeTruthy()
+    })
+
+    it('should redirect to the batch search page with the date filter', async () => {
+      jest.spyOn(store, 'dispatch')
+
+      await wrapper.setData({ selectedDateRange: { start: 1546253843460, end: 1546599443460 } })
+
+      expect(store.dispatch).toBeCalled()
+      expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
+        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: ['1546253843460', '1546599443460']
+      })
     })
   })
 

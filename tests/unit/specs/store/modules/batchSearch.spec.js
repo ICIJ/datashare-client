@@ -79,7 +79,7 @@ describe('BatchSearchStore', () => {
         url: Api.getFullUrl('/api/batch/search/project1,project2')
       }))
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        data: { from: 0, size: 100, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: [] },
+        data: { from: 0, size: 100, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: null },
         method: 'POST',
         url: Api.getFullUrl('/api/batch/search')
       }))
