@@ -2,11 +2,15 @@
   <div class="batch-search h-100">
     <div class="container pt-4">
       <div class="container-fluid p-0">
-        <b-btn @click="$refs['batch-search-form'].show()" variant="primary" class="float-right">
+        <b-btn @click="$refs['batch-search-form'].show()" variant="primary" class="float-right ml-2">
           <fa icon="plus" class="mr-1"></fa>
           {{ $t('batchSearch.heading') }}
         </b-btn>
-        <form class="batch-search__search-bar " @submit.prevent="searchBatchsearches">
+        <b-btn class="float-right ml-2" variant="light" @click="deleteFilters">
+          <fa icon="filter-circle-xmark" />
+          {{ $t('batchSearch.deleteFilters') }}
+        </b-btn>
+        <form class="batch-search__search-bar" @submit.prevent="searchBatchsearches">
           <div class="d-flex align-items-left w-50">
             <div class="input-group">
               <input
@@ -389,6 +393,11 @@ export default {
       } else {
         return item.projects.map(project => project.name).join(', ')
       }
+    },
+    deleteFilters () {
+      this.$set(this, 'query', '')
+      this.$set(this, 'search', '')
+      this.$set(this, 'selectedDateRange', null)
     },
     moment
   }

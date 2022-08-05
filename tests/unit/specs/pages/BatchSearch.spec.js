@@ -168,6 +168,17 @@ describe('BatchSearch.vue', () => {
         from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: ['1546253843460', '1546599443460']
       })
     })
+
+    it('should delete the current filters', async () => {
+      const query = 'this is my new query'
+      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 } })
+
+      await wrapper.vm.deleteFilters()
+
+      expect(wrapper.vm.query).toEqual('')
+      expect(wrapper.vm.search).toEqual('')
+      expect(wrapper.vm.selectedDateRange).toBeNull()
+    })
   })
 
   describe('SERVER mode', () => {
