@@ -1,37 +1,37 @@
 <template>
   <div class="batch-search h-100">
     <div class="container pt-4 ">
-        <div class="d-flex flex-wrap ">
-          <form class="batch-search__search-bar w-50" @submit.prevent="searchBatchsearches">
-              <div class="input-group">
-                <input
-                  v-model="search"
-                  :placeholder="$t('batchSearch.placeholder')"
-                  class="batch-search__search-bar__input form-control ">
-                <div class="batch-search__search-bar__button input-group-append">
-                  <b-dropdown :text="$t('batchSearch.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
-                    <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key" class="batch-search__search-bar__field__items">
-                      {{ $t('batchSearch.field.' + key) }}
-                    </b-dropdown-item>
-                  </b-dropdown>
-                  <button type="submit" class="btn btn-dark">
-                    {{ $t('search.buttonLabel') }}
-                  </button>
-                </div>
+      <div class="d-flex flex-grow-1 flex-wrap align-items-center ">
+        <form class="batch-search__search-bar col-md-6 px-0 py-2"  @submit.prevent="searchBatchsearches">
+            <div class="input-group">
+              <input
+                v-model="search"
+                :placeholder="$t('batchSearch.placeholder')"
+                class="batch-search__search-bar__input form-control ">
+              <div class="batch-search__search-bar__button input-group-append">
+                <b-dropdown :text="$t('batchSearch.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
+                  <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key" class="batch-search__search-bar__field__items">
+                    {{ $t('batchSearch.field.' + key) }}
+                  </b-dropdown-item>
+                </b-dropdown>
+                <button type="submit" class="btn btn-dark">
+                  {{ $t('search.buttonLabel') }}
+                </button>
               </div>
-          </form>
-          <b-btn class="text-muted " variant="link" @click="deleteFilters">
-            <fa icon="filter-circle-xmark" />
-            {{ $t('batchSearch.clearFilters') }}
-          </b-btn>
-          <b-btn class="ml-auto" @click="$refs['batch-search-form'].show()" variant="primary" >
-            <fa icon="plus" class="mr-1"></fa>
-            {{ $t('batchSearch.heading') }}
-          </b-btn>
-        </div>
+            </div>
+        </form>
+        <b-btn class="text-muted " variant="link"  @click="deleteFilters">
+          <fa icon="filter-circle-xmark" />
+          {{ $t('batchSearch.clearFilters') }}
+        </b-btn>
+        <b-btn class="ml-auto " @click="$refs['batch-search-form'].show()" variant="primary" >
+          <fa icon="plus" class="mr-1"></fa>
+          <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>
+        </b-btn>
         <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
           <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()"></batch-search-form>
         </b-modal>
+      </div>
       <div class="batch-search__items">
         <v-wait for="load batchSearches">
           <div slot="waiting" class="card py-2">
