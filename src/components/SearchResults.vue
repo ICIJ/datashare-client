@@ -13,9 +13,9 @@ export default {
   computed: {
     component () {
       switch (this.layout) {
-        case 'grid': return () => import('@/components/SearchResultsGrid')
-        case 'table': return () => import('@/components/SearchResultsTable')
-        default: return () => import('@/components/SearchResultsList')
+      case 'grid': return () => import('@/components/SearchResultsGrid')
+      case 'table': return () => import('@/components/SearchResultsTable')
+      default: return () => import('@/components/SearchResultsList')
       }
     },
     ...mapState('search', ['layout'])
