@@ -75,8 +75,8 @@
           <span>
             {{ field.label }}
           </span>
-          <b-btn radius variant="outline" class="batch-search__items__header__filter-date-toggle">
-            <fa icon="filter" id="batch-search__items__header__filter-date-toggle"/>
+          <b-btn  variant="outline" id="batch-search__items__header__filter-date-toggle" class="batch-search__items__header__filter-date-toggle">
+            <fa icon="filter" />
           </b-btn>
           <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedDateRange">
             {{  }}
