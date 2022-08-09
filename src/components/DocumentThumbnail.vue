@@ -4,7 +4,7 @@
          class="document-thumbnail__image"
          :src="thumbnailSrc"
          v-if="isActivated">
-    <span class="document-thumbnail__placeholder" v-if="!loaded">
+    <span class="document-thumbnail__placeholder" v-if="!loaded && document.contentTypeIcon">
       <fa :icon="document.contentTypeIcon"></fa>
     </span>
   </div>
