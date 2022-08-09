@@ -1,6 +1,5 @@
 <template>
-  <div class="batch-search h-100">
-    <div class="container pt-4 d-flex flex-column">
+  <div class="batch-search container h-100">
         <div class="d-flex flex-grow-1 flex-wrap align-items-center ">
           <form class="batch-search__search-bar col-md-6 px-0 py-2"  @submit.prevent="searchBatchsearches">
               <div class="input-group">
@@ -32,101 +31,103 @@
             <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()"></batch-search-form>
           </b-modal>
         </div>
-          <v-wait for="load batchSearches" class="batch-search__items card">
-            <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" />
-            <b-table
-              hover
-              no-sort-reset
-              responsive
-              show-empty
-              striped
-              tbody-tr-class="batch-search__items__item"
-              thead-tr-class="text-nowrap"
-              :fields="fieldsIfAnyItemOrFilter"
-              :items="batchSearches"
-              :sort-by="sortBy"
-              :sort-desc="orderBy"
-              @sort-changed="sortChanged">
-              <template #empty v-if="!this.hasActiveFilter">
-                <p class="batch-search__items__item__no-item text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
-              </template>
-              <template #empty v-else>
-                <p class="batch-search__items__item__no-item-filtered text-center m-0" v-html="$t('batchSearch.emptyWithFilter')"></p>
-              </template>
-              <template v-slot:cell(name)="{ item }">
-                <router-link
-                  :to="generateTo(item)"
-                  class="batch-search__items__item__link">
-                  {{ item.name }}
-                </router-link>
-                <p class="m-0 text-muted small">
-                  {{ item.description }}
-                </p>
-              </template>
-              <template v-slot:cell(queries)="{ item }">
-                <span class="batch-search__items__item__queries">
-                  {{ $n(item.nbQueries) }}
-                </span>
-              </template>
-              <template v-slot:cell(state)="{ item }">
-                <batch-search-status :batch-search="item" />
-              </template>
-              <template v-slot:head(date)="{ field }">
-                <span>
-                  {{ field.label }}
-                </span>
-                <b-btn radius variant="outline" id="batch-search__items__header__filter-date-toggle">
-                  <fa icon="filter" id="batch-search__items__header__filter-date-toggle"/>
-                </b-btn>
-                <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedDateRange">
-                  {{  }}
-                </b-badge>
-                <b-popover custom-class="popover-body-p-0"
-                          lazy
-                          target="batch-search__items__header__filter-date-toggle"
-                          triggers="focus">
-                  <date-picker
-                    is-range
-                    color="gray"
-                    v-model="selectedDateRange"
-                    :model-config="{ type: 'number' }"
-                    :locale="locale"
-                    :key="locale">
-                  </date-picker>
-                </b-popover>
-              </template>
-              <template v-slot:cell(date)="{ item }">
-                <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
-                  {{ moment(item.date).locale($i18n.locale).format('LL') }}
-                </span>
-              </template>
-              <!-- eslint-disable-next-line vue/valid-v-slot -->
-              <template v-slot:cell(user.id)="{ item }">
-                <user-display :username="item.user.id" v-if="item.user" />
-              </template>
-              <template v-slot:cell(nbResults)="{ item }">
-                <span class="batch-search__items__item__results">
-                  {{ $n(item.nbResults) }}
-                </span>
-              </template>
-              <template v-slot:cell(published)="{ item }">
-                {{ item.published ? $t('global.yes') : $t('global.no') }}
-              </template>
-              <template v-slot:cell(projects)="{ item }">
-                <span class="batch-search__items__item__projects text-truncate" v-b-tooltip.hover :title="getProjectsNames(item)">
-                  {{ getProjectsNames(item) }}
-                </span>
-              </template>
-            </b-table>
-            <b-pagination-nav
-              class="mt-2"
-              :link-gen="linkGen"
-              :number-of-pages="numberOfPages"
-              use-router
-              v-if="numberOfPages > 1"></b-pagination-nav>
-          </v-wait>
+        <v-wait for="load batchSearches" class="batch-search__items card">
+          <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" />
+          <div class="">
+          <b-table
+            hover
+            no-sort-reset
+            responsive
+            show-empty
+            striped
+            tbody-tr-class="batch-search__items__item"
+            thead-tr-class="text-nowrap"
+            :fields="fieldsIfAnyItemOrFilter"
+            :items="batchSearches"
+            :sort-by="sortBy"
+            :sort-desc="orderBy"
+            @sort-changed="sortChanged">
+            <template #empty v-if="!this.hasActiveFilter">
+              <p class="batch-search__items__item__no-item text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
+            </template>
+            <template #empty v-else>
+              <p class="batch-search__items__item__no-item-filtered text-center m-0" v-html="$t('batchSearch.emptyWithFilter')"></p>
+            </template>
+            <template v-slot:cell(name)="{ item }">
+              <router-link
+                :to="generateTo(item)"
+                class="batch-search__items__item__link">
+                {{ item.name }}
+              </router-link>
+              <p class="m-0 text-muted small">
+                {{ item.description }}
+              </p>
+            </template>
+            <template v-slot:cell(queries)="{ item }">
+              <span class="batch-search__items__item__queries">
+                {{ $n(item.nbQueries) }}
+              </span>
+            </template>
+            <template v-slot:cell(state)="{ item }">
+              <batch-search-status :batch-search="item" />
+            </template>
+            <template v-slot:head(date)="{ field }">
+              <span>
+                {{ field.label }}
+              </span>
+              <b-btn radius variant="outline" id="batch-search__items__header__filter-date-toggle">
+                <fa icon="filter" id="batch-search__items__header__filter-date-toggle"/>
+              </b-btn>
+              <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedDateRange">
+                {{  }}
+              </b-badge>
+              <b-popover custom-class="popover-body-p-0"
+                        lazy
+                        target="batch-search__items__header__filter-date-toggle"
+                        triggers="focus">
+                <date-picker
+                  is-range
+                  color="gray"
+                  v-model="selectedDateRange"
+                  :model-config="{ type: 'number' }"
+                  :locale="locale"
+                  :key="locale">
+                </date-picker>
+              </b-popover>
+            </template>
+            <template v-slot:cell(date)="{ item }">
+              <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
+                {{ moment(item.date).locale($i18n.locale).format('LL') }}
+              </span>
+            </template>
+            <!-- eslint-disable-next-line vue/valid-v-slot -->
+            <template v-slot:cell(user.id)="{ item }">
+              <user-display :username="item.user.id" v-if="item.user" />
+            </template>
+            <template v-slot:cell(nbResults)="{ item }">
+              <span class="batch-search__items__item__results">
+                {{ $n(item.nbResults) }}
+              </span>
+            </template>
+            <template v-slot:cell(published)="{ item }">
+              {{ item.published ? $t('global.yes') : $t('global.no') }}
+            </template>
+            <template v-slot:cell(projects)="{ item }">
+              <span class="batch-search__items__item__projects text-truncate" v-b-tooltip.hover :title="getProjectsNames(item)">
+                {{ getProjectsNames(item) }}
+              </span>
+            </template>
+          </b-table>
 
-    </div>
+          </div>
+          <b-pagination-nav
+            class="mt-2"
+            :link-gen="linkGen"
+            :number-of-pages="numberOfPages"
+            use-router
+            v-if="numberOfPages > 1"></b-pagination-nav>
+        </v-wait>
+
   </div>
 </template>
 
@@ -400,6 +401,7 @@ export default {
 
 <style lang="scss" scoped>
   .batch-search {
+    display: grid;
     &__search-bar {
       &__input {
         border-radius: 1.5em 0 0 1.5rem;
