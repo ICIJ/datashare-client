@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-search container h-100">
+  <div class="batch-search container h-100 pt-4">
     <div class="d-flex flex-wrap align-items-center ">
       <form class="batch-search__search-bar col-md-6 px-0 py-2"  @submit.prevent="searchBatchsearches">
           <div class="input-group">
@@ -454,6 +454,7 @@ export default {
         thead th {
           white-space: nowrap;
           vertical-align: middle;
+          border-top:none;
         }
       }
 
