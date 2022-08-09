@@ -91,7 +91,7 @@ describe('BatchSearch.vue', () => {
       expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all', batchDate: null }
+        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all', batchDate: null, project: [] }
       })
     })
 
@@ -104,7 +104,7 @@ describe('BatchSearch.vue', () => {
 
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all', batchDate: null }
+        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all', batchDate: null, project: [] }
       })
     })
 
@@ -165,7 +165,19 @@ describe('BatchSearch.vue', () => {
 
       expect(store.dispatch).toBeCalled()
       expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: ['1546253843460', '1546599443460']
+        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: ['1546253843460', '1546599443460'], project: []
+      })
+    })
+
+    it('should redirect to the batch search page with the project filter', async () => {
+      jest.spyOn(store, 'dispatch')
+
+      await wrapper.setData({ selectedProjects: ['project_02'] })
+      await wrapper.vm.fetchWithLoader()
+
+      expect(store.dispatch).toBeCalled()
+      expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
+        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: ['project_02']
       })
     })
 

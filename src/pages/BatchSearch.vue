@@ -287,13 +287,13 @@ export default {
       return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasActiveFilter () {
-      return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects !== null
+      return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects.length
     },
     locale () {
       return this.$i18n.locale
     },
     projects () {
-      return this.$store.state.search.indices
+      return this.$core.projects
     }
   },
   watch: {
@@ -324,7 +324,7 @@ export default {
       if (vm.selectedDateRange) {
         vm.$set(vm, 'batchDate', get(to, 'query.batchDate', [`${vm.selectedDateRange.start}`, `${vm.selectedDateRange.end}`]))
       }
-      if (vm.selectedProjects) {
+      if (vm.selectedProjects.length) {
         vm.$set(vm, 'project', get(to, 'query.project', vm.selectedProjects))
       }
     })
@@ -339,7 +339,7 @@ export default {
     if (this.selectedDateRange) {
       this.$set(this, 'batchDate', get(to, 'query.batchDate', [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`]))
     }
-    if (this.selectedProjects) {
+    if (this.selectedProjects.length) {
       this.$set(this, 'project', get(to, 'query.project', this.selectedProjects))
     }
     next()
@@ -362,7 +362,7 @@ export default {
       order = this.order,
       query = this.query,
       field = this.field,
-      project = this.project,
+      project = this.selectedProjects,
       batchDate = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
     }) {
       return {
