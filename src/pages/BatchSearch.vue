@@ -71,6 +71,27 @@
         <template v-slot:cell(state)="{ item }">
           <batch-search-status :batch-search="item" />
         </template>
+        <template v-slot:head(projects)="{ field }">
+              <span>
+                {{ field.label }}
+              </span>
+          <b-btn radius variant="outline" id="batch-search__items__header__filter-project-toggle">
+            <fa icon="filter"/>
+          </b-btn>
+          <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedProjects.length > 0">
+            {{ }}
+          </b-badge>
+          <b-popover custom-class="popover-body-p-0"
+                     lazy
+                     target="batch-search__items__header__filter-project-toggle"
+                     triggers="focus">
+            <b-form-checkbox-group v-model="selectedProjects" stacked debounce="2000">
+              <b-form-checkbox v-for="project in projects" :key="project" :value="project" :disabled="isItemDisabled(projects, project)">
+                {{ project }}
+              </b-form-checkbox>
+            </b-form-checkbox-group>
+          </b-popover>
+        </template>
         <template v-slot:head(date)="{ field }">
           <span>
             {{ field.label }}
@@ -161,7 +182,8 @@ export default {
       query: '',
       search: '',
       sort: settings.batchSearch.sort,
-      selectedDateRange: null
+      selectedDateRange: null,
+      selectedProjects: []
     }
   },
   computed: {
@@ -269,10 +291,13 @@ export default {
       return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasActiveFilter () {
-      return this.query !== '' || this.selectedDateRange !== null
+      return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects !== null
     },
     locale () {
       return this.$i18n.locale
+    },
+    projects () {
+      return this.$store.state.search.indices
     }
   },
   watch: {
@@ -290,6 +315,9 @@ export default {
     },
     selectedDateRange () {
       this.fetchWithLoader()
+    },
+    selectedProjects () {
+      this.fetchWithLoader()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -303,6 +331,9 @@ export default {
       if (vm.selectedDateRange) {
         vm.$set(vm, 'batchDate', get(to, 'query.batchDate', [`${vm.selectedDateRange.start}`, `${vm.selectedDateRange.end}`]))
       }
+      if (vm.selectedProjects) {
+        vm.$set(vm, 'project', get(to, 'query.project', vm.selectedProjects))
+      }
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -314,6 +345,9 @@ export default {
     this.$set(this, 'search', get(to, 'query.query', this.search))
     if (this.selectedDateRange) {
       this.$set(this, 'batchDate', get(to, 'query.batchDate', [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`]))
+    }
+    if (this.selectedProjects) {
+      this.$set(this, 'project', get(to, 'query.project', this.selectedProjects))
     }
     next()
   },
@@ -335,11 +369,12 @@ export default {
       order = this.order,
       query = this.query,
       field = this.field,
+      project = this.project,
       batchDate = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
     }) {
       return {
         name: 'batch-search',
-        query: { page, sort, order, query, field, batchDate }
+        query: { page, sort, order, query, field, project, batchDate }
       }
     },
     sortChanged (ctx) {
@@ -352,7 +387,7 @@ export default {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
       const dateRange = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
-      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field, batchDate: dateRange }
+      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field, project: this.selectedProjects, batchDate: dateRange }
       await this.$store.dispatch('batchSearch/getBatchSearches', params)
     },
     async fetchWithLoader () {
@@ -392,6 +427,10 @@ export default {
       this.$set(this, 'query', '')
       this.$set(this, 'search', '')
       this.$set(this, 'selectedDateRange', null)
+      this.$set(this, 'selectedProjects', [])
+    },
+    isItemDisabled (list, item) {
+      return list.length === 1 && list[0] === item
     },
     moment
   }

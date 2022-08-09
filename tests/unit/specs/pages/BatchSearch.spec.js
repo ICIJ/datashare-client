@@ -171,13 +171,14 @@ describe('BatchSearch.vue', () => {
 
     it('should delete the current filters', async () => {
       const query = 'this is my new query'
-      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 } })
+      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })
 
       await wrapper.vm.deleteFilters()
 
       expect(wrapper.vm.query).toEqual('')
       expect(wrapper.vm.search).toEqual('')
       expect(wrapper.vm.selectedDateRange).toBeNull()
+      expect(wrapper.vm.selectedProjects).toHaveLength(0)
     })
   })
 
