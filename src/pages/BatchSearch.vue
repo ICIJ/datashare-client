@@ -84,12 +84,8 @@
           <b-popover custom-class="popover-body-p-0"
                      lazy
                      target="batch-search__items__header__filter-project-toggle"
-                     triggers="focus">
-            <b-form-checkbox-group v-model="selectedProjects" stacked debounce="2000">
-              <b-form-checkbox v-for="project in projects" :key="project" :value="project" :disabled="isItemDisabled(projects, project)">
-                {{ project }}
-              </b-form-checkbox>
-            </b-form-checkbox-group>
+                     triggers="click">
+            <selectable-dropdown v-if=" projects.length" deactivate-keys v-model="selectedProjects" multiple :items="projects"></selectable-dropdown>
           </b-popover>
         </template>
         <template v-slot:head(date)="{ field }">
@@ -314,9 +310,6 @@ export default {
       this.fetchWithLoader()
     },
     selectedDateRange () {
-      this.fetchWithLoader()
-    },
-    selectedProjects () {
       this.fetchWithLoader()
     }
   },
