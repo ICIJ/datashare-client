@@ -75,7 +75,7 @@
               <span>
                 {{ field.label }}
               </span>
-          <b-btn radius variant="outline" id="batch-search__items__header__filter-project-toggle">
+          <b-btn radius variant="outline" id="batch-search__items__header__filter-project-toggle" class="batch-search__items__header__filter-date-toggle">
             <fa icon="filter"/>
           </b-btn>
           <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedProjects.length > 0">
@@ -85,7 +85,7 @@
                      lazy
                      target="batch-search__items__header__filter-project-toggle"
                      triggers="click">
-            <selectable-dropdown v-if=" projects.length" deactivate-keys v-model="selectedProjects" multiple :items="projects"></selectable-dropdown>
+            <selectable-dropdown deactivate-keys v-model="selectedProjects" multiple :items="projects"/>
           </b-popover>
         </template>
         <template v-slot:head(date)="{ field }">
@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import { compact, find, get, random, some } from 'lodash'
+import { compact, find, random, some } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -287,7 +287,7 @@ export default {
       return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasActiveFilter () {
-      return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects.length
+      return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects.length > 0
     },
     locale () {
       return this.$i18n.locale
@@ -297,52 +297,49 @@ export default {
     }
   },
   watch: {
-    page () {
+    async page () {
       this.fetchWithLoader()
     },
-    sort () {
-      this.fetchWithLoader()
+    async sort () {
+      await this.fetchWithLoader()
     },
-    order () {
-      this.fetchWithLoader()
+    async order () {
+      await this.fetchWithLoader()
     },
-    query () {
-      this.fetchWithLoader()
+    async query () {
+      await this.fetchWithLoader()
     },
-    selectedDateRange () {
-      this.fetchWithLoader()
-    }
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.$set(vm, 'page', parseInt(get(to, 'query.page', vm.page)))
-      vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
-      vm.$set(vm, 'order', get(to, 'query.order', vm.order))
-      vm.$set(vm, 'query', get(to, 'query.query', vm.query))
-      vm.$set(vm, 'field', get(to, 'query.field', vm.field))
-      vm.$set(vm, 'search', get(to, 'query.query', vm.search))
-      if (vm.selectedDateRange) {
-        vm.$set(vm, 'batchDate', get(to, 'query.batchDate', [`${vm.selectedDateRange.start}`, `${vm.selectedDateRange.end}`]))
+    async selectedDateRange (newValue, oldValue) {
+      if (newValue?.start !== oldValue?.start && newValue?.end !== oldValue?.value) {
+        await this.$router.push(this.generateLinkToBatchSearch({}))
       }
-      if (vm.selectedProjects.length) {
-        vm.$set(vm, 'project', get(to, 'query.project', vm.selectedProjects))
-      }
-    })
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.$set(this, 'page', parseInt(get(to, 'query.page', this.page)))
-    this.$set(this, 'sort', get(to, 'query.sort', this.sort))
-    this.$set(this, 'order', get(to, 'query.order', this.order))
-    this.$set(this, 'query', get(to, 'query.query', this.query))
-    this.$set(this, 'field', get(to, 'query.field', this.field))
-    this.$set(this, 'search', get(to, 'query.query', this.search))
-    if (this.selectedDateRange) {
-      this.$set(this, 'batchDate', get(to, 'query.batchDate', [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`]))
+      await this.fetchWithLoader()
+    },
+    $route: {
+      handler (to, from) {
+        // logical-nullish-assignment '??=' : update a variable with a new value,
+        // but only if that variable currently holds a "nullish" value (either null or undefined).
+        this.page ??= parseInt(to.query?.page) ?? 1
+        this.sort ??= to.query?.sort
+        this.order ??= to.query?.order
+        this.query ??= to.query?.query
+        this.field ??= to.query?.field
+        this.search ??= to.query?.query // TODO : there is two get on query.query
+
+        const start = parseInt(to.query?.dateStart)
+        const end = parseInt(to.query?.dateEnd)
+        const hasChanged = this.selectedDateRange?.dateStart !== start && this.selectedDateRange?.dateEnd !== end
+
+        if (hasChanged && !Number.isNaN(start) && !Number.isNaN(end)) {
+          this.$set(this, 'selectedDateRange', { start, end })
+        } else {
+          this.$set(this, 'selectedDateRange', null)
+        }
+
+        this.selectedProjects ??= to.query?.project
+      },
+      immediate: true
     }
-    if (this.selectedProjects.length) {
-      this.$set(this, 'project', get(to, 'query.project', this.selectedProjects))
-    }
-    next()
   },
   async mounted () {
     this.fetchWithLoader()
@@ -363,18 +360,19 @@ export default {
       query = this.query,
       field = this.field,
       project = this.selectedProjects,
-      batchDate = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
+      batchDate = this.selectedDateRange
     }) {
+      const date = batchDate ? { dateStart: batchDate.start, dateEnd: batchDate.end } : null
       return {
         name: 'batch-search',
-        query: { page, sort, order, query, field, project, batchDate }
+        query: { page, sort, order, query, field, project, ...date }
       }
     },
-    sortChanged (ctx) {
+    async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
       const params = { page: this.page, sort, order }
-      return this.$router.push(this.generateLinkToBatchSearch(params))
+      await this.$router.push(this.generateLinkToBatchSearch(params))
     },
     async fetch () {
       const from = (this.page - 1) * this.perPage
@@ -405,7 +403,7 @@ export default {
       return this.generateLinkToBatchSearch({ page })
     },
     searchBatchsearches () {
-      this.$set(this, 'query', this.search)
+      this.query = this.search
       const params = { page: 1, query: this.query }
       return this.$router.push(this.generateLinkToBatchSearch(params))
     },
