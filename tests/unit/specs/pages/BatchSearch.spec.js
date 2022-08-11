@@ -58,9 +58,6 @@ describe('BatchSearch.vue', () => {
     wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
     await flushPromises()
   })
-  afterEach(async () => {
-    await wrapper.setData({})
-  })
   afterAll(() => {
     jest.unmock('@/api')
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
@@ -101,6 +98,12 @@ describe('BatchSearch.vue', () => {
       jest.spyOn(router, 'push')
       const data = { selectedDateRange: { start: 1546253843460, end: 1546599443460 } }
       await wrapper.setData(data)
+      await wrapper.vm.$nextTick()
+      await wrapper.vm.$nextTick()
+      await wrapper.vm.$nextTick()
+      await wrapper.vm.$nextTick()
+      await wrapper.vm.$nextTick()
+      await flushPromises()
 
       expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
@@ -109,7 +112,7 @@ describe('BatchSearch.vue', () => {
       })
     })
 
-    it.skip('should redirect to the batch search page with the new query and the first page', async () => {
+    it('should redirect to the batch search page with the new query and the first page', async () => {
       const query = 'this is my new query'
       jest.spyOn(router, 'push')
       await wrapper.setData({ page: 2, search: query })
@@ -149,24 +152,25 @@ describe('BatchSearch.vue', () => {
       expect(searchSpy).toBeCalledTimes(1)
     })
 
-    it('should display a \'No result\' message when no items', () => {
+    it('should display a \'No result\' message when no items', async () => {
       const state = { batchSearches: [] }
       const actions = { getBatchSearches: jest.fn() }
       const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
 
       wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-
+      await flushPromises()
       expect(wrapper.find('.batch-search__items__item__no-item').exists()).toBeTruthy()
     })
 
-    it.skip('should display a \'No filtered result\' message when no items and filter is on', async () => {
+    it('should display a \'No filtered result\' message when no items and filter is on', async () => {
       const state = { batchSearches: [] }
       const actions = { getBatchSearches: jest.fn() }
       const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
 
       wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-      wrapper.setData({ query: 'test' })
-      await wrapper.vm.fetchWithLoader()
+
+      await wrapper.setData({ query: 'test' })
+      await flushPromises()
 
       expect(wrapper.find('.batch-search__items__item__no-item-filtered').exists()).toBeTruthy()
     })
@@ -197,7 +201,6 @@ describe('BatchSearch.vue', () => {
     it('should delete the current filters', async () => {
       const query = 'this is my new query'
       await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })
-
       await wrapper.vm.deleteFilters()
 
       expect(wrapper.vm.query).toEqual('')

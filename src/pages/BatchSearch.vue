@@ -297,26 +297,25 @@ export default {
     }
   },
   watch: {
-    async page () {
-      this.fetchWithLoader()
+    page () {
+      return this.updateRoute()
     },
-    async sort () {
-      await this.fetchWithLoader()
+    sort () {
+      return this.updateRoute()
     },
-    async order () {
-      await this.fetchWithLoader()
+    order () {
+      return this.updateRoute()
     },
-    async query () {
-      await this.fetchWithLoader()
+    query () {
+      return this.updateRoute()
     },
-    async selectedDateRange (newValue, oldValue) {
-      if (newValue?.start !== oldValue?.start && newValue?.end !== oldValue?.value) {
-        await this.$router.push(this.generateLinkToBatchSearch({}))
-      }
-      await this.fetchWithLoader()
-    },
+    // async selectedDateRange (newValue, oldValue) {
+    //   if (newValue?.start !== oldValue?.start && newValue?.end !== oldValue?.value) {
+    //     await this.updateRoute()
+    //   }
+    // },
     $route: {
-      handler (to, from) {
+      async handler (to, from) {
         // logical-nullish-assignment '??=' : update a variable with a new value,
         // but only if that variable currently holds a "nullish" value (either null or undefined).
         this.page ??= parseInt(to.query?.page) ?? 1
@@ -328,7 +327,7 @@ export default {
 
         const start = parseInt(to.query?.dateStart)
         const end = parseInt(to.query?.dateEnd)
-        const hasChanged = this.selectedDateRange?.dateStart !== start && this.selectedDateRange?.dateEnd !== end
+        const hasChanged = this.selectedDateRange?.start !== start && this.selectedDateRange?.end !== end
 
         if (hasChanged && !Number.isNaN(start) && !Number.isNaN(end)) {
           this.$set(this, 'selectedDateRange', { start, end })
@@ -337,12 +336,11 @@ export default {
         }
 
         this.selectedProjects ??= to.query?.project
+
+        await this.fetchWithLoader()
       },
       immediate: true
     }
-  },
-  async mounted () {
-    this.fetchWithLoader()
   },
   methods: {
     generateTo (item) {
@@ -362,11 +360,14 @@ export default {
       project = this.selectedProjects,
       batchDate = this.selectedDateRange
     }) {
-      const date = batchDate ? { dateStart: batchDate.start, dateEnd: batchDate.end } : null
+      // const date = batchDate ? { dateStart: batchDate.start, dateEnd: batchDate.end } : null
       return {
         name: 'batch-search',
-        query: { page, sort, order, query, field, project, ...date }
+        query: { page, sort, order, query, field, project }
       }
+    },
+    updateRoute () {
+      return this.$router.push(this.generateLinkToBatchSearch({}))
     },
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
@@ -419,9 +420,6 @@ export default {
       this.$set(this, 'search', '')
       this.$set(this, 'selectedDateRange', null)
       this.$set(this, 'selectedProjects', [])
-    },
-    isItemDisabled (list, item) {
-      return list.length === 1 && list[0] === item
     },
     moment
   }
