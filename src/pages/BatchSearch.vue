@@ -295,22 +295,7 @@ export default {
     hasActiveFilter () {
       return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects.length > 0
     },
-    // selectedDateRange2:{
-    //   get(){
-    //     if(this.start && this.end){
-    //       return {
-    //         start:this.start,
-    //         end:this.end
-    //       }
-    //     }else{
-    //       return null
-    //     }
-    //   },
-    //   set(value){
-    //     this.start = value.start
-    //     this.end = value.end
-    //   }
-    // },
+
     locale () {
       return this.$i18n.locale
     },
