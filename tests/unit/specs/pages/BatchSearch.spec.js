@@ -99,7 +99,7 @@ describe('BatchSearch.vue', () => {
       })
     })
     describe('use delete filter', () => {
-      beforeEach(() => {
+      afterEach(() => {
         wrapper.vm.deleteFilters()
       })
       it('should redirect on date changed', async () => {
