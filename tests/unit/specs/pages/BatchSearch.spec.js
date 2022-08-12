@@ -58,6 +58,7 @@ describe('BatchSearch.vue', () => {
     wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
     await flushPromises()
   })
+
   afterEach(async () => {
     wrapper.destroy()
     await flushPromises()
@@ -67,35 +68,7 @@ describe('BatchSearch.vue', () => {
     jest.unmock('@/api')
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
-  describe('delete', () => {
-    let wrapper
-    let router
-    beforeEach(async () => {
-      router = new VueRouter({
-        routes: [
-          {
-            name: 'batch-search',
-            path: 'batch-search'
-          }, {
-            name: 'batch-search.results',
-            path: 'batch-search/:index/:uuid'
-          }
-        ]
-      })
-      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-      await flushPromises()
-    })
-    it('should delete the current filters', async () => {
-      const query = 'this is my new query'
-      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })
-      await wrapper.vm.deleteFilters()
 
-      expect(wrapper.vm.query).toEqual('')
-      expect(wrapper.vm.search).toEqual('')
-      expect(wrapper.vm.selectedDateRange).toBeNull()
-      expect(wrapper.vm.selectedProjects).toHaveLength(0)
-    })
-  })
   describe('common functions', () => {
     beforeAll(async () => {
       Murmur.config.merge({ mode: 'SERVER' })
@@ -227,6 +200,17 @@ describe('BatchSearch.vue', () => {
       expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
         from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: ['project_02']
       })
+    })
+
+    it('should delete the current filters', async () => {
+      const query = 'this is my new query'
+      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })
+      await wrapper.vm.deleteFilters()
+
+      expect(wrapper.vm.query).toEqual('')
+      expect(wrapper.vm.search).toEqual('')
+      expect(wrapper.vm.selectedDateRange).toBeNull()
+      expect(wrapper.vm.selectedProjects).toHaveLength(0)
     })
   })
 
