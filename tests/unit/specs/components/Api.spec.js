@@ -24,6 +24,7 @@ describe('Api.vue', () => {
   beforeEach(() => {
     Murmur.config.merge({ mode: 'SERVER' })
     wrapper = shallowMount(ApiPage, { i18n, localVue, router, store })
+    axios.request.mockClear()
   })
 
   afterAll(() => {
@@ -41,12 +42,11 @@ describe('Api.vue', () => {
 
   it('should request the creation of the API key', async () => {
     wrapper = mount(ApiPage, { i18n, localVue, router, store })
-    axios.request.mockClear()
 
     await wrapper.find('.api .api__create-key .btn').trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(axios.request).toBeCalledTimes(2)
+    expect(axios.request).toBeCalledTimes(3)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/key/doe'),
       method: 'PUT'
