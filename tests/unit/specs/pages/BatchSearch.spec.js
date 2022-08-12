@@ -99,15 +99,15 @@ describe('BatchSearch.vue', () => {
       })
     })
     describe('use delete filter', () => {
-      afterEach(() => {
-        wrapper.vm.deleteFilters()
+      afterEach(async () => {
+        await wrapper.setData({ selectedDateRange: null })
       })
       it('should redirect on date changed', async () => {
         jest.spyOn(router, 'push')
         const data = { selectedDateRange: { start: 1546253843460, end: 1546599443460 } }
         await wrapper.setData(data)
 
-        expect(router.push).toBeCalled()
+        expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith({
           name: 'batch-search',
           query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end, project: [] }
@@ -117,11 +117,12 @@ describe('BatchSearch.vue', () => {
       it('should redirect to the batch search page with the date filter', async () => {
         jest.spyOn(store, 'dispatch')
 
-        await wrapper.setData({ selectedDateRange: { start: 1546253843460, end: 1546599443460 } })
+        const data = { selectedDateRange: { start: 1546253843460, end: 1546599443460 } }
+        await wrapper.setData(data)
 
-        expect(store.dispatch).toBeCalled()
+        expect(store.dispatch).toBeCalledTimes(2)
         expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-          from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: ['1546253843460', '1546599443460'], project: []
+          from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: [`${data.selectedDateRange.start}`, `${data.selectedDateRange.end}`], project: []
         })
       })
     })
