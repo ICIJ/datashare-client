@@ -39,30 +39,63 @@ jest.mock('@/api', () => {
 
 describe('BatchSearch.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const router = new VueRouter({
-    routes: [
-      {
-        name: 'batch-search',
-        path: 'batch-search'
-      }, {
-        name: 'batch-search.results',
-        path: 'batch-search/:index/:uuid'
-      }
-    ]
-  })
   let wrapper = null
-
+  let router = null
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(async () => {
+    router = new VueRouter({
+      routes: [
+        {
+          name: 'batch-search',
+          path: 'batch-search'
+        }, {
+          name: 'batch-search.results',
+          path: 'batch-search/:index/:uuid'
+        }
+      ]
+    })
     wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
     await flushPromises()
   })
+  afterEach(async () => {
+    wrapper.destroy()
+    await flushPromises()
+  })
+
   afterAll(() => {
     jest.unmock('@/api')
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
+  describe('delete', () => {
+    let wrapper
+    let router
+    beforeEach(async () => {
+      router = new VueRouter({
+        routes: [
+          {
+            name: 'batch-search',
+            path: 'batch-search'
+          }, {
+            name: 'batch-search.results',
+            path: 'batch-search/:index/:uuid'
+          }
+        ]
+      })
+      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+      await flushPromises()
+    })
+    it('should delete the current filters', async () => {
+      const query = 'this is my new query'
+      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })
+      await wrapper.vm.deleteFilters()
 
+      expect(wrapper.vm.query).toEqual('')
+      expect(wrapper.vm.search).toEqual('')
+      expect(wrapper.vm.selectedDateRange).toBeNull()
+      expect(wrapper.vm.selectedProjects).toHaveLength(0)
+    })
+  })
   describe('common functions', () => {
     beforeAll(async () => {
       Murmur.config.merge({ mode: 'SERVER' })
@@ -84,7 +117,6 @@ describe('BatchSearch.vue', () => {
 
     it('should redirect on sort changed', async () => {
       jest.spyOn(router, 'push')
-
       await wrapper.vm.sortChanged({ sortBy: 'nbResults', sortDesc: true })
 
       expect(router.push).toBeCalled()
@@ -93,22 +125,31 @@ describe('BatchSearch.vue', () => {
         query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all', project: [] }
       })
     })
+    describe('use delete filter', () => {
+      afterEach(() => {
+        wrapper.vm.deleteFilters()
+      })
+      it('should redirect on date changed', async () => {
+        jest.spyOn(router, 'push')
+        const data = { selectedDateRange: { start: 1546253843460, end: 1546599443460 } }
+        await wrapper.setData(data)
 
-    it('should redirect on date changed', async () => {
-      jest.spyOn(router, 'push')
-      const data = { selectedDateRange: { start: 1546253843460, end: 1546599443460 } }
-      await wrapper.setData(data)
-      await wrapper.vm.$nextTick()
-      await wrapper.vm.$nextTick()
-      await wrapper.vm.$nextTick()
-      await wrapper.vm.$nextTick()
-      await wrapper.vm.$nextTick()
-      await flushPromises()
+        expect(router.push).toBeCalled()
+        expect(router.push).toBeCalledWith({
+          name: 'batch-search',
+          query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end, project: [] }
+        })
+      })
 
-      expect(router.push).toBeCalled()
-      expect(router.push).toBeCalledWith({
-        name: 'batch-search',
-        query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end, project: [] }
+      it('should redirect to the batch search page with the date filter', async () => {
+        jest.spyOn(store, 'dispatch')
+
+        await wrapper.setData({ selectedDateRange: { start: 1546253843460, end: 1546599443460 } })
+
+        expect(store.dispatch).toBeCalled()
+        expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
+          from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: ['1546253843460', '1546599443460'], project: []
+        })
       })
     })
 
@@ -118,6 +159,7 @@ describe('BatchSearch.vue', () => {
       await wrapper.setData({ page: 2, search: query })
       await wrapper.vm.searchBatchsearches()
 
+      expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
         query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all', project: [] }
@@ -175,17 +217,6 @@ describe('BatchSearch.vue', () => {
       expect(wrapper.find('.batch-search__items__item__no-item-filtered').exists()).toBeTruthy()
     })
 
-    it('should redirect to the batch search page with the date filter', async () => {
-      jest.spyOn(store, 'dispatch')
-
-      await wrapper.setData({ selectedDateRange: { start: 1546253843460, end: 1546599443460 } })
-
-      expect(store.dispatch).toBeCalled()
-      expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: ['1546253843460', '1546599443460'], project: []
-      })
-    })
-
     it('should redirect to the batch search page with the project filter', async () => {
       jest.spyOn(store, 'dispatch')
 
@@ -196,17 +227,6 @@ describe('BatchSearch.vue', () => {
       expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
         from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: ['project_02']
       })
-    })
-
-    it('should delete the current filters', async () => {
-      const query = 'this is my new query'
-      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })
-      await wrapper.vm.deleteFilters()
-
-      expect(wrapper.vm.query).toEqual('')
-      expect(wrapper.vm.search).toEqual('')
-      expect(wrapper.vm.selectedDateRange).toBeNull()
-      expect(wrapper.vm.selectedProjects).toHaveLength(0)
     })
   })
 

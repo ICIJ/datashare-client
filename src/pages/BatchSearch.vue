@@ -179,8 +179,14 @@ export default {
       search: '',
       sort: settings.batchSearch.sort,
       selectedDateRange: null,
-      selectedProjects: []
+      selectedProjects: [],
+      start: null,
+      end: null
     }
+  },
+  mounted () {
+    this.setDataFromQueryParams()
+    this.fetchAndRegisterPollWithLoader()
   },
   computed: {
     ...mapState('batchSearch', ['batchSearches', 'total']),
@@ -289,6 +295,22 @@ export default {
     hasActiveFilter () {
       return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects.length > 0
     },
+    // selectedDateRange2:{
+    //   get(){
+    //     if(this.start && this.end){
+    //       return {
+    //         start:this.start,
+    //         end:this.end
+    //       }
+    //     }else{
+    //       return null
+    //     }
+    //   },
+    //   set(value){
+    //     this.start = value.start
+    //     this.end = value.end
+    //   }
+    // },
     locale () {
       return this.$i18n.locale
     },
@@ -298,51 +320,54 @@ export default {
   },
   watch: {
     page () {
-      return this.updateRoute()
+      this.updateRoute()
     },
     sort () {
-      return this.updateRoute()
+      this.updateRoute()
     },
     order () {
-      return this.updateRoute()
+      this.updateRoute()
     },
     query () {
-      return this.updateRoute()
+      this.updateRoute()
     },
-    // async selectedDateRange (newValue, oldValue) {
-    //   if (newValue?.start !== oldValue?.start && newValue?.end !== oldValue?.value) {
-    //     await this.updateRoute()
-    //   }
-    // },
+    async selectedDateRange (newValue, oldValue) {
+      this.updateRoute()
+    },
     $route: {
-      async handler (to, from) {
-        // logical-nullish-assignment '??=' : update a variable with a new value,
-        // but only if that variable currently holds a "nullish" value (either null or undefined).
-        this.page ??= parseInt(to.query?.page) ?? 1
-        this.sort ??= to.query?.sort
-        this.order ??= to.query?.order
-        this.query ??= to.query?.query
-        this.field ??= to.query?.field
-        this.search ??= to.query?.query // TODO : there is two get on query.query
-
-        const start = parseInt(to.query?.dateStart)
-        const end = parseInt(to.query?.dateEnd)
-        const hasChanged = this.selectedDateRange?.start !== start && this.selectedDateRange?.end !== end
-
-        if (hasChanged && !Number.isNaN(start) && !Number.isNaN(end)) {
-          this.$set(this, 'selectedDateRange', { start, end })
-        } else {
-          this.$set(this, 'selectedDateRange', null)
-        }
-
-        this.selectedProjects ??= to.query?.project
-
+      async handler (to) {
+        this.setDataFromQueryParams(to)
         await this.fetchWithLoader()
-      },
-      immediate: true
+      }
     }
   },
   methods: {
+    setDataFromQueryParams (to = this.$route) {
+      // logical-nullish-assignment '??=' : update a variable with a new value,
+      // but only if that variable currently holds a "nullish" value (either null or undefined).
+      this.page ??= parseInt(to.query?.page) ?? 1
+      this.sort ??= to.query?.sort
+      this.order ??= to.query?.order
+      this.query ??= to.query?.query
+      this.field ??= to.query?.field
+      this.search ??= to.query?.query // TODO : there is two get on query.query
+
+      if (to.query?.dateStart && to.query?.dateEnd) {
+        const start = parseInt(to.query?.dateStart)
+        const end = parseInt(to.query?.dateEnd)
+        if (!Number.isNaN(start) && !Number.isNaN(end)) {
+          if (start !== this.selectedDateRange?.start && end !== this.selectedDateRange?.end) {
+            this.$set(this, 'selectedDateRange', { start, end })
+          }
+        } else if (this.selectedDateRange !== null) {
+          this.$set(this, 'selectedDateRange', null)
+        }
+      } else if (this.selectedDateRange !== null) {
+        this.$set(this, 'selectedDateRange', null)
+      }
+
+      this.selectedProjects ??= to.query?.project
+    },
     generateTo (item) {
       const baseTo = { name: 'batch-search.results', params: { index: this.getProjectsNames(item).replace(/\s/g, ''), uuid: item.uuid }, query: { page: 1, sort: this.sortResults, order: this.orderResults } }
       const searchQueryExists = this.query
@@ -360,10 +385,10 @@ export default {
       project = this.selectedProjects,
       batchDate = this.selectedDateRange
     }) {
-      // const date = batchDate ? { dateStart: batchDate.start, dateEnd: batchDate.end } : null
+      const date = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
       return {
         name: 'batch-search',
-        query: { page, sort, order, query, field, project }
+        query: { page, sort, order, query, field, project, ...date }
       }
     },
     updateRoute () {
@@ -380,9 +405,16 @@ export default {
       const size = this.perPage
       const dateRange = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
       const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field, project: this.selectedProjects, batchDate: dateRange }
-      await this.$store.dispatch('batchSearch/getBatchSearches', params)
+      return this.$store.dispatch('batchSearch/getBatchSearches', params)
     },
     async fetchWithLoader () {
+      this.$wait.start('load batchSearches')
+      this.$Progress.start()
+      await this.fetch()
+      this.$Progress.finish()
+      this.$wait.end('load batchSearches')
+    },
+    async  fetchAndRegisterPollWithLoader () {
       this.$wait.start('load batchSearches')
       this.$Progress.start()
       await this.fetchAndRegisterPoll()
