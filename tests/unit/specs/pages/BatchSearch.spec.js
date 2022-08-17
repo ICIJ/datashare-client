@@ -203,6 +203,13 @@ describe('BatchSearch.vue', () => {
       })
     })
 
+    it('should enable clear filter button when a filter is selected', async () => {
+      const button = wrapper.find('.batch-search__clear-filter-btn').element
+      expect(button.disabled).toBeTruthy()
+      await wrapper.setData({ query: 'this is my new query' })
+      expect(button.disabled).toBeFalsy()
+    })
+
     it('should delete the current filters', async () => {
       const query = 'this is my new query'
       await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })

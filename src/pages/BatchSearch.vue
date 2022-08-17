@@ -19,7 +19,7 @@
             </div>
           </div>
       </form>
-      <b-btn class="text-muted " variant="link"  @click="deleteFilters">
+      <b-btn class="batch-search__clear-filter-btn text-muted " variant="link"  @click="deleteFilters" :disabled="!hasActiveFilter">
         <fa icon="filter-circle-xmark" />
         {{ $t('batchSearch.clearFilters') }}
       </b-btn>
@@ -316,7 +316,7 @@ export default {
     query () {
       this.updateRoute()
     },
-    async selectedDateRange (newValue, oldValue) {
+    async selectedDateRange () {
       this.updateRoute()
     },
     $route: {
