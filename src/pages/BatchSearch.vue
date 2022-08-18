@@ -71,6 +71,23 @@
         <template v-slot:cell(state)="{ item }">
           <batch-search-status :batch-search="item" />
         </template>
+        <template v-slot:head(state)="{ field }">
+              <span>
+                {{ field.label }}
+              </span>
+          <b-btn radius variant="outline" id="batch-search__items__header__filter-state-toggle" class="batch-search__items__header__filter-date-toggle">
+            <fa icon="filter"/>
+          </b-btn>
+          <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedStates.length > 0">
+            {{ }}
+          </b-badge>
+          <b-popover custom-class="popover-body-p-0"
+                     lazy
+                     target="batch-search__items__header__filter-state-toggle"
+                     triggers="focus">
+            <selectable-dropdown deactivate-keys v-model="selectedStates" multiple :items="states"/>
+          </b-popover>
+        </template>
         <template v-slot:head(projects)="{ field }">
               <span>
                 {{ field.label }}
@@ -84,7 +101,7 @@
           <b-popover custom-class="popover-body-p-0"
                      lazy
                      target="batch-search__items__header__filter-project-toggle"
-                     triggers="click">
+                     triggers="focus">
             <selectable-dropdown deactivate-keys v-model="selectedProjects" multiple :items="projects"/>
           </b-popover>
         </template>
@@ -101,7 +118,7 @@
           <b-popover custom-class="popover-body-p-0"
                     lazy
                     target="batch-search__items__header__filter-date-toggle"
-                    triggers="focus">
+                    triggers="click">
             <date-picker
               is-range
               color="gray"
@@ -180,6 +197,7 @@ export default {
       sort: settings.batchSearch.sort,
       selectedDateRange: null,
       selectedProjects: [],
+      selectedStates: [],
       start: null,
       end: null
     }
@@ -293,7 +311,7 @@ export default {
       return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasActiveFilter () {
-      return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects.length > 0
+      return this.query !== '' || this.selectedDateRange !== null || this.selectedProjects.length > 0 || this.selectedStates.length > 0
     },
 
     locale () {
@@ -301,6 +319,9 @@ export default {
     },
     projects () {
       return this.$core.projects
+    },
+    states () {
+      return ['QUEUED', 'RUNNING', 'SUCCESS', 'FAILURE']
     }
   },
   watch: {
@@ -352,6 +373,7 @@ export default {
       }
 
       this.selectedProjects ??= to.query?.project
+      this.selectedStates ??= to.query?.states
     },
     generateTo (item) {
       const baseTo = { name: 'batch-search.results', params: { index: this.getProjectsNames(item).replace(/\s/g, ''), uuid: item.uuid }, query: { page: 1, sort: this.sortResults, order: this.orderResults } }
@@ -368,12 +390,13 @@ export default {
       query = this.query,
       field = this.field,
       project = this.selectedProjects,
+      state = this.selectedStates,
       batchDate = this.selectedDateRange
     }) {
       const date = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
       return {
         name: 'batch-search',
-        query: { page, sort, order, query, field, project, ...date }
+        query: { page, sort, order, query, field, ...project, ...state, ...date }
       }
     },
     updateRoute () {
@@ -389,7 +412,7 @@ export default {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
       const dateRange = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
-      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field, project: this.selectedProjects, batchDate: dateRange }
+      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field, project: this.selectedProjects, state: this.selectedStates, batchDate: dateRange }
       return this.$store.dispatch('batchSearch/getBatchSearches', params)
     },
     async fetchWithLoader () {
@@ -437,6 +460,7 @@ export default {
       this.$set(this, 'search', '')
       this.$set(this, 'selectedDateRange', null)
       this.$set(this, 'selectedProjects', [])
+      this.$set(this, 'selectedStates', [])
     },
     moment
   }

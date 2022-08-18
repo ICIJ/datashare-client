@@ -95,7 +95,7 @@ describe('BatchSearch.vue', () => {
       expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all', project: [] }
+        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all' }
       })
     })
     describe('use delete filter', () => {
@@ -110,7 +110,7 @@ describe('BatchSearch.vue', () => {
         expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith({
           name: 'batch-search',
-          query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end, project: [] }
+          query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end }
         })
       })
 
@@ -122,7 +122,7 @@ describe('BatchSearch.vue', () => {
 
         expect(store.dispatch).toBeCalledTimes(2)
         expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-          from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: [`${data.selectedDateRange.start}`, `${data.selectedDateRange.end}`], project: []
+          from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: [`${data.selectedDateRange.start}`, `${data.selectedDateRange.end}`], project: [], state: []
         })
       })
     })
@@ -136,7 +136,7 @@ describe('BatchSearch.vue', () => {
       expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all', project: [] }
+        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
       })
     })
 
@@ -191,15 +191,27 @@ describe('BatchSearch.vue', () => {
       expect(wrapper.find('.batch-search__items__item__no-item-filtered').exists()).toBeTruthy()
     })
 
+    it('should redirect to the batch search page with the state filter', async () => {
+      jest.spyOn(store, 'dispatch')
+
+      await wrapper.setData({ selectedStates: ['RUNNING', 'FAILURE'] })
+      await wrapper.vm.updateRoute()
+
+      expect(store.dispatch).toBeCalled()
+      expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
+        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: [], state: ['RUNNING', 'FAILURE']
+      })
+    })
+
     it('should redirect to the batch search page with the project filter', async () => {
       jest.spyOn(store, 'dispatch')
 
       await wrapper.setData({ selectedProjects: ['project_02'] })
-      await wrapper.vm.fetchWithLoader()
+      await wrapper.vm.updateRoute()
 
       expect(store.dispatch).toBeCalled()
       expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: ['project_02']
+        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: ['project_02'], state: []
       })
     })
 
