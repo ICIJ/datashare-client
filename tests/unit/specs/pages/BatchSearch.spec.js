@@ -122,7 +122,16 @@ describe('BatchSearch.vue', () => {
 
         expect(store.dispatch).toBeCalledTimes(2)
         expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-          from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: [`${data.selectedDateRange.start}`, `${data.selectedDateRange.end}`], project: [], state: []
+          from: 0,
+          size: 100,
+          query: '',
+          sort: 'batch_date',
+          order: 'desc',
+          field: 'all',
+          batchDate: [`${data.selectedDateRange.start}`, `${data.selectedDateRange.end}`],
+          project: [],
+          state: [],
+          publishState: null
         })
       })
     })
@@ -199,7 +208,16 @@ describe('BatchSearch.vue', () => {
 
       expect(store.dispatch).toBeCalled()
       expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: [], state: ['RUNNING', 'FAILURE']
+        from: 0,
+        size: 100,
+        query: '',
+        sort: 'batch_date',
+        order: 'desc',
+        field: 'all',
+        batchDate: null,
+        project: [],
+        state: ['RUNNING', 'FAILURE'],
+        publishState: null
       })
     })
 
@@ -211,7 +229,16 @@ describe('BatchSearch.vue', () => {
 
       expect(store.dispatch).toBeCalled()
       expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-        from: 0, size: 100, query: '', sort: 'batch_date', order: 'desc', field: 'all', batchDate: null, project: ['project_02'], state: []
+        from: 0,
+        size: 100,
+        query: '',
+        sort: 'batch_date',
+        order: 'desc',
+        field: 'all',
+        batchDate: null,
+        project: ['project_02'],
+        state: [],
+        publishState: null
       })
     })
 

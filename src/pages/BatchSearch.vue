@@ -33,7 +33,7 @@
     </div>
     <v-wait for="load batchSearches" class="batch-search__items card">
       <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" />
-      <div class="">
+      <div >
       <b-table
         hover
         no-sort-reset
@@ -436,7 +436,6 @@ export default {
       publishState = this.publicationStatus
     }) {
       const date = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
-      page = '' + page
       const route = {
         name: 'batch-search',
         query: { page, sort, order, query, field, ...project, ...state, ...date }
@@ -454,6 +453,9 @@ export default {
     updateRoute () {
       const route = this.generateLinkToBatchSearch({})
       const { currentRoute: { query: curQuery } } = this.$router
+      if (curQuery.page) {
+        curQuery.page = curQuery.page.toString()
+      }
       if (!isEqual(curQuery, route.query)) {
         return this.$router.push(this.generateLinkToBatchSearch({}))
       }
@@ -469,8 +471,19 @@ export default {
     async fetch () {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      const dateRange = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
-      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field, project: this.selectedProjects, state: this.selectedStates, batchDate: dateRange, publishState: this.publicationStatus }
+      const batchDate = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
+      const params = {
+        from,
+        size,
+        sort: this.sort,
+        order: this.order,
+        query: this.query,
+        field: this.field,
+        project: this.selectedProjects,
+        state: this.selectedStates,
+        batchDate,
+        publishState: this.publicationStatus
+      }
       return this.$store.dispatch('batchSearch/getBatchSearches', params)
     },
     async fetchWithLoader () {
