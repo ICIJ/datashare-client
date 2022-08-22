@@ -47,7 +47,7 @@
         :sort-by="sortBy"
         :sort-desc="orderBy"
         @sort-changed="sortChanged">
-        <template #empty v-if="!this.hasActiveFilter">
+        <template #empty v-if="!hasActiveFilter">
           <p class="batch-search__items__item__no-item text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
         </template>
         <template #empty v-else>
@@ -130,9 +130,9 @@
           </b-popover>
         </template>
         <template v-slot:head(published)="{ field }">
-              <span>
-                {{ field.label }}
-              </span>
+          <span>
+            {{ field.label }}
+          </span>
           <b-btn radius variant="outline" id="batch-search__items__header__filter-published-toggle" class="batch-search__items__header__filter-date-toggle">
             <fa icon="filter"/>
           </b-btn>
@@ -143,7 +143,7 @@
                      lazy
                      target="batch-search__items__header__filter-published-toggle"
                      triggers="focus">
-            <selectable-dropdown deactivate-keys v-model="selectedStatus" :items="status" :eq="(item, other) => item?.value === other?.value">
+            <selectable-dropdown deactivate-keys v-model="selectedStatus" :items="status" :eq="isStatusSelected">
               <template #item-label="{ item }">
                 <span v-html="item.label"></span>
               </template>
@@ -447,6 +447,9 @@ export default {
         delete route.query?.publishState
       }
       return route
+    },
+    isStatusSelected (item, other) {
+      return item?.value === other?.value
     },
     updateRoute () {
       const route = this.generateLinkToBatchSearch({})
