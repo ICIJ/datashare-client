@@ -5,7 +5,7 @@
         <div v-if="selected.length" class="d-inline-flex search-results-table__actions mr-2 align-self-start align-items-center">
           <b-list-group horizontal>
             <b-list-group-item class="search-results-table__actions__action py-2" button v-for="action in actions" :key="action.id" @click="onClick(action.id)">
-              <fa :icon="action.icon" :class="action.iconClass"></fa>
+              <fa v-if="action.icon" :icon="action.icon" :class="action.iconClass"></fa>
               {{ action.label }}
             </b-list-group-item>
           </b-list-group>
@@ -31,7 +31,7 @@
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc">
         <template v-slot:cell(relevance)="{ item, rowSelected }">
-          <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon"></fa>
+          <fa v-if="item.contentTypeIcon" :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon"></fa>
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox"></fa>
         </template>
         <template v-slot:cell(index)="{ item }">
