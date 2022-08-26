@@ -4,6 +4,7 @@
       <date-picker
         is-range
         color="gray"
+        :max-date="new Date()"
         v-model="selectedDateRange"
         :model-config="{ type: 'number' }"
         :locale="locale"
