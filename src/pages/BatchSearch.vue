@@ -1,7 +1,7 @@
 <template>
   <div class="batch-search container h-100 pt-4">
     <div class="d-flex flex-wrap align-items-center ">
-      <form class="batch-search__search-bar col-md-6 px-0 py-2"  @submit.prevent="searchBatchsearches">
+      <form class="batch-search__search-bar col-md-6 px-0 py-2" @submit.prevent="searchBatchsearches">
           <div class="input-group">
             <input
               v-model="search"
@@ -35,6 +35,10 @@
       <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" />
       <div >
       <b-table
+        :fields="fieldsIfAnyItemOrFilter"
+        :items="batchSearches"
+        :sort-by="sortBy"
+        :sort-desc="orderBy"
         hover
         no-sort-reset
         responsive
@@ -42,10 +46,6 @@
         striped
         tbody-tr-class="batch-search__items__item"
         thead-tr-class="text-nowrap"
-        :fields="fieldsIfAnyItemOrFilter"
-        :items="batchSearches"
-        :sort-by="sortBy"
-        :sort-desc="orderBy"
         @sort-changed="sortChanged">
         <template #empty v-if="!hasActiveFilter">
           <p class="batch-search__items__item__no-item text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
@@ -53,7 +53,7 @@
         <template #empty v-else>
           <p class="batch-search__items__item__no-item-filtered text-center m-0" v-html="$t('batchSearch.emptyWithFilter')"></p>
         </template>
-        <template v-slot:cell(name)="{ item }">
+        <template #cell(name)="{ item }">
           <router-link
             :to="generateTo(item)"
             class="batch-search__items__item__link">
@@ -63,22 +63,22 @@
             {{ item.description }}
           </p>
         </template>
-        <template v-slot:cell(queries)="{ item }">
+        <template #cell(queries)="{ item }">
           <span class="batch-search__items__item__queries">
             {{ $n(item.nbQueries) }}
           </span>
         </template>
-        <template v-slot:cell(state)="{ item }">
+        <template #cell(state)="{ item }">
           <batch-search-status :batch-search="item" />
         </template>
-        <template v-slot:head(state)="{ field }">
+        <template #head(state)="{ field }">
               <span>
                 {{ field.label }}
               </span>
           <b-btn radius variant="outline" id="batch-search__items__header__filter-state-toggle" class="batch-search__items__header__filter-date-toggle">
             <fa icon="filter"/>
           </b-btn>
-          <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedStates.length > 0">
+          <b-badge v-if="hasSelectedStates" variant="secondary" class="position-absolute p-2 rounded-circle" >
             {{ }}
           </b-badge>
           <b-popover custom-class="popover-body-p-0"
@@ -88,14 +88,14 @@
             <selectable-dropdown deactivate-keys v-model="selectedStates" multiple :items="states"/>
           </b-popover>
         </template>
-        <template v-slot:head(projects)="{ field }">
+        <template #head(projects)="{ field }">
               <span>
                 {{ field.label }}
               </span>
           <b-btn radius variant="outline" id="batch-search__items__header__filter-project-toggle" class="batch-search__items__header__filter-date-toggle">
             <fa icon="filter"/>
           </b-btn>
-          <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedProjects.length > 0">
+          <b-badge v-if="hasSelectedProjects" variant="secondary" class="position-absolute p-2 rounded-circle" >
             {{ }}
           </b-badge>
           <b-popover custom-class="popover-body-p-0"
@@ -105,7 +105,7 @@
             <selectable-dropdown deactivate-keys v-model="selectedProjects" multiple :items="projects"/>
           </b-popover>
         </template>
-        <template v-slot:head(date)="{ field }">
+        <template #head(date)="{ field }">
           <span>
             {{ field.label }}
           </span>
@@ -129,7 +129,7 @@
             </date-picker>
           </b-popover>
         </template>
-        <template v-slot:head(published)="{ field }">
+        <template #head(published)="{ field }">
           <span>
             {{ field.label }}
           </span>
@@ -150,24 +150,24 @@
             </selectable-dropdown>
           </b-popover>
         </template>
-        <template v-slot:cell(date)="{ item }">
+        <template #cell(date)="{ item }">
           <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
             {{ moment(item.date).locale($i18n.locale).format('LL') }}
           </span>
         </template>
         <!-- eslint-disable-next-line vue/valid-v-slot -->
-        <template v-slot:cell(user.id)="{ item }">
+        <template #cell(user.id)="{ item }">
           <user-display :username="item.user.id" v-if="item.user" />
         </template>
-        <template v-slot:cell(nbResults)="{ item }">
+        <template #cell(nbResults)="{ item }">
           <span class="batch-search__items__item__results">
             {{ $n(item.nbResults) }}
           </span>
         </template>
-        <template v-slot:cell(published)="{ item }">
+        <template #cell(published)="{ item }">
           {{ item.published ? $t('global.yes') : $t('global.no') }}
         </template>
-        <template v-slot:cell(projects)="{ item }">
+        <template #cell(projects)="{ item }">
           <span class="batch-search__items__item__projects text-truncate" v-b-tooltip.hover :title="getProjectsNames(item)">
             {{ getProjectsNames(item) }}
           </span>
@@ -223,6 +223,7 @@ const EBatchSearchStatus = Object.freeze({
     value: EBatchSearchStatusValue.NOT_PUBLISHED
   }
 })
+
 export default {
   name: 'BatchSearches',
   mixins: [polling, utils],
@@ -362,15 +363,27 @@ export default {
       return Math.ceil(this.total / this.perPage)
     },
     hasPendingBatchSearches () {
-      const pendingStates = ['RUNNING', 'QUEUED']
+      const pendingStates = [EBatchSearchState.RUNNING, EBatchSearchState.QUEUED]
       return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasSelectedStatus () {
-      return this.publicationStatus
+      return !!this.publicationStatus
+    },
+    hasSelectedStates () {
+      return this.selectedStates.length
+    },
+    hasSelectedProjects () {
+      return this.selectedProjects.length
+    },
+    hasQuery () {
+      return this.query.length
+    },
+    hasSelectedDateRange () {
+      return !!this.selectedDateRange
     },
     hasActiveFilter () {
-      return this.query !== '' || this.selectedDateRange !== null ||
-        this.selectedProjects.length > 0 || this.selectedStates.length > 0 ||
+      return this.hasQuery || this.hasSelectedDateRange ||
+        this.hasSelectedProjects || this.hasSelectedStates ||
         this.hasSelectedStatus
     },
     locale () {
@@ -628,7 +641,7 @@ export default {
       }
 
       &__header__filter-date-toggle{
-        padding: 0px 0.5em;
+        padding: 0 0.5em;
       }
 
       &__item {
