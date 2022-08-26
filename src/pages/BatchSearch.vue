@@ -70,62 +70,16 @@
           <batch-search-status :batch-search="item" />
         </template>
         <template #head(state)="{ field }">
-              <span>
-                {{ field.label }}
-              </span>
-          <b-btn radius variant="outline" id="batch-search__items__header__filter-state-toggle" class="batch-search__items__header__filter-date-toggle">
-            <fa icon="filter"/>
-          </b-btn>
-          <b-badge v-if="hasSelectedStates" variant="secondary" class="position-absolute p-2 rounded-circle" >
-            {{ }}
-          </b-badge>
-          <b-popover custom-class="popover-body-p-0"
-                     lazy
-                     target="batch-search__items__header__filter-state-toggle"
-                     triggers="focus">
-            <selectable-dropdown deactivate-keys v-model="selectedStates" multiple :items="states"/>
-          </b-popover>
+          <batch-search-filter-dropdown v-model="selectedStates" :items="states" :id="field.key" :label="field.label" multiple/>
         </template>
         <template #head(projects)="{ field }">
-              <span>
-                {{ field.label }}
-              </span>
-          <b-btn radius variant="outline" id="batch-search__items__header__filter-project-toggle" class="batch-search__items__header__filter-date-toggle">
-            <fa icon="filter"/>
-          </b-btn>
-          <b-badge v-if="hasSelectedProjects" variant="secondary" class="position-absolute p-2 rounded-circle" >
-            {{ }}
-          </b-badge>
-          <b-popover custom-class="popover-body-p-0"
-                     lazy
-                     target="batch-search__items__header__filter-project-toggle"
-                     triggers="focus">
-            <selectable-dropdown deactivate-keys v-model="selectedProjects" multiple :items="projects"/>
-          </b-popover>
+          <batch-search-filter-dropdown v-model="selectedProjects" :items="projects" :id="field.key" :label="field.label" multiple/>
         </template>
         <template #head(date)="{ field }">
           <batch-search-filter-date v-model="selectedDateRange" :date="selectedDateRange" :id="field.key" :label="field.label"/>
         </template>
         <template #head(published)="{ field }">
-          <span>
-            {{ field.label }}
-          </span>
-          <b-btn radius variant="outline" id="batch-search__items__header__filter-published-toggle" class="batch-search__items__header__filter-date-toggle">
-            <fa icon="filter"/>
-          </b-btn>
-          <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="hasSelectedStatus">
-            {{ }}
-          </b-badge>
-          <b-popover custom-class="popover-body-p-0"
-                     lazy
-                     target="batch-search__items__header__filter-published-toggle"
-                     triggers="focus">
-            <selectable-dropdown deactivate-keys v-model="selectedStatus" :items="status" :eq="isStatusSelected">
-              <template #item-label="{ item }">
-                <span v-html="item.label"></span>
-              </template>
-            </selectable-dropdown>
-          </b-popover>
+          <batch-search-filter-dropdown v-model="selectedStatus" :items="status" :id="field.key" :label="field.label"/>
         </template>
         <template #cell(date)="{ item }">
           <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
@@ -173,6 +127,7 @@ import UserDisplay from '@/components/UserDisplay'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
+import BatchSearchFilterDropdown from '@/components/BatchSearchFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
 import SearchBarInput from '@/components/SearchBarInput'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
@@ -209,6 +164,7 @@ export default {
   components: {
     SearchBarInputDropdown,
     SearchBarInput,
+    BatchSearchFilterDropdown,
     BatchSearchFilterDate,
     BatchSearchForm,
     BatchSearchStatus,
@@ -222,7 +178,7 @@ export default {
       perPage: settings.batchSearch.size,
       query: '',
       search: '',
-      states: EBatchSearchState,
+      states: Object.keys(EBatchSearchState),
       status: [
         EBatchSearchStatus[EBatchSearchStatusValue.PUBLISHED],
         EBatchSearchStatus[EBatchSearchStatusValue.NOT_PUBLISHED]
