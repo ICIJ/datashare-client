@@ -51,7 +51,7 @@ export default {
       return `batch-search-filter__toggle--${this.id}`
     },
     btnId () {
-      return uniqueId(this.btnClassName)
+      return uniqueId(`${this.btnClassName}-`)
     }
   }
 }
