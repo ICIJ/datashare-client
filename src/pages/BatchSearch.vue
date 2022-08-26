@@ -106,28 +106,7 @@
           </b-popover>
         </template>
         <template #head(date)="{ field }">
-          <span>
-            {{ field.label }}
-          </span>
-          <b-btn  variant="outline" id="batch-search__items__header__filter-date-toggle" class="batch-search__items__header__filter-date-toggle">
-            <fa icon="filter" />
-          </b-btn>
-          <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" v-if="selectedDateRange">
-            {{  }}
-          </b-badge>
-          <b-popover custom-class="popover-body-p-0"
-                    lazy
-                    target="batch-search__items__header__filter-date-toggle"
-                    triggers="click">
-            <date-picker
-              is-range
-              color="gray"
-              v-model="selectedDateRange"
-              :model-config="{ type: 'number' }"
-              :locale="locale"
-              :key="locale">
-            </date-picker>
-          </b-popover>
+          <batch-search-filter-date v-model="selectedDateRange" :date="selectedDateRange" :id="field.key" :label="field.label"/>
         </template>
         <template #head(published)="{ field }">
           <span>
@@ -196,7 +175,7 @@ import UserDisplay from '@/components/UserDisplay'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
 
 const EBatchSearchState = Object.freeze({
   QUEUED: 'QUEUED',
@@ -228,7 +207,7 @@ export default {
   name: 'BatchSearches',
   mixins: [polling, utils],
   components: {
-    DatePicker,
+    BatchSearchFilterDate,
     BatchSearchForm,
     BatchSearchStatus,
     UserDisplay
