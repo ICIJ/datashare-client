@@ -8,7 +8,7 @@
       @input="onInput"
       @focus="onFocus">
     <div class="input-group-append">
-        <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }"
+        <router-link v-if="!hideTips" :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }"
                      class="search-bar-input__tips-addon input-group-text px-2"
                      :class="{ 'search-bar-input__tips-addon--active': showTips }"
                      :title="$t('search.tips')" v-b-tooltip.bottomleft>
@@ -56,6 +56,12 @@ export default {
     size: {
       type: String,
       default: 'md'
+    },
+    /**
+     * Hide tips icon in the input bar
+     */
+    hideTips: {
+      type: Boolean
     }
   },
   methods: {
@@ -79,7 +85,7 @@ export default {
       }
     },
     showTips () {
-      return this.query?.length || this.tips
+      return !this.hideTips && this.query?.length
     }
   }
 }
