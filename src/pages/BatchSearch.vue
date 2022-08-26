@@ -1,23 +1,21 @@
 <template>
   <div class="batch-search container h-100 pt-4">
-    <div class="d-flex flex-wrap align-items-center ">
-      <form class="batch-search__search-bar col-md-6 px-0 py-2" @submit.prevent="searchBatchsearches">
-          <div class="input-group">
-            <input
-              v-model="search"
+    <div class="d-flex flex-wrap align-items-center">
+      <form class="batch-search__search-bar col-md-6 px-0" @submit.prevent="searchBatchsearches">
+        <search-bar-input v-model="search"
               :placeholder="$t('batchSearch.placeholder')"
-              class="batch-search__search-bar__input form-control ">
-            <div class="batch-search__search-bar__button input-group-append">
-              <b-dropdown :text="$t('batchSearch.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
-                <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key" class="batch-search__search-bar__field__items">
-                  {{ $t('batchSearch.field.' + key) }}
-                </b-dropdown-item>
-              </b-dropdown>
-              <button type="submit" class="btn btn-dark">
-                {{ $t('search.buttonLabel') }}
-              </button>
-            </div>
-          </div>
+                          class="batch-search__search-bar__input"
+                          hide-tips
+        >
+          <template #fields>
+            <search-bar-input-dropdown
+              v-model="field"
+              :fieldOptions="fieldOptions"
+              :fieldOptionsPath="fieldOptionsPath"
+              class="batch-search__search-bar__field"
+            />
+          </template>
+        </search-bar-input>
       </form>
       <b-btn class="batch-search__clear-filter-btn text-muted " variant="link"  @click="deleteFilters" :disabled="!hasActiveFilter">
         <fa icon="filter-circle-xmark" />
@@ -176,6 +174,8 @@ import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
+import SearchBarInput from '@/components/SearchBarInput'
+import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 
 const EBatchSearchState = Object.freeze({
   QUEUED: 'QUEUED',
@@ -207,6 +207,8 @@ export default {
   name: 'BatchSearches',
   mixins: [polling, utils],
   components: {
+    SearchBarInputDropdown,
+    SearchBarInput,
     BatchSearchFilterDate,
     BatchSearchForm,
     BatchSearchStatus,
@@ -289,6 +291,9 @@ export default {
         options.push('user_id')
       }
       return options
+    },
+    fieldOptionsPath () {
+      return ['batchSearch', 'field']
     },
     fieldsIfAnyItemOrFilter () {
       if (this.batchSearches.length || this.hasActiveFilter) {
@@ -562,43 +567,6 @@ export default {
 <style lang="scss" scoped>
   .batch-search {
     display: grid;
-    &__search-bar {
-      &__input {
-        border-radius: 1.5em 0 0 1.5rem;
-      }
-
-      &__button .btn {
-        border-radius: 0 1.5em 1.5rem 0;
-      }
-
-      &__field {
-        background: $input-bg;
-        border-left: dashed 1px  $input-border-color;
-        font-size: inherit;
-
-        &--selected:after {
-          bottom: 1px;
-          border: 2px solid $tertiary;
-          content: "";
-          left: 0;
-          position: absolute;
-          right: 1px;
-          top: 1px;
-        }
-
-        &:deep(.btn) {
-          border: 1px solid $input-border-color;
-          border-left: 0;
-          box-shadow: $input-box-shadow;
-          color: $text-muted;
-
-          .input-group-lg & {
-            font-size: 1.25rem;
-          }
-        }
-      }
-    }
-
     &__items {
       border-radius: $card-border-radius 0 0 0;
       margin-top: $spacer;
