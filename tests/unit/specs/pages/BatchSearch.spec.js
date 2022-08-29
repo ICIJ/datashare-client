@@ -95,7 +95,7 @@ describe('BatchSearch.vue', () => {
       expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all' }
+        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all', project: [] }
       })
     })
     describe('use delete filter', () => {
@@ -110,7 +110,7 @@ describe('BatchSearch.vue', () => {
         expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith({
           name: 'batch-search',
-          query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end }
+          query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end, project: [] }
         })
       })
 
@@ -145,7 +145,7 @@ describe('BatchSearch.vue', () => {
       expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
-        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
+        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all', project: [] }
       })
     })
 
@@ -265,7 +265,7 @@ describe('BatchSearch.vue', () => {
     beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
     it('should have author field in server mode in fieldOptions', () => {
-      const field = wrapper.find('.batch-search__search-bar__field__items:nth-child(4)')
+      const field = wrapper.find('.search-bar-input-fields__option:nth-child(4)')
       expect(field.text()).toContain('Author')
     })
 
@@ -284,7 +284,7 @@ describe('BatchSearch.vue', () => {
     beforeAll(() => Murmur.config.merge({ mode: 'LOCAL' }))
 
     it('should NOT have author field in local mode in fieldOptions', () => {
-      expect(wrapper.findAll('.batch-search__search-bar__field__items')).toHaveLength(3)
+      expect(wrapper.findAll('.search-bar-input-fields__option')).toHaveLength(3)
     })
 
     it('should NOT display project name in the batch search results url', () => {

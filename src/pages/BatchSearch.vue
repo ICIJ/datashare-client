@@ -3,7 +3,7 @@
     <div class="d-flex flex-wrap align-items-center">
       <form class="batch-search__search-bar col-md-6 px-0" @submit.prevent="searchBatchsearches">
         <search-bar-input v-model="search"
-              :placeholder="$t('batchSearch.placeholder')"
+                          :placeholder="$t('batchSearch.placeholder')"
                           class="batch-search__search-bar__input"
                           hide-tips
         >
@@ -17,11 +17,14 @@
           </template>
         </search-bar-input>
       </form>
-      <b-btn class="batch-search__clear-filter-btn text-muted " variant="link"  @click="deleteFilters" :disabled="!hasActiveFilter">
-        <fa icon="filter-circle-xmark" />
+      <b-btn :disabled="!hasActiveFilter"
+             class="batch-search__clear-filter-btn text-muted "
+             variant="link"
+             @click="deleteFilters">
+        <fa icon="filter-circle-xmark"/>
         {{ $t('batchSearch.clearFilters') }}
       </b-btn>
-      <b-btn class="ml-auto " @click="$refs['batch-search-form'].show()" variant="primary" >
+      <b-btn class="ml-auto" @click="$refs['batch-search-form'].show()" variant="primary" >
         <fa icon="plus" class="mr-1"></fa>
         <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>
       </b-btn>
@@ -31,10 +34,9 @@
     </div>
     <v-wait for="load batchSearches" class="batch-search__items card">
       <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" />
-      <div >
       <b-table
         :fields="fieldsIfAnyItemOrFilter"
-        :items="batchSearches"
+        :items="displayBatchSearches"
         :sort-by="sortBy"
         :sort-desc="orderBy"
         hover
@@ -45,30 +47,12 @@
         tbody-tr-class="batch-search__items__item"
         thead-tr-class="text-nowrap"
         @sort-changed="sortChanged">
-        <template #empty v-if="!hasActiveFilter">
-          <p class="batch-search__items__item__no-item text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
+        <template #empty >
+          <p class="batch-search__items__item__no-item text-center m-0"
+             :class="{'batch-search__items__item__no-item-filtered':hasActiveFilter}"
+             v-html="noItemMessage"/>
         </template>
-        <template #empty v-else>
-          <p class="batch-search__items__item__no-item-filtered text-center m-0" v-html="$t('batchSearch.emptyWithFilter')"></p>
-        </template>
-        <template #cell(name)="{ item }">
-          <router-link
-            :to="generateTo(item)"
-            class="batch-search__items__item__link">
-            {{ item.name }}
-          </router-link>
-          <p class="m-0 text-muted small">
-            {{ item.description }}
-          </p>
-        </template>
-        <template #cell(queries)="{ item }">
-          <span class="batch-search__items__item__queries">
-            {{ $n(item.nbQueries) }}
-          </span>
-        </template>
-        <template #cell(state)="{ item }">
-          <batch-search-status :batch-search="item" />
-        </template>
+        <!-- Filterable Headers -->
         <template #head(state)="{ field }">
           <batch-search-filter-dropdown v-model="selectedStates" :items="states" :id="field.key" :label="field.label" multiple/>
         </template>
@@ -81,45 +65,54 @@
         <template #head(published)="{ field }">
           <batch-search-filter-dropdown v-model="selectedStatus" :items="status" :id="field.key" :label="field.label"/>
         </template>
-        <template #cell(date)="{ item }">
-          <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
-            {{ moment(item.date).locale($i18n.locale).format('LL') }}
+        <!-- Cells -->
+        <template #cell(name)="{ item }">
+          <router-link :to="generateTo(item)" class="batch-search__items__item__link">
+            {{ item.name }}
+          </router-link>
+          <p class="m-0 text-muted small">{{ item.description }}</p>
+        </template>
+        <template #cell(queries)="{ item }">
+          <span class="batch-search__items__item__queries">
+            {{ $n(item.nbQueries) }}
           </span>
+        </template>
+        <template #cell(state)="{ item }">
+          <batch-search-status :batch-search="item" />
+        </template>
+        <template #cell(date)="{ item }">
+          <span :title="item.dateTitle">{{ item.dateContent }}</span>
         </template>
         <!-- eslint-disable-next-line vue/valid-v-slot -->
         <template #cell(user.id)="{ item }">
-          <user-display :username="item.user.id" v-if="item.user" />
+          <user-display :username="item.userId" v-if="item.hasUser" />
         </template>
         <template #cell(nbResults)="{ item }">
-          <span class="batch-search__items__item__results">
-            {{ $n(item.nbResults) }}
-          </span>
+          <span class="batch-search__items__item__results">{{ item.formatNbResults }}</span>
         </template>
         <template #cell(published)="{ item }">
-          {{ item.published ? $t('global.yes') : $t('global.no') }}
+          {{ item.isPublished }}
         </template>
         <template #cell(projects)="{ item }">
-          <span class="batch-search__items__item__projects text-truncate" v-b-tooltip.hover :title="getProjectsNames(item)">
-            {{ getProjectsNames(item) }}
+          <span class="batch-search__items__item__projects text-truncate" v-b-tooltip.hover :title="item.projectNames">
+            {{ item.projectNames }}
           </span>
         </template>
       </b-table>
 
-      </div>
       <b-pagination-nav
-        class="mt-2"
+        v-if="numberOfPages > 1"
         :link-gen="linkGen"
         :number-of-pages="numberOfPages"
-        use-router
-        v-if="numberOfPages > 1"></b-pagination-nav>
+        class="mt-2"
+        use-router/>
     </v-wait>
   </div>
 </template>
 
 <script>
-import { compact, find, isEqual, random, some } from 'lodash'
+import { compact, find, isEqual, some } from 'lodash'
 import moment from 'moment'
-import { mapState } from 'vuex'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
@@ -131,6 +124,7 @@ import BatchSearchFilterDropdown from '@/components/BatchSearchFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
 import SearchBarInput from '@/components/SearchBarInput'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import { mapState } from 'vuex'
 
 const EBatchSearchState = Object.freeze({
   QUEUED: 'QUEUED',
@@ -192,14 +186,22 @@ export default {
       end: null
     }
   },
-  mounted () {
-    this.setDataFromQueryParams()
-    this.fetchAndRegisterPollWithLoader()
-  },
   computed: {
-    ...mapState('batchSearch', ['batchSearches', 'total']),
-    publicationStatus () {
-      return this.selectedStatus?.value ?? null
+    ...mapState('batchSearch', ['total']),
+    displayBatchSearches () {
+      return this.$store.state.batchSearch.batchSearches.map((batchSearch) => {
+        return {
+          ...batchSearch,
+          queries: this.$n(batchSearch.queries),
+          dateTitle: moment(batchSearch.date).locale(this.$i18n.locale).format('LLL'),
+          dateContent: moment(batchSearch.date).locale(this.$i18n.locale).format('LL'),
+          userId: batchSearch.user?.id,
+          hasUser: !!batchSearch.user,
+          formatNbResults: this.$n(batchSearch.nbResults),
+          isPublished: batchSearch.published ? this.$t('global.yes') : this.$t('global.no'),
+          projectNames: this.getProjectsNames(batchSearch)
+        }
+      })
     },
     howToLink () {
       const { href } = this.$router.resolve('/docs/all-batch-search-documents')
@@ -210,36 +212,6 @@ export default {
     },
     orderResults () {
       return settings.batchSearchResults.order
-    },
-    projectNameField () {
-      return this.isServer
-        ? {
-          key: 'projects',
-          label: this.$t('batchSearch.projects'),
-          sortable: true,
-          name: 'projects'
-        }
-        : null
-    },
-    authorField () {
-      return this.isServer
-        ? {
-          key: 'user.id',
-          label: this.$t('batchSearch.author'),
-          sortable: true,
-          name: 'user_id'
-        }
-        : null
-    },
-    publishedField () {
-      return this.isServer
-        ? {
-          key: 'published',
-          label: this.$t('batchSearch.published'),
-          sortable: true,
-          name: 'published'
-        }
-        : null
     },
     fieldOptions () {
       const options = ['all', 'name', 'description']
@@ -252,7 +224,7 @@ export default {
       return ['batchSearch', 'field']
     },
     fieldsIfAnyItemOrFilter () {
-      if (this.batchSearches.length || this.hasActiveFilter) {
+      if (this.displayBatchSearches.length || this.hasActiveFilter) {
         return this.fields
       }
       return []
@@ -265,14 +237,24 @@ export default {
           sortable: true,
           name: 'state'
         },
-        this.projectNameField,
+        this.serverField({
+          key: 'projects',
+          label: this.$t('batchSearch.projects'),
+          sortable: true,
+          name: 'projects'
+        }),
         {
           key: 'name',
           label: this.$t('batchSearch.name'),
           sortable: true,
           name: 'name'
         },
-        this.authorField,
+        this.serverField({
+          key: 'user.id',
+          label: this.$t('batchSearch.author'),
+          sortable: true,
+          name: 'user_id'
+        }),
         {
           key: 'queries',
           label: this.$t('batchSearch.queries'),
@@ -290,8 +272,16 @@ export default {
           sortable: true,
           name: 'batch_results'
         },
-        this.publishedField
+        this.serverField({
+          key: 'published',
+          label: this.$t('batchSearch.published'),
+          sortable: true,
+          name: 'published'
+        })
       ])
+    },
+    publicationStatus () {
+      return this.selectedStatus?.value ?? null
     },
     sortBy () {
       return find(this.fields, item => item.name === this.sort).key
@@ -304,7 +294,7 @@ export default {
     },
     hasPendingBatchSearches () {
       const pendingStates = [EBatchSearchState.RUNNING, EBatchSearchState.QUEUED]
-      return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
+      return some(this.displayBatchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasSelectedStatus () {
       return !!this.publicationStatus
@@ -326,15 +316,22 @@ export default {
         this.hasSelectedProjects || this.hasSelectedStates ||
         this.hasSelectedStatus
     },
-    locale () {
-      return this.$i18n.locale
+    noItemMessage () {
+      return this.hasActiveFilter ? this.$t('batchSearch.empty', { howToLink: this.howToLink }) : this.$t('batchSearch.emptyWithFilter')
     },
     projects () {
       return this.$core.projects
     }
 
   },
+  mounted () {
+    this.setDataFromQueryParams()
+    this.fetchAndRegisterPollWithLoader()
+  },
   methods: {
+    serverField (field) {
+      return this.isServer ? field : null
+    },
     setDataFromQueryParams (to = this.$route) {
       // logical-nullish-assignment '??=' : update a variable with a new value,
       // but only if that variable currently holds a "nullish" value (either null or undefined).
@@ -359,7 +356,7 @@ export default {
         this.$set(this, 'selectedDateRange', null)
       }
 
-      this.selectedProjects ??= to.query?.project
+      this.selectedProjects ??= [...to.query?.project]
       this.selectedStates ??= to.query?.states
 
       const newObj = EBatchSearchStatus[to.query?.publishState] ?? null
@@ -391,7 +388,7 @@ export default {
       const date = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
       const route = {
         name: 'batch-search',
-        query: { page, sort, order, query, field, ...project, ...state, ...date }
+        query: { page, sort, order, query, field, project, ...state, ...date }
       }
       if (publishState) {
         route.query.publishState = publishState
@@ -399,9 +396,6 @@ export default {
         delete route.query?.publishState
       }
       return route
-    },
-    isStatusSelected (item, other) {
-      return item?.value === other?.value
     },
     updateRoute () {
       const route = this.generateLinkToBatchSearch({})
@@ -460,9 +454,9 @@ export default {
     },
     async fetchAndRegisterPoll () {
       await this.fetch()
-      const fn = this.fetchForPoll
-      const timeout = () => random(1000, 4000)
-      this.registerPollOnce({ fn, timeout })
+      // const fn = this.fetchForPoll
+      // const timeout = () => random(1000, 4000)
+      // this.registerPollOnce({ fn, timeout })
     },
     linkGen (page) {
       return this.generateLinkToBatchSearch({ page })
@@ -473,11 +467,7 @@ export default {
       return this.$router.push(this.generateLinkToBatchSearch(params))
     },
     getProjectsNames (item) {
-      if (item.projects === undefined) {
-        return ''
-      } else {
-        return item.projects.map(project => project.name).join(', ')
-      }
+      return item.projects?.map(project => project.name).join(', ') ?? ''
     },
     deleteFilters () {
       this.$set(this, 'query', '')
@@ -486,8 +476,7 @@ export default {
       this.$set(this, 'selectedProjects', [])
       this.$set(this, 'selectedStates', [])
       this.$set(this, 'selectedStatus', null)
-    },
-    moment
+    }
   },
   watch: {
     page () {
