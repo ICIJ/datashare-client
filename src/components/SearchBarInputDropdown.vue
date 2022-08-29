@@ -1,7 +1,13 @@
 <template>
-  <b-dropdown :text="$t(fieldOptionsPathValue + selectedField)" variant="outline-light" class="search-bar-input-dropdown" right :class="{ 'search-bar__field--selected': selectedField !== 'all' }">
-    <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="selectedField = key">
-     {{ $t(fieldOptionsPathValue + key) }}
+  <b-dropdown :class="{ 'search-bar__field--selected': selectedField !== 'all' }" :text="$t(fieldOptionsPathValue + selectedField)"
+              class="search-bar-input-fields" right
+              variant="outline-light">
+    <b-dropdown-item
+      v-for="key in fieldOptions"
+      :key="key"
+      class="search-bar-input-fields__option"
+      @click="selectedField = key">
+      {{ $t(fieldOptionsPathValue + key) }}
     </b-dropdown-item>
   </b-dropdown>
 </template>

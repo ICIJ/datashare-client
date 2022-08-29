@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="batch-search-filter">
     <span>
         {{ label }}
     </span>
@@ -10,17 +10,18 @@
       <fa icon="filter"/>
     </b-btn>
     <batch-search-filter-badge v-if="active"/>
-    <b-popover custom-class="popover-body-p-0"
-               lazy
-               :target="btnId"
-               triggers="focus">
-      <slot></slot>
-    </b-popover>
+    <keep-alive>
+      <b-popover custom-class="popover-body-p-0"
+                 lazy
+                 :target="btnId"
+                 triggers="focus">
+        <slot></slot>
+      </b-popover>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-import { uniqueId } from 'lodash'
 import BatchSearchFilterBadge from '@/components/BatchSearchFilterBadge'
 
 export default {
@@ -51,7 +52,7 @@ export default {
       return `batch-search-filter__toggle--${this.id}`
     },
     btnId () {
-      return uniqueId(`${this.btnClassName}-`)
+      return `${this.btnClassName}-id`
     }
   }
 }

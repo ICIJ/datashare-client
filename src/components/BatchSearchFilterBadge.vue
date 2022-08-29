@@ -1,5 +1,6 @@
 <template>
-  <b-badge variant="secondary" class="position-absolute p-2 rounded-circle" >
+  <b-badge class="batch-search-filter-badge position-absolute p-2 rounded-circle"
+           variant="secondary">
     {{ }}
   </b-badge>
 </template>
