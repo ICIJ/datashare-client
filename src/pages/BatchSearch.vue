@@ -38,7 +38,7 @@
         :fields="fieldsIfAnyItemOrFilter"
         :items="displayBatchSearches"
         :sort-by="sortBy"
-        :sort-desc="orderBy"
+        :sort-desc="sortDesc"
         hover
         no-sort-reset
         responsive
@@ -85,7 +85,7 @@
         </template>
         <!-- eslint-disable-next-line vue/valid-v-slot -->
         <template #cell(user.id)="{ item }">
-          <user-display :username="item.userId" v-if="item.hasUser" />
+          <user-display v-if="item.hasUser" :username="item.userId"/>
         </template>
         <template #cell(nbResults)="{ item }">
           <span class="batch-search__items__item__results">{{ item.formatNbResults }}</span>
@@ -126,12 +126,6 @@ import SearchBarInput from '@/components/SearchBarInput'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 import { mapState } from 'vuex'
 
-const EBatchSearchState = Object.freeze({
-  QUEUED: 'QUEUED',
-  RUNNING: 'RUNNING',
-  SUCCESS: 'SUCCESS',
-  FAILURE: 'FAILURE'
-})
 const EBatchSearchStatusValue = Object.freeze({
   PUBLISHED: '1',
   NOT_PUBLISHED: '0'
@@ -172,7 +166,7 @@ export default {
       perPage: settings.batchSearch.size,
       query: '',
       search: '',
-      states: Object.keys(EBatchSearchState),
+      states: Object.keys(settings.batchSearch.status),
       status: [
         EBatchSearchStatus[EBatchSearchStatusValue.PUBLISHED],
         EBatchSearchStatus[EBatchSearchStatusValue.NOT_PUBLISHED]
@@ -206,12 +200,6 @@ export default {
     howToLink () {
       const { href } = this.$router.resolve('/docs/all-batch-search-documents')
       return href
-    },
-    sortResults () {
-      return settings.batchSearchResults.sort
-    },
-    orderResults () {
-      return settings.batchSearchResults.order
     },
     fieldOptions () {
       const options = ['all', 'name', 'description']
@@ -286,14 +274,14 @@ export default {
     sortBy () {
       return find(this.fields, item => item.name === this.sort).key
     },
-    orderBy () {
+    sortDesc () {
       return this.order === 'desc'
     },
     numberOfPages () {
       return Math.ceil(this.total / this.perPage)
     },
     hasPendingBatchSearches () {
-      const pendingStates = [EBatchSearchState.RUNNING, EBatchSearchState.QUEUED]
+      const pendingStates = [settings.batchSearch.states.running, settings.batchSearch.states.queued]
       return some(this.displayBatchSearches, ({ state }) => pendingStates.includes(state))
     },
     hasSelectedStatus () {
@@ -332,15 +320,18 @@ export default {
     serverField (field) {
       return this.isServer ? field : null
     },
+    updateOrder (order) {
+      return (order === 'asc' || order === 'desc') && this.order !== order
+    },
     setDataFromQueryParams (to = this.$route) {
-      // logical-nullish-assignment '??=' : update a variable with a new value,
-      // but only if that variable currently holds a "nullish" value (either null or undefined).
       this.page ??= parseInt(to.query?.page) ?? 1
-      this.sort ??= to.query?.sort
-      this.order ??= to.query?.order
-      this.query ??= to.query?.query
-      this.field ??= to.query?.field
-      this.search ??= to.query?.query // TODO : there is two get on query.query
+      this.sort = to.query?.sort ?? this.sort
+      if (this.updateOrder(to.query?.order)) {
+        this.order = to.query?.order
+      }
+      this.query = to.query?.query ?? this.query
+      this.field = to.query?.field ?? this.field
+      this.search = to.query?.query ?? this.query // TODO : there is two get on query.query
 
       if (to.query?.dateStart && to.query?.dateEnd) {
         const start = parseInt(to.query?.dateStart)
@@ -367,7 +358,18 @@ export default {
       }
     },
     generateTo (item) {
-      const baseTo = { name: 'batch-search.results', params: { index: this.getProjectsNames(item).replace(/\s/g, ''), uuid: item.uuid }, query: { page: 1, sort: this.sortResults, order: this.orderResults } }
+      const baseTo = {
+        name: 'batch-search.results',
+        params: {
+          index: this.getProjectsNames(item).replace(/\s/g, ''),
+          uuid: item.uuid
+        },
+        query: {
+          page: 1,
+          sort: settings.batchSearchResults.sort,
+          order: settings.batchSearchResults.order
+        }
+      }
       const searchQueryExists = this.query
       return {
         ...baseTo,
@@ -410,9 +412,7 @@ export default {
     },
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
-      const order = ctx.sortDesc ? 'desc' : 'asc'
-      const params = { page: this.page, sort, order }
-
+      const params = { page: this.page, sort, order: this.order }
       await this.$router.push(this.generateLinkToBatchSearch(params))
     },
     async fetch () {
