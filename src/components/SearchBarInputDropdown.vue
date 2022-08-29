@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .search-bar-input-dropdown {
+  .search-bar-input-fields {
       background: $input-bg;
       border-left: dashed 1px  $input-border-color;
       font-size: inherit;
