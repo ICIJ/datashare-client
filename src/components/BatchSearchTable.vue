@@ -5,7 +5,7 @@
       :fields="fieldsIfAnyItemOrFilter"
       :items="displayBatchSearches"
       :sort-by="sortBy"
-      :sort-desc="sortDesc"
+      :sort-desc="isDesc"
       hover
       no-sort-reset
       responsive
@@ -95,22 +95,25 @@ import { compact, find } from 'lodash'
 import settings from '@/utils/settings'
 import utils from '@/mixins/utils'
 
-const EBatchSearchStatusValue = Object.freeze({
+const BATCHSEARCH_STATUS_VALUE = Object.freeze({
   PUBLISHED: '1',
   NOT_PUBLISHED: '0'
 })
 
-const EBatchSearchStatus = Object.freeze({
-  [EBatchSearchStatusValue.PUBLISHED]: {
+const BATCHSEARCH_STATUS = Object.freeze({
+  [BATCHSEARCH_STATUS_VALUE.PUBLISHED]: {
     label: 'published',
-    value: EBatchSearchStatusValue.PUBLISHED
+    value: BATCHSEARCH_STATUS_VALUE.PUBLISHED
   },
-  [EBatchSearchStatusValue.NOT_PUBLISHED]: {
+  [BATCHSEARCH_STATUS_VALUE.NOT_PUBLISHED]: {
     label: 'notPublished',
-    value: EBatchSearchStatusValue.NOT_PUBLISHED
+    value: BATCHSEARCH_STATUS_VALUE.NOT_PUBLISHED
   }
 })
-
+const SORT_ORDER = Object.freeze({
+  ASC: 'asc',
+  DESC: 'desc'
+})
 export default {
   name: 'BatchSearchTable',
   mixins: [utils],
@@ -118,8 +121,8 @@ export default {
   data () {
     return {
       status: [
-        EBatchSearchStatus[EBatchSearchStatusValue.PUBLISHED],
-        EBatchSearchStatus[EBatchSearchStatusValue.NOT_PUBLISHED]
+        BATCHSEARCH_STATUS[BATCHSEARCH_STATUS_VALUE.PUBLISHED],
+        BATCHSEARCH_STATUS[BATCHSEARCH_STATUS_VALUE.NOT_PUBLISHED]
       ],
       labelPath: 'batchSearch'
     }
@@ -249,7 +252,7 @@ export default {
       },
       set (value) {
         const batchDate = value ? { dateStart: value?.start, dateEnd: value?.end } : null
-        return this.$router.push(this.generateLinkToBatchSearch({ batchDate }))
+        return this.$router.push(this.createBatchSearchRoute({ batchDate }))
       }
     },
     selectedProjects: {
@@ -264,7 +267,21 @@ export default {
       set (values) {
         const project = values?.length > 0 ? values?.join(',') : null
         return this.$router.push(
-          this.generateLinkToBatchSearch({ project }))
+          this.createBatchSearchRoute({ project }))
+      }
+    },
+    isDesc () {
+      return this.selectedSort.order === SORT_ORDER.DESC
+    },
+    selectedSort: {
+      get () {
+        const sort = this.fieldNameByKey(this.$route.query?.sort.toLowerCase()) ?? settings.batchSearch.sort
+        const order = SORT_ORDER[this.$route.query?.order.toUpperCase()] ?? settings.batchSearch.order
+        return { sort, order }
+      },
+      set ({ sort, order }) {
+        const params = { page: this.page, sort: sort, order: order }
+        return this.updateRoute(params)
       }
     },
     selectedStates: {
@@ -278,33 +295,59 @@ export default {
       set (values) {
         const state = values?.length > 0 ? values?.join(',') : null
         return this.$router.push(
-          this.generateLinkToBatchSearch({ state }))
+          this.createBatchSearchRoute({ state }))
       }
     },
     publicationStatus () {
-      return EBatchSearchStatus[this.$route.query?.publishState]?.value ?? null
+      return BATCHSEARCH_STATUS[this.$route.query?.publishState]?.value ?? null
     },
     selectedStatus: {
       get () {
-        return EBatchSearchStatus[this.$route.query?.publishState] ?? null
+        return BATCHSEARCH_STATUS[this.$route.query?.publishState] ?? null
       },
       set (status) {
         const publishState = status?.value ?? null
         return this.$router.push(
-          this.generateLinkToBatchSearch({ publishState }))
+          this.createBatchSearchRoute({ publishState }))
       }
     },
     sortBy () {
-      return find(this.fields, item => item.name === this.sort).key
-    },
-    sortDesc () {
-      return this.order === 'desc'
+      return find(this.fields, item => item.name === this.selectedSort.sort).key
     },
     states () {
       return Object.values(settings.batchSearch.status)
     }
   },
   methods: {
+    createBatchSearchRoute ({
+      page = this.page,
+      sort = this.selectedSort.sort,
+      order = this.selectedSort.order,
+      query = this.query,
+      field = this.field,
+      project = this.selectedProjects,
+      state = this.selectedStates,
+      batchDate = this.selectedDateRange,
+      publishState = this.publicationStatus
+    }) {
+      const route = {
+        name: 'batch-search',
+        query: { query, page, sort, order, field, project, state, ...batchDate, publishState }
+      }
+      if (!this.hasQuery) {
+        delete route.query?.query
+      }
+      if (!publishState) {
+        delete route.query?.publishState
+      }
+      if (!project) {
+        delete route.query?.project
+      }
+      if (!state) {
+        delete route.query?.state
+      }
+      return route
+    },
     async fetch () {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
@@ -312,8 +355,8 @@ export default {
       const params = {
         from,
         size,
-        sort: this.sort,
-        order: this.order,
+        sort: this.selectedSort.sort,
+        order: this.selectedSort.order,
         query: this.query,
         field: this.field,
         project: this.selectedProjects,
@@ -351,43 +394,23 @@ export default {
     getProjectsNames (item) {
       return item.projects?.map(project => project.name).join(', ') ?? ''
     },
-    generateLinkToBatchSearch ({
-      page = this.page,
-      sort = this.sort,
-      order = this.order,
-      query = this.query,
-      field = this.field,
-      project = this.selectedProjects,
-      state = this.selectedStates,
-      batchDate = this.selectedDateRange,
-      publishState = this.publicationStatus
-    }) {
-      const route = {
-        name: 'batch-search',
-        query: { query, page, sort, order, field, project, state, ...batchDate, publishState }
-      }
-      if (!this.hasQuery) {
-        delete route.query?.query
-      }
-      if (!publishState) {
-        delete route.query?.publishState
-      }
-      if (!project) {
-        delete route.query?.project
-      }
-      if (!state) {
-        delete route.query?.state
-      }
-      return route
-    },
     serverField (field) {
       return this.isServer ? field : null
     },
     async sortChanged (ctx) {
-      const sort = find(this.fields, item => item.key === ctx.sortBy).name
-      const params = { page: this.page, sort, order: this.order }
-      console.log(params)
-      // await this.$router.push(this.generateLinkToBatchSearch(params))
+      const order = ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
+      console.log('ctx', ctx.sortDesc, order)
+      this.selectedSort = {
+        sort: this.fieldNameByKey(ctx.sortBy),
+        order
+      }
+    },
+    fieldNameByKey (key) {
+      return find(this.fields, item => item.key === key)?.name
+    },
+    updateRoute (params) {
+      return this.$router.push(
+        this.createBatchSearchRoute(params))
     }
   }
 }
