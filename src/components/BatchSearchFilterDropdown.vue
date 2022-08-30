@@ -1,9 +1,9 @@
 <template>
-  <batch-search-filter :id="id" :label="label" :active="isActive">
+  <batch-search-filter :id="id" :name="name" :active="isActive">
     <keep-alive>
     <selectable-dropdown v-model="selectedValues" :items="items" deactivate-keys :multiple="multiple">
       <template  #item-label="{ item }">
-        <span>{{item && item.label ? item.label:item}}</span>
+        <slot name="label" :item="item">{{ item && item.label ? item.label : item }}</slot>
       </template>
     </selectable-dropdown>
     </keep-alive>
@@ -12,6 +12,8 @@
 
 <script>
 import BatchSearchFilter from '@/components/BatchSearchFilter'
+import { isEqual } from 'lodash'
+
 export default {
   name: 'BatchSearchFilterDropdown',
   components: { BatchSearchFilter },
@@ -24,12 +26,13 @@ export default {
       type: String,
       required: true
     },
-    label: {
+    name: {
       type: String,
       required: true
     },
     values: {
-      type: [Array, Object]
+      type: [Array, Object],
+      default: null
     },
     items: {
       type: Array,
@@ -40,18 +43,20 @@ export default {
     }
   },
   methods: {
-
+    value (item) {
+      return item && item.label ? item.label : item
+    }
   },
   computed: {
     isActive () {
-      return this.values?.length > 0 || this.values?.value !== undefined
+      return this.values?.length > 0 || (this.values?.value !== undefined)
     },
     selectedValues: {
       get () {
         return this.values
       },
       set (values) {
-        this.$emit('update', values)
+        if (!isEqual(values, this.values)) { this.$emit('update', values) }
       }
     }
 

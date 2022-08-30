@@ -1,5 +1,5 @@
 <template>
-  <batch-search-filter :id="id" :label="label" :active="isActive">
+  <batch-search-filter :id="id" :name="name" :active="isActive">
     <keep-alive>
       <date-picker
         is-range
@@ -32,7 +32,7 @@ export default {
       type: String,
       required: true
     },
-    label: {
+    name: {
       type: String,
       required: true
     },

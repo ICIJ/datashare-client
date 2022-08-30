@@ -1,7 +1,7 @@
 <template>
   <div class="batch-search-filter">
     <span>
-        {{ label }}
+        {{ name }}
     </span>
     <b-btn :id="btnId"
            :class="btnClassName"
@@ -10,14 +10,11 @@
       <fa icon="filter"/>
     </b-btn>
     <batch-search-filter-badge v-if="active"/>
-    <keep-alive>
       <b-popover custom-class="popover-body-p-0"
-                 lazy
                  :target="btnId"
                  triggers="focus">
         <slot></slot>
       </b-popover>
-    </keep-alive>
   </div>
 </template>
 
@@ -38,7 +35,7 @@ export default {
       type: String,
       required: true
     },
-    label: {
+    name: {
       type: String,
       required: true
     },
