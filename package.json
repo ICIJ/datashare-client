@@ -102,7 +102,7 @@
     "sass": "^1.54.0",
     "sass-loader": "^10.1.0",
     "sass-resources-loader": "^2.2.4",
-    "vue-template-compiler": "^2.6.14",
+    "vue-template-compiler": "2.7.8",
     "whatwg-fetch": "^3.5.0"
   },
   "eslintConfig": {
