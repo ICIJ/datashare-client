@@ -1,548 +1,68 @@
 <template>
   <div class="batch-search container h-100 pt-4">
-    <div class="d-flex flex-wrap align-items-center">
-      <form class="batch-search__search-bar col-md-6 px-0" @submit.prevent="searchBatchsearches">
-        <search-bar-input v-model="search"
-                          :placeholder="$t('batchSearch.placeholder')"
-                          class="batch-search__search-bar__input"
-                          hide-tips
-        >
-          <template #fields>
-            <search-bar-input-dropdown
-              v-model="field"
-              :fieldOptions="fieldOptions"
-              :fieldOptionsPath="fieldOptionsPath"
-              class="batch-search__search-bar__field"
-            />
-          </template>
-        </search-bar-input>
-      </form>
-      <b-btn :disabled="!hasActiveFilter"
-             class="batch-search__clear-filter-btn text-muted "
-             variant="link"
-             @click="deleteFilters">
-        <fa icon="filter-circle-xmark"/>
-        {{ $t('batchSearch.clearFilters') }}
-      </b-btn>
-      <b-btn class="ml-auto" @click="$refs['batch-search-form'].show()" variant="primary" >
-        <fa icon="plus" class="mr-1"></fa>
-        <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>
-      </b-btn>
-      <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
-        <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()"></batch-search-form>
-      </b-modal>
-    </div>
-    <v-wait for="load batchSearches" class="batch-search__items card">
-      <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" />
-      <b-table
-        :fields="fieldsIfAnyItemOrFilter"
-        :items="displayBatchSearches"
-        :sort-by="sortBy"
-        :sort-desc="sortDesc"
-        hover
-        no-sort-reset
-        responsive
-        show-empty
-        striped
-        tbody-tr-class="batch-search__items__item"
-        thead-tr-class="text-nowrap"
-        @sort-changed="sortChanged">
-        <template #empty >
-          <p class="batch-search__items__item__no-item text-center m-0"
-             :class="{'batch-search__items__item__no-item-filtered':hasActiveFilter}"
-             v-html="noItemMessage"/>
-        </template>
-        <!-- Filterable Headers -->
-        <template #head(state)="{ field }">
-          <batch-search-filter-dropdown v-model="selectedStates" :items="states" :id="field.key" :label="field.label" multiple/>
-        </template>
-        <template #head(projects)="{ field }">
-          <batch-search-filter-dropdown v-model="selectedProjects" :items="projects" :id="field.key" :label="field.label" multiple/>
-        </template>
-        <template #head(date)="{ field }">
-          <batch-search-filter-date v-model="selectedDateRange" :date="selectedDateRange" :id="field.key" :label="field.label"/>
-        </template>
-        <template #head(published)="{ field }">
-          <batch-search-filter-dropdown v-model="selectedStatus" :items="status" :id="field.key" :label="field.label"/>
-        </template>
-        <!-- Cells -->
-        <template #cell(name)="{ item }">
-          <router-link :to="generateTo(item)" class="batch-search__items__item__link">
-            {{ item.name }}
-          </router-link>
-          <p class="m-0 text-muted small">{{ item.description }}</p>
-        </template>
-        <template #cell(queries)="{ item }">
-          <span class="batch-search__items__item__queries">
-            {{ $n(item.nbQueries) }}
-          </span>
-        </template>
-        <template #cell(state)="{ item }">
-          <batch-search-status :batch-search="item" />
-        </template>
-        <template #cell(date)="{ item }">
-          <span :title="item.dateTitle">{{ item.dateContent }}</span>
-        </template>
-        <!-- eslint-disable-next-line vue/valid-v-slot -->
-        <template #cell(user.id)="{ item }">
-          <user-display v-if="item.hasUser" :username="item.userId"/>
-        </template>
-        <template #cell(nbResults)="{ item }">
-          <span class="batch-search__items__item__results">{{ item.formatNbResults }}</span>
-        </template>
-        <template #cell(published)="{ item }">
-          {{ item.isPublished }}
-        </template>
-        <template #cell(projects)="{ item }">
-          <span class="batch-search__items__item__projects text-truncate" v-b-tooltip.hover :title="item.projectNames">
-            {{ item.projectNames }}
-          </span>
-        </template>
-      </b-table>
-
-      <b-pagination-nav
-        v-if="numberOfPages > 1"
-        :link-gen="linkGen"
-        :number-of-pages="numberOfPages"
-        class="mt-2"
-        use-router/>
-    </v-wait>
+    <v-wait for="load haveBatchSearch" class="batch-search__wait">
+      <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
+      <template v-if="hasBatchSearch">
+      <div class="d-flex flex-wrap align-items-center">
+        <batch-search-filter-query class="batch-search__search-bar my-1"/>
+        <batch-search-clear-filters class="batch-search__clear-filter-btn my-1"/>
+        <b-btn class="ml-auto my-1" variant="primary" @click="$refs['batch-search-form'].show()">
+          <fa class="mr-1" icon="plus"></fa>
+          <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>
+        </b-btn>
+      </div>
+      <batch-search-table/>
+    </template>
+    <template v-else>
+      <div class="text-center">
+        <div v-html="noBatchSearch" class="py-2"/>
+        <b-btn class="ml-auto my-1" variant="primary" @click="$refs['batch-search-form'].show()">
+          <fa class="mr-1" icon="plus"></fa>
+          <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>
+        </b-btn>
+      </div>
+    </template>
+    <b-modal ref="batch-search-form" :title="$t('batchSearch.heading')" body-class="p-0" hide-footer size="md">
+      <batch-search-form hide-border hide-title @submit="$refs['batch-search-form'].hide()"></batch-search-form>
+    </b-modal>
+      </v-wait>
   </div>
 </template>
 
 <script>
-import { compact, find, isEqual, some } from 'lodash'
-import moment from 'moment'
-
 import BatchSearchForm from '@/components/BatchSearchForm'
-import BatchSearchStatus from '@/components/BatchSearchStatus'
-import UserDisplay from '@/components/UserDisplay'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
-import settings from '@/utils/settings'
-import BatchSearchFilterDropdown from '@/components/BatchSearchFilterDropdown'
-import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
-import SearchBarInput from '@/components/SearchBarInput'
-import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
-import { mapState } from 'vuex'
-
-const EBatchSearchStatusValue = Object.freeze({
-  PUBLISHED: '1',
-  NOT_PUBLISHED: '0'
-})
-const EBatchSearchStatusLabel = Object.freeze({
-  [EBatchSearchStatusValue.PUBLISHED]: 'Published',
-  [EBatchSearchStatusValue.NOT_PUBLISHED]: 'Not published'
-})
-
-const EBatchSearchStatus = Object.freeze({
-  [EBatchSearchStatusValue.PUBLISHED]: {
-    label: EBatchSearchStatusLabel[EBatchSearchStatusValue.PUBLISHED],
-    value: EBatchSearchStatusValue.PUBLISHED
-  },
-  [EBatchSearchStatusValue.NOT_PUBLISHED]: {
-    label: EBatchSearchStatusLabel[EBatchSearchStatusValue.NOT_PUBLISHED],
-    value: EBatchSearchStatusValue.NOT_PUBLISHED
-  }
-})
+import BatchSearchTable from '@/components/BatchSearchTable'
+import BatchSearchClearFilters from '@/components/BatchSearchClearFiltersButton'
+import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
 
 export default {
   name: 'BatchSearches',
   mixins: [polling, utils],
   components: {
-    SearchBarInputDropdown,
-    SearchBarInput,
-    BatchSearchFilterDropdown,
-    BatchSearchFilterDate,
-    BatchSearchForm,
-    BatchSearchStatus,
-    UserDisplay
+    BatchSearchFilterQuery,
+    BatchSearchClearFilters,
+    BatchSearchTable,
+    BatchSearchForm
   },
-  data () {
-    return {
-      field: 'all',
-      order: settings.batchSearch.order,
-      page: 1,
-      perPage: settings.batchSearch.size,
-      query: '',
-      search: '',
-      states: Object.keys(settings.batchSearch.status),
-      status: [
-        EBatchSearchStatus[EBatchSearchStatusValue.PUBLISHED],
-        EBatchSearchStatus[EBatchSearchStatusValue.NOT_PUBLISHED]
-      ],
-      sort: settings.batchSearch.sort,
-      selectedDateRange: null,
-      selectedProjects: [],
-      selectedStates: [],
-      selectedStatus: null,
-      start: null,
-      end: null
+  async mounted () {
+    this.getBatchSearch()
+  },
+  methods: {
+    async getBatchSearch () {
+      this.$wait.start('load haveBatchSearch')
+      await this.$store.dispatch('batchSearch/getBatchSearches', { page: 1, size: 1 })
+      this.$wait.end('load haveBatchSearch')
     }
   },
   computed: {
-    ...mapState('batchSearch', ['total']),
-    displayBatchSearches () {
-      return this.$store.state.batchSearch.batchSearches.map((batchSearch) => {
-        return {
-          ...batchSearch,
-          queries: this.$n(batchSearch.queries),
-          dateTitle: moment(batchSearch.date).locale(this.$i18n.locale).format('LLL'),
-          dateContent: moment(batchSearch.date).locale(this.$i18n.locale).format('LL'),
-          userId: batchSearch.user?.id,
-          hasUser: !!batchSearch.user,
-          formatNbResults: this.$n(batchSearch.nbResults),
-          isPublished: batchSearch.published ? this.$t('global.yes') : this.$t('global.no'),
-          projectNames: this.getProjectsNames(batchSearch)
-        }
-      })
+    hasBatchSearch () {
+      return this.$store.state.batchSearch.haveBatchSearch
     },
-    howToLink () {
-      const { href } = this.$router.resolve('/docs/all-batch-search-documents')
-      return href
-    },
-    fieldOptions () {
-      const options = ['all', 'name', 'description']
-      if (this.isServer) {
-        options.push('user_id')
-      }
-      return options
-    },
-    fieldOptionsPath () {
-      return ['batchSearch', 'field']
-    },
-    fieldsIfAnyItemOrFilter () {
-      if (this.displayBatchSearches.length || this.hasActiveFilter) {
-        return this.fields
-      }
-      return []
-    },
-    fields () {
-      return compact([
-        {
-          key: 'state',
-          label: this.$t('batchSearch.state'),
-          sortable: true,
-          name: 'state'
-        },
-        this.serverField({
-          key: 'projects',
-          label: this.$t('batchSearch.projects'),
-          sortable: true,
-          name: 'projects'
-        }),
-        {
-          key: 'name',
-          label: this.$t('batchSearch.name'),
-          sortable: true,
-          name: 'name'
-        },
-        this.serverField({
-          key: 'user.id',
-          label: this.$t('batchSearch.author'),
-          sortable: true,
-          name: 'user_id'
-        }),
-        {
-          key: 'queries',
-          label: this.$t('batchSearch.queries'),
-          sortable: false
-        },
-        {
-          key: 'date',
-          label: this.$t('batchSearch.date'),
-          sortable: true,
-          name: 'batch_date'
-        },
-        {
-          key: 'nbResults',
-          label: this.$t('batchSearch.nbResults'),
-          sortable: true,
-          name: 'batch_results'
-        },
-        this.serverField({
-          key: 'published',
-          label: this.$t('batchSearch.published'),
-          sortable: true,
-          name: 'published'
-        })
-      ])
-    },
-    publicationStatus () {
-      return this.selectedStatus?.value ?? null
-    },
-    sortBy () {
-      return find(this.fields, item => item.name === this.sort).key
-    },
-    sortDesc () {
-      return this.order === 'desc'
-    },
-    numberOfPages () {
-      return Math.ceil(this.total / this.perPage)
-    },
-    hasPendingBatchSearches () {
-      const pendingStates = [settings.batchSearch.states.running, settings.batchSearch.states.queued]
-      return some(this.displayBatchSearches, ({ state }) => pendingStates.includes(state))
-    },
-    hasSelectedStatus () {
-      return !!this.publicationStatus
-    },
-    hasSelectedStates () {
-      return this.selectedStates.length
-    },
-    hasSelectedProjects () {
-      return this.selectedProjects.length
-    },
-    hasQuery () {
-      return this.query.length
-    },
-    hasSelectedDateRange () {
-      return !!this.selectedDateRange
-    },
-    hasActiveFilter () {
-      return this.hasQuery || this.hasSelectedDateRange ||
-        this.hasSelectedProjects || this.hasSelectedStates ||
-        this.hasSelectedStatus
-    },
-    noItemMessage () {
-      return this.hasActiveFilter ? this.$t('batchSearch.empty', { howToLink: this.howToLink }) : this.$t('batchSearch.emptyWithFilter')
-    },
-    projects () {
-      return this.$core.projects
-    }
-
-  },
-  mounted () {
-    this.setDataFromQueryParams()
-    this.fetchAndRegisterPollWithLoader()
-  },
-  methods: {
-    serverField (field) {
-      return this.isServer ? field : null
-    },
-    updateOrder (order) {
-      return (order === 'asc' || order === 'desc') && this.order !== order
-    },
-    setDataFromQueryParams (to = this.$route) {
-      this.page ??= parseInt(to.query?.page) ?? 1
-      this.sort = to.query?.sort ?? this.sort
-      if (this.updateOrder(to.query?.order)) {
-        this.order = to.query?.order
-      }
-      this.query = to.query?.query ?? this.query
-      this.field = to.query?.field ?? this.field
-      this.search = to.query?.query ?? this.query // TODO : there is two get on query.query
-
-      if (to.query?.dateStart && to.query?.dateEnd) {
-        const start = parseInt(to.query?.dateStart)
-        const end = parseInt(to.query?.dateEnd)
-        if (!Number.isNaN(start) && !Number.isNaN(end)) {
-          if (start !== this.selectedDateRange?.start && end !== this.selectedDateRange?.end) {
-            this.$set(this, 'selectedDateRange', { start, end })
-          }
-        } else if (this.selectedDateRange !== null) {
-          this.$set(this, 'selectedDateRange', null)
-        }
-      } else if (this.selectedDateRange !== null) {
-        this.$set(this, 'selectedDateRange', null)
-      }
-
-      this.selectedProjects ??= [...to.query?.project]
-      this.selectedStates ??= to.query?.states
-
-      const newObj = EBatchSearchStatus[to.query?.publishState] ?? null
-      if (newObj && newObj?.value !== this.selectedStatus?.value) {
-        this.selectedStatus = newObj
-      } else if (!newObj && this.publicationStatus) {
-        this.selectedStatus = null
-      }
-    },
-    generateTo (item) {
-      const baseTo = {
-        name: 'batch-search.results',
-        params: {
-          index: this.getProjectsNames(item).replace(/\s/g, ''),
-          uuid: item.uuid
-        },
-        query: {
-          page: 1,
-          sort: settings.batchSearchResults.sort,
-          order: settings.batchSearchResults.order
-        }
-      }
-      const searchQueryExists = this.query
-      return {
-        ...baseTo,
-        ...(searchQueryExists && { query: { query: this.query } })
-      }
-    },
-    generateLinkToBatchSearch ({
-      page = this.page,
-      sort = this.sort,
-      order = this.order,
-      query = this.query,
-      field = this.field,
-      project = this.selectedProjects,
-      state = this.selectedStates,
-      batchDate = this.selectedDateRange,
-      publishState = this.publicationStatus
-    }) {
-      const date = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
-      const route = {
-        name: 'batch-search',
-        query: { page, sort, order, query, field, project, ...state, ...date }
-      }
-      if (publishState) {
-        route.query.publishState = publishState
-      } else {
-        delete route.query?.publishState
-      }
-      return route
-    },
-    updateRoute () {
-      const route = this.generateLinkToBatchSearch({})
-      const { currentRoute: { query: curQuery } } = this.$router
-      if (curQuery.page) {
-        curQuery.page = curQuery.page.toString()
-      }
-      if (!isEqual(curQuery, route.query)) {
-        return this.$router.push(this.generateLinkToBatchSearch({}))
-      }
-      return Promise.resolve()
-    },
-    async sortChanged (ctx) {
-      const sort = find(this.fields, item => item.key === ctx.sortBy).name
-      const params = { page: this.page, sort, order: this.order }
-      await this.$router.push(this.generateLinkToBatchSearch(params))
-    },
-    async fetch () {
-      const from = (this.page - 1) * this.perPage
-      const size = this.perPage
-      const batchDate = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
-      const params = {
-        from,
-        size,
-        sort: this.sort,
-        order: this.order,
-        query: this.query,
-        field: this.field,
-        project: this.selectedProjects,
-        state: this.selectedStates,
-        batchDate,
-        publishState: this.publicationStatus
-      }
-      return this.$store.dispatch('batchSearch/getBatchSearches', params)
-    },
-    async fetchWithLoader () {
-      this.$wait.start('load batchSearches')
-      this.$Progress.start()
-      await this.fetch()
-      this.$Progress.finish()
-      this.$wait.end('load batchSearches')
-    },
-    async  fetchAndRegisterPollWithLoader () {
-      this.$wait.start('load batchSearches')
-      this.$Progress.start()
-      await this.fetchAndRegisterPoll()
-      this.$Progress.finish()
-      this.$wait.end('load batchSearches')
-    },
-    async fetchForPoll () {
-      await this.fetch()
-      // Continue to poll data if they are pending batch searches and we are on page 1
-      return this.page === 1 && this.hasPendingBatchSearches
-    },
-    async fetchAndRegisterPoll () {
-      await this.fetch()
-      // const fn = this.fetchForPoll
-      // const timeout = () => random(1000, 4000)
-      // this.registerPollOnce({ fn, timeout })
-    },
-    linkGen (page) {
-      return this.generateLinkToBatchSearch({ page })
-    },
-    searchBatchsearches () {
-      this.query = this.search
-      const params = { page: 1, query: this.query }
-      return this.$router.push(this.generateLinkToBatchSearch(params))
-    },
-    getProjectsNames (item) {
-      return item.projects?.map(project => project.name).join(', ') ?? ''
-    },
-    deleteFilters () {
-      this.$set(this, 'query', '')
-      this.$set(this, 'search', '')
-      this.$set(this, 'selectedDateRange', null)
-      this.$set(this, 'selectedProjects', [])
-      this.$set(this, 'selectedStates', [])
-      this.$set(this, 'selectedStatus', null)
-    }
-  },
-  watch: {
-    page () {
-      this.updateRoute()
-    },
-    sort () {
-      this.updateRoute()
-    },
-    order () {
-      this.updateRoute()
-    },
-    query () {
-      this.updateRoute()
-    },
-    selectedDateRange () {
-      this.updateRoute()
-    },
-    publicationStatus (newStatus, oldStatus) {
-      if (newStatus !== oldStatus) {
-        this.updateRoute()
-      }
-    },
-    $route: {
-      async handler (to) {
-        this.setDataFromQueryParams(to)
-        await this.fetchWithLoader()
-      }
+    noBatchSearch () {
+      return this.$t('batchSearch.empty', { howToLink: this.howToLink })
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  .batch-search {
-    display: grid;
-    &__items {
-      border-radius: $card-border-radius 0 0 0;
-      margin-top: $spacer;
-      overflow: hidden;
-      position: static;
-
-      &:deep(.table-responsive) {
-        margin: 0;
-      }
-
-      &:deep(table) {
-        margin: 0;
-
-        thead th {
-          white-space: nowrap;
-          vertical-align: middle;
-          border-top:none;
-        }
-      }
-
-      &__header__filter-date-toggle{
-        padding: 0 0.5em;
-      }
-
-      &__item {
-
-        &__projects {
-          display: block;
-          max-width: 10vw;
-        }
-      }
-    }
-  }
-</style>

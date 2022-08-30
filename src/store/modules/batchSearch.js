@@ -11,7 +11,8 @@ export function initialState () {
     batchSearches: [],
     results: [],
     selectedQueries: [],
-    total: 0
+    total: 0,
+    haveBatchSearch: false
   }
 }
 
@@ -35,6 +36,11 @@ export const mutations = {
   },
   total (state, total) {
     Vue.set(state, 'total', total)
+  },
+  haveBatchSearch (state, haveBatchSearch) {
+    if (!state.haveBatchSearch) {
+      Vue.set(state, 'haveBatchSearch', haveBatchSearch)
+    }
   }
 }
 
@@ -59,6 +65,9 @@ export const actions = {
       }
     }
     commit('total', batchSearches.total)
+    if (batchSearches.total > 0) {
+      commit('haveBatchSearch', true)
+    }
     return commit('batchSearches', batchSearches.items)
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published }) {
@@ -91,6 +100,8 @@ export const actions = {
   async deleteBatchSearches ({ commit }) {
     try {
       await api.deleteBatchSearches()
+
+      commit('total', 0)
       return commit('batchSearches', [])
     } catch (_) {}
   }
