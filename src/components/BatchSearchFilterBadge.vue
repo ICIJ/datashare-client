@@ -1,12 +1,23 @@
 <template>
-  <b-badge class="batch-search-filter-badge position-absolute p-2 rounded-circle"
-           variant="secondary">
-    {{ }}
-  </b-badge>
+  <fa class="batch-search-filter-badge text-secondary"
+      :class="{'batch-search-filter-badge--inactive':!active}"
+      icon="circle"
+      width="8px"></fa>
 </template>
 
 <script>
 export default {
-  name: 'BatchSearchFiltersBadge'
+  name: 'BatchSearchFiltersBadge',
+  props: {
+    active: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
+<style lang="scss">
+.batch-search-filter-badge--inactive{
+  visibility: hidden;
+}
+</style>

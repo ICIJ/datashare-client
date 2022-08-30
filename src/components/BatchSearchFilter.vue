@@ -1,20 +1,21 @@
 <template>
-  <div class="batch-search-filter">
+  <div class="batch-search-filter d-flex align-items-baseline">
     <span>
         {{ name }}
     </span>
     <b-btn :id="btnId"
+           class="batch-search-filter__toggle"
            :class="btnClassName"
            radius
            variant="outline">
       <fa icon="filter"/>
     </b-btn>
-    <batch-search-filter-badge v-if="active"/>
-      <b-popover custom-class="popover-body-p-0"
-                 :target="btnId"
-                 triggers="focus">
-        <slot></slot>
-      </b-popover>
+    <batch-search-filter-badge :active="active"/>
+    <b-popover custom-class="popover-body-p-0"
+               :target="btnId"
+               triggers="focus">
+      <slot></slot>
+    </b-popover>
   </div>
 </template>
 
@@ -54,3 +55,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.batch-search-filter{
+  &__toggle{
+    padding:  0 0.2em 0 0.5em;
+    line-height: 1.3em;
+  }
+
+}
+</style>
