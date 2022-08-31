@@ -22,7 +22,7 @@
           </b-dropdown-item>
         </b-dropdown>
         <b-dropdown class="search-results-header__settings__size mr-2"
-                    menu-class="search-results-header__settings__size__dropdown"
+                    menu-class="search-results-header__settings__size__dropdown pt-0"
                     size="sm"
                     toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler"
                     variant="link">
