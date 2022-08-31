@@ -5,7 +5,7 @@ import { Core } from '@/core'
 import VueRouter from 'vue-router'
 
 describe('BatchSearchFilterQuery.vue', () => {
-  const { i18n } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
   it('display a search bar input', async () => {
@@ -15,11 +15,8 @@ describe('BatchSearchFilterQuery.vue', () => {
   })
 
   describe('data change on search params changed', () => {
-    let localVue = null
     let router = null
     beforeEach(() => {
-      localVue = createLocalVue()
-      localVue.use(VueRouter)
       router = new VueRouter({
         routes: [{
           name: 'batch-search', path: 'batch-search'
