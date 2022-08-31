@@ -2,7 +2,7 @@
   <form class="batch-search-filter-query col-md-6 px-0" @submit.prevent="filterByQuery">
     <search-bar-input v-model="search"
                       :placeholder="$t('batchSearch.placeholder')"
-                      class="batch-search__search-bar__input"
+                      class="batch-search-filter-query__input"
                       hide-tips
     >
       <template #fields>
@@ -18,23 +18,21 @@
 </template>
 
 <script>
-import utils from '@/mixins/utils'
 import SearchBarInput from '@/components/SearchBarInput'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 
 export default {
   name: 'BatchSearchFilterQuery',
   components: { SearchBarInputDropdown, SearchBarInput },
-  mixins: [utils],
   data () {
     return {
       field: 'all',
-      search: this.$route.query?.query ?? ''
+      search: this.$route?.query?.query ?? ''
     }
   },
   methods: {
     filterByQuery () {
-      const params = this.$route.query
+      const params = this.$route?.query
       return this.$router.push({
         name: 'batch-search',
         query: { ...params, page: 1, query: this.search }
