@@ -711,7 +711,17 @@
     "empty": "crwdns2539:0crwdne2539:0",
     "created": "crwdns2520:0crwdne2520:0",
     "warning": "crwdns2454:0crwdne2454:0",
-    "inProgress": "crwdns2518:0crwdne2518:0"
+    "inProgress": "crwdns2518:0crwdne2518:0",
+    "relaunch": {
+      "succeed": "crwdns2574:0crwdne2574:0",
+      "succeedBody": "crwdns2576:0crwdne2576:0",
+      "failed": "crwdns2578:0crwdne2578:0",
+      "failedBody": "crwdns2580:0crwdne2580:0"
+    }
+  },
+  "batchDownloadActions": {
+    "relaunch": "crwdns2582:0crwdne2582:0",
+    "search": "crwdns2584:0crwdne2584:0"
   },
   "tasksList": {
     "empty": "crwdns2541:0crwdne2541:0",
