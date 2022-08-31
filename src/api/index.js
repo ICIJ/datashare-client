@@ -99,13 +99,16 @@ export default class Api {
     return this.sendActionAsText(`/api/batch/search/${batchId}`)
   }
   getBatchSearches (from = 0, size = 100, sort = 'batch_date', order = 'asc', query = '*', field = 'all') {
-    return this.sendActionAsText('/api/batch/search', { method: 'POST', data: { from, size, sort, order, query, field } })
+    const data = { from, size, sort, order, query, field }
+    return this.sendActionAsText('/api/batch/search', { method: 'POST', data })
   }
   getBatchSearchResults (batchId, from = 0, size = 100, queries = [], sort = 'doc_nb', order = 'desc') {
-    return this.sendActionAsText(`/api/batch/search/result/${batchId}`, { method: 'POST', data: { from, size, queries, sort, order } })
+    const data = { from, size, queries, sort, order }
+    return this.sendActionAsText(`/api/batch/search/result/${batchId}`, { method: 'POST', data })
   }
   copyBatchSearch (batchId, name, description) {
-    return this.sendActionAsText(`/api/batch/search/copy/${batchId}`, { method: 'POST', data: { name, description } })
+    const data = { name, description }
+    return this.sendActionAsText(`/api/batch/search/copy/${batchId}`, { method: 'POST', data })
   }
   deleteBatchSearch (batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: 'DELETE' })
@@ -131,10 +134,12 @@ export default class Api {
     return this.sendAction('/api/users/me')
   }
   getUserHistory (type, from, size) {
-    return this.sendAction('/api/users/me/history', { method: 'GET', params: { type: type, from: from, size: size } })
+    const params = { type: type, from: from, size: size }
+    return this.sendAction('/api/users/me/history', { method: 'GET', params })
   }
   addHistoryEvent (projectIds, type, name, uri) {
-    return this.sendActionAsText('/api/users/me/history', { method: 'PUT', data: { projectIds, type, name, uri } })
+    const data = { projectIds, type, name, uri }
+    return this.sendActionAsText('/api/users/me/history', { method: 'PUT', data })
   }
   deleteUserHistory (type) {
     return this.sendAction('/api/users/me/history', { method: 'DELETE', params: { type: type } })
@@ -142,21 +147,21 @@ export default class Api {
   deleteUserEvent (id) {
     return this.sendAction('/api/users/me/history/event', { method: 'DELETE', params: { id: id } })
   }
-  setMarkAsRecommended (project, docIds) {
-    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: 'POST', data: docIds })
+  setMarkAsRecommended (project, data) {
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: 'POST', data })
   }
-  setUnmarkAsRecommended (project, docIds) {
-    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unrecommend`, { method: 'POST', data: docIds })
+  setUnmarkAsRecommended (project, data) {
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unrecommend`, { method: 'POST', data })
   }
   getRecommendationsByDocuments (project, docId) {
     return this.sendAction(`/api/users/recommendationsby?project=${project}&docIds=${docId}`)
   }
   getRecommendationsByProject (project) {
-    return this.sendAction('/api/users/recommendations', { method: 'GET', params: { project: project } })
+    return this.sendAction('/api/users/recommendations', { method: 'GET', params: { project } })
   }
   getDocumentsRecommendedBy (project, users = []) {
-    const userIds = join(users)
-    return this.sendAction(`/api/${project}/documents/recommendations`, { method: 'GET', params: { userids: userIds } })
+    const userids = join(users)
+    return this.sendAction(`/api/${project}/documents/recommendations`, { method: 'GET', params: { userids } })
   }
   getNerPipelines () {
     return this.sendAction('/api/ner/pipelines')
