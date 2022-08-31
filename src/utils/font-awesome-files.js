@@ -26,5 +26,5 @@ export function findIcon (type) {
 export function findContentTypeIcon (contentType) {
   const extensions = get(types, [contentType, 'extensions'], [])
   const icon = get(types, [contentType, 'icon'], null)
-  return icon ? findIcon(icon) : find(extensions.map(findIcon)) || defaultIcon
+  return (icon ? findIcon(icon) : find(extensions.map(findIcon))) || defaultIcon
 }
