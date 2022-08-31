@@ -1,6 +1,6 @@
 <template>
   <b-btn :disabled="!hasActiveFilter"
-         class="text-muted "
+         class="batch-search-clear-filters text-muted "
          variant="link"
          @click="deleteFilters">
     <fa icon="filter-circle-xmark"/>
@@ -11,15 +11,15 @@
 <script>
 
 import utils from '@/mixins/utils'
-const SEARCH_PARAMS_SERVER = Object.freeze({
-  query: false,
-  publishState: true,
-  project: true,
-  dateStart: false,
-  dateEnd: false,
-  state: false,
-  order: false,
-  sort: false
+const SEARCH_PARAMS_LOCAL = Object.freeze({
+  query: true,
+  publishState: false,
+  project: false,
+  dateStart: true,
+  dateEnd: true,
+  state: true,
+  order: true,
+  sort: true
 })
 
 export default {
@@ -32,15 +32,15 @@ export default {
   },
   computed: {
     filters () {
-      const keys = Object.keys(SEARCH_PARAMS_SERVER)
+      const keys = Object.keys(SEARCH_PARAMS_LOCAL)
       return this.isServer
         ? keys
         : keys.filter(key =>
-          SEARCH_PARAMS_SERVER[key]
+          SEARCH_PARAMS_LOCAL[key]
         )
     },
     currentFilters () {
-      return Object.keys(this.$route.query)
+      return Object.keys(this.$route?.query)
     },
     hasActiveFilter () {
       const isContained = this.currentFilters.filter(f => this.filters.includes(f)).length !== 0
