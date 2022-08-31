@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     isActive () {
-      return this.date != null
+      return this.date !== null
     },
     locale () {
       return this.$i18n.locale
