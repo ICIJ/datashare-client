@@ -10,19 +10,21 @@
 
 <script>
 
-const SEARCH_PARAMS_FILTERS = Object.freeze({
-  query: 'query',
-  publishState: 'publishState',
-  project: 'project',
-  dateStart: 'dateStart',
-  dateEnd: 'dateEnd',
-  state: 'state',
-  order: 'order',
-  sort: 'sort'
+import utils from '@/mixins/utils'
+const SEARCH_PARAMS_SERVER = Object.freeze({
+  query: false,
+  publishState: true,
+  project: true,
+  dateStart: false,
+  dateEnd: false,
+  state: false,
+  order: false,
+  sort: false
 })
 
 export default {
   name: 'BatchSearchClearFilters',
+  mixins: [utils],
   methods: {
     deleteFilters () {
       return this.$router.push({ name: 'batch-search', query: {} })
@@ -30,7 +32,12 @@ export default {
   },
   computed: {
     filters () {
-      return Object.keys(SEARCH_PARAMS_FILTERS)
+      const keys = Object.keys(SEARCH_PARAMS_SERVER)
+      return this.isServer
+        ? keys
+        : keys.filter(key =>
+          SEARCH_PARAMS_SERVER[key]
+        )
     },
     currentFilters () {
       return Object.keys(this.$route.query)

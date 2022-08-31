@@ -30,6 +30,11 @@ export default {
       search: this.$route?.query?.query ?? ''
     }
   },
+  watch: {
+    $route (value) {
+      this.search = value?.query?.query
+    }
+  },
   methods: {
     filterByQuery () {
       const params = this.$route?.query
