@@ -7,7 +7,7 @@
              show-empty
              thead-tr-class="text-nowrap"
              tbody-tr-class="tasks-list__tasks__item"
-             class="card border-top-0 indexing__tasks">
+             class="card border-top-0 tasks-list__tasks">
       <template #empty>
         <slot name="empty">
           <p class="text-center m-0" v-html="$t('tasksList.empty')"></p>
@@ -117,11 +117,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .tasks-list {
-    &__table td {
-      vertical-align: middle;
-    }
-  }
-</style>
