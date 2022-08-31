@@ -6,10 +6,16 @@
       </div>
       <tasks-list :tasks="tasks">
         <template v-slot="{ item: { name, properties } }">
-          <a :href="downloadResultsUrl(name)" target="_blank">
-            <fa icon="download" fixed-width />
-            {{ properties.batchDownload.filename | basename }}
-          </a>
+          <div class="d-flex">
+            <a :href="downloadResultsUrl(name)" target="_blank">
+              <fa icon="download" fixed-width />
+              {{ properties.batchDownload.filename | basename }}
+            </a>
+            <batch-download-actions
+              class="ml-auto"
+              :value="properties.batchDownload"
+              @relaunched="getDownloadTasks" />
+          </div>
         </template>
         <template #empty>
           <p class="text-center m-0" v-html="$t('batchDownload.empty')"></p>
@@ -21,6 +27,7 @@
 
 <script>
 import { some, random } from 'lodash'
+import BatchDownloadActions from '@/components/BatchDownloadActions'
 import TasksList from '@/components/TasksList'
 import features from '@/mixins/features'
 import polling from '@/mixins/polling'
@@ -31,6 +38,7 @@ const api = new Api()
 export default {
   name: 'BatchDownload',
   components: {
+    BatchDownloadActions,
     TasksList
   },
   mixins: [features, polling],
