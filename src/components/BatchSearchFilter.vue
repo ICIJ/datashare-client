@@ -1,6 +1,6 @@
 <template>
   <div class="batch-search-filter d-flex align-items-baseline">
-    <span>
+    <span class="batch-search-filter__label">
         {{ name }}
     </span>
     <b-btn :id="btnId"
@@ -11,7 +11,7 @@
       <fa icon="filter"/>
     </b-btn>
     <batch-search-filter-badge :active="active"/>
-    <b-popover custom-class="popover-body-p-0"
+    <b-popover custom-class="batch-search-filter__popover popover-body-p-0"
                :target="btnId"
                triggers="focus">
       <slot></slot>
@@ -61,6 +61,5 @@ export default {
     padding:  0 0.2em 0 0.5em;
     line-height: 1.3em;
   }
-
 }
 </style>
