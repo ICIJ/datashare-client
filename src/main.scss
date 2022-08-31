@@ -96,9 +96,18 @@ body {
   .popover-magnified-#{$variant} {
     @include popover-magnified-variant($value);
   }
+
+  .popover-#{$variant} {
+    @include popover-variant($value);
+  }
+}
+
+.popover-white {
+  @include popover-variant($white, 1px, $dropdown-border-color);
 }
 
 .popover {
+
   .popover-body {
     & > .dropdown-menu {
       background: inherit;

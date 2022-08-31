@@ -41,3 +41,61 @@
     border-right-color: $bg;
   }
 }
+
+
+@mixin popover-variant($bg, $border-width: $popover-border-width, $border-color: $popover-border-color) {
+  $bg-darker: darken($bg, 3%);
+  color: text-contrast($bg);
+  background: $bg;
+  border: $border-width solid $border-color;
+
+  .popover-header {
+    background: mix($bg-darker, $bg);
+    color: text-contrast(mix($bg-darker, $bg));
+  }
+
+  .popover-body {
+    color: inherit;
+    padding: $spacer;
+  }
+
+  &.popover.bs-popover-top > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="top"] > .arrow::after {
+    border-top-color: $bg;
+  }
+
+  &.popover.bs-popover-top > .arrow::before,
+  &.popover.bs-popover-auto[x-placement^="top"] > .arrow::before {
+    border-top-color: $border-color;
+  }
+
+  &.popover.bs-popover-bottom > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+    border-bottom-color: $bg;
+  }
+
+  &.popover.bs-popover-bottom > .arrow::before,
+  &.popover.bs-popover-auto[x-placement^="bottom"] > .arrow::before {
+    border-bottom-color: $border-color;
+  }
+
+  &.popover.bs-popover-left > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="left"] > .arrow::after {
+    border-left-color: $bg;
+  }
+
+  &.popover.bs-popover-left > .arrow::before,
+  &.popover.bs-popover-auto[x-placement^="left"] > .arrow::before {
+    border-left-color: $border-color;
+  }
+
+  &.popover.bs-popover-right > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="right"] > .arrow::after {
+    border-right-color: $bg;
+  }
+
+  &.popover.bs-popover-right > .arrow::before,
+  &.popover.bs-popover-auto[x-placement^="right"] > .arrow::before {
+    border-right-color: $border-color;
+  }
+}
