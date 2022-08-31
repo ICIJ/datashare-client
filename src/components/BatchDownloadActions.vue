@@ -1,5 +1,6 @@
 <script>
-import { uniqueId } from 'lodash'
+import { get, castArray, compact, first, flow, keys, uniqueId } from 'lodash'
+import { get as getFp, map as mapFp } from 'lodash/fp'
 import Api from '@/api'
 
 export default {
@@ -13,14 +14,45 @@ export default {
     }
   },
   computed: {
-    togglerId () {
-      return uniqueId('batch-download-actions-')
+    api () {
+      return new Api()
     },
     popoverTarget () {
       return `#${this.togglerId}`
     },
-    api () {
-      return new Api()
+    projects () {
+      return this?.value?.projects?.map(p => p.name) || []
+    },
+    searchRoute () {
+      const name = 'search'
+      const query = {}
+      const { bool: boolQuery = {} } = this.tryToParseQuery()
+      // Create a function to retreive the query_string
+      const queryStringPath = 'bool.should.0.query_string.query'
+      const findQ = flow(castArray, mapFp(getFp(queryStringPath)), compact, first)
+      // Create a closure function to apply the filter to the query object
+      const applyFilter = (reverse = false) => {
+        return filter => {
+          keys(filter.terms || {}).forEach(name => {
+            filter.terms[name].forEach(value => {
+              const queryKey = reverse ? `f[-${name}]` : `f[${name}]`
+              query[queryKey] ||= []
+              query[queryKey].push(value)
+            })
+          })
+        }
+      }
+      // Collect indices
+      query.indices = this.projects.join(',')
+      // Collect query string in "must"
+      query.q = findQ(boolQuery.must || [])
+      // Collect all filters and all reverse filter
+      castArray(get(boolQuery, 'filter.bool.must', [])).forEach(applyFilter())
+      castArray(get(boolQuery, 'filter.bool.must_not', [])).forEach(applyFilter(true))
+      return { name, query }
+    },
+    togglerId () {
+      return uniqueId('batch-download-actions-')
     }
   },
   methods: {
@@ -30,8 +62,8 @@ export default {
     async relaunch () {
       try {
         this.closePopover()
-        const projectIds = this.value.projects.map(p => p.name)
-        const query = JSON.parse(this.value.query || null)
+        const projectIds = this.projects
+        const query = this.parseQuery()
         await this.api.runBatchDownload({ projectIds, query })
         this.notifyRelaunchSucceed()
       } catch (error) {
@@ -41,7 +73,8 @@ export default {
     notifyRelaunchSucceed () {
       const title = this.$t('batchDownload.relaunch.succeed')
       const variant = 'success'
-      this.$root.$bvToast.toast(this.$t('batchDownload.relaunch.succeedBody'), { variant, title })
+      const body = this.$t('batchDownload.relaunch.succeedBody')
+      this.$root.$bvToast.toast(body, { variant, title })
       /**
          * The batch download was relaunched successfully
          *
@@ -52,13 +85,24 @@ export default {
     notifyRelaunchFailed (error) {
       const title = this.$t('batchDownload.relaunch.failed')
       const variant = 'danger'
-      this.$root.$bvToast.toast(this.$t('batchDownload.relaunch.failedBody'), { variant, title })
+      const body = this.$t('batchDownload.relaunch.failedBody')
+      this.$root.$bvToast.toast(body, { variant, title })
       /**
          * The batch download couldn't be relaunched
          *
          * @event relaunchFailed
          */
       this.$emit('relaunchFailed', error)
+    },
+    parseQuery () {
+      return JSON.parse(this.value.query || null) ?? {}
+    },
+    tryToParseQuery () {
+      try {
+        return this.parseQuery()
+      } catch (_) {
+        return {}
+      }
     }
   }
 }
@@ -79,6 +123,10 @@ export default {
         <fa icon="redo" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.relaunch') }}
       </b-dropdown-item-button>
+      <b-dropdown-item :to="searchRoute">
+        <fa icon="search" fixed-width class="mr-1" />
+        {{ $t('batchDownloadActions.search') }}
+      </b-dropdown-item>
     </b-popover>
   </div>
 </template>

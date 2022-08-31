@@ -720,7 +720,8 @@
     }
   },
   "batchDownloadActions": {
-    "relaunch": "Relaunch"
+    "relaunch": "Relaunch",
+    "search": "See search results"
   },
   "tasksList": {
     "empty": "You have not yet started any tasks.",
