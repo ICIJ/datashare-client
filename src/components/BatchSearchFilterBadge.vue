@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'BatchSearchFiltersBadge',
+  name: 'BatchSearchFilterBadge',
   props: {
     active: {
       type: Boolean,
