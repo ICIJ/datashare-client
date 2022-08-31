@@ -711,7 +711,17 @@
     "empty": "Vous n'avez pas encore lancé de tâches de téléchargement.",
     "created": "Votre téléchargement est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
-    "inProgress": "Voir tous les téléchargements en attente"
+    "inProgress": "Voir tous les téléchargements en attente",
+    "relaunch": {
+      "succeed": "Your download is being prepared",
+      "succeedBody": "The download should be available soon.",
+      "failed": "Unable to relaunch",
+      "failedBody": "Something happend when trying to relaunch this batch download."
+    }
+  },
+  "batchDownloadActions": {
+    "relaunch": "Relaunch",
+    "search": "See search results"
   },
   "tasksList": {
     "empty": "Vous n'avez pas encore lancé de tâches.",
