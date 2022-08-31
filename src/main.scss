@@ -101,7 +101,6 @@ body {
     @include popover-variant($value);
   }
 }
-
 .popover-white {
   @include popover-variant($white, 1px, $dropdown-border-color);
 }
@@ -163,7 +162,7 @@ body {
     }
   }
 
-  &.popover-body-overflow-hidden .popover-body {
+  &.popover-body-overflow-hidden:not(.dropdown-menu) .popover-body {
     border-radius: inherit;
     overflow: hidden;
   }
