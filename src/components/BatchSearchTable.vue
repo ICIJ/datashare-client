@@ -18,9 +18,7 @@
         <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" :rows="placeholderRows"/>
       </template>
       <template #empty >
-        <p class="batch-search-table__item__no-item text-center m-0"
-           :class="{'batch-search__items__item__no-item-filtered':hasActiveFilter}"
-           v-html="noItemMessage"/>
+        <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage"/>
       </template>
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
@@ -159,6 +157,8 @@ export default {
       batchDate = this.selectedDateRange,
       publishState = this.publicationStatus
     }) {
+      batchDate = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
+
       const route = {
         name: 'batch-search',
         query: { query, page, sort, order, field, project, state, ...batchDate, publishState }
@@ -358,8 +358,7 @@ export default {
         const areNumber = !Number.isNaN(start) && !Number.isNaN(end)
         return areNumber ? { start, end } : null
       },
-      set (value) {
-        const batchDate = value ? { dateStart: value?.start, dateEnd: value?.end } : null
+      set (batchDate) {
         return this.$router.push(this.createBatchSearchRoute({ batchDate }))
       }
     },
