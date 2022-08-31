@@ -1,11 +1,11 @@
 <template>
-  <batch-search-filter :id="id" :name="name" :active="isActive">
+  <batch-search-filter class="batch-search-filter-dropdown" :id="id" :name="name" :active="isActive">
     <keep-alive>
-    <selectable-dropdown v-model="selectedValues" :items="items" deactivate-keys :multiple="multiple">
-      <template  #item-label="{ item }">
-        <slot name="label" :item="item">{{ item && item.label ? item.label : item }}</slot>
-      </template>
-    </selectable-dropdown>
+      <selectable-dropdown v-model="selectedValues" :items="items" deactivate-keys :multiple="multiple">
+        <template #item-label="{ item }">
+          <slot name="label" :item="item">{{ labelItem(item) }}</slot>
+        </template>
+      </selectable-dropdown>
     </keep-alive>
   </batch-search-filter>
 </template>
@@ -43,7 +43,7 @@ export default {
     }
   },
   methods: {
-    value (item) {
+    labelItem (item) {
       return item && item.label ? item.label : item
     }
   },
