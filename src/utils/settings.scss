@@ -94,6 +94,8 @@ $table-hover-bg: mix($secondary, white, 5%);
 
 $nav-tabs-link-active-bg: white;
 
+$dropdown-item-padding-y: 0.5rem;
+
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';
 @import '~node_modules/bootstrap/scss/_variables.scss';
