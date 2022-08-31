@@ -58,7 +58,8 @@ export default {
 <style lang="scss" scoped>
 .batch-search-filter{
   &__toggle{
-    padding:  0 0.2em 0 0.5em;
+    padding:  0 0.2em;
+    margin:  0 0 0 1em;
     line-height: 1.3em;
   }
 }
