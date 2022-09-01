@@ -21,7 +21,8 @@ describe('BatchSearchFilterQuery.vue', () => {
       router = new VueRouter({
         routes: [{
           name: 'batch-search', path: 'batch-search'
-        }]
+        }],
+        mode: 'abstract'
       })
     })
 
