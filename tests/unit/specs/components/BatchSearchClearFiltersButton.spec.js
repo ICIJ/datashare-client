@@ -23,6 +23,19 @@ describe('BatchSearchClearFilters.vue', () => {
     expect(wrapper.find('.batch-search-clear-filters').text()).toBe('Clear filters')
   })
 
+  it('should enable clear filter button when a filter is selected', async () => {
+    wrapper = shallowMount(BatchSearchClearFilters, { i18n, localVue, router })
+
+    const button = wrapper.find('.batch-search-clear-filters')
+    expect(button.attributes().disabled).toBeTruthy()
+    await router.push({
+      name: 'batch-search',
+      query: { page: 1, query: 'hello' }
+    })
+    const buttonEnabled = wrapper.find('.batch-search-clear-filters')
+    expect(buttonEnabled.attributes().disabled).toBeFalsy()
+  })
+
   it('trigger clear filters button', async () => {
     await router.push({
       name: 'batch-search',
