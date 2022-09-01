@@ -14,9 +14,9 @@
         <batch-search-table/>
       </template>
       <template v-else>
-        <div class="batch-search__none card text-center">
-          <div class="batch-search__none__message py-2 " v-html="noBatchSearch"/>
-          <b-btn class="ml-auto my-1" variant="primary" @click="$refs['batch-search-form'].show()">
+        <div class="batch-search__none  text-center">
+          <div class="batch-search__none__message b-table-empty-row" v-html="noBatchSearch"/>
+          <b-btn class="mx-auto my-2" variant="primary" @click="$refs['batch-search-form'].show()">
             <fa class="mr-1" icon="plus"></fa>
             <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>
           </b-btn>
@@ -36,6 +36,7 @@ import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
 import BatchSearchClearFilters from '@/components/BatchSearchClearFiltersButton'
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
+import { mapState } from 'vuex'
 
 export default {
   name: 'BatchSearches',
@@ -47,25 +48,29 @@ export default {
     BatchSearchForm
   },
   async mounted () {
-    this.getBatchSearch()
+    if (!this.hasBatchSearch) {
+      await this.getBatchSearch()
+    }
   },
   methods: {
     async getBatchSearch () {
       this.$wait.start('load haveBatchSearch')
-      await this.$store.dispatch('batchSearch/getBatchSearches', {
-        page: 1,
-        size: 1
-      })
+      await this.$store.dispatch('batchSearch/hasBatchSearch')
       this.$wait.end('load haveBatchSearch')
     }
   },
   computed: {
-    hasBatchSearch () {
-      return this.$store.state.batchSearch.haveBatchSearch
-    },
+    ...mapState('batchSearch', ['hasBatchSearch']),
     noBatchSearch () {
       return this.$t('batchSearch.empty', { howToLink: this.howToLink })
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.batch-search__none__message {
+  padding: 0.75em;
+  border:1px solid #dee2e6;
+  background-color: white;
+}
+</style>
