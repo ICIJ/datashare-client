@@ -20,9 +20,11 @@
 <script>
 import SearchBarInput from '@/components/SearchBarInput'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import utils from '@/mixins/utils'
 
 export default {
   name: 'BatchSearchFilterQuery',
+  mixins: [utils],
   components: { SearchBarInputDropdown, SearchBarInput },
   data () {
     return {

@@ -3,6 +3,7 @@ import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
 import { Core } from '@/core'
 import VueRouter from 'vue-router'
+import Murmur from '@icij/murmur'
 
 describe('BatchSearchFilterQuery.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
@@ -60,6 +61,26 @@ describe('BatchSearchFilterQuery.vue', () => {
       await wrapper.find('.btn-dark').trigger('submit')
 
       expect(searchSpy).toBeCalledTimes(1)
+    })
+
+    it('should have author field in server mode in fieldOptions', () => {
+      Murmur.config.merge({ mode: 'SERVER' })
+      const wrapper = mount(BatchSearchFilterQuery, { i18n, localVue })
+
+      const fields = wrapper.findAll('.search-bar-input-fields__option')
+      expect(fields).toHaveLength(4)
+      const field = wrapper.find('.search-bar-input-fields__option:nth-child(4)')
+      expect(field.text()).toContain('Author')
+    })
+
+    it('should not have author field in local mode in fieldOptions', () => {
+      Murmur.config.merge({ mode: 'LOCAL' })
+      const wrapper = mount(BatchSearchFilterQuery, { i18n, localVue })
+
+      const fieldsLOCAL = wrapper.findAll('.search-bar-input-fields__option')
+      expect(fieldsLOCAL).toHaveLength(3)
+      const noAuthorField = wrapper.find('.search-bar-input-fields__option:nth-child(4)')
+      expect(noAuthorField.exists()).toBeFalsy()
     })
   })
 })
