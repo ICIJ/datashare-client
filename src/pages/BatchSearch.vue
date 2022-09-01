@@ -14,8 +14,8 @@
         <batch-search-table/>
       </template>
       <template v-else>
-        <div class="card text-center">
-          <div class="py-2" v-html="noBatchSearch"/>
+        <div class="batch-search__none card text-center">
+          <div class="batch-search__none__message py-2 " v-html="noBatchSearch"/>
           <b-btn class="ml-auto my-1" variant="primary" @click="$refs['batch-search-form'].show()">
             <fa class="mr-1" icon="plus"></fa>
             <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>

@@ -40,259 +40,47 @@ jest.mock('@/api', () => {
 describe('BatchSearch.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
-  let router = null
+  const router = new VueRouter()
+
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
-
-  beforeEach(async () => {
-    router = new VueRouter({
-      routes: [
-        {
-          name: 'batch-search',
-          path: 'batch-search'
-        }, {
-          name: 'batch-search.results',
-          path: 'batch-search/:index/:uuid'
-        }
-      ]
-    })
-    wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-    await flushPromises()
-  })
-
-  afterEach(async () => {
-    wrapper.destroy()
-    await flushPromises()
-  })
 
   afterAll(() => {
     jest.unmock('@/api')
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
 
-  describe('common functions', () => {
-    beforeAll(async () => {
-      Murmur.config.merge({ mode: 'SERVER' })
-      await flushPromises()
-    })
-
-    it('should display a search bar', () => {
-      expect(wrapper.find('.batch-search__search-bar').exists()).toBeTruthy()
-    })
-
-    it('should list the batchSearches', () => {
-      expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
-    })
-
-    it('should display the number of queries per batchSearch', () => {
-      expect(wrapper.findAll('.batch-search__items__item__queries').at(0).text()).toBe('1')
-      expect(wrapper.findAll('.batch-search__items__item__queries').at(1).text()).toBe('2')
-    })
-
-    it('should redirect on sort changed', async () => {
-      jest.spyOn(router, 'push')
-      await wrapper.vm.sortChanged({ sortBy: 'nbResults', sortDesc: true })
-
-      expect(router.push).toBeCalled()
-      expect(router.push).toBeCalledWith({
-        name: 'batch-search',
-        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all', project: [] }
-      })
-    })
-    describe('use delete filter', () => {
-      afterEach(async () => {
-        await wrapper.setData({ selectedDateRange: null })
-      })
-      it('should redirect on date changed', async () => {
-        jest.spyOn(router, 'push')
-        const data = { selectedDateRange: { start: 1546253843460, end: 1546599443460 } }
-        await wrapper.setData(data)
-
-        expect(router.push).toBeCalledTimes(1)
-        expect(router.push).toBeCalledWith({
-          name: 'batch-search',
-          query: { page: 1, sort: 'batch_date', order: 'desc', query: '', field: 'all', dateStart: data.selectedDateRange.start, dateEnd: data.selectedDateRange.end, project: [] }
-        })
-      })
-
-      it('should redirect to the batch search page with the date filter', async () => {
-        jest.spyOn(store, 'dispatch')
-
-        const data = { selectedDateRange: { start: 1546253843460, end: 1546599443460 } }
-        await wrapper.setData(data)
-
-        expect(store.dispatch).toBeCalledTimes(2)
-        expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-          from: 0,
-          size: 100,
-          query: '',
-          sort: 'batch_date',
-          order: 'desc',
-          field: 'all',
-          batchDate: [`${data.selectedDateRange.start}`, `${data.selectedDateRange.end}`],
-          project: [],
-          state: [],
-          publishState: null
-        })
-      })
-    })
-
-    it('should redirect to the batch search page with the new query and the first page', async () => {
-      const query = 'this is my new query'
-      jest.spyOn(router, 'push')
-      await wrapper.setData({ page: 2, search: query })
-      await wrapper.vm.searchBatchsearches()
-
-      expect(router.push).toBeCalled()
-      expect(router.push).toBeCalledWith({
-        name: 'batch-search',
-        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all', project: [] }
-      })
-    })
-
-    it('should execute "fetch" on query change', async () => {
-      const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
-      expect(fetchSpy).not.toBeCalled()
-      await wrapper.setData({ query: 'new search' })
-      expect(fetchSpy).toBeCalled()
-    })
-
-    it('should NOT display a pagination', async () => {
-      await wrapper.setData({ perPage: 5 })
-
-      expect(wrapper.find('.pagination.b-pagination').exists()).toBeFalsy()
-    })
-
-    it('should display a pagination', async () => {
-      await wrapper.setData({ perPage: 1 })
-
-      expect(wrapper.find('.pagination.b-pagination').exists()).toBeTruthy()
-    })
-
-    it('should execute "searchBatchsearches" on submit one time', async () => {
-      const searchSpy = jest.spyOn(wrapper.vm, 'searchBatchsearches')
-      expect(searchSpy).not.toBeCalled()
-
-      await wrapper.find('.btn-dark').trigger('submit')
-
-      expect(searchSpy).toBeCalledTimes(1)
-    })
-
-    it('should display a \'No result\' message when no items', async () => {
-      const state = { batchSearches: [] }
-      const actions = { getBatchSearches: jest.fn() }
-      const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
-
-      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-      await flushPromises()
-      expect(wrapper.find('.batch-search__items__item__no-item').exists()).toBeTruthy()
-    })
-
-    it('should display a \'No filtered result\' message when no items and filter is on', async () => {
-      const state = { batchSearches: [] }
-      const actions = { getBatchSearches: jest.fn() }
-      const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
-
-      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-
-      await wrapper.setData({ query: 'test' })
-      await flushPromises()
-
-      expect(wrapper.find('.batch-search__items__item__no-item-filtered').exists()).toBeTruthy()
-    })
-
-    it('should redirect to the batch search page with the state filter', async () => {
-      jest.spyOn(store, 'dispatch')
-
-      await wrapper.setData({ selectedStates: ['RUNNING', 'FAILURE'] })
-      await wrapper.vm.updateRoute()
-
-      expect(store.dispatch).toBeCalled()
-      expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-        from: 0,
-        size: 100,
-        query: '',
-        sort: 'batch_date',
-        order: 'desc',
-        field: 'all',
-        batchDate: null,
-        project: [],
-        state: ['RUNNING', 'FAILURE'],
-        publishState: null
-      })
-    })
-
-    it('should redirect to the batch search page with the project filter', async () => {
-      jest.spyOn(store, 'dispatch')
-
-      await wrapper.setData({ selectedProjects: ['project_02'] })
-      await wrapper.vm.updateRoute()
-
-      expect(store.dispatch).toBeCalled()
-      expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
-        from: 0,
-        size: 100,
-        query: '',
-        sort: 'batch_date',
-        order: 'desc',
-        field: 'all',
-        batchDate: null,
-        project: ['project_02'],
-        state: [],
-        publishState: null
-      })
-    })
-
-    it('should enable clear filter button when a filter is selected', async () => {
-      const button = wrapper.find('.batch-search__clear-filter-btn').element
-      expect(button.disabled).toBeTruthy()
-      await wrapper.setData({ query: 'this is my new query' })
-      expect(button.disabled).toBeFalsy()
-    })
-
-    it('should delete the current filters', async () => {
-      const query = 'this is my new query'
-      await wrapper.setData({ query: query, search: query, selectedDateRange: { start: 1546253843460, end: 1546599443460 }, selectedProjects: ['test-project'] })
-      await wrapper.vm.deleteFilters()
-
-      expect(wrapper.vm.query).toEqual('')
-      expect(wrapper.vm.search).toEqual('')
-      expect(wrapper.vm.selectedDateRange).toBeNull()
-      expect(wrapper.vm.selectedProjects).toHaveLength(0)
-    })
+  beforeEach(async () => {
+    wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+    await flushPromises()
+  })
+  beforeAll(async () => {
+    Murmur.config.merge({ mode: 'SERVER' })
+    await flushPromises()
   })
 
-  describe('SERVER mode', () => {
-    beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
-
-    it('should have author field in server mode in fieldOptions', () => {
-      const field = wrapper.find('.search-bar-input-fields__option:nth-child(4)')
-      expect(field.text()).toContain('Author')
-    })
-
-    it('should display 8 columns of info per row', () => {
-      const columns = wrapper.findAll('.batch-search__items__item:nth-child(1) td')
-      expect(columns).toHaveLength(8)
-    })
-
-    it('should display projects names in the batch search results url', () => {
-      const link = wrapper.findAll('.batch-search__items__item__link').at(0)
-      expect(link.attributes('href')).toContain('/project_01,project_02/')
-    })
+  it('should display a search bar', () => {
+    expect(wrapper.find('.batch-search__search-bar').exists()).toBeTruthy()
   })
 
-  describe('LOCAL mode', () => {
-    beforeAll(() => Murmur.config.merge({ mode: 'LOCAL' }))
+  it('should display a batch search table', () => {
+    expect(wrapper.find('.batch-search-table').exists()).toBeTruthy()
+  })
 
-    it('should NOT have author field in local mode in fieldOptions', () => {
-      expect(wrapper.findAll('.search-bar-input-fields__option')).toHaveLength(3)
-    })
+  it('should display a clear filters button', () => {
+    const button = wrapper.find('.batch-search-clear-filters')
+    expect(button.exists()).toBeTruthy()
+    expect(button.attributes().disabled).toBeTruthy()
+  })
 
-    it('should NOT display project name in the batch search results url', () => {
-      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="3"] a').exists()).toBeFalsy()
-    })
+  it('should display a \'No filtered result\' message when no items and filter is on', async () => {
+    const state = { batchSearches: [] }
+    const actions = { getBatchSearches: jest.fn() }
+    const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
 
-    it('should display 6 columns of info per row', () => {
-      expect(wrapper.find('.batch-search__search-bar__field__items:nth-child(4)').exists()).toBeFalsy()
-    })
+    wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+
+    await flushPromises()
+
+    expect(wrapper.find('.batch-search__none').exists()).toBeTruthy()
   })
 })
