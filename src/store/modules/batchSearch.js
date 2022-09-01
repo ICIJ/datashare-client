@@ -12,7 +12,7 @@ export function initialState () {
     results: [],
     selectedQueries: [],
     total: 0,
-    haveBatchSearch: false
+    hasBatchSearch: false
   }
 }
 
@@ -28,6 +28,16 @@ export const mutations = {
   batchSearches (state, batchSearches) {
     Vue.set(state, 'batchSearches', batchSearches)
   },
+  removeBatchSearch (state, batchId) {
+    remove(state.batchSearches, batchSearch => batchSearch.uuid === batchId)
+    state.hasBatchSearch = state.batchSearches.length > 0
+    state.total = state.total - 1
+  },
+  clearBatchSearches (state) {
+    state.batchSearches = []
+    state.hasBatchSearch = false
+    state.total = 0
+  },
   selectedQueries (state, selectedQueries) {
     Vue.set(state, 'selectedQueries', selectedQueries)
   },
@@ -37,10 +47,8 @@ export const mutations = {
   total (state, total) {
     Vue.set(state, 'total', total)
   },
-  haveBatchSearch (state, haveBatchSearch) {
-    if (!state.haveBatchSearch) {
-      Vue.set(state, 'haveBatchSearch', haveBatchSearch)
-    }
+  hasBatchSearch (state, hasBatchSearch) {
+    state.hasBatchSearch = hasBatchSearch
   }
 }
 
@@ -54,6 +62,14 @@ export const actions = {
     }
     return commit('batchSearch', batchSearch)
   },
+  async hasBatchSearch ({ commit }) {
+    try {
+      const batchSearches = await api.getBatchSearches()
+      commit('hasBatchSearch', batchSearches.total > 0)
+    } catch (e) {
+      commit('hasBatchSearch', false)
+    }
+  },
   async getBatchSearches ({ commit }, { from = 0, size = 100, sort = 'batch_date', order = 'asc', query = '*', field = 'all', project = [], state = [], batchDate = null, publishState = null }) {
     let batchSearches = []
     try {
@@ -65,13 +81,11 @@ export const actions = {
       }
     }
     commit('total', batchSearches.total)
-    if (batchSearches.total > 0) {
-      commit('haveBatchSearch', true)
-    }
     return commit('batchSearches', batchSearches.items)
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published }) {
     await api.batchSearch(name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published)
+    commit('hasBatchSearch', true)
     return dispatch('getBatchSearches', {})
   },
   async getBatchSearchResults ({ commit }, { batchId, from, size, queries, sort, order }) {
@@ -83,10 +97,10 @@ export const actions = {
     }
     return commit('results', results)
   },
-  async deleteBatchSearch ({ state }, { batchId }) {
+  async deleteBatchSearch ({ commit, state }, { batchId }) {
     try {
       await api.deleteBatchSearch(batchId)
-      remove(state.batchSearches, batchSearch => batchSearch === batchId)
+      commit('removeBatchSearch', batchId)
       return true
     } catch (_) {
       return false
@@ -100,9 +114,8 @@ export const actions = {
   async deleteBatchSearches ({ commit }) {
     try {
       await api.deleteBatchSearches()
-
-      commit('total', 0)
-      return commit('batchSearches', [])
+      commit('clearBatchSearches')
+      return {}
     } catch (_) {}
   }
 }

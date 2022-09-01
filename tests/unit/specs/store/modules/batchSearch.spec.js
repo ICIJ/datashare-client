@@ -104,7 +104,7 @@ describe('BatchSearchStore', () => {
     })
 
     it('should delete a specific batchSearch', async () => {
-      store.state.batchSearch.batchSearches = ['batchSearch_01', 'batchSearch_02', 'batchSearch_03']
+      store.state.batchSearch.batchSearches = [{ uuid: 'batchSearch_01' }, { uuid: 'batchSearch_02' }, { uuid: 'batchSearch_03' }]
 
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
 
@@ -113,7 +113,7 @@ describe('BatchSearchStore', () => {
         url: Api.getFullUrl('/api/batch/search/batchSearch_01'),
         method: 'DELETE'
       }))
-      expect(store.state.batchSearch.batchSearches).toEqual(['batchSearch_02', 'batchSearch_03'])
+      expect(store.state.batchSearch.batchSearches).toEqual([{ uuid: 'batchSearch_02' }, { uuid: 'batchSearch_03' }])
     })
 
     it('should delete all the batchSearches', async () => {

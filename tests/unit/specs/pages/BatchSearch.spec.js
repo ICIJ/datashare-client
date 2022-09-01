@@ -74,11 +74,10 @@ describe('BatchSearch.vue', () => {
 
   it('should display a \'No filtered result\' message when no items and filter is on', async () => {
     const state = { batchSearches: [] }
-    const actions = { getBatchSearches: jest.fn() }
+    const actions = { hasBatchSearch: jest.fn() }
     const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
 
     wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-
     await flushPromises()
 
     expect(wrapper.find('.batch-search__none').exists()).toBeTruthy()
