@@ -54,7 +54,7 @@ const routerFactory = () => {
 const routeFactory = function (args) {
   return {
     name: 'batch-search',
-    query: { page: 1, sort: 'batch_date', order: 'desc', field: undefined, ...args }
+    query: { page: 1, sort: 'batch_date', order: 'desc', field: 'all', ...args }
   }
 }
 
@@ -122,7 +122,7 @@ describe('BatchSearchTable.vue', () => {
           query: '',
           sort: 'batch_date',
           order: 'desc',
-          field: undefined,
+          field: 'all',
           batchDate: null,
           project: [],
           state: ['RUNNING', 'FAILURE'],
@@ -145,7 +145,7 @@ describe('BatchSearchTable.vue', () => {
           query: '',
           sort: 'batch_date',
           order: 'desc',
-          field: undefined,
+          field: 'all',
           batchDate: null,
           project: ['project_02'],
           state: [],
@@ -165,7 +165,7 @@ describe('BatchSearchTable.vue', () => {
           query: '',
           sort: 'batch_date',
           order: 'desc',
-          field: undefined,
+          field: 'all',
           batchDate: ['0', '1'],
           project: [],
           state: [],
@@ -231,6 +231,7 @@ describe('BatchSearchTable.vue', () => {
           query: {
             query: 'test',
             page: 2,
+            field: 'name',
             sort: 'batch_results',
             order: 'asc',
             project: 'projectA,projectB',
@@ -244,6 +245,7 @@ describe('BatchSearchTable.vue', () => {
         await flushPromises()
 
         expect(wrapper.vm.search).toBe('test')
+        expect(wrapper.vm.field).toBe('name')
         expect(wrapper.vm.page).toEqual(2)
         expect(wrapper.vm.order).toEqual('asc')
         expect(wrapper.vm.sort).toEqual('batch_results')
@@ -257,7 +259,8 @@ describe('BatchSearchTable.vue', () => {
           name: 'batch-search',
           query: {
             page: -1,
-            sort: 'not_existing_field',
+            sort: 'not_existing_sort',
+            field: 'not_existing_field',
             order: 'not_existing_order',
             project: 'projectA,not_existing_project',
             state: 'not_existing_state',
@@ -269,6 +272,7 @@ describe('BatchSearchTable.vue', () => {
         await flushPromises()
 
         expect(wrapper.vm.search).toBe('')
+        expect(wrapper.vm.field).toBe('all')
         expect(wrapper.vm.page).toEqual(1)
         expect(wrapper.vm.order).toEqual('desc')
         expect(wrapper.vm.sort).toEqual('batch_date')

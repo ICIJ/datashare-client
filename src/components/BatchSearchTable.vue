@@ -139,10 +139,8 @@ export default {
     this.fetchWithLoader()
   },
   watch: {
-    $route: {
-      async handler () {
-        await this.fetchWithLoader()
-      }
+    $route () {
+      return this.fetchWithLoader()
     }
   },
   methods: {
@@ -338,6 +336,17 @@ export default {
     },
     search () {
       return this.$route?.query?.query ?? ''
+    },
+    field () {
+      const fieldValue = this.$route?.query?.field
+      return this.fieldOptions?.includes(fieldValue) ? fieldValue : 'all'
+    },
+    fieldOptions () {
+      const options = ['all', 'name', 'description']
+      if (this.isServer) {
+        options.push('user_id')
+      }
+      return options
     },
     noItemMessage () {
       return this.$t('batchSearch.emptyWithFilter')

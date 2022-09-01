@@ -28,22 +28,14 @@ export default {
   components: { SearchBarInputDropdown, SearchBarInput },
   data () {
     return {
-      field: 'all',
+      field: this.getField(this.$route?.query?.field),
       search: this.$route?.query?.query ?? ''
     }
   },
   watch: {
     $route (value) {
       this.search = value?.query?.query
-    }
-  },
-  methods: {
-    filterByQuery () {
-      const params = this.$route?.query
-      return this.$router.push({
-        name: 'batch-search',
-        query: { ...params, page: 1, query: this.search }
-      })
+      this.field = this.getField(value?.query?.field)
     }
   },
   computed: {
@@ -56,6 +48,18 @@ export default {
     },
     fieldOptionsPath () {
       return ['batchSearch', 'field']
+    }
+  },
+  methods: {
+    filterByQuery () {
+      const params = this.$route?.query ?? {}
+      return this.$router.push({
+        name: 'batch-search',
+        query: { ...params, page: 1, query: this.search, field: this.field }
+      })
+    },
+    getField (value) {
+      return this.fieldOptions?.includes(value) ? value : 'all'
     }
   }
 }
