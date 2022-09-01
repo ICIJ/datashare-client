@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column my-2">
+  <div class="batch-search-table d-flex flex-column my-2">
     <b-table
       :busy="isBusy"
       :fields="fields"
@@ -50,7 +50,7 @@
       </template>
       <template #cell(queries)="{ item }">
           <span class="batch-search-table__item__queries">
-            {{ $n(item.nbQueries) }}
+            {{ item.formatNbQueries }}
           </span>
       </template>
       <template #cell(state)="{ item }">
@@ -158,24 +158,19 @@ export default {
       publishState = this.publicationStatus
     }) {
       batchDate = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
+      const queryParams = { query, page, sort, order, field, project, state, ...batchDate, publishState }
+      this.removeEmptySearchParams(queryParams)
 
-      const route = {
+      return {
         name: 'batch-search',
-        query: { query, page, sort, order, field, project, state, ...batchDate, publishState }
+        query: queryParams
       }
-      if (!this.hasQuery) {
-        delete route.query?.query
-      }
-      if (!publishState) {
-        delete route.query?.publishState
-      }
-      if (!project) {
-        delete route.query?.project
-      }
-      if (!state) {
-        delete route.query?.state
-      }
-      return route
+    },
+    removeEmptySearchParams (query) {
+      if (!query.query?.length) delete query?.query
+      if (!query?.publishState) delete query?.publishState
+      if (!query?.project || !query?.project?.length) delete query?.project
+      if (!query?.state || !query?.state?.length) delete query?.state
     },
     async fetch () {
       const from = (this.page - 1) * this.perPage
@@ -249,19 +244,19 @@ export default {
       return this.isServer ? field : null
     },
     async sortChanged (ctx) {
-      const order = ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
-      console.log('ctx', ctx.sortDesc, order)
       this.selectedSort = {
         sort: this.fieldNameByKey(ctx.sortBy),
-        order
+        order: ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
       }
     },
-    fieldNameByKey (key) {
-      return find(this.fields, item => item.key === key)?.name
+    fieldNameByKey (fieldKey) {
+      return find(this.fields, item => item.key === fieldKey)?.name
+    },
+    fieldKeyByName (fieldName) {
+      return find(this.fields, item => item.name === fieldName)?.key
     },
     updateRoute (params) {
-      return this.$router.push(
-        this.createBatchSearchRoute(params))
+      return this.$router.push(this.createBatchSearchRoute(params))
     }
   },
   computed: {
@@ -275,6 +270,7 @@ export default {
           dateContent: moment(batchSearch.date).locale(this.$i18n.locale).format('LL'),
           userId: batchSearch.user?.id,
           hasUser: !!batchSearch.user,
+          formatNbQueries: this.$n(batchSearch.nbQueries),
           formatNbResults: this.$n(batchSearch.nbResults),
           isPublished: batchSearch.published ? this.$t('global.yes') : this.$t('global.no'),
           projectNames: this.getProjectsNames(batchSearch)
@@ -310,7 +306,8 @@ export default {
         {
           key: 'queries',
           label: this.$t('batchSearch.queries'),
-          sortable: false
+          sortable: false,
+          name: 'query'
         },
         {
           key: 'date',
@@ -340,7 +337,7 @@ export default {
       return this.$wait.waiting('load batchSearches')
     },
     search () {
-      return this.$route.query?.query ?? ''
+      return this.$route?.query?.query ?? ''
     },
     noItemMessage () {
       return this.$t('batchSearch.emptyWithFilter')
@@ -353,8 +350,8 @@ export default {
     },
     selectedDateRange: {
       get () {
-        const start = parseInt(this.$route.query?.dateStart)
-        const end = parseInt(this.$route.query?.dateEnd)
+        const start = parseInt(this.$route?.query?.dateStart)
+        const end = parseInt(this.$route?.query?.dateEnd)
         const areNumber = !Number.isNaN(start) && !Number.isNaN(end)
         return areNumber ? { start, end } : null
       },
@@ -364,7 +361,7 @@ export default {
     },
     selectedProjects: {
       get () {
-        const param = this.$route.query?.project
+        const param = this.$route?.query?.project
         let projects = param
         if (typeof param === 'string') {
           projects = param?.split(',') ?? []
@@ -380,16 +377,21 @@ export default {
     isDesc () {
       return this.selectedSort.order === SORT_ORDER.DESC
     },
-    page: {
-      get () {
-        return this.$route.query?.page ?? 1
-      }
+    page () {
+      const value = parseInt(this.$route?.query?.page)
+      return !isNaN(value) && value > 0 ? value : 1
+    },
+    sort () {
+      const sortNameFromQuery = this.$route?.query?.sort?.toLowerCase()
+      const sortKeyExists = this.fieldKeyByName(sortNameFromQuery)
+      return sortKeyExists ? sortNameFromQuery : settings.batchSearch.sort
+    },
+    order () {
+      return SORT_ORDER[this.$route?.query?.order?.toUpperCase()] ?? settings.batchSearch.order
     },
     selectedSort: {
       get () {
-        const sort = this.fieldNameByKey(this.$route.query?.sort?.toLowerCase()) ?? settings.batchSearch.sort
-        const order = SORT_ORDER[this.$route.query?.order?.toUpperCase()] ?? settings.batchSearch.order
-        return { sort, order }
+        return { sort: this.sort, order: this.order }
       },
       set ({ sort, order }) {
         const params = { page: this.page, sort: sort, order: order }
@@ -398,7 +400,7 @@ export default {
     },
     selectedStates: {
       get () {
-        let states = this.$route.query?.state
+        let states = this.$route?.query?.state
         if (typeof states === 'string') {
           states = states?.split(',') ?? []
         }
@@ -411,11 +413,11 @@ export default {
       }
     },
     publicationStatus () {
-      return BATCHSEARCH_STATUS[this.$route.query?.publishState]?.value ?? null
+      return BATCHSEARCH_STATUS[this.$route?.query?.publishState]?.value ?? null
     },
     selectedStatus: {
       get () {
-        return BATCHSEARCH_STATUS[this.$route.query?.publishState] ?? null
+        return BATCHSEARCH_STATUS[this.$route?.query?.publishState] ?? null
       },
       set (status) {
         const publishState = status?.value ?? null
@@ -424,7 +426,7 @@ export default {
       }
     },
     sortBy () {
-      return find(this.fields, item => item.name === this.selectedSort.sort).key
+      return this.fieldKeyByName(this.selectedSort.sort)
     },
     states () {
       return Object.values(settings.batchSearch.status)
