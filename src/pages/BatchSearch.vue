@@ -34,7 +34,7 @@ import BatchSearchForm from '@/components/BatchSearchForm'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
-import BatchSearchClearFilters from '@/components/BatchSearchClearFiltersButton'
+import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
 import { mapState } from 'vuex'
 

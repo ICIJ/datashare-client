@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import BatchSearchClearFilters from '@/components/BatchSearchClearFiltersButton'
+import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 
 import { Core } from '@/core'
 import VueRouter from 'vue-router'
