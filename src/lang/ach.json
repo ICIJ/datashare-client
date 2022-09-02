@@ -717,11 +717,16 @@
       "succeedBody": "crwdns2576:0crwdne2576:0",
       "failed": "crwdns2578:0crwdne2578:0",
       "failedBody": "crwdns2580:0crwdne2580:0"
+    },
+    "delete": {
+      "failed": "crwdns2586:0crwdne2586:0",
+      "failedBody": "crwdns2588:0crwdne2588:0"
     }
   },
   "batchDownloadActions": {
     "relaunch": "crwdns2582:0crwdne2582:0",
-    "search": "crwdns2584:0crwdne2584:0"
+    "search": "crwdns2584:0crwdne2584:0",
+    "delete": "crwdns2590:0crwdne2590:0"
   },
   "tasksList": {
     "empty": "crwdns2541:0crwdne2541:0",
