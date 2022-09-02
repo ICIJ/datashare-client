@@ -16,7 +16,7 @@
         </router-link>
       <slot name="fields">
       </slot>
-      <button type="submit" class="btn btn-dark search-bar-input__submit">
+      <button type="submit" class="btn btn-dark search-bar-input__submit" :disabled="disableSubmit">
         {{ $t('search.buttonLabel') }}
       </button>
     </div>
@@ -56,6 +56,13 @@ export default {
     size: {
       type: String,
       default: 'md'
+    },
+    /**
+     * Disable submit button
+     */
+    disableSubmit: {
+      type: Boolean,
+      default: false
     },
     /**
      * Hide tips icon in the input bar
