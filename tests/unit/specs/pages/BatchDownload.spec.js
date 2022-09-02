@@ -27,6 +27,7 @@ jest.mock('axios', () => {
             filename: 'filename_01_2021-01-01T12:45:25',
             query: 'query_01',
             zipSize: 150,
+            exists: true,
             project: {
               name: 'project',
               sourcePath: 'source'
@@ -54,6 +55,7 @@ jest.mock('axios', () => {
           batchDownload: {
             uuid: 'uuid_02',
             encrypted: true,
+            exists: false,
             filename: 'filename_02_2020-01-01T19:50:00',
             query: 'query_02',
             project: {
@@ -144,5 +146,14 @@ describe('BatchDownload.vue', () => {
   it('should display the zip size if there is any', async () => {
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(2) .tasks-list__tasks__item__size').exists()).toBeTruthy()
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__size').exists()).toBeFalsy()
+  })
+
+  it('should disable the download when the file doesnt exist anymore', async () => {
+    expect(wrapper.find('#batch-download__item-uuid_02 .batch-download__link--enabled').exists()).toBeFalsy()
+
+    const span = wrapper.find('#batch-download__item-uuid_02 .batch-download__link--disabled')
+
+    expect(span.exists()).toBeTruthy()
+    expect(span.element.title).toEqual('The archive has expired.')
   })
 })

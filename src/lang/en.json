@@ -717,6 +717,7 @@
   "batchDownload": {
     "title": "Batch downloads",
     "empty": "You have not yet started any download tasks.",
+    "noFile": "The archive has expired.",
     "created": "Your download is being prepared",
     "warning": "This feature is currently being developped by the Datashare team.",
     "inProgress": "See all pending downloads",

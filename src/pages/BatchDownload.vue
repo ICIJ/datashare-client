@@ -6,11 +6,15 @@
       </div>
       <tasks-list :tasks="tasks">
         <template v-slot="{ item: { name, properties, state } }">
-          <div class="d-flex">
-            <a :href="downloadResultsUrl(name)" target="_blank">
+          <div class="d-flex batch-download__item" :id="'batch-download__item-' + properties.batchDownload.uuid">
+            <a v-if="properties.batchDownload.exists" :href="downloadResultsUrl(name)" class="batch-download__link--enabled" target="_blank">
               <fa icon="download" fixed-width />
               {{ properties.batchDownload.filename | basename }}
             </a>
+            <span v-else class="batch-download__link--disabled disabled" :title="$t('batchDownload.noFile')">
+              <fa icon="times" fixed-width />
+              {{ properties.batchDownload.filename | basename }}
+            </span>
             <batch-download-actions
               class="ml-auto"
               :name="name"
