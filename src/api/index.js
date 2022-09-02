@@ -23,7 +23,7 @@ export default class Api {
     return this.sendActionAsText((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT' })
   }
   deleteTask (name) {
-    return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: 'PUT' })
+    return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: 'DELETE' })
   }
   deleteDoneTasks () {
     return this.sendAction('/api/task/clean', { method: 'POST' })
