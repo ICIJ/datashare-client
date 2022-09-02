@@ -1,7 +1,7 @@
 <template>
   <batch-search-filter class="batch-search-filter-dropdown" :id="id" :name="name" :active="isActive">
     <keep-alive>
-      <selectable-dropdown v-model="selectedValues" :items="items" deactivate-keys :multiple="multiple">
+      <selectable-dropdown v-model="selectedValues" :items="items" deactivate-keys :multiple="multiple" class="shadow-none border-0">
         <template #item-label="{ item }">
           <slot name="label" :item="item">{{ labelItem(item) }}</slot>
         </template>

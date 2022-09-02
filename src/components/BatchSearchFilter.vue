@@ -11,7 +11,7 @@
       <fa icon="filter"/>
     </b-btn>
     <batch-search-filter-badge :active="active"/>
-    <b-popover custom-class="batch-search-filter__popover popover-body-p-0"
+    <b-popover custom-class="batch-search-filter__popover popover-white popover-body-p-0"
                :target="btnId"
                triggers="focus">
       <slot></slot>
