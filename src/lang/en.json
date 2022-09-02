@@ -621,10 +621,12 @@
     "date": "Date",
     "nbResults": "Number of results",
     "query": "no queries | 1 query | {count} queries",
+    "clearFilters": "Clear filters",
     "delete": "Delete batch search",
     "deleted": "The batch search have been deleted.",
     "notDeleted": "The batch search has not been deleted.",
     "published": "Published",
+    "notPublished": "Not published",
     "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Do phrase matches",
     "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order.",
@@ -637,6 +639,12 @@
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "placeholder": "Search in batch searches...",
+    "status": {
+      "failure": "failure",
+      "queued": "queued",
+      "running": "running",
+      "success": "success"
+    },
     "field": {
       "all": "All fields",
       "name": "Name",

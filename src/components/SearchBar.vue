@@ -1,56 +1,53 @@
 <template>
   <form class="search-bar container-fluid" :id="uniqueId" @submit.prevent="submit" :class="{ 'search-bar--focused': focused, 'search-bar--animated': animated }">
     <div class="d-flex align-items-center">
-      <div class="input-group" :class="{ ['input-group-' + size]: true }">
-        <input
-          v-model="query"
-          class="form-control search-bar__input"
-          :placeholder="$t('search.placeholder')"
-          @blur="onBlur"
-          @input="onInput"
-          @focus="onFocus">
-        <div class="input-group-append">
-          <template  v-if="!tips">
-            <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :title="$t('search.tips')" v-b-tooltip.bottomleft>
-              <fa icon="question-circle" fixed-width />
-            </router-link>
-          </template>
-          <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
-            <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
-              {{ $t('search.field.' + key) }}
-            </b-dropdown-item>
-          </b-dropdown>
-          <button type="submit" class="btn btn-dark search-bar__submit">
-            {{ $t('search.buttonLabel') }}
-          </button>
-        </div>
-        <selectable-dropdown
-          class="search-bar__suggestions dropdown-menu"
-          ref="suggestions"
-          @input="selectTerm"
-          @click.native="submit"
-          @deactivate="hideSuggestions"
-          :hide="!suggestions.length"
-          :items="suggestions">
-          <template v-slot:item-label="{ item }">
-            <div class="d-flex">
-              <div class="flex-grow-1 text-truncate">
-                <span v-html="injectTermInQuery(item.key)"></span>
+      <search-bar-input
+        v-model="query"
+        class="search-bar__input"
+        :placeholder="placeholder"
+        :size="size"
+        @blur="onBlur"
+        @input="onInput"
+        @focus="onFocus"
+      >
+        <template #fields>
+          <search-bar-input-dropdown
+            v-model="field"
+            class="search-bar__field-options"
+            :fieldOptions="fieldOptions"
+            :fieldOptionsPath="fieldOptionsPath"
+          />
+        </template>
+        <template #suggestions>
+            <selectable-dropdown
+            class="search-bar__suggestions dropdown-menu"
+            ref="suggestions"
+            :hide="!suggestions.length"
+            :items="suggestions">
+            <template v-slot:item-label="{ item }">
+              <div class="d-flex">
+                <div class="flex-grow-1 text-truncate">
+                  <span v-html="injectTermInQuery(item.key)"></span>
+                </div>
               </div>
-            </div>
-          </template>
-        </selectable-dropdown>
-      </div>
+            </template>
+          </selectable-dropdown>
+        </template>
+      </search-bar-input>
       <div class="px-0" v-if="settings">
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
-        <b-btn class="text-dark" variant="transparent" size="md" :title="$t('userHistory.saveSearch')"
-              v-b-tooltip.hover.bottomleft @click="$refs['user-history-save-search-form'].show()">
+        <b-btn v-b-tooltip.hover.bottomleft
+               :title="$t('userHistory.saveSearch')"
+               class="text-dark"
+               size="md"
+               variant="transparent"
+               @click="$refs['user-history-save-search-form'].show()">
           <fa icon="save"/>
           <b-modal body-class="p-0"
-               hide-footer
-               ref="user-history-save-search-form"
-               size="md"
-               :title="$t('userHistory.saveSearch')">
+                   hide-footer
+                   ref="user-history-save-search-form"
+                   size="md"
+                   :title="$t('userHistory.saveSearch')">
             <user-history-save-search-form :indices="indices"
                                            :uri="uri"
                                            @submit="$refs['user-history-save-search-form'].hide()"/>
@@ -68,6 +65,8 @@ import lucene from 'lucene'
 
 import elasticsearch from '@/api/elasticsearch'
 import ShortkeysModal from '@/components/ShortkeysModal'
+import SearchBarInput from '@/components/SearchBarInput'
+import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
 
@@ -83,16 +82,17 @@ export default {
   name: 'SearchBar',
   props: {
     /**
-     * Show search suggestions.
-     */
-    tips: {
-      type: Boolean
-    },
-    /**
      * Animate the focus on the search input.
      */
     animated: {
       type: Boolean
+    },
+    /**
+     * Placeholder in the search bar.
+     */
+    placeholder: {
+      type: String,
+      default: function () { this.$t('search.placeholder') }
     },
     /**
      * Display the shortcuts button.
@@ -110,6 +110,13 @@ export default {
       }
     },
     /**
+     * Field option translation path
+     */
+    fieldOptionsPath: {
+      type: Array,
+      default: () => ['search', 'field']
+    },
+    /**
      * Search input size
      * @values sm, md, lg
      */
@@ -119,8 +126,10 @@ export default {
     }
   },
   components: {
+    SearchBarInput,
     ShortkeysModal,
-    UserHistorySaveSearchForm
+    UserHistorySaveSearchForm,
+    SearchBarInputDropdown
   },
   data () {
     return {
@@ -128,7 +137,6 @@ export default {
       focused: false,
       operatorLinks: settings.documentationLinks.operators.default,
       query: this.$store.state.search.query,
-      showTips: false,
       suggestions: []
     }
   },
@@ -216,6 +224,7 @@ export default {
       try {
         if (this.suggestionsAllowed) {
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
+
           // Avoid setting suggestions if user lost the focus on the input
           if (this.focused) {
             // Is the query still valid
@@ -264,11 +273,6 @@ export default {
     uri () {
       return window.location.hash.substr(2)
     }
-  },
-  watch: {
-    query (value) {
-      this.$set(this, 'showTips', value !== '')
-    }
   }
 }
 </script>
@@ -276,88 +280,12 @@ export default {
 <style lang="scss" scoped>
   .search-bar {
 
-    .input-group {
-      filter: drop-shadow(0 0.3em .6em rgba(black, 0));
-      flex-wrap: nowrap;
-      transition: transform 0.2s;
-      white-space: nowrap;
-    }
-
     &--focused.search-bar--animated {
-      .input-group {
+      :deep(.input-group) {
         filter: drop-shadow(0 0.3em .6em rgba(black, .2));
+        transition: transform 0.2s;
         transform: translateY(-0.25em);
       }
-    }
-
-    .input-group-md &__input.form-control,
-    .input-group-lg &__input.form-control {
-      border-radius: 1.5em 0 0 1.5em;
-    }
-
-    &__input.form-control {
-      border-right: 0;
-
-      &:focus + .input-group-append .search-bar__field &:deep(.btn),
-      &:focus + .input-group-append .search-bar__tips-addon {
-        border-bottom-color: $input-focus-border-color;
-        border-top-color: $input-focus-border-color;
-      }
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    &__field {
-      background: $input-bg;
-      border-left: dashed 1px  $input-border-color;
-      font-size: inherit;
-
-      &--selected:after {
-        bottom: 1px;
-        border: 2px solid $tertiary;
-        content: "";
-        left: 0;
-        position: absolute;
-        right: 1px;
-        top: 1px;
-      }
-
-      &:deep(.btn) {
-        border: 1px solid $input-border-color;
-        border-left: 0;
-        box-shadow: $input-box-shadow;
-        color: $text-muted;
-
-        .input-group-lg & {
-          font-size: 1.25rem;
-        }
-      }
-    }
-
-    &__tips-addon.input-group-text {
-      background: white;
-      border-left: 0;
-      border-right: 0;
-      box-shadow: $input-box-shadow;
-      color: transparent;
-      pointer-events: none;
-      transition: $input-transition, color .15s ease-in-out;
-    }
-
-    &__tips-addon--active.input-group-text {
-      color: $link-color;
-      pointer-events: all;
-    }
-
-    &__field.show .btn.dropdown-toggle,
-    &__field .btn.dropdown-toggle:hover,
-    &__field .btn.dropdown-toggle:active {
-      background: transparent;
-      border: 1px solid $input-border-color;
-      border-left: 0;
-      box-shadow: $input-box-shadow;
     }
 
     & &__suggestions.dropdown-menu {
@@ -378,19 +306,6 @@ export default {
           color: white;
         }
       }
-    }
-
-    &__tips {
-      border-radius: 0 0 $input-border-radius $input-border-radius;
-      display: block;
-      font-size: 0.9rem;
-      padding: $spacer * 0.5 0 0;
-      z-index: 100;
-    }
-
-    & .input-group > .input-group-append > &__submit.btn {
-      border-bottom-right-radius: 1.5em;
-      border-top-right-radius: 1.5em;
     }
   }
 </style>

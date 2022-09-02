@@ -161,7 +161,13 @@ export default {
   batchSearch: {
     order: 'desc',
     size: 100,
-    sort: 'batch_date'
+    sort: 'batch_date',
+    status: {
+      running: 'RUNNING',
+      failure: 'FAILURE',
+      queued: 'QUEUED',
+      success: 'SUCCESS'
+    }
   },
   batchSearchResults: {
     order: 'asc',

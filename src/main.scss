@@ -53,9 +53,9 @@ body {
       &:before {
         animation: rotateLogo 4s linear infinite;
         background-image: linear-gradient(#48C2FC, #48C2FC),
-                          linear-gradient($secondary, $secondary),
-                          linear-gradient(#48C2FC, #48C2FC),
-                          linear-gradient($secondary, $secondary);
+          linear-gradient($secondary, $secondary),
+          linear-gradient(#48C2FC, #48C2FC),
+          linear-gradient($secondary, $secondary);
         background-position: 0 0, 100% 0, 100% 100%, 0 100%;
         background-repeat: no-repeat;
         background-size: 50% 50%, 50% 50%;
@@ -92,7 +92,8 @@ body {
   padding: $spacer;
 }
 
-@each $variant, $value in $theme-colors {
+@each $variant,
+$value in $theme-colors {
   .popover-magnified-#{$variant} {
     @include popover-magnified-variant($value);
   }
@@ -108,7 +109,7 @@ body {
 .popover {
 
   .popover-body {
-    & > .dropdown-menu {
+    &>.dropdown-menu {
       background: inherit;
       color: inherit;
       float: none;
@@ -154,12 +155,18 @@ body {
   &.popover-body-p-0 {
     .popover-body {
       padding: 0;
+
+      & .vc-container.vc-gray {
+        border-radius: 4px;
+      }
+
     }
 
-    &.bs-popover-bottom > .arrow::after,
-    &.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+    &.bs-popover-bottom>.arrow::after,
+    &.bs-popover-auto[x-placement^="bottom"]>.arrow::after {
       border-bottom-color: $popover-bg;
     }
+
   }
 
   &.popover-body-overflow-hidden:not(.dropdown-menu) .popover-body {
@@ -167,8 +174,8 @@ body {
     overflow: hidden;
   }
 
-  &.bs-popover-bottom > .arrow::after,
-  &.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+  &.bs-popover-bottom>.arrow::after,
+  &.bs-popover-auto[x-placement^="bottom"]>.arrow::after {
     border-bottom-color: $popover-header-bg;
   }
 }
@@ -177,7 +184,10 @@ body {
 #b-toaster-top-left.b-toaster .b-toaster-slot,
 #b-toaster-bottom-right.b-toaster .b-toaster-slot,
 #b-toaster-bottom-left.b-toaster .b-toaster-slot {
-  &, .b-toast, .b-toast .toast {
+
+  &,
+  .b-toast,
+  .b-toast .toast {
     max-width: 460px;
   }
 

@@ -44,7 +44,7 @@ export default {
     }
   },
   data () {
-    return { 
+    return {
       version: 0
     }
   },
