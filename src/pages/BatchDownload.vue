@@ -5,7 +5,7 @@
         <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
       </div>
       <tasks-list :tasks="tasks">
-        <template v-slot="{ item: { name, properties } }">
+        <template v-slot="{ item: { name, properties, state } }">
           <div class="d-flex">
             <a :href="downloadResultsUrl(name)" target="_blank">
               <fa icon="download" fixed-width />
@@ -13,8 +13,11 @@
             </a>
             <batch-download-actions
               class="ml-auto"
+              :name="name"
+              :state="state"
               :value="properties.batchDownload"
-              @relaunched="getDownloadTasks" />
+              @relaunched="getDownloadTasks"
+              @deleted="getDownloadTasks" />
           </div>
         </template>
         <template #empty>

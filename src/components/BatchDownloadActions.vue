@@ -7,15 +7,32 @@ export default {
   name: 'BatchDownloadActions',
   props: {
     /**
-       * Attributes of the batch download
-       */
+     * Name of the batch download's task
+     */
+    name: {
+      type: String
+    },
+    /**
+     * State of the batch download's task
+     */
+    state: {
+      type: String,
+      default: ''
+    },
+    /**
+     * Attributes of the batch download
+     */
     value: {
-      type: Object
+      type: Object,
+      default: () => ({ })
     }
   },
   computed: {
     api () {
       return new Api()
+    },
+    isTaskRunning () {
+      return this.state.toUpperCase() === 'RUNNING'
     },
     popoverTarget () {
       return `#${this.togglerId}`
@@ -59,7 +76,16 @@ export default {
     closePopover () {
       this.$root.$emit('bv::hide::popover', this.togglerId)
     },
-    async relaunch () {
+    async deleteTask () {
+      try {
+        this.closePopover()
+        await this.api.deleteTask(this.name)
+        this.notifyDeleteSucceed()
+      } catch (error) {
+        this.notifyDeleteFailed(error)
+      }
+    },
+    async relaunchTask () {
       try {
         this.closePopover()
         const projectIds = this.projects
@@ -76,10 +102,10 @@ export default {
       const body = this.$t('batchDownload.relaunch.succeedBody')
       this.$root.$bvToast.toast(body, { variant, title })
       /**
-         * The batch download was relaunched successfully
-         *
-         * @event relaunched
-         */
+       * The batch download was relaunched successfully
+       *
+       * @event relaunched
+       */
       this.$emit('relaunched', this.value)
     },
     notifyRelaunchFailed (error) {
@@ -88,11 +114,31 @@ export default {
       const body = this.$t('batchDownload.relaunch.failedBody')
       this.$root.$bvToast.toast(body, { variant, title })
       /**
-         * The batch download couldn't be relaunched
-         *
-         * @event relaunchFailed
-         */
+       * The batch download couldn't be relaunched
+       *
+       * @event relaunchFailed
+       */
       this.$emit('relaunchFailed', error)
+    },
+    notifyDeleteSucceed () {
+      /**
+       * The batch download was deleted successfully
+       *
+       * @event deleted
+       */
+      this.$emit('deleted', this.value)
+    },
+    notifyDeleteFailed (error) {
+      const title = this.$t('batchDownload.delete.failed')
+      const variant = 'danger'
+      const body = this.$t('batchDownload.delete.failedBody')
+      this.$root.$bvToast.toast(body, { variant, title })
+      /**
+       * The batch download couldn't be deleted
+       *
+       * @event deleteFailed
+       */
+      this.$emit('deleteFailed', error)
     },
     parseQuery () {
       return JSON.parse(this.value.query || null) ?? {}
@@ -119,14 +165,23 @@ export default {
       placement="left"
       triggers="focus"
       :target="popoverTarget">
-      <b-dropdown-item-button @click="relaunch()">
+      <b-dropdown-item-button @click="relaunchTask()" class="batch-download-actions__relaunch">
         <fa icon="redo" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.relaunch') }}
       </b-dropdown-item-button>
-      <b-dropdown-item :to="searchRoute">
+      <b-dropdown-item :to="searchRoute" class="batch-download-actions__search">
         <fa icon="search" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.search') }}
       </b-dropdown-item>
+      <b-dropdown-divider />
+      <b-dropdown-item-button v-if="isTaskRunning" disabled button-class="batch-download-actions__delete">
+        <fa icon="trash-alt" fixed-width class="mr-1" />
+        {{ $t('batchDownloadActions.delete') }}
+      </b-dropdown-item-button>
+      <b-dropdown-item-button v-else button-class="batch-download-actions__delete text-danger" @click="deleteTask">
+        <fa icon="trash-alt" fixed-width class="mr-1" />
+        {{ $t('batchDownloadActions.delete') }}
+      </b-dropdown-item-button>
     </b-popover>
   </div>
 </template>

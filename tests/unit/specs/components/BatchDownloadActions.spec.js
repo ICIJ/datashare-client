@@ -8,19 +8,31 @@ describe('BatchDownloadActions.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   const projects = [{ name: 'project' }]
 
-  function mockRunBatchDownload (batchDownload) {
-    // Returns data
+  function mockRunBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
     const data = {
-      name: 'BatchDownloadTask',
-      progress: 0,
-      state: 'RUNNING',
+      name,
+      state,
       user: batchDownload.user,
       properties: { batchDownload }
     }
     // Mock the `runBatchDownload` method
     const spy = jest.spyOn(Api.prototype, 'runBatchDownload')
       .mockImplementation(Promise.resolve(data))
-    return { batchDownload, data, spy }
+    return { batchDownload, name, state, spy }
+  }
+
+  function mockDeleteBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
+    // Mock the `deleteTask` method
+    const spy = jest.spyOn(Api.prototype, 'deleteTask')
+      .mockImplementation(Promise.resolve(true))
+    return { batchDownload, name, state, spy }
+  }
+
+  function mockFailToDeleteBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
+    // Mock the `deleteTask` method
+    const spy = jest.spyOn(Api.prototype, 'deleteTask')
+      .mockImplementation(Promise.reject(new Error('')))
+    return { batchDownload, name, state, spy }
   }
 
   beforeEach(async () => {
@@ -29,40 +41,40 @@ describe('BatchDownloadActions.vue', () => {
     jest.clearAllMocks()
   })
 
-  describe('relaunch method', () => {
+  describe('relaunchTask method', () => {
     it('should emit an error when the relaunch fails', async () => {
       const query = ';ERRORED;'
-      const { batchDownload: value } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('erroredTask', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
-      await wrapper.vm.relaunch()
+      await wrapper.vm.relaunchTask()
       expect(wrapper.emitted('reluanchFailed'))
     })
 
     it('should emit a success when the relaunch', async () => {
       const query = '{ }'
-      const { batchDownload: value } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
-      await wrapper.vm.relaunch()
+      await wrapper.vm.relaunchTask()
       expect(wrapper.emitted('reluanched'))
     })
 
     it('should call the API with a parsed query', async () => {
       const query = '{ "foo": "bar" }'
-      const { batchDownload: value, spy } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value, spy } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
-      await wrapper.vm.relaunch()
+      await wrapper.vm.relaunchTask()
       expect(spy).toHaveBeenCalledWith(expect.objectContaining({ query: { foo: 'bar' } }))
     })
 
     it('should call the API with a list of projects', async () => {
-      const { batchDownload: value, spy } = mockRunBatchDownload({ projects })
+      const { batchDownload: value, spy } = mockRunBatchDownload('task', { projects })
       const propsData = { value }
       const projectIds = ['project']
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
-      await wrapper.vm.relaunch()
+      await wrapper.vm.relaunchTask()
       expect(spy).toHaveBeenCalledWith(expect.objectContaining({ projectIds }))
     })
   })
@@ -89,7 +101,7 @@ describe('BatchDownloadActions.vue', () => {
           }
         }
       })
-      const { batchDownload: value } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.vm.searchRoute.query['f[contentType]']).toContain('application/pdf')
@@ -112,7 +124,7 @@ describe('BatchDownloadActions.vue', () => {
           }
         }
       })
-      const { batchDownload: value } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.vm.searchRoute.query['f[extractionLevel]']).toContain('0')
@@ -145,7 +157,7 @@ describe('BatchDownloadActions.vue', () => {
           ]
         }
       })
-      const { batchDownload: value } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.vm.searchRoute.query.q).toContain('FOO')
@@ -174,7 +186,7 @@ describe('BatchDownloadActions.vue', () => {
           }
         }
       })
-      const { batchDownload: value } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.vm.searchRoute.query['f[-contentType]']).toContain('application/pdf')
@@ -203,7 +215,7 @@ describe('BatchDownloadActions.vue', () => {
           }
         }
       })
-      const { batchDownload: value } = mockRunBatchDownload({ projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.vm.searchRoute.query['f[extractionLevel]']).toContain('0')
@@ -211,10 +223,28 @@ describe('BatchDownloadActions.vue', () => {
     })
 
     it('with project', async () => {
-      const { batchDownload: value } = mockRunBatchDownload({ projects })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.vm.searchRoute.query.indices).toContain('project')
+    })
+  })
+
+  describe('deleteTask method', () => {
+    it('should emit an error when the delete fails', async () => {
+      const { name, batchDownload: value } = mockFailToDeleteBatchDownload('failing')
+      const propsData = { name, value }
+      const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      await wrapper.vm.deleteTask()
+      expect(wrapper.emitted('deleteFailed'))
+    })
+
+    it('should emit a success when the delete', async () => {
+      const { name, batchDownload: value } = mockDeleteBatchDownload('successful')
+      const propsData = { name, value }
+      const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      await wrapper.vm.deleteTask()
+      expect(wrapper.emitted('deleted'))
     })
   })
 })
