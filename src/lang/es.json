@@ -717,11 +717,16 @@
       "succeedBody": "The download should be available soon.",
       "failed": "Unable to relaunch",
       "failedBody": "Something happend when trying to relaunch this batch download."
+    },
+    "delete": {
+      "failed": "Unable to delete",
+      "failedBody": "Something happend when trying to delete this batch download."
     }
   },
   "batchDownloadActions": {
     "relaunch": "Relaunch",
-    "search": "See search results"
+    "search": "See search results",
+    "delete": "Delete"
   },
   "tasksList": {
     "empty": "Aún no has iniciado ninguna tarea.",
