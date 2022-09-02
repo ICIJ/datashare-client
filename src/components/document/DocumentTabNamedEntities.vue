@@ -16,40 +16,46 @@
            class="document__named-entities document__named-entities--not--found">
         {{ $t('document.namedEntitiesNotFound') }}
       </div>
-      <div v-else-if="!isLoadingNamedEntities" class="document__named-entities">
-        <div v-for="(pages, category) in namedEntitiesPaginatedByCategories" :key="category" class="mb-4">
-          <div class="mb-2" :class="getCategoryClass(category, 'text-')" v-if="categoryIsNotEmpty(category)">
-            <fa :icon="getCategoryIcon(category)"></fa>
+      <div v-else-if="!isLoadingNamedEntities" class="document__named-entitie">
+        <div v-for="(hits, category) in namedEntitiesByCategories" :key="category" class="s border-bottom pb-4 mb-4">
+          <div class="mb-2 d-flex align-items-center" :class="getCategoryClass(category, 'text-')" v-if="categoryIsNotEmpty(category)">
+            <fa :icon="getCategoryIcon(category)" class="mr-2" />
             {{ $t('filter.namedEntity' + capitalize(category)) }}
             <i>({{ getCategoryTotal(category) }})</i>
+            <div class="ml-auto">
+              <haptic-copy class="btn-light btn-sm py-1" :label="$t('document.copyAsCsv')" :text="hitsAsCsv(hits)" />
+            </div>
           </div>
-          <span v-for="(page, index) in pages" :key="index">
-            <span v-for="(ne, index) in page.hits" :key="index" class="d-inline mr-2">
-              <b-badge pill variant="light" class="p-0 text-uppercase text-black border"
-                       :class="getCategoryClass(category, 'border-')" :id="`named-entity-${ne.id}`">
-                <span class="p-1 d-inline-block">
-                  {{ ne.source.mentionNorm }}
-                </span>
-              </b-badge>
-              <b-popover :target="`named-entity-${ne.id}`" triggers="hover" placement="top">
-                <named-entity-in-context :document="document" :named-entity="ne"></named-entity-in-context>
-                <template #title>
-                  <div class="d-flex">
-                    <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
-                    <div class="ml-auto pl-2" v-if="ne.offsets.length > 1">
-                      {{ $tc('document.namedEntitiesOccurences', ne.offsets.length, { count: ne.offsets.length }) }}
-                    </div>
+          <span v-for="(ne, index) in hits" :key="index" class="d-inline-block">
+            <b-badge class="p-1 text-uppercase text-black border"
+                      pill
+                      variant="light"
+                      :class="getCategoryClass(category, 'border-')"
+                      :id="`named-entity-${ne.id}`">
+              {{ ne.source.mentionNorm }}
+            </b-badge>
+            <span>&nbsp;</span>
+            <b-popover :target="`named-entity-${ne.id}`" triggers="hover" placement="top">
+              <named-entity-in-context :document="document" :named-entity="ne"></named-entity-in-context>
+              <template #title>
+                <div class="d-flex">
+                  <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
+                  <div class="ml-auto pl-2" v-if="ne.offsets.length > 1">
+                    {{ $tc('document.namedEntitiesOccurences', ne.offsets.length, { count: ne.offsets.length }) }}
                   </div>
-                </template>
-              </b-popover>
-            </span>
+                </div>
+              </template>
+            </b-popover>
           </span>
           <v-wait :for="`load_more_data_${category}`">
-            <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
-            <div v-if="categoryHasNextPage(category)">
-              <a class="document__named-entities__more small" href="#" @click.prevent="getNextPageInCategory(category)">
+            <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-3" slot="waiting" />
+            <div v-if="categoryHasNextPage(category)" class="mt-3 text-center">
+              <b-btn class="document__named-entities__more"
+                     size="sm"
+                     variant="link"
+                     @click.prevent="getNextPageInCategory(category)">
                 {{ $t('document.namedEntitiesShowMore.showMore' + capitalize(category)) }}
-              </a>
+              </b-btn>
             </div>
           </v-wait>
         </div>
@@ -59,7 +65,7 @@
 </template>
 
 <script>
-import { capitalize, get, sumBy, throttle } from 'lodash'
+import { capitalize, flatten, get, mapValues, sumBy, pickBy, throttle } from 'lodash'
 import { mapState } from 'vuex'
 
 import NamedEntityInContext from '@/components/NamedEntityInContext'
@@ -104,6 +110,12 @@ export default {
     hasNamedEntities () {
       return sumBy(this.categories, category => this.getCategoryTotal(category))
     },
+    namedEntitiesByCategories () {
+      const namedEntitiesByCategories = mapValues(this.namedEntitiesPaginatedByCategories, pages => {
+        return flatten(pages.map(page => page.hits))
+      })
+      return pickBy(namedEntitiesByCategories, hits => !!hits.length)
+    },
     categories () {
       return this.$store.getters['document/categories']
     },
@@ -115,6 +127,13 @@ export default {
     this.getFirstPageInAllCategories('load first page of named entities')
   },
   methods: {
+    hitsAsCsv (hits = []) {
+      const csvHeader = ['named entity', 'occurences'].join(',')
+      const csvBody = hits.map(({ source }) => {
+        return [source.mentionNorm, source.offsets.length].join(',')
+      }).join('\n')
+      return [csvHeader, csvBody].join('\n')
+    },
     getCategoryTotal (category) {
       return get(this, ['namedEntitiesPaginatedByCategories', category, 0, 'total'], 0)
     },
@@ -156,18 +175,6 @@ export default {
         margin-left: auto;
         max-width: 300px;
         width: 100%;
-      }
-    }
-
-    &__more {
-      background: $light;
-      display: inline-block;
-      margin-bottom: $spacer * 0.25;
-      padding: $spacer * 0.25 $spacer * 0.5;
-
-      &:hover {
-        background: white;
-        text-decoration: white;
       }
     }
   }

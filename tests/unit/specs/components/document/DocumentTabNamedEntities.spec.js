@@ -32,11 +32,11 @@ describe('DocumentTabNamedEntities.vue', () => {
 
     const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(3)
-    expect(pills.at(0).find('b-badge-stub > span').text()).toBe('mention_01')
+    expect(pills.at(0).find('b-badge-stub').text()).toBe('mention_01')
     expect(pills.at(0).classes()).toContain('border-category-person')
-    expect(pills.at(1).find('b-badge-stub > span').text()).toBe('mention_02')
+    expect(pills.at(1).find('b-badge-stub').text()).toBe('mention_02')
     expect(pills.at(1).classes()).toContain('border-category-organization')
-    expect(pills.at(2).find('b-badge-stub > span').text()).toBe('mention_03')
+    expect(pills.at(2).find('b-badge-stub').text()).toBe('mention_03')
     expect(pills.at(2).classes()).toContain('border-category-location')
   })
 
@@ -55,7 +55,7 @@ describe('DocumentTabNamedEntities.vue', () => {
 
     const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(1)
-    expect(pills.at(0).find('b-badge-stub > span').text()).toBe('loulou')
+    expect(pills.at(0).find('b-badge-stub').text()).toBe('loulou')
     expect(pills.at(0).classes()).toContain('border-category-person')
   })
 
