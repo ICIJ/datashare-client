@@ -1,6 +1,6 @@
 <template>
   <div class="user-history">
-    <div class="container mt-4">
+    <div class="mt-4">
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
         <li v-for="event in searches" :key="event.id" class="user-history__list__item">
           <div class="user-history__list__item__delete float-right m-4">
