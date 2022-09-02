@@ -91,8 +91,9 @@ import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import UserDisplay from '@/components/UserDisplay'
 import moment from 'moment'
-import { compact, find, random } from 'lodash'
+import { compact, find, some, random } from 'lodash'
 import settings from '@/utils/settings'
+import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import { mapState } from 'vuex'
 
@@ -118,7 +119,7 @@ const SORT_ORDER = Object.freeze({
 
 export default {
   name: 'BatchSearchTable',
-  mixins: [utils],
+  mixins: [polling, utils],
   components: { UserDisplay, BatchSearchStatus, BatchSearchFilterDate, BatchSearchFilterDropdown },
   data () {
     return {
@@ -136,7 +137,7 @@ export default {
     }
   },
   mounted () {
-    this.fetchWithLoader()
+    this.fetchAndRegisterPollWithLoader()
   },
   watch: {
     $route () {
@@ -213,9 +214,6 @@ export default {
       const timeout = () => random(1000, 4000)
       this.registerPollOnce({ fn, timeout })
     },
-    linkGen (page) {
-      return this.createBatchSearchRoute({ page })
-    },
     generateTo (item) {
       const baseTo = {
         name: 'batch-search.results',
@@ -237,6 +235,10 @@ export default {
     },
     getProjectsNames (item) {
       return item.projects?.map(project => project.name).join(', ') ?? ''
+    },
+
+    linkGen (page) {
+      return this.createBatchSearchRoute({ page })
     },
     serverField (field) {
       return this.isServer ? field : null
@@ -326,6 +328,12 @@ export default {
           name: 'published'
         })
       ])
+    },
+    hasPendingBatchSearches () {
+      const RUNNING = settings.batchSearch.status.running
+      const QUEUED = settings.batchSearch.status.queued
+      const pendingStates = [RUNNING, QUEUED]
+      return some(this.displayBatchSearches, ({ state }) => pendingStates.includes(state))
     },
     howToLink () {
       const { href } = this.$router.resolve('/docs/all-batch-search-documents')
