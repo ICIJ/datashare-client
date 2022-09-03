@@ -423,6 +423,7 @@
     "starFile": "文書に星マークを付ける",
     "notFound": "ドキュメントが見つかりません。",
     "notAvailable": "Preview is not available for this document.",
+    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "固有表現が見つかりません",
     "namedEntitiesNotSearched": "<p>文書は解析されていません。</p><p class=\\\"text-muted small\\\">固有表現を検索するには、 <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> に行き、新たなタスクを開始してください \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "プレビューを生成しています…",
@@ -621,10 +622,12 @@
     "date": "日付",
     "nbResults": "結果の数",
     "query": "検索語なし | 検索語１語 | 検索語{count} 語",
+    "clearFilters": "Clear filters",
     "delete": "まとめ検索（バッチサーチ）を削除",
     "deleted": "まとめ検索（バッチサーチ）は削除されました。",
     "notDeleted": "まとめ検索（バッチサーチ）は削除されていません。",
     "published": "公開済み",
+    "notPublished": "Not published",
     "publishedDescription": "このまとめ検索（バッチサーチ）へのアクセスを、プロジェクトの他の参加者にも認めます。この設定は後で変えられます。",
     "phraseMatch": "完全一致検索をする",
     "phraseMatchDescription": "文や語句が完全一致するものだけを文書内で検索できるようにします。複数の言葉の組み合わせを、その順序と関係なく照合するものではありません。",
@@ -637,6 +640,12 @@
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "placeholder": "Search in batch searches...",
+    "status": {
+      "failure": "failure",
+      "queued": "queued",
+      "running": "running",
+      "success": "success"
+    },
     "field": {
       "all": "All fields",
       "name": "Name",
@@ -709,6 +718,7 @@
   "batchDownload": {
     "title": "Batch downloads",
     "empty": "You have not yet started any download tasks.",
+    "noFile": "The archive has expired.",
     "created": "Your download is being prepared",
     "warning": "This feature is currently being developped by the Datashare team.",
     "inProgress": "See all pending downloads",
