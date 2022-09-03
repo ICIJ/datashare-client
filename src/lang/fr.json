@@ -423,6 +423,7 @@
     "starFile": "Mettre en favoris le document",
     "notFound": "Document non trouvé",
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
+    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
     "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Génération d'une prévisualisation...",
@@ -621,10 +622,12 @@
     "date": "Date",
     "nbResults": "Nombre de résultats",
     "query": "pas de recherche | 1 recherche | {count} recherches",
+    "clearFilters": "Clear filters",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
     "notDeleted": "La recherche en lot n'a pas été supprimée.",
     "published": "Publiée",
+    "notPublished": "Not published",
     "publishedDescription": "Donner accès aux autres membres du projet à cette recherche en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",
     "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre.",
@@ -637,6 +640,12 @@
     "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
     "errorMessage": "Le système a rencontré une erreur. Il peut s'agir d'une erreur de syntaxe que vous avez écrite dans votre CSV ou d'une autre erreur. Veuillez vous référer à <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">cette page d'aide</a> où les erreurs les plus courantes sont expliquées.",
     "placeholder": "Rechercher dans les recherches en lot...",
+    "status": {
+      "failure": "failure",
+      "queued": "queued",
+      "running": "running",
+      "success": "success"
+    },
     "field": {
       "all": "All fields",
       "name": "Name",
@@ -709,6 +718,7 @@
   "batchDownload": {
     "title": "Téléchargements en lot",
     "empty": "Vous n'avez pas encore lancé de tâches de téléchargement.",
+    "noFile": "The archive has expired.",
     "created": "Votre téléchargement est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "inProgress": "Voir tous les téléchargements en attente",
