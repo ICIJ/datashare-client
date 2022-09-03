@@ -423,6 +423,7 @@
     "starFile": "Marcar como favorito",
     "notFound": "Documento no encontrado",
     "notAvailable": "La vista previa no está disponible para este archivo.",
+    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
     "namedEntitiesNotSearched": "<p>Documento no analizado.</p><p class=\\\"text-muted small\\\">Para buscar entidades identificadas, vaya a <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> y comience una nueva tarea \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Generando visualización previa...",
@@ -621,10 +622,12 @@
     "date": "Fecha",
     "nbResults": "Número de resultados",
     "query": "no hay consultas | 1 consulta | {count} consultas",
+    "clearFilters": "Clear filters",
     "delete": "Eliminar búsqueda masiva",
     "deleted": "La búsqueda masiva ha sido eliminado.",
     "notDeleted": "La búsqueda masiva no ha sido eliminada.",
     "published": "Publicado",
+    "notPublished": "Not published",
     "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
     "phraseMatch": "Hacer la frase coincide exactamente",
     "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
@@ -637,6 +640,12 @@
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
     "placeholder": "Buscar en las búsquedas masivas...",
+    "status": {
+      "failure": "failure",
+      "queued": "queued",
+      "running": "running",
+      "success": "success"
+    },
     "field": {
       "all": "Todos los campos",
       "name": "Nombre",
@@ -709,6 +718,7 @@
   "batchDownload": {
     "title": "Descarga en lotes",
     "empty": "Aún no has iniciado ninguna tarea de descarga.",
+    "noFile": "The archive has expired.",
     "created": "Tu descarga está siendo procesada",
     "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare.",
     "inProgress": "Ver todas las descargas pendientes",
