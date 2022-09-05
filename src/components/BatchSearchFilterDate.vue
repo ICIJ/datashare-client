@@ -1,14 +1,8 @@
 <template>
   <batch-search-filter :id="id" :name="name" :active="isActive">
     <keep-alive>
-      <date-picker
-        is-range
-        color="gray"
-        :max-date="new Date()"
-        v-model="selectedDateRange"
-        :model-config="{ type: 'number' }"
-        :locale="locale"
-        :key="locale">
+      <date-picker is-range color="gray" :max-date="new Date()" v-model="selectedDateRange"
+        :model-config="modelConfig" :key="`date-${id}`" :locale="locale">
       </date-picker>
     </keep-alive>
   </batch-search-filter>
@@ -16,6 +10,7 @@
 
 <script>
 import BatchSearchFilter from '@/components/BatchSearchFilter'
+import moment from 'moment'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 export default {
   name: 'BatchSearchFilterDate',
@@ -41,11 +36,21 @@ export default {
     }
   },
   methods: {
-
+    startTimeAdjust (start) {
+      return moment(start).locale(this.$i18n.locale).startOf('day').valueOf()
+    },
+    endTimeAdjust (end) {
+      return moment(end).locale(this.$i18n.locale).endOf('day').valueOf()
+    }
   },
   computed: {
     isActive () {
       return this.date !== null
+    },
+    modelConfig () {
+      return {
+        type: 'number'
+      }
     },
     locale () {
       return this.$i18n.locale
@@ -55,7 +60,13 @@ export default {
         return this.date
       },
       set (values) {
-        this.$emit('update', values)
+        if (values) {
+          const start = this.startTimeAdjust(values?.start)
+          const end = this.endTimeAdjust(values?.end)
+          this.$emit('update', { start, end })
+        } else {
+          this.$emit('update', values)
+        }
       }
     }
 
