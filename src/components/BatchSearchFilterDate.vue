@@ -57,16 +57,15 @@ export default {
     },
     selectedDateRange: {
       get () {
+        if (this.date?.start && this.date?.end) {
+          const start = this.startTimeAdjust(this.date?.start)
+          const end = this.endTimeAdjust(this.date?.end)
+          return { start, end }
+        }
         return this.date
       },
       set (values) {
-        if (values) {
-          const start = this.startTimeAdjust(values?.start)
-          const end = this.endTimeAdjust(values?.end)
-          this.$emit('update', { start, end })
-        } else {
-          this.$emit('update', values)
-        }
+        this.$emit('update', values)
       }
     }
 
