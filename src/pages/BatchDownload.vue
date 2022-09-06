@@ -20,7 +20,7 @@
               :name="name"
               :state="state"
               :value="properties.batchDownload"
-              @relaunched="getDownloadTasks"
+              @relaunched="startPollingDownloadTasks"
               @deleted="getDownloadTasks" />
           </div>
         </template>
@@ -80,15 +80,14 @@ export default {
       return fn()
     },
     async getDownloadTasks () {
-      this.tasks = await api.getTasks('BatchDownloadRunner')
-      this.sortByDateTime(this.tasks)
+      this.tasks = this.sortByDateTime(await api.getTasks('BatchDownloadRunner'))
       // Return true if it has pending download tasks to tell the
       // polling function to continue to poll tasks.
       return this.hasPendingBatchDownloadTasks
     },
     sortByDateTime (tasks) {
       const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/
-      this.tasks.sort(function (a, b) {
+      return tasks.sort(function (a, b) {
         return new Date(b.properties.batchDownload.filename.match(dateRegExp)[0]) - new Date(a.properties.batchDownload.filename.match(dateRegExp)[0])
       })
     },
