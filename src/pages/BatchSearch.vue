@@ -61,6 +61,9 @@ export default {
   },
   computed: {
     ...mapState('batchSearch', ['hasBatchSearch']),
+    howToLink () {
+      return '#/docs/all-batch-search-documents'
+    },
     noBatchSearch () {
       return this.$t('batchSearch.empty', { howToLink: this.howToLink })
     }
