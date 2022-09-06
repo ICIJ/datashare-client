@@ -6,6 +6,7 @@
       :items="displayBatchSearches"
       :sort-by="sortBy"
       :sort-desc="isDesc"
+      class="card border-top-0"
       hover
       no-sort-reset
       responsive
