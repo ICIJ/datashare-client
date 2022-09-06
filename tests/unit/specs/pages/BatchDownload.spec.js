@@ -149,10 +149,7 @@ describe('BatchDownload.vue', () => {
   })
 
   it('should disable the download when the file doesnt exist anymore', async () => {
-    expect(wrapper.find('#batch-download__item-uuid_02 .batch-download__link--enabled').exists()).toBeFalsy()
-
-    const span = wrapper.find('#batch-download__item-uuid_02 .batch-download__link--disabled')
-
+    const span = wrapper.find('#batch-download__item--uuid_02 .batch-download__link--disabled')
     expect(span.exists()).toBeTruthy()
     expect(span.element.title).toEqual('The archive has expired.')
   })
