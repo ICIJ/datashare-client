@@ -64,6 +64,7 @@ export default {
       // Collect query string in "must"
       query.q = findQ(boolQuery.must || [])
       // Collect all filters and all reverse filter
+      castArray(get(boolQuery, 'filter', [])).forEach(applyFilter())
       castArray(get(boolQuery, 'filter.bool.must', [])).forEach(applyFilter())
       castArray(get(boolQuery, 'filter.bool.must_not', [])).forEach(applyFilter(true))
       return { name, query }

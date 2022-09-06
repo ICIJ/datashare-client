@@ -228,6 +228,148 @@ describe('BatchDownloadActions.vue', () => {
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.vm.searchRoute.query.indices).toContain('project')
     })
+
+    it('with a language filter', async () => {
+      const query = JSON.stringify({
+        bool: {
+          filter: {
+            terms: {
+              language: [
+                'GERMAN'
+              ]
+            }
+          },
+          must: [
+            {
+              match_all: {}
+            },
+            {
+              bool: {
+                should: [
+                  {
+                    query_string: {
+                      query: '*'
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              match: {
+                type: 'Document'
+              }
+            }
+          ]
+        }
+      })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
+      const propsData = { value }
+      const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      expect(wrapper.vm.searchRoute.query['f[language]']).toContain('GERMAN')
+      expect(wrapper.vm.searchRoute.query.q).toContain('*')
+    })
+
+    it.skip('with a very complexe query', async () => {
+      const query = JSON.stringify({
+        bool: {
+          filter: {
+            bool: {
+              must: [
+                {
+                  terms: {
+                    contentType: [
+                      'application/pdf'
+                    ]
+                  }
+                },
+                {
+                  terms: {
+                    extractionLevel: [
+                      '0'
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          must: [
+            {
+              bool: {
+                should: [
+                  {
+                    range: {
+                      'metadata.tika_metadata_creation_date': {
+                        gte: '2004-01-01T11:19:08.555Z',
+                        lte: '2039-12-31T11:19:09.995Z'
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              bool: {
+                should: [
+                  {
+                    term: {
+                      'dirname.tree': '/home/dev/Datashare/90ST'
+                    }
+                  },
+                  {
+                    term: {
+                      'dirname.tree': '/home/dev/datashare/90st'
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              bool: {
+                should: [
+                  {
+                    range: {
+                      extractionDate: {
+                        gte: '2022-08-01T00:00:00.000Z',
+                        lte: '2022-08-31T23:59:59.999Z'
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              match_all: {}
+            },
+            {
+              bool: {
+                should: [
+                  {
+                    query_string: {
+                      query: '*'
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              match: {
+                type: 'Document'
+              }
+            }
+          ]
+        }
+      })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
+      const propsData = { value }
+      const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      expect(wrapper.vm.searchRoute.query['f[extractionLevel]']).toContain('0')
+      expect(wrapper.vm.searchRoute.query['f[contentType]']).toContain('application/pdf')
+      expect(wrapper.vm.searchRoute.query['f[creationDate]']).toContain('1072955948555')
+      expect(wrapper.vm.searchRoute.query['f[creationDate]']).toContain('2208943149995')
+      expect(wrapper.vm.searchRoute.query['f[path]']).toContain('/home/dev/Datashare/90ST')
+      expect(wrapper.vm.searchRoute.query['f[indexingDate]']).toContain('1659312000000')
+      expect(wrapper.vm.searchRoute.query.q).toContain('*')
+    })
   })
 
   describe('deleteTask method', () => {
