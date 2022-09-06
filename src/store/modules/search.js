@@ -423,10 +423,11 @@ export const actions = {
     commit('query', lucene.toString(query))
     return dispatch('query')
   },
-  async runBatchDownload ({ state, getters }) {
-    const query = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
-    const jsonQuery = elasticsearch.rootSearch(getters.instantiatedFilters, query).build()
-    return api.runBatchDownload({ projectIds: state.indices, query: jsonQuery.query })
+  async runBatchDownload ({ state, getters }, uri = null) {
+    const q = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
+    const { indices: projectIds } = state
+    const { query } = elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
+    return api.runBatchDownload({ projectIds, query, uri })
   }
 }
 
