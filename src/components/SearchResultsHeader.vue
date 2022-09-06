@@ -180,6 +180,12 @@ export default {
     },
     nbDocuments () {
       return `${this.$t('search.results.on')} ${this.$tc('search.results.results', this.response.total, { total: this.$n(this.response.total) })}`
+    },
+    uriFromStore () {
+      const from = 0
+      const query = { ...this.$store.getters['search/toRouteQuery'](), from }
+      const { route: { fullPath } } = this.$router.resolve({ name: 'search', query })
+      return fullPath
     }
   },
   mounted () {
@@ -219,7 +225,8 @@ export default {
       this.$store.dispatch('search/query')
     },
     batchDownload () {
-      this.$store.dispatch('search/runBatchDownload')
+      const uri = this.uriFromStore
+      this.$store.dispatch('search/runBatchDownload', uri)
       const to = { name: 'batch-download' }
       const variant = 'primary'
       const title = this.$t('batchDownload.created')

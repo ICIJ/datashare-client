@@ -131,7 +131,16 @@ describe('SearchResultsHeader.vue', () => {
       data: {
         options: {
           projectIds: [index, anotherIndex],
-          query: { bool: { must: [{ match_all: {} }, { bool: { should: [{ query_string: { query: 'bar' } }] } }, { match: { type: 'Document' } }] } }
+          uri: expect.any(String),
+          query: {
+            bool: {
+              must: [
+                { match_all: {} },
+                { bool: { should: [{ query_string: { query: 'bar' } }] } },
+                { match: { type: 'Document' } }
+              ]
+            }
+          }
         }
       }
     }))
