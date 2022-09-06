@@ -7,11 +7,11 @@
       <tasks-list :tasks="tasks">
         <template v-slot="{ item: { name, properties, state } }">
           <div class="d-flex batch-download__item" :id="'batch-download__item--' + properties.batchDownload.uuid">
-            <a v-if="properties.batchDownload.exists" :href="downloadResultsUrl(name)" class="batch-download__link" target="_blank">
+            <a v-if="properties.batchDownload.exists" :href="downloadResultsUrl(name)" class="batch-download__item__link" target="_blank">
               <fa icon="download" fixed-width />
               {{ properties.batchDownload.filename | basename }}
             </a>
-            <span v-else class="batch-download__link batch-download__link--disabled" v-b-tooltip :title="$t('batchDownload.noFile')">
+            <span v-else class="batch-download__item__link batch-download__item__link--disabled" v-b-tooltip :title="$t('batchDownload.noFile')">
               <fa icon="times" fixed-width />
               {{ properties.batchDownload.filename | basename }}
             </span>
