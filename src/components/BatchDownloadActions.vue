@@ -1,6 +1,5 @@
 <script>
-import { get, castArray, compact, first, flow, keys, uniqueId } from 'lodash'
-import { get as getFp, map as mapFp } from 'lodash/fp'
+import { uniqueId } from 'lodash'
 import Api from '@/api'
 
 export default {
@@ -40,34 +39,8 @@ export default {
     projects () {
       return this?.value?.projects?.map(p => p.name) || []
     },
-    searchRoute () {
-      const name = 'search'
-      const query = {}
-      const { bool: boolQuery = {} } = this.tryToParseQuery()
-      // Create a function to retreive the query_string
-      const queryStringPath = 'bool.should.0.query_string.query'
-      const findQ = flow(castArray, mapFp(getFp(queryStringPath)), compact, first)
-      // Create a closure function to apply the filter to the query object
-      const applyFilter = (reverse = false) => {
-        return filter => {
-          keys(filter.terms || {}).forEach(name => {
-            filter.terms[name].forEach(value => {
-              const queryKey = reverse ? `f[-${name}]` : `f[${name}]`
-              query[queryKey] ||= []
-              query[queryKey].push(value)
-            })
-          })
-        }
-      }
-      // Collect indices
-      query.indices = this.projects.join(',')
-      // Collect query string in "must"
-      query.q = findQ(boolQuery.must || [])
-      // Collect all filters and all reverse filter
-      castArray(get(boolQuery, 'filter', [])).forEach(applyFilter())
-      castArray(get(boolQuery, 'filter.bool.must', [])).forEach(applyFilter())
-      castArray(get(boolQuery, 'filter.bool.must_not', [])).forEach(applyFilter(true))
-      return { name, query }
+    uri () {
+      return this?.value?.uri || null
     },
     togglerId () {
       return uniqueId('batch-download-actions-')
@@ -91,7 +64,8 @@ export default {
         this.closePopover()
         const projectIds = this.projects
         const query = this.parseQuery()
-        await this.api.runBatchDownload({ projectIds, query })
+        const uri = this.uri
+        await this.api.runBatchDownload({ projectIds, query, uri })
         this.notifyRelaunchSucceed()
       } catch (error) {
         this.notifyRelaunchFailed(error)
@@ -170,10 +144,14 @@ export default {
         <fa icon="redo" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.relaunch') }}
       </b-dropdown-item-button>
-      <b-dropdown-item :to="searchRoute" class="batch-download-actions__search">
+      <b-dropdown-item :to="uri" class="batch-download-actions__search" v-if="uri">
         <fa icon="search" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.search') }}
       </b-dropdown-item>
+      <b-dropdown-item-button disabled class="batch-download-actions__search" v-else>
+        <fa icon="search" fixed-width class="mr-1" />
+        {{ $t('batchDownloadActions.search') }}
+      </b-dropdown-item-button>
       <b-dropdown-divider />
       <b-dropdown-item-button v-if="isTaskRunning" disabled button-class="batch-download-actions__delete">
         <fa icon="trash-alt" fixed-width class="mr-1" />
