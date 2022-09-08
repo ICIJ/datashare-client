@@ -83,7 +83,7 @@ export const actions = {
     commit('total', batchSearches.total)
     return commit('batchSearches', batchSearches.items)
   },
-  async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published }) {
+  async onSubmit ({ commit, dispatch }, { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published }) {
     await api.batchSearch(name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published)
     commit('hasBatchSearch', true)
     return dispatch('getBatchSearches', {})
@@ -97,7 +97,7 @@ export const actions = {
     }
     return commit('results', results)
   },
-  async deleteBatchSearch ({ commit, state }, { batchId }) {
+  async deleteBatchSearch ({ commit }, { batchId }) {
     try {
       await api.deleteBatchSearch(batchId)
       commit('removeBatchSearch', batchId)
@@ -106,17 +106,17 @@ export const actions = {
       return false
     }
   },
-  async updateBatchSearch ({ state }, { batchId, published }) {
+  async updateBatchSearch (_, { batchId, published }) {
     try {
       await api.updateBatchSearch(batchId, published)
-    } catch (_) {}
+    } catch (_) { }
   },
   async deleteBatchSearches ({ commit }) {
     try {
       await api.deleteBatchSearches()
       commit('clearBatchSearches')
       return {}
-    } catch (_) {}
+    } catch (_) { }
   }
 }
 
