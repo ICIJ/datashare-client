@@ -1,33 +1,40 @@
-import axios from 'axios'
+import { createLocalVue } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import mode from '@/modes'
-import Auth from '@/api/resources/Auth'
-
-const auth = new Auth(mode())
-
-jest.mock('axios')
+import { Api } from '@/api'
+import { Core } from '@/core'
+import { getMode } from '@/mode'
 
 describe('auth backend client', () => {
-  beforeEach(() => axios.request.mockRejectedValue({ response: { status: 401 } }))
+  let auth
+  let mockAxios
+
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    const api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api, getMode()).useAll()
+    auth = core.auth
+  })
+  beforeEach(() => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockRejectedValue({ response: { status: 401 } })
+  })
 
   afterEach(() => auth.reset())
 
-  afterAll(() => jest.unmock('axios'))
-
   describe('getUsername', () => {
     it('should return user name if user is authenticated with basic auth', async () => {
-      axios.request.mockResolvedValue({ data: { uid: 'john' } })
+      mockAxios.request.mockResolvedValue({ data: { uid: 'john' } })
       expect(await auth.getUsername()).toBe('john')
-      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9009/api/users/me' })
+      expect(mockAxios.request).toBeCalledWith({ url: 'http://localhost:9009/api/users/me' })
     })
 
     it('should return null if user is not authenticated with basic auth', async () => {
       expect(await auth.getUsername()).toBeNull()
-      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9009/api/users/me' })
+      expect(mockAxios.request).toBeCalledWith({ url: 'http://localhost:9009/api/users/me' })
     })
 
     it('should throw error when testing basic auth and response is other than 200 or 401', async () => {
-      axios.request.mockRejectedValue({ response: { status: 500, statusText: 'message' } })
+      mockAxios.request.mockRejectedValue({ response: { status: 500, statusText: 'message' } })
       try {
         await auth.getUsername()
       } catch (error) {

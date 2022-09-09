@@ -1,59 +1,57 @@
-import axios from 'axios'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import Api from '@/api'
-import { actions, getters, mutations, state } from '@/store/modules/batchSearch'
+import { Api } from '@/api'
+import { storeBuilder } from '@/store/storeBuilder'
 
 Vue.use(Vuex)
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: {} })
-  }
-})
-
 describe('BatchSearchStore', () => {
-  let store = null
+  let api
+  let store
+  const mockAxiosApi = { request: jest.fn() }
+  const mockEventbus = { $emit: jest.fn() }
 
   beforeAll(() => {
-    store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, actions, getters, mutations, state } } })
+    api = new Api(mockAxiosApi, mockEventbus)
+    store = storeBuilder(api)
   })
 
-  afterEach(() => axios.request.mockClear())
-
-  afterAll(() => jest.unmock('axios'))
+  beforeEach(() => {
+    mockAxiosApi.request.mockClear()
+    mockAxiosApi.request.mockResolvedValue({ data: {} })
+  })
 
   describe('actions', () => {
     it('should retrieve a batchSearch according to its id', async () => {
-      axios.request.mockReturnValue({ data: { name: 'This is my batchSearch' } })
+      mockAxiosApi.request.mockReturnValue({ data: { name: 'This is my batchSearch' } })
 
       await store.dispatch('batchSearch/getBatchSearch', 12)
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search/12')
       }))
       expect(store.state.batchSearch.batchSearch.name).toBe('This is my batchSearch')
 
-      axios.request.mockReturnValue({ data: {} })
+      mockAxiosApi.request.mockReturnValue({ data: {} })
     })
 
     it('should retrieve all the batchSearches', async () => {
-      axios.request.mockResolvedValue({ data: { items: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'], total: 3 } })
+      mockAxiosApi.request.mockResolvedValue({ data: { items: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'], total: 3 } })
       const data = { from: 0, size: 10, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: [], project: [], state: [], publishState: null }
 
       await store.dispatch('batchSearch/getBatchSearches', data)
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         data,
         method: 'POST',
         url: Api.getFullUrl('/api/batch/search')
       }))
       expect(store.state.batchSearch.batchSearches).toHaveLength(3)
 
-      axios.request.mockResolvedValue({ data: {} })
+      mockAxiosApi.request.mockResolvedValue({ data: {} })
     })
 
     it('should submit the new batchSearch form with complete information', async () => {
@@ -72,13 +70,13 @@ describe('BatchSearchStore', () => {
       data.append('paths', '/a/path/to/home')
       data.append('paths', '/another/path')
       data.append('published', false)
-      expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(2)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         data,
         method: 'POST',
         url: Api.getFullUrl('/api/batch/search/project1,project2')
       }))
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         data: { from: 0, size: 100, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: null, project: [], state: [], publishState: null },
         method: 'POST',
         url: Api.getFullUrl('/api/batch/search')
@@ -86,12 +84,12 @@ describe('BatchSearchStore', () => {
     })
 
     it('should retrieve a batchSearch results according to its id', async () => {
-      axios.request.mockReturnValue({ data: [{ contentType: 'type_01', documentId: 12, rootId: 42 }] })
+      mockAxiosApi.request.mockReturnValue({ data: [{ contentType: 'type_01', documentId: 12, rootId: 42 }] })
 
       await store.dispatch('batchSearch/getBatchSearchResults', { batchId: 12 })
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search/result/12'),
         method: 'POST'
       }))
@@ -100,7 +98,7 @@ describe('BatchSearchStore', () => {
       expect(store.state.batchSearch.results[0].rootId).toBe(42)
       expect(store.state.batchSearch.results[0].document).not.toBeNull()
 
-      axios.request.mockResolvedValue({ data: {} })
+      mockAxiosApi.request.mockResolvedValue({ data: {} })
     })
 
     it('should delete a specific batchSearch', async () => {
@@ -108,8 +106,8 @@ describe('BatchSearchStore', () => {
 
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search/batchSearch_01'),
         method: 'DELETE'
       }))
@@ -121,8 +119,8 @@ describe('BatchSearchStore', () => {
 
       await store.dispatch('batchSearch/deleteBatchSearches')
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search'),
         method: 'DELETE'
       }))

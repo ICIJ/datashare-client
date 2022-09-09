@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import Api from '@/api'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 
 export default {
@@ -52,11 +51,6 @@ export default {
   data () {
     return {
       searches: this.events
-    }
-  },
-  computed: {
-    api () {
-      return new Api()
     }
   },
   methods: {
@@ -93,7 +87,7 @@ export default {
     },
     async deleteUserEvent (event) {
       try {
-        await this.api.deleteUserEvent(event.id)
+        await this.$core.api.deleteUserEvent(event.id)
         this.$root.$bvToast.toast(this.$t('userHistory.deleted'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('userHistory.notDeleted'), { noCloseButton: true, variant: 'warning' })

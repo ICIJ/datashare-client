@@ -97,12 +97,8 @@
 
 <script>
 import { camelCase, find, get, map, startCase } from 'lodash'
-
-import Api from '@/api'
-import SearchFormControl from '@/components/SearchFormControl'
 import { isUrl } from '@/utils/strings'
-
-const api = new Api()
+import SearchFormControl from '@/components/SearchFormControl'
 
 /**
  * A list of available plugins.
@@ -138,7 +134,7 @@ export default {
       return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.description : plugin.description
     },
     async search () {
-      const plugins = await api.getPlugins(this.searchTerm)
+      const plugins = await this.$core.api.getPlugins(this.searchTerm)
       map(plugins, plugin => { plugin.show = false })
       this.$set(this, 'plugins', plugins)
     },
@@ -146,7 +142,7 @@ export default {
       const plugin = find(this.plugins, { id: pluginId })
       plugin.show = true
       try {
-        await api.installPluginFromId(pluginId)
+        await this.$core.api.installPluginFromId(pluginId)
         plugin.installed = true
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
@@ -157,7 +153,7 @@ export default {
     async installPluginFromUrl () {
       this.$set(this, 'isInstallingFromUrl', true)
       try {
-        await api.installPluginFromUrl(this.url)
+        await this.$core.api.installPluginFromUrl(this.url)
         await this.search()
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
@@ -171,7 +167,7 @@ export default {
       const plugin = find(this.plugins, { id: pluginId })
       plugin.show = true
       try {
-        await api.uninstallPlugin(pluginId)
+        await this.$core.api.uninstallPlugin(pluginId)
         plugin.installed = false
         this.$bvToast.toast(this.$t('plugins.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {

@@ -1,6 +1,6 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import { Core } from '@/core'
 import DocumentContent from '@/components/DocumentContent'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -19,7 +19,8 @@ jest.mock('lodash', () => {
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('DocumentContent.vue', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  const api = new Api(null, null)
+  const { i18n, localVue, store } = Core.init(createLocalVue(), api).useAll()
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
 
@@ -33,12 +34,11 @@ describe('DocumentContent.vue', () => {
       .withLanguage(language))
       .commit()
     // Mock the `getDocumentSlice` method
-    jest.spyOn(Api.prototype, 'getDocumentSlice')
-      .mockImplementation(async (project, documentId, offset, limit) => {
-        // Modify the returned content according to passed parameters
-        const content = contentSlice.content.substring(offset, offset + limit)
-        return { ...contentSlice, content, offset, limit }
-      })
+    api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
+      // Modify the returned content according to passed parameters
+      const content = contentSlice.content.substring(offset, offset + limit)
+      return { ...contentSlice, content, offset, limit }
+    })
     // Get the document from the store
     await store.dispatch('document/get', { id, index })
     const document = store.state.document.doc
@@ -46,6 +46,11 @@ describe('DocumentContent.vue', () => {
     flushPromises()
     return { content, contentSlice, document }
   }
+
+  beforeEach(() => {
+    api.getDocumentSlice = jest.fn()
+    api.searchDocument = jest.fn()
+  })
 
   afterEach(async () => {
     // Ensure all promise are flushed...
@@ -102,10 +107,9 @@ describe('DocumentContent.vue', () => {
   describe('search term', () => {
     describe('witg 1 occurence', () => {
       beforeEach(() => {
-        jest.spyOn(Api.prototype, 'searchDocument')
-          .mockImplementation(() => {
-            return Promise.resolve({ count: 1, offsets: [10] })
-          })
+        api.searchDocument.mockImplementation(() => {
+          return Promise.resolve({ count: 1, offsets: [10] })
+        })
       })
 
       it('should support regex', async () => {
@@ -133,10 +137,9 @@ describe('DocumentContent.vue', () => {
       beforeEach(async () => {
         const content = 'this is a full full content'
         const { document } = await mockDocumentContentSlice(content)
-        jest.spyOn(Api.prototype, 'searchDocument')
-          .mockImplementation(async () => {
-            return { count: 2, offsets: [10, 15] }
-          })
+        api.searchDocument.mockImplementation(async () => {
+          return { count: 2, offsets: [10, 15] }
+        })
         const propsData = { document }
         wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
         await flushPromises()
@@ -188,10 +191,9 @@ describe('DocumentContent.vue', () => {
       beforeEach(async () => {
         const content = 'this is a full FulL content fuLL'
         const { document } = await mockDocumentContentSlice(content)
-        jest.spyOn(Api.prototype, 'searchDocument')
-          .mockImplementation(async () => {
-            return { count: 3, offsets: [10, 15, 28] }
-          })
+        api.searchDocument.mockImplementation(async () => {
+          return { count: 3, offsets: [10, 15, 28] }
+        })
         const propsData = { document }
         wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
         await flushPromises()
@@ -255,10 +257,9 @@ describe('DocumentContent.vue', () => {
 
     describe('with 1 occurences', () => {
       beforeEach(async () => {
-        jest.spyOn(Api.prototype, 'searchDocument')
-          .mockImplementation(async () => {
-            return { count: 1, offsets: [37] }
-          })
+        api.searchDocument.mockImplementation(async () => {
+          return { count: 1, offsets: [37] }
+        })
       })
 
       it('should lazy load 2 slices and merge them with the correct search mark', async () => {
@@ -281,10 +282,9 @@ describe('DocumentContent.vue', () => {
 
     describe('with 2 occurences', () => {
       beforeEach(async () => {
-        jest.spyOn(Api.prototype, 'searchDocument')
-          .mockImplementation(async () => {
-            return { count: 2, offsets: [8, 29] }
-          })
+        api.searchDocument.mockImplementation(async () => {
+          return { count: 2, offsets: [8, 29] }
+        })
       })
 
       it('should lazy load 2 slices and merge them with the correct search marks', async () => {

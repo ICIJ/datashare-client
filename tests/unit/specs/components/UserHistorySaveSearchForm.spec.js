@@ -1,37 +1,31 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import Api from '@/api'
 import { Core } from '@/core'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
-
-Api.getFullUrl = jest.fn()
-
-jest.mock('@/api', () => {
-  return jest.fn(() => {
-    return {
-      saveSearch: jest.fn()
-    }
-  })
-})
+import { Api } from '@/api'
 
 describe('UserHistorySaveSearchForm.vue', () => {
   let wrapper
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  let i18n, localVue, router, store, wait
   const propsData = {
     index: 'project',
     uri: 'uri'
   }
 
-  beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
-
-  beforeEach(async () => {
-    wrapper = shallowMount(UserHistorySaveSearchForm, { i18n, localVue, propsData, router, store, wait })
+  beforeAll(() => {
+    Murmur.config.merge({ mode: 'SERVER' })
+    const api = new Api(null, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    router = core.router
+    store = core.store
+    wait = core.wait
   })
 
-  afterAll(() => jest.unmock('@/api'))
-
   it('should call "saveSearch" method on click on submit button', async () => {
+    wrapper = shallowMount(UserHistorySaveSearchForm, { i18n, localVue, propsData, router, store, wait })
     const saveSearchMock = jest.spyOn(wrapper.vm, 'saveSearch')
     wrapper.setData({ name: 'Test' })
     wrapper.find('.card-footer .d-flex b-btn-stub').trigger('submit')

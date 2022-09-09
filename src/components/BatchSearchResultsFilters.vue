@@ -71,7 +71,7 @@ export default {
     /**
      * The batch search uuid
      */
-    uuid: {
+    uuid: { // TODO not used in the component because it's retrieved from the url=> change me
       type: String
     },
     /**
@@ -124,6 +124,9 @@ export default {
       get () {
         return this.$store.state.batchSearch.selectedQueries
       }
+    },
+    routeQuery () {
+      return this.$route?.query ?? {}
     }
   },
   mounted () {
@@ -136,10 +139,9 @@ export default {
   },
   methods: {
     updateRoute () {
-      const routeQuery = get(this, '$route.query', {})
       const queries = compact(map(this.selectedQueries, 'label'))
-      if (!isEqual(routeQuery.queries || [], queries)) {
-        const query = { ...routeQuery, queries }
+      if (!isEqual(this.routeQuery.queries || [], queries)) {
+        const query = { ...this.routeQuery, queries }
         this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
       }
     },
@@ -148,17 +150,17 @@ export default {
       this.$router.push({ name: 'search', query: { q, indices: this.indices.join(',') } }).catch(() => {})
     },
     sort (queriesSort) {
-      const routeQuery = get(this, '$route.query', {})
-      const query = { ...routeQuery, queries_sort: queriesSort }
+      const query = { ...this.routeQuery, queries_sort: queriesSort }
       this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
     },
     readQueryFromRoute () {
-      if (get(this, ['$route', 'query', 'queries_sort'], null) === 'default') {
+      if (this.$route?.query?.queries_sort === 'default') {
         this.$set(this, 'sortField', 'default')
       } else {
         this.$set(this, 'sortField', 'count')
       }
-      const queries = castArray(get(this, ['$route', 'query', 'queries'], []))
+
+      const queries = castArray(this.$route?.query?.queries ?? [])
       this.selectedQueries = queries.map(label => find(this.queries, { label }))
     }
   }

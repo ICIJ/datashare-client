@@ -1,41 +1,36 @@
 import Murmur from '@icij/murmur'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import VueRouter from 'vue-router'
-
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { flushPromises } from 'tests/unit/tests_utils'
+
+import VueRouter from 'vue-router'
+import Vuex from 'vuex'
+import { Api } from '@/api'
 import { Core } from '@/core'
 import BatchSearchTable from '@/components/BatchSearchTable'
-import Vuex from 'vuex'
 
-jest.mock('@/api', () => {
-  return jest.fn(() => {
-    return {
-      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve({
-        items: [{
-          uuid: '1',
-          projects: [{ name: 'project_01' }, { name: 'project_02' }],
-          name: 'name_01',
-          description: 'description_01',
-          date: '2019-01-01',
-          nbResults: 2,
-          nbQueries: 1,
-          state: 'SUCCESS'
-        }, {
-          uuid: '2',
-          projects: [{ name: 'project_02' }],
-          name: 'name_02',
-          description: 'description_02',
-          date: '2019-01-01',
-          nbResults: 3,
-          nbQueries: 2,
-          state: 'FAILURE'
-        }],
-        total: 2
-      }))
-    }
-  })
-})
+const batchSearchMock = {
+  items: [{
+    uuid: '1',
+    projects: [{ name: 'project_01' }, { name: 'project_02' }],
+    name: 'name_01',
+    description: 'description_01',
+    date: '2019-01-01',
+    nbResults: 2,
+    nbQueries: 1,
+    state: 'SUCCESS'
+  }, {
+    uuid: '2',
+    projects: [{ name: 'project_02' }],
+    name: 'name_02',
+    description: 'description_02',
+    date: '2019-01-01',
+    nbResults: 3,
+    nbQueries: 2,
+    state: 'FAILURE'
+  }],
+  total: 2
+}
 const routerFactory = () => {
   return new VueRouter({
     routes: [
@@ -59,14 +54,22 @@ const routeFactory = function (args) {
 }
 
 describe('BatchSearchTable.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
-  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+  let wrapper, i18n, localVue, store, wait, api
 
-  afterAll(() => {
-    jest.unmock('@/api')
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+  beforeAll(() => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+
+    api = new Api(null, null)
+    api.getBatchSearches = jest.fn().mockResolvedValue(batchSearchMock)
+
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
   })
+
+  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
 
   describe('common functions', () => {
     beforeAll(async () => {

@@ -1,16 +1,21 @@
-import axios from 'axios'
-
-import Api from '@/api'
-import store from '@/store'
+import { Api } from '@/api'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
-jest.mock('axios')
+import { storeBuilder } from '@/store/storeBuilder'
 
 describe('RecommendedStore', () => {
   const { index } = esConnectionHelper.build()
 
-  afterAll(() => jest.unmock('axios'))
-  beforeAll(() => store.commit('search/index', index))
+  let mockAxios, api, store
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios)
+    store = storeBuilder(api)
+    store.commit('search/index', index)
+  })
+
+  beforeEach(() => {
+    mockAxios.request.mockClear()
+  })
 
   it('should define a store module', () => {
     expect(store.state.recommended).toBeDefined()
@@ -28,13 +33,13 @@ describe('RecommendedStore', () => {
   })
 
   it('should set the list of documents recommended by a list of users', async () => {
-    axios.request.mockResolvedValue({ data: ['document_01', 'document_02', 'document_03'] })
-    axios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: ['document_01', 'document_02', 'document_03'] })
+    mockAxios.request.mockClear()
 
     await store.dispatch('recommended/getDocumentsRecommendedBy', ['user_01', 'user_02'])
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/recommendations`),
       method: 'GET',
       params: {
@@ -45,11 +50,11 @@ describe('RecommendedStore', () => {
   })
 
   it('should reset the list of documents recommended if no users', async () => {
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
 
     await store.dispatch('recommended/getDocumentsRecommendedBy', [])
 
-    expect(axios.request).toBeCalledTimes(0)
+    expect(mockAxios.request).toBeCalledTimes(0)
     expect(store.state.recommended.documents).toEqual([])
   })
 
@@ -64,12 +69,12 @@ describe('RecommendedStore', () => {
   })
 
   it('should return users who recommended documents from this project', async () => {
-    axios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 1 }] } })
-    axios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 1 }] } })
+    mockAxios.request.mockClear()
     await store.dispatch('recommended/fetchIndicesRecommendations')
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/users/recommendations'),
       method: 'GET',
       params: { project: index }
@@ -79,12 +84,12 @@ describe('RecommendedStore', () => {
   })
 
   it('should return the total of documents recommended for this project', async () => {
-    axios.request.mockResolvedValue({ data: { totalCount: 42, aggregates: [] } })
-    axios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: { totalCount: 42, aggregates: [] } })
+    mockAxios.request.mockClear()
     await store.dispatch('recommended/fetchIndicesRecommendations')
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/users/recommendations'),
       method: 'GET',
       params: { project: index }

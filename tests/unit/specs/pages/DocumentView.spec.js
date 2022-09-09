@@ -1,36 +1,40 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import axios from 'axios'
 
-import Api from '@/api'
-import elasticsearch from '@/api/elasticsearch'
-import { Core } from '@/core'
-import DocumentView from '@/pages/DocumentView'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({
-      data: [
-        { label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }
-      ]
-    })
-  }
-})
+import elasticsearch from '@/api/elasticsearch'
+import { Api } from '@/api'
+import { Core } from '@/core'
+import DocumentView from '@/pages/DocumentView'
 
 describe('DocumentView.vue', () => {
-  const core = Core.init(createLocalVue()).useAll()
-  const { i18n, localVue, router, store, wait } = core
+  let core, i18n, localVue, router, store, wait, api, mockAxios, wrapper
   const { index: project, es } = esConnectionHelper.build()
   const id = 'document'
   const parentId = 'parent_document'
   const propsData = { index: project, id, routing: parentId }
-  let wrapper = null
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios, null)
+    api.getUser = jest.fn()
+    core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    router = core.router
+    store = core.store
+    wait = core.wait
+  })
 
   beforeEach(async () => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({
+      data: [{ label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }]
+    })
+    api.getUser.mockClear()
+    api.getUser.mockResolvedValue({ uid: 'test-user' })
+
     await letData(es).have(new IndexedDocument(parentId, project)).commit()
     await letData(es).have(new IndexedDocument(id, project).withParent(parentId)).commit()
     store.commit('document/doc', { _id: id, _index: project, _source: { extractionLevel: 1 } })
@@ -39,10 +43,9 @@ describe('DocumentView.vue', () => {
   afterEach(() => {
     store.commit('document/reset')
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    axios.request.mockClear()
   })
 
-  afterAll(() => jest.unmock('axios'))
+  afterAll(() => jest.unmock('mockAxios'))
 
   it('should display an error message if document is not found', async () => {
     const propsData = { id: 'notfound', index: project }
@@ -65,7 +68,7 @@ describe('DocumentView.vue', () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
     await wrapper.vm.getDoc()
     const url = Api.getFullUrl(`/api/${project}/documents/tags/${id}`)
-    expect(axios.request).toBeCalledWith({ url })
+    expect(mockAxios.request).toBeCalledWith({ url })
   })
 
   it('should call the API to retrieve document recommendations', async () => {
@@ -73,7 +76,7 @@ describe('DocumentView.vue', () => {
 
     await wrapper.vm.getDoc()
     const url = Api.getFullUrl(`/api/users/recommendationsby?project=${project}&docIds=${id}`)
-    expect(axios.request).toBeCalledWith({ url })
+    expect(mockAxios.request).toBeCalledWith({ url })
   })
 
   it('should display a document', async () => {
@@ -122,7 +125,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     const url = Api.getFullUrl('/api/users/me/history')
-    expect(axios.request).toBeCalledWith(expect.objectContaining({ url }))
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({ url }))
   })
 
   describe('navigate through tabs as loop', () => {

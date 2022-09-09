@@ -1,10 +1,6 @@
 import Vue from 'vue'
 import { has } from 'lodash'
 
-import Api from '@/api'
-
-export const api = new Api()
-
 export const state = {
   allowedFor: {}
 }
@@ -18,8 +14,8 @@ export const mutations = {
   }
 }
 
-export const actions = {
-  async getIndexStatus ({ state }, index) {
+function actionBuilder (api) {
+  const getIndexStatus = async ({ state }, index) => {
     try {
       if (!has(state.allowedFor, index)) {
         // Not allowed index will throw an error
@@ -29,21 +25,41 @@ export const actions = {
     } catch (_) {
       return false
     }
-  },
-  async fetchIndexStatus ({ commit, state }, index) {
-    const allowed = actions.getIndexStatus({ state }, index)
-    commit('allowedFor', { index, allowed })
-  },
-  async fetchIndicesStatus ({ commit, rootState, state }) {
+  }
+  const fetchIndexStatus = async ({
+    commit,
+    state
+  }, index) => {
+    const allowed = await getIndexStatus({ state }, index)
+    commit('allowedFor', {
+      index,
+      allowed
+    })
+  }
+  const fetchIndicesStatus = async ({
+    commit,
+    rootState,
+    state
+  }) => {
+    const promises = []
     for (const index of rootState.search.indices) {
-      actions.fetchIndexStatus({ commit, state }, index)
+      promises.push(fetchIndexStatus({ commit, state }, index))
     }
+    return Promise.all(promises)
+  }
+  return {
+    getIndexStatus,
+    fetchIndexStatus,
+    fetchIndicesStatus
   }
 }
 
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
+export function downloadsBuilder (api) {
+  const actions = actionBuilder(api)
+  return {
+    namespaced: true,
+    state,
+    mutations,
+    actions
+  }
 }

@@ -1,23 +1,23 @@
 import toLower from 'lodash/toLower'
-import axios from 'axios'
 import { createLocalVue } from '@vue/test-utils'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import { Core } from '@/core'
-
-jest.mock('axios')
 
 describe('ProjectsMixin', () => {
   const project = toLower('ProjectsMixin')
   const anotherProject = toLower('AnotherProjectsMixin')
-  let core
+  let core, api, mockAxios
 
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios)
+  })
   beforeEach(() => {
-    core = Core.init(createLocalVue()).useAll()
+    mockAxios.request.mockClear()
+    core = Core.init(createLocalVue(), api).useAll()
     core.store.commit('search/indices', [anotherProject])
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should call a function when a project is selected', async () => {
     const withFn = jest.fn()
@@ -107,7 +107,7 @@ describe('ProjectsMixin', () => {
     core.config.set('defaultProject', defaultProject)
     core.createDefaultProject()
 
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/index/${defaultProject}`)
     }))
   })

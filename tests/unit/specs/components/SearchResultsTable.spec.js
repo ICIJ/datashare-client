@@ -1,28 +1,34 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import axios from 'axios'
 import VueRouter from 'vue-router'
 
-import Api from '@/api'
-import SearchResultsTable from '@/components/SearchResultsTable'
-import { Core } from '@/core'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: {} })
-  }
-})
+import { Api } from '@/api'
+import { Core } from '@/core'
+import SearchResultsTable from '@/components/SearchResultsTable'
 
 describe('SearchResultsTable.vue', () => {
-  const router = new VueRouter()
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const { index, es } = esConnectionHelper.build()
-  let wrapper = null
+  let i18n, localVue, store, wait, router, wrapper, api, mockAxios
 
-  beforeAll(() => store.commit('search/index', index))
+  const { index, es } = esConnectionHelper.build()
+
+  beforeAll(() => {
+    router = new VueRouter()
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
+
+    store.commit('search/index', index)
+  })
 
   beforeEach(async () => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: {} })
+
     await letData(es).have(new IndexedDocuments()
       .setBaseName('document')
       .withIndex(index)
@@ -30,8 +36,6 @@ describe('SearchResultsTable.vue', () => {
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
     wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store, wait })
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should display a b-table', () => {
     expect(wrapper.find('.search-results-table__items').exists()).toBeTruthy()
@@ -63,8 +67,8 @@ describe('SearchResultsTable.vue', () => {
 
     wrapper.findAll('.list-group-item-action').at(1).trigger('click')
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/' + index + '/documents/batchUpdate/star'),
       method: 'POST',
       data: ['document_01', 'document_02']
@@ -84,7 +88,7 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should select all documents', async () => {
-    axios.request.mockResolvedValue({ data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }] })
+    mockAxios.request.mockResolvedValue({ data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }] })
     wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
     await wrapper.setData({ selected: [{ id: 'document_01' }] })
     await wrapper.vm.$nextTick()

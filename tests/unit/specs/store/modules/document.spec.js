@@ -1,25 +1,30 @@
 import { indexOf, orderBy, uniqueId } from 'lodash'
-import axios from 'axios'
 
-import Api from '@/api'
-import store from '@/store'
+import { Api } from '@/api'
+import { storeBuilder } from '@/store/storeBuilder'
 import { initialState } from '@/store/modules/document'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: { uid: 'Jean-Michel' } })
-  }
-})
-
 describe('DocumentStore', () => {
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
+  let api
+  let store
+  const mockAxiosApi = { request: jest.fn() }
+  const mockEventbus = { $emit: jest.fn() }
+
+  beforeAll(() => {
+    api = new Api(mockAxiosApi, mockEventbus)
+    store = storeBuilder(api)
+  })
+
+  beforeEach(() => {
+    mockAxiosApi.request.mockClear()
+    mockAxiosApi.request.mockResolvedValue({ data: { uid: 'Jean-Michel' } }) // TODO : it should be a given with response data not a before each
+  })
 
   afterEach(() => store.commit('document/reset'))
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
     expect(store.state.document).toBeDefined()
@@ -83,13 +88,13 @@ describe('DocumentStore', () => {
   describe('Manage tags', () => {
     it('should get the document\'s tags', async () => {
       const tags = ['tag_01', 'tag_02']
-      axios.request.mockReturnValue({ data: tags })
+      mockAxiosApi.request.mockReturnValue({ data: tags })
       await letData(es).have(new IndexedDocument(id, index).withTags(tags)).commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getTags')
       expect(store.state.document.tags).toEqual(tags)
-      axios.request.mockClear()
-      axios.request.mockResolvedValue({ data: { uid: 'Jean-Michel' } })
+      mockAxiosApi.request.mockClear()
+      mockAxiosApi.request.mockResolvedValue({ data: { uid: 'Jean-Michel' } })
     })
 
     it('should tag multiple documents and not refresh', async () => {
@@ -97,12 +102,12 @@ describe('DocumentStore', () => {
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
 
-      axios.request.mockClear()
+      mockAxiosApi.request.mockClear()
 
       await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
         method: 'POST',
         data: {
@@ -116,7 +121,7 @@ describe('DocumentStore', () => {
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
 
-      axios.request.mockClear()
+      mockAxiosApi.request.mockClear()
 
       // Retrieve documents
       await store.dispatch('document/get', { id: 'doc_01', index })
@@ -128,8 +133,8 @@ describe('DocumentStore', () => {
 
       await store.dispatch('document/tag', { documents: [document01, document02], tag: 'tag_01 tag_02 tag_03' })
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
         method: 'POST',
         data: {
@@ -151,12 +156,12 @@ describe('DocumentStore', () => {
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
 
-      axios.request.mockClear()
+      mockAxiosApi.request.mockClear()
 
       await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
         method: 'POST',
         data: {
@@ -210,12 +215,12 @@ describe('DocumentStore', () => {
       await store.dispatch('document/get', { id: 'doc_01', index })
       store.state.document.isRecommended = false
 
-      axios.request.mockClear()
+      mockAxiosApi.request.mockClear()
 
       await store.dispatch('document/toggleAsRecommended', userId)
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/recommend`),
         method: 'POST',
         data: ['doc_01']
@@ -231,12 +236,12 @@ describe('DocumentStore', () => {
       await store.dispatch('document/get', { id: 'doc_01', index })
       store.state.document.isRecommended = true
 
-      axios.request.mockClear()
+      mockAxiosApi.request.mockClear()
 
       await store.dispatch('document/toggleAsRecommended')
 
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unrecommend`),
         method: 'POST',
         data: ['doc_01']
@@ -247,13 +252,13 @@ describe('DocumentStore', () => {
 
     it('should retrieve the list of users who recommended it and set it to the store', async () => {
       const users = { aggregates: [{ item: { id: 'user_01' }, doc_count: 1 }, { item: { id: 'user_02' }, doc_count: 1 }] }
-      axios.request.mockReturnValue({ data: users })
+      mockAxiosApi.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
       await store.dispatch('document/getRecommendationsByDocuments')
 
-      expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
+      expect(mockAxiosApi.request).toBeCalledTimes(1)
+      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/users/recommendationsby?project=${index}&docIds=doc_01`)
       }))
       expect(store.state.document.recommendedBy).toEqual(['user_01', 'user_02'])
@@ -261,7 +266,7 @@ describe('DocumentStore', () => {
 
     it('should sort users by alphabetical order of id', async () => {
       const users = { aggregates: [{ item: { id: 'user_01' }, doc_count: 1 }, { item: { id: 'user_03' }, doc_count: 1 }, { item: { id: 'user_02' }, doc_count: 1 }] }
-      axios.request.mockReturnValue({ data: users })
+      mockAxiosApi.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
       await store.dispatch('document/getRecommendationsByDocuments')

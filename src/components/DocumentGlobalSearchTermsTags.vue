@@ -1,9 +1,6 @@
 <script>
 import { get, keys, orderBy } from 'lodash'
-import Api from '@/api'
 import utils from '@/mixins/utils'
-
-export const api = new Api()
 
 /**
  * A list of search terms tags.
@@ -75,7 +72,7 @@ export default {
     },
     searchTermInContent (label) {
       const searchParams = [this.index, this.id, label, this.targetLanguage, this.routing]
-      return api.searchDocument(...searchParams)
+      return this.$core.api.searchDocument(...searchParams)
     },
     searchTermInTags (label) {
       const needle = label.toLowerCase()

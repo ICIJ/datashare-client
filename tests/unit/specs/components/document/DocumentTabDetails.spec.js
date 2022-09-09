@@ -1,25 +1,29 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import { Core } from '@/core'
-import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-
-jest.mock('axios')
+import { Core } from '@/core'
+import DocumentTabDetails from '@/components/document/DocumentTabDetails'
+import { Api } from '@/api'
 
 describe('DocumentTabDetails.vue', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
-  let wrapper = null
+  let wrapper, i18n, localVue, store, api, mockAxios
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+  })
 
   afterEach(() => {
     store.commit('document/reset')
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should display document path with config.mountedDataDir', async () => {
     Murmur.config.merge({ dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' })

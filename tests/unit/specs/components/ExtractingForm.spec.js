@@ -1,24 +1,28 @@
-import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import Api from '@/api'
-import ExtractingForm from '@/components/ExtractingForm'
+import { Api } from '@/api'
 import { Core } from '@/core'
-
-jest.mock('axios', () => {
-  return {
-    get: jest.fn().mockResolvedValue({ data: {} }),
-    request: jest.fn().mockResolvedValue({ data: {} })
-  }
-})
+import ExtractingForm from '@/components/ExtractingForm'
 
 describe('ExtractingForm.vue', () => {
-  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
+  let wrapper, i18n, localVue, router, store, mockAxios, api
+
+  beforeAll(() => {
+    mockAxios = { request: jest.fn(), get: jest.fn() }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    router = core.router
+    store = core.store
+  })
 
   beforeEach(() => {
     wrapper = shallowMount(ExtractingForm, { i18n, localVue, router, store })
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
+    mockAxios.get.mockClear()
+    mockAxios.request.mockResolvedValue({ data: {} })
+    mockAxios.get.mockResolvedValue({ data: {} })
   })
 
   afterEach(() => store.commit('indexing/reset'))
@@ -26,8 +30,8 @@ describe('ExtractingForm.vue', () => {
   it('should call extract action without OCR option, by default', () => {
     wrapper.vm.submitExtract()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
       data: {
@@ -43,8 +47,8 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'ocr', true)
     wrapper.vm.submitExtract()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
       data: {

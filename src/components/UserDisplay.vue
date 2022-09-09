@@ -143,7 +143,7 @@ export default {
       return this.applyPipelineChain(this.avatarPipeline)(this.avatarFallback, this.username)
     },
     applyUsernamePipeline () {
-      return this.applyPipelineChain(this.usernamePipeline)(this.username)
+      return this.applyPipelineChain(this.usernamePipeline)(this.username, this.$core.auth)
     },
     applyLinkPipeline () {
       return this.applyPipelineChain(this.linkPipeline)(this.linkFallback, this.username)

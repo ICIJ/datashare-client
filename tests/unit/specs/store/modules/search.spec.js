@@ -3,24 +3,25 @@ import { cloneDeep, find, omit } from 'lodash'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
-import store from '@/store'
+import { storeBuilder } from '@/store/storeBuilder'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
-jest.mock('axios')
+import { Api } from '@/api'
 
 describe('SearchStore', () => {
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
-  beforeAll(() => store.commit('search/index', project))
+  let store
+  beforeAll(() => {
+    store = storeBuilder(new Api({ request: jest.fn() }, null))
+    store.commit('search/index', project)
+  })
 
   afterEach(() => {
     store.commit('search/index', project)
     store.commit('search/reset')
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
     expect(store.state.search).toBeDefined()

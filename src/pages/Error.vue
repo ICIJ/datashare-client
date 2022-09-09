@@ -1,7 +1,7 @@
 <script>
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import VersionNumber from '@/components/VersionNumber'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'

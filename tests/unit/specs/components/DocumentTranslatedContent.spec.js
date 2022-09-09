@@ -1,6 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import Api from '@/api'
+import { Api } from '@/api'
 
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -11,27 +11,28 @@ import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 describe('DocumentTranslatedContent.vue', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  let i18n, localVue, store, api
   const { index, es } = esConnectionHelper.build()
 
   function mockedDocumentContentFactory (id, content = '') {
     // Index the document
     const contentSlice = letTextContent().withContent(content)
     const indexedDocument = new IndexedDocument(id, index).withContent(content)
+
     return {
       indexedDocument,
       content,
       contentSlice,
       async commit () {
         // Mock the `getDocumentSlice` method
-        jest.spyOn(Api.prototype, 'getDocumentSlice')
-          .mockImplementation(async (project, documentId, offset, limit, targetLanguage) => {
-            // Get the translation (if any)
-            const translation = this.indexedDocument.getContentTranslated({ targetLanguage })
-            // Modify the returned content according to passed parameters
-            const content = (translation || this.indexedDocument.content).substring(offset, offset + limit)
-            return { ...contentSlice, content, offset, limit }
-          })
+        const getDocumentSlideMock = async (project, documentId, offset, limit, targetLanguage) => {
+          // Get the translation (if any)
+          const translation = this.indexedDocument.getContentTranslated({ targetLanguage })
+          // Modify the returned content according to passed parameters
+          const content = (translation || this.indexedDocument.content).substring(offset, offset + limit)
+          return { ...contentSlice, content, offset, limit }
+        }
+        api.getDocumentSlice.mockImplementation(getDocumentSlideMock)
         // Index the document
         await letData(es).have(this.indexedDocument).commit()
         // Get the document from the store
@@ -43,16 +44,23 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     }
   }
+  beforeAll(() => {
+    api = new Api(null, null)
+    api.getDocumentSlice = jest.fn()
 
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+  })
   beforeEach(() => {
+    api.getDocumentSlice.mockClear()
     store.commit('document/toogleShowTransatedContent', true)
   })
 
   afterEach(async () => {
     // Ensure all promise are flushed...
     await flushPromises()
-    // Then clear all mocks
-    jest.clearAllMocks()
     // Remove document
     store.commit('document/reset')
   })

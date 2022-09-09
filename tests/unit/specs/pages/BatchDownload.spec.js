@@ -1,14 +1,25 @@
-import axios from 'axios'
-
 import { flushPromises } from 'tests/unit/tests_utils'
-import Api from '@/api'
+import { Api } from '@/api'
 import BatchDownload from '@/pages/BatchDownload'
 import { Core } from '@/core'
 import { createLocalVue, mount } from '@vue/test-utils'
+import { getMode, MODE_NAME } from '@/mode'
+import { storeBuilder } from '@/store/storeBuilder'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({
+describe('BatchDownload.vue', () => {
+  let i18n, localVue, wrapper, store, wait, mockAxios
+
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    const api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    wait = core.wait
+    store = storeBuilder(api)
+  })
+  beforeEach(async () => {
+    mockAxios.request.mockResolvedValue({
       data: [{
         name: 'BatchDownloadTask_01_name',
         result: 'BatchDownloadTask_01_result',
@@ -101,27 +112,16 @@ jest.mock('axios', () => {
         }
       }]
     })
-  }
-})
-
-describe('BatchDownload.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
-
-  beforeEach(async () => {
     wrapper = mount(BatchDownload, { i18n, localVue, store, wait })
+    mockAxios.request.mockClear()
     await flushPromises()
   })
 
-  afterAll(() => jest.unmock('axios'))
-
   it('should get all batch download tasks', async () => {
-    axios.request.mockClear()
-
     await wrapper.vm.getDownloadTasks()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/task/all'),
       params: {
         filter: 'BatchDownloadRunner'

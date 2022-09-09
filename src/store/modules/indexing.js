@@ -2,10 +2,6 @@ import { remove } from 'lodash'
 import { getField, updateField } from 'vuex-map-fields'
 import Vue from 'vue'
 
-import Api from '@/api'
-
-export const api = new Api()
-
 export function initialState () {
   return {
     form: {
@@ -20,6 +16,9 @@ export function initialState () {
 
 export const state = initialState()
 
+// indexing/getField is used with vuex-map-field in:
+// - FindNamedEntitiesForm.vue
+// - ExtractingForm.vue
 export const getters = {
   getField
 }
@@ -51,57 +50,59 @@ export const mutations = {
     state.form.offline = initialState().form.offline
   }
 }
-
-export const actions = {
-  submitExtract ({ state }) {
-    return api.index({ ocr: state.form.ocr, filter: state.form.filter })
-  },
-  runBatchSearch () {
-    return api.runBatchSearch()
-  },
-  submitFindNamedEntities ({ state }) {
-    return api.findNames(state.form.pipeline, { syncModels: !state.form.offline })
-  },
-  async stopPendingTasks ({ commit }) {
-    try {
-      await api.stopPendingTasks()
-      return commit('stopPendingTasks')
-    } catch (_) {}
-  },
-  async stopTask ({ commit }, name) {
-    try {
-      await api.stopTask(name)
-      commit('stopTask', name)
-    } catch (_) {}
-  },
-  async deleteDoneTasks ({ commit }) {
-    try {
-      await api.deleteDoneTasks()
-      commit('deleteDoneTasks')
-    } catch (_) {}
-  },
-  async getTasks ({ commit }) {
-    try {
-      const tasks = await api.getTasks()
-      commit('updateTasks', tasks)
-    } catch (_) {
-      commit('updateTasks', [])
+function actionsBuilder (api) {
+  return {
+    submitExtract ({ state }) {
+      return api.index({ ocr: state.form.ocr, filter: state.form.filter })
+    },
+    runBatchSearch () {
+      return api.runBatchSearch()
+    },
+    submitFindNamedEntities ({ state }) {
+      return api.findNames(state.form.pipeline, { syncModels: !state.form.offline })
+    },
+    async stopPendingTasks ({ commit }) {
+      try {
+        await api.stopPendingTasks()
+        return commit('stopPendingTasks')
+      } catch (_) {}
+    },
+    async stopTask ({ commit }, name) {
+      try {
+        await api.stopTask(name)
+        commit('stopTask', name)
+      } catch (_) {}
+    },
+    async deleteDoneTasks ({ commit }) {
+      try {
+        await api.deleteDoneTasks()
+        commit('deleteDoneTasks')
+      } catch (_) {}
+    },
+    async getTasks ({ commit }) {
+      try {
+        const tasks = await api.getTasks()
+        commit('updateTasks', tasks)
+      } catch (_) {
+        commit('updateTasks', [])
+      }
+    },
+    async deleteAll ({ rootState }) {
+      for (const index of rootState.search.indices) {
+        await api.deleteAll(index)
+      }
+    },
+    getNerPipelines () {
+      return api.getNerPipelines()
     }
-  },
-  async deleteAll ({ rootState }) {
-    for (const index of rootState.search.indices) {
-      await api.deleteAll(index)
-    }
-  },
-  getNerPipelines () {
-    return api.getNerPipelines()
   }
 }
-
-export default {
-  namespaced: true,
-  state,
-  getters,
-  actions,
-  mutations
+export function indexingStoreBuilder (api) {
+  return {
+    namespaced: true,
+    state,
+    getters,
+    mutations,
+    actions: actionsBuilder(api)
+  }
 }

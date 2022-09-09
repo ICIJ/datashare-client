@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import Api from '@/api'
 import { filter, findIndex } from 'lodash'
 import { mapState } from 'vuex'
 
@@ -184,9 +183,6 @@ export default {
     },
     isModal () {
       return this.$route.name === 'document-modal'
-    },
-    api () {
-      return new Api()
     }
   },
   methods: {
@@ -199,7 +195,7 @@ export default {
       await this.$store.dispatch('document/getTags')
       await this.$store.dispatch('document/getRecommendationsByDocuments', await this.$core.auth.getUsername())
       if (this.doc) {
-        await this.api.addHistoryEvent([this.doc.index], 'DOCUMENT', this.doc.slicedNameToString, this.doc.route)
+        await this.$core.api.addHistoryEvent([this.doc.index], 'DOCUMENT', this.doc.slicedNameToString, this.doc.route)
         const container = this.$el.closest('.ps-container')
         this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
         this.$root.$emit('document::content::changed')
@@ -294,8 +290,7 @@ export default {
     @include gradient-directional($primary, theme-color(dark));
     color: white;
     display: inline-block;
-    padding: $spacer * 2 0;
-    padding-bottom: 0;
+    padding: $spacer * 2 0 0 0;
     width: 100%;
 
     &__name {

@@ -20,15 +20,15 @@ import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
 import WidgetsMixin from './WidgetsMixin'
 
-import Api from '@/api'
+import { dispatch } from '@/utils/event-bus'
 import Auth from '@/api/resources/Auth'
 import messages from '@/lang/en'
-import mode from '@/modes'
+import { getMode, MODE_NAME } from '@/mode'
 import router from '@/router'
 import guards from '@/router/guards'
-import store from '@/store'
-import { dispatch } from '@/utils/event-bus'
+import { storeBuilder } from '@/store/storeBuilder'
 import settings from '@/utils/settings'
+import { Api } from '@/api'
 
 class Base {}
 const Behaviors = compose(FiltersMixin, HooksMixin, PipelinesMixin, ProjectsMixin, WidgetsMixin)(Base)
@@ -47,12 +47,15 @@ class Core extends Behaviors {
   /**
    * Create an application
    * @param {Object} LocalVue - The Vue class to instantiate the application with.
-   * @param auth - The authentication service
+   * @param api - Datashare api interface
+   * @param mode - mode of authentication ('local' or 'server'
    */
-  constructor (LocalVue = Vue, auth = new Auth(mode('local'))) {
+  constructor (LocalVue = Vue, api = new Api(null, null), mode = getMode(MODE_NAME.LOCAL)) {
     super(LocalVue)
     this.LocalVue = LocalVue
-    this._auth = auth
+    this._api = api
+    this._store = storeBuilder(api)
+    this._auth = new Auth(mode, this._api)
     // Disable production tip when not in production
     this.LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
     // Setup deferred state
@@ -175,14 +178,14 @@ class Core extends Behaviors {
       this.config.merge(await this.getUser())
       // Murmur exposes a config attribute which share a Config object
       // with the current vue instance.
-      this.config.merge(mode(serverSettings.mode))
+      this.config.merge(getMode(serverSettings.mode))
       // The backend can yet override some configuration
       this.config.merge(serverSettings)
       // Create the default project for the current user or redirect to login
       if (serverSettings.mode === 'LOCAL' || serverSettings.mode === 'EMBEDDED') {
         await this.createDefaultProject()
       }
-      this._auth = new Auth(mode(serverSettings.mode))
+      this._auth = new Auth(getMode(serverSettings.mode))
       // Set the default project
       if (!this.store.state.search.indices.length) {
         this.store.commit('search/indices', [this.getDefaultProject()])
@@ -190,7 +193,7 @@ class Core extends Behaviors {
       // Check if "Download" functionality is available for the selected project
       // Because otherwise, if the FilterPanel is closed, it is never called
       await this.store.dispatch('downloads/fetchIndicesStatus')
-      // Old a promise that is resolved when the core is configured
+      // Hold a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {
       return this.ready && this._readyReject(error)
@@ -302,7 +305,7 @@ class Core extends Behaviors {
    * @type {Vuex.Store}
    */
   get store () {
-    return store
+    return this._store
   }
   /**
    * The Auth module instance
@@ -323,12 +326,11 @@ class Core extends Behaviors {
    * @type {Api}
    */
   get api () {
-    this._api = this._api || new Api()
     return this._api
   }
   /**
    * instantiate a Core class (useful for chaining usage or mapping)
-   * @param {...Mixed} options - Options to pass to the Core constructor
+   * @param {...Mixed, Api} options - Options to pass to the Core constructor
    * @returns {Core}
    */
   static init (...options) {
@@ -336,4 +338,9 @@ class Core extends Behaviors {
   }
 }
 
-export default Core
+// Force usage of Core.init instead of constructor
+const coreInit = Object.freeze({
+  isInstanceOfCore: (object) => object instanceof Core,
+  init: Core.init
+})
+export default coreInit

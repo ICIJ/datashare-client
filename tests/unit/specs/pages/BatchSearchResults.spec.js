@@ -3,78 +3,15 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
 
-import Api from '@/api'
 import { Core } from '@/core'
 import UserDisplay from '@/components/UserDisplay'
 import BatchSearchResults from '@/pages/BatchSearchResults'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-Api.getFullUrl = jest.fn() // mock static function
-
-jest.mock('@/api', () => {
-  return jest.fn(() => {
-    return {
-      getBatchSearchResults: jest.fn().mockResolvedValue([
-        {
-          creationDate: '2011-10-11T04:12:49.000+0000',
-          documentId: 42,
-          documentNumber: 0,
-          documentName: '42.pdf',
-          contentType: 'type_03',
-          query: 'query_01',
-          project: 'batchsearchresults',
-          rootId: 42
-        }, {
-          creationDate: '2011-10-11T04:12:49.000+0000',
-          documentId: 43,
-          documentNumber: 1,
-          documentName: '43.pdf',
-          contentType: 'type_02',
-          query: 'query_01',
-          project: 'anotherbatchsearchresults',
-          rootId: 43
-        }, {
-          creationDate: '2011-10-11T04:12:49.000+0000',
-          documentId: 44,
-          documentNumber: 2,
-          documentName: '44.pdf',
-          contentType: 'type_01',
-          query: 'query_02',
-          project: 'anotherbatchsearchresults',
-          rootId: 44
-        }
-      ]),
-      getBatchSearch: jest.fn().mockResolvedValue({
-        uuid: '12',
-        projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
-        name: 'BatchSearch Test',
-        description: 'This is the description of the batch search',
-        state: 'SUCCESS',
-        date: '2019-07-18T14:45:34.869+0000',
-        nbResults: 333,
-        phraseMatch: 1,
-        fuzziness: 1,
-        fileTypes: [],
-        paths: [],
-        published: true,
-        queries: {
-          query_01: 6,
-          query_02: 6,
-          query_03: 6
-        },
-        user: {
-          id: 'test'
-        }
-      }),
-      copyBatchSearch: jest.fn()
-    }
-  })
-})
-
 describe('BatchSearchResults.vue', () => {
   let wrapper = null
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  let i18n, localVue, store, wait
   const router = new VueRouter({
     routes: [
       {
@@ -90,7 +27,68 @@ describe('BatchSearchResults.vue', () => {
   const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { uuid: '12', indices: project.concat(',', anotherProject) }
 
-  beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
+  beforeAll(() => {
+    Murmur.config.merge({ mode: 'SERVER' })
+    const api = jest.fn()
+    api.getBatchSearchResults = jest.fn().mockResolvedValue([
+      {
+        creationDate: '2011-10-11T04:12:49.000+0000',
+        documentId: 42,
+        documentNumber: 0,
+        documentName: '42.pdf',
+        contentType: 'type_03',
+        query: 'query_01',
+        project: 'batchsearchresults',
+        rootId: 42
+      }, {
+        creationDate: '2011-10-11T04:12:49.000+0000',
+        documentId: 43,
+        documentNumber: 1,
+        documentName: '43.pdf',
+        contentType: 'type_02',
+        query: 'query_01',
+        project: 'anotherbatchsearchresults',
+        rootId: 43
+      }, {
+        creationDate: '2011-10-11T04:12:49.000+0000',
+        documentId: 44,
+        documentNumber: 2,
+        documentName: '44.pdf',
+        contentType: 'type_01',
+        query: 'query_02',
+        project: 'anotherbatchsearchresults',
+        rootId: 44
+      }
+    ])
+    api.getBatchSearch = jest.fn().mockResolvedValue({
+      uuid: '12',
+      projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
+      name: 'BatchSearch Test',
+      description: 'This is the description of the batch search',
+      state: 'SUCCESS',
+      date: '2019-07-18T14:45:34.869+0000',
+      nbResults: 333,
+      phraseMatch: 1,
+      fuzziness: 1,
+      fileTypes: [],
+      paths: [],
+      published: true,
+      queries: {
+        query_01: 6,
+        query_02: 6,
+        query_03: 6
+      },
+      user: {
+        id: 'test'
+      }
+    })
+    api.copyBatchSearch = jest.fn()
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
+  })
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()

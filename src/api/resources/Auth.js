@@ -1,13 +1,11 @@
 import get from 'lodash/get'
 
-import Api from '@/api'
 import { getCookie } from 'tiny-cookie'
 
-const api = new Api()
-
 export default class Auth {
-  constructor (mode) {
+  constructor (mode, api) {
     this.mode = mode
+    this.api = api
     this.cachedUsername = null
   }
 
@@ -35,7 +33,7 @@ export default class Auth {
 
   async _getBasicAuthUserName () {
     try {
-      const response = await api.getUser()
+      const response = await this.api.getUser()
       setTimeout(() => this.reset(), 43200 * 1000)
       return response.uid
     } catch (error) {

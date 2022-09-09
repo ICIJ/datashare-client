@@ -7,13 +7,13 @@ import Vuex from 'vuex'
 import { flushPromises } from 'tests/unit/tests_utils'
 import { Core } from '@/core'
 import Search from '@/pages/Search'
-import { state, getters, mutations, actions } from '@/store/modules/search'
+import { state, getters, mutations } from '@/store/modules/search'
 
 describe('Search.vue', () => {
   let store
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const actionsStore = Object.assign(cloneDeep(actions), { query: jest.fn(), refresh: jest.fn(), updateFromRouteQuery: jest.fn() })
+  const actionsStore = { query: jest.fn(), refresh: jest.fn(), updateFromRouteQuery: jest.fn() }
   let wrapper = null
   jest.setTimeout(1e4)
 
@@ -35,10 +35,15 @@ describe('Search.vue', () => {
     wrapper = shallowMount(Search, { i18n, localVue, router, store })
   })
 
-  it('should refresh the view on custom event', () => {
+  it('should search query on component creation', async () => {
+    expect(actionsStore.query).toBeCalledTimes(1)
+  })
+
+  it('should refresh the view on custom event', async () => {
+    actionsStore.query.mockClear()
     wrapper.vm.$root.$emit('index::delete::all')
 
-    expect(actionsStore.query).toBeCalledTimes(2)
+    expect(actionsStore.query).toBeCalledTimes(1)
   })
 
   it('should execute a new search on event "filter::starred::refresh"', () => {

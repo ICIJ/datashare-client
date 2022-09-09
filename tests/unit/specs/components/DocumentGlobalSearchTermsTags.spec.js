@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import { Core } from '@/core'
 
@@ -8,11 +8,7 @@ import { IndexedDocument } from 'tests/unit/es_utils'
 import { flushPromises } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentGlobalSearchTermsTags.vue', () => {
-  const { index, es } = esConnectionHelper.build()
-
   function mockedDocumentSearchFactory () {
     return {
       terms: { },
@@ -21,14 +17,12 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
         return this
       },
       commit () {
-        // Mock the `searchDocument` method
-        jest.spyOn(Api.prototype, 'searchDocument')
-          .mockImplementation(async (index, id, term) => {
-            if (term in this.terms) {
-              return this.terms[term]
-            }
-            return { count: 0, offsets: [] }
-          })
+        api.searchDocument.mockImplementation(async (index, id, term) => {
+          if (term in this.terms) {
+            return this.terms[term]
+          }
+          return { count: 0, offsets: [] }
+        })
         return this
       }
     }
@@ -49,6 +43,22 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     await flushPromises()
     return wrapper
   }
+
+  const { index, es } = esConnectionHelper.build()
+  let i18n, localVue, store, api
+
+  beforeAll(() => {
+    api = new Api(null, null)
+    api.searchDocument = jest.fn()
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+  })
+
+  beforeEach(() => {
+    api.searchDocument.mockClear()
+  })
 
   afterEach(async () => {
     // Ensure all promise are flushed...

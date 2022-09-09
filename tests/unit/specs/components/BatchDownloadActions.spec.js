@@ -1,11 +1,11 @@
-import Api from '@/api'
 import { flushPromises } from 'tests/unit/tests_utils'
 import BatchDownloadActions from '@/components/BatchDownloadActions'
 import { Core } from '@/core'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 describe('BatchDownloadActions.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+  const mockApi = { runBatchDownload: jest.fn(), deleteTask: jest.fn() }
+  const { i18n, localVue } = Core.init(createLocalVue(), mockApi).useAll()
   const projects = [{ name: 'project' }]
 
   function mockRunBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
@@ -15,29 +15,22 @@ describe('BatchDownloadActions.vue', () => {
       user: batchDownload.user,
       properties: { batchDownload }
     }
-    // Mock the `runBatchDownload` method
-    const spy = jest.spyOn(Api.prototype, 'runBatchDownload')
-      .mockImplementation(Promise.resolve(data))
-    return { batchDownload, name, state, spy }
+    mockApi.runBatchDownload.mockResolvedValue(data)
+    return { batchDownload, name, state }
   }
 
   function mockDeleteBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
-    // Mock the `deleteTask` method
-    const spy = jest.spyOn(Api.prototype, 'deleteTask')
-      .mockImplementation(Promise.resolve(true))
-    return { batchDownload, name, state, spy }
+    mockApi.deleteTask.mockResolvedValue(true)
+    return { batchDownload, name, state }
   }
 
   function mockFailToDeleteBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
-    // Mock the `deleteTask` method
-    const spy = jest.spyOn(Api.prototype, 'deleteTask')
-      .mockImplementation(Promise.reject(new Error('')))
-    return { batchDownload, name, state, spy }
+    mockApi.deleteTask.mockRejectedValue(new Error(''))
+    return { batchDownload, name, state }
   }
 
   beforeEach(async () => {
     await flushPromises()
-    // Then clear all mocks
     jest.clearAllMocks()
   })
 
@@ -62,20 +55,20 @@ describe('BatchDownloadActions.vue', () => {
 
     it('should call the API with a parsed query', async () => {
       const query = '{ "foo": "bar" }'
-      const { batchDownload: value, spy } = mockRunBatchDownload('task', { projects, query })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       await wrapper.vm.relaunchTask()
-      expect(spy).toHaveBeenCalledWith(expect.objectContaining({ query: { foo: 'bar' } }))
+      expect(mockApi.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ query: { foo: 'bar' } }))
     })
 
     it('should call the API with a list of projects', async () => {
-      const { batchDownload: value, spy } = mockRunBatchDownload('task', { projects })
+      const { batchDownload: value } = mockRunBatchDownload('task', { projects })
       const propsData = { value }
       const projectIds = ['project']
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       await wrapper.vm.relaunchTask()
-      expect(spy).toHaveBeenCalledWith(expect.objectContaining({ projectIds }))
+      expect(mockApi.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ projectIds }))
     })
   })
 

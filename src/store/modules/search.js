@@ -6,15 +6,12 @@ import {
 import lucene from 'lucene'
 import Vue from 'vue'
 
-import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
 import filters from '@/store/filters'
 import * as filterTypes from '@/store/filters'
 import { isNarrowScreen } from '@/utils/screen'
 import settings from '@/utils/settings'
-
-export const api = new Api()
 
 export function initialState () {
   return cloneDeep({
@@ -307,134 +304,195 @@ export const mutations = {
   }
 }
 
-export const actions = {
-  async refresh ({ state, commit, getters }, updateIsReady = true) {
-    commit('isReady', !updateIsReady)
-    commit('error', null)
-    try {
-      const indices = state.indices.join(',')
-      const raw = await elasticsearch.searchDocs(indices, state.query, getters.instantiatedFilters, state.from, state.size, state.sort, getters.getFields())
-      commit('buildResponse', raw)
-      commit('isReady', true)
-      return raw
-    } catch (error) {
-      commit('isReady', true)
-      commit('error', error)
-      throw error
-    }
-  },
-  updateFromRouteQuery ({ commit, getters }, query) {
-    ['q', 'index', 'indices', 'from', 'size', 'sort', 'field'].forEach(key => {
-      if (key in query) {
-        // Add the query to the state with a mutation to avoid triggering a search
-        commit(key, query[key])
+function actionsBuilder (api) {
+  return {
+    async refresh ({
+      state,
+      commit,
+      getters
+    }, updateIsReady = true) {
+      commit('isReady', !updateIsReady)
+      commit('error', null)
+      try {
+        const indices = state.indices.join(',')
+        const raw = await elasticsearch.searchDocs(indices, state.query, getters.instantiatedFilters, state.from, state.size, state.sort, getters.getFields())
+        commit('buildResponse', raw)
+        commit('isReady', true)
+        return raw
+      } catch (error) {
+        commit('isReady', true)
+        commit('error', error)
+        throw error
       }
-    })
-    // Iterate over the list of filter
-    each(getters.instantiatedFilters, filter => {
-      // The filter key are formatted in the URL as follow.
-      // See `query-string` for more info about query string format.
-      each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, isReverse) => {
-        // Add the data if the value exist
+    },
+    updateFromRouteQuery ({
+      commit,
+      getters
+    }, query) {
+      ['q', 'index', 'indices', 'from', 'size', 'sort', 'field'].forEach(key => {
         if (key in query) {
-          // Because the values are grouped for each query parameter and because
-          // the `addFilterValue` also accept an array of value, we can directly
-          // use the query values.
-          commit('addFilterValue', filter.itemParam({ key: query[key] }))
-          // Invert the filter if we are using the second key (for reverse filter)
-          if (isReverse) {
-            commit('excludeFilter', filter.name)
-          }
+          // Add the query to the state with a mutation to avoid triggering a search
+          commit(key, query[key])
         }
       })
-    })
-  },
-  query ({ state, commit, dispatch }, q = { index: state.index, indices: state.indices, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
-    // Only the "query" parameter must be treaten differently
-    if (has(q, 'query')) {
-      commit('query', q.query)
-    } else if (isString(q)) {
-      commit('query', q)
-    }
-    // Then mutates all values if they are in queryOrParams. The mutation
-    // for "indices" must be after "index" since the two mutations are
-    // updating concurent values.
-    ['index', 'indices', 'from', 'size', 'sort', 'field'].forEach(key => {
-      if (has(q, key)) {
-        commit(key, q[key])
+      // Iterate over the list of filter
+      each(getters.instantiatedFilters, filter => {
+        // The filter key are formatted in the URL as follow.
+        // See `query-string` for more info about query string format.
+        each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, isReverse) => {
+          // Add the data if the value exist
+          if (key in query) {
+            // Because the values are grouped for each query parameter and because
+            // the `addFilterValue` also accept an array of value, we can directly
+            // use the query values.
+            commit('addFilterValue', filter.itemParam({ key: query[key] }))
+            // Invert the filter if we are using the second key (for reverse filter)
+            if (isReverse) {
+              commit('excludeFilter', filter.name)
+            }
+          }
+        })
+      })
+    },
+    query ({
+      state,
+      commit,
+      dispatch
+    }, q = {
+      index: state.index,
+      indices: state.indices,
+      query: state.query,
+      from: state.from,
+      size: state.size,
+      sort: state.sort,
+      field: state.field
+    }) {
+      // Only the "query" parameter must be treaten differently
+      if (has(q, 'query')) {
+        commit('query', q.query)
+      } else if (isString(q)) {
+        commit('query', q)
       }
-    })
-    return dispatch('refresh', true)
-  },
-  queryFilter ({ state, getters }, params) {
-    return elasticsearch.searchFilter(
-      state.indices.join(','),
-      getters.getFilter({ name: params.name }),
-      state.query,
-      getters.instantiatedFilters,
-      !getters.isFilterContextualized(params.name),
-      params.options,
-      getters.getFields(),
-      params.from,
-      params.size
-    ).then(raw => new EsDocList(raw))
-  },
-  setFilterValue ({ commit, dispatch }, filter) {
-    commit('setFilterValue', filter)
-    return dispatch('query')
-  },
-  addFilterValue ({ commit, dispatch }, filter) {
-    commit('addFilterValue', filter)
-    return dispatch('query')
-  },
-  removeFilterValue ({ commit, dispatch }, filter) {
-    commit('removeFilterValue', filter)
-    return dispatch('query')
-  },
-  resetFilterValues ({ commit, dispatch }, name) {
-    commit('resetFilterValues', name)
-    return dispatch('query')
-  },
-  toggleFilter ({ commit, dispatch }, name) {
-    commit('toggleFilter', name)
-    return dispatch('query')
-  },
-  previousPage ({ state, commit, dispatch }, name) {
-    commit('from', state.from - state.size)
-    return dispatch('query')
-  },
-  nextPage ({ state, commit, dispatch }, name) {
-    commit('from', state.from + state.size)
-    return dispatch('query')
-  },
-  deleteQueryTerm ({ state, commit, dispatch }, term) {
-    function deleteQueryTermFromSimpleQuery (query) {
-      if (get(query, 'left.term', '') === term) query = omit(query, 'left')
-      if (get(query, 'right.term', '') === term) query = omit(query, 'right')
-      if (has(query, 'left.left')) query.left = deleteQueryTermFromSimpleQuery(get(query, 'left', null))
-      if (has(query, 'right.left')) query.right = deleteQueryTermFromSimpleQuery(get(query, 'right', null))
-      if (has(query, 'right.right') && !has(query, 'right.left') && get(query, 'operator', '').includes('NOT')) query.operator = '<implicit>'
-      if (has(query, 'start') && !has(query, 'left')) query = omit(query, 'start')
-      if (has(query, 'operator') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'operator')
-      if (has(query, 'parenthesized') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'parenthesized')
-      return query
+      // Then mutates all values if they are in queryOrParams. The mutation
+      // for "indices" must be after "index" since the two mutations are
+      // updating concurent values.
+      ['index', 'indices', 'from', 'size', 'sort', 'field'].forEach(key => {
+        if (has(q, key)) {
+          commit(key, q[key])
+        }
+      })
+      return dispatch('refresh', true)
+    },
+    queryFilter ({
+      state,
+      getters
+    }, params) {
+      return elasticsearch.searchFilter(
+        state.indices.join(','),
+        getters.getFilter({ name: params.name }),
+        state.query,
+        getters.instantiatedFilters,
+        !getters.isFilterContextualized(params.name),
+        params.options,
+        getters.getFields(),
+        params.from,
+        params.size
+      ).then(raw => new EsDocList(raw))
+    },
+    setFilterValue ({
+      commit,
+      dispatch
+    }, filter) {
+      commit('setFilterValue', filter)
+      return dispatch('query')
+    },
+    addFilterValue ({
+      commit,
+      dispatch
+    }, filter) {
+      commit('addFilterValue', filter)
+      return dispatch('query')
+    },
+    removeFilterValue ({
+      commit,
+      dispatch
+    }, filter) {
+      commit('removeFilterValue', filter)
+      return dispatch('query')
+    },
+    resetFilterValues ({
+      commit,
+      dispatch
+    }, name) {
+      commit('resetFilterValues', name)
+      return dispatch('query')
+    },
+    toggleFilter ({
+      commit,
+      dispatch
+    }, name) {
+      commit('toggleFilter', name)
+      return dispatch('query')
+    },
+    previousPage ({
+      state,
+      commit,
+      dispatch
+    }, name) {
+      commit('from', state.from - state.size)
+      return dispatch('query')
+    },
+    nextPage ({
+      state,
+      commit,
+      dispatch
+    }, name) {
+      commit('from', state.from + state.size)
+      return dispatch('query')
+    },
+    deleteQueryTerm ({
+      state,
+      commit,
+      dispatch
+    }, term) {
+      function deleteQueryTermFromSimpleQuery (query) {
+        if (get(query, 'left.term', '') === term) query = omit(query, 'left')
+        if (get(query, 'right.term', '') === term) query = omit(query, 'right')
+        if (has(query, 'left.left')) query.left = deleteQueryTermFromSimpleQuery(get(query, 'left', null))
+        if (has(query, 'right.left')) query.right = deleteQueryTermFromSimpleQuery(get(query, 'right', null))
+        if (has(query, 'right.right') && !has(query, 'right.left') && get(query, 'operator', '').includes('NOT')) query.operator = '<implicit>'
+        if (has(query, 'start') && !has(query, 'left')) query = omit(query, 'start')
+        if (has(query, 'operator') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'operator')
+        if (has(query, 'parenthesized') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'parenthesized')
+        return query
+      }
+
+      const query = deleteQueryTermFromSimpleQuery(lucene.parse(state.query))
+      commit('query', lucene.toString(query))
+      return dispatch('query')
+    },
+    async runBatchDownload ({
+      state,
+      getters
+    }, uri = null) {
+      const q = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
+      const { indices: projectIds } = state
+      const { query } = elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
+      return api.runBatchDownload({
+        projectIds,
+        query,
+        uri
+      })
     }
-    const query = deleteQueryTermFromSimpleQuery(lucene.parse(state.query))
-    commit('query', lucene.toString(query))
-    return dispatch('query')
-  },
-  async runBatchDownload ({ state, getters }, uri = null) {
-    const q = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
-    const { indices: projectIds } = state
-    const { query } = elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
-    return api.runBatchDownload({ projectIds, query, uri })
   }
 }
 
-export default {
-  namespaced: true,
-  state,
-  getters,
-  mutations,
-  actions
+export function searchStoreBuilder (api) {
+  return {
+    namespaced: true,
+    state,
+    getters,
+    mutations,
+    actions: actionsBuilder(api)
+  }
 }

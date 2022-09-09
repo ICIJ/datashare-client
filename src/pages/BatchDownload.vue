@@ -38,9 +38,6 @@ import BatchDownloadActions from '@/components/BatchDownloadActions'
 import TasksList from '@/components/TasksList'
 import features from '@/mixins/features'
 import polling from '@/mixins/polling'
-import Api from '@/api'
-
-const api = new Api()
 
 export default {
   name: 'BatchDownload',
@@ -80,7 +77,7 @@ export default {
       return fn()
     },
     async getDownloadTasks () {
-      this.tasks = this.sortByDateTime(await api.getTasks('BatchDownloadRunner'))
+      this.tasks = this.sortByDateTime(await this.$core.api.getTasks('BatchDownloadRunner'))
       // Return true if it has pending download tasks to tell the
       // polling function to continue to poll tasks.
       return this.hasPendingBatchDownloadTasks

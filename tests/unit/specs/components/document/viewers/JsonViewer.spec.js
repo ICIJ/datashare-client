@@ -4,24 +4,24 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import JsonViewer from '@/components/document/viewers/JsonViewer'
 import JsonFormatter from '@/components/JsonFormatter'
 import { Core } from '@/core'
-
-jest.mock('axios', () => {
-  const documentJson = require('tests/unit/resources/document.json')
-  return {
-    request: jest.fn().mockResolvedValue({ data: documentJson })
-  }
-})
+import { Api } from '@/api'
+const documentJson = require('tests/unit/resources/document.json')
 
 describe('JsonViewer.vue', () => {
-  const { localVue } = Core.init(createLocalVue()).useAll()
-  let wrapper
+  let localVue, mockAxios, api, wrapper
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    localVue = core.localVue
+  })
 
   beforeEach(async () => {
+    mockAxios.request.mockResolvedValue({ data: documentJson })
     wrapper = shallowMount(JsonViewer, { localVue, propsData: { document: { url: 'document.json' } } })
     await flushPromises()
   })
-
-  afterAll(() => jest.unmock('axios'))
+  afterEach(() => mockAxios.request.mockClear())
 
   it('should render the JSON in a JsonFormatter component', () => {
     expect(wrapper.findComponent(JsonFormatter).exists()).toBeTruthy()

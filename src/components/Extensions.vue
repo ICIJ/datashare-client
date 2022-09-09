@@ -97,11 +97,9 @@
 <script>
 import { camelCase, find, get, map, startCase } from 'lodash'
 
-import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
 import { isUrl } from '@/utils/strings'
 
-const api = new Api()
 /**
  * A list of available extensions.
  */
@@ -136,7 +134,7 @@ export default {
       return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.description : extension.description
     },
     async search () {
-      const extensions = await api.getExtensions(this.searchTerm)
+      const extensions = await this.$core.api.getExtensions(this.searchTerm)
       map(extensions, extension => { extension.show = false })
       this.$set(this, 'extensions', extensions)
     },
@@ -144,7 +142,7 @@ export default {
       const extension = find(this.extensions, { id: extensionId })
       extension.show = true
       try {
-        await api.installExtensionFromId(extensionId)
+        await this.$core.api.installExtensionFromId(extensionId)
         extension.installed = true
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
@@ -155,7 +153,7 @@ export default {
     async installExtensionFromUrl () {
       this.$set(this, 'isInstallingFromUrl', true)
       try {
-        await api.installExtensionFromUrl(this.url)
+        await this.$core.api.installExtensionFromUrl(this.url)
         await this.search()
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
@@ -169,7 +167,7 @@ export default {
       const extension = find(this.extensions, { id: extensionId })
       extension.show = true
       try {
-        await api.uninstallExtension(extensionId)
+        await this.$core.api.uninstallExtension(extensionId)
         extension.installed = false
         this.$bvToast.toast(this.$t('extensions.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {

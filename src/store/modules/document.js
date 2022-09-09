@@ -1,11 +1,8 @@
 import { compact, concat, findIndex, flattenDeep, get, keys, map, sortBy, sumBy, uniqBy, values } from 'lodash'
 import Vue from 'vue'
 
-import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
-
-export const api = new Api()
 
 export function initialState () {
   return {
@@ -144,163 +141,168 @@ export const mutations = {
   }
 }
 
-export const actions = {
-  async get ({ commit, state }, idAndRouting) {
-    try {
-      const { id, index, routing } = idAndRouting
-      const doc = await elasticsearch.getDocumentWithoutContent(index, id, routing)
-      commit('idAndRouting', idAndRouting)
-      commit('doc', doc)
-    } catch (_) {
-      commit('doc', null)
-    }
-    return state.doc
-  },
-  async getContent ({ commit, state }) {
-    if (state.doc !== null) {
-      const { id, routing } = state.idAndRouting
-      const { index } = state.doc
-      const doc = await elasticsearch.getDocumentWithContent(index, id, routing)
-      const translations = get(doc, '_source.content_translated')
-      const content = get(doc, '_source.content')
-      commit('translations', translations)
-      commit('content', content)
-      return content
-    }
-  },
-  getContentSlice ({ state }, { offset, limit, targetLanguage }) {
-    if (state.doc !== null) {
-      const { id, routing } = state.idAndRouting
-      const { index } = state.doc
-      const o = offset ?? 0
-      const l = limit ?? 0
-      return api.getDocumentSlice(index, id, o, l, targetLanguage, routing)
-    }
-  },
-  async setContent ({ commit, state }, content) {
-    if (state.doc !== null) {
-      commit('content', content)
-    }
-  },
-  async getContentMaxOffset ({ state }, { targetLanguage }) {
-    if (state.doc !== null) {
-      const { id, routing } = state.idAndRouting
-      const { index } = state.doc
-      const slice = await api.getDocumentSlice(index, id, 0, 0, targetLanguage, routing)
-      return slice.maxOffset
-    }
-  },
-  async searchOccurrences ({ state }, { query, targetLanguage }) {
-    if (state.doc !== null) {
-      const { id, routing } = state.idAndRouting
-      const { index } = state.doc
-      return api.searchDocument(index, id, query, targetLanguage, routing)
-    }
-    return { count: 0, offsets: [] }
-  },
-  async getParent ({ commit, state }) {
-    if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
+function actionBuilder (api) {
+  return {
+    async get ({ commit, state }, idAndRouting) {
       try {
-        const { index } = state.doc
-        const { parentDocument: id, rootDocument: routing } = state.doc.raw._source
+        const { id, index, routing } = idAndRouting
         const doc = await elasticsearch.getDocumentWithoutContent(index, id, routing)
-        commit('parentDocument', doc)
+        commit('idAndRouting', idAndRouting)
+        commit('doc', doc)
       } catch (_) {
-        commit('parentDocument', null)
+        commit('doc', null)
       }
-    }
-    return state.parentDocument
-  },
-  async getRoot ({ commit, state }) {
-    if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
-      try {
+      return state.doc
+    },
+    async getContent ({ commit, state }) {
+      if (state.doc !== null) {
+        const { id, routing } = state.idAndRouting
         const { index } = state.doc
-        const { rootDocument: id } = state.doc.raw._source
-        const doc = await elasticsearch.getDocumentWithoutContent(index, id, id)
-        commit('rootDocument', doc)
+        const doc = await elasticsearch.getDocumentWithContent(index, id, routing)
+        const translations = get(doc, '_source.content_translated')
+        const content = get(doc, '_source.content')
+        commit('translations', translations)
+        commit('content', content)
+        return content
+      }
+    },
+    getContentSlice ({ state }, { offset, limit, targetLanguage }) {
+      if (state.doc !== null) {
+        const { id, routing } = state.idAndRouting
+        const { index } = state.doc
+        const o = offset ?? 0
+        const l = limit ?? 0
+        return api.getDocumentSlice(index, id, o, l, targetLanguage, routing)
+      }
+    },
+    async setContent ({ commit, state }, content) {
+      if (state.doc !== null) {
+        commit('content', content)
+      }
+    },
+    async getContentMaxOffset ({ state }, { targetLanguage }) {
+      if (state.doc !== null) {
+        const { id, routing } = state.idAndRouting
+        const { index } = state.doc
+        const slice = await api.getDocumentSlice(index, id, 0, 0, targetLanguage, routing)
+        return slice.maxOffset
+      }
+    },
+    async searchOccurrences ({ state }, { query, targetLanguage }) {
+      if (state.doc !== null) {
+        const { id, routing } = state.idAndRouting
+        const { index } = state.doc
+        return api.searchDocument(index, id, query, targetLanguage, routing)
+      }
+      return { count: 0, offsets: [] }
+    },
+    async getParent ({ commit, state }) {
+      if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
+        try {
+          const { index } = state.doc
+          const { parentDocument: id, rootDocument: routing } = state.doc.raw._source
+          const doc = await elasticsearch.getDocumentWithoutContent(index, id, routing)
+          commit('parentDocument', doc)
+        } catch (_) {
+          commit('parentDocument', null)
+        }
+      }
+      return state.parentDocument
+    },
+    async getRoot ({ commit, state }) {
+      if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
+        try {
+          const { index } = state.doc
+          const { rootDocument: id } = state.doc.raw._source
+          const doc = await elasticsearch.getDocumentWithoutContent(index, id, id)
+          commit('rootDocument', doc)
+        } catch (_) {
+          commit('rootDocument', null)
+        }
+      }
+      return state.rootDocument
+    },
+    getFirstPageForNamedEntityInCategory ({ dispatch, commit }, { category, filterToken = null } = {}) {
+      commit('namedEntitiesPagesInCategory', { category, pages: [] })
+      return dispatch('getNextPageForNamedEntityInCategory', { category, filterToken })
+    },
+    async getFirstPageForNamedEntityInAllCategories ({ dispatch, getters }, { filterToken = null } = {}) {
+      for (const category of getters.categories) {
+        await dispatch('getFirstPageForNamedEntityInCategory', { filterToken, category })
+      }
+    },
+    async getNextPageForNamedEntityInCategory ({ state, getters, commit }, { category, filterToken = null } = {}) {
+      try {
+        const from = getters.countNamedEntitiesInCategory(category)
+        const index = state.doc.index
+        const { id, routing } = state.doc
+        const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category, filterToken)
+        const page = new EsDocList(raw)
+        if (from === 0) {
+          const pages = [page]
+          return commit('namedEntitiesPagesInCategory', { category, pages })
+        } else {
+          return commit('namedEntitiesPageInCategory', { category, page })
+        }
       } catch (_) {
-        commit('rootDocument', null)
+        return null
       }
-    }
-    return state.rootDocument
-  },
-  getFirstPageForNamedEntityInCategory ({ dispatch, commit }, { category, filterToken = null } = {}) {
-    commit('namedEntitiesPagesInCategory', { category, pages: [] })
-    return dispatch('getNextPageForNamedEntityInCategory', { category, filterToken })
-  },
-  async getFirstPageForNamedEntityInAllCategories ({ dispatch, getters }, { filterToken = null } = {}) {
-    for (const category of getters.categories) {
-      await dispatch('getFirstPageForNamedEntityInCategory', { filterToken, category })
-    }
-  },
-  async getNextPageForNamedEntityInCategory ({ state, getters, commit }, { category, filterToken = null } = {}) {
-    try {
-      const from = getters.countNamedEntitiesInCategory(category)
-      const index = state.doc.index
-      const { id, routing } = state.doc
-      const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category, filterToken)
-      const page = new EsDocList(raw)
-      if (from === 0) {
-        const pages = [page]
-        return commit('namedEntitiesPagesInCategory', { category, pages })
+    },
+    async getTags ({ state, commit }) {
+      try {
+        const tags = await api.getTags(state.doc.index, state.doc.id)
+        commit('tags', tags)
+      } catch (_) {
+        commit('tags')
+      }
+      return state.tags
+    },
+    async tag ({ state, dispatch }, { documents, tag, userId }) {
+      const index = state.doc ? state.doc.index : get(documents, '0.index', null)
+      await api.tagDocuments(index, map(documents, 'id'), compact(tag.split(' ')))
+      if (documents.length === 1) await dispatch('addTag', { tag, userId })
+    },
+    async addTag ({ state, commit }, { tag, userId }) {
+      commit('addTag', { tag, userId })
+    },
+    async deleteTag ({ state, commit }, { documents, tag }) {
+      await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
+      if (documents.length === 1) commit('deleteTag', tag)
+    },
+    async toggleAsRecommended ({ state, commit }, userId) {
+      if (state.isRecommended) {
+        await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
+        commit('unmarkAsRecommended', userId)
+        commit('isRecommended', false)
       } else {
-        return commit('namedEntitiesPageInCategory', { category, page })
-      }
-    } catch (_) {
-      return null
-    }
-  },
-  async getTags ({ state, commit }) {
-    try {
-      const tags = await api.getTags(state.doc.index, state.doc.id)
-      commit('tags', tags)
-    } catch (_) {
-      commit('tags')
-    }
-    return state.tags
-  },
-  async tag ({ state, dispatch }, { documents, tag, userId }) {
-    const index = state.doc ? state.doc.index : get(documents, '0.index', null)
-    await api.tagDocuments(index, map(documents, 'id'), compact(tag.split(' ')))
-    if (documents.length === 1) await dispatch('addTag', { tag, userId })
-  },
-  async addTag ({ state, commit }, { tag, userId }) {
-    commit('addTag', { tag, userId })
-  },
-  async deleteTag ({ state, commit }, { documents, tag }) {
-    await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
-    if (documents.length === 1) commit('deleteTag', tag)
-  },
-  async toggleAsRecommended ({ state, commit }, userId) {
-    if (state.isRecommended) {
-      await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
-      commit('unmarkAsRecommended', userId)
-      commit('isRecommended', false)
-    } else {
-      await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
-      commit('markAsRecommended', userId)
-      commit('isRecommended', true)
-    }
-  },
-  async getRecommendationsByDocuments ({ state, commit }, userId) {
-    try {
-      const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
-      commit('recommendedBy', map(sortBy(get(recommendedBy, 'aggregates', []), 'item.id'), 'item.id'))
-      const index = state.recommendedBy.indexOf(userId)
-      if (index > -1) {
+        await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
+        commit('markAsRecommended', userId)
         commit('isRecommended', true)
       }
-    } catch (_) {
-      commit('recommendedBy', [])
+    },
+    async getRecommendationsByDocuments ({ state, commit }, userId) {
+      try {
+        const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
+        commit('recommendedBy', map(sortBy(get(recommendedBy, 'aggregates', []), 'item.id'), 'item.id'))
+        const index = state.recommendedBy.indexOf(userId)
+        if (index > -1) {
+          commit('isRecommended', true)
+        }
+      } catch (_) {
+        commit('recommendedBy', [])
+      }
+      return state.recommendedBy
     }
-    return state.recommendedBy
   }
 }
 
-export default {
-  namespaced: true,
-  getters,
-  state,
-  mutations,
-  actions
+export const documentStoreBuilder = function (api) {
+  const actions = actionBuilder(api)
+  return {
+    namespaced: true,
+    getters,
+    state,
+    mutations,
+    actions
+  }
 }

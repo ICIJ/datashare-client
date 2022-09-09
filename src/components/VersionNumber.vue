@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import Api from '@/api'
 
 /**
  * Display Datashare's version number.
@@ -71,8 +70,7 @@ export default {
   },
   methods: {
     async fetchVersion () {
-      const api = new Api()
-      return api.getVersion()
+      return this.$core.api.getVersion()
     },
     async setVersion () {
       const version = await this.fetchVersion()

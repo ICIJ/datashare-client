@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import Api from '@/api'
 
 /**
  * A form to copy batch search
@@ -60,7 +59,7 @@ export default {
     async copyBatchSearch () {
       try {
         const { uuid: batchId } = this.batchSearch
-        await this.api.copyBatchSearch(batchId, this.name, this.description)
+        await this.$core.api.copyBatchSearch(batchId, this.name, this.description)
         if (!this.isServer) {
           this.runBatchSearch()
         } else {
@@ -73,11 +72,6 @@ export default {
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
       }
-    }
-  },
-  computed: {
-    api () {
-      return new Api()
     }
   }
 }

@@ -3,24 +3,23 @@ import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from 'tests
 
 import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
 import { Core } from '@/core'
-import Api from '@/api'
+import { Api } from '@/api'
 
 describe('LegacySpreadsheetViewer.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
-
+  let wrapper, api, i18n, localVue
   beforeAll(async () => {
-    jest.spyOn(Api.prototype, 'getSource')
-      .mockImplementation(({ url }) => {
-        return mockArrayBuffer(url, false)
-      })
+    api = new Api()
+    api.getSource = jest.fn()
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
   })
 
   beforeEach(() => {
+    api.getSource.mockClear()
+    api.getSource = jest.fn(({ url }) => mockArrayBuffer(url, false))
     wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue })
   })
-
-  afterAll(() => jest.clearAllMocks())
 
   it('should display an error message if the document does not exist', async () => {
     await wrapper.setProps({ document: { url: 'nodoc.xlsx' } })

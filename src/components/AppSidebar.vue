@@ -194,7 +194,6 @@
 <script>
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
-import Api from '@/api'
 import Hook from '@/components/Hook'
 import LocalesMenu from '@/components/LocalesMenu'
 import MountedDataLocation from '@/components/MountedDataLocation'
@@ -202,6 +201,7 @@ import VersionNumber from '@/components/VersionNumber'
 import docs from '@/mixins/docs'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
+import { Api } from '@/api'
 
 /**
  * The global app sidebar.

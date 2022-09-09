@@ -1,21 +1,20 @@
-import axios from 'axios'
-
-import store from '@/store'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
-jest.mock('axios')
+import { storeBuilder } from '@/store/storeBuilder'
+import { Api } from '@/api'
 
 describe('StarredStore', () => {
   const { index, es } = esConnectionHelper.build()
-  const filter = store.getters['search/getFilter']({ name: 'starred' })
-
+  let store, filter, api
+  beforeAll(() => {
+    api = new Api(null, null)
+    store = storeBuilder(api)
+    filter = store.getters['search/getFilter']({ name: 'starred' })
+  })
   beforeEach(() => {
     store.commit('search/index', index)
     store.commit('starred/documents', [])
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
     expect(store.state.starred).toBeDefined()
@@ -56,10 +55,11 @@ describe('StarredStore', () => {
   })
 
   it('should return the list of the starredDocuments', async () => {
-    axios.request.mockResolvedValue({ data: [12] })
+    api.getStarredDocuments = jest.fn().mockResolvedValue([12])
     await store.dispatch('starred/fetchIndicesStarredDocuments')
     expect(store.state.starred.documents).toEqual([{ index, id: 12 }])
     expect(filter.starredDocuments).toEqual([{ index, id: 12 }])
+    api.getStarredDocuments.mockClear()
   })
 
   it('should remove a documentId from the list of the starredDocuments', () => {

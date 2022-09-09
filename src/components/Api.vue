@@ -63,10 +63,7 @@
 </template>
 
 <script>
-import Api from '@/api'
 import utils from '@/mixins/utils'
-
-const api = new Api()
 
 /**
  * A page to manage user's API keys.
@@ -94,18 +91,18 @@ export default {
   methods: {
     async getHashedApiKey () {
       const username = await this.$core.auth.getUsername()
-      const { hashedKey } = await api.getApiKey(username)
+      const { hashedKey } = await this.$core.api.getApiKey(username)
       this.hashedKey = hashedKey
     },
     async createApiKey () {
       const username = await this.$core.auth.getUsername()
-      const { apiKey } = await api.createApiKey(username)
+      const { apiKey } = await this.$core.api.createApiKey(username) // why hash is not returned at the same time?
       this.apiKey = apiKey
       await this.getHashedApiKey()
     },
     async deleteApiKey () {
       const username = await this.$core.auth.getUsername()
-      await api.deleteApiKey(username)
+      await this.$core.api.deleteApiKey(username)
       this.hashedKey = null
     }
   }

@@ -1,25 +1,9 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
-import axios from 'axios'
 
-import Api from '@/api'
-import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
+import { Api } from '@/api'
 import { Core } from '@/core'
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({
-      data: {
-        totalCount: 42,
-        aggregates: [
-          { item: { id: 'user_00' }, count: 2 },
-          { item: { id: 'user_01' }, count: 1 },
-          { item: { id: 'user_02' }, count: 3 }
-        ]
-      }
-    })
-  }
-})
+import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 
 jest.mock('@/api/resources/Auth', () => {
   return jest.fn().mockImplementation(() => {
@@ -36,23 +20,51 @@ FilterRecommendedBy.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterRecommendedBy.vue', () => {
   const flushPromises = () => new Promise(resolve => setImmediate(resolve))
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  let i18n, localVue, router, store, wait, wrapper, api, mockAxios
   const project = toLower('FilterRecommendedBy')
-  const filter = store.getters['search/getFilter']({ name: 'recommendedBy' })
-  const propsData = { filter }
-  const computed = { currentUserId: () => 'user_01' }
-  let wrapper = null
 
-  beforeAll(() => store.commit('search/index', project))
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    router = core.router
+    store = core.store
+    wait = core.wait
+
+    store.commit('search/index', project)
+  })
 
   beforeEach(async () => {
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({
+      data: {
+        totalCount: 42,
+        aggregates: [
+          {
+            item: { id: 'user_00' },
+            count: 2
+          },
+          {
+            item: { id: 'user_01' },
+            count: 1
+          },
+          {
+            item: { id: 'user_02' },
+            count: 3
+          }
+        ]
+      }
+    })
+    const filter = store.getters['search/getFilter']({ name: 'recommendedBy' })
+    const propsData = { filter }
+    const computed = { currentUserId: () => 'user_01' }
     wrapper = await mount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData, computed })
     await wrapper.vm.$nextTick()
   })
 
   afterAll(() => {
-    jest.unmock('axios')
     jest.unmock('@/api/resources/Auth')
   })
 
@@ -61,8 +73,8 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   it('should load users who recommended documents in this project', () => {
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/users/recommendations'),
       method: 'GET',
       params: {
@@ -91,11 +103,11 @@ describe('FilterRecommendedBy.vue', () => {
 
   it('should retrieve documents recommended by selected users', async () => {
     const documents = ['document_01', 'document_02', 'document_03']
-    axios.request.mockResolvedValue({ data: documents })
-    axios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: documents })
+    mockAxios.request.mockClear()
     await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
       method: 'GET',
       params: {
@@ -108,14 +120,13 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   it('should select no users', async () => {
-    wrapper = await mount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData })
-    axios.request.mockResolvedValue({ data: [] })
-    axios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: [] })
+    mockAxios.request.mockClear()
 
     await wrapper.vm.selectUsers([])
     await wrapper.vm.$nextTick()
 
-    expect(axios.request).toBeCalledTimes(0)
+    expect(mockAxios.request).toBeCalledTimes(0)
     expect(store.state.recommended.documents).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeTruthy()

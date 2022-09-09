@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import Api from '@/api'
 import { findIndex, uniqueId, isEqual } from 'lodash'
 import PageHeader from '@/components/PageHeader'
 import settings from '@/utils/settings'
@@ -59,9 +58,6 @@ export default {
     }
   },
   computed: {
-    api () {
-      return new Api()
-    },
     tab: {
       get () {
         return findIndex(this.tabRoutes, name => {
@@ -139,13 +135,13 @@ export default {
     },
     async getUserHistory () {
       const type = this.getTypeOfCurrentPage()
-      const events = await this.api.getUserHistory(type, this.pageOffset, this.perPage)
+      const events = await this.$core.api.getUserHistory(type, this.pageOffset, this.perPage)
       this.$set(this, 'events', events.items)
       this.$set(this, 'totalEvents', events.total)
     },
     async deleteUserHistory () {
       const type = this.getTypeOfCurrentPage()
-      await this.api.deleteUserHistory(type)
+      await this.$core.api.deleteUserHistory(type)
       this.$set(this, 'events', [])
       this.$set(this, 'totalEvents', 0)
     },

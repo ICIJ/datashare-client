@@ -1,18 +1,18 @@
-import store from '@/store'
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: null })
-  }
-})
+import { Api } from '@/api'
+import { storeBuilder } from '@/store/storeBuilder'
 
 describe('DownloadsStore', () => {
   const index = 'downloadStoreFoo'
   const anotherIndex = 'downloadStoreBar'
-
-  afterAll(() => jest.unmock('axios'))
-  beforeAll(() => store.commit('search/indices', index))
-  beforeEach(() => store.commit('downloads/clear'))
+  let store
+  beforeAll(() => {
+    const api = new Api(null, null)
+    store = storeBuilder(api)
+    store.commit('search/indices', index)
+  })
+  beforeEach(() => {
+    store.commit('downloads/clear')
+  })
 
   describe('state', () => {
     it('should define a store module', () => {

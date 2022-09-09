@@ -1,6 +1,5 @@
 <script>
 import { uniqueId } from 'lodash'
-import Api from '@/api'
 
 export default {
   name: 'BatchDownloadActions',
@@ -27,9 +26,6 @@ export default {
     }
   },
   computed: {
-    api () {
-      return new Api()
-    },
     isTaskRunning () {
       return this.state.toUpperCase() === 'RUNNING'
     },
@@ -53,7 +49,7 @@ export default {
     async deleteTask () {
       try {
         this.closePopover()
-        await this.api.deleteTask(this.name)
+        await this.$core.api.deleteTask(this.name)
         this.notifyDeleteSucceed()
       } catch (error) {
         this.notifyDeleteFailed(error)
@@ -65,7 +61,7 @@ export default {
         const projectIds = this.projects
         const query = this.parseQuery()
         const uri = this.uri
-        await this.api.runBatchDownload({ projectIds, query, uri })
+        await this.$core.api.runBatchDownload({ projectIds, query, uri })
         this.notifyRelaunchSucceed()
       } catch (error) {
         this.notifyRelaunchFailed(error)

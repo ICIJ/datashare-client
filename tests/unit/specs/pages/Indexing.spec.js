@@ -1,7 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import axios from 'axios'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import { Core } from '@/core'
 import Indexing from '@/pages/Indexing'
 
@@ -14,17 +13,6 @@ const flushPromisesAndPendingTimers = async () => { jest.runOnlyPendingTimers();
 // @see https://jestjs.io/fr/docs/timer-mocks
 jest.useFakeTimers()
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({
-      data: [
-        { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' },
-        { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
-      ]
-    })
-  }
-})
-
 jest.mock('@/api/elasticsearch', () => {
   return {
     count: () => {
@@ -32,17 +20,29 @@ jest.mock('@/api/elasticsearch', () => {
     }
   }
 })
-
 describe('Indexing.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  let i18n, localVue, store, wait, api, mockAxios
 
+  const mockIndexedFiles = [
+    { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' },
+    { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
+  ]
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
+  })
   beforeEach(() => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: mockIndexedFiles })
     store.commit('indexing/reset')
-    axios.request.mockClear()
   })
 
   afterAll(() => {
-    jest.unmock('axios')
     jest.unmock('@/api/elasticsearch')
   })
 
@@ -121,11 +121,11 @@ describe('Indexing.vue', () => {
     ])
     await flushPromises()
 
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
     wrapper.find('.indexing__actions__stop-pending-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
-    const calledUrls = axios.request.mock.calls.map(call => call[0].url)
+    const calledUrls = mockAxios.request.mock.calls.map(call => call[0].url)
     expect(calledUrls).toContain(Api.getFullUrl('/api/task/stopAll'))
   })
 
@@ -138,11 +138,11 @@ describe('Indexing.vue', () => {
     ])
     await flushPromises()
 
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
     wrapper.find('.indexing__actions__delete-done-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
-    const calledUrls = axios.request.mock.calls.map(call => call[0].url)
+    const calledUrls = mockAxios.request.mock.calls.map(call => call[0].url)
     expect(calledUrls).toContain(Api.getFullUrl('/api/task/clean'))
   })
 
@@ -157,10 +157,10 @@ describe('Indexing.vue', () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPools()
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
     wrapper.find('.tasks-list__tasks__item__stop').trigger('click')
     await flushPromisesAndPendingTimers()
-    const calledUrls = axios.request.mock.calls.map(call => call[0].url)
+    const calledUrls = mockAxios.request.mock.calls.map(call => call[0].url)
     const stopUrl = Api.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.baz@456'))
     expect(calledUrls).toContain(stopUrl)
   })

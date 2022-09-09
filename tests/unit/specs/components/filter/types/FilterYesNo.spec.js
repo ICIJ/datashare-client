@@ -6,25 +6,32 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterStarred from '@/components/filter/types/FilterStarred'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { flushPromises } from 'tests/unit/tests_utils'
-
-const { i18n, localVue, store, router, wait } = Core.init(createLocalVue()).useAll()
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: [] })
-  }
-})
+import { Api } from '@/api'
 
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
 FilterStarred.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterStarred.vue', () => {
-  const { index, es } = esConnectionHelper.build()
-  const filter = store.getters['search/getFilter']({ name: 'starred' })
+  const {
+    index,
+    es
+  } = esConnectionHelper.build()
+  let filter, mockAxios, api, store, i18n, localVue, router, wait
   let wrapper
-  jest.setTimeout(1e4)
 
-  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+  beforeAll(() => {
+    mockAxios = { request: jest.fn().mockResolvedValue({ data: [] }) }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    router = core.router
+    wait = core.wait
+    filter = store.getters['search/getFilter']({ name: 'starred' })
+
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+  })
 
   beforeEach(() => {
     wrapper = mount(FilterStarred, {
@@ -33,17 +40,12 @@ describe('FilterStarred.vue', () => {
       router,
       store,
       wait,
-      propsData: {
-        filter
-      }
+      propsData: { filter }
     })
     store.commit('search/index', index)
   })
 
-  afterAll(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    jest.unmock('@/api')
-  })
+  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
 
   it('should display "All" as the first item', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
@@ -89,9 +91,15 @@ describe('FilterStarred.vue', () => {
 
   it('should fetch the starred documents', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
-    store.commit('starred/documents', [{ index, id: 'document' }])
+    store.commit('starred/documents', [{
+      index,
+      id: 'document'
+    }])
     await flushPromises()
-    expect(wrapper.vm.starredDocuments).toEqual([{ index, id: 'document' }])
+    expect(wrapper.vm.starredDocuments).toEqual([{
+      index,
+      id: 'document'
+    }])
   })
 
   it('should display the results count', async () => {
@@ -99,8 +107,14 @@ describe('FilterStarred.vue', () => {
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
     await letData(es).have(new IndexedDocument('document_03', index)).commit()
     store.commit('starred/documents', [
-      { index, id: 'document_01' },
-      { index, id: 'document_02' }
+      {
+        index,
+        id: 'document_01'
+      },
+      {
+        index,
+        id: 'document_02'
+      }
     ])
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
@@ -115,7 +129,10 @@ describe('FilterStarred.vue', () => {
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
     await wrapper.findAll('.filter__items__item').at(0).find('.custom-control-input').trigger('click')
-    store.commit('search/addFilterValue', { name: 'starred', value: true })
+    store.commit('search/addFilterValue', {
+      name: 'starred',
+      value: true
+    })
     wrapper.findComponent({ ref: 'filter' }).vm.collapseItems = false
 
     expect(wrapper.findAll('.filter__footer__action--invert')).toHaveLength(0)

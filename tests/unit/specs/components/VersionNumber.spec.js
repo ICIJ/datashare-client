@@ -2,28 +2,31 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import VersionNumber from '@/components/VersionNumber'
 import { Core } from '@/core'
+import { Api } from '@/api'
+import { getMode, MODE_NAME } from '@/mode'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({
+describe('VersionNumber.vue', () => {
+  let i18n, localVue, store, wrapper, mockAxios
+
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    const api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+  })
+
+  beforeEach(() => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({
       data: {
         'git.build.version': 'X.Y.Z',
         'git.commit.id.abbrev': 'sha1_abbrev'
       }
     })
-  }
-})
-
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-
-describe('VersionNumber.vue', () => {
-  let wrapper
-
-  beforeEach(() => {
     wrapper = shallowMount(VersionNumber, { i18n, localVue, store })
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should display client git sha1', () => {
     const sha1 = wrapper.vm.clientHash

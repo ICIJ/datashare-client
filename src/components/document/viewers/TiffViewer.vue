@@ -87,7 +87,7 @@ export default {
       return this.tiff.toCanvas()
     },
     async getTiff () {
-      const r = await this.getSource(this.document, { responseType: 'blob' })
+      const r = await this.$core.api.getSource(this.document, { responseType: 'blob' })
       const buffer = await r.arrayBuffer()
       return new Tiff({ buffer })
     },

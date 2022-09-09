@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import Api from '@/api'
 
 /**
  * A form to save the search in user history
@@ -42,7 +41,7 @@ export default {
   methods: {
     async saveSearch () {
       try {
-        await this.api.addHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
+        await this.$core.api.addHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
         const { href } = this.$router.resolve({ name: 'search-history' })
         const toastParams = { href, noCloseButton: true, variant: 'success' }
         this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
@@ -60,9 +59,6 @@ export default {
       const query = { ...this.$store.getters['search/toRouteQuery'](), from }
       const { route: { fullPath } } = this.$router.resolve({ name: 'search', query })
       return fullPath
-    },
-    api () {
-      return new Api()
     },
     searchHistoryPath () {
       const { route: { path } } = this.$router.resolve({ name: 'search-history' })

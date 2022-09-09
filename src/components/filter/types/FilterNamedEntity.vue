@@ -33,13 +33,10 @@
 </template>
 
 <script>
-import Api from '@/api'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-
-const api = new Api()
 
 /**
  * A Filter component to list named entities for a specific type.
@@ -53,13 +50,13 @@ export default {
   mixins: [ner, utils],
   methods: {
     async deleteNamedEntitiesByMentionNorm (mentionNorm) {
+      const promises = []
       for (const index in this.$store.state.search.indices) {
-        await api.deleteNamedEntitiesByMentionNorm(index, mentionNorm)
+        promises.push(this.$core.api.deleteNamedEntitiesByMentionNorm(index, mentionNorm))
       }
+      await Promise.all(promises)
       this.$root.$emit('filter::hide::named-entities')
-      if (this.root) {
-        this.root.aggregate()
-      }
+      await this.root?.aggregate()
     }
   }
 }

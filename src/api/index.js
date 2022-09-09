@@ -1,7 +1,4 @@
 import { join, map, replace, toLower } from 'lodash'
-import axios from 'axios'
-
-import { EventBus } from '@/utils/event-bus'
 
 const Method = Object.freeze({
   POST: 'POST',
@@ -11,7 +8,12 @@ const Method = Object.freeze({
   GET: 'GET'
 })
 
-export default class Api {
+export class Api {
+  constructor (_axios, _EventBus) {
+    this.axios = _axios
+    this.eventBus = _EventBus
+  }
+
   index (options) {
     return this.sendActionAsText('/api/task/batchUpdate/index/file', { method: Method.POST, data: { options } })
   }
@@ -221,10 +223,10 @@ export default class Api {
   }
   async sendAction (url, config = {}) {
     try {
-      const r = await axios.request({ url: Api.getFullUrl(url), ...config })
+      const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })
       return r ? r.data : null
     } catch (error) {
-      EventBus.$emit('http::error', error)
+      this.eventBus?.$emit('http::error', error)
       throw error
     }
   }

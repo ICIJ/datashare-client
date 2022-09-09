@@ -3,7 +3,7 @@ import Murmur from '@icij/murmur'
 import moment from 'moment'
 import { extname } from 'path'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/filters/humanSize'
 import { findContentTypeIcon } from '@/utils/font-awesome-files'

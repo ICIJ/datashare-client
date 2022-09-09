@@ -2,47 +2,57 @@ import { noop } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+
+import { Api } from '@/api'
 import { Core } from '@/core'
 import mixin from '@/mixins/filters'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
-jest.mock('@/api', () => {
-  const { jsonResp } = require('tests/unit/tests_utils')
-  return jest.fn(() => {
-    return {
-      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonResp()),
-      fetchIndicesStarredDocuments: jest.fn().mockReturnValue(jsonResp())
-    }
-  })
-})
+import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
+const { jsonResp } = require('tests/unit/tests_utils')
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
 mixin.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterNamedEntity.vue', () => {
-  const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
+  let localVue, i18n, store, wait, api
   const { index, es } = esConnectionHelper.build()
+
   const id = 'document'
   const name = 'namedEntityPerson'
-  const filter = store.getters['search/getFilter']({ name })
-  const propsData = { filter, infiniteScroll: false }
   let wrapper = null
 
   beforeAll(() => {
+    api = new Api(null, null)
+    api.deleteNamedEntitiesByMentionNorm = jest.fn()
+    api.fetchIndicesStarredDocuments = jest.fn()
+    const core = Core.init(createLocalVue(), api).useAll()
+    localVue = core.localVue
+    i18n = core.i18n
+    store = core.store
+    wait = core.wait
+
     Murmur.config.set('manageDocuments', true)
     mixin.methods.watchedForUpdate = noop
     store.commit('search/index', index)
   })
 
   beforeEach(() => {
+    api.deleteNamedEntitiesByMentionNorm.mockReturnValue(jsonResp())
+    api.fetchIndicesStarredDocuments.mockReturnValue(jsonResp())
+
+    const filter = store.getters['search/getFilter']({ name })
+    const propsData = { filter, infiniteScroll: false }
+
     wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData })
     store.commit('search/reset')
     store.commit('search/contextualizeFilter', name)
   })
 
-  afterAll(() => jest.unmock('@/api'))
+  afterEach(() => {
+    api.fetchIndicesStarredDocuments.mockClear()
+    api.deleteNamedEntitiesByMentionNorm.mockClear()
+  })
 
   it('should filter items according to the content type filter search', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)

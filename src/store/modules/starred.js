@@ -1,7 +1,4 @@
 import { castArray, groupBy, findIndex, map } from 'lodash'
-import Api from '@/api'
-
-export const api = new Api()
 
 export const state = {
   // A collection of `{ index, id }` documents
@@ -38,44 +35,47 @@ export const mutations = {
     }
   }
 }
-
-export const actions = {
-  async starDocuments ({ commit }, documents = []) {
-    const documentsByIndex = groupBy(castArray(documents), 'index')
-    for (const [index, documents] of Object.entries(documentsByIndex)) {
-      const documentIds = map(documents, 'id')
-      await api.starDocuments(index, documentIds)
-      commit('pushDocuments', documents)
-    }
-  },
-  async unstarDocuments ({ commit }, documents = []) {
-    const documentsByIndex = groupBy(castArray(documents), 'index')
-    for (const [index, documents] of Object.entries(documentsByIndex)) {
-      const documentIds = map(documents, 'id')
-      await api.unstarDocuments(index, documentIds)
-      commit('removeDocuments', documents)
-    }
-  },
-  toggleStarDocument ({ state, dispatch }, { index, id } = {}) {
-    const i = findIndex(state.documents, { index, id })
-    if (i > -1) {
-      return dispatch('unstarDocuments', { index, id })
-    } else {
-      return dispatch('starDocuments', { index, id })
-    }
-  },
-  async fetchIndicesStarredDocuments ({ commit, rootState }, indices = null) {
-    for (const index of castArray(indices || rootState.search.indices)) {
-      const ids = await api.getStarredDocuments(index)
-      const documents = castArray(ids).map(id => ({ id, index }))
-      commit('documents', documents)
+function actionsBuilder (api) {
+  return {
+    async starDocuments ({ commit }, documents = []) {
+      const documentsByIndex = groupBy(castArray(documents), 'index')
+      for (const [index, documents] of Object.entries(documentsByIndex)) {
+        const documentIds = map(documents, 'id')
+        await api.starDocuments(index, documentIds)
+        commit('pushDocuments', documents)
+      }
+    },
+    async unstarDocuments ({ commit }, documents = []) {
+      const documentsByIndex = groupBy(castArray(documents), 'index')
+      for (const [index, documents] of Object.entries(documentsByIndex)) {
+        const documentIds = map(documents, 'id')
+        await api.unstarDocuments(index, documentIds)
+        commit('removeDocuments', documents)
+      }
+    },
+    toggleStarDocument ({ state, dispatch }, { index, id } = {}) {
+      const i = findIndex(state.documents, { index, id })
+      if (i > -1) {
+        return dispatch('unstarDocuments', { index, id })
+      } else {
+        return dispatch('starDocuments', { index, id })
+      }
+    },
+    async fetchIndicesStarredDocuments ({ commit, rootState }, indices = null) {
+      for (const index of castArray(indices || rootState.search.indices)) {
+        const ids = await api.getStarredDocuments(index)
+        const documents = castArray(ids).map(id => ({ id, index }))
+        commit('documents', documents)
+      }
     }
   }
 }
 
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
+export function starredStoreBuilder (api) {
+  return {
+    namespaced: true,
+    state,
+    mutations,
+    actions: actionsBuilder(api)
+  }
 }
