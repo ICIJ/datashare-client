@@ -93,8 +93,12 @@ export default {
   async mounted () {
     if (this.hasPreviewHost) {
       await this.waitFor(async () => {
-        this.$set(this, 'meta', await this.fetchMeta())
-        this.$set(this, 'size', await this.fetchSize())
+        try {
+          this.$set(this, 'meta', await this.fetchMeta())
+          this.$set(this, 'size', await this.fetchSize())
+        } catch (e) {
+          throw Error('Unable to fetch the thumbnail informations')
+        }
       })
     }
   },
