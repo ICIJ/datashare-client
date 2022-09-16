@@ -330,7 +330,7 @@ class Core extends Behaviors {
   }
   /**
    * instantiate a Core class (useful for chaining usage or mapping)
-   * @param {...Mixed, Api} options - Options to pass to the Core constructor
+   * @param {...Mixed} options - Options to pass to the Core constructor
    * @returns {Core}
    */
   static init (...options) {
