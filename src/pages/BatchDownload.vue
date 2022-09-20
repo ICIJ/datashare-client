@@ -28,6 +28,7 @@
           <p class="text-center m-0" v-html="$t('batchDownload.empty')"></p>
         </template>
       </tasks-list>
+      <p class="text-center m-0 text-muted" v-html="$t('batchDownload.limitations', batchDownloadLimitations)"></p>
     </v-wait>
   </div>
 </template>
@@ -65,6 +66,12 @@ export default {
     hasPendingBatchDownloadTasks () {
       const pendingStates = ['RUNNING', 'QUEUED']
       return some(this.tasks, ({ state }) => pendingStates.includes(state))
+    },
+    batchDownloadLimitations () {
+      return {
+        maxNbFiles: this.$core.config.get('batchDownloadMaxNbFiles'),
+        maxSize: this.$core.config.get('batchDownloadMaxSize')
+      }
     }
   },
   methods: {
