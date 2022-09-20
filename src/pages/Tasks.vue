@@ -21,6 +21,15 @@
           </template>
         </b-tab>
       </template>
+      <div v-if="$route.name === 'batch-search'">
+        <b-btn class="ml-auto my-1 text-nowrap" variant="primary" @click="$refs['batch-search-form'].show()">
+          <fa class="mr-1" icon="plus" />
+          {{ $t('batchSearch.heading') }}
+        </b-btn>
+        <b-modal ref="batch-search-form" :title="$t('batchSearch.heading')" body-class="p-0" hide-footer size="md">
+          <batch-search-form hide-border hide-title @submit="$refs['batch-search-form'].hide()"></batch-search-form>
+        </b-modal>
+      </div>
     </page-header>
     <router-view />
   </div>
@@ -29,12 +38,14 @@
 <script>
 import { findIndex } from 'lodash'
 import utils from '@/mixins/utils'
+import BatchSearchForm from '@/components/BatchSearchForm'
 import PageHeader from '@/components/PageHeader'
 
 export default {
   name: 'Tasks',
   mixins: [utils],
   components: {
+    BatchSearchForm,
     PageHeader
   },
   data () {

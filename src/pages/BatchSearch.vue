@@ -6,31 +6,19 @@
         <div class="d-flex flex-wrap align-items-center">
           <batch-search-filter-query class="batch-search__search-bar my-1"/>
           <batch-search-clear-filters class="batch-search__clear-filter-btn m-1"/>
-          <b-btn class="ml-auto my-1 text-nowrap" variant="primary" @click="$refs['batch-search-form'].show()">
-            <fa class="mr-1" icon="plus" />
-            {{ $t('batchSearch.heading') }}
-          </b-btn>
         </div>
         <batch-search-table/>
       </template>
       <template v-else>
         <div class="batch-search__none  text-center">
           <div class="batch-search__none__message b-table-empty-row" v-html="noBatchSearch"/>
-          <b-btn class="mx-auto my-2" variant="primary" @click="$refs['batch-search-form'].show()">
-            <fa class="mr-1" icon="plus" />
-            <span class="text-nowrap">{{ $t('batchSearch.heading') }}</span>
-          </b-btn>
         </div>
       </template>
-      <b-modal ref="batch-search-form" :title="$t('batchSearch.heading')" body-class="p-0" hide-footer size="md">
-        <batch-search-form hide-border hide-title @submit="$refs['batch-search-form'].hide()"></batch-search-form>
-      </b-modal>
     </v-wait>
   </div>
 </template>
 
 <script>
-import BatchSearchForm from '@/components/BatchSearchForm'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
@@ -44,8 +32,7 @@ export default {
   components: {
     BatchSearchFilterQuery,
     BatchSearchClearFilters,
-    BatchSearchTable,
-    BatchSearchForm
+    BatchSearchTable
   },
   async mounted () {
     if (!this.hasBatchSearch) {
