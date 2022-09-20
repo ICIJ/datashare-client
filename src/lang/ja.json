@@ -731,7 +731,8 @@
     "delete": {
       "failed": "Unable to delete",
       "failedBody": "Something happend when trying to delete this batch download."
-    }
+    },
+    "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
   },
   "batchDownloadActions": {
     "relaunch": "Relaunch",
