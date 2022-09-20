@@ -731,7 +731,8 @@
     "delete": {
       "failed": "crwdns2586:0crwdne2586:0",
       "failedBody": "crwdns2588:0crwdne2588:0"
-    }
+    },
+    "limitations": "crwdns2608:0%{maxNbFiles}crwdnd2608:0%{maxSize}crwdne2608:0"
   },
   "batchDownloadActions": {
     "relaunch": "crwdns2582:0crwdne2582:0",
