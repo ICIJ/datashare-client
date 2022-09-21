@@ -509,14 +509,13 @@
     "findNamedEntitiesTooltip": "crwdns1896:0crwdne1896:0",
     "pipelines": "crwdns938:0crwdne938:0",
     "pipelineOptions": {
+      "email": "crwdns2422:0crwdne2422:0",
       "corenlp": "crwdns2456:0crwdne2456:0",
-      "email": "crwdns2422:0crwdne2422:0"
+      "opennlp": "crwdns2610:0crwdne2610:0",
+      "mitie": "crwdns2612:0crwdne2612:0",
+      "ixapipe": "crwdns2614:0crwdne2614:0",
+      "gatenlp": "crwdns2616:0crwdne2616:0"
     },
-    "corenlp": "crwdns2458:0crwdne2458:0",
-    "opennlp": "crwdns2460:0crwdne2460:0",
-    "mitie": "crwdns2462:0crwdne2462:0",
-    "ixapipe": "crwdns2464:0crwdne2464:0",
-    "email": "crwdns948:0crwdne948:0",
     "default": "crwdns950:0crwdne950:0",
     "syncModels": "crwdns1898:0crwdne1898:0",
     "stopTask": "crwdns1900:0crwdne1900:0",
