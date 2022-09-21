@@ -509,14 +509,14 @@
     "findNamedEntitiesTooltip": "Texts must be extracted before finding named entities",
     "pipelines": "Pipelines",
     "pipelineOptions": {
+      "email": "Find email addresses",
       "corenlp": "Find people, organizations and locations with CoreNLP",
-      "email": "Find email addresses"
+      "opennlp": "Find people, organizations and locations with OpenNLP",
+      "mitie": "Find people, organizations and locations with MITIE",
+      "ixapipe": "Find people, organizations and locations with IXA Pipe",
+      "gatenlp": "Find people, organizations and locations with GateNLP"
+
     },
-    "corenlp": "CoreNLP",
-    "opennlp": "OpenNLP",
-    "mitie": "MITIE",
-    "ixapipe": "IXA Pipe",
-    "email": "Email extraction",
     "default": "By default - Offers the highest probability of working in most documents",
     "syncModels": "Please check this box if you are currently working offline with no internet connection.",
     "stopTask": "Stop this task",
