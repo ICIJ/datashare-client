@@ -44,11 +44,14 @@
               <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
                 {{ directory.key | basename }}
               </a>
-              <div class="font-weight-bold ml-2" :title="$n(directory.contentLength.value)" v-if="size">
+              <div class="font-weight-bold ml-2" :title="$n(directory.contentLength.value)" v-if="size && directory.contentLength">
                 {{ humanSize(directory.contentLength.value, false, $t('human.size'))  }}
               </div>
               <span :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })" class="ml-2 badge badge-light badge-pill" v-if="count">
-                <span v-if="compact">
+                <span v-if="!directory.doc_count">
+                  -
+                </span>
+                <span v-else-if="compact">
                   {{ $n(directory.doc_count) }}
                 </span>
                 <span v-else>
@@ -75,7 +78,7 @@
 </template>
 
 <script>
-import { difference, filter, flatten, get, identity, includes, noop, round, uniq, uniqueId } from 'lodash'
+import { difference, flatten, find, filter, get, identity, includes, noop, round, uniq, uniqBy, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { basename } from 'path'
 import { waitFor } from 'vue-wait'
@@ -204,6 +207,7 @@ export default {
   data () {
     return {
       pages: [],
+      tree: [],
       infiniteScrollId: uniqueId('infinite-scroll-'),
       allDirectoriesInputId: uniqueId('all-directories-input-')
     }
@@ -250,11 +254,23 @@ export default {
     order () {
       return { [this.sortBy]: this.sortByOrder }
     },
+    treeChildren () {
+      const topLevelDirectory = find(this.tree, { type: 'directory' })
+      return get(topLevelDirectory, 'children', [])
+    },
+    treeAsPagesBuckets () {
+      return this.treeChildren
+        .filter(dir => dir.type === 'directory')
+        .map(dir => ({ key: dir.name, contentLength: 0, doc_count: 0 }))
+    },
     pagesBuckets () {
       return this.pages.map(p => get(p, 'aggregations.byDirname.buckets', []))
     },
-    directories () {
+    flattenPagesBuckets () {
       return flatten(this.pagesBuckets)
+    },
+    directories () {
+      return uniqBy([...this.flattenPagesBuckets, ...this.treeAsPagesBuckets], dir => dir.key)
     },
     hits () {
       return get(this, 'lastPage.hits.total.value', 0)
@@ -386,12 +402,16 @@ export default {
       const preference = 'tree-view-paths'
       const res = await elasticsearch.search({ index, body, preference, size: 0 })
       // Clear the list of pages (to start over!)
-      if (clearPages) this.clearPages()
+      if (clearPages) await this.clearPagesAndLoadTree()
       // Add the result as a page
       this.pages.push(res)
     },
     clearPages () {
       return this.pages.splice(0, this.pages.length)
+    },
+    async clearPagesAndLoadTree () {
+      this.tree = await this.$core.api.tree(this.path)
+      return this.clearPages()
     }
   }
 }
