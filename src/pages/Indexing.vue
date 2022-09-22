@@ -24,7 +24,7 @@
           <b-btn variant="primary"
                  class="mr-2 indexing__actions__extract"
                  v-b-modal:[extractingFormId]>
-            <fa icon="rocket" class="mr-2" />
+            <fa icon="search-plus" class="mr-2" />
             {{ $t('indexing.extractText') }}
           </b-btn>
           <b-btn variant="primary"
@@ -43,7 +43,7 @@
                    modal-class="indexing__form-modal extracting__form"
                    size="md">
             <template #modal-title>
-              <fa icon="rocket" class="mr-1"></fa>
+              <fa icon="search-plus" class="mr-1" />
               {{ $t('indexing.extractText') }}
             </template>
             <extracting-form id="extracting-form" :finally="closeExtractingForm" />
@@ -54,6 +54,7 @@
                    modal-class="indexing__form-modal find-named-entities__form"
                    size="md">
             <template #modal-title>
+              <fa icon="user-tag" class="mr-1" />
               {{ $t('indexing.findNamedEntities') }}
             </template>
             <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
