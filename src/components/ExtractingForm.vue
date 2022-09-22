@@ -1,7 +1,14 @@
 <template>
   <form class="extracting-form" id="extracting-form" @submit.prevent="submitExtract">
+    <div class="extracting-    mb-4">
+      <div class="ml-4 pl-2">
+        <p class="font-weight-bold mb-0">Which folder do you want to add?</p>
+        <p class="small mb-2">The entire Datashare folder will be indexed by default.</p>
+        <inline-directory-picker dark v-model="path" />
+      </div>
+    </div>
     <div class="extracting-form__group mb-4">
-      <b-form-checkbox v-model="ocr" name="check-button" switch>
+      <b-form-checkbox v-model="ocr" name="check-button">
         <div class="font-weight-bold ml-2">
           {{ $t('indexing.extractWithOcrLabel') }}
         </div>
@@ -12,8 +19,8 @@
         </div>
       </b-form-checkbox>
     </div>
-    <div class="extracting-form__group">
-      <b-form-checkbox v-model="filter" name="check-button" switch>
+    <div class="extracting-form__group mb-4">
+      <b-form-checkbox v-model="filter" name="check-button">
         <div class="font-weight-bold ml-2">
           {{ $t('indexing.extractOnlyNewLabel') }}
         </div>
@@ -37,6 +44,7 @@
 <script>
 import { noop } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
+import InlineDirectoryPicker from './InlineDirectoryPicker.vue'
 
 const { mapFields } = createHelpers({
   getterType: 'indexing/getField',
@@ -48,6 +56,9 @@ const { mapFields } = createHelpers({
  */
 export default {
   name: 'ExtractingForm',
+  components: {
+    InlineDirectoryPicker
+  },
   props: {
     /**
      * Callback function to call when the form have been submitted (this should be replaced by an event in future versions).
@@ -63,7 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapFields(['form.filter', 'form.ocr'])
+    ...mapFields(['form.filter', 'form.ocr', 'form.path'])
   },
   methods: {
     async submitExtract () {

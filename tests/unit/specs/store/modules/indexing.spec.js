@@ -7,6 +7,7 @@ import { storeBuilder } from '@/store/storeBuilder'
 describe('IndexingStore', () => {
   const project = toLower('IndexingStore')
   let store, mockAxios
+
   beforeAll(() => {
     mockAxios = { request: jest.fn() }
     const api = new Api(mockAxios)
@@ -38,7 +39,9 @@ describe('IndexingStore', () => {
     expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
-      data: { options: { ocr: false, filter: true } }
+      data: {
+        options: expect.objectContaining({ ocr: false, filter: true })
+      }
     }))
   })
 
@@ -49,7 +52,9 @@ describe('IndexingStore', () => {
     expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/findNames/CORENLP'),
       method: 'POST',
-      data: { options: { syncModels: true } }
+      data: {
+        options: expect.objectContaining({ syncModels: true })
+      }
     }))
   })
 
