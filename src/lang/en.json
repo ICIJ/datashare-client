@@ -518,7 +518,8 @@
 
     },
     "default": "By default - Offers the highest probability of working in most documents",
-    "syncModels": "Please check this box if you are currently working offline with no internet connection.",
+    "syncModelsLabel": "Do you want to work offline?",
+    "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "Stop this task",
     "stopPendingTasks": "Stop all pending tasks",
     "deleteDoneTasks": "Clear done tasks",

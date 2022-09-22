@@ -1,31 +1,40 @@
 <template>
   <v-wait for="load ner pipelines">
     <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-5 text-light" />
-    <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
-      <div class="find-named-entities-form__header mb-4">
-        <h4>
+    <form class="find-named-entities-form position-relative" @submit.prevent="submitFindNamedEntities">
+      <fa icon="tags" class="position-absolute mt-1 ml-1" size="lg" />
+      <div class="ml-4 pl-3">
+        <p class="find-named-entities-form__header font-weight-bold mb-0">
           {{ $t('indexing.findNamedEntitiesHeader') }}
-        </h4>
-      </div>
-      <div class="find-named-entities-form__subheader mb-4">
-        <span>
-          {{ $t('indexing.findNamedEntitiesSubheader') }}
-        </span>
-      </div>
-      <div class="find-named-entities-form__body form-group mb-4">
-        <div class="custom-control custom-radio mb-2" v-for="(translationReference, pip) in pipelines" :key="pip">
-          <input class="custom-control-input" type="radio" :id="pip" :value="pip" v-model="pipeline">
-          <label class="custom-control-label" :for="pip">
-            {{ $t(`${translationReference}`) }}
-            <div class="font-italic small" v-if="pip === 'corenlp'">
-              {{ $t('indexing.default') }}
+        </p>
+        <div class="find-named-entities-form__body form-group mb-4">
+          <p class="mb-2">
+            {{ $t('indexing.findNamedEntitiesSubheader') }}
+          </p>
+          <fieldset class="list-group">
+            <div class="list-group-item bg-transparent border-light"
+                            v-for="(translationReference, pip) in pipelines"
+                            :key="pip">
+              <b-form-radio name="pipeline"
+                            v-model="pipeline"
+                            :value="pip">
+                {{ $t(`${translationReference}`) }}
+                <div class="font-italic small" v-if="pip === 'corenlp'">
+                  {{ $t('indexing.default') }}
+                </div>
+              </b-form-radio>
             </div>
-          </label>
+          </fieldset>
         </div>
       </div>
       <div class="find-named-entities-form__offline form-group" v-if="$config.is('manageDocuments')">
-        <b-form-checkbox id="syncModels" v-model="offline">
-          {{ $t('indexing.syncModels') }}
+        <b-form-checkbox v-model="offline" switch>
+          <div class="font-weight-bold ml-1">
+            {{ $t('indexing.syncModelsLabel') }}
+          </div>
+          <div class="ml-1 small">
+            {{ $t('indexing.syncModels') }}
+          </div>
         </b-form-checkbox>
       </div>
       <div class="find-named-entities-form__footer mt-4 row no-gutters">

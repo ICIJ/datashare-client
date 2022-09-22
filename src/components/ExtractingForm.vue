@@ -1,18 +1,19 @@
 <template>
-  <form class="extracting-form" id="extracting-form" @submit.prevent="submitExtract">
-    <div class="extracting-    mb-4">
-      <div class="ml-4 pl-2">
-        <p class="font-weight-bold mb-0">Which folder do you want to add?</p>
+  <form class="extracting-form position-relative" @submit.prevent="submitExtract">
+    <div class="extracting-form__group mb-4">
+      <fa icon="folder-open" class="position-absolute mt-1 ml-1" size="lg" />
+      <div class="ml-4 pl-3">
+        <p class="font-weight-bold mb-0">Which folder do you want to index?</p>
         <p class="small mb-2">The entire Datashare folder will be indexed by default.</p>
-        <inline-directory-picker dark v-model="path" />
+        <inline-directory-picker hide-folder-icon dark v-model="path" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
-      <b-form-checkbox v-model="ocr" name="check-button">
-        <div class="font-weight-bold ml-2">
+      <b-form-checkbox v-model="ocr" name="check-button" switch>
+        <div class="font-weight-bold ml-1">
           {{ $t('indexing.extractWithOcrLabel') }}
         </div>
-        <div class="extracting-form__group__help ml-2 small">
+        <div class="extracting-form__group__help ml-1 small">
           <span>
             {{ $t('indexing.extractWithOcrHelp') }}
           </span>
@@ -20,11 +21,11 @@
       </b-form-checkbox>
     </div>
     <div class="extracting-form__group mb-4">
-      <b-form-checkbox v-model="filter" name="check-button">
-        <div class="font-weight-bold ml-2">
+      <b-form-checkbox v-model="filter" name="check-button" switch>
+        <div class="font-weight-bold ml-1">
           {{ $t('indexing.extractOnlyNewLabel') }}
         </div>
-        <div class="extracting-form__group__help ml-2 small">
+        <div class="extracting-form__group__help ml-1 small">
           <span>
             {{ $t('indexing.extractOnlyNewHelp') }}
           </span>
