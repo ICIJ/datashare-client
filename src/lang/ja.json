@@ -498,18 +498,18 @@
     "go": "移動",
     "tasks": "作業",
     "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
-    "extractText": "テキストを抽出",
+    "extractText": "Add documents",
     "extractWithOcrLabel": "画像やPDFからもテキストを抽出しますか？",
     "extractWithOcrHelp": "その場合、データシェアはOCR（光学的文字認識）を作動させます。これは時間が最大10倍かかります",
     "extractOnlyNewLabel": "既にインデックスされたファイルは飛ばしますか？",
     "extractOnlyNewHelp": "その場合、データシェアがテキストを抽出する対象は、データシェア内でまだ検索できていないファイルだけとなります",
-    "findNamedEntities": "人物、組織、場所、メールアドレスを探す",
+    "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "What would you like to do?",
     "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models.",
     "findNamedEntitiesTooltip": "固有表現を探す前に、テキストを抽出しなければなりません",
     "pipelines": "パイプライン（固有表現処理プロセス）",
     "pipelineOptions": {
-      "email": "Find email addresses",
+      "email": "Find email",
       "corenlp": "Find people, organizations and locations with CoreNLP",
       "opennlp": "Find people, organizations and locations with OpenNLP",
       "mitie": "Find people, organizations and locations with MITIE",
@@ -517,7 +517,8 @@
       "gatenlp": "Find people, organizations and locations with GateNLP"
     },
     "default": "デフォルトで--大半の文書において、機能する可能性が最も高い",
-    "syncModels": "もし、現在インターネット接続がないオフライン状態で作業している場合、このボックスにチェックを入れてください",
+    "syncModelsLabel": "Do you want to work offline?",
+    "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "このタスクを止める",
     "stopPendingTasks": "途中になっているタスクを全て止める",
     "deleteDoneTasks": "完了済みタスクを削除",
@@ -747,6 +748,17 @@
     "title": "Insights",
     "selectProject": "Select a project"
   },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Browse",
+        "close": "Close"
+      }
+    },
+    "browser": {
+      "empty": "No sub-folders"
+    }
+  },
   "widget": {
     "noData": "No data",
     "noFolders": "No folders",
@@ -778,7 +790,7 @@
       "people": "0 people | one person | <strong>{count}</strong> people",
       "locations": "0 locations | one location | <strong>{count}</strong> locations",
       "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
-      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
+      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
     },
     "treemap": {
       "seeDocuments": "See documents in Datashare",
