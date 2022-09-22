@@ -498,18 +498,18 @@
     "go": "crwdns918:0crwdne918:0",
     "tasks": "crwdns920:0crwdne920:0",
     "empty": "crwdns2522:0%{howToLink}crwdne2522:0",
-    "extractText": "crwdns1880:0crwdne1880:0",
+    "extractText": "crwdns2618:0crwdne2618:0",
     "extractWithOcrLabel": "crwdns1882:0crwdne1882:0",
     "extractWithOcrHelp": "crwdns1884:0crwdne1884:0",
     "extractOnlyNewLabel": "crwdns1886:0crwdne1886:0",
     "extractOnlyNewHelp": "crwdns1888:0crwdne1888:0",
-    "findNamedEntities": "crwdns1890:0crwdne1890:0",
+    "findNamedEntities": "crwdns2620:0crwdne2620:0",
     "findNamedEntitiesHeader": "crwdns2416:0crwdne2416:0",
     "findNamedEntitiesSubheader": "crwdns2418:0crwdne2418:0",
     "findNamedEntitiesTooltip": "crwdns1896:0crwdne1896:0",
     "pipelines": "crwdns938:0crwdne938:0",
     "pipelineOptions": {
-      "email": "crwdns2422:0crwdne2422:0",
+      "email": "crwdns2622:0crwdne2622:0",
       "corenlp": "crwdns2456:0crwdne2456:0",
       "opennlp": "crwdns2610:0crwdne2610:0",
       "mitie": "crwdns2612:0crwdne2612:0",
@@ -517,7 +517,8 @@
       "gatenlp": "crwdns2616:0crwdne2616:0"
     },
     "default": "crwdns950:0crwdne950:0",
-    "syncModels": "crwdns1898:0crwdne1898:0",
+    "syncModelsLabel": "crwdns2624:0crwdne2624:0",
+    "syncModels": "crwdns2626:0crwdne2626:0",
     "stopTask": "crwdns1900:0crwdne1900:0",
     "stopPendingTasks": "crwdns1902:0crwdne1902:0",
     "deleteDoneTasks": "crwdns1904:0crwdne1904:0",
@@ -747,6 +748,17 @@
     "title": "crwdns2376:0crwdne2376:0",
     "selectProject": "crwdns1854:0crwdne1854:0"
   },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "crwdns2628:0crwdne2628:0",
+        "close": "crwdns2630:0crwdne2630:0"
+      }
+    },
+    "browser": {
+      "empty": "crwdns2632:0crwdne2632:0"
+    }
+  },
   "widget": {
     "noData": "crwdns2000:0crwdne2000:0",
     "noFolders": "crwdns2054:0crwdne2054:0",
@@ -778,7 +790,7 @@
       "people": "crwdns2436:0{count}crwdne2436:0",
       "locations": "crwdns2438:0{count}crwdne2438:0",
       "organizations": "crwdns2440:0{count}crwdne2440:0",
-      "emails": "crwdns2442:0{count}crwdne2442:0"
+      "emails": "crwdns2634:0{count}crwdne2634:0"
     },
     "treemap": {
       "seeDocuments": "crwdns2230:0crwdne2230:0",
