@@ -7,6 +7,7 @@ export function initialState () {
     form: {
       filter: true,
       ocr: false,
+      path: null,
       offline: false,
       pipeline: 'CORENLP'
     },
@@ -50,10 +51,14 @@ export const mutations = {
     state.form.offline = initialState().form.offline
   }
 }
+
 function actionsBuilder (api) {
   return {
     submitExtract ({ state }) {
-      return api.index({ ocr: state.form.ocr, filter: state.form.filter })
+      if (state.form.path) {
+        return api.indexPath(state.form.path, state.form)
+      }
+      return api.index(state.form)
     },
     runBatchSearch () {
       return api.runBatchSearch()
@@ -97,6 +102,7 @@ function actionsBuilder (api) {
     }
   }
 }
+
 export function indexingStoreBuilder (api) {
   return {
     namespaced: true,

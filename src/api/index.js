@@ -1,4 +1,4 @@
-import { join, map, replace, toLower } from 'lodash'
+import { join, map, replace, trim, toLower } from 'lodash'
 
 const Method = Object.freeze({
   POST: 'POST',
@@ -13,9 +13,19 @@ export class Api {
     this.axios = _axios
     this.eventBus = _EventBus
   }
-
-  index (options) {
-    return this.sendActionAsText('/api/task/batchUpdate/index/file', { method: Method.POST, data: { options } })
+  tree (path) {
+    return this.sendAction('/api/tree/' + trim(path, '/'), { method: Method.GET })
+  }
+  index ({ ocr = false, filter = true } = {}) {
+    const options = { ocr, filter }
+    const data = { options }
+    return this.sendActionAsText('/api/task/batchUpdate/index/file', { method: Method.POST, data })
+  }
+  indexPath (path, { ocr = false, filter = true } = {}) {
+    const options = { ocr, filter }
+    const data = { options }
+    const trimedPath = trim(path, '/')
+    return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
   }
   runBatchSearch () {
     return this.sendAction('/api/task/batchSearch', { method: Method.POST })
