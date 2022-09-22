@@ -92,6 +92,12 @@ body {
   padding: $spacer;
 }
 
+.tooltip {
+  &-lg .tooltip-inner {
+    max-width: 90vw;
+  }
+}
+
 @each $variant,
 $value in $theme-colors {
   .popover-magnified-#{$variant} {
