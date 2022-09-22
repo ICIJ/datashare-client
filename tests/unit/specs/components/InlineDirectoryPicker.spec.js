@@ -76,9 +76,9 @@ describe('InlineDirectoryPicker.vue', () => {
 
     beforeEach(() => {
       const api = jest.fn()
-      const { localVue, wait, store, config } = Core.init(createLocalVue(), api).useAll()
+      const { localVue, i18n, wait, store, config } = Core.init(createLocalVue(), api).useAll()
       config.set('dataDir', '/home/dev/Datashare/')
-      wrapper = mount(InlineDirectoryPicker, { localVue, wait, store })
+      wrapper = mount(InlineDirectoryPicker, { localVue, i18n, wait, store })
     })
 
     it('should render the directory list with only "Home"', () => {
@@ -161,9 +161,9 @@ describe('InlineDirectoryPicker.vue', () => {
       const api = jest.fn()
       const path = '/home/dev/Datashare/01FOO'
       const propsData = { path }
-      const { localVue, wait, store, config } = Core.init(createLocalVue(), api).useAll()
+      const { localVue, i18n, wait, store, config } = Core.init(createLocalVue(), api).useAll()
       config.set('dataDir', '/home/dev/Datashare/')
-      wrapper = mount(InlineDirectoryPicker, { localVue, wait, store, propsData })
+      wrapper = mount(InlineDirectoryPicker, { localVue, i18n, wait, store, propsData })
       wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_01FOO_TREE)
     })
 

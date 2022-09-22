@@ -498,7 +498,7 @@
     "go": "Go",
     "tasks": "Tasks",
     "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
-    "extractText": "Extract text",
+    "extractText": "Add documents",
     "extractWithOcrLabel": "Do you want to extract text also from images and PDFs?",
     "extractWithOcrHelp": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
     "extractOnlyNewLabel": "Do you want to skip already indexed files?",
@@ -747,6 +747,17 @@
   "insights": {
     "title": "Insights",
     "selectProject": "Select a project"
+  },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Browse",
+        "close": "Close"
+      }
+    },
+    "browser": {
+      "empty": "No sub-folders"
+    }
   },
   "widget": {
     "noData": "No data",

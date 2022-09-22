@@ -57,7 +57,10 @@ export default {
       return !this.$wait.is(this.waitIdentifier)
     },
     browseBtnLabel () {
-      return this.browse ? 'Close' : 'Browse'
+      if (this.browse) {
+        return this.$t('inlineDirectoryPicker.header.browseBtn.close')
+      }
+      return this.$t('inlineDirectoryPicker.header.browseBtn.browse')
     },
     browseBtnVariant () {
       return this.dark ? 'light' : 'dark'
@@ -150,7 +153,7 @@ export default {
           </li>
         </ul>
         <p v-else-if="isReady" class="text-center small p-3 m-0">
-          No directories
+          {{ $t('inlineDirectoryPicker.browser.empty') }}
         </p>
       </b-collapse>
     </b-overlay>
