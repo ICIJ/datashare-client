@@ -498,18 +498,18 @@
     "go": "Ir",
     "tasks": "Tareas",
     "empty": "Aún no has iniciado ninguna tarea. <a href=\"%{howToLink}\" target=\"_blank\">Lee más.</a>",
-    "extractText": "Extraer texto",
+    "extractText": "Add documents",
     "extractWithOcrLabel": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
     "extractWithOcrHelp": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
     "extractOnlyNewLabel": "¿Desea omitir archivos ya indexados?",
     "extractOnlyNewHelp": "Si es así, Datashare sólo extraerá texto de archivos que aún no se pueden buscar en Datashare.",
-    "findNamedEntities": "Buscar personas, organizaciones, ubicaciones y direcciones de correo electrónico",
+    "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "¿Qué te gustaría hacer?",
     "findNamedEntitiesSubheader": "Datashare utiliza modelos de Programación Neuro-Lingüística (Natural Language Processing).",
     "findNamedEntitiesTooltip": "Los textos deben ser extraídos antes de iniciar el proceso para encontrar entidades identificadas",
     "pipelines": "Canales",
     "pipelineOptions": {
-      "email": "Encontra direcciones de correo electrónico",
+      "email": "Find email",
       "corenlp": "Encuentra nombres de personas, organizaciones y lugares con CoreNLP",
       "opennlp": "Find people, organizations and locations with OpenNLP",
       "mitie": "Find people, organizations and locations with MITIE",
@@ -517,7 +517,8 @@
       "gatenlp": "Find people, organizations and locations with GateNLP"
     },
     "default": "Por defecto - Ofrece la mayor probabilidad de trabajar en la mayoría de los documentos",
-    "syncModels": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
+    "syncModelsLabel": "Do you want to work offline?",
+    "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "Detener esta tarea",
     "stopPendingTasks": "Detener todas las tareas pendientes",
     "deleteDoneTasks": "Borrar tareas completadas",
@@ -747,6 +748,17 @@
     "title": "Estadísticas",
     "selectProject": "Seleccione un proyecto"
   },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Browse",
+        "close": "Close"
+      }
+    },
+    "browser": {
+      "empty": "No sub-folders"
+    }
+  },
   "widget": {
     "noData": "No hay datos",
     "noFolders": "Sin carpetas",
@@ -778,7 +790,7 @@
       "people": "0 persona | una persona | <strong>{count}</strong> personas",
       "locations": "0 ubicación | una ubicación | <strong>{count}</strong> ubicaciones",
       "organizations": "0 organización | una organización | <strong>{count}</strong> organizaciones",
-      "emails": "0 dirección de correo electrónico | una dirección de correo electrónico | <strong>{count}</strong> direcciones de correo electrónico"
+      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
     },
     "treemap": {
       "seeDocuments": "Ver archivos en Datashare",
