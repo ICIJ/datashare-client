@@ -12,8 +12,8 @@
           {{ $t('indexing.findNamedEntitiesSubheader') }}
         </span>
       </div>
-      <div class="find-named-entities-form__body form-group mb-4 pl-4">
-        <div class="custom-control custom-radio" v-for="(translationReference, pip) in pipelines" :key="pip">
+      <div class="find-named-entities-form__body form-group mb-4">
+        <div class="custom-control custom-radio mb-2" v-for="(translationReference, pip) in pipelines" :key="pip">
           <input class="custom-control-input" type="radio" :id="pip" :value="pip" v-model="pipeline">
           <label class="custom-control-label" :for="pip">
             {{ $t(`${translationReference}`) }}
@@ -23,7 +23,7 @@
           </label>
         </div>
       </div>
-      <div class="find-named-entities-form__offline form-group pl-4" v-if="$config.is('manageDocuments')">
+      <div class="find-named-entities-form__offline form-group" v-if="$config.is('manageDocuments')">
         <b-form-checkbox id="syncModels" v-model="offline">
           {{ $t('indexing.syncModels') }}
         </b-form-checkbox>
