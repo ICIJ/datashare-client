@@ -8,7 +8,7 @@
           {{ $t('indexing.findNamedEntitiesHeader') }}
         </p>
         <div class="find-named-entities-form__body form-group mb-4">
-          <p class="mb-2">
+          <p class="mb-2 small">
             {{ $t('indexing.findNamedEntitiesSubheader') }}
           </p>
           <fieldset class="list-group">
