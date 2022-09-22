@@ -498,18 +498,18 @@
     "go": "Los",
     "tasks": "Aufgaben",
     "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
-    "extractText": "Text extrahieren",
+    "extractText": "Add documents",
     "extractWithOcrLabel": "Möchten Sie Text auch aus Bildern und PDFs extrahieren?",
     "extractWithOcrHelp": "Wenn ja, führt Datashare OCR (Optische Zeichenerkennung) durch. Dies kann bis zu zehn Mal länger dauern.",
     "extractOnlyNewLabel": "Möchten Sie bereits indizierte Dateien überspringen?",
     "extractOnlyNewHelp": "Wenn ja, wird Datashare den Text nur aus Dateien extrahieren, die in Datashare noch nicht durchsuchbar sind.",
-    "findNamedEntities": "Leute, Organisationen, Standorte und E-Mail-Adressen finden",
+    "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "Was möchten Sie tun?",
     "findNamedEntitiesSubheader": "Datashare verwendet Modelle zur Verarbeitung natürlicher Sprachen.",
     "findNamedEntitiesTooltip": "Die Texte müssen extrahiert werden, bevor Named Entities gefunden werden können",
     "pipelines": "Pipelines",
     "pipelineOptions": {
-      "email": "E-Mail-Adressen finden",
+      "email": "Find email",
       "corenlp": "Leute, Organisationen und Standorte mit CoreNLP finden",
       "opennlp": "Find people, organizations and locations with OpenNLP",
       "mitie": "Find people, organizations and locations with MITIE",
@@ -517,7 +517,8 @@
       "gatenlp": "Find people, organizations and locations with GateNLP"
     },
     "default": "Standardmäßig - Bietet die höchste Wahrscheinlichkeit in den meisten Dokumenten zu funktionieren",
-    "syncModels": "Bitte aktivieren Sie dieses Kästchen, wenn Sie derzeit offline ohne Internetverbindung arbeiten.",
+    "syncModelsLabel": "Do you want to work offline?",
+    "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "Diese Aufgabe beenden",
     "stopPendingTasks": "Alle ausstehenden Aufgaben beenden",
     "deleteDoneTasks": "Erledigte Aufgaben löschen",
@@ -747,6 +748,17 @@
     "title": "Einblicke",
     "selectProject": "Projekt auswählen"
   },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Browse",
+        "close": "Close"
+      }
+    },
+    "browser": {
+      "empty": "No sub-folders"
+    }
+  },
   "widget": {
     "noData": "Keine Daten",
     "noFolders": "Keine Ordner",
@@ -778,7 +790,7 @@
       "people": "Keine Personen | eine Person | <strong>{count}</strong> Personen",
       "locations": "keine Orte | ein Ort | <strong>{count}</strong> Orte",
       "organizations": "keine Organisationen | eine Organisation | <strong>{count}</strong> Organisationen",
-      "emails": "keine E-Mail-Adressen | eine E-Mail-Adresse | <strong>{count}</strong> E-Mail-Adressen"
+      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
     },
     "treemap": {
       "seeDocuments": "Dokumente in Datashare ansehen",
