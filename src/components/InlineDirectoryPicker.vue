@@ -71,7 +71,7 @@ export default {
       return trim(path.split('/').pop(), '/')
     },
     directoryTitle (index) {
-      return [this.cannonicalDataDir, ...this.directories.slice(1, index + 1) ].join('/')
+      return [this.cannonicalDataDir, ...this.directories.slice(1, index + 1)].join('/')
     },
     select (pathOrIndex, continueBrowsing = false) {
       this.browse = continueBrowsing
@@ -89,7 +89,7 @@ export default {
       this.$emit('input', path)
       return path
     },
-    async selectAndBrowse (pathOrIndex) {    
+    async selectAndBrowse (pathOrIndex) {
       this.select(pathOrIndex, true)
       // Browse only if we are already browsing
       await this.$nextTick()
@@ -112,19 +112,19 @@ export default {
   <div class="inline-directory-picker border rounded" :class="{ 'inline-directory-picker--dark': dark }">
     <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
       <div class="inline-directory-picker__header d-flex align-items-center p-2">
-        <fa class="inline-directory-picker__header__icon mr-3" 
-            icon="folder" 
-            fixed-width 
+        <fa class="inline-directory-picker__header__icon mr-3"
+            icon="folder"
+            fixed-width
             v-if="!hideFolderIcon" />
         <active-text-truncate class="inline-directory-picker__header__list mr-1"
-                              direction="rtl" 
+                              direction="rtl"
                               :key="directories.length">
-          <div class="inline-directory-picker__header__list__item" 
-               v-for="(directory, i) in directories" 
-               :key="directory" 
+          <div class="inline-directory-picker__header__list__item"
+               v-for="(directory, i) in directories"
+               :key="directory"
                @click="selectAndBrowse(i)">
             <b-btn class="p-0"
-                   variant="link" 
+                   variant="link"
                    v-b-tooltip="{ delay: { show: 1e3, hide: 0 }, customClass: 'tooltip-lg' }"
                    :title="directoryTitle(i)">
               {{ basename(directory) }}
@@ -136,13 +136,13 @@ export default {
         </b-btn>
       </div>
       <b-collapse :visible="browse">
-        <ul v-if="browsingTreeDirectories.length" 
+        <ul v-if="browsingTreeDirectories.length"
             class="inline-directory-picker__browser list-unstyled m-0 border-top">
-          <li v-for="directory in browsingTreeDirectories" 
-              :key="directory.name" 
+          <li v-for="directory in browsingTreeDirectories"
+              :key="directory.name"
               class="inline-directory-picker__browser__item position-relative">
             <a class="inline-directory-picker__browser__item__link d-block p-2 stretched-link"
-               href 
+               href
                @click.prevent="selectAndBrowse(directory.name, true)">
               <fa icon="folder" fixed-width class="mr-3" />
               {{ basename(directory.name) }}
@@ -189,7 +189,7 @@ export default {
           color: inherit;
         }
 
-        &__link:hover, 
+        &__link:hover,
         &--active &__link {
           text-decoration: none;
           background: $table-hover-bg;
