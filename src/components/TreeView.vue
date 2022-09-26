@@ -402,14 +402,20 @@ export default {
       const preference = 'tree-view-paths'
       const res = await elasticsearch.search({ index, body, preference, size: 0 })
       // Clear the list of pages (to start over!)
-      if (clearPages) await this.clearPagesAndLoadTree()
+      if (clearPages) await this.clearPages()
+      // Only load the tree if we clear out the pages
+      // and entirely load the folder. This way we avoid
+      // load directories from the /tree API when they are
+      // already present in next result page of the
+      // ElasticSearch aggregation.
+      if (clearPages && this.reachedTheEnd) await this.getTree()
       // Add the result as a page
       this.pages.push(res)
     },
     clearPages () {
       return this.pages.splice(0, this.pages.length)
     },
-    async clearPagesAndLoadTree () {
+    async getTree () {
       this.tree = await this.$core.api.tree(this.path)
       return this.clearPages()
     }
