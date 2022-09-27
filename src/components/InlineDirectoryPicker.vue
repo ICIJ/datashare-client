@@ -1,5 +1,5 @@
 <script>
-import { compact, find, filter, trim, trimEnd, uniqueId } from 'lodash'
+import { compact, get, filter, trim, trimEnd, uniqueId } from 'lodash'
 
 export default {
   name: 'InlineDirectoryPicker',
@@ -22,16 +22,10 @@ export default {
     return {
       browse: false,
       browsingPath: null,
-      browsingTree: []
+      browsingTree: null
     }
   },
   computed: {
-    browsingTreeChildren () {
-      if (!this.browsingTree.length) {
-        return []
-      }
-      return find(this.browsingTree, { type: 'directory' }).children || []
-    },
     cannonicalDataDir () {
       return trimEnd(this.dataDir, '/')
     },
@@ -39,7 +33,7 @@ export default {
       return this.$config.get('dataDir')
     },
     browsingTreeDirectories () {
-      return filter(this.browsingTreeChildren, { type: 'directory' })
+      return filter(get(this.browsingTree, 'contents', []), { type: 'directory' })
     },
     directories () {
       if (!this.path) {

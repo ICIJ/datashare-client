@@ -4,71 +4,57 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
 import { Core } from '@/core'
 
-const HOME_TREE = [
-  {
-    name: '/home/dev/Datashare',
-    type: 'directory',
-    prot: 'drwxrwxrwx',
-    children: [
-      {
-        prot: 'drwxr-xr-x',
-        children: [],
-        name: '/home/dev/Datashare/01FOO',
-        type: 'directory'
-      },
-      {
-        prot: '-rw-rw-r--',
-        size: 9850,
-        name: '/home/dev/Datashare/02BAR.ods',
-        type: 'file'
-      },
-      {
-        prot: '-rw-rw-r--',
-        size: 73904,
-        name: '/home/dev/Datashare/03BUS.tif',
-        type: 'file'
-      }
-    ]
-  },
-  {
-    directories: 1,
-    files: 2,
-    type: 'report'
-  }
-]
+const HOME_TREE = {
+  name: '/home/dev/Datashare',
+  type: 'directory',
+  prot: 'drwxrwxrwx',
+  contents: [
+    {
+      prot: 'drwxr-xr-x',
+      contents: [],
+      name: '/home/dev/Datashare/01FOO',
+      type: 'directory'
+    },
+    {
+      prot: '-rw-rw-r--',
+      size: 9850,
+      name: '/home/dev/Datashare/02BAR.ods',
+      type: 'file'
+    },
+    {
+      prot: '-rw-rw-r--',
+      size: 73904,
+      name: '/home/dev/Datashare/03BUS.tif',
+      type: 'file'
+    }
+  ]
+}
 
-const HOME_01FOO_TREE = [
-  {
-    name: '/home/dev/Datashare/01FOO',
-    type: 'directory',
-    prot: 'drwxrwxrwx',
-    children: [
-      {
-        prot: 'drwxr-xr-x',
-        children: [],
-        name: '/home/dev/Datashare/01FOO/pandora',
-        type: 'directory'
-      },
-      {
-        prot: 'drwxr-xr-x',
-        children: [],
-        name: '/home/dev/Datashare/01FOO/paradise',
-        type: 'directory'
-      },
-      {
-        prot: 'drwxr-xr-x',
-        children: [],
-        name: '/home/dev/Datashare/01FOO/panama',
-        type: 'directory'
-      }
-    ]
-  },
-  {
-    directories: 3,
-    files: 0,
-    type: 'report'
-  }
-]
+const HOME_01FOO_TREE = {
+  name: '/home/dev/Datashare/01FOO',
+  type: 'directory',
+  prot: 'drwxrwxrwx',
+  contents: [
+    {
+      prot: 'drwxr-xr-x',
+      contents: [],
+      name: '/home/dev/Datashare/01FOO/pandora',
+      type: 'directory'
+    },
+    {
+      prot: 'drwxr-xr-x',
+      contents: [],
+      name: '/home/dev/Datashare/01FOO/paradise',
+      type: 'directory'
+    },
+    {
+      prot: 'drwxr-xr-x',
+      contents: [],
+      name: '/home/dev/Datashare/01FOO/panama',
+      type: 'directory'
+    }
+  ]
+}
 
 describe('InlineDirectoryPicker.vue', () => {
   describe('without path', () => {

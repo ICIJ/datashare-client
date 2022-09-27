@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { difference, flatten, find, filter, get, identity, includes, noop, round, uniq, uniqBy, uniqueId } from 'lodash'
+import { difference, flatten, filter, get, identity, includes, noop, round, uniq, uniqBy, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { basename } from 'path'
 import { waitFor } from 'vue-wait'
@@ -255,8 +255,7 @@ export default {
       return { [this.sortBy]: this.sortByOrder }
     },
     treeChildren () {
-      const topLevelDirectory = find(this.tree, { type: 'directory' })
-      return get(topLevelDirectory, 'children', [])
+      return filter(get(this.tree, 'contents', []), { type: 'directory' })
     },
     treeAsPagesBuckets () {
       return this.treeChildren

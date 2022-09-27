@@ -5,26 +5,19 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { Core } from '@/core'
 
-const HOME_TREE = [
-  {
-    name: '/home/foo',
-    type: 'directory',
-    prot: 'drwxrwxrwx',
-    children: [
-      {
-        prot: 'drwxr-xr-x',
-        children: [],
-        name: '/home/foo/01FOO',
-        type: 'directory'
-      }
-    ]
-  },
-  {
-    directories: 1,
-    files: 0,
-    type: 'report'
-  }
-]
+const HOME_TREE = {
+  name: '/home/foo',
+  type: 'directory',
+  prot: 'drwxrwxrwx',
+  contents: [
+    {
+      prot: 'drwxr-xr-x',
+      contents: [],
+      name: '/home/foo/01FOO',
+      type: 'directory'
+    }
+  ]
+}
 
 describe('TreeView.vue', () => {
   const { index, es } = esConnectionHelper.build()
