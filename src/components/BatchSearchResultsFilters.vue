@@ -27,9 +27,12 @@
       </div>
       <div class="small">
         <selectable-dropdown
+          v-if="filteredQueries.length"
           class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
           deactivate-keys
           multiple
+          scrollerHeight="280px"
+          :height=35
           v-model="selectedQueries"
           :eq="(item, other) => item.label === other.label"
           :items="filteredQueries">
@@ -51,13 +54,14 @@
             </div>
           </template>
         </selectable-dropdown>
+        <div v-else class="text-center text-dark">Loading queries ...</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { castArray, cloneDeep, compact, find, get, isEqual, map, orderBy } from 'lodash'
+import { castArray, cloneDeep, compact, find, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
 import SearchFormControl from '@/components/SearchFormControl'
@@ -69,10 +73,11 @@ export default {
   name: 'BatchSearchResultsFilters',
   props: {
     /**
-     * The batch search uuid
+     * The batch search query keys
      */
-    uuid: { // TODO not used in the component because it's retrieved from the url=> change me
-      type: String
+    queryKeys: {
+      type: Array,
+      default: () => []
     },
     /**
      * The batch search indices
@@ -97,17 +102,11 @@ export default {
       const options = { shouldSort: false, keys }
       return new Fuse(this.queries, options)
     },
-    meta () {
-      return get(this, '$store.state.batchSearch.batchSearch', null)
-    },
-    queriesKeys () {
-      return map(this.meta.queries, (count, label) => ({ label, count }))
-    },
     queries () {
       if (this.sortField === 'count') {
-        return orderBy(this.queriesKeys, ['count'], ['desc'])
+        return orderBy(this.queryKeys, ['count'], ['desc'])
       } else {
-        return this.queriesKeys
+        return this.queryKeys
       }
     },
     filteredQueries () {

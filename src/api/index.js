@@ -121,6 +121,9 @@ export class Api {
   getBatchSearch (batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`)
   }
+  getBatchSearchQueries (batchId) {
+    return this.sendActionAsText(`/api/batch/search/${batchId}/queries`)
+  }
   getBatchSearches (from = 0,
     size = 100,
     sort = 'batch_date',

@@ -1,12 +1,18 @@
 import remove from 'lodash/remove'
+import map from 'lodash/map'
 
 import Vue from 'vue'
+import {
+  RESET, SINGLE_BATCH_SEARCH, SINGLE_BATCH_SEARCH_QUERIES, BATCH_SEARCHES, REMOVE_BATCH_SEARCH,
+  CLEAR_BATCH_SEARCH, SELECTED_QUERIES, RESULTS, TOTAL, HAS_BATCH_SEARCH
+} from '@/store/mutation-types'
 
 export function initialState () {
   return {
     batchSearch: {},
     batchSearches: [],
     results: [],
+    queries: {},
     selectedQueries: [],
     total: 0,
     hasBatchSearch: false
@@ -15,57 +21,75 @@ export function initialState () {
 
 export const state = initialState()
 
+export const getters = {
+  queryKeys (state) {
+    return map(state.queries, (count, label) => ({ label, count }))
+  },
+  nbSelectedQueries (state) {
+    return state.selectedQueries?.length ?? 0
+  }
+}
 export const mutations = {
-  reset (state) {
+  [RESET] (state) {
     Object.assign(state, initialState())
   },
-  batchSearch (state, batchSearch) {
+  [SINGLE_BATCH_SEARCH] (state, batchSearch) {
     Vue.set(state, 'batchSearch', batchSearch)
   },
-  batchSearches (state, batchSearches) {
+  [SINGLE_BATCH_SEARCH_QUERIES] (state, queries) {
+    state.queries = queries
+  },
+  [BATCH_SEARCHES] (state, batchSearches) {
     Vue.set(state, 'batchSearches', batchSearches)
   },
-  removeBatchSearch (state, batchId) {
+  [REMOVE_BATCH_SEARCH] (state, batchId) {
     remove(state.batchSearches, batchSearch => batchSearch.uuid === batchId)
     state.hasBatchSearch = state.batchSearches.length > 0
     state.total = state.total - 1
   },
-  clearBatchSearches (state) {
+  [CLEAR_BATCH_SEARCH] (state) {
     state.batchSearches = []
     state.hasBatchSearch = false
     state.total = 0
   },
-  selectedQueries (state, selectedQueries) {
+  [SELECTED_QUERIES] (state, selectedQueries) {
     Vue.set(state, 'selectedQueries', selectedQueries)
   },
-  results (state, results) {
+  [RESULTS] (state, results) {
     Vue.set(state, 'results', results)
   },
-  total (state, total) {
-    Vue.set(state, 'total', total)
+  [TOTAL] (state, total) {
+    state.total = total
   },
-  hasBatchSearch (state, hasBatchSearch) {
+  [HAS_BATCH_SEARCH] (state, hasBatchSearch) {
     state.hasBatchSearch = hasBatchSearch
   }
 }
 
-function actionBuilder (api) {
+export function actionBuilder (api) {
   return {
     async getBatchSearch ({ commit }, batchId) {
       let batchSearch = {}
       try {
         batchSearch = await api.getBatchSearch(batchId)
-      } catch (_) {
-        batchSearch = {}
+      } finally {
+        commit(SINGLE_BATCH_SEARCH, batchSearch)
       }
-      return commit('batchSearch', batchSearch)
+    },
+    async getBatchSearchQueries ({ commit }, batchId) {
+      let queries = {}
+      try {
+        queries = await api.getBatchSearchQueries(batchId)
+      } finally {
+        commit(SINGLE_BATCH_SEARCH_QUERIES, queries)
+      }
     },
     async hasBatchSearch ({ commit }) {
       try {
         const batchSearches = await api.getBatchSearches()
-        commit('hasBatchSearch', batchSearches.total > 0)
+        commit(HAS_BATCH_SEARCH, batchSearches.total > 0)
       } catch (e) {
-        commit('hasBatchSearch', false)
+        commit(HAS_BATCH_SEARCH, false)
       }
     },
     async getBatchSearches ({ commit }, {
@@ -89,8 +113,8 @@ function actionBuilder (api) {
           total: 0
         }
       }
-      commit('total', batchSearches.total)
-      return commit('batchSearches', batchSearches.items)
+      commit(TOTAL, batchSearches.total)
+      commit(BATCH_SEARCHES, batchSearches.items)
     },
     async onSubmit ({
       commit,
@@ -106,8 +130,10 @@ function actionBuilder (api) {
       paths,
       published
     }) {
+      // send the new batch search
       await api.batchSearch(name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published)
-      commit('hasBatchSearch', true)
+      commit(HAS_BATCH_SEARCH, true)
+      // get all batch searches including the new one
       return dispatch('getBatchSearches', {})
     },
     async getBatchSearchResults ({ commit }, {
@@ -124,12 +150,12 @@ function actionBuilder (api) {
       } catch (_) {
         results = []
       }
-      return commit('results', results)
+      commit(RESULTS, results)
     },
     async deleteBatchSearch ({ commit }, { batchId }) {
       try {
         await api.deleteBatchSearch(batchId)
-        commit('removeBatchSearch', batchId)
+        commit(REMOVE_BATCH_SEARCH, batchId)
         return true
       } catch (_) {
         return false
@@ -148,9 +174,9 @@ function actionBuilder (api) {
     async deleteBatchSearches ({ commit }) {
       try {
         await api.deleteBatchSearches()
-        commit('clearBatchSearches')
+        commit(CLEAR_BATCH_SEARCH)
         return {}
-      } catch (_) {
+      } finally {
         // TODO do something
       }
     }
@@ -162,6 +188,7 @@ export function batchStoreBuilder (api) {
     namespaced: true,
     state,
     mutations,
+    getters,
     actions: actionBuilder(api)
   }
 }

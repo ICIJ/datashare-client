@@ -9,16 +9,18 @@
       <span class="sr-only">
         {{ $t('batchSearchResultsFilters.queries.heading') }}
       </span>
-      <b-badge variant="secondary" class="batch-search-actions__item__counter" v-if="selectedQueries.length">
-        {{ selectedQueries.length | humanNumber }}
+      <b-badge variant="secondary" class="batch-search-actions__item__counter" v-if="nbSelectedQueries">
+        {{ nbSelectedQueries | humanNumber }}
       </b-badge>
-      <b-popover custom-class="popover-body-p-0"
-                 lazy
-                 placement="bottom"
-                 target="batch-search-actions-filters-toggle"
-                 triggers="focus" >
-        <batch-search-results-filters :uuid="uuid" :indices="projects" hide-border />
-      </b-popover>
+      <keep-alive>
+        <b-popover custom-class="popover-body-p-0"
+                  lazy
+                  placement="bottom"
+                  target="batch-search-actions-filters-toggle"
+                  triggers="focus" >
+          <batch-search-results-filters :query-keys="queryKeys" :indices="projects" hide-border />
+        </b-popover>
+      </keep-alive>
     </b-btn>
 
     <confirm-button class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ml-2"
@@ -74,7 +76,9 @@
 
 <script>
 import { get } from 'lodash'
+import { mapGetters } from 'vuex'
 import { Api } from '@/api'
+
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
 import humanNumber from '@/filters/humanNumber'
@@ -106,9 +110,7 @@ export default {
     }
   },
   computed: {
-    selectedQueries () {
-      return get(this, '$store.state.batchSearch.selectedQueries', [])
-    },
+    ...mapGetters('batchSearch', ['nbSelectedQueries', 'queryKeys']),
     user () {
       return get(this, 'batchSearch.user.id')
     },
@@ -130,6 +132,7 @@ export default {
   },
   async created () {
     this.isMyBatchSearch = await this.$core.auth.getUsername() === this.user
+    this.getQueries()
   },
   methods: {
     async deleteBatchSearch () {
@@ -141,6 +144,9 @@ export default {
         this.$root.$bvToast.toast(this.$t('batchSearch.notDeleted'), { noCloseButton: true, variant: 'warning' })
       }
       this.$router.push({ name: 'batch-search' })
+    },
+    getQueries () {
+      return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.uuid)
     }
   }
 }

@@ -14,10 +14,12 @@ describe('BatchSearchStore', () => {
 
   beforeAll(() => {
     api = new Api(mockAxiosApi, mockEventbus)
+    api.getBatchSearchQueries = jest.fn()
     store = storeBuilder(api)
   })
 
   beforeEach(() => {
+    api.getBatchSearchQueries.mockClear()
     mockAxiosApi.request.mockClear()
     mockAxiosApi.request.mockResolvedValue({ data: {} })
   })
@@ -35,6 +37,33 @@ describe('BatchSearchStore', () => {
       expect(store.state.batchSearch.batchSearch.name).toBe('This is my batchSearch')
 
       mockAxiosApi.request.mockReturnValue({ data: {} })
+    })
+
+    it('should retrieve the queries of a batch search given its ID', async () => {
+      const queries = { query1: 0, query2: 2, query3: 1 }
+      api.getBatchSearchQueries = jest.fn().mockImplementation((uuid) => {
+        if (uuid === '1') {
+          return queries
+        }
+        return {}
+      })
+      await store.dispatch('batchSearch/getBatchSearchQueries', '1')
+      expect(api.getBatchSearchQueries).toBeCalledWith('1')
+      expect(Object.keys(store.state.batchSearch.queries)).toHaveLength(3)
+      await store.dispatch('batchSearch/getBatchSearchQueries', '2')
+      expect(api.getBatchSearchQueries).toBeCalledWith('2')
+      expect(store.state.batchSearch.queries).toEqual({})
+    })
+
+    it('should retrieve the queries in the form of a label/count array of objects', async () => {
+      const queries = { query1: 0, query2: 2, query3: 1 }
+      api.getBatchSearchQueries = jest.fn().mockResolvedValue(queries)
+      await store.dispatch('batchSearch/getBatchSearchQueries', '1')
+      expect(store.getters['batchSearch/queryKeys']).toHaveLength(3)
+      expect(store.getters['batchSearch/queryKeys']).toEqual([
+        { label: 'query1', count: 0 },
+        { label: 'query2', count: 2 },
+        { label: 'query3', count: 1 }])
     })
 
     it('should retrieve all the batchSearches', async () => {

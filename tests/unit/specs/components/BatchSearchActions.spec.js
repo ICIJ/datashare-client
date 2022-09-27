@@ -6,6 +6,9 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import { Core } from '@/core'
 import BatchSearchActions from '@/components/BatchSearchActions'
 import { getMode, MODE_NAME } from '@/mode'
+import { Api } from '@/api'
+import Vuex from 'vuex'
+import { getters, mutations, actionBuilder } from '@/store/modules/batchSearch'
 
 describe('BatchSearchActions.vue', () => {
   let wrapper, i18n, localVue, store, wait, router, api
@@ -26,11 +29,6 @@ describe('BatchSearchActions.vue', () => {
       fileTypes: [],
       paths: [],
       published: true,
-      queries: {
-        query_01: 6,
-        query_02: 6,
-        query_03: 6
-      },
       user: {
         id: 'test'
       }
@@ -38,7 +36,7 @@ describe('BatchSearchActions.vue', () => {
   }
 
   beforeAll(() => {
-    api = jest.fn()
+    api = new Api(null, null)
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -73,6 +71,22 @@ describe('BatchSearchActions.vue', () => {
     await wrapper.vm.$core.auth.getUsername()
     await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--delete').exists()).toBeTruthy()
+  })
+
+  it('should display number of selected queries', async () => {
+    const stateMock = { selectedQueries: [] }
+    let storeMock = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state: stateMock, getters, mutations, actions: actionBuilder(api) } } })
+    wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store: storeMock, wait })
+    await flushPromises()
+
+    expect(wrapper.find('.batch-search-actions__item__counter').exists()).toBeFalsy()
+
+    const state2 = { selectedQueries: ['test'] }
+    storeMock = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state: state2, getters, mutations, actions: actionBuilder(api) } } })
+    wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store: storeMock, wait })
+    await flushPromises()
+
+    expect(wrapper.find('.batch-search-actions__item__counter').text()).toBe('1')
   })
 
   it('should NOT display a button to delete the batchSearch if it is not mine', async () => {
@@ -124,11 +138,6 @@ describe('BatchSearchActions.vue', () => {
         fileTypes: [],
         paths: [],
         published: true,
-        queries: {
-          query_01: 6,
-          query_02: 6,
-          query_03: 6
-        },
         user: { id: 'test' }
       }
     }
