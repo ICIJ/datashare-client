@@ -492,6 +492,9 @@
     "receivedLink": "受信メール",
     "sentLink": "送信メール"
   },
+  "extractingLanguageFormControlng": {
+    "nullOption": "Detect automaticaly (default)"
+  },
   "indexing": {
     "title": "文書の分析",
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">文書追加についての書類を読んでください</a>。",
@@ -503,6 +506,7 @@
     "extractWithOcrHelp": "その場合、データシェアはOCR（光学的文字認識）を作動させます。これは時間が最大10倍かかります",
     "extractOnlyNewLabel": "既にインデックスされたファイルは飛ばしますか？",
     "extractOnlyNewHelp": "その場合、データシェアがテキストを抽出する対象は、データシェア内でまだ検索できていないファイルだけとなります",
+    "extractLanguage": "In which language are your documents?",
     "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "What would you like to do?",
     "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models.",
