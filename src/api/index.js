@@ -234,6 +234,12 @@ export class Api {
   uninstallExtension (extensionId) {
     return this.sendAction(`/api/extensions/uninstall?id=${extensionId}`, { method: Method.DELETE })
   }
+  ocrLanguages () {
+    return this.sendAction('/api/settings/ocr/languages')
+  }
+  textLanguages () {
+    return this.sendAction('/api/settings/text/languages')
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })

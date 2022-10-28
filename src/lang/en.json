@@ -492,6 +492,9 @@
     "receivedLink": "Emails received",
     "sentLink": "Emails sent"
   },
+  "extractingLanguageFormControlng": {
+    "nullOption": "Detect automaticaly (default)"
+  },
   "indexing": {
     "title": "Analyze your documents",
     "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
@@ -503,6 +506,7 @@
     "extractWithOcrHelp": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
     "extractOnlyNewLabel": "Do you want to skip already indexed files?",
     "extractOnlyNewHelp": "If yes, Datashare will only extract text from files that are not yet searchable in Datashare.",
+    "extractLanguage": "In which language are your documents?",
     "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "What would you like to do?",
     "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models.",

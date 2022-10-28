@@ -32,6 +32,13 @@
         </div>
       </b-form-checkbox>
     </div>
+    <div class="extracting-form__group mb-4">
+      <fa icon="globe" class="position-absolute mt-1 ml-1" size="lg" />
+      <div class="ml-4 pl-3">
+        <p class="font-weight-bold">{{ $t('indexing.extractLanguage') }}</p>
+        <extracting-language-form-control v-model="language" dark />
+      </div>
+    </div>
     <div class="extracting-form__footer mt-4 row no-gutters">
       <div class="col text-right">
         <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
@@ -45,6 +52,8 @@
 <script>
 import { noop } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
+
+import ExtractingLanguageFormControl from './ExtractingLanguageFormControl.vue'
 import InlineDirectoryPicker from './InlineDirectoryPicker.vue'
 
 const { mapFields } = createHelpers({
@@ -58,6 +67,7 @@ const { mapFields } = createHelpers({
 export default {
   name: 'ExtractingForm',
   components: {
+    ExtractingLanguageFormControl,
     InlineDirectoryPicker
   },
   props: {
@@ -75,7 +85,7 @@ export default {
     }
   },
   computed: {
-    ...mapFields(['form.filter', 'form.ocr', 'form.path'])
+    ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language'])
   },
   methods: {
     async submitExtract () {

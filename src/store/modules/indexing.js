@@ -6,9 +6,10 @@ export function initialState () {
   return {
     form: {
       filter: true,
+      language: null,
       ocr: false,
-      path: null,
       offline: false,
+      path: null,
       pipeline: 'CORENLP'
     },
     tasks: []
