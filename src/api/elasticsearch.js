@@ -115,7 +115,16 @@ export function datasharePlugin (Client) {
 
   Client.prototype._addSortToBody = function (name = 'relevance', body) {
     const { field, desc } = find(settings.searchSortFields, { name }) || settings.searchSortFields[0]
-    body.sort(field, desc ? 'desc' : 'asc')
+    if (name === 'creationDateNewest' || name === 'creationDateOldest') {
+      body.sort([{
+        'metadata.tika_metadata_dcterms_created': {
+          order: desc ? 'desc' : 'asc',
+          unmapped_type: 'date'
+        }
+      }])
+    } else {
+      body.sort(field, desc ? 'desc' : 'asc')
+    }
     if (field !== 'path') body.sort('path', 'asc')
   }
 
