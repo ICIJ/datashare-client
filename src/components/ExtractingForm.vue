@@ -36,7 +36,7 @@
       <fa icon="globe" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
         <p class="font-weight-bold">{{ $t('indexing.extractLanguage') }}</p>
-        <extracting-language-form-control v-model="language" dark />
+        <extracting-language-form-control v-model="language" dark :ocr-warning="!!ocr" />
       </div>
     </div>
     <div class="extracting-form__footer mt-4 row no-gutters">

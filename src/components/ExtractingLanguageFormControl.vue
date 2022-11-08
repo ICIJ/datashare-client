@@ -1,5 +1,5 @@
 <script>
-import { uniqueId } from 'lodash'
+import { find, uniqueId } from 'lodash'
 
 /**
  * A form-control to select the extracting language.
@@ -15,6 +15,12 @@ export default {
       type: String
     },
     /**
+     * Enable warning when the OCR language is not available
+     */
+    ocrWarning: {
+      type: Boolean
+    },
+    /**
      * Enable dark mode for this component
      */
     dark: {
@@ -23,7 +29,8 @@ export default {
   },
   data () {
     return {
-      languages: []
+      textLanguages: [],
+      ocrLanguages: []
     }
   },
   async mounted () {
@@ -32,7 +39,8 @@ export default {
   methods: {
     async loadLanguages () {
       this.$wait.start(this.waitIdentifier)
-      this.languages = await this.$core.api.textLanguages()
+      this.textLanguages = await this.$core.api.textLanguages()
+      this.ocrLanguages = await this.$core.api.ocrLanguages()
       this.$wait.end(this.waitIdentifier)
     }
   },
@@ -41,7 +49,7 @@ export default {
       return { value: null, text: this.$t('extractingLanguageFormControlng.nullOption') }
     },
     options () {
-      return this.languages.map(language => {
+      return this.textLanguages.map(language => {
         return { value: language.iso6392, text: this.$t(`filter.lang.${language.name}`) }
       })
     },
@@ -53,6 +61,9 @@ export default {
     },
     overlayVariant () {
       return this.dark ? 'dark' : 'light'
+    },
+    isOcrLanguageAvailable () {
+      return this.value && !!find(this.ocrLanguages, { iso6392: this.value })
     }
   }
 }
@@ -61,5 +72,11 @@ export default {
 <template>
   <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
     <b-form-select :value="value" @input="newValue => $emit('input', newValue)" :options="[nullOption, ...options]" />
+    <b-collapse :visible="ocrWarning && !isOcrLanguageAvailable">
+      <b-alert show variant="warning" class="mt-3">
+        It looks like optical character recognition is not installed for this language.
+        Please read the documentation to know how to fix this.
+      </b-alert>
+    </b-collapse>
   </b-overlay>
 </template>
