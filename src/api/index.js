@@ -16,13 +16,15 @@ export class Api {
   tree (path) {
     return this.sendAction('/api/tree/' + trim(path, '/'), { method: Method.GET })
   }
-  index ({ ocr = false, filter = true } = {}) {
-    const options = { ocr, filter }
+  index ({ ocr = false, filter = true, language = null } = {}) {
+    const ocrLanguage = language
+    const options = { ocr, filter, language, ocrLanguage }
     const data = { options }
     return this.sendActionAsText('/api/task/batchUpdate/index/file', { method: Method.POST, data })
   }
-  indexPath (path, { ocr = false, filter = true } = {}) {
-    const options = { ocr, filter }
+  indexPath (path, { ocr = false, filter = true, language = null } = {}) {
+    const ocrLanguage = language
+    const options = { ocr, filter, language, ocrLanguage }
     const data = { options }
     const trimedPath = trim(path, '/')
     return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
