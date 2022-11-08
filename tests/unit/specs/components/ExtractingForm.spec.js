@@ -37,7 +37,9 @@ describe('ExtractingForm.vue', () => {
       data: {
         options: {
           ocr: false,
-          filter: true
+          filter: true,
+          language: null,
+          ocrLanguage: null
         }
       }
     }))
@@ -54,7 +56,9 @@ describe('ExtractingForm.vue', () => {
       data: {
         options: {
           ocr: true,
-          filter: true
+          filter: true,
+          language: null,
+          ocrLanguage: null
         }
       }
     }))
