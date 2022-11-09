@@ -21,6 +21,13 @@
       </b-form-checkbox>
     </div>
     <div class="extracting-form__group mb-4">
+      <fa icon="globe" class="position-absolute mt-1 ml-1" size="lg" />
+      <div class="ml-4 pl-3">
+        <p class="font-weight-bold">{{ $t('indexing.extractLanguage') }}</p>
+        <extracting-language-form-control v-model="language" dark :ocr-warning="!!ocr" />
+      </div>
+    </div>
+    <div class="extracting-form__group mb-4">
       <b-form-checkbox v-model="filter" name="check-button" switch>
         <div class="font-weight-bold ml-1">
           {{ $t('indexing.extractOnlyNewLabel') }}
@@ -31,13 +38,6 @@
           </span>
         </div>
       </b-form-checkbox>
-    </div>
-    <div class="extracting-form__group mb-4">
-      <fa icon="globe" class="position-absolute mt-1 ml-1" size="lg" />
-      <div class="ml-4 pl-3">
-        <p class="font-weight-bold">{{ $t('indexing.extractLanguage') }}</p>
-        <extracting-language-form-control v-model="language" dark :ocr-warning="!!ocr" />
-      </div>
     </div>
     <div class="extracting-form__footer mt-4 row no-gutters">
       <div class="col text-right">
