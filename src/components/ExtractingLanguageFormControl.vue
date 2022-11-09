@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     nullOption () {
-      return { value: null, text: this.$t('extractingLanguageFormControlng.nullOption') }
+      return { value: null, text: this.$t('extractingLanguageFormControl.nullOption') }
     },
     options () {
       return this.textLanguages.map(language => {
@@ -76,10 +76,7 @@ export default {
   <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
     <b-form-select :value="value" @input="newValue => $emit('input', newValue)" :options="[nullOption, ...options]" />
     <b-collapse :visible="showOcrWarning">
-      <b-alert show variant="warning" class="mt-3">
-        It looks like optical character recognition is not installed for this language.
-        Please read the documentation to know how to fix this.
-      </b-alert>
+      <b-alert show variant="warning" class="mt-3" v-html="$t('extractingLanguageFormControl.ocrWarning')" />
     </b-collapse>
   </b-overlay>
 </template>
