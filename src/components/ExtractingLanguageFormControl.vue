@@ -63,7 +63,10 @@ export default {
       return this.dark ? 'dark' : 'light'
     },
     isOcrLanguageAvailable () {
-      return this.value && !!find(this.ocrLanguages, { iso6392: this.value })
+      return !!find(this.ocrLanguages, { iso6392: this.value })
+    },
+    showOcrWarning () {
+      return this.ocrWarning && this.value && !this.isOcrLanguageAvailable
     }
   }
 }
@@ -72,7 +75,7 @@ export default {
 <template>
   <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
     <b-form-select :value="value" @input="newValue => $emit('input', newValue)" :options="[nullOption, ...options]" />
-    <b-collapse :visible="ocrWarning && !isOcrLanguageAvailable">
+    <b-collapse :visible="showOcrWarning">
       <b-alert show variant="warning" class="mt-3">
         It looks like optical character recognition is not installed for this language.
         Please read the documentation to know how to fix this.
