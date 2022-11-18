@@ -17,6 +17,33 @@ describe('Datashare backend client', () => {
   it('should return backend response to index', async () => {
     json = await api.index({})
     expect(json).toEqual({})
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+      method: 'POST',
+      data: {
+        options: {
+          filter: true,
+          ocr: false
+        }
+      }
+    }))
+  })
+
+  it('should return backend response to index when language is specified', async () => {
+    json = await api.index({ language: 'fra' })
+    expect(json).toEqual({})
+    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+      method: 'POST',
+      data: {
+        options: {
+          filter: true,
+          ocr: false,
+          language: 'fra',
+          ocrLanguage: 'fra'
+        }
+      }
+    }))
   })
 
   it('should return backend response to findNames', async () => {

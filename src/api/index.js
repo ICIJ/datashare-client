@@ -18,14 +18,14 @@ export class Api {
   }
   index ({ ocr = false, filter = true, language = null } = {}) {
     const ocrLanguage = language
-    const options = { ocr, filter, language, ocrLanguage }
+    const options = Object.fromEntries(Object.entries({ ocr, filter, language, ocrLanguage }).filter(([_, v]) => v !== null))
     const data = { options }
     return this.sendActionAsText('/api/task/batchUpdate/index/file', { method: Method.POST, data })
   }
   indexPath (path, { ocr = false, filter = true, language = null } = {}) {
     const ocrLanguage = language
-    const options = { ocr, filter, language, ocrLanguage }
-    const data = { options }
+    const options = Object.fromEntries(Object.entries({ ocr, filter, language, ocrLanguage }).filter(([_, v]) => v !== null))
+    const data = Object.fromEntries(Object.entries({ options }).filter(([_, v]) => v != null))
     const trimedPath = trim(path, '/')
     return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
   }
