@@ -37,16 +37,15 @@ describe('ExtractingForm.vue', () => {
       data: {
         options: {
           ocr: false,
-          filter: true,
-          language: null,
-          ocrLanguage: null
+          filter: true
         }
       }
     }))
   })
 
-  it('should call extract action with OCR option', () => {
+  it('should call extract action with OCR option and language', () => {
     wrapper.vm.$set(wrapper.vm, 'ocr', true)
+    wrapper.vm.$set(wrapper.vm, 'language', 'fra')
     wrapper.vm.submitExtract()
 
     expect(mockAxios.request).toBeCalledTimes(1)
@@ -57,8 +56,8 @@ describe('ExtractingForm.vue', () => {
         options: {
           ocr: true,
           filter: true,
-          language: null,
-          ocrLanguage: null
+          language: 'fra',
+          ocrLanguage: 'fra'
         }
       }
     }))
