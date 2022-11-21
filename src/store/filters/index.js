@@ -58,7 +58,7 @@ export default [
     type: 'FilterDateRange',
     options: {
       name: 'creationDate',
-      key: 'metadata.tika_metadata_creation_date',
+      key: 'metadata.tika_metadata_dcterms_created',
       icon: 'calendar-alt',
       order: 50,
       fromElasticSearch: false

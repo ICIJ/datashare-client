@@ -117,12 +117,12 @@ export default {
     },
     {
       name: 'creationDateNewest',
-      field: 'metadata.tika_metadata_creation_date',
+      field: 'metadata.tika_metadata_dcterms_created',
       desc: true
     },
     {
       name: 'creationDateOldest',
-      field: 'metadata.tika_metadata_creation_date',
+      field: 'metadata.tika_metadata_dcterms_created',
       desc: false
     },
     {

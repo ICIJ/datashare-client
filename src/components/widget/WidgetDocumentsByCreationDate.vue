@@ -227,7 +227,7 @@ export default {
       return key > 0 && key < new Date().getTime()
     },
     bodybuilderBase ({ size = 1000, from = 0 } = {}) {
-      const field = 'metadata.tika_metadata_creation_date'
+      const field = 'metadata.tika_metadata_dcterms_created'
       return bodybuilder()
         .size(0)
         .andQuery('bool', bool => {

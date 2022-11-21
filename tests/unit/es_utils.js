@@ -76,7 +76,7 @@ class IndexedDocument {
     this.metadata = {
       tika_metadata_another_metadata: null,
       tika_metadata_content_type: null,
-      tika_metadata_creation_date: null
+      tika_metadata_dcterms_created: null
     }
     this.nerList = []
     this.nerTags = []
@@ -112,7 +112,7 @@ class IndexedDocument {
     return this
   }
   withCreationDate (creationDate) {
-    this.metadata.tika_metadata_creation_date = creationDate
+    this.metadata.tika_metadata_dcterms_created = creationDate
     return this
   }
   withOtherMetadata (otherMetadata) {

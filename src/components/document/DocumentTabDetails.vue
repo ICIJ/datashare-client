@@ -188,7 +188,7 @@ export default {
           value: this.documentDirname
         },
         {
-          name: 'metadata.tika_metadata_creation_date',
+          name: 'metadata.tika_metadata_dcterms_created',
           label: this.$t('document.creationDate'),
           class: 'document__content__creation-date',
           value: this.document.meta('creation_date')

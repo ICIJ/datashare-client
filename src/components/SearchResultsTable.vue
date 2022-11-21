@@ -168,7 +168,7 @@ export default {
         },
         {
           key: 'creationDateHumanShort',
-          sortBy: 'metadata.tika_metadata_creation_date',
+          sortBy: 'metadata.tika_metadata_dcterms_created',
           sortable: true,
           label: this.$t('document.creationDate'),
           class: 'fit'
