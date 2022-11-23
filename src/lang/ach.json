@@ -530,7 +530,9 @@
     "deleteIndexLabel": "crwdns1906:0crwdne1906:0",
     "deleteIndexDescription": "crwdns1908:0crwdne1908:0",
     "deleteSuccess": "crwdns1910:0crwdne1910:0",
-    "deleteFailure": "crwdns1912:0crwdne1912:0"
+    "deleteFailure": "crwdns1912:0crwdne1912:0",
+    "deleteBatchSearchSuccess": "crwdns2643:0crwdne2643:0",
+    "deleteBatchSearchFailure": "crwdns2645:0crwdne2645:0"
   },
   "menu": {
     "help": "crwdns964:0crwdne964:0",
