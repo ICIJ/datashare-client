@@ -54,11 +54,16 @@ export default {
     async deleteAll () {
       try {
         await this.$store.dispatch('indexing/deleteAll')
-        await this.$store.dispatch('batchSearch/deleteBatchSearches')
         this.$root.$emit('index::delete::all')
         this.$bvToast.toast(this.$t('indexing.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
-        this.$bvToast.toast(this.$t('indexing.deleteFailure'), { noCloseButton: true, variant: 'danger' })
+        this.$bvToast.toast(this.$t('indexing.deleteFailure'), { noCloseButton: true, variant: 'warning' })
+      }
+      try {
+        await this.$store.dispatch('batchSearch/deleteBatchSearches')
+        this.$bvToast.toast(this.$t('indexing.deleteBatchSearchSuccess'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$bvToast.toast(this.$t('indexing.deleteBatchSearchFailure'), { noCloseButton: true, variant: 'warning' })
       }
     },
     showTreeView () {
