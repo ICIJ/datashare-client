@@ -530,9 +530,7 @@
     "deleteIndexLabel": "あなたの文書を全てデータシェアから取り除く",
     "deleteIndexDescription": "100%安全にするため、あなたのコンピューターのデータシェアのフォルダから、あなたの文書を取り除いてください。全てのデータシェア文書が送られた「ごみ箱」も空っぽにすることを忘れないで！ それに先立ち、あなたの文書のコピーを、安全性の高い別の場所に確実に入れておくこと。",
     "deleteSuccess": "Your documents are now removed from Datashare.",
-    "deleteFailure": "Something went wrong, unable to remove your documents.",
-    "deleteBatchSearchSuccess": "The batch search table has been removed.",
-    "deleteBatchSearchFailure": "Something went wrong, the batch search table hasn't been removed."
+    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare."
   },
   "menu": {
     "help": "ヘルプを求める",
