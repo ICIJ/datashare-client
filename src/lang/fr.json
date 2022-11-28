@@ -530,9 +530,7 @@
     "deleteIndexLabel": "Effacer tous les documents de Datashare",
     "deleteIndexDescription": "Pour être 100% sûr·e, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr.",
     "deleteSuccess": "Vos documents sont maintenant supprimés de Datashare.",
-    "deleteFailure": "Une erreur est survenue, impossible de supprimer vos documents.",
-    "deleteBatchSearchSuccess": "The batch search table has been removed.",
-    "deleteBatchSearchFailure": "Something went wrong, the batch search table hasn't been removed."
+    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare."
   },
   "menu": {
     "help": "Demander de l'aide",
