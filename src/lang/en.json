@@ -531,9 +531,7 @@
     "deleteIndexLabel": "Remove all your documents from Datashare",
     "deleteIndexDescription": "To be 100% safe, please remove your documents from the Datashare folder on your computer – don't forget to empty your trash bin of all Datashare documents! Make sure you have a copy of them in another secure place beforehand.",
     "deleteSuccess": "Your documents are now removed from Datashare.",
-    "deleteFailure": "Something went wrong, unable to remove your documents.",
-    "deleteBatchSearchSuccess": "The batch search table has been removed.",
-    "deleteBatchSearchFailure": "Something went wrong, the batch search table hasn't been removed."
+    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare."
   },
   "menu": {
     "help": "Ask for help",

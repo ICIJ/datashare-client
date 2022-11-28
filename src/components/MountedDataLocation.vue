@@ -52,19 +52,11 @@ export default {
   },
   methods: {
     async deleteAll () {
-      try {
-        await this.$store.dispatch('indexing/deleteAll')
-        this.$root.$emit('index::delete::all')
-        this.$bvToast.toast(this.$t('indexing.deleteSuccess'), { noCloseButton: true, variant: 'success' })
-      } catch (_) {
-        this.$bvToast.toast(this.$t('indexing.deleteFailure'), { noCloseButton: true, variant: 'warning' })
-      }
-      try {
-        await this.$store.dispatch('batchSearch/deleteBatchSearches')
-        this.$bvToast.toast(this.$t('indexing.deleteBatchSearchSuccess'), { noCloseButton: true, variant: 'success' })
-      } catch (_) {
-        this.$bvToast.toast(this.$t('indexing.deleteBatchSearchFailure'), { noCloseButton: true, variant: 'warning' })
-      }
+      await this.$store.dispatch('indexing/deleteAll')
+      this.$root.$emit('index::delete::all')
+      this.$bvToast.toast(this.$t('indexing.deleteSuccess'), { noCloseButton: true, variant: 'success' })
+      await this.$store.dispatch('batchSearch/deleteBatchSearches')
+      this.$bvToast.toast(this.$t('indexing.deleteBatchSearchSuccess'), { noCloseButton: true, variant: 'success' })
     },
     showTreeView () {
       this.$set(this, 'path', this.dataDir)
@@ -83,14 +75,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .mounted-data-location {
-    border-radius: 1em;
-    background: rgba(black, 0.2);
-    cursor: pointer;
+.mounted-data-location {
+  border-radius: 1em;
+  background: rgba(black, 0.2);
+  cursor: pointer;
 
-    &:hover {
-      background: rgba(black, 0.5);
-      text-decoration: underline;
-    }
+  &:hover {
+    background: rgba(black, 0.5);
+    text-decoration: underline;
   }
+}
 </style>
