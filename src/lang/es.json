@@ -530,7 +530,9 @@
     "deleteIndexLabel": "Elimina todos tus documentos de Datashare",
     "deleteIndexDescription": "Para estar 100% seguro, elimine sus documentos de la carpeta Datashare de su computadora. ¡No olvide vaciar su papelera de todos los documentos de Datashare! Asegúrese de tener una copia de ellos en otro lugar seguro de antemano.",
     "deleteSuccess": "Sus archivos han sido eliminados de Datashare.",
-    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare."
+    "deleteFailure": "Something went wrong, unable to remove your documents.",
+    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare.",
+    "deleteBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
   },
   "menu": {
     "help": "Pedir ayuda",
