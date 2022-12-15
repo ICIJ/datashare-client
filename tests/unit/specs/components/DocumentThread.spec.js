@@ -14,9 +14,9 @@ describe('DocumentThread.vue', () => {
     it('should filter on contentType to retrieve emails only', async () => {
       await letData(es).have(new IndexedDocument('document_01', index)
         .withMetadata({
-          tika_metadata_subject: 'subject'
+          tika_metadata_subject: 'subject',
+          tika_metadata_meta_creation_date: '2020-12-04T00:00:01Z'
         })
-        .withCreationDate('2020-12-04T00:00:01Z')
         .withContentType('application/vnd.ms-outlook')
       ).commit()
       await letData(es).have(new IndexedDocument('document_02', index)
@@ -49,9 +49,9 @@ describe('DocumentThread.vue', () => {
     it('should retrieve emails with the exact match of the subject, whatever is before or after', async () => {
       await letData(es).have(new IndexedDocument('document_01', index)
         .withMetadata({
-          tika_metadata_subject: 'term_01 term_02'
+          tika_metadata_subject: 'term_01 term_02',
+          tika_metadata_meta_creation_date: '2020-12-04T00:00:01Z'
         })
-        .withCreationDate('2020-12-04T00:00:01Z')
         .withContentType('application/vnd.ms-outlook')
       ).commit()
       await letData(es).have(new IndexedDocument('document_02', index)
