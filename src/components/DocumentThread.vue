@@ -108,7 +108,7 @@ export default {
     threadBody () {
       const body = bodybuilder()
       // Creation date is the date when the email was sent
-      body.sort('metadata.tika_metadata_dcterms_created', 'asc')
+      body.sort('metadata.tika_metadata_meta_creation_date', 'asc')
       body.rawOption('highlight', {
         fields: {
           content: {
