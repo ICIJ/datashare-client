@@ -191,13 +191,13 @@ export default {
           name: 'metadata.tika_metadata_dcterms_created',
           label: this.$t('document.creationDate'),
           class: 'document__content__creation-date',
-          value: this.document.meta('creation_date')
+          value: this.document.meta('dcterms_created')
         },
         {
-          name: 'metadata.tika_metadata_author',
+          name: 'metadata.tika_metadata_dc_creator',
           label: this.$t('document.author'),
           class: 'document__content__author',
-          value: this.document.meta('author')
+          value: this.document.meta('dc_creator')
         },
         {
           name: 'extractionDate',

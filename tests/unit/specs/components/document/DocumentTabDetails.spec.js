@@ -63,6 +63,30 @@ describe('DocumentTabDetails.vue', () => {
     expect(wrapper.find('.document__content__creation-date').exists()).toBeFalsy()
   })
 
+  it('should display the creation date if it is defined', async () => {
+    await letData(es).have(new IndexedDocument(id, index).withCreationDate('2020-12-04T00:00:01Z')).commit()
+    await store.dispatch('document/get', { id, index })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.find('.document__content__creation-date').exists()).toBeTruthy()
+  })
+
+  it('should not display the author if it is missing', async () => {
+    await letData(es).have(new IndexedDocument(id, index)).commit()
+    await store.dispatch('document/get', { id, index })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.find('.document__content__author').exists()).toBeFalsy()
+  })
+
+  it('should display the author date if it is defined', async () => {
+    await letData(es).have(new IndexedDocument(id, index).withAuthor('local')).commit()
+    await store.dispatch('document/get', { id, index })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.find('.document__content__author').exists()).toBeTruthy()
+  })
+
   it('should display a link to the list of children documents', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })

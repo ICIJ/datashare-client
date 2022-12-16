@@ -9,7 +9,6 @@
     "metadata.tika_metadata_dc_title",
     "metadata.tika_metadata_message_from",
     "metadata.tika_metadata_message_to",
-    "metadata.tika_metadata_meta_author",
     "metadata.tika_metadata_dc_subject",
     "name",
     "path",

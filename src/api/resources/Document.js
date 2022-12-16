@@ -243,6 +243,7 @@ export default class Document extends EsDoc {
       '_source.contentLength',
       '_source.contentType',
       '_source.metadata.tika_metadata_subject',
+      '_source.metadata.tika_metadata_dc_subject',
       '_source.metadata.tika_metadata_dc_title'
     ])
   }
