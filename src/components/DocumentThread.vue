@@ -108,7 +108,7 @@ export default {
     threadBody () {
       const body = bodybuilder()
       // Creation date is the date when the email was sent
-      body.sort('metadata.tika_metadata_meta_creation_date', 'asc')
+      body.sort('metadata.tika_metadata_dcterms_created', 'asc')
       body.rawOption('highlight', {
         fields: {
           content: {
@@ -126,7 +126,7 @@ export default {
         .orQuery('regexp', 'contentType', 'message/.*')
       )
       // Similar subject
-      body.query('query_string', { default_field: 'metadata.tika_metadata_subject', query: `.*\"${ this.document.cleanSubject }\".*` })
+      body.query('query_string', { fields: ['metadata.tika_metadata_dc_subject', 'metadata.tika_metadata_subject'], query: `.*\"${ this.document.cleanSubject }\".*` })
       // Collect all field data
       return reduce(this.threadQueryFields, (body, path, field) => {
         const value = this.document[field]

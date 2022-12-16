@@ -109,7 +109,9 @@ export default class Document extends EsDoc {
     const titles = [this.title]
     if (this.isEmail) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
-      titles.push(trim(this.get('_source.metadata.tika_metadata_subject', '')))
+      const subject = this.get('_source.metadata.tika_metadata_subject', null) ??
+                      this.get('_source.metadata.tika_metadata_dc_subject', '')
+      titles.push(trim(subject))
     }
     if (this.isTweet) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
