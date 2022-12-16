@@ -74,8 +74,7 @@ export default {
       key: 'title',
       fields: [
         'metadata.tika_metadata_dc_title',
-        'metadata.tika_metadata_title',
-        'metadata.tika_metadata_subject',
+        'metadata.tika_metadata_dc_subject',
         'metadata.tika_metadata_resourcename',
         'path'
       ]
@@ -86,9 +85,6 @@ export default {
         'metadata.tika_metadata_message_from',
         'metadata.tika_metadata_message_from_email',
         'metadata.tika_metadata_message_from_name',
-        'metadata.tika_metadata_author',
-        'metadata.tika_metadata_meta_author',
-        'metadata.tika_metadata_creator',
         'metadata.tika_metadata_dc_creator'
       ]
     },
