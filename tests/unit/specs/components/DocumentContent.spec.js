@@ -112,16 +112,6 @@ describe('DocumentContent.vue', () => {
         })
       })
 
-      it('should support regex', async () => {
-        const content = 'this is a test.\nFor testing purpose.'
-        const { document } = await mockDocumentContentSlice(content)
-        const propsData = { document }
-        const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'test.*', regex: true })
-        await flushPromises()
-        expect(wrapper.vm.localSearchOccurrences).toEqual(1)
-      })
-
       it('should not sticky the toolbox by default', async () => {
         const { document } = await mockDocumentContentSlice('')
         const propsData = { document }
@@ -145,7 +135,7 @@ describe('DocumentContent.vue', () => {
         await flushPromises()
         await wrapper.vm.loadContentSlice()
         // Use vm.$set method to set nested value reactivly
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
+        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'full')
         await flushPromises()
       })
 
@@ -166,19 +156,19 @@ describe('DocumentContent.vue', () => {
         expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
 
         wrapper.vm.findNextLocalSearchTerm()
-        await wrapper.vm.$nextTick()
+        await flushPromises()
 
         expect(wrapper.vm.localSearchIndex).toEqual(2)
         expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>')
 
         wrapper.vm.findPreviousLocalSearchTerm()
-        await wrapper.vm.$nextTick()
+        await flushPromises()
 
         expect(wrapper.vm.localSearchIndex).toEqual(1)
         expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
 
         wrapper.vm.findNextLocalSearchTerm()
-        await wrapper.vm.$nextTick()
+        await flushPromises()
 
         expect(wrapper.vm.localSearchIndex).toEqual(2)
         expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>')
@@ -202,7 +192,7 @@ describe('DocumentContent.vue', () => {
 
       it('should be case insensitive', async () => {
         // Use vm.$set method to set nested value reactivly
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
+        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'full')
         await flushPromises()
         expect(wrapper.vm.localSearchOccurrences).toEqual(3)
       })
@@ -269,7 +259,7 @@ describe('DocumentContent.vue', () => {
         const pageSize = 25
         const propsData = { document, pageSize }
         const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'long' })
+        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'long')
         await flushPromises()
         // Load two slices
         await wrapper.vm.loadContentSlice({ offset: 0 })
@@ -294,7 +284,7 @@ describe('DocumentContent.vue', () => {
         const pageSize = 25
         const propsData = { document, pageSize }
         const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'or' })
+        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'or')
         await flushPromises()
         // Load two slices
         await wrapper.vm.loadContentSlice({ offset: 0 })

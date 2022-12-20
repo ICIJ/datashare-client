@@ -109,7 +109,7 @@ export default {
         <mark class="document-global-search-terms-tags__item"
               :class="getTermIndexClass(index, term)"
               :style="getTermIndexBorderColor(index)"
-              @click="$emit('select', term)">
+              @click="$emit('select', term.label)">
           <span class="document-global-search-terms-tags__item__label">
             {{ term.label }}
           </span>

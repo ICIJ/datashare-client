@@ -60,7 +60,7 @@ export default {
       localSearchIndex: 0,
       localSearchIndexes: [],
       localSearchOccurrences: 0,
-      localSearchTerm: { label: this.q },
+      localSearchTerm: this.q,
       rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
       maxOffsetTranslations: { }
     }
@@ -70,7 +70,10 @@ export default {
     // Initial local query, we need to jump to the result
     if (this.q) {
       this.hasStickyToolbox = true
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
+      await this.retrieveTotalOccurrences()
+      await this.cookAllContentSlices()
+      await this.$nextTick()
+      await this.jumpToActiveLocalSearchTerm()
     }
   },
   watch: {
@@ -145,7 +148,7 @@ export default {
         for (const [limit, targetLanguages] of entries(limits)) {
           for (const [targetLanguage, contentSlice] of entries(targetLanguages)) {
             if (offset >= minOffset && offset <= maxOffset) {
-              await this.cookContentSlice({ offset, limit, targetLanguage, ...contentSlice })
+              await this.cookContentSlice({ offset, limit, targetLanguage, ...contentSlice }) // @todo: Promise.all ?
             }
           }
         }
@@ -179,7 +182,7 @@ export default {
     },
     async retrieveTotalOccurrences () {
       try {
-        const query = this.localSearchTerm.label
+        const query = this.localSearchTerm
         const targetLanguage = this.targetLanguage
         const { count, offsets } = await this.$store.dispatch('document/searchOccurrences', { query, targetLanguage })
         this.localSearchIndexes = offsets
@@ -197,7 +200,7 @@ export default {
       }
 
       const offsets = this.localSearchIndexes
-      const term = this.localSearchTerm.label
+      const term = this.localSearchTerm
       return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
     },
     findNextLocalSearchTerm () {
@@ -224,7 +227,7 @@ export default {
       this.clearActiveLocalSearchTerm()
       const activeTermOffset = this.localSearchIndexes[this.localSearchIndex - 1]
       // Load missing content slice (if needed)
-      this.loadContentSliceArround(activeTermOffset)
+      await this.loadContentSliceArround(activeTermOffset)
       // Move to the content slice containing the term
       const activeTermContentSlice = this.findContentSliceIndexArround(activeTermOffset)
       this.scrollToContentSlice(activeTermContentSlice)
@@ -305,7 +308,7 @@ export default {
       ])
     },
     hasLocalSearchTerms () {
-      return this.localSearchTerm.label && this.localSearchTerm.label.length > 0
+      return this.localSearchTerm && this.localSearchTerm.length > 0
     }
   }
 }

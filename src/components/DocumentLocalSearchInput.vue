@@ -18,7 +18,7 @@ export default {
      * @model
      */
     searchTerm: {
-      type: Object
+      type: String
     },
     /**
      * The position of the current occurrence of the term
@@ -69,12 +69,6 @@ export default {
     }
   },
   methods: {
-    start () {
-      /**
-       * User started to search a term
-       */
-      this.$emit('start', this.searchTerm)
-    },
     previous () {
       /**
        * User selected the previous occurrence of the term
@@ -117,14 +111,14 @@ export default {
 </script>
 
 <template>
-  <div class="document-local-search-input form-inline px-3" :class="{ 'document-local-search-input--active': isActive, 'document-local-search-input--pristine': searchTerm.label.length > 0 }">
+  <div class="document-local-search-input form-inline px-3" :class="{ 'document-local-search-input--active': isActive, 'document-local-search-input--pristine': searchTerm.length > 0 }">
     <div class="form-group py-2 mr-2">
       <label class="sr-only">
         {{ $t('document.search') }}
       </label>
       <div class="input-group">
-        <input type="search" :value="searchTerm.label" @input="$emit('input', { label: $event.target.value })" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="getKeys('findInDocument')" @shortkey="getAction('findInDocument')" />
-        <div class="document-local-search-input__count input-group-append w-25" v-if="searchTerm.label.length > 0">
+        <input type="search" :value="searchTerm" @input="$emit('input', $event.target.value)" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="getKeys('findInDocument')" @shortkey="getAction('findInDocument')" />
+        <div class="document-local-search-input__count input-group-append w-25" v-if="searchTerm.length > 0">
           <span v-if="loading" class="input-group-text w-100 text-center d-inline-block">
             <fa icon="circle-notch" spin></fa>
           </span>
@@ -137,10 +131,10 @@ export default {
       </div>
     </div>
     <div class="form-group">
-      <button class="document-local-search-input__previous btn btn-sm p-2" @click="previous" :disabled="searchOccurrences === 0 || searchTerm.label.length === 0">
+      <button class="document-local-search-input__previous btn btn-sm p-2" @click="previous" :disabled="searchOccurrences === 0 || searchTerm.length === 0">
         <fa icon="angle-up"></fa>
       </button>
-      <button class="document-local-search-input__next btn btn-sm p-2" @click="next" :disabled="searchOccurrences === 0 || searchTerm.label.length === 0">
+      <button class="document-local-search-input__next btn btn-sm p-2" @click="next" :disabled="searchOccurrences === 0 || searchTerm.length === 0">
         <fa icon="angle-down"></fa>
       </button>
     </div>
