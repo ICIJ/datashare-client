@@ -143,16 +143,18 @@ export default {
       // Finally, save the
       this.setContentSlice({ ...sliceParams, organicOffset, cookedContent, organicHead, organicTail })
     },
-    async cookAllContentSlices ({ minOffset = 0, maxOffset = this.maxOffset } = {}) {
+    cookAllContentSlices ({ minOffset = 0, maxOffset = this.maxOffset } = {}) {
+      const promises = []
       for (const [offset, limits] of entries(this.contentSlices)) {
         for (const [limit, targetLanguages] of entries(limits)) {
           for (const [targetLanguage, contentSlice] of entries(targetLanguages)) {
             if (offset >= minOffset && offset <= maxOffset) {
-              await this.cookContentSlice({ offset, limit, targetLanguage, ...contentSlice }) // @todo: Promise.all ?
+              promises.push(this.cookContentSlice({ offset, limit, targetLanguage, ...contentSlice }))
             }
           }
         }
       }
+      return Promise.all(promises)
     },
     getContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}, defaultValue = null) {
       // Ensure the limit is not beyond limit
