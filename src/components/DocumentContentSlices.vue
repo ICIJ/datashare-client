@@ -25,6 +25,7 @@
 
 <script>
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+import { hasOverflow, getTranslateValues } from '@/utils/style'
 import DocumentContentSlicePlaceholder from './DocumentContentSlicePlaceholder'
 import DocumentContentSlice from './DocumentContentSlice'
 
@@ -62,6 +63,13 @@ export default {
     scrollBuffer () {
       // Huge buffer to ensure all views are created
       return this.bufferizeAll ? 9e3 * this.slices.length : 300
+    },
+    scrollableContainer () {
+      let container = this.$el.parentElement
+      while (container && !hasOverflow(container)) {
+        container = container?.parentElement
+      }
+      return container || window
     }
   },
   methods: {
@@ -69,7 +77,10 @@ export default {
       this.$emit('placeholder-visible', slice)
     },
     scrollToContentSlice (sliceIndex) {
-      return this.$refs?.scroller?.scrollToItem(sliceIndex)
+      const el = this.$el.querySelectorAll('.vue-recycle-scroller__item-view')[sliceIndex]
+      const { y: top } = getTranslateValues(el)
+      this.scrollableContainer.scrollTo({ top })
+      this.onPlaceholderVisible(this.slices[sliceIndex])
     }
   }
 }

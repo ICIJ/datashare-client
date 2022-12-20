@@ -16,6 +16,13 @@ jest.mock('lodash', () => {
   }
 })
 
+jest.mock('@/utils/style', () => {
+  return {
+    hasOverflow: jest.fn().mockReturnValue(false),
+    getTranslateValues: jest.fn().mockReturnValue({ y: 0, x: 0, z: 0 })
+  }
+})
+
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('DocumentContent.vue', () => {

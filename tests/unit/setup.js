@@ -15,10 +15,4 @@ window.matchMedia = jest.fn().mockImplementation(query => {
   }
 })
 
-window.WebKitCSSMatrix = class {
-  constructor () {
-    return { m41: 0, m42: 0 }
-  }
-}
-
 window.scrollTo = jest.fn()
