@@ -37,7 +37,8 @@ export default {
      * The batch search meta data
      */
     batchSearch: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
