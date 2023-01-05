@@ -166,9 +166,27 @@
           </locales-menu>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
-          <a class="app-sidebar__container__menu__item__link"
+          <a v-if="isBasicAuth"
+            @click="$refs['logout-modal'].show()"
+            class="app-sidebar__container__menu__item__link--basic-auth"
+            :title="$t('menu.logoutModal')"
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
+            <fa icon="sign-out-alt" fixed-width></fa>
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ $t('menu.logoutShort') }}
+            </span>
+            <b-modal
+               hide-footer
+               class="app-sidebar__container__menu__item__link__modal"
+               ref="logout-modal"
+               size="md"
+               :title="$t('menu.logout')">
+              <p> {{ $t('menu.logoutModal') }}</p>
+            </b-modal>
+          </a>
+          <a v-else class="app-sidebar__container__menu__item__link"
              :href="logoutLink"
-             title="Logout"
+             :title="$t('menu.logout')"
              v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -216,6 +234,11 @@ export default {
     VersionNumber,
     VuePerfectScrollbar
   },
+  data () {
+    return {
+      showLogoutModal: false
+    }
+  },
   computed: {
     query () {
       return this.$store.getters['search/toRouteQueryWithStamp']()
@@ -239,6 +262,9 @@ export default {
       set (toggle) {
         return this.$store.dispatch('app/toggleSidebar', toggle)
       }
+    },
+    isBasicAuth () {
+      return this.$config && this.$config.get('authFilter') === 'org.icij.datashare.session.BasicAuthAdaptorFilter'
     }
   },
   watch: {

@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 
 import AppSidebar from '@/components/AppSidebar'
 import { Core } from '@/core'
@@ -12,11 +12,18 @@ jest.mock('@/utils/utils', () => {
 })
 
 describe('AppSidebar.vue', () => {
-  const { config, i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
+  const mockApi = { getVersion: jest.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } }) }
+
+  const { config, i18n, localVue, router, store } = Core.init(createLocalVue(), mockApi).useAll()
   let wrapper = null
 
   function setServerMode () {
     config.merge({ mode: 'SERVER' })
+    return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
+  }
+
+  function setBasicAuthFilter () {
+    config.merge({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter', mode: 'SERVER' })
     return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   }
 
@@ -47,6 +54,27 @@ describe('AppSidebar.vue', () => {
     it('should be displayed if in SERVER mode', () => {
       wrapper = setServerMode()
       expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeTruthy()
+    })
+
+    describe('in basic auth', () => {
+      it('should be displayed if using BASIC AUTH authFilter', () => {
+        wrapper = setBasicAuthFilter()
+        expect(wrapper.vm.isServer).toBeTruthy()
+        expect(wrapper.vm.isBasicAuth).toBeTruthy()
+        const element = wrapper.find('.app-sidebar__container__menu__item__link--basic-auth')
+        expect(element.exists()).toBe(true)
+      })
+      it('should be show the modal on click', async () => {
+        config.merge({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter', mode: 'SERVER' })
+        wrapper = mount(AppSidebar, { config, i18n, localVue, router, store })
+
+        const element = wrapper.find('.app-sidebar__container__menu__item__link--basic-auth')
+        const modal = wrapper.find('.app-sidebar__container__menu__item__link__modal')
+        expect(modal.exists()).toBe(false)
+        await element.trigger('click')
+        const modalVisible = wrapper.find('.app-sidebar__container__menu__item__link__modal')
+        expect(modalVisible.exists()).toBe(false)
+      })
     })
   })
 

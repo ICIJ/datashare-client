@@ -554,6 +554,7 @@
     "settingsShort": "Settings",
     "logout": "Logout",
     "logoutShort": "Logout",
+    "logoutModal": "This session will remain open until you close this browser or clear your browser's site data. Until then you won't be logged out.",
     "addDocuments": "How to add documents",
     "faq": "FAQ",
     "faqShort": "FAQ",
