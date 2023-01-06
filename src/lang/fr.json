@@ -553,6 +553,7 @@
     "settingsShort": "Réglages",
     "logout": "Déconnexion",
     "logoutShort": "Se déconnecter",
+    "logoutModal": "This session will remain open until you close this browser or clear your browser's site data. Until then you won't be logged out.",
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
     "faqShort": "FAQ",
