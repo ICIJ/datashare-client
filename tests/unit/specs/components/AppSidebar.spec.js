@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import AppSidebar from '@/components/AppSidebar'
 import { Core } from '@/core'
@@ -26,7 +26,6 @@ describe('AppSidebar.vue', () => {
     config.merge({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter', mode: 'SERVER' })
     return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   }
-
   beforeEach(() => {
     getOS.mockReset()
     config.merge({ mode: 'LOCAL' })
@@ -64,16 +63,18 @@ describe('AppSidebar.vue', () => {
         const element = wrapper.find('.app-sidebar__container__menu__item__link--basic-auth')
         expect(element.exists()).toBe(true)
       })
-      it('should be show the modal on click', async () => {
-        config.merge({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter', mode: 'SERVER' })
-        wrapper = mount(AppSidebar, { config, i18n, localVue, router, store })
 
-        const element = wrapper.find('.app-sidebar__container__menu__item__link--basic-auth')
-        const modal = wrapper.find('.app-sidebar__container__menu__item__link__modal')
-        expect(modal.exists()).toBe(false)
-        await element.trigger('click')
-        const modalVisible = wrapper.find('.app-sidebar__container__menu__item__link__modal')
-        expect(modalVisible.exists()).toBe(false)
+      describe('when clicking on the logout link', () => {
+        beforeEach(() => {
+          wrapper = setBasicAuthFilter()
+        })
+        it('should call showModal', async () => {
+          wrapper.vm.showModal = jest.fn()
+          jest.spyOn(wrapper.vm, 'showModal')
+          expect(wrapper.vm.showModal).toHaveBeenCalledTimes(0)
+          wrapper.find('.app-sidebar__container__menu__item__link--basic-auth').trigger('click')
+          expect(wrapper.vm.showModal).toHaveBeenCalledTimes(1)
+        })
       })
     })
   })

@@ -167,9 +167,9 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
           <a v-if="isBasicAuth"
-            @click="$refs['logout-modal'].show()"
+            @click.prevent="showModal"
             class="app-sidebar__container__menu__item__link--basic-auth"
-            :title="$t('menu.logoutModal')"
+            :title="$t('menu.logout')"
             v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -284,6 +284,9 @@ export default {
       const width = `${this.$el.offsetWidth}px`
       // Save component width in a CSS variable after it's been update
       this.$root.$el.style.setProperty('--core-sidebar-width', width)
+    },
+    async showModal () {
+      this.$refs['logout-modal'].show()
     }
   }
 }
