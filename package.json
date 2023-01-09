@@ -12,7 +12,7 @@
     "test:unit": "vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=2",
     "test:unit:watch": "vue-cli-service test:unit --testPathPattern=/unit/ --watch",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "eslint --ext .js,.vue src",
+    "lint": "eslint --ext .js,.vue .",
     "lint:fix": "yarn lint --fix",
     "test": "yarn test:unit && yarn test:e2e",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:components && yarn doc:components:toc && yarn doc:widgets",
