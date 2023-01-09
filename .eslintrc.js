@@ -3,7 +3,7 @@ module.exports = {
     jest: true,
     node: true
   },
-  extends: ['plugin:vue/strongly-recommended', 'standard', 'plugin:vue/essential', '@vue/standard', 'prettier'],
+  extends: ['plugin:vue/strongly-recommended', 'standard', 'prettier'],
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'error',
@@ -13,8 +13,5 @@ module.exports = {
     'template-curly-spacing': 'off',
     'vue/custom-event-name-casing': 'off',
     'import/no-extraneous-dependencies': 'off'
-  },
-  parserOptions: {
-    parser: 'babel-eslint'
   }
 }
