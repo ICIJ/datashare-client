@@ -7,7 +7,7 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-jest.mock('lodash/throttle', () => jest.fn(fn => fn))
+jest.mock('lodash/throttle', () => jest.fn((fn) => fn))
 
 describe('BatchSearchForm.vue', () => {
   const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
@@ -16,7 +16,12 @@ describe('BatchSearchForm.vue', () => {
 
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
-  const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFilter: jest.fn() } } } })
+  const store = new Vuex.Store({
+    modules: {
+      batchSearch: { namespaced: true, state, actions },
+      search: { namespaced: true, actions: { queryFilter: jest.fn() } }
+    }
+  })
   let wrapper = null
 
   beforeAll(() => Murmur.config.merge({ groups_by_applications: { datashare: [project] }, dataDir: '/root/project' }))
@@ -104,7 +109,11 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter fileTypes according to the fileTypes input on mime file', () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [{ label: 'Visio document', mime: 'visio' }, { label: 'StarWriter 5 document', mime: 'vision' }, { label: 'Something else', mime: 'else' }])
+      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [
+        { label: 'Visio document', mime: 'visio' },
+        { label: 'StarWriter 5 document', mime: 'vision' },
+        { label: 'Something else', mime: 'else' }
+      ])
       wrapper.vm.$set(wrapper.vm, 'fileType', 'visi')
 
       wrapper.vm.searchFileTypes()
@@ -115,7 +124,10 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter according to the fileTypes input on label file', () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [{ label: 'Label PDF', mime: 'PDF' }, { label: 'another type', mime: 'other' }])
+      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [
+        { label: 'Label PDF', mime: 'PDF' },
+        { label: 'another type', mime: 'other' }
+      ])
       wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
 
       wrapper.vm.searchFileTypes()
@@ -139,7 +151,10 @@ describe('BatchSearchForm.vue', () => {
       wrapper.vm.$set(wrapper.vm, 'selectedFileType', { label: 'StarWriter 5 document' })
       wrapper.vm.searchFileType()
 
-      expect(wrapper.vm.fileTypes).toEqual([{ label: 'Excel 2003 XML spreadsheet visio' }, { label: 'StarWriter 5 document' }])
+      expect(wrapper.vm.fileTypes).toEqual([
+        { label: 'Excel 2003 XML spreadsheet visio' },
+        { label: 'StarWriter 5 document' }
+      ])
     })
   })
 
@@ -244,11 +259,13 @@ describe('BatchSearchForm.vue', () => {
 
       await wrapper.vm.retrieveFileTypes()
 
-      expect(wrapper.vm.allFileTypes).toEqual([{
-        extensions: ['.pdf'],
-        label: 'Portable Document Format (PDF)',
-        mime: 'application/pdf'
-      }])
+      expect(wrapper.vm.allFileTypes).toEqual([
+        {
+          extensions: ['.pdf'],
+          label: 'Portable Document Format (PDF)',
+          mime: 'application/pdf'
+        }
+      ])
     })
 
     it('should return content type itself if content type description does NOT exist', async () => {
@@ -256,11 +273,13 @@ describe('BatchSearchForm.vue', () => {
 
       await wrapper.vm.retrieveFileTypes()
 
-      expect(wrapper.vm.allFileTypes).toEqual([{
-        extensions: [],
-        label: 'application/test',
-        mime: 'application/test'
-      }])
+      expect(wrapper.vm.allFileTypes).toEqual([
+        {
+          extensions: [],
+          label: 'application/test',
+          mime: 'application/test'
+        }
+      ])
     })
   })
 

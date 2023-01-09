@@ -108,8 +108,8 @@ export default {
       <li v-for="(term, index) in sortedTerms" :key="index" class="list-inline-item">
         <mark
           class="document-global-search-terms-tags__item"
-          :class="getTermIndexClass(index, term)"
-          :style="getTermIndexBorderColor(index)"
+          :class="getTermIndexClass(i, term)"
+          :style="getTermIndexBorderColor(i)"
           @click="$emit('select', term.label)"
         >
           <span class="document-global-search-terms-tags__item__label">
