@@ -4,7 +4,11 @@ import bodybuilder from 'bodybuilder'
 describe('FilterNamedEntity.js', () => {
   it('should filter on existing category', () => {
     const filter = new FilterNamedEntity({})
-    const q = filter.queryBuilder(bodybuilder(), { name: 'namedEntityLocation', reverse: false, values: ['luxembourg'] }, 'query')
+    const q = filter.queryBuilder(
+      bodybuilder(),
+      { name: 'namedEntityLocation', reverse: false, values: ['luxembourg'] },
+      'query'
+    )
     expect(JSON.stringify(q.build())).toContain('{"query_string":{"default_field":"category","query":"LOCATION"}}')
   })
 

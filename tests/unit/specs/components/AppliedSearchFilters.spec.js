@@ -98,7 +98,7 @@ describe('AppliedSearchFilters.vue', () => {
 
   describe('deletes applied filters', () => {
     beforeEach(() => {
-      wrapper = mount(AppliedSearchFilters, { localVue, router, store, mocks: { $t: msg => msg } })
+      wrapper = mount(AppliedSearchFilters, { localVue, router, store, mocks: { $t: (msg) => msg } })
     })
 
     it('should remove the "AND" on last applied filter deletion', async () => {

@@ -12,10 +12,7 @@ import { Api } from '@/api'
 FilterStarred.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterStarred.vue', () => {
-  const {
-    index,
-    es
-  } = esConnectionHelper.build()
+  const { index, es } = esConnectionHelper.build()
   let filter, mockAxios, api, store, i18n, localVue, router, wait
   let wrapper
 
@@ -64,8 +61,12 @@ describe('FilterStarred.vue', () => {
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
 
     expect(wrapper.findAll('.filter__items__item .custom-control-label .filter__items__item__label')).toHaveLength(2)
-    expect(wrapper.findAll('.filter__items__item').at(0).find('.custom-control-label .filter__items__item__label').text()).toBe('Starred')
-    expect(wrapper.findAll('.filter__items__item').at(1).find('.custom-control-label .filter__items__item__label').text()).toBe('Not starred')
+    expect(
+      wrapper.findAll('.filter__items__item').at(0).find('.custom-control-label .filter__items__item__label').text()
+    ).toBe('Starred')
+    expect(
+      wrapper.findAll('.filter__items__item').at(1).find('.custom-control-label .filter__items__item__label').text()
+    ).toBe('Not starred')
   })
 
   it('should change the selected value', async () => {
@@ -91,15 +92,19 @@ describe('FilterStarred.vue', () => {
 
   it('should fetch the starred documents', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
-    store.commit('starred/documents', [{
-      index,
-      id: 'document'
-    }])
+    store.commit('starred/documents', [
+      {
+        index,
+        id: 'document'
+      }
+    ])
     await flushPromises()
-    expect(wrapper.vm.starredDocuments).toEqual([{
-      index,
-      id: 'document'
-    }])
+    expect(wrapper.vm.starredDocuments).toEqual([
+      {
+        index,
+        id: 'document'
+      }
+    ])
   })
 
   it('should display the results count', async () => {

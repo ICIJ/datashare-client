@@ -53,10 +53,12 @@ describe('DocumentActions.vue', () => {
 
     await wrapper.vm.toggleStarDocument()
 
-    expect(wrapper.vm.starredDocuments).toEqual([{
-      id: document.id,
-      index: document.index
-    }])
+    expect(wrapper.vm.starredDocuments).toEqual([
+      {
+        id: document.id,
+        index: document.index
+      }
+    ])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
 
@@ -64,10 +66,12 @@ describe('DocumentActions.vue', () => {
     store.commit('starred/pushDocument', document)
     await flushPromises()
 
-    expect(wrapper.vm.starredDocuments).toEqual([{
-      id: document.id,
-      index: document.index
-    }])
+    expect(wrapper.vm.starredDocuments).toEqual([
+      {
+        id: document.id,
+        index: document.index
+      }
+    ])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
 
     await wrapper.vm.toggleStarDocument()
@@ -122,8 +126,9 @@ describe('DocumentActions.vue', () => {
 
   it('should display "Download parent" button if document has a parent', async () => {
     await letData(es).have(new IndexedDocument('parent_document', project)).commit()
-    const indexedDocument = await letData(es).have(new IndexedDocument('another_document', project)
-      .withParent('parent_document').withRoot('parent_document')).commit()
+    const indexedDocument = await letData(es)
+      .have(new IndexedDocument('another_document', project).withParent('parent_document').withRoot('parent_document'))
+      .commit()
     document = indexedDocument.document
     wrapper = shallowMount(DocumentActions, {
       i18n,

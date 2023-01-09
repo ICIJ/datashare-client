@@ -28,16 +28,18 @@ describe('BatchSearchFilterQuery.vue', () => {
     let router = null
     beforeEach(() => {
       router = new VueRouter({
-        routes: [{
-          name: 'batch-search', path: 'batch-search'
-        }],
+        routes: [
+          {
+            name: 'batch-search',
+            path: 'batch-search'
+          }
+        ],
         mode: 'abstract'
       })
     })
 
     it('search updated on filterByQuery', async () => {
-      const wrapper = shallowMount(BatchSearchFilterQuery,
-        { i18n, localVue, router })
+      const wrapper = shallowMount(BatchSearchFilterQuery, { i18n, localVue, router })
       expect(wrapper.vm.search).toBe('')
       await wrapper.setData({ search: 'test' })
       await wrapper.vm.filterByQuery()
@@ -46,8 +48,7 @@ describe('BatchSearchFilterQuery.vue', () => {
     })
 
     it('field updated on filterByQuery', async () => {
-      const wrapper = shallowMount(BatchSearchFilterQuery,
-        { i18n, localVue, router })
+      const wrapper = shallowMount(BatchSearchFilterQuery, { i18n, localVue, router })
       expect(wrapper.vm.search).toBe('')
       await wrapper.setData({ field: 'name' })
       await wrapper.vm.filterByQuery()
@@ -56,8 +57,7 @@ describe('BatchSearchFilterQuery.vue', () => {
     })
 
     it('field and search updated on filterByQuery', async () => {
-      const wrapper = shallowMount(BatchSearchFilterQuery,
-        { i18n, localVue, router })
+      const wrapper = shallowMount(BatchSearchFilterQuery, { i18n, localVue, router })
       expect(wrapper.vm.search).toBe('')
       await wrapper.setData({ search: 'test', field: 'name' })
       await wrapper.vm.filterByQuery()

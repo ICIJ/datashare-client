@@ -5,7 +5,7 @@ describe('store', () => {
     expect(store).toBeInstanceOf(Object)
   })
 
-  it('shouldn\'t be in strict mode', () => {
+  it("shouldn't be in strict mode", () => {
     expect(store.strict).toBeFalsy()
   })
 

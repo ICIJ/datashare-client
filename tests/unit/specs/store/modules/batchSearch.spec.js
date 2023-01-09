@@ -31,9 +31,11 @@ describe('BatchSearchStore', () => {
       await store.dispatch('batchSearch/getBatchSearch', 12)
 
       expect(mockAxiosApi.request).toBeCalledTimes(1)
-      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/batch/search/12')
-      }))
+      expect(mockAxiosApi.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/batch/search/12')
+        })
+      )
       expect(store.state.batchSearch.batchSearch.name).toBe('This is my batchSearch')
 
       mockAxiosApi.request.mockReturnValue({ data: {} })
@@ -63,28 +65,54 @@ describe('BatchSearchStore', () => {
       expect(store.getters['batchSearch/queryKeys']).toEqual([
         { label: 'query1', count: 0 },
         { label: 'query2', count: 2 },
-        { label: 'query3', count: 1 }])
+        { label: 'query3', count: 1 }
+      ])
     })
 
     it('should retrieve all the batchSearches', async () => {
-      mockAxiosApi.request.mockResolvedValue({ data: { items: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'], total: 3 } })
-      const data = { from: 0, size: 10, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: [], project: [], state: [], publishState: null }
+      mockAxiosApi.request.mockResolvedValue({
+        data: { items: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'], total: 3 }
+      })
+      const data = {
+        from: 0,
+        size: 10,
+        sort: 'batch_date',
+        order: 'asc',
+        query: '*',
+        field: 'all',
+        batchDate: [],
+        project: [],
+        state: [],
+        publishState: null
+      }
 
       await store.dispatch('batchSearch/getBatchSearches', data)
 
       expect(mockAxiosApi.request).toBeCalledTimes(1)
-      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-        data,
-        method: 'POST',
-        url: Api.getFullUrl('/api/batch/search')
-      }))
+      expect(mockAxiosApi.request).toBeCalledWith(
+        expect.objectContaining({
+          data,
+          method: 'POST',
+          url: Api.getFullUrl('/api/batch/search')
+        })
+      )
       expect(store.state.batchSearch.batchSearches).toHaveLength(3)
 
       mockAxiosApi.request.mockResolvedValue({ data: {} })
     })
 
     it('should submit the new batchSearch form with complete information', async () => {
-      await store.dispatch('batchSearch/onSubmit', { name: 'name', csvFile: 'csvFile', description: 'description', projects: ['project1', 'project2'], phraseMatch: false, fuzziness: 2, fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }], paths: ['/a/path/to/home', '/another/path'], published: false })
+      await store.dispatch('batchSearch/onSubmit', {
+        name: 'name',
+        csvFile: 'csvFile',
+        description: 'description',
+        projects: ['project1', 'project2'],
+        phraseMatch: false,
+        fuzziness: 2,
+        fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }],
+        paths: ['/a/path/to/home', '/another/path'],
+        published: false
+      })
 
       const data = new FormData()
       data.append('name', 'name')
@@ -100,16 +128,31 @@ describe('BatchSearchStore', () => {
       data.append('paths', '/another/path')
       data.append('published', false)
       expect(mockAxiosApi.request).toBeCalledTimes(2)
-      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-        data,
-        method: 'POST',
-        url: Api.getFullUrl('/api/batch/search/project1,project2')
-      }))
-      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-        data: { from: 0, size: 100, sort: 'batch_date', order: 'asc', query: '*', field: 'all', batchDate: null, project: [], state: [], publishState: null },
-        method: 'POST',
-        url: Api.getFullUrl('/api/batch/search')
-      }))
+      expect(mockAxiosApi.request).toBeCalledWith(
+        expect.objectContaining({
+          data,
+          method: 'POST',
+          url: Api.getFullUrl('/api/batch/search/project1,project2')
+        })
+      )
+      expect(mockAxiosApi.request).toBeCalledWith(
+        expect.objectContaining({
+          data: {
+            from: 0,
+            size: 100,
+            sort: 'batch_date',
+            order: 'asc',
+            query: '*',
+            field: 'all',
+            batchDate: null,
+            project: [],
+            state: [],
+            publishState: null
+          },
+          method: 'POST',
+          url: Api.getFullUrl('/api/batch/search')
+        })
+      )
     })
 
     it('should retrieve a batchSearch results according to its id', async () => {
@@ -118,10 +161,12 @@ describe('BatchSearchStore', () => {
       await store.dispatch('batchSearch/getBatchSearchResults', { batchId: 12 })
 
       expect(mockAxiosApi.request).toBeCalledTimes(1)
-      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/batch/search/result/12'),
-        method: 'POST'
-      }))
+      expect(mockAxiosApi.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/batch/search/result/12'),
+          method: 'POST'
+        })
+      )
       expect(store.state.batchSearch.results).toHaveLength(1)
       expect(store.state.batchSearch.results[0].documentId).toBe(12)
       expect(store.state.batchSearch.results[0].rootId).toBe(42)
@@ -131,15 +176,21 @@ describe('BatchSearchStore', () => {
     })
 
     it('should delete a specific batchSearch', async () => {
-      store.state.batchSearch.batchSearches = [{ uuid: 'batchSearch_01' }, { uuid: 'batchSearch_02' }, { uuid: 'batchSearch_03' }]
+      store.state.batchSearch.batchSearches = [
+        { uuid: 'batchSearch_01' },
+        { uuid: 'batchSearch_02' },
+        { uuid: 'batchSearch_03' }
+      ]
 
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
 
       expect(mockAxiosApi.request).toBeCalledTimes(1)
-      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/batch/search/batchSearch_01'),
-        method: 'DELETE'
-      }))
+      expect(mockAxiosApi.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/batch/search/batchSearch_01'),
+          method: 'DELETE'
+        })
+      )
       expect(store.state.batchSearch.batchSearches).toEqual([{ uuid: 'batchSearch_02' }, { uuid: 'batchSearch_03' }])
     })
 
@@ -149,10 +200,12 @@ describe('BatchSearchStore', () => {
       await store.dispatch('batchSearch/deleteBatchSearches')
 
       expect(mockAxiosApi.request).toBeCalledTimes(1)
-      expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/batch/search'),
-        method: 'DELETE'
-      }))
+      expect(mockAxiosApi.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/batch/search'),
+          method: 'DELETE'
+        })
+      )
       expect(store.state.batchSearch.batchSearches).toEqual([])
     })
   })

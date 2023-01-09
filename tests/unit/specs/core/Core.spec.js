@@ -73,11 +73,15 @@ describe('Core', () => {
     expect(vm).toBeInstanceOf(Vue)
   })
 
-  it('should call a global event "datashare:ready" after the core is configured', done => {
-    document.addEventListener('datashare:ready', ({ detail }) => {
-      expect(Core.isInstanceOfCore(detail.core)).toBe(true)
-      done()
-    }, { once: true })
+  it('should call a global event "datashare:ready" after the core is configured', (done) => {
+    document.addEventListener(
+      'datashare:ready',
+      ({ detail }) => {
+        expect(Core.isInstanceOfCore(detail.core)).toBe(true)
+        done()
+      },
+      { once: true }
+    )
     // Create and configure the core
     Core.init(localVue, api).useAll().configure()
   })
@@ -97,9 +101,11 @@ describe('Core', () => {
     await core.configure()
 
     expect(mockAxios.request).toBeCalledTimes(4)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/project/isDownloadAllowed/${project}`)
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl(`/api/project/isDownloadAllowed/${project}`)
+      })
+    )
   })
 
   it('should install the internal `VueCore` plugin', () => {
@@ -122,7 +128,7 @@ describe('Core', () => {
     expect(core.getDefaultProject()).toEqual('my_project')
   })
 
-  it('should return first user project when user doesn\'t have the default project', () => {
+  it("should return first user project when user doesn't have the default project", () => {
     const core = Core.init(localVue).useAll()
     core.config.set('groups_by_applications.datashare', ['user_project'])
     core.config.set('defaultProject', 'default_project')

@@ -12,17 +12,19 @@ jest.mock('@/utils/utils', () => {
 })
 
 describe('AppSidebar.vue', () => {
-  const mockApi = { getVersion: jest.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } }) }
+  const mockApi = {
+    getVersion: jest.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } })
+  }
 
   const { config, i18n, localVue, router, store } = Core.init(createLocalVue(), mockApi).useAll()
   let wrapper = null
 
-  function setServerMode () {
+  function setServerMode() {
     config.merge({ mode: 'SERVER' })
     return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   }
 
-  function setBasicAuthFilter () {
+  function setBasicAuthFilter() {
     config.merge({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter', mode: 'SERVER' })
     return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   }
@@ -36,12 +38,16 @@ describe('AppSidebar.vue', () => {
 
   describe('the help link', () => {
     it('should be a github link if NOT in SERVER mode', () => {
-      expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(expect.stringContaining('github.com'))
+      expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(
+        expect.stringContaining('github.com')
+      )
     })
 
     it('should be another github link if in SERVER mode', () => {
       wrapper = setServerMode()
-      expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toBe('https://github.com/ICIJ/datashare/wiki/Datashare-Support')
+      expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toBe(
+        'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
+      )
     })
   })
 

@@ -260,8 +260,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 2 documents', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(4)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.hits).toHaveLength(2)
@@ -269,8 +270,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 3 documents', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(4)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(3)
@@ -278,8 +280,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 1 document (1/3)', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(4)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(1)
@@ -292,8 +295,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 5 documents in total', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(5)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(5))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.total).toBe(5)
@@ -301,8 +305,13 @@ describe('SearchStore', () => {
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']())
-      .toMatchObject({ field: 'all', indices: project, q: '', size: 25, from: 0 })
+    expect(store.getters['search/toRouteQuery']()).toMatchObject({
+      field: 'all',
+      indices: project,
+      q: '',
+      size: 25,
+      from: 0
+    })
   })
 
   it('should return an advanced and filtered query parameters', () => {
@@ -312,8 +321,14 @@ describe('SearchStore', () => {
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
 
-    expect(store.getters['search/toRouteQuery']())
-      .toMatchObject({ indices: project, q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
+    expect(store.getters['search/toRouteQuery']()).toMatchObject({
+      indices: project,
+      q: 'datashare',
+      from: 0,
+      size: 12,
+      sort: 'randomOrder',
+      'f[contentType]': ['TXT']
+    })
 
     store.commit('search/size', 25)
   })
@@ -389,7 +404,7 @@ describe('SearchStore', () => {
     })
   })
 
-  it('should not delete the term from the query if it doesn\'t exist', async () => {
+  it("should not delete the term from the query if it doesn't exist", async () => {
     store.commit('search/query', '*')
     await store.dispatch('search/deleteQueryTerm', 'term')
 
@@ -454,138 +469,137 @@ describe('SearchStore', () => {
     it('should retrieve 1 applied filter', () => {
       store.commit('search/query', 'term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term_01', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false }
+      ])
     })
 
     it('should retrieve 2 applied filters', () => {
       store.commit('search/query', 'term_01 term_02')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false }
+      ])
     })
 
     it('should retrieve 3 applied filters', () => {
       store.commit('search/query', 'term_01 term_02 term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: false, regex: false }
+      ])
     })
 
     it('should merge 2 identical terms', () => {
       store.commit('search/query', 'term_01 term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term_01', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false }
+      ])
     })
 
     it('should filter on boolean operators "AND" and "OR"', () => {
       store.commit('search/query', 'term_01 AND term_02 OR term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: false, regex: false }
+      ])
     })
 
     it('should not split an exact search sentence', () => {
       store.commit('search/query', 'term_01 "and an exact term" term_02')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'and an exact term', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'and an exact term', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false }
+      ])
     })
 
     it('should display field name', () => {
       store.commit('search/query', 'field_name:term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: 'field_name', label: 'term_01', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: 'field_name', label: 'term_01', negation: false, regex: false }
+      ])
     })
 
     it('should return a negation parameter according to the prefix', () => {
       store.commit('search/query', '-term_01 +term_02 !term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: true, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: true, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false }
+      ])
     })
 
     it('should return a negation parameter if query starts by "NOT"', () => {
       store.commit('search/query', 'NOT term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term_01', negation: true, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: true, regex: false }
+      ])
     })
 
     it('should return a negation parameter if query contains "AND NOT" or "OR NOT"', () => {
       store.commit('search/query', 'term_01 AND NOT term_02 NOT term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: true, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: true, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false }
+      ])
     })
 
     it('should remove escaped slash', () => {
       store.commit('search/query', 'term\\:other')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term:other', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term:other', negation: false, regex: false }
+      ])
     })
 
     it('should grab terms between brackets', () => {
       store.commit('search/query', 'term_01 (term_02 AND -term_03) term_04')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false },
-          { field: '', label: 'term_04', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false },
+        { field: '', label: 'term_04', negation: false, regex: false }
+      ])
     })
 
     it('should apply the negation only to the second group', () => {
       store.commit('search/query', '(term_01 term_02) NOT term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false }
+      ])
     })
 
     it('should detect regex and return it as true', () => {
       store.commit('search/query', '/test and.*/')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'test and.*', negation: false, regex: true }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'test and.*', negation: false, regex: true }
+      ])
     })
 
     it('should replace escaped arobase in regex', () => {
       store.commit('search/query', '/.*\\@.*/')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: '.*@.*', negation: false, regex: true }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: '.*@.*', negation: false, regex: true }
+      ])
     })
   })
 
@@ -678,8 +692,12 @@ describe('SearchStore', () => {
   })
 
   it('should find document on querying the NamedEntity with a complex query', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project).withContent('test of ner_01').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02', project).withContent('test of ner_02').withNer('ner_02')).commit()
+    await letData(es)
+      .have(new IndexedDocument('doc_01', project).withContent('test of ner_01').withNer('ner_01'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('doc_02', project).withContent('test of ner_02').withNer('ner_02'))
+      .commit()
     await letData(es).have(new IndexedDocument('doc_03', project).withContent('no content').withNer('test')).commit()
 
     await store.dispatch('search/query', '(test AND ner_*) OR test')

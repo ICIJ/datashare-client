@@ -31,16 +31,18 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
-      method: 'POST',
-      data: {
-        options: {
-          ocr: false,
-          filter: true
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        method: 'POST',
+        data: {
+          options: {
+            ocr: false,
+            filter: true
+          }
         }
-      }
-    }))
+      })
+    )
   })
 
   it('should call extract action with OCR option and language', () => {
@@ -49,18 +51,20 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
-      method: 'POST',
-      data: {
-        options: {
-          ocr: true,
-          filter: true,
-          language: 'fra',
-          ocrLanguage: 'fra'
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        method: 'POST',
+        data: {
+          options: {
+            ocr: true,
+            filter: true,
+            language: 'fra',
+            ocrLanguage: 'fra'
+          }
         }
-      }
-    }))
+      })
+    )
   })
 
   it('should reset the modal params on submitting the form', async () => {

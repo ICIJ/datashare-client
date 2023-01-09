@@ -76,29 +76,29 @@ describe('SearchBar.vue', function () {
   describe('search suggestions', () => {
     it('should retrieve suggestions in NamedEntities and tags for default search', async () => {
       wrapper = shallowMountFactory()
-      await letData(es).have(new IndexedDocument('document', project)
-        .withNer('ne_01')
-        .withTags(['ne_tag'])
-      ).commit()
+      await letData(es)
+        .have(new IndexedDocument('document', project).withNer('ne_01').withTags(['ne_tag']))
+        .commit()
 
       const suggestions = await wrapper.vm.suggestTerms([{ field: '<implicit>', term: 'ne_' }])
 
-      expect(suggestions.suggestions).toEqual([{ key: 'ne_01', doc_count: 1 }, { key: 'ne_tag', doc_count: 1 }])
+      expect(suggestions.suggestions).toEqual([
+        { key: 'ne_01', doc_count: 1 },
+        { key: 'ne_tag', doc_count: 1 }
+      ])
     })
 
     it('should order suggestions by doc_count descending', async () => {
       wrapper = shallowMountFactory()
-      await letData(es).have(new IndexedDocument('document_01', project)
-        .withNer('ne_01')
-        .withNer('ne_02')
-      ).commit()
-      await letData(es).have(new IndexedDocument('document_02', project)
-        .withNer('ne_02')
-      ).commit()
+      await letData(es).have(new IndexedDocument('document_01', project).withNer('ne_01').withNer('ne_02')).commit()
+      await letData(es).have(new IndexedDocument('document_02', project).withNer('ne_02')).commit()
 
       const suggestions = await wrapper.vm.suggestTerms([{ field: '<implicit>', term: 'ne_' }])
 
-      expect(suggestions.suggestions).toEqual([{ key: 'ne_02', doc_count: 2 }, { key: 'ne_01', doc_count: 1 }])
+      expect(suggestions.suggestions).toEqual([
+        { key: 'ne_02', doc_count: 2 },
+        { key: 'ne_01', doc_count: 1 }
+      ])
     })
   })
 })

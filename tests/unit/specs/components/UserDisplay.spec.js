@@ -4,7 +4,7 @@ import UserDisplay from '@/components/UserDisplay'
 import { Core } from '@/core'
 
 describe('UserDisplay.vue', () => {
-  const flushPromises = () => new Promise(resolve => setImmediate(resolve))
+  const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
   let wrapper = null
   let api, i18n, localVue, store, wait
 
@@ -48,7 +48,7 @@ describe('UserDisplay.vue', () => {
     store.commit('pipelines/register', {
       name: 'username-to-uppercase',
       category: wrapper.vm.usernamePipeline,
-      type: username => username.toUpperCase()
+      type: (username) => username.toUpperCase()
     })
     await flushPromises()
     expect(wrapper.find('.user-display__username').text()).toBe('FOO')

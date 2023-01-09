@@ -1,4 +1,3 @@
-
 import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 
@@ -48,7 +47,10 @@ describe('DocumentNotesStore', () => {
       ]
     })
 
-    const notes = await store.dispatch('documentNotes/filterNotesByPath', { project, path: '/this/is/a/path/to/document.txt' })
+    const notes = await store.dispatch('documentNotes/filterNotesByPath', {
+      project,
+      path: '/this/is/a/path/to/document.txt'
+    })
 
     expect(notes).toHaveLength(3)
   })

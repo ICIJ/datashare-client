@@ -52,10 +52,12 @@ describe('Api.vue', () => {
     await flushPromises()
 
     expect(mockAxios.request).toBeCalledTimes(3)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/key/doe'),
-      method: 'PUT'
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/key/doe'),
+        method: 'PUT'
+      })
+    )
   })
 
   it('should delete the apiKey', async () => {

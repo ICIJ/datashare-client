@@ -4,7 +4,7 @@ import elasticsearch from 'elasticsearch-browser'
 import esMapping from './datashare_index_mappings.json'
 import esSettings from './datashare_index_settings.json'
 
-function slugger (value) {
+function slugger(value) {
   return value
     .toLowerCase()
     .trim()
@@ -12,14 +12,14 @@ function slugger (value) {
     .replace(/\s/g, '-')
 }
 
-function esConnectionHelper (indexOrIndices = []) {
+function esConnectionHelper(indexOrIndices = []) {
   jest.setTimeout(1e4)
   const indices = castArray(indexOrIndices)
 
   beforeAll(async () => {
     await Promise.all(
-      map(indices, async index => {
-        if (!await es.indices.exists({ index })) {
+      map(indices, async (index) => {
+        if (!(await es.indices.exists({ index }))) {
           await es.indices.create({ index, body: { settings: esSettings, mappings: esMapping } })
         }
       })
@@ -27,7 +27,12 @@ function esConnectionHelper (indexOrIndices = []) {
   })
 
   beforeEach(async () => {
-    await es.deleteByQuery({ index: join(indices), conflicts: 'proceed', refresh: true, body: { query: { match_all: {} } } })
+    await es.deleteByQuery({
+      index: join(indices),
+      conflicts: 'proceed',
+      refresh: true,
+      body: { query: { match_all: {} } }
+    })
     // Easy Tiger! Elasticsearch can hardly follow
     await setTimeout(noop, 5000)
   })
@@ -39,7 +44,7 @@ function esConnectionHelper (indexOrIndices = []) {
   return indices
 }
 
-function build (prefix = 'spec') {
+function build(prefix = 'spec') {
   const randomKey = Math.random().toString(36).slice(2)
   const randomIndex = [prefix, randomKey, uniqueId()].map(slugger).join('-')
   const [index] = esConnectionHelper(randomIndex)

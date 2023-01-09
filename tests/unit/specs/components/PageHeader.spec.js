@@ -9,7 +9,10 @@ describe('PageHeader.vue', () => {
   let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(PageHeader, { localVue, propsData: { description: 'This is my description', title: 'This is my title' } })
+    wrapper = shallowMount(PageHeader, {
+      localVue,
+      propsData: { description: 'This is my description', title: 'This is my title' }
+    })
   })
 
   it('should NOT display a PageIcon', () => {

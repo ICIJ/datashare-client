@@ -1,4 +1,10 @@
-import { getDocumentTypeLabel, getExtractionLevelTranslationKey, getOS, getShortkeyOS, objectIncludes } from '@/utils/utils'
+import {
+  getDocumentTypeLabel,
+  getExtractionLevelTranslationKey,
+  getOS,
+  getShortkeyOS,
+  objectIncludes
+} from '@/utils/utils'
 
 describe('utils', () => {
   let languageGetter = null
@@ -89,21 +95,41 @@ describe('utils', () => {
     })
 
     it('should filter on a simple object of strings', () => {
-      expect(objectIncludes({ id: 'obj_01', name: 'this is an object', description: 'this is a complex description' }, 'compl')).toBeTruthy()
-      expect(objectIncludes({ id: 'obj_02', name: 'this is an object', description: 'this is a simple description' }, 'compl')).toBeFalsy()
+      expect(
+        objectIncludes(
+          { id: 'obj_01', name: 'this is an object', description: 'this is a complex description' },
+          'compl'
+        )
+      ).toBeTruthy()
+      expect(
+        objectIncludes(
+          { id: 'obj_02', name: 'this is an object', description: 'this is a simple description' },
+          'compl'
+        )
+      ).toBeFalsy()
     })
 
     it('should filter on a complex object of strings', () => {
-      expect(objectIncludes({
-        id: 'obj_01',
-        name: ['this has multiple', 'and some complex', 'names'],
-        description: 'this is a description'
-      }, 'compl')).toBeTruthy()
-      expect(objectIncludes({
-        id: 'obj_01',
-        name: ['this has multiple', 'and some simple', 'names'],
-        description: 'this is a description'
-      }, 'compl')).toBeFalsy()
+      expect(
+        objectIncludes(
+          {
+            id: 'obj_01',
+            name: ['this has multiple', 'and some complex', 'names'],
+            description: 'this is a description'
+          },
+          'compl'
+        )
+      ).toBeTruthy()
+      expect(
+        objectIncludes(
+          {
+            id: 'obj_01',
+            name: ['this has multiple', 'and some simple', 'names'],
+            description: 'this is a description'
+          },
+          'compl'
+        )
+      ).toBeFalsy()
     })
   })
 })

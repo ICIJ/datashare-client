@@ -29,7 +29,7 @@ describe('Error.vue local mode', () => {
     const computed = { isServer: () => true }
     wrapper = shallowMount(Error, { i18n, localVue, computed })
     // Flush promises
-    await (new Promise(resolve => setImmediate(resolve)))
+    await new Promise((resolve) => setImmediate(resolve))
     // Render again
     expect(wrapper.find('.error__header').exists()).toBeTruthy()
   })
@@ -50,7 +50,7 @@ describe('Error.vue server mode', () => {
     // Mock the isServer property
     wrapper = shallowMount(Error, { i18n, localVue })
     // Flush promises
-    await (new Promise(resolve => setImmediate(resolve)))
+    await new Promise((resolve) => setImmediate(resolve))
     // Render again
     expect(wrapper.find('.error__header').exists()).toBeFalsy()
   })

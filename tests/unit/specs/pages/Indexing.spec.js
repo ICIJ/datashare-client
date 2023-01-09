@@ -6,8 +6,11 @@ import Indexing from '@/pages/Indexing'
 
 // We use a custom flushPromises function with s`setImmediate`
 // which is not mocked by jest when using fake timers
-const flushPromises = () => new Promise(resolve => setImmediate(resolve))
-const flushPromisesAndPendingTimers = async () => { jest.runOnlyPendingTimers(); await flushPromises() }
+const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
+const flushPromisesAndPendingTimers = async () => {
+  jest.runOnlyPendingTimers()
+  await flushPromises()
+}
 
 // Polling task list uses timers
 // @see https://jestjs.io/fr/docs/timer-mocks
@@ -116,16 +119,14 @@ describe('Indexing.vue', () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPools()
-    store.commit('indexing/updateTasks', [
-      { name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }
-    ])
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
 
     mockAxios.request.mockClear()
     wrapper.find('.indexing__actions__stop-pending-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
-    const calledUrls = mockAxios.request.mock.calls.map(call => call[0].url)
+    const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
     expect(calledUrls).toContain(Api.getFullUrl('/api/task/stopAll'))
   })
 
@@ -133,16 +134,14 @@ describe('Indexing.vue', () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPools()
-    store.commit('indexing/updateTasks', [
-      { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
-    ])
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
 
     mockAxios.request.mockClear()
     wrapper.find('.indexing__actions__delete-done-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
-    const calledUrls = mockAxios.request.mock.calls.map(call => call[0].url)
+    const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
     expect(calledUrls).toContain(Api.getFullUrl('/api/task/clean'))
   })
 
@@ -160,7 +159,7 @@ describe('Indexing.vue', () => {
     mockAxios.request.mockClear()
     wrapper.find('.tasks-list__tasks__item__stop').trigger('click')
     await flushPromisesAndPendingTimers()
-    const calledUrls = mockAxios.request.mock.calls.map(call => call[0].url)
+    const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
     const stopUrl = Api.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.baz@456'))
     expect(calledUrls).toContain(stopUrl)
   })

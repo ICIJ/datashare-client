@@ -8,8 +8,11 @@ import Vuex from 'vuex'
 import { Core } from '@/core'
 import Search from '@/pages/Search'
 import { state, getters, mutations } from '@/store/modules/search'
-const flushPromises = () => new Promise(resolve => setImmediate(resolve))
-const flushPromisesAndAdvanceTimers = async time => { jest.advanceTimersByTime(time); await flushPromises() }
+const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
+const flushPromisesAndAdvanceTimers = async (time) => {
+  jest.advanceTimersByTime(time)
+  await flushPromises()
+}
 
 describe('Search.vue', () => {
   let store

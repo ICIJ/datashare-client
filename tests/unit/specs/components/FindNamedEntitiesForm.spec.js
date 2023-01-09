@@ -28,20 +28,24 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/ner/pipelines')
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/ner/pipelines')
+      })
+    )
   })
 
   it('should call findNames action with CORENLP pipeline, by default', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
-      method: 'POST',
-      data: { options: { syncModels: true } }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+        method: 'POST',
+        data: { options: { syncModels: true } }
+      })
+    )
   })
 
   it('should call findNames action with ANOTHERNLP pipeline', () => {
@@ -49,11 +53,13 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/ANOTHERNLP'),
-      method: 'POST',
-      data: { options: { syncModels: true } }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/findNames/ANOTHERNLP'),
+        method: 'POST',
+        data: { options: { syncModels: true } }
+      })
+    )
   })
 
   it('should call findNames action with no models synchronization', () => {
@@ -62,11 +68,13 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
-      method: 'POST',
-      data: { options: { syncModels: false } }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+        method: 'POST',
+        data: { options: { syncModels: false } }
+      })
+    )
   })
 
   it('should reset the modal params on submitting the form', async () => {

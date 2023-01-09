@@ -22,6 +22,8 @@ describe('DocumentTypeCard.vue', () => {
     })
 
     expect(wrapper.findAll('.document-type-card .bg-warning')).toHaveLength(1)
-    expect(wrapper.find('.document-type-card .bg-warning').text()).toBe('This file contains executable code. Ensure you have macros disabled before opening it.')
+    expect(wrapper.find('.document-type-card .bg-warning').text()).toBe(
+      'This file contains executable code. Ensure you have macros disabled before opening it.'
+    )
   })
 })

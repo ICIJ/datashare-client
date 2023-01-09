@@ -9,14 +9,14 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('DocumentGlobalSearchTermsTags.vue', () => {
-  function mockedDocumentSearchFactory () {
+  function mockedDocumentSearchFactory() {
     return {
-      terms: { },
-      add ({ term = '', count = 0, offsets = [] } = {}) {
+      terms: {},
+      add({ term = '', count = 0, offsets = [] } = {}) {
         this.terms[term] = { count, offsets }
         return this
       },
-      commit () {
+      commit() {
         api.searchDocument.mockImplementation(async (index, id, term) => {
           if (term in this.terms) {
             return this.terms[term]
@@ -28,9 +28,8 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     }
   }
 
-  async function createView (content = '', query = '', metadata = '', tags = []) {
-    const indexedDocument = await IndexedDocument
-      .build('document-id', index)
+  async function createView(content = '', query = '', metadata = '', tags = []) {
+    const indexedDocument = await IndexedDocument.build('document-id', index)
       .withContent(content)
       .withOtherMetadata(metadata)
       .withTags(tags)
@@ -92,10 +91,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     })
 
     it('should display query terms in tags with specific message and in last position', async () => {
-      mockedDocumentSearchFactory()
-        .add({ term: 'message', count: 1 })
-        .add({ term: 'tag_01', count: 0 })
-        .commit()
+      mockedDocumentSearchFactory().add({ term: 'message', count: 1 }).add({ term: 'tag_01', count: 0 }).commit()
       const wrapper = await createView('message', 'message tag_01', '', ['tag_01', 'tag_02'])
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(2)
@@ -106,10 +102,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     })
 
     it('should not display the query terms on a specific field but content', async () => {
-      mockedDocumentSearchFactory()
-        .add({ term: 'term_01', count: 1 })
-        .add({ term: 'term_02', count: 0 })
-        .commit()
+      mockedDocumentSearchFactory().add({ term: 'term_01', count: 1 }).add({ term: 'term_02', count: 0 }).commit()
       const wrapper = await createView('term_01', 'content:term_01 field_name:term_02')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('term_01')
@@ -117,10 +110,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     })
 
     it('should not display the negative query terms', async () => {
-      mockedDocumentSearchFactory()
-        .add({ term: 'term_01', count: 1 })
-        .add({ term: 'term_02', count: 0 })
-        .commit()
+      mockedDocumentSearchFactory().add({ term: 'term_01', count: 1 }).add({ term: 'term_02', count: 0 }).commit()
       const wrapper = await createView('term_01', 'term_01 -term_02')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(1)
@@ -132,9 +122,17 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       const wrapper = await createView('this is a full full content', 'full content')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item--index-0')).toHaveLength(1)
-      expect(wrapper.find('.document-global-search-terms-tags__item--index-0 .document-global-search-terms-tags__item__label').text()).toBe('full')
+      expect(
+        wrapper
+          .find('.document-global-search-terms-tags__item--index-0 .document-global-search-terms-tags__item__label')
+          .text()
+      ).toBe('full')
       expect(wrapper.findAll('.document-global-search-terms-tags__item--index-1')).toHaveLength(1)
-      expect(wrapper.find('.document-global-search-terms-tags__item--index-1 .document-global-search-terms-tags__item__label').text()).toBe('content')
+      expect(
+        wrapper
+          .find('.document-global-search-terms-tags__item--index-1 .document-global-search-terms-tags__item__label')
+          .text()
+      ).toBe('content')
     })
   })
 })

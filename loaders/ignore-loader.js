@@ -1,4 +1,4 @@
-module.exports = function ignoreLoader (content) {
+module.exports = function ignoreLoader(content) {
   this && this.cacheable && this.cacheable()
   return ''
 }

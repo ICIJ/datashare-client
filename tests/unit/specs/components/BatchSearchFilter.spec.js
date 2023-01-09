@@ -6,7 +6,7 @@ import { Core } from '@/core'
 describe('BatchSearchFilter.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
 
-  function createContainer () {
+  function createContainer() {
     const div = document.createElement('div')
     document.body.appendChild(div)
     return div
