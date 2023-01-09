@@ -11,10 +11,10 @@
       {{ $t('filter.sortByDropdown.toggler') }}
     </template>
     <b-dropdown-item
-      v-for="({ sortByOption, sortByOptionOrder, label }, $index) in sortByOptionsWithLabels"
+      v-for="({ sortByFromFilter, sortByOrderFromFilter, label }, $index) in sortByOptionsWithLabels"
       :key="$index"
-      :active="isOptionActive({ sortByOption, sortByOptionOrder })"
-      @click="selectOption({ sortByOption, sortByOptionOrder })"
+      :active="isOptionActive({ sortByFromFilter, sortByOrderFromFilter })"
+      @click="selectOption({ sortByFromFilter, sortByOrderFromFilter })"
     >
       {{ label }}
     </b-dropdown-item>
@@ -49,21 +49,21 @@ export default {
       return this.sortByOptions.map(({ sortBy, sortByOrder }) => {
         const key = `filter.sortByDropdown.options.${sortBy}.${sortByOrder}`
         const label = this.$t(key)
-        return { label, sortBy, sortByOrder }
+        return { label, sortByFromFilter: sortBy, sortByOrderFromFilter: sortByOrder }
       })
     }
   },
   methods: {
-    selectOption({ sortBy, sortByOrder }) {
-      if (sortBy !== this.sortBy) {
-        this.$emit('update:sortBy', sortBy)
+    selectOption({ sortByFromFilter, sortByOrderFromFilter }) {
+      if (sortByFromFilter !== this.sortBy) {
+        this.$emit('update:sortBy', sortByFromFilter)
       }
-      if (sortByOrder !== this.sortByOrder) {
-        this.$emit('update:sortByOrder', sortByOrder)
+      if (sortByOrderFromFilter !== this.sortByOrder) {
+        this.$emit('update:sortByOrder', sortByOrderFromFilter)
       }
     },
-    isOptionActive({ sortBy, sortByOrder }) {
-      return this.sortBy === sortBy && this.sortByOrder === sortByOrder
+    isOptionActive({ sortByFromFilter, sortByOrderFromFilter }) {
+      return this.sortBy === sortByFromFilter && this.sortByOrder === sortByOrderFromFilter
     }
   }
 }
