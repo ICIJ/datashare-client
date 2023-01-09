@@ -1,11 +1,13 @@
 <template>
-  <b-badge class="applied-search-filters-item p-0 my-1 mr-2 mw-100 text-truncate"
+  <b-badge
+    class="applied-search-filters-item p-0 my-1 mr-2 mw-100 text-truncate"
     v-b-tooltip.html
     variant="warning"
     @click.prevent="deleteQueryTerm()"
     :id="appliedSearchFiltersItemId"
     :pill="hideFilterLabel"
-    :class="appliedSearchFiltersItemClassList">
+    :class="appliedSearchFiltersItemClassList"
+  >
     <span class="applied-search-filters-item__wrapper d-inline-flex flex-column">
       <span class="applied-search-filters-item__wrapper__label p-1" v-if="!hideFilterLabel">
         {{ filterName }}
@@ -62,22 +64,22 @@ export default {
     displayUser
   },
   computed: {
-    appliedSearchFiltersItemId () {
+    appliedSearchFiltersItemId() {
       return uniqueId('applied-search-filters-item-')
     },
-    appliedSearchFiltersItemClassList () {
+    appliedSearchFiltersItemClassList() {
       return {
         'applied-search-filters-item--negation': this.filter.negation,
         'applied-search-filters-item--read-only': this.readOnly
       }
     },
-    displayedFilterValue () {
+    displayedFilterValue() {
       return this.filter.label || this.filterValue
     },
-    filterValue () {
+    filterValue() {
       return this.$options.filters.displayUser(this.filter.value)
     },
-    filterName () {
+    filterName() {
       if (this.isQueryTerm) {
         return this.$t('filter.searchTerm')
       }
@@ -85,12 +87,12 @@ export default {
       const localeKey = `filter.${name}`
       return this.$te(localeKey) ? this.$t(localeKey) : name
     },
-    isQueryTerm () {
+    isQueryTerm() {
       return !('name' in this.filter) || this.filter.name === 'q'
     }
   },
   methods: {
-    async deleteQueryTerm () {
+    async deleteQueryTerm() {
       if (this.readOnly) {
         return
       }
@@ -110,23 +112,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .applied-search-filters-item {
-    cursor: pointer;
+.applied-search-filters-item {
+  cursor: pointer;
 
-    &--negation {
-      text-decoration: line-through;
-    }
+  &--negation {
+    text-decoration: line-through;
+  }
 
-    &__wrapper {
-
-      &__label {
-        font-size: 0.8em;
-        background: #fff;
-        border: 1px solid $warning;
-        border-bottom: 0;
-        text-transform: uppercase;
-        border-radius: $border-radius-sm $border-radius-sm 0 0;
-      }
+  &__wrapper {
+    &__label {
+      font-size: 0.8em;
+      background: #fff;
+      border: 1px solid $warning;
+      border-bottom: 0;
+      text-transform: uppercase;
+      border-radius: $border-radius-sm $border-radius-sm 0 0;
     }
   }
+}
 </style>

@@ -1,10 +1,12 @@
 <template>
   <div class="batch-search-actions">
-    <b-btn class="batch-search-actions__item"
-           id="batch-search-actions-filters-toggle"
-           v-b-tooltip.hover
-           variant="light"
-           :title="$t('batchSearchResultsFilters.queries.heading')">
+    <b-btn
+      class="batch-search-actions__item"
+      id="batch-search-actions-filters-toggle"
+      v-b-tooltip.hover
+      variant="light"
+      :title="$t('batchSearchResultsFilters.queries.heading')"
+    >
       <fa icon="filter" />
       <span class="sr-only">
         {{ $t('batchSearchResultsFilters.queries.heading') }}
@@ -13,61 +15,73 @@
         {{ nbSelectedQueries | humanNumber }}
       </b-badge>
       <keep-alive>
-        <b-popover custom-class="popover-body-p-0"
-                  lazy
-                  placement="bottom"
-                  target="batch-search-actions-filters-toggle"
-                  triggers="focus" >
+        <b-popover
+          custom-class="popover-body-p-0"
+          lazy
+          placement="bottom"
+          target="batch-search-actions-filters-toggle"
+          triggers="focus"
+        >
           <batch-search-results-filters :query-keys="queryKeys" :indices="projects" hide-border />
         </b-popover>
       </keep-alive>
     </b-btn>
 
-    <confirm-button class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ml-2"
-                    v-b-tooltip.hover
-                    v-if="isMyBatchSearch"
-                    :confirmed="deleteBatchSearch"
-                    :label="$t('batchSearch.delete')"
-                    :no="$t('global.no')"
-                    :yes="$t('global.yes')"
-                    :title="$t('batchSearch.delete')">
+    <confirm-button
+      class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ml-2"
+      v-b-tooltip.hover
+      v-if="isMyBatchSearch"
+      :confirmed="deleteBatchSearch"
+      :label="$t('batchSearch.delete')"
+      :no="$t('global.no')"
+      :yes="$t('global.yes')"
+      :title="$t('batchSearch.delete')"
+    >
       <fa icon="trash-alt" />
       <span class="sr-only">
         {{ $t('batchSearch.delete') }}
       </span>
     </confirm-button>
 
-    <b-btn class="batch-search-actions__item action batch-search-actions__item--relaunch ml-2"
-           v-if="isMyBatchSearch && isEnded"
-           variant="light"
-           @click="$refs['batch-search-copy-form'].show()"
-           :disabled="isRelaunched">
+    <b-btn
+      class="batch-search-actions__item action batch-search-actions__item--relaunch ml-2"
+      v-if="isMyBatchSearch && isEnded"
+      variant="light"
+      @click="$refs['batch-search-copy-form'].show()"
+      :disabled="isRelaunched"
+    >
       <fa icon="redo" />
       {{ $t('batchSearchResults.relaunch') }}
-      <b-modal body-class="p-0"
-               hide-footer
-               ref="batch-search-copy-form"
-               size="md"
-               :title="$t('batchSearchResults.relaunchTitle')">
+      <b-modal
+        body-class="p-0"
+        hide-footer
+        ref="batch-search-copy-form"
+        size="md"
+        :title="$t('batchSearchResults.relaunchTitle')"
+      >
         <batch-search-copy-form :batch-search="batchSearch" />
       </b-modal>
     </b-btn>
 
-    <b-btn class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
-           variant="light"
-           v-b-tooltip.hover
-           :title="$t('batchSearchResults.downloadQueriesTooltip')"
-           :href="downloadQueriesUrl">
+    <b-btn
+      class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
+      variant="light"
+      v-b-tooltip.hover
+      :title="$t('batchSearchResults.downloadQueriesTooltip')"
+      :href="downloadQueriesUrl"
+    >
       <fa icon="download" />
       {{ $t('batchSearchResults.downloadQueries') }}
     </b-btn>
 
-    <b-btn class="batch-search-actions__item batch-search-actions__item--download-results ml-2"
-           v-if="isEnded"
-           variant="primary"
-           v-b-tooltip.hover
-           :title="$t('batchSearchResults.downloadQueriesTooltip')"
-           :href="downloadResultsUrl">
+    <b-btn
+      class="batch-search-actions__item batch-search-actions__item--download-results ml-2"
+      v-if="isEnded"
+      variant="primary"
+      v-b-tooltip.hover
+      :title="$t('batchSearchResults.downloadQueriesTooltip')"
+      :href="downloadResultsUrl"
+    >
       <fa icon="download" />
       {{ $t('batchSearchResults.downloadResults') }}
     </b-btn>
@@ -103,7 +117,7 @@ export default {
   filters: {
     humanNumber
   },
-  data () {
+  data() {
     return {
       isMyBatchSearch: false,
       isRelaunched: false
@@ -111,31 +125,31 @@ export default {
   },
   computed: {
     ...mapGetters('batchSearch', ['nbSelectedQueries', 'queryKeys']),
-    user () {
+    user() {
       return get(this, 'batchSearch.user.id')
     },
-    uuid () {
+    uuid() {
       return get(this, 'batchSearch.uuid')
     },
-    projects () {
-      return get(this, 'batchSearch.projects').map(project => project.name)
+    projects() {
+      return get(this, 'batchSearch.projects').map((project) => project.name)
     },
-    isEnded () {
+    isEnded() {
       return ['SUCCESS', 'FAILURE'].indexOf(this.batchSearch.state) > -1
     },
-    downloadQueriesUrl () {
+    downloadQueriesUrl() {
       return Api.getFullUrl(`/api/batch/search/${this.uuid}/queries?format=csv`)
     },
-    downloadResultsUrl () {
+    downloadResultsUrl() {
       return Api.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
     }
   },
-  async created () {
-    this.isMyBatchSearch = await this.$core.auth.getUsername() === this.user
+  async created() {
+    this.isMyBatchSearch = (await this.$core.auth.getUsername()) === this.user
     this.getQueries()
   },
   methods: {
-    async deleteBatchSearch () {
+    async deleteBatchSearch() {
       const batchId = this.uuid
       const isDeleted = await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
       if (isDeleted) {
@@ -145,7 +159,7 @@ export default {
       }
       this.$router.push({ name: 'batch-search' })
     },
-    getQueries () {
+    getQueries() {
       return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.uuid)
     }
   }
@@ -153,19 +167,18 @@ export default {
 </script>
 
 <style lang="scss">
-  .batch-search-actions {
+.batch-search-actions {
+  &__item {
+    position: relative;
 
-    &__item {
-      position: relative;
-
-      & &__counter {
-        margin: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-        transform: translate(50%, -50%);
-        z-index: 100;
-      }
+    & &__counter {
+      margin: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transform: translate(50%, -50%);
+      z-index: 100;
     }
   }
+}
 </style>

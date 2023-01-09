@@ -44,25 +44,24 @@ export default {
       }
     }
   },
-  beforeMount () {
+  beforeMount() {
     this.$store.commit('insights/project', this.$store.state.search.indices[0])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .insights {
+.insights {
+  &__container {
+    margin-top: $spacer;
 
-    &__container {
-      margin-top: $spacer;
-
-      &__widget {
-        display: flex;
-        flex-direction: row;
-        margin-bottom: $grid-gutter-width;
-        min-height: calc(100% - #{$grid-gutter-width});
-        position: relative;
-      }
+    &__widget {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: $grid-gutter-width;
+      min-height: calc(100% - #{$grid-gutter-width});
+      position: relative;
     }
   }
+}
 </style>

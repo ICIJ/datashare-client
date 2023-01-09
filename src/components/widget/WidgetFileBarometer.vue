@@ -35,16 +35,16 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       onDisk: null,
       total: null
     }
   },
-  async created () {
+  async created() {
     await this.loadData()
   },
-  mounted () {
+  mounted() {
     this.$store.subscribe(async ({ type }) => {
       // The project changed
       if (type === 'insights/project') {
@@ -53,18 +53,18 @@ export default {
     })
   },
   methods: {
-    async count (query) {
+    async count(query) {
       const index = this.$store.state.insights.project
       const body = { track_total_hits: true, query: { query_string: { query } } }
       const preference = 'widget-file-barometer'
       const res = await elasticsearch.search({ index, body, preference, size: 0 })
       return res?.hits?.total?.value || 0
     },
-    countTotal () {
+    countTotal() {
       const q = 'type:Document'
       return this.count(q)
     },
-    countOnDisk () {
+    countOnDisk() {
       const q = 'type:Document AND extractionLevel:0'
       return this.count(q)
     },
@@ -80,12 +80,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .widget {
-    min-height: 100%;
+.widget {
+  min-height: 100%;
 
-    &__main-figure {
-      display: block;
-      font-size: 1.8rem;
-    }
+  &__main-figure {
+    display: block;
+    font-size: 1.8rem;
   }
+}
 </style>

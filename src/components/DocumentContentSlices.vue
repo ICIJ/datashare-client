@@ -6,17 +6,11 @@
       :key="version"
       :min-item-size="85"
       ref="scroller"
-      page-mode>
-      <template v-slot="{ item, index, active }">
-        <dynamic-scroller-item
-          :active="active"
-          :data-index="index"
-          :item="item"
-          tag="span">
-          <component
-            :is="item | sliceComponent"
-            :slice="item"
-            @visible="onPlaceholderVisible" />
+      page-mode
+    >
+      <template #default="{ item, index, active }">
+        <dynamic-scroller-item :active="active" :data-index="index" :item="item" tag="span">
+          <component :is="item | sliceComponent" :slice="item" @visible="onPlaceholderVisible" />
         </dynamic-scroller-item>
       </template>
     </dynamic-scroller>
@@ -38,33 +32,33 @@ export default {
   props: {
     slices: {
       type: Array,
-      default: () => ([])
+      default: () => []
     },
     bufferizeAll: {
       type: Boolean
     }
   },
-  data () {
+  data() {
     return {
       version: 0
     }
   },
   watch: {
-    bufferizeAll () {
+    bufferizeAll() {
       this.version++
     }
   },
   filters: {
-    sliceComponent ({ placeholder = false } = {}) {
+    sliceComponent({ placeholder = false } = {}) {
       return placeholder ? DocumentContentSlicePlaceholder : DocumentContentSlice
     }
   },
   computed: {
-    scrollBuffer () {
+    scrollBuffer() {
       // Huge buffer to ensure all views are created
       return this.bufferizeAll ? 9e3 * this.slices.length : 300
     },
-    scrollableContainer () {
+    scrollableContainer() {
       let container = this.$el.parentElement
       while (container && !hasOverflow(container)) {
         container = container?.parentElement
@@ -73,10 +67,10 @@ export default {
     }
   },
   methods: {
-    onPlaceholderVisible (slice) {
+    onPlaceholderVisible(slice) {
       this.$emit('placeholder-visible', slice)
     },
-    scrollToContentSlice (sliceIndex) {
+    scrollToContentSlice(sliceIndex) {
       const el = this.$el.querySelectorAll('.vue-recycle-scroller__item-view')[sliceIndex]
       const { y: top } = getTranslateValues(el)
       this.scrollableContainer.scrollTo({ top })
@@ -87,5 +81,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '~node_modules/vue-virtual-scroller/dist/vue-virtual-scroller.css';
+@import '~node_modules/vue-virtual-scroller/dist/vue-virtual-scroller.css';
 </style>

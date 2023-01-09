@@ -18,17 +18,18 @@
                     <fa icon="link"></fa>
                   </span>
                 </div>
-                <b-form-input
-                  :state="isFormValid"
-                  placeholder="URL"
-                  type="url"
-                  v-model="url" />
+                <b-form-input :state="isFormValid" placeholder="URL" type="url" v-model="url" />
               </div>
               <div class="d-flex align-items-center">
                 <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
-                <b-btn variant="primary" class="ml-auto text-nowrap" @click="installExtensionFromUrl" :disabled="isFormValid !== true">
+                <b-btn
+                  variant="primary"
+                  class="ml-auto text-nowrap"
+                  @click="installExtensionFromUrl"
+                  :disabled="isFormValid !== true"
+                >
                   {{ $t('extensions.install') }}
                 </b-btn>
               </div>
@@ -36,11 +37,20 @@
           </b-modal>
         </div>
         <div class="extensions__search ml-auto">
-          <search-form-control :placeholder="$t('extensions.search')" v-model="searchTerm" @input="search"></search-form-control>
+          <search-form-control
+            :placeholder="$t('extensions.search')"
+            v-model="searchTerm"
+            @input="search"
+          ></search-form-control>
         </div>
       </div>
       <b-card-group deck>
-        <b-overlay :show="extension.show" v-for="extension in extensions" :key="extension.id" class="extensions__card m-3 d-flex">
+        <b-overlay
+          :show="extension.show"
+          v-for="extension in extensions"
+          :key="extension.id"
+          class="extensions__card m-3 d-flex"
+        >
           <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
               <div class="d-flex">
@@ -53,36 +63,60 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
-                  <b-btn class="extensions__card__uninstall-button mb-2" @click="uninstallExtension(extension.id)" v-if="extension.installed" variant="danger">
+                  <b-btn
+                    class="extensions__card__uninstall-button mb-2"
+                    @click="uninstallExtension(extension.id)"
+                    v-if="extension.installed"
+                    variant="danger"
+                  >
                     <fa icon="trash-alt"></fa>
                     {{ $t('extensions.uninstall') }}
                   </b-btn>
-                  <b-btn class="extensions__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="!extension.installed">
+                  <b-btn
+                    class="extensions__card__download-button mb-2"
+                    @click="installExtensionFromId(extension.id)"
+                    variant="primary"
+                    v-if="!extension.installed"
+                  >
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('extensions.install') }}
                   </b-btn>
-                  <b-btn class="extensions__card__update-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && isExtensionFromRegistry(extension) && extension.version !== extension.deliverableFromRegistry.version" size="sm">
+                  <b-btn
+                    class="extensions__card__update-button mb-2"
+                    @click="installExtensionFromId(extension.id)"
+                    variant="primary"
+                    v-if="
+                      extension.installed &&
+                      isExtensionFromRegistry(extension) &&
+                      extension.version !== extension.deliverableFromRegistry.version
+                    "
+                    size="sm"
+                  >
                     <fa icon="sync"></fa>
                     {{ $t('extensions.update') }}
                   </b-btn>
-                  <div v-if="extension.version && extension.installed" class="extensions__card__version text-muted text-center">
+                  <div
+                    v-if="extension.version && extension.installed"
+                    class="extensions__card__version text-muted text-center"
+                  >
                     {{ $t('extensions.version', { version: extension.version }) }}
                   </div>
                 </div>
               </div>
             </b-card-text>
-            <template v-slot:footer v-if="isExtensionFromRegistry(extension)">
+            <template #footer v-if="isExtensionFromRegistry(extension)">
               <div class="extensions__card__official-version text-truncate w-100">
-                <span class="font-weight-bold">
-                  {{ $t('extensions.officialVersion') }}:
-                </span>
+                <span class="font-weight-bold"> {{ $t('extensions.officialVersion') }}: </span>
                 {{ extension.deliverableFromRegistry.version }}
               </div>
               <div class="text-truncate w-100">
-                <span class="font-weight-bold">
-                  {{ $t('extensions.homePage') }}:
-                </span>
-                <a class="extensions__card__homepage" :href="extension.deliverableFromRegistry.homepage" target="_blank" v-if="extension.deliverableFromRegistry.homepage">
+                <span class="font-weight-bold"> {{ $t('extensions.homePage') }}: </span>
+                <a
+                  class="extensions__card__homepage"
+                  :href="extension.deliverableFromRegistry.homepage"
+                  target="_blank"
+                  v-if="extension.deliverableFromRegistry.homepage"
+                >
                   {{ extension.deliverableFromRegistry.homepage }}
                 </a>
               </div>
@@ -108,7 +142,7 @@ export default {
   components: {
     SearchFormControl
   },
-  data () {
+  data() {
     return {
       extensions: [],
       searchTerm: '',
@@ -116,7 +150,7 @@ export default {
       url: ''
     }
   },
-  mounted () {
+  mounted() {
     this.search()
   },
   filters: {
@@ -124,21 +158,25 @@ export default {
     startCase
   },
   methods: {
-    isExtensionFromRegistry (extension) {
+    isExtensionFromRegistry(extension) {
       return get(extension, 'deliverableFromRegistry', false)
     },
-    getExtensionName (extension) {
+    getExtensionName(extension) {
       return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.name : extension.name
     },
-    getExtensionDescription (extension) {
-      return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.description : extension.description
+    getExtensionDescription(extension) {
+      return this.isExtensionFromRegistry(extension)
+        ? extension.deliverableFromRegistry.description
+        : extension.description
     },
-    async search () {
+    async search() {
       const extensions = await this.$core.api.getExtensions(this.searchTerm)
-      map(extensions, extension => { extension.show = false })
+      map(extensions, (extension) => {
+        extension.show = false
+      })
       this.$set(this, 'extensions', extensions)
     },
-    async installExtensionFromId (extensionId) {
+    async installExtensionFromId(extensionId) {
       const extension = find(this.extensions, { id: extensionId })
       extension.show = true
       try {
@@ -150,7 +188,7 @@ export default {
       }
       extension.show = false
     },
-    async installExtensionFromUrl () {
+    async installExtensionFromUrl() {
       this.$set(this, 'isInstallingFromUrl', true)
       try {
         await this.$core.api.installExtensionFromUrl(this.url)
@@ -163,7 +201,7 @@ export default {
       this.$set(this, 'isInstallingFromUrl', false)
       this.$set(this, 'url', '')
     },
-    async uninstallExtension (extensionId) {
+    async uninstallExtension(extensionId) {
       const extension = find(this.extensions, { id: extensionId })
       extension.show = true
       try {
@@ -177,7 +215,7 @@ export default {
     }
   },
   computed: {
-    isFormValid () {
+    isFormValid() {
       return this.url === '' ? null : isUrl(this.url)
     }
   }

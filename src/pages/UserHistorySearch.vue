@@ -5,14 +5,15 @@
         <li v-for="event in searches" :key="event.id" class="user-history__list__item">
           <div class="user-history__list__item__delete float-right m-4">
             <confirm-button
-                class="btn btn-outline-danger"
-                placement="leftbottom"
-                :confirmed="() => deleteUserEvent(event)"
-                :label="$t('userHistory.confirmDelete')"
-                :no="$t('global.no')"
-                :yes="$t('global.yes')">
-                <fa icon="trash-alt" />
-                {{ $t('userHistory.delete') }}
+              class="btn btn-outline-danger"
+              placement="leftbottom"
+              :confirmed="() => deleteUserEvent(event)"
+              :label="$t('userHistory.confirmDelete')"
+              :no="$t('global.no')"
+              :yes="$t('global.yes')"
+            >
+              <fa icon="trash-alt" />
+              {{ $t('userHistory.delete') }}
             </confirm-button>
           </div>
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
@@ -20,16 +21,18 @@
               {{ event.name }}
             </div>
             <div class="user-history__list__item__query">
-              <applied-search-filters-item read-only
-                                           v-for="(filter, index) in filtersItems(event)"
-                                          :key="index"
-                                          :filter="filter" />
+              <applied-search-filters-item
+                read-only
+                v-for="(filter, index) in filtersItems(event)"
+                :key="index"
+                :filter="filter"
+              />
             </div>
           </router-link>
         </li>
       </ul>
       <div class="text-muted text-center" v-else>
-        {{  $t('userHistory.empty') }}
+        {{ $t('userHistory.empty') }}
       </div>
     </div>
   </div>
@@ -48,20 +51,20 @@ export default {
       type: Array
     }
   },
-  data () {
+  data() {
     return {
       searches: this.events
     }
   },
   methods: {
-    filtersItems ({ uri }) {
+    filtersItems({ uri }) {
       return this.createFiltersFromURI(uri)
     },
-    isIgnoredFilter ({ name, value }) {
+    isIgnoredFilter({ name, value }) {
       const ignored = ['from', 'size', 'sort', 'field']
       return ignored.includes(name) || (name === 'q' && ['', '*'].includes(value))
     },
-    createFiltersFromURI (uri) {
+    createFiltersFromURI(uri) {
       const urlSearchParams = new URLSearchParams(uri.split('?').slice(1).pop())
       const params = Object.fromEntries(urlSearchParams.entries())
       // Reduce params list into an array
@@ -85,14 +88,14 @@ export default {
         return filters
       }, [])
     },
-    async deleteUserEvent (event) {
+    async deleteUserEvent(event) {
       try {
         await this.$core.api.deleteUserEvent(event.id)
         this.$root.$bvToast.toast(this.$t('userHistory.deleted'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('userHistory.notDeleted'), { noCloseButton: true, variant: 'warning' })
       } finally {
-        const searches = this.searches.filter(e => !(e === event))
+        const searches = this.searches.filter((e) => !(e === event))
         this.$set(this, 'searches', searches)
       }
     }
@@ -101,25 +104,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .user-history {
-    &__list {
+.user-history {
+  &__list {
+    &__item {
+      a:hover {
+        text-decoration: none;
+        color: $table-hover-color;
+        background-color: $table-hover-bg;
+      }
 
-      &__item {
+      &:nth-child(odd) {
+        background: $table-accent-bg;
+      }
 
-        a:hover {
-          text-decoration: none;
-          color: $table-hover-color;
-          background-color: $table-hover-bg;
-        }
-
-        &:nth-child(odd) {
-          background: $table-accent-bg;
-        }
-
-        &:not(:last-of-type) {
-          border-bottom: 1px solid $border-color;
-        }
+      &:not(:last-of-type) {
+        border-bottom: 1px solid $border-color;
       }
     }
   }
+}
 </style>

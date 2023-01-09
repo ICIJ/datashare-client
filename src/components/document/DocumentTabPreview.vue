@@ -34,7 +34,7 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       paginatedTypes: [
         'application/pdf',
@@ -46,30 +46,30 @@ export default {
     }
   },
   methods: {
-    importPreviewComponent () {
+    importPreviewComponent() {
       return import('@/components/document/viewers/' + this.previewComponent + '.vue')
     }
   },
   computed: {
-    isPaginated () {
+    isPaginated() {
       return this.paginatedTypes.indexOf(this.document.contentType) > -1
     },
-    previewComponent () {
+    previewComponent() {
       switch (true) {
-      case this.document.isJson:
-        return 'JsonViewer'
-      case this.isPaginated:
-        return 'PaginatedViewer'
-      case this.document.isTiff:
-        return 'TiffViewer'
-      case this.document.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
-        return 'SpreadsheetViewer'
-      case this.document.isSpreadsheet:
-        return 'LegacySpreadsheetViewer'
-      case this.document.isImage:
-        return 'ImageViewer'
-      default:
-        return null
+        case this.document.isJson:
+          return 'JsonViewer'
+        case this.isPaginated:
+          return 'PaginatedViewer'
+        case this.document.isTiff:
+          return 'TiffViewer'
+        case this.document.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
+          return 'SpreadsheetViewer'
+        case this.document.isSpreadsheet:
+          return 'LegacySpreadsheetViewer'
+        case this.document.isImage:
+          return 'ImageViewer'
+        default:
+          return null
       }
     }
   }

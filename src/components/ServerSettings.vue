@@ -10,8 +10,9 @@
               label-cols-xs="12"
               label-cols-sm="4"
               label-cols-lg="3"
-              v-for="(_, name) in settings">
-              <template v-slot:label>
+              v-for="(_, name) in settings"
+            >
+              <template #label>
                 <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
                   <span class="flex-grow-1 pb-1" :title="name">
                     {{ name | sentenceCase | capitalizeKnownAcronyms }}
@@ -57,28 +58,31 @@ export default {
   name: 'ServerSettings',
   mixins: [utils],
   filters: {
-    sentenceCase (str) {
+    sentenceCase(str) {
       const result = str.replace(/([A-Z])/g, ' $1')
       return result.charAt(0).toUpperCase() + result.slice(1)
     },
-    capitalizeKnownAcronyms (str) {
-      return str.split(' ').map(word => {
-        const knownAcronyms = KNOWN_ACRONYMS.map(a => a.toUpperCase())
-        const index = knownAcronyms.indexOf(word.toUpperCase())
-        if (index > -1) {
-          return KNOWN_ACRONYMS[index]
-        }
-        return word
-      }).join(' ')
+    capitalizeKnownAcronyms(str) {
+      return str
+        .split(' ')
+        .map((word) => {
+          const knownAcronyms = KNOWN_ACRONYMS.map((a) => a.toUpperCase())
+          const index = knownAcronyms.indexOf(word.toUpperCase())
+          if (index > -1) {
+            return KNOWN_ACRONYMS[index]
+          }
+          return word
+        })
+        .join(' ')
     }
   },
-  data () {
+  data() {
     return {
       master: {},
       settings: {}
     }
   },
-  async mounted () {
+  async mounted() {
     this.$wait.start('load server settings')
     const master = await this.$store.dispatch('settings/getSettings')
     this.$set(this, 'master', master)
@@ -86,13 +90,13 @@ export default {
     this.$wait.end('load server settings')
   },
   methods: {
-    fieldChanged (field) {
+    fieldChanged(field) {
       return this.settings[field] !== this.master[field]
     },
-    restore (field) {
+    restore(field) {
       this.$set(this.settings, field, this.master[field])
     },
-    async onSubmit () {
+    async onSubmit() {
       try {
         await this.$store.dispatch('settings/onSubmit', this.settings)
         this.$config.merge(this.settings)

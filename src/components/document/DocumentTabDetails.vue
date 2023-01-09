@@ -7,7 +7,7 @@
       <p class="text-muted">
         {{ $t('document.tagsVisibility') }}
       </p>
-      <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="true" />
+      <document-tags-form :document="document" :tags="tags" :display-tags="true" :display-form="true" />
     </div>
     <div class="document__content__shortcuts mb-3">
       <h5 class="mb-3">
@@ -35,15 +35,27 @@
       <p class="text-muted">
         {{ $t('document.detailsInfo') }}
       </p>
-      <div class="row document__content__details__children mx-2">
-      </div>
+      <div class="row document__content__details__children mx-2"></div>
       <div class="row document__content__details__item" v-for="field in filteredCanonicalFields" :key="field.name">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="field.name">
             {{ field.label }}
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="field.to || { name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value), indices } }">
+            <router-link
+              :to="
+                field.to || {
+                  name: 'search',
+                  query: {
+                    q: document.valueAsQueryParam(
+                      field.name,
+                      field.rawValue !== undefined ? field.rawValue : field.value
+                    ),
+                    indices
+                  }
+                }
+              "
+            >
               <fa icon="search" />
             </router-link>
           </div>
@@ -119,41 +131,41 @@ export default {
   filters: {
     startCase
   },
-  data () {
+  data() {
     return {
       metadataVisible: false
     }
   },
   computed: {
     ...mapState('document', ['tags']),
-    documentPath () {
+    documentPath() {
       if (this.$config.get('mountedDataDir')) {
         return this.document.source.path.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
       } else {
         return this.document.source.path
       }
     },
-    documentDirname () {
+    documentDirname() {
       if (this.$config.get('mountedDataDir')) {
         return this.document.source.dirname.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
       } else {
         return this.document.source.dirname
       }
     },
-    index () {
+    index() {
       return this.document.index
     },
-    indices () {
+    indices() {
       return uniq([this.index, ...this.$store.state.search.indices]).join(',')
     },
-    metaFieldsNames () {
+    metaFieldsNames() {
       if (this.metadataVisible) {
-        return filter(this.document.metas, name => map(this.canonicalFields, 'name').indexOf(name) === -1)
+        return filter(this.document.metas, (name) => map(this.canonicalFields, 'name').indexOf(name) === -1)
       } else {
         return []
       }
     },
-    canonicalFields () {
+    canonicalFields() {
       return [
         {
           name: '_id',
@@ -259,23 +271,23 @@ export default {
         }
       ]
     },
-    filteredCanonicalFields () {
-      return filter(this.canonicalFields, field => field.value)
+    filteredCanonicalFields() {
+      return filter(this.canonicalFields, (field) => field.value)
     },
-    searchChildrenDocumentParams () {
+    searchChildrenDocumentParams() {
       const index = this.index
       const q = `_routing:${this.document.id}`
       const query = { q, index }
       return { name: 'search', query }
     },
-    searchDirnameDocumentParams () {
+    searchDirnameDocumentParams() {
       const index = this.index
       const q = `dirname:"${this.documentDirname}"`
       const query = { q, index }
       return { name: 'search', query }
     }
   },
-  async created () {
+  async created() {
     await this.$store.dispatch('document/getTags')
   },
   methods: {
@@ -286,35 +298,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .tab-pane {
-    & div {
-      word-wrap: break-word;
-    }
+.tab-pane {
+  & div {
+    word-wrap: break-word;
   }
+}
 
-  .document {
+.document {
+  &__content {
+    &__details {
+      &__item {
+        padding: $spacer * 0.3 0;
 
-    &__content {
-
-      &__details {
-
-        &__item {
-          padding: $spacer * 0.3 0;
-
-          &__search {
-            display: none;
-          }
-
-          &:hover &__search {
-            display: block;
-          }
+        &__search {
+          display: none;
         }
 
-        &__item:nth-child(even) {
-          background: #f3f3f3;
+        &:hover &__search {
+          display: block;
         }
+      }
+
+      &__item:nth-child(even) {
+        background: #f3f3f3;
       }
     }
   }
-
+}
 </style>

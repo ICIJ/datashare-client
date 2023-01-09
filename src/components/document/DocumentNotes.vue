@@ -22,7 +22,7 @@ export default {
       type: String
     }
   },
-  data () {
+  data() {
     return {
       notes: []
     }
@@ -31,12 +31,12 @@ export default {
     ...mapState('search', ['index'])
   },
   methods: {
-    async retrieveNotes (project, path) {
+    async retrieveNotes(project, path) {
       const notes = await this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
       this.$set(this, 'notes', notes)
     }
   },
-  mounted () {
+  mounted() {
     this.retrieveNotes(this.index, this.path)
   }
 }

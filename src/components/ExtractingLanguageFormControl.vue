@@ -27,17 +27,17 @@ export default {
       type: Boolean
     }
   },
-  data () {
+  data() {
     return {
       textLanguages: [],
       ocrLanguages: []
     }
   },
-  async mounted () {
+  async mounted() {
     await this.loadLanguages()
   },
   methods: {
-    async loadLanguages () {
+    async loadLanguages() {
       this.$wait.start(this.waitIdentifier)
       this.textLanguages = await this.$core.api.textLanguages()
       this.ocrLanguages = await this.$core.api.ocrLanguages()
@@ -45,27 +45,27 @@ export default {
     }
   },
   computed: {
-    nullOption () {
+    nullOption() {
       return { value: null, text: this.$t('extractingLanguageFormControl.nullOption') }
     },
-    options () {
-      return this.textLanguages.map(language => {
+    options() {
+      return this.textLanguages.map((language) => {
         return { value: language.iso6392, text: this.$t(`filter.lang.${language.name}`) }
       })
     },
-    waitIdentifier () {
+    waitIdentifier() {
       return uniqueId('extracting-language-form-control-')
     },
-    isReady () {
+    isReady() {
       return !this.$wait.is(this.waitIdentifier)
     },
-    overlayVariant () {
+    overlayVariant() {
       return this.dark ? 'dark' : 'light'
     },
-    isOcrLanguageAvailable () {
+    isOcrLanguageAvailable() {
       return !!find(this.ocrLanguages, { iso6392: this.value })
     },
-    showOcrWarning () {
+    showOcrWarning() {
       return this.ocrWarning && this.value && !this.isOcrLanguageAvailable
     }
   }
@@ -74,7 +74,7 @@ export default {
 
 <template>
   <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
-    <b-form-select :value="value" @input="newValue => $emit('input', newValue)" :options="[nullOption, ...options]" />
+    <b-form-select :value="value" @input="(newValue) => $emit('input', newValue)" :options="[nullOption, ...options]" />
     <b-collapse :visible="showOcrWarning">
       <b-alert show variant="warning" class="mt-3" v-html="$t('extractingLanguageFormControl.ocrWarning')" />
     </b-collapse>

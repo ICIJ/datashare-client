@@ -13,7 +13,10 @@
             <span class="filter__items__item__label px-1 flex-grow-1">
               {{ value }}
             </span>
-            <span class="filter__items__item__count badge badge-pill badge-light align-self-start" :class="{ hideOnHover : $config.is('manageDocuments') }">
+            <span
+              class="filter__items__item__count badge badge-pill badge-light align-self-start"
+              :class="{ hideOnHover: $config.is('manageDocuments') }"
+            >
               {{ $n(item.doc_count) }}
             </span>
           </span>
@@ -24,7 +27,8 @@
           :confirmed="() => deleteNamedEntitiesByMentionNorm(value)"
           :label="$t('filter.deleteNamedEntity')"
           :yes="$t('global.yes')"
-          :no="$t('global.no')">
+          :no="$t('global.no')"
+        >
           <fa icon="trash-alt"></fa>
         </confirm-button>
       </div>
@@ -49,7 +53,7 @@ export default {
   },
   mixins: [ner, utils],
   methods: {
-    async deleteNamedEntitiesByMentionNorm (mentionNorm) {
+    async deleteNamedEntitiesByMentionNorm(mentionNorm) {
       const promises = []
       for (const index in this.$store.state.search.indices) {
         promises.push(this.$core.api.deleteNamedEntitiesByMentionNorm(index, mentionNorm))
@@ -63,20 +67,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .filter--named-entity {
-    .filter__items__item {
-      &__delete:not([aria-describedby]) {
-        display: none;
-      }
+.filter--named-entity {
+  .filter__items__item {
+    &__delete:not([aria-describedby]) {
+      display: none;
+    }
 
-      &:hover .filter__items__item__delete {
-        color: inherit;
-        display: block;
-      }
+    &:hover .filter__items__item__delete {
+      color: inherit;
+      display: block;
+    }
 
-      &:hover .hideOnHover {
-        display: none;
-      }
+    &:hover .hideOnHover {
+      display: none;
     }
   }
+}
 </style>

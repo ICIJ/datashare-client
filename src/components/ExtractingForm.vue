@@ -79,7 +79,7 @@ export default {
       default: noop
     }
   },
-  data () {
+  data() {
     return {
       disabled: false
     }
@@ -88,7 +88,7 @@ export default {
     ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language'])
   },
   methods: {
-    async submitExtract () {
+    async submitExtract() {
       this.disabled = true
       try {
         await this.$store.dispatch('indexing/submitExtract')
@@ -102,8 +102,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .extracting-form {
-    background: darken($primary, 20);
-    color: white;
-  }
+.extracting-form {
+  background: darken($primary, 20);
+  color: white;
+}
 </style>

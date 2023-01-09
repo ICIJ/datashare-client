@@ -1,8 +1,17 @@
 <template>
   <widget-documents-by-creation-date :widget="widget" ref="widgetDocumentsByCreationDate">
     <template #selector="{ selectedPath, setSelectedPath }">
-      <span v-b-modal.modal-widget-select-path class="mr-3 py-1 px-2 border btn btn-link d-inline-flex" v-if="selectedPath">
-        <tree-breadcrumb datadir-icon="filter" :path="selectedPath" no-datadir @input="treeViewPath = $event"></tree-breadcrumb>
+      <span
+        v-b-modal.modal-widget-select-path
+        class="mr-3 py-1 px-2 border btn btn-link d-inline-flex"
+        v-if="selectedPath"
+      >
+        <tree-breadcrumb
+          datadir-icon="filter"
+          :path="selectedPath"
+          no-datadir
+          @input="treeViewPath = $event"
+        ></tree-breadcrumb>
         <span v-if="selectedPath === dataDir">
           {{ $t('widget.creationDate.filterFolder') }}
         </span>
@@ -17,8 +26,15 @@
         @ok="setSelectedPath(treeViewPath)"
         :ok-title="$t('widget.creationDate.selectFolder')"
         scrollable
-        size="lg">
-        <tree-view :path="treeViewPath || selectedPath" :project="project" @input="treeViewPath = $event" count size></tree-view>
+        size="lg"
+      >
+        <tree-view
+          :path="treeViewPath || selectedPath"
+          :project="project"
+          @input="treeViewPath = $event"
+          count
+          size
+        ></tree-view>
       </b-modal>
     </template>
   </widget-documents-by-creation-date>
@@ -49,19 +65,19 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       treeViewPath: null
     }
   },
   computed: {
     ...mapState('insights', ['project']),
-    dataDir () {
+    dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   },
   watch: {
-    project () {
+    project() {
       this.$set(this, 'treeViewPath', this.dataDir)
     }
   }

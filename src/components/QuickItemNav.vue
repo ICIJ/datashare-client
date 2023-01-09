@@ -51,21 +51,21 @@ export default {
     }
   },
   methods: {
-    goToPreviousItem () {
+    goToPreviousItem() {
       this.setIndex(Math.max(0, this.index - 1))
       /**
        * Triggered when user click on the `previous` button.
        */
       this.$emit('previous')
     },
-    goToNextItem () {
+    goToNextItem() {
       this.setIndex(Math.min(this.totalItems - 1, this.index + 1))
       /**
        * Triggered when user click on the `next` button.
        */
       this.$emit('next')
     },
-    setIndex (index) {
+    setIndex(index) {
       if (index !== this.index) {
         /**
          * Triggered when the value of `index` changes.
@@ -75,28 +75,28 @@ export default {
     }
   },
   computed: {
-    isPreviousButtonEnable () {
+    isPreviousButtonEnable() {
       if (this.hasPreviousItem !== null) {
         return !!this.hasPreviousItem
       }
       return this.index > 0
     },
-    isNextButtonEnable () {
+    isNextButtonEnable() {
       if (this.hasNextItem !== null) {
         return !!this.hasNextItem
       }
       return this.index < this.totalItems - 1
     },
-    isMac () {
+    isMac() {
       return getShortkeyOS() === 'mac'
     },
-    osTooltipKey () {
+    osTooltipKey() {
       return this.isMac ? 'tooltipMac' : 'tooltipOthers'
     },
-    previousTooltip () {
+    previousTooltip() {
       return this.$t(`quickItemNav.previous.${this.osTooltipKey}`)
     },
-    nextTooltip () {
+    nextTooltip() {
       return this.$t(`quickItemNav.next.${this.osTooltipKey}`)
     }
   }
@@ -105,12 +105,14 @@ export default {
 
 <template>
   <span class="quick-items-nav">
-    <button id="previous-item-button"
-            class="btn btn-sm btn-link text-white py-0 quick-items-nav__previous"
-            @click="goToPreviousItem"
-            @shortkey="getAction('goToPreviousItem')"
-            v-shortkey="getKeys('goToPreviousItem')"
-            :disabled="!isPreviousButtonEnable" >
+    <button
+      id="previous-item-button"
+      class="btn btn-sm btn-link text-white py-0 quick-items-nav__previous"
+      @click="goToPreviousItem"
+      @shortkey="getAction('goToPreviousItem')"
+      v-shortkey="getKeys('goToPreviousItem')"
+      :disabled="!isPreviousButtonEnable"
+    >
       <fa icon="angle-left" class="mr-1"></fa>
       <span class="d-sm-none d-md-inline">
         {{ $t('quickItemNav.previous.label') }}
@@ -119,12 +121,14 @@ export default {
     <b-tooltip target="previous-item-button" triggers="hover">
       <span v-html="previousTooltip"></span>
     </b-tooltip>
-    <button id="next-item-button"
-            class="btn btn-sm btn-link text-white py-0 quick-items-nav__next"
-            @click="goToNextItem"
-            @shortkey="getAction('goToNextItem')"
-            v-shortkey="getKeys('goToNextItem')"
-            :disabled="!isNextButtonEnable">
+    <button
+      id="next-item-button"
+      class="btn btn-sm btn-link text-white py-0 quick-items-nav__next"
+      @click="goToNextItem"
+      @shortkey="getAction('goToNextItem')"
+      v-shortkey="getKeys('goToNextItem')"
+      :disabled="!isNextButtonEnable"
+    >
       <span class="d-sm-none d-md-inline">
         {{ $t('quickItemNav.next.label') }}
       </span>

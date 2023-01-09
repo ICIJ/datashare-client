@@ -24,16 +24,16 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       content: ''
     }
   },
-  async mounted () {
+  async mounted() {
     this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
   },
   watch: {
-    async widget () {
+    async widget() {
       this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
     }
   },
@@ -41,10 +41,10 @@ export default {
     ...mapGetters('pipelines', {
       applyPipelineChain: 'applyPipelineChainByCategory'
     }),
-    defaultContent () {
+    defaultContent() {
       return this.$config.get('widgetTextDefaultContent', settings.widgetTextDefaultContent)
     },
-    widgetContent () {
+    widgetContent() {
       return this.widget.content || this.defaultContent
     }
   }
@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .widget--text {
-    min-height: 100%;
-  }
+.widget--text {
+  min-height: 100%;
+}
 </style>

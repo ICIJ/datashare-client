@@ -1,5 +1,10 @@
 <template>
-  <form class="search-bar container-fluid" :id="uniqueId" @submit.prevent="submit" :class="{ 'search-bar--focused': focused, 'search-bar--animated': animated }">
+  <form
+    class="search-bar container-fluid"
+    :id="uniqueId"
+    @submit.prevent="submit"
+    :class="{ 'search-bar--focused': focused, 'search-bar--animated': animated }"
+  >
     <div class="d-flex align-items-center">
       <search-bar-input
         v-model="query"
@@ -14,17 +19,18 @@
           <search-bar-input-dropdown
             v-model="field"
             class="search-bar__field-options"
-            :fieldOptions="fieldOptions"
-            :fieldOptionsPath="fieldOptionsPath"
+            :field-options="fieldOptions"
+            :field-options-path="fieldOptionsPath"
           />
         </template>
         <template #suggestions>
-            <selectable-dropdown
+          <selectable-dropdown
             class="search-bar__suggestions dropdown-menu"
             ref="suggestions"
             :hide="!suggestions.length"
-            :items="suggestions">
-            <template v-slot:item-label="{ item }">
+            :items="suggestions"
+          >
+            <template #item-label="{ item }">
               <div class="d-flex">
                 <div class="flex-grow-1 text-truncate">
                   <span v-html="injectTermInQuery(item.key)"></span>
@@ -36,21 +42,27 @@
       </search-bar-input>
       <div class="px-0" v-if="settings">
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
-        <b-btn v-b-tooltip.hover.bottomleft
-               :title="$t('userHistory.saveSearch')"
-               class="text-dark"
-               size="md"
-               variant="transparent"
-               @click="$refs['user-history-save-search-form'].show()">
-          <fa icon="save"/>
-          <b-modal body-class="p-0"
-                   hide-footer
-                   ref="user-history-save-search-form"
-                   size="md"
-                   :title="$t('userHistory.saveSearch')">
-            <user-history-save-search-form :indices="indices"
-                                           :uri="uri"
-                                           @submit="$refs['user-history-save-search-form'].hide()"/>
+        <b-btn
+          v-b-tooltip.hover.bottomleft
+          :title="$t('userHistory.saveSearch')"
+          class="text-dark"
+          size="md"
+          variant="transparent"
+          @click="$refs['user-history-save-search-form'].show()"
+        >
+          <fa icon="save" />
+          <b-modal
+            body-class="p-0"
+            hide-footer
+            ref="user-history-save-search-form"
+            size="md"
+            :title="$t('userHistory.saveSearch')"
+          >
+            <user-history-save-search-form
+              :indices="indices"
+              :uri="uri"
+              @submit="$refs['user-history-save-search-form'].hide()"
+            />
           </b-modal>
         </b-btn>
       </div>
@@ -70,9 +82,9 @@ import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
 
-function escapeLuceneChars (str) {
+function escapeLuceneChars(str) {
   const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']
-  return some(escapable, char => str.indexOf(char) > -1) ? JSON.stringify(str) : str
+  return some(escapable, (char) => str.indexOf(char) > -1) ? JSON.stringify(str) : str
 }
 
 /**
@@ -92,7 +104,9 @@ export default {
      */
     placeholder: {
       type: String,
-      default: function () { this.$t('search.placeholder') }
+      default: function () {
+        this.$t('search.placeholder')
+      }
     },
     /**
      * Display the shortcuts button.
@@ -105,8 +119,8 @@ export default {
      */
     fieldOptions: {
       type: Array,
-      default () {
-        return settings.searchFields.map(field => field.key)
+      default() {
+        return settings.searchFields.map((field) => field.key)
       }
     },
     /**
@@ -131,7 +145,7 @@ export default {
     UserHistorySaveSearchForm,
     SearchBarInputDropdown
   },
-  data () {
+  data() {
     return {
       field: this.$store.state.search.field,
       focused: false,
@@ -140,8 +154,8 @@ export default {
       suggestions: []
     }
   },
-  mounted () {
-    this.$store.subscribe(mutation => {
+  mounted() {
+    this.$store.subscribe((mutation) => {
       if (mutation.type === 'search/query') {
         this.$set(this, 'query', mutation.payload)
       }
@@ -151,7 +165,7 @@ export default {
     })
   },
   methods: {
-    submit () {
+    submit() {
       this.hideSuggestions()
       // Change the route after update the store with the new query
       this.$store.commit('search/field', this.field)
@@ -159,27 +173,27 @@ export default {
       this.$store.commit('search/from', 0)
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQueryWithStamp']() })
     },
-    async suggestTerms (candidates) {
+    async suggestTerms(candidates) {
       const query = this.query
       const index = this.$store.state.search.indices.join(',')
       const candidate = last(candidates)
       const fields = castArray(candidate.field === '<implicit>' ? settings.suggestedImplicitFields : candidate.field)
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
       const body = bodybuilder().size(0)
-      each(fields, field => {
+      each(fields, (field) => {
         body.aggregation('terms', field, { include }, field)
       })
       const preference = 'search-bar-suggestions'
       const response = await elasticsearch.search({ index, body: body.build(), preference })
       let suggestions = []
-      each(fields, field => {
+      each(fields, (field) => {
         suggestions = concat(suggestions, get(response, `aggregations.${field}.buckets`, []))
       })
       suggestions = orderBy(suggestions, ['doc_count'], ['desc'])
       // Return an object to check later if the promise result is still applicable
       return { query, suggestions }
     },
-    termCandidates (ast = null) {
+    termCandidates(ast = null) {
       try {
         // List of terms to return
         let terms = []
@@ -196,7 +210,7 @@ export default {
         return []
       }
     },
-    replaceLastTermCandidate (term, ast = null, highlight = true) {
+    replaceLastTermCandidate(term, ast = null, highlight = true) {
       // Parse the query by default
       ast = ast === null ? lucene.parse(this.query) : ast
       // Use recursive call for branches
@@ -209,7 +223,7 @@ export default {
       }
       return ast
     },
-    injectTermInQuery (term, ast = null, highlight = true) {
+    injectTermInQuery(term, ast = null, highlight = true) {
       try {
         ast = this.replaceLastTermCandidate(term, ast, highlight)
         return lucene.toString(ast)
@@ -217,7 +231,7 @@ export default {
         return this.query
       }
     },
-    selectTerm (term) {
+    selectTerm(term) {
       this.$set(this, 'query', term ? this.injectTermInQuery(term.key, null, false) : this.query)
     },
     searchTerms: throttle(async function () {
@@ -238,39 +252,39 @@ export default {
         this.hideSuggestions()
       }
     }, 200),
-    hideSuggestions () {
+    hideSuggestions() {
       this.$set(this, 'suggestions', [])
     },
-    hideSuggestionsAfterDelay () {
+    hideSuggestionsAfterDelay() {
       setTimeout(() => {
         this.$nextTick(this.hideSuggestions)
       }, 200)
     },
-    onBlur () {
+    onBlur() {
       this.focused = false
       this.hideSuggestionsAfterDelay()
     },
-    onInput () {
+    onInput() {
       this.searchTerms()
     },
-    onFocus () {
+    onFocus() {
       this.focused = true
       this.searchTerms()
     }
   },
   computed: {
-    indices () {
+    indices() {
       return this.$store.state.search.indices
     },
-    uniqueId () {
+    uniqueId() {
       return uniqueId('search-bar-')
     },
-    suggestionsAllowed () {
-      const terms = this.termCandidates().map(t => t.term)
+    suggestionsAllowed() {
+      const terms = this.termCandidates().map((t) => t.term)
       const lastTerm = last(terms) || ''
       return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
     },
-    uri () {
+    uri() {
       return window.location.hash.substr(2)
     }
   }
@@ -278,34 +292,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .search-bar {
-
-    &--focused.search-bar--animated {
-      :deep(.input-group) {
-        filter: drop-shadow(0 0.3em .6em rgba(black, .2));
-        transition: transform 0.2s;
-        transform: translateY(-0.25em);
-      }
+.search-bar {
+  &--focused.search-bar--animated {
+    :deep(.input-group) {
+      filter: drop-shadow(0 0.3em 0.6em rgba(black, 0.2));
+      transition: transform 0.2s;
+      transform: translateY(-0.25em);
     }
+  }
 
-    & &__suggestions.dropdown-menu {
-      left: 0;
-      position: absolute !important;
-      right: 0;
-      top: 100%;
-    }
+  & &__suggestions.dropdown-menu {
+    left: 0;
+    position: absolute !important;
+    right: 0;
+    top: 100%;
+  }
 
-    &__suggestions {
-      box-shadow: $dropdown-box-shadow;
-      margin-top: $dropdown-spacer;
+  &__suggestions {
+    box-shadow: $dropdown-box-shadow;
+    margin-top: $dropdown-spacer;
 
-      & .dropdown-item {
-        cursor: pointer;
+    & .dropdown-item {
+      cursor: pointer;
 
-        &:active, &:focus, &.active {
-          color: white;
-        }
+      &:active,
+      &:focus,
+      &.active {
+        color: white;
       }
     }
   }
+}
 </style>

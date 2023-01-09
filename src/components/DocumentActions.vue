@@ -1,18 +1,16 @@
 <template>
-  <component
-    :is="noBtnGroup ? 'div' : 'b-btn-group'"
-    :vertical="vertical"
-    class="document-actions align-items-center">
+  <component :is="noBtnGroup ? 'div' : 'b-btn-group'" :vertical="vertical" class="document-actions align-items-center">
     <a
       class="document-actions__star btn"
       :class="starBtnClassDefinition"
       @click.prevent="toggleStarDocument()"
       href
-      :id="starBtnId">
+      :id="starBtnId"
+    >
       <fa :icon="[isStarred ? 'fa' : 'far', 'star']" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
-      {{ $t('document.starButton') }}
-    </span>
+        {{ $t('document.starButton') }}
+      </span>
     </a>
     <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
       {{ $t('document.starFile') }}
@@ -25,7 +23,8 @@
           :class="downloadBtnClass"
           :href="document.fullUrl"
           :id="downloadBtnId"
-          target="_blank">
+          target="_blank"
+        >
           <fa icon="download" fixed-width />
           <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
             {{ $t('document.downloadButton') }}
@@ -35,7 +34,8 @@
           v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
           right
           toggle-class="py-0"
-          size="sm">
+          size="sm"
+        >
           <b-dropdown-item :href="documentFullUrlWithoutMetadata">
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
@@ -45,7 +45,8 @@
         :placement="tooltipsPlacement"
         :target="downloadBtnId"
         :title="document.contentTypeLabel"
-        triggers="hover focus">
+        triggers="hover focus"
+      >
         <document-type-card :document="document" />
       </b-popover>
     </template>
@@ -57,7 +58,8 @@
           :class="downloadBtnClass"
           :href="document.fullRootUrl"
           :id="downloadRootBtnId"
-          target="_blank">
+          target="_blank"
+        >
           <fa icon="download" fixed-width />
           <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
             {{ $t('document.downloadRootButton') }}
@@ -67,7 +69,8 @@
           v-if="displayDownloadWithoutMetadata && hasRootCleanableContentType"
           right
           toggle-class="py-0"
-          size="sm">
+          size="sm"
+        >
           <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
@@ -77,7 +80,8 @@
         :placement="tooltipsPlacement"
         :target="downloadRootBtnId"
         :title="document.rootContentTypeLabel"
-        triggers="hover focus">
+        triggers="hover focus"
+      >
         <document-type-card :document="document.root" />
       </b-popover>
     </template>
@@ -86,7 +90,8 @@
       class="document-actions__popup btn"
       :class="popupBtnClass"
       :id="popupBtnId"
-      :to="{ name: 'document-modal', params: document.routerParams }">
+      :to="{ name: 'document-modal', params: document.routerParams }"
+    >
       <fa icon="external-link-alt" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
         {{ $t('document.externalWindow') }}
@@ -207,63 +212,60 @@ export default {
       type: Boolean
     }
   },
-  data () {
+  data() {
     return {
-      cleanableContentTypes: [
-        'application/pdf',
-        'application/msword'
-      ]
+      cleanableContentTypes: ['application/pdf', 'application/msword']
     }
   },
   computed: {
     ...mapState('starred', { starredDocuments: 'documents' }),
-    isStarred () {
+    isStarred() {
       const { index, id } = this.document
       return findIndex(this.starredDocuments, { index, id }) > -1
     },
-    starBtnClassDefinition () {
+    starBtnClassDefinition() {
       return {
         [this.starredBtnClass]: this.isStarred,
         ...this.classAttributeToObject(this.starBtnClass)
       }
     },
-    starBtnId () {
+    starBtnId() {
       return uniqueId('document-actions-star-button-')
     },
-    downloadBtnId () {
+    downloadBtnId() {
       return uniqueId('document-actions-download-button-')
     },
-    downloadRootBtnId () {
+    downloadRootBtnId() {
       return uniqueId('document-actions-download-root-button-')
     },
-    popupBtnId () {
+    popupBtnId() {
       return uniqueId('document-actions-popup-button-')
     },
-    documentFullUrlWithoutMetadata () {
+    documentFullUrlWithoutMetadata() {
       return this.document.fullUrl + '&filter_metadata=true'
     },
-    rootDocumentFullUrlWithoutMetadata () {
+    rootDocumentFullUrlWithoutMetadata() {
       return this.document.fullRootUrl + '&filter_metadata=true'
     },
-    canIDownload () {
+    canIDownload() {
       return this.isDownloadAllowed
     },
-    hasRoot () {
+    hasRoot() {
       return this.document.root
     },
-    hasCleanableContentType () {
+    hasCleanableContentType() {
       return this.cleanableContentTypes.includes(this.document.contentType)
     },
-    hasRootCleanableContentType () {
+    hasRootCleanableContentType() {
       return this.hasRoot && this.cleanableContentTypes.includes(this.document.root.contentType)
     }
   },
   methods: {
-    classAttributeToObject (str) {
+    classAttributeToObject(str) {
       const list = str.split(' ')
-      return Object.assign({}, ...list.map(key => ({ [key]: true })))
+      return Object.assign({}, ...list.map((key) => ({ [key]: true })))
     },
-    async toggleStarDocument () {
+    async toggleStarDocument() {
       try {
         await this.$store.dispatch('starred/toggleStarDocument', this.document)
       } catch (_) {

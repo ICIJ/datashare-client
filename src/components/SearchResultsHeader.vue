@@ -1,33 +1,41 @@
 <template>
-  <div class="search-results-header"
-       :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
+  <div
+    class="search-results-header"
+    :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }"
+  >
     <div class="search-results-header__settings d-flex align-items-center">
       <b-btn-group class="flex-grow-1" v-if="!noProgress">
-        <b-dropdown class="search-results-header__settings__sort"
-                    menu-class="search-results-header__settings__sort__dropdown"
-                    toggle-class="text-decoration-none py-2 px-2 border search-results-header__settings__sort__toggler"
-                    size="sm"
-                    variant="link">
-          <template v-slot:button-content>
+        <b-dropdown
+          class="search-results-header__settings__sort"
+          menu-class="search-results-header__settings__sort__dropdown"
+          toggle-class="text-decoration-none py-2 px-2 border search-results-header__settings__sort__toggler"
+          size="sm"
+          variant="link"
+        >
+          <template #button-content>
             {{ $t('search.results.sort.sortLabel') }}
           </template>
           <b-dropdown-header>
             {{ $t('search.settings.sortBy') }}
           </b-dropdown-header>
-          <b-dropdown-item :active="selectedSort === sort"
-                           @click="selectSort(selectedSort)"
-                           :key="selectedSort"
-                           v-for="selectedSort in sorts">
+          <b-dropdown-item
+            :active="selectedSort === sort"
+            @click="selectSort(selectedSort)"
+            :key="selectedSort"
+            v-for="selectedSort in sorts"
+          >
             {{ $t('search.results.sort.' + selectedSort) }}
           </b-dropdown-item>
         </b-dropdown>
-        <b-dropdown class="search-results-header__settings__size mr-2"
-                    menu-class="search-results-header__settings__size__dropdown pt-0"
-                    size="sm"
-                    toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler"
-                    variant="link">
-          <template v-slot:button-content>
-            <span class="search-results-header__settings__size__toggler__slot" >
+        <b-dropdown
+          class="search-results-header__settings__size mr-2"
+          menu-class="search-results-header__settings__size__dropdown pt-0"
+          size="sm"
+          toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler"
+          variant="link"
+        >
+          <template #button-content>
+            <span class="search-results-header__settings__size__toggler__slot">
               {{ firstDocument }} – {{ lastDocument }}
             </span>
             <span class="search-results-header__settings__size__toggler__hits text-muted" :title="nbDocuments">
@@ -37,23 +45,26 @@
           <b-dropdown-header>
             {{ $t('search.settings.resultsPerPage') }}
           </b-dropdown-header>
-          <b-dropdown-item :active="selectedSize === size"
-                           :key="selectedSize"
-                           @click="selectSize(selectedSize)"
-                           v-for="selectedSize in sizes">
+          <b-dropdown-item
+            :active="selectedSize === size"
+            :key="selectedSize"
+            @click="selectSize(selectedSize)"
+            v-for="selectedSize in sizes"
+          >
             <div class="d-flex align-items-center">
-              <span>
-                {{ selectedSize }} {{ $t('search.results.perPage') }}
-              </span>
+              <span> {{ selectedSize }} {{ $t('search.results.perPage') }} </span>
             </div>
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <confirm-button v-if="response.total > 0" class="search-results-header__settings__btn-download btn btn-link text-nowrap "
-                      :confirmed="batchDownload"
-                      :label="batchDownloadLabel"
-                      :yes="$t('global.yes')"
-                      :no="$t('global.no')">
+      <confirm-button
+        v-if="response.total > 0"
+        class="search-results-header__settings__btn-download btn btn-link text-nowrap"
+        :confirmed="batchDownload"
+        :label="batchDownloadLabel"
+        :yes="$t('global.yes')"
+        :no="$t('global.no')"
+      >
         <fa icon="download"></fa>
         <span v-if="!noLabels" class="ml-2 d-none d-md-inline">
           {{ $t('search.results.batchDownload') }}
@@ -65,7 +76,8 @@
         :is-displayed="isDisplayed"
         :no-last-page-link="searchWindowTooLarge"
         :position="position"
-        :total="response.total" />
+        :total="response.total"
+      />
     </div>
     <div class="search-results-header__applied-search-filters" v-if="position === 'top' && !noFilters">
       <applied-search-filters />
@@ -100,7 +112,7 @@ export default {
     position: {
       type: String,
       default: 'top',
-      validator: value => ['top', 'bottom'].indexOf(value) >= -1
+      validator: (value) => ['top', 'bottom'].indexOf(value) >= -1
     },
     /**
      * Use borders
@@ -128,7 +140,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       batchDownloadMaxNbFiles: this.$config.get('batchDownloadMaxNbFiles'),
       batchDownloadMaxSize: this.$config.get('batchDownloadMaxSize'),
@@ -148,83 +160,93 @@ export default {
   },
   computed: {
     ...mapState('search', ['from', 'response', 'size', 'sort']),
-    firstDocument () {
+    firstDocument() {
       return this.lastDocument === 0 ? 0 : this.from + 1
     },
-    lastDocument () {
+    lastDocument() {
       return min([this.response.total, this.from + this.size])
     },
-    searchWindowTooLarge () {
-      return (this.response.total + this.size) >= this.$config.get('search.maxWindowSize', 1e4)
+    searchWindowTooLarge() {
+      return this.response.total + this.size >= this.$config.get('search.maxWindowSize', 1e4)
     },
-    sumContentLength () {
+    sumContentLength() {
       let totalLength = 0
-      this.response.hits.forEach(doc => {
+      this.response.hits.forEach((doc) => {
         if (doc.contentLength >= 0) {
           totalLength += doc.contentLength
         }
       })
       return totalLength
     },
-    batchDownloadLabel () {
+    batchDownloadLabel() {
       let label = ''
       if (this.batchDownloadMaxNbFiles !== undefined && this.response.total > this.batchDownloadMaxNbFiles) {
-        label += `${this.$tc('search.results.warningNumber', this.batchDownloadMaxNbFiles, { number: this.$n(this.batchDownloadMaxNbFiles) })} `
+        label += `${this.$tc('search.results.warningNumber', this.batchDownloadMaxNbFiles, {
+          number: this.$n(this.batchDownloadMaxNbFiles)
+        })} `
       }
       if (this.batchDownloadMaxSize !== undefined && this.sumContentLength > byteSize(this.batchDownloadMaxSize)) {
-        label += `${this.$tc('search.results.warningSize', this.batchDownloadMaxSize, { size: this.batchDownloadMaxSize })} `
+        label += `${this.$tc('search.results.warningSize', this.batchDownloadMaxSize, {
+          size: this.batchDownloadMaxSize
+        })} `
       }
       return label === ''
-        ? `${this.$tc('search.results.batchDownloadSubmit', this.response.total, { total: this.$n(this.response.total) })} ${this.$t('global.confirmLabel')}`
+        ? `${this.$tc('search.results.batchDownloadSubmit', this.response.total, {
+            total: this.$n(this.response.total)
+          })} ${this.$t('global.confirmLabel')}`
         : `${label} ${this.$t('search.results.warningConfirm')}`
     },
-    nbDocuments () {
-      return `${this.$t('search.results.on')} ${this.$tc('search.results.results', this.response.total, { total: this.$n(this.response.total) })}`
+    nbDocuments() {
+      return `${this.$t('search.results.on')} ${this.$tc('search.results.results', this.response.total, {
+        total: this.$n(this.response.total)
+      })}`
     },
-    uriFromStore () {
+    uriFromStore() {
       const from = 0
       const query = { ...this.$store.getters['search/toRouteQuery'](), from }
-      const { route: { fullPath } } = this.$router.resolve({ name: 'search', query })
+      const {
+        route: { fullPath }
+      } = this.$router.resolve({ name: 'search', query })
       return fullPath
     }
   },
-  mounted () {
+  mounted() {
     // Force page to scroll top at each load
     // Specially for pagination
     document.body.scrollTop = document.documentElement.scrollTop = 0
   },
   methods: {
-    getToTemplate () {
+    getToTemplate() {
       return { name: 'search', query: cloneDeep(this.$store.getters['search/toRouteQuery']()) }
     },
-    isDisplayed () {
+    isDisplayed() {
       return this.response.total > this.size
     },
-    selectSize (size) {
+    selectSize(size) {
       // Store new search size into store
       this.$store.commit('search/size', size)
       // Change the route
       this.refreshRouteAndSearch()
     },
-    selectSort (sort) {
+    selectSort(sort) {
       // Store new search sort into store
       this.$store.commit('search/sort', sort)
       // Change the route
       this.refreshRouteAndSearch()
     },
-    refreshRouteAndSearch () {
+    refreshRouteAndSearch() {
       this.refreshRoute()
       this.refreshSearch()
     },
-    refreshRoute () {
+    refreshRoute() {
       const name = 'search'
       const query = this.$store.getters['search/toRouteQuery']()
       this.$router.push({ name, query }).catch(() => {})
     },
-    refreshSearch () {
+    refreshSearch() {
       this.$store.dispatch('search/query')
     },
-    batchDownload () {
+    batchDownload() {
       const uri = this.uriFromStore
       this.$store.dispatch('search/runBatchDownload', uri)
       const to = { name: 'batch-download' }
@@ -238,68 +260,70 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .search-results-header {
-    padding: 0.5 * $spacer 0;
+.search-results-header {
+  padding: 0.5 * $spacer 0;
 
-    &--bordered {
-      &.search-results-header--top {
-        border-bottom: 1px solid $gray-200;
-      }
-      &.search-results-header--bottom {
-        border-top: 1px solid $gray-200;
-      }
+  &--bordered {
+    &.search-results-header--top {
+      border-bottom: 1px solid $gray-200;
     }
-
-    &__settings {
-      color: $text-muted;
-      font-size: 0.95em;
-
-      &__size, &__sort {
-        &__toggler {
-          font-size: $font-size-sm;
-          line-height: inherit;
-        }
-      }
-
-      &__size  {
-        &:deep(&__toggler) {
-          display: flex;
-          align-items: center;
-          gap: 0.5em;
-          width :172px;
-        }
-
-        &:deep(&__toogler__hits) {
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-        }
-      }
+    &.search-results-header--bottom {
+      border-top: 1px solid $gray-200;
     }
+  }
 
-    .search-results-header__settings__size__dropdown,
-    .search-results-header__settings__sort__dropdown {
-      min-width: 100%;
-      padding-top: 0;
+  &__settings {
+    color: $text-muted;
+    font-size: 0.95em;
 
-      .dropdown-header {
-        background: $gray-100;
-        border-bottom: 1px solid $border-color;
-        color: $body-color;
-        font-weight: bold;
-      }
-
-      .dropdown-item, .dropdown-header {
-        font-size: inherit;
+    &__size,
+    &__sort {
+      &__toggler {
+        font-size: $font-size-sm;
         line-height: inherit;
-        padding: 0.25rem 0.75rem;
+      }
+    }
 
-        &.active .text-muted,
-        &:focus .text-muted {
-          color: white !important;
-          opacity: 0.6;
-        }
+    &__size {
+      &:deep(&__toggler) {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        width: 172px;
+      }
+
+      &:deep(&__toogler__hits) {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
     }
   }
+
+  .search-results-header__settings__size__dropdown,
+  .search-results-header__settings__sort__dropdown {
+    min-width: 100%;
+    padding-top: 0;
+
+    .dropdown-header {
+      background: $gray-100;
+      border-bottom: 1px solid $border-color;
+      color: $body-color;
+      font-weight: bold;
+    }
+
+    .dropdown-item,
+    .dropdown-header {
+      font-size: inherit;
+      line-height: inherit;
+      padding: 0.25rem 0.75rem;
+
+      &.active .text-muted,
+      &:focus .text-muted {
+        color: white !important;
+        opacity: 0.6;
+      }
+    }
+  }
+}
 </style>

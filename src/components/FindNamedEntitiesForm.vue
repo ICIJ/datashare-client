@@ -12,12 +12,12 @@
             {{ $t('indexing.findNamedEntitiesSubheader') }}
           </p>
           <fieldset class="list-group">
-            <div class="list-group-item bg-transparent border-light"
-                            v-for="(translationReference, pip) in pipelines"
-                            :key="pip">
-              <b-form-radio name="pipeline"
-                            v-model="pipeline"
-                            :value="pip">
+            <div
+              class="list-group-item bg-transparent border-light"
+              v-for="(translationReference, pip) in pipelines"
+              :key="pip"
+            >
+              <b-form-radio name="pipeline" v-model="pipeline" :value="pip">
                 {{ $t(`${translationReference}`) }}
                 <div class="font-italic small" v-if="pip === 'corenlp'">
                   {{ $t('indexing.default') }}
@@ -78,20 +78,17 @@ export default {
     lowerCase,
     startCase
   },
-  data () {
+  data() {
     return {
       pipelines: [],
       disabled: false
     }
   },
   computed: {
-    ...mapFields([
-      'form.offline',
-      'form.pipeline'
-    ])
+    ...mapFields(['form.offline', 'form.pipeline'])
   },
   methods: {
-    async submitFindNamedEntities () {
+    async submitFindNamedEntities() {
       this.disabled = true
       try {
         await this.$store.dispatch('indexing/submitFindNamedEntities')
@@ -100,7 +97,7 @@ export default {
         this.finally()
       }
     },
-    handlePipelinesTranslation (pipelines) {
+    handlePipelinesTranslation(pipelines) {
       const translationsMap = {}
       pipelines.forEach((pip) => {
         translationsMap[pip] = `indexing.pipelineOptions.${pip}`
@@ -108,7 +105,7 @@ export default {
       return translationsMap
     }
   },
-  async mounted () {
+  async mounted() {
     this.$wait.start('load ner pipelines')
     let pipelines = await this.$store.dispatch('indexing/getNerPipelines')
     pipelines = map(pipelines, lowerCase)
@@ -116,21 +113,20 @@ export default {
     this.$wait.end('load ner pipelines')
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
-  .find-named-entities-form {
-    background: darken($primary, 20);
-    color: white;
+.find-named-entities-form {
+  background: darken($primary, 20);
+  color: white;
 
-    &__header h4 {
-      font-size: 1.2em;
-      font-weight: bolder;
-    }
-
-    &__subheader {
-      font-style: italic;
-    }
+  &__header h4 {
+    font-size: 1.2em;
+    font-weight: bolder;
   }
+
+  &__subheader {
+    font-style: italic;
+  }
+}
 </style>

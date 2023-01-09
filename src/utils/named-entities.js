@@ -3,7 +3,7 @@ import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt
 import { faBuilding } from '@fortawesome/free-solid-svg-icons/faBuilding'
 import { faIdCardAlt } from '@fortawesome/free-solid-svg-icons/faIdCardAlt'
 
-export function namedEntityIcon (category) {
+export function namedEntityIcon(category) {
   const icons = {
     emails: faEnvelope,
     email: faEnvelope,

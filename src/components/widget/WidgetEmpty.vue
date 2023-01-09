@@ -20,27 +20,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @use "sass:math";
+@use 'sass:math';
 
-  .widget--empty {
-    width: 100%;
+.widget--empty {
+  width: 100%;
 
-    &:before {
-      content: "";
-      display: block;
-      padding-top: math.div(9, 16) * 100%;
-    }
-
-    &:after {
-      color: $text-muted;
-      content: "This is an empty widget";
-      font-weight: lighter;
-      left: 0;
-      position: absolute;
-      right: 0;
-      text-align: center;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+  &:before {
+    content: '';
+    display: block;
+    padding-top: math.div(9, 16) * 100%;
   }
+
+  &:after {
+    color: $text-muted;
+    content: 'This is an empty widget';
+    font-weight: lighter;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 </style>

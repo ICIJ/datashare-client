@@ -19,7 +19,7 @@ import { starredStoreBuilder } from './modules/starred'
 import treeView from './modules/treeView'
 
 Vue.use(Vuex)
-export function storeBuilder (api) {
+export function storeBuilder(api) {
   return new Vuex.Store({
     modules: {
       app,
@@ -55,9 +55,9 @@ export function storeBuilder (api) {
           'search.showFilters',
           'search.layout'
         ],
-        filter (mutation) {
-        // Only for some mutations
-          return some(['search/', 'app/', 'doc/'], k => mutation.type.indexOf(k) === 0)
+        filter(mutation) {
+          // Only for some mutations
+          return some(['search/', 'app/', 'doc/'], (k) => mutation.type.indexOf(k) === 0)
         }
       })
     ]

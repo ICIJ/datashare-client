@@ -10,7 +10,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       observer: null,
       contentPlaceholderRows: [
@@ -21,30 +21,30 @@ export default {
       ]
     }
   },
-  mounted () {
+  mounted() {
     return this.bindObserver()
   },
   methods: {
-    async bindObserver () {
+    async bindObserver() {
       this.observer = this.createObserver()
       // Ensure the element is mounted before binding it to the observer
       await this.$nextTick()
       // Observe the component element
       this.observer.observe(this.$el)
     },
-    createObserver () {
-      return new IntersectionObserver(async entries => {
+    createObserver() {
+      return new IntersectionObserver(async (entries) => {
         if (entries[0].isIntersecting) {
           /**
-             * The placeholder enters the viewport.
-             *
-             * @event visible
-             */
+           * The placeholder enters the viewport.
+           *
+           * @event visible
+           */
           this.$emit('visible', this.slice)
         }
       })
     },
-    rowStyle () {
+    rowStyle() {
       const width = `${random(10, 100)}%`
       return { width }
     }
@@ -61,7 +61,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-  .document-content-slice-placeholder {
-    min-height: 60vh;
-  }
+.document-content-slice-placeholder {
+  min-height: 60vh;
+}
 </style>

@@ -46,11 +46,7 @@ export const router = {
               props: true,
               meta: {
                 title: ({ i18n }) => i18n.t('document.title'),
-                docs: [
-                  'all/star-documents.md',
-                  'all/tag-documents.md',
-                  'all/use-keyboard-shortcuts.md'
-                ]
+                docs: ['all/star-documents.md', 'all/tag-documents.md', 'all/use-keyboard-shortcuts.md']
               }
             }
           ]
@@ -116,9 +112,7 @@ export const router = {
               },
               meta: {
                 title: ({ i18n }) => i18n.t('batchSearch.title'),
-                docs: [
-                  'all/batch-search-documents.md'
-                ]
+                docs: ['all/batch-search-documents.md']
               }
             },
             {
@@ -203,7 +197,7 @@ export const router = {
           meta: {
             title: 'Document'
           },
-          props (route) {
+          props(route) {
             return { ...route.params, ...route.query }
           },
           component: () => import('@/pages/DocumentStandalone')
@@ -216,7 +210,7 @@ export const router = {
       meta: {
         title: 'Document'
       },
-      props (route) {
+      props(route) {
         return { ...route.params, ...route.query }
       },
       component: () => import('@/pages/DocumentModal')

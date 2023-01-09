@@ -7,15 +7,34 @@
             <b-input-group-text slot="prepend">
               <fa icon="tag"></fa>
             </b-input-group-text>
-            <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" autocomplete="off" autofocus ref="tag"></b-form-input>
+            <b-form-input
+              v-model="tag"
+              @input="searchTags"
+              required
+              :placeholder="$t('document.tagsNew')"
+              autocomplete="off"
+              autofocus
+              ref="tag"
+            ></b-form-input>
           </b-input-group>
         </b-overlay>
-        <selectable-dropdown :items="suggestions" @input="tag = $event" @click.native="addTag" :hide="!suggestions.length" class="document-tags-form__add__suggestions"></selectable-dropdown>
+        <selectable-dropdown
+          :items="suggestions"
+          @input="tag = $event"
+          @click.native="addTag"
+          :hide="!suggestions.length"
+          class="document-tags-form__add__suggestions"
+        ></selectable-dropdown>
       </b-form>
     </div>
     <div class="col-md-8" v-if="displayTags">
       <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
-        <li class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1" :class="[mode === 'light' ? 'border badge-light': 'badge-dark']" v-for="tag in tags" :key="tag.label">
+        <li
+          class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1"
+          :class="[mode === 'light' ? 'border badge-light' : 'badge-dark']"
+          v-for="tag in tags"
+          :key="tag.label"
+        >
           <span :title="generateTagTooltip(tag)" v-b-tooltip>
             {{ tag.label }}
           </span>
@@ -26,7 +45,8 @@
             v-if="!isCreatedByAdmin(tag)"
             :label="$t('document.tagConfirmation')"
             :no="$t('global.no')"
-            :yes="$t('global.yes')">
+            :yes="$t('global.yes')"
+          >
             <fa icon="times" class="fa-fw pl-2"></fa>
           </confirm-button>
         </li>
@@ -86,7 +106,7 @@ export default {
       default: 'light'
     }
   },
-  data () {
+  data() {
     return {
       isReady: true,
       suggestions: [],
@@ -94,7 +114,7 @@ export default {
     }
   },
   computed: {
-    documents () {
+    documents() {
       return castArray(this.document)
     }
   },
@@ -108,29 +128,42 @@ export default {
       const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
       this.$set(this, 'suggestions', map(buckets, 'key'))
     }, 200),
-    async addTag () {
+    async addTag() {
       this.$set(this, 'isReady', false)
-      await this.$store.dispatch('document/tag', { documents: this.documents, tag: this.tag, userId: await this.$core.auth.getUsername() })
+      await this.$store.dispatch('document/tag', {
+        documents: this.documents,
+        tag: this.tag,
+        userId: await this.$core.auth.getUsername()
+      })
       this.$set(this, 'tag', '')
       this.$set(this, 'suggestions', [])
       this.$set(this, 'isReady', true)
-      delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.elasticsearch.waitForAnswer, 'tags')
-      if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
+      delay(
+        (filterName) => this.$root.$emit('filter::refresh', filterName),
+        settings.elasticsearch.waitForAnswer,
+        'tags'
+      )
+      if (!this.displayTags)
+        this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
       // Focus on the tag input
       if (this.$refs && this.$refs.tag && this.$refs.tag.focus) {
-        this.$nextTick(() => { this.$refs.tag.focus() })
+        this.$nextTick(() => {
+          this.$refs.tag.focus()
+        })
       }
     },
-    async deleteTag (tag) {
+    async deleteTag(tag) {
       this.$set(this, 'isReady', false)
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
       this.$root.$emit('filter::delete', 'tags', tag)
       this.$set(this, 'isReady', true)
     },
-    generateTagTooltip (tag) {
-      return `${this.$t('document.createdBy')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
+    generateTagTooltip(tag) {
+      return `${this.$t('document.createdBy')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(
+        tag.creationDate
+      ).format('LLL')}`
     },
-    isCreatedByAdmin (tag) {
+    isCreatedByAdmin(tag) {
       return tag?.user?.id === this.$config.get('userAdmin') || false
     }
   }
@@ -138,43 +171,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .document-tags-form {
-    font-size: 1rem;
+.document-tags-form {
+  font-size: 1rem;
 
-    &__add {
-      position: relative;
+  &__add {
+    position: relative;
 
-      &__suggestions.selectable-dropdown.dropdown-menu {
-        position: absolute;
-        right: 0;
-        top: 100%;
-      }
+    &__suggestions.selectable-dropdown.dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: 100%;
+    }
+  }
+
+  &__tags__tag {
+    span {
+      vertical-align: middle;
     }
 
-    &__tags__tag {
-      span {
-        vertical-align: middle;
+    &__delete.btn {
+      border: 0;
+      cursor: pointer;
+      font-size: 0.8rem;
+      line-height: 1;
+      padding: 0;
+
+      &.dark {
+        color: white;
       }
 
-      &__delete.btn {
-        border: 0;
-        cursor: pointer;
-        font-size: 0.8rem;
-        line-height: 1;
-        padding: 0;
+      &.light {
+        color: $text-muted;
+      }
 
-        &.dark {
-          color: white;
-        }
-
-        &.light {
-          color: $text-muted;
-        }
-
-        > svg:hover {
-          color: $danger;
-        }
+      > svg:hover {
+        color: $danger;
       }
     }
   }
+}
 </style>

@@ -30,7 +30,6 @@
 </template>
 
 <script>
-
 /**
  * Display Datashare's version number.
  */
@@ -59,27 +58,27 @@ export default {
       default: 'Version'
     }
   },
-  mounted () {
+  mounted() {
     this.setVersion()
   },
-  data () {
+  data() {
     return {
       serverHash: null,
       serverVersion: null
     }
   },
   methods: {
-    async fetchVersion () {
+    async fetchVersion() {
       return this.$core.api.getVersion()
     },
-    async setVersion () {
+    async setVersion() {
       const version = await this.fetchVersion()
       this.$set(this, 'serverHash', version['git.commit.id.abbrev'])
       this.$set(this, 'serverVersion', version['git.build.version'])
     }
   },
   computed: {
-    clientHash () {
+    clientHash() {
       return process.env.VUE_APP_GIT_HASH.substring(0, 7)
     }
   }

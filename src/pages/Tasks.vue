@@ -48,21 +48,21 @@ export default {
     BatchSearchForm,
     PageHeader
   },
-  data () {
+  data() {
     return {
       defaultTab: null
     }
   },
   computed: {
     tab: {
-      get () {
-        const index = findIndex(this.tabRoutes, name => {
+      get() {
+        const index = findIndex(this.tabRoutes, (name) => {
           return this.$route.name.startsWith(name)
         })
         // Use the defaultTab value when the current route doesn't match with any tab
         return index > -1 ? index : this.defaultTab
       },
-      set (value) {
+      set(value) {
         const name = this.tabRoutes[value]
         // Change tab only if the route changed
         if (name !== this.$route.name) {
@@ -70,12 +70,12 @@ export default {
         }
       }
     },
-    tabRoutes () {
+    tabRoutes() {
       return ['batch-search', 'batch-download', 'indexing']
     }
   },
-  beforeRouteEnter (to, from, next) {
-    return next(vm => {
+  beforeRouteEnter(to, from, next) {
+    return next((vm) => {
       const defaultTab = vm.tabRoutes.indexOf(to.name)
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab

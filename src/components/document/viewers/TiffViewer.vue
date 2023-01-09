@@ -53,7 +53,7 @@ export default {
     }
   },
   mixins: [datashareSourceMixin],
-  data () {
+  data() {
     return {
       error: null,
       maxWidth: 750,
@@ -63,10 +63,10 @@ export default {
       pages: []
     }
   },
-  created () {
+  created() {
     Tiff.initialize({ TOTAL_MEMORY: 16777216 * 10 })
   },
-  async mounted () {
+  async mounted() {
     try {
       this.tiff = await this.getTiff()
       for (const page of range(1, this.tiff.countDirectory() + 1)) {
@@ -77,32 +77,32 @@ export default {
     }
   },
   methods: {
-    getPage (page = this.active) {
+    getPage(page = this.active) {
       if (this.pages[page - 1]) {
         return this.pages[page - 1].toDataURL()
       }
     },
-    renderPage (page = this.active) {
+    renderPage(page = this.active) {
       this.tiff.setDirectory(page - 1)
       return this.tiff.toCanvas()
     },
-    async getTiff () {
+    async getTiff() {
       const r = await this.$core.api.getSource(this.document, { responseType: 'blob' })
       const buffer = await r.arrayBuffer()
       return new Tiff({ buffer })
     },
-    async rotateActivePage (page, direction = 1) {
+    async rotateActivePage(page, direction = 1) {
       const canvas = await this.rotate(this.pages[page - 1], direction)
       this.$set(this.pages, page - 1, canvas)
     },
-    rotate (canvas, direction = 1) {
+    rotate(canvas, direction = 1) {
       const ctx = canvas.getContext('2d')
       const cw = canvas.width
       const ch = canvas.height
       // Store current data to a temporary image
       let img = new Image()
       // Create a promise to return when the image is rotated
-      const promise = new Promise(resolve => {
+      const promise = new Promise((resolve) => {
         img.onload = () => {
           // Reset the canvas with new dimensions
           canvas.width = ch
@@ -111,10 +111,10 @@ export default {
           ctx.translate(ch / 2, cw / 2)
           // Clockwise rotation
           if (direction === 1) {
-            ctx.rotate(90 * Math.PI / 180)
+            ctx.rotate((90 * Math.PI) / 180)
             // Counterclockwise rotation
           } else {
-            ctx.rotate(-90 * Math.PI / 180)
+            ctx.rotate((-90 * Math.PI) / 180)
           }
           // Draw the previows image, now rotated
           ctx.drawImage(img, cw / -2, ch / -2)
@@ -140,8 +140,7 @@ export default {
       cursor: pointer;
 
       &:hover {
-        box-shadow: 0 0 0 1px $input-focus-border-color,
-                    0 0 $spacer * 0.5 0 $input-focus-border-color;
+        box-shadow: 0 0 0 1px $input-focus-border-color, 0 0 $spacer * 0.5 0 $input-focus-border-color;
       }
 
       &__page {

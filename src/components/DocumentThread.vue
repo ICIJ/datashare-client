@@ -3,21 +3,27 @@
     <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
     <div class="document-thread p-0" v-if="document">
       <ul class="list-unstyled document-thread__list m-0">
-        <li class="document-thread__list__email"
-            :class="{ 'document-thread__list__email--active': isActive(email) }"
-            :key="email.id"
-            v-for="email in thread.hits">
+        <li
+          class="document-thread__list__email"
+          :class="{ 'document-thread__list__email--active': isActive(email) }"
+          :key="email.id"
+          v-for="email in thread.hits"
+        >
           <router-link :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block" v-once>
             <div class="d-flex text-nowrap">
               <div class="w-100">
-                <email-string class="document-thread__list__email__from mr-3"
-                              :email="email.messageFrom"
-                              tag="strong"></email-string>
+                <email-string
+                  class="document-thread__list__email__from mr-3"
+                  :email="email.messageFrom"
+                  tag="strong"
+                ></email-string>
               </div>
-              <abbr class="document-thread__list__email__date align-self-end small"
-                    :title="email.creationDateHuman"
-                    v-b-tooltip
-                    v-if="email.creationDate">
+              <abbr
+                class="document-thread__list__email__date align-self-end small"
+                :title="email.creationDateHuman"
+                v-b-tooltip
+                v-if="email.creationDate"
+              >
                 {{ $d(email.creationDate) }}
               </abbr>
             </div>
@@ -25,11 +31,13 @@
               <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email) && email.messageTo">
                 {{ $t('email.to') }}
                 <ul class="list-inline d-inline">
-                  <email-string class="list-inline-item"
-                                :email="to"
-                                :key="to"
-                                tag="li"
-                                v-for="to in email.messageTo.split(',')"></email-string>
+                  <email-string
+                    class="list-inline-item"
+                    :email="to"
+                    :key="to"
+                    tag="li"
+                    v-for="to in email.messageTo.split(',')"
+                  ></email-string>
                 </ul>
               </span>
               <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
@@ -38,9 +46,11 @@
             </div>
           </router-link>
           <div v-if="isActive(email)">
-            <document-translated-content class="document-thread__list__email__content"
-                                         :document="activeDocument"
-                                         :named-entities="namedEntities"></document-translated-content>
+            <document-translated-content
+              class="document-thread__list__email__content"
+              :document="activeDocument"
+              :named-entities="namedEntities"
+            ></document-translated-content>
           </div>
         </li>
       </ul>
@@ -74,14 +84,14 @@ export default {
      */
     namedEntities: {
       type: Array,
-      default: () => ([])
+      default: () => []
     }
   },
   components: {
     DocumentTranslatedContent,
     EmailString
   },
-  data () {
+  data() {
     return {
       thread: {
         hits: []
@@ -98,14 +108,14 @@ export default {
       // vue caching mechanism to ensure the activeDocument computed property is
       // refreshed after the content was updated.
       cache: false,
-      get () {
+      get() {
         return this.document
       }
     },
-    activeDocumentIndex () {
+    activeDocumentIndex() {
       return findIndex(this.thread.hits, this.isActive)
     },
-    threadBody () {
+    threadBody() {
       const body = bodybuilder()
       // Creation date is the date when the email was sent
       body.sort('metadata.tika_metadata_dcterms_created', 'asc')
@@ -121,25 +131,31 @@ export default {
       // Select only the Documents at the same extraction level
       body.query('match', 'extractionLevel', this.document.extractionLevel)
       // Select emails only
-      body.query('bool', b => b
-        .orQuery('match', 'contentType', 'application/vnd.ms-outlook')
-        .orQuery('regexp', 'contentType', 'message/.*')
+      body.query('bool', (b) =>
+        b.orQuery('match', 'contentType', 'application/vnd.ms-outlook').orQuery('regexp', 'contentType', 'message/.*')
       )
       // Similar subject
-      body.query('query_string', { fields: ['metadata.tika_metadata_dc_subject', 'metadata.tika_metadata_subject'], query: `.*\"${ this.document.cleanSubject }\".*` })
+      body.query('query_string', {
+        fields: ['metadata.tika_metadata_dc_subject', 'metadata.tika_metadata_subject'],
+        query: `.*\"${this.document.cleanSubject}\".*`
+      })
       // Collect all field data
-      return reduce(this.threadQueryFields, (body, path, field) => {
-        const value = this.document[field]
-        if (value) body.query('match', path, value)
-        return body
-      }, body)
+      return reduce(
+        this.threadQueryFields,
+        (body, path, field) => {
+          const value = this.document[field]
+          if (value) body.query('match', path, value)
+          return body
+        },
+        body
+      )
     }
   },
   methods: {
-    isActive (email) {
+    isActive(email) {
       return email.id === this.document.id
     },
-    async scrollToActive () {
+    async scrollToActive() {
       // Element must be mounted
       await this.$nextTick()
       // Use the active email
@@ -152,7 +168,7 @@ export default {
       const $container = this.$el.closest('.overflow-auto')
       this.$root.$emit('scroll-tracker:request', element, offset, $container)
     },
-    async init () {
+    async init() {
       this.$wait.start('load thread')
       // Load it's thread (if any)
       this.thread = await this.getThread()
@@ -163,7 +179,7 @@ export default {
       // Scroll to the active email
       await this.scrollToActive()
     },
-    async getThread () {
+    async getThread() {
       try {
         if (this.threadBody) {
           const raw = await elasticsearch.search({
@@ -179,13 +195,13 @@ export default {
       }
     }
   },
-  beforeRouteEnter (_to, _from, next) {
+  beforeRouteEnter(_to, _from, next) {
     next(this.init)
   },
-  beforeRouteUpdate (_to, _from, next) {
+  beforeRouteUpdate(_to, _from, next) {
     this.init().then(next)
   },
-  mounted () {
+  mounted() {
     this.$store.subscribe(({ type, payload }) => {
       if (type === 'document/content') {
         this.thread.hits[this.activeDocumentIndex].content = payload
@@ -199,7 +215,7 @@ export default {
 <style lang="scss" scoped>
 .document-thread {
   background: black;
-  margin:$spacer;
+  margin: $spacer;
 
   &__list {
     background: white;
@@ -226,7 +242,7 @@ export default {
           border-left: 2px solid $secondary;
           bottom: 0;
           box-shadow: 0 0 10px 0 $secondary;
-          content: "";
+          content: '';
           left: 0;
           position: absolute;
           top: 0;
@@ -236,7 +252,7 @@ export default {
       &__to {
         .list-inline-item:not(:last-of-type):after {
           clear: right;
-          content:",";
+          content: ',';
           float: right;
         }
       }

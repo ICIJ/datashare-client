@@ -8,7 +8,12 @@
           <h5 class="flex-grow-1 my-0 h6 text-uppercase text-muted">
             {{ $t('search.filtersTitle') }}
           </h5>
-          <button class="filters-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters" :title="$t('search.hideFilters')" v-b-tooltip>
+          <button
+            class="filters-panel__sticky__toolbar__toggler btn btn-link"
+            @click="hideFilters"
+            :title="$t('search.hideFilters')"
+            v-b-tooltip
+          >
             <fa icon="arrow-left" class="text-light"></fa>
             <span class="sr-only">
               {{ $t('search.hideFilters') }}
@@ -19,11 +24,22 @@
       </div>
       <hook name="filters-panel.filters:before"></hook>
       <filter-project></filter-project>
-      <component v-for="filter in filters" :ref="filter.name" :key="filter.name" :is="filter.component" v-bind="{ filter }"></component>
+      <component
+        v-for="filter in filters"
+        :ref="filter.name"
+        :key="filter.name"
+        :is="filter.component"
+        v-bind="{ filter }"
+      ></component>
       <hook name="filters-panel.filters:after"></hook>
       <hook name="filters-panel:after"></hook>
     </div>
-    <b-modal hide-footer lazy ref="openFilterSearch" :title="expandedFilter ? $t('filter.' + expandedFilter.name) : null">
+    <b-modal
+      hide-footer
+      lazy
+      ref="openFilterSearch"
+      :title="expandedFilter ? $t('filter.' + expandedFilter.name) : null"
+    >
       <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query"></filter-search>
     </b-modal>
   </div>
@@ -61,13 +77,13 @@ export default {
     FilterStarred,
     Hook
   },
-  mounted () {
+  mounted() {
     this.$root.$on('filter::async-search', this.openFilterSearch)
     this.$root.$on('filter::add-filter-values', this.setFilterValue)
     this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
     this.$root.$on('index::delete::all', this.refreshEachFilter)
   },
-  data () {
+  data() {
     return {
       expandedFilter: null,
       query: null
@@ -77,30 +93,30 @@ export default {
     ...mapState('search', ['showFilters']),
     filters: {
       cache: false,
-      get () {
+      get() {
         return this.$store.getters['search/instantiatedFilters']
       }
     }
   },
   methods: {
-    openFilterSearch (expandedFilter, query) {
+    openFilterSearch(expandedFilter, query) {
       if (this.$refs.openFilterSearch) {
         this.$set(this, 'expandedFilter', expandedFilter)
         this.$set(this, 'query', query)
         this.$refs.openFilterSearch.show()
       }
     },
-    setFilterValue ({ name }, value) {
+    setFilterValue({ name }, value) {
       this.$store.commit('search/setFilterValue', { name, value })
     },
-    hideFilters () {
+    hideFilters() {
       this.$store.commit('search/toggleFilters')
     },
-    isFilterComponent (component) {
+    isFilterComponent(component) {
       return isArray(component) && !!get(component, '0.root', false)
     },
-    resetFilterValues (refresh = true) {
-      Object.values(this.$refs).forEach(component => {
+    resetFilterValues(refresh = true) {
+      Object.values(this.$refs).forEach((component) => {
         if (this.isFilterComponent(component)) {
           const filter = component[0]
           filter.root.query = ''
@@ -111,8 +127,8 @@ export default {
         }
       })
     },
-    refreshEachFilter () {
-      Object.values(this.$refs).forEach(component => {
+    refreshEachFilter() {
+      Object.values(this.$refs).forEach((component) => {
         if (this.isFilterComponent(component)) {
           component[0].root.aggregateWithLoading()
         }
@@ -124,66 +140,66 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @use "sass:math";
+@use 'sass:math';
 
-  .filters-panel {
-    $card-bg: darken($app-context-sidebar-bg, 5%);
-    $panel-color: $app-sidebar-color;
+.filters-panel {
+  $card-bg: darken($app-context-sidebar-bg, 5%);
+  $panel-color: $app-sidebar-color;
 
-    align-items: flex-start;
-    background: $app-context-sidebar-bg;
-    color: $panel-color;
-    display: flex;
-    min-height: 100vh;
-    padding-bottom: $spacer;
-    padding-right: $spacer;
+  align-items: flex-start;
+  background: $app-context-sidebar-bg;
+  color: $panel-color;
+  display: flex;
+  min-height: 100vh;
+  padding-bottom: $spacer;
+  padding-right: $spacer;
 
-    &__sticky {
-      width: 100%;
+  &__sticky {
+    width: 100%;
 
-      &__toolbar {
-        font-size: $font-size-sm;
-        line-height: $line-height-base * 1 - math.div(85 - 95, 95);
-        padding: $spacer 0 0 $spacer;
+    &__toolbar {
+      font-size: $font-size-sm;
+      line-height: $line-height-base * 1 - math.div(85 - 95, 95);
+      padding: $spacer 0 0 $spacer;
 
-        .custom-control-input:checked ~ .custom-control-label::before {
-          background-color: $tertiary;
-          border-color: $tertiary;
+      .custom-control-input:checked ~ .custom-control-label::before {
+        background-color: $tertiary;
+        border-color: $tertiary;
+      }
+    }
+
+    &:deep(.card) {
+      background: $card-bg;
+      border-width: 0;
+      color: $panel-color;
+      margin: $spacer 0 0 $spacer;
+
+      .card-header {
+        background: inherit;
+        border-radius: $card-border-radius;
+        border-width: 0;
+        color: rgba($panel-color, 0.6);
+        position: relative;
+        z-index: 10;
+
+        & > h6 {
+          background: transparent;
+          color: rgba($panel-color, 0.6);
+          cursor: pointer;
+          font-size: 0.9rem;
+          font-weight: bolder;
+          margin-bottom: 0;
+          padding-top: $spacer * 0.25;
         }
       }
 
-      &:deep(.card) {
-        background: $card-bg;
-        border-width: 0;
+      & > .list-group,
+      & > .card-body {
         color: $panel-color;
-        margin: $spacer 0 0 $spacer;
-
-        .card-header {
-          background: inherit;
-          border-radius: $card-border-radius;
-          border-width: 0;
-          color: rgba($panel-color, 0.6);
-          position: relative;
-          z-index: 10;
-
-          & > h6 {
-            background: transparent;
-            color: rgba($panel-color, 0.6);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: bolder;
-            margin-bottom: 0;
-            padding-top: $spacer * .25;
-          }
-        }
-
-        & > .list-group,
-        & > .card-body {
-          color: $panel-color;
-          font-size: 0.8rem;
-          padding:0;
-        }
+        font-size: 0.8rem;
+        padding: 0;
       }
     }
   }
+}
 </style>

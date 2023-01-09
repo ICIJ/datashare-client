@@ -51,24 +51,24 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       onDisk: null,
       path: null,
       total: null
     }
   },
-  async created () {
+  async created() {
     this.$set(this, 'path', this.dataDir)
     await this.loadData()
   },
   computed: {
     ...mapState('insights', ['project']),
-    dataDir () {
+    dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   },
-  mounted () {
+  mounted() {
     this.$store.subscribe(async ({ type }) => {
       if (type === 'insights/project') {
         await this.loadData()
@@ -76,7 +76,7 @@ export default {
     })
   },
   methods: {
-    async sumTotal () {
+    async sumTotal() {
       const index = this.$store.state.insights.project
       const body = bodybuilder()
         .andQuery('match', 'type', 'Document')
@@ -96,7 +96,7 @@ export default {
     humanSize
   },
   watch: {
-    project () {
+    project() {
       this.$set(this, 'path', this.dataDir)
     }
   }
@@ -104,21 +104,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .widget {
-    min-height: 100%;
+.widget {
+  min-height: 100%;
 
-    &__main-figure {
-      display: block;
-      font-size: 1.8rem;
-    }
+  &__main-figure {
+    display: block;
+    font-size: 1.8rem;
+  }
 
-    &__details {
-      color: $link-color;
-      cursor: pointer;
+  &__details {
+    color: $link-color;
+    cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
+}
 </style>

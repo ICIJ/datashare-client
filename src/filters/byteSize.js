@@ -1,4 +1,4 @@
-export default function byteSize (humanSize) {
+export default function byteSize(humanSize) {
   const powers = { k: 1, m: 2, g: 3 }
   const regex = /([0-9]+)([KMG])/
 

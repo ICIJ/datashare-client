@@ -14,31 +14,49 @@
       striped
       tbody-tr-class="batch-search-table__item"
       thead-tr-class="batch-search-table__head text-nowrap"
-      @sort-changed="sortChanged">
+      @sort-changed="sortChanged"
+    >
       <template #table-busy>
-        <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" :rows="placeholderRows"/>
+        <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" :rows="placeholderRows" />
       </template>
-      <template #empty >
-        <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage"/>
+      <template #empty>
+        <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage" />
       </template>
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
-        <batch-search-filter-dropdown v-model="selectedStates" :items="states" :id="field.key" :name="field.label" multiple>
-          <template #label="{item}">
-            {{$t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase()}}
+        <batch-search-filter-dropdown
+          v-model="selectedStates"
+          :items="states"
+          :id="field.key"
+          :name="field.label"
+          multiple
+        >
+          <template #label="{ item }">
+            {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
           </template>
         </batch-search-filter-dropdown>
       </template>
       <template #head(projects)="{ field }">
-        <batch-search-filter-dropdown v-model="selectedProjects" :items="projects" :id="field.key" :name="field.label" multiple/>
+        <batch-search-filter-dropdown
+          v-model="selectedProjects"
+          :items="projects"
+          :id="field.key"
+          :name="field.label"
+          multiple
+        />
       </template>
       <template #head(date)="{ field }">
-        <batch-search-filter-date v-model="selectedDateRange" :date="selectedDateRange" :id="field.key" :name="field.label"/>
+        <batch-search-filter-date
+          v-model="selectedDateRange"
+          :date="selectedDateRange"
+          :id="field.key"
+          :name="field.label"
+        />
       </template>
       <template #head(published)="{ field }">
         <batch-search-filter-dropdown v-model="selectedStatus" :items="status" :id="field.key" :name="field.label">
-          <template #label="{item}">
-            {{$t(`batchSearch.${item.label}`)}}
+          <template #label="{ item }">
+            {{ $t(`batchSearch.${item.label}`) }}
           </template>
         </batch-search-filter-dropdown>
       </template>
@@ -50,9 +68,9 @@
         <p class="m-0 text-muted small">{{ item.description }}</p>
       </template>
       <template #cell(queries)="{ item }">
-          <span class="batch-search-table__item__queries">
-            {{ item.formatNbQueries }}
-          </span>
+        <span class="batch-search-table__item__queries">
+          {{ item.formatNbQueries }}
+        </span>
       </template>
       <template #cell(state)="{ item }">
         <batch-search-status :batch-search="item" />
@@ -62,7 +80,7 @@
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #cell(user.id)="{ item }">
-        <user-display v-if="item.hasUser" :username="item.userId" style="vertical-align:center"/>
+        <user-display v-if="item.hasUser" :username="item.userId" style="vertical-align: center" />
       </template>
       <template #cell(nbResults)="{ item }">
         <span class="batch-search-table__item__results">{{ item.formatNbResults }}</span>
@@ -71,9 +89,9 @@
         {{ item.isPublished }}
       </template>
       <template #cell(projects)="{ item }">
-          <span class="batch-search-table__item__projects text-truncate" v-b-tooltip.hover :title="item.projectNames">
-            {{ item.projectNames }}
-          </span>
+        <span class="batch-search-table__item__projects text-truncate" v-b-tooltip.hover :title="item.projectNames">
+          {{ item.projectNames }}
+        </span>
       </template>
     </b-table>
 
@@ -82,7 +100,8 @@
       :link-gen="linkGen"
       :number-of-pages="numberOfPages"
       class="mt-2 mx-auto"
-      use-router/>
+      use-router
+    />
   </div>
 </template>
 
@@ -122,7 +141,7 @@ export default {
   name: 'BatchSearchTable',
   mixins: [polling, utils],
   components: { UserDisplay, BatchSearchStatus, BatchSearchFilterDate, BatchSearchFilterDropdown },
-  data () {
+  data() {
     return {
       status: [
         BATCHSEARCH_STATUS[BATCHSEARCH_STATUS_VALUE.PUBLISHED],
@@ -137,16 +156,16 @@ export default {
       ]
     }
   },
-  mounted () {
+  mounted() {
     this.fetchAndRegisterPollWithLoader()
   },
   watch: {
-    $route () {
+    $route() {
       return this.fetchWithLoader()
     }
   },
   methods: {
-    createBatchSearchRoute ({
+    createBatchSearchRoute({
       page = this.page,
       sort = this.selectedSort.sort,
       order = this.selectedSort.order,
@@ -166,16 +185,18 @@ export default {
         query: queryParams
       }
     },
-    removeEmptySearchParams (query) {
+    removeEmptySearchParams(query) {
       if (!query.query?.length) delete query?.query
       if (!query?.publishState) delete query?.publishState
       if (!query?.project || !query?.project?.length) delete query?.project
       if (!query?.state || !query?.state?.length) delete query?.state
     },
-    async fetch () {
+    async fetch() {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      const batchDate = this.selectedDateRange ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`] : null
+      const batchDate = this.selectedDateRange
+        ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`]
+        : null
       const params = {
         from,
         size,
@@ -190,32 +211,32 @@ export default {
       }
       return this.$store.dispatch('batchSearch/getBatchSearches', params)
     },
-    async fetchWithLoader () {
+    async fetchWithLoader() {
       this.$wait.start('load batchSearches')
       this.$Progress.start()
       await this.fetch()
       this.$Progress.finish()
       this.$wait.end('load batchSearches')
     },
-    async  fetchAndRegisterPollWithLoader () {
+    async fetchAndRegisterPollWithLoader() {
       this.$wait.start('load batchSearches')
       this.$Progress.start()
       await this.fetchAndRegisterPoll()
       this.$Progress.finish()
       this.$wait.end('load batchSearches')
     },
-    async fetchForPoll () {
+    async fetchForPoll() {
       await this.fetch()
       // Continue to poll data if they are pending batch searches and we are on page 1
       return this.page === 1 && this.hasPendingBatchSearches
     },
-    async fetchAndRegisterPoll () {
+    async fetchAndRegisterPoll() {
       await this.fetch()
       const fn = this.fetchForPoll
       const timeout = () => random(1000, 4000)
       this.registerPollOnce({ fn, timeout })
     },
-    generateTo (item) {
+    generateTo(item) {
       const baseTo = {
         name: 'batch-search.results',
         params: {
@@ -234,35 +255,35 @@ export default {
         ...(searchQueryExists && { query: { query: this.search } })
       }
     },
-    getProjectsNames (item) {
-      return item.projects?.map(project => project.name).join(', ') ?? ''
+    getProjectsNames(item) {
+      return item.projects?.map((project) => project.name).join(', ') ?? ''
     },
 
-    linkGen (page) {
+    linkGen(page) {
       return this.createBatchSearchRoute({ page })
     },
-    serverField (field) {
+    serverField(field) {
       return this.isServer ? field : null
     },
-    async sortChanged (ctx) {
+    async sortChanged(ctx) {
       this.selectedSort = {
         sort: this.fieldNameByKey(ctx.sortBy),
         order: ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
       }
     },
-    fieldNameByKey (fieldKey) {
-      return find(this.fields, item => item.key === fieldKey)?.name
+    fieldNameByKey(fieldKey) {
+      return find(this.fields, (item) => item.key === fieldKey)?.name
     },
-    fieldKeyByName (fieldName) {
-      return find(this.fields, item => item.name === fieldName)?.key
+    fieldKeyByName(fieldName) {
+      return find(this.fields, (item) => item.name === fieldName)?.key
     },
-    updateRoute (params) {
+    updateRoute(params) {
       return this.$router.push(this.createBatchSearchRoute(params))
     }
   },
   computed: {
     ...mapState('batchSearch', ['total']),
-    displayBatchSearches () {
+    displayBatchSearches() {
       return this.$store.state.batchSearch.batchSearches.map((batchSearch) => {
         return {
           ...batchSearch,
@@ -278,7 +299,7 @@ export default {
         }
       })
     },
-    fields () {
+    fields() {
       return compact([
         {
           key: 'state',
@@ -330,123 +351,120 @@ export default {
         })
       ])
     },
-    hasPendingBatchSearches () {
+    hasPendingBatchSearches() {
       const RUNNING = settings.batchSearch.status.running
       const QUEUED = settings.batchSearch.status.queued
       const pendingStates = [RUNNING, QUEUED]
       return some(this.displayBatchSearches, ({ state }) => pendingStates.includes(state))
     },
-    howToLink () {
+    howToLink() {
       const { href } = this.$router.resolve('/docs/all-batch-search-documents')
       return href
     },
-    isBusy () {
+    isBusy() {
       return this.$wait.waiting('load batchSearches')
     },
-    search () {
+    search() {
       return this.$route?.query?.query ?? ''
     },
-    field () {
+    field() {
       const fieldValue = this.$route?.query?.field
       return this.fieldOptions?.includes(fieldValue) ? fieldValue : 'all'
     },
-    fieldOptions () {
+    fieldOptions() {
       const options = ['all', 'name', 'description']
       if (this.isServer) {
         options.push('user_id')
       }
       return options
     },
-    noItemMessage () {
+    noItemMessage() {
       return this.$t('batchSearch.emptyWithFilter')
     },
-    numberOfPages () {
+    numberOfPages() {
       return Math.ceil(this.total / this.perPage)
     },
-    projects () {
+    projects() {
       return this.$core.projects
     },
     selectedDateRange: {
-      get () {
+      get() {
         const start = parseInt(this.$route?.query?.dateStart)
         const end = parseInt(this.$route?.query?.dateEnd)
         const areNumber = !Number.isNaN(start) && !Number.isNaN(end)
         return areNumber ? { start, end } : null
       },
-      set (batchDate) {
+      set(batchDate) {
         return this.$router.push(this.createBatchSearchRoute({ batchDate }))
       }
     },
     selectedProjects: {
-      get () {
+      get() {
         const param = this.$route?.query?.project
         let projects = param
         if (typeof param === 'string') {
           projects = param?.split(',') ?? []
         }
-        return projects?.filter(p => this.projects.includes(p)) ?? []
+        return projects?.filter((p) => this.projects.includes(p)) ?? []
       },
-      set (values) {
+      set(values) {
         const project = values?.length > 0 ? values?.join(',') : null
-        return this.$router.push(
-          this.createBatchSearchRoute({ project }))
+        return this.$router.push(this.createBatchSearchRoute({ project }))
       }
     },
-    isDesc () {
+    isDesc() {
       return this.selectedSort.order === SORT_ORDER.DESC
     },
-    page () {
+    page() {
       const value = parseInt(this.$route?.query?.page)
       return !isNaN(value) && value > 0 ? value : 1
     },
-    sort () {
+    sort() {
       const sortNameFromQuery = this.$route?.query?.sort?.toLowerCase()
       const sortKeyExists = this.fieldKeyByName(sortNameFromQuery)
       return sortKeyExists ? sortNameFromQuery : settings.batchSearch.sort
     },
-    order () {
+    order() {
       return SORT_ORDER[this.$route?.query?.order?.toUpperCase()] ?? settings.batchSearch.order
     },
     selectedSort: {
-      get () {
+      get() {
         return { sort: this.sort, order: this.order }
       },
-      set ({ sort, order }) {
+      set({ sort, order }) {
         const params = { page: this.page, sort: sort, order: order }
         return this.updateRoute(params)
       }
     },
     selectedStates: {
-      get () {
+      get() {
         let states = this.$route?.query?.state
         if (typeof states === 'string') {
           states = states?.split(',') ?? []
         }
-        return states?.map(p => p.toUpperCase()).filter(p => this.states.includes(p)) ?? []
+        return states?.map((p) => p.toUpperCase()).filter((p) => this.states.includes(p)) ?? []
       },
-      set (values) {
+      set(values) {
         const state = values?.length > 0 ? values?.join(',') : null
-        return this.$router.push(
-          this.createBatchSearchRoute({ state }))
+        return this.$router.push(this.createBatchSearchRoute({ state }))
       }
     },
-    publicationStatus () {
+    publicationStatus() {
       return BATCHSEARCH_STATUS[this.$route?.query?.publishState]?.value ?? null
     },
     selectedStatus: {
-      get () {
+      get() {
         return BATCHSEARCH_STATUS[this.$route?.query?.publishState] ?? null
       },
-      set (status) {
+      set(status) {
         const publishState = status?.value ?? null
-        return this.$router.push(
-          this.createBatchSearchRoute({ publishState }))
+        return this.$router.push(this.createBatchSearchRoute({ publishState }))
       }
     },
-    sortBy () {
+    sortBy() {
       return this.fieldKeyByName(this.selectedSort.sort)
     },
-    states () {
+    states() {
       return Object.values(settings.batchSearch.status)
     }
   }
@@ -461,6 +479,5 @@ export default {
       max-width: 10vw;
     }
   }
-
 }
 </style>

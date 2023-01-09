@@ -25,27 +25,27 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       source: null
     }
   },
-  async mounted () {
+  async mounted() {
     this.source = await this.getSource(this.document)
   }
 }
 </script>
 
 <style lang="scss">
-  .json-viewer {
-    max-width: 100%;
-    overflow: auto;
+.json-viewer {
+  max-width: 100%;
+  overflow: auto;
 
-    &__formatter > * {
-      bottom: $spacer;
-      left: $spacer;
-      right: $spacer;
-      top: $spacer;
-    }
+  &__formatter > * {
+    bottom: $spacer;
+    left: $spacer;
+    right: $spacer;
+    top: $spacer;
   }
+}
 </style>

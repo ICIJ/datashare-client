@@ -32,7 +32,11 @@
               </a>
             </div>
             <div class="mx-3">
-              <confirm-button class="api__key__delete btn btn-outline-danger" :confirmed="deleteApiKey" :description="$t('api.key.delete.description')">
+              <confirm-button
+                class="api__key__delete btn btn-outline-danger"
+                :confirmed="deleteApiKey"
+                :description="$t('api.key.delete.description')"
+              >
                 <fa icon="trash-alt" />
                 {{ $t('api.key.delete.button') }}
               </confirm-button>
@@ -46,13 +50,22 @@
         {{ $t('api.noAccess') }}
       </b-alert>
     </div>
-    <b-modal size="md" :title="$t('api.key.created')" :visible="hasApiKey" lazy ok-only body-class="p-0" footer-class="card-footer" @hidden="apiKey = null">
+    <b-modal
+      size="md"
+      :title="$t('api.key.created')"
+      :visible="hasApiKey"
+      lazy
+      ok-only
+      body-class="p-0"
+      footer-class="card-footer"
+      @hidden="apiKey = null"
+    >
       <div class="card-body border-top border-bottom">
         <p>
           {{ $t('api.key.warning') }}
         </p>
         <div class="input-group input-group-sm">
-          <input class="form-control text-monospace" :value="apiKey">
+          <input class="form-control text-monospace" :value="apiKey" />
           <div class="input-group-append">
             <haptic-copy :text="apiKey" class="btn-outline-primary" label="Copy" />
           </div>
@@ -71,36 +84,36 @@ import utils from '@/mixins/utils'
 export default {
   name: 'Api',
   mixins: [utils],
-  data () {
+  data() {
     return {
       hashedKey: null,
       apiKey: null
     }
   },
-  async created () {
+  async created() {
     await this.getHashedApiKey()
   },
   computed: {
-    hasHashedKey () {
+    hasHashedKey() {
       return !!this.hashedKey
     },
-    hasApiKey () {
+    hasApiKey() {
       return !!this.apiKey
     }
   },
   methods: {
-    async getHashedApiKey () {
+    async getHashedApiKey() {
       const username = await this.$core.auth.getUsername()
       const { hashedKey } = await this.$core.api.getApiKey(username)
       this.hashedKey = hashedKey
     },
-    async createApiKey () {
+    async createApiKey() {
       const username = await this.$core.auth.getUsername()
       const { apiKey } = await this.$core.api.createApiKey(username) // why hash is not returned at the same time?
       this.apiKey = apiKey
       await this.getHashedApiKey()
     },
-    async deleteApiKey () {
+    async deleteApiKey() {
       const username = await this.$core.auth.getUsername()
       await this.$core.api.deleteApiKey(username)
       this.hashedKey = null
@@ -110,11 +123,10 @@ export default {
 </script>
 
 <style lang="scss">
-  .api {
-
-    &__create-key {
-      margin: auto;
-      max-width: $modal-md;
-    }
+.api {
+  &__create-key {
+    margin: auto;
+    max-width: $modal-md;
   }
+}
 </style>

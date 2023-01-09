@@ -4,7 +4,13 @@
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
         <li v-for="event in events" :key="event.id" class="user-history__list__item">
           <router-link :to="{ path: event.uri }" class="p-3 d-flex">
-            <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-3 user-history__list__item__preview" />
+            <document-thumbnail
+              :document="eventAsDocument(event)"
+              size="40"
+              crop
+              lazy
+              class="mr-3 user-history__list__item__preview"
+            />
             <div class="flex-grow-1">
               <div class="user-history__list__item__name font-weight-bold">
                 {{ event.name }}
@@ -18,7 +24,7 @@
         </li>
       </ul>
       <div class="text-muted text-center" v-else>
-        {{  $t('userHistory.empty') }}
+        {{ $t('userHistory.empty') }}
       </div>
     </div>
   </div>
@@ -41,7 +47,7 @@ export default {
     }
   },
   methods: {
-    eventAsDocument ({ uri }) {
+    eventAsDocument({ uri }) {
       // Ensure the URI starts with a / and doesn't contain query params
       const path = `/${trimStart(uri.split('?').shift(0), '/')}`
       const [, _index, _id, _routing] = this.documentPathRegexp.exec(path) || []
@@ -49,9 +55,9 @@ export default {
     }
   },
   computed: {
-    documentPathRegexp () {
+    documentPathRegexp() {
       const routes = this.$router.getRoutes()
-      const { path } = find(routes, { name: 'document-standalone' }) || { }
+      const { path } = find(routes, { name: 'document-standalone' }) || {}
       return pathToRegexp(path)
     }
   }
@@ -59,41 +65,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .user-history {
-    &__list {
+.user-history {
+  &__list {
+    &__item {
+      &:nth-child(odd) {
+        background: $table-accent-bg;
+      }
 
-      &__item {
+      &:not(:last-of-type) {
+        border-bottom: 1px solid $border-color;
+      }
 
-        &:nth-child(odd) {
-          background: $table-accent-bg;
-        }
+      a:hover {
+        text-decoration: none;
+        color: $table-hover-color;
+        background-color: $table-hover-bg;
+      }
 
-        &:not(:last-of-type) {
-          border-bottom: 1px solid $border-color;
-        }
+      & &__preview.document-thumbnail--crop {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+      }
 
-        a:hover {
-          text-decoration: none;
-          color: $table-hover-color;
-          background-color: $table-hover-bg;
-        }
+      a > div {
+        min-width: 0;
+      }
 
-        & &__preview.document-thumbnail--crop {
-          width: 40px;
-          min-width: 40px;
-          height: 40px;
-        }
-
-        a > div {
-          min-width: 0;
-        }
-
-        &__uri {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
+      &__uri {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
+}
 </style>

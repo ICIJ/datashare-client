@@ -1,6 +1,6 @@
 export const mixin = {
   methods: {
-    async getSource (document, config = {}) {
+    async getSource(document, config = {}) {
       try {
         return await this.$core.api.getSource(document, config)
       } catch (error) {

@@ -1,16 +1,7 @@
 <template>
   <b-form-group class="mb-0">
-    <b-form-checkbox-group
-      :disabled="disabled"
-      :options="projectOptions"
-      v-if="multiple"
-      v-model="selectedProject" />
-    <b-form-select
-      :disabled="disabled"
-      :options="projectOptions"
-      :size="size"
-      v-else
-      v-model="selectedProject" />
+    <b-form-checkbox-group :disabled="disabled" :options="projectOptions" v-if="multiple" v-model="selectedProject" />
+    <b-form-select :disabled="disabled" :options="projectOptions" :size="size" v-else v-model="selectedProject" />
   </b-form-group>
 </template>
 
@@ -53,21 +44,21 @@ export default {
     }
   },
   computed: {
-    projects () {
+    projects() {
       return this.$core.projects
     },
-    projectOptions () {
-      return this.projects.map(value => {
+    projectOptions() {
+      return this.projects.map((value) => {
         const text = startCase(value)
         const disabled = this.multiple && isEqual(this.selectedProject, [value])
         return { disabled, text, value }
       })
     },
     selectedProject: {
-      get () {
+      get() {
         return this.multiple ? castArray(this.value) : this.value
       },
-      set (value) {
+      set(value) {
         this.$emit('input', value)
       }
     }

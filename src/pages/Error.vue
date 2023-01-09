@@ -27,37 +27,37 @@ export default {
       type: Number
     }
   },
-  data () {
+  data() {
     return {
       username: null
     }
   },
-  async mounted () {
+  async mounted() {
     this.username = await this.$core.auth.getUsername()
   },
   computed: {
-    titleAsString () {
+    titleAsString() {
       if (!this.title) {
         return this.error instanceof Error ? this.error.message : this.error
       }
       return this.title
     },
-    helpLink () {
+    helpLink() {
       return this.$config.get('helpLink', settings.helpLink)
     },
-    faqLink () {
+    faqLink() {
       return this.$config.get('faqLink', settings.faqLink)
     },
-    userGuidesLink () {
+    userGuidesLink() {
       return this.$config.get('userGuidesLink', settings.userGuidesLink)
     },
-    devWikiLink () {
+    devWikiLink() {
       return this.$config.get('devWikiLink', settings.devWikiLink)
     },
-    showHeader () {
+    showHeader() {
       return this.isServer && !!this.username
     },
-    logoutLink () {
+    logoutLink() {
       return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   }
@@ -67,10 +67,12 @@ export default {
 <template>
   <div class="error d-flex flex-column">
     <div class="error__header p-3 text-right" v-if="showHeader">
-      <a class="btn btn-outline-light btn-sm"
-         :href="logoutLink"
-         :title="$t('menu.connectedAs', { username })"
-         v-b-tooltip.html>
+      <a
+        class="btn btn-outline-light btn-sm"
+        :href="logoutLink"
+        :title="$t('menu.connectedAs', { username })"
+        v-b-tooltip.html
+      >
         <fa icon="sign-out-alt" fixed-width></fa>
         {{ $t('menu.logout') }}
       </a>
@@ -127,63 +129,62 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-  .error {
-    background: $app-context-sidebar-bg no-repeat right bottom;
-    color: $app-context-sidebar-color;
-    width: 100%;
-    min-height: 100vh;
+.error {
+  background: $app-context-sidebar-bg no-repeat right bottom;
+  color: $app-context-sidebar-color;
+  width: 100%;
+  min-height: 100vh;
 
-    &__container {
-      margin: $spacer auto;
-      text-align: center;
+  &__container {
+    margin: $spacer auto;
+    text-align: center;
 
-      &__heading {
-        display: flex;
+    &__heading {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      &__code {
+        display: inline-flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
+        background: $app-sidebar-bg;
+        border-radius: 1em;
 
-        &__code {
-          display: inline-flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: center;
-          background: $app-sidebar-bg;
-          border-radius: 1em;
-
-          &__icon {
-            transform: scale(1.1);
-          }
-
-          &__value {
-            font-size: 0.6em;
-
-            &:empty {
-              display: none;
-            }
-          }
+        &__icon {
+          transform: scale(1.1);
         }
-      }
 
-      &__description {
-        margin-bottom: $spacer * 5;
-      }
+        &__value {
+          font-size: 0.6em;
 
-      &__links {
-
-        &__item {
-
-          &:not(:last-of-type):after {
-            content: "|";
-            margin: 0 $spacer;
-            color: $app-sidebar-link-color;
-          }
-
-          &, a {
-            color: $app-sidebar-link-color;
+          &:empty {
+            display: none;
           }
         }
       }
     }
+
+    &__description {
+      margin-bottom: $spacer * 5;
+    }
+
+    &__links {
+      &__item {
+        &:not(:last-of-type):after {
+          content: '|';
+          margin: 0 $spacer;
+          color: $app-sidebar-link-color;
+        }
+
+        &,
+        a {
+          color: $app-sidebar-link-color;
+        }
+      }
+    }
   }
+}
 </style>

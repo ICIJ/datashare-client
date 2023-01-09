@@ -22,28 +22,28 @@ export default {
       type: String
     }
   },
-  data () {
+  data() {
     return {
       html: null
     }
   },
   computed: {
-    meta () {
+    meta() {
       return this.findRouteDocMetaBySlug(this.slug)
     }
   },
-  mounted () {
+  mounted() {
     this.fetch()
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => vm.fetch(to.params.slug))
+  beforeRouteEnter(to, from, next) {
+    next((vm) => vm.fetch(to.params.slug))
   },
-  async beforeRouteUpdate (to, from, next) {
+  async beforeRouteUpdate(to, from, next) {
     await this.fetch(to.params.slug)
     next()
   },
   methods: {
-    async fetch (slug = this.slug) {
+    async fetch(slug = this.slug) {
       const { resourcePath } = this.findRouteDocMetaBySlug(slug)
       const module = await import(/* webpackChunkName: "[request]" */ '../../public/docs/' + resourcePath)
       this.html = module.default
@@ -53,60 +53,69 @@ export default {
 </script>
 
 <style lang="scss">
-  .route-doc {
-    min-height: 100vh;
+.route-doc {
+  min-height: 100vh;
 
-    &__header {
-      &__description {
-        max-width: 880px;
+  &__header {
+    &__description {
+      max-width: 880px;
+    }
+  }
+
+  &__content {
+    & > h1 {
+      display: none;
+    }
+
+    h2 {
+      @include font-size($h2-font-size * 0.8);
+    }
+    h3 {
+      @include font-size($h3-font-size * 0.8);
+    }
+    h4 {
+      @include font-size($h4-font-size * 0.8);
+    }
+    h5 {
+      @include font-size($h5-font-size * 0.8);
+    }
+    h6 {
+      @include font-size($h6-font-size * 0.8);
+    }
+
+    img {
+      display: block;
+      max-height: 60vh;
+      max-width: 750px;
+      width: auto;
+
+      @media (max-width: 1370px) {
+        max-width: 100%;
       }
     }
 
-    &__content {
+    blockquote {
+      background-color: $gray-100;
+      margin-bottom: $spacer;
+      padding: 1rem;
 
-      & > h1 {
-        display: none;
+      *:last-of-type {
+        margin-bottom: 0;
       }
 
-      h2 { @include font-size($h2-font-size * .8); }
-      h3 { @include font-size($h3-font-size * .8); }
-      h4 { @include font-size($h4-font-size * .8); }
-      h5 { @include font-size($h5-font-size * .8); }
-      h6 { @include font-size($h6-font-size * .8); }
+      pre {
+        background-color: transparent;
+        border: 0;
+        margin-bottom: 0;
+        margin-top: 0;
+        padding: 0;
 
-      img  {
-        display: block;
-        max-height: 60vh;
-        max-width: 750px;
-        width: auto;
-
-        @media (max-width: 1370px) {
-          max-width: 100%;
-        }
-      }
-
-      blockquote {
-        background-color: $gray-100;
-        margin-bottom: $spacer;
-        padding: 1rem;
-
-        *:last-of-type {
-          margin-bottom: 0;
-        }
-
-        pre {
-          background-color: transparent;
-          border: 0;
-          margin-bottom: 0;
-          margin-top: 0;
-          padding: 0;
-
-          code {
-            @include font-size(inherit);
-            color: $gray-900; // Effectively the base text color
-          }
+        code {
+          @include font-size(inherit);
+          color: $gray-900; // Effectively the base text color
         }
       }
     }
   }
+}
 </style>

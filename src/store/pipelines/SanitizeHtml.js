@@ -2,8 +2,8 @@ import xss from 'xss'
 import IdentityPipeline from './IdentityPipeline'
 
 class SanitizeHtml extends IdentityPipeline {
-  apply (content) {
-    function process (whiteList) {
+  apply(content) {
+    function process(whiteList) {
       return xss(content, { stripIgnoreTag: true, whiteList })
     }
 

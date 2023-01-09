@@ -4,7 +4,15 @@
       <h4 v-html="widget.title" class="m-0 h"></h4>
     </div>
     <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
-      <component class="list-group-item list-group-item-action widget__list__item" :is="item | itemComponent" :href="item.href" v-for="(item, i) in items" :key="i" :class="{ active: item.active }" :target="item | itemTarget">
+      <component
+        class="list-group-item list-group-item-action widget__list__item"
+        :is="item | itemComponent"
+        :href="item.href"
+        v-for="(item, i) in items"
+        :key="i"
+        :class="{ active: item.active }"
+        :target="item | itemTarget"
+      >
         <div class="widget__list__item__label">
           {{ item.label }}
         </div>
@@ -32,21 +40,21 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       items: []
     }
   },
   filters: {
-    itemComponent ({ href = null } = {}) {
+    itemComponent({ href = null } = {}) {
       return href ? 'a' : 'div'
     },
-    itemTarget ({ href = null } = {}) {
+    itemTarget({ href = null } = {}) {
       const origin = window.location.origin
       return !href || href.indexOf(origin) === 0 ? null : '_blank'
     }
   },
-  async mounted () {
+  async mounted() {
     const items = await this.applyPipelineChain(this.widget.pipeline)(this.widget.items)
     this.$set(this, 'items', items)
   },
@@ -59,28 +67,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .widget {
-    &--list-group {
-      min-height: 100%;
-    }
+.widget {
+  &--list-group {
+    min-height: 100%;
+  }
 
-    &__list {
-      &__item {
-        color: $body-color;
+  &__list {
+    &__item {
+      color: $body-color;
 
-        &[href] {
-          color: $link-color;
-        }
+      &[href] {
+        color: $link-color;
+      }
 
-        &__label {
-          color: inherit;
-        }
+      &__label {
+        color: inherit;
+      }
 
-        &__description {
-          color: $text-muted;
-          font-size: 0.8em;
-        }
+      &__description {
+        color: $text-muted;
+        font-size: 0.8em;
       }
     }
   }
+}
 </style>

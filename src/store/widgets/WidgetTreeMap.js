@@ -11,17 +11,13 @@ class WidgetTreeMap extends WidgetEmpty {
    * @param index {string} - The Elasticsearch project of the Widget
    * @param options {Object} - See WidgetEmpty for others options
    */
-  constructor ({
-    title = null,
-    index = '',
-    ...options
-  }) {
+  constructor({ title = null, index = '', ...options }) {
     super(options)
     this.title = title
     this.index = index
   }
 
-  get component () {
+  get component() {
     return Component
   }
 }

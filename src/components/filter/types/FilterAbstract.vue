@@ -1,8 +1,9 @@
 <template>
   <filter-boilerplate
-    @add-filter-values="value => $emit('add-filter-values', value)"
+    @add-filter-values="(value) => $emit('add-filter-values', value)"
     ref="filter"
-    v-bind="$props"></filter-boilerplate>
+    v-bind="$props"
+  ></filter-boilerplate>
 </template>
 
 <script>
@@ -24,27 +25,31 @@ export default {
     // Temporary import of the props from FilterBoilerplate
     ...FilterBoilerplate.props
   },
-  async mounted () {
+  async mounted() {
     await this.$nextTick()
     this.mounted = true
   },
   computed: {
-    root () {
+    root() {
       return get(this, '$refs.filter', {})
     }
   },
   methods: {
     // Returns all props without the givens keys
-    propsWithout (...keys) {
+    propsWithout(...keys) {
       keys = flatten(keys).map(camelCase)
-      return reduce(this.$props, (props, value, key) => {
-        if (keys.indexOf(key) === -1) {
-          props[key] = value
-        }
-        return props
-      }, {})
+      return reduce(
+        this.$props,
+        (props, value, key) => {
+          if (keys.indexOf(key) === -1) {
+            props[key] = value
+          }
+          return props
+        },
+        {}
+      )
     },
-    async bindOnRoot (...args) {
+    async bindOnRoot(...args) {
       if (!this.mounted) {
         await this.$nextTick()
       }

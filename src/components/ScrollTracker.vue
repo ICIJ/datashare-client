@@ -17,7 +17,7 @@ export default {
       default: 3000
     }
   },
-  data () {
+  data() {
     return {
       icon: faArrowUp,
       offset: 0,
@@ -27,54 +27,56 @@ export default {
       visible: false
     }
   },
-  mounted () {
+  mounted() {
     // Listen to scroll request from the root
     this.$root.$on('scroll-tracker:request', this.request)
   },
   methods: {
-    request (target, offset = 0, container = this.container) {
+    request(target, offset = 0, container = this.container) {
       this.target = target
       this.offset = offset
       this.container = container
       this.toggle(this.shouldBeVisible())
     },
-    scrollToTarget () {
+    scrollToTarget() {
       this.hide()
       VueScrollTo.scrollTo(this.target, 200, { offset: this.offset, container: this.container })
     },
-    toggle (toggler = !this.visible) {
+    toggle(toggler = !this.visible) {
       return toggler ? this.show() : this.hide()
     },
-    show () {
+    show() {
       this.icon = this.isTargetAbove() ? faArrowDown : faArrowUp
       this.visible = true
       this.setTimeout()
       // Hide the tracker on scroll
       window.addEventListener('scroll', this.hide)
     },
-    hide () {
+    hide() {
       this.visible = false
       // Remove the event listener
       window.removeEventListener('scroll', this.hide)
     },
-    setTimeout () {
+    setTimeout() {
       // Clear any existing timeout
       clearTimeout(this.timeoutHolder)
       // Hide the tracker after a delay
-      this.timeoutHolder = setTimeout(() => { this.$nextTick(this.hide) }, this.timeout)
+      this.timeoutHolder = setTimeout(() => {
+        this.$nextTick(this.hide)
+      }, this.timeout)
     },
-    shouldBeVisible () {
+    shouldBeVisible() {
       return !this.isTargetInView()
     },
-    isTargetInView () {
+    isTargetInView() {
       const { top } = this.targetBoundingClientRect()
       return top >= 0 && top < (window.innerHeight || document.documentElement.clientHeight)
     },
-    isTargetAbove () {
+    isTargetAbove() {
       const { top } = this.targetBoundingClientRect()
       return top > (window.innerHeight || document.documentElement.clientHeight)
     },
-    targetBoundingClientRect () {
+    targetBoundingClientRect() {
       if (this.target.nodeType > 0) {
         return this.target.getBoundingClientRect()
       } else {
@@ -94,37 +96,40 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-  $scroll-tracker-size: 8rem;
+$scroll-tracker-size: 8rem;
 
-  a.scroll-tracker {
-    background: rgba(theme-color('dark'), 0.9);
-    border-radius: $scroll-tracker-size * 0.1;
-    bottom: 0;
+a.scroll-tracker {
+  background: rgba(theme-color('dark'), 0.9);
+  border-radius: $scroll-tracker-size * 0.1;
+  bottom: 0;
+  color: white;
+  cursor: pointer;
+  display: block;
+  font-size: $scroll-tracker-size * 0.6;
+  height: $scroll-tracker-size;
+  left: 50%;
+  line-height: $scroll-tracker-size;
+  margin: $spacer 0;
+  position: fixed;
+  text-align: center;
+  transform: translateX(-50%);
+  width: $scroll-tracker-size;
+  z-index: $zindex-tooltip;
+
+  &:hover,
+  &:active {
+    background: theme-color('darker');
     color: white;
-    cursor: pointer;
-    display: block;
-    font-size: $scroll-tracker-size * 0.6;
-    height: $scroll-tracker-size;
-    left: 50%;
-    line-height: $scroll-tracker-size;
-    margin: $spacer 0;
-    position: fixed;
-    text-align: center;
-    transform: translateX(-50%);
-    width: $scroll-tracker-size;
-    z-index: $zindex-tooltip;
-
-    &:hover, &:active {
-      background: theme-color('darker');
-      color: white;
-    }
-
-    &.fade-enter-active, &.fade-leave-active {
-      transition: .3s;
-    }
-
-    &.fade-enter, &.fade-leave-to {
-      opacity: 0;
-    }
   }
+
+  &.fade-enter-active,
+  &.fade-leave-active {
+    transition: 0.3s;
+  }
+
+  &.fade-enter,
+  &.fade-leave-to {
+    opacity: 0;
+  }
+}
 </style>

@@ -3,17 +3,24 @@
     <div v-if="hasResults">
       <search-results-header position="top" no-labels bordered class="px-3"></search-results-header>
       <div class="search-results-list__items">
-        <div v-for="document in response.hits" :key="document.id" :data-document-id="document.id" class="search-results-list__items__item mw-100">
+        <div
+          v-for="document in response.hits"
+          :key="document.id"
+          :data-document-id="document.id"
+          class="search-results-list__items__item mw-100"
+        >
           <search-results-list-link
             class="search-results-list__items__item__link"
-            :document="document"></search-results-list-link>
+            :document="document"
+          ></search-results-list-link>
           <div>
             <document-actions
               class="search-results-list__items__item__actions"
               :document="document"
               :is-download-allowed="isDownloadAllowed(document)"
               tooltips-placement="right"
-              vertical></document-actions>
+              vertical
+            ></document-actions>
           </div>
         </div>
       </div>
@@ -49,7 +56,7 @@ export default {
     SearchResultsListLink
   },
   watch: {
-    $route (to, from) {
+    $route(to, from) {
       if (to.name === 'document') {
         const documentId = to.params.id
         const searchListItems = [...this.$el.querySelectorAll('.search-results-list__items__item')]
@@ -65,15 +72,18 @@ export default {
   },
   computed: {
     ...mapState('search', ['query', 'response']),
-    hasResults () {
+    hasResults() {
       return this.response.hits.length > 0
     },
-    hasFilters () {
-      return this.$store.getters['search/activeFilters'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
+    hasFilters() {
+      return (
+        this.$store.getters['search/activeFilters'].length > 0 ||
+        this.$store.state.search.field !== settings.defaultSearchField
+      )
     }
   },
   methods: {
-    isDownloadAllowed ({ index }) {
+    isDownloadAllowed({ index }) {
       return !!this.$store.state.downloads.allowedFor[index]
     }
   }
@@ -81,80 +91,83 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @use "sass:math";
+@use 'sass:math';
 
-  .search-results-list {
-    background: white;
-    border-radius: $card-border-radius;
+.search-results-list {
+  background: white;
+  border-radius: $card-border-radius;
 
-    &__toolbar {
-      background: $tertiary;
-      color: white;
-      font-size: 0.85rem;
-      line-height: $line-height-base * (1 - math.div(85 - 95, 95));
-      padding: 0.5rem 0;
+  &__toolbar {
+    background: $tertiary;
+    color: white;
+    font-size: 0.85rem;
+    line-height: $line-height-base * (1 - math.div(85 - 95, 95));
+    padding: 0.5rem 0;
 
-      &.slide-up-enter-active, &.slide-up-leave-active {
-        transition: .3s;
-      }
-
-      &.slide-up-enter, &.slide-up-leave-to {
-        // Works with only one row
-        margin-top: calc(#{-1em * $line-height-base} - #{$spacer * 1});
-        opacity: 0;
-      }
-
-      .nav-link {
-        color: mix($tertiary, text-contrast($tertiary), .7)
-      }
+    &.slide-up-enter-active,
+    &.slide-up-leave-active {
+      transition: 0.3s;
     }
 
-    &__items {
-      &__item {
-        flex-direction: row;
-        display: flex;
-        flex-wrap: nowrap;
-        max-width: 100%;
-        overflow: hidden;
+    &.slide-up-enter,
+    &.slide-up-leave-to {
+      // Works with only one row
+      margin-top: calc(#{-1em * $line-height-base} - #{$spacer * 1});
+      opacity: 0;
+    }
 
-        &:hover, &:hover &__link {
-          background: $table-hover-bg;
-          text-decoration: none;
+    .nav-link {
+      color: mix($tertiary, text-contrast($tertiary), 0.7);
+    }
+  }
+
+  &__items {
+    &__item {
+      flex-direction: row;
+      display: flex;
+      flex-wrap: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+
+      &:hover,
+      &:hover &__link {
+        background: $table-hover-bg;
+        text-decoration: none;
+      }
+
+      &__actions {
+        margin: $spacer;
+        visibility: hidden;
+
+        &:deep(.btn) {
+          font-size: 0.9rem;
+          padding: $spacer * 0.1 $spacer * 0.25;
+          transition: none;
         }
 
-        &__actions {
-          margin: $spacer;
-          visibility: hidden;
-
-          &:deep(.btn) {
-            font-size: 0.9rem;
-            padding: $spacer * 0.10 $spacer * 0.25;
-            transition: none;
+        &:deep(.document-actions__star) {
+          &.starred {
+            border-color: transparent;
+            box-shadow: none;
+            visibility: visible;
           }
-
-          &:deep(.document-actions__star) {
-            &.starred {
-              border-color: transparent;
-              box-shadow: none;
-              visibility: visible;
-            }
-          }
         }
+      }
 
-        &:hover &__actions {
-          visibility: visible;
+      &:hover &__actions {
+        visibility: visible;
 
-          &:deep(.btn) {
-            background: white;
-            border-color: $primary;
-          }
+        &:deep(.btn) {
+          background: white;
+          border-color: $primary;
         }
+      }
 
-        &__link {
-          flex-grow: 1;
-          min-width: 0;
-        }
+      &__link {
+        flex-grow: 1;
+        min-width: 0;
       }
     }
   }
+}
 </style>

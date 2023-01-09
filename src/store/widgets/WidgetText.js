@@ -12,14 +12,14 @@ class WidgetText extends WidgetEmpty {
    * @param pipeline='widget-text' {string} - Transformation to apply to the content
    * @param options {Object} - See WidgetEmpty for others options
    */
-  constructor ({ title = null, content = null, pipeline = 'widget-text', ...options }) {
+  constructor({ title = null, content = null, pipeline = 'widget-text', ...options }) {
     super(options)
     this.title = title
     this.content = content
     this.pipeline = pipeline
   }
 
-  get component () {
+  get component() {
     return Component
   }
 }

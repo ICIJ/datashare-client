@@ -12,14 +12,15 @@
       :description="$t('indexing.deleteIndexDescription')"
       :label="$t('indexing.deleteIndexLabel')"
       :no="$t('global.no')"
-      :yes="$t('global.yes')">
+      :yes="$t('global.yes')"
+    >
       <fa icon="trash-alt"></fa>
       <span class="sr-only">
         {{ $t('indexing.deleteIndexLabel') }}
       </span>
     </confirm-button>
     <b-popover :target="valueId" triggers="hover" placement="top" :boundary-padding="16 * 1.5">
-      <template v-slot:title>
+      <template #title>
         {{ $t('footer.homedir') }}
       </template>
       <div class="text-monospace">
@@ -45,13 +46,13 @@ export default {
   components: {
     TreeView
   },
-  data () {
+  data() {
     return {
       path: null
     }
   },
   methods: {
-    async deleteAll () {
+    async deleteAll() {
       try {
         await this.$store.dispatch('indexing/deleteAll')
         this.$root.$emit('index::delete::all')
@@ -70,16 +71,16 @@ export default {
         }
       }
     },
-    showTreeView () {
+    showTreeView() {
       this.$set(this, 'path', this.dataDir)
       this.$bvModal.show('mounting-data-location-tree-view')
     }
   },
   computed: {
-    valueId () {
+    valueId() {
       return uniqueId('mounted-data-location__value--')
     },
-    dataDir () {
+    dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   }
@@ -87,14 +88,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .mounted-data-location {
-    border-radius: 1em;
-    background: rgba(black, 0.2);
-    cursor: pointer;
+.mounted-data-location {
+  border-radius: 1em;
+  background: rgba(black, 0.2);
+  cursor: pointer;
 
-    &:hover {
-      background: rgba(black, 0.5);
-      text-decoration: underline;
-    }
+  &:hover {
+    background: rgba(black, 0.5);
+    text-decoration: underline;
   }
+}
 </style>

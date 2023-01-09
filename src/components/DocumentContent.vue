@@ -53,7 +53,7 @@ export default {
       default: 2500
     }
   },
-  data () {
+  data() {
     return {
       hasStickyToolbox: false,
       contentSlices: {},
@@ -62,10 +62,10 @@ export default {
       localSearchOccurrences: 0,
       localSearchTerm: this.q,
       rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
-      maxOffsetTranslations: { }
+      maxOffsetTranslations: {}
     }
   },
-  async mounted () {
+  async mounted() {
     await this.loadMaxOffset()
     // Initial local query, we need to jump to the result
     if (this.q) {
@@ -83,31 +83,44 @@ export default {
       await this.$nextTick()
       await this.jumpToActiveLocalSearchTerm()
     }, 300),
-    async targetLanguage (value) {
+    async targetLanguage(value) {
       await this.loadMaxOffset(value)
       await this.cookAllContentSlices()
     }
   },
   methods: {
-    async loadMaxOffset (targetLanguage = this.targetLanguage) {
+    async loadMaxOffset(targetLanguage = this.targetLanguage) {
       const key = targetLanguage ?? 'original'
       // Ensure we load the map offset only once
       const offset = await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
       this.$set(this.maxOffsetTranslations, key, offset)
       return offset
     },
-    findContentSliceIndexArround (desiredOffset) {
-      return findLastIndex(this.offsets, offset => offset <= desiredOffset)
+    findContentSliceIndexArround(desiredOffset) {
+      return findLastIndex(this.offsets, (offset) => offset <= desiredOffset)
     },
-    findAdjacentContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage }, defaultValue = null) {
+    findAdjacentContentSlice(
+      { offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage },
+      defaultValue = null
+    ) {
       const adjacentOffset = Number(offset) + Number(limit)
       return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }, defaultValue)
     },
-    findPrecedingContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage }, defaultValue = null) {
+    findPrecedingContentSlice(
+      { offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage },
+      defaultValue = null
+    ) {
       const adjacentOffset = Number(offset) - Number(limit)
       return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }, defaultValue)
     },
-    setContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '', cookedContent = '', ...rest } = {}) {
+    setContentSlice({
+      offset = 0,
+      limit = this.pageSize,
+      targetLanguage = this.targetLanguage,
+      content = '',
+      cookedContent = '',
+      ...rest
+    } = {}) {
       const obj = this.contentSlices
       const targetLanguageKey = targetLanguage || 'original'
       // Reactivly set the nested values of contentSlices
@@ -116,11 +129,16 @@ export default {
       this.$set(obj[offset][limit], targetLanguageKey, { ...rest, content, cookedContent })
       return { ...rest, content, cookedContent }
     },
-    makeContentSliceOrganic ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '' } = {}) {
+    makeContentSliceOrganic({
+      offset = 0,
+      limit = this.pageSize,
+      targetLanguage = this.targetLanguage,
+      content = ''
+    } = {}) {
       // Find if the preceding content slice to know if it has an organic tail already
-      const { organicTail: organicHead = true } = this.findPrecedingContentSlice({ offset, limit, targetLanguage }, { })
+      const { organicTail: organicHead = true } = this.findPrecedingContentSlice({ offset, limit, targetLanguage }, {})
       // Find the adjacent content slice to add missing tailing content add the end of a line
-      const { content: adjacentContent = '\n' } = this.findAdjacentContentSlice({ offset, limit, targetLanguage }, { })
+      const { content: adjacentContent = '\n' } = this.findAdjacentContentSlice({ offset, limit, targetLanguage }, {})
       // The slice ends with a new line or its adjacent slice starts with a new line
       const organicTail = content.endsWith('\n') || adjacentContent.startsWith('\n')
       // Extract the content suffix from the adjacent content
@@ -133,7 +151,12 @@ export default {
       const organicOffset = organicHead ? offset : 1 + Number(offset) + content.split('\n').shift().length
       return { organicContent, organicHead, organicTail, organicOffset }
     },
-    async cookContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage, content = '' } = {}) {
+    async cookContentSlice({
+      offset = 0,
+      limit = this.pageSize,
+      targetLanguage = this.targetLanguage,
+      content = ''
+    } = {}) {
       // Extract the content after making it "organic"
       const sliceParams = { offset, limit, targetLanguage, content }
       const { organicHead, organicTail, organicOffset, organicContent } = this.makeContentSliceOrganic(sliceParams)
@@ -143,7 +166,7 @@ export default {
       // Finally, save the
       this.setContentSlice({ ...sliceParams, organicOffset, cookedContent, organicHead, organicTail })
     },
-    cookAllContentSlices ({ minOffset = 0, maxOffset = this.maxOffset } = {}) {
+    cookAllContentSlices({ minOffset = 0, maxOffset = this.maxOffset } = {}) {
       const promises = []
       for (const [offset, limits] of entries(this.contentSlices)) {
         for (const [limit, targetLanguages] of entries(limits)) {
@@ -156,33 +179,36 @@ export default {
       }
       return Promise.all(promises)
     },
-    getContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}, defaultValue = null) {
+    getContentSlice(
+      { offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {},
+      defaultValue = null
+    ) {
       // Ensure the limit is not beyond limit
       limit = Math.min(limit, this.maxOffset - offset)
       const targetLanguageKey = targetLanguage || 'original'
       return get(this.contentSlices, [offset, limit, targetLanguageKey], defaultValue)
     },
-    hasContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+    hasContentSlice({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       return !!this.getContentSlice({ offset, limit, targetLanguage })
     },
-    loadContentSliceArround (desiredOffset) {
+    loadContentSliceArround(desiredOffset) {
       const desiredOffsetIndex = this.findContentSliceIndexArround(desiredOffset)
       const offset = this.offsets[desiredOffsetIndex]
       return this.loadContentSliceOnce({ offset })
     },
-    async loadContentSlice ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+    async loadContentSlice({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       // Ensure the limit is not beyond limit
       limit = Math.min(limit, this.maxOffset - offset)
       const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
       return this.setContentSlice({ offset, limit, targetLanguage, content })
     },
-    async loadContentSliceOnce ({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+    async loadContentSliceOnce({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       if (!this.hasContentSlice({ offset, limit, targetLanguage })) {
         await this.loadContentSlice({ offset, limit, targetLanguage })
       }
       return this.getContentSlice({ offset, limit, targetLanguage })
     },
-    async retrieveTotalOccurrences () {
+    async retrieveTotalOccurrences() {
       try {
         const query = this.localSearchTerm
         const targetLanguage = this.targetLanguage
@@ -196,7 +222,7 @@ export default {
         this.localSearchIndex = 0
       }
     },
-    addLocalSearchMarks (content, { organicOffset: delta = 0 } = {}) {
+    addLocalSearchMarks(content, { organicOffset: delta = 0 } = {}) {
       if (!this.hasLocalSearchTerms) {
         return content
       }
@@ -205,26 +231,26 @@ export default {
       const term = this.localSearchTerm
       return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
     },
-    findNextLocalSearchTerm () {
+    findNextLocalSearchTerm() {
       const localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
       this.$set(this, 'localSearchIndex', localSearchIndex)
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
-    findPreviousLocalSearchTerm () {
+    findPreviousLocalSearchTerm() {
       const localSearchIndex = Math.max(1, this.localSearchIndex - 1)
       this.$set(this, 'localSearchIndex', localSearchIndex)
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
-    clearActiveLocalSearchTerm () {
+    clearActiveLocalSearchTerm() {
       const activeTerms = this.$el.querySelectorAll('.local-search-term--active')
-      activeTerms.forEach(term => term.classList.remove('local-search-term--active'))
+      activeTerms.forEach((term) => term.classList.remove('local-search-term--active'))
     },
-    scrollToContentSlice (activeTermContentSlice = 0) {
+    scrollToContentSlice(activeTermContentSlice = 0) {
       if (this.$refs?.slices?.scrollToContentSlice) {
         this.$refs?.slices?.scrollToContentSlice(activeTermContentSlice)
       }
     },
-    async jumpToActiveLocalSearchTerm () {
+    async jumpToActiveLocalSearchTerm() {
       // Delete all existing "local-search-term--active" classes from other element
       this.clearActiveLocalSearchTerm()
       const activeTermOffset = this.localSearchIndexes[this.localSearchIndex - 1]
@@ -240,24 +266,24 @@ export default {
       activeTerm?.classList.add('local-search-term--active')
       activeTerm?.scrollIntoView({ block: 'center', inline: 'nearest' })
     },
-    async onContentSlicePlaceholderVisible ({ offset, limit }) {
+    async onContentSlicePlaceholderVisible({ offset, limit }) {
       await this.loadContentSliceOnce({ offset, limit })
       // Cook preceding, current and adjacent content slices
       const minOffset = offset - limit
       const maxOffset = offset + limit
       await this.cookAllContentSlices({ minOffset, maxOffset })
     },
-    getContentSlicePageOffset (page) {
+    getContentSlicePageOffset(page) {
       return (page - 1) * this.pageSize
     },
-    getVirtualContentSlicePlaceholder (page) {
+    getVirtualContentSlicePlaceholder(page) {
       const id = `document-content-slice-placeholder-${page}`
       const limit = this.pageSize
       const offset = this.getContentSlicePageOffset(page)
       const placeholder = true
       return { placeholder, id, offset, limit }
     },
-    getVirtualContentSlice (page) {
+    getVirtualContentSlice(page) {
       const offset = this.getContentSlicePageOffset(page)
       // To return the actual content slice, the content must exists
       if (this.hasContentSlice({ offset })) {
@@ -279,28 +305,28 @@ export default {
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms'
     }),
-    isRightToLeft () {
+    isRightToLeft() {
       const language = get(this.document, 'source.language', null)
       return this.rightToLeftLanguages.includes(language)
     },
-    contentPipelineFunctions () {
+    contentPipelineFunctions() {
       return this.getFullPipelineChain('extracted-text')
     },
-    maxOffset () {
+    maxOffset() {
       return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
     },
-    offsets () {
+    offsets() {
       return range(0, this.maxOffset, this.pageSize)
     },
-    virtualContentSlices () {
+    virtualContentSlices() {
       return this.offsets.map((_, index) => {
         return this.getVirtualContentSlice(index + 1)
       })
     },
-    contentPipeline () {
+    contentPipeline() {
       return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
     },
-    contentPipelineParams () {
+    contentPipelineParams() {
       return pick(this, [
         'hasStickyToolbox',
         'globalSearchTerms',
@@ -309,7 +335,7 @@ export default {
         'localSearchTerm'
       ])
     },
-    hasLocalSearchTerms () {
+    hasLocalSearchTerms() {
       return this.localSearchTerm && this.localSearchTerm.length > 0
     }
   }
@@ -325,21 +351,30 @@ export default {
         class="p-3 w-100"
         :document="document"
         :target-language="targetLanguage"
-        @select="localSearchTerm = $event" />
-      <document-local-search-input class="ml-auto"
+        @select="localSearchTerm = $event"
+      />
+      <document-local-search-input
+        class="ml-auto"
         v-model="localSearchTerm"
-        v-bind:activated.sync="hasStickyToolbox"
+        :activated.sync="hasStickyToolbox"
         @next="findNextLocalSearchTerm"
         @previous="findPreviousLocalSearchTerm"
         :search-occurrences="localSearchOccurrences"
-        :search-index="localSearchIndex" />
+        :search-index="localSearchIndex"
+      />
       <hook name="document.content.toolbox:after"></hook>
     </div>
     <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3">
       <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
       <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-      <hook name="document.content.togglers:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-      <hook name="document.content.togglers:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
+      <hook
+        name="document.content.togglers:before"
+        class="d-flex flex-row justify-content-end align-items-center"
+      ></hook>
+      <hook
+        name="document.content.togglers:after"
+        class="d-flex flex-row justify-content-end align-items-center"
+      ></hook>
       <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
     </div>
 
@@ -350,7 +385,8 @@ export default {
       :slices="virtualContentSlices"
       @placeholder-visible="onContentSlicePlaceholderVisible"
       class="document-content__body container-fluid py-3"
-      ref="slices" />
+      ref="slices"
+    />
     <hook name="document.content.body:after"></hook>
 
     <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
@@ -359,47 +395,47 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-  .document-content {
-    &__toolbox {
-      background: $lighter;
-      box-shadow: 0 -1 * $spacer 0 0 white;
-      left: 0;
-      margin: $spacer $grid-gutter-width * 0.5;
-      margin-bottom: 0;
-      position: static;
-      top: $spacer;
-      z-index: 50;
+.document-content {
+  &__toolbox {
+    background: $lighter;
+    box-shadow: 0 -1 * $spacer 0 0 white;
+    left: 0;
+    margin: $spacer $grid-gutter-width * 0.5;
+    margin-bottom: 0;
+    position: static;
+    top: $spacer;
+    z-index: 50;
 
-      &--sticky {
-        position: sticky;
-      }
-    }
-
-    &__body--rtl {
-      direction: rtl;
-      text-align: right;
-    }
-
-    :deep(mark) {
-      padding: 0;
-    }
-
-    :deep(.local-search-term) {
-      background: $mark-bg;
-      color: black;
-      padding: 0;
-    }
-
-    :deep(.local-search-term--active) {
-      background: #38D878;
-      color: white;
-    }
-
-    :deep(.local-search-term > .global-search-term) {
-      background: transparent;
-      color: inherit;
-      border-bottom: 2px solid transparent;
-      padding: 0;
+    &--sticky {
+      position: sticky;
     }
   }
+
+  &__body--rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  :deep(mark) {
+    padding: 0;
+  }
+
+  :deep(.local-search-term) {
+    background: $mark-bg;
+    color: black;
+    padding: 0;
+  }
+
+  :deep(.local-search-term--active) {
+    background: #38d878;
+    color: white;
+  }
+
+  :deep(.local-search-term > .global-search-term) {
+    background: transparent;
+    color: inherit;
+    border-bottom: 2px solid transparent;
+    padding: 0;
+  }
+}
 </style>

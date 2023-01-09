@@ -3,35 +3,35 @@ import get from 'lodash/get'
 import { getCookie } from 'tiny-cookie'
 
 export default class Auth {
-  constructor (mode, api) {
+  constructor(mode, api) {
     this.mode = mode
     this.api = api
     this.cachedUsername = null
   }
 
-  async getUsername () {
+  async getUsername() {
     if (!this.cachedUsername) {
       this.cachedUsername = await this._checkAuthentication()
     }
     return this.cachedUsername
   }
 
-  reset () {
+  reset() {
     this.cachedUsername = null
   }
 
-  async _checkAuthentication () {
+  async _checkAuthentication() {
     try {
       if (this.mode.name === 'local') {
         return 'local' // default username
       }
-      return this._getCookieUsername() || await this._getBasicAuthUserName()
+      return this._getCookieUsername() || (await this._getBasicAuthUserName())
     } catch (_) {
       return null
     }
   }
 
-  async _getBasicAuthUserName () {
+  async _getBasicAuthUserName() {
     try {
       const response = await this.api.getUser()
       setTimeout(() => this.reset(), 43200 * 1000)
@@ -44,7 +44,7 @@ export default class Auth {
     }
   }
 
-  _getCookieUsername () {
+  _getCookieUsername() {
     const cookie = getCookie(process.env.VUE_APP_DS_COOKIE_NAME, JSON.parse)
     return get(cookie, 'login', null)
   }

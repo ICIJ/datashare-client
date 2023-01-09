@@ -1,28 +1,36 @@
 <template>
   <div class="filter__footer d-flex align-items-center text-nowrap p-1" v-if="!hideFooter">
-    <filter-sort-by-dropdown v-if="!hideSort"
-                            :sort-by="sortBy"
-                            :sort-by-order="sortByOrder"
-                            :sort-by-options="sortByOptions"
-                            @update:sortBy="$emit('update:sortBy', $event)"
-                            @update:sortByOrder="$emit('update:sortByOrder', $event)" />
-    <button v-if="shouldDisplayShowMore"
-            class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm"
-            @click="openFilterSearch">
+    <filter-sort-by-dropdown
+      v-if="!hideSort"
+      :sort-by="sortBy"
+      :sort-by-order="sortByOrder"
+      :sort-by-options="sortByOptions"
+      @update:sortBy="$emit('update:sortBy', $event)"
+      @update:sortByOrder="$emit('update:sortByOrder', $event)"
+    />
+    <button
+      v-if="shouldDisplayShowMore"
+      class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm"
+      @click="openFilterSearch"
+    >
       <fa icon="expand-alt" fixed-width />
       {{ $t('filter.showMore') }}
     </button>
     <span class="mx-auto"></span>
-    <b-form-checkbox v-if="!hideExclude"
-                     v-model="isReversed"
-                     size="sm"
-                     class="filter__footer__action filter__footer__action--invert">
+    <b-form-checkbox
+      v-if="!hideExclude"
+      v-model="isReversed"
+      size="sm"
+      class="filter__footer__action filter__footer__action--invert"
+    >
       {{ $t('filter.invert') }}
     </b-form-checkbox>
-    <b-form-checkbox v-if="!hideContextualize"
-                     v-model="isContextualized"
-                     size="sm"
-                     class="filter__footer__action filter__footer__action--contextualize">
+    <b-form-checkbox
+      v-if="!hideContextualize"
+      v-model="isContextualized"
+      size="sm"
+      class="filter__footer__action filter__footer__action--contextualize"
+    >
       {{ $t('filter.contextualize') }}
     </b-form-checkbox>
   </div>
@@ -71,17 +79,17 @@ export default {
     }
   },
   computed: {
-    hideFooter () {
+    hideFooter() {
       return this.hideExclude && this.hideSort && this.hideContextualize && !this.shouldDisplayShowMore
     },
-    shouldDisplayShowMore () {
+    shouldDisplayShowMore() {
       return !this.hideShowMore
     },
     isReversed: {
-      get () {
+      get() {
         return this.$store.getters['search/isFilterReversed'](this.filter.name)
       },
-      set (toggler) {
+      set(toggler) {
         // Change the store so it's reflected everywhere
         this.toggleFilter(toggler)
         /**
@@ -91,10 +99,10 @@ export default {
       }
     },
     isContextualized: {
-      get () {
+      get() {
         return this.$store.getters['search/isFilterContextualized'](this.filter.name)
       },
-      set (toggler) {
+      set(toggler) {
         // Change the store so it's reflected everywhere
         this.toggleContextualizedFilter(toggler)
         /**
@@ -105,20 +113,20 @@ export default {
     }
   },
   methods: {
-    openFilterSearch () {
+    openFilterSearch() {
       /**
        * Triggered when user starts to search in the filter values.
        */
       this.$emit('open-filter-search', this.filter, this.query)
     },
-    toggleContextualizedFilter (toggler) {
+    toggleContextualizedFilter(toggler) {
       if (toggler) {
         this.$store.commit('search/contextualizeFilter', this.filter.name)
       } else {
         this.$store.commit('search/decontextualizeFilter', this.filter.name)
       }
     },
-    toggleFilter (toggler) {
+    toggleFilter(toggler) {
       if (toggler) {
         this.$store.commit('search/excludeFilter', this.filter.name)
       } else {
@@ -130,39 +138,39 @@ export default {
 </script>
 
 <style lang="scss">
-  .filter__footer {
+.filter__footer {
+  .filter--has-values & {
+    background: $tertiary;
+    color: #000;
+  }
 
-    .filter--has-values & {
-      background: $tertiary;
-      color: #000;
+  &__action {
+    color: inherit;
+
+    &.btn {
+      padding: 0.2em;
     }
 
-    &__action {
+    .filter__footer > &.custom-checkbox {
+      margin: 0 0.2em;
+
+      label {
+        padding-top: 0;
+        display: inline-block;
+        margin-bottom: 0;
+      }
+
+      .filter--has-values & .custom-control-input:checked ~ .custom-control-label::before {
+        background: #000;
+        border-color: #000;
+        color: #fff;
+      }
+    }
+
+    &:hover,
+    &:active {
       color: inherit;
-
-      &.btn {
-        padding: 0.2em;
-      }
-
-      .filter__footer > &.custom-checkbox {
-        margin: 0 .2em;
-
-        label {
-          padding-top: 0;
-          display: inline-block;
-          margin-bottom: 0;
-        }
-
-        .filter--has-values & .custom-control-input:checked ~ .custom-control-label::before {
-          background: #000;
-          border-color: #000;
-          color: #fff;
-        }
-      }
-
-      &:hover, &:active {
-        color: inherit;
-      }
     }
   }
+}
 </style>

@@ -2,14 +2,14 @@
   <b-form @submit.prevent="saveSearch">
     <div class="w-100 border-top">
       <div class="card-body pb-1">
-        <b-form-group label-size="sm" :label="`${ $t('userHistory.name') } *`">
+        <b-form-group label-size="sm" :label="`${$t('userHistory.name')} *`">
           <b-form-input v-model="name" type="text" required />
         </b-form-group>
         <p v-html="$t('userHistorySaveSearchForm.description', { searchHistoryPath })"></p>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
-          <b-btn type="submit"  variant="primary">
+          <b-btn type="submit" variant="primary">
             {{ $t('global.submit') }}
           </b-btn>
         </div>
@@ -19,7 +19,6 @@
 </template>
 
 <script>
-
 /**
  * A form to save the search in user history
  */
@@ -33,13 +32,13 @@ export default {
       type: [String, Array]
     }
   },
-  data () {
+  data() {
     return {
       name: ''
     }
   },
   methods: {
-    async saveSearch () {
+    async saveSearch() {
       try {
         await this.$core.api.addHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
         const { href } = this.$router.resolve({ name: 'search-history' })
@@ -54,14 +53,18 @@ export default {
     }
   },
   computed: {
-    uriFromStore () {
+    uriFromStore() {
       const from = 0
       const query = { ...this.$store.getters['search/toRouteQuery'](), from }
-      const { route: { fullPath } } = this.$router.resolve({ name: 'search', query })
+      const {
+        route: { fullPath }
+      } = this.$router.resolve({ name: 'search', query })
       return fullPath
     },
-    searchHistoryPath () {
-      const { route: { path } } = this.$router.resolve({ name: 'search-history' })
+    searchHistoryPath() {
+      const {
+        route: { path }
+      } = this.$router.resolve({ name: 'search-history' })
       return `/#${path}`
     }
   }

@@ -35,14 +35,14 @@ import settings from '@/utils/settings'
 export default {
   name: 'Login',
   computed: {
-    signinUrl () {
+    signinUrl() {
       return process.env.VUE_APP_DS_AUTH_SIGNIN
     },
-    helpLink () {
+    helpLink() {
       return this.$config.get('helpLink', settings.helpLink)
     }
   },
-  async mounted () {
+  async mounted() {
     if (await this.$core.auth.getUsername()) {
       return this.$router.push('/')
     }
@@ -51,18 +51,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .login {
-    background: theme-color('dark');
-    min-height: 100vh;
-    padding: 10vh;
+.login {
+  background: theme-color('dark');
+  min-height: 100vh;
+  padding: 10vh;
 
-    &__card {
-      margin:0 auto;
-      max-width: 660px;
+  &__card {
+    margin: 0 auto;
+    max-width: 660px;
 
-      &__heading h2 {
-        font-size: 2.5rem;
-      }
+    &__heading h2 {
+      font-size: 2.5rem;
     }
   }
+}
 </style>

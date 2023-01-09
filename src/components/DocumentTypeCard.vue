@@ -4,7 +4,11 @@
     <div>
       <p class="m-0">
         {{ localizedDescription }}
-        <strong v-if="!document.hasStandardExtension" class="font-weight-bold" v-html="$t('search.nav.document.extensionWarning', { extension: document.standardExtension })"></strong>
+        <strong
+          v-if="!document.hasStandardExtension"
+          class="font-weight-bold"
+          v-html="$t('search.nav.document.extensionWarning', { extension: document.standardExtension })"
+        ></strong>
       </p>
       <p class="bg-warning mb-0 mt-2 p-2 text-dark" v-if="document.hasContentTypeWarning">
         <fa icon="exclamation-triangle" class="mr-1"></fa>
@@ -34,11 +38,11 @@ export default {
     DocumentThumbnail
   },
   computed: {
-    localizedDescription () {
+    localizedDescription() {
       const descriptions = this.document.contentTypeDescription
       return descriptions[this.$i18n.locale] || descriptions.en
     },
-    localizedContentTypeWarning () {
+    localizedContentTypeWarning() {
       const warnings = this.document.contentTypeWarning
       return warnings[this.$i18n.locale] || warnings.en
     }

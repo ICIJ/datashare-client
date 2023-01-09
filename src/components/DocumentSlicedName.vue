@@ -1,17 +1,20 @@
 <template>
   <component :is="baseComponent" v-bind="baseComponentProps">
-    <span class="document-sliced-name"
-          :class="{
-            'document-sliced-name--sliced': isSliced(),
-            'document-sliced-name--truncate': hasActiveTextTruncate(),
-            'document-sliced-name--has-subject': hasSubject() }">
-      <span class="document-sliced-name__item"
-            :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }"
-            :key="index"
-            v-for="(slice, index) in slices">
-        <span v-if="isMiddleSlice(slice)">
-          …
-        </span>
+    <span
+      class="document-sliced-name"
+      :class="{
+        'document-sliced-name--sliced': isSliced(),
+        'document-sliced-name--truncate': hasActiveTextTruncate(),
+        'document-sliced-name--has-subject': hasSubject()
+      }"
+    >
+      <span
+        class="document-sliced-name__item"
+        :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }"
+        :key="index"
+        v-for="(slice, index) in slices"
+      >
+        <span v-if="isMiddleSlice(slice)"> … </span>
         <span v-else-if="hasContentSlice(slice)" class="d-inline-flex flex-row align-items-end">
           <span class="document-sliced-name__item__short-id">
             {{ slice }}
@@ -20,9 +23,11 @@
             {{ contentType }}
           </span>
         </span>
-        <router-link v-else-if="hasInteractiveRoot()"
-                     class="document-sliced-name__item__root"
-                     :to="{ name: 'document', params: rootParams }">
+        <router-link
+          v-else-if="hasInteractiveRoot()"
+          class="document-sliced-name__item__root"
+          :to="{ name: 'document', params: rootParams }"
+        >
           {{ slice }}
         </router-link>
         <span v-else class="document-sliced-name__item__single" :title="slice">
@@ -80,48 +85,48 @@ export default {
     }
   },
   methods: {
-    isFirstSlice (slice) {
+    isFirstSlice(slice) {
       return this.slices.indexOf(slice) === 0
     },
-    isLastSlice (slice) {
+    isLastSlice(slice) {
       return this.slices.indexOf(slice) === this.slices.length - 1
     },
-    isMiddleSlice (slice) {
+    isMiddleSlice(slice) {
       return !this.isFirstSlice(slice) && !this.isLastSlice(slice)
     },
-    hasContentSlice (slice) {
+    hasContentSlice(slice) {
       return !this.isFirstSlice(slice) && this.isLastSlice(slice)
     },
-    hasInteractiveRoot () {
+    hasInteractiveRoot() {
       return this.isSliced && this.interactiveRoot
     },
-    hasActiveTextTruncate () {
+    hasActiveTextTruncate() {
       return this.activeTextTruncate !== null
     },
-    hasSubject () {
+    hasSubject() {
       return this.showSubject && !this.isSliced() && this.document.hasSubject
     },
-    isSliced () {
+    isSliced() {
       return this.slices.length > 1
     }
   },
   computed: {
-    slices () {
+    slices() {
       return this.document.slicedName
     },
-    subject () {
+    subject() {
       return this.document.subject
     },
-    contentType () {
+    contentType() {
       return get(types, [this.document.contentType, 'extensions'], [])[0]
     },
-    rootParams () {
+    rootParams() {
       return { id: this.document.source.rootDocument || this.document.id }
     },
-    baseComponent () {
+    baseComponent() {
       return this.hasActiveTextTruncate ? ActiveTextTruncate : 'span'
     },
-    baseComponentProps () {
+    baseComponentProps() {
       if (isString(this.activeTextTruncate) && this.activeTextTruncate !== '') {
         return { direction: this.activeTextTruncate }
       }
@@ -135,45 +140,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .document-sliced-name {
-    display: inline-block;
-    padding: 0.1em 0;
+.document-sliced-name {
+  display: inline-block;
+  padding: 0.1em 0;
 
-    &--truncate {
-      white-space: nowrap;
+  &--truncate {
+    white-space: nowrap;
+  }
+
+  &__item {
+    display: inline;
+
+    // Slice separator
+    &:not(:last-child):after {
+      content: '❭';
+      font-size: 0.5em;
+      transform: translateY(-0.25em);
+      line-height: 1em;
+      opacity: 0.5;
+      padding: 0 0.5em;
+      display: inline-block;
     }
 
-    &__item {
-      display: inline;
+    &__content-type {
+      font-weight: normal;
+      opacity: 0.8;
+    }
 
-      // Slice separator
-      &:not(:last-child):after {
-        content: "❭";
-        font-size: 0.5em;
-        transform: translateY(-0.25em);
-        line-height: 1em;
-        opacity: 0.5;
-        padding: 0 0.5em;
-        display: inline-block;
-      }
+    &__root,
+    &__root:hover {
+      color: inherit;
 
-      &__content-type {
+      .document-sliced-name--sliced &:not(a) {
         font-weight: normal;
-        opacity: 0.8;
       }
+    }
 
-      &__root, &__root:hover {
-        color: inherit;
-
-        .document-sliced-name--sliced &:not(a) {
-          font-weight: normal;
-        }
-      }
-
-      .document-sliced-name--sliced &__root,
-      .document-sliced-name--has-subject &__single {
-        opacity: 0.5;
-      }
+    .document-sliced-name--sliced &__root,
+    .document-sliced-name--has-subject &__single {
+      opacity: 0.5;
     }
   }
+}
 </style>

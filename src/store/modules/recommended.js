@@ -8,22 +8,22 @@ export const state = {
 }
 
 export const mutations = {
-  documents (state, documents) {
+  documents(state, documents) {
     Vue.set(state, 'documents', documents)
   },
-  byUsers (state, byUsers) {
+  byUsers(state, byUsers) {
     Vue.set(state, 'byUsers', byUsers)
   },
-  total (state, total) {
+  total(state, total) {
     Vue.set(state, 'total', total)
   }
 }
-function actionsBuilder (api) {
+function actionsBuilder(api) {
   return {
-    async fetchIndicesRecommendations ({ rootState, commit }) {
+    async fetchIndicesRecommendations({ rootState, commit }) {
       try {
         const { indices } = rootState.search
-        const recommendationsByProject = indices.map(index => api.getRecommendationsByProject(index))
+        const recommendationsByProject = indices.map((index) => api.getRecommendationsByProject(index))
         const recommendations = await Promise.all(recommendationsByProject)
         const total = sumBy(recommendations, 'totalCount')
         const aggregates = flatten(map(recommendations, 'aggregates'))
@@ -40,11 +40,11 @@ function actionsBuilder (api) {
         commit('total', 0)
       }
     },
-    async getDocumentsRecommendedBy ({ rootState, commit }, users) {
+    async getDocumentsRecommendedBy({ rootState, commit }, users) {
       try {
         if (users.length) {
           const { indices } = rootState.search
-          const documentsByProject = indices.map(index => api.getDocumentsRecommendedBy(index, users))
+          const documentsByProject = indices.map((index) => api.getDocumentsRecommendedBy(index, users))
           commit('documents', flatten(await Promise.all(documentsByProject)))
         } else {
           commit('documents', [])
@@ -55,7 +55,7 @@ function actionsBuilder (api) {
     }
   }
 }
-export function recommendedStoreBuilder (api) {
+export function recommendedStoreBuilder(api) {
   return {
     namespaced: true,
     state,

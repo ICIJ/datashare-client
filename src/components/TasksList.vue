@@ -1,13 +1,15 @@
 <template>
   <div class="tasks-list">
-    <b-table :fields="tasksFields"
-             :items="sortedTasks"
-             responsive
-             striped
-             show-empty
-             thead-tr-class="text-nowrap"
-             tbody-tr-class="tasks-list__tasks__item"
-             class="card border-top-0 tasks-list__tasks">
+    <b-table
+      :fields="tasksFields"
+      :items="sortedTasks"
+      responsive
+      striped
+      show-empty
+      thead-tr-class="text-nowrap"
+      tbody-tr-class="tasks-list__tasks__item"
+      class="card border-top-0 tasks-list__tasks"
+    >
       <template #empty>
         <slot name="empty">
           <p class="text-center m-0" v-html="$t('tasksList.empty')"></p>
@@ -27,10 +29,13 @@
             {{ item.name | taskToId }}
           </b-badge>
           <template v-if="item.state === 'RUNNING' && stoppable">
-            <span class="px-1">
-              –
-            </span>
-            <b-btn variant="link" size="sm" @click="stopTask(item.name)" class="tasks-list__tasks__item__stop text-danger p-0">
+            <span class="px-1"> – </span>
+            <b-btn
+              variant="link"
+              size="sm"
+              @click="stopTask(item.name)"
+              class="tasks-list__tasks__item__stop text-danger p-0"
+            >
               {{ $t('tasksList.stop') }}
             </b-btn>
           </template>
@@ -43,7 +48,7 @@
         </div>
       </template>
       <template #table-colgroup="{ fields }">
-        <col v-for="{ key } in fields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }">
+        <col v-for="{ key } in fields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }" />
       </template>
     </b-table>
   </div>
@@ -61,8 +66,8 @@ export default {
   },
   props: {
     /**
-      * Object of tasks passed from the parent
-      */
+     * Object of tasks passed from the parent
+     */
     tasks: {
       type: Array
     },
@@ -74,42 +79,46 @@ export default {
     }
   },
   filters: {
-    taskToName (taskName) {
+    taskToName(taskName) {
       return taskName.split('.').pop().split('@').shift()
     },
-    taskToId (taskName) {
+    taskToId(taskName) {
       return taskName.split('@').pop()
     }
   },
   computed: {
-    sortedTasks () {
+    sortedTasks() {
       // Move running tasks on top
       const states = ['RUNNING']
       return sortBy(this.tasks, ({ state }) => -states.indexOf(state))
     },
-    tasksFields () {
+    tasksFields() {
       return this.tasks.length ? ['state', 'name'] : []
     },
-    isZipEncrypted () {
+    isZipEncrypted() {
       return this.$config.get('batchDownloadEncrypt')
     }
   },
   methods: {
-    isBatchDownloadEncrypted (item) {
+    isBatchDownloadEncrypted(item) {
       return item.name.includes('BatchDownload') && item.properties.batchDownload.encrypted
     },
-    hasZipSize (item) {
-      return item.name.includes('BatchDownload') && item.state !== 'ERROR' && item.properties.batchDownload.zipSize !== undefined
+    hasZipSize(item) {
+      return (
+        item.name.includes('BatchDownload') &&
+        item.state !== 'ERROR' &&
+        item.properties.batchDownload.zipSize !== undefined
+      )
     },
-    async stopPendingTasks () {
+    async stopPendingTasks() {
       await this.$store.dispatch('indexing/stopPendingTasks')
       await this.$store.dispatch('indexing/getTasks')
     },
-    async stopTask (name) {
+    async stopTask(name) {
       await this.$store.dispatch('indexing/stopTask', name)
       await this.$store.dispatch('indexing/getTasks')
     },
-    async deleteDoneTasks () {
+    async deleteDoneTasks() {
       await this.$store.dispatch('indexing/deleteDoneTasks')
       await this.$store.dispatch('indexing/getTasks')
     },

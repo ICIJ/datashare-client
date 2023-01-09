@@ -1,12 +1,14 @@
 <template>
-  <filter-boilerplate ref="filter"
-                      v-bind="propsWithout('hide-show-more')"
-                      hide-show-more
-                      hide-exclude
-                      hide-sort
-                      hide-contextualize
-                      :infinite-scroll="false"
-                      @reset-filter-values="resetFilterValues">
+  <filter-boilerplate
+    ref="filter"
+    v-bind="propsWithout('hide-show-more')"
+    hide-show-more
+    hide-exclude
+    hide-sort
+    hide-contextualize
+    :infinite-scroll="false"
+    @reset-filter-values="resetFilterValues"
+  >
     <template #all>
       <span class="d-flex">
         <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
@@ -16,7 +18,12 @@
     </template>
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
-        <b-form-checkbox v-for="{ user, count } in recommendedByUsersSorted" :value="user" class="filter__items__item" :key="user">
+        <b-form-checkbox
+          v-for="{ user, count } in recommendedByUsersSorted"
+          :value="user"
+          class="filter__items__item"
+          :key="user"
+        >
           <span class="d-flex">
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
               <user-display :username="user" hide-avatar hide-link />
@@ -53,32 +60,32 @@ export default {
   mixins: [utils],
   computed: {
     ...mapState('recommended', { recommendedByUsers: 'byUsers' }),
-    recommendedByUsersSorted () {
+    recommendedByUsersSorted() {
       // Sort by count (decreasing) and ensure the current user is first
       return sortBy(this.recommendedByUsers, ({ user, count }) => {
         return user === this.currentUserId ? -1e9 : -count
       })
     },
-    currentUserId () {
+    currentUserId() {
       return this.$config ? this.$config.get('uid', 'local') : 'local'
     },
     selected: {
-      get () {
+      get() {
         return this.getFilterValuesByName(this.filter.name)
       },
-      set (values) {
+      set(values) {
         this.selectUsers(values)
       }
     }
   },
-  async mounted () {
+  async mounted() {
     await this.$store.dispatch('recommended/fetchIndicesRecommendations')
   },
   methods: {
-    resetFilterValues (_, refresh) {
+    resetFilterValues(_, refresh) {
       return this.selectUsers([], refresh)
     },
-    async selectUsers (users = [], refresh = true) {
+    async selectUsers(users = [], refresh = true) {
       this.setFilterValue(this.filter, { key: users })
       await this.$store.dispatch('recommended/getDocumentsRecommendedBy', users)
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)

@@ -22,31 +22,31 @@ export default {
      */
     value: {
       type: Object,
-      default: () => ({ })
+      default: () => ({})
     }
   },
   computed: {
-    isTaskRunning () {
+    isTaskRunning() {
       return this.state.toUpperCase() === 'RUNNING'
     },
-    popoverTarget () {
+    popoverTarget() {
       return `#${this.togglerId}`
     },
-    projects () {
-      return this?.value?.projects?.map(p => p.name) || []
+    projects() {
+      return this?.value?.projects?.map((p) => p.name) || []
     },
-    uri () {
+    uri() {
       return this?.value?.uri || null
     },
-    togglerId () {
+    togglerId() {
       return uniqueId('batch-download-actions-')
     }
   },
   methods: {
-    closePopover () {
+    closePopover() {
       this.$root.$emit('bv::hide::popover', this.togglerId)
     },
-    async deleteTask () {
+    async deleteTask() {
       try {
         this.closePopover()
         await this.$core.api.deleteTask(this.name)
@@ -55,7 +55,7 @@ export default {
         this.notifyDeleteFailed(error)
       }
     },
-    async relaunchTask () {
+    async relaunchTask() {
       try {
         this.closePopover()
         const projectIds = this.projects
@@ -67,7 +67,7 @@ export default {
         this.notifyRelaunchFailed(error)
       }
     },
-    notifyRelaunchSucceed () {
+    notifyRelaunchSucceed() {
       const title = this.$t('batchDownload.relaunch.succeed')
       const variant = 'success'
       const body = this.$t('batchDownload.relaunch.succeedBody')
@@ -79,7 +79,7 @@ export default {
        */
       this.$emit('relaunched', this.value)
     },
-    notifyRelaunchFailed (error) {
+    notifyRelaunchFailed(error) {
       const title = this.$t('batchDownload.relaunch.failed')
       const variant = 'danger'
       const body = this.$t('batchDownload.relaunch.failedBody')
@@ -91,7 +91,7 @@ export default {
        */
       this.$emit('relaunchFailed', error)
     },
-    notifyDeleteSucceed () {
+    notifyDeleteSucceed() {
       /**
        * The batch download was deleted successfully
        *
@@ -99,7 +99,7 @@ export default {
        */
       this.$emit('deleted', this.value)
     },
-    notifyDeleteFailed (error) {
+    notifyDeleteFailed(error) {
       const title = this.$t('batchDownload.delete.failed')
       const variant = 'danger'
       const body = this.$t('batchDownload.delete.failedBody')
@@ -111,10 +111,10 @@ export default {
        */
       this.$emit('deleteFailed', error)
     },
-    parseQuery () {
+    parseQuery() {
       return JSON.parse(this.value.query || null) ?? {}
     },
-    tryToParseQuery () {
+    tryToParseQuery() {
       try {
         return this.parseQuery()
       } catch (_) {
@@ -135,7 +135,8 @@ export default {
       custom-class="popover-body-p-0 popover-body-overflow-hidden dropdown-menu shadow popover-white"
       placement="left"
       triggers="focus"
-      :target="popoverTarget">
+      :target="popoverTarget"
+    >
       <b-dropdown-item-button @click="relaunchTask()" class="batch-download-actions__relaunch">
         <fa icon="redo" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.relaunch') }}

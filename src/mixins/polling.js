@@ -5,39 +5,39 @@ import { find, findIndex, filter, isFunction } from 'lodash'
  * on a regular interval.
  */
 export default {
-  data () {
+  data() {
     return {
       registeredPolls: []
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.unregisteredPools()
   },
   methods: {
-    unregisteredPools () {
+    unregisteredPools() {
       // Clear all pools
       this.registeredPolls.forEach(this.unregisteredPoll)
     },
-    unregisteredPoll ({ id }) {
+    unregisteredPoll({ id }) {
       const index = findIndex(this.registeredPolls, { id })
       // Clear the timeout
       clearTimeout(id)
       // Delete the function from the poll
       this.registeredPolls.splice(index, 1)
     },
-    registerPoll ({ fn, timeout = 2000, immediate = false } = {}) {
+    registerPoll({ fn, timeout = 2000, immediate = false } = {}) {
       // Scheddule the pool first to get its id
       const id = this.schedulePool({ fn, timeout, immediate })
       // And add it to the list to retreive it later
       this.registeredPolls.push({ fn, id })
     },
-    registerPollOnce ({ fn, ...rest } = {}) {
+    registerPollOnce({ fn, ...rest } = {}) {
       // Find all matching poll functions
       filter(this.registeredPolls, { fn }).forEach(this.unregisteredPoll)
       // Register the poll again with the new option
       return this.registerPoll({ fn, ...rest })
     },
-    schedulePool ({ fn, timeout, immediate = false }) {
+    schedulePool({ fn, timeout, immediate = false }) {
       // Return the id of the setInterval
       return setTimeout(async () => {
         const pool = find(this.registeredPolls, { fn })
@@ -49,14 +49,14 @@ export default {
           } else {
             this.unregisteredPoll(pool)
           }
-        // Reject promise triggers unregistering of the pool
+          // Reject promise triggers unregistering of the pool
         } catch (_) {
           this.unregisteredPoll(pool)
         }
-      // If immediate is true, the timeout is set to 0
+        // If immediate is true, the timeout is set to 0
       }, !immediate * this.callOrGetTimeout(timeout))
     },
-    callOrGetTimeout (timeout) {
+    callOrGetTimeout(timeout) {
       if (isFunction(timeout)) {
         return timeout()
       }

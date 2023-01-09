@@ -1,7 +1,13 @@
 <template>
   <batch-search-filter class="batch-search-filter-dropdown" :id="id" :name="name" :active="isActive">
     <keep-alive>
-      <selectable-dropdown v-model="selectedValues" :items="items" deactivate-keys :multiple="multiple" class="shadow-none border-0">
+      <selectable-dropdown
+        v-model="selectedValues"
+        :items="items"
+        deactivate-keys
+        :multiple="multiple"
+        class="shadow-none border-0"
+      >
         <template #item-label="{ item }">
           <slot name="label" :item="item">{{ labelItem(item) }}</slot>
         </template>
@@ -43,23 +49,24 @@ export default {
     }
   },
   methods: {
-    labelItem (item) {
+    labelItem(item) {
       return item && item.label ? item.label : item
     }
   },
   computed: {
-    isActive () {
-      return this.values?.length > 0 || (this.values?.value !== undefined)
+    isActive() {
+      return this.values?.length > 0 || this.values?.value !== undefined
     },
     selectedValues: {
-      get () {
+      get() {
         return this.values
       },
-      set (values) {
-        if (!isEqual(values, this.values)) { this.$emit('update', values) }
+      set(values) {
+        if (!isEqual(values, this.values)) {
+          this.$emit('update', values)
+        }
       }
     }
-
   }
 }
 </script>
