@@ -108,13 +108,13 @@
               <b-badge
                 class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
                 @click.prevent="deleteFileType(index)"
-                :key="fileType.mime"
+                :key="oneFileType.mime"
                 pill
-                v-for="(fileType, index) in fileTypes"
+                v-for="(oneFileType, index) in fileTypes"
                 variant="warning"
               >
                 <fa icon="times-circle"></fa>
-                {{ fileType.label }}
+                {{ oneFileType.label }}
               </b-badge>
             </b-form-group>
             <b-form-group label-size="sm" :label="$t('batchSearch.path')">
@@ -147,13 +147,13 @@
                 <b-badge
                   class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
                   @click.prevent="deletePath(index)"
-                  :key="path"
+                  :key="onePath"
                   pill
-                  v-for="(path, index) in paths"
+                  v-for="(onePath, index) in paths"
                   variant="warning"
                 >
                   <fa icon="times-circle"></fa>
-                  {{ path }}
+                  {{ onePath }}
                 </b-badge>
               </div>
             </b-form-group>

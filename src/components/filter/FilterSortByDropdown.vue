@@ -11,10 +11,10 @@
       {{ $t('filter.sortByDropdown.toggler') }}
     </template>
     <b-dropdown-item
-      v-for="({ sortBy, sortByOrder, label }, $index) in sortByOptionsWithLabels"
+      v-for="({ sortByOption, sortByOptionOrder, label }, $index) in sortByOptionsWithLabels"
       :key="$index"
-      :active="isOptionActive({ sortBy, sortByOrder })"
-      @click="selectOption({ sortBy, sortByOrder })"
+      :active="isOptionActive({ sortByOption, sortByOptionOrder })"
+      @click="selectOption({ sortByOption, sortByOptionOrder })"
     >
       {{ label }}
     </b-dropdown-item>

@@ -32,17 +32,17 @@
         <li
           class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1"
           :class="[mode === 'light' ? 'border badge-light' : 'badge-dark']"
-          v-for="tag in tags"
-          :key="tag.label"
+          v-for="oneTag in tags"
+          :key="oneTag.label"
         >
-          <span :title="generateTagTooltip(tag)" v-b-tooltip>
-            {{ tag.label }}
+          <span :title="generateTagTooltip(oneTag)" v-b-tooltip>
+            {{ oneTag.label }}
           </span>
           <confirm-button
             class="document-tags-form__tags__tag__delete btn btn-sm"
             :class="mode"
-            :confirmed="() => deleteTag(tag)"
-            v-if="!isCreatedByAdmin(tag)"
+            :confirmed="() => deleteTag(oneTag)"
+            v-if="!isCreatedByAdmin(oneTag)"
             :label="$t('document.tagConfirmation')"
             :no="$t('global.no')"
             :yes="$t('global.yes')"
@@ -78,13 +78,15 @@ export default {
      * The selected document(s)
      */
     document: {
-      type: [Object, Array]
+      type: [Object, Array],
+      default: () => {}
     },
     /**
      * List of existing tags for the selection
      */
     tags: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     /**
      * Display the list of tags

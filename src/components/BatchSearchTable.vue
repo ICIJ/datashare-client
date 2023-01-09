@@ -23,12 +23,12 @@
         <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage" />
       </template>
       <!-- Filterable Headers -->
-      <template #head(state)="{ field }">
+      <template #head(state)="{ stateField }">
         <batch-search-filter-dropdown
           v-model="selectedStates"
           :items="states"
-          :id="field.key"
-          :name="field.label"
+          :id="stateField.key"
+          :name="stateField.label"
           multiple
         >
           <template #label="{ item }">
@@ -36,25 +36,30 @@
           </template>
         </batch-search-filter-dropdown>
       </template>
-      <template #head(projects)="{ field }">
+      <template #head(projects)="{ projectField }">
         <batch-search-filter-dropdown
           v-model="selectedProjects"
           :items="projects"
-          :id="field.key"
-          :name="field.label"
+          :id="projectField.key"
+          :name="projectField.label"
           multiple
         />
       </template>
-      <template #head(date)="{ field }">
+      <template #head(date)="{ dateField }">
         <batch-search-filter-date
           v-model="selectedDateRange"
           :date="selectedDateRange"
-          :id="field.key"
-          :name="field.label"
+          :id="dateField.key"
+          :name="dateField.label"
         />
       </template>
-      <template #head(published)="{ field }">
-        <batch-search-filter-dropdown v-model="selectedStatus" :items="status" :id="field.key" :name="field.label">
+      <template #head(published)="{ publishedField }">
+        <batch-search-filter-dropdown
+          v-model="selectedStatus"
+          :items="status"
+          :id="publishedField.key"
+          :name="publishedField.label"
+        >
           <template #label="{ item }">
             {{ $t(`batchSearch.${item.label}`) }}
           </template>
