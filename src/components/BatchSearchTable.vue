@@ -23,12 +23,12 @@
         <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage" />
       </template>
       <!-- Filterable Headers -->
-      <template #head(state)="{ stateField }">
+      <template #head(state)="{ field }">
         <batch-search-filter-dropdown
           v-model="selectedStates"
           :items="states"
-          :id="stateField.key"
-          :name="stateField.label"
+          :id="field.key"
+          :name="field.label"
           multiple
         >
           <template #label="{ item }">
@@ -36,30 +36,25 @@
           </template>
         </batch-search-filter-dropdown>
       </template>
-      <template #head(projects)="{ projectField }">
+      <template #head(projects)="{ field }">
         <batch-search-filter-dropdown
           v-model="selectedProjects"
           :items="projects"
-          :id="projectField.key"
-          :name="projectField.label"
+          :id="field.key"
+          :name="field.label"
           multiple
         />
       </template>
-      <template #head(date)="{ dateField }">
+      <template #head(date)="{ field }">
         <batch-search-filter-date
           v-model="selectedDateRange"
           :date="selectedDateRange"
-          :id="dateField.key"
-          :name="dateField.label"
+          :id="field.key"
+          :name="field.label"
         />
       </template>
-      <template #head(published)="{ publishedField }">
-        <batch-search-filter-dropdown
-          v-model="selectedStatus"
-          :items="status"
-          :id="publishedField.key"
-          :name="publishedField.label"
-        >
+      <template #head(published)="{ field }">
+        <batch-search-filter-dropdown v-model="selectedStatus" :items="status" :id="field.key" :name="field.label">
           <template #label="{ item }">
             {{ $t(`batchSearch.${item.label}`) }}
           </template>
@@ -175,7 +170,7 @@ export default {
       sort = this.selectedSort.sort,
       order = this.selectedSort.order,
       query = this.search,
-      field = this.field,
+      field = this.fieldValue,
       project = this.selectedProjects,
       state = this.selectedStates,
       batchDate = this.selectedDateRange,
@@ -208,7 +203,7 @@ export default {
         sort: this.selectedSort.sort,
         order: this.selectedSort.order,
         query: this.search,
-        field: this.field,
+        field: this.fieldValue,
         project: this.selectedProjects,
         state: this.selectedStates,
         batchDate,
@@ -372,7 +367,7 @@ export default {
     search() {
       return this.$route?.query?.query ?? ''
     },
-    field() {
+    fieldValue() {
       const fieldValue = this.$route?.query?.field
       return this.fieldOptions?.includes(fieldValue) ? fieldValue : 'all'
     },
