@@ -12,8 +12,8 @@
     "test:unit": "vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=2",
     "test:unit:watch": "vue-cli-service test:unit --testPathPattern=/unit/ --watch",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
-    "linte": "eslint --ext .js,.vue src",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "yarn lint --fix",
     "test": "yarn test:unit && yarn test:e2e",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:components && yarn doc:components:toc && yarn doc:widgets",
     "doc:api": "npm_config_yes=true npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'public/docs/client/Client-›-API.md'",
@@ -127,10 +127,10 @@
   },
   "lint-staged": {
     "*.js": [
-      "vue-cli-service lint"
+    "eslint --ext .js,.vue src"
     ],
     "*.vue": [
-      "vue-cli-service lint"
+    "eslint --ext .js,.vue src"
     ]
   },
   "majestic": {
