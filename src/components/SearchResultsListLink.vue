@@ -43,6 +43,9 @@ export default {
     DocumentSlicedName,
     DocumentThumbnail
   },
+  filters: {
+    startCase
+  },
   mixins: [ner],
   props: {
     /**
@@ -74,9 +77,6 @@ export default {
     showIndex() {
       return this.indices.length > 1 && !this.location.startsWith(`./${this.index}`)
     }
-  },
-  filters: {
-    startCase
   },
   methods: {}
 }

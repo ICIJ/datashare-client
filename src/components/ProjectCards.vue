@@ -19,27 +19,6 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-.project-cards {
-  &__item {
-    background: $primary;
-    border: darken($primary, 10%) 1px solid;
-    border-radius: $border-radius-sm;
-    color: white;
-    display: block;
-
-    &:hover {
-      background: darken($primary, 5);
-      color: white;
-    }
-
-    &--active {
-      box-shadow: 0 0 0 2px $warning;
-    }
-  }
-}
-</style>
-
 <script>
 import { startCase } from 'lodash'
 
@@ -60,3 +39,24 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.project-cards {
+  &__item {
+    background: $primary;
+    border: darken($primary, 10%) 1px solid;
+    border-radius: $border-radius-sm;
+    color: white;
+    display: block;
+
+    &:hover {
+      background: darken($primary, 5);
+      color: white;
+    }
+
+    &--active {
+      box-shadow: 0 0 0 2px $warning;
+    }
+  }
+}
+</style>

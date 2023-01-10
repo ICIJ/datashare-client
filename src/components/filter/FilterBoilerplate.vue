@@ -17,11 +17,9 @@
           <span v-if="filter.icon" class="filter__items__item__icon pl-0 pr-1">
             <fa :icon="filter.icon" fixed-width></fa>
           </span>
-          <template>
-            <slot name="title">
-              {{ $t(`filter.${filter.name}`) }}
-            </slot>
-          </template>
+          <slot name="title">
+            {{ $t(`filter.${filter.name}`) }}
+          </slot>
         </h6>
         <fa v-if="isReady" :icon="headerIcon" class="float-right filter__header__icon"></fa>
         <fa v-else icon="circle-notch" spin class="float-right"></fa>
@@ -102,6 +100,7 @@
         </infinite-loading>
       </div>
       <filter-footer
+        v-if="!hideFooter"
         :filter="filter"
         :hide-contextualize="hideContextualize"
         :hide-exclude="hideExclude"
@@ -109,7 +108,6 @@
         :hide-sort="hideSort"
         :sort-by-options.sync="sortByOptions"
         :sort-by-order.sync="sortByOrder"
-        v-if="!hideFooter"
         :sort-by.sync="sortBy"
         @contextualize-filter="toggleContextualizeFilter"
         @open-filter-search="openFilterSearch"

@@ -156,131 +156,6 @@ export default {
       ]
     }
   },
-  watch: {
-    $route() {
-      return this.fetchWithLoader()
-    }
-  },
-  mounted() {
-    this.fetchAndRegisterPollWithLoader()
-  },
-  methods: {
-    createBatchSearchRoute({
-      page = this.page,
-      sort = this.selectedSort.sort,
-      order = this.selectedSort.order,
-      query = this.search,
-      field = this.fieldValue,
-      project = this.selectedProjects,
-      state = this.selectedStates,
-      batchDate = this.selectedDateRange,
-      publishState = this.publicationStatus
-    }) {
-      batchDate = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
-      const queryParams = { query, page, sort, order, field, project, state, ...batchDate, publishState }
-      this.removeEmptySearchParams(queryParams)
-
-      return {
-        name: 'batch-search',
-        query: queryParams
-      }
-    },
-    removeEmptySearchParams(query) {
-      if (!query.query?.length) delete query?.query
-      if (!query?.publishState) delete query?.publishState
-      if (!query?.project || !query?.project?.length) delete query?.project
-      if (!query?.state || !query?.state?.length) delete query?.state
-    },
-    async fetch() {
-      const from = (this.page - 1) * this.perPage
-      const size = this.perPage
-      const batchDate = this.selectedDateRange
-        ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`]
-        : null
-      const params = {
-        from,
-        size,
-        sort: this.selectedSort.sort,
-        order: this.selectedSort.order,
-        query: this.search,
-        field: this.fieldValue,
-        project: this.selectedProjects,
-        state: this.selectedStates,
-        batchDate,
-        publishState: this.publicationStatus
-      }
-      return this.$store.dispatch('batchSearch/getBatchSearches', params)
-    },
-    async fetchWithLoader() {
-      this.$wait.start('load batchSearches')
-      this.$Progress.start()
-      await this.fetch()
-      this.$Progress.finish()
-      this.$wait.end('load batchSearches')
-    },
-    async fetchAndRegisterPollWithLoader() {
-      this.$wait.start('load batchSearches')
-      this.$Progress.start()
-      await this.fetchAndRegisterPoll()
-      this.$Progress.finish()
-      this.$wait.end('load batchSearches')
-    },
-    async fetchForPoll() {
-      await this.fetch()
-      // Continue to poll data if they are pending batch searches and we are on page 1
-      return this.page === 1 && this.hasPendingBatchSearches
-    },
-    async fetchAndRegisterPoll() {
-      await this.fetch()
-      const fn = this.fetchForPoll
-      const timeout = () => random(1000, 4000)
-      this.registerPollOnce({ fn, timeout })
-    },
-    generateTo(item) {
-      const baseTo = {
-        name: 'batch-search.results',
-        params: {
-          index: this.getProjectsNames(item).replace(/\s/g, ''),
-          uuid: item.uuid
-        },
-        query: {
-          page: 1,
-          sort: settings.batchSearchResults.sort,
-          order: settings.batchSearchResults.order
-        }
-      }
-      const searchQueryExists = this.search
-      return {
-        ...baseTo,
-        ...(searchQueryExists && { query: { query: this.search } })
-      }
-    },
-    getProjectsNames(item) {
-      return item.projects?.map((project) => project.name).join(', ') ?? ''
-    },
-
-    linkGen(page) {
-      return this.createBatchSearchRoute({ page })
-    },
-    serverField(field) {
-      return this.isServer ? field : null
-    },
-    async sortChanged(ctx) {
-      this.selectedSort = {
-        sort: this.fieldNameByKey(ctx.sortBy),
-        order: ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
-      }
-    },
-    fieldNameByKey(fieldKey) {
-      return find(this.fields, (item) => item.key === fieldKey)?.name
-    },
-    fieldKeyByName(fieldName) {
-      return find(this.fields, (item) => item.name === fieldName)?.key
-    },
-    updateRoute(params) {
-      return this.$router.push(this.createBatchSearchRoute(params))
-    }
-  },
   computed: {
     ...mapState('batchSearch', ['total']),
     displayBatchSearches() {
@@ -466,6 +341,131 @@ export default {
     },
     states() {
       return Object.values(settings.batchSearch.status)
+    }
+  },
+  watch: {
+    $route() {
+      return this.fetchWithLoader()
+    }
+  },
+  mounted() {
+    this.fetchAndRegisterPollWithLoader()
+  },
+  methods: {
+    createBatchSearchRoute({
+      page = this.page,
+      sort = this.selectedSort.sort,
+      order = this.selectedSort.order,
+      query = this.search,
+      field = this.fieldValue,
+      project = this.selectedProjects,
+      state = this.selectedStates,
+      batchDate = this.selectedDateRange,
+      publishState = this.publicationStatus
+    }) {
+      batchDate = batchDate ? { dateStart: batchDate?.start, dateEnd: batchDate?.end } : null
+      const queryParams = { query, page, sort, order, field, project, state, ...batchDate, publishState }
+      this.removeEmptySearchParams(queryParams)
+
+      return {
+        name: 'batch-search',
+        query: queryParams
+      }
+    },
+    removeEmptySearchParams(query) {
+      if (!query.query?.length) delete query?.query
+      if (!query?.publishState) delete query?.publishState
+      if (!query?.project || !query?.project?.length) delete query?.project
+      if (!query?.state || !query?.state?.length) delete query?.state
+    },
+    async fetch() {
+      const from = (this.page - 1) * this.perPage
+      const size = this.perPage
+      const batchDate = this.selectedDateRange
+        ? [`${this.selectedDateRange.start}`, `${this.selectedDateRange.end}`]
+        : null
+      const params = {
+        from,
+        size,
+        sort: this.selectedSort.sort,
+        order: this.selectedSort.order,
+        query: this.search,
+        field: this.fieldValue,
+        project: this.selectedProjects,
+        state: this.selectedStates,
+        batchDate,
+        publishState: this.publicationStatus
+      }
+      return this.$store.dispatch('batchSearch/getBatchSearches', params)
+    },
+    async fetchWithLoader() {
+      this.$wait.start('load batchSearches')
+      this.$Progress.start()
+      await this.fetch()
+      this.$Progress.finish()
+      this.$wait.end('load batchSearches')
+    },
+    async fetchAndRegisterPollWithLoader() {
+      this.$wait.start('load batchSearches')
+      this.$Progress.start()
+      await this.fetchAndRegisterPoll()
+      this.$Progress.finish()
+      this.$wait.end('load batchSearches')
+    },
+    async fetchForPoll() {
+      await this.fetch()
+      // Continue to poll data if they are pending batch searches and we are on page 1
+      return this.page === 1 && this.hasPendingBatchSearches
+    },
+    async fetchAndRegisterPoll() {
+      await this.fetch()
+      const fn = this.fetchForPoll
+      const timeout = () => random(1000, 4000)
+      this.registerPollOnce({ fn, timeout })
+    },
+    generateTo(item) {
+      const baseTo = {
+        name: 'batch-search.results',
+        params: {
+          index: this.getProjectsNames(item).replace(/\s/g, ''),
+          uuid: item.uuid
+        },
+        query: {
+          page: 1,
+          sort: settings.batchSearchResults.sort,
+          order: settings.batchSearchResults.order
+        }
+      }
+      const searchQueryExists = this.search
+      return {
+        ...baseTo,
+        ...(searchQueryExists && { query: { query: this.search } })
+      }
+    },
+    getProjectsNames(item) {
+      return item.projects?.map((project) => project.name).join(', ') ?? ''
+    },
+
+    linkGen(page) {
+      return this.createBatchSearchRoute({ page })
+    },
+    serverField(field) {
+      return this.isServer ? field : null
+    },
+    async sortChanged(ctx) {
+      this.selectedSort = {
+        sort: this.fieldNameByKey(ctx.sortBy),
+        order: ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
+      }
+    },
+    fieldNameByKey(fieldKey) {
+      return find(this.fields, (item) => item.key === fieldKey)?.name
+    },
+    fieldKeyByName(fieldName) {
+      return find(this.fields, (item) => item.name === fieldName)?.key
+    },
+    updateRoute(params) {
+      return this.$router.push(this.createBatchSearchRoute(params))
     }
   }
 }

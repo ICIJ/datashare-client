@@ -110,15 +110,6 @@ export default {
       filterToken: null
     }
   },
-  watch: {
-    filterToken(filterToken) {
-      // No throttle when the filter token is empty
-      if (!filterToken) {
-        return this.getFirstPageInAllCategories()
-      }
-      return this.getFirstPageInAllCategoriesWithThrottle()
-    }
-  },
   computed: {
     ...mapState('document', ['isLoadingNamedEntities', 'namedEntitiesPaginatedByCategories']),
     hasNamedEntities() {
@@ -135,6 +126,15 @@ export default {
     },
     getFirstPageInAllCategoriesWithThrottle() {
       return throttle(this.getFirstPageInAllCategories, 1000)
+    }
+  },
+  watch: {
+    filterToken(filterToken) {
+      // No throttle when the filter token is empty
+      if (!filterToken) {
+        return this.getFirstPageInAllCategories()
+      }
+      return this.getFirstPageInAllCategoriesWithThrottle()
     }
   },
   mounted() {

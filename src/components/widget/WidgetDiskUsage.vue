@@ -58,15 +58,20 @@ export default {
       total: null
     }
   },
-  async created() {
-    this.$set(this, 'path', this.dataDir)
-    await this.loadData()
-  },
   computed: {
     ...mapState('insights', ['project']),
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
+  },
+  watch: {
+    project() {
+      this.$set(this, 'path', this.dataDir)
+    }
+  },
+  async created() {
+    this.$set(this, 'path', this.dataDir)
+    await this.loadData()
   },
   mounted() {
     this.$store.subscribe(async ({ type }) => {
@@ -94,11 +99,6 @@ export default {
       this.$set(this, 'total', total)
     }),
     humanSize
-  },
-  watch: {
-    project() {
-      this.$set(this, 'path', this.dataDir)
-    }
   }
 }
 </script>

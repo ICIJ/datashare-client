@@ -95,6 +95,15 @@ export default {
     Hook
   },
   mixins: [shortkeys],
+  beforeRouteEnter(to, _from, next) {
+    next((vm) => {
+      vm.getDoc(to.params)
+    })
+  },
+  beforeRouteUpdate(to, _from, next) {
+    this.getDoc(to.params)
+    next()
+  },
   props: {
     id: {
       type: String
@@ -118,20 +127,6 @@ export default {
       activeTab: 'extracted-text',
       tabsThoughtPipeline: []
     }
-  },
-  watch: {
-    doc() {
-      return this.setTabs()
-    }
-  },
-  async mounted() {
-    if (!this.$wait.is('load document data')) {
-      await this.getDoc()
-    }
-    await this.getDownloadStatus()
-    await this.setTabs()
-    // Listen for event to switch tab
-    this.$root.$on('document::tab', this.activateTab)
   },
   computed: {
     ...mapState('document', ['doc', 'parentDocument', 'tags']),
@@ -195,6 +190,20 @@ export default {
     isModal() {
       return this.$route.name === 'document-modal'
     }
+  },
+  watch: {
+    doc() {
+      return this.setTabs()
+    }
+  },
+  async mounted() {
+    if (!this.$wait.is('load document data')) {
+      await this.getDoc()
+    }
+    await this.getDownloadStatus()
+    await this.setTabs()
+    // Listen for event to switch tab
+    this.$root.$on('document::tab', this.activateTab)
   },
   methods: {
     async getDoc(params = { id: this.id, routing: this.routing, index: this.index }) {
@@ -271,15 +280,6 @@ export default {
       }
       return {}
     }
-  },
-  beforeRouteEnter(to, _from, next) {
-    next((vm) => {
-      vm.getDoc(to.params)
-    })
-  },
-  beforeRouteUpdate(to, _from, next) {
-    this.getDoc(to.params)
-    next()
   }
 }
 </script>

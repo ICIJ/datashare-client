@@ -154,6 +154,22 @@ export default {
       suggestions: []
     }
   },
+  computed: {
+    indices() {
+      return this.$store.state.search.indices
+    },
+    uniqueId() {
+      return uniqueId('search-bar-')
+    },
+    suggestionsAllowed() {
+      const terms = this.termCandidates().map((t) => t.term)
+      const lastTerm = last(terms) || ''
+      return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
+    },
+    uri() {
+      return window.location.hash.substr(2)
+    }
+  },
   mounted() {
     this.$store.subscribe((mutation) => {
       if (mutation.type === 'search/query') {
@@ -270,22 +286,6 @@ export default {
     onFocus() {
       this.focused = true
       this.searchTerms()
-    }
-  },
-  computed: {
-    indices() {
-      return this.$store.state.search.indices
-    },
-    uniqueId() {
-      return uniqueId('search-bar-')
-    },
-    suggestionsAllowed() {
-      const terms = this.termCandidates().map((t) => t.term)
-      const lastTerm = last(terms) || ''
-      return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
-    },
-    uri() {
-      return window.location.hash.substr(2)
     }
   }
 }

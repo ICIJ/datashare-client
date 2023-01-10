@@ -78,6 +78,19 @@ export default {
     SearchDocumentNavbar,
     SearchResults
   },
+  async beforeRouteUpdate(to, from, next) {
+    if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
+      try {
+        this.$store.dispatch('search/updateFromRouteQuery', to.query)
+        await this.search()
+        next()
+      } catch (_) {
+        this.wrongQuery()
+      }
+    } else {
+      next()
+    }
+  },
   data() {
     return {
       errorMessages: {
@@ -127,19 +140,6 @@ export default {
     },
     bodyWrapper() {
       return this.layout === 'list' ? VuePerfectScrollbar : 'div'
-    }
-  },
-  async beforeRouteUpdate(to, from, next) {
-    if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
-      try {
-        this.$store.dispatch('search/updateFromRouteQuery', to.query)
-        await this.search()
-        next()
-      } catch (_) {
-        this.wrongQuery()
-      }
-    } else {
-      next()
     }
   },
   watch: {

@@ -54,14 +54,14 @@ export default {
       items: []
     }
   },
-  async mounted() {
-    const items = await this.applyPipelineChain(this.widget.pipeline)(this.widget.items)
-    this.$set(this, 'items', items)
-  },
   computed: {
     ...mapGetters('pipelines', {
       applyPipelineChain: 'applyPipelineChainByCategory'
     })
+  },
+  async mounted() {
+    const items = await this.applyPipelineChain(this.widget.pipeline)(this.widget.items)
+    this.$set(this, 'items', items)
   }
 }
 </script>

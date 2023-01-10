@@ -29,14 +29,6 @@ export default {
       content: ''
     }
   },
-  watch: {
-    async widget() {
-      this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
-    }
-  },
-  async mounted() {
-    this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
-  },
   computed: {
     ...mapGetters('pipelines', {
       applyPipelineChain: 'applyPipelineChainByCategory'
@@ -47,6 +39,14 @@ export default {
     widgetContent() {
       return this.widget.content || this.defaultContent
     }
+  },
+  watch: {
+    async widget() {
+      this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
+    }
+  },
+  async mounted() {
+    this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
   }
 }
 </script>

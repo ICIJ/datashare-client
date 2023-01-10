@@ -83,12 +83,6 @@ export default {
       query: null
     }
   },
-  mounted() {
-    this.$root.$on('filter::async-search', this.openFilterSearch)
-    this.$root.$on('filter::add-filter-values', this.setFilterValue)
-    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
-    this.$root.$on('index::delete::all', this.refreshEachFilter)
-  },
   computed: {
     ...mapState('search', ['showFilters']),
     filters: {
@@ -97,6 +91,12 @@ export default {
         return this.$store.getters['search/instantiatedFilters']
       }
     }
+  },
+  mounted() {
+    this.$root.$on('filter::async-search', this.openFilterSearch)
+    this.$root.$on('filter::add-filter-values', this.setFilterValue)
+    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
+    this.$root.$on('index::delete::all', this.refreshEachFilter)
   },
   methods: {
     openFilterSearch(expandedFilter, query) {

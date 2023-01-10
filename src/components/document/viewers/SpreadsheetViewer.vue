@@ -109,21 +109,6 @@ export default {
       meta: null
     }
   },
-  async mounted() {
-    this.$wait.start('load spreadsheet')
-    this.$Progress.start()
-    const response = await fetch(this.contentUrl, this.contentOptions)
-    const meta = await response.json()
-    this.$set(this, 'meta', meta)
-    this.$set(this, 'activeSheetIndex', 0)
-    this.$Progress.finish()
-    this.$wait.end('load spreadsheet')
-  },
-  methods: {
-    debounceFilterInput: debounce(function ({ target: { value } }) {
-      this.$set(this, 'filter', value)
-    }, 500)
-  },
   computed: {
     tableVars() {
       return {
@@ -200,6 +185,21 @@ export default {
         return ['ctrl', 'f']
       }
     }
+  },
+  async mounted() {
+    this.$wait.start('load spreadsheet')
+    this.$Progress.start()
+    const response = await fetch(this.contentUrl, this.contentOptions)
+    const meta = await response.json()
+    this.$set(this, 'meta', meta)
+    this.$set(this, 'activeSheetIndex', 0)
+    this.$Progress.finish()
+    this.$wait.end('load spreadsheet')
+  },
+  methods: {
+    debounceFilterInput: debounce(function ({ target: { value } }) {
+      this.$set(this, 'filter', value)
+    }, 500)
   }
 }
 </script>

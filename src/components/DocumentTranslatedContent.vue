@@ -76,6 +76,21 @@ export default {
       translations: []
     }
   },
+  computed: {
+    ...mapState('document', ['showTranslatedContent']),
+    targetLanguage() {
+      if (this.showTranslatedContent) {
+        return this.language
+      }
+      return null
+    },
+    hasTranslations() {
+      return !!this.translation
+    },
+    translation() {
+      return find(this.translations, { target_language: this.language })
+    }
+  },
   async mounted() {
     await this.loadAvailableTranslations()
   },
@@ -92,21 +107,6 @@ export default {
       const { index, id, routing } = this.document
       const data = await elasticsearch.getSource({ index, id, routing, _source })
       this.$set(this, 'translations', data.content_translated)
-    }
-  },
-  computed: {
-    ...mapState('document', ['showTranslatedContent']),
-    targetLanguage() {
-      if (this.showTranslatedContent) {
-        return this.language
-      }
-      return null
-    },
-    hasTranslations() {
-      return !!this.translation
-    },
-    translation() {
-      return find(this.translations, { target_language: this.language })
     }
   }
 }

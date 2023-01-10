@@ -137,17 +137,6 @@ export default {
       selectedPath: null
     }
   },
-  watch: {
-    project() {
-      this.$set(this, 'mounted', false)
-      this.$set(this, 'selectedPath', this.dataDir)
-      this.init()
-    }
-  },
-  mounted() {
-    this.$set(this, 'selectedPath', this.dataDir)
-    this.$nextTick(() => this.init())
-  },
   computed: {
     ...mapState('insights', ['project']),
     chartWidth() {
@@ -252,6 +241,17 @@ export default {
     loader() {
       return uniqueId('loading-creation-date-buckets')
     }
+  },
+  watch: {
+    project() {
+      this.$set(this, 'mounted', false)
+      this.$set(this, 'selectedPath', this.dataDir)
+      this.init()
+    }
+  },
+  mounted() {
+    this.$set(this, 'selectedPath', this.dataDir)
+    this.$nextTick(() => this.init())
   },
   methods: {
     async init() {

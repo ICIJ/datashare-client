@@ -101,6 +101,14 @@ export default {
     UserDisplay
   },
   mixins: [utils],
+  props: {
+    /**
+     * Shrink the layout of the navbar.
+     */
+    isShrinked: {
+      type: Boolean
+    }
+  },
   computed: {
     ...mapState('document', ['doc', 'isRecommended', 'recommendedBy']),
     query() {
@@ -116,14 +124,6 @@ export default {
     },
     markAsRecommendedVariant() {
       return this.isRecommended ? 'success' : 'light'
-    }
-  },
-  props: {
-    /**
-     * Shrink the layout of the navbar.
-     */
-    isShrinked: {
-      type: Boolean
     }
   },
   mounted() {

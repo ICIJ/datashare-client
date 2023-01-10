@@ -84,19 +84,6 @@ export default {
       transformedUsername: null
     }
   },
-  watch: {
-    username() {
-      return this.applyPipelines()
-    }
-  },
-  created() {
-    this.$store.subscribe(({ type }) => {
-      if (type.startsWith('pipelines/')) {
-        return this.applyPipelines()
-      }
-    })
-    return this.applyPipelinesWithLoader()
-  },
   computed: {
     ...mapGetters('pipelines', {
       applyPipelineChain: 'applyPipelineChainByCategory'
@@ -127,6 +114,19 @@ export default {
     loader() {
       return `load-username-${this.username}`
     }
+  },
+  watch: {
+    username() {
+      return this.applyPipelines()
+    }
+  },
+  created() {
+    this.$store.subscribe(({ type }) => {
+      if (type.startsWith('pipelines/')) {
+        return this.applyPipelines()
+      }
+    })
+    return this.applyPipelinesWithLoader()
   },
   methods: {
     async applyPipelinesWithLoader() {

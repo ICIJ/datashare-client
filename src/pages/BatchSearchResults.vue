@@ -269,6 +269,37 @@ export default {
     humanNumber
   },
   mixins: [utils],
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.$set(vm, 'published', vm.batchSearch.published)
+      vm.$set(vm, 'page', parseInt(get(to, 'query.page', vm.page)))
+      vm.$set(vm, 'queries', castArray(get(to, 'query.queries', vm.queries)))
+      vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
+      vm.$set(vm, 'order', get(to, 'query.order', vm.order))
+      const queries = castArray(get(to, 'query.queries', vm.queries))
+      const selectedQueries = queries.map((query) => {
+        return { label: query }
+      })
+      vm.$store.commit('batchSearch/selectedQueries', selectedQueries)
+    })
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.$set(this, 'page', parseInt(get(to, 'query.page', this.page)))
+    this.$set(this, 'queries', castArray(get(to, 'query.queries', this.queries)))
+    this.$set(this, 'sort', get(to, 'query.sort', this.sort))
+    this.$set(this, 'order', get(to, 'query.order', this.order))
+    const queries = castArray(get(to, 'query.queries', this.queries))
+    const selectedQueries = queries.map((query) => {
+      return { label: query }
+    })
+    this.$store.commit('batchSearch/selectedQueries', selectedQueries)
+    next()
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('batchSearch/batchSearch', {})
+    this.$store.commit('batchSearch/selectedQueries', [])
+    next()
+  },
   props: {
     /**
      * The unique id of the batch search
@@ -293,27 +324,6 @@ export default {
       queries: [],
       sort: settings.batchSearchResults.sort
     }
-  },
-  watch: {
-    page() {
-      this.fetch()
-    },
-    queries(queries, oldQueries = []) {
-      // Check array values to avoid unnecessary fetching
-      if (!isEqual(queries, oldQueries)) {
-        this.fetch()
-      }
-    },
-    sort() {
-      this.fetch()
-    },
-    order() {
-      this.fetch()
-    }
-  },
-  async created() {
-    await this.fetch()
-    await this.setIsMyBatchSearch()
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results']),
@@ -462,36 +472,26 @@ export default {
       return this.batchSearch.projects.length > 1
     }
   },
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      vm.$set(vm, 'published', vm.batchSearch.published)
-      vm.$set(vm, 'page', parseInt(get(to, 'query.page', vm.page)))
-      vm.$set(vm, 'queries', castArray(get(to, 'query.queries', vm.queries)))
-      vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
-      vm.$set(vm, 'order', get(to, 'query.order', vm.order))
-      const queries = castArray(get(to, 'query.queries', vm.queries))
-      const selectedQueries = queries.map((query) => {
-        return { label: query }
-      })
-      vm.$store.commit('batchSearch/selectedQueries', selectedQueries)
-    })
+  watch: {
+    page() {
+      this.fetch()
+    },
+    queries(queries, oldQueries = []) {
+      // Check array values to avoid unnecessary fetching
+      if (!isEqual(queries, oldQueries)) {
+        this.fetch()
+      }
+    },
+    sort() {
+      this.fetch()
+    },
+    order() {
+      this.fetch()
+    }
   },
-  beforeRouteUpdate(to, from, next) {
-    this.$set(this, 'page', parseInt(get(to, 'query.page', this.page)))
-    this.$set(this, 'queries', castArray(get(to, 'query.queries', this.queries)))
-    this.$set(this, 'sort', get(to, 'query.sort', this.sort))
-    this.$set(this, 'order', get(to, 'query.order', this.order))
-    const queries = castArray(get(to, 'query.queries', this.queries))
-    const selectedQueries = queries.map((query) => {
-      return { label: query }
-    })
-    this.$store.commit('batchSearch/selectedQueries', selectedQueries)
-    next()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('batchSearch/batchSearch', {})
-    this.$store.commit('batchSearch/selectedQueries', [])
-    next()
+  async created() {
+    await this.fetch()
+    await this.setIsMyBatchSearch()
   },
   methods: {
     handlePrevNextRoute() {

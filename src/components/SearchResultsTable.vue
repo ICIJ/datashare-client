@@ -119,6 +119,9 @@ export default {
     DocumentTagsForm,
     SearchResultsHeader
   },
+  filters: {
+    startCase
+  },
   data() {
     return {
       selected: []
@@ -230,9 +233,6 @@ export default {
         }
       ]
     }
-  },
-  filters: {
-    startCase
   },
   methods: {
     onRowSelected(items) {

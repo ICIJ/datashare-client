@@ -55,6 +55,18 @@ export default {
     SearchResultsHeader,
     SearchResultsListLink
   },
+  computed: {
+    ...mapState('search', ['query', 'response']),
+    hasResults() {
+      return this.response.hits.length > 0
+    },
+    hasFilters() {
+      return (
+        this.$store.getters['search/activeFilters'].length > 0 ||
+        this.$store.state.search.field !== settings.defaultSearchField
+      )
+    }
+  },
   watch: {
     $route(to, from) {
       if (to.name === 'document') {
@@ -68,18 +80,6 @@ export default {
 
         target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
       }
-    }
-  },
-  computed: {
-    ...mapState('search', ['query', 'response']),
-    hasResults() {
-      return this.response.hits.length > 0
-    },
-    hasFilters() {
-      return (
-        this.$store.getters['search/activeFilters'].length > 0 ||
-        this.$store.state.search.field !== settings.defaultSearchField
-      )
     }
   },
   methods: {

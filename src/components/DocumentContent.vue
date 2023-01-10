@@ -65,15 +65,46 @@ export default {
       maxOffsetTranslations: {}
     }
   },
-  async mounted() {
-    await this.loadMaxOffset()
-    // Initial local query, we need to jump to the result
-    if (this.q) {
-      this.hasStickyToolbox = true
-      await this.retrieveTotalOccurrences()
-      await this.cookAllContentSlices()
-      await this.$nextTick()
-      await this.jumpToActiveLocalSearchTerm()
+  computed: {
+    ...mapGetters('pipelines', {
+      getPipelineChain: 'applyPipelineChainByCategory',
+      getFullPipelineChain: 'getFullPipelineChainByCategory'
+    }),
+    ...mapGetters('search', {
+      globalSearchTerms: 'retrieveContentQueryTerms'
+    }),
+    isRightToLeft() {
+      const language = get(this.document, 'source.language', null)
+      return this.rightToLeftLanguages.includes(language)
+    },
+    contentPipelineFunctions() {
+      return this.getFullPipelineChain('extracted-text')
+    },
+    maxOffset() {
+      return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
+    },
+    offsets() {
+      return range(0, this.maxOffset, this.pageSize)
+    },
+    virtualContentSlices() {
+      return this.offsets.map((_, index) => {
+        return this.getVirtualContentSlice(index + 1)
+      })
+    },
+    contentPipeline() {
+      return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
+    },
+    contentPipelineParams() {
+      return pick(this, [
+        'hasStickyToolbox',
+        'globalSearchTerms',
+        'localSearchIndex',
+        'localSearchOccurrences',
+        'localSearchTerm'
+      ])
+    },
+    hasLocalSearchTerms() {
+      return this.localSearchTerm && this.localSearchTerm.length > 0
     }
   },
   watch: {
@@ -86,6 +117,17 @@ export default {
     async targetLanguage(value) {
       await this.loadMaxOffset(value)
       await this.cookAllContentSlices()
+    }
+  },
+  async mounted() {
+    await this.loadMaxOffset()
+    // Initial local query, we need to jump to the result
+    if (this.q) {
+      this.hasStickyToolbox = true
+      await this.retrieveTotalOccurrences()
+      await this.cookAllContentSlices()
+      await this.$nextTick()
+      await this.jumpToActiveLocalSearchTerm()
     }
   },
   methods: {
@@ -295,48 +337,6 @@ export default {
         return { id, get, offset, limit, targetLanguage }
       }
       return this.getVirtualContentSlicePlaceholder(page)
-    }
-  },
-  computed: {
-    ...mapGetters('pipelines', {
-      getPipelineChain: 'applyPipelineChainByCategory',
-      getFullPipelineChain: 'getFullPipelineChainByCategory'
-    }),
-    ...mapGetters('search', {
-      globalSearchTerms: 'retrieveContentQueryTerms'
-    }),
-    isRightToLeft() {
-      const language = get(this.document, 'source.language', null)
-      return this.rightToLeftLanguages.includes(language)
-    },
-    contentPipelineFunctions() {
-      return this.getFullPipelineChain('extracted-text')
-    },
-    maxOffset() {
-      return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
-    },
-    offsets() {
-      return range(0, this.maxOffset, this.pageSize)
-    },
-    virtualContentSlices() {
-      return this.offsets.map((_, index) => {
-        return this.getVirtualContentSlice(index + 1)
-      })
-    },
-    contentPipeline() {
-      return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
-    },
-    contentPipelineParams() {
-      return pick(this, [
-        'hasStickyToolbox',
-        'globalSearchTerms',
-        'localSearchIndex',
-        'localSearchOccurrences',
-        'localSearchTerm'
-      ])
-    },
-    hasLocalSearchTerms() {
-      return this.localSearchTerm && this.localSearchTerm.length > 0
     }
   }
 }

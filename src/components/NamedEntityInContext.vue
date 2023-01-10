@@ -43,35 +43,6 @@ export default {
       default: 560
     }
   },
-  async mounted() {
-    await this.loadContent()
-    await this.$nextTick(this.scrollToFirstMark)
-  },
-  methods: {
-    async loadContent() {
-      if (!this.showContentTextLengthWarning && !this.isContentLoaded) {
-        this.$wait.start(this.waitIdentifier)
-        await this.$store.dispatch('document/getContent')
-        this.$wait.end(this.waitIdentifier)
-      }
-    },
-    highlight(content) {
-      const length = this.namedEntity.mention.length
-      const start = this.extractPrefix.length + this.firstOffset - this.extractOffsetStart
-      const ranges = [{ start, length }]
-      return Highlight.create({ content }).ranges(ranges)
-    },
-    scrollToFirstMark() {
-      const container = this.$el.querySelector('.named-entity-in-context__extract') || this.$el
-      const target = container.querySelector('mark')
-
-      if (target) {
-        container.style.overflow = 'auto'
-        VueScrollTo.scrollTo(target, 500, { container, offset: -75, force: true })
-        container.style.overflow = 'hidden'
-      }
-    }
-  },
   computed: {
     ...mapState('document', ['isContentLoaded', 'showContentTextLengthWarning']),
     content() {
@@ -108,6 +79,35 @@ export default {
     },
     waitIdentifier() {
       return 'load document content for named entity in context'
+    }
+  },
+  async mounted() {
+    await this.loadContent()
+    await this.$nextTick(this.scrollToFirstMark)
+  },
+  methods: {
+    async loadContent() {
+      if (!this.showContentTextLengthWarning && !this.isContentLoaded) {
+        this.$wait.start(this.waitIdentifier)
+        await this.$store.dispatch('document/getContent')
+        this.$wait.end(this.waitIdentifier)
+      }
+    },
+    highlight(content) {
+      const length = this.namedEntity.mention.length
+      const start = this.extractPrefix.length + this.firstOffset - this.extractOffsetStart
+      const ranges = [{ start, length }]
+      return Highlight.create({ content }).ranges(ranges)
+    },
+    scrollToFirstMark() {
+      const container = this.$el.querySelector('.named-entity-in-context__extract') || this.$el
+      const target = container.querySelector('mark')
+
+      if (target) {
+        container.style.overflow = 'auto'
+        VueScrollTo.scrollTo(target, 500, { container, offset: -75, force: true })
+        container.style.overflow = 'hidden'
+      }
     }
   }
 }

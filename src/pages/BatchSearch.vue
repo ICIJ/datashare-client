@@ -34,6 +34,15 @@ export default {
     BatchSearchTable
   },
   mixins: [polling, utils],
+  computed: {
+    ...mapState('batchSearch', ['hasBatchSearch']),
+    howToLink() {
+      return '#/docs/all-batch-search-documents'
+    },
+    noBatchSearch() {
+      return this.$t('batchSearch.empty', { howToLink: this.howToLink })
+    }
+  },
   async mounted() {
     if (!this.hasBatchSearch) {
       await this.getBatchSearch()
@@ -44,15 +53,6 @@ export default {
       this.$wait.start('load haveBatchSearch')
       await this.$store.dispatch('batchSearch/hasBatchSearch')
       this.$wait.end('load haveBatchSearch')
-    }
-  },
-  computed: {
-    ...mapState('batchSearch', ['hasBatchSearch']),
-    howToLink() {
-      return '#/docs/all-batch-search-documents'
-    },
-    noBatchSearch() {
-      return this.$t('batchSearch.empty', { howToLink: this.howToLink })
     }
   }
 }
