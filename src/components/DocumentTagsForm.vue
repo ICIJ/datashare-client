@@ -1,48 +1,48 @@
 <template>
   <div class="document-tags-form row no-gutters">
-    <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex" v-if="displayForm">
-      <b-form @submit.prevent="addTag" class="document-tags-form__add">
+    <div v-if="displayForm" :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex">
+      <b-form class="document-tags-form__add" @submit.prevent="addTag">
         <b-overlay :show="!isReady" spinner-small class="h-100">
           <b-input-group size="sm" class="h-100">
             <b-input-group-text slot="prepend">
               <fa icon="tag"></fa>
             </b-input-group-text>
             <b-form-input
+              ref="tag"
               v-model="tag"
-              @input="searchTags"
               required
               :placeholder="$t('document.tagsNew')"
               autocomplete="off"
               autofocus
-              ref="tag"
+              @input="searchTags"
             ></b-form-input>
           </b-input-group>
         </b-overlay>
         <selectable-dropdown
           :items="suggestions"
-          @input="tag = $event"
-          @click.native="addTag"
           :hide="!suggestions.length"
           class="document-tags-form__add__suggestions"
+          @input="tag = $event"
+          @click.native="addTag"
         ></selectable-dropdown>
       </b-form>
     </div>
-    <div class="col-md-8" v-if="displayTags">
+    <div v-if="displayTags" class="col-md-8">
       <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
         <li
-          class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1"
-          :class="[mode === 'light' ? 'border badge-light' : 'badge-dark']"
           v-for="oneTag in tags"
           :key="oneTag.label"
+          class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1"
+          :class="[mode === 'light' ? 'border badge-light' : 'badge-dark']"
         >
-          <span :title="generateTagTooltip(oneTag)" v-b-tooltip>
+          <span v-b-tooltip :title="generateTagTooltip(oneTag)">
             {{ oneTag.label }}
           </span>
           <confirm-button
+            v-if="!isCreatedByAdmin(oneTag)"
             class="document-tags-form__tags__tag__delete btn btn-sm"
             :class="mode"
             :confirmed="() => deleteTag(oneTag)"
-            v-if="!isCreatedByAdmin(oneTag)"
             :label="$t('document.tagConfirmation')"
             :no="$t('global.no')"
             :yes="$t('global.yes')"

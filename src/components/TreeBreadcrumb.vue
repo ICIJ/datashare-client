@@ -13,9 +13,9 @@
       ...
     </li>
     <li
-      class="list-inline-item tree-breadcrumb__item"
       v-for="directory in tree.slice(-maxDirectories)"
       :key="directory"
+      class="list-inline-item tree-breadcrumb__item"
     >
       <a href @click.prevent="$emit('input', directory)">{{ directory | basename }}</a>
     </li>
@@ -31,6 +31,9 @@ import { basename } from 'path'
  */
 export default {
   name: 'TreeBreadcrumb',
+  filters: {
+    basename
+  },
   model: {
     prop: 'path',
     event: 'input'
@@ -70,9 +73,6 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  filters: {
-    basename
   },
   computed: {
     fullTree() {

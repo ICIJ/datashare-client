@@ -17,13 +17,13 @@
         >
           <div class="input-group justify-content-end">
             <input
+              v-shortkey.focus="getShortcut"
               type="search"
               class="form-control"
-              @input="debounceFilterInput"
               :placeholder="$t('document.spreadsheet.findInSpreadsheet')"
-              v-shortkey.focus="getShortcut"
+              @input="debounceFilterInput"
             />
-            <div class="input-group-append" v-if="filter">
+            <div v-if="filter" class="input-group-append">
               <div class="input-group-text">
                 {{ $tc('document.spreadsheet.filtered.rows', filteredItems.length) }}
               </div>
@@ -37,12 +37,12 @@
           :min-item-size="54"
           class="spreadsheet-viewer__content__table__scroller border-left border mb-3"
         >
-          <template #before v-if="fieldsInFirstItem">
+          <template v-if="fieldsInFirstItem" #before>
             <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
               <div
                 v-for="field in fields"
-                class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden"
                 :key="field"
+                class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden"
               >
                 <div class="p-2">
                   {{ field }}
@@ -55,8 +55,8 @@
               <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
                 <div
                   v-for="(col, i) in item.cols"
-                  class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden"
                   :key="i"
+                  class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden"
                 >
                   <div class="p-2">
                     {{ col }}
@@ -67,8 +67,8 @@
           </template>
         </dynamic-scroller>
       </div>
-      <b-tabs v-model="activeSheetIndex" pills class="mx-3 mb-3" v-if="nonEmptySheets.length > 1">
-        <b-tab :title="sheet" v-for="(sheet, i) in nonEmptySheets" :key="i"></b-tab>
+      <b-tabs v-if="nonEmptySheets.length > 1" v-model="activeSheetIndex" pills class="mx-3 mb-3">
+        <b-tab v-for="(sheet, i) in nonEmptySheets" :key="i" :title="sheet"></b-tab>
       </b-tabs>
     </div>
   </v-wait>
@@ -88,6 +88,11 @@ import { getShortkeyOS } from '@/utils/utils'
  */
 export default {
   name: 'SpreadsheetViewer',
+  components: {
+    DynamicScroller,
+    DynamicScrollerItem
+  },
+  mixins: [shortkeys],
   props: {
     /**
      * The selected document
@@ -95,11 +100,6 @@ export default {
     document: {
       type: Object
     }
-  },
-  mixins: [shortkeys],
-  components: {
-    DynamicScroller,
-    DynamicScrollerItem
   },
   data() {
     return {

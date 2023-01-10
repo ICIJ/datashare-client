@@ -50,30 +50,6 @@ export default {
       default: null
     }
   },
-  methods: {
-    goToPreviousItem() {
-      this.setIndex(Math.max(0, this.index - 1))
-      /**
-       * Triggered when user click on the `previous` button.
-       */
-      this.$emit('previous')
-    },
-    goToNextItem() {
-      this.setIndex(Math.min(this.totalItems - 1, this.index + 1))
-      /**
-       * Triggered when user click on the `next` button.
-       */
-      this.$emit('next')
-    },
-    setIndex(index) {
-      if (index !== this.index) {
-        /**
-         * Triggered when the value of `index` changes.
-         */
-        this.$emit('input', index)
-      }
-    }
-  },
   computed: {
     isPreviousButtonEnable() {
       if (this.hasPreviousItem !== null) {
@@ -99,6 +75,30 @@ export default {
     nextTooltip() {
       return this.$t(`quickItemNav.next.${this.osTooltipKey}`)
     }
+  },
+  methods: {
+    goToPreviousItem() {
+      this.setIndex(Math.max(0, this.index - 1))
+      /**
+       * Triggered when user click on the `previous` button.
+       */
+      this.$emit('previous')
+    },
+    goToNextItem() {
+      this.setIndex(Math.min(this.totalItems - 1, this.index + 1))
+      /**
+       * Triggered when user click on the `next` button.
+       */
+      this.$emit('next')
+    },
+    setIndex(index) {
+      if (index !== this.index) {
+        /**
+         * Triggered when the value of `index` changes.
+         */
+        this.$emit('input', index)
+      }
+    }
   }
 }
 </script>
@@ -107,11 +107,11 @@ export default {
   <span class="quick-items-nav">
     <button
       id="previous-item-button"
+      v-shortkey="getKeys('goToPreviousItem')"
       class="btn btn-sm btn-link text-white py-0 quick-items-nav__previous"
+      :disabled="!isPreviousButtonEnable"
       @click="goToPreviousItem"
       @shortkey="getAction('goToPreviousItem')"
-      v-shortkey="getKeys('goToPreviousItem')"
-      :disabled="!isPreviousButtonEnable"
     >
       <fa icon="angle-left" class="mr-1"></fa>
       <span class="d-sm-none d-md-inline">
@@ -123,11 +123,11 @@ export default {
     </b-tooltip>
     <button
       id="next-item-button"
+      v-shortkey="getKeys('goToNextItem')"
       class="btn btn-sm btn-link text-white py-0 quick-items-nav__next"
+      :disabled="!isNextButtonEnable"
       @click="goToNextItem"
       @shortkey="getAction('goToNextItem')"
-      v-shortkey="getKeys('goToNextItem')"
-      :disabled="!isNextButtonEnable"
     >
       <span class="d-sm-none d-md-inline">
         {{ $t('quickItemNav.next.label') }}

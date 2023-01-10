@@ -54,7 +54,7 @@ export default {
 
 <template>
   <div class="document-content-slice-placeholder">
-    <div v-for="i in 20" :key="i" v-once>
+    <div v-for="i in 20" v-once :key="i">
       <content-placeholder :rows="contentPlaceholderRows" class="p-0 my-3" :style="rowStyle()" />
     </div>
   </div>

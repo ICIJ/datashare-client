@@ -33,8 +33,8 @@
             <b-btn
               variant="link"
               size="sm"
-              @click="stopTask(item.name)"
               class="tasks-list__tasks__item__stop text-danger p-0"
+              @click="stopTask(item.name)"
             >
               {{ $t('tasksList.stop') }}
             </b-btn>
@@ -64,6 +64,14 @@ export default {
   components: {
     EllipseStatus
   },
+  filters: {
+    taskToName(taskName) {
+      return taskName.split('.').pop().split('@').shift()
+    },
+    taskToId(taskName) {
+      return taskName.split('@').pop()
+    }
+  },
   props: {
     /**
      * Object of tasks passed from the parent
@@ -76,14 +84,6 @@ export default {
      */
     stoppable: {
       type: Boolean
-    }
-  },
-  filters: {
-    taskToName(taskName) {
-      return taskName.split('.').pop().split('@').shift()
-    },
-    taskToId(taskName) {
-      return taskName.split('@').pop()
     }
   },
   computed: {

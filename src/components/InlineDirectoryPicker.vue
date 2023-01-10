@@ -114,22 +114,22 @@ export default {
   <div class="inline-directory-picker border rounded" :class="{ 'inline-directory-picker--dark': dark }">
     <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
       <div class="inline-directory-picker__header d-flex align-items-center p-2">
-        <fa class="inline-directory-picker__header__icon mr-3" icon="folder" fixed-width v-if="!hideFolderIcon" />
+        <fa v-if="!hideFolderIcon" class="inline-directory-picker__header__icon mr-3" icon="folder" fixed-width />
         <active-text-truncate
+          :key="directories.length"
           class="inline-directory-picker__header__list mr-1"
           direction="rtl"
-          :key="directories.length"
         >
           <div
-            class="inline-directory-picker__header__list__item"
             v-for="(directory, i) in directories"
             :key="directory"
+            class="inline-directory-picker__header__list__item"
             @click="selectAndBrowse(i)"
           >
             <b-btn
+              v-b-tooltip="{ delay: { show: 1e3, hide: 0 }, customClass: 'tooltip-lg' }"
               class="p-0"
               variant="link"
-              v-b-tooltip="{ delay: { show: 1e3, hide: 0 }, customClass: 'tooltip-lg' }"
               :title="directoryTitle(i)"
             >
               {{ basename(directory) }}

@@ -26,11 +26,6 @@ const SEARCH_PARAMS_LOCAL = Object.freeze({
 export default {
   name: 'BatchSearchClearFilters',
   mixins: [utils],
-  methods: {
-    deleteFilters() {
-      return this.$router.push({ name: 'batch-search', query: {} })
-    }
-  },
   computed: {
     filters() {
       const keys = Object.keys(SEARCH_PARAMS_LOCAL)
@@ -42,6 +37,11 @@ export default {
     hasActiveFilter() {
       const isContained = this.currentFilters.filter((f) => this.filters.includes(f)).length !== 0
       return this.currentFilters.length !== 0 && isContained
+    }
+  },
+  methods: {
+    deleteFilters() {
+      return this.$router.push({ name: 'batch-search', query: {} })
     }
   }
 }

@@ -13,10 +13,10 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
  */
 export default {
   name: 'JsonViewer',
-  mixins: [datashareSourceMixin],
   components: {
     JsonFormatter
   },
+  mixins: [datashareSourceMixin],
   props: {
     /**
      * The selected document

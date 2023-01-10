@@ -1,14 +1,14 @@
 <template>
   <button
+    v-show="!autoHiding || hasFiltersOrQuery"
+    v-b-tooltip
     class="btn"
     :class="componentClasses"
-    @click="resetFiltersAndQuery"
-    v-show="!autoHiding || hasFiltersOrQuery"
     :title="$t('search.clearFiltersDescription')"
-    v-b-tooltip
     :disabled="!hasFiltersOrQuery"
+    @click="resetFiltersAndQuery"
   >
-    <fa :icon="icon" v-if="!noIcon"></fa>
+    <fa v-if="!noIcon" :icon="icon"></fa>
     <slot>
       {{ $t('search.clearFilters') }}
     </slot>

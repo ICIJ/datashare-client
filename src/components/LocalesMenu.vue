@@ -1,5 +1,5 @@
 <template>
-  <b-button class="locales-menu" :id="uniqueId" href="#" variant="none">
+  <b-button :id="uniqueId" class="locales-menu" href="#" variant="none">
     <span class="locales-menu__button">
       <slot v-bind="{ currentLocale, locales }">
         <fa icon="globe" class="mr-1"></fa>
@@ -7,19 +7,19 @@
       </slot>
     </span>
     <b-popover
+      ref="popover"
       :target="uniqueId"
       triggers="click blur"
       custom-class="locales-menu__list popover-body-p-0"
-      ref="popover"
     >
       <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
         <a
-          href="#"
-          class="dropdown-item"
           v-for="locale in locales"
           :key="locale.key"
-          @click.prevent="chooseLocale(locale.key)"
+          href="#"
+          class="dropdown-item"
           :class="{ active: locale === currentLocale }"
+          @click.prevent="chooseLocale(locale.key)"
         >
           {{ locale.label }}
         </a>

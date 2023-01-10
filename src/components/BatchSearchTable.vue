@@ -17,7 +17,7 @@
       @sort-changed="sortChanged"
     >
       <template #table-busy>
-        <content-placeholder slot="waiting" class="p-3" v-for="index in 3" :key="index" :rows="placeholderRows" />
+        <content-placeholder v-for="index in 3" slot="waiting" :key="index" class="p-3" :rows="placeholderRows" />
       </template>
       <template #empty>
         <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage" />
@@ -25,9 +25,9 @@
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
         <batch-search-filter-dropdown
+          :id="field.key"
           v-model="selectedStates"
           :items="states"
-          :id="field.key"
           :name="field.label"
           multiple
         >
@@ -38,23 +38,23 @@
       </template>
       <template #head(projects)="{ field }">
         <batch-search-filter-dropdown
+          :id="field.key"
           v-model="selectedProjects"
           :items="projects"
-          :id="field.key"
           :name="field.label"
           multiple
         />
       </template>
       <template #head(date)="{ field }">
         <batch-search-filter-date
+          :id="field.key"
           v-model="selectedDateRange"
           :date="selectedDateRange"
-          :id="field.key"
           :name="field.label"
         />
       </template>
       <template #head(published)="{ field }">
-        <batch-search-filter-dropdown v-model="selectedStatus" :items="status" :id="field.key" :name="field.label">
+        <batch-search-filter-dropdown :id="field.key" v-model="selectedStatus" :items="status" :name="field.label">
           <template #label="{ item }">
             {{ $t(`batchSearch.${item.label}`) }}
           </template>
@@ -89,7 +89,7 @@
         {{ item.isPublished }}
       </template>
       <template #cell(projects)="{ item }">
-        <span class="batch-search-table__item__projects text-truncate" v-b-tooltip.hover :title="item.projectNames">
+        <span v-b-tooltip.hover class="batch-search-table__item__projects text-truncate" :title="item.projectNames">
           {{ item.projectNames }}
         </span>
       </template>
@@ -139,8 +139,8 @@ const SORT_ORDER = Object.freeze({
 
 export default {
   name: 'BatchSearchTable',
-  mixins: [polling, utils],
   components: { UserDisplay, BatchSearchStatus, BatchSearchFilterDate, BatchSearchFilterDropdown },
+  mixins: [polling, utils],
   data() {
     return {
       status: [
@@ -156,13 +156,13 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.fetchAndRegisterPollWithLoader()
-  },
   watch: {
     $route() {
       return this.fetchWithLoader()
     }
+  },
+  mounted() {
+    this.fetchAndRegisterPollWithLoader()
   },
   methods: {
     createBatchSearchRoute({

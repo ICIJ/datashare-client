@@ -28,12 +28,12 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'BatchSearches',
-  mixins: [polling, utils],
   components: {
     BatchSearchFilterQuery,
     BatchSearchClearFilters,
     BatchSearchTable
   },
+  mixins: [polling, utils],
   async mounted() {
     if (!this.hasBatchSearch) {
       await this.getBatchSearch()

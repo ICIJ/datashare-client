@@ -1,11 +1,11 @@
 <template>
   <div class="widget widget--tree-map">
-    <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
-      <h4 v-html="widget.title" class="m-0 h"></h4>
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
+      <h4 class="m-0 h" v-html="widget.title"></h4>
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }">
       <div class="d-flex flex-row">
-        <tree-breadcrumb :path="currentPath" no-datadir @input="update($event)" v-if="currentPath" />
+        <tree-breadcrumb v-if="currentPath" :path="currentPath" no-datadir @input="update($event)" />
         <router-link
           :to="{ name: 'search', query: { index: widget.index, 'f[path]': currentPath } }"
           class="widget__content__search"

@@ -124,16 +124,16 @@ export default {
       </label>
       <div class="input-group">
         <input
+          ref="search"
+          v-shortkey="getKeys('findInDocument')"
           type="search"
           :value="searchTerm"
-          @input="$emit('input', $event.target.value)"
           :placeholder="$t('document.find')"
-          ref="search"
           class="form-control document-local-search-input__term"
-          v-shortkey="getKeys('findInDocument')"
+          @input="$emit('input', $event.target.value)"
           @shortkey="getAction('findInDocument')"
         />
-        <div class="document-local-search-input__count input-group-append w-25" v-if="searchTerm.length > 0">
+        <div v-if="searchTerm.length > 0" class="document-local-search-input__count input-group-append w-25">
           <span v-if="loading" class="input-group-text w-100 text-center d-inline-block">
             <fa icon="circle-notch" spin></fa>
           </span>
@@ -152,15 +152,15 @@ export default {
     <div class="form-group">
       <button
         class="document-local-search-input__previous btn btn-sm p-2"
-        @click="previous"
         :disabled="searchOccurrences === 0 || searchTerm.length === 0"
+        @click="previous"
       >
         <fa icon="angle-up"></fa>
       </button>
       <button
         class="document-local-search-input__next btn btn-sm p-2"
-        @click="next"
         :disabled="searchOccurrences === 0 || searchTerm.length === 0"
+        @click="next"
       >
         <fa icon="angle-down"></fa>
       </button>

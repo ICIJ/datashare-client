@@ -2,7 +2,7 @@
   <div class="mounted-data-location d-flex align-items-center px-1">
     <div class="d-flex align-items-center flex-grow-1 mw-100" @click="showTreeView()">
       <fa icon="folder" class="ml-1 mr-2 text-muted mounted-data-location__icon"></fa>
-      <div class="flex-grow-1 text-monospace px-0 py-1 text-truncate mounted-data-location__value" :id="valueId">
+      <div :id="valueId" class="flex-grow-1 text-monospace px-0 py-1 text-truncate mounted-data-location__value">
         {{ dataDir }}
       </div>
     </div>
@@ -51,6 +51,14 @@ export default {
       path: null
     }
   },
+  computed: {
+    valueId() {
+      return uniqueId('mounted-data-location__value--')
+    },
+    dataDir() {
+      return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
+    }
+  },
   methods: {
     async deleteAll() {
       try {
@@ -74,14 +82,6 @@ export default {
     showTreeView() {
       this.$set(this, 'path', this.dataDir)
       this.$bvModal.show('mounting-data-location-tree-view')
-    }
-  },
-  computed: {
-    valueId() {
-      return uniqueId('mounted-data-location__value--')
-    },
-    dataDir() {
-      return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   }
 }

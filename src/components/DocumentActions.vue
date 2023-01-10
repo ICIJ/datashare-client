@@ -1,11 +1,11 @@
 <template>
   <component :is="noBtnGroup ? 'div' : 'b-btn-group'" :vertical="vertical" class="document-actions align-items-center">
     <a
+      :id="starBtnId"
       class="document-actions__star btn"
       :class="starBtnClassDefinition"
-      @click.prevent="toggleStarDocument()"
       href
-      :id="starBtnId"
+      @click.prevent="toggleStarDocument()"
     >
       <fa :icon="[isStarred ? 'fa' : 'far', 'star']" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
@@ -19,10 +19,10 @@
     <template v-if="canIDownload">
       <b-btn-group :class="downloadBtnGroupClass">
         <a
+          :id="downloadBtnId"
           class="document-actions__download btn"
           :class="downloadBtnClass"
           :href="document.fullUrl"
-          :id="downloadBtnId"
           target="_blank"
         >
           <fa icon="download" fixed-width />
@@ -54,10 +54,10 @@
     <template v-if="canIDownload && hasRoot">
       <b-btn-group :class="downloadBtnGroupClass">
         <a
+          :id="downloadRootBtnId"
           class="document-actions__download-root btn"
           :class="downloadBtnClass"
           :href="document.fullRootUrl"
-          :id="downloadRootBtnId"
           target="_blank"
         >
           <fa icon="download" fixed-width />
@@ -87,9 +87,9 @@
     </template>
 
     <router-link-popup
+      :id="popupBtnId"
       class="document-actions__popup btn"
       :class="popupBtnClass"
-      :id="popupBtnId"
       :to="{ name: 'document-modal', params: document.routerParams }"
     >
       <fa icon="external-link-alt" fixed-width />

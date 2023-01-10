@@ -4,6 +4,7 @@
  */
 export default {
   name: 'Hook',
+  functional: true,
   props: {
     /**
      * Name of the hook (targeted by plugins).
@@ -26,7 +27,6 @@ export default {
       default: () => {}
     }
   },
-  functional: true,
   render(createElement, context) {
     function filterHookedComponentsByTarget(targetName) {
       const { $store } = context.parent

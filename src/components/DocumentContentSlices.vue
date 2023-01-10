@@ -1,11 +1,11 @@
 <template>
   <div class="document-content-slices">
     <dynamic-scroller
+      :key="version"
+      ref="scroller"
       :buffer="scrollBuffer"
       :items="slices"
-      :key="version"
       :min-item-size="85"
-      ref="scroller"
       page-mode
     >
       <template #default="{ item, index, active }">
@@ -29,6 +29,11 @@ export default {
     DynamicScroller,
     DynamicScrollerItem
   },
+  filters: {
+    sliceComponent({ placeholder = false } = {}) {
+      return placeholder ? DocumentContentSlicePlaceholder : DocumentContentSlice
+    }
+  },
   props: {
     slices: {
       type: Array,
@@ -43,16 +48,6 @@ export default {
       version: 0
     }
   },
-  watch: {
-    bufferizeAll() {
-      this.version++
-    }
-  },
-  filters: {
-    sliceComponent({ placeholder = false } = {}) {
-      return placeholder ? DocumentContentSlicePlaceholder : DocumentContentSlice
-    }
-  },
   computed: {
     scrollBuffer() {
       // Huge buffer to ensure all views are created
@@ -64,6 +59,11 @@ export default {
         container = container?.parentElement
       }
       return container || window
+    }
+  },
+  watch: {
+    bufferizeAll() {
+      this.version++
     }
   },
   methods: {

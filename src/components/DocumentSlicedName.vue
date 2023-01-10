@@ -9,17 +9,17 @@
       }"
     >
       <span
+        v-for="(slice, index) in slices"
+        :key="index"
         class="document-sliced-name__item"
         :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }"
-        :key="index"
-        v-for="(slice, index) in slices"
       >
         <span v-if="isMiddleSlice(slice)"> … </span>
         <span v-else-if="hasContentSlice(slice)" class="d-inline-flex flex-row align-items-end">
           <span class="document-sliced-name__item__short-id">
             {{ slice }}
           </span>
-          <span class="document-sliced-name__item__content-type" v-if="slice === document.shortId">
+          <span v-if="slice === document.shortId" class="document-sliced-name__item__content-type">
             {{ contentType }}
           </span>
         </span>
@@ -84,32 +84,6 @@ export default {
       type: Boolean
     }
   },
-  methods: {
-    isFirstSlice(slice) {
-      return this.slices.indexOf(slice) === 0
-    },
-    isLastSlice(slice) {
-      return this.slices.indexOf(slice) === this.slices.length - 1
-    },
-    isMiddleSlice(slice) {
-      return !this.isFirstSlice(slice) && !this.isLastSlice(slice)
-    },
-    hasContentSlice(slice) {
-      return !this.isFirstSlice(slice) && this.isLastSlice(slice)
-    },
-    hasInteractiveRoot() {
-      return this.isSliced && this.interactiveRoot
-    },
-    hasActiveTextTruncate() {
-      return this.activeTextTruncate !== null
-    },
-    hasSubject() {
-      return this.showSubject && !this.isSliced() && this.document.hasSubject
-    },
-    isSliced() {
-      return this.slices.length > 1
-    }
-  },
   computed: {
     slices() {
       return this.document.slicedName
@@ -134,6 +108,32 @@ export default {
         return { direction: 'rtl' }
       }
       return {}
+    }
+  },
+  methods: {
+    isFirstSlice(slice) {
+      return this.slices.indexOf(slice) === 0
+    },
+    isLastSlice(slice) {
+      return this.slices.indexOf(slice) === this.slices.length - 1
+    },
+    isMiddleSlice(slice) {
+      return !this.isFirstSlice(slice) && !this.isLastSlice(slice)
+    },
+    hasContentSlice(slice) {
+      return !this.isFirstSlice(slice) && this.isLastSlice(slice)
+    },
+    hasInteractiveRoot() {
+      return this.isSliced && this.interactiveRoot
+    },
+    hasActiveTextTruncate() {
+      return this.activeTextTruncate !== null
+    },
+    hasSubject() {
+      return this.showSubject && !this.isSliced() && this.document.hasSubject
+    },
+    isSliced() {
+      return this.slices.length > 1
     }
   }
 }

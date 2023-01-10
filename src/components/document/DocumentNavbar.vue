@@ -9,8 +9,8 @@
         <b-btn
           v-if="isShrinked"
           class="document-navbar__title text-left font-weight-bold flex-grow-1 px-2 text-white py-0 text-truncate"
-          @click="scrollToTop"
           variant="link"
+          @click="scrollToTop"
         >
           {{ doc.title }}
         </b-btn>
@@ -21,19 +21,19 @@
       <b-btn
         class="mx-2 px-2 py-0 document-navbar__recommended-by"
         size="sm"
-        @click="toggleAsRecommended"
         :data-recommended-label="$t('search.nav.markAsRecommended')"
         :data-unrecommended-label="$t('search.nav.unmarkAsRecommended')"
         :variant="markAsRecommendedVariant"
+        @click="toggleAsRecommended"
       >
         {{ markAsRecommendedLabel }}
       </b-btn>
       <template v-if="isServer">
         <b-badge
+          id="popover-recommended-by"
           pill
           :variant="markAsRecommendedVariant"
           class="mr-2 document-navbar__recommended-by-number"
-          id="popover-recommended-by"
         >
           {{ recommendedBy.length }}
         </b-badge>
@@ -49,9 +49,9 @@
         </b-popover>
       </template>
       <b-btn
+        id="popover-document-share"
         variant="link"
         class="text-white py-0 px-2 px-2 py-0 document-navbar__share"
-        id="popover-document-share"
         size="sm"
       >
         <fa icon="share-alt"></fa>
@@ -96,11 +96,11 @@ import utils from '@/mixins/utils'
  */
 export default {
   name: 'SearchDocumentNavbar',
-  mixins: [utils],
   components: {
     DocumentActions,
     UserDisplay
   },
+  mixins: [utils],
   computed: {
     ...mapState('document', ['doc', 'isRecommended', 'recommendedBy']),
     query() {

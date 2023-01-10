@@ -1,12 +1,12 @@
 <template>
   <span class="shortkeys-modal">
     <b-button
+      v-b-modal.shortkeys
+      v-b-tooltip.hover.bottomleft
       class="text-dark"
       variant="transparent"
       size="md"
-      v-b-modal.shortkeys
       :title="$t('shortkeys.title')"
-      v-b-tooltip.hover.bottomleft
     >
       <fa icon="keyboard" />
       <span class="sr-only">
@@ -17,7 +17,7 @@
       <div v-for="(shortkey, index) in shortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
         <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row no-gutters w-100 mb-1">
           <div class="col-sm-1 pr-2">
-            <fa :icon="shortkey.icon" v-if="shortkey.icon" fixed-width></fa>
+            <fa v-if="shortkey.icon" :icon="shortkey.icon" fixed-width></fa>
           </div>
           <div class="col-sm-7 pr-2">
             {{ getLabel(shortkey) }}
@@ -44,14 +44,14 @@ import { getShortkeyOS } from '@/utils/utils'
  */
 export default {
   name: 'ShortkeysModal',
-  data() {
-    return {
-      shortkeys: []
-    }
-  },
   filters: {
     shortkey(values) {
       return join(map(values, capitalize), '+')
+    }
+  },
+  data() {
+    return {
+      shortkeys: []
     }
   },
   computed: {

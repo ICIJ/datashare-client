@@ -39,10 +39,6 @@ export default {
       mounted: false
     }
   },
-  async mounted() {
-    await this.$nextTick()
-    this.mounted = true
-  },
   watch: {
     $props: {
       deep: true,
@@ -54,6 +50,10 @@ export default {
     mounted() {
       return this.render()
     }
+  },
+  async mounted() {
+    await this.$nextTick()
+    this.mounted = true
   },
   methods: {
     render() {

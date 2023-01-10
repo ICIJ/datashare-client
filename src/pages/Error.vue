@@ -8,11 +8,11 @@ import settings from '@/utils/settings'
 
 export default {
   name: 'Error',
-  mixins: [utils],
   components: {
     FontAwesomeLayers,
     VersionNumber
   },
+  mixins: [utils],
   props: {
     error: {
       type: [String, Error]
@@ -31,9 +31,6 @@ export default {
     return {
       username: null
     }
-  },
-  async mounted() {
-    this.username = await this.$core.auth.getUsername()
   },
   computed: {
     titleAsString() {
@@ -60,18 +57,21 @@ export default {
     logoutLink() {
       return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
+  },
+  async mounted() {
+    this.username = await this.$core.auth.getUsername()
   }
 }
 </script>
 
 <template>
   <div class="error d-flex flex-column">
-    <div class="error__header p-3 text-right" v-if="showHeader">
+    <div v-if="showHeader" class="error__header p-3 text-right">
       <a
+        v-b-tooltip.html
         class="btn btn-outline-light btn-sm"
         :href="logoutLink"
         :title="$t('menu.connectedAs', { username })"
-        v-b-tooltip.html
       >
         <fa icon="sign-out-alt" fixed-width></fa>
         {{ $t('menu.logout') }}

@@ -7,7 +7,7 @@
           <img src="~images/logo-color.svg" alt="Datashare" class="app-sidebar__container__brand__logo" />
         </router-link>
         <div>
-          <a @click="hideSidebar()" class="app-sidebar__container__toggle text-white">
+          <a class="app-sidebar__container__toggle text-white" @click="hideSidebar()">
             <fa icon="bars"></fa>
           </a>
         </div>
@@ -16,10 +16,10 @@
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <router-link
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.search')"
             :to="{ name: 'search', query }"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
           >
             <fa icon="search" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -29,10 +29,10 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--tasks">
           <router-link
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.tasks')"
             :to="{ name: 'tasks' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
           >
             <fa icon="rocket" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -42,11 +42,11 @@
         </li>
         <li class="app-sidebar__container__menu__item">
           <router-link
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
-            @click.prevent="$root.$emit('history::toggle')"
             :title="$t('menu.history')"
             :to="{ name: 'user-history' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            @click.prevent="$root.$emit('history::toggle')"
           >
             <fa icon="clock" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -56,10 +56,10 @@
         </li>
         <li class="app-sidebar__container__menu__item">
           <router-link
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.insights')"
             :to="{ name: 'insights' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
           >
             <fa icon="chart-bar" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -70,10 +70,10 @@
         <template>
           <li class="app-sidebar__container__menu__item">
             <router-link
+              v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
               class="app-sidebar__container__menu__item__link"
               :title="$t('menu.settings')"
               :to="{ name: 'settings' }"
-              v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             >
               <fa icon="cog" fixed-width></fa>
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -88,11 +88,11 @@
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <a
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :href="faqLink"
             target="_blank"
             :title="$t('menu.faq')"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
           >
             <fa icon="question" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -102,11 +102,11 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
           <a
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :href="helpLink"
             target="_blank"
             :title="$t('menu.help')"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
           >
             <fa icon="ambulance" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -126,7 +126,7 @@
             </span>
           </h5>
           <ul class="app-sidebar__container__menu app-sidebar__container__menu--borderless list-unstyled">
-            <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" :key="meta.resourcePath">
+            <li v-for="meta in currentRouteDocs" :key="meta.resourcePath" class="app-sidebar__container__menu__item">
               <router-link
                 class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree"
                 :to="{ name: 'docs', params: meta }"
@@ -141,10 +141,10 @@
         <ul v-else class="app-sidebar__container__menu list-unstyled">
           <li class="app-sidebar__container__menu__item" :data-badge="currentRouteDocs.length">
             <b-button
+              id="app-menu-user-guide"
               class="app-sidebar__container__menu__item__link"
               :data-badge="currentRouteDocs.length"
               href="#"
-              id="app-menu-user-guide"
               variant="none"
             >
               <fa icon="book" fixed-width></fa>
@@ -159,10 +159,10 @@
               >
                 <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
                   <router-link
-                    class="dropdown-item"
-                    :key="meta.resourcePath"
-                    :to="{ name: 'docs', params: meta }"
                     v-for="meta in currentRouteDocs"
+                    :key="meta.resourcePath"
+                    class="dropdown-item"
+                    :to="{ name: 'docs', params: meta }"
                   >
                     {{ meta.title }}
                   </router-link>
@@ -176,29 +176,29 @@
       <hook name="app-sidebar.locales:before"></hook>
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
-          <locales-menu class="app-sidebar__container__menu__item__link text-wrap" v-slot="{ currentLocale }">
+          <locales-menu v-slot="{ currentLocale }" class="app-sidebar__container__menu__item__link text-wrap">
             <fa icon="globe" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ currentLocale.label }}
             </span>
           </locales-menu>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
+        <li v-if="isServer" class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout">
           <a
             v-if="isBasicAuth"
-            @click.prevent="showModal"
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--basic-auth"
             :title="$t('menu.logout')"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            @click.prevent="showModal"
           >
             <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.logoutShort') }}
             </span>
             <b-modal
+              ref="logout-modal"
               hide-footer
               class="app-sidebar__container__menu__item__link__modal"
-              ref="logout-modal"
               size="md"
               :title="$t('menu.logout')"
             >
@@ -207,10 +207,10 @@
           </a>
           <a
             v-else
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :href="logoutLink"
             :title="$t('menu.logout')"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
           >
             <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -229,7 +229,7 @@
         :tooltip-placement="reduced ? 'righttop' : 'top'"
       ></version-number>
     </div>
-    <div class="app-sidebar__data-location" v-if="!isServer" v-show="!reduced">
+    <div v-if="!isServer" v-show="!reduced" class="app-sidebar__data-location">
       <mounted-data-location></mounted-data-location>
     </div>
   </div>
@@ -252,7 +252,6 @@ import { Api } from '@/api'
  */
 export default {
   name: 'AppSidebar',
-  mixins: [docs, utils],
   components: {
     Hook,
     LocalesMenu,
@@ -260,6 +259,7 @@ export default {
     VersionNumber,
     VuePerfectScrollbar
   },
+  mixins: [docs, utils],
   computed: {
     query() {
       return this.$store.getters['search/toRouteQueryWithStamp']()

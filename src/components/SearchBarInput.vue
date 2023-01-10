@@ -11,11 +11,11 @@
     <div class="input-group-append">
       <router-link
         v-if="!hideTips"
+        v-b-tooltip.bottomleft
         :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }"
         class="search-bar-input__tips-addon input-group-text px-2"
         :class="{ 'search-bar-input__tips-addon--active': showTips }"
         :title="$t('search.tips')"
-        v-b-tooltip.bottomleft
       >
         <fa icon="question-circle" fixed-width />
       </router-link>
@@ -76,17 +76,6 @@ export default {
       type: Boolean
     }
   },
-  methods: {
-    onBlur() {
-      this.$emit('blur')
-    },
-    onInput() {
-      this.$emit('input')
-    },
-    onFocus() {
-      this.$emit('focus')
-    }
-  },
   computed: {
     value: {
       get() {
@@ -98,6 +87,17 @@ export default {
     },
     showTips() {
       return !this.hideTips && this.query?.length
+    }
+  },
+  methods: {
+    onBlur() {
+      this.$emit('blur')
+    },
+    onInput() {
+      this.$emit('input')
+    },
+    onFocus() {
+      this.$emit('focus')
     }
   }
 }

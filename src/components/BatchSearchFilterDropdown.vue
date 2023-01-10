@@ -1,5 +1,5 @@
 <template>
-  <batch-search-filter class="batch-search-filter-dropdown" :id="id" :name="name" :active="isActive">
+  <batch-search-filter :id="id" class="batch-search-filter-dropdown" :name="name" :active="isActive">
     <keep-alive>
       <selectable-dropdown
         v-model="selectedValues"
@@ -48,11 +48,6 @@ export default {
       type: Boolean
     }
   },
-  methods: {
-    labelItem(item) {
-      return item && item.label ? item.label : item
-    }
-  },
   computed: {
     isActive() {
       return this.values?.length > 0 || this.values?.value !== undefined
@@ -66,6 +61,11 @@ export default {
           this.$emit('update', values)
         }
       }
+    }
+  },
+  methods: {
+    labelItem(item) {
+      return item && item.label ? item.label : item
     }
   }
 }

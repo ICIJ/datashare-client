@@ -1,11 +1,11 @@
 <template>
   <div class="search-layout-selector btn-group">
     <button
+      v-b-tooltip
       class="btn search-layout-selector__button"
       :class="{ 'search-layout-selector__button--active': layout === 'list' }"
-      @click="layout = 'list'"
       :title="$t('search.layout.list')"
-      v-b-tooltip
+      @click="layout = 'list'"
     >
       <fa icon="th-list" fa-fw></fa>
       <span class="sr-only">
@@ -13,11 +13,11 @@
       </span>
     </button>
     <button
+      v-b-tooltip
       class="btn search-layout-selector__button"
       :class="{ 'search-layout-selector__button--active': layout === 'grid' }"
-      @click="layout = 'grid'"
       :title="$t('search.layout.grid')"
-      v-b-tooltip
+      @click="layout = 'grid'"
     >
       <fa icon="th" fa-fw></fa>
       <span class="sr-only">
@@ -25,11 +25,11 @@
       </span>
     </button>
     <button
+      v-b-tooltip
       class="btn search-layout-selector__button"
       :class="{ 'search-layout-selector__button--active': layout === 'table' }"
-      @click="layout = 'table'"
       :title="$t('search.layout.table')"
-      v-b-tooltip
+      @click="layout = 'table'"
     >
       <fa icon="table" fa-fw></fa>
       <span class="sr-only">

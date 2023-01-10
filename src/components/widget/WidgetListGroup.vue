@@ -1,22 +1,22 @@
 <template>
   <div class="widget widget--list-group">
-    <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
-      <h4 v-html="widget.title" class="m-0 h"></h4>
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
+      <h4 class="m-0 h" v-html="widget.title"></h4>
     </div>
     <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
       <component
-        class="list-group-item list-group-item-action widget__list__item"
         :is="item | itemComponent"
-        :href="item.href"
         v-for="(item, i) in items"
         :key="i"
+        class="list-group-item list-group-item-action widget__list__item"
+        :href="item.href"
         :class="{ active: item.active }"
         :target="item | itemTarget"
       >
         <div class="widget__list__item__label">
           {{ item.label }}
         </div>
-        <div class="widget__list__item__description" v-if="item.description">
+        <div v-if="item.description" class="widget__list__item__description">
           {{ item.description }}
         </div>
       </component>
@@ -32,6 +32,15 @@ import { mapGetters } from 'vuex'
  */
 export default {
   name: 'WidgetListGroup',
+  filters: {
+    itemComponent({ href = null } = {}) {
+      return href ? 'a' : 'div'
+    },
+    itemTarget({ href = null } = {}) {
+      const origin = window.location.origin
+      return !href || href.indexOf(origin) === 0 ? null : '_blank'
+    }
+  },
   props: {
     /**
      * The widget definition object.
@@ -43,15 +52,6 @@ export default {
   data() {
     return {
       items: []
-    }
-  },
-  filters: {
-    itemComponent({ href = null } = {}) {
-      return href ? 'a' : 'div'
-    },
-    itemTarget({ href = null } = {}) {
-      const origin = window.location.origin
-      return !href || href.indexOf(origin) === 0 ? null : '_blank'
     }
   },
   async mounted() {

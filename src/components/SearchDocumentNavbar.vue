@@ -2,12 +2,12 @@
   <document-navbar class="search-document-navbar" :is-shrinked="isShrinked">
     <template #back>
       <router-link
+        v-b-tooltip.right="{ customClass: isShrinked ? 'ml-3' : 'd-none' }"
+        v-shortkey="getKeys('backToSearchResults')"
         class="document-navbar__back pr-1"
         :class="{ 'flex-grow-1': !isShrinked }"
         :to="{ name: 'search', query }"
         :title="$t('search.back')"
-        v-b-tooltip.right="{ customClass: isShrinked ? 'ml-3' : 'd-none' }"
-        v-shortkey="getKeys('backToSearchResults')"
         @shortkey.native="getAction('backToSearchResults')"
       >
         <fa icon="chevron-circle-left"></fa>
@@ -44,53 +44,17 @@ import shortkeys from '@/mixins/shortkeys'
  */
 export default {
   name: 'SearchDocumentNavbar',
-  mixins: [shortkeys],
   components: {
     DocumentNavbar,
     QuickItemNav
   },
+  mixins: [shortkeys],
   props: {
     /**
      * Shrink the layout of the navbar.
      */
     isShrinked: {
       type: Boolean
-    }
-  },
-  mounted() {
-    this.saveComponentHeight()
-  },
-  updated() {
-    this.saveComponentHeight()
-  },
-  methods: {
-    saveComponentHeight() {
-      const height = `${this.$el.offsetHeight}px`
-      // Save component height in a CSS variable after it's been update
-      this.$root.$el.style.setProperty('--search-document-navbar-height', height)
-    },
-    goToDocument(document) {
-      if (document) {
-        const params = document.routerParams
-        const query = { q: this.$store.state.search.query }
-        return this.$router.push({ name: 'document', params, query })
-      }
-    },
-    async goToPreviousDocument() {
-      if (this.navRequiresPreviousPage) {
-        await this.$store.dispatch('search/previousPage')
-        return this.goToDocument(this.lastDocument)
-      } else {
-        return this.goToDocument(this.previousDocument)
-      }
-    },
-    async goToNextDocument() {
-      if (this.navRequiresNextPage) {
-        await this.$store.dispatch('search/nextPage')
-        return this.goToDocument(this.firstDocument)
-      } else {
-        return this.goToDocument(this.nextDocument)
-      }
     }
   },
   computed: {
@@ -141,6 +105,42 @@ export default {
     },
     nextDocument() {
       return this.response.hits[this.documentIndex + 1]
+    }
+  },
+  mounted() {
+    this.saveComponentHeight()
+  },
+  updated() {
+    this.saveComponentHeight()
+  },
+  methods: {
+    saveComponentHeight() {
+      const height = `${this.$el.offsetHeight}px`
+      // Save component height in a CSS variable after it's been update
+      this.$root.$el.style.setProperty('--search-document-navbar-height', height)
+    },
+    goToDocument(document) {
+      if (document) {
+        const params = document.routerParams
+        const query = { q: this.$store.state.search.query }
+        return this.$router.push({ name: 'document', params, query })
+      }
+    },
+    async goToPreviousDocument() {
+      if (this.navRequiresPreviousPage) {
+        await this.$store.dispatch('search/previousPage')
+        return this.goToDocument(this.lastDocument)
+      } else {
+        return this.goToDocument(this.previousDocument)
+      }
+    },
+    async goToNextDocument() {
+      if (this.navRequiresNextPage) {
+        await this.$store.dispatch('search/nextPage')
+        return this.goToDocument(this.firstDocument)
+      } else {
+        return this.goToDocument(this.nextDocument)
+      }
     }
   }
 }

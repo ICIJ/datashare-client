@@ -8,8 +8,8 @@
         <div
           v-for="page in Object.keys(doc.sheets).length"
           :key="page"
-          @click="doc.active = Object.keys(doc.sheets)[page - 1]"
           class="mr-2 my-2 d-flex legacy-spreadsheet-viewer__header__thumbnails"
+          @click="doc.active = Object.keys(doc.sheets)[page - 1]"
         >
           <span class="d-flex align-items-center">{{ page }}</span>
           <div
@@ -19,10 +19,10 @@
         </div>
       </div>
       <div class="legacy-spreadsheet-viewer__preview">
-        <div class="legacy-spreadsheet-viewer__preview__header" v-if="doc.active">
+        <div v-if="doc.active" class="legacy-spreadsheet-viewer__preview__header">
           <b-form-select
-            class="input-sm"
             v-model="doc.active"
+            class="input-sm"
             :options="Object.keys(doc.sheets)"
             @change="displaySheet"
           />
@@ -48,6 +48,7 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
  */
 export default {
   name: 'LegacySpreadsheetViewer',
+  mixins: [datashareSourceMixin],
   props: {
     /**
      * The selected document
@@ -57,7 +58,6 @@ export default {
       default: () => ({})
     }
   },
-  mixins: [datashareSourceMixin],
   data() {
     return {
       message: this.$t('document.generatingPreview'),

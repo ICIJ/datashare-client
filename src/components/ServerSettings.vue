@@ -3,14 +3,14 @@
     <div v-if="!isServer">
       <div class="container my-4">
         <v-wait for="load server settings">
-          <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
+          <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
           <b-form @submit.prevent="onSubmit">
             <b-form-group
+              v-for="(_, name) in settings"
               :key="name"
               label-cols-xs="12"
               label-cols-sm="4"
               label-cols-lg="3"
-              v-for="(_, name) in settings"
             >
               <template #label>
                 <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
@@ -18,7 +18,7 @@
                     {{ name | sentenceCase | capitalizeKnownAcronyms }}
                   </span>
                   <span>
-                    <b-btn variant="link text-muted" size="sm py-0" v-if="fieldChanged(name)" @click="restore(name)">
+                    <b-btn v-if="fieldChanged(name)" variant="link text-muted" size="sm py-0" @click="restore(name)">
                       <fa icon="undo"></fa>
                     </b-btn>
                   </span>
@@ -56,7 +56,6 @@ const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth'
  */
 export default {
   name: 'ServerSettings',
-  mixins: [utils],
   filters: {
     sentenceCase(str) {
       const result = str.replace(/([A-Z])/g, ' $1')
@@ -76,6 +75,7 @@ export default {
         .join(' ')
     }
   },
+  mixins: [utils],
   data() {
     return {
       master: {},

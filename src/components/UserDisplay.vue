@@ -84,6 +84,11 @@ export default {
       transformedUsername: null
     }
   },
+  watch: {
+    username() {
+      return this.applyPipelines()
+    }
+  },
   created() {
     this.$store.subscribe(({ type }) => {
       if (type.startsWith('pipelines/')) {
@@ -91,11 +96,6 @@ export default {
       }
     })
     return this.applyPipelinesWithLoader()
-  },
-  watch: {
-    username() {
-      return this.applyPipelines()
-    }
   },
   computed: {
     ...mapGetters('pipelines', {

@@ -1,11 +1,11 @@
 <template>
   <v-wait for="load document data">
-    <content-placeholder class="document py-2 px-3" slot="waiting"></content-placeholder>
+    <content-placeholder slot="waiting" class="document py-2 px-3"></content-placeholder>
     <div
-      class="d-flex flex-column document"
-      :class="{ 'document--standalone': isStandalone, 'document--modal': isModal }"
       v-if="doc"
       v-shortkey="getKeys('tabNavigation')"
+      class="d-flex flex-column document"
+      :class="{ 'document--standalone': isStandalone, 'document--modal': isModal }"
       @shortkey="getAction('tabNavigation')"
     >
       <div class="document__header">
@@ -13,7 +13,7 @@
         <h3 class="document__header__name" :class="{ 'document__header__name--has-subject': doc.hasSubject }">
           <hook name="document.header.name:before"></hook>
           <document-sliced-name interactive-root :document="doc" />
-          <div class="document__header__name__subject" v-if="doc.hasSubject">
+          <div v-if="doc.hasSubject" class="document__header__name__subject">
             {{ doc.subject }}
           </div>
           <hook name="document.header.name:after"></hook>
@@ -34,22 +34,22 @@
             <hook name="document.header.nav.items:before" tag="li"></hook>
             <template v-for="tab in visibleTabs">
               <hook
-                :name="`document.header.nav.items.${tab.name}:before`"
                 :key="`hook.${tab.name}:before`"
+                :name="`document.header.nav.items.${tab.name}:before`"
                 tag="li"
               ></hook>
-              <li class="document__header__nav__item list-inline-item" :key="tab.name" :title="$t(tab.label)">
-                <a @click="$root.$emit('document::tab', tab.name)" :class="{ active: isTabActive(tab.name) }">
+              <li :key="tab.name" class="document__header__nav__item list-inline-item" :title="$t(tab.label)">
+                <a :class="{ active: isTabActive(tab.name) }" @click="$root.$emit('document::tab', tab.name)">
                   <hook :name="`document.header.nav.${tab.name}:before`"></hook>
-                  <fa :icon="tab.icon" v-if="tab.icon" class="mr-2"></fa>
-                  <component v-if="tab.labelComponent" :is="tab.labelComponent"></component>
+                  <fa v-if="tab.icon" :icon="tab.icon" class="mr-2"></fa>
+                  <component :is="tab.labelComponent" v-if="tab.labelComponent"></component>
                   <template v-else>{{ $t(tab.label) }}</template>
                   <hook :name="`document.header.nav.${tab.name}:after`"></hook>
                 </a>
               </li>
               <hook
-                :name="`document.header.nav.items.${tab.name}:after`"
                 :key="`hook.${tab.name}:after`"
+                :name="`document.header.nav.items.${tab.name}:after`"
                 tag="li"
               ></hook>
             </template>
@@ -61,11 +61,11 @@
       </div>
       <div class="d-flex flex-grow-1 flex-column tab-content document__content">
         <component
-          class="document__content__pane tab-pane flex-grow-1 w-100"
-          :class="tabClass(tab.name)"
-          :key="tab.name"
           :is="getComponentIfActive(tab)"
           v-for="tab in visibleTabs"
+          :key="tab.name"
+          class="document__content__pane tab-pane flex-grow-1 w-100"
+          :class="tabClass(tab.name)"
           v-bind="getPropsIfActive(tab)"
         >
         </component>
@@ -89,12 +89,12 @@ import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'DocumentView',
-  mixins: [shortkeys],
   components: {
     DocumentSlicedName,
     DocumentTagsForm,
     Hook
   },
+  mixins: [shortkeys],
   props: {
     id: {
       type: String

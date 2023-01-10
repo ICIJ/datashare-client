@@ -22,8 +22,8 @@
             <ul class="list-unstyled route-docs-links__item__outline">
               <li v-for="(heading, index) in meta.headings" :key="index">
                 <a
-                  href="#"
                   v-scroll-to="`#${heading.id}`"
+                  href="#"
                   class="route-docs-links__item__outline__heading"
                   :class="{ 'route-docs-links__item__outline__heading--last': index === meta.headings.length - 1 }"
                 >

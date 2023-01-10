@@ -1,12 +1,12 @@
 <template>
   <div class="api h-100 container pt-4">
     <div v-if="isServer">
-      <div class="api__create-key card card-body text-center" v-if="!hasHashedKey">
+      <div v-if="!hasHashedKey" class="api__create-key card card-body text-center">
         <div class="mb-3">
           <fa icon="key" size="3x" />
         </div>
         <p class="lead" v-html="$t('api.key.why')"></p>
-        <b-button @click="createApiKey" variant="primary">
+        <b-button variant="primary" @click="createApiKey">
           <fa icon="plus" class="mr-1"></fa>
           {{ $t('api.newApiKey') }}
         </b-button>
@@ -26,7 +26,7 @@
                 {{ $t('api.key.unavailable') }}
               </span>
               –
-              <a class="font-weight-bold text-link" @click.prevent="createApiKey" href="#">
+              <a class="font-weight-bold text-link" href="#" @click.prevent="createApiKey">
                 <fa icon="redo" />
                 {{ $t('api.key.regenerate') }}
               </a>
@@ -90,9 +90,6 @@ export default {
       apiKey: null
     }
   },
-  async created() {
-    await this.getHashedApiKey()
-  },
   computed: {
     hasHashedKey() {
       return !!this.hashedKey
@@ -100,6 +97,9 @@ export default {
     hasApiKey() {
       return !!this.apiKey
     }
+  },
+  async created() {
+    await this.getHashedApiKey()
   },
   methods: {
     async getHashedApiKey() {

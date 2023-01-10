@@ -4,7 +4,7 @@
     :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }"
   >
     <div class="search-results-header__settings d-flex align-items-center">
-      <b-btn-group class="flex-grow-1" v-if="!noProgress">
+      <b-btn-group v-if="!noProgress" class="flex-grow-1">
         <b-dropdown
           class="search-results-header__settings__sort"
           menu-class="search-results-header__settings__sort__dropdown"
@@ -19,10 +19,10 @@
             {{ $t('search.settings.sortBy') }}
           </b-dropdown-header>
           <b-dropdown-item
+            v-for="selectedSort in sorts"
+            :key="selectedSort"
             :active="selectedSort === sort"
             @click="selectSort(selectedSort)"
-            :key="selectedSort"
-            v-for="selectedSort in sorts"
           >
             {{ $t('search.results.sort.' + selectedSort) }}
           </b-dropdown-item>
@@ -46,10 +46,10 @@
             {{ $t('search.settings.resultsPerPage') }}
           </b-dropdown-header>
           <b-dropdown-item
-            :active="selectedSize === size"
-            :key="selectedSize"
-            @click="selectSize(selectedSize)"
             v-for="selectedSize in sizes"
+            :key="selectedSize"
+            :active="selectedSize === size"
+            @click="selectSize(selectedSize)"
           >
             <div class="d-flex align-items-center">
               <span> {{ selectedSize }} {{ $t('search.results.perPage') }} </span>
@@ -79,7 +79,7 @@
         :total="response.total"
       />
     </div>
-    <div class="search-results-header__applied-search-filters" v-if="position === 'top' && !noFilters">
+    <div v-if="position === 'top' && !noFilters" class="search-results-header__applied-search-filters">
       <applied-search-filters />
     </div>
   </div>

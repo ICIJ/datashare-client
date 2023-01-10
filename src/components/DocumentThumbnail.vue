@@ -1,7 +1,7 @@
 <template>
   <div class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle">
-    <img :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" v-if="isActivated" />
-    <span class="document-thumbnail__placeholder" v-if="!loaded && document.contentTypeIcon">
+    <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
+    <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
       <fa :icon="document.contentTypeIcon"></fa>
     </span>
   </div>
@@ -97,6 +97,14 @@ export default {
       return window && 'IntersectionObserver' in window
     }
   },
+  async mounted() {
+    // This component can be deactivated globally
+    if (!this.isActivated) return
+    // This component can be lazy loaded
+    if (this.lazy && this.lazyLoadable) return this.bindObserver()
+    // Fetch directly
+    await this.fetchAndLoad()
+  },
   methods: {
     async fetchAsBase64() {
       return this.fetchPreviewAsBase64(this.thumbnailUrl)
@@ -139,14 +147,6 @@ export default {
       // Observe the component element
       this.observer.observe(this.$el)
     }
-  },
-  async mounted() {
-    // This component can be deactivated globally
-    if (!this.isActivated) return
-    // This component can be lazy loaded
-    if (this.lazy && this.lazyLoadable) return this.bindObserver()
-    // Fetch directly
-    await this.fetchAndLoad()
   }
 }
 </script>

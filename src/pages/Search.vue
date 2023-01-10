@@ -3,15 +3,15 @@
     <hook name="search:before" />
     <div class="d-flex">
       <button
-        class="search__show-filters align-self-center ml-3 btn btn-link px-0"
-        @click="clickOnShowFilters()"
         v-if="!showFilters"
-        :title="$t('search.showFilters')"
         v-b-tooltip.right
+        class="search__show-filters align-self-center ml-3 btn btn-link px-0"
+        :title="$t('search.showFilters')"
+        @click="clickOnShowFilters()"
       >
         <fa icon="arrow-right" />
         <span class="sr-only">{{ $t('search.showFilters') }}</span>
-        <b-badge pill variant="warning" class="search__show-filters__counter" v-if="activeFilters">
+        <b-badge v-if="activeFilters" pill variant="warning" class="search__show-filters__counter">
           {{ activeFilters }}
         </b-badge>
       </button>
@@ -19,10 +19,10 @@
     </div>
     <div class="px-0 search__body">
       <hook name="search.body:before" />
-      <component :is="bodyWrapper" class="search__body__search-results search__body__results" ref="searchBodyScrollbar">
+      <component :is="bodyWrapper" ref="searchBodyScrollbar" class="search__body__search-results search__body__results">
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
-          <div class="mt-2" v-if="isRequestTimeoutError">
+          <div v-if="isRequestTimeoutError" class="mt-2">
             <b-button @click="refresh">
               <fa icon="redo" class="mr-1"></fa>
               {{ $t('search.errors.tryAgain') }}
@@ -37,7 +37,7 @@
         </div>
       </component>
       <transition name="slide-right">
-        <div class="search__body__document" v-if="showDocument">
+        <div v-if="showDocument" class="search__body__document">
           <search-document-navbar class="search__body__document__navbar" :is-shrinked="isShrinked" />
           <div class="search__body__document__wrapper">
             <div id="search__body__document__wrapper" class="overflow-auto text-break" @scroll="handleScroll">
@@ -142,19 +142,6 @@ export default {
       next()
     }
   },
-  async created() {
-    try {
-      this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
-      await this.search()
-    } catch (_) {
-      this.wrongQuery()
-    }
-  },
-  mounted() {
-    this.$root.$on('index::delete::all', this.search)
-    this.$root.$on('filter::starred::refresh', this.refresh)
-    this.$root.$on('document::content::changed', this.updateScrollBars)
-  },
   watch: {
     showDocument(show) {
       if (show) {
@@ -179,6 +166,19 @@ export default {
     currentDocument() {
       this.updateScrollBars()
     }
+  },
+  async created() {
+    try {
+      this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
+      await this.search()
+    } catch (_) {
+      this.wrongQuery()
+    }
+  },
+  mounted() {
+    this.$root.$on('index::delete::all', this.search)
+    this.$root.$on('filter::starred::refresh', this.refresh)
+    this.$root.$on('document::content::changed', this.updateScrollBars)
   },
   methods: {
     handleScroll(e) {

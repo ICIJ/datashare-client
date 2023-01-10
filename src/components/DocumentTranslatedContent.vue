@@ -5,8 +5,8 @@
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
           <abbr
-            :title="$t(`filter.lang.${document.source.language}`)"
             v-if="translation.source_language === document.source.language"
+            :title="$t(`filter.lang.${document.source.language}`)"
             >{{ $t('documentTranslatedContent.detected') }}</abbr
           >
           <span v-else>
@@ -52,6 +52,9 @@ import DocumentContent from '@/components/DocumentContent'
  */
 export default {
   name: 'DocumentTranslatedContent',
+  components: {
+    DocumentContent
+  },
   props: {
     /**
      * The selected document.
@@ -66,9 +69,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  components: {
-    DocumentContent
   },
   data() {
     return {

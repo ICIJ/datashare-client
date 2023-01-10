@@ -89,7 +89,7 @@ export default {
 
 <template>
   <transition name="fade">
-    <a class="scroll-tracker" tabindex="0" v-show="visible" @click="scrollToTarget">
+    <a v-show="visible" class="scroll-tracker" tabindex="0" @click="scrollToTarget">
       <fa :icon="icon"></fa>
     </a>
   </transition>

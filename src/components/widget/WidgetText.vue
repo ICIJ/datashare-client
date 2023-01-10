@@ -1,7 +1,7 @@
 <template>
   <div class="widget widget--text">
-    <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
-      <h4 v-html="widget.title" class="m-0 h"></h4>
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
+      <h4 class="m-0 h" v-html="widget.title"></h4>
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }" v-html="content"></div>
   </div>
@@ -29,13 +29,13 @@ export default {
       content: ''
     }
   },
-  async mounted() {
-    this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
-  },
   watch: {
     async widget() {
       this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
     }
+  },
+  async mounted() {
+    this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
   },
   computed: {
     ...mapGetters('pipelines', {

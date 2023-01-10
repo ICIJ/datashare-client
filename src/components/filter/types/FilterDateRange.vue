@@ -1,7 +1,7 @@
 <template>
   <filter-boilerplate
-    class="filter--date-range"
     ref="filter"
+    class="filter--date-range"
     v-bind="$props"
     hide-show-more
     hide-contextualize
@@ -10,17 +10,17 @@
     <template #items>
       <div class="m-2">
         <date-picker
+          :key="locale"
+          v-model="selectedDate"
           class="date-picker"
           is-range
           is-dark
           is-expanded
           color="yellow"
-          v-model="selectedDate"
           show-caps
           :model-config="{ type: 'number' }"
           :attributes="attributes"
           :locale="locale"
-          :key="locale"
         >
         </date-picker>
       </div>
@@ -41,11 +41,11 @@ import min from 'lodash/min'
  */
 export default {
   name: 'FilterDateRange',
-  extends: FilterAbstract,
   components: {
     DatePicker,
     FilterBoilerplate
   },
+  extends: FilterAbstract,
   computed: {
     attributes() {
       return [

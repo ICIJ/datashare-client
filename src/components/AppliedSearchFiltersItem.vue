@@ -1,19 +1,19 @@
 <template>
   <b-badge
-    class="applied-search-filters-item p-0 my-1 mr-2 mw-100 text-truncate"
-    v-b-tooltip.html
-    variant="warning"
-    @click.prevent="deleteQueryTerm()"
     :id="appliedSearchFiltersItemId"
+    v-b-tooltip.html
+    class="applied-search-filters-item p-0 my-1 mr-2 mw-100 text-truncate"
+    variant="warning"
     :pill="hideFilterLabel"
     :class="appliedSearchFiltersItemClassList"
+    @click.prevent="deleteQueryTerm()"
   >
     <span class="applied-search-filters-item__wrapper d-inline-flex flex-column">
-      <span class="applied-search-filters-item__wrapper__label p-1" v-if="!hideFilterLabel">
+      <span v-if="!hideFilterLabel" class="applied-search-filters-item__wrapper__label p-1">
         {{ filterName }}
       </span>
       <span class="applied-search-filters-item__wrapper__value p-1">
-        <fa icon="times-circle" v-if="!readOnly" />
+        <fa v-if="!readOnly" icon="times-circle" />
         {{ displayedFilterValue }}
       </span>
     </span>
@@ -40,6 +40,9 @@ import displayUser from '@/filters/displayUser'
  */
 export default {
   name: 'AppliedSearchFiltersItem',
+  filters: {
+    displayUser
+  },
   props: {
     /**
      * The applied filter
@@ -59,9 +62,6 @@ export default {
     hideFilterLabel: {
       type: Boolean
     }
-  },
-  filters: {
-    displayUser
   },
   computed: {
     appliedSearchFiltersItemId() {

@@ -20,10 +20,10 @@
             <document-thumbnail :document="document" size="md" />
           </router-link>
           <router-link
+            v-b-tooltip
             class="search-results-grid__items__item__title py-2 px-3 small"
             :to="{ name: 'document', params: document.routerParams }"
             :title="document.slicedNameToString"
-            v-b-tooltip
           >
             <document-sliced-name
               active-text-truncate

@@ -17,6 +17,13 @@ export default {
     PageHeader
   },
   mixins: [docs],
+  beforeRouteEnter(to, from, next) {
+    next((vm) => vm.fetch(to.params.slug))
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.fetch(to.params.slug)
+    next()
+  },
   props: {
     slug: {
       type: String
@@ -34,13 +41,6 @@ export default {
   },
   mounted() {
     this.fetch()
-  },
-  beforeRouteEnter(to, from, next) {
-    next((vm) => vm.fetch(to.params.slug))
-  },
-  async beforeRouteUpdate(to, from, next) {
-    await this.fetch(to.params.slug)
-    next()
   },
   methods: {
     async fetch(slug = this.slug) {

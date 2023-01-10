@@ -45,7 +45,7 @@ export default {
 </script>
 
 <template>
-  <span class="content-type-badge" :title="title" v-b-tooltip>
+  <span v-b-tooltip class="content-type-badge" :title="title">
     <fa :icon="icon" class="content-type-badge__icon" fixed-width />
     <span class="content-type-badge__extension">
       {{ extension }}

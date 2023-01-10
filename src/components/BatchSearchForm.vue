@@ -1,7 +1,7 @@
 <template>
   <div class="batch-search-form">
     <b-form @submit.prevent="onSubmit">
-      <h5 class="py-2 h6 text-uppercase text-muted" v-if="!hideTitle">
+      <h5 v-if="!hideTitle" class="py-2 h6 text-uppercase text-muted">
         {{ $t('batchSearch.heading') }}
       </h5>
       <div class="card w-100" :class="{ 'border-0': hideBorder }">
@@ -35,7 +35,7 @@
           <b-form-group label-size="sm" :label="$t('batchSearch.description')">
             <b-form-textarea v-model="description" rows="2" max-rows="6"></b-form-textarea>
           </b-form-group>
-          <b-form-group label-size="sm" :label="`${$t('batchSearch.projects')} *`" v-if="isServer">
+          <b-form-group v-if="isServer" label-size="sm" :label="`${$t('batchSearch.projects')} *`">
             <div class="batch-search-form__projects container p-0">
               <b-form-checkbox-group v-model="projects" stacked>
                 <b-form-checkbox
@@ -50,9 +50,9 @@
             </div>
           </b-form-group>
           <b-form-group
+            v-if="isServer"
             label-size="sm"
             :description="$t('batchSearch.publishedDescription')"
-            v-if="isServer"
             class="published"
           >
             <b-form-checkbox v-model="published" switch>
@@ -72,7 +72,7 @@
               </b-form-checkbox>
             </b-form-group>
             <b-form-group label-size="sm" class="mb-0" :label="fuzzinessLabel" :description="fuzzinessDescription">
-              <b-form-input type="number" v-model="fuzziness" min="0" :max="maxFuzziness"></b-form-input>
+              <b-form-input v-model="fuzziness" type="number" min="0" :max="maxFuzziness"></b-form-input>
             </b-form-group>
             <p class="help small">
               <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
@@ -92,11 +92,11 @@
               </b-overlay>
               <selectable-dropdown
                 ref="suggestionFileTypes"
+                :hide="!suggestionFileTypes.length"
+                :items="suggestionFileTypes"
                 @input="selectFileType"
                 @click.native="searchFileType"
                 @deactivate="hideSuggestionsFileTypes"
-                :hide="!suggestionFileTypes.length"
-                :items="suggestionFileTypes"
               >
                 <template #item-label="{ item }">
                   <div :id="item.mime">
@@ -106,12 +106,12 @@
                 </template>
               </selectable-dropdown>
               <b-badge
-                class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
-                @click.prevent="deleteFileType(index)"
-                :key="oneFileType.mime"
-                pill
                 v-for="(oneFileType, index) in fileTypes"
+                :key="oneFileType.mime"
+                class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
+                pill
                 variant="warning"
+                @click.prevent="deleteFileType(index)"
               >
                 <fa icon="times-circle"></fa>
                 {{ oneFileType.label }}
@@ -122,35 +122,35 @@
                 {{ $t('batchSearch.selectFolder') }}
               </div>
               <b-modal
+                id="modal-select-path"
                 body-class="p-0 border-bottom"
                 cancel-variant="outline-primary"
                 :cancel-title="$t('global.cancel')"
                 hide-header
-                id="modal-select-path"
                 lazy
-                @ok="setPaths()"
                 :ok-title="$t('batchSearch.selectFolder')"
                 scrollable
                 size="lg"
+                @ok="setPaths()"
               >
                 <tree-view
+                  v-model="path"
                   count
                   size
-                  @checked="selectedPaths = $event"
                   :projects="projects"
                   selectable
                   :selected-paths="selectedPaths"
-                  v-model="path"
+                  @checked="selectedPaths = $event"
                 ></tree-view>
               </b-modal>
               <div>
                 <b-badge
-                  class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
-                  @click.prevent="deletePath(index)"
-                  :key="onePath"
-                  pill
                   v-for="(onePath, index) in paths"
+                  :key="onePath"
+                  class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
+                  pill
                   variant="warning"
+                  @click.prevent="deletePath(index)"
                 >
                   <fa icon="times-circle"></fa>
                   {{ onePath }}
@@ -202,10 +202,13 @@ import types from '@/utils/types.json'
  */
 export default {
   name: 'BatchSearchForm',
-  mixins: [utils],
   components: {
     TreeView
   },
+  filters: {
+    startCase
+  },
+  mixins: [utils],
   props: {
     /**
      * Disables rendering of the form title
@@ -293,9 +296,6 @@ export default {
   },
   created() {
     this.$set(this, 'projects', [this.availableProjects[0]] || [])
-  },
-  filters: {
-    startCase
   },
   methods: {
     verifyQueryLimit(csv) {

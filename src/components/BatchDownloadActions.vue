@@ -127,7 +127,7 @@ export default {
 
 <template>
   <div class="batch-download-actions">
-    <b-btn variant="link" size="sm" class="p-1" :id="togglerId">
+    <b-btn :id="togglerId" variant="link" size="sm" class="p-1">
       <fa icon="ellipsis" fixed-width class="mx-1" />
     </b-btn>
     <b-popover
@@ -137,15 +137,15 @@ export default {
       triggers="focus"
       :target="popoverTarget"
     >
-      <b-dropdown-item-button @click="relaunchTask()" class="batch-download-actions__relaunch">
+      <b-dropdown-item-button class="batch-download-actions__relaunch" @click="relaunchTask()">
         <fa icon="redo" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.relaunch') }}
       </b-dropdown-item-button>
-      <b-dropdown-item :to="uri" class="batch-download-actions__search" v-if="uri">
+      <b-dropdown-item v-if="uri" :to="uri" class="batch-download-actions__search">
         <fa icon="search" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.search') }}
       </b-dropdown-item>
-      <b-dropdown-item-button disabled class="batch-download-actions__search" v-else>
+      <b-dropdown-item-button v-else disabled class="batch-download-actions__search">
         <fa icon="search" fixed-width class="mr-1" />
         {{ $t('batchDownloadActions.search') }}
       </b-dropdown-item-button>

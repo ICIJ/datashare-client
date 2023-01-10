@@ -5,7 +5,7 @@
       <app-sidebar></app-sidebar>
     </div>
     <div class="app__main flex-grow-1 d-flex" :class="{ 'app__main--has-context-sidebar': doesRouteHaveSidebar }">
-      <vue-perfect-scrollbar class="app__main__context-sidebar p-1" v-if="!isContextSidebarReduced">
+      <vue-perfect-scrollbar v-if="!isContextSidebarReduced" class="app__main__context-sidebar p-1">
         <router-view name="sidebar"></router-view>
       </vue-perfect-scrollbar>
       <div class="app__main__view flex-grow-1">

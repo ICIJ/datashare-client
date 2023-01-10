@@ -4,10 +4,10 @@
       <div class="tree-view__header d-flex flex-row text-nowrap">
         <tree-breadcrumb
           :path="path"
-          @input="$emit('input', $event)"
           :max-directories="compact ? 2 : 5"
           no-datadir
           datadir-label
+          @input="$emit('input', $event)"
         ></tree-breadcrumb>
         <transition name="fade">
           <div v-if="!$wait.waiting('loading tree view data')">
@@ -16,9 +16,9 @@
               {{ humanSize(total, false, $t('human.size')) }}
             </span>
             <span
+              v-if="count"
               :title="$tc('treeView.hits', hits, { hits })"
               class="tree-view__header__hits ml-2 badge badge-light badge-pill"
-              v-if="count"
             >
               {{ humanNumber(hits, $t('human.number')) }} {{ $tc('treeView.docs', hits) }}
             </span>
@@ -40,9 +40,9 @@
               class="list-group-item d-flex flex-row align-items-center text-muted tree-view__directories__item"
             >
               <b-form-checkbox
+                :id="allDirectoriesInputId"
                 :value="path"
                 class="tree-view__directories__item__checkbox"
-                :id="allDirectoriesInputId"
               />
               <label class="flex-grow-1 m-0 text-light" :for="allDirectoriesInputId">
                 {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
@@ -60,24 +60,24 @@
               class="list-group-item d-flex flex-row align-items-center tree-view__directories__item"
             >
               <b-form-checkbox
-                :value="directory.key"
                 v-if="selectable"
+                :value="directory.key"
                 class="tree-view__directories__item__checkbox"
               ></b-form-checkbox>
               <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
                 {{ directory.key | basename }}
               </a>
               <div
+                v-if="size && directory.contentLength"
                 class="font-weight-bold ml-2"
                 :title="$n(directory.contentLength.value)"
-                v-if="size && directory.contentLength"
               >
                 {{ humanSize(directory.contentLength.value, false, $t('human.size')) }}
               </div>
               <span
+                v-if="count"
                 :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
                 class="ml-2 badge badge-light badge-pill"
-                v-if="count"
               >
                 <span v-if="!directory.doc_count"> - </span>
                 <span v-else-if="compact">
@@ -88,8 +88,8 @@
                 </span>
               </span>
               <span
-                class="tree-view__directories__item__bar"
                 v-if="!noBars"
+                class="tree-view__directories__item__bar"
                 :style="{ width: totalPercentage(directory.contentLength.value) }"
               ></span>
             </li>
@@ -100,7 +100,7 @@
               {{ $t('widget.noFolders') }}
             </li>
           </ul>
-          <infinite-loading @infinite="nextLoadData" v-if="useInfiniteScroll" :identifier="infiniteScrollId">
+          <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteScrollId" @infinite="nextLoadData">
             <span slot="spinner"></span>
             <span slot="no-more"></span>
             <span slot="no-results"></span>
@@ -130,6 +130,13 @@ import humanSize from '@/filters/humanSize'
  */
 export default {
   name: 'TreeView',
+  components: {
+    InfiniteLoading,
+    TreeBreadcrumb
+  },
+  filters: {
+    basename
+  },
   model: {
     prop: 'path',
     event: 'input'
@@ -236,10 +243,6 @@ export default {
       type: Boolean
     }
   },
-  components: {
-    InfiniteLoading,
-    TreeBreadcrumb
-  },
   data() {
     return {
       pages: [],
@@ -247,29 +250,6 @@ export default {
       infiniteScrollId: uniqueId('infinite-scroll-'),
       allDirectoriesInputId: uniqueId('all-directories-input-')
     }
-  },
-  async created() {
-    await this.loadDataWithSpinner({ clearPages: true })
-  },
-  watch: {
-    path() {
-      return this.reloadDataWithSpinner()
-    },
-    sortBy() {
-      return this.reloadDataWithSpinner()
-    },
-    sortByOrder() {
-      return this.reloadDataWithSpinner()
-    },
-    directories() {
-      /**
-       * Called when more directories are loaded
-       */
-      this.$emit('update:directories', this.directories)
-    }
-  },
-  filters: {
-    basename
   },
   computed: {
     lastPage() {
@@ -353,6 +333,26 @@ export default {
         return this.selectPaths(paths)
       }
     }
+  },
+  watch: {
+    path() {
+      return this.reloadDataWithSpinner()
+    },
+    sortBy() {
+      return this.reloadDataWithSpinner()
+    },
+    sortByOrder() {
+      return this.reloadDataWithSpinner()
+    },
+    directories() {
+      /**
+       * Called when more directories are loaded
+       */
+      this.$emit('update:directories', this.directories)
+    }
+  },
+  async created() {
+    await this.loadDataWithSpinner({ clearPages: true })
   },
   methods: {
     humanSize,

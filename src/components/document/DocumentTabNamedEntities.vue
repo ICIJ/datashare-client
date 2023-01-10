@@ -1,6 +1,6 @@
 <template>
   <v-wait for="load first page of named entities">
-    <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
+    <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
     <div class="p-3">
       <div class="document__named-entities__toolbox">
         <search-form-control
@@ -25,9 +25,9 @@
       <div v-else-if="!isLoadingNamedEntities" class="document__named-entitie">
         <div v-for="(hits, category) in namedEntitiesByCategories" :key="category" class="s border-bottom pb-4 mb-4">
           <div
+            v-if="categoryIsNotEmpty(category)"
             class="mb-2 d-flex align-items-center"
             :class="getCategoryClass(category, 'text-')"
-            v-if="categoryIsNotEmpty(category)"
           >
             <fa :icon="getCategoryIcon(category)" class="mr-2" />
             {{ $t('filter.namedEntity' + capitalize(category)) }}
@@ -38,11 +38,11 @@
           </div>
           <span v-for="(ne, index) in hits" :key="index" class="d-inline-block">
             <b-badge
+              :id="`named-entity-${ne.id}`"
               class="p-1 text-uppercase text-black border"
               pill
               variant="light"
               :class="getCategoryClass(category, 'border-')"
-              :id="`named-entity-${ne.id}`"
             >
               {{ ne.source.mentionNorm }}
             </b-badge>
@@ -52,7 +52,7 @@
               <template #title>
                 <div class="d-flex">
                   <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
-                  <div class="ml-auto pl-2" v-if="ne.offsets.length > 1">
+                  <div v-if="ne.offsets.length > 1" class="ml-auto pl-2">
                     {{ $tc('document.namedEntitiesOccurences', ne.offsets.length, { count: ne.offsets.length }) }}
                   </div>
                 </div>
@@ -60,7 +60,7 @@
             </b-popover>
           </span>
           <v-wait :for="`load_more_data_${category}`">
-            <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-3" slot="waiting" />
+            <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-3" />
             <div v-if="categoryHasNextPage(category)" class="mt-3 text-center">
               <b-btn
                 class="document__named-entities__more"
@@ -92,6 +92,11 @@ import utils from '@/mixins/utils'
  */
 export default {
   name: 'DocumentTabNamedEntities',
+  components: {
+    NamedEntityInContext,
+    SearchFormControl
+  },
+  mixins: [ner, utils],
   props: {
     /**
      * The selected document
@@ -104,11 +109,6 @@ export default {
     return {
       filterToken: null
     }
-  },
-  mixins: [ner, utils],
-  components: {
-    NamedEntityInContext,
-    SearchFormControl
   },
   watch: {
     filterToken(filterToken) {

@@ -20,6 +20,11 @@ import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
  */
 export default {
   name: 'DocumentTabExtractedText',
+  components: {
+    DocumentNotes,
+    DocumentThread,
+    DocumentTranslatedContent
+  },
   props: {
     /**
      * The selected document
@@ -34,11 +39,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  components: {
-    DocumentNotes,
-    DocumentThread,
-    DocumentTranslatedContent
   }
 }
 </script>

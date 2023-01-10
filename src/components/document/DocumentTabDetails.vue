@@ -36,7 +36,7 @@
         {{ $t('document.detailsInfo') }}
       </p>
       <div class="row document__content__details__children mx-2"></div>
-      <div class="row document__content__details__item" v-for="field in filteredCanonicalFields" :key="field.name">
+      <div v-for="field in filteredCanonicalFields" :key="field.name" class="row document__content__details__item">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="field.name">
             {{ field.label }}
@@ -73,7 +73,7 @@
           </div>
         </div>
       </div>
-      <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name">
+      <div v-for="name in metaFieldsNames" :key="name" class="row document__content__details__item">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="name">
             <var>{{ document.shortMetaName(name) | startCase }}</var>
@@ -91,7 +91,7 @@
         </div>
       </div>
       <div class="text-center mt-4">
-        <button @click="metadataVisible = !metadataVisible" class="btn btn-outline-primary btn-sm">
+        <button class="btn btn-outline-primary btn-sm" @click="metadataVisible = !metadataVisible">
           {{ $t(metadataVisible ? 'document.showLessDetails' : 'document.showMoreDetails') }}
         </button>
       </div>
@@ -111,6 +111,12 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
  */
 export default {
   name: 'DocumentTabDetails',
+  components: {
+    DocumentTagsForm
+  },
+  filters: {
+    startCase
+  },
   props: {
     /**
      * The selected document
@@ -124,12 +130,6 @@ export default {
     parentDocument: {
       type: Object
     }
-  },
-  components: {
-    DocumentTagsForm
-  },
-  filters: {
-    startCase
   },
   data() {
     return {

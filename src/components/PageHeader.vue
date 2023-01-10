@@ -6,7 +6,7 @@
           <slot></slot>
         </div>
         <h3 class="page-header__title">
-          <page-icon :icon="icon" v-if="icon"></page-icon>
+          <page-icon v-if="icon" :icon="icon"></page-icon>
           <slot name="preTitle"></slot>
           {{ title }}
         </h3>
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <b-tabs v-model="tabIndex" class="page-header__tabs px-0" v-if="hasTabs" nav-wrapper-class="page-header__tabs__nav">
+    <b-tabs v-if="hasTabs" v-model="tabIndex" class="page-header__tabs px-0" nav-wrapper-class="page-header__tabs__nav">
       <slot name="tabs" />
     </b-tabs>
   </div>

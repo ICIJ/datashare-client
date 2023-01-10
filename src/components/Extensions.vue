@@ -18,7 +18,7 @@
                     <fa icon="link"></fa>
                   </span>
                 </div>
-                <b-form-input :state="isFormValid" placeholder="URL" type="url" v-model="url" />
+                <b-form-input v-model="url" :state="isFormValid" placeholder="URL" type="url" />
               </div>
               <div class="d-flex align-items-center">
                 <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
@@ -27,8 +27,8 @@
                 <b-btn
                   variant="primary"
                   class="ml-auto text-nowrap"
-                  @click="installExtensionFromUrl"
                   :disabled="isFormValid !== true"
+                  @click="installExtensionFromUrl"
                 >
                   {{ $t('extensions.install') }}
                 </b-btn>
@@ -38,17 +38,17 @@
         </div>
         <div class="extensions__search ml-auto">
           <search-form-control
-            :placeholder="$t('extensions.search')"
             v-model="searchTerm"
+            :placeholder="$t('extensions.search')"
             @input="search"
           ></search-form-control>
         </div>
       </div>
       <b-card-group deck>
         <b-overlay
-          :show="extension.show"
           v-for="extension in extensions"
           :key="extension.id"
+          :show="extension.show"
           class="extensions__card m-3 d-flex"
         >
           <b-card footer-border-variant="white" class="m-0">
@@ -64,33 +64,33 @@
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
                   <b-btn
-                    class="extensions__card__uninstall-button mb-2"
-                    @click="uninstallExtension(extension.id)"
                     v-if="extension.installed"
+                    class="extensions__card__uninstall-button mb-2"
                     variant="danger"
+                    @click="uninstallExtension(extension.id)"
                   >
                     <fa icon="trash-alt"></fa>
                     {{ $t('extensions.uninstall') }}
                   </b-btn>
                   <b-btn
-                    class="extensions__card__download-button mb-2"
-                    @click="installExtensionFromId(extension.id)"
-                    variant="primary"
                     v-if="!extension.installed"
+                    class="extensions__card__download-button mb-2"
+                    variant="primary"
+                    @click="installExtensionFromId(extension.id)"
                   >
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('extensions.install') }}
                   </b-btn>
                   <b-btn
-                    class="extensions__card__update-button mb-2"
-                    @click="installExtensionFromId(extension.id)"
-                    variant="primary"
                     v-if="
                       extension.installed &&
                       isExtensionFromRegistry(extension) &&
                       extension.version !== extension.deliverableFromRegistry.version
                     "
+                    class="extensions__card__update-button mb-2"
+                    variant="primary"
                     size="sm"
+                    @click="installExtensionFromId(extension.id)"
                   >
                     <fa icon="sync"></fa>
                     {{ $t('extensions.update') }}
@@ -104,7 +104,7 @@
                 </div>
               </div>
             </b-card-text>
-            <template #footer v-if="isExtensionFromRegistry(extension)">
+            <template v-if="isExtensionFromRegistry(extension)" #footer>
               <div class="extensions__card__official-version text-truncate w-100">
                 <span class="font-weight-bold"> {{ $t('extensions.officialVersion') }}: </span>
                 {{ extension.deliverableFromRegistry.version }}
@@ -112,10 +112,10 @@
               <div class="text-truncate w-100">
                 <span class="font-weight-bold"> {{ $t('extensions.homePage') }}: </span>
                 <a
+                  v-if="extension.deliverableFromRegistry.homepage"
                   class="extensions__card__homepage"
                   :href="extension.deliverableFromRegistry.homepage"
                   target="_blank"
-                  v-if="extension.deliverableFromRegistry.homepage"
                 >
                   {{ extension.deliverableFromRegistry.homepage }}
                 </a>
@@ -142,6 +142,10 @@ export default {
   components: {
     SearchFormControl
   },
+  filters: {
+    camelCase,
+    startCase
+  },
   data() {
     return {
       extensions: [],
@@ -150,12 +154,13 @@ export default {
       url: ''
     }
   },
+  computed: {
+    isFormValid() {
+      return this.url === '' ? null : isUrl(this.url)
+    }
+  },
   mounted() {
     this.search()
-  },
-  filters: {
-    camelCase,
-    startCase
   },
   methods: {
     isExtensionFromRegistry(extension) {
@@ -212,11 +217,6 @@ export default {
         this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
       extension.show = false
-    }
-  },
-  computed: {
-    isFormValid() {
-      return this.url === '' ? null : isUrl(this.url)
     }
   }
 }

@@ -14,7 +14,7 @@
             {{ $t('batchDownload.title') }}
           </template>
         </b-tab>
-        <b-tab :active="defaultTab === 2" v-if="!isServer">
+        <b-tab v-if="!isServer" :active="defaultTab === 2">
           <template #title>
             <fa icon="search-plus" fixed-width class="mr-1" />
             {{ $t('indexing.title') }}
@@ -43,10 +43,20 @@ import PageHeader from '@/components/PageHeader'
 
 export default {
   name: 'Tasks',
-  mixins: [utils],
   components: {
     BatchSearchForm,
     PageHeader
+  },
+  mixins: [utils],
+  beforeRouteEnter(to, from, next) {
+    return next((vm) => {
+      const defaultTab = vm.tabRoutes.indexOf(to.name)
+      if (defaultTab > -1) {
+        vm.defaultTab = defaultTab
+      } else if (!vm.$route.name.includes('batch-search')) {
+        vm.$router.push({ name: 'batch-search' })
+      }
+    })
   },
   data() {
     return {
@@ -73,16 +83,6 @@ export default {
     tabRoutes() {
       return ['batch-search', 'batch-download', 'indexing']
     }
-  },
-  beforeRouteEnter(to, from, next) {
-    return next((vm) => {
-      const defaultTab = vm.tabRoutes.indexOf(to.name)
-      if (defaultTab > -1) {
-        vm.defaultTab = defaultTab
-      } else if (!vm.$route.name.includes('batch-search')) {
-        vm.$router.push({ name: 'batch-search' })
-      }
-    })
   }
 }
 </script>

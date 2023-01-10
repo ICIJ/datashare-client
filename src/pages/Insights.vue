@@ -1,6 +1,6 @@
 <template>
   <div class="insights">
-    <div class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4" v-if="isServer">
+    <div v-if="isServer" class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4">
       <div class="container py-2 d-flex align-items-center">
         <div class="pr-2">
           {{ $t('insights.selectProject') }}
@@ -12,7 +12,7 @@
     </div>
     <div class="container insights__container">
       <b-row class="align-items-stretch">
-        <b-col v-for="(widget, index) in instantiatedWidgets" :md="widget.cols" :key="index">
+        <b-col v-for="(widget, index) in instantiatedWidgets" :key="index" :md="widget.cols">
           <div class="insights__container__widget" :class="{ card: widget.card }">
             <component :is="widget.component" :widget="widget" class="flex-grow-1" />
           </div>

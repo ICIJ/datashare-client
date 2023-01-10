@@ -1,5 +1,5 @@
 <template>
-  <div class="filter__footer d-flex align-items-center text-nowrap p-1" v-if="!hideFooter">
+  <div v-if="!hideFooter" class="filter__footer d-flex align-items-center text-nowrap p-1">
     <filter-sort-by-dropdown
       v-if="!hideSort"
       :sort-by="sortBy"

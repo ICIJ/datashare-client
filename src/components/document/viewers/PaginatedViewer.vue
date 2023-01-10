@@ -1,9 +1,9 @@
 <template>
   <v-wait :for="loader" class="w-100 d-flex flex-column">
-    <div class="p-3 w-100 text-muted" slot="waiting">
+    <div slot="waiting" class="p-3 w-100 text-muted">
       {{ $t('document.fetching') }}
     </div>
-    <div class="paginated-viewer paginated-viewer--pdf p-3 flex-grow-1" v-if="document.isPdf">
+    <div v-if="document.isPdf" class="paginated-viewer paginated-viewer--pdf p-3 flex-grow-1">
       <iframe
         class="paginated-viewer__iframe border shadow"
         :src="document.inlineFullUrl"
@@ -13,12 +13,12 @@
         allowfullscreen
       ></iframe>
     </div>
-    <div class="paginated-viewer paginated-viewer--previewable d-flex flex-grow-1" v-else-if="isPreviewable">
+    <div v-else-if="isPreviewable" class="paginated-viewer paginated-viewer--previewable d-flex flex-grow-1">
       <div class="paginated-viewer__thumbnails">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
           <select
-            class="form-control form-control-sm"
             v-model.number="active"
+            class="form-control form-control-sm"
             @change="scrollToPageAndThumbnail(active)"
           >
             <option v-for="page in pagesRange" :key="page" :value="page">
@@ -30,10 +30,10 @@
         <div class="paginated-viewer__thumbnails__items">
           <div
             v-for="page in pagesRange"
-            @click="setActiveAndScrollToPage(page)"
+            :key="`thumbnail-${page}`"
             class="paginated-viewer__thumbnails__items__item m-2"
             :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
-            :key="`thumbnail-${page}`"
+            @click="setActiveAndScrollToPage(page)"
           >
             <document-thumbnail
               class="border-0"
@@ -52,17 +52,17 @@
         <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page m-3" :data-page="page + 1">
           <document-thumbnail
             :document="document"
-            @enter="setActiveAndScrollToThumbnail(page)"
-            @errored.once="errored = true"
             lazy
             :page="page"
             :ratio="ratio"
             :size="1200"
+            @enter="setActiveAndScrollToThumbnail(page)"
+            @errored.once="errored = true"
           ></document-thumbnail>
         </div>
       </div>
     </div>
-    <div class="paginated-viewer paginated-viewer--not-available p-3" v-else>
+    <div v-else class="paginated-viewer paginated-viewer--not-available p-3">
       {{ $t('document.notAvailable') }}
     </div>
   </v-wait>
@@ -80,6 +80,9 @@ import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
  */
 export default {
   name: 'PaginatedViewer',
+  components: {
+    DocumentThumbnail
+  },
   mixins: [preview],
   props: {
     /**
@@ -88,9 +91,6 @@ export default {
     document: {
       type: Object
     }
-  },
-  components: {
-    DocumentThumbnail
   },
   data() {
     return {
@@ -103,6 +103,36 @@ export default {
         width: 0,
         height: 0
       }
+    }
+  },
+  computed: {
+    hasPreviewHost() {
+      return !!this.$config.get('previewHost')
+    },
+    ratio() {
+      try {
+        return this.size.height / this.size.width
+      } catch (_) {
+        return 1
+      }
+    },
+    pagesRange() {
+      return range(this.meta.pages)
+    },
+    metaOptions() {
+      return {
+        method: 'GET',
+        cache: 'default',
+        headers: {
+          [this.sessionIdHeaderName]: this.sessionIdHeaderValue
+        }
+      }
+    },
+    loader() {
+      return uniqueId('paginated-viewer-load-data-')
+    },
+    isPreviewable() {
+      return this.hasPreviewHost && get(this, 'meta.previewable', false) && !this.errored
     }
   },
   async mounted() {
@@ -164,36 +194,6 @@ export default {
     scrollToPageAndThumbnail(page) {
       this.scrollToPage(page)
       this.scrollToThumbnail(page)
-    }
-  },
-  computed: {
-    hasPreviewHost() {
-      return !!this.$config.get('previewHost')
-    },
-    ratio() {
-      try {
-        return this.size.height / this.size.width
-      } catch (_) {
-        return 1
-      }
-    },
-    pagesRange() {
-      return range(this.meta.pages)
-    },
-    metaOptions() {
-      return {
-        method: 'GET',
-        cache: 'default',
-        headers: {
-          [this.sessionIdHeaderName]: this.sessionIdHeaderValue
-        }
-      }
-    },
-    loader() {
-      return uniqueId('paginated-viewer-load-data-')
-    },
-    isPreviewable() {
-      return this.hasPreviewHost && get(this, 'meta.previewable', false) && !this.errored
     }
   }
 }

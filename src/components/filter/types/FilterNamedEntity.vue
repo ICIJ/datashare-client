@@ -1,5 +1,5 @@
 <template>
-  <filter-boilerplate v-bind="$props" class="filter--named-entity" ref="filter">
+  <filter-boilerplate v-bind="$props" ref="filter" class="filter--named-entity">
     <template #title>
       <span class="col-2 filter__items__item__icon pl-0 pr-1" :class="getCategoryClass(filter.category, 'text-')">
         <fa :icon="getCategoryIcon(filter.category)" fixed-width></fa>
@@ -22,8 +22,8 @@
           </span>
         </b-form-checkbox>
         <confirm-button
-          class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-1 filter__items__item__delete"
           v-if="$config.is('manageDocuments')"
+          class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-1 filter__items__item__delete"
           :confirmed="() => deleteNamedEntitiesByMentionNorm(value)"
           :label="$t('filter.deleteNamedEntity')"
           :yes="$t('global.yes')"
@@ -47,10 +47,10 @@ import utils from '@/mixins/utils'
  */
 export default {
   name: 'FilterNamedEntity',
-  extends: FilterAbstract,
   components: {
     FilterBoilerplate
   },
+  extends: FilterAbstract,
   mixins: [ner, utils],
   methods: {
     async deleteNamedEntitiesByMentionNorm(mentionNorm) {

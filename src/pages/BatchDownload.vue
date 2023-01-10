@@ -2,11 +2,11 @@
   <div class="batch-download mt-4 container">
     <v-wait for="load download tasks">
       <div slot="waiting" class="card py-2">
-        <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
+        <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
       </div>
       <tasks-list :tasks="tasks">
         <template #default="{ item: { name, properties, state } }">
-          <div class="d-flex batch-download__item" :id="'batch-download__item--' + properties.batchDownload.uuid">
+          <div :id="'batch-download__item--' + properties.batchDownload.uuid" class="d-flex batch-download__item">
             <a
               v-if="properties.batchDownload.exists"
               :href="downloadResultsUrl(name)"
@@ -18,8 +18,8 @@
             </a>
             <span
               v-else
-              class="batch-download__item__link batch-download__item__link--disabled"
               v-b-tooltip
+              class="batch-download__item__link batch-download__item__link--disabled"
               :title="$t('batchDownload.noFile')"
             >
               <fa icon="times" fixed-width />
@@ -57,21 +57,16 @@ export default {
     BatchDownloadActions,
     TasksList
   },
-  mixins: [features, polling],
-  data() {
-    return {
-      tasks: []
-    }
-  },
   filters: {
     basename(str) {
       return str.split('/').pop()
     }
   },
-  async mounted() {
-    this.$wait.start('load download tasks')
-    await this.startPollingDownloadTasks()
-    this.$wait.end('load download tasks')
+  mixins: [features, polling],
+  data() {
+    return {
+      tasks: []
+    }
   },
   computed: {
     hasPendingBatchDownloadTasks() {
@@ -84,6 +79,11 @@ export default {
         maxSize: this.$core.config.get('batchDownloadMaxSize')
       }
     }
+  },
+  async mounted() {
+    this.$wait.start('load download tasks')
+    await this.startPollingDownloadTasks()
+    this.$wait.end('load download tasks')
   },
   methods: {
     startPollingDownloadTasks() {

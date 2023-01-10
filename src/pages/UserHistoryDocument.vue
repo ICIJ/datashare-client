@@ -1,7 +1,7 @@
 <template>
   <div class="user-history">
     <div class="mt-4">
-      <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
+      <ul v-if="events.length" class="list-unstyled user-history__list card mb-4">
         <li v-for="event in events" :key="event.id" class="user-history__list__item">
           <router-link :to="{ path: event.uri }" class="p-3 d-flex">
             <document-thumbnail
@@ -23,7 +23,7 @@
           </router-link>
         </li>
       </ul>
-      <div class="text-muted text-center" v-else>
+      <div v-else class="text-muted text-center">
         {{ $t('userHistory.empty') }}
       </div>
     </div>
@@ -46,19 +46,19 @@ export default {
       type: Array
     }
   },
+  computed: {
+    documentPathRegexp() {
+      const routes = this.$router.getRoutes()
+      const { path } = find(routes, { name: 'document-standalone' }) || {}
+      return pathToRegexp(path)
+    }
+  },
   methods: {
     eventAsDocument({ uri }) {
       // Ensure the URI starts with a / and doesn't contain query params
       const path = `/${trimStart(uri.split('?').shift(0), '/')}`
       const [, _index, _id, _routing] = this.documentPathRegexp.exec(path) || []
       return new Document({ _index, _id, _routing })
-    }
-  },
-  computed: {
-    documentPathRegexp() {
-      const routes = this.$router.getRoutes()
-      const { path } = find(routes, { name: 'document-standalone' }) || {}
-      return pathToRegexp(path)
     }
   }
 }

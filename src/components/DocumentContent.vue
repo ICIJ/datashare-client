@@ -354,13 +354,13 @@ export default {
         @select="localSearchTerm = $event"
       />
       <document-local-search-input
-        class="ml-auto"
         v-model="localSearchTerm"
+        class="ml-auto"
         :activated.sync="hasStickyToolbox"
-        @next="findNextLocalSearchTerm"
-        @previous="findPreviousLocalSearchTerm"
         :search-occurrences="localSearchOccurrences"
         :search-index="localSearchIndex"
+        @next="findNextLocalSearchTerm"
+        @previous="findPreviousLocalSearchTerm"
       />
       <hook name="document.content.toolbox:after"></hook>
     </div>
@@ -380,12 +380,12 @@ export default {
 
     <hook name="document.content.body:before"></hook>
     <document-content-slices
+      ref="slices"
       :bufferize-all="!!localSearchOccurrences"
       :class="{ 'document-content__body--rtl': isRightToLeft }"
       :slices="virtualContentSlices"
-      @placeholder-visible="onContentSlicePlaceholderVisible"
       class="document-content__body container-fluid py-3"
-      ref="slices"
+      @placeholder-visible="onContentSlicePlaceholderVisible"
     />
     <hook name="document.content.body:after"></hook>
 

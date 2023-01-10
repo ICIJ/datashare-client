@@ -1,7 +1,7 @@
 <template>
   <div class="widget widget--file-barometer d-flex align-items-center text-center">
     <v-wait for="barometer counters" class="flex-grow-1" transition="fade">
-      <fa icon="circle-notch" spin slot="waiting" size="2x" />
+      <fa slot="waiting" icon="circle-notch" spin size="2x" />
       <p :class="{ 'card-body': widget.card }">
         <fa icon="hdd" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">

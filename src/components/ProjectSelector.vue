@@ -1,7 +1,7 @@
 <template>
   <b-form-group class="mb-0">
-    <b-form-checkbox-group :disabled="disabled" :options="projectOptions" v-if="multiple" v-model="selectedProject" />
-    <b-form-select :disabled="disabled" :options="projectOptions" :size="size" v-else v-model="selectedProject" />
+    <b-form-checkbox-group v-if="multiple" v-model="selectedProject" :disabled="disabled" :options="projectOptions" />
+    <b-form-select v-else v-model="selectedProject" :disabled="disabled" :options="projectOptions" :size="size" />
   </b-form-group>
 </template>
 

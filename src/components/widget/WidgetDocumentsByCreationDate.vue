@@ -1,11 +1,11 @@
 <template>
   <div class="widget">
     <div
-      class="widget__header d-md-flex align-items-center"
       v-if="widget.title"
+      class="widget__header d-md-flex align-items-center"
       :class="{ 'card-header': widget.card }"
     >
-      <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
+      <h4 class="m-0 flex-grow-1" v-html="widget.title"></h4>
       <div class="widget__header__selectors d-flex align-items-center">
         <slot name="selector" :selectedPath="selectedPath" :setSelectedPath="setSelectedPath"></slot>
         <div class="btn-group">
@@ -24,10 +24,10 @@
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
       <v-wait :for="loader">
-        <div class="widget__content__spinner" slot="waiting">
+        <div slot="waiting" class="widget__content__spinner">
           <fa icon="circle-notch" spin size="2x"></fa>
         </div>
-        <div class="widget__content__chart align-items-center" v-if="data.length > 0">
+        <div v-if="data.length > 0" class="widget__content__chart align-items-center">
           <column-chart :data="slicedDataForMurmur" :max-value="maxValue" :x-axis-tick-format="xAxisTickFormat">
             <template #tooltip="{ datum: { date, value: total } }">
               <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
@@ -40,37 +40,37 @@
               :style="datesRangeSelectionStyle"
             >
               <b-button
+                v-if="hasPreviousDatesRangeSlice"
                 pill
                 variant="outline-dark"
-                @click="previousDatesRangeSlice"
-                v-if="hasPreviousDatesRangeSlice"
                 class="widget__content__chart__range__selection__previous bg-white"
+                @click="previousDatesRangeSlice"
               >
                 <fa icon="angle-left" />
               </b-button>
               <b-button
+                v-if="hasNextDatesRangeSlice"
                 pill
                 variant="outline-dark"
-                @click="nextDatesRangeSlice"
-                v-if="hasNextDatesRangeSlice"
                 class="widget__content__chart__range__selection__next bg-white"
+                @click="nextDatesRangeSlice"
               >
                 <fa icon="angle-right" />
               </b-button>
             </div>
             <column-chart
-              @click.native="jumpToSelectionRange"
               :data="dataForMurmur"
               :fixed-height="100"
               no-tooltips
               no-x-axis
               no-y-axis
+              @click.native="jumpToSelectionRange"
             />
           </div>
           <div class="d-flex align-items-center mt-2">
             <p
-              class="widget__content__missing small my-0 text-muted"
               v-if="missing"
+              class="widget__content__missing small my-0 text-muted"
               :title="$t('widget.creationDate.missingTooltip')"
             >
               {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}

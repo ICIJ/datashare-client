@@ -150,7 +150,7 @@ export default {
       class="ellipse-status__badge mx-2 d-inline-flex"
       :class="{ 'ellipse-status__badge--has-error': hasError }"
     >
-      <b-badge v-b-modal:[errorModalId] v-if="hasError" :variant="statusAsVariant" class="p-0">
+      <b-badge v-if="hasError" v-b-modal:[errorModalId] :variant="statusAsVariant" class="p-0">
         <span class="d-inline-block p-1">
           {{ status }}
         </span>
@@ -165,7 +165,7 @@ export default {
         {{ status }}
       </b-badge>
     </span>
-    <b-modal body-class="ellipse-status__modal pb-0" hide-header ok-only :id="errorModalId" :size="errorModalSize">
+    <b-modal :id="errorModalId" body-class="ellipse-status__modal pb-0" hide-header ok-only :size="errorModalSize">
       <slot name="error" />
     </b-modal>
   </span>

@@ -1,13 +1,13 @@
 <template>
   <div class="widget widget--disk-usage d-flex align-items-center text-center">
     <v-wait for="disk usage" class="flex-grow-1" transition="fade">
-      <fa icon="circle-notch" spin slot="waiting" size="2x" />
+      <fa slot="waiting" icon="circle-notch" spin size="2x" />
       <p :class="{ 'card-body': widget.card }">
         <fa icon="weight" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
           {{ humanSize(total, false, $t('human.size')) }}
         </strong>
-        <a class="widget__details" v-b-modal.modal-disk-usage-details>
+        <a v-b-modal.modal-disk-usage-details class="widget__details">
           {{ $t('widget.diskUsage.details') }}
         </a>
       </p>

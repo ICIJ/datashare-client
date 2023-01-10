@@ -17,12 +17,12 @@
       </span>
     </template>
     <template #items-group>
-      <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
+      <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0" @change="selectUsers">
         <b-form-checkbox
           v-for="{ user, count } in recommendedByUsersSorted"
+          :key="user"
           :value="user"
           class="filter__items__item"
-          :key="user"
         >
           <span class="d-flex">
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
@@ -52,11 +52,11 @@ import utils from '@/mixins/utils'
  */
 export default {
   name: 'FilterRecommendedBy',
-  extends: FilterAbstract,
   components: {
     FilterBoilerplate,
     UserDisplay
   },
+  extends: FilterAbstract,
   mixins: [utils],
   computed: {
     ...mapState('recommended', { recommendedByUsers: 'byUsers' }),

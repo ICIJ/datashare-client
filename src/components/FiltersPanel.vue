@@ -1,5 +1,5 @@
 <template>
-  <div class="filters-panel" v-show="showFilters">
+  <div v-show="showFilters" class="filters-panel">
     <div class="filters-panel__sticky w-100">
       <hook name="filters-panel:before"></hook>
       <div class="filters-panel__sticky__toolbar">
@@ -9,10 +9,10 @@
             {{ $t('search.filtersTitle') }}
           </h5>
           <button
-            class="filters-panel__sticky__toolbar__toggler btn btn-link"
-            @click="hideFilters"
-            :title="$t('search.hideFilters')"
             v-b-tooltip
+            class="filters-panel__sticky__toolbar__toggler btn btn-link"
+            :title="$t('search.hideFilters')"
+            @click="hideFilters"
           >
             <fa icon="arrow-left" class="text-light"></fa>
             <span class="sr-only">
@@ -25,19 +25,19 @@
       <hook name="filters-panel.filters:before"></hook>
       <filter-project></filter-project>
       <component
+        :is="filter.component"
         v-for="filter in filters"
         :ref="filter.name"
         :key="filter.name"
-        :is="filter.component"
         v-bind="{ filter }"
       ></component>
       <hook name="filters-panel.filters:after"></hook>
       <hook name="filters-panel:after"></hook>
     </div>
     <b-modal
+      ref="openFilterSearch"
       hide-footer
       lazy
-      ref="openFilterSearch"
       :title="expandedFilter ? $t('filter.' + expandedFilter.name) : null"
     >
       <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query"></filter-search>
@@ -77,17 +77,17 @@ export default {
     FilterStarred,
     Hook
   },
-  mounted() {
-    this.$root.$on('filter::async-search', this.openFilterSearch)
-    this.$root.$on('filter::add-filter-values', this.setFilterValue)
-    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
-    this.$root.$on('index::delete::all', this.refreshEachFilter)
-  },
   data() {
     return {
       expandedFilter: null,
       query: null
     }
+  },
+  mounted() {
+    this.$root.$on('filter::async-search', this.openFilterSearch)
+    this.$root.$on('filter::add-filter-values', this.setFilterValue)
+    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
+    this.$root.$on('index::delete::all', this.refreshEachFilter)
   },
   computed: {
     ...mapState('search', ['showFilters']),

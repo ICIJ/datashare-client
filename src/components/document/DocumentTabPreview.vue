@@ -45,11 +45,6 @@ export default {
       ]
     }
   },
-  methods: {
-    importPreviewComponent() {
-      return import('@/components/document/viewers/' + this.previewComponent + '.vue')
-    }
-  },
   computed: {
     isPaginated() {
       return this.paginatedTypes.indexOf(this.document.contentType) > -1
@@ -71,6 +66,11 @@ export default {
         default:
           return null
       }
+    }
+  },
+  methods: {
+    importPreviewComponent() {
+      return import('@/components/document/viewers/' + this.previewComponent + '.vue')
     }
   }
 }

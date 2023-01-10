@@ -9,7 +9,7 @@
       <hook name="landing.form.heading:after"></hook>
       <search-bar class="landing__form__search-bar py-3" size="md"></search-bar>
       <hook name="landing.form.project:before"></hook>
-      <div class="mt-5 text-white" v-if="isServer">
+      <div v-if="isServer" class="mt-5 text-white">
         <div class="landing__form__projects">
           <h2 class="text-uppercase h5">
             {{ $t('filter.projects') }}
@@ -31,12 +31,12 @@ import utils from '@/mixins/utils'
 
 export default {
   name: 'Landing',
-  mixins: [utils],
   components: {
     Hook,
     ProjectCards,
     SearchBar
-  }
+  },
+  mixins: [utils]
 }
 </script>
 

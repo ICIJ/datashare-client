@@ -1,8 +1,8 @@
 <template>
-  <div class="document-attachments" v-if="total !== null && total > 0">
+  <div v-if="total !== null && total > 0" class="document-attachments">
     <h6>{{ $tc('document.attachments.heading', total, { total }) }}</h6>
     <ul class="document-attachments__list list-unstyled d-flex-inline">
-      <li v-for="attachment in attachments" class="document-attachments__list__item" :key="attachment.id">
+      <li v-for="attachment in attachments" :key="attachment.id" class="document-attachments__list__item">
         <router-link
           :to="{ name: 'document', params: attachment.routerParams }"
           class="document-attachments__list__item__link d-flex-inline"
@@ -12,7 +12,7 @@
         </router-link>
       </li>
     </ul>
-    <a v-if="total && attachments.length < total" @click.prevent="loadMore" href="#" class="document-attachments__more">
+    <a v-if="total && attachments.length < total" href="#" class="document-attachments__more" @click.prevent="loadMore">
       <fa icon="plus" fixed-width class="mr-1" />
       {{ $t('document.attachments.more') }}
     </a>
@@ -45,6 +45,17 @@ export default {
       size: 50
     }
   },
+  computed: {
+    attachments() {
+      return flatten(this.pages.map((page) => page.hits))
+    },
+    total() {
+      return this.pages.length ? this.pages[0].total : null
+    },
+    from() {
+      return sum(this.pages.map((page) => page.hits.length))
+    }
+  },
   async mounted() {
     await this.loadMore()
     this.$emit('document:attachments', this.total)
@@ -66,17 +77,6 @@ export default {
         .rawOption('_source', { includes: ['*'], excludes: ['content'] })
         .from(this.from)
         .size(this.size)
-    }
-  },
-  computed: {
-    attachments() {
-      return flatten(this.pages.map((page) => page.hits))
-    },
-    total() {
-      return this.pages.length ? this.pages[0].total : null
-    },
-    from() {
-      return sum(this.pages.map((page) => page.hits.length))
     }
   }
 }

@@ -37,21 +37,6 @@ export default {
       name: ''
     }
   },
-  methods: {
-    async saveSearch() {
-      try {
-        await this.$core.api.addHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
-        const { href } = this.$router.resolve({ name: 'search-history' })
-        const toastParams = { href, noCloseButton: true, variant: 'success' }
-        this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
-      } catch (_) {
-        const toastParams = { noCloseButton: true, variant: 'danger' }
-        this.$root.$bvToast.toast(this.$t('userHistory.submitError'), toastParams)
-      } finally {
-        this.$emit('submit')
-      }
-    }
-  },
   computed: {
     uriFromStore() {
       const from = 0
@@ -66,6 +51,21 @@ export default {
         route: { path }
       } = this.$router.resolve({ name: 'search-history' })
       return `/#${path}`
+    }
+  },
+  methods: {
+    async saveSearch() {
+      try {
+        await this.$core.api.addHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
+        const { href } = this.$router.resolve({ name: 'search-history' })
+        const toastParams = { href, noCloseButton: true, variant: 'success' }
+        this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
+      } catch (_) {
+        const toastParams = { noCloseButton: true, variant: 'danger' }
+        this.$root.$bvToast.toast(this.$t('userHistory.submitError'), toastParams)
+      } finally {
+        this.$emit('submit')
+      }
     }
   }
 }

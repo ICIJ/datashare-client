@@ -25,17 +25,17 @@
         </b-btn-group>
 
         <div class="ml-auto">
-          <b-btn variant="primary" class="mr-2 indexing__actions__extract" v-b-modal:[extractingFormId]>
+          <b-btn v-b-modal:[extractingFormId] variant="primary" class="mr-2 indexing__actions__extract">
             <fa icon="search-plus" class="mr-2" />
             {{ $t('indexing.extractText') }}
           </b-btn>
           <b-btn
+            v-b-tooltip
+            v-b-modal:[findNamedEntitiesFormId]
             variant="primary"
             class="indexing__actions__find-named-entites mr-2"
             :disabled="!canOpenFindNamedEntitiesForm"
             :title="findNamedEntitiesTooltip"
-            v-b-tooltip
-            v-b-modal:[findNamedEntitiesFormId]
           >
             <fa icon="user-tag" class="mr-2" />
             {{ $t('indexing.findNamedEntities') }}

@@ -1,9 +1,9 @@
 <template>
   <form
-    class="search-bar container-fluid"
     :id="uniqueId"
-    @submit.prevent="submit"
+    class="search-bar container-fluid"
     :class="{ 'search-bar--focused': focused, 'search-bar--animated': animated }"
+    @submit.prevent="submit"
   >
     <div class="d-flex align-items-center">
       <search-bar-input
@@ -25,8 +25,8 @@
         </template>
         <template #suggestions>
           <selectable-dropdown
-            class="search-bar__suggestions dropdown-menu"
             ref="suggestions"
+            class="search-bar__suggestions dropdown-menu"
             :hide="!suggestions.length"
             :items="suggestions"
           >
@@ -40,7 +40,7 @@
           </selectable-dropdown>
         </template>
       </search-bar-input>
-      <div class="px-0" v-if="settings">
+      <div v-if="settings" class="px-0">
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
         <b-btn
           v-b-tooltip.hover.bottomleft
@@ -52,9 +52,9 @@
         >
           <fa icon="save" />
           <b-modal
+            ref="user-history-save-search-form"
             body-class="p-0"
             hide-footer
-            ref="user-history-save-search-form"
             size="md"
             :title="$t('userHistory.saveSearch')"
           >
@@ -92,6 +92,12 @@ function escapeLuceneChars(str) {
  */
 export default {
   name: 'SearchBar',
+  components: {
+    SearchBarInput,
+    ShortkeysModal,
+    UserHistorySaveSearchForm,
+    SearchBarInputDropdown
+  },
   props: {
     /**
      * Animate the focus on the search input.
@@ -138,12 +144,6 @@ export default {
       type: String,
       default: 'md'
     }
-  },
-  components: {
-    SearchBarInput,
-    ShortkeysModal,
-    UserHistorySaveSearchForm,
-    SearchBarInputDropdown
   },
   data() {
     return {

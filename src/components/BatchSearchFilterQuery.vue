@@ -26,18 +26,12 @@ import utils from '@/mixins/utils'
 
 export default {
   name: 'BatchSearchFilterQuery',
-  mixins: [utils],
   components: { SearchBarInputDropdown, SearchBarInput },
+  mixins: [utils],
   data() {
     return {
       field: this.getField(this.$route?.query?.field),
       search: this.$route?.query?.query ?? ''
-    }
-  },
-  watch: {
-    $route(value) {
-      this.search = value?.query?.query
-      this.field = this.getField(value?.query?.field)
     }
   },
   computed: {
@@ -57,6 +51,12 @@ export default {
     emptySearch() {
       const urlQ = this.$route?.query?.query ?? ''
       return this.search?.length === 0 && urlQ === this.search
+    }
+  },
+  watch: {
+    $route(value) {
+      this.search = value?.query?.query
+      this.field = this.getField(value?.query?.field)
     }
   },
   methods: {

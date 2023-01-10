@@ -53,14 +53,6 @@ export default {
       }
     }
   },
-  created() {
-    return this.loadData()
-  },
-  watch: {
-    project() {
-      return this.loadData()
-    }
-  },
   computed: {
     total() {
       return sum(values(this.entities))
@@ -80,6 +72,14 @@ export default {
     project() {
       return this.$store.state.insights.project
     }
+  },
+  watch: {
+    project() {
+      return this.loadData()
+    }
+  },
+  created() {
+    return this.loadData()
   },
   methods: {
     async loadData() {

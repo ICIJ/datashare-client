@@ -1,5 +1,5 @@
 <template>
-  <div class="m-3" v-if="notes.length">
+  <div v-if="notes.length" class="m-3">
     <b-alert v-for="note in notes" :key="note.note" :variant="note.variant || 'warning'" show>
       {{ note.note }}
     </b-alert>
@@ -30,14 +30,14 @@ export default {
   computed: {
     ...mapState('search', ['index'])
   },
+  mounted() {
+    this.retrieveNotes(this.index, this.path)
+  },
   methods: {
     async retrieveNotes(project, path) {
       const notes = await this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
       this.$set(this, 'notes', notes)
     }
-  },
-  mounted() {
-    this.retrieveNotes(this.index, this.path)
   }
 }
 </script>

@@ -33,17 +33,6 @@ export default {
       ocrLanguages: []
     }
   },
-  async mounted() {
-    await this.loadLanguages()
-  },
-  methods: {
-    async loadLanguages() {
-      this.$wait.start(this.waitIdentifier)
-      this.textLanguages = await this.$core.api.textLanguages()
-      this.ocrLanguages = await this.$core.api.ocrLanguages()
-      this.$wait.end(this.waitIdentifier)
-    }
-  },
   computed: {
     nullOption() {
       return { value: null, text: this.$t('extractingLanguageFormControl.nullOption') }
@@ -68,13 +57,24 @@ export default {
     showOcrWarning() {
       return this.ocrWarning && this.value && !this.isOcrLanguageAvailable
     }
+  },
+  async mounted() {
+    await this.loadLanguages()
+  },
+  methods: {
+    async loadLanguages() {
+      this.$wait.start(this.waitIdentifier)
+      this.textLanguages = await this.$core.api.textLanguages()
+      this.ocrLanguages = await this.$core.api.ocrLanguages()
+      this.$wait.end(this.waitIdentifier)
+    }
   }
 }
 </script>
 
 <template>
   <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
-    <b-form-select :value="value" @input="(newValue) => $emit('input', newValue)" :options="[nullOption, ...options]" />
+    <b-form-select :value="value" :options="[nullOption, ...options]" @input="(newValue) => $emit('input', newValue)" />
     <b-collapse :visible="showOcrWarning">
       <b-alert show variant="warning" class="mt-3" v-html="$t('extractingLanguageFormControl.ocrWarning')" />
     </b-collapse>

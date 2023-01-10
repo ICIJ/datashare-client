@@ -38,8 +38,8 @@
           <fa icon="circle-notch" spin size="2x"></fa>
         </div>
       </template>
-      <router-view :events="this.events" />
-      <div class="user-history__pagination pt-2" v-if="totalEvents > perPage">
+      <router-view :events="events" />
+      <div v-if="totalEvents > perPage" class="user-history__pagination pt-2">
         <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalEvents" />
       </div>
     </v-wait>
@@ -54,6 +54,31 @@ import settings from '@/utils/settings'
 export default {
   components: {
     PageHeader
+  },
+  beforeRouteEnter(to, from, next) {
+    return next((vm) => {
+      const defaultTab = vm.tabRoutes.indexOf(to.name)
+      if (!isEqual(from.path, to.path)) {
+        vm.page = 1
+      }
+      if (defaultTab > -1) {
+        vm.defaultTab = defaultTab
+      } else if (vm.$route.name !== 'document-history') {
+        vm.$router.push({ name: 'document-history' })
+      }
+    })
+  },
+  beforeRouteUpdate(to, from, next) {
+    const defaultTab = this.tabRoutes.indexOf(to.name)
+    if (!isEqual(from.path, to.path)) {
+      this.page = 1
+    }
+    if (defaultTab > -1) {
+      this.defaultTab = defaultTab
+    } else if (this.$route.name !== 'document-history') {
+      this.$router.push({ name: 'document-history' })
+    }
+    next()
   },
   data() {
     return {
@@ -101,38 +126,13 @@ export default {
       }
     }
   },
-  beforeRouteEnter(to, from, next) {
-    return next((vm) => {
-      const defaultTab = vm.tabRoutes.indexOf(to.name)
-      if (!isEqual(from.path, to.path)) {
-        vm.page = 1
-      }
-      if (defaultTab > -1) {
-        vm.defaultTab = defaultTab
-      } else if (vm.$route.name !== 'document-history') {
-        vm.$router.push({ name: 'document-history' })
-      }
-    })
-  },
-  beforeRouteUpdate(to, from, next) {
-    const defaultTab = this.tabRoutes.indexOf(to.name)
-    if (!isEqual(from.path, to.path)) {
-      this.page = 1
-    }
-    if (defaultTab > -1) {
-      this.defaultTab = defaultTab
-    } else if (this.$route.name !== 'document-history') {
-      this.$router.push({ name: 'document-history' })
-    }
-    next()
-  },
-  created() {
-    this.getUserHistoryWithSpinner()
-  },
   watch: {
     $route() {
       this.getUserHistoryWithSpinner()
     }
+  },
+  created() {
+    this.getUserHistoryWithSpinner()
   },
   methods: {
     async getUserHistoryWithSpinner() {

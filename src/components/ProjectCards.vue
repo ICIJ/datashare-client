@@ -1,7 +1,7 @@
 <template>
   <div class="project-cards container-fluid p-0">
     <div class="row">
-      <div class="col-4 mb-4" v-for="project in projects" :key="project">
+      <div v-for="project in projects" :key="project" class="col-4 mb-4">
         <router-link
           :to="{ name: 'search', query: { indices: project, q: '*' } }"
           class="project-cards__item d-flex justify-content-start text-nowrap"
@@ -47,16 +47,16 @@ import { startCase } from 'lodash'
  * List all the projects with cards linking to the search.
  */
 export default {
+  computed: {
+    projects() {
+      return this.$core.projects
+    }
+  },
   methods: {
     isActive(project) {
       return this.$store.state.search.indices.includes(project)
     },
     startCase
-  },
-  computed: {
-    projects() {
-      return this.$core.projects
-    }
   }
 }
 </script>

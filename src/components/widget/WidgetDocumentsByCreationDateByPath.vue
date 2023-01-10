@@ -1,10 +1,10 @@
 <template>
-  <widget-documents-by-creation-date :widget="widget" ref="widgetDocumentsByCreationDate">
+  <widget-documents-by-creation-date ref="widgetDocumentsByCreationDate" :widget="widget">
     <template #selector="{ selectedPath, setSelectedPath }">
       <span
+        v-if="selectedPath"
         v-b-modal.modal-widget-select-path
         class="mr-3 py-1 px-2 border btn btn-link d-inline-flex"
-        v-if="selectedPath"
       >
         <tree-breadcrumb
           datadir-icon="filter"
@@ -17,23 +17,23 @@
         </span>
       </span>
       <b-modal
+        id="modal-widget-select-path"
         body-class="p-0 border-bottom"
         cancel-variant="outline-primary"
         :cancel-title="$t('global.cancel')"
         hide-header
-        id="modal-widget-select-path"
         lazy
-        @ok="setSelectedPath(treeViewPath)"
         :ok-title="$t('widget.creationDate.selectFolder')"
         scrollable
         size="lg"
+        @ok="setSelectedPath(treeViewPath)"
       >
         <tree-view
           :path="treeViewPath || selectedPath"
           :project="project"
-          @input="treeViewPath = $event"
           count
           size
+          @input="treeViewPath = $event"
         ></tree-view>
       </b-modal>
     </template>

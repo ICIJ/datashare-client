@@ -3,6 +3,8 @@
     <template #items="{ sortBy, sortByOrder }">
       <div class="filter__tree-view">
         <tree-view
+          ref="treeView"
+          v-model="path"
           :projects="projects"
           :selected-paths.sync="selectedPaths"
           :pre-body-build="preBodyBuild"
@@ -12,9 +14,7 @@
           count
           include-children-documents
           no-bars
-          ref="treeView"
           selectable
-          v-model="path"
         />
       </div>
     </template>
@@ -33,26 +33,15 @@ import TreeView from '@/components/TreeView'
  */
 export default {
   name: 'FilterPath',
-  extends: FilterAbstract,
   components: {
     FilterBoilerplate,
     TreeView
   },
+  extends: FilterAbstract,
   data() {
     return {
       key: null,
       path: null
-    }
-  },
-  created() {
-    this.$set(this, 'path', this.dataDir)
-  },
-  watch: {
-    projects(value, previousValue) {
-      if (!isEqual(value, previousValue)) {
-        this.$set(this, 'path', this.dataDir)
-        this.setFilterValue(this.filter, { key: [] })
-      }
     }
   },
   computed: {
@@ -83,6 +72,17 @@ export default {
     isContextualized() {
       return this.$store.getters['search/isFilterContextualized'](this.filter.name)
     }
+  },
+  watch: {
+    projects(value, previousValue) {
+      if (!isEqual(value, previousValue)) {
+        this.$set(this, 'path', this.dataDir)
+        this.setFilterValue(this.filter, { key: [] })
+      }
+    }
+  },
+  created() {
+    this.$set(this, 'path', this.dataDir)
   },
   methods: {
     preBodyBuild(body) {

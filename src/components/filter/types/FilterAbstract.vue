@@ -1,8 +1,8 @@
 <template>
   <filter-boilerplate
-    @add-filter-values="(value) => $emit('add-filter-values', value)"
     ref="filter"
     v-bind="$props"
+    @add-filter-values="(value) => $emit('add-filter-values', value)"
   ></filter-boilerplate>
 </template>
 
@@ -17,22 +17,22 @@ import filters from '@/mixins/filters'
  */
 export default {
   name: 'FilterAbstract',
-  mixins: [filters],
   components: {
     FilterBoilerplate
   },
+  mixins: [filters],
   props: {
     // Temporary import of the props from FilterBoilerplate
     ...FilterBoilerplate.props
-  },
-  async mounted() {
-    await this.$nextTick()
-    this.mounted = true
   },
   computed: {
     root() {
       return get(this, '$refs.filter', {})
     }
+  },
+  async mounted() {
+    await this.$nextTick()
+    this.mounted = true
   },
   methods: {
     // Returns all props without the givens keys

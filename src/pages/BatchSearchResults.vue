@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-search-results" v-if="isLoaded">
+  <div v-if="isLoaded" class="batch-search-results">
     <div class="my-4 container">
       <div class="mx-1 mb-2">
         <router-link :to="generateTo">
@@ -32,7 +32,7 @@
                 {{ $t('batchSearch.published') }}
               </dt>
               <dd>
-                <b-form-checkbox @change="changePublished" switch v-model="batchSearch.published" />
+                <b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" />
               </dd>
             </div>
             <div>
@@ -125,7 +125,7 @@
     <div class="container">
       <v-wait for="load batchSearch results">
         <div slot="waiting" class="card py-2">
-          <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
+          <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
         </div>
         <div class="batch-search-results__queries">
           <div class="card">
@@ -141,9 +141,9 @@
               show-empty
               striped
               :sort-by="sortBy"
-              @sort-changed="sortChanged"
               :sort-desc="orderBy"
               tbody-tr-class="batch-search-results__queries__query"
+              @sort-changed="sortChanged"
             >
               <template #cell(documentNumber)="{ item }">
                 {{ item.documentNumber + 1 }}
@@ -151,17 +151,17 @@
               <template #cell(documentPath)="{ item, index }">
                 <router-link
                   class="batch-search-results__queries__query__link"
-                  @click.native.prevent="openDocumentModal(index)"
                   target="_blank"
                   :to="{
                     name: 'document-standalone',
                     params: { index: item.project.name, id: item.documentId, routing: item.rootId },
                     query: { q: item.query }
                   }"
+                  @click.native.prevent="openDocumentModal(index)"
                 >
                   <active-text-truncate
-                    class="batch-search-results__queries__query__link__path"
                     v-b-tooltip.hover
+                    class="batch-search-results__queries__query__link__path"
                     :title="item.documentPath"
                   >
                     {{ item.documentPath }}
@@ -192,8 +192,8 @@
           </div>
         </div>
         <custom-pagination
-          class="batch-search-results__pagination my-4"
           v-model="currentPage"
+          class="batch-search-results__pagination my-4"
           :per-page="perPage"
           :total-rows="totalItems"
         />
@@ -201,9 +201,9 @@
     </div>
     <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0">
       <div v-if="documentInModal" :key="documentInModalIndex">
-        <document-navbar :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing">
+        <document-navbar :id="documentInModal.id" :index="documentInModal.index" :routing="documentInModal.routing">
           <template #back>
-            <a @click="$bvModal.hide('document-modal')" role="button" class="small text-white">
+            <a role="button" class="small text-white" @click="$bvModal.hide('document-modal')">
               <fa icon="chevron-circle-left"></fa>
               <span class="ml-2">
                 {{ $t('Back to results') }}
@@ -264,6 +264,10 @@ export default {
     UserDisplay,
     QuickItemNav
   },
+  filters: {
+    humanSize,
+    humanNumber
+  },
   mixins: [utils],
   props: {
     /**
@@ -278,10 +282,6 @@ export default {
     indices: {
       type: [String, Array]
     }
-  },
-  filters: {
-    humanSize,
-    humanNumber
   },
   data() {
     return {

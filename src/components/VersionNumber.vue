@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="version-number d-inline-block" ref="appFooterVersion">
-      <fa icon="bolt" class="mr-1" v-if="!noIcon"></fa>
+    <div ref="appFooterVersion" class="version-number d-inline-block">
+      <fa v-if="!noIcon" icon="bolt" class="mr-1"></fa>
       {{ label }} {{ serverVersion }}
     </div>
-    <b-tooltip :target="() => this.$refs.appFooterVersion" :placement="tooltipPlacement">
+    <b-tooltip :target="() => $refs.appFooterVersion" :placement="tooltipPlacement">
       <div class="version-number__tooltip">
         <div class="d-flex text-left align-items-center version-number__tooltip__client">
           <div class="text-muted w-100">
@@ -58,14 +58,19 @@ export default {
       default: 'Version'
     }
   },
-  mounted() {
-    this.setVersion()
-  },
   data() {
     return {
       serverHash: null,
       serverVersion: null
     }
+  },
+  computed: {
+    clientHash() {
+      return process.env.VUE_APP_GIT_HASH.substring(0, 7)
+    }
+  },
+  mounted() {
+    this.setVersion()
   },
   methods: {
     async fetchVersion() {
@@ -75,11 +80,6 @@ export default {
       const version = await this.fetchVersion()
       this.$set(this, 'serverHash', version['git.commit.id.abbrev'])
       this.$set(this, 'serverVersion', version['git.build.version'])
-    }
-  },
-  computed: {
-    clientHash() {
-      return process.env.VUE_APP_GIT_HASH.substring(0, 7)
     }
   }
 }

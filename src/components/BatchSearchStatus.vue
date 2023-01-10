@@ -1,7 +1,7 @@
 <template>
   <div class="batch-search-status">
     <ellipse-status :status="batchSearch.state" :no-badge="noLabel" horizontal>
-      <template #error v-if="isFailed">
+      <template v-if="isFailed" #error>
         <div v-if="batchSearch.errorQuery" class="batch-search-status__modal__error-query mb-2 font-weight-bolder">
           <span v-html="$t('batchSearch.errorQuery', { query: batchSearch.errorQuery })"></span>
         </div>
@@ -41,6 +41,10 @@ export default {
   components: {
     EllipseStatus,
     JsonFormatter
+  },
+  filters: {
+    capitalize,
+    toVariant
   },
   props: {
     /**
@@ -83,10 +87,6 @@ export default {
         return null
       }
     }
-  },
-  filters: {
-    capitalize,
-    toVariant
   }
 }
 </script>

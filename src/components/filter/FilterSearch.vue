@@ -2,17 +2,17 @@
   <div class="filter-search">
     <div class="card">
       <component
-        class="border-0"
-        ref="filterComponent"
         :is="filter.component"
+        ref="filterComponent"
         :key="filter.name"
+        class="border-0"
         :collapsed-if-no-values="false"
         :dark="false"
         :model-query="modelQuery"
-        @add-filter-values="onAddedFilterValues"
         hide-header
         hide-show-more
         v-bind="{ filter }"
+        @add-filter-values="onAddedFilterValues"
       ></component>
     </div>
   </div>

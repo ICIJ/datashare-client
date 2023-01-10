@@ -1,7 +1,7 @@
 <template>
   <div class="user-history">
     <div class="mt-4">
-      <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
+      <ul v-if="events.length" class="list-unstyled user-history__list card mb-4">
         <li v-for="event in searches" :key="event.id" class="user-history__list__item">
           <div class="user-history__list__item__delete float-right m-4">
             <confirm-button
@@ -22,16 +22,16 @@
             </div>
             <div class="user-history__list__item__query">
               <applied-search-filters-item
-                read-only
                 v-for="(filter, index) in filtersItems(event)"
                 :key="index"
+                read-only
                 :filter="filter"
               />
             </div>
           </router-link>
         </li>
       </ul>
-      <div class="text-muted text-center" v-else>
+      <div v-else class="text-muted text-center">
         {{ $t('userHistory.empty') }}
       </div>
     </div>

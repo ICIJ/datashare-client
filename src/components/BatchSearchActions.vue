@@ -1,9 +1,9 @@
 <template>
   <div class="batch-search-actions">
     <b-btn
-      class="batch-search-actions__item"
       id="batch-search-actions-filters-toggle"
       v-b-tooltip.hover
+      class="batch-search-actions__item"
       variant="light"
       :title="$t('batchSearchResultsFilters.queries.heading')"
     >
@@ -11,7 +11,7 @@
       <span class="sr-only">
         {{ $t('batchSearchResultsFilters.queries.heading') }}
       </span>
-      <b-badge variant="secondary" class="batch-search-actions__item__counter" v-if="nbSelectedQueries">
+      <b-badge v-if="nbSelectedQueries" variant="secondary" class="batch-search-actions__item__counter">
         {{ nbSelectedQueries | humanNumber }}
       </b-badge>
       <keep-alive>
@@ -28,9 +28,9 @@
     </b-btn>
 
     <confirm-button
-      class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ml-2"
-      v-b-tooltip.hover
       v-if="isMyBatchSearch"
+      v-b-tooltip.hover
+      class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ml-2"
       :confirmed="deleteBatchSearch"
       :label="$t('batchSearch.delete')"
       :no="$t('global.no')"
@@ -44,18 +44,18 @@
     </confirm-button>
 
     <b-btn
-      class="batch-search-actions__item action batch-search-actions__item--relaunch ml-2"
       v-if="isMyBatchSearch && isEnded"
+      class="batch-search-actions__item action batch-search-actions__item--relaunch ml-2"
       variant="light"
-      @click="$refs['batch-search-copy-form'].show()"
       :disabled="isRelaunched"
+      @click="$refs['batch-search-copy-form'].show()"
     >
       <fa icon="redo" />
       {{ $t('batchSearchResults.relaunch') }}
       <b-modal
+        ref="batch-search-copy-form"
         body-class="p-0"
         hide-footer
-        ref="batch-search-copy-form"
         size="md"
         :title="$t('batchSearchResults.relaunchTitle')"
       >
@@ -64,9 +64,9 @@
     </b-btn>
 
     <b-btn
+      v-b-tooltip.hover
       class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
       variant="light"
-      v-b-tooltip.hover
       :title="$t('batchSearchResults.downloadQueriesTooltip')"
       :href="downloadQueriesUrl"
     >
@@ -75,10 +75,10 @@
     </b-btn>
 
     <b-btn
-      class="batch-search-actions__item batch-search-actions__item--download-results ml-2"
       v-if="isEnded"
-      variant="primary"
       v-b-tooltip.hover
+      class="batch-search-actions__item batch-search-actions__item--download-results ml-2"
+      variant="primary"
       :title="$t('batchSearchResults.downloadQueriesTooltip')"
       :href="downloadResultsUrl"
     >
@@ -102,6 +102,13 @@ import humanNumber from '@/filters/humanNumber'
  */
 export default {
   name: 'BatchSearchActions',
+  components: {
+    BatchSearchResultsFilters,
+    BatchSearchCopyForm
+  },
+  filters: {
+    humanNumber
+  },
   props: {
     /**
      * The batch search meta data
@@ -109,13 +116,6 @@ export default {
     batchSearch: {
       type: Object
     }
-  },
-  components: {
-    BatchSearchResultsFilters,
-    BatchSearchCopyForm
-  },
-  filters: {
-    humanNumber
   },
   data() {
     return {

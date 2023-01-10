@@ -11,15 +11,15 @@
       <active-text-truncate class="search-results-list-link__location">
         <span class="d-inline-flex align-items-center">
           <fa icon="folder" class="mr-1" />
-          <b-badge variant="light" class="mr-2" v-if="showIndex">
+          <b-badge v-if="showIndex" variant="light" class="mr-2">
             {{ document.index | startCase }}
           </b-badge>
           {{ location }}
         </span>
       </active-text-truncate>
       <div
-        class="search-results-list-link__fragments"
         v-if="document.highlight"
+        class="search-results-list-link__fragments"
         v-html="document.highlight.content.join(' [...] ')"
       ></div>
     </div>
@@ -39,6 +39,10 @@ import ner from '@/mixins/ner'
  */
 export default {
   name: 'SearchResultsLink',
+  components: {
+    DocumentSlicedName,
+    DocumentThumbnail
+  },
   mixins: [ner],
   props: {
     /**
@@ -47,10 +51,6 @@ export default {
     document: {
       type: Object
     }
-  },
-  components: {
-    DocumentSlicedName,
-    DocumentThumbnail
   },
   computed: {
     ...mapState('search', ['indices', 'query']),

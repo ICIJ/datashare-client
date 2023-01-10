@@ -28,15 +28,6 @@ export default {
       terms: []
     }
   },
-  async mounted() {
-    await this.searchTerms()
-  },
-  watch: {
-    async targetLanguage() {
-      this.terms.splice(0)
-      await this.searchTerms()
-    }
-  },
   computed: {
     queryTerms() {
       return this.$store.getters['search/retrieveContentQueryTerms']
@@ -63,6 +54,15 @@ export default {
         'source.path'
       ]
     }
+  },
+  watch: {
+    async targetLanguage() {
+      this.terms.splice(0)
+      await this.searchTerms()
+    }
+  },
+  async mounted() {
+    await this.searchTerms()
   },
   methods: {
     getTermIndexClass(index, term) {
@@ -100,7 +100,7 @@ export default {
 </script>
 
 <template>
-  <div class="document-global-search-terms-tags d-flex align-items-center" v-if="document && terms.length">
+  <div v-if="document && terms.length" class="document-global-search-terms-tags d-flex align-items-center">
     <div class="mr-2">
       {{ $t('document.researchedTerms') }}
     </div>
@@ -116,23 +116,23 @@ export default {
             {{ term.label }}
           </span>
           <span
+            v-if="term.count === 0 && term.metadata > 0"
             class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0"
             :style="getTermIndexBackgroundColor(i)"
-            v-if="term.count === 0 && term.metadata > 0"
           >
             {{ $t('document.inMetadata') }}
           </span>
           <span
+            v-else-if="term.count === 0 && term.tags > 0"
             class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0"
             :style="getTermIndexBackgroundColor(i)"
-            v-else-if="term.count === 0 && term.tags > 0"
           >
             {{ $t('document.inTags') }}
           </span>
           <span
+            v-else
             class="document-global-search-terms-tags__item__count py-0"
             :style="getTermIndexBackgroundColor(i)"
-            v-else
           >
             {{ term.count }}
           </span>

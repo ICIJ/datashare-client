@@ -1,11 +1,11 @@
 <template>
   <div class="widget widget--duplicates">
-    <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
-      <h4 v-html="widget.title" class="m-0"></h4>
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
+      <h4 class="m-0" v-html="widget.title"></h4>
     </div>
     <div class="p-4">
       <v-wait for="duplicate-counters" transition="fade">
-        <fa icon="circle-notch" spin slot="waiting" size="2x" class="m-auto d-block"></fa>
+        <fa slot="waiting" icon="circle-notch" spin size="2x" class="m-auto d-block"></fa>
         <div>
           <stacked-bar-chart
             :data="data"

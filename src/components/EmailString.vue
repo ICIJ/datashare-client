@@ -3,9 +3,9 @@
     <span>
       {{ nameOrRawEmail }}
       <b-popover
+        v-if="mounted"
         :target="$el"
         triggers="hover focus"
-        v-if="mounted"
         custom-class="email-string__popover"
         placement="bottom"
       >
@@ -68,9 +68,6 @@ export default {
       mounted: false
     }
   },
-  mounted() {
-    this.$set(this, 'mounted', true)
-  },
   computed: {
     nameOrRawEmail() {
       return this.nameWithoutEmail || this.email
@@ -94,6 +91,9 @@ export default {
       const field = 'metadata.tika_metadata_message_from'
       return `${field}:"${this.emailWithoutName || this.email}"`
     }
+  },
+  mounted() {
+    this.$set(this, 'mounted', true)
   }
 }
 </script>

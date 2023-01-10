@@ -8,10 +8,10 @@
         >
           <b-list-group horizontal>
             <b-list-group-item
-              class="search-results-table__actions__action py-2"
-              button
               v-for="action in actions"
               :key="action.id"
+              class="search-results-table__actions__action py-2"
+              button
               @click="onClick(action.id)"
             >
               <fa v-if="action.icon" :icon="action.icon" :class="action.iconClass"></fa>
@@ -34,7 +34,6 @@
         hover
         selectable
         responsive
-        @row-selected="onRowSelected"
         :items="itemsProvider"
         :fields="fields"
         :busy="$wait.waiting('load results table')"
@@ -44,6 +43,7 @@
         thead-tr-class="text-nowrap"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
+        @row-selected="onRowSelected"
       >
         <template #cell(relevance)="{ item, rowSelected }">
           <fa
@@ -70,7 +70,7 @@
           </router-link>
         </template>
         <template #cell(highlight)="{ value }">
-          <span v-html="value" class="text-truncate text-muted"></span>
+          <span class="text-truncate text-muted" v-html="value"></span>
         </template>
         <template #cell(contentLength)="{ value }">
           {{ humanSize(value) }}

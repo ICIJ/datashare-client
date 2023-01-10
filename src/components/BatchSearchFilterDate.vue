@@ -2,12 +2,12 @@
   <batch-search-filter :id="id" :name="name" :active="isActive">
     <keep-alive>
       <date-picker
+        :key="`date-${id}`"
+        v-model="selectedDateRange"
         is-range
         color="gray"
         :max-date="new Date()"
-        v-model="selectedDateRange"
         :model-config="modelConfig"
-        :key="`date-${id}`"
         :locale="locale"
       >
       </date-picker>
@@ -42,14 +42,6 @@ export default {
       type: Object
     }
   },
-  methods: {
-    startTimeAdjust(start) {
-      return moment(start).locale(this.$i18n.locale).startOf('day').valueOf()
-    },
-    endTimeAdjust(end) {
-      return moment(end).locale(this.$i18n.locale).endOf('day').valueOf()
-    }
-  },
   computed: {
     isActive() {
       return this.date !== null
@@ -74,6 +66,14 @@ export default {
       set(values) {
         this.$emit('update', values)
       }
+    }
+  },
+  methods: {
+    startTimeAdjust(start) {
+      return moment(start).locale(this.$i18n.locale).startOf('day').valueOf()
+    },
+    endTimeAdjust(end) {
+      return moment(end).locale(this.$i18n.locale).endOf('day').valueOf()
     }
   }
 }

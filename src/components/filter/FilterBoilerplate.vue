@@ -11,10 +11,10 @@
     }"
   >
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
-    <slot name="header" v-if="!hideHeader">
+    <slot v-if="!hideHeader" name="header">
       <div class="card-header px-2 d-flex filter__header" @click="toggleItems">
         <h6 class="flex-fill flex-shrink-1 text-truncate pt-0">
-          <span class="filter__items__item__icon pl-0 pr-1" v-if="filter.icon">
+          <span v-if="filter.icon" class="filter__items__item__icon pl-0 pr-1">
             <fa :icon="filter.icon" fixed-width></fa>
           </span>
           <template>
@@ -31,13 +31,13 @@
     <b-collapse :visible="showResults">
       <div class="list-group list-group-flush filter__items">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
-        <slot name="search" v-if="!hideSearch && filter.isSearchable">
+        <slot v-if="!hideSearch && filter.isSearchable" name="search">
           <search-form-control
+            v-model="query"
             class="filter__items__search"
             :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"
             :rounded="false"
             @submit.prevent="openFilterSearch"
-            v-model="query"
           ></search-form-control>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
@@ -65,10 +65,10 @@
           </b-form-checkbox>
           <slot name="items-group" :items="items" :options="options" :selected="selected">
             <b-form-checkbox-group
-              class="list-group-item p-0 border-0"
-              @input="changeSelectedValues"
-              stacked
               v-model="selected"
+              class="list-group-item p-0 border-0"
+              stacked
+              @input="changeSelectedValues"
             >
               <template v-for="{ value, item, label } of options">
                 <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
@@ -95,14 +95,13 @@
             <span v-html="$t('filter.noMatches')"></span>
           </div>
         </template>
-        <infinite-loading @infinite="nextAggregate" :identifier="infiniteId" :distance="200" v-if="useInfiniteScroll">
+        <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteId" :distance="200" @infinite="nextAggregate">
           <span slot="spinner"></span>
           <span slot="no-more"></span>
           <span slot="no-results"></span>
         </infinite-loading>
       </div>
       <filter-footer
-        @contextualize-filter="toggleContextualizeFilter"
         :filter="filter"
         :hide-contextualize="hideContextualize"
         :hide-exclude="hideExclude"
@@ -110,10 +109,11 @@
         :hide-sort="hideSort"
         :sort-by-options.sync="sortByOptions"
         :sort-by-order.sync="sortByOrder"
+        v-if="!hideFooter"
         :sort-by.sync="sortBy"
+        @contextualize-filter="toggleContextualizeFilter"
         @open-filter-search="openFilterSearch"
         @toggle-filter="toggleFilter"
-        v-if="!hideFooter"
       />
     </b-collapse>
   </div>
@@ -151,13 +151,13 @@ import settings from '@/utils/settings'
  */
 export default {
   name: 'FilterBoilerplate',
-  mixins: [filters],
   components: {
     FilterFooter,
     Hook,
     InfiniteLoading,
     SearchFormControl
   },
+  mixins: [filters],
   props: {
     filter: {
       type: Object
@@ -235,68 +235,6 @@ export default {
       sortByOptions: get(this, 'filter.sortByOptions', settings.filter.sortByOptions),
       unwatch: () => {}
     }
-  },
-  watch: {
-    modelQuery() {
-      this.$set(this, 'query', this.modelQuery)
-    },
-    query() {
-      this.$set(this, 'infiniteId', uniqueId())
-      this.aggregateWithThrottle({ clearPages: true })
-      // Emit an event to update the model value only if it changed
-      if (this.query !== this.modelQuery) {
-        this.$emit('update:modelQuery', this.query)
-      }
-    },
-    collapseItems() {
-      this.initialize()
-    },
-    sortBy() {
-      this.clearInfiniteScroll()
-    },
-    sortByOrder() {
-      this.clearInfiniteScroll()
-    }
-  },
-  async mounted() {
-    await this.$nextTick()
-    this.mounted = true
-    // Listen for event to refresh the filter
-    this.$root.$on('filter::refresh', () => this.aggregateWithLoading())
-    // Listen for deletion of a filter value
-    this.$root.$on('filter::delete', (filterName, { label: key }) => {
-      // No need to update this filter when it doesn't match
-      // with the event's filter
-      if (this.filter.name !== filterName) {
-        return
-      }
-      // Collects all indexes of the deleted item in the components loaded pages
-      const itemIndexes = this.pages.map((page) => {
-        return findIndex(this.getPageItems(page), { key })
-      })
-      // Iterate on the list of indexes for each page
-      itemIndexes.forEach((itemIndex, pageIndex) => {
-        // The item wasn't found in this page
-        if (itemIndex === -1) {
-          return
-        }
-        // Get the item object merge pageIndex, with this.pageItemsPath and
-        // itemIndex. The value of this.pageItemsPath is an array so it needs
-        // to be deconstructed into another array to merge it with the two indexes
-        const item = get(this.pages, [pageIndex, ...this.pageItemsPath, itemIndex])
-        // The item still have more than one occurrence, we just need to
-        // update the doc count
-        if (item.doc_count > 1) {
-          item.doc_count--
-          // The item as only one occurrence, meaning it must be
-          // deleted from the page's items.
-        } else {
-          get(this.pages, [pageIndex, ...this.pageItemsPath]).splice(itemIndex, 1)
-        }
-      })
-    })
-    // Initialize the filter for the first time
-    this.initialize()
   },
   computed: {
     waitIdentifier() {
@@ -439,6 +377,71 @@ export default {
       }
     }
   },
+  watch: {
+    modelQuery() {
+      this.$set(this, 'query', this.modelQuery)
+    },
+    query() {
+      this.$set(this, 'infiniteId', uniqueId())
+      this.aggregateWithThrottle({ clearPages: true })
+      // Emit an event to update the model value only if it changed
+      if (this.query !== this.modelQuery) {
+        this.$emit('update:modelQuery', this.query)
+      }
+    },
+    collapseItems() {
+      this.initialize()
+    },
+    sortBy() {
+      this.clearInfiniteScroll()
+    },
+    sortByOrder() {
+      this.clearInfiniteScroll()
+    }
+  },
+  async mounted() {
+    await this.$nextTick()
+    this.mounted = true
+    // Listen for event to refresh the filter
+    this.$root.$on('filter::refresh', () => this.aggregateWithLoading())
+    // Listen for deletion of a filter value
+    this.$root.$on('filter::delete', (filterName, { label: key }) => {
+      // No need to update this filter when it doesn't match
+      // with the event's filter
+      if (this.filter.name !== filterName) {
+        return
+      }
+      // Collects all indexes of the deleted item in the components loaded pages
+      const itemIndexes = this.pages.map((page) => {
+        return findIndex(this.getPageItems(page), { key })
+      })
+      // Iterate on the list of indexes for each page
+      itemIndexes.forEach((itemIndex, pageIndex) => {
+        // The item wasn't found in this page
+        if (itemIndex === -1) {
+          return
+        }
+        // Get the item object merge pageIndex, with this.pageItemsPath and
+        // itemIndex. The value of this.pageItemsPath is an array so it needs
+        // to be deconstructed into another array to merge it with the two indexes
+        const item = get(this.pages, [pageIndex, ...this.pageItemsPath, itemIndex])
+        // The item still have more than one occurrence, we just need to
+        // update the doc count
+        if (item.doc_count > 1) {
+          item.doc_count--
+          // The item as only one occurrence, meaning it must be
+          // deleted from the page's items.
+        } else {
+          get(this.pages, [pageIndex, ...this.pageItemsPath]).splice(itemIndex, 1)
+        }
+      })
+    })
+    // Initialize the filter for the first time
+    this.initialize()
+  },
+  beforeDestroy() {
+    this.unwatch()
+  },
   methods: {
     initialize() {
       if (!this.collapseItems && this.offset === 0) {
@@ -561,9 +564,6 @@ export default {
       this.$emit('add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()
     }
-  },
-  beforeDestroy() {
-    this.unwatch()
   }
 }
 </script>

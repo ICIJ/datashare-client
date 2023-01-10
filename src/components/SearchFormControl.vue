@@ -85,9 +85,9 @@ export default {
       <b-form-input
         :autofocus="autofocus"
         class="search-form-control__input"
-        @input="$emit('input', $event)"
         :placeholder="placeholder"
         :value="value"
+        @input="$emit('input', $event)"
       ></b-form-input>
       <b-input-group-append class="search-form-control__addon search-form-control__addon--append">
         <b-button variant="light" class="search-form-control__addon__submit" type="submit">

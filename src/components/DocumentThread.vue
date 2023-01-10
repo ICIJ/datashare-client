@@ -1,15 +1,15 @@
 <template>
   <v-wait for="load thread">
-    <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
-    <div class="document-thread p-0" v-if="document">
+    <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
+    <div v-if="document" class="document-thread p-0">
       <ul class="list-unstyled document-thread__list m-0">
         <li
+          v-for="email in thread.hits"
+          :key="email.id"
           class="document-thread__list__email"
           :class="{ 'document-thread__list__email--active': isActive(email) }"
-          :key="email.id"
-          v-for="email in thread.hits"
         >
-          <router-link :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block" v-once>
+          <router-link v-once :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block">
             <div class="d-flex text-nowrap">
               <div class="w-100">
                 <email-string
@@ -19,28 +19,28 @@
                 ></email-string>
               </div>
               <abbr
+                v-if="email.creationDate"
+                v-b-tooltip
                 class="document-thread__list__email__date align-self-end small"
                 :title="email.creationDateHuman"
-                v-b-tooltip
-                v-if="email.creationDate"
               >
                 {{ $d(email.creationDate) }}
               </abbr>
             </div>
             <div class="d-flex">
-              <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email) && email.messageTo">
+              <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-muted mr-3">
                 {{ $t('email.to') }}
                 <ul class="list-inline d-inline">
                   <email-string
+                    v-for="to in email.messageTo.split(',')"
+                    :key="to"
                     class="list-inline-item"
                     :email="to"
-                    :key="to"
                     tag="li"
-                    v-for="to in email.messageTo.split(',')"
                   ></email-string>
                 </ul>
               </span>
-              <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
+              <span v-else class="document-thread__list__email__excerpt text-muted w-100">
                 {{ email.excerpt }}
               </span>
             </div>
@@ -72,6 +72,16 @@ import EmailString from '@/components/EmailString'
  */
 export default {
   name: 'DocumentThread',
+  components: {
+    DocumentTranslatedContent,
+    EmailString
+  },
+  beforeRouteEnter(_to, _from, next) {
+    next(this.init)
+  },
+  beforeRouteUpdate(_to, _from, next) {
+    this.init().then(next)
+  },
   props: {
     /**
      * The selected document
@@ -86,10 +96,6 @@ export default {
       type: Array,
       default: () => []
     }
-  },
-  components: {
-    DocumentTranslatedContent,
-    EmailString
   },
   data() {
     return {
@@ -151,6 +157,14 @@ export default {
       )
     }
   },
+  mounted() {
+    this.$store.subscribe(({ type, payload }) => {
+      if (type === 'document/content') {
+        this.thread.hits[this.activeDocumentIndex].content = payload
+      }
+    })
+    this.init()
+  },
   methods: {
     isActive(email) {
       return email.id === this.document.id
@@ -194,20 +208,6 @@ export default {
         return EsDocList.none()
       }
     }
-  },
-  beforeRouteEnter(_to, _from, next) {
-    next(this.init)
-  },
-  beforeRouteUpdate(_to, _from, next) {
-    this.init().then(next)
-  },
-  mounted() {
-    this.$store.subscribe(({ type, payload }) => {
-      if (type === 'document/content') {
-        this.thread.hits[this.activeDocumentIndex].content = payload
-      }
-    })
-    this.init()
   }
 }
 </script>

@@ -5,37 +5,37 @@
         <span class="flex-grow-1 my-auto">
           {{ $t('batchSearchResultsFilters.queries.heading') }}
         </span>
-        <span class="mr-2" v-if="hasMultipleQueries">
+        <span v-if="hasMultipleQueries" class="mr-2">
           {{ $t('search.results.sort.sort') }}
         </span>
         <b-dropdown
+          v-if="hasMultipleQueries"
           class="batch-search-results-filters__queries__sort"
           toggle-class="p-0"
           right
           :text="$t(`search.results.sort.${sortField}`)"
           variant="link"
-          v-if="hasMultipleQueries"
         >
-          <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)" :active="key === sortField">
+          <b-dropdown-item v-for="key in sortFields" :key="key" :active="key === sortField" @click="sort(key)">
             {{ $t(`search.results.sort.${key}`) }}
           </b-dropdown-item>
         </b-dropdown>
       </h6>
       <div class="batch-search-results-filters__queries__search text-dark">
         <search-form-control
-          :placeholder="$t('batchSearchResultsFilters.filterQueries')"
           v-model="queriesFilter"
+          :placeholder="$t('batchSearchResultsFilters.filterQueries')"
         ></search-form-control>
       </div>
       <div class="small">
         <selectable-dropdown
           v-if="filteredQueries.length"
+          v-model="selectedQueries"
           class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
           deactivate-keys
           multiple
           scroller-height="280px"
           :height="35"
-          v-model="selectedQueries"
           :eq="(item, other) => item.label === other.label"
           :items="filteredQueries"
         >
@@ -75,6 +75,9 @@ import SearchFormControl from '@/components/SearchFormControl'
  */
 export default {
   name: 'BatchSearchResultsFilters',
+  components: {
+    SearchFormControl
+  },
   props: {
     /**
      * The batch search query keys
@@ -89,9 +92,6 @@ export default {
     indices: {
       type: [String, Array]
     }
-  },
-  components: {
-    SearchFormControl
   },
   data() {
     return {
@@ -132,13 +132,13 @@ export default {
       return this.$route?.query ?? {}
     }
   },
-  mounted() {
-    this.readQueryFromRoute()
-  },
   watch: {
     $route() {
       this.readQueryFromRoute()
     }
+  },
+  mounted() {
+    this.readQueryFromRoute()
   },
   methods: {
     updateRoute() {
