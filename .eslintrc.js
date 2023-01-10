@@ -3,7 +3,7 @@ module.exports = {
     jest: true,
     node: true
   },
-  extends: ['plugin:vue/strongly-recommended', 'plugin:vue/recommended', 'standard', 'prettier'],
+  extends: ['plugin:vue/recommended', 'standard', 'prettier'],
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'error',
