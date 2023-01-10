@@ -1,6 +1,6 @@
 {
   "global": {
-    "all": "Tout",
+    "all": "Tous",
     "cancel": "Annuler",
     "enterCorrectUrl": "Veuillez saisir une URL valide.",
     "yes": "Oui",
@@ -508,7 +508,7 @@
     "extractOnlyNewLabel": "Voulez-vous ignorer les fichiers déjà indexés ?",
     "extractOnlyNewHelp": "Si oui, Datashare extraira seulement le texte des fichiers qui ne sont pas déjà dans Datashare.",
     "extractLanguage": "Dans quelle langue sont vos documents?",
-    "findNamedEntities": "Trouver des personnes, des organisations, des lieux et des adresses e-mail",
+    "findNamedEntities": "Trouver les personnes, les organisations, les lieux et les adresses e-mail",
     "findNamedEntitiesHeader": "Que souhaitez-vous faire ?",
     "findNamedEntitiesSubheader": "Datashare utilise des modèles de Traitement du Language Naturel (Natural Language Processing).",
     "findNamedEntitiesTooltip": "Les textes doivent être extraits avant de chercher les entités nommées",
@@ -516,10 +516,10 @@
     "pipelineOptions": {
       "email": "Trouver les adresses e-mail",
       "corenlp": "Trouver des noms de personnes, d'organisations et de localités avec CoreNLP",
-      "opennlp": "Trouver des noms de personnes, d'organisations et de lieux avec CoreNLP",
-      "mitie": "Trouver des noms de personnes, d'organisations et de lieux avec MITIE",
-      "ixapipe": "Trouver des noms de personnes, d'organisations et de lieux avec IXA Pipe",
-      "gatenlp": "Trouver des noms de personnes, d'organisations et de lieux avec GateNLP"
+      "opennlp": "Trouver les personnes, les organisations et les lieux avec CoreNLP",
+      "mitie": "Trouver les personnes, les organisations et les lieux avec MITIE",
+      "ixapipe": "Trouver les personnes, les organisations et les lieux avec IXA Pipe",
+      "gatenlp": "Trouver les personnes, les organisations et les lieux avec GateNLP"
     },
     "default": "Par défaut - Meilleure probabilité de fonctionner pour tous les documents",
     "syncModelsLabel": "Voulez-vous travailler hors ligne ?",
@@ -726,26 +726,26 @@
   "batchDownload": {
     "title": "Téléchargements en lot",
     "empty": "Vous n'avez pas encore lancé de tâches de téléchargement.",
-    "noFile": "The archive has expired.",
+    "noFile": "L'archive a expiré.",
     "created": "Votre téléchargement est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "inProgress": "Voir tous les téléchargements en attente",
     "relaunch": {
-      "succeed": "Your download is being prepared",
-      "succeedBody": "The download should be available soon.",
-      "failed": "Unable to relaunch",
-      "failedBody": "Something happend when trying to relaunch this batch download."
+      "succeed": "Votre téléchargement est en cours de préparation",
+      "succeedBody": "Le téléchargement sera bientôt disponible.",
+      "failed": "Impossible de relancer",
+      "failedBody": "Une erreur est survenue pendant que la recherche en lot était relancée."
     },
     "delete": {
-      "failed": "Unable to delete",
-      "failedBody": "Something happend when trying to delete this batch download."
+      "failed": "Impossible de supprimer",
+      "failedBody": "Une erreur est survenue pendant que la recherche en lot était supprimée."
     },
-    "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
+    "limitations": "Les téléchargements en lots sont limités à %{maxNbFiles} fichiers et %{maxSize}B."
   },
   "batchDownloadActions": {
-    "relaunch": "Relaunch",
-    "search": "See search results",
-    "delete": "Delete"
+    "relaunch": "Relancer",
+    "search": "Voir les résultats de la recherche",
+    "delete": "Supprimer"
   },
   "tasksList": {
     "empty": "Vous n'avez pas encore lancé de tâches.",
@@ -759,12 +759,12 @@
   "inlineDirectoryPicker": {
     "header": {
       "browseBtn": {
-        "browse": "Browse",
-        "close": "Close"
+        "browse": "Parcourir",
+        "close": "Fermer"
       }
     },
     "browser": {
-      "empty": "No sub-folders"
+      "empty": "Pas de sous-dossiers"
     }
   },
   "widget": {
@@ -798,7 +798,7 @@
       "people": "0 personne | une personne | <strong>{count}</strong> personnes",
       "locations": "0 lieu | un lieu | <strong>{count}</strong> lieux",
       "organizations": "0 organisation | une organisation | <strong>{count}</strong>organisations",
-      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
+      "emails": "0 adresse e-mail | une adresse e-mail | <strong>{count}</strong> adresses e-mail"
     },
     "treemap": {
       "seeDocuments": "Voir les documents dans Datashare",
