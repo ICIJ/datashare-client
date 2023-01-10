@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'test' && window) {
     // Everything is fine
     .then(() => datashare.mount())
     // Redirect to the error page
-    .catch(error => {
+    .catch((error) => {
       const vm = datashare.mount()
       // Unauthenticated error during initialization:
       // redirect the user to the login page

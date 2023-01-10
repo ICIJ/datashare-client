@@ -34,21 +34,25 @@ describe('ServerSettings.vue', () => {
 
   it('should load the settings on component creation', () => {
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/settings')
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/settings')
+      })
+    )
   })
 
   it('should submit the settings modifications', () => {
     wrapper.vm.onSubmit()
 
     expect(mockAxios.request).toBeCalledTimes(2)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/settings'),
-      method: 'PATCH',
-      data: { data: {} },
-      headers: { 'Content-Type': 'application/json' }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/settings'),
+        method: 'PATCH',
+        data: { data: {} },
+        headers: { 'Content-Type': 'application/json' }
+      })
+    )
   })
 
   it('should restore master settings if submit fails', async () => {

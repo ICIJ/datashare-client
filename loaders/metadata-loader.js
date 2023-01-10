@@ -7,7 +7,7 @@ const xss = require('xss')
 const { basename, extname, relative } = require('path')
 const { marked } = require('marked')
 
-function slugger (value) {
+function slugger(value) {
   return value
     .toLowerCase()
     .trim()
@@ -15,7 +15,7 @@ function slugger (value) {
     .replace(/\s/g, '-')
 }
 
-module.exports = function metadataLoader (source) {
+module.exports = function metadataLoader(source) {
   this && this.cacheable && this.cacheable()
 
   const resourcePath = relative('./public/docs/', this.resourcePath)
@@ -31,7 +31,7 @@ module.exports = function metadataLoader (source) {
     Object.assign(metadata, {
       title,
       ...attributes,
-      headings: filter(headings, h => h.depth > 1).map(h => {
+      headings: filter(headings, (h) => h.depth > 1).map((h) => {
         const text = xss(marked.parse(h.text), { stripIgnoreTag: true, whiteList: {} })
         const id = slugger(text)
         return { text, id }

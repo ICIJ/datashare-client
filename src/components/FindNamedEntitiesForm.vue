@@ -1,6 +1,6 @@
 <template>
   <v-wait for="load ner pipelines">
-    <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-5 text-light" />
+    <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
     <form class="find-named-entities-form position-relative" @submit.prevent="submitFindNamedEntities">
       <fa icon="tags" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
@@ -12,14 +12,14 @@
             {{ $t('indexing.findNamedEntitiesSubheader') }}
           </p>
           <fieldset class="list-group">
-            <div class="list-group-item bg-transparent border-light"
-                            v-for="(translationReference, pip) in pipelines"
-                            :key="pip">
-              <b-form-radio name="pipeline"
-                            v-model="pipeline"
-                            :value="pip">
+            <div
+              v-for="(translationReference, pip) in pipelines"
+              :key="pip"
+              class="list-group-item bg-transparent border-light"
+            >
+              <b-form-radio v-model="pipeline" name="pipeline" :value="pip">
                 {{ $t(`${translationReference}`) }}
-                <div class="font-italic small" v-if="pip === 'corenlp'">
+                <div v-if="pip === 'corenlp'" class="font-italic small">
                   {{ $t('indexing.default') }}
                 </div>
               </b-form-radio>
@@ -27,7 +27,7 @@
           </fieldset>
         </div>
       </div>
-      <div class="find-named-entities-form__offline form-group" v-if="$config.is('manageDocuments')">
+      <div v-if="$config.is('manageDocuments')" class="find-named-entities-form__offline form-group">
         <b-form-checkbox v-model="offline" switch>
           <div class="font-weight-bold ml-1">
             {{ $t('indexing.syncModelsLabel') }}
@@ -64,6 +64,10 @@ const { mapFields } = createHelpers({
  */
 export default {
   name: 'FindNamedEntitiesForm',
+  filters: {
+    lowerCase,
+    startCase
+  },
   mixins: [utils],
   props: {
     /**
@@ -74,24 +78,24 @@ export default {
       default: noop
     }
   },
-  filters: {
-    lowerCase,
-    startCase
-  },
-  data () {
+  data() {
     return {
       pipelines: [],
       disabled: false
     }
   },
   computed: {
-    ...mapFields([
-      'form.offline',
-      'form.pipeline'
-    ])
+    ...mapFields(['form.offline', 'form.pipeline'])
+  },
+  async mounted() {
+    this.$wait.start('load ner pipelines')
+    let pipelines = await this.$store.dispatch('indexing/getNerPipelines')
+    pipelines = map(pipelines, lowerCase)
+    this.$set(this, 'pipelines', this.handlePipelinesTranslation(pipelines))
+    this.$wait.end('load ner pipelines')
   },
   methods: {
-    async submitFindNamedEntities () {
+    async submitFindNamedEntities() {
       this.disabled = true
       try {
         await this.$store.dispatch('indexing/submitFindNamedEntities')
@@ -100,37 +104,29 @@ export default {
         this.finally()
       }
     },
-    handlePipelinesTranslation (pipelines) {
+    handlePipelinesTranslation(pipelines) {
       const translationsMap = {}
       pipelines.forEach((pip) => {
         translationsMap[pip] = `indexing.pipelineOptions.${pip}`
       })
       return translationsMap
     }
-  },
-  async mounted () {
-    this.$wait.start('load ner pipelines')
-    let pipelines = await this.$store.dispatch('indexing/getNerPipelines')
-    pipelines = map(pipelines, lowerCase)
-    this.$set(this, 'pipelines', this.handlePipelinesTranslation(pipelines))
-    this.$wait.end('load ner pipelines')
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
-  .find-named-entities-form {
-    background: darken($primary, 20);
-    color: white;
+.find-named-entities-form {
+  background: darken($primary, 20);
+  color: white;
 
-    &__header h4 {
-      font-size: 1.2em;
-      font-weight: bolder;
-    }
-
-    &__subheader {
-      font-style: italic;
-    }
+  &__header h4 {
+    font-size: 1.2em;
+    font-weight: bolder;
   }
+
+  &__subheader {
+    font-style: italic;
+  }
+}
 </style>

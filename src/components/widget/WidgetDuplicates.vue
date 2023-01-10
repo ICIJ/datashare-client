@@ -1,13 +1,20 @@
 <template>
   <div class="widget widget--duplicates">
-    <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
-      <h4 v-html="widget.title" class="m-0"></h4>
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
+      <h4 class="m-0" v-html="widget.title"></h4>
     </div>
     <div class="p-4">
       <v-wait for="duplicate-counters" transition="fade">
-        <fa icon="circle-notch" spin slot="waiting" size="2x" class="m-auto d-block"></fa>
+        <fa slot="waiting" icon="circle-notch" spin size="2x" class="m-auto d-block"></fa>
         <div>
-          <stacked-bar-chart :data="data" :x-axis-tick-format="humanNumber" label-above :bar-colors="colors" :keys="keys" :groups="groups"></stacked-bar-chart>
+          <stacked-bar-chart
+            :data="data"
+            :x-axis-tick-format="humanNumber"
+            label-above
+            :bar-colors="colors"
+            :keys="keys"
+            :groups="groups"
+          ></stacked-bar-chart>
           <p class="small text-muted mb-0">
             {{ $t('widget.duplicates.duplicated') }}
           </p>
@@ -37,7 +44,7 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       data: [],
       colors: ['#193D87', '#6081c4'],
@@ -45,10 +52,10 @@ export default {
       groups: ['Duplicates*', 'Documents']
     }
   },
-  async created () {
+  async created() {
     await this.loadData()
   },
-  mounted () {
+  mounted() {
     this.$store.subscribe(async ({ type }) => {
       // The project changed
       if (type === 'insights/project') {
@@ -57,17 +64,17 @@ export default {
     })
   },
   methods: {
-    async count (query) {
+    async count(query) {
       const index = this.$store.state.insights.project
       const body = { track_total_hits: true, query: { query_string: { query } } }
       const res = await elasticsearch.search({ index, body, size: 0 })
       return get(res, 'hits.total.value', 0)
     },
-    countTotal () {
+    countTotal() {
       const q = 'type:Document'
       return this.count(q)
     },
-    countDuplicates () {
+    countDuplicates() {
       const q = 'type:Duplicate'
       return this.count(q)
     },
@@ -82,11 +89,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .widget--duplicates {
-    width: 100%;
+.widget--duplicates {
+  width: 100%;
 
-    &:deep(.stacked-bar-chart__groups__item__label) {
-      display: none;
-    }
+  &:deep(.stacked-bar-chart__groups__item__label) {
+    display: none;
   }
+}
 </style>

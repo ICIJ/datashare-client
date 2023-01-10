@@ -1,32 +1,32 @@
-function letTextContent (content) {
+function letTextContent(content) {
   return new TextContent(content)
 }
 class TextContent {
-  constructor (content) {
+  constructor(content) {
     this.content = content ?? ''
     this.offset = 0
     this.limit = this.content.length
     this.maxOffset = this.content.length
   }
-  withContent (content) {
+  withContent(content) {
     this.content = content
     this.limit = this.content.length
     this.maxOffset = content.length
     return this
   }
-  withOffset (offset) {
+  withOffset(offset) {
     this.offset = offset
     return this
   }
-  withLimit (limit) {
+  withLimit(limit) {
     this.limit = limit
     return this
   }
-  withMaxOffset (maxOffset) {
+  withMaxOffset(maxOffset) {
     this.maxOffset = maxOffset
     return this
   }
-  getResponse () {
+  getResponse() {
     return { content: this.content, limit: this.limit, offset: this.offset, maxOffset: this.maxOffset }
   }
 }

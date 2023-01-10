@@ -3,56 +3,64 @@
     <div class="mt-4 container">
       <div class="mb-3 d-flex">
         <b-btn-group class="indexing__actions mr-2">
-          <b-btn class="indexing__actions__stop-pending-tasks"
-                 variant="outline-primary"
-                 type="b-btn"
-                 :disabled="!hasPendingTasks"
-                 @click="stopPendingTasks">
+          <b-btn
+            class="indexing__actions__stop-pending-tasks"
+            variant="outline-primary"
+            type="b-btn"
+            :disabled="!hasPendingTasks"
+            @click="stopPendingTasks"
+          >
             <fa icon="hand-paper" class="mr-1" />
             {{ $t('indexing.stopPendingTasks') }}
           </b-btn>
-          <b-btn class="indexing__actions__delete-done-tasks"
-                 variant="outline-primary"
-                 :disabled="!hasDoneTasks"
-                 @click="deleteDoneTasks">
+          <b-btn
+            class="indexing__actions__delete-done-tasks"
+            variant="outline-primary"
+            :disabled="!hasDoneTasks"
+            @click="deleteDoneTasks"
+          >
             <fa icon="trash-alt" class="mr-1" />
             {{ $t('indexing.deleteDoneTasks') }}
           </b-btn>
         </b-btn-group>
 
         <div class="ml-auto">
-          <b-btn variant="primary"
-                 class="mr-2 indexing__actions__extract"
-                 v-b-modal:[extractingFormId]>
+          <b-btn v-b-modal:[extractingFormId] variant="primary" class="mr-2 indexing__actions__extract">
             <fa icon="search-plus" class="mr-2" />
             {{ $t('indexing.extractText') }}
           </b-btn>
-          <b-btn variant="primary"
-                 class="indexing__actions__find-named-entites mr-2"
-                 :disabled="!canOpenFindNamedEntitiesForm"
-                 :title="findNamedEntitiesTooltip"
-                 v-b-tooltip
-                 v-b-modal:[findNamedEntitiesFormId]>
+          <b-btn
+            v-b-tooltip
+            v-b-modal:[findNamedEntitiesFormId]
+            variant="primary"
+            class="indexing__actions__find-named-entites mr-2"
+            :disabled="!canOpenFindNamedEntitiesForm"
+            :title="findNamedEntitiesTooltip"
+          >
             <fa icon="user-tag" class="mr-2" />
             {{ $t('indexing.findNamedEntities') }}
           </b-btn>
 
-          <b-modal :id="extractingFormId"
-                   body-bg-variant="darker"
-                   hide-footer
-                   modal-class="indexing__form-modal extracting__form"
-                   size="md">
+          <b-modal
+            :id="extractingFormId"
+            body-bg-variant="darker"
+            hide-footer
+            modal-class="indexing__form-modal extracting__form"
+            size="md"
+          >
             <template #modal-title>
               <fa icon="search-plus" class="mr-1" />
               {{ $t('indexing.extractText') }}
             </template>
             <extracting-form id="extracting-form" :finally="closeExtractingForm" />
           </b-modal>
-          <b-modal :id="findNamedEntitiesFormId"
-                   body-bg-variant="darker"
-                   hide-footer
-                   modal-class="indexing__form-modal find-named-entities__form"
-                   size="md">
+          <b-modal
+            :id="findNamedEntitiesFormId"
+            body-bg-variant="darker"
+            hide-footer
+            modal-class="indexing__form-modal find-named-entities__form"
+            size="md"
+          >
             <template #modal-title>
               <fa icon="user-tag" class="mr-1" />
               {{ $t('indexing.findNamedEntities') }}
@@ -86,59 +94,59 @@ import settings from '@/utils/settings'
 import { getOS } from '@/utils/utils'
 
 export default {
-  name: 'indexing',
+  name: 'Indexing',
   components: {
     ExtractingForm,
     FindNamedEntitiesForm,
     TasksList
   },
   mixins: [polling],
-  data () {
+  data() {
     return {
       count: 0
     }
   },
   computed: {
     ...mapState('indexing', ['tasks']),
-    hasIndexedDocuments () {
+    hasIndexedDocuments() {
       return this.count > 0
     },
-    hasPendingTasks () {
+    hasPendingTasks() {
       return this.pendingTasks.length !== 0
     },
-    hasDoneTasks () {
+    hasDoneTasks() {
       return this.tasks.length - this.pendingTasks.length > 0
     },
-    pendingTasks () {
+    pendingTasks() {
       return filter(this.tasks, { state: 'RUNNING' })
     },
-    sortedTasks () {
+    sortedTasks() {
       // Move running tasks on top
       const states = ['RUNNING']
       return sortBy(this.tasks, ({ state }) => -states.indexOf(state))
     },
-    extractingFormId () {
+    extractingFormId() {
       return uniqueId('extracting-form-')
     },
-    canOpenFindNamedEntitiesForm () {
+    canOpenFindNamedEntitiesForm() {
       return this.hasDoneTasks || this.hasIndexedDocuments
     },
-    findNamedEntitiesFormId () {
+    findNamedEntitiesFormId() {
       return uniqueId('find-named-entities-form-')
     },
-    findNamedEntitiesTooltip () {
+    findNamedEntitiesTooltip() {
       return !this.canOpenFindNamedEntitiesForm ? this.$t('indexing.findNamedEntitiesTooltip') : ''
     },
-    howToLink () {
+    howToLink() {
       const os = getOS()
       const fallback = settings.documentationLinks.indexing.default
       return settings.documentationLinks.indexing[os] || fallback
     },
-    indices () {
+    indices() {
       return this.$store.state.search.indices
     }
   },
-  async mounted () {
+  async mounted() {
     this.$wait.start('load indexing tasks')
     this.count = await this.countAny()
     await this.startPollingTasks()
@@ -148,29 +156,29 @@ export default {
     this.$wait.end('load indexing tasks')
   },
   methods: {
-    async countAny () {
+    async countAny() {
       const index = this.indices.join(',')
       const preference = 'indexing'
       const { count = 0 } = await elasticsearch.count({ index, preference })
       return count
     },
-    closeExtractingForm () {
+    closeExtractingForm() {
       this.$bvModal.hide(this.extractingFormId)
       return this.startPollingTasks()
     },
-    closeFindNamedEntitiesForm () {
+    closeFindNamedEntitiesForm() {
       this.$bvModal.hide(this.findNamedEntitiesFormId)
       return this.startPollingTasks()
     },
-    async stopPendingTasks () {
+    async stopPendingTasks() {
       await this.$store.dispatch('indexing/stopPendingTasks')
       await this.$store.dispatch('indexing/getTasks')
     },
-    async deleteDoneTasks () {
+    async deleteDoneTasks() {
       await this.$store.dispatch('indexing/deleteDoneTasks')
       await this.$store.dispatch('indexing/getTasks')
     },
-    startPollingTasks () {
+    startPollingTasks() {
       const fn = this.getTasks
       const timeout = () => random(1000, 4000)
       // Register the `getTasks` for later
@@ -178,7 +186,7 @@ export default {
       // Execute the `getTasks` method immediatly
       return fn()
     },
-    async getTasks () {
+    async getTasks() {
       await this.$store.dispatch('indexing/getTasks')
       // Continue to poll task if they are pending ones
       return this.hasPendingTasks
@@ -188,9 +196,9 @@ export default {
 </script>
 
 <style lang="scss">
-  .indexing {
-    &__table td {
-      vertical-align: middle;
-    }
+.indexing {
+  &__table td {
+    vertical-align: middle;
   }
+}
 </style>

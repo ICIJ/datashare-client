@@ -5,7 +5,7 @@ global.console = Object.assign(global.console, {
   info: jest.fn()
 })
 
-window.matchMedia = jest.fn().mockImplementation(query => {
+window.matchMedia = jest.fn().mockImplementation((query) => {
   return {
     matches: false,
     media: query,

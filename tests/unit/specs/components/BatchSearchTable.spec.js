@@ -10,25 +10,28 @@ import { Core } from '@/core'
 import BatchSearchTable from '@/components/BatchSearchTable'
 
 const batchSearchMock = {
-  items: [{
-    uuid: '1',
-    projects: [{ name: 'project_01' }, { name: 'project_02' }],
-    name: 'name_01',
-    description: 'description_01',
-    date: '2019-01-01',
-    nbResults: 2,
-    nbQueries: 1,
-    state: 'SUCCESS'
-  }, {
-    uuid: '2',
-    projects: [{ name: 'project_02' }],
-    name: 'name_02',
-    description: 'description_02',
-    date: '2019-01-01',
-    nbResults: 3,
-    nbQueries: 2,
-    state: 'FAILURE'
-  }],
+  items: [
+    {
+      uuid: '1',
+      projects: [{ name: 'project_01' }, { name: 'project_02' }],
+      name: 'name_01',
+      description: 'description_01',
+      date: '2019-01-01',
+      nbResults: 2,
+      nbQueries: 1,
+      state: 'SUCCESS'
+    },
+    {
+      uuid: '2',
+      projects: [{ name: 'project_02' }],
+      name: 'name_02',
+      description: 'description_02',
+      date: '2019-01-01',
+      nbResults: 3,
+      nbQueries: 2,
+      state: 'FAILURE'
+    }
+  ],
   total: 2
 }
 const routerFactory = () => {
@@ -37,7 +40,8 @@ const routerFactory = () => {
       {
         name: 'batch-search',
         path: 'batch-search'
-      }, {
+      },
+      {
         name: 'batch-search.results',
         path: 'batch-search/:index/:uuid'
       }
@@ -99,7 +103,7 @@ describe('BatchSearchTable.vue', () => {
         await wrapper.setData({ perPage: 5 })
         expect(wrapper.find('.pagination.b-pagination').exists()).toBeFalsy()
       })
-      it('should display a \'No result\' message when no items', async () => {
+      it("should display a 'No result' message when no items", async () => {
         const state = { batchSearches: [] }
         const actions = { getBatchSearches: jest.fn() }
         const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
@@ -248,7 +252,7 @@ describe('BatchSearchTable.vue', () => {
         await flushPromises()
 
         expect(wrapper.vm.search).toBe('test')
-        expect(wrapper.vm.field).toBe('name')
+        expect(wrapper.vm.fieldValue).toBe('name')
         expect(wrapper.vm.page).toEqual(2)
         expect(wrapper.vm.order).toEqual('asc')
         expect(wrapper.vm.sort).toEqual('batch_results')
@@ -275,7 +279,7 @@ describe('BatchSearchTable.vue', () => {
         await flushPromises()
 
         expect(wrapper.vm.search).toBe('')
-        expect(wrapper.vm.field).toBe('all')
+        expect(wrapper.vm.fieldValue).toBe('all')
         expect(wrapper.vm.page).toEqual(1)
         expect(wrapper.vm.order).toEqual('desc')
         expect(wrapper.vm.sort).toEqual('batch_date')

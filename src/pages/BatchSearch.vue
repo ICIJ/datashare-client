@@ -4,14 +4,14 @@
       <fa slot="waiting" class="d-flex mx-auto mt-5" icon="circle-notch" size="2x" spin />
       <template v-if="hasBatchSearch">
         <div class="d-flex flex-wrap align-items-center">
-          <batch-search-filter-query class="batch-search__search-bar my-1"/>
-          <batch-search-clear-filters class="batch-search__clear-filter-btn m-1"/>
+          <batch-search-filter-query class="batch-search__search-bar my-1" />
+          <batch-search-clear-filters class="batch-search__clear-filter-btn m-1" />
         </div>
-        <batch-search-table/>
+        <batch-search-table />
       </template>
       <template v-else>
-        <div class="batch-search__none  text-center">
-          <div class="batch-search__none__message b-table-empty-row" v-html="noBatchSearch"/>
+        <div class="batch-search__none text-center">
+          <div class="batch-search__none__message b-table-empty-row" v-html="noBatchSearch" />
         </div>
       </template>
     </v-wait>
@@ -28,31 +28,31 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'BatchSearches',
-  mixins: [polling, utils],
   components: {
     BatchSearchFilterQuery,
     BatchSearchClearFilters,
     BatchSearchTable
   },
-  async mounted () {
+  mixins: [polling, utils],
+  computed: {
+    ...mapState('batchSearch', ['hasBatchSearch']),
+    howToLink() {
+      return '#/docs/all-batch-search-documents'
+    },
+    noBatchSearch() {
+      return this.$t('batchSearch.empty', { howToLink: this.howToLink })
+    }
+  },
+  async mounted() {
     if (!this.hasBatchSearch) {
       await this.getBatchSearch()
     }
   },
   methods: {
-    async getBatchSearch () {
+    async getBatchSearch() {
       this.$wait.start('load haveBatchSearch')
       await this.$store.dispatch('batchSearch/hasBatchSearch')
       this.$wait.end('load haveBatchSearch')
-    }
-  },
-  computed: {
-    ...mapState('batchSearch', ['hasBatchSearch']),
-    howToLink () {
-      return '#/docs/all-batch-search-documents'
-    },
-    noBatchSearch () {
-      return this.$t('batchSearch.empty', { howToLink: this.howToLink })
     }
   }
 }
@@ -60,7 +60,7 @@ export default {
 <style lang="scss" scoped>
 .batch-search__none__message {
   padding: 0.75em;
-  border:1px solid #dee2e6;
+  border: 1px solid #dee2e6;
   background-color: white;
 }
 </style>

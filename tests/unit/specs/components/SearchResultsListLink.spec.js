@@ -108,6 +108,10 @@ describe('SearchResultsListLink.vue', () => {
         })
       }
     })
-    expect(wrapper.find('.search-results-list-link .search-results-list-link__basename .document-sliced-name__item__single').text()).toBe(documentName)
+    expect(
+      wrapper
+        .find('.search-results-list-link .search-results-list-link__basename .document-sliced-name__item__single')
+        .text()
+    ).toBe(documentName)
   })
 })

@@ -12,7 +12,8 @@
     "test:unit": "vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=2",
     "test:unit:watch": "vue-cli-service test:unit --testPathPattern=/unit/ --watch",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
+    "lint": "eslint --ext .js,.vue .",
+    "lint:fix": "yarn lint --fix",
     "test": "yarn test:unit && yarn test:e2e",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:components && yarn doc:components:toc && yarn doc:widgets",
     "doc:api": "npm_config_yes=true npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'public/docs/client/Client-›-API.md'",
@@ -82,8 +83,10 @@
     "babel-plugin-transform-require-context": "^0.1.1",
     "canvas": "^2.9.3",
     "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "^7.13.0",
@@ -105,35 +108,6 @@
     "vue-template-compiler": "2.7.10",
     "whatwg-fetch": "^3.5.0"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard"
-    ],
-    "rules": {
-      "import/no-webpack-loader-syntax": "off",
-      "no-useless-escape": "off",
-      "lines-between-class-members": "off",
-      "template-curly-spacing": "off",
-      "vue/custom-event-name-casing": "off",
-      "indent": [
-        "error",
-        2,
-        {
-          "ignoredNodes": [
-            "TemplateLiteral"
-          ]
-        }
-      ]
-    },
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
@@ -153,10 +127,10 @@
   },
   "lint-staged": {
     "*.js": [
-      "vue-cli-service lint"
+    "eslint --ext .js,.vue src"
     ],
     "*.vue": [
-      "vue-cli-service lint"
+    "eslint --ext .js,.vue src"
     ]
   },
   "majestic": {

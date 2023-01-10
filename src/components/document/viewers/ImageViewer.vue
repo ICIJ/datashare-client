@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style>
-  .image-viewer img {
-    max-width: 100%;
-  }
+.image-viewer img {
+  max-width: 100%;
+}
 </style>

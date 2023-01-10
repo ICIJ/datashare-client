@@ -19,7 +19,7 @@ jest.mock('@/api/resources/Auth', () => {
 FilterRecommendedBy.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterRecommendedBy.vue', () => {
-  const flushPromises = () => new Promise(resolve => setImmediate(resolve))
+  const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
   let i18n, localVue, router, store, wait, wrapper, api, mockAxios
   const project = toLower('FilterRecommendedBy')
 
@@ -74,13 +74,15 @@ describe('FilterRecommendedBy.vue', () => {
 
   it('should load users who recommended documents in this project', () => {
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/recommendations'),
-      method: 'GET',
-      params: {
-        project: project
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: {
+          project: project
+        }
+      })
+    )
     expect(wrapper.vm.recommendedByUsers).toEqual([
       { user: 'user_00', count: 2 },
       { user: 'user_01', count: 1 },
@@ -107,13 +109,15 @@ describe('FilterRecommendedBy.vue', () => {
     mockAxios.request.mockClear()
     await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
-      method: 'GET',
-      params: {
-        userids: 'user_01,user_02'
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
+        method: 'GET',
+        params: {
+          userids: 'user_01,user_02'
+        }
+      })
+    )
     expect(store.state.recommended.documents).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeFalsy()

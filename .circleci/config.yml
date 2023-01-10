@@ -5,6 +5,9 @@ workflows:
   test_and_publish_doc:
     jobs:
       - build
+      - lint:
+          requires: 
+            - build
       - test:
           requires:
             - build
@@ -48,6 +51,19 @@ jobs:
           key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/datashare-client
+  
+  # This job will run linters on the vue and js code
+  lint:
+    docker:
+      - image: cimg/node:16.16.0
+    working_directory: ~/datashare-client
+    steps:
+      - restore_cache:
+          name: Restore app bundle (repo + dependencies) from the `build` job
+          key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Run linter
+          command: yarn lint
 
   # This job will run unit tests for the client
   test:

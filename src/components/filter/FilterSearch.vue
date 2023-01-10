@@ -1,17 +1,19 @@
 <template>
   <div class="filter-search">
     <div class="card">
-      <component class="border-0"
-                 ref="filterComponent"
-                 :is="filter.component"
-                 :key="filter.name"
-                 :collapsed-if-no-values="false"
-                 :dark="false"
-                 :model-query="modelQuery"
-                 @add-filter-values="onAddedFilterValues"
-                 hide-header
-                 hide-show-more
-                 v-bind="{ filter }"></component>
+      <component
+        :is="filter.component"
+        ref="filterComponent"
+        :key="filter.name"
+        class="border-0"
+        :collapsed-if-no-values="false"
+        :dark="false"
+        :model-query="modelQuery"
+        hide-header
+        hide-show-more
+        v-bind="{ filter }"
+        @add-filter-values="onAddedFilterValues"
+      ></component>
     </div>
   </div>
 </template>
@@ -49,7 +51,7 @@ export default {
     }
   },
   methods: {
-    onAddedFilterValues (component) {
+    onAddedFilterValues(component) {
       /**
        * A value is selected for a specific component
        */
@@ -60,17 +62,15 @@ export default {
 </script>
 
 <style lang="scss">
-  .filter-search {
+.filter-search {
+  .filter {
+    &__items {
+      max-height: calc(100vh - 300px);
 
-    .filter {
-
-      &__items {
-        max-height: calc(100vh - 300px);
-
-        &__search {
-          margin-top: 0.5rem;
-        }
+      &__search {
+        margin-top: 0.5rem;
       }
     }
   }
+}
 </style>

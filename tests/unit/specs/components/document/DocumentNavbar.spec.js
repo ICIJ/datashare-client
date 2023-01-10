@@ -54,19 +54,23 @@ describe('DocumentNavbar.vue', () => {
       await wrapper.vm.toggleAsRecommended()
 
       expect(mockAxios.request).toBeCalledTimes(2)
-      expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/recommend`),
-        method: 'POST',
-        data: ['doc_01']
-      }))
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/recommend`),
+          method: 'POST',
+          data: ['doc_01']
+        })
+      )
       expect(wrapper.vm.isRecommended).toBeTruthy()
-      expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: index
-        }
-      }))
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/recommendations'),
+          method: 'GET',
+          params: {
+            project: index
+          }
+        })
+      )
       expect(store.state.recommended.byUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
     })
 
@@ -77,19 +81,23 @@ describe('DocumentNavbar.vue', () => {
       await wrapper.vm.toggleAsRecommended()
 
       expect(mockAxios.request).toBeCalledTimes(2)
-      expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unrecommend`),
-        method: 'POST',
-        data: ['doc_01']
-      }))
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unrecommend`),
+          method: 'POST',
+          data: ['doc_01']
+        })
+      )
       expect(wrapper.vm.isRecommended).toBeFalsy()
-      expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: index
-        }
-      }))
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/recommendations'),
+          method: 'GET',
+          params: {
+            project: index
+          }
+        })
+      )
       expect(store.state.recommended.byUsers).toEqual([])
     })
   })

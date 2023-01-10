@@ -5,7 +5,7 @@ import WidgetDocumentsByCreationDate from './WidgetDocumentsByCreationDate'
  * Widget to display number of files by creation date by path
  */
 class WidgetDocumentsByCreationDateByPath extends WidgetDocumentsByCreationDate {
-  get component () {
+  get component() {
     return Component
   }
 }

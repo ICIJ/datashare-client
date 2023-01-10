@@ -67,13 +67,9 @@ describe('StarredStore', () => {
       { index, id: 12 },
       { index, id: 42 }
     ])
-    store.commit('starred/removeDocuments', [
-      { index, id: 42 }
-    ])
+    store.commit('starred/removeDocuments', [{ index, id: 42 }])
 
-    expect(store.state.starred.documents).toEqual([
-      { index, id: 12 }
-    ])
+    expect(store.state.starred.documents).toEqual([{ index, id: 12 }])
   })
 
   it('should push a documentId from the list of the starredDocuments', () => {
@@ -153,11 +149,8 @@ describe('StarredStore', () => {
       { index, id: 'doc_03' }
     ])
 
-    await store.dispatch('starred/unstarDocuments', [
-      { index, id: 'doc_01' }])
+    await store.dispatch('starred/unstarDocuments', [{ index, id: 'doc_01' }])
 
-    expect(store.state.starred.documents).toEqual([
-      { index, id: 'doc_03' }
-    ])
+    expect(store.state.starred.documents).toEqual([{ index, id: 'doc_03' }])
   })
 })

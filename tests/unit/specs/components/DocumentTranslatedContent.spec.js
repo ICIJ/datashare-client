@@ -14,7 +14,7 @@ describe('DocumentTranslatedContent.vue', () => {
   let i18n, localVue, store, api
   const { index, es } = esConnectionHelper.build()
 
-  function mockedDocumentContentFactory (id, content = '') {
+  function mockedDocumentContentFactory(id, content = '') {
     // Index the document
     const contentSlice = letTextContent().withContent(content)
     const indexedDocument = new IndexedDocument(id, index).withContent(content)
@@ -23,7 +23,7 @@ describe('DocumentTranslatedContent.vue', () => {
       indexedDocument,
       content,
       contentSlice,
-      async commit () {
+      async commit() {
         // Mock the `getDocumentSlice` method
         const getDocumentSlideMock = async (project, documentId, offset, limit, targetLanguage) => {
           // Get the translation (if any)
@@ -78,7 +78,7 @@ describe('DocumentTranslatedContent.vue', () => {
     expect(wrapper.find('.document-content__body').text()).toBe('Premier')
   })
 
-  it('shouldn\'t show italian translation', async () => {
+  it("shouldn't show italian translation", async () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-italian', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('Primo', 'FRENCH', 'ITALIAN')
     const { document } = await mocked.commit()

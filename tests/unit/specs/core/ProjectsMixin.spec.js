@@ -107,8 +107,10 @@ describe('ProjectsMixin', () => {
     core.config.set('defaultProject', defaultProject)
     core.createDefaultProject()
 
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/index/${defaultProject}`)
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl(`/api/index/${defaultProject}`)
+      })
+    )
   })
 })

@@ -5,37 +5,40 @@
         <span class="flex-grow-1 my-auto">
           {{ $t('batchSearchResultsFilters.queries.heading') }}
         </span>
-        <span class="mr-2" v-if="hasMultipleQueries">
+        <span v-if="hasMultipleQueries" class="mr-2">
           {{ $t('search.results.sort.sort') }}
         </span>
         <b-dropdown
+          v-if="hasMultipleQueries"
           class="batch-search-results-filters__queries__sort"
           toggle-class="p-0"
           right
           :text="$t(`search.results.sort.${sortField}`)"
           variant="link"
-          v-if="hasMultipleQueries">
-          <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)" :active="key === sortField">
+        >
+          <b-dropdown-item v-for="key in sortFields" :key="key" :active="key === sortField" @click="sort(key)">
             {{ $t(`search.results.sort.${key}`) }}
           </b-dropdown-item>
         </b-dropdown>
       </h6>
       <div class="batch-search-results-filters__queries__search text-dark">
         <search-form-control
+          v-model="queriesFilter"
           :placeholder="$t('batchSearchResultsFilters.filterQueries')"
-          v-model="queriesFilter"></search-form-control>
+        ></search-form-control>
       </div>
       <div class="small">
         <selectable-dropdown
           v-if="filteredQueries.length"
+          v-model="selectedQueries"
           class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
           deactivate-keys
           multiple
-          scrollerHeight="280px"
-          :height=35
-          v-model="selectedQueries"
+          scroller-height="280px"
+          :height="35"
           :eq="(item, other) => item.label === other.label"
-          :items="filteredQueries">
+          :items="filteredQueries"
+        >
           <template #item-label="{ item }">
             <div class="d-flex batch-search-results-filters__queries__dropdown__item">
               <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
@@ -48,7 +51,8 @@
               </span>
               <span
                 class="batch-search-results-filters__queries__dropdown__item__search"
-                @click.stop.prevent="executeSearch(item.label)">
+                @click.stop.prevent="executeSearch(item.label)"
+              >
                 <fa icon="search" class="text-tertiary"></fa>
               </span>
             </div>
@@ -71,6 +75,9 @@ import SearchFormControl from '@/components/SearchFormControl'
  */
 export default {
   name: 'BatchSearchResultsFilters',
+  components: {
+    SearchFormControl
+  },
   props: {
     /**
      * The batch search query keys
@@ -86,10 +93,7 @@ export default {
       type: [String, Array]
     }
   },
-  components: {
-    SearchFormControl
-  },
-  data () {
+  data() {
     return {
       queriesFilter: null,
       sortField: 'count',
@@ -97,62 +101,62 @@ export default {
     }
   },
   computed: {
-    fuse () {
+    fuse() {
       const keys = ['label']
       const options = { shouldSort: false, keys }
       return new Fuse(this.queries, options)
     },
-    queries () {
+    queries() {
       if (this.sortField === 'count') {
         return orderBy(this.queryKeys, ['count'], ['desc'])
       } else {
         return this.queryKeys
       }
     },
-    filteredQueries () {
-      return this.queriesFilter ? this.fuse.search(this.queriesFilter).map(result => result.item) : this.queries
+    filteredQueries() {
+      return this.queriesFilter ? this.fuse.search(this.queriesFilter).map((result) => result.item) : this.queries
     },
-    hasMultipleQueries () {
+    hasMultipleQueries() {
       return this.queries && this.queries.length > 1
     },
     selectedQueries: {
-      set (queries) {
+      set(queries) {
         this.$store.commit('batchSearch/selectedQueries', cloneDeep(queries))
         this.updateRoute()
       },
-      get () {
+      get() {
         return this.$store.state.batchSearch.selectedQueries
       }
     },
-    routeQuery () {
+    routeQuery() {
       return this.$route?.query ?? {}
     }
   },
-  mounted () {
-    this.readQueryFromRoute()
-  },
   watch: {
-    $route () {
+    $route() {
       this.readQueryFromRoute()
     }
   },
+  mounted() {
+    this.readQueryFromRoute()
+  },
   methods: {
-    updateRoute () {
+    updateRoute() {
       const queries = compact(map(this.selectedQueries, 'label'))
       if (!isEqual(this.routeQuery.queries || [], queries)) {
         const query = { ...this.routeQuery, queries }
         this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
       }
     },
-    executeSearch (q) {
+    executeSearch(q) {
       this.$store.commit('search/reset')
       this.$router.push({ name: 'search', query: { q, indices: this.indices.join(',') } }).catch(() => {})
     },
-    sort (queriesSort) {
+    sort(queriesSort) {
       const query = { ...this.routeQuery, queries_sort: queriesSort }
       this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
     },
-    readQueryFromRoute () {
+    readQueryFromRoute() {
       if (this.$route?.query?.queries_sort === 'default') {
         this.$set(this, 'sortField', 'default')
       } else {
@@ -160,54 +164,53 @@ export default {
       }
 
       const queries = castArray(this.$route?.query?.queries ?? [])
-      this.selectedQueries = queries.map(label => find(this.queries, { label }))
+      this.selectedQueries = queries.map((label) => find(this.queries, { label }))
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .batch-search-results-filters {
-    max-width: 90vw;
-    width: 300px;
+.batch-search-results-filters {
+  max-width: 90vw;
+  width: 300px;
 
-    &__queries {
-      &__search {
-        background-color: $card-cap-bg;
-        padding: $card-spacer-y $card-spacer-x;
+  &__queries {
+    &__search {
+      background-color: $card-cap-bg;
+      padding: $card-spacer-y $card-spacer-x;
+    }
+
+    &__sort {
+      z-index: 1001;
+
+      &:deep(.btn.dropdown-toggle) {
+        color: white;
+        text-decoration: none;
       }
+    }
 
-      &__sort {
-        z-index: 1001;
+    &__dropdown {
+      border-radius: 0;
+      max-height: 280px;
+      overflow: auto;
 
-        &:deep(.btn.dropdown-toggle) {
-          color: white;
-          text-decoration: none;
+      &__item {
+        &__search:not([aria-describedby]) {
+          display: none;
         }
-      }
 
-      &__dropdown {
-        border-radius: 0;
-        max-height: 280px;
-        overflow: auto;
+        &:hover .batch-search-results-filters__queries__dropdown__item__search {
+          color: inherit;
+          cursor: pointer;
+          display: block;
+        }
 
-        &__item {
-
-          &__search:not([aria-describedby]) {
-            display: none;
-          }
-
-          &:hover .batch-search-results-filters__queries__dropdown__item__search {
-            color: inherit;
-            cursor: pointer;
-            display: block;
-          }
-
-          &:hover .batch-search-results-filters__queries__dropdown__item__count {
-            display: none;
-          }
+        &:hover .batch-search-results-filters__queries__dropdown__item__count {
+          display: none;
         }
       }
     }
   }
+}
 </style>

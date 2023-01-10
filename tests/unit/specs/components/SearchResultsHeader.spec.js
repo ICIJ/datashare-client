@@ -52,9 +52,9 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   it('should display an applied filters component on top position', async () => {
-    await letData(es).have(
-      new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(3)
-    ).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(3))
+      .commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     wrapper.setProps({ position: 'top' })
@@ -63,9 +63,9 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   it('should not display an applied filters component on bottom position', async () => {
-    await letData(es).have(
-      new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(3)
-    ).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(3))
+      .commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     await wrapper.setProps({ position: 'bottom' })
@@ -122,25 +122,27 @@ describe('SearchResultsHeader.vue', () => {
 
     await wrapper.vm.batchDownload()
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/batchDownload'),
-      method: 'POST',
-      data: {
-        options: {
-          projectIds: [index, anotherIndex],
-          uri: expect.any(String),
-          query: {
-            bool: {
-              must: [
-                { match_all: {} },
-                { bool: { should: [{ query_string: { query: 'bar' } }] } },
-                { match: { type: 'Document' } }
-              ]
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchDownload'),
+        method: 'POST',
+        data: {
+          options: {
+            projectIds: [index, anotherIndex],
+            uri: expect.any(String),
+            query: {
+              bool: {
+                must: [
+                  { match_all: {} },
+                  { bool: { should: [{ query_string: { query: 'bar' } }] } },
+                  { match: { type: 'Document' } }
+                ]
+              }
             }
           }
         }
-      }
-    }))
+      })
+    )
   })
 
   describe('firstDocument', () => {

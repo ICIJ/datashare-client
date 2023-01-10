@@ -39,13 +39,15 @@ describe('RecommendedStore', () => {
     await store.dispatch('recommended/getDocumentsRecommendedBy', ['user_01', 'user_02'])
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/recommendations`),
-      method: 'GET',
-      params: {
-        userids: 'user_01,user_02'
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl(`/api/${index}/documents/recommendations`),
+        method: 'GET',
+        params: {
+          userids: 'user_01,user_02'
+        }
+      })
+    )
     expect(store.state.recommended.documents).toEqual(['document_01', 'document_02', 'document_03'])
   })
 
@@ -69,18 +71,29 @@ describe('RecommendedStore', () => {
   })
 
   it('should return users who recommended documents from this project', async () => {
-    mockAxios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 1 }] } })
+    mockAxios.request.mockResolvedValue({
+      data: {
+        aggregates: [
+          { item: { id: 'user_01' }, count: 1 },
+          { item: { id: 'user_02' }, count: 1 }
+        ]
+      }
+    })
     mockAxios.request.mockClear()
     await store.dispatch('recommended/fetchIndicesRecommendations')
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/recommendations'),
-      method: 'GET',
-      params: { project: index }
-    }))
-    expect(store.state.recommended.byUsers)
-      .toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 1 }])
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: { project: index }
+      })
+    )
+    expect(store.state.recommended.byUsers).toEqual([
+      { user: 'user_01', count: 1 },
+      { user: 'user_02', count: 1 }
+    ])
   })
 
   it('should return the total of documents recommended for this project', async () => {
@@ -89,11 +102,13 @@ describe('RecommendedStore', () => {
     await store.dispatch('recommended/fetchIndicesRecommendations')
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/recommendations'),
-      method: 'GET',
-      params: { project: index }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: { project: index }
+      })
+    )
     expect(store.state.recommended.total).toBe(42)
   })
 })

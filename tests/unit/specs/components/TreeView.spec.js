@@ -49,8 +49,12 @@ describe('TreeView.vue', () => {
   })
 
   it('should display 2 directories', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5)).commit()
-    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
+      .commit()
     await wrapper.vm.loadData()
 
     expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
@@ -60,8 +64,12 @@ describe('TreeView.vue', () => {
 
   it('should display 3 directories including one from the tree', async () => {
     wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
-    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5)).commit()
-    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
+      .commit()
     await wrapper.vm.loadData({ clearPages: true })
 
     expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()

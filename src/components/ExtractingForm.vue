@@ -5,7 +5,7 @@
       <div class="ml-4 pl-3">
         <p class="font-weight-bold mb-0">Which folder do you want to index?</p>
         <p class="small mb-2">The entire Datashare folder will be indexed by default.</p>
-        <inline-directory-picker hide-folder-icon dark v-model="path" />
+        <inline-directory-picker v-model="path" hide-folder-icon dark />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -79,7 +79,7 @@ export default {
       default: noop
     }
   },
-  data () {
+  data() {
     return {
       disabled: false
     }
@@ -88,7 +88,7 @@ export default {
     ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language'])
   },
   methods: {
-    async submitExtract () {
+    async submitExtract() {
       this.disabled = true
       try {
         await this.$store.dispatch('indexing/submitExtract')
@@ -102,8 +102,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .extracting-form {
-    background: darken($primary, 20);
-    color: white;
-  }
+.extracting-form {
+  background: darken($primary, 20);
+  color: white;
+}
 </style>

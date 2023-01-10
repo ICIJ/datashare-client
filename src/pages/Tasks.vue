@@ -14,7 +14,7 @@
             {{ $t('batchDownload.title') }}
           </template>
         </b-tab>
-        <b-tab :active="defaultTab === 2" v-if="!isServer">
+        <b-tab v-if="!isServer" :active="defaultTab === 2">
           <template #title>
             <fa icon="search-plus" fixed-width class="mr-1" />
             {{ $t('indexing.title') }}
@@ -43,39 +43,13 @@ import PageHeader from '@/components/PageHeader'
 
 export default {
   name: 'Tasks',
-  mixins: [utils],
   components: {
     BatchSearchForm,
     PageHeader
   },
-  data () {
-    return {
-      defaultTab: null
-    }
-  },
-  computed: {
-    tab: {
-      get () {
-        const index = findIndex(this.tabRoutes, name => {
-          return this.$route.name.startsWith(name)
-        })
-        // Use the defaultTab value when the current route doesn't match with any tab
-        return index > -1 ? index : this.defaultTab
-      },
-      set (value) {
-        const name = this.tabRoutes[value]
-        // Change tab only if the route changed
-        if (name !== this.$route.name) {
-          this.$router.push({ name })
-        }
-      }
-    },
-    tabRoutes () {
-      return ['batch-search', 'batch-download', 'indexing']
-    }
-  },
-  beforeRouteEnter (to, from, next) {
-    return next(vm => {
+  mixins: [utils],
+  beforeRouteEnter(to, from, next) {
+    return next((vm) => {
       const defaultTab = vm.tabRoutes.indexOf(to.name)
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
@@ -83,6 +57,32 @@ export default {
         vm.$router.push({ name: 'batch-search' })
       }
     })
+  },
+  data() {
+    return {
+      defaultTab: null
+    }
+  },
+  computed: {
+    tab: {
+      get() {
+        const index = findIndex(this.tabRoutes, (name) => {
+          return this.$route.name.startsWith(name)
+        })
+        // Use the defaultTab value when the current route doesn't match with any tab
+        return index > -1 ? index : this.defaultTab
+      },
+      set(value) {
+        const name = this.tabRoutes[value]
+        // Change tab only if the route changed
+        if (name !== this.$route.name) {
+          this.$router.push({ name })
+        }
+      }
+    },
+    tabRoutes() {
+      return ['batch-search', 'batch-download', 'indexing']
+    }
   }
 }
 </script>

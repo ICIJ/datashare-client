@@ -104,8 +104,9 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(4)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(3).attributes('title'))
-      .toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(3).attributes('title')).toContain(
+      'Named Entities'
+    )
   })
 
   it('should NOT display the named entities tab', async () => {
@@ -115,8 +116,9 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(2).attributes('title'))
-      .not.toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(2).attributes('title')).not.toContain(
+      'Named Entities'
+    )
   })
 
   it('should call the API to add document to history', async () => {
@@ -168,7 +170,7 @@ describe('DocumentView.vue', () => {
       core.registerPipeline({
         name: temporaryPipelineName,
         category: 'document-view-tabs',
-        type (tabs, document) {
+        type(tabs, document) {
           const tab = { name: 'tmp', label: 'Temporary' }
           return [...tabs, tab]
         }

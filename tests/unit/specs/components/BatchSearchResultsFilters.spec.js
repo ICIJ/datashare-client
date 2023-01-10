@@ -13,9 +13,11 @@ describe('BatchSearchResultsFilters.vue', () => {
   const { index: anotherProject } = esConnectionHelper.build()
 
   const propsDataMultipleQueries = {
-    queryKeys: [{ label: 'query_01', count: 1 },
+    queryKeys: [
+      { label: 'query_01', count: 1 },
       { label: 'query_02', count: 3 },
-      { label: 'query_03', count: 2 }],
+      { label: 'query_03', count: 2 }
+    ],
     indices: [project, anotherProject]
   }
   const propsDataSingleQuery = { queryKeys: [{ label: 'query_04', count: 12 }], indices: project }
@@ -49,7 +51,11 @@ describe('BatchSearchResultsFilters.vue', () => {
       localVue,
       router,
       store,
-      computed: { downloadLink () { return 'mocked-download-link' } },
+      computed: {
+        downloadLink() {
+          return 'mocked-download-link'
+        }
+      },
       propsData: propsDataSingleQuery
     })
     await wrapper.vm.$nextTick()
@@ -64,7 +70,11 @@ describe('BatchSearchResultsFilters.vue', () => {
       localVue,
       router,
       store,
-      computed: { downloadLink () { return 'mocked-download-link' } },
+      computed: {
+        downloadLink() {
+          return 'mocked-download-link'
+        }
+      },
       propsData: propsDataMultipleQueries
     })
     await wrapper.vm.$nextTick()
@@ -80,7 +90,11 @@ describe('BatchSearchResultsFilters.vue', () => {
       localVue,
       router,
       store,
-      computed: { downloadLink () { return 'mocked-download-link' } },
+      computed: {
+        downloadLink() {
+          return 'mocked-download-link'
+        }
+      },
       propsData: propsDataSingleQuery
     })
     await wrapper.vm.$nextTick()
@@ -95,7 +109,11 @@ describe('BatchSearchResultsFilters.vue', () => {
       localVue,
       router,
       store,
-      computed: { downloadLink () { return 'mocked-download-link' } },
+      computed: {
+        downloadLink() {
+          return 'mocked-download-link'
+        }
+      },
       propsData: propsDataMultipleQueries
     })
     await wrapper.vm.$nextTick()
@@ -111,7 +129,11 @@ describe('BatchSearchResultsFilters.vue', () => {
         localVue,
         router,
         store,
-        computed: { downloadLink () { return 'mocked-download-link' } },
+        computed: {
+          downloadLink() {
+            return 'mocked-download-link'
+          }
+        },
         propsData: propsDataMultipleQueries
       })
       await wrapper.vm.$nextTick()
@@ -125,7 +147,11 @@ describe('BatchSearchResultsFilters.vue', () => {
         localVue,
         router,
         store,
-        computed: { downloadLink () { return 'mocked-download-link' } },
+        computed: {
+          downloadLink() {
+            return 'mocked-download-link'
+          }
+        },
         propsData: propsDataMultipleQueries
       })
       await wrapper.vm.$nextTick()
@@ -133,7 +159,10 @@ describe('BatchSearchResultsFilters.vue', () => {
       wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
 
       expect(wrapper.vm.$router.push).toBeCalled()
-      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'search', query: { q: 'query_02', indices: project.concat(',', anotherProject) } })
+      expect(wrapper.vm.$router.push).toBeCalledWith({
+        name: 'search',
+        query: { q: 'query_02', indices: project.concat(',', anotherProject) }
+      })
       spy.mockClear()
     })
   })
@@ -145,7 +174,11 @@ describe('BatchSearchResultsFilters.vue', () => {
         localVue,
         router,
         store,
-        computed: { downloadLink () { return 'mocked-download-link' } },
+        computed: {
+          downloadLink() {
+            return 'mocked-download-link'
+          }
+        },
         propsData: propsDataMultipleQueries
       })
 
@@ -158,15 +191,25 @@ describe('BatchSearchResultsFilters.vue', () => {
         localVue,
         router,
         store,
-        computed: { downloadLink () { return 'mocked-download-link' } },
+        computed: {
+          downloadLink() {
+            return 'mocked-download-link'
+          }
+        },
         propsData: propsDataMultipleQueries
       })
       await wrapper.vm.$nextTick()
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe('query_02')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(1).text()).toBe('query_03')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(2).text()).toBe('query_01')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe(
+        'query_02'
+      )
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(1).text()).toBe(
+        'query_03'
+      )
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(2).text()).toBe(
+        'query_01'
+      )
     })
 
     it('should sort queries by "default" order ie. as in database', async () => {
@@ -175,7 +218,11 @@ describe('BatchSearchResultsFilters.vue', () => {
         localVue,
         router,
         store,
-        computed: { downloadLink () { return 'mocked-download-link' } },
+        computed: {
+          downloadLink() {
+            return 'mocked-download-link'
+          }
+        },
         propsData: propsDataMultipleQueries
       })
       const spy = jest.spyOn(wrapper.vm.$router, 'push')
@@ -199,7 +246,11 @@ describe('BatchSearchResultsFilters.vue', () => {
         localVue,
         router,
         store,
-        computed: { downloadLink () { return 'mocked-download-link' } },
+        computed: {
+          downloadLink() {
+            return 'mocked-download-link'
+          }
+        },
         propsData: propsDataMultipleQueries
       })
       await wrapper.vm.$nextTick()

@@ -3,11 +3,11 @@ import { cloneDeep, extend, get, set } from 'lodash'
 const _raw = '_RAW'
 
 export default class EsDoc {
-  constructor (raw) {
+  constructor(raw) {
     this[_raw] = cloneDeep(raw)
     this.map(raw)
   }
-  map (raw) {
+  map(raw) {
     // Map the given object to document attribute
     return extend(this, {
       id: raw._id,
@@ -16,26 +16,26 @@ export default class EsDoc {
       type: raw._type
     })
   }
-  get (path, defaultValue) {
+  get(path, defaultValue) {
     return get(this.raw, path, defaultValue)
   }
-  set (path, value) {
+  set(path, value) {
     return set(this.raw, path, value)
   }
-  get source () {
+  get source() {
     return this.get('_source', {})
   }
-  get raw () {
+  get raw() {
     return this[_raw]
   }
-  get serializedForStorage () {
+  get serializedForStorage() {
     return this.raw
   }
-  static match (hit) {
+  static match(hit) {
     const raw = hit.raw || hit
     return get(raw, '_source.type', 'Document') === (this.esName || this.name)
   }
-  static create (raw, parent) {
+  static create(raw, parent) {
     return new EsDoc(raw, parent)
   }
 }

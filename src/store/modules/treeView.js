@@ -11,9 +11,9 @@ export const state = {
 }
 
 export const getters = {
-  isOpen (state) {
-    return path => {
-      return some(state.openPaths, openPath => {
+  isOpen(state) {
+    return (path) => {
+      return some(state.openPaths, (openPath) => {
         const splitPath = split(path, '/')
         const splitOpenPath = split(openPath, '/')
         const slicedOpenPath = slice(splitOpenPath, 0, splitPath.length)
@@ -24,16 +24,16 @@ export const getters = {
 }
 
 export const mutations = {
-  togglePath (state, path) {
+  togglePath(state, path) {
     state.openPaths = xor(state.openPaths, castArray(path))
     return getters.isOpen(state)(path)
   },
-  addPath (state, path) {
+  addPath(state, path) {
     if (state.openPaths.indexOf(path) === -1) {
       state.openPaths.push(path)
     }
   },
-  removePath (state, path) {
+  removePath(state, path) {
     state.openPaths = without(state.openPaths, path)
   }
 }

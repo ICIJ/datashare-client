@@ -37,11 +37,14 @@ describe('shortkeys mixin', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchDocumentNavbar, { localVue, store, router, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(SearchDocumentNavbar, { localVue, store, router, mocks: { $t: (msg) => msg } })
   })
 
   it('should return the getShortkey object for "goToPreviousDocument" action', () => {
-    const result = { keys: { mac: ['meta', 'arrowleft'], default: ['ctrl', 'arrowleft'] }, action: 'goToPreviousDocument' }
+    const result = {
+      keys: { mac: ['meta', 'arrowleft'], default: ['ctrl', 'arrowleft'] },
+      action: 'goToPreviousDocument'
+    }
     expect(wrapper.vm.getShortkey('goToPreviousDocument')).toEqual(result)
   })
 

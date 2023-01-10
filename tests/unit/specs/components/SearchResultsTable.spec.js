@@ -29,10 +29,7 @@ describe('SearchResultsTable.vue', () => {
     mockAxios.request.mockClear()
     mockAxios.request.mockResolvedValue({ data: {} })
 
-    await letData(es).have(new IndexedDocuments()
-      .setBaseName('document')
-      .withIndex(index)
-      .count(4)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('document').withIndex(index).count(4)).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
     wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store, wait })
   })
@@ -47,10 +44,7 @@ describe('SearchResultsTable.vue', () => {
 
   it('should display 3 action buttons', async () => {
     await wrapper.setData({
-      selected: [
-        { id: 'document_01' },
-        { id: 'document_02' }
-      ]
+      selected: [{ id: 'document_01' }, { id: 'document_02' }]
     })
 
     expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(3)
@@ -68,11 +62,13 @@ describe('SearchResultsTable.vue', () => {
     wrapper.findAll('.list-group-item-action').at(1).trigger('click')
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/' + index + '/documents/batchUpdate/star'),
-      method: 'POST',
-      data: ['document_01', 'document_02']
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/' + index + '/documents/batchUpdate/star'),
+        method: 'POST',
+        data: ['document_01', 'document_02']
+      })
+    )
   })
 
   it('should translate an unknown size', () => {
@@ -88,7 +84,9 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should select all documents', async () => {
-    mockAxios.request.mockResolvedValue({ data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }] })
+    mockAxios.request.mockResolvedValue({
+      data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }]
+    })
     wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
     await wrapper.setData({ selected: [{ id: 'document_01' }] })
     await wrapper.vm.$nextTick()

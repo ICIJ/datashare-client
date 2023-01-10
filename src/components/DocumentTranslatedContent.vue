@@ -4,7 +4,11 @@
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
-          <abbr :title="$t(`filter.lang.${document.source.language}`)" v-if="translation.source_language === document.source.language">{{ $t('documentTranslatedContent.detected') }}</abbr>
+          <abbr
+            v-if="translation.source_language === document.source.language"
+            :title="$t(`filter.lang.${document.source.language}`)"
+            >{{ $t('documentTranslatedContent.detected') }}</abbr
+          >
           <span v-else>
             {{ $t(`filter.lang.${translation.source_language}`) }}
           </span>
@@ -13,10 +17,22 @@
             {{ $t(`filter.lang.${language}`) }}
           </strong>
           <button class="btn btn-sm btn-link ml-3" @click="toggleTranslatedContent">
-            {{ $t(showTranslatedContent ? 'documentTranslatedContent.viewOriginal' : 'documentTranslatedContent.viewTranslated') }}
+            {{
+              $t(
+                showTranslatedContent
+                  ? 'documentTranslatedContent.viewOriginal'
+                  : 'documentTranslatedContent.viewTranslated'
+              )
+            }}
           </button>
         </div>
-        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :q="q" :target-language="targetLanguage" />
+        <document-content
+          ref="content"
+          class="document-translated-content__translation__header__content"
+          :document="document"
+          :q="q"
+          :target-language="targetLanguage"
+        />
       </div>
     </template>
     <template v-else>
@@ -36,6 +52,9 @@ import DocumentContent from '@/components/DocumentContent'
  */
 export default {
   name: 'DocumentTranslatedContent',
+  components: {
+    DocumentContent
+  },
   props: {
     /**
      * The selected document.
@@ -51,23 +70,35 @@ export default {
       default: ''
     }
   },
-  components: {
-    DocumentContent
-  },
-  data () {
+  data() {
     return {
       language: 'ENGLISH',
       translations: []
     }
   },
-  async mounted () {
+  computed: {
+    ...mapState('document', ['showTranslatedContent']),
+    targetLanguage() {
+      if (this.showTranslatedContent) {
+        return this.language
+      }
+      return null
+    },
+    hasTranslations() {
+      return !!this.translation
+    },
+    translation() {
+      return find(this.translations, { target_language: this.language })
+    }
+  },
+  async mounted() {
     await this.loadAvailableTranslations()
   },
   methods: {
-    toggleTranslatedContent () {
+    toggleTranslatedContent() {
       this.$store.commit('document/toogleShowTransatedContent')
     },
-    async loadAvailableTranslations () {
+    async loadAvailableTranslations() {
       const _source = join([
         'content_translated.source_language',
         'content_translated.target_language',
@@ -77,42 +108,27 @@ export default {
       const data = await elasticsearch.getSource({ index, id, routing, _source })
       this.$set(this, 'translations', data.content_translated)
     }
-  },
-  computed: {
-    ...mapState('document', ['showTranslatedContent']),
-    targetLanguage () {
-      if (this.showTranslatedContent) {
-        return this.language
-      }
-      return null
-    },
-    hasTranslations () {
-      return !!this.translation
-    },
-    translation () {
-      return find(this.translations, { target_language: this.language })
-    }
   }
 }
 </script>
 
 <style lang="scss">
-  .document-translated-content {
-    &__translation {
-      box-shadow: 0 0 0 3px $translation-bg inset;
+.document-translated-content {
+  &__translation {
+    box-shadow: 0 0 0 3px $translation-bg inset;
 
-      .document-translated-content--original & {
-        box-shadow: none;
-
-        &__header {
-          background: transparent;
-        }
-      }
+    .document-translated-content--original & {
+      box-shadow: none;
 
       &__header {
-        background: $translation-bg;
-        color: rgba(darken($translation-bg, 70), 0.7);
+        background: transparent;
       }
     }
+
+    &__header {
+      background: $translation-bg;
+      color: rgba(darken($translation-bg, 70), 0.7);
+    }
   }
+}
 </style>

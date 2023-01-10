@@ -7,7 +7,10 @@ export default {
       },
       {
         height: '1em',
-        boxes: [[0, '5em'], ['1em', '60%']]
+        boxes: [
+          [0, '5em'],
+          ['1em', '60%']
+        ]
       },
       {
         height: '1em',
@@ -15,7 +18,10 @@ export default {
       },
       {
         height: '1em',
-        boxes: [[0, '5em'], ['1em', '40%']]
+        boxes: [
+          [0, '5em'],
+          ['1em', '40%']
+        ]
       },
       {
         height: '1em',
@@ -38,9 +44,7 @@ export default {
       default: 'https://icij.gitbook.io/datashare/all/search-with-operators'
     }
   },
-  hotKeyPrevented: [
-    '.search-bar__input'
-  ],
+  hotKeyPrevented: ['.search-bar__input'],
   locales: [
     {
       key: 'en',

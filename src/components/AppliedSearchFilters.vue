@@ -1,5 +1,5 @@
 <template>
-  <div class="applied-search-filters d-flex flex-wrap pt-1" v-if="filters.length">
+  <div v-if="filters.length" class="applied-search-filters d-flex flex-wrap pt-1">
     <applied-search-filters-item v-for="(filter, index) in filters" :key="index" :filter="filter" hide-filter-label />
     <reset-filters-button variant="link" class="text-muted badge font-weight-normal" auto-hiding />
   </div>
@@ -19,14 +19,14 @@ export default {
     ResetFiltersButton
   },
   computed: {
-    filters () {
+    filters() {
       const filters = []
-      this.$store.getters['search/retrieveQueryTerms'].forEach(term => {
+      this.$store.getters['search/retrieveQueryTerms'].forEach((term) => {
         term.value = term.label
         filters.push(term)
       })
-      this.$store.getters['search/instantiatedFilters'].forEach(filter => {
-        filter.values.forEach(value => {
+      this.$store.getters['search/instantiatedFilters'].forEach((filter) => {
+        filter.values.forEach((value) => {
           let label = filter.itemLabel ? filter.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label
           // Indexing Date filter is filtering by month

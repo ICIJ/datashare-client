@@ -58,7 +58,8 @@ describe('Extensions.vue', () => {
         description: 'extension_04_registry_description',
         homepage: null
       }
-    }]
+    }
+  ]
   beforeAll(() => {
     mockAxios = { request: jest.fn() }
     api = new Api(mockAxios, null)
@@ -83,17 +84,27 @@ describe('Extensions.vue', () => {
 
   describe('extension card', () => {
     beforeEach(async () => {
-      wrapper = mount(Extensions, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      wrapper = mount(Extensions, {
+        i18n,
+        localVue,
+        data: () => {
+          return { url: 'this.is.an.url' }
+        }
+      })
       await flushPromises()
     })
 
     describe('extension name', () => {
       it('should display name from registry if extension is NOT installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__name').text()).toBe('Extension 01 Registry Name')
+        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__name').text()).toBe(
+          'Extension 01 Registry Name'
+        )
       })
 
       it('should display name from registry if extension is installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__name').text()).toBe('Extension 02 Registry Name')
+        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__name').text()).toBe(
+          'Extension 02 Registry Name'
+        )
       })
 
       it('should display extension name if extension is installed and NOT from registry', () => {
@@ -103,15 +114,21 @@ describe('Extensions.vue', () => {
 
     describe('extension description', () => {
       it('should display description from registry if extension is NOT installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__description').text()).toBe('extension_01_registry_description')
+        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__description').text()).toBe(
+          'extension_01_registry_description'
+        )
       })
 
       it('should display description from registry if extension is installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__description').text()).toBe('extension_02_registry_description')
+        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__description').text()).toBe(
+          'extension_02_registry_description'
+        )
       })
 
       it('should display plugin description if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(3) .extensions__card__description').text()).toBe('extension_03_description')
+        expect(wrapper.find('.extensions__card:nth-child(3) .extensions__card__description').text()).toBe(
+          'extension_03_description'
+        )
       })
     })
 
@@ -131,21 +148,29 @@ describe('Extensions.vue', () => {
 
     describe('extension official version', () => {
       it('should display the official version if extension is from registry and has an official version', () => {
-        expect(wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__official-version').exists()).toBeTruthy()
+        expect(
+          wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__official-version').exists()
+        ).toBeTruthy()
       })
 
       it('should NOT display the official version if extension is installed and NOT from registry', () => {
-        expect(wrapper.findAll('.extensions__card:nth-child(3) .extensions__card__official-version').exists()).toBeFalsy()
+        expect(
+          wrapper.findAll('.extensions__card:nth-child(3) .extensions__card__official-version').exists()
+        ).toBeFalsy()
       })
     })
 
     describe('extension homepage', () => {
       it('should display homepage from registry if extension is NOT installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__homepage').text()).toBe('extension_01_registry_homepage')
+        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__homepage').text()).toBe(
+          'extension_01_registry_homepage'
+        )
       })
 
       it('should display homepage from registry if extension is installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__homepage').text()).toBe('extension_02_registry_homepage')
+        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__homepage').text()).toBe(
+          'extension_02_registry_homepage'
+        )
       })
 
       it('should NOT display homepage if extension is installed and NOT from registry', () => {
@@ -159,21 +184,29 @@ describe('Extensions.vue', () => {
 
     describe('uninstall button', () => {
       it('should display uninstall button if extension is installed', () => {
-        expect(wrapper.findAll('.extensions__card:nth-child(2) .extensions__card__uninstall-button').exists()).toBeTruthy()
+        expect(
+          wrapper.findAll('.extensions__card:nth-child(2) .extensions__card__uninstall-button').exists()
+        ).toBeTruthy()
       })
 
       it('should NOT display uninstall button if extension is NOT installed', () => {
-        expect(wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__uninstall-button').exists()).toBeFalsy()
+        expect(
+          wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__uninstall-button').exists()
+        ).toBeFalsy()
       })
     })
 
     describe('download button', () => {
       it('should display download button if extension is NOT installed', () => {
-        expect(wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__download-button').exists()).toBeTruthy()
+        expect(
+          wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__download-button').exists()
+        ).toBeTruthy()
       })
 
       it('should NOT display download button if extension is installed', () => {
-        expect(wrapper.findAll('.extensions__card:nth-child(2) .extensions__card__download-button').exists()).toBeFalsy()
+        expect(
+          wrapper.findAll('.extensions__card:nth-child(2) .extensions__card__download-button').exists()
+        ).toBeFalsy()
       })
     })
 
@@ -215,7 +248,13 @@ describe('Extensions.vue', () => {
   })
 
   it('should call for extension installation from extensionUrl', () => {
-    wrapper = mount(Extensions, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    wrapper = mount(Extensions, {
+      i18n,
+      localVue,
+      data: () => {
+        return { url: 'this.is.an.url' }
+      }
+    })
     mockAxios.request.mockClear()
 
     wrapper.vm.installExtensionFromUrl()

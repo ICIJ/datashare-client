@@ -10,20 +10,20 @@ export default {
      */
     shortkeyScope: {
       type: String,
-      default () {
+      default() {
         return this.$options.name
       }
     }
   },
   methods: {
-    getShortkey (name) {
+    getShortkey(name) {
       return shortkeys[this.shortkeyScope][name]
     },
-    getKeys (name) {
+    getKeys(name) {
       const shortkey = this.getShortkey(name)
       return shortkey === undefined ? undefined : shortkey.keys[getShortkeyOS()]
     },
-    getAction (name) {
+    getAction(name) {
       const shortkey = this.getShortkey(name)
       const functionName = shortkey.action
       if (isFunction(this[functionName])) {

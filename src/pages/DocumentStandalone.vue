@@ -37,20 +37,20 @@ export default {
 </script>
 
 <style lang="scss">
-  .document-standalone {
-    max-width: 1140px;
-    margin: 5vh auto;
-    border: $border-color 1px solid;
-    border-radius: $border-radius-lg;
-    box-shadow: $box-shadow-sm;
+.document-standalone {
+  max-width: 1140px;
+  margin: 5vh auto;
+  border: $border-color 1px solid;
+  border-radius: $border-radius-lg;
+  box-shadow: $box-shadow-sm;
 
-    @media (max-width: #{1140px + $app-sidebar-reduced-width}) {
-      margin: 0 auto;
-      border: 0;
-    }
-
-    .document-navbar {
-      border-radius: $border-radius-lg $border-radius-lg 0 0;
-    }
+  @media (max-width: #{1140px + $app-sidebar-reduced-width}) {
+    margin: 0 auto;
+    border: 0;
   }
+
+  .document-navbar {
+    border-radius: $border-radius-lg $border-radius-lg 0 0;
+  }
+}
 </style>

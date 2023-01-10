@@ -36,26 +36,30 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/submitExtract')
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
-      method: 'POST',
-      data: {
-        options: expect.objectContaining({ ocr: false, filter: true })
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        method: 'POST',
+        data: {
+          options: expect.objectContaining({ ocr: false, filter: true })
+        }
+      })
+    )
   })
 
   it('should execute a default find named entities action', async () => {
     await store.dispatch('indexing/submitFindNamedEntities')
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
-      method: 'POST',
-      data: {
-        options: expect.objectContaining({ syncModels: true })
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+        method: 'POST',
+        data: {
+          options: expect.objectContaining({ syncModels: true })
+        }
+      })
+    )
   })
 
   it('should stop pending tasks', async () => {
@@ -66,25 +70,31 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(0)
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/stopAll'),
-      method: 'PUT'
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/stopAll'),
+        method: 'PUT'
+      })
+    )
   })
 
   it('should stop the task named 456', async () => {
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
-      { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }])
+    store.commit('indexing/updateTasks', [
+      { name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
+      { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }
+    ])
     expect(store.state.indexing.tasks).toHaveLength(2)
 
     await store.dispatch('indexing/stopTask', 'foo.bar@123')
 
     expect(store.state.indexing.tasks).toHaveLength(1)
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/task/stop/${encodeURIComponent('foo.bar@123')}`),
-      method: 'PUT'
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl(`/api/task/stop/${encodeURIComponent('foo.bar@123')}`),
+        method: 'PUT'
+      })
+    )
   })
 
   it('should delete done tasks', async () => {
@@ -95,10 +105,12 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(0)
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/clean'),
-      method: 'POST'
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/clean'),
+        method: 'POST'
+      })
+    )
   })
 
   it('should reset the extracting form', () => {
@@ -125,18 +137,22 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/deleteAll')
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/project/${project}`),
-      method: 'DELETE'
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl(`/api/project/${project}`),
+        method: 'DELETE'
+      })
+    )
   })
 
   it('should retrieve the NER pipelines', async () => {
     await store.dispatch('indexing/getNerPipelines')
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/ner/pipelines')
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/ner/pipelines')
+      })
+    )
   })
 })
