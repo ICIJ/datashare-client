@@ -107,7 +107,7 @@
       </ul>
       <hook name="app-sidebar.help:after"></hook>
       <hook name="app-sidebar.guides:before"></hook>
-      <div v-if="currentRouteDocs.length">
+      <div v-if="filteredRouteDocs.length">
         <div v-if="!reduced">
           <h5 class="app-sidebar__container__heading">
             <fa icon="book" fixed-width></fa>
@@ -116,20 +116,21 @@
             </span>
           </h5>
           <ul class="app-sidebar__container__menu app-sidebar__container__menu--borderless list-unstyled">
-            <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" :key="meta.resourcePath">
-              <router-link class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree"
-                           :to="{ name: 'docs', params: meta }">
+            <li class="app-sidebar__container__menu__item" v-for="meta, i in filteredRouteDocs" :key="i">
+              <a class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree"
+                 target="_blank"
+                 :href="meta.href" >
                 <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
                   {{ meta.title }}
                 </span>
-              </router-link>
+              </a>
             </li>
           </ul>
         </div>
         <ul v-else class="app-sidebar__container__menu list-unstyled">
-          <li class="app-sidebar__container__menu__item"  :data-badge="currentRouteDocs.length">
+          <li class="app-sidebar__container__menu__item"  :data-badge="filteredRouteDocs.length">
             <b-button class="app-sidebar__container__menu__item__link"
-                      :data-badge="currentRouteDocs.length"
+                      :data-badge="filteredRouteDocs.length"
                       href="#"
                       id="app-menu-user-guide"
                       variant="none">
@@ -142,12 +143,13 @@
                          triggers="click blur"
                          @show="$root.$emit('bv::hide::tooltip')">
                 <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
-                  <router-link class="dropdown-item"
-                               :key="meta.resourcePath"
-                               :to="{ name: 'docs', params: meta }"
-                               v-for="meta in currentRouteDocs">
+                  <a class="dropdown-item"
+                      target="_blank"
+                     v-for="meta, i in filteredRouteDocs"
+                     :key="i"
+                     :href="meta.href">
                     {{ meta.title }}
-                  </router-link>
+                  </a>
                 </div>
               </b-popover>
             </b-button>
