@@ -10,8 +10,15 @@ export const router = {
           component: () => import('@/pages/Landing'),
           meta: {
             docs: [
-              '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
-              'all/analyze-documents.md?mode=LOCAL'
+              {
+                title: 'Add documents to Datashare',
+                path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
+                mode: ['LOCAL', 'EMBEDDED']
+              },
+              {
+                title: 'Analyse documents',
+                path: 'all/analyze-documents'
+              }
             ]
           },
           beforeEnter: (to, from, next) => {
@@ -27,10 +34,22 @@ export const router = {
           meta: {
             title: ({ i18n }) => i18n.t('search.title'),
             docs: [
-              'all/search-documents.md',
-              'all/filter-documents.md',
-              'all/search-with-operators.md',
-              'all/star-documents.md'
+              {
+                title: 'Search documents',
+                path: 'all/search-documents'
+              },
+              {
+                title: 'Filter a documents',
+                path: 'all/filter-documents'
+              },
+              {
+                title: 'Search with pperators',
+                path: 'all/search-with-operators'
+              },
+              {
+                title: 'Star a document',
+                path: 'all/star-documents'
+              }
             ]
           },
           components: {
@@ -47,9 +66,18 @@ export const router = {
               meta: {
                 title: ({ i18n }) => i18n.t('document.title'),
                 docs: [
-                  'all/star-documents.md',
-                  'all/tag-documents.md',
-                  'all/use-keyboard-shortcuts.md'
+                  {
+                    title: 'Star a document',
+                    path: 'all/star-documents'
+                  },
+                  {
+                    title: 'Tag a document',
+                    path: 'all/tag-documents'
+                  },
+                  {
+                    title: 'Use keyboard shortcuts',
+                    path: 'all/use-keyboard-shortcuts'
+                  }
                 ]
               }
             }
@@ -91,8 +119,15 @@ export const router = {
               meta: {
                 title: ({ i18n }) => i18n.t('indexing.title'),
                 docs: [
-                  '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
-                  'all/analyze-documents.md?mode=LOCAL'
+                  {
+                    title: 'Add documents to Datashare',
+                    path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
+                    mode: ['LOCAL', 'EMBEDDED']
+                  },
+                  {
+                    title: 'Analyse documents',
+                    path: 'all/analyze-documents'
+                  }
                 ]
               }
             },
@@ -103,8 +138,15 @@ export const router = {
               meta: {
                 title: ({ i18n }) => i18n.t('batchDownload.title'),
                 docs: [
-                  '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
-                  'all/analyze-documents.md?mode=LOCAL'
+                  {
+                    title: 'Add documents to Datashare',
+                    path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
+                    mode: ['LOCAL', 'EMBEDDED']
+                  },
+                  {
+                    title: 'Analyse documents',
+                    path: 'all/analyze-documents'
+                  }
                 ]
               }
             },
@@ -117,7 +159,10 @@ export const router = {
               meta: {
                 title: ({ i18n }) => i18n.t('batchSearch.title'),
                 docs: [
-                  'all/batch-search-documents.md'
+                  {
+                    title: 'How to use batch searches',
+                    path: 'all/batch-search-documents'
+                  }
                 ]
               }
             },
@@ -165,21 +210,6 @@ export const router = {
               }
             }
           ]
-        },
-        {
-          name: 'docs',
-          path: 'docs/:slug',
-          components: {
-            default: () => import('@/pages/RouteDoc'),
-            sidebar: () => import('@/components/RouteDocsLinks')
-          },
-          meta: {
-            title: ({ i18n }) => i18n.t('document.title')
-          },
-          props: {
-            default: true,
-            sidebar: true
-          }
         },
         {
           name: 'settings',
