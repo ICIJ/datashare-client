@@ -167,7 +167,7 @@ export default {
         <template #waiting>
           {{ username }}
         </template>
-        <template>
+        <template #default>
           {{ transformedUsername }}
         </template>
       </v-wait>

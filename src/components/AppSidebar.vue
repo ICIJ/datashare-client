@@ -67,21 +67,19 @@
             </span>
           </router-link>
         </li>
-        <template>
-          <li class="app-sidebar__container__menu__item">
-            <router-link
-              v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
-              class="app-sidebar__container__menu__item__link"
-              :title="$t('menu.settings')"
-              :to="{ name: 'settings' }"
-            >
-              <fa icon="cog" fixed-width></fa>
-              <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-                {{ $t(reduced ? 'menu.settingsShort' : 'menu.settings') }}
-              </span>
-            </router-link>
-          </li>
-        </template>
+        <li class="app-sidebar__container__menu__item">
+          <router-link
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            class="app-sidebar__container__menu__item__link"
+            :title="$t('menu.settings')"
+            :to="{ name: 'settings' }"
+          >
+            <fa icon="cog" fixed-width></fa>
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ $t(reduced ? 'menu.settingsShort' : 'menu.settings') }}
+            </span>
+          </router-link>
+        </li>
       </ul>
       <hook name="app-sidebar.menu:after"></hook>
       <hook name="app-sidebar.help:before"></hook>
