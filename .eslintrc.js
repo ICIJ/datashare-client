@@ -12,6 +12,7 @@ module.exports = {
     'lines-between-class-members': 'off',
     'template-curly-spacing': 'off',
     'vue/custom-event-name-casing': 'off',
-    'import/no-extraneous-dependencies': 'off'
+    'import/no-extraneous-dependencies': 'off',
+    'vue/require-default-prop': 'off'
   }
 }
