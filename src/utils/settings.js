@@ -26,6 +26,7 @@ export default {
   defaultLocale: 'en',
   defaultSearchField: 'all',
   defaultSearchSort: 'relevance',
+  documentationUrl: 'https://icij.gitbook.io/datashare',
   documentationLinks: {
     indexing: {
       mac: 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare',
