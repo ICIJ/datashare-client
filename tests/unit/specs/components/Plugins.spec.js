@@ -20,7 +20,8 @@ const pluginsMock = [
       description: 'plugin_01_registry_description',
       homepage: 'plugin_01_registry_homepage'
     }
-  }, {
+  },
+  {
     id: 'plugin_02_id',
     name: 'plugin_02_name',
     version: 'plugin_02_version',
@@ -33,14 +34,16 @@ const pluginsMock = [
       description: 'plugin_02_registry_description',
       homepage: 'plugin_02_registry_homepage'
     }
-  }, {
+  },
+  {
     id: 'plugin_03_id',
     name: 'plugin_03_name',
     version: null,
     description: 'plugin_03_description',
     installed: true,
     deliverableFromRegistry: null
-  }, {
+  },
+  {
     id: 'plugin_04_id',
     name: 'plugin_04_name',
     version: 'plugin_04_version',
@@ -53,7 +56,8 @@ const pluginsMock = [
       description: 'plugin_04_registry_description',
       homepage: null
     }
-  }]
+  }
+]
 
 describe('Plugins.vue', () => {
   let wrapper, i18n, localVue, api, mockAxios
@@ -68,7 +72,13 @@ describe('Plugins.vue', () => {
   beforeEach(async () => {
     mockAxios.request.mockClear() // TODO CD suggestion: mock each plugin api function getPlugins, installPlugin, uninstallPlugin instead of mocking axios
     mockAxios.request.mockResolvedValue({ data: pluginsMock })
-    wrapper = shallowMount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    wrapper = shallowMount(Plugins, {
+      i18n,
+      localVue,
+      data: () => {
+        return { url: 'this.is.an.url' }
+      }
+    })
     await flushPromises()
   })
 
@@ -91,7 +101,13 @@ describe('Plugins.vue', () => {
 
   describe('plugin card', () => {
     beforeEach(async () => {
-      wrapper = mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      wrapper = mount(Plugins, {
+        i18n,
+        localVue,
+        data: () => {
+          return { url: 'this.is.an.url' }
+        }
+      })
       await flushPromises()
     })
 
@@ -111,15 +127,21 @@ describe('Plugins.vue', () => {
 
     describe('plugin description', () => {
       it('should display description from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__description').text()).toBe('plugin_01_registry_description')
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__description').text()).toBe(
+          'plugin_01_registry_description'
+        )
       })
 
       it('should display description from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__description').text()).toBe('plugin_02_registry_description')
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__description').text()).toBe(
+          'plugin_02_registry_description'
+        )
       })
 
       it('should display plugin description if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__description').text()).toBe('plugin_03_description')
+        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__description').text()).toBe(
+          'plugin_03_description'
+        )
       })
     })
 
@@ -149,11 +171,15 @@ describe('Plugins.vue', () => {
 
     describe('plugin homepage', () => {
       it('should display homepage from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__homepage').text()).toBe('plugin_01_registry_homepage')
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__homepage').text()).toBe(
+          'plugin_01_registry_homepage'
+        )
       })
 
       it('should display homepage from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__homepage').text()).toBe('plugin_02_registry_homepage')
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__homepage').text()).toBe(
+          'plugin_02_registry_homepage'
+        )
       })
 
       it('should NOT display homepage if plugin is installed and NOT from registry', () => {
@@ -222,7 +248,13 @@ describe('Plugins.vue', () => {
   })
 
   it('should call for plugin installation from pluginUrl', () => {
-    wrapper = mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    wrapper = mount(Plugins, {
+      i18n,
+      localVue,
+      data: () => {
+        return { url: 'this.is.an.url' }
+      }
+    })
     mockAxios.request.mockClear()
 
     wrapper.vm.installPluginFromUrl()

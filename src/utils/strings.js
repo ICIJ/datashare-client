@@ -1,6 +1,6 @@
 import { escapeRegExp } from 'lodash'
 
-export function slugger (value = '') {
+export function slugger(value = '') {
   return value
     .toLowerCase()
     .trim()
@@ -8,11 +8,11 @@ export function slugger (value = '') {
     .replace(/\s/g, '-')
 }
 
-export function addLocalSearchMarksClassByOffsets ({ content = '', term = '', offsets = [], delta = 0 } = {}) {
+export function addLocalSearchMarksClassByOffsets({ content = '', term = '', offsets = [], delta = 0 } = {}) {
   // Create one chunk for each letter
   const chunks = content.split('')
   // Add mark tag to the corresponding letters
-  offsets.forEach(offset => {
+  offsets.forEach((offset) => {
     const start = offset - delta
     const end = start + term.length - 1
     // Only replace by offset in existing chunk
@@ -25,7 +25,7 @@ export function addLocalSearchMarksClassByOffsets ({ content = '', term = '', of
   return chunks.join('')
 }
 
-export function addLocalSearchMarksClassSensitive (content = '<div></div>', localSearchTerm = { label: '' }) {
+export function addLocalSearchMarksClassSensitive(content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
   // In case the searched term is split on 2 lines in the content
   const escapedLocalSearchTermAsRegex = escapedLocalSearchTerm.replace(' ', '( |  |.|..| .)')
@@ -35,7 +35,7 @@ export function addLocalSearchMarksClassSensitive (content = '<div></div>', loca
   try {
     if (localSearchOccurrences === 0) throw new Error()
     const needle = new RegExp(`(${escapedLocalSearchTermAsRegex})`, 'gms')
-    const replacedContent = content.replace(needle, m => {
+    const replacedContent = content.replace(needle, (m) => {
       const term = m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')
       return `<mark class="local-search-term">${term}</mark>`
     })
@@ -45,13 +45,13 @@ export function addLocalSearchMarksClassSensitive (content = '<div></div>', loca
       localSearchIndex,
       localSearchOccurrences
     }
-  // Silently fails
+    // Silently fails
   } catch (error) {
     return { content, localSearchIndex, localSearchOccurrences }
   }
 }
 
-export function addLocalSearchMarksClass (content = '<div></div>', localSearchTerm = { label: '' }) {
+export function addLocalSearchMarksClass(content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
   // In case the searched term is split on 2 lines in the content
   const escapedLocalSearchTermAsRegex = escapedLocalSearchTerm.replace(' ', '( |  |.|..| .)')
@@ -61,7 +61,7 @@ export function addLocalSearchMarksClass (content = '<div></div>', localSearchTe
   try {
     if (localSearchOccurrences === 0) throw new Error()
     const needle = new RegExp(`(${escapedLocalSearchTermAsRegex})`, 'gims')
-    const replacedContent = content.replace(needle, m => {
+    const replacedContent = content.replace(needle, (m) => {
       const term = m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')
       return `<mark class="local-search-term">${term}</mark>`
     })
@@ -71,18 +71,21 @@ export function addLocalSearchMarksClass (content = '<div></div>', localSearchTe
       localSearchIndex,
       localSearchOccurrences
     }
-  // Silently fails
+    // Silently fails
   } catch (error) {
     return { content, localSearchIndex, localSearchOccurrences }
   }
 }
 
-export function isUrl (url = '') {
-  const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
+export function isUrl(url = '') {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  ) // fragment locator
   return !!pattern.test(url)
 }

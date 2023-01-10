@@ -8,7 +8,7 @@ export default {
     }
   },
   computed: {
-    cookedContent () {
+    cookedContent() {
       return this.slice.get(this.slice).cookedContent
     }
   }

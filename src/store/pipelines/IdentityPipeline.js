@@ -1,10 +1,10 @@
 class IdentityPipeline {
-  constructor ({ name, category = null, order = 0, ...defintion } = {}) {
+  constructor({ name, category = null, order = 0, ...defintion } = {}) {
     this.name = name
     this.category = category
     this.order = order
   }
-  apply (value) {
+  apply(value) {
     return value
   }
 }

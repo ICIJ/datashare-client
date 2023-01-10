@@ -12,7 +12,7 @@ import { flushPromises } from 'tests/unit/tests_utils'
 jest.mock('lodash', () => {
   return {
     ...jest.requireActual('lodash'),
-    throttle: cb => cb
+    throttle: (cb) => cb
   }
 })
 
@@ -31,15 +31,10 @@ describe('DocumentContent.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
 
-  async function mockDocumentContentSlice (content = '', { language = 'ENGLISH' } = {}) {
-    const contentSlice = letTextContent()
-      .withContent(content)
-      .getResponse()
+  async function mockDocumentContentSlice(content = '', { language = 'ENGLISH' } = {}) {
+    const contentSlice = letTextContent().withContent(content).getResponse()
     // Index the document
-    await letData(es).have(new IndexedDocument(id, index)
-      .withContent(content)
-      .withLanguage(language))
-      .commit()
+    await letData(es).have(new IndexedDocument(id, index).withContent(content).withLanguage(language)).commit()
     // Mock the `getDocumentSlice` method
     api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
       // Modify the returned content according to passed parameters
@@ -70,7 +65,8 @@ describe('DocumentContent.vue', () => {
 
   describe('the extracted text content', () => {
     it('should sanitize the HTML in the extracted text', async () => {
-      const content = 'this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'
+      const content =
+        'this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'
       const { document } = await mockDocumentContentSlice(content)
       const propsData = { document }
       const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
@@ -92,7 +88,8 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should display the text right to left for arabic', async () => {
-      const content = 'المنال ويتلذذ بالآلام، الألم هو الألم ولكن نتيجة لظروف ما قد تكمن السعاده فيما نتحمله من كد وأسي.'
+      const content =
+        'المنال ويتلذذ بالآلام، الألم هو الألم ولكن نتيجة لظروف ما قد تكمن السعاده فيما نتحمله من كد وأسي.'
       const { document } = await mockDocumentContentSlice(content, { language: 'ARABIC' })
       const propsData = { document }
       const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
@@ -153,32 +150,42 @@ describe('DocumentContent.vue', () => {
       it('should highlight the first occurrence of the searched term', async () => {
         const { innerHTML } = wrapper.find('.document-content__body .document-content-slice').element
         expect(wrapper.vm.localSearchIndex).toEqual(1)
-        expect(innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
+        expect(innerHTML).toEqual(
+          '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
+        )
       })
 
       it('should find the previous and next occurrence, as a loop', async () => {
         const { element } = wrapper.find('.document-content__body  .document-content-slice')
 
         expect(wrapper.vm.localSearchIndex).toEqual(1)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
+        expect(element.innerHTML).toEqual(
+          '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
+        )
 
         wrapper.vm.findNextLocalSearchTerm()
         await flushPromises()
 
         expect(wrapper.vm.localSearchIndex).toEqual(2)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>')
+        expect(element.innerHTML).toEqual(
+          '<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>'
+        )
 
         wrapper.vm.findPreviousLocalSearchTerm()
         await flushPromises()
 
         expect(wrapper.vm.localSearchIndex).toEqual(1)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>')
+        expect(element.innerHTML).toEqual(
+          '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
+        )
 
         wrapper.vm.findNextLocalSearchTerm()
         await flushPromises()
 
         expect(wrapper.vm.localSearchIndex).toEqual(2)
-        expect(element.innerHTML).toEqual('<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>')
+        expect(element.innerHTML).toEqual(
+          '<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>'
+        )
       })
     })
 
@@ -249,7 +256,9 @@ describe('DocumentContent.vue', () => {
       await wrapper.vm.loadContentSlice({ offset: 30 })
       // Cook all slices
       await wrapper.vm.cookAllContentSlices()
-      expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe('<p>this is a content from Elastic Search doc which looks huge</p>')
+      expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe(
+        '<p>this is a content from Elastic Search doc which looks huge</p>'
+      )
     })
 
     describe('with 1 occurences', () => {
@@ -273,7 +282,9 @@ describe('DocumentContent.vue', () => {
         await wrapper.vm.loadContentSlice({ offset: 25 })
         // Cook all slices
         await wrapper.vm.cookAllContentSlices()
-        expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe('<p>this is a content and content can be <mark class="local-search-term" data-offset="37">long</mark></p>')
+        expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe(
+          '<p>this is a content and content can be <mark class="local-search-term" data-offset="37">long</mark></p>'
+        )
       })
     })
 
@@ -298,7 +309,9 @@ describe('DocumentContent.vue', () => {
         await wrapper.vm.loadContentSlice({ offset: 25 })
         // Cook all slices
         await wrapper.vm.cookAllContentSlices()
-        expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe('<p>ICIJ: st<mark class="local-search-term" data-offset="8">or</mark>ies that rock the w<mark class="local-search-term" data-offset="29">or</mark>ld</p>')
+        expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe(
+          '<p>ICIJ: st<mark class="local-search-term" data-offset="8">or</mark>ies that rock the w<mark class="local-search-term" data-offset="29">or</mark>ld</p>'
+        )
       })
     })
 

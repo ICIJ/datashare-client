@@ -26,7 +26,7 @@ describe('WidgetText.vue', () => {
     const widget = { content: 'Hello world' }
     const propsData = { widget }
     const wrapper = shallowMount(WidgetText, { localVue, store, propsData })
-    await new Promise(resolve => setImmediate(resolve))
+    await new Promise((resolve) => setImmediate(resolve))
     expect(wrapper.find('.widget__content').text()).toBe('Hello world')
   })
 

@@ -17,7 +17,8 @@ describe('BatchSearchResults.vue', () => {
       {
         name: 'batch-search.results',
         path: 'batch-search/:indices/:uuid'
-      }, {
+      },
+      {
         name: 'document-standalone',
         path: '/ds/:indices/:id/:routing?'
       }
@@ -40,7 +41,8 @@ describe('BatchSearchResults.vue', () => {
         query: 'query_01',
         project: 'batchsearchresults',
         rootId: 42
-      }, {
+      },
+      {
         creationDate: '2011-10-11T04:12:49.000+0000',
         documentId: 43,
         documentNumber: 1,
@@ -49,7 +51,8 @@ describe('BatchSearchResults.vue', () => {
         query: 'query_01',
         project: 'anotherbatchsearchresults',
         rootId: 43
-      }, {
+      },
+      {
         creationDate: '2011-10-11T04:12:49.000+0000',
         documentId: 44,
         documentNumber: 2,
@@ -177,17 +180,20 @@ describe('BatchSearchResults.vue', () => {
 
   it('should redirect to document including the search query', async () => {
     wrapper = mount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
-    await wrapper.vm.$router.push({
-      name: 'batch-search.results',
-      params: { indices: project.concat(',', anotherProject), uuid: '12' },
-      query: { page: 1 }
-    }).catch(() => {})
+    await wrapper.vm.$router
+      .push({
+        name: 'batch-search.results',
+        params: { indices: project.concat(',', anotherProject), uuid: '12' },
+        query: { page: 1 }
+      })
+      .catch(() => {})
 
     await wrapper.vm.fetch()
 
     expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href'))
-      .toBe(`#/ds/${project.concat(',', anotherProject)}/42/42?q=query_01`)
+    expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href')).toBe(
+      `#/ds/${project.concat(',', anotherProject)}/42/42?q=query_01`
+    )
   })
 
   it('should cast queries param into array on beforeRouteEnter and beforeRouteUpdate', async () => {
@@ -198,7 +204,7 @@ describe('BatchSearchResults.vue', () => {
       query: { page: 1, queries: 'simple_text' }
     }
 
-    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, toObject, undefined, fn => fn(wrapper.vm))
+    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, toObject, undefined, (fn) => fn(wrapper.vm))
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.queries).toEqual(['simple_text'])
 
@@ -216,7 +222,7 @@ describe('BatchSearchResults.vue', () => {
       query: { page: 1, queries: 'simple_text' }
     }
 
-    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, to, undefined, fn => fn(wrapper.vm))
+    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, to, undefined, (fn) => fn(wrapper.vm))
     expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual([{ label: 'simple_text' }])
 
     wrapper.vm.$store.commit('batchSearch/selectedQueries', [])

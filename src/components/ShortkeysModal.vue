@@ -1,7 +1,13 @@
 <template>
   <span class="shortkeys-modal">
-    <b-button class="text-dark" variant="transparent" size="md" v-b-modal.shortkeys :title="$t('shortkeys.title')"
-              v-b-tooltip.hover.bottomleft>
+    <b-button
+      v-b-modal.shortkeys
+      v-b-tooltip.hover.bottomleft
+      class="text-dark"
+      variant="transparent"
+      size="md"
+      :title="$t('shortkeys.title')"
+    >
       <fa icon="keyboard" />
       <span class="sr-only">
         {{ $t('shortkeys.title') }}
@@ -11,7 +17,7 @@
       <div v-for="(shortkey, index) in shortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
         <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row no-gutters w-100 mb-1">
           <div class="col-sm-1 pr-2">
-            <fa :icon="shortkey.icon" v-if="shortkey.icon" fixed-width></fa>
+            <fa v-if="shortkey.icon" :icon="shortkey.icon" fixed-width></fa>
           </div>
           <div class="col-sm-7 pr-2">
             {{ getLabel(shortkey) }}
@@ -38,23 +44,23 @@ import { getShortkeyOS } from '@/utils/utils'
  */
 export default {
   name: 'ShortkeysModal',
-  data () {
-    return {
-      shortkeys: []
+  filters: {
+    shortkey(values) {
+      return join(map(values, capitalize), '+')
     }
   },
-  filters: {
-    shortkey (values) {
-      return join(map(values, capitalize), '+')
+  data() {
+    return {
+      shortkeys: []
     }
   },
   computed: {
     getShortkeyOS
   },
-  created () {
+  created() {
     const currentPage = get(this, '$route.name', '')
-    map(shortkeys, action => {
-      map(action, shortkey => {
+    map(shortkeys, (action) => {
+      map(action, (shortkey) => {
         // Filter only shortkeys of the current page
         if (shortkey.page !== currentPage) return
         // Check if multiple keys
@@ -62,7 +68,11 @@ export default {
           this.shortkeys.push(shortkey)
         } else {
           map(shortkey.keys.default, (_, action) => {
-            const newShortkey = { action, keys: { default: shortkey.keys.default[action], mac: shortkey.keys.mac[action] }, link: shortkey.link }
+            const newShortkey = {
+              action,
+              keys: { default: shortkey.keys.default[action], mac: shortkey.keys.mac[action] },
+              link: shortkey.link
+            }
             const label = get(shortkey, ['label', action], false)
             if (label) newShortkey.label = label
             const icon = get(shortkey, ['icon', action], false)
@@ -74,7 +84,7 @@ export default {
     })
   },
   methods: {
-    getLabel (shortkey) {
+    getLabel(shortkey) {
       const label = get(shortkey, 'label', get(shortkey, 'action', ''))
       return this.$te(label) ? this.$t(label) : label
     }
@@ -83,21 +93,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .shortkeys-modal__shortkey {
-    border-bottom: 1px solid lighten($text-muted, 40);
+.shortkeys-modal__shortkey {
+  border-bottom: 1px solid lighten($text-muted, 40);
 
-    &:last-child {
-      border-bottom: none;
-    }
+  &:last-child {
+    border-bottom: none;
+  }
 
-    &__link {
-      color: inherit;
-      display: inline-flex;
+  &__link {
+    color: inherit;
+    display: inline-flex;
+    text-decoration: none;
+
+    &:hover {
       text-decoration: none;
-
-      &:hover {
-        text-decoration: none;
-      }
     }
   }
+}
 </style>

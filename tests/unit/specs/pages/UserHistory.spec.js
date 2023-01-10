@@ -35,33 +35,36 @@ describe('UserHistory.vue', () => {
   beforeEach(() => {
     mockAxios.request.mockClear()
     mockAxios.request.mockResolvedValue({
-      data: [{
-        id: 'id_01',
-        user: {
-          id: 'user',
-          name: null,
-          email: null,
-          provider: 'local'
+      data: [
+        {
+          id: 'id_01',
+          user: {
+            id: 'user',
+            name: null,
+            email: null,
+            provider: 'local'
+          },
+          creationDate: 'creation_date_01',
+          modificationDate: 'modification_date_01',
+          type: 'DOCUMENT',
+          name: 'name_01',
+          uri: 'uri_01'
         },
-        creationDate: 'creation_date_01',
-        modificationDate: 'modification_date_01',
-        type: 'DOCUMENT',
-        name: 'name_01',
-        uri: 'uri_01'
-      }, {
-        id: 'id_02',
-        user: {
-          id: 'user',
-          name: null,
-          email: null,
-          provider: 'local'
-        },
-        creationDate: 'creation_date_02',
-        modificationDate: 'modification_date_02',
-        type: 'SEARCH',
-        name: 'name_02',
-        uri: 'uri_02'
-      }]
+        {
+          id: 'id_02',
+          user: {
+            id: 'user',
+            name: null,
+            email: null,
+            provider: 'local'
+          },
+          creationDate: 'creation_date_02',
+          modificationDate: 'modification_date_02',
+          type: 'SEARCH',
+          name: 'name_02',
+          uri: 'uri_02'
+        }
+      ]
     })
   })
 
@@ -76,15 +79,17 @@ describe('UserHistory.vue', () => {
     wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     await wrapper.vm.$nextTick()
     expect(mockAxios.request).toBeCalledTimes(2)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/me/history'),
-      method: 'GET',
-      params: {
-        from: 0,
-        size: 100,
-        type: 'document'
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/me/history'),
+        method: 'GET',
+        params: {
+          from: 0,
+          size: 100,
+          type: 'document'
+        }
+      })
+    )
   })
 
   it('should call delete user history api function is called', async () => {
@@ -94,12 +99,14 @@ describe('UserHistory.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(mockAxios.request).toBeCalledTimes(2)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/me/history'),
-      method: 'DELETE',
-      params: {
-        type: 'document'
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/me/history'),
+        method: 'DELETE',
+        params: {
+          type: 'document'
+        }
+      })
+    )
   })
 })

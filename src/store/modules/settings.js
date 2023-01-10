@@ -1,17 +1,17 @@
-function actionBuilder (api) {
+function actionBuilder(api) {
   return {
-    getSettings () {
+    getSettings() {
       try {
         return api.getSettings()
       } catch (_) {}
     },
-    onSubmit (state, settings) {
+    onSubmit(state, settings) {
       return api.setSettings(settings)
     }
   }
 }
 
-export function settingsStoreBuilder (api) {
+export function settingsStoreBuilder(api) {
   return {
     namespaced: true,
     actions: actionBuilder(api)

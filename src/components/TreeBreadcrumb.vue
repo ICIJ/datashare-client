@@ -6,10 +6,17 @@
         <span v-if="datadirLabel" class="ml-1">{{ $t('treeView.datadir') }}</span>
       </a>
     </li>
-    <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
+    <li
+      v-if="treeWithoutDataDir.length > maxDirectories"
+      class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr"
+    >
       ...
     </li>
-    <li class="list-inline-item tree-breadcrumb__item" v-for="directory in tree.slice(-maxDirectories)" :key="directory">
+    <li
+      v-for="directory in tree.slice(-maxDirectories)"
+      :key="directory"
+      class="list-inline-item tree-breadcrumb__item"
+    >
       <a href @click.prevent="$emit('input', directory)">{{ directory | basename }}</a>
     </li>
   </ul>
@@ -24,6 +31,9 @@ import { basename } from 'path'
  */
 export default {
   name: 'TreeBreadcrumb',
+  filters: {
+    basename
+  },
   model: {
     prop: 'path',
     event: 'input'
@@ -64,25 +74,26 @@ export default {
       default: false
     }
   },
-  filters: {
-    basename
-  },
   computed: {
-    fullTree () {
-      return reduce(this.path.split('/'), (tree, d) => {
-        if (d !== '') {
-          tree.push([last(tree), basename(d)].join('/'))
-        }
-        return tree
-      }, [])
+    fullTree() {
+      return reduce(
+        this.path.split('/'),
+        (tree, d) => {
+          if (d !== '') {
+            tree.push([last(tree), basename(d)].join('/'))
+          }
+          return tree
+        },
+        []
+      )
     },
-    treeWithoutDataDir () {
-      return filter(this.fullTree, d => d.length > this.dataDir.length)
+    treeWithoutDataDir() {
+      return filter(this.fullTree, (d) => d.length > this.dataDir.length)
     },
-    tree () {
+    tree() {
       return this.noDatadir ? this.treeWithoutDataDir : this.fullTree
     },
-    dataDir () {
+    dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   }
@@ -90,21 +101,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .tree-breadcrumb {
-    &__item.list-inline-item {
-      margin-right: $spacer * 0.10;
-      padding: 0;
+.tree-breadcrumb {
+  &__item.list-inline-item {
+    margin-right: $spacer * 0.1;
+    padding: 0;
 
-      &:not(:last-child):after {
-        content: "/";
-        color: $text-muted;
-        margin-left: $spacer * 0.10;
-      }
+    &:not(:last-child):after {
+      content: '/';
+      color: $text-muted;
+      margin-left: $spacer * 0.1;
+    }
 
-      &:last-child a {
-        color: inherit;
-        font-weight: bold;
-      }
+    &:last-child a {
+      color: inherit;
+      font-weight: bold;
     }
   }
+}
 </style>

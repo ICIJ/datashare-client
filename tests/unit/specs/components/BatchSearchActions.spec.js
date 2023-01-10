@@ -16,9 +16,11 @@ describe('BatchSearchActions.vue', () => {
   const propsData = {
     batchSearch: {
       uuid: '12',
-      projects: [{
-        name: 'BatchSearchActions'
-      }],
+      projects: [
+        {
+          name: 'BatchSearchActions'
+        }
+      ],
       name: 'BatchSearch Test',
       description: 'This is the description of the batch search',
       state: 'SUCCESS',
@@ -46,7 +48,8 @@ describe('BatchSearchActions.vue', () => {
       {
         name: 'batch-search.results',
         path: 'batch-search/:index/:uuid'
-      }, {
+      },
+      {
         name: 'document-standalone',
         path: '/ds/:index/:id/:routing?'
       }
@@ -75,14 +78,18 @@ describe('BatchSearchActions.vue', () => {
 
   it('should display number of selected queries', async () => {
     const stateMock = { selectedQueries: [] }
-    let storeMock = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state: stateMock, getters, mutations, actions: actionBuilder(api) } } })
+    let storeMock = new Vuex.Store({
+      modules: { batchSearch: { namespaced: true, state: stateMock, getters, mutations, actions: actionBuilder(api) } }
+    })
     wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store: storeMock, wait })
     await flushPromises()
 
     expect(wrapper.find('.batch-search-actions__item__counter').exists()).toBeFalsy()
 
     const state2 = { selectedQueries: ['test'] }
-    storeMock = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state: state2, getters, mutations, actions: actionBuilder(api) } } })
+    storeMock = new Vuex.Store({
+      modules: { batchSearch: { namespaced: true, state: state2, getters, mutations, actions: actionBuilder(api) } }
+    })
     wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store: storeMock, wait })
     await flushPromises()
 
@@ -126,9 +133,11 @@ describe('BatchSearchActions.vue', () => {
     const propsData = {
       batchSearch: {
         uuid: '155',
-        projects: [{
-          name: 'BatchSearchActions'
-        }],
+        projects: [
+          {
+            name: 'BatchSearchActions'
+          }
+        ],
         description: 'This is the description of the batch search',
         state: 'QUEUED',
         date: '2019-07-18T14:45:34.869+0000',

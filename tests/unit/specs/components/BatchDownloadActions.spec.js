@@ -8,7 +8,7 @@ describe('BatchDownloadActions.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue(), mockApi).useAll()
   const projects = [{ name: 'project' }]
 
-  function mockRunBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
+  function mockRunBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
     const data = {
       name,
       state,
@@ -19,12 +19,12 @@ describe('BatchDownloadActions.vue', () => {
     return { batchDownload, name, state }
   }
 
-  function mockDeleteBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
+  function mockDeleteBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
     mockApi.deleteTask.mockResolvedValue(true)
     return { batchDownload, name, state }
   }
 
-  function mockFailToDeleteBatchDownload (name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
+  function mockFailToDeleteBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
     mockApi.deleteTask.mockRejectedValue(new Error(''))
     return { batchDownload, name, state }
   }

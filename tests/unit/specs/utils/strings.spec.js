@@ -7,7 +7,7 @@ describe('strings', () => {
       expect(content).toBe('Lorem ipsum <mark class="local-search-term">dolor</mark>')
     })
 
-    it('shouldn\'t wrap anything', () => {
+    it("shouldn't wrap anything", () => {
       const { content } = addLocalSearchMarksClass('Lorem ipsum dolor', { label: 'sit amet' })
       expect(content).toBe('Lorem ipsum dolor')
     })
@@ -48,28 +48,45 @@ describe('strings', () => {
     })
 
     it('should wrap "ipsum" with tags in string with HTML, wrapped with a span', () => {
-      const { content } = addLocalSearchMarksClass('<span>Lorem <strong>ipsum</strong> dolor</span>', { label: 'ipsum' })
+      const { content } = addLocalSearchMarksClass('<span>Lorem <strong>ipsum</strong> dolor</span>', {
+        label: 'ipsum'
+      })
       expect(content).toBe('<span>Lorem <strong><mark class="local-search-term">ipsum</mark></strong> dolor</span>')
     })
 
     it('should wrap "dolor" in a deeply nested string', () => {
-      const { content } = addLocalSearchMarksClass('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', { label: 'dolor' })
-      expect(content).toBe('<i>Lorem</i> <strong>ipsum <span><mark class="local-search-term">dolor</mark></span></strong>')
+      const { content } = addLocalSearchMarksClass('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', {
+        label: 'dolor'
+      })
+      expect(content).toBe(
+        '<i>Lorem</i> <strong>ipsum <span><mark class="local-search-term">dolor</mark></span></strong>'
+      )
     })
 
     it('should wrap "Lorem" in a deeply nested string', () => {
-      const { content } = addLocalSearchMarksClass('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', { label: 'lorem' })
-      expect(content).toBe('<i><mark class="local-search-term">Lorem</mark></i> <strong>ipsum <span>dolor</span></strong>')
+      const { content } = addLocalSearchMarksClass('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', {
+        label: 'lorem'
+      })
+      expect(content).toBe(
+        '<i><mark class="local-search-term">Lorem</mark></i> <strong>ipsum <span>dolor</span></strong>'
+      )
     })
 
     it('shouldn\'t wrap "Lorem ipsum" in different tags', () => {
-      const { content } = addLocalSearchMarksClass('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', { label: 'Lorem ipsum' })
+      const { content } = addLocalSearchMarksClass('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', {
+        label: 'Lorem ipsum'
+      })
       expect(content).toBe('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>')
     })
 
     it('should wrap regex', () => {
-      const { content } = addLocalSearchMarksClass('France is not a tax heaven.\nBut most probably a taxidermists country.', { label: 'tax.*', regex: true })
-      expect(content).toBe('France is not a <mark class="local-search-term">tax heaven. But most probably a taxidermists country.</mark>')
+      const { content } = addLocalSearchMarksClass(
+        'France is not a tax heaven.\nBut most probably a taxidermists country.',
+        { label: 'tax.*', regex: true }
+      )
+      expect(content).toBe(
+        'France is not a <mark class="local-search-term">tax heaven. But most probably a taxidermists country.</mark>'
+      )
     })
 
     it('should display HTML characters', () => {
@@ -83,7 +100,9 @@ describe('strings', () => {
     })
 
     it('should ignore carriage return', () => {
-      const { content, localSearchOccurrences } = addLocalSearchMarksClass('content content Donald \nTrump content', { label: 'Donald Trump' })
+      const { content, localSearchOccurrences } = addLocalSearchMarksClass('content content Donald \nTrump content', {
+        label: 'Donald Trump'
+      })
 
       expect(localSearchOccurrences).toBe(1)
       expect(content).toBe('content content <mark class="local-search-term">Donald Trump</mark> content')
@@ -112,7 +131,9 @@ describe('strings', () => {
       const term = 'i'
       const offsets = [0, 2]
       const marked = addLocalSearchMarksClassByOffsets({ content, offsets, term })
-      expect(marked).toBe('<mark class="local-search-term" data-offset="0">I</mark>C<mark class="local-search-term" data-offset="2">I</mark>J')
+      expect(marked).toBe(
+        '<mark class="local-search-term" data-offset="0">I</mark>C<mark class="local-search-term" data-offset="2">I</mark>J'
+      )
     })
 
     it('should replace "dolor" using its offset minus the given delta', () => {

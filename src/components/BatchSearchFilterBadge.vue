@@ -1,8 +1,10 @@
 <template>
-  <fa class="batch-search-filter-badge text-secondary"
-      :class="{'batch-search-filter-badge--inactive':!active}"
-      icon="circle"
-      width="8px"></fa>
+  <fa
+    class="batch-search-filter-badge text-secondary"
+    :class="{ 'batch-search-filter-badge--inactive': !active }"
+    icon="circle"
+    width="8px"
+  ></fa>
 </template>
 
 <script>
@@ -17,7 +19,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.batch-search-filter-badge--inactive{
+.batch-search-filter-badge--inactive {
   visibility: hidden;
 }
 </style>

@@ -1,7 +1,7 @@
 import IdentityPipeline from './IdentityPipeline'
 
 class DeleteEmptyParagraphsPipeline extends IdentityPipeline {
-  apply (value) {
+  apply(value) {
     return value.replace(/<p>\s*<\/p>/gm, '')
   }
 }

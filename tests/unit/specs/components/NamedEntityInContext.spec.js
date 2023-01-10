@@ -14,11 +14,14 @@ describe('NamedEntityInContext.vue', () => {
   const defaultPropsData = async function ({ namedEntityIndex = 0, extractLength = 16 } = {}) {
     const category = 'PERSON'
     const id = 'document'
-    await letData(es).have(new IndexedDocument(id, index)
-      .withContent('Lorem Lea ipsum dolor Yassine sit amet')
-      .withNer('Lea', 6, category)
-      .withNer('Yassine', 22, category)
-      .withNer('contact@icij.org', -1, category))
+    await letData(es)
+      .have(
+        new IndexedDocument(id, index)
+          .withContent('Lorem Lea ipsum dolor Yassine sit amet')
+          .withNer('Lea', 6, category)
+          .withNer('Yassine', 22, category)
+          .withNer('contact@icij.org', -1, category)
+      )
       .commit()
     const document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getContent')

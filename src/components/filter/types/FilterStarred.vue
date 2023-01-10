@@ -1,14 +1,16 @@
 <template>
-  <filter-boilerplate ref="filter"
-                      v-bind="propsWithout('hide-show-more')"
-                      hide-show-more
-                      hide-exclude
-                      hide-contextualize
-                      hide-sort
-                      :infinite-scroll="false"
-                      @reset-filter-values="resetFilterValues">
+  <filter-boilerplate
+    ref="filter"
+    v-bind="propsWithout('hide-show-more')"
+    hide-show-more
+    hide-exclude
+    hide-contextualize
+    hide-sort
+    :infinite-scroll="false"
+    @reset-filter-values="resetFilterValues"
+  >
     <template #items-group>
-      <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="changeYesNoValue">
+      <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0" @change="changeYesNoValue">
         <b-form-checkbox :value="true" class="filter__items__item">
           <span>
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
@@ -46,35 +48,35 @@ import utils from '@/mixins/utils'
  */
 export default {
   name: 'FilterStarred',
-  extends: FilterAbstract,
   components: {
     FilterBoilerplate
   },
+  extends: FilterAbstract,
   mixins: [utils],
   computed: {
-    total () {
+    total() {
       return Math.max(get(this, '$refs.filter.total', 0) - this.starredDocuments.length, 0)
     },
     selected: {
-      get () {
+      get() {
         return this.getFilterValuesByName(this.filter.name)
       },
-      set (values) {
+      set(values) {
         this.changeYesNoValue(values)
       }
     },
-    starredDocuments () {
+    starredDocuments() {
       return this.filter.starredDocuments
     }
   },
-  mounted () {
+  mounted() {
     return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
   },
   methods: {
-    resetFilterValues (_, refresh) {
+    resetFilterValues(_, refresh) {
       return this.changeYesNoValue([], refresh)
     },
-    changeYesNoValue (values = [], refresh = true) {
+    changeYesNoValue(values = [], refresh = true) {
       if (values.length === 2) {
         values = values.slice(1)
       }

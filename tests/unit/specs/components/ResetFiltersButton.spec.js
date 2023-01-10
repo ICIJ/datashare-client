@@ -33,7 +33,7 @@ describe('ResetFiltersButton.vue', function () {
     expect(wrapper.find('.btn').attributes('disabled')).toBeUndefined()
   })
 
-  it('shouldn\'t have filters', () => {
+  it("shouldn't have filters", () => {
     expect(wrapper.vm.hasFiltersOrQuery).toBeFalsy()
   })
 

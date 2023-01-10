@@ -5,7 +5,9 @@ import WidgetTreeMap from '@/components/widget/WidgetTreeMap'
 
 jest.mock('@/api/elasticsearch', () => {
   return {
-    search: () => { return { aggregations: { byDirname: { buckets: [{ key: '/home/dev/data/folders', doc_count: 50 }] } } } }
+    search: () => {
+      return { aggregations: { byDirname: { buckets: [{ key: '/home/dev/data/folders', doc_count: 50 }] } } }
+    }
   }
 })
 
@@ -24,7 +26,9 @@ describe('WidgetTreeMap.vue', () => {
       localVue,
       store,
       propsData: { widget: {} },
-      data () { return { id: 'widget_tree_map' } }
+      data() {
+        return { id: 'widget_tree_map' }
+      }
     })
   })
 
@@ -45,7 +49,9 @@ describe('WidgetTreeMap.vue', () => {
       localVue,
       store,
       propsData,
-      data () { return { id: 'widget_tree_map' } }
+      data() {
+        return { id: 'widget_tree_map' }
+      }
     })
     expect(wrapper.find('.widget__header').text()).toBe('Hello world')
   })

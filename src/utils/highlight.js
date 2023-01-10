@@ -1,7 +1,7 @@
 import { filter, inRange, some, sortBy } from 'lodash'
 
 export class TextChunk {
-  constructor ({ content = '', start = 0, length = 0, previousChunk = null, ...data } = { }) {
+  constructor({ content = '', start = 0, length = 0, previousChunk = null, ...data } = {}) {
     this.content = content
     this.end = start + length
     this.start = start
@@ -9,36 +9,36 @@ export class TextChunk {
     this.data = data || {}
   }
 
-  highlight (iterator = null) {
+  highlight(iterator = null) {
     if (iterator) {
       return iterator({ ...this.data, content: this.content })
     }
     return `<mark>${this.content}</mark>`
   }
 
-  get isFirstChunk () {
+  get isFirstChunk() {
     return !this.previousChunk
   }
 
-  set previousChunk (previousChunk) {
+  set previousChunk(previousChunk) {
     if (previousChunk) {
       this._previousChunk = previousChunk
       previousChunk.nextChunk = this
     }
   }
 
-  get previousChunk () {
+  get previousChunk() {
     return this._previousChunk || null
   }
 }
 
 export class Highlight {
-  constructor ({ content = '', each = null } = {}) {
+  constructor({ content = '', each = null } = {}) {
     this.content = content
     this.each = each
   }
 
-  cleanRanges (ranges = []) {
+  cleanRanges(ranges = []) {
     ranges = sortBy(ranges, ['start', 'length'])
     // Remove overlaping ranges
     ranges = filter(ranges, (range, i) => {
@@ -46,15 +46,17 @@ export class Highlight {
       // Look into previous ranges to ensure none is overlaping
       return !some(previousRanges, ({ start, length }) => {
         // It starts in the current range
-        return inRange(start, range.start - 1, range.start + range.length + 1) ||
-        // Or it ends in the current range
-        inRange(start + length, range.start - 1, range.start + range.length + 1)
+        return (
+          inRange(start, range.start - 1, range.start + range.length + 1) ||
+          // Or it ends in the current range
+          inRange(start + length, range.start - 1, range.start + range.length + 1)
+        )
       })
     })
     return ranges
   }
 
-  ranges (ranges = []) {
+  ranges(ranges = []) {
     let textChunk = new TextChunk()
     this.cleanRanges(ranges).forEach(({ start, length, ...data }) => {
       const end = start + length
@@ -75,7 +77,7 @@ export class Highlight {
     return content
   }
 
-  static create (...args) {
+  static create(...args) {
     return new Highlight(...args)
   }
 }

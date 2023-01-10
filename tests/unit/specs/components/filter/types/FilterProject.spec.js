@@ -25,7 +25,7 @@ describe('FilterProject.vue', () => {
 
     const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
     localVue.config.optionMergeStrategies.created = (parent, _) => mergeCreatedStrategy(parent)
-    localVue.mixin({ created () {} })
+    localVue.mixin({ created() {} })
 
     Murmur.config.merge({ groups_by_applications: { datashare: JSON.stringify([project, anotherProject]) } })
     store.commit('search/index', project)
@@ -34,11 +34,23 @@ describe('FilterProject.vue', () => {
   beforeEach(() => {
     mockAxios.request.mockClear()
     mockAxios.request.mockResolvedValue({ data: [] })
-    wrapper = shallowMount(FilterProject, { i18n, localVue, store, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) } })
+    wrapper = shallowMount(FilterProject, {
+      i18n,
+      localVue,
+      store,
+      wait,
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }
+    })
   })
 
-  it('should not display a dropdown if we aren\'t in server mode', () => {
-    wrapper = shallowMount(FilterProject, { i18n, localVue, store, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) } })
+  it("should not display a dropdown if we aren't in server mode", () => {
+    wrapper = shallowMount(FilterProject, {
+      i18n,
+      localVue,
+      store,
+      wait,
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }
+    })
 
     expect(wrapper.findAll('option')).toHaveLength(0)
   })
@@ -49,7 +61,14 @@ describe('FilterProject.vue', () => {
 
   describe('on project change', () => {
     beforeEach(() => {
-      wrapper = shallowMount(FilterProject, { i18n, localVue, store, router: new VueRouter(), wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) } })
+      wrapper = shallowMount(FilterProject, {
+        i18n,
+        localVue,
+        store,
+        router: new VueRouter(),
+        wait,
+        propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }
+      })
       store.commit('downloads/clear')
     })
 
@@ -76,22 +95,26 @@ describe('FilterProject.vue', () => {
       await wrapper.vm.select(anotherProject)
 
       expect(mockAxios.request).toBeCalledTimes(3)
-      expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherProject}`)
-      }))
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherProject}`)
+        })
+      )
     })
 
     it('should refresh the recommendedByUsers', async () => {
       await wrapper.vm.select(anotherProject)
 
       expect(mockAxios.request).toBeCalledTimes(3)
-      expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: anotherProject
-        }
-      }))
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/recommendations'),
+          method: 'GET',
+          params: {
+            project: anotherProject
+          }
+        })
+      )
     })
 
     it('should refresh the route', async () => {

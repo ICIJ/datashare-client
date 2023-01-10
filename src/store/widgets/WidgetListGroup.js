@@ -12,13 +12,13 @@ class WidgetListGroup extends WidgetEmpty {
    * @param pipeline='widget-list-group' {string} - I do not know
    * @param options {Object} - See WidgetEmpty for others options
    */
-  constructor ({ title = null, items = [], pipeline = 'widget-list-group', ...options }) {
+  constructor({ title = null, items = [], pipeline = 'widget-list-group', ...options }) {
     super(options)
     this.title = title
     this.items = items
     this.pipeline = pipeline
   }
-  get component () {
+  get component() {
     return Component
   }
 }

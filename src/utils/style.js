@@ -1,8 +1,8 @@
 /**
  * This helper function returns true if the given node
  * has an overflow "auto" or "scroll"
-*/
-export function hasOverflow (node) {
+ */
+export function hasOverflow(node) {
   const { overflow } = window.getComputedStyle(node)
   return overflow === 'auto' || overflow === 'scroll'
 }
@@ -12,7 +12,7 @@ export function hasOverflow (node) {
  * @param {HTMLElement} element
  * @returns {Object}
  */
-export function getTranslateValues (element) {
+export function getTranslateValues(element) {
   const style = window.getComputedStyle(element)
   const matrix = style.transform || style.webkitTransform || style.mozTransform
 

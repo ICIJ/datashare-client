@@ -10,7 +10,12 @@ describe('Pagination.vue', () => {
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
-    wrapper = shallowMount(Pagination, { i18n, localVue, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, sync: false })
+    wrapper = shallowMount(Pagination, {
+      i18n,
+      localVue,
+      propsData: { total: 22, getToTemplate: () => cloneDeep(template) },
+      sync: false
+    })
   })
 
   describe('should display the pagination, or not', () => {
@@ -71,7 +76,10 @@ describe('Pagination.vue', () => {
       const template = { name: 'router-name', query: { from: 20, size: 10 } }
       wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
 
-      expect(wrapper.vm.previousPageLinkParameters()).toMatchObject({ name: 'router-name', query: { from: 10, size: 10 } })
+      expect(wrapper.vm.previousPageLinkParameters()).toMatchObject({
+        name: 'router-name',
+        query: { from: 10, size: 10 }
+      })
     })
 
     it('should generate the link to the next page', () => {

@@ -28,14 +28,14 @@ export default {
     SearchBar,
     SearchLayoutSelector
   },
-  mounted () {
+  mounted() {
     this.saveComponentHeight()
   },
-  updated () {
+  updated() {
     this.saveComponentHeight()
   },
   methods: {
-    saveComponentHeight () {
+    saveComponentHeight() {
       const height = `${this.$el.offsetHeight}px`
       // Save component height in a CSS variable after it's been update
       this.$root.$el.style.setProperty('--core-nav-height', height)
@@ -45,34 +45,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .app__nav {
-    color: $body-color;
-    position: relative;
-    width: auto;
-    z-index: 25;
+.app__nav {
+  color: $body-color;
+  position: relative;
+  width: auto;
+  z-index: 25;
 
-    @media (max-width: $document-float-breakpoint-width) {
-      z-index: 15;
-    }
+  @media (max-width: $document-float-breakpoint-width) {
+    z-index: 15;
+  }
 
-    .search--grid &, .search--table & {
-      z-index: 15;
-    }
+  .search--grid &,
+  .search--table & {
+    z-index: 15;
+  }
 
-    &__container {
+  &__container {
+    &__main {
+      border-radius: $border-radius-lg 0 0 0;
+      position: relative;
+      white-space: nowrap;
+      z-index: $zindex-fixed + 30;
 
-      &__main {
-        border-radius: $border-radius-lg 0 0 0;
-        position:relative;
-        white-space: nowrap;
-        z-index: $zindex-fixed + 30;
-
-        &__search-bar {
-          max-width: 880px;
-          padding: 0;
-          position: relative;
-        }
+      &__search-bar {
+        max-width: 880px;
+        padding: 0;
+        position: relative;
       }
     }
   }
+}
 </style>

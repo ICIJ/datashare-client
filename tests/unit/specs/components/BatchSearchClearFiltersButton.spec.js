@@ -11,9 +11,12 @@ describe('BatchSearchClearFilters.vue', () => {
   let router = null
   beforeEach(() => {
     router = new VueRouter({
-      routes: [{
-        name: 'batch-search', path: 'batch-search'
-      }]
+      routes: [
+        {
+          name: 'batch-search',
+          path: 'batch-search'
+        }
+      ]
     })
   })
 

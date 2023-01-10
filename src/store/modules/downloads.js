@@ -6,15 +6,15 @@ export const state = {
 }
 
 export const mutations = {
-  clear (state) {
+  clear(state) {
     Vue.set(state, 'allowedFor', {})
   },
-  allowedFor (state, { index, allowed }) {
+  allowedFor(state, { index, allowed }) {
     Vue.set(state.allowedFor, index, allowed)
   }
 }
 
-function actionBuilder (api) {
+function actionBuilder(api) {
   const getIndexStatus = async ({ state }, index) => {
     try {
       if (!has(state.allowedFor, index)) {
@@ -26,21 +26,14 @@ function actionBuilder (api) {
       return false
     }
   }
-  const fetchIndexStatus = async ({
-    commit,
-    state
-  }, index) => {
+  const fetchIndexStatus = async ({ commit, state }, index) => {
     const allowed = await getIndexStatus({ state }, index)
     commit('allowedFor', {
       index,
       allowed
     })
   }
-  const fetchIndicesStatus = async ({
-    commit,
-    rootState,
-    state
-  }) => {
+  const fetchIndicesStatus = async ({ commit, rootState, state }) => {
     const promises = []
     for (const index of rootState.search.indices) {
       promises.push(fetchIndexStatus({ commit, state }, index))
@@ -54,7 +47,7 @@ function actionBuilder (api) {
   }
 }
 
-export function downloadsBuilder (api) {
+export function downloadsBuilder(api) {
   const actions = actionBuilder(api)
   return {
     namespaced: true,

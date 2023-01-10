@@ -4,33 +4,36 @@ import { Core } from '@/core'
 import UserHistorySearch from '@/pages/UserHistorySearch'
 
 const propsData = {
-  events: [{
-    id: 'id_01',
-    user: {
-      id: 'user',
-      name: null,
-      email: null,
-      provider: 'local'
+  events: [
+    {
+      id: 'id_01',
+      user: {
+        id: 'user',
+        name: null,
+        email: null,
+        provider: 'local'
+      },
+      creationDate: 'creation_date_01',
+      modificationDate: 'modification_date_01',
+      type: 'SEARCH',
+      name: 'name_01',
+      uri: 'uri_01'
     },
-    creationDate: 'creation_date_01',
-    modificationDate: 'modification_date_01',
-    type: 'SEARCH',
-    name: 'name_01',
-    uri: 'uri_01'
-  }, {
-    id: 'id_02',
-    user: {
-      id: 'user',
-      name: null,
-      email: null,
-      provider: 'local'
-    },
-    creationDate: 'creation_date_02',
-    modificationDate: 'modification_date_02',
-    type: 'SEARCH',
-    name: 'name_02',
-    uri: 'uri_02'
-  }]
+    {
+      id: 'id_02',
+      user: {
+        id: 'user',
+        name: null,
+        email: null,
+        provider: 'local'
+      },
+      creationDate: 'creation_date_02',
+      modificationDate: 'modification_date_02',
+      type: 'SEARCH',
+      name: 'name_02',
+      uri: 'uri_02'
+    }
+  ]
 }
 
 describe('UserHistorySearch.vue', () => {
@@ -78,12 +81,14 @@ describe('UserHistorySearch.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/me/history/event'),
-      method: 'DELETE',
-      params: {
-        id: event.id
-      }
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/me/history/event'),
+        method: 'DELETE',
+        params: {
+          id: event.id
+        }
+      })
+    )
   })
 })

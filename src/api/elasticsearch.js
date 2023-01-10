@@ -7,7 +7,7 @@ import settings from '@/utils/settings'
 
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html
-export function datasharePlugin (Client) {
+export function datasharePlugin(Client) {
   Client.prototype.getDocument = async function (index, id, routing = null, params = {}) {
     try {
       return await this.get({ index, id, routing, ...params })
@@ -29,8 +29,8 @@ export function datasharePlugin (Client) {
 
   Client.prototype._search = function (params) {
     return this.search({ ...params }).then(
-      data => data,
-      error => {
+      (data) => data,
+      (error) => {
         EventBus.$emit('http::error', error)
         throw error
       }
@@ -50,7 +50,15 @@ export function datasharePlugin (Client) {
     return this._search({ index, routing, body })
   }
 
-  Client.prototype.getDocumentNamedEntitiesInCategory = async function (index, docId, routing = null, from = 0, size = 200, category = null, filterToken = null) {
+  Client.prototype.getDocumentNamedEntitiesInCategory = async function (
+    index,
+    docId,
+    routing = null,
+    from = 0,
+    size = 200,
+    category = null,
+    filterToken = null
+  ) {
     const body = bodybuilder()
       .size(size)
       .from(from)
@@ -58,7 +66,7 @@ export function datasharePlugin (Client) {
         type: 'NamedEntity',
         id: docId
       })
-      .addQuery('bool', bool => {
+      .addQuery('bool', (bool) => {
         if (filterToken) {
           const fields = ['mentionNorm', 'mention']
           const query = `*${filterToken}*`
@@ -73,23 +81,33 @@ export function datasharePlugin (Client) {
   }
 
   Client.prototype.addQueryToFilter = function (query, body, fields = []) {
-    body.query('match_all')
-      .addQuery('bool', b => b
+    body.query('match_all').addQuery('bool', (b) =>
+      b
         // Add the query string to the body
         .orQuery('query_string', {
           query,
           fields: fields.length ? fields : undefined
         })
-      )
+    )
   }
 
-  Client.prototype.searchFilter = function (index, filter, query = '*', filters = [], isGlobalSearch = false, options = {}, fields = [], from = 0, size = 8) {
+  Client.prototype.searchFilter = function (
+    index,
+    filter,
+    query = '*',
+    filters = [],
+    isGlobalSearch = false,
+    options = {},
+    fields = [],
+    from = 0,
+    size = 8
+  ) {
     const { preference } = filter
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     let body = filter.body(bodybuilder(), options, from, size)
     if (!isGlobalSearch) {
-      each(filters, filter => filter.addFilter(body))
+      each(filters, (filter) => filter.addFilter(body))
       this.addQueryToFilter(query, body, fields)
     }
     body = body.size(0).rawOption('track_total_hits', true).build()
@@ -97,31 +115,32 @@ export function datasharePlugin (Client) {
   }
 
   Client.prototype._addFiltersToBody = function (filters, body) {
-    each(filters, filter => {
+    each(filters, (filter) => {
       filter.applyTo(body)
     })
   }
 
   Client.prototype._addQueryToBody = function (query, body, fields = []) {
     if (isEqual(fields, ['path'])) replace(query, /\//g, '\\/')
-    body.query('match_all')
-      .addQuery('bool', b => b
-        .orQuery('query_string', {
-          query,
-          fields: fields.length ? fields : undefined
-        })
-      )
+    body.query('match_all').addQuery('bool', (b) =>
+      b.orQuery('query_string', {
+        query,
+        fields: fields.length ? fields : undefined
+      })
+    )
   }
 
   Client.prototype._addSortToBody = function (name = 'relevance', body) {
     const { field, desc } = find(settings.searchSortFields, { name }) || settings.searchSortFields[0]
     if (name === 'creationDateNewest' || name === 'creationDateOldest') {
-      body.sort([{
-        'metadata.tika_metadata_dcterms_created': {
-          order: desc ? 'desc' : 'asc',
-          unmapped_type: 'date'
+      body.sort([
+        {
+          'metadata.tika_metadata_dcterms_created': {
+            order: desc ? 'desc' : 'asc',
+            unmapped_type: 'date'
+          }
         }
-      }])
+      ])
     } else {
       body.sort(field, desc ? 'desc' : 'asc')
     }
@@ -158,7 +177,15 @@ export function datasharePlugin (Client) {
     return body
   }
 
-  Client.prototype.searchDocs = function (index, query = '*', filters = [], from = 0, size = 25, sort = 'relevance', fields = []) {
+  Client.prototype.searchDocs = function (
+    index,
+    query = '*',
+    filters = [],
+    from = 0,
+    size = 25,
+    sort = 'relevance',
+    fields = []
+  ) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     const body = this._buildBody(from, size, filters, query, sort, fields).rawOption('track_total_hits', true).build()

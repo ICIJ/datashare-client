@@ -9,11 +9,11 @@ export { faFile as defaultIcon } from '@fortawesome/free-solid-svg-icons/faFile'
 
 // Import all file icon
 export const iconsContext = require.context('@fortawesome/free-solid-svg-icons', true, /faFile[A-Z]\w+\.js$/)
-export const icons = iconsContext.keys().map(key => {
+export const icons = iconsContext.keys().map((key) => {
   return iconsContext(key)[basename(key, '.js')]
 })
 
-export function findIcon (type) {
+export function findIcon(type) {
   // Remove leading .
   type = trim(type.toLowerCase(), '.')
   // Find the icon name
@@ -23,7 +23,7 @@ export function findIcon (type) {
   return icon
 }
 
-export function findContentTypeIcon (contentType) {
+export function findContentTypeIcon(contentType) {
   const extensions = get(types, [contentType, 'extensions'], [])
   const icon = get(types, [contentType, 'icon'], null)
   return (icon ? findIcon(icon) : find(extensions.map(findIcon))) || defaultIcon

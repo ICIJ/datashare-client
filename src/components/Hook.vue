@@ -4,6 +4,7 @@
  */
 export default {
   name: 'Hook',
+  functional: true,
   props: {
     /**
      * Name of the hook (targeted by plugins).
@@ -26,28 +27,27 @@ export default {
       default: () => {}
     }
   },
-  functional: true,
-  render (createElement, context) {
-    function filterHookedComponentsByTarget (targetName) {
+  render(createElement, context) {
+    function filterHookedComponentsByTarget(targetName) {
       const { $store } = context.parent
       return $store.getters['hooks/filterHookedComponentsByTarget'](targetName)
     }
 
-    function hookedComponents () {
+    function hookedComponents() {
       return filterHookedComponentsByTarget(context.props.name)
     }
 
-    function renderedComponents () {
+    function renderedComponents() {
       return hookedComponents().map(({ component }) => {
         return createElement(component, { props: context.props.bind })
       })
     }
 
-    function isDebug () {
+    function isDebug() {
       return context.parent.$config.is('hooksDebug')
     }
 
-    function debugTag () {
+    function debugTag() {
       return createElement(context.props.debugTag, {
         class: ['hook-debug'],
         attrs: {
@@ -57,7 +57,7 @@ export default {
       })
     }
 
-    function renderedComponentsWithDebug () {
+    function renderedComponentsWithDebug() {
       return [debugTag(), ...renderedComponents()]
     }
 
@@ -68,21 +68,21 @@ export default {
 </script>
 
 <style lang="scss">
-  .hook-debug {
-    position: relative;
-    white-space: nowrap;
-    height: 0;
-    width: 0;
+.hook-debug {
+  position: relative;
+  white-space: nowrap;
+  height: 0;
+  width: 0;
 
-    &:before {
-      content: attr(aria-hook) " → " attr(aria-count);
-      font-size: 0.8rem;
-      font-weight: bold;
-      color: $tertiary;
-      text-shadow: 0 0 0.5em black;
-      background: rgba(black, .7);
-      font-family: $font-family-monospace;
-      padding: 0.1em 0.3em;
-    }
+  &:before {
+    content: attr(aria-hook) ' → ' attr(aria-count);
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: $tertiary;
+    text-shadow: 0 0 0.5em black;
+    background: rgba(black, 0.7);
+    font-family: $font-family-monospace;
+    padding: 0.1em 0.3em;
   }
+}
 </style>

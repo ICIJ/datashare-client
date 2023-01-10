@@ -5,7 +5,7 @@ import WidgetEmpty from './WidgetEmpty'
  * Widget to display text on the insights page
  */
 class WidgetEntities extends WidgetEmpty {
-  get component () {
+  get component() {
     return Component
   }
 }

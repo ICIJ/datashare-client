@@ -16,25 +16,28 @@ describe('BatchSearch.vue', () => {
   beforeAll(async () => {
     api = new Api(null, null)
     api.getBatchSearches = jest.fn().mockResolvedValue({
-      items: [{
-        uuid: '1',
-        projects: [{ name: 'project_01' }, { name: 'project_02' }],
-        name: 'name_01',
-        description: 'description_01',
-        date: '2019-01-01',
-        nbResults: 2,
-        nbQueries: 1,
-        state: 'SUCCESS'
-      }, {
-        uuid: '2',
-        projects: [{ name: 'project_02' }],
-        name: 'name_02',
-        description: 'description_02',
-        date: '2019-01-01',
-        nbResults: 3,
-        nbQueries: 2,
-        state: 'FAILURE'
-      }],
+      items: [
+        {
+          uuid: '1',
+          projects: [{ name: 'project_01' }, { name: 'project_02' }],
+          name: 'name_01',
+          description: 'description_01',
+          date: '2019-01-01',
+          nbResults: 2,
+          nbQueries: 1,
+          state: 'SUCCESS'
+        },
+        {
+          uuid: '2',
+          projects: [{ name: 'project_02' }],
+          name: 'name_02',
+          description: 'description_02',
+          date: '2019-01-01',
+          nbResults: 3,
+          nbQueries: 2,
+          state: 'FAILURE'
+        }
+      ],
       total: 2
     })
     const core = Core.init(createLocalVue(), api).useAll()
@@ -70,7 +73,7 @@ describe('BatchSearch.vue', () => {
     expect(button.attributes().disabled).toBeTruthy()
   })
 
-  it('should display a \'No filtered result\' message when no items and filter is on', async () => {
+  it("should display a 'No filtered result' message when no items and filter is on", async () => {
     const state = { batchSearches: [] }
     const actions = { hasBatchSearch: jest.fn() }
     const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })

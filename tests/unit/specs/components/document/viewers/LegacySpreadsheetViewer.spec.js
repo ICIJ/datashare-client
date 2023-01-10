@@ -34,12 +34,39 @@ describe('LegacySpreadsheetViewer.vue', () => {
     await wrapper.vm.getWorkbook()
     await flushPromises()
 
-    expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element).toBeTruthy()
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(0).text()).toBe('this')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(1).text()).toBe('is')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(2).text()).toBe('a')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(3).text()).toBe('CSV')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(4).text()).toBe('spreadsheet')
+    expect(
+      wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element
+    ).toBeTruthy()
+    expect(
+      wrapper
+        .findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td')
+        .at(0)
+        .text()
+    ).toBe('this')
+    expect(
+      wrapper
+        .findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td')
+        .at(1)
+        .text()
+    ).toBe('is')
+    expect(
+      wrapper
+        .findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td')
+        .at(2)
+        .text()
+    ).toBe('a')
+    expect(
+      wrapper
+        .findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td')
+        .at(3)
+        .text()
+    ).toBe('CSV')
+    expect(
+      wrapper
+        .findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td')
+        .at(4)
+        .text()
+    ).toBe('spreadsheet')
   })
 
   it('should load a xlsx content file', async () => {
@@ -47,22 +74,41 @@ describe('LegacySpreadsheetViewer.vue', () => {
     await wrapper.vm.getWorkbook()
     await flushPromises()
 
-    expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element).toBeTruthy()
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(0).text()).toBe('this')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(1).text()).toBe('is')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(2).text()).toBe('a')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(3).text()).toBe('XLSX')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(4).text()).toBe('spreadsheet')
+    expect(
+      wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element
+    ).toBeTruthy()
+    expect(
+      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(0).text()
+    ).toBe('this')
+    expect(
+      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(1).text()
+    ).toBe('is')
+    expect(
+      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(2).text()
+    ).toBe('a')
+    expect(
+      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(3).text()
+    ).toBe('XLSX')
+    expect(
+      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(4).text()
+    ).toBe('spreadsheet')
   })
 
   it('should change the displayed sheet', async () => {
     wrapper = mount(LegacySpreadsheetViewer, { i18n, localVue, propsData: { document: { url: 'spreadsheet.xlsx' } } })
     await wrapper.vm.getWorkbook()
     await flushPromises()
-    await wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__header option').at(1).setSelected()
+    await wrapper
+      .findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__header option')
+      .at(1)
+      .setSelected()
 
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(0).text()).toBe('second')
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(1).text()).toBe('sheet')
+    expect(
+      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(0).text()
+    ).toBe('second')
+    expect(
+      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(1).text()
+    ).toBe('sheet')
   })
 
   it('should display a thumbnail by page', async () => {
@@ -70,7 +116,17 @@ describe('LegacySpreadsheetViewer.vue', () => {
     await wrapper.vm.getWorkbook()
     await flushPromises()
 
-    expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__header .legacy-spreadsheet-viewer__header__thumbnails').exists()).toBeTruthy()
-    expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__header .legacy-spreadsheet-viewer__header__thumbnails .img-thumbnail')).toHaveLength(2)
+    expect(
+      wrapper
+        .find(
+          '.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__header .legacy-spreadsheet-viewer__header__thumbnails'
+        )
+        .exists()
+    ).toBeTruthy()
+    expect(
+      wrapper.findAll(
+        '.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__header .legacy-spreadsheet-viewer__header__thumbnails .img-thumbnail'
+      )
+    ).toHaveLength(2)
   })
 })

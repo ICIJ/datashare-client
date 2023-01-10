@@ -1,8 +1,15 @@
 <template>
   <batch-search-filter :id="id" :name="name" :active="isActive">
     <keep-alive>
-      <date-picker is-range color="gray" :max-date="new Date()" v-model="selectedDateRange"
-        :model-config="modelConfig" :key="`date-${id}`" :locale="locale">
+      <date-picker
+        :key="`date-${id}`"
+        v-model="selectedDateRange"
+        is-range
+        color="gray"
+        :max-date="new Date()"
+        :model-config="modelConfig"
+        :locale="locale"
+      >
       </date-picker>
     </keep-alive>
   </batch-search-filter>
@@ -35,28 +42,20 @@ export default {
       type: Object
     }
   },
-  methods: {
-    startTimeAdjust (start) {
-      return moment(start).locale(this.$i18n.locale).startOf('day').valueOf()
-    },
-    endTimeAdjust (end) {
-      return moment(end).locale(this.$i18n.locale).endOf('day').valueOf()
-    }
-  },
   computed: {
-    isActive () {
+    isActive() {
       return this.date !== null
     },
-    modelConfig () {
+    modelConfig() {
       return {
         type: 'number'
       }
     },
-    locale () {
+    locale() {
       return this.$i18n.locale
     },
     selectedDateRange: {
-      get () {
+      get() {
         if (this.date?.start && this.date?.end) {
           const start = this.startTimeAdjust(this.date?.start)
           const end = this.endTimeAdjust(this.date?.end)
@@ -64,11 +63,18 @@ export default {
         }
         return this.date
       },
-      set (values) {
+      set(values) {
         this.$emit('update', values)
       }
     }
-
+  },
+  methods: {
+    startTimeAdjust(start) {
+      return moment(start).locale(this.$i18n.locale).startOf('day').valueOf()
+    },
+    endTimeAdjust(end) {
+      return moment(end).locale(this.$i18n.locale).endOf('day').valueOf()
+    }
   }
 }
 </script>

@@ -4,7 +4,7 @@ import utils from '@/mixins/utils'
 export default {
   mixins: [utils],
   methods: {
-    labelToHuman (label) {
+    labelToHuman(label) {
       if (this.$te(label)) {
         return this.$t(label)
       } else if (this.$te('global.' + label)) {
@@ -15,31 +15,31 @@ export default {
         return this.translationKeyToHuman(label)
       }
     },
-    translationKeyToHuman (label = '') {
+    translationKeyToHuman(label = '') {
       return last(String(label).split('.'))
     },
-    getFilterByName (name) {
+    getFilterByName(name) {
       return this.$store.getters['search/getFilter']({ name })
     },
-    getFilterValuesByName (name) {
+    getFilterValuesByName(name) {
       return get(this, `$store.state.search.values.${name}`, [])
     },
-    setFilterValue (filter, item) {
+    setFilterValue(filter, item) {
       this.$store.commit('search/setFilterValue', filter.itemParam(item))
     },
-    removeFilterValue ({ name }) {
+    removeFilterValue({ name }) {
       this.$store.commit('search/removeFilter', name)
     },
-    refreshRouteAndSearch () {
+    refreshRouteAndSearch() {
       this.refreshRoute()
       this.refreshSearch()
     },
-    refreshRoute () {
+    refreshRoute() {
       const name = 'search'
       const query = this.$store.getters['search/toRouteQuery']()
       return this.$router.push({ name, query }).catch(() => {})
     },
-    refreshSearch () {
+    refreshSearch() {
       return this.$store.dispatch('search/query')
     }
   }

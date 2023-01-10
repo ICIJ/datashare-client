@@ -1,24 +1,27 @@
 <template>
-  <filter-boilerplate class="filter--date-range"
-                      ref="filter"
-                      v-bind="$props"
-                      hide-show-more
-                      hide-contextualize
-                      hide-sort>
+  <filter-boilerplate
+    ref="filter"
+    class="filter--date-range"
+    v-bind="$props"
+    hide-show-more
+    hide-contextualize
+    hide-sort
+  >
     <template #items>
       <div class="m-2">
         <date-picker
+          :key="locale"
+          v-model="selectedDate"
           class="date-picker"
           is-range
           is-dark
           is-expanded
           color="yellow"
-          v-model="selectedDate"
           show-caps
           :model-config="{ type: 'number' }"
           :attributes="attributes"
           :locale="locale"
-          :key="locale">
+        >
         </date-picker>
       </div>
     </template>
@@ -38,13 +41,13 @@ import min from 'lodash/min'
  */
 export default {
   name: 'FilterDateRange',
-  extends: FilterAbstract,
   components: {
     DatePicker,
     FilterBoilerplate
   },
+  extends: FilterAbstract,
   computed: {
-    attributes () {
+    attributes() {
       return [
         {
           key: 'today',
@@ -56,11 +59,11 @@ export default {
         }
       ]
     },
-    locale () {
+    locale() {
       return this.$i18n.locale
     },
     selectedDate: {
-      get () {
+      get() {
         const values = this.getFilterValuesByName(this.filter.name) || []
         if (values.length < 2) {
           return null
@@ -69,7 +72,7 @@ export default {
         const end = max(values)
         return { start, end }
       },
-      set (range) {
+      set(range) {
         if (range === null) {
           return this.setFilterValue(this.filter, { key: [] })
         }
@@ -112,7 +115,7 @@ export default {
           .vc-highlight-base-start,
           .vc-highlight-base-middle,
           .vc-highlight-base-end {
-            background-color: rgba($tertiary, .4);
+            background-color: rgba($tertiary, 0.4);
           }
 
           .vc-rounded-full {
@@ -123,7 +126,7 @@ export default {
       }
 
       .vc-day-content:hover {
-        background-color: rgba($tertiary, .1);
+        background-color: rgba($tertiary, 0.1);
       }
     }
   }

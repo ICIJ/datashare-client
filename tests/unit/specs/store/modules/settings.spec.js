@@ -18,20 +18,24 @@ describe('SettingsStore', () => {
     store.dispatch('settings/getSettings')
 
     expect(mockAxiosApi.request).toBeCalledTimes(1)
-    expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/settings')
-    }))
+    expect(mockAxiosApi.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/settings')
+      })
+    )
   })
 
   it('should send the settings modifications', () => {
     store.dispatch('settings/onSubmit', { foo: 'bar' })
 
     expect(mockAxiosApi.request).toBeCalledTimes(1)
-    expect(mockAxiosApi.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/settings'),
-      method: 'PATCH',
-      data: { data: { foo: 'bar' } },
-      headers: { 'Content-Type': 'application/json' }
-    }))
+    expect(mockAxiosApi.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/settings'),
+        method: 'PATCH',
+        data: { data: { foo: 'bar' } },
+        headers: { 'Content-Type': 'application/json' }
+      })
+    )
   })
 })

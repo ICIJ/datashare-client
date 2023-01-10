@@ -20,15 +20,25 @@ describe('DocumentTabNamedEntities.vue', () => {
   })
 
   it('should display named entities in the dedicated tab', async () => {
-    await letData(es).have(new IndexedDocument(id, index)
-      .withPipeline('CORENLP')
-      .withNer('mention_01', 0, 'PERSON')
-      .withNer('mention_02', 0, 'ORGANIZATION')
-      .withNer('mention_03', 0, 'LOCATION'))
+    await letData(es)
+      .have(
+        new IndexedDocument(id, index)
+          .withPipeline('CORENLP')
+          .withNer('mention_01', 0, 'PERSON')
+          .withNer('mention_02', 0, 'ORGANIZATION')
+          .withNer('mention_03', 0, 'LOCATION')
+      )
       .commit()
     document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
+    wrapper = shallowMount(DocumentTabNamedEntities, {
+      i18n,
+      localVue,
+      store,
+      wait,
+      propsData: { document },
+      sync: false
+    })
 
     const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(3)
@@ -41,15 +51,25 @@ describe('DocumentTabNamedEntities.vue', () => {
   })
 
   it('should display filtered named entities', async () => {
-    await letData(es).have(new IndexedDocument(id, index)
-      .withPipeline('DUCKNLP')
-      .withNer('riri', 0, 'PERSON')
-      .withNer('fifi', 0, 'PERSON')
-      .withNer('loulou', 0, 'PERSON'))
+    await letData(es)
+      .have(
+        new IndexedDocument(id, index)
+          .withPipeline('DUCKNLP')
+          .withNer('riri', 0, 'PERSON')
+          .withNer('fifi', 0, 'PERSON')
+          .withNer('loulou', 0, 'PERSON')
+      )
       .commit()
     document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
+    wrapper = shallowMount(DocumentTabNamedEntities, {
+      i18n,
+      localVue,
+      store,
+      wait,
+      propsData: { document },
+      sync: false
+    })
     wrapper.setData({ filterToken: 'lou' })
     await wrapper.vm.getFirstPageInAllCategories()
 
@@ -63,7 +83,14 @@ describe('DocumentTabNamedEntities.vue', () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
+    wrapper = shallowMount(DocumentTabNamedEntities, {
+      i18n,
+      localVue,
+      store,
+      wait,
+      propsData: { document },
+      sync: false
+    })
 
     expect(wrapper.findAll('.document__named-entities--not--searched')).toHaveLength(1)
   })
@@ -72,7 +99,14 @@ describe('DocumentTabNamedEntities.vue', () => {
     await letData(es).have(new IndexedDocument(id, index).withPipeline('CORENLP')).commit()
     document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
+    wrapper = shallowMount(DocumentTabNamedEntities, {
+      i18n,
+      localVue,
+      store,
+      wait,
+      propsData: { document },
+      sync: false
+    })
 
     expect(wrapper.findAll('.document__named-entities--not--found')).toHaveLength(1)
   })

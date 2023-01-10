@@ -18,18 +18,18 @@
                     <fa icon="link" />
                   </span>
                 </div>
-                <b-form-input
-                  :state="isFormValid"
-                  class="b-form-control"
-                  placeholder="URL"
-                  type="url"
-                  v-model="url" />
+                <b-form-input v-model="url" :state="isFormValid" class="b-form-control" placeholder="URL" type="url" />
               </div>
               <div class="d-flex align-items-center">
                 <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
-                <b-btn variant="primary" class="ml-auto text-nowrap" @click="installPluginFromUrl" :disabled="isFormValid !== true">
+                <b-btn
+                  variant="primary"
+                  class="ml-auto text-nowrap"
+                  :disabled="isFormValid !== true"
+                  @click="installPluginFromUrl"
+                >
                   {{ $t('plugins.install') }}
                 </b-btn>
               </div>
@@ -37,11 +37,11 @@
           </b-modal>
         </div>
         <div class="plugins__search ml-auto">
-          <search-form-control :placeholder="$t('plugins.search')" v-model="searchTerm" @input="search" />
+          <search-form-control v-model="searchTerm" :placeholder="$t('plugins.search')" @input="search" />
         </div>
       </div>
       <b-card-group deck>
-        <b-overlay :show="plugin.show" v-for="plugin in plugins" :key="plugin.id" class="plugins__card m-3 d-flex">
+        <b-overlay v-for="plugin in plugins" :key="plugin.id" :show="plugin.show" class="plugins__card m-3 d-flex">
           <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
               <div class="d-flex">
@@ -54,36 +54,57 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
-                  <b-btn class="plugins__card__uninstall-button mb-2" @click="uninstallPlugin(plugin.id)" v-if="plugin.installed" variant="danger">
+                  <b-btn
+                    v-if="plugin.installed"
+                    class="plugins__card__uninstall-button mb-2"
+                    variant="danger"
+                    @click="uninstallPlugin(plugin.id)"
+                  >
                     <fa icon="trash-alt"></fa>
                     {{ $t('plugins.uninstall') }}
                   </b-btn>
-                  <b-btn class="plugins__card__download-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="!plugin.installed">
+                  <b-btn
+                    v-if="!plugin.installed"
+                    class="plugins__card__download-button mb-2"
+                    variant="primary"
+                    @click="installPluginFromId(plugin.id)"
+                  >
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('plugins.install') }}
                   </b-btn>
-                  <b-btn class="plugins__card__update-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="plugin.installed && isPluginFromRegistry(plugin) && plugin.version !== plugin.deliverableFromRegistry.version" size="sm">
+                  <b-btn
+                    v-if="
+                      plugin.installed &&
+                      isPluginFromRegistry(plugin) &&
+                      plugin.version !== plugin.deliverableFromRegistry.version
+                    "
+                    class="plugins__card__update-button mb-2"
+                    variant="primary"
+                    size="sm"
+                    @click="installPluginFromId(plugin.id)"
+                  >
                     <fa icon="sync"></fa>
                     {{ $t('plugins.update') }}
                   </b-btn>
                   <div v-if="plugin.version && plugin.installed" class="plugins__card__version text-muted text-center">
-                    {{ $t('plugins.version', { version: plugin.version  }) }}
+                    {{ $t('plugins.version', { version: plugin.version }) }}
                   </div>
                 </div>
               </div>
             </b-card-text>
-            <template v-slot:footer v-if="isPluginFromRegistry(plugin)" >
+            <template v-if="isPluginFromRegistry(plugin)" #footer>
               <div class="plugins__card__official-version text-truncate w-100">
-                <span class="font-weight-bold">
-                  {{ $t('plugins.officialVersion') }}:
-                </span>
+                <span class="font-weight-bold"> {{ $t('plugins.officialVersion') }}: </span>
                 {{ plugin.deliverableFromRegistry.version }}
               </div>
               <div class="text-truncate w-100">
-                <span class="font-weight-bold">
-                  {{ $t('plugins.homePage') }}:
-                </span>
-                <a class="plugins__card__homepage" :href="plugin.deliverableFromRegistry.homepage" target="_blank" v-if="plugin.deliverableFromRegistry.homepage">
+                <span class="font-weight-bold"> {{ $t('plugins.homePage') }}: </span>
+                <a
+                  v-if="plugin.deliverableFromRegistry.homepage"
+                  class="plugins__card__homepage"
+                  :href="plugin.deliverableFromRegistry.homepage"
+                  target="_blank"
+                >
                   {{ plugin.deliverableFromRegistry.homepage }}
                 </a>
               </div>
@@ -108,7 +129,11 @@ export default {
   components: {
     SearchFormControl
   },
-  data () {
+  filters: {
+    camelCase,
+    startCase
+  },
+  data() {
     return {
       plugins: [],
       searchTerm: '',
@@ -116,29 +141,32 @@ export default {
       url: ''
     }
   },
-  mounted () {
+  computed: {
+    isFormValid() {
+      return this.url === '' ? null : isUrl(this.url)
+    }
+  },
+  mounted() {
     this.search()
   },
-  filters: {
-    camelCase,
-    startCase
-  },
   methods: {
-    isPluginFromRegistry (plugin) {
+    isPluginFromRegistry(plugin) {
       return get(plugin, 'deliverableFromRegistry', false)
     },
-    getPluginName (plugin) {
+    getPluginName(plugin) {
       return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.name : plugin.name
     },
-    getPluginDescription (plugin) {
+    getPluginDescription(plugin) {
       return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.description : plugin.description
     },
-    async search () {
+    async search() {
       const plugins = await this.$core.api.getPlugins(this.searchTerm)
-      map(plugins, plugin => { plugin.show = false })
+      map(plugins, (plugin) => {
+        plugin.show = false
+      })
       this.$set(this, 'plugins', plugins)
     },
-    async installPluginFromId (pluginId) {
+    async installPluginFromId(pluginId) {
       const plugin = find(this.plugins, { id: pluginId })
       plugin.show = true
       try {
@@ -150,7 +178,7 @@ export default {
       }
       plugin.show = false
     },
-    async installPluginFromUrl () {
+    async installPluginFromUrl() {
       this.$set(this, 'isInstallingFromUrl', true)
       try {
         await this.$core.api.installPluginFromUrl(this.url)
@@ -163,7 +191,7 @@ export default {
       this.$set(this, 'isInstallingFromUrl', false)
       this.$set(this, 'url', '')
     },
-    async uninstallPlugin (pluginId) {
+    async uninstallPlugin(pluginId) {
       const plugin = find(this.plugins, { id: pluginId })
       plugin.show = true
       try {
@@ -174,11 +202,6 @@ export default {
         this.$bvToast.toast(this.$t('plugins.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
       plugin.show = false
-    }
-  },
-  computed: {
-    isFormValid () {
-      return this.url === '' ? null : isUrl(this.url)
     }
   }
 }

@@ -50,7 +50,7 @@ class Core extends Behaviors {
    * @param api - Datashare api interface
    * @param mode - mode of authentication ('local' or 'server'
    */
-  constructor (LocalVue = Vue, api = new Api(null, null), mode = getMode(MODE_NAME.LOCAL)) {
+  constructor(LocalVue = Vue, api = new Api(null, null), mode = getMode(MODE_NAME.LOCAL)) {
     super(LocalVue)
     this.LocalVue = LocalVue
     this._api = api
@@ -67,7 +67,7 @@ class Core extends Behaviors {
    * @param {Object} options - Option to pass to the plugin
    * @returns {Core} the current instance of Core
    */
-  use (Plugin, options) {
+  use(Plugin, options) {
     this.LocalVue.use(Plugin, options)
     return this
   }
@@ -75,7 +75,7 @@ class Core extends Behaviors {
    * Configure all default Vue plugins for this application
    * @returns {Core} the current instance of Core
    */
-  useAll () {
+  useAll() {
     this.useI18n()
     this.useBootstrapVue()
     this.useCommons()
@@ -88,7 +88,7 @@ class Core extends Behaviors {
    * Configure vue-i18n plugin
    * @returns {Core} the current instance of Core
    */
-  useI18n () {
+  useI18n() {
     this.use(VueI18n)
     this.i18n = new VueI18n({
       locale: settings.defaultLocale,
@@ -103,7 +103,7 @@ class Core extends Behaviors {
    * Configure bootstrap-vue plugin
    * @returns {Core} the current instance of Core
    */
-  useBootstrapVue () {
+  useBootstrapVue() {
     this.use(BootstrapVue, {
       BPopover: {
         boundaryPadding: 14
@@ -115,7 +115,7 @@ class Core extends Behaviors {
    * Configure vue-router plugin
    * @returns {Core} the current instance of Core
    */
-  useRouter () {
+  useRouter() {
     this.use(VueRouter)
     this.router = new VueRouter(router)
     guards(this)
@@ -125,7 +125,7 @@ class Core extends Behaviors {
    * Configure most common Vue plugins (Murmur, VueProgressBar, VueShortkey, VueScrollTo and VueCalendar)
    * @returns {Core} the current instance of Core
    */
-  useCommons () {
+  useCommons() {
     // Common plugins
     this.use(Murmur)
     this.use(VueProgressBar, { color: settings.progressBar.color })
@@ -143,7 +143,7 @@ class Core extends Behaviors {
    * Configure vue-wait plugin
    * @returns {Core} the current instance of Core
    */
-  useWait () {
+  useWait() {
     this.use(VueWait)
     this.wait = new VueWait({ useVuex: true })
     return this
@@ -152,13 +152,15 @@ class Core extends Behaviors {
    * Add a $core property to the instance's Vue
    * @returns {Core} the current instance of Core
    */
-  useCore () {
+  useCore() {
     const core = this
-    this.use(class VueCore {
-      static install (Vue) {
-        Vue.prototype.$core = core
+    this.use(
+      class VueCore {
+        static install(Vue) {
+          Vue.prototype.$core = core
+        }
       }
-    })
+    )
     return this
   }
   /**
@@ -168,7 +170,7 @@ class Core extends Behaviors {
    * @reject {Object} - The Error object
    * @returns {Promise<Object>}
    */
-  async configure () {
+  async configure() {
     try {
       // Override Murmur default value for content-placeholder
       this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
@@ -200,7 +202,7 @@ class Core extends Behaviors {
     }
   }
 
-  getDefaultProject () {
+  getDefaultProject() {
     const userProjects = this.config.get('groups_by_applications.datashare', [])
     if (userProjects.length === 0) return ''
     const defaultProject = this.config.get('defaultProject', '')
@@ -212,9 +214,9 @@ class Core extends Behaviors {
    * @param {String} [selector=#app] - Query selector to the mounting point
    * @returns {Vue} The instantiated Vue
    */
-  mount (selector = '#app') {
+  mount(selector = '#app') {
     // Render function returns a router-view component by default
-    const render = h => h('router-view')
+    const render = (h) => h('router-view')
     // We do not necessarily use the default Vue so we can use this function
     // from our unit tests
     const vm = new this.LocalVue({
@@ -230,7 +232,7 @@ class Core extends Behaviors {
   /**
    * Build a promise to be resolved when the application is configured.
    */
-  defer () {
+  defer() {
     this._ready = new Promise((resolve, reject) => {
       this._readyResolve = resolve
       this._readyReject = reject
@@ -244,7 +246,7 @@ class Core extends Behaviors {
    * @param {...Mixed} args - Additional params to pass to the event
    * @returns {Core} the current instance of Core
    */
-  dispatch (name, ...args) {
+  dispatch(name, ...args) {
     dispatch(name, { app: this, core: this, ...args })
     return this
   }
@@ -254,7 +256,7 @@ class Core extends Behaviors {
    * @fullfil {Object} Current user
    * @type {Promise<Object>}
    */
-  getUser () {
+  getUser() {
     return this.api.getUser()
   }
   /**
@@ -262,7 +264,7 @@ class Core extends Behaviors {
    * @param {String} title - Title to append to the page
    * @param {String} [suffix=Datashare] - Suffix to the title
    */
-  setPageTitle (title = null, suffix = 'Datashare') {
+  setPageTitle(title = null, suffix = 'Datashare') {
     if (document && document.title) {
       document.title = title ? `${title} - ${suffix}` : suffix
     }
@@ -272,7 +274,7 @@ class Core extends Behaviors {
    * @fullfil {Object} The actual application core instance.
    * @type {Promise<Object>}
    */
-  get ready () {
+  get ready() {
     if (!this._ready) {
       this.defer()
     }
@@ -283,49 +285,49 @@ class Core extends Behaviors {
    * @type {Core}
    * @deprecated
    */
-  get app () {
+  get app() {
     return this
   }
   /**
    * The application core instance
    * @type {Core}
    */
-  get core () {
+  get core() {
     return this
   }
   /**
    * The Vue class to instantiate the application with
    * @type {Vue}
    */
-  get localVue () {
+  get localVue() {
     return this.LocalVue
   }
   /**
    * The Vuex instance
    * @type {Vuex.Store}
    */
-  get store () {
+  get store() {
     return this._store
   }
   /**
    * The Auth module instance
    * @type {Auth}
    */
-  get auth () {
+  get auth() {
     return this._auth
   }
   /**
    * The configuration object provided by Murmur
    * @type {Object}
    */
-  get config () {
+  get config() {
     return Murmur.config
   }
   /**
    * The Datashare api interface
    * @type {Api}
    */
-  get api () {
+  get api() {
     return this._api
   }
   /**
@@ -333,7 +335,7 @@ class Core extends Behaviors {
    * @param {...Mixed} options - Options to pass to the Core constructor
    * @returns {Core}
    */
-  static init (...options) {
+  static init(...options) {
     return new Core(...options)
   }
 }
