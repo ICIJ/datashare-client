@@ -105,7 +105,7 @@ export default {
       {{ $t('document.researchedTerms') }}
     </div>
     <ul class="list-inline m-0">
-      <li v-for="(term, index) in sortedTerms" :key="index" class="list-inline-item">
+      <li v-for="(term, i) in sortedTerms" :key="i" class="list-inline-item">
         <mark
           class="document-global-search-terms-tags__item"
           :class="getTermIndexClass(i, term)"
@@ -117,21 +117,21 @@ export default {
           </span>
           <span
             class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0"
-            :style="getTermIndexBackgroundColor(index)"
+            :style="getTermIndexBackgroundColor(i)"
             v-if="term.count === 0 && term.metadata > 0"
           >
             {{ $t('document.inMetadata') }}
           </span>
           <span
             class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0"
-            :style="getTermIndexBackgroundColor(index)"
+            :style="getTermIndexBackgroundColor(i)"
             v-else-if="term.count === 0 && term.tags > 0"
           >
             {{ $t('document.inTags') }}
           </span>
           <span
             class="document-global-search-terms-tags__item__count py-0"
-            :style="getTermIndexBackgroundColor(index)"
+            :style="getTermIndexBackgroundColor(i)"
             v-else
           >
             {{ term.count }}
