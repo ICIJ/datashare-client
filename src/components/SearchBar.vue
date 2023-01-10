@@ -135,7 +135,6 @@ export default {
     return {
       field: this.$store.state.search.field,
       focused: false,
-      operatorLinks: settings.documentationLinks.operators.default,
       query: this.$store.state.search.query,
       suggestions: []
     }
