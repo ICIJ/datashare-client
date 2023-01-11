@@ -370,7 +370,7 @@
     },
     "level": {
       "all": "Tous",
-      "level00": "Fichier sur le disque",
+      "level00": "Fichier sur disque",
       "level01": "1er",
       "level02": "2ème",
       "level03": "3ème",
@@ -494,7 +494,7 @@
   },
   "extractingLanguageFormControl": {
     "nullOption": "Détecter automatiquement (par défaut)",
-    "ocrWarning": "Il semble que la reconnaissance optique des caractères ne soit pas installée pour cette langue. Veuillez <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">lire le guide de l'utilisateurice</a> pour savoir comment résoudre ce problème."
+    "ocrWarning": "Il semble que la reconnaissance optique des caractères ne soit pas installée pour cette langue. Veuillez <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">lire le guide utilisateurice</a> pour savoir comment résoudre ce problème."
   },
   "indexing": {
     "title": "Analyser vos documents",
@@ -552,13 +552,13 @@
     "settings": "Paramètres",
     "settingsShort": "Réglages",
     "logout": "Déconnexion",
-    "logoutShort": "Se déconnecter",
+    "logoutShort": "Déconnexion",
     "logoutModal": "Cette session restera ouverte jusqu'à ce que vous fermiez ce navigateur ou que vous supprimiez les données de votre navigateur. Sans cela, vous ne serez pas déconnecté•e.",
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
     "faqShort": "FAQ",
-    "userGuides": "Guides d'utilisateurs",
-    "userGuidesShort": "Guide d'utilisation",
+    "userGuides": "Guide utilisateur",
+    "userGuidesShort": "Guide utilisateur",
     "devWiki": "Wiki pour développeur•se•s",
     "connectedAs": "Vous êtes connecté•e en tant que <strong>{username}</strong>"
   },
@@ -772,8 +772,8 @@
     "noFolders": "Aucun dossier",
     "barometer": {
       "document": "aucun document | 1 document | %{total} documents",
-      "amongWhich": "parmi le(s)quel(s)",
-      "onDisk": "sur le disque"
+      "amongWhich": "dont",
+      "onDisk": "sur disque"
     },
     "diskUsage": {
       "details": "Voir l'utilisation du disque",
@@ -836,7 +836,7 @@
     "install": "Installer",
     "uninstall": "Désinstaller",
     "update": "Mettre à jour",
-    "installFromUrl": "Installer le plugin depuis une URL"
+    "installFromUrl": "Installer un plugin depuis une URL"
   },
   "extensions": {
     "title": "Extensions",
