@@ -19,6 +19,6 @@ describe('ImageViewer.vue', () => {
   })
 
   it('should generate an image href containing `inline`', async () => {
-    expect(wrapper.vm.href).toContain('&inline')
+    expect(wrapper.find('img').attributes().src).toContain('&inline')
   })
 })

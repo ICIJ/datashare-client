@@ -4,10 +4,19 @@ import some from 'lodash/some'
 
 // Private properties keys
 const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
-const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
+const _ROOT_STATE = typeof Symbol === 'function' ? Symbol('_ROOT_state') : '_ROOT_state'
 
 export default class FilterText {
-  constructor ({ name, key, icon = null, isSearchable = false, alternativeSearch = () => {}, order = null, fromElasticSearch = true, preference = '_local' } = { }) {
+  constructor({
+    name,
+    key,
+    icon = null,
+    isSearchable = false,
+    alternativeSearch = () => {},
+    order = null,
+    fromElasticSearch = true,
+    preference = '_local'
+  } = {}) {
     this.name = name
     this.key = key
     this.icon = icon
@@ -21,42 +30,50 @@ export default class FilterText {
     this.sortByOrder = 'desc'
   }
 
-  itemParam (item) {
+  itemParam(item) {
     return { name: this.name, value: item.key }
   }
 
-  itemLabel (item) {
+  itemLabel(item) {
     return item.key || item.value
   }
 
-  addChildIncludeFilter (body, param) {
+  addChildIncludeFilter(body, param) {
     return body.addFilter('terms', this.key, param.values)
   }
 
-  addParentIncludeFilter (body, param) {
-    return body.query('has_parent', { parent_type: 'Document' }, q => q.query('terms', this.key, param.values))
+  addParentIncludeFilter(body, param) {
+    return body.query('has_parent', { parent_type: 'Document' }, (q) => q.query('terms', this.key, param.values))
   }
 
-  addParentExcludeFilter (body, param) {
-    return body.query('has_parent', { parent_type: 'Document' }, q => q.notQuery('terms', this.key, param.values))
+  addParentExcludeFilter(body, param) {
+    return body.query('has_parent', { parent_type: 'Document' }, (q) => q.notQuery('terms', this.key, param.values))
   }
 
-  addChildExcludeFilter (body, param) {
+  addChildExcludeFilter(body, param) {
     return body.notFilter('terms', this.key, param.values)
   }
 
-  body (body, options, from = 0, size = 8) {
-    return body
-      .query('match', 'type', 'Document')
-      .agg('terms', this.key, this.key, sub => {
-        return sub.agg('bucket_sort', {
-          size,
-          from
-        }, 'bucket_truncate')
-      }, options)
+  body(body, options, from = 0, size = 8) {
+    return body.query('match', 'type', 'Document').agg(
+      'terms',
+      this.key,
+      this.key,
+      (sub) => {
+        return sub.agg(
+          'bucket_sort',
+          {
+            size,
+            from
+          },
+          'bucket_truncate'
+        )
+      },
+      options
+    )
   }
 
-  addFilter (body) {
+  addFilter(body) {
     if (this.hasValues()) {
       if (this.reverse) {
         if (this.isNamedEntityAggregation(body)) {
@@ -74,42 +91,45 @@ export default class FilterText {
     }
   }
 
-  hasValues () {
+  hasValues() {
     return this.values.length > 0
   }
 
-  isNamedEntityAggregation (body) {
-    return some([
-      '"must":{"term":{"type":"NamedEntity"}}',
-      '"must":[{"term":{"type":"NamedEntity"}}'
-    ], str => includes(JSON.stringify(body.build()), str))
+  isNamedEntityAggregation(body) {
+    return some(['"must":{"term":{"type":"NamedEntity"}}', '"must":[{"term":{"type":"NamedEntity"}}'], (str) =>
+      includes(JSON.stringify(body.build()), str)
+    )
   }
 
-  applyTo (body) {
+  applyTo(body) {
     this.addFilter(body)
   }
 
-  bindState (state) {
-    this[_STATE] = this[_STATE] || state
+  bindRootState(rootState) {
+    this[_ROOT_STATE] = this[_ROOT_STATE] || rootState
   }
 
-  get state () {
-    return this[_STATE]
+  get rootState() {
+    return this[_ROOT_STATE]
   }
 
-  get values () {
+  get state() {
+    return this?.rootState?.search
+  }
+
+  get values() {
     return this[_VALUES] || get(this, ['state', 'values', this.name], [])
   }
 
-  set values (values) {
+  set values(values) {
     this[_VALUES] = values
   }
 
-  get reverse () {
+  get reverse() {
     return get(this, ['state', 'reversed'], []).indexOf(this.name) > -1
   }
 
-  get contextualized () {
+  get contextualized() {
     return get(this, ['state', 'contextualized'], []).indexOf(this.name) > -1
   }
 }

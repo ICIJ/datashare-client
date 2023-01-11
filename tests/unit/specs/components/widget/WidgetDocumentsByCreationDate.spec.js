@@ -1,18 +1,16 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
 import { Core } from '@/core'
+import { flushPromises } from 'tests/unit/tests_utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { widget: { title: 'Hello world' } }
-  const project = toLower('WidgetDocumentsByCreationDate')
-  const anotherProject = toLower('AnotherWidgetDocumentsByCreationDate')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
   let wrapper = null
 
   beforeAll(() => store.commit('insights/project', project))
@@ -26,12 +24,15 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   })
 
   it('should filter data where creation date < 1970', async () => {
-    await letData(es).have(new IndexedDocument('document_01', project)
-      .withCreationDate('2019-08-19T00:00:00.000Z')).commit()
-    await letData(es).have(new IndexedDocument('document_02', project)
-      .withCreationDate('0000-01-01T00:00:00.000Z')).commit()
-    await letData(es).have(new IndexedDocument('document_03', project)
-      .withCreationDate('1968-01-01T00:00:00.000Z')).commit()
+    await letData(es)
+      .have(new IndexedDocument('document_01', project).withCreationDate('2019-08-19T00:00:00.000Z'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_02', project).withCreationDate('0000-01-01T00:00:00.000Z'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_03', project).withCreationDate('1968-01-01T00:00:00.000Z'))
+      .commit()
 
     await wrapper.vm.loadData()
 
@@ -40,9 +41,11 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
   it('should rerun init on project change', async () => {
     const init = jest.spyOn(wrapper.vm, 'init')
-    await store.commit('insights/project', anotherProject)
+    store.commit('insights/project', anotherProject)
+    await flushPromises()
     expect(init).toBeCalledTimes(1)
-    await store.commit('insights/project', project)
+    store.commit('insights/project', project)
+    await flushPromises()
     expect(init).toBeCalledTimes(2)
   })
 
@@ -56,12 +59,15 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     })
 
     it('should change the value of the selectedInterval and reload data', async () => {
-      await letData(es).have(new IndexedDocument('document_01', project)
-        .withCreationDate('2019-08-01T00:00:00.000Z')).commit()
-      await letData(es).have(new IndexedDocument('document_02', project)
-        .withCreationDate('2019-07-01T00:00:00.000Z')).commit()
-      await letData(es).have(new IndexedDocument('document_03', project)
-        .withCreationDate('2019-06-01T00:00:00.000Z')).commit()
+      await letData(es)
+        .have(new IndexedDocument('document_01', project).withCreationDate('2019-08-01T00:00:00.000Z'))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_02', project).withCreationDate('2019-07-01T00:00:00.000Z'))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_03', project).withCreationDate('2019-06-01T00:00:00.000Z'))
+        .commit()
 
       await wrapper.vm.setSelectedInterval('year')
 
@@ -73,7 +79,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   describe('missing data', () => {
     it('should display no message if no data are missing', async () => {
       await wrapper.setData({
-        data: [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }],
+        data: [
+          { date: new Date('2012-02'), doc_count: 2 },
+          { date: new Date('2012-03'), doc_count: 4 }
+        ],
         missing: 0
       })
 
@@ -82,7 +91,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
     it('should display a message if data are missing', async () => {
       await wrapper.setData({
-        data: [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }],
+        data: [
+          { date: new Date('2012-02'), doc_count: 2 },
+          { date: new Date('2012-03'), doc_count: 4 }
+        ],
         missing: 2
       })
 
@@ -90,14 +102,18 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     })
 
     it('should count missing creation dates while loading data', async () => {
-      await letData(es).have(new IndexedDocument('document_01', project)
-        .withCreationDate('2019-08-19T00:00:00.000Z')).commit()
-      await letData(es).have(new IndexedDocument('document_02', project)
-        .withCreationDate('0000-01-01T00:00:00.000Z')).commit()
-      await letData(es).have(new IndexedDocument('document_03', project)
-        .withCreationDate('1968-01-01T00:00:00.000Z')).commit()
+      await letData(es)
+        .have(new IndexedDocument('document_01', project).withCreationDate('2019-08-19T00:00:00.000Z'))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_02', project).withCreationDate('0000-01-01T00:00:00.000Z'))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_03', project).withCreationDate('1968-01-01T00:00:00.000Z'))
+        .commit()
 
       await wrapper.vm.loadData()
+      await flushPromises()
 
       expect(wrapper.vm.missing).toBe(2)
     })

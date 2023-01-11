@@ -5,14 +5,27 @@
         <div class="text-center mb-4">
           {{ Object.keys(doc.sheets).indexOf(doc.active) + 1 }} / {{ Object.keys(doc.sheets).length }}
         </div>
-        <div v-for="page in Object.keys(doc.sheets).length" :key="page" @click="doc.active = Object.keys(doc.sheets)[page - 1]" class="mr-2 my-2 d-flex legacy-spreadsheet-viewer__header__thumbnails">
+        <div
+          v-for="page in Object.keys(doc.sheets).length"
+          :key="page"
+          class="mr-2 my-2 d-flex legacy-spreadsheet-viewer__header__thumbnails"
+          @click="doc.active = Object.keys(doc.sheets)[page - 1]"
+        >
           <span class="d-flex align-items-center">{{ page }}</span>
-          <div class="small ml-1 img-thumbnail text-truncate" v-html="displaySheet(Object.keys(doc.sheets)[page - 1])" />
+          <div
+            class="small ml-1 img-thumbnail text-truncate"
+            v-html="displaySheet(Object.keys(doc.sheets)[page - 1])"
+          />
         </div>
       </div>
       <div class="legacy-spreadsheet-viewer__preview">
-        <div class="legacy-spreadsheet-viewer__preview__header" v-if="doc.active">
-          <b-form-select class="input-sm" v-model="doc.active" :options="Object.keys(doc.sheets)" @change="displaySheet" />
+        <div v-if="doc.active" class="legacy-spreadsheet-viewer__preview__header">
+          <b-form-select
+            v-model="doc.active"
+            class="input-sm"
+            :options="Object.keys(doc.sheets)"
+            @change="displaySheet"
+          />
         </div>
         <div class="legacy-spreadsheet-viewer__preview__content">
           <div v-html="displaySheet(doc.active)" />
@@ -27,7 +40,7 @@
 </template>
 
 <script>
-import XLSX from 'xlsx'
+import { read, utils } from 'xlsx'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**
@@ -35,6 +48,7 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
  */
 export default {
   name: 'LegacySpreadsheetViewer',
+  mixins: [datashareSourceMixin],
   props: {
     /**
      * The selected document
@@ -44,8 +58,7 @@ export default {
       default: () => ({})
     }
   },
-  mixins: [datashareSourceMixin],
-  data () {
+  data() {
     return {
       message: this.$t('document.generatingPreview'),
       doc: {
@@ -54,36 +67,37 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.getWorkbook()
   },
   methods: {
-    getWorkbook () {
-      return this.xlsx().then(workbook => {
-        this.doc.sheets = workbook
-        this.doc.active = Object.keys(workbook)[0]
-      }).catch(err => {
-        this.message = err.message
-      })
-    },
-    xlsx () {
-      return this.getSource(this.document, { responseType: 'arraybuffer' })
-        .then(arrayBuffer => {
-          let arr = ''
-          const data = new Uint8Array(arrayBuffer)
-          for (let i = 0; i !== data.length; ++i) {
-            arr += String.fromCharCode(data[i])
-          }
-          const workbook = XLSX.read(arr, { type: 'binary' })
-          const result = {}
-          workbook.SheetNames.forEach(function (sheetname) {
-            const roa = XLSX.utils.sheet_to_html(workbook.Sheets[sheetname])
-            if (roa.length > 0) result[sheetname] = roa
-          })
-          return result
+    getWorkbook() {
+      return this.xlsx()
+        .then((workbook) => {
+          this.doc.sheets = workbook
+          this.doc.active = Object.keys(workbook)[0]
+        })
+        .catch((err) => {
+          this.message = err.message
         })
     },
-    displaySheet (value) {
+    xlsx() {
+      return this.getSource(this.document, { responseType: 'arraybuffer' }).then((arrayBuffer) => {
+        let arr = ''
+        const data = new Uint8Array(arrayBuffer)
+        for (let i = 0; i !== data.length; ++i) {
+          arr += String.fromCharCode(data[i])
+        }
+        const workbook = read(arr, { type: 'binary' })
+        const result = {}
+        workbook.SheetNames.forEach(function (sheetname) {
+          const roa = utils.sheet_to_html(workbook.Sheets[sheetname])
+          if (roa.length > 0) result[sheetname] = roa
+        })
+        return result
+      })
+    },
+    displaySheet(value) {
       return this.doc.sheets[value]
     }
   }

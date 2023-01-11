@@ -3,7 +3,7 @@ import isString from 'lodash/isString'
 import IdentityPipeline from './IdentityPipeline'
 
 class AddLabelComponents extends IdentityPipeline {
-  apply (value) {
+  apply(value) {
     return castArray(value).map(({ label, ...obj }) => {
       // If the given label is a string,
       // this pipeline will wrap it into a tiny component that

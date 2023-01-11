@@ -7,33 +7,36 @@ import UserHistoryDocument from '@/pages/UserHistoryDocument'
 describe('UserHistoryDocument.vue', () => {
   const { i18n, localVue, router } = Core.init(createLocalVue()).useAll()
   const propsData = {
-    events: [{
-      id: 'id_01',
-      user: {
-        id: 'user',
-        name: null,
-        email: null,
-        provider: 'local'
+    events: [
+      {
+        id: 'id_01',
+        user: {
+          id: 'user',
+          name: null,
+          email: null,
+          provider: 'local'
+        },
+        creationDate: 'creation_date_01',
+        modificationDate: 'modification_date_01',
+        type: 'DOCUMENT',
+        name: 'name_01',
+        uri: 'uri_01'
       },
-      creationDate: 'creation_date_01',
-      modificationDate: 'modification_date_01',
-      type: 'DOCUMENT',
-      name: 'name_01',
-      uri: 'uri_01'
-    }, {
-      id: 'id_02',
-      user: {
-        id: 'user',
-        name: null,
-        email: null,
-        provider: 'local'
-      },
-      creationDate: 'creation_date_02',
-      modificationDate: 'modification_date_02',
-      type: 'DOCUMENT',
-      name: 'name_02',
-      uri: 'uri_02'
-    }]
+      {
+        id: 'id_02',
+        user: {
+          id: 'user',
+          name: null,
+          email: null,
+          provider: 'local'
+        },
+        creationDate: 'creation_date_02',
+        modificationDate: 'modification_date_02',
+        type: 'DOCUMENT',
+        name: 'name_02',
+        uri: 'uri_02'
+      }
+    ]
   }
   let wrapper = null
 

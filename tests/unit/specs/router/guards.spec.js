@@ -3,16 +3,9 @@ import { setCookie, removeCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockRejectedValue({ response: { status: 401 } })
-  }
-})
-
-const { localVue, router, config } = Core.init(createLocalVue()).useAll()
-
 describe('guards', () => {
-  let wrapper
+  let wrapper = null
+  const { localVue, router, config } = Core.init(createLocalVue()).useAll()
 
   beforeAll(() => {
     config.set('groups_by_applications.datashare', ['local-datashare'])

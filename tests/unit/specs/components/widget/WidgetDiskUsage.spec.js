@@ -1,19 +1,18 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import WidgetDiskUsage from '@/components/widget/WidgetDiskUsage'
-import { Core } from '@/core'
+import { flushPromises } from 'tests/unit/tests_utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
+import WidgetDiskUsage from '@/components/widget/WidgetDiskUsage'
+import { Core } from '@/core'
+
 describe('WidgetDiskUsage.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { widget: { title: 'Hello world' } }
-  const project = toLower('WidgetDiskUsage')
-  const anotherProject = toLower('AnotherWidgetDiskUsage')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
   let wrapper = null
 
   beforeEach(() => {
@@ -35,11 +34,10 @@ describe('WidgetDiskUsage.vue', () => {
   })
 
   it('should reset path on project change', async () => {
-    wrapper.vm.$set(wrapper.vm, 'path', 'path_01')
+    await wrapper.setData({ path: 'path_01' })
     expect(wrapper.vm.path).toBe('path_01')
-
-    await store.commit('insights/project', anotherProject)
-
+    store.commit('insights/project', anotherProject)
+    await flushPromises()
     expect(wrapper.vm.path).toBe('dataDir')
   })
 })

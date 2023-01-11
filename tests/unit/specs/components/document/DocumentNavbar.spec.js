@@ -1,26 +1,27 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import axios from 'axios'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import DocumentNavbar from '@/components/document/DocumentNavbar'
 import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('@/utils/utils')
-jest.mock('axios')
 
 describe('DocumentNavbar.vue', () => {
-  const { i18n, localVue, store, router } = Core.init(createLocalVue()).useAll()
-  const project = toLower('DocumentNavbar')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  let i18n, localVue, store, router, mockAxios, api
+  const { index, es } = esConnectionHelper.build()
   let wrapper = null
-
   beforeAll(() => {
-    store.commit('search/index', project)
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    router = core.router
+    store.commit('search/index', index)
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
@@ -32,13 +33,16 @@ describe('DocumentNavbar.vue', () => {
   afterAll(() => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
     jest.unmock('@/utils/utils')
-    jest.unmock('axios')
   })
 
-  describe('Mark as recommmended button', () => {
+  describe('Mark as recommended button', () => {
     beforeAll(async () => {
-      await letData(es).have(new IndexedDocument('doc_01', project)).commit()
-      await store.dispatch('document/get', { id: 'doc_01', index: project })
+      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+      await store.dispatch('document/get', { id: 'doc_01', index })
+    })
+
+    beforeEach(() => {
+      mockAxios.request.mockClear()
     })
 
     it('should display a "Mark as recommended" button', () => {
@@ -46,62 +50,68 @@ describe('DocumentNavbar.vue', () => {
     })
 
     it('should call batchUpdate api function, MARK document as recommended and update recommendedBy in search store', async () => {
-      axios.request.mockClear()
-      axios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'Jean-Michel' }, count: 1 }] } })
+      mockAxios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'Jean-Michel' }, count: 1 }] } })
       await wrapper.vm.toggleAsRecommended()
 
-      expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/recommend`),
-        method: 'POST',
-        data: ['doc_01']
-      }))
+      expect(mockAxios.request).toBeCalledTimes(2)
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/recommend`),
+          method: 'POST',
+          data: ['doc_01']
+        })
+      )
       expect(wrapper.vm.isRecommended).toBeTruthy()
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: project
-        }
-      }))
-      expect(store.state.search.recommendedByUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/recommendations'),
+          method: 'GET',
+          params: {
+            project: index
+          }
+        })
+      )
+      expect(store.state.recommended.byUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
     })
 
     it('should call batchUpdate api function, UNMARK document as recommended and update recommendedBy in search store', async () => {
       store.commit('document/isRecommended', true)
-      axios.request.mockClear()
-      axios.request.mockResolvedValue({ data: [] })
+      mockAxios.request.mockResolvedValue({ data: [] })
 
       await wrapper.vm.toggleAsRecommended()
 
-      expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/unrecommend`),
-        method: 'POST',
-        data: ['doc_01']
-      }))
+      expect(mockAxios.request).toBeCalledTimes(2)
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unrecommend`),
+          method: 'POST',
+          data: ['doc_01']
+        })
+      )
       expect(wrapper.vm.isRecommended).toBeFalsy()
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: project
-        }
-      }))
-      expect(store.state.search.recommendedByUsers).toEqual([])
+      expect(mockAxios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/recommendations'),
+          method: 'GET',
+          params: {
+            project: index
+          }
+        })
+      )
+      expect(store.state.recommended.byUsers).toEqual([])
     })
   })
 
   it('should display the number of recommendedBy', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index: project })
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index })
 
     expect(wrapper.find('.document-navbar__recommended-by-number').exists()).toBeTruthy()
   })
 
   it('should display document title if shrinked', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index: project })
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index })
 
     await wrapper.setProps({ isShrinked: true })
 

@@ -33,30 +33,30 @@ export default {
       default: () => ({ hoverPreviewEnabled: true })
     }
   },
-  data () {
+  data() {
     return {
       formatter: null,
       mounted: false
     }
   },
-  async mounted () {
-    await this.$nextTick()
-    this.mounted = true
-  },
   watch: {
     $props: {
       deep: true,
       immediate: true,
-      handler () {
+      handler() {
         return this.render()
       }
     },
-    mounted () {
+    mounted() {
       return this.render()
     }
   },
+  async mounted() {
+    await this.$nextTick()
+    this.mounted = true
+  },
   methods: {
-    render () {
+    render() {
       if (this.mounted) {
         const formatter = new JSONFormatter(this.json, this.open, this.config)
         this.$el.innerHTML = ''

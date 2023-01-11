@@ -23,9 +23,9 @@ const WrappedHook = {
 //
 // Because we use custom component, the runtime-build function must be defined
 // explicitely in the hooked component definition.
-function hookedComponentDefinition (content = '') {
+function hookedComponentDefinition(content = '') {
   return {
-    render (h) {
+    render(h) {
       return h('div', { class: 'hooked-component' }, content)
     }
   }
@@ -78,7 +78,11 @@ describe('Hook.vue', () => {
   })
 
   it('should have two components in reverse order', () => {
-    store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('0'), order: 1 })
+    store.commit('hooks/register', {
+      target: 'test-ordered-components',
+      definition: hookedComponentDefinition('0'),
+      order: 1
+    })
     store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
     const propsData = { name: 'test-ordered-components' }
     const wrapper = mount(WrappedHook, { localVue, store, propsData })

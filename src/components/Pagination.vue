@@ -1,37 +1,41 @@
 <template>
-  <div v-if="isDisplayedComputed" class="pagination" :id="id">
+  <div v-if="isDisplayedComputed" :id="id" class="pagination">
     <router-link
-      :to="firstPageLinkParameters()"
-      :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
-      class="pagination__link pagination__first-page px-2"
-      v-b-tooltip="{ id, placement, trigger: 'hover' }"
       v-show="!noFirstPageLink"
-      :title="$t('pagination.firstPage')">
+      v-b-tooltip="{ id, placement, trigger: 'hover' }"
+      :to="firstPageLinkParameters()"
+      :class="{ disabled: isFirstOrPreviousPageUnavailable() }"
+      class="pagination__link pagination__first-page px-2"
+      :title="$t('pagination.firstPage')"
+    >
       <fa icon="angle-double-left"></fa>
     </router-link>
     <router-link
-      :to="previousPageLinkParameters()"
-      :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
-      class="pagination__link pagination__previous-page px-2"
       v-b-tooltip="{ id, placement, trigger: 'hover' }"
-      :title="$t('pagination.previousPage')">
+      :to="previousPageLinkParameters()"
+      :class="{ disabled: isFirstOrPreviousPageUnavailable() }"
+      class="pagination__link pagination__previous-page px-2"
+      :title="$t('pagination.previousPage')"
+    >
       <fa icon="angle-left"></fa>
     </router-link>
     <router-link
-      :to="nextPageLinkParameters()"
-      :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
-      class="pagination__link pagination__next-page px-2"
       v-b-tooltip="{ id, placement, trigger: 'hover' }"
-      :title="$t('pagination.nextPage')">
+      :to="nextPageLinkParameters()"
+      :class="{ disabled: isNextOrLastPageUnavailable() }"
+      class="pagination__link pagination__next-page px-2"
+      :title="$t('pagination.nextPage')"
+    >
       <fa icon="angle-right"></fa>
     </router-link>
     <router-link
-      :to="lastPageLinkParameters()"
-      :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
-      class="pagination__link pagination__last-page px-2"
-      v-b-tooltip="{ id, placement, trigger: 'hover' }"
       v-show="!noLastPageLink"
-      :title="$t('pagination.lastPage')">
+      v-b-tooltip="{ id, placement, trigger: 'hover' }"
+      :to="lastPageLinkParameters()"
+      :class="{ disabled: isNextOrLastPageUnavailable() }"
+      class="pagination__link pagination__last-page px-2"
+      :title="$t('pagination.lastPage')"
+    >
       <fa icon="angle-double-right"></fa>
     </router-link>
   </div>
@@ -102,58 +106,58 @@ export default {
     }
   },
   computed: {
-    isDisplayedComputed () {
+    isDisplayedComputed() {
       return this.isDisplayed === noop ? this.total > this.size : this.isDisplayed()
     },
-    size () {
+    size() {
       return get(this.getToTemplate(), ['query', this.sizeAttr], 0)
     },
-    from () {
+    from() {
       return get(this.getToTemplate(), ['query', this.fromAttr], 0)
     },
-    nextFrom () {
+    nextFrom() {
       return this.from + this.size
     },
-    gap () {
+    gap() {
       return Number(this.total % this.size === 0)
     },
-    id () {
+    id() {
       return uniqueId('pagination')
     },
-    placement () {
+    placement() {
       return this.position === 'top' ? 'bottomleft' : 'topleft'
     }
   },
   methods: {
-    mergeWithQuery (query) {
+    mergeWithQuery(query) {
       const to = this.getToTemplate()
       to.query = Object.assign(to.query, query)
       return to
     },
-    firstPageLinkParameters () {
+    firstPageLinkParameters() {
       return this.mergeWithQuery({
         [this.fromAttr]: 0
       })
     },
-    previousPageLinkParameters () {
+    previousPageLinkParameters() {
       return this.mergeWithQuery({
         [this.fromAttr]: max([0, this.from - this.size])
       })
     },
-    nextPageLinkParameters () {
+    nextPageLinkParameters() {
       return this.mergeWithQuery({
         [this.fromAttr]: this.nextFrom < this.total ? this.nextFrom : this.from
       })
     },
-    lastPageLinkParameters () {
+    lastPageLinkParameters() {
       return this.mergeWithQuery({
         [this.fromAttr]: this.size * (floor(this.total / this.size) - this.gap)
       })
     },
-    isFirstOrPreviousPageUnavailable () {
+    isFirstOrPreviousPageUnavailable() {
       return this.from === 0
     },
-    isNextOrLastPageUnavailable () {
+    isNextOrLastPageUnavailable() {
       return this.from + this.size >= this.total
     }
   }
@@ -161,16 +165,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .pagination {
-    &__link,
-    &__link:hover {
-      color: $text-muted;
-      font-size: 1.1em;
+.pagination {
+  &__link,
+  &__link:hover {
+    color: $text-muted;
+    font-size: 1.1em;
 
-      &.disabled {
-        color: $gray-500;
-        cursor: inherit;
-      }
+    &.disabled {
+      color: $gray-500;
+      cursor: inherit;
     }
   }
+}
 </style>

@@ -2,23 +2,27 @@
   <filter-boilerplate v-bind="$props" ref="filter" @aggregate="$refs.treeView.reloadDataWithSpinner()">
     <template #items="{ sortBy, sortByOrder }">
       <div class="filter__tree-view">
-        <tree-view v-model="path" ref="treeView"
-                  :project="project"
-                  :selectedPaths.sync="selectedPaths"
-                  :pre-body-build="preBodyBuild"
-                  :sort-by="sortBy"
-                  :sort-by-order="sortByOrder"
-                  selectable
-                  count
-                  include-children-documents
-                  no-bars
-                  compact></tree-view>
+        <tree-view
+          ref="treeView"
+          v-model="path"
+          :projects="projects"
+          :selected-paths.sync="selectedPaths"
+          :pre-body-build="preBodyBuild"
+          :sort-by="sortBy"
+          :sort-by-order="sortByOrder"
+          compact
+          count
+          include-children-documents
+          no-bars
+          selectable
+        />
       </div>
     </template>
   </filter-boilerplate>
 </template>
 
 <script>
+import { isEqual } from 'lodash'
 import elasticsearch from '@/api/elasticsearch'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
@@ -29,55 +33,62 @@ import TreeView from '@/components/TreeView'
  */
 export default {
   name: 'FilterPath',
-  extends: FilterAbstract,
   components: {
     FilterBoilerplate,
     TreeView
   },
-  data () {
+  extends: FilterAbstract,
+  data() {
     return {
       key: null,
       path: null
     }
   },
-  created () {
-    this.$set(this, 'path', this.dataDir)
-  },
-  watch: {
-    project () {
-      this.$set(this, 'path', this.dataDir)
-      this.$set(this, 'selectedPaths', [])
-    }
-  },
   computed: {
-    dataDir () {
+    dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     },
+    filterValues() {
+      return this.getFilterByName(this.filter.name).values
+    },
     selectedPaths: {
-      get () {
-        return this.getFilterByName(this.filter.name).values
+      get() {
+        return this.filterValues
       },
-      set (key) {
-        this.setFilterValue(this.filter, { key })
-        this.$store.commit('search/from', 0)
-        this.refreshRouteAndSearch()
+      set(key) {
+        if (!isEqual(key, this.filterValues)) {
+          this.setFilterValue(this.filter, { key })
+          this.$store.commit('search/from', 0)
+          this.refreshRouteAndSearch()
+        }
       }
     },
-    project () {
-      return this.$store.state.search.index
+    projects() {
+      return this.$store.state.search.indices
     },
-    instantiatedFilters () {
+    instantiatedFilters() {
       return this.$store.getters['search/instantiatedFilters']
     },
-    isContextualized () {
+    isContextualized() {
       return this.$store.getters['search/isFilterContextualized'](this.filter.name)
     }
   },
+  watch: {
+    projects(value, previousValue) {
+      if (!isEqual(value, previousValue)) {
+        this.$set(this, 'path', this.dataDir)
+        this.setFilterValue(this.filter, { key: [] })
+      }
+    }
+  },
+  created() {
+    this.$set(this, 'path', this.dataDir)
+  },
   methods: {
-    preBodyBuild (body) {
+    preBodyBuild(body) {
       if (this.isContextualized) {
         // Add every filter to the search body
-        this.instantiatedFilters.forEach(filter => filter.addFilter(body))
+        this.instantiatedFilters.forEach((filter) => filter.addFilter(body))
         // Add query to the search body
         elasticsearch.addQueryToFilter(this.$store.state.search.query || '*', body)
       }
@@ -88,26 +99,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .filter {
-    &__tree-view /deep/ .tree-view {
-      &__header {
-        background: $light;
-        border-radius: $border-radius-sm;
-        color: $body-color;
-        margin: 0.5rem;
+.filter {
+  &__tree-view :deep(.tree-view) {
+    .tree-view__header {
+      background: $light;
+      border-radius: $border-radius-sm;
+      color: $body-color;
+      margin: 0.5rem;
 
-        &__hits, &__size {
-          display: none;
-        }
+      &__hits,
+      &__size {
+        display: none;
       }
+    }
 
-      .filter--dark & .list-group-item {
-        border-bottom: 0;
+    .filter--dark & .list-group-item {
+      border-bottom: 0;
 
-        a {
-          color: $light;
-        }
+      a {
+        color: $light;
       }
     }
   }
+}
 </style>

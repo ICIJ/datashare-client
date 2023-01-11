@@ -3,7 +3,7 @@ import { SimplePipeline, IdentityPipeline, AddLineBreaksPipeline } from '@/store
 
 describe('PipelinesStore', () => {
   it('should define a store module', () => {
-    expect(store.state.pipelines).not.toBeUndefined()
+    expect(store.state.pipelines).toBeDefined()
   })
 
   it('should found a pipeline by its name', () => {
@@ -24,7 +24,7 @@ describe('PipelinesStore', () => {
 
   it('should register a pipeline with a function', () => {
     const name = 'test-pl-with-function'
-    const type = value => value.toUpperCase()
+    const type = (value) => value.toUpperCase()
     store.commit('pipelines/register', { name, type })
     const pipeline = store.getters['pipelines/getInstantiatedPipelineByName'](name)
     expect(pipeline).toBeInstanceOf(SimplePipeline)
@@ -33,7 +33,7 @@ describe('PipelinesStore', () => {
 
   it('should register a pipeline with a function', () => {
     class Type {
-      apply (value) {
+      apply(value) {
         return value.toUpperCase()
       }
     }
@@ -111,8 +111,8 @@ describe('PipelinesStore', () => {
 
   it('should have ordered pipelines', () => {
     const category = 'test-category-ordered-case'
-    store.commit('pipelines/register', { category, type: s => s.toLowerCase() })
-    store.commit('pipelines/register', { category, type: s => s.toUpperCase() })
+    store.commit('pipelines/register', { category, type: (s) => s.toLowerCase() })
+    store.commit('pipelines/register', { category, type: (s) => s.toUpperCase() })
     const pipelines = store.getters['pipelines/getPipelineChainByCategory'](category)
     expect(pipelines).toHaveLength(2)
     expect(pipelines.reduce((res, fn) => fn(res), 'foo BAR')).toBe('FOO BAR')
@@ -121,8 +121,8 @@ describe('PipelinesStore', () => {
 
   it('should have ordered pipelines', () => {
     const category = 'test-category-ordered-case-with-property'
-    store.commit('pipelines/register', { category, type: s => s.toLowerCase(), order: 10 })
-    store.commit('pipelines/register', { category, type: s => s.toUpperCase(), order: 5 })
+    store.commit('pipelines/register', { category, type: (s) => s.toLowerCase(), order: 10 })
+    store.commit('pipelines/register', { category, type: (s) => s.toUpperCase(), order: 5 })
     const pipelines = store.getters['pipelines/getPipelineChainByCategory'](category)
     expect(pipelines).toHaveLength(2)
     expect(pipelines.reduce((res, fn) => fn(res), 'foo BAR')).toBe('foo bar')

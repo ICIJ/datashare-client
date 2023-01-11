@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import NamedEntityInContext from '@/components/NamedEntityInContext'
@@ -9,19 +8,20 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('NamedEntityInContext.vue', () => {
-  const index = toLower('NamedEntityInContext')
-  esConnectionHelper(index)
+  const { index, es } = esConnectionHelper.build()
 
-  const es = esConnectionHelper.es
   // A quick function to generate the default propsData for most tests
   const defaultPropsData = async function ({ namedEntityIndex = 0, extractLength = 16 } = {}) {
     const category = 'PERSON'
     const id = 'document'
-    await letData(es).have(new IndexedDocument(id, index)
-      .withContent('Lorem Lea ipsum dolor Yassine sit amet')
-      .withNer('Lea', 6, category)
-      .withNer('Yassine', 22, category)
-      .withNer('contact@icij.org', -1, category))
+    await letData(es)
+      .have(
+        new IndexedDocument(id, index)
+          .withContent('Lorem Lea ipsum dolor Yassine sit amet')
+          .withNer('Lea', 6, category)
+          .withNer('Yassine', 22, category)
+          .withNer('contact@icij.org', -1, category)
+      )
       .commit()
     const document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getContent')

@@ -10,7 +10,6 @@ export { default as FilterPath } from './FilterPath'
 export { default as FilterRecommendedBy } from './FilterRecommendedBy'
 export { default as FilterStarred } from './FilterStarred'
 export { default as FilterText } from './FilterText'
-export { default as FilterYesNo } from './FilterYesNo'
 
 export default [
   {
@@ -59,7 +58,7 @@ export default [
     type: 'FilterDateRange',
     options: {
       name: 'creationDate',
-      key: 'metadata.tika_metadata_creation_date',
+      key: 'metadata.tika_metadata_dcterms_created',
       icon: 'calendar-alt',
       order: 50,
       fromElasticSearch: false

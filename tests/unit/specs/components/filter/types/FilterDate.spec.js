@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import FilterDate from '@/components/filter/types/FilterDate'
@@ -15,9 +14,7 @@ filters.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterDate.vue', () => {
   const { i18n, localVue, store, wait, router } = Core.init(createLocalVue()).useAll()
-  const index = toLower('FilterDate')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
   const filter = store.getters['search/getFilter']({ name: 'indexingDate' })
   const propsData = { filter }
 
@@ -31,12 +28,9 @@ describe('FilterDate.vue', () => {
   afterEach(() => store.commit('search/reset'))
 
   it('should display a creation date filter with 2 months', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', index)
-      .withIndexingDate('2018-04-01T00:00:00.000Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_02', index)
-      .withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_03', index)
-      .withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', index).withIndexingDate('2018-04-01T00:00:00.000Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02', index).withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_03', index).withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
 
     await wrapper.vm.root.aggregate()
 

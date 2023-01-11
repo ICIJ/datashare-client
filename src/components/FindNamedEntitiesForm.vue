@@ -1,31 +1,40 @@
 <template>
   <v-wait for="load ner pipelines">
-    <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-5 text-light" />
-    <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
-      <div class="find-named-entities-form__header mb-4">
-        <h4>
+    <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
+    <form class="find-named-entities-form position-relative" @submit.prevent="submitFindNamedEntities">
+      <fa icon="tags" class="position-absolute mt-1 ml-1" size="lg" />
+      <div class="ml-4 pl-3">
+        <p class="find-named-entities-form__header font-weight-bold mb-0">
           {{ $t('indexing.findNamedEntitiesHeader') }}
-        </h4>
-      </div>
-      <div class="find-named-entities-form__subheader mb-4">
-        <span>
-          {{ $t('indexing.findNamedEntitiesSubheader') }}
-        </span>
-      </div>
-      <div class="find-named-entities-form__body form-group mb-4 pl-4">
-        <div class="custom-control custom-radio" v-for="(translationReference, pip) in pipelines" :key="pip">
-          <input class="custom-control-input" type="radio" :id="pip" :value="pip" v-model="pipeline">
-          <label class="custom-control-label" :for="pip">
-            {{ $t(`${translationReference}`) }}
-            <div class="font-italic small" v-if="pip === 'corenlp'">
-              {{ $t('indexing.default') }}
+        </p>
+        <div class="find-named-entities-form__body form-group mb-4">
+          <p class="mb-2 small">
+            {{ $t('indexing.findNamedEntitiesSubheader') }}
+          </p>
+          <fieldset class="list-group">
+            <div
+              v-for="(translationReference, pip) in pipelines"
+              :key="pip"
+              class="list-group-item bg-transparent border-light"
+            >
+              <b-form-radio v-model="pipeline" name="pipeline" :value="pip">
+                {{ $t(`${translationReference}`) }}
+                <div v-if="pip === 'corenlp'" class="font-italic small">
+                  {{ $t('indexing.default') }}
+                </div>
+              </b-form-radio>
             </div>
-          </label>
+          </fieldset>
         </div>
       </div>
-      <div class="find-named-entities-form__offline form-group pl-4" v-if="$config.is('manageDocuments')">
-        <b-form-checkbox id="syncModels" v-model="offline">
-          {{ $t('indexing.syncModels') }}
+      <div v-if="$config.is('manageDocuments')" class="find-named-entities-form__offline form-group">
+        <b-form-checkbox v-model="offline" switch>
+          <div class="font-weight-bold ml-1">
+            {{ $t('indexing.syncModelsLabel') }}
+          </div>
+          <div class="ml-1 small">
+            {{ $t('indexing.syncModels') }}
+          </div>
         </b-form-checkbox>
       </div>
       <div class="find-named-entities-form__footer mt-4 row no-gutters">
@@ -55,6 +64,10 @@ const { mapFields } = createHelpers({
  */
 export default {
   name: 'FindNamedEntitiesForm',
+  filters: {
+    lowerCase,
+    startCase
+  },
   mixins: [utils],
   props: {
     /**
@@ -65,24 +78,24 @@ export default {
       default: noop
     }
   },
-  filters: {
-    lowerCase,
-    startCase
-  },
-  data () {
+  data() {
     return {
       pipelines: [],
       disabled: false
     }
   },
   computed: {
-    ...mapFields([
-      'form.offline',
-      'form.pipeline'
-    ])
+    ...mapFields(['form.offline', 'form.pipeline'])
+  },
+  async mounted() {
+    this.$wait.start('load ner pipelines')
+    let pipelines = await this.$store.dispatch('indexing/getNerPipelines')
+    pipelines = map(pipelines, lowerCase)
+    this.$set(this, 'pipelines', this.handlePipelinesTranslation(pipelines))
+    this.$wait.end('load ner pipelines')
   },
   methods: {
-    async submitFindNamedEntities () {
+    async submitFindNamedEntities() {
       this.disabled = true
       try {
         await this.$store.dispatch('indexing/submitFindNamedEntities')
@@ -91,37 +104,29 @@ export default {
         this.finally()
       }
     },
-    handlePipelinesTranslation (pipelines) {
+    handlePipelinesTranslation(pipelines) {
       const translationsMap = {}
       pipelines.forEach((pip) => {
         translationsMap[pip] = `indexing.pipelineOptions.${pip}`
       })
       return translationsMap
     }
-  },
-  async mounted () {
-    this.$wait.start('load ner pipelines')
-    let pipelines = await this.$store.dispatch('indexing/getNerPipelines')
-    pipelines = map(pipelines, lowerCase)
-    this.$set(this, 'pipelines', this.handlePipelinesTranslation(pipelines))
-    this.$wait.end('load ner pipelines')
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
-  .find-named-entities-form {
-    background: darken($primary, 20);
-    color: white;
+.find-named-entities-form {
+  background: darken($primary, 20);
+  color: white;
 
-    &__header h4 {
-      font-size: 1.2em;
-      font-weight: bolder;
-    }
-
-    &__subheader {
-      font-style: italic;
-    }
+  &__header h4 {
+    font-size: 1.2em;
+    font-weight: bolder;
   }
+
+  &__subheader {
+    font-style: italic;
+  }
+}
 </style>

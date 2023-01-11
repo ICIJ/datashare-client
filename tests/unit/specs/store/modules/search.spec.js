@@ -1,33 +1,30 @@
-import { cloneDeep, find, omit, toLower } from 'lodash'
-import axios from 'axios'
+import { cloneDeep, find, omit } from 'lodash'
 
-import Api from '@/api'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
-import store from '@/store'
+import { storeBuilder } from '@/store/storeBuilder'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
-jest.mock('axios')
+import { Api } from '@/api'
 
 describe('SearchStore', () => {
-  const project = toLower('SearchStore')
-  const anotherProject = toLower('AnotherSearchStore')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
 
-  beforeAll(() => store.commit('search/index', project))
+  let store
+  beforeAll(() => {
+    store = storeBuilder(new Api({ request: jest.fn() }, null))
+    store.commit('search/index', project)
+  })
 
   afterEach(() => {
     store.commit('search/index', project)
     store.commit('search/reset')
   })
 
-  afterAll(() => jest.unmock('axios'))
-
   it('should define a store module', () => {
-    expect(store.state.search).not.toBeUndefined()
+    expect(store.state.search).toBeDefined()
   })
 
   it('should instantiate the default 12 filters, with order', () => {
@@ -39,42 +36,22 @@ describe('SearchStore', () => {
 
   it('should reset to initial state', async () => {
     const initialState = cloneDeep(store.state.search)
-    store.commit('search/index', anotherProject)
+    store.commit('search/indices', [anotherProject])
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
     store.commit('search/toggleFilters')
-    store.commit('search/isDownloadAllowed', true)
-    store.commit('search/recommendedByUsers', ['user_01', 'user_02'])
-    store.commit('search/recommendedByTotal', 42)
 
     store.commit('search/reset')
 
-    const omittedFields = ['index', 'isReady', 'filters', 'showFilters', 'response', 'size', 'sort']
+    const omittedFields = ['index', 'indices', 'isReady', 'filters', 'showFilters', 'response', 'size', 'sort']
     expect(omit(store.state.search, omittedFields)).toEqual(omit(initialState, omittedFields))
-    expect(store.state.search.index).toBe(anotherProject)
+    expect(store.state.search.indices).toEqual([anotherProject])
     expect(store.state.search.isReady).toBeTruthy()
     expect(find(store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
 
     store.commit('search/size', 25)
-  })
-
-  it('should not reset the starredDocuments from the filter', async () => {
-    store.commit('search/starredDocuments', ['document_01', 'document_02'])
-
-    store.commit('search/reset', ['starredDocuments'])
-
-    expect(find(store.getters['search/instantiatedFilters'], { name: 'starred' }).starredDocuments)
-      .toEqual(['document_01', 'document_02'])
-  })
-
-  it('should not reset the starredDocuments', async () => {
-    store.commit('search/starredDocuments', ['document_01', 'document_02'])
-
-    store.commit('search/reset', ['starredDocuments'])
-
-    expect(store.state.search.starredDocuments).toEqual(['document_01', 'document_02'])
   })
 
   it('should change the state after "query" mutation', async () => {
@@ -119,7 +96,7 @@ describe('SearchStore', () => {
 
   it('should return document from another project', async () => {
     await letData(es).have(new IndexedDocument('document', anotherProject).withContent('bar')).commit()
-    await store.dispatch('search/query', { index: anotherProject, query: 'bar', from: 0, size: 25 })
+    await store.dispatch('search/query', { indices: [anotherProject], query: 'bar', from: 0, size: 25 })
 
     expect(store.state.search.response.hits).toHaveLength(1)
     expect(store.state.search.response.hits[0].basename).toBe('document')
@@ -283,8 +260,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 2 documents', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(4)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.hits).toHaveLength(2)
@@ -292,8 +270,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 3 documents', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(4)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(3)
@@ -301,8 +280,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 1 document (1/3)', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(4)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(1)
@@ -315,8 +295,9 @@ describe('SearchStore', () => {
   })
 
   it('should return 5 documents in total', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document')
-      .withIndex(project).count(5)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(5))
+      .commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.total).toBe(5)
@@ -324,19 +305,30 @@ describe('SearchStore', () => {
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']())
-      .toMatchObject({ field: 'all', index: project, q: '', size: 25, sort: 'relevance', from: 0 })
+    expect(store.getters['search/toRouteQuery']()).toMatchObject({
+      field: 'all',
+      indices: project,
+      q: '',
+      size: 25,
+      from: 0
+    })
   })
 
   it('should return an advanced and filtered query parameters', () => {
-    store.commit('search/index', project)
+    store.commit('search/indices', [project])
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
 
-    expect(store.getters['search/toRouteQuery']())
-      .toMatchObject({ index: project, q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
+    expect(store.getters['search/toRouteQuery']()).toMatchObject({
+      indices: project,
+      q: 'datashare',
+      from: 0,
+      size: 12,
+      sort: 'randomOrder',
+      'f[contentType]': ['TXT']
+    })
 
     store.commit('search/size', 25)
   })
@@ -358,35 +350,35 @@ describe('SearchStore', () => {
   describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the project of the store according to the url', async () => {
       store.commit('search/index', project)
-      await store.dispatch('search/updateFromRouteQuery', { index: process.env.VUE_APP_ES_ANOTHER_INDEX })
+      store.dispatch('search/updateFromRouteQuery', { indices: process.env.VUE_APP_ES_ANOTHER_INDEX })
 
       expect(store.state.search.index).toBe(process.env.VUE_APP_ES_ANOTHER_INDEX)
     })
 
     it('should set the query of the store according to the url', async () => {
       store.commit('search/query', 'anything')
-      await store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
+      store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
 
       expect(store.state.search.query).toBe('new_query')
     })
 
     it('should set the from of the store according to the url', async () => {
       store.commit('search/from', 12)
-      await store.dispatch('search/updateFromRouteQuery', { from: 42 })
+      store.dispatch('search/updateFromRouteQuery', { from: 42 })
 
       expect(store.state.search.from).toBe(42)
     })
 
     it('should RESET the from of the store according to the url', async () => {
       store.commit('search/from', 12)
-      await store.dispatch('search/updateFromRouteQuery', { from: 0 })
+      store.dispatch('search/updateFromRouteQuery', { from: 0 })
 
       expect(store.state.search.from).toBe(0)
     })
 
     it('should set the size of the store according to the url', async () => {
       store.commit('search/size', 12)
-      await store.dispatch('search/updateFromRouteQuery', { size: 24 })
+      store.dispatch('search/updateFromRouteQuery', { size: 24 })
 
       expect(store.state.search.size).toBe(24)
       store.commit('search/size', 25)
@@ -394,32 +386,25 @@ describe('SearchStore', () => {
 
     it('should set the sort of the store according to the url', async () => {
       store.commit('search/sort', 'anything')
-      await store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
+      store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
 
       expect(store.state.search.sort).toBe('new_sort')
     })
 
     it('should set the filter of the store according to the url', async () => {
-      await store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
+      store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
       expect(store.getters['search/getFilter']({ name: 'contentType' }).values[0]).toBe('new_type')
-    })
-
-    it('should not change the starredDocuments on updateFromRouteQuery', async () => {
-      store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
-      await store.dispatch('search/updateFromRouteQuery', {})
-
-      expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
     })
 
     it('should not change the field on updateFromRouteQuery', async () => {
       store.commit('search/field', 'author')
-      await store.dispatch('search/updateFromRouteQuery', {})
+      store.dispatch('search/updateFromRouteQuery', {})
 
       expect(store.state.search.field).toBe('author')
     })
   })
 
-  it('should not delete the term from the query if it doesn\'t exist', async () => {
+  it("should not delete the term from the query if it doesn't exist", async () => {
     store.commit('search/query', '*')
     await store.dispatch('search/deleteQueryTerm', 'term')
 
@@ -484,241 +469,137 @@ describe('SearchStore', () => {
     it('should retrieve 1 applied filter', () => {
       store.commit('search/query', 'term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term_01', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false }
+      ])
     })
 
     it('should retrieve 2 applied filters', () => {
       store.commit('search/query', 'term_01 term_02')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false }
+      ])
     })
 
     it('should retrieve 3 applied filters', () => {
       store.commit('search/query', 'term_01 term_02 term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: false, regex: false }
+      ])
     })
 
     it('should merge 2 identical terms', () => {
       store.commit('search/query', 'term_01 term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term_01', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false }
+      ])
     })
 
     it('should filter on boolean operators "AND" and "OR"', () => {
       store.commit('search/query', 'term_01 AND term_02 OR term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: false, regex: false }
+      ])
     })
 
     it('should not split an exact search sentence', () => {
       store.commit('search/query', 'term_01 "and an exact term" term_02')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'and an exact term', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'and an exact term', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false }
+      ])
     })
 
     it('should display field name', () => {
       store.commit('search/query', 'field_name:term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: 'field_name', label: 'term_01', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: 'field_name', label: 'term_01', negation: false, regex: false }
+      ])
     })
 
     it('should return a negation parameter according to the prefix', () => {
       store.commit('search/query', '-term_01 +term_02 !term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: true, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: true, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false }
+      ])
     })
 
     it('should return a negation parameter if query starts by "NOT"', () => {
       store.commit('search/query', 'NOT term_01')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term_01', negation: true, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: true, regex: false }
+      ])
     })
 
     it('should return a negation parameter if query contains "AND NOT" or "OR NOT"', () => {
       store.commit('search/query', 'term_01 AND NOT term_02 NOT term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: true, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: true, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false }
+      ])
     })
 
     it('should remove escaped slash', () => {
       store.commit('search/query', 'term\\:other')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'term:other', negation: false, regex: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term:other', negation: false, regex: false }
+      ])
     })
 
     it('should grab terms between brackets', () => {
       store.commit('search/query', 'term_01 (term_02 AND -term_03) term_04')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false },
-          { field: '', label: 'term_04', negation: false, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false },
+        { field: '', label: 'term_04', negation: false, regex: false }
+      ])
     })
 
     it('should apply the negation only to the second group', () => {
       store.commit('search/query', '(term_01 term_02) NOT term_03')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([
-          { field: '', label: 'term_01', negation: false, regex: false },
-          { field: '', label: 'term_02', negation: false, regex: false },
-          { field: '', label: 'term_03', negation: true, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false },
+        { field: '', label: 'term_03', negation: true, regex: false }
+      ])
     })
 
     it('should detect regex and return it as true', () => {
       store.commit('search/query', '/test and.*/')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: 'test and.*', negation: false, regex: true }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'test and.*', negation: false, regex: true }
+      ])
     })
 
     it('should replace escaped arobase in regex', () => {
       store.commit('search/query', '/.*\\@.*/')
 
-      expect(store.getters['search/retrieveQueryTerms'])
-        .toEqual([{ field: '', label: '.*@.*', negation: false, regex: true }])
-    })
-  })
-
-  describe('retrieveContentQueryTermsInContent', () => {
-    it('should return an empty array', () => {
-      expect(store.getters['search/retrieveContentQueryTermsInContent']()).toEqual([])
-    })
-  })
-
-  describe('retrieveContentQueryTermsInDocument', () => {
-    const id = 'document'
-
-    it('should return an empty array if no query term', async () => {
-      await letData(es).have(new IndexedDocument(id, project)).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent')
-      await store.dispatch('search/query', '*')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([])
-    })
-
-    it('should return an empty result if no match between the query and the document', async () => {
-      await letData(es).have(new IndexedDocument(id, project)).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent')
-      await store.dispatch('search/query', 'test')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([{ content: 0, field: '', label: 'test', metadata: 0, negation: false, tags: 0, regex: false }])
-    })
-
-    it('should return a content of 1 if there is a match between the query and the document content', async () => {
-      await letData(es).have(new IndexedDocument(id, project).withContent('specific term specific')).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent')
-      await store.dispatch('search/query', 'specific')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([{ content: 2, field: '', label: 'specific', metadata: 0, negation: false, tags: 0, regex: false }])
-    })
-
-    it('should return a metadata of 3 if there is a match between the query and the document metadata', async () => {
-      await letData(es).have(new IndexedDocument(id, project).withOtherMetadata('term term term')).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent')
-      await store.dispatch('search/query', 'term')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([{ content: 0, field: '', label: 'term', metadata: 3, negation: false, tags: 0, regex: false }])
-    })
-
-    it('should return a tags of 1 if there is a match between the query and the document tags', async () => {
-      await letData(es).have(new IndexedDocument(id, project).withTags(['tags'])).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent')
-      await store.dispatch('search/query', 'tags')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([{ content: 0, field: '', label: 'tags', metadata: 0, negation: false, tags: 1, regex: false }])
-    })
-
-    it('should apply regex to count occurrences', async () => {
-      await letData(es).have(new IndexedDocument(id, project).withContent('this is a test like another')).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent')
-      await store.dispatch('search/query', '/.*test.*/')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([{ content: 1, field: '', label: '.*test.*', metadata: 0, negation: false, tags: 0, regex: true }])
-    })
-
-    it('should find phrase match across carriage return', async () => {
-      await letData(es).have(new IndexedDocument(id, project).withContent('content content Emmanuel\nMacron content')).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent', { id, index: project })
-      await store.dispatch('search/query', '"Emmanuel Macron"')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([{ content: 1, field: '', label: 'Emmanuel Macron', metadata: 0, negation: false, tags: 0, regex: false }])
-    })
-
-    it('should sort query terms according to where and how many it is found', async () => {
-      await letData(es).have(new IndexedDocument(id, project)
-        .withContent('term_00 term_00 term_01 term_04 term_05 term_07')
-        .withOtherMetadata('term_02 term_04 term_06 term_07')
-        .withTags(['term_03', 'term_05', 'term_06', 'term_07'])
-      ).commit()
-      await store.dispatch('document/get', { id, index: project })
-      await store.dispatch('document/getContent', { id, index: project })
-      await store.dispatch('search/query', 'term_00 term_01 term_02 term_03 term_04 term_05 term_06 term_07 term_08')
-
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([
-          { content: 2, field: '', label: 'term_00', metadata: 0, negation: false, tags: 0, regex: false },
-          { content: 1, field: '', label: 'term_07', metadata: 1, negation: false, tags: 1, regex: false },
-          { content: 1, field: '', label: 'term_04', metadata: 1, negation: false, tags: 0, regex: false },
-          { content: 1, field: '', label: 'term_05', metadata: 0, negation: false, tags: 1, regex: false },
-          { content: 1, field: '', label: 'term_01', metadata: 0, negation: false, tags: 0, regex: false },
-          { content: 0, field: '', label: 'term_06', metadata: 1, negation: false, tags: 1, regex: false },
-          { content: 0, field: '', label: 'term_02', metadata: 1, negation: false, tags: 0, regex: false },
-          { content: 0, field: '', label: 'term_03', metadata: 0, negation: false, tags: 1, regex: false },
-          { content: 0, field: '', label: 'term_08', metadata: 0, negation: false, tags: 0, regex: false }
-        ])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: '.*@.*', negation: false, regex: true }
+      ])
     })
   })
 
@@ -787,60 +668,6 @@ describe('SearchStore', () => {
     })
   })
 
-  describe('starredDocuments', () => {
-    it('should return the list of the starredDocuments', async () => {
-      axios.request.mockResolvedValue({ data: [42] })
-      await store.dispatch('search/getStarredDocuments')
-
-      expect(store.state.search.starredDocuments).toEqual([42])
-      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([42])
-    })
-
-    it('should remove a documentId from the list of the starredDocuments', () => {
-      store.commit('search/starredDocuments', [12, 42])
-      store.commit('search/removeFromStarredDocuments', [42])
-
-      expect(store.state.search.starredDocuments).toEqual([12])
-    })
-
-    it('should push a documentId from the list of the starredDocuments', () => {
-      store.commit('search/starredDocuments', [12])
-      store.commit('search/pushFromStarredDocuments', 42)
-
-      expect(store.state.search.starredDocuments).toEqual([12, 42])
-    })
-
-    it('should push a documentId from the list of the starredDocuments only if it does not exist', () => {
-      store.commit('search/pushFromStarredDocuments', 12)
-      store.commit('search/pushFromStarredDocuments', 42)
-      store.commit('search/pushFromStarredDocuments', 42)
-      store.commit('search/pushFromStarredDocuments', 42)
-
-      expect(store.state.search.starredDocuments).toEqual([12, 42])
-    })
-
-    it('should toggle a starred documentId, push it if it is not starred', async () => {
-      store.commit('search/starredDocuments', [])
-      await store.dispatch('search/toggleStarDocument', 45)
-
-      expect(store.state.search.starredDocuments).toEqual([45])
-      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([45])
-    })
-
-    it('should toggle a starred documentId, remove it if it is starred', async () => {
-      store.commit('search/starredDocuments', [48])
-      await store.dispatch('search/toggleStarDocument', 48)
-
-      expect(store.state.search.starredDocuments).toEqual([])
-      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([])
-    })
-
-    it('should set the starredDocuments property of the filter', () => {
-      store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
-      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual(['doc_01', 'doc_02'])
-    })
-  })
-
   it('should find document on querying the NamedEntity', async () => {
     const document = new IndexedDocument('doc_01', project)
     document.withNer('test')
@@ -865,8 +692,12 @@ describe('SearchStore', () => {
   })
 
   it('should find document on querying the NamedEntity with a complex query', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project).withContent('test of ner_01').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02', project).withContent('test of ner_02').withNer('ner_02')).commit()
+    await letData(es)
+      .have(new IndexedDocument('doc_01', project).withContent('test of ner_01').withNer('ner_01'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('doc_02', project).withContent('test of ner_02').withNer('ner_02'))
+      .commit()
     await letData(es).have(new IndexedDocument('doc_03', project).withContent('no content').withNer('test')).commit()
 
     await store.dispatch('search/query', '(test AND ner_*) OR test')
@@ -884,27 +715,6 @@ describe('SearchStore', () => {
     expect(find(store.getters['search/instantiatedFilters'], { name }).values).toEqual([42])
   })
 
-  it('should star a batch of documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project).withContent('test').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02', project).withNer('ner_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03', project).withNer('test')).commit()
-
-    await store.dispatch('search/starDocuments', [{ id: 'doc_01' }, { id: 'doc_03' }])
-
-    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_03'])
-  })
-
-  it('should unstar a batch of documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project).withContent('test').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02', project).withNer('ner_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03', project).withNer('test')).commit()
-
-    await store.dispatch('search/starDocuments', [{ id: 'doc_01' }, { id: 'doc_03' }])
-    await store.dispatch('search/unstarDocuments', [{ id: 'doc_01' }])
-
-    expect(store.state.search.starredDocuments).toEqual(['doc_03'])
-  })
-
   it('should order documents by path', async () => {
     await letData(es).have(new IndexedDocument('c', project)).commit()
     await letData(es).have(new IndexedDocument('b', project)).commit()
@@ -916,92 +726,5 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits[0].shortId).toBe('a')
     expect(store.state.search.response.hits[1].shortId).toBe('b')
     expect(store.state.search.response.hits[2].shortId).toBe('c')
-  })
-
-  describe('documentsRecommended state attribute', () => {
-    it('should init documentsRecommended to an empty array', () => {
-      expect(store.state.search).toHaveProperty('documentsRecommended')
-      expect(store.state.search.documentsRecommended).toEqual([])
-    })
-
-    it('should set documentsRecommended to userIds', () => {
-      const userIds = ['user_01', 'user_02', 'user_03']
-      store.commit('search/documentsRecommended', userIds)
-
-      expect(store.state.search.documentsRecommended).toEqual(userIds)
-    })
-
-    it('should set the list of documents recommended by a list of users', async () => {
-      axios.request.mockResolvedValue({ data: ['document_01', 'document_02', 'document_03'] })
-      axios.request.mockClear()
-
-      await store.dispatch('search/getDocumentsRecommendedBy', ['user_01', 'user_02'])
-
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
-        method: 'GET',
-        params: {
-          userids: 'user_01,user_02'
-        }
-      }))
-      expect(store.state.search.documentsRecommended).toEqual(['document_01', 'document_02', 'document_03'])
-    })
-
-    it('should reset the list of documents recommended if no users', async () => {
-      axios.request.mockClear()
-
-      await store.dispatch('search/getDocumentsRecommendedBy', [])
-
-      expect(axios.request).toBeCalledTimes(0)
-      expect(store.state.search.documentsRecommended).toEqual([])
-    })
-  })
-
-  describe('recommendedByUsers state attribute', () => {
-    it('should init recommendedByUsers to an empty array', () => {
-      expect(store.state.search).toHaveProperty('recommendedByUsers')
-      expect(store.state.search.recommendedByUsers).toEqual([])
-    })
-
-    it('should init recommendedByTotal to zero', () => {
-      expect(store.state.search).toHaveProperty('recommendedByTotal')
-      expect(store.state.search.recommendedByTotal).toBe(0)
-    })
-
-    it('should return users who recommended documents from this project', async () => {
-      axios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 1 }] } })
-      axios.request.mockClear()
-
-      await store.dispatch('search/getRecommendationsByProject')
-
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: project
-        }
-      }))
-      expect(store.state.search.recommendedByUsers)
-        .toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 1 }])
-    })
-
-    it('should return the total of documents recommended for this project', async () => {
-      axios.request.mockResolvedValue({ data: { totalCount: 42 } })
-      axios.request.mockClear()
-
-      await store.dispatch('search/getRecommendationsByProject')
-
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: project
-        }
-      }))
-      expect(store.state.search.recommendedByTotal).toBe(42)
-    })
   })
 })

@@ -7,12 +7,12 @@ import settings from '@/utils/settings'
 import { slugger } from '@/utils/strings'
 import types from '@/utils/types.json'
 
-function getDocumentTypeLabel (key) {
+function getDocumentTypeLabel(key) {
   if (key === undefined) return ''
   return get(types, [key, 'label'], key)
 }
 
-function getExtractionLevelTranslationKey (key) {
+function getExtractionLevelTranslationKey(key) {
   if (key === undefined) return ''
   const levels = {
     0: 'level00',
@@ -30,7 +30,7 @@ function getExtractionLevelTranslationKey (key) {
   return `filter.level.${get(levels, key, key)}`
 }
 
-function getOS () {
+function getOS() {
   let OSName = 'other'
   if (window.navigator.platform.includes('Mac')) OSName = 'mac'
   else if (window.navigator.platform.includes('Win')) OSName = 'windows'
@@ -38,22 +38,22 @@ function getOS () {
   return OSName
 }
 
-function getShortkeyOS () {
+function getShortkeyOS() {
   return getOS() === 'mac' ? 'mac' : 'default'
 }
 
-function objectIncludes (object, text) {
+function objectIncludes(object, text) {
   if (typeof object === 'string') {
     return object.toLowerCase().includes(text.toLowerCase())
   }
-  return Object.values(object).some(object => objectIncludes(object, text))
+  return Object.values(object).some((object) => objectIncludes(object, text))
 }
 
-function toVariant (string = '', defaultVariant = 'darker', prefix = '') {
+function toVariant(string = '', defaultVariant = 'darker', prefix = '') {
   return prefix + settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
 }
 
-function toVariantIcon (string = '', defaultVariant = 'darker') {
+function toVariantIcon(string = '', defaultVariant = 'darker') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
     success: faCheck,
@@ -63,7 +63,7 @@ function toVariantIcon (string = '', defaultVariant = 'darker') {
   return icons[variant]
 }
 
-function toVariantColor (string = '', defaultVariant = 'darker') {
+function toVariantColor(string = '', defaultVariant = 'darker') {
   const variant = toVariant(string, defaultVariant)
   const style = getComputedStyle(document.body)
   return style.getPropertyValue(`--${variant}`) || '#eee'

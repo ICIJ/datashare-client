@@ -1,20 +1,20 @@
 <template>
   <div class="insights">
-    <div class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4" v-if="isServer">
+    <div v-if="isServer" class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4">
       <div class="container py-2 d-flex align-items-center">
         <div class="pr-2">
           {{ $t('insights.selectProject') }}
         </div>
         <div>
-          <project-selector v-model="project" size="md" class="insights__toolbox__project-selector"></project-selector>
+          <project-selector v-model="project" size="md" class="insights__toolbox__project-selector" />
         </div>
       </div>
     </div>
     <div class="container insights__container">
       <b-row class="align-items-stretch">
-        <b-col v-for="(widget, index) in instantiatedWidgets" :md="widget.cols" :key="index">
+        <b-col v-for="(widget, index) in instantiatedWidgets" :key="index" :md="widget.cols">
           <div class="insights__container__widget" :class="{ card: widget.card }">
-            <component :is="widget.component" :widget="widget" class="flex-grow-1"></component>
+            <component :is="widget.component" :widget="widget" class="flex-grow-1" />
           </div>
         </b-col>
       </b-row>
@@ -44,25 +44,24 @@ export default {
       }
     }
   },
-  beforeMount () {
-    this.$store.commit('insights/project', this.$store.state.search.index)
+  beforeMount() {
+    this.$store.commit('insights/project', this.$store.state.search.indices[0])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .insights {
+.insights {
+  &__container {
+    margin-top: $spacer;
 
-    &__container {
-      margin-top: $spacer;
-
-      &__widget {
-        display: flex;
-        flex-direction: row;
-        margin-bottom: $grid-gutter-width;
-        min-height: calc(100% - #{$grid-gutter-width});
-        position: relative;
-      }
+    &__widget {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: $grid-gutter-width;
+      min-height: calc(100% - #{$grid-gutter-width});
+      position: relative;
     }
   }
+}
 </style>

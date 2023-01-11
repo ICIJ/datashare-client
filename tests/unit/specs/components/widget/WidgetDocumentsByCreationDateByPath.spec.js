@@ -1,17 +1,16 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import WidgetDocumentsByCreationDateByPath from '@/components/widget/WidgetDocumentsByCreationDateByPath'
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('WidgetDocumentsByCreationDateByPath.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { index: project } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const propsData = { widget: { title: 'Hello world' } }
-  const project = toLower('WidgetDocumentsByCreationDateByPath')
-  const anotherProject = toLower('AnotherWidgetDocumentsByCreationDateByPath')
-  esConnectionHelper([project, anotherProject])
   let wrapper = null
 
   beforeAll(() => {
@@ -28,11 +27,10 @@ describe('WidgetDocumentsByCreationDateByPath.vue', () => {
   })
 
   it('should reset treeViewPath on project change', async () => {
-    wrapper.vm.$set(wrapper.vm, 'treeViewPath', 'path_01')
+    await wrapper.setData({ treeViewPath: 'path_01' })
     expect(wrapper.vm.treeViewPath).toBe('path_01')
-
-    await store.commit('insights/project', anotherProject)
-
+    store.commit('insights/project', anotherProject)
+    await flushPromises()
     expect(wrapper.vm.treeViewPath).toBe('dataDir')
   })
 })

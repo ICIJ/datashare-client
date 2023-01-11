@@ -9,15 +9,15 @@ const RE_DESCRIPTION = /^>+(.*)$/
 const DOC_PATH = join('public', 'docs', 'client')
 
 const buildToc = Handlebars.compile(readFileSync('bin/DOCS.COMPONENTS.hbs', 'UTF-8'))
-const joinToDoc = path => join(DOC_PATH, path)
+const joinToDoc = (path) => join(DOC_PATH, path)
 
 const components = {
-  collectToc (files) {
-    return files.map(filepath => {
+  collectToc(files) {
+    return files.map((filepath) => {
       const content = readFileSync(filepath, 'UTF-8')
-      const nonEmptyLines = content.split('\n').filter(l => l.length > 0)
+      const nonEmptyLines = content.split('\n').filter((l) => l.length > 0)
       const fallbackTitle = basename(filepath, '.md')
-      const titleIndex = findIndex(nonEmptyLines, l => l.match(RE_HEADER))
+      const titleIndex = findIndex(nonEmptyLines, (l) => l.match(RE_HEADER))
       const title = trimStart(nonEmptyLines[titleIndex], '# ') || fallbackTitle
       const nextToTitle = nonEmptyLines[titleIndex + 1] || ''
       const description = nextToTitle.match(RE_DESCRIPTION) ? trimStart(nextToTitle, '> ') : ''
@@ -26,7 +26,7 @@ const components = {
       return { title, description, path, wikiPath }
     })
   },
-  collectAllTocs () {
+  collectAllTocs() {
     return Object.entries(this).reduce((result, [key, value]) => {
       if (isArrayLike(value)) {
         result[key] = this.collectToc(value)
@@ -34,19 +34,19 @@ const components = {
       return result
     }, {})
   },
-  get widgets () {
+  get widgets() {
     return glob.sync(joinToDoc('Client-›-Components-›-Widget*.md'))
   },
-  get filters () {
+  get filters() {
     return glob.sync(joinToDoc('Client-›-Components-›-Filter-›-Types-›-Filter*.md'))
   },
-  get pages () {
+  get pages() {
     return glob.sync(joinToDoc('Client-›-Pages-›-*.md'))
   },
-  get others () {
+  get others() {
     const all = glob.sync(joinToDoc('Client-›-Components-›-*.md'))
-    return filter(all, f => {
-      const sw = target => startsWith(basename(f).split('-›-').pop(), target)
+    return filter(all, (f) => {
+      const sw = (target) => startsWith(basename(f).split('-›-').pop(), target)
       return sw('Filters') || !(sw('Filter') || sw('Widget'))
     })
   }

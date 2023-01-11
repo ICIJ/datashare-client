@@ -1,8 +1,9 @@
-import toLower from 'lodash/toLower'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
+
+import { flushPromises } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 
@@ -11,8 +12,7 @@ const router = new VueRouter()
 
 describe('AppliedSearchFilters.vue', () => {
   jest.setTimeout(1e4)
-  const index = toLower('AppliedSearchFilters')
-  esConnectionHelper(index)
+  const { index } = esConnectionHelper.build()
   let wrapper
 
   beforeAll(() => store.commit('search/index', index))
@@ -31,7 +31,8 @@ describe('AppliedSearchFilters.vue', () => {
     })
 
     it('should display 1 applied filter', async () => {
-      await store.commit('search/setFilterValue', { name: 'contentType', value: 'term_01' })
+      store.commit('search/setFilterValue', { name: 'contentType', value: 'term_01' })
+      await flushPromises()
 
       expect(wrapper.findAll('.applied-search-filters applied-search-filters-item-stub')).toHaveLength(1)
     })
@@ -97,7 +98,7 @@ describe('AppliedSearchFilters.vue', () => {
 
   describe('deletes applied filters', () => {
     beforeEach(() => {
-      wrapper = mount(AppliedSearchFilters, { localVue, router, store, mocks: { $t: msg => msg } })
+      wrapper = mount(AppliedSearchFilters, { localVue, router, store, mocks: { $t: (msg) => msg } })
     })
 
     it('should remove the "AND" on last applied filter deletion', async () => {

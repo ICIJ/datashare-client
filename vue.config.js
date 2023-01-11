@@ -1,7 +1,7 @@
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
 const { join } = require('path')
 const { setCookie } = require('tiny-cookie')
-const marked = require('marked')
+const { marked } = require('marked')
 
 const resolve = filepath => join(__dirname, filepath)
 const gitRevisionPlugin = new GitRevisionPlugin()
@@ -13,8 +13,16 @@ process.env.VUE_APP_GIT_BRANCH = gitRevisionPlugin.branch()
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
-  // @see https://github.com/webpack-contrib/worker-loader/issues/177
   parallel: process.env.NODE_ENV !== 'production',
+  css: {
+    loaderOptions: {
+      sass: {
+        // Replace the default lodader by dart sass
+        // @see https://www.priestch.com/replace-node-sass-with-dart-sass-in-vue-cli3-based-project/
+        implementation: require('sass')
+      }
+    }
+  },
   chainWebpack: config => {
     // Resource loader configuration:
     // 4 named rules must include this loader
@@ -24,6 +32,9 @@ module.exports = {
         .use('sass-resources-loader')
         .loader('sass-resources-loader')
         .options({
+          // If hoistUseStatements is true, entry file @use imports will
+          // be hoisted. This means the @use statements will go above the inclusion of resources.
+          hoistUseStatements: true,
           resources: [
             resolve('src/utils/settings.scss')
           ]
@@ -52,20 +63,6 @@ module.exports = {
       .end()
       .use('metadata-strip-loader')
       .loader('metadata-strip-loader')
-
-    // Use a specific loader for workers
-    config.module.rule('worker')
-      .test(/\.worker\.js$/)
-      .use('worker-loader')
-      .loader('worker-loader')
-      .options({
-        filename: 'js/[name].[hash].js',
-        publicPath: '/'
-      })
-
-    // Exclude Worker files from vue-cli js rule to avoid inconsistency and caching
-    // @see https://github.com/vuejs/vue-cli/issues/2028#issuecomment-410352587
-    config.module.rule('js').exclude.add(/\.worker\.js$/)
 
     // Aliases configuration
     config.resolve.alias

@@ -1,5 +1,4 @@
 import find from 'lodash/find'
-import toLower from 'lodash/toLower'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueI18n from 'vue-i18n'
@@ -13,10 +12,8 @@ import messagesFr from '@/lang/fr'
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterText.vue', () => {
-  const index = toLower('FilterText')
-  const anotherIndex = toLower('AnotherFilterText')
-  esConnectionHelper([index, anotherIndex])
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
+  const { index: anotherIndex } = esConnectionHelper.build()
   const name = 'contentType'
   const filter = store.getters['search/getFilter']({ name })
   let wrapper = null
@@ -51,16 +48,11 @@ describe('FilterText.vue', () => {
   })
 
   it('should display 2 items for the contentType filter', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index).withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
@@ -69,12 +61,12 @@ describe('FilterText.vue', () => {
   })
 
   it('should filter according to the others filters if contextualized search', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('type_01')
-      .withLanguage('ENGLISH')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('type_02')
-      .withLanguage('FRENCH')).commit()
+    await letData(es)
+      .have(new IndexedDocument('document_01', index).withContentType('type_01').withLanguage('ENGLISH'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_02', index).withContentType('type_02').withLanguage('FRENCH'))
+      .commit()
 
     store.commit('search/contextualizeFilter', name)
     store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
@@ -85,20 +77,13 @@ describe('FilterText.vue', () => {
   })
 
   it('should display 3 items for the contentType filter', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/stylesheet')).commit()
-    await letData(es).have(new IndexedDocument('document_07', index)
-      .withContentType('text/stylesheet')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index).withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
+    await letData(es).have(new IndexedDocument('document_07', index).withContentType('text/stylesheet')).commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
@@ -107,12 +92,9 @@ describe('FilterText.vue', () => {
   })
 
   it('should display 3 items for the contentType filter alphabeticaly', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/stylesheet')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
 
     wrapper.findComponent({ ref: 'filter' }).setData({ sortBy: '_key', sortByOrder: 'asc' })
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
@@ -126,18 +108,24 @@ describe('FilterText.vue', () => {
   })
 
   it('should display X filter items after applying the relative search', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContent('INDEX').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContent('LIST').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContent('SHOW').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContent('INDEX').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContent('LIST').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContent('LIST').withContentType('text/stylesheet')).commit()
+    await letData(es)
+      .have(new IndexedDocument('document_01', index).withContent('INDEX').withContentType('text/javascript'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_02', index).withContent('LIST').withContentType('text/javascript'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_03', index).withContent('SHOW').withContentType('text/javascript'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_04', index).withContent('INDEX').withContentType('text/html'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_05', index).withContent('LIST').withContentType('text/html'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_06', index).withContent('LIST').withContentType('text/stylesheet'))
+      .commit()
 
     store.commit('search/query', 'SHOW')
     store.commit('search/decontextualizeFilter', name)
@@ -155,10 +143,12 @@ describe('FilterText.vue', () => {
   })
 
   it('should apply relative filter and get back to global filter', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContent('Lorem').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContent('Ipsum').withContentType('text/html')).commit()
+    await letData(es)
+      .have(new IndexedDocument('document_01', index).withContent('Lorem').withContentType('text/javascript'))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_02', index).withContent('Ipsum').withContentType('text/html'))
+      .commit()
 
     store.commit('search/query', 'Lorem')
     store.commit('search/decontextualizeFilter', name)
@@ -176,12 +166,9 @@ describe('FilterText.vue', () => {
   })
 
   it('should display an item for excluded filter', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/javascript')).commit()
 
     store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
     store.commit('search/excludeFilter', 'contentType')
@@ -193,16 +180,11 @@ describe('FilterText.vue', () => {
   })
 
   it('should filter filter values', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_12', index)
-      .withContentType('text/type_12')).commit()
-    await letData(es).have(new IndexedDocument('document_13', index)
-      .withContentType('text/type_13')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_12', index).withContentType('text/type_12')).commit()
+    await letData(es).have(new IndexedDocument('document_13', index).withContentType('text/type_13')).commit()
 
     wrapper.findComponent({ ref: 'filter' }).vm.query = 'text/type_0'
 
@@ -213,18 +195,12 @@ describe('FilterText.vue', () => {
   })
 
   it('should filter filter values with no results', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index).withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/type_03')).commit()
 
     wrapper.findComponent({ ref: 'filter' }).vm.query = 'yolo'
 
@@ -235,10 +211,8 @@ describe('FilterText.vue', () => {
   })
 
   it('should filter filter values - Uppercase situation', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/csv')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('plain/text')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/csv')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('plain/text')).commit()
 
     wrapper.findComponent({ ref: 'filter' }).vm.query = 'TEX'
 
@@ -249,14 +223,16 @@ describe('FilterText.vue', () => {
   })
 
   it('should filter filter values on filter item', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('application/pdf')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('image/wmf')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('image/emf')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+    await letData(es)
+      .have(
+        new IndexedDocument('document_02', index).withContentType(
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+      )
+      .commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('image/wmf')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index).withContentType('image/emf')).commit()
 
     wrapper.findComponent({ ref: 'filter' }).vm.query = 'image'
 
@@ -267,12 +243,9 @@ describe('FilterText.vue', () => {
   })
 
   it('should filter filter values on filter label', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('message/rfc822')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('another_type')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('another_type')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('message/rfc822')).commit()
 
     wrapper.findComponent({ ref: 'filter' }).vm.query = 'Internet'
 
@@ -284,12 +257,9 @@ describe('FilterText.vue', () => {
   })
 
   it('should filter filter values on filter label in capital letters', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('message/rfc822')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('another_type')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('another_type')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('message/rfc822')).commit()
 
     wrapper.findComponent({ ref: 'filter' }).vm.query = 'EMAIL'
 
@@ -303,8 +273,7 @@ describe('FilterText.vue', () => {
   it('should fire 2 events on click on filter item', async () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
     const spyRefreshRoute = jest.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
 
@@ -315,8 +284,7 @@ describe('FilterText.vue', () => {
 
   it('should reset the from query on click on filter item', async () => {
     store.commit('search/from', 25)
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
 
@@ -324,12 +292,9 @@ describe('FilterText.vue', () => {
   })
 
   it('should return filters from another index', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_03', anotherIndex)
-      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_03', anotherIndex).withContentType('text/javascript')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
@@ -343,10 +308,8 @@ describe('FilterText.vue', () => {
   })
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('type_02')).commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
@@ -361,18 +324,12 @@ describe('FilterText.vue', () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
     const spyRefreshRoute = jest.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
 
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withContentType('type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index).withContentType('type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index).withContentType('type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index).withContentType('type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index).withContentType('type_03')).commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(2) input').trigger('click')
@@ -397,8 +354,7 @@ describe('FilterText.vue', () => {
         filter: store.getters['search/getFilter']({ name: 'language' })
       }
     })
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withLanguage('ENGLISH')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -417,8 +373,7 @@ describe('FilterText.vue', () => {
         filter: store.getters['search/getFilter']({ name: 'language' })
       }
     })
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withLanguage('WELSH')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index).withLanguage('WELSH')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -429,8 +384,7 @@ describe('FilterText.vue', () => {
     wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'extractionLevel' }) })
 
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withParent('document_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
@@ -451,8 +405,7 @@ describe('FilterText.vue', () => {
     })
 
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withParent('document_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
@@ -470,12 +423,15 @@ describe('FilterText.vue', () => {
   it('should remove "tag_01" from the tags filter on event "filter::delete"', async () => {
     wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'tags' }) })
 
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withTags(['tag_01'])).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withTags(['tag_02'])).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withTags(['tag_03'])).commit()
+    await letData(es)
+      .have(new IndexedDocument('document_01', index).withTags(['tag_01']))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_02', index).withTags(['tag_02']))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocument('document_03', index).withTags(['tag_03']))
+      .commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findComponent({ ref: 'filter' }).vm.items).toHaveLength(3)

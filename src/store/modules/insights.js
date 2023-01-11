@@ -7,7 +7,7 @@ import Vue from 'vue'
 import widgets from '@/store/widgets'
 import * as widgetTypes from '@/store/widgets'
 
-export function initialState () {
+export function initialState() {
   return {
     project: '',
     widgets: cloneDeep({ widgets }).widgets
@@ -17,32 +17,32 @@ export function initialState () {
 const state = initialState()
 
 const mutations = {
-  reset (state) {
+  reset(state) {
     const s = initialState()
-    Object.keys(s).forEach(key => Vue.set(state, key, s[key]))
+    Object.keys(s).forEach((key) => Vue.set(state, key, s[key]))
   },
-  removeWidget (state, name) {
-    const index = findIndex(state.widgets, options => options.name === name)
+  removeWidget(state, name) {
+    const index = findIndex(state.widgets, (options) => options.name === name)
     Vue.delete(state.widgets, index)
   },
-  addWidget (state, options) {
+  addWidget(state, options) {
     if (!options.name || !find(state.widgets, { name: options.name })) {
       state.widgets.push(options)
     }
   },
-  clearWidgets (state) {
+  clearWidgets(state) {
     Vue.set(state, 'widgets', [])
   },
-  project (state, project) {
+  project(state, project) {
     Vue.set(state, 'project', project)
   }
 }
 
 export const getters = {
-  getWidget (state, getters) {
-    return predicate => find(state.widgets, predicate)
+  getWidget(state, getters) {
+    return (predicate) => find(state.widgets, predicate)
   },
-  instantiateWidget (state) {
+  instantiateWidget(state) {
     return ({ type = 'WidgetEmpty', ...options } = {}) => {
       const Type = widgetTypes[type]
       const widget = new Type(options)
@@ -52,7 +52,7 @@ export const getters = {
       return widget
     }
   },
-  instantiatedWidgets (state, getters) {
+  instantiatedWidgets(state, getters) {
     const widgets = state.widgets.map(getters.instantiateWidget)
     return sortBy(widgets, ['order'])
   }

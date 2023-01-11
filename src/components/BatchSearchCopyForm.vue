@@ -2,7 +2,7 @@
   <b-form @submit.prevent="copyBatchSearch">
     <div class="card w-100">
       <div class="card-body pb-1">
-        <b-form-group label-size="sm" :label="`${ $t('batchSearch.name') } *`">
+        <b-form-group label-size="sm" :label="`${$t('batchSearch.name')} *`">
           <b-form-input v-model="name" type="text" required />
         </b-form-group>
         <b-form-group label-size="sm" :label="$t('batchSearch.description')">
@@ -16,7 +16,7 @@
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
-          <b-btn type="submit"  variant="primary">
+          <b-btn type="submit" variant="primary">
             {{ $t('global.submit') }}
           </b-btn>
         </div>
@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import Api from '@/api'
-
 /**
  * A form to copy batch search
  */
@@ -38,10 +36,11 @@ export default {
      * The batch search meta data
      */
     batchSearch: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
-  data () {
+  data() {
     return {
       deleteAfterRelaunch: false,
       description: this.batchSearch.description,
@@ -49,7 +48,7 @@ export default {
     }
   },
   methods: {
-    async runBatchSearch () {
+    async runBatchSearch() {
       try {
         await this.$store.dispatch('indexing/runBatchSearch')
         this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
@@ -57,10 +56,10 @@ export default {
         this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
       }
     },
-    async copyBatchSearch () {
+    async copyBatchSearch() {
       try {
         const { uuid: batchId } = this.batchSearch
-        await this.api.copyBatchSearch(batchId, this.name, this.description)
+        await this.$core.api.copyBatchSearch(batchId, this.name, this.description)
         if (!this.isServer) {
           this.runBatchSearch()
         } else {
@@ -73,11 +72,6 @@ export default {
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
       }
-    }
-  },
-  computed: {
-    api () {
-      return new Api()
     }
   }
 }

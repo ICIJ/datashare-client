@@ -2,16 +2,30 @@
   <div class="search-results-table">
     <div v-if="hasResults">
       <div class="d-flex mb-2">
-        <div v-if="selected.length" class="d-inline-flex search-results-table__actions mr-2 align-self-start align-items-center">
+        <div
+          v-if="selected.length"
+          class="d-inline-flex search-results-table__actions mr-2 align-self-start align-items-center"
+        >
           <b-list-group horizontal>
-            <b-list-group-item class="search-results-table__actions__action py-2" button v-for="action in actions" :key="action.id" @click="onClick(action.id)">
-              <fa :icon="action.icon" :class="action.iconClass"></fa>
+            <b-list-group-item
+              v-for="action in actions"
+              :key="action.id"
+              class="search-results-table__actions__action py-2"
+              button
+              @click="onClick(action.id)"
+            >
+              <fa v-if="action.icon" :icon="action.icon" :class="action.iconClass"></fa>
               {{ action.label }}
             </b-list-group-item>
           </b-list-group>
           <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" display-form />
         </div>
-        <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="!!selected.length" :no-filters="!!selected.length" />
+        <search-results-header
+          position="top"
+          class="flex-grow-1 align-self-center py-0"
+          :no-progress="!!selected.length"
+          :no-filters="!!selected.length"
+        />
       </div>
       <b-table
         ref="selectableTable"
@@ -20,7 +34,6 @@
         hover
         selectable
         responsive
-        @row-selected="onRowSelected"
         :items="itemsProvider"
         :fields="fields"
         :busy="$wait.waiting('load results table')"
@@ -29,24 +42,46 @@
         tbody-tr-class="search-results-table__items__row"
         thead-tr-class="text-nowrap"
         :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc">
-        <template v-slot:cell(relevance)="{ item, rowSelected }">
-          <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon"></fa>
-          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox"></fa>
+        :sort-desc.sync="sortDesc"
+        @row-selected="onRowSelected"
+      >
+        <template #cell(relevance)="{ item, rowSelected }">
+          <fa
+            v-if="item.contentTypeIcon"
+            :icon="item.contentTypeIcon"
+            fixed-width
+            class="search-results-table__items__row__icon"
+          ></fa>
+          <fa
+            :icon="['far', rowSelected ? 'check-square' : 'square']"
+            fixed-width
+            class="search-results-table__items__row__checkbox"
+          ></fa>
         </template>
-        <template v-slot:cell(path)="{ item }">
-          <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="search-results-table__items__row__title">
-            <document-sliced-name :document="item" active-text-truncate />
+        <template #cell(index)="{ item }">
+          <b-badge variant="light">{{ item.index | startCase }}</b-badge>
+        </template>
+        <template #cell(path)="{ item }">
+          <router-link
+            :to="{ name: 'document', params: item.routerParams, query: { q: query } }"
+            class="search-results-table__items__row__title"
+          >
+            <document-sliced-name :document="item" active-text-truncate show-subject />
           </router-link>
         </template>
-        <template v-slot:cell(highlight)="{ value }">
-          <span v-html="value" class="text-truncate text-muted"></span>
+        <template #cell(highlight)="{ value }">
+          <span class="text-truncate text-muted" v-html="value"></span>
         </template>
-        <template v-slot:cell(contentLength)="{ value }">
+        <template #cell(contentLength)="{ value }">
           {{ humanSize(value) }}
         </template>
-        <template v-slot:cell(actions)="{ item }">
-          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" tooltips-placement="rightbottom"></document-actions>
+        <template #cell(actions)="{ item }">
+          <document-actions
+            :document="item"
+            class="float-right btn-group-sm"
+            :is-download-allowed="isDownloadAllowed(item)"
+            tooltips-placement="rightbottom"
+          ></document-actions>
         </template>
       </b-table>
       <search-results-header position="bottom" />
@@ -63,7 +98,7 @@
 </template>
 
 <script>
-import { find } from 'lodash'
+import { find, startCase } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
@@ -84,59 +119,69 @@ export default {
     DocumentTagsForm,
     SearchResultsHeader
   },
-  data () {
+  filters: {
+    startCase
+  },
+  data() {
     return {
       selected: []
     }
   },
   computed: {
-    ...mapState('search', ['isDownloadAllowed', 'query', 'response']),
-    isAllSelected () {
+    ...mapState('search', ['indices', 'query', 'response']),
+    isAllSelected() {
       return this.response.hits.length === this.selected.length
     },
-    actions () {
-      return [{
-        id: 'selectAll',
-        label: this.isAllSelected ? this.$t('document.unselectAll') : this.$t('document.selectAll'),
-        icon: ['far', this.isAllSelected ? 'check-square' : 'square']
-      }, {
-        id: 'star',
-        label: this.$t('document.starButton'),
-        icon: ['fa', 'star']
-      }, {
-        id: 'unstar',
-        label: this.$t('document.unstarButton'),
-        icon: ['far', 'star']
-      }]
+    actions() {
+      return [
+        {
+          id: 'selectAll',
+          label: this.isAllSelected ? this.$t('document.unselectAll') : this.$t('document.selectAll'),
+          icon: ['far', this.isAllSelected ? 'check-square' : 'square']
+        },
+        {
+          id: 'star',
+          label: this.$t('document.starButton'),
+          icon: ['fa', 'star']
+        },
+        {
+          id: 'unstar',
+          label: this.$t('document.unstarButton'),
+          icon: ['far', 'star']
+        }
+      ]
     },
-    hasResults () {
+    hasResults() {
       return this.response.hits.length > 0
     },
-    hasFilters () {
-      return this.$store.getters['search/activeFilters'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
+    hasFilters() {
+      return (
+        this.$store.getters['search/activeFilters'].length > 0 ||
+        this.$store.state.search.field !== settings.defaultSearchField
+      )
     },
-    defaultSortField () {
+    defaultSortField() {
       return this.fields[0]
     },
     sortBy: {
-      get () {
+      get() {
         const { field } = this.$store.getters['search/sortBy']
         const { key } = find(this.fields, { sortBy: field }) || this.defaultSortField
         return key
       },
-      set () {
+      set() {
         return null
       }
     },
     sortDesc: {
-      get () {
+      get() {
         return this.$store.getters['search/sortBy'].desc
       },
-      set () {
+      set() {
         return null
       }
     },
-    fields () {
+    fields() {
       return [
         {
           key: 'relevance',
@@ -145,22 +190,29 @@ export default {
           class: 'pr-1'
         },
         {
+          key: 'index',
+          label: this.$t('document.project'),
+          class: this.indices.length > 1 ? '' : 'd-none'
+        },
+        {
           key: 'path',
           sortBy: 'path',
           sortable: true,
-          label: this.$t('document.document') + (this.$store.getters['search/sortBy'].field === 'path' ? ` (${this.$t('search.results.sortedByPath')})` : ''),
+          label:
+            this.$t('document.document') +
+            (this.$store.getters['search/sortBy'].field === 'path'
+              ? ` (${this.$t('search.results.sortedByPath')})`
+              : ''),
           class: 'pl-0'
         },
         {
           key: 'highlight',
           headerTitle: 'highlight',
-          formatter (value) {
-            return value ? value.content.join(' [...] ') : ''
-          }
+          formatter: (value) => value?.content?.join(' [...] ') || ''
         },
         {
           key: 'creationDateHumanShort',
-          sortBy: 'metadata.tika_metadata_creation_date',
+          sortBy: 'metadata.tika_metadata_dcterms_created',
           sortable: true,
           label: this.$t('document.creationDate'),
           class: 'fit'
@@ -170,9 +222,7 @@ export default {
           sortBy: 'contentLength',
           sortable: true,
           label: this.$t('document.size'),
-          formatter (value, name, item) {
-            return item.source.contentLength
-          },
+          formatter: (value, name, item) => item?.source?.contentLength,
           class: 'fit'
         },
         {
@@ -185,35 +235,35 @@ export default {
     }
   },
   methods: {
-    onRowSelected (items) {
+    onRowSelected(items) {
       this.$set(this, 'selected', items)
     },
-    async onClick (actionId) {
+    async onClick(actionId) {
       this.$wait.start('load results table')
       switch (actionId) {
-      case 'selectAll':
-        if (this.isAllSelected) {
-          this.$refs.selectableTable.clearSelected()
-          this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
-        } else {
-          this.$refs.selectableTable.selectAllRows()
-          this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
-        }
-        break
-      case 'star':
-        await this.$store.dispatch('search/starDocuments', this.selected)
-        this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
-        break
-      case 'unstar':
-        await this.$store.dispatch('search/unstarDocuments', this.selected)
-        this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
-        break
-      default:
-        break
+        case 'selectAll':
+          if (this.isAllSelected) {
+            this.$refs.selectableTable.clearSelected()
+            this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
+          } else {
+            this.$refs.selectableTable.selectAllRows()
+            this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
+          }
+          break
+        case 'star':
+          await this.$store.dispatch('starred/starDocuments', this.selected)
+          this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
+          break
+        case 'unstar':
+          await this.$store.dispatch('starred/unstarDocuments', this.selected)
+          this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
+          break
+        default:
+          break
       }
       this.$wait.end('load results table')
     },
-    async itemsProvider ({ sortBy, sortDesc }) {
+    async itemsProvider({ sortBy, sortDesc }) {
       // Refresh response only if sortBy or sortDesc are different from the state
       if (sortBy !== this.sortBy || sortDesc !== this.sortDesc) {
         // Find the table field for the sorting key (or use the first by default)
@@ -227,86 +277,98 @@ export default {
       }
       return this.response.hits
     },
-    humanSize (value) {
+    humanSize(value) {
       const size = humanSize(value)
       return size === 'unknown' ? this.$t('document.unknown') : size
+    },
+    isDownloadAllowed({ index }) {
+      return !!this.$store.state.downloads.allowedFor[index]
     }
   }
 }
 </script>
 
 <style lang="scss">
-  .search-results-table {
-    padding: 0 0 $spacer;
+.search-results-table {
+  padding: 0 0 $spacer;
 
-    &__items {
-      .table.b-table > thead > tr > th.fit {
-        background-position: right 0.10rem center;
+  &__items {
+    .table.b-table > thead > tr > th.fit {
+      background-position: right 0.1rem center;
+      padding-right: 0.85em;
+    }
+
+    &__row {
+      &__title {
+        display: flex;
+
+        &:visited:not(.router-link-active) {
+          color: mix(#609, white, 50%);
+        }
+      }
+
+      td.fit {
         padding-right: 0.85em;
       }
 
-      &__row {
-        &__title:visited:not(.router-link-active) {
-          color: mix(#609, white, 50%);
-        }
-
-        td.fit {
-          padding-right: 0.85em;
-        }
-
-        table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
-        table tbody tr.b-table-row-selected &__icon,
-        table tbody tr:hover &__icon {
-          display: none;
-        }
-
-        table tbody tr &__checkbox,
-        table tbody tr &__icon {
-          color: $link-color;
-        }
-
-        table tbody tr &__actions {
-          padding: 0;
-          vertical-align: middle;
-        }
-
-        td .text-truncate {
-          display: block;
-          max-width: 20vw;
-
-          .document-sliced-name {
-            display: inline-block;
-          }
-        }
-      }
-    }
-
-    &__actions {
-      background: $body-bg;
-      font-size: $font-size-sm;
-
-      &__action.document-tags-form {
-        align-self: stretch;
-        display: inline-flex;
-
-        & > div, input.form-control {
-          align-self: stretch;
-          height: 100%;
-        }
+      table tbody tr &__title:hover {
+        text-decoration: none;
       }
 
-      &__action.list-group-item-action {
-        color: $primary;
-        width: auto;
+      table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
+      table tbody tr.b-table-row-selected &__icon,
+      table tbody tr:hover &__icon {
+        display: none;
+      }
 
-        svg {
-          margin-right: .5em;
-        }
+      table tbody tr &__checkbox,
+      table tbody tr &__icon {
+        color: $link-color;
+      }
 
-        &:hover {
-          color: theme-color('dark');
+      table tbody tr &__actions {
+        padding: 0;
+        vertical-align: middle;
+      }
+
+      td .text-truncate {
+        display: block;
+        max-width: 20vw;
+
+        .document-sliced-name {
+          display: inline-block;
         }
       }
     }
   }
+
+  &__actions {
+    background: $body-bg;
+    font-size: $font-size-sm;
+
+    &__action.document-tags-form {
+      align-self: stretch;
+      display: inline-flex;
+
+      & > div,
+      input.form-control {
+        align-self: stretch;
+        height: 100%;
+      }
+    }
+
+    &__action.list-group-item-action {
+      color: $primary;
+      width: auto;
+
+      svg {
+        margin-right: 0.5em;
+      }
+
+      &:hover {
+        color: theme-color('dark');
+      }
+    }
+  }
+}
 </style>

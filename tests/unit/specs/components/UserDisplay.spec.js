@@ -3,21 +3,19 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import UserDisplay from '@/components/UserDisplay'
 import { Core } from '@/core'
 
-jest.mock('@/api', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      getUser: jest.fn().mockImplementation(() => {
-        return Promise.resolve({ uid: 'local' })
-      })
-    }
-  })
-})
-
 describe('UserDisplay.vue', () => {
-  const flushPromises = () => new Promise(resolve => setImmediate(resolve))
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
   let wrapper = null
+  let api, i18n, localVue, store, wait
 
+  beforeAll(() => {
+    api = { getUser: jest.fn().mockResolvedValue({ uid: 'local' }) }
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
+  })
   beforeEach(async () => {
     const propsData = { username: 'foo' }
     wrapper = mount(UserDisplay, { i18n, localVue, store, propsData, wait })
@@ -30,8 +28,6 @@ describe('UserDisplay.vue', () => {
     store.commit('pipelines/unregister', 'username-icij-link')
   })
 
-  afterAll(() => jest.unmock('@/api'))
-
   it('should display "foo"', async () => {
     expect(wrapper.find('.user-display__username').text()).toBe('foo')
   })
@@ -43,7 +39,7 @@ describe('UserDisplay.vue', () => {
   })
 
   it('should display "you"', async () => {
-    wrapper.setProps({ username: 'local' })
+    await wrapper.setProps({ username: 'local' })
     await flushPromises()
     expect(wrapper.find('.user-display__username').text().toLowerCase()).toBe('you')
   })
@@ -52,7 +48,7 @@ describe('UserDisplay.vue', () => {
     store.commit('pipelines/register', {
       name: 'username-to-uppercase',
       category: wrapper.vm.usernamePipeline,
-      type: username => username.toUpperCase()
+      type: (username) => username.toUpperCase()
     })
     await flushPromises()
     expect(wrapper.find('.user-display__username').text()).toBe('FOO')

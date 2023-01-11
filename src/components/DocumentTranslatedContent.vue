@@ -1,22 +1,38 @@
 <template>
-  <div class="document-translated-content" :class="{ 'document-translated-content--original': showOriginal }">
-    <template v-if="hasTranslations && !showContentTextLengthWarning">
+  <div class="document-translated-content" :class="{ 'document-translated-content--original': !showTranslatedContent }">
+    <template v-if="hasTranslations">
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
-          <abbr :title="$t(`filter.lang.${document.source.language}`)" v-if="translation.source_language === document.source.language">
-            {{ $t('documentTranslatedContent.detected') }}
-          </abbr>
+          <abbr
+            v-if="translation.source_language === document.source.language"
+            :title="$t(`filter.lang.${document.source.language}`)"
+            >{{ $t('documentTranslatedContent.detected') }}</abbr
+          >
           <span v-else>
             {{ $t(`filter.lang.${translation.source_language}`) }}
           </span>
           <fa icon="angle-right" class="mx-2" />
-          <strong>{{ $t(`filter.lang.${language}`) }}</strong>
-          <button class="btn btn-sm btn-link ml-3" @click="toggleOriginalContent">
-            {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
+          <strong :title="`Translated with ${translation.translator}`">
+            {{ $t(`filter.lang.${language}`) }}
+          </strong>
+          <button class="btn btn-sm btn-link ml-3" @click="toggleTranslatedContent">
+            {{
+              $t(
+                showTranslatedContent
+                  ? 'documentTranslatedContent.viewOriginal'
+                  : 'documentTranslatedContent.viewTranslated'
+              )
+            }}
           </button>
         </div>
-        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :q="q" :content-translation="contentTranslation" />
+        <document-content
+          ref="content"
+          class="document-translated-content__translation__header__content"
+          :document="document"
+          :q="q"
+          :target-language="targetLanguage"
+        />
       </div>
     </template>
     <template v-else>
@@ -27,7 +43,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import find from 'lodash/find'
+import { find, join } from 'lodash'
 import elasticsearch from '@/api/elasticsearch'
 import DocumentContent from '@/components/DocumentContent'
 
@@ -36,6 +52,9 @@ import DocumentContent from '@/components/DocumentContent'
  */
 export default {
   name: 'DocumentTranslatedContent',
+  components: {
+    DocumentContent
+  },
   props: {
     /**
      * The selected document.
@@ -51,65 +70,65 @@ export default {
       default: ''
     }
   },
-  components: {
-    DocumentContent
-  },
-  data () {
+  data() {
     return {
       language: 'ENGLISH',
-      showOriginal: false,
       translations: []
     }
   },
-  async mounted () {
-    await this.loadAvailableTranslations()
-  },
-  methods: {
-    toggleOriginalContent () {
-      this.showOriginal = !this.showOriginal
-    },
-    async loadAvailableTranslations () {
-      const _source = 'content_translated.source_language,content_translated.target_language'
-      const { index, id, routing } = this.document
-      const data = await elasticsearch.getSource({ index, id, routing, _source })
-      this.$set(this, 'translations', data.content_translated)
-    }
-  },
   computed: {
-    ...mapState('document', ['showContentTextLengthWarning']),
-    contentTranslation () {
-      if (!this.showOriginal) {
+    ...mapState('document', ['showTranslatedContent']),
+    targetLanguage() {
+      if (this.showTranslatedContent) {
         return this.language
       }
       return null
     },
-    hasTranslations () {
+    hasTranslations() {
       return !!this.translation
     },
-    translation () {
+    translation() {
       return find(this.translations, { target_language: this.language })
+    }
+  },
+  async mounted() {
+    await this.loadAvailableTranslations()
+  },
+  methods: {
+    toggleTranslatedContent() {
+      this.$store.commit('document/toogleShowTransatedContent')
+    },
+    async loadAvailableTranslations() {
+      const _source = join([
+        'content_translated.source_language',
+        'content_translated.target_language',
+        'content_translated.translator'
+      ])
+      const { index, id, routing } = this.document
+      const data = await elasticsearch.getSource({ index, id, routing, _source })
+      this.$set(this, 'translations', data.content_translated)
     }
   }
 }
 </script>
 
 <style lang="scss">
-  .document-translated-content {
-    &__translation {
-      box-shadow: 0 0 0 3px $translation-bg inset;
+.document-translated-content {
+  &__translation {
+    box-shadow: 0 0 0 3px $translation-bg inset;
 
-      .document-translated-content--original & {
-        box-shadow: none;
-
-        &__header {
-          background: transparent;
-        }
-      }
+    .document-translated-content--original & {
+      box-shadow: none;
 
       &__header {
-        background: $translation-bg;
-        color: rgba(darken($translation-bg, 70), 0.7);
+        background: transparent;
       }
     }
+
+    &__header {
+      background: $translation-bg;
+      color: rgba(darken($translation-bg, 70), 0.7);
+    }
   }
+}
 </style>

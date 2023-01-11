@@ -1,19 +1,19 @@
 <template>
   <div class="widget widget--disk-usage d-flex align-items-center text-center">
     <v-wait for="disk usage" class="flex-grow-1" transition="fade">
-      <fa icon="circle-notch" spin slot="waiting" size="2x" />
+      <fa slot="waiting" icon="circle-notch" spin size="2x" />
       <p :class="{ 'card-body': widget.card }">
         <fa icon="weight" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
           {{ humanSize(total, false, $t('human.size')) }}
         </strong>
-        <a class="widget__details" v-b-modal.modal-disk-usage-details>
+        <a v-b-modal.modal-disk-usage-details class="widget__details">
           {{ $t('widget.diskUsage.details') }}
         </a>
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="path" :project="project" count size>
+      <tree-view v-model="path" :projects="[project]" count size>
         <template #above>
           <b-collapse :visible="path === dataDir">
             <div class="my-2 mx-3 alert alert-warning p-2">
@@ -51,24 +51,29 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       onDisk: null,
       path: null,
       total: null
     }
   },
-  async created () {
-    this.$set(this, 'path', this.dataDir)
-    await this.loadData()
-  },
   computed: {
     ...mapState('insights', ['project']),
-    dataDir () {
+    dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   },
-  mounted () {
+  watch: {
+    project() {
+      this.$set(this, 'path', this.dataDir)
+    }
+  },
+  async created() {
+    this.$set(this, 'path', this.dataDir)
+    await this.loadData()
+  },
+  mounted() {
     this.$store.subscribe(async ({ type }) => {
       if (type === 'insights/project') {
         await this.loadData()
@@ -76,7 +81,7 @@ export default {
     })
   },
   methods: {
-    async sumTotal () {
+    async sumTotal() {
       const index = this.$store.state.insights.project
       const body = bodybuilder()
         .andQuery('match', 'type', 'Document')
@@ -94,31 +99,26 @@ export default {
       this.$set(this, 'total', total)
     }),
     humanSize
-  },
-  watch: {
-    project () {
-      this.$set(this, 'path', this.dataDir)
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .widget {
-    min-height: 100%;
+.widget {
+  min-height: 100%;
 
-    &__main-figure {
-      display: block;
-      font-size: 1.8rem;
-    }
+  &__main-figure {
+    display: block;
+    font-size: 1.8rem;
+  }
 
-    &__details {
-      color: $link-color;
-      cursor: pointer;
+  &__details {
+    color: $link-color;
+    cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
+}
 </style>

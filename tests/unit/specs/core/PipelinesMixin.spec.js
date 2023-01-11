@@ -18,15 +18,15 @@ describe('PipelinesMixin', () => {
   it('should find one pipeline by its category on the current project', () => {
     core.registerPipelineForProject('first-index', { category: 'biz' })
     expect(core.store.getters['pipelines/getPipelinesByCategory']('biz')).toHaveLength(0)
-    core.store.commit('search/index', 'first-index')
+    core.store.commit('search/indices', 'first-index')
     expect(core.store.getters['pipelines/getPipelinesByCategory']('biz')).toHaveLength(1)
   })
 
   it('should find no pipeline on the current project', () => {
     core.registerPipelineForProject('first-index', { category: 'flu' })
-    core.store.commit('search/index', 'first-index')
+    core.store.commit('search/indices', 'first-index')
     expect(core.store.getters['pipelines/getPipelinesByCategory']('flu')).toHaveLength(1)
-    core.store.commit('search/index', 'second-index')
+    core.store.commit('search/indices', 'second-index')
     expect(core.store.getters['pipelines/getPipelinesByCategory']('flu')).toHaveLength(0)
   })
 })

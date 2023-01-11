@@ -1,9 +1,12 @@
 <template>
-  <b-form-select :options="projects" v-model="selectedProject" :size="size"></b-form-select>
+  <b-form-group class="mb-0">
+    <b-form-checkbox-group v-if="multiple" v-model="selectedProject" :disabled="disabled" :options="projectOptions" />
+    <b-form-select v-else v-model="selectedProject" :disabled="disabled" :options="projectOptions" :size="size" />
+  </b-form-group>
 </template>
 
 <script>
-import { compact, get, isEmpty, uniq, includes, remove } from 'lodash'
+import { castArray, isEqual, startCase } from 'lodash'
 
 /**
  * A single-project selector input.
@@ -16,7 +19,7 @@ export default {
      * @model
      */
     value: {
-      type: String,
+      type: [String, Array],
       required: true
     },
     /**
@@ -26,35 +29,36 @@ export default {
     size: {
       type: String,
       default: 'md'
-    }
-  },
-  methods: {
-    verifyDefaultSelectedProject () {
-      const projectToVerify = this.value
-      const projects = this.$config.get('groups_by_applications.datashare', [])
-
-      return includes(projects, projectToVerify) ? projectToVerify : projects[0]
+    },
+    /**
+     * Allow to select several projects
+     */
+    multiple: {
+      type: Boolean
+    },
+    /**
+     * Disable the input
+     */
+    disabled: {
+      type: Boolean
     }
   },
   computed: {
-    projects () {
-      const defaultProjects = [this.$config.get('defaultProject')]
-      // @depracated this load the list from a depracated list of project for retro-compatibility
-      const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
-      const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
-      let sortedProjects = compact(uniq([...projects, ...legacyProjects]).sort())
-      if (!includes(projects, defaultProjects)) {
-        sortedProjects = remove(sortedProjects, (project) => {
-          return includes(projects, project)
-        })
-      }
-      return sortedProjects.map(value => ({ value, text: value }))
+    projects() {
+      return this.$core.projects
+    },
+    projectOptions() {
+      return this.projects.map((value) => {
+        const text = startCase(value)
+        const disabled = this.multiple && isEqual(this.selectedProject, [value])
+        return { disabled, text, value }
+      })
     },
     selectedProject: {
-      get () {
-        return isEmpty(this.value) ? get(this.projects, [0, 'value'], '') : this.verifyDefaultSelectedProject()
+      get() {
+        return this.multiple ? castArray(this.value) : this.value
       },
-      set (value) {
+      set(value) {
         this.$emit('input', value)
       }
     }

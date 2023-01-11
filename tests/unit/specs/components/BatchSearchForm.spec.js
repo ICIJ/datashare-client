@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
@@ -8,17 +7,21 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-jest.mock('lodash/throttle', () => jest.fn(fn => fn))
+jest.mock('lodash/throttle', () => jest.fn((fn) => fn))
 
 describe('BatchSearchForm.vue', () => {
   const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
-  const project = toLower('BatchSearchForm')
-  const anotherProject = toLower('AnotherBatchSearchForm')
-  esConnectionHelper([project, anotherProject])
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
+
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
-  const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFilter: jest.fn() } } } })
+  const store = new Vuex.Store({
+    modules: {
+      batchSearch: { namespaced: true, state, actions },
+      search: { namespaced: true, actions: { queryFilter: jest.fn() } }
+    }
+  })
   let wrapper = null
 
   beforeAll(() => Murmur.config.merge({ groups_by_applications: { datashare: [project] }, dataDir: '/root/project' }))
@@ -55,7 +58,7 @@ describe('BatchSearchForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'name', 'Example')
     wrapper.vm.$set(wrapper.vm, 'paths', ['This', 'is', 'a', 'multiple', 'paths'])
     wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
-    wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
+    wrapper.vm.$set(wrapper.vm, 'projects', ['project-example'])
     wrapper.vm.$set(wrapper.vm, 'published', false)
     wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
 
@@ -69,14 +72,14 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.paths).toEqual([])
     expect(wrapper.vm.phraseMatch).toBeTruthy()
-    expect(wrapper.vm.project).toBe(project)
+    expect(wrapper.vm.projects).toContainEqual(project)
     expect(wrapper.vm.published).toBeTruthy()
     expect(wrapper.vm.showAdvancedFilters).toBeFalsy()
   })
 
   it('should reset the fuzziness to 0 on phraseMatch change', async () => {
-    wrapper.vm.$set(wrapper.vm, 'fuzziness', 12)
-    await wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
+    await wrapper.setData({ fuzziness: 12 })
+    await wrapper.setData({ phraseMatch: false })
 
     expect(wrapper.vm.fuzziness).toBe(0)
   })
@@ -106,7 +109,11 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter fileTypes according to the fileTypes input on mime file', () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [{ label: 'Visio document', mime: 'visio' }, { label: 'StarWriter 5 document', mime: 'vision' }, { label: 'Something else', mime: 'else' }])
+      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [
+        { label: 'Visio document', mime: 'visio' },
+        { label: 'StarWriter 5 document', mime: 'vision' },
+        { label: 'Something else', mime: 'else' }
+      ])
       wrapper.vm.$set(wrapper.vm, 'fileType', 'visi')
 
       wrapper.vm.searchFileTypes()
@@ -117,7 +124,10 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter according to the fileTypes input on label file', () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [{ label: 'Label PDF', mime: 'PDF' }, { label: 'another type', mime: 'other' }])
+      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [
+        { label: 'Label PDF', mime: 'PDF' },
+        { label: 'another type', mime: 'other' }
+      ])
       wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
 
       wrapper.vm.searchFileTypes()
@@ -141,7 +151,10 @@ describe('BatchSearchForm.vue', () => {
       wrapper.vm.$set(wrapper.vm, 'selectedFileType', { label: 'StarWriter 5 document' })
       wrapper.vm.searchFileType()
 
-      expect(wrapper.vm.fileTypes).toEqual([{ label: 'Excel 2003 XML spreadsheet visio' }, { label: 'StarWriter 5 document' }])
+      expect(wrapper.vm.fileTypes).toEqual([
+        { label: 'Excel 2003 XML spreadsheet visio' },
+        { label: 'StarWriter 5 document' }
+      ])
     })
   })
 
@@ -173,52 +186,52 @@ describe('BatchSearchForm.vue', () => {
 
   describe('On project change', () => {
     it('should reset fileType and path', async () => {
-      wrapper.vm.$set(wrapper.vm, 'fileType', 'fileTypeTest')
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.setData({ fileType: 'fileTypeTest' })
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.fileType).toBe('')
     })
 
     it('should reset fileTypes and paths', async () => {
-      wrapper.vm.$set(wrapper.vm, 'fileTypes', ['fileType_01', 'fileType_02'])
-      wrapper.vm.$set(wrapper.vm, 'paths', ['path_01', 'path_02'])
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.setData({ fileTypes: ['fileType_01', 'fileType_02'] })
+      await wrapper.setData({ paths: ['path_01', 'path_02'] })
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.fileTypes).toEqual([])
       expect(wrapper.vm.paths).toEqual([])
     })
 
     it('should reset allFileTypes', async () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', ['fileType_01', 'fileType_02'])
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.setData({ allFileTypes: ['fileType_01', 'fileType_02'] })
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.allFileTypes).toEqual([])
     })
 
     it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
       jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
     })
 
     it('should call retrieveFileTypes', async () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.setData({ projects: [anotherProject] })
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
     })
   })
 
   describe('should load contentTypes from the current project', () => {
-    beforeEach(() => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [])
-      wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
+    beforeEach(async () => {
+      await wrapper.setData({ allFileTypes: [] })
+      await wrapper.setData({ showAdvancedFilters: true })
     })
 
     it('should call retrieveFileTypes on showAdvancedFilters change', async () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', false)
+      await wrapper.setData({ showAdvancedFilters: false })
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
     })
@@ -246,11 +259,13 @@ describe('BatchSearchForm.vue', () => {
 
       await wrapper.vm.retrieveFileTypes()
 
-      expect(wrapper.vm.allFileTypes).toEqual([{
-        extensions: ['.pdf'],
-        label: 'Portable Document Format (PDF)',
-        mime: 'application/pdf'
-      }])
+      expect(wrapper.vm.allFileTypes).toEqual([
+        {
+          extensions: ['.pdf'],
+          label: 'Portable Document Format (PDF)',
+          mime: 'application/pdf'
+        }
+      ])
     })
 
     it('should return content type itself if content type description does NOT exist', async () => {
@@ -258,11 +273,13 @@ describe('BatchSearchForm.vue', () => {
 
       await wrapper.vm.retrieveFileTypes()
 
-      expect(wrapper.vm.allFileTypes).toEqual([{
-        extensions: [],
-        label: 'application/test',
-        mime: 'application/test'
-      }])
+      expect(wrapper.vm.allFileTypes).toEqual([
+        {
+          extensions: [],
+          label: 'application/test',
+          mime: 'application/test'
+        }
+      ])
     })
   })
 

@@ -3,7 +3,7 @@ import Murmur from '@icij/murmur'
 import moment from 'moment'
 import { extname } from 'path'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/filters/humanSize'
 import { findContentTypeIcon } from '@/utils/font-awesome-files'
@@ -14,66 +14,69 @@ const _root = '_ROOT'
 const _separator = '/'
 
 export default class Document extends EsDoc {
-  constructor (raw, parent = null, root = null) {
+  constructor(raw, parent = null, root = null) {
     super(raw)
     this.parent = parent
     this.root = root
   }
-  nl2br (str) {
-    return trim(str).split('\n').map(row => `<p>${row}</p>`).join('')
+  nl2br(str) {
+    return trim(str)
+      .split('\n')
+      .map((row) => `<p>${row}</p>`)
+      .join('')
   }
-  translationIn (targetLanguage) {
+  translationIn(targetLanguage) {
     return find(this.translations, { target_language: targetLanguage })
   }
-  translatedContentIn (targetLanguage) {
+  translatedContentIn(targetLanguage) {
     const translation = this.translationIn(targetLanguage)
     return translation ? translation.content : null
   }
-  meta (name, defaultValue) {
+  meta(name, defaultValue) {
     const tikaMetadataName = `metadata.tika_metadata_${this.shortMetaName(name)}`
     return get(this.source, tikaMetadataName, defaultValue)
   }
-  valueAsQueryParam (name, value) {
+  valueAsQueryParam(name, value) {
     return `${name}:"${value}"`
   }
-  metaAsQueryParam (name, defaultValue) {
+  metaAsQueryParam(name, defaultValue) {
     const tikaMetadataName = `metadata.tika_metadata_${this.shortMetaName(name)}`
     return this.valueAsQueryParam(tikaMetadataName, this.meta(name, defaultValue))
   }
-  shortMetaName (name) {
+  shortMetaName(name) {
     return name.replace('tika_metadata_', '')
   }
-  set parent (parent) {
+  set parent(parent) {
     this[_parent] = parent ? new Document(parent) : null
   }
-  get parent () {
+  get parent() {
     return this[_parent]
   }
-  set root (root) {
+  set root(root) {
     this[_root] = root ? new Document(root) : null
   }
-  get root () {
+  get root() {
     return this[_root]
   }
-  get content () {
+  get content() {
     return this.get('_source.content')
   }
-  set content (content) {
+  set content(content) {
     this.set('_source.content', content)
   }
-  get metas () {
+  get metas() {
     return keys(this.source.metadata || {})
   }
-  get shortId () {
+  get shortId() {
     return this.id.slice(0, 10)
   }
-  get path () {
+  get path() {
     return this.get('_source.path', '')
   }
-  get tags () {
+  get tags() {
     return this.get('_source.tags', [])
   }
-  get folder () {
+  get folder() {
     // Extract location parts
     const parts = this.path.split(_separator)
     // Remove the file name
@@ -81,16 +84,16 @@ export default class Document extends EsDoc {
     // And return the new path
     return parts.join(_separator) + _separator
   }
-  get location () {
+  get location() {
     return this.folder.split(Murmur.config.get('dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
   }
-  get basename () {
+  get basename() {
     return last(this.path.split(_separator))
   }
-  get extension () {
+  get extension() {
     return extname(this.basename).toLowerCase()
   }
-  get resourceName () {
+  get resourceName() {
     let resourceName = trim(this.get('_source.metadata.tika_metadata_resourcename', this.shortId))
     if (startsWith(resourceName, '=?') && endsWith(resourceName, '?=')) {
       const resourceNameArray = resourceName.split('?')
@@ -98,28 +101,31 @@ export default class Document extends EsDoc {
     }
     return resourceName
   }
-  get title () {
+  get title() {
     const titles = [this.shortId, this.basename]
     if (this.extractionLevel > 0) {
       titles.push(this.resourceName)
     }
     return last(compact(titles))
   }
-  get subject () {
+  get subject() {
     const titles = [this.title]
     if (this.isEmail) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
-      titles.push(trim(this.get('_source.metadata.tika_metadata_subject', '')))
+      const subject =
+        this.get('_source.metadata.tika_metadata_subject', null) ??
+        this.get('_source.metadata.tika_metadata_dc_subject', '')
+      titles.push(trim(subject))
     }
     if (this.isTweet) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
     }
     return last(compact(titles))
   }
-  get cleanSubject () {
+  get cleanSubject() {
     return this.subject.replace(/((.{1,4})\s?:\s?)*(.+)/i, '$3')
   }
-  get slicedName () {
+  get slicedName() {
     if (this.extractionLevel === 0) {
       return [this.title]
     }
@@ -130,96 +136,107 @@ export default class Document extends EsDoc {
     // - the document title
     return [this.basename].concat([distance].slice(0, distance)).concat(this.title)
   }
-  get slicedNameToString () {
+  get slicedNameToString() {
     return this.slicedName.join(' › ')
   }
-  get highlight () {
+  get highlight() {
     return this.raw.highlight
   }
-  get route () {
+  get route() {
     return `/ds/${this.index}/${this.id}/${this.routing}`
   }
-  get url () {
+  get url() {
     return `/api/${this.index}/documents/src/${this.id}?routing=${this.routing}`
   }
-  get fullUrl () {
+  get fullUrl() {
     return Api.getFullUrl(this.url)
   }
-  get rootUrl () {
+  get inlineFullUrl() {
+    const url = new URL(this.fullUrl)
+    url.searchParams.set('inline', true)
+    return url.href
+  }
+  get rootUrl() {
     return `/api/${this.index}/documents/src/${this.routing}?routing=${this.routing}`
   }
-  get fullRootUrl () {
+  get fullRootUrl() {
     return Api.getFullUrl(this.rootUrl)
   }
-  get contentType () {
+  get contentType() {
     return this.source.contentType || 'unknown'
   }
-  get contentTypeLabel () {
+  get contentTypeLabel() {
     return get(types, [this.contentType, 'label'], null)
   }
-  get contentTypeDescription () {
+  get contentTypeDescription() {
     return get(types, [this.contentType, 'description'], {})
   }
-  get contentTypeWarning () {
+  get contentTypeWarning() {
     return get(types, [this.contentType, 'warning'], {})
   }
-  get contentTypeIcon () {
+  get contentTypeIcon() {
     return findContentTypeIcon(this.contentType)
   }
-  get rootContentType () {
+  get rootContentType() {
     return this.root ? this.root.source.contentType : 'unknown'
   }
-  get rootContentTypeLabel () {
+  get rootContentTypeLabel() {
     return get(types, [this.rootContentType, 'label'], null)
   }
-  get standardExtension () {
+  get standardExtension() {
     return get(types, [this.contentType, 'extensions', 0], null)
   }
-  get standardExtensions () {
+  get standardExtensions() {
     return get(types, [this.contentType, 'extensions'], [])
   }
-  get hasStandardExtension () {
+  get hasStandardExtension() {
     return this.standardExtensions.indexOf(this.extension) > -1
   }
-  get hasContentTypeWarning () {
+  get hasContentTypeWarning() {
     return !!get(types, [this.contentType, 'warning'], false)
   }
-  get hasContent () {
+  get hasContent() {
     return this.get('_source.content', null) !== null
   }
-  get creationDate () {
-    const creationDate = this.source.metadata.tika_metadata_creation_date
+  get hasTranslatedContent() {
+    return this.get('_source.content_translated', null) !== null
+  }
+  get hasSubject() {
+    return this.subject && this.subject !== this.title
+  }
+  get creationDate() {
+    const creationDate = this.source.metadata.tika_metadata_dcterms_created
     if (creationDate && !isNaN(Date.parse(creationDate))) {
       return new Date(creationDate)
     } else {
       return null
     }
   }
-  get creationDateHuman () {
+  get creationDateHuman() {
     return this.creationDate ? moment(this.creationDate).format('LLL') : null
   }
-  get creationDateHumanShort () {
+  get creationDateHumanShort() {
     return this.creationDate ? moment(this.creationDate).format('L LT') : null
   }
-  get extractionLevel () {
+  get extractionLevel() {
     return this.get('_source.extractionLevel', 0)
   }
-  get contentTextLength () {
+  get contentTextLength() {
     return this.get('_source.contentTextLength', 0)
   }
-  get contentLength () {
+  get contentLength() {
     return this.get('_source.contentLength')
   }
-  get humanSize () {
+  get humanSize() {
     return humanSize(this.contentLength, true)
   }
-  get index () {
+  get index() {
     return this.raw._index
   }
-  get routerParams () {
+  get routerParams() {
     return pick(this, ['index', 'id', 'routing'])
   }
-  get serializedForStorage () {
+  get serializedForStorage() {
     return pick(this.raw, [
       '_id',
       '_routing',
@@ -230,45 +247,46 @@ export default class Document extends EsDoc {
       '_source.contentLength',
       '_source.contentType',
       '_source.metadata.tika_metadata_subject',
+      '_source.metadata.tika_metadata_dc_subject',
       '_source.metadata.tika_metadata_dc_title'
     ])
   }
-  get threadIndex () {
+  get threadIndex() {
     return this.get('_source.metadata.tika_metadata_message_raw_header_thread_index', null)
   }
-  get messageId () {
+  get messageId() {
     return this.get('_source.metadata.tika_metadata_message_raw_header_message_id', null)
   }
-  get messageFrom () {
+  get messageFrom() {
     return this.get('_source.metadata.tika_metadata_message_from', null)
   }
-  get messageTo () {
+  get messageTo() {
     return this.get('_source.metadata.tika_metadata_message_to', null)
   }
-  get excerpt () {
+  get excerpt() {
     const content = this.get('highlight.content[0]', '')
     return trim(content)
   }
-  set translations (translations) {
+  set translations(translations) {
     this.set('_source.content_translated', translations)
   }
-  get translations () {
+  get translations() {
     const translations = this.get('_source.content_translated', [])
-    return filter(translations, t => t.content !== '')
+    return filter(translations, (t) => t.content !== '')
   }
-  get isEmail () {
+  get isEmail() {
     return this.contentType.indexOf('message/') === 0 || this.contentType === 'application/vnd.ms-outlook'
   }
-  get isTweet () {
+  get isTweet() {
     return this.contentType === 'application/json; twint'
   }
-  get isPdf () {
+  get isPdf() {
     return this.contentType === 'application/pdf'
   }
-  get isTiff () {
+  get isTiff() {
     return this.contentType === 'image/tiff'
   }
-  get isSpreadsheet () {
+  get isSpreadsheet() {
     const spreadsheetTypes = [
       'application/vnd.oasis.opendocument.spreadsheet',
       'application/vnd.oasis.opendocument.spreadsheet-template',
@@ -279,26 +297,26 @@ export default class Document extends EsDoc {
     ]
     return spreadsheetTypes.indexOf(this.contentType) > -1
   }
-  get isImage () {
+  get isImage() {
     return this.contentType.indexOf('image/') === 0
   }
-  get isJson () {
+  get isJson() {
     return this.contentType.indexOf('application/json') === 0
   }
-  get hasTranslations () {
+  get hasTranslations() {
     return this.translations.length > 0
   }
-  get hasNerTags () {
+  get hasNerTags() {
     return this.get('_source.nerTags', []).length > 0
   }
-  get hasBigContentTextLength () {
-    // 150,000 characters
-    return this.contentTextLength > 1.5e5
+  get hasBigContentTextLength() {
+    // 25,000 characters
+    return this.contentTextLength === undefined || this.contentTextLength === 0 || this.contentTextLength > 25e3
   }
-  static get esName () {
+  static get esName() {
     return 'Document'
   }
-  static create (raw) {
+  static create(raw) {
     return new Document(raw)
   }
 }

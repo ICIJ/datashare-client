@@ -1,20 +1,11 @@
-import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { Api } from '@/api'
 import { Core } from '@/core'
-
-import Api from '@/api'
 import UserHistorySearch from '@/pages/UserHistorySearch'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: {} })
-  }
-})
-
-describe('UserHistorySearch.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
-  const propsData = {
-    events: [{
+const propsData = {
+  events: [
+    {
       id: 'id_01',
       user: {
         id: 'user',
@@ -27,7 +18,8 @@ describe('UserHistorySearch.vue', () => {
       type: 'SEARCH',
       name: 'name_01',
       uri: 'uri_01'
-    }, {
+    },
+    {
       id: 'id_02',
       user: {
         id: 'user',
@@ -40,15 +32,27 @@ describe('UserHistorySearch.vue', () => {
       type: 'SEARCH',
       name: 'name_02',
       uri: 'uri_02'
-    }]
-  }
+    }
+  ]
+}
+
+describe('UserHistorySearch.vue', () => {
+  let i18n, localVue, mockAxios
+
   let wrapper = null
 
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    const api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+  })
   beforeEach(async () => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({})
     wrapper = await shallowMount(UserHistorySearch, { i18n, localVue, propsData })
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should NOT display a list of search', async () => {
     const propsData = { events: [] }
@@ -76,13 +80,15 @@ describe('UserHistorySearch.vue', () => {
     await wrapper.vm.deleteUserEvent(event)
     await wrapper.vm.$nextTick()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/me/history/event'),
-      method: 'DELETE',
-      params: {
-        id: event.id
-      }
-    }))
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/me/history/event'),
+        method: 'DELETE',
+        params: {
+          id: event.id
+        }
+      })
+    )
   })
 })

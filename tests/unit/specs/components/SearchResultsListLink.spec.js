@@ -2,6 +2,7 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import toLower from 'lodash/toLower'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import { Core } from '@/core'
 import Document from '@/api/resources/Document'
 import SearchResultsListLink from '@/components/SearchResultsListLink'
@@ -74,8 +75,8 @@ describe('SearchResultsListLink.vue', () => {
       }
     })
 
-    await store.commit('search/query', 'other')
-
+    store.commit('search/query', 'other')
+    await flushPromises()
     expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo\?q=other$/)
   })
 
@@ -107,6 +108,10 @@ describe('SearchResultsListLink.vue', () => {
         })
       }
     })
-    expect(wrapper.find('.search-results-list-link .search-results-list-link__basename .document-sliced-name__item__single').text()).toBe(documentName)
+    expect(
+      wrapper
+        .find('.search-results-list-link .search-results-list-link__basename .document-sliced-name__item__single')
+        .text()
+    ).toBe(documentName)
   })
 })

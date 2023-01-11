@@ -1,5 +1,4 @@
 import find from 'lodash/find'
-import toLower from 'lodash/toLower'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
@@ -11,8 +10,7 @@ const { localVue, store, i18n } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('AppliedSearchFiltersItem.vue', () => {
-  const index = toLower('AppliedSearchFiltersItem')
-  esConnectionHelper(index)
+  const { index } = esConnectionHelper.build()
   let wrapper
 
   beforeAll(() => store.commit('search/index', index))

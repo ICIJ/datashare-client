@@ -1,62 +1,65 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import axios from 'axios'
 
-import Api from '@/api'
-import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
+import { Api } from '@/api'
 import { Core } from '@/core'
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: {} })
-  }
-})
+import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 
 describe('FindNamedEntitiesForm.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
-
+  let wrapper, i18n, localVue, store, wait, api, mockAxios
   beforeEach(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
     wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
   })
 
   beforeEach(() => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: {} })
     store.commit('indexing/reset')
-    axios.request.mockClear()
   })
-
-  afterAll(() => jest.unmock('axios'))
 
   it('should load NER pipelines on component mounted', () => {
     wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/ner/pipelines')
-    }))
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/ner/pipelines')
+      })
+    )
   })
 
   it('should call findNames action with CORENLP pipeline, by default', () => {
     wrapper.vm.submitFindNamedEntities()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
-      method: 'POST',
-      data: { options: { syncModels: true } }
-    }))
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+        method: 'POST',
+        data: { options: { syncModels: true } }
+      })
+    )
   })
 
   it('should call findNames action with ANOTHERNLP pipeline', () => {
     wrapper.vm.$set(wrapper.vm, 'pipeline', 'ANOTHERNLP')
     wrapper.vm.submitFindNamedEntities()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/ANOTHERNLP'),
-      method: 'POST',
-      data: { options: { syncModels: true } }
-    }))
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/findNames/ANOTHERNLP'),
+        method: 'POST',
+        data: { options: { syncModels: true } }
+      })
+    )
   })
 
   it('should call findNames action with no models synchronization', () => {
@@ -64,12 +67,14 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'offline', true)
     wrapper.vm.submitFindNamedEntities()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
-      method: 'POST',
-      data: { options: { syncModels: false } }
-    }))
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+        method: 'POST',
+        data: { options: { syncModels: false } }
+      })
+    )
   })
 
   it('should reset the modal params on submitting the form', async () => {

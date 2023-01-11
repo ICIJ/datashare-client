@@ -1,40 +1,48 @@
-import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import DocumentActions from '@/components/DocumentActions'
-import { Core } from '@/core'
+import { flushPromises } from 'tests/unit/tests_utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: {} })
-  }
-})
+import DocumentActions from '@/components/DocumentActions'
+import { Core } from '@/core'
+import { Api } from '@/api'
 
 describe('DocumentActions.vue', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-  const project = toLower('DocumentActions')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  let i18n, localVue, store, mockAxios, api
+  const { index: project, es } = esConnectionHelper.build()
   let document = null
   let wrapper = null
 
-  beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] }))
+  beforeAll(() => {
+    mockAxios = { request: jest.fn().mockResolvedValue({ data: {} }) }
+    api = new Api(mockAxios, null)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
 
-  beforeEach(async () => {
-    store.commit('search/starredDocuments', [])
-    const indexedDocument = await letData(es).have(new IndexedDocument('document', project)).commit()
-    document = indexedDocument.document
-    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document }, sync: false })
+    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] })
   })
 
-  afterAll(() => jest.unmock('axios'))
+  beforeEach(async () => {
+    store.commit('starred/documents', [])
+    const indexedDocument = await letData(es).have(new IndexedDocument('document', project)).commit()
+    document = indexedDocument.document
+    wrapper = shallowMount(DocumentActions, {
+      i18n,
+      localVue,
+      store,
+      propsData: { document },
+      sync: false
+    })
+  })
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
-    await store.commit('search/starredDocuments', [document.id])
+    store.commit('starred/documents', [document])
+    await flushPromises()
 
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
@@ -43,19 +51,30 @@ describe('DocumentActions.vue', () => {
     expect(wrapper.vm.starredDocuments).toEqual([])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
 
-    await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
+    await wrapper.vm.toggleStarDocument()
 
-    expect(wrapper.vm.starredDocuments).toEqual([document.id])
+    expect(wrapper.vm.starredDocuments).toEqual([
+      {
+        id: document.id,
+        index: document.index
+      }
+    ])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
-    await store.commit('search/pushFromStarredDocuments', document.id)
+    store.commit('starred/pushDocument', document)
+    await flushPromises()
 
-    expect(wrapper.vm.starredDocuments).toEqual([document.id])
+    expect(wrapper.vm.starredDocuments).toEqual([
+      {
+        id: document.id,
+        index: document.index
+      }
+    ])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
 
-    await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
+    await wrapper.vm.toggleStarDocument()
 
     expect(wrapper.vm.starredDocuments).toEqual([])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
@@ -65,7 +84,7 @@ describe('DocumentActions.vue', () => {
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('filter::starred::refresh', mockCallback)
 
-    await wrapper.vm.toggleStarDocument(wrapper.vm.document)
+    await wrapper.vm.toggleStarDocument()
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
@@ -75,13 +94,31 @@ describe('DocumentActions.vue', () => {
   })
 
   it('should display "Download" button if download is allowed', () => {
-    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
+    wrapper = shallowMount(DocumentActions, {
+      i18n,
+      localVue,
+      store,
+      propsData: {
+        document,
+        isDownloadAllowed: true
+      },
+      sync: false
+    })
 
     expect(wrapper.find('.document-actions__download').exists()).toBeTruthy()
   })
 
   it('should NOT display "Download parent" button if document has no parent', () => {
-    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
+    wrapper = shallowMount(DocumentActions, {
+      i18n,
+      localVue,
+      store,
+      propsData: {
+        document,
+        isDownloadAllowed: true
+      },
+      sync: false
+    })
 
     expect(wrapper.vm.hasRoot).toBeFalsy()
     expect(wrapper.find('.document-actions__download-parent').exists()).toBeFalsy()
@@ -89,10 +126,20 @@ describe('DocumentActions.vue', () => {
 
   it('should display "Download parent" button if document has a parent', async () => {
     await letData(es).have(new IndexedDocument('parent_document', project)).commit()
-    const indexedDocument = await letData(es).have(new IndexedDocument('another_document', project)
-      .withParent('parent_document').withRoot('parent_document')).commit()
+    const indexedDocument = await letData(es)
+      .have(new IndexedDocument('another_document', project).withParent('parent_document').withRoot('parent_document'))
+      .commit()
     document = indexedDocument.document
-    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
+    wrapper = shallowMount(DocumentActions, {
+      i18n,
+      localVue,
+      store,
+      propsData: {
+        document,
+        isDownloadAllowed: true
+      },
+      sync: false
+    })
 
     expect(wrapper.vm.hasRoot).toBeTruthy()
     expect(wrapper.find('.document-actions__download-root').exists()).toBeTruthy()

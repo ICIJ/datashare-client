@@ -7,7 +7,10 @@ export default {
       },
       {
         height: '1em',
-        boxes: [[0, '5em'], ['1em', '60%']]
+        boxes: [
+          [0, '5em'],
+          ['1em', '60%']
+        ]
       },
       {
         height: '1em',
@@ -15,7 +18,10 @@ export default {
       },
       {
         height: '1em',
-        boxes: [[0, '5em'], ['1em', '40%']]
+        boxes: [
+          [0, '5em'],
+          ['1em', '40%']
+        ]
       },
       {
         height: '1em',
@@ -26,6 +32,7 @@ export default {
   defaultLocale: 'en',
   defaultSearchField: 'all',
   defaultSearchSort: 'relevance',
+  documentationUrl: 'https://icij.gitbook.io/datashare',
   documentationLinks: {
     indexing: {
       mac: 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare',
@@ -37,9 +44,7 @@ export default {
       default: 'https://icij.gitbook.io/datashare/all/search-with-operators'
     }
   },
-  hotKeyPrevented: [
-    '.search-bar__input'
-  ],
+  hotKeyPrevented: ['.search-bar__input'],
   locales: [
     {
       key: 'en',
@@ -74,8 +79,7 @@ export default {
       key: 'title',
       fields: [
         'metadata.tika_metadata_dc_title',
-        'metadata.tika_metadata_title',
-        'metadata.tika_metadata_subject',
+        'metadata.tika_metadata_dc_subject',
         'metadata.tika_metadata_resourcename',
         'path'
       ]
@@ -86,9 +90,6 @@ export default {
         'metadata.tika_metadata_message_from',
         'metadata.tika_metadata_message_from_email',
         'metadata.tika_metadata_message_from_name',
-        'metadata.tika_metadata_author',
-        'metadata.tika_metadata_meta_author',
-        'metadata.tika_metadata_creator',
         'metadata.tika_metadata_dc_creator'
       ]
     },
@@ -117,12 +118,12 @@ export default {
     },
     {
       name: 'creationDateNewest',
-      field: 'metadata.tika_metadata_creation_date',
+      field: 'metadata.tika_metadata_dcterms_created',
       desc: true
     },
     {
       name: 'creationDateOldest',
-      field: 'metadata.tika_metadata_creation_date',
+      field: 'metadata.tika_metadata_dcterms_created',
       desc: false
     },
     {
@@ -161,7 +162,13 @@ export default {
   batchSearch: {
     order: 'desc',
     size: 100,
-    sort: 'batch_date'
+    sort: 'batch_date',
+    status: {
+      running: 'RUNNING',
+      failure: 'FAILURE',
+      queued: 'QUEUED',
+      success: 'SUCCESS'
+    }
   },
   batchSearchResults: {
     order: 'asc',

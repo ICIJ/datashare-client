@@ -1,18 +1,19 @@
 <template>
   <div class="user-history">
-    <div class="container mt-4">
-      <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
+    <div class="mt-4">
+      <ul v-if="events.length" class="list-unstyled user-history__list card mb-4">
         <li v-for="event in searches" :key="event.id" class="user-history__list__item">
           <div class="user-history__list__item__delete float-right m-4">
             <confirm-button
-                class="btn btn-outline-danger"
-                placement="leftbottom"
-                :confirmed="() => deleteUserEvent(event)"
-                :label="$t('userHistory.confirmDelete')"
-                :no="$t('global.no')"
-                :yes="$t('global.yes')">
-                <fa icon="trash-alt" />
-                {{ $t('userHistory.delete') }}
+              class="btn btn-outline-danger"
+              placement="leftbottom"
+              :confirmed="() => deleteUserEvent(event)"
+              :label="$t('userHistory.confirmDelete')"
+              :no="$t('global.no')"
+              :yes="$t('global.yes')"
+            >
+              <fa icon="trash-alt" />
+              {{ $t('userHistory.delete') }}
             </confirm-button>
           </div>
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
@@ -20,23 +21,24 @@
               {{ event.name }}
             </div>
             <div class="user-history__list__item__query">
-              <applied-search-filters-item read-only
-                                           v-for="(filter, index) in filtersItems(event)"
-                                          :key="index"
-                                          :filter="filter" />
+              <applied-search-filters-item
+                v-for="(filter, index) in filtersItems(event)"
+                :key="index"
+                read-only
+                :filter="filter"
+              />
             </div>
           </router-link>
         </li>
       </ul>
-      <div class="text-muted text-center" v-else>
-        {{  $t('userHistory.empty') }}
+      <div v-else class="text-muted text-center">
+        {{ $t('userHistory.empty') }}
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Api from '@/api'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 
 export default {
@@ -49,25 +51,20 @@ export default {
       type: Array
     }
   },
-  data () {
+  data() {
     return {
       searches: this.events
     }
   },
-  computed: {
-    api () {
-      return new Api()
-    }
-  },
   methods: {
-    filtersItems ({ uri }) {
+    filtersItems({ uri }) {
       return this.createFiltersFromURI(uri)
     },
-    isIgnoredFilter ({ name, value }) {
+    isIgnoredFilter({ name, value }) {
       const ignored = ['from', 'size', 'sort', 'field']
       return ignored.includes(name) || (name === 'q' && ['', '*'].includes(value))
     },
-    createFiltersFromURI (uri) {
+    createFiltersFromURI(uri) {
       const urlSearchParams = new URLSearchParams(uri.split('?').slice(1).pop())
       const params = Object.fromEntries(urlSearchParams.entries())
       // Reduce params list into an array
@@ -82,19 +79,23 @@ export default {
           const ts = parseInt(value)
           value = new Date(ts).toISOString().substr(0, 10).replace(/T/, ' ').replace(/\..+/, '')
         }
+        // Change 'indices' key to 'projects'
+        if (name.includes('indices')) {
+          name = 'projects'
+        }
         // Finally, add the filter to the list of displayed filters
         filters.push({ name, value, label: value })
         return filters
       }, [])
     },
-    async deleteUserEvent (event) {
+    async deleteUserEvent(event) {
       try {
-        await this.api.deleteUserEvent(event.id)
+        await this.$core.api.deleteUserEvent(event.id)
         this.$root.$bvToast.toast(this.$t('userHistory.deleted'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('userHistory.notDeleted'), { noCloseButton: true, variant: 'warning' })
       } finally {
-        const searches = this.searches.filter(e => !(e === event))
+        const searches = this.searches.filter((e) => !(e === event))
         this.$set(this, 'searches', searches)
       }
     }
@@ -103,25 +104,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .user-history {
-    &__list {
+.user-history {
+  &__list {
+    &__item {
+      a:hover {
+        text-decoration: none;
+        color: $table-hover-color;
+        background-color: $table-hover-bg;
+      }
 
-      &__item {
+      &:nth-child(odd) {
+        background: $table-accent-bg;
+      }
 
-        a:hover {
-          text-decoration: none;
-          color: $table-hover-color;
-          background-color: $table-hover-bg;
-        }
-
-        &:nth-child(odd) {
-          background: $table-accent-bg;
-        }
-
-        &:not(:last-of-type) {
-          border-bottom: 1px solid $border-color;
-        }
+      &:not(:last-of-type) {
+        border-bottom: 1px solid $border-color;
       }
     }
   }
+}
 </style>

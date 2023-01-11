@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import { flushPromises } from 'tests/unit/tests_utils'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import { Core } from '@/core'
 
@@ -19,20 +20,20 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('should display a reset button if query is valuated', async () => {
-    await store.commit('search/query', 'this is a query')
-
+    store.commit('search/query', 'this is a query')
+    await flushPromises()
     expect(wrapper.find('.btn').exists()).toBeTruthy()
     expect(wrapper.find('.btn').attributes('disabled')).toBeUndefined()
   })
 
   it('should display a reset button if a filter is valuated', async () => {
-    await store.commit('search/addFilterValue', { name: 'language', value: 'en' })
-
+    store.commit('search/addFilterValue', { name: 'language', value: 'en' })
+    await flushPromises()
     expect(wrapper.find('.btn').exists()).toBeTruthy()
     expect(wrapper.find('.btn').attributes('disabled')).toBeUndefined()
   })
 
-  it('shouldn\'t have filters', () => {
+  it("shouldn't have filters", () => {
     expect(wrapper.vm.hasFiltersOrQuery).toBeFalsy()
   })
 
@@ -66,11 +67,11 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('should not change the starredDocuments on filters reset', () => {
-    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+    store.commit('starred/documents', [{ id: 'doc_01' }, { id: 'doc_02' }])
 
     wrapper.vm.resetFiltersAndQuery()
 
-    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+    expect(store.state.starred.documents).toEqual([{ id: 'doc_01' }, { id: 'doc_02' }])
   })
 
   it('should emit an event "bv::hide::popover" on filters reset', () => {

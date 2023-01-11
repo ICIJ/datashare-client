@@ -7,34 +7,50 @@
             <fa icon="link" class="mr-1"></fa>
             {{ $t('extensions.installFromUrl') }}
           </b-btn>
-          <b-modal ref="installExtensionFromUrl" hide-footer id="extensions__add__modal">
+          <b-modal ref="installExtensionFromUrl" hide-footer lazy>
             <template #modal-title>
-              <fa icon="link" class="mr-1"></fa>
               {{ $t('extensions.installFromUrl') }}
             </template>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text rounded-0 border-0 bg-white">
-                  <fa icon="link"></fa>
-                </span>
+            <b-overlay :show="isInstallingFromUrl">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-white">
+                    <fa icon="link"></fa>
+                  </span>
+                </div>
+                <b-form-input v-model="url" :state="isFormValid" placeholder="URL" type="url" />
               </div>
-              <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl(url)"></b-form-input>
-              <b-form-invalid-feedback class="text-secondary mt-2">
-                {{ $t('global.enterCorrectUrl') }}
-              </b-form-invalid-feedback>
-            </div>
-            <b-btn variant="primary" class="float-right" @click="installExtensionFromUrl">
-              {{ $t('extensions.install') }}
-            </b-btn>
-            <b-overlay :show="show" no-wrap></b-overlay>
+              <div class="d-flex align-items-center">
+                <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
+                  {{ $t('global.enterCorrectUrl') }}
+                </b-form-invalid-feedback>
+                <b-btn
+                  variant="primary"
+                  class="ml-auto text-nowrap"
+                  :disabled="isFormValid !== true"
+                  @click="installExtensionFromUrl"
+                >
+                  {{ $t('extensions.install') }}
+                </b-btn>
+              </div>
+            </b-overlay>
           </b-modal>
         </div>
         <div class="extensions__search ml-auto">
-          <search-form-control :placeholder="$t('extensions.search')" v-model="searchTerm" @input="search"></search-form-control>
+          <search-form-control
+            v-model="searchTerm"
+            :placeholder="$t('extensions.search')"
+            @input="search"
+          ></search-form-control>
         </div>
       </div>
       <b-card-group deck>
-        <b-overlay :show="extension.show" v-for="extension in extensions" :key="extension.id" class="extensions__card m-3 d-flex">
+        <b-overlay
+          v-for="extension in extensions"
+          :key="extension.id"
+          :show="extension.show"
+          class="extensions__card m-3 d-flex"
+        >
           <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
               <div class="d-flex">
@@ -47,36 +63,60 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
-                  <b-btn class="extensions__card__uninstall-button mb-2" @click="uninstallExtension(extension.id)" v-if="extension.installed" variant="danger">
+                  <b-btn
+                    v-if="extension.installed"
+                    class="extensions__card__uninstall-button mb-2"
+                    variant="danger"
+                    @click="uninstallExtension(extension.id)"
+                  >
                     <fa icon="trash-alt"></fa>
                     {{ $t('extensions.uninstall') }}
                   </b-btn>
-                  <b-btn class="extensions__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="!extension.installed">
+                  <b-btn
+                    v-if="!extension.installed"
+                    class="extensions__card__download-button mb-2"
+                    variant="primary"
+                    @click="installExtensionFromId(extension.id)"
+                  >
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('extensions.install') }}
                   </b-btn>
-                  <b-btn class="extensions__card__update-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && isExtensionFromRegistry(extension) && extension.version !== extension.deliverableFromRegistry.version" size="sm">
+                  <b-btn
+                    v-if="
+                      extension.installed &&
+                      isExtensionFromRegistry(extension) &&
+                      extension.version !== extension.deliverableFromRegistry.version
+                    "
+                    class="extensions__card__update-button mb-2"
+                    variant="primary"
+                    size="sm"
+                    @click="installExtensionFromId(extension.id)"
+                  >
                     <fa icon="sync"></fa>
                     {{ $t('extensions.update') }}
                   </b-btn>
-                  <div v-if="extension.version && extension.installed" class="extensions__card__version text-muted text-center">
+                  <div
+                    v-if="extension.version && extension.installed"
+                    class="extensions__card__version text-muted text-center"
+                  >
                     {{ $t('extensions.version', { version: extension.version }) }}
                   </div>
                 </div>
               </div>
             </b-card-text>
-            <template v-slot:footer v-if="isExtensionFromRegistry(extension)">
+            <template v-if="isExtensionFromRegistry(extension)" #footer>
               <div class="extensions__card__official-version text-truncate w-100">
-                <span class="font-weight-bold">
-                  {{ $t('extensions.officialVersion') }}:
-                </span>
+                <span class="font-weight-bold"> {{ $t('extensions.officialVersion') }}: </span>
                 {{ extension.deliverableFromRegistry.version }}
               </div>
               <div class="text-truncate w-100">
-                <span class="font-weight-bold">
-                  {{ $t('extensions.homePage') }}:
-                </span>
-                <a class="extensions__card__homepage" :href="extension.deliverableFromRegistry.homepage" target="_blank" v-if="extension.deliverableFromRegistry.homepage">
+                <span class="font-weight-bold"> {{ $t('extensions.homePage') }}: </span>
+                <a
+                  v-if="extension.deliverableFromRegistry.homepage"
+                  class="extensions__card__homepage"
+                  :href="extension.deliverableFromRegistry.homepage"
+                  target="_blank"
+                >
                   {{ extension.deliverableFromRegistry.homepage }}
                 </a>
               </div>
@@ -91,11 +131,9 @@
 <script>
 import { camelCase, find, get, map, startCase } from 'lodash'
 
-import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
 import { isUrl } from '@/utils/strings'
 
-const api = new Api()
 /**
  * A list of available extensions.
  */
@@ -104,41 +142,50 @@ export default {
   components: {
     SearchFormControl
   },
-  data () {
-    return {
-      extensions: [],
-      searchTerm: '',
-      show: false,
-      url: ''
-    }
-  },
-  mounted () {
-    this.search()
-  },
   filters: {
     camelCase,
     startCase
   },
+  data() {
+    return {
+      extensions: [],
+      searchTerm: '',
+      isInstallingFromUrl: false,
+      url: ''
+    }
+  },
+  computed: {
+    isFormValid() {
+      return this.url === '' ? null : isUrl(this.url)
+    }
+  },
+  mounted() {
+    this.search()
+  },
   methods: {
-    isExtensionFromRegistry (extension) {
+    isExtensionFromRegistry(extension) {
       return get(extension, 'deliverableFromRegistry', false)
     },
-    getExtensionName (extension) {
+    getExtensionName(extension) {
       return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.name : extension.name
     },
-    getExtensionDescription (extension) {
-      return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.description : extension.description
+    getExtensionDescription(extension) {
+      return this.isExtensionFromRegistry(extension)
+        ? extension.deliverableFromRegistry.description
+        : extension.description
     },
-    async search () {
-      const extensions = await api.getExtensions(this.searchTerm)
-      map(extensions, extension => { extension.show = false })
+    async search() {
+      const extensions = await this.$core.api.getExtensions(this.searchTerm)
+      map(extensions, (extension) => {
+        extension.show = false
+      })
       this.$set(this, 'extensions', extensions)
     },
-    async installExtensionFromId (extensionId) {
+    async installExtensionFromId(extensionId) {
       const extension = find(this.extensions, { id: extensionId })
       extension.show = true
       try {
-        await api.installExtensionFromId(extensionId)
+        await this.$core.api.installExtensionFromId(extensionId)
         extension.installed = true
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
@@ -146,32 +193,31 @@ export default {
       }
       extension.show = false
     },
-    async installExtensionFromUrl () {
-      this.$set(this, 'show', true)
+    async installExtensionFromUrl() {
+      this.$set(this, 'isInstallingFromUrl', true)
       try {
-        await api.installExtensionFromUrl(this.url)
+        await this.$core.api.installExtensionFromUrl(this.url)
         await this.search()
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$refs.installExtensionFromUrl.hide()
-      this.$set(this, 'show', false)
+      this.$set(this, 'isInstallingFromUrl', false)
       this.$set(this, 'url', '')
     },
-    async uninstallExtension (extensionId) {
+    async uninstallExtension(extensionId) {
       const extension = find(this.extensions, { id: extensionId })
       extension.show = true
       try {
-        await api.uninstallExtension(extensionId)
+        await this.$core.api.uninstallExtension(extensionId)
         extension.installed = false
         this.$bvToast.toast(this.$t('extensions.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
       extension.show = false
-    },
-    isUrl
+    }
   }
 }
 </script>
@@ -184,13 +230,6 @@ export default {
 
   .card-header {
     font-weight: bold;
-  }
-}
-
-#extensions__add__modal {
-  .modal-body {
-    background: darken($primary, 20);
-    color: white;
   }
 }
 </style>

@@ -1,25 +1,25 @@
 <template>
-  <div class="filter card"
-      :class="{
-        'filter--reversed': isReversed,
-        'filter--hide-show-more': hideShowMore,
-        'filter--hide-search': hideSearch,
-        'filter--hide-header': hideHeader,
-        'filter--has-values': hasValues,
-        'filter--dark': dark
-      }">
+  <div
+    class="filter card"
+    :class="{
+      'filter--reversed': isReversed,
+      'filter--hide-show-more': hideShowMore,
+      'filter--hide-search': hideSearch,
+      'filter--hide-header': hideHeader,
+      'filter--has-values': hasValues,
+      'filter--dark': dark
+    }"
+  >
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
-    <slot name="header" v-if="!hideHeader">
+    <slot v-if="!hideHeader" name="header">
       <div class="card-header px-2 d-flex filter__header" @click="toggleItems">
         <h6 class="flex-fill flex-shrink-1 text-truncate pt-0">
-          <span class="filter__items__item__icon pl-0 pr-1" v-if="filter.icon">
+          <span v-if="filter.icon" class="filter__items__item__icon pl-0 pr-1">
             <fa :icon="filter.icon" fixed-width></fa>
           </span>
-          <template>
-            <slot name="title">
-              {{ $t(`filter.${filter.name}`) }}
-            </slot>
-          </template>
+          <slot name="title">
+            {{ $t(`filter.${filter.name}`) }}
+          </slot>
         </h6>
         <fa v-if="isReady" :icon="headerIcon" class="float-right filter__header__icon"></fa>
         <fa v-else icon="circle-notch" spin class="float-right"></fa>
@@ -29,24 +29,28 @@
     <b-collapse :visible="showResults">
       <div class="list-group list-group-flush filter__items">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
-        <slot name="search" v-if="!hideSearch && filter.isSearchable">
-          <search-form-control class="filter__items__search"
-                               :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"
-                               :rounded="false"
-                               @submit.prevent="openFilterSearch"
-                               v-model="query"></search-form-control>
+        <slot v-if="!hideSearch && filter.isSearchable" name="search">
+          <search-form-control
+            v-model="query"
+            class="filter__items__search"
+            :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"
+            :rounded="false"
+            @submit.prevent="openFilterSearch"
+          ></search-form-control>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
-        <slot :items="items"
-              name="items"
-              :options="options"
-              :query="query"
-              :selected="selected"
-              :sort-by="sortBy"
-              :sort-by-order="sortByOrder"
-              :total-count="totalCount">
+        <slot
+          :items="items"
+          name="items"
+          :options="options"
+          :query="query"
+          :selected="selected"
+          :sort-by="sortBy"
+          :sort-by-order="sortByOrder"
+          :total-count="totalCount"
+        >
           <b-form-checkbox v-model="isAllSelected" class="filter__items__all mb-0" :disabled="isAllSelected">
-            <slot name="all">
+            <slot name="all" v-bind="{ total }">
               <span class="d-flex">
                 <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
                   {{ labelToHuman('all') }}
@@ -58,10 +62,12 @@
             </slot>
           </b-form-checkbox>
           <slot name="items-group" :items="items" :options="options" :selected="selected">
-            <b-form-checkbox-group class="list-group-item p-0 border-0"
-                                   @input="changeSelectedValues"
-                                   stacked
-                                   v-model="selected">
+            <b-form-checkbox-group
+              v-model="selected"
+              class="list-group-item p-0 border-0"
+              stacked
+              @input="changeSelectedValues"
+            >
               <template v-for="{ value, item, label } of options">
                 <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
                   <b-form-checkbox :value="value" class="filter__items__item">
@@ -87,31 +93,46 @@
             <span v-html="$t('filter.noMatches')"></span>
           </div>
         </template>
-        <infinite-loading @infinite="nextAggregate" :identifier="infiniteId" :distance="200" v-if="useInfiniteScroll">
+        <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteId" :distance="200" @infinite="nextAggregate">
           <span slot="spinner"></span>
           <span slot="no-more"></span>
           <span slot="no-results"></span>
         </infinite-loading>
       </div>
-      <filter-footer @contextualize-filter="toggleContextualizeFilter"
-                     :filter="filter"
-                     :hide-contextualize="hideContextualize"
-                     :hide-exclude="hideExclude"
-                     :hide-show-more="hideShowMore"
-                     :hide-sort="hideSort"
-                     :sort-by-options.sync="sortByOptions"
-                     :sort-by-order.sync="sortByOrder"
-                     :sort-by.sync="sortBy"
-                     @open-filter-search="openFilterSearch"
-                     @toggle-filter="toggleFilter"
-                     v-if="!hideFooter" />
+      <filter-footer
+        v-if="!hideFooter"
+        :filter="filter"
+        :hide-contextualize="hideContextualize"
+        :hide-exclude="hideExclude"
+        :hide-show-more="hideShowMore"
+        :hide-sort="hideSort"
+        :sort-by-options.sync="sortByOptions"
+        :sort-by-order.sync="sortByOrder"
+        :sort-by.sync="sortBy"
+        @contextualize-filter="toggleContextualizeFilter"
+        @open-filter-search="openFilterSearch"
+        @toggle-filter="toggleFilter"
+      />
     </b-collapse>
   </div>
 </template>
 
 <script>
 import {
-  compact, concat, escapeRegExp, findIndex, flatten, get, map, noop, pick, setWith, sumBy, throttle, toLower, uniqueId
+  compact,
+  concat,
+  escapeRegExp,
+  findIndex,
+  flatten,
+  get,
+  map,
+  noop,
+  pick,
+  setWith,
+  sumBy,
+  throttle,
+  toLower,
+  uniqueId
 } from 'lodash'
 import InfiniteLoading from 'vue-infinite-loading'
 
@@ -128,13 +149,13 @@ import settings from '@/utils/settings'
  */
 export default {
   name: 'FilterBoilerplate',
-  mixins: [filters],
   components: {
     FilterFooter,
     Hook,
     InfiniteLoading,
     SearchFormControl
   },
+  mixins: [filters],
   props: {
     filter: {
       type: Object
@@ -200,7 +221,7 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       collapseItems: this.collapsedIfNoValues && !this.hasValues,
       infiniteId: uniqueId(),
@@ -213,11 +234,152 @@ export default {
       unwatch: () => {}
     }
   },
+  computed: {
+    waitIdentifier() {
+      return `items for ${this.filter.name} on ${this.$options.name}`
+    },
+    isReady() {
+      return !this.$wait.is(this.waitIdentifier)
+    },
+    isGlobal() {
+      return !this.filter.contextualized
+    },
+    getFilter() {
+      return this.getFilterByName(this.filter.name)
+    },
+    pageItemsPath() {
+      return ['aggregations', this.filter.key, 'buckets']
+    },
+    queryTokens() {
+      return [escapeRegExp(this.query.toLowerCase())]
+    },
+    options() {
+      return map(this.itemsWithExcludedValues, (item) => {
+        return {
+          item,
+          value: item.key.toString(),
+          label: this.labelToHuman(this.filter.itemLabel(item))
+        }
+      })
+    },
+    items() {
+      return flatten(this.pages.map(this.getPageItems))
+    },
+    itemsWithExcludedValues() {
+      const pages = concat([this.excludedItemsPage], this.pages)
+      return flatten(pages.map(this.getPageItems))
+    },
+    lastPage() {
+      return this.pages[this.pages.length - 1]
+    },
+    lastPageItems() {
+      return get(this.lastPage, this.pageItemsPath, [])
+    },
+    excludedItemsPage() {
+      if (!this.isGlobal && this.getFilter && this.getFilter.reverse) {
+        const values = this.getFilter.values.map((key) => ({ key, doc_count: 0 }))
+        return setWith({}, this.pageItemsPath.join('.'), values, Object)
+      }
+      return []
+    },
+    calculatedCount() {
+      return this.totalCount || 0
+    },
+    totalCount() {
+      return sumBy(this.items, 'doc_count')
+    },
+    total() {
+      return get(this, 'lastPage.total', 0)
+    },
+    headerIcon() {
+      return this.collapseItems ? 'plus' : 'minus'
+    },
+    showResults() {
+      return (this.isReady || this.offset > 0) && !this.collapseItems
+    },
+    hasResults() {
+      return this.isReady && this.items.length > 0
+    },
+    noResults() {
+      return this.isReady && this.items.length === 0
+    },
+    noMatches() {
+      return this.isReady && this.items.length === 0
+    },
+    useInfiniteScroll() {
+      return this.infiniteScroll && this.offset > 0 && this.items.length >= this.size
+    },
+    fromElasticSearch() {
+      return get(this, 'filter.fromElasticSearch', false)
+    },
+    aggregateWithThrottle() {
+      return throttle(this.aggregateWithLoading, 700)
+    },
+    offset() {
+      return get(this, 'items.length', 0)
+    },
+    nextOffset() {
+      return this.offset + this.size
+    },
+    size() {
+      return settings.filter.bucketSize
+    },
+    hasFilterQuery() {
+      // The filter has a query if:
+      //   * it is searchable
+      //   * the query is not empty
+      //   * it has an "alternativeSearch" function to generate query tokens
+      return this.filter.isSearchable && this.query !== '' && this.filter.alternativeSearch
+    },
+    aggregationInclude() {
+      const alternativeSearch = compact(this.filter.alternativeSearch(toLower(this.query)))
+      return '.*(' + concat(alternativeSearch, this.queryTokens).join('|') + ').*'
+    },
+    aggregationOptions() {
+      // The "size" attribute must be as big as the number of displayed buckets
+      let options = { size: this.nextOffset, order: this.order }
+      // Merge the options object with the filter's query
+      if (this.hasFilterQuery) {
+        options = { ...options, include: this.aggregationInclude }
+      }
+      return options
+    },
+    order() {
+      return { [this.sortBy]: this.sortByOrder }
+    },
+    selected: {
+      get() {
+        return this.getFilterValuesByName(this.filter.name)
+      },
+      set(key) {
+        this.setFilterValue(this.filter, { key })
+      }
+    },
+    isAllSelected: {
+      get() {
+        return this.selected.length === 0
+      },
+      set(checked) {
+        if (checked) {
+          this.$set(this, 'selected', [])
+        }
+      }
+    },
+    isReversed() {
+      return this.$store.getters['search/isFilterReversed'](this.filter.name)
+    },
+    hasValues: {
+      cache: false,
+      get() {
+        return this.$store.getters['search/hasFilterValues'](this.filter.name)
+      }
+    }
+  },
   watch: {
-    modelQuery () {
+    modelQuery() {
       this.$set(this, 'query', this.modelQuery)
     },
-    query () {
+    query() {
       this.$set(this, 'infiniteId', uniqueId())
       this.aggregateWithThrottle({ clearPages: true })
       // Emit an event to update the model value only if it changed
@@ -225,17 +387,17 @@ export default {
         this.$emit('update:modelQuery', this.query)
       }
     },
-    collapseItems () {
+    collapseItems() {
       this.initialize()
     },
-    sortBy () {
+    sortBy() {
       this.clearInfiniteScroll()
     },
-    sortByOrder () {
+    sortByOrder() {
       this.clearInfiniteScroll()
     }
   },
-  async mounted () {
+  async mounted() {
     await this.$nextTick()
     this.mounted = true
     // Listen for event to refresh the filter
@@ -248,7 +410,7 @@ export default {
         return
       }
       // Collects all indexes of the deleted item in the components loaded pages
-      const itemIndexes = this.pages.map(page => {
+      const itemIndexes = this.pages.map((page) => {
         return findIndex(this.getPageItems(page), { key })
       })
       // Iterate on the list of indexes for each page
@@ -265,8 +427,8 @@ export default {
         // update the doc count
         if (item.doc_count > 1) {
           item.doc_count--
-        // The item as only one occurrence, meaning it must be
-        // deleted from the page's items.
+          // The item as only one occurrence, meaning it must be
+          // deleted from the page's items.
         } else {
           get(this.pages, [pageIndex, ...this.pageItemsPath]).splice(itemIndex, 1)
         }
@@ -275,149 +437,11 @@ export default {
     // Initialize the filter for the first time
     this.initialize()
   },
-  computed: {
-    waitIdentifier () {
-      return `items for ${this.filter.name} on ${this.$options.name}`
-    },
-    isReady () {
-      return !this.$wait.is(this.waitIdentifier)
-    },
-    isGlobal () {
-      return !this.filter.contextualized
-    },
-    getFilter () {
-      return this.getFilterByName(this.filter.name)
-    },
-    pageItemsPath () {
-      return ['aggregations', this.filter.key, 'buckets']
-    },
-    queryTokens () {
-      return [escapeRegExp(this.query.toLowerCase())]
-    },
-    options () {
-      return map(this.itemsWithExcludedValues, item => {
-        return {
-          item,
-          value: item.key.toString(),
-          label: this.labelToHuman(this.filter.itemLabel(item))
-        }
-      })
-    },
-    items () {
-      return flatten(this.pages.map(this.getPageItems))
-    },
-    itemsWithExcludedValues () {
-      const pages = concat([this.excludedItemsPage], this.pages)
-      return flatten(pages.map(this.getPageItems))
-    },
-    lastPage () {
-      return this.pages[this.pages.length - 1]
-    },
-    lastPageItems () {
-      return get(this.lastPage, this.pageItemsPath, [])
-    },
-    excludedItemsPage () {
-      if (!this.isGlobal && this.getFilter && this.getFilter.reverse) {
-        const values = this.getFilter.values.map(key => ({ key, doc_count: 0 }))
-        return setWith({}, this.pageItemsPath.join('.'), values, Object)
-      }
-      return []
-    },
-    calculatedCount () {
-      return this.totalCount || 0
-    },
-    totalCount () {
-      return sumBy(this.items, 'doc_count')
-    },
-    total () {
-      return get(this, 'lastPage.total', 0)
-    },
-    headerIcon () {
-      return this.collapseItems ? 'plus' : 'minus'
-    },
-    showResults () {
-      return (this.isReady || this.offset > 0) && !this.collapseItems
-    },
-    hasResults () {
-      return this.isReady && this.items.length > 0
-    },
-    noResults () {
-      return this.isReady && this.items.length === 0
-    },
-    noMatches () {
-      return this.isReady && this.items.length === 0
-    },
-    useInfiniteScroll () {
-      return this.infiniteScroll && this.offset > 0 && this.items.length >= this.size
-    },
-    fromElasticSearch () {
-      return get(this, 'filter.fromElasticSearch', false)
-    },
-    aggregateWithThrottle () {
-      return throttle(this.aggregateWithLoading, 700)
-    },
-    offset () {
-      return get(this, 'items.length', 0)
-    },
-    nextOffset () {
-      return this.offset + this.size
-    },
-    size () {
-      return settings.filter.bucketSize
-    },
-    hasFilterQuery () {
-      // The filter has a query if:
-      //   * it is searchable
-      //   * the query is not empty
-      //   * it has an "alternativeSearch" function to generate query tokens
-      return this.filter.isSearchable && this.query !== '' && this.filter.alternativeSearch
-    },
-    aggregationInclude () {
-      const alternativeSearch = compact(this.filter.alternativeSearch(toLower(this.query)))
-      return '.*(' + concat(alternativeSearch, this.queryTokens).join('|') + ').*'
-    },
-    aggregationOptions () {
-      // The "size" attribute must be as big as the number of displayed buckets
-      let options = { size: this.nextOffset, order: this.order }
-      // Merge the options object with the filter's query
-      if (this.hasFilterQuery) {
-        options = { ...options, include: this.aggregationInclude }
-      }
-      return options
-    },
-    order () {
-      return { [this.sortBy]: this.sortByOrder }
-    },
-    selected: {
-      get () {
-        return this.getFilterValuesByName(this.filter.name)
-      },
-      set (key) {
-        this.setFilterValue(this.filter, { key })
-      }
-    },
-    isAllSelected: {
-      get () {
-        return this.selected.length === 0
-      },
-      set (checked) {
-        if (checked) {
-          this.$set(this, 'selected', [])
-        }
-      }
-    },
-    isReversed () {
-      return this.$store.getters['search/isFilterReversed'](this.filter.name)
-    },
-    hasValues: {
-      cache: false,
-      get () {
-        return this.$store.getters['search/hasFilterValues'](this.filter.name)
-      }
-    }
+  beforeDestroy() {
+    this.unwatch()
   },
   methods: {
-    initialize () {
+    initialize() {
       if (!this.collapseItems && this.offset === 0) {
         // Are we using an "offline" components?
         this.aggregateWithLoading()
@@ -430,19 +454,23 @@ export default {
         //
         // When they are contextualized, every filter with selected values will
         // be present in the list of watched values.
-        const unwatch = this.$store.watch(this.watchedForUpdate, () => {
-          // It's important to clear pages to ensure the filter is loading
-          // pages from the start and not adding new pages.
-          this.aggregateWithLoading({ clearPages: true })
-        }, { deep: true })
+        const unwatch = this.$store.watch(
+          this.watchedForUpdate,
+          () => {
+            // It's important to clear pages to ensure the filter is loading
+            // pages from the start and not adding new pages.
+            this.aggregateWithLoading({ clearPages: true })
+          },
+          { deep: true }
+        )
         this.$set(this, 'unwatch', unwatch)
       }
     },
-    clearInfiniteScroll () {
+    clearInfiniteScroll() {
       this.$set(this, 'infiniteId', uniqueId())
       this.aggregateWithThrottle({ clearPages: true })
     },
-    openFilterSearch () {
+    openFilterSearch() {
       /**
        * Triggered at the root level when user starts to search in the filter values.
        */
@@ -452,13 +480,13 @@ export default {
        */
       this.$emit('async-search', this.filter, this.query)
     },
-    async aggregateWithLoading (...args) {
+    async aggregateWithLoading(...args) {
       this.$wait.start(this.waitIdentifier)
       const page = await this.aggregate(...args)
       this.$wait.end(this.waitIdentifier)
       return page
     },
-    async aggregate ({ clearPages = false } = {}) {
+    async aggregate({ clearPages = false } = {}) {
       /**
        * Triggered when a filter received instruction to be load data
        */
@@ -479,154 +507,151 @@ export default {
       this.pages.push(page)
       return page
     },
-    async nextAggregate ($infiniteLoadingState) {
+    async nextAggregate($infiniteLoadingState) {
       await this.aggregateWithLoading()
       // Did we reach the end?
       const method = this.lastPageItems.length < this.size ? 'complete' : 'loaded'
       // Call the right method (with "noop" as safety net in case the method can't be found)
       return get($infiniteLoadingState, method, noop)()
     },
-    toggleItems () {
+    toggleItems() {
       this.collapseItems = !this.collapseItems
     },
-    getPageItems (page) {
+    getPageItems(page) {
       return get(page, this.pageItemsPath, [])
     },
-    hasValue (item) {
+    hasValue(item) {
       return this.$store.getters['search/hasFilterValue'](this.filter.itemParam(item))
     },
-    removeValue (item) {
+    removeValue(item) {
       this.$store.commit('search/removeFilterValue', this.filter.itemParam(item))
       this.refreshRouteAndSearch()
     },
-    addValue (item) {
+    addValue(item) {
       this.$store.commit('search/addFilterValue', this.filter.itemParam(item))
       this.refreshRouteAndSearch()
     },
-    setValue (item) {
+    setValue(item) {
       this.setFilterValue(this.filter, item)
       this.refreshRouteAndSearch()
     },
-    toggleFilter () {
+    toggleFilter() {
       this.refreshRouteAndSearch()
     },
-    toggleContextualizeFilter () {
+    toggleContextualizeFilter() {
       this.clearInfiniteScroll()
     },
-    watchedForUpdate () {
+    watchedForUpdate() {
       const { search } = this.$store.state
       if (this.filter.contextualized) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
-        return pick(search, ['index', 'query', 'values'])
+        return pick(search, ['indices', 'query', 'values'])
       } else {
-        return pick(search, ['index'])
+        return pick(search, ['indices'])
       }
     },
-    resetFilterValues (refresh = true) {
+    resetFilterValues(refresh = true) {
       this.$set(this, 'selected', [])
       this.$store.commit('search/includeFilter', this.filter.name)
       this.$emit('reset-filter-values', this.filter, refresh)
     },
-    changeSelectedValues ($ev) {
+    changeSelectedValues($ev) {
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()
     }
-  },
-  beforeDestroy () {
-    this.unwatch()
   }
 }
 </script>
 
 <style lang="scss">
-  .filter {
-    .content-placeholder .content-placeholder__wrapper__row__box {
-      background: darken($app-context-sidebar-bg, 5%);
-    }
+.filter {
+  .content-placeholder .content-placeholder__wrapper__row__box {
+    background: darken($app-context-sidebar-bg, 5%);
+  }
 
-    &__header {
-      &__icon {
-        cursor: pointer;
-      }
+  &__header {
+    &__icon {
+      cursor: pointer;
     }
+  }
 
-    .custom-checkbox {
+  .custom-checkbox {
+    display: block;
+    margin: 0.5rem;
+
+    label {
       display: block;
-      margin: 0.5rem;
+      padding-top: 0.2rem;
 
-      label {
-        display: block;
-        padding-top: 0.2rem;
-
-        & > span {
-          display: flex;
-          flex-direction: row;
-        }
-      }
-
-      input:checked + label {
-        font-weight: bold;
+      & > span {
+        display: flex;
+        flex-direction: row;
       }
     }
 
-    &.filter--reversed {
-      .filter__items__item:not(.filter__items__all) input:checked + label {
-        text-decoration: line-through;
-      }
+    input:checked + label {
+      font-weight: bold;
+    }
+  }
+
+  &.filter--reversed {
+    .filter__items__item:not(.filter__items__all) input:checked + label {
+      text-decoration: line-through;
+    }
+  }
+
+  &.filter--has-values {
+    box-shadow: 0 0 0 2px $tertiary, 0 0 10px 0 rgba($tertiary, 0.2);
+  }
+
+  &__items {
+    font-size: 0.8rem;
+    max-height: 300px;
+    overflow: auto;
+
+    .list-group-item {
+      background: inherit;
+      color: inherit;
     }
 
-    &.filter--has-values {
-      box-shadow: 0 0 0 2px $tertiary, 0 0 10px 0 rgba($tertiary, .2);
+    &__all + .list-group-item:empty {
+      margin-bottom: $spacer * 0.5;
     }
 
-    &__items {
-      font-size: 0.8rem;
-      max-height: 300px;
-      overflow: auto;
+    &__item .custom-checkbox {
+      margin-bottom: 0;
+    }
 
-      .list-group-item {
-        background: inherit;
+    &__search {
+      margin: 0 0.5rem;
+    }
+
+    .filter--dark &__search {
+      color: $light;
+
+      .search-form-control__input,
+      .search-form-control__addon__submit:last-of-type {
+        background: #000;
         color: inherit;
       }
 
-      &__all + .list-group-item:empty {
-        margin-bottom: $spacer * 0.5;
-      }
-
-      &__item .custom-checkbox {
-        margin-bottom: 0;
-      }
-
-      &__search {
-        margin: 0 0.5rem;
-      }
-
-      .filter--dark &__search {
-        color: $light;
-
-        .search-form-control__input,
-        .search-form-control__addon__submit:last-of-type {
-          background: #000;
-          color: inherit;
-        }
-
-        .search-form-control__input:not(:focus),
-        .search-form-control__addon__submit:last-of-type {
-          border-color: #000;
-        }
-      }
-
-      & &__display {
-        cursor: pointer;
-        font-size: 0.8rem;
-        font-weight: bolder;
-        margin: 0;
-        padding: 0 2.25rem 0.5rem;
-        text-align: center;
+      .search-form-control__input:not(:focus),
+      .search-form-control__addon__submit:last-of-type {
+        border-color: #000;
       }
     }
+
+    & &__display {
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: bolder;
+      margin: 0;
+      padding: 0 2.25rem 0.5rem;
+      text-align: center;
+    }
   }
+}
 </style>

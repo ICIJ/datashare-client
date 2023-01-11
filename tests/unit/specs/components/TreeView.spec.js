@@ -1,4 +1,3 @@
-import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import TreeView from '@/components/TreeView'
@@ -6,20 +5,33 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { Core } from '@/core'
 
+const HOME_TREE = {
+  name: '/home/foo',
+  type: 'directory',
+  prot: 'drwxrwxrwx',
+  contents: [
+    {
+      prot: 'drwxr-xr-x',
+      contents: [],
+      name: '/home/foo/01FOO',
+      type: 'directory'
+    }
+  ]
+}
+
 describe('TreeView.vue', () => {
-  const index = toLower('TreeView')
-  esConnectionHelper(index)
-  const es = esConnectionHelper.es
+  const { index, es } = esConnectionHelper.build()
 
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = {
-    project: index,
+    projects: [index],
     path: '/home/foo',
     selectedPaths: ['path_01', 'path_02'],
     size: true,
     count: true,
     infiniteScroll: false
   }
+
   let wrapper = null
 
   beforeAll(() => {
@@ -28,7 +40,8 @@ describe('TreeView.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
+    const api = jest.fn()
+    wrapper = shallowMount(TreeView, { api, i18n, localVue, propsData, store, wait })
   })
 
   it('should be a Vue instance', () => {
@@ -36,13 +49,32 @@ describe('TreeView.vue', () => {
   })
 
   it('should display 2 directories', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5)).commit()
-    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5)).commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
+      .commit()
     await wrapper.vm.loadData()
 
     expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
     expect(wrapper.find('.tree-view__header__hits').text()).toBe('10 docs')
     expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(2)
+  })
+
+  it('should display 3 directories including one from the tree', async () => {
+    wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
+      .commit()
+    await letData(es)
+      .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
+      .commit()
+    await wrapper.vm.loadData({ clearPages: true })
+
+    expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
+    expect(wrapper.find('.tree-view__header__hits').text()).toBe('10 docs')
+    expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(3)
   })
 
   it('should init selected on component creation', () => {

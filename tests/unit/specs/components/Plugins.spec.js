@@ -1,73 +1,86 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import axios from 'axios'
+import { flushPromises } from 'tests/unit/tests_utils'
 
-import Api from '@/api'
-import Plugins from '@/components/Plugins'
+import { Api } from '@/api'
 import { Core } from '@/core'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({
-      data: [{
-        id: 'plugin_01_id',
-        name: 'plugin_01_name',
-        version: 'plugin_01_version',
-        description: 'plugin_01_description',
-        installed: false,
-        deliverableFromRegistry: {
-          id: 'plugin_01_id',
-          name: 'plugin_01_registry_name',
-          version: 'plugin_01_version',
-          description: 'plugin_01_registry_description',
-          homepage: 'plugin_01_registry_homepage'
-        }
-      }, {
-        id: 'plugin_02_id',
-        name: 'plugin_02_name',
-        version: 'plugin_02_version',
-        description: 'plugin_02_description',
-        installed: true,
-        deliverableFromRegistry: {
-          id: 'plugin_02_id',
-          name: 'plugin_02_registry_name',
-          version: 'plugin_02_version',
-          description: 'plugin_02_registry_description',
-          homepage: 'plugin_02_registry_homepage'
-        }
-      }, {
-        id: 'plugin_03_id',
-        name: 'plugin_03_name',
-        version: null,
-        description: 'plugin_03_description',
-        installed: true,
-        deliverableFromRegistry: null
-      }, {
-        id: 'plugin_04_id',
-        name: 'plugin_04_name',
-        version: 'plugin_04_version',
-        description: null,
-        installed: true,
-        deliverableFromRegistry: {
-          id: 'plugin_04_id',
-          name: 'plugin_04_registry_name',
-          version: 'plugin_04_registry_version',
-          description: 'plugin_04_registry_description',
-          homepage: null
-        }
-      }]
-    })
+import Plugins from '@/components/Plugins'
+
+const pluginsMock = [
+  {
+    id: 'plugin_01_id',
+    name: 'plugin_01_name',
+    version: 'plugin_01_version',
+    description: 'plugin_01_description',
+    installed: false,
+    deliverableFromRegistry: {
+      id: 'plugin_01_id',
+      name: 'plugin_01_registry_name',
+      version: 'plugin_01_version',
+      description: 'plugin_01_registry_description',
+      homepage: 'plugin_01_registry_homepage'
+    }
+  },
+  {
+    id: 'plugin_02_id',
+    name: 'plugin_02_name',
+    version: 'plugin_02_version',
+    description: 'plugin_02_description',
+    installed: true,
+    deliverableFromRegistry: {
+      id: 'plugin_02_id',
+      name: 'plugin_02_registry_name',
+      version: 'plugin_02_version',
+      description: 'plugin_02_registry_description',
+      homepage: 'plugin_02_registry_homepage'
+    }
+  },
+  {
+    id: 'plugin_03_id',
+    name: 'plugin_03_name',
+    version: null,
+    description: 'plugin_03_description',
+    installed: true,
+    deliverableFromRegistry: null
+  },
+  {
+    id: 'plugin_04_id',
+    name: 'plugin_04_name',
+    version: 'plugin_04_version',
+    description: null,
+    installed: true,
+    deliverableFromRegistry: {
+      id: 'plugin_04_id',
+      name: 'plugin_04_registry_name',
+      version: 'plugin_04_registry_version',
+      description: 'plugin_04_registry_description',
+      homepage: null
+    }
   }
-})
+]
 
 describe('Plugins.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
+  let wrapper, i18n, localVue, api, mockAxios
 
-  beforeEach(async () => {
-    wrapper = await shallowMount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
   })
-
-  afterAll(() => jest.unmock('axios'))
+  beforeEach(async () => {
+    mockAxios.request.mockClear() // TODO CD suggestion: mock each plugin api function getPlugins, installPlugin, uninstallPlugin instead of mocking axios
+    mockAxios.request.mockResolvedValue({ data: pluginsMock })
+    wrapper = shallowMount(Plugins, {
+      i18n,
+      localVue,
+      data: () => {
+        return { url: 'this.is.an.url' }
+      }
+    })
+    await flushPromises()
+  })
 
   it('should display a button to install a plugin from url', () => {
     expect(wrapper.find('.plugins .plugins__add b-btn-stub').exists()).toBeTruthy()
@@ -88,7 +101,14 @@ describe('Plugins.vue', () => {
 
   describe('plugin card', () => {
     beforeEach(async () => {
-      wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      wrapper = mount(Plugins, {
+        i18n,
+        localVue,
+        data: () => {
+          return { url: 'this.is.an.url' }
+        }
+      })
+      await flushPromises()
     })
 
     describe('plugin name', () => {
@@ -107,15 +127,21 @@ describe('Plugins.vue', () => {
 
     describe('plugin description', () => {
       it('should display description from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__description').text()).toBe('plugin_01_registry_description')
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__description').text()).toBe(
+          'plugin_01_registry_description'
+        )
       })
 
       it('should display description from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__description').text()).toBe('plugin_02_registry_description')
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__description').text()).toBe(
+          'plugin_02_registry_description'
+        )
       })
 
       it('should display plugin description if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__description').text()).toBe('plugin_03_description')
+        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__description').text()).toBe(
+          'plugin_03_description'
+        )
       })
     })
 
@@ -145,11 +171,15 @@ describe('Plugins.vue', () => {
 
     describe('plugin homepage', () => {
       it('should display homepage from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__homepage').text()).toBe('plugin_01_registry_homepage')
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__homepage').text()).toBe(
+          'plugin_01_registry_homepage'
+        )
       })
 
       it('should display homepage from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__homepage').text()).toBe('plugin_02_registry_homepage')
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__homepage').text()).toBe(
+          'plugin_02_registry_homepage'
+        )
       })
 
       it('should NOT display homepage if plugin is installed and NOT from registry', () => {
@@ -197,21 +227,20 @@ describe('Plugins.vue', () => {
   })
 
   it('should search for matching plugins', async () => {
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
     await wrapper.setData({ searchTerm: '02_desc' })
-
     await wrapper.vm.search()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/plugins?filter=.*02_desc.*') })
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl('/api/plugins?filter=.*02_desc.*') })
   })
 
   it('should call for plugin installation from pluginId', () => {
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
     wrapper.vm.installPluginFromId('plugin_01_id')
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith({
       method: 'PUT',
       url: Api.getFullUrl('/api/plugins/install?id=plugin_01_id')
     })
@@ -219,25 +248,31 @@ describe('Plugins.vue', () => {
   })
 
   it('should call for plugin installation from pluginUrl', () => {
-    wrapper = mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
-    axios.request.mockClear()
+    wrapper = mount(Plugins, {
+      i18n,
+      localVue,
+      data: () => {
+        return { url: 'this.is.an.url' }
+      }
+    })
+    mockAxios.request.mockClear()
 
     wrapper.vm.installPluginFromUrl()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith({
       method: 'PUT',
       url: Api.getFullUrl('/api/plugins/install?url=this.is.an.url')
     })
-    expect(wrapper.vm.show).toBeTruthy()
+    expect(wrapper.vm.isInstallingFromUrl).toBeTruthy()
   })
 
   it('should call for plugin uninstallation', () => {
-    axios.request.mockClear()
+    mockAxios.request.mockClear()
     wrapper.vm.uninstallPlugin('plugin_01_id')
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledWith({
       method: 'DELETE',
       url: Api.getFullUrl('/api/plugins/uninstall?id=plugin_01_id')
     })

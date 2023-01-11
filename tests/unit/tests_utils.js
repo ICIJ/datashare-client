@@ -2,7 +2,11 @@ import { merge } from 'lodash'
 import fs from 'fs'
 import { join } from 'path'
 
-export function responseWithJson (body = {}, status = 200, headers = {}) {
+export function flushPromises() {
+  return new Promise((resolve) => setTimeout(resolve, 0))
+}
+
+export function responseWithJson(body = {}, status = 200, headers = {}) {
   const mockResponse = new Response(JSON.stringify(body), {
     status,
     headers: merge(headers, { 'Content-type': 'application/json' })
@@ -10,7 +14,7 @@ export function responseWithJson (body = {}, status = 200, headers = {}) {
   return Promise.resolve(mockResponse)
 }
 
-export function responseWithArrayBuffer (path, returnBuffer = true) {
+export function responseWithArrayBuffer(path, returnBuffer = true) {
   try {
     const arrayBuffer = fs.readFileSync(join(__dirname, `resources/${path}`))
     const status = 200

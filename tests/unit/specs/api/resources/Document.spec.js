@@ -68,6 +68,21 @@ describe('Document', () => {
           contentType: 'message/orNot',
           metadata: {
             tika_metadata_dc_title: 'This is a nice title',
+            tika_metadata_dc_subject: 'This is an even better title'
+          }
+        }
+      })
+      expect(doc.subject).toBe('This is an even better title')
+    })
+
+    it('should return the subject (old mapping) if it is an email', () => {
+      const doc = new Document({
+        _id: '01234567890123456789',
+        _source: {
+          path: '/this/is/a/specific.file',
+          contentType: 'message/orNot',
+          metadata: {
+            tika_metadata_dc_title: 'This is a nice title',
             tika_metadata_subject: 'This is an even better title'
           }
         }

@@ -1,24 +1,53 @@
-import axios from 'axios'
-
-import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: {} })
-  }
-})
-
-const api = new Api()
+import { Api } from '@/api'
 
 describe('Datashare backend client', () => {
   let json = null
+  let api
+  const mockAxios = { request: jest.fn() }
+  beforeAll(() => {
+    api = new Api(mockAxios, EventBus)
+  })
 
-  beforeEach(() => axios.request.mockClear())
+  beforeEach(() => {
+    mockAxios.request.mockClear()
+    mockAxios.request.mockResolvedValue({ data: {} }) // TODO : it should be a given with response data not a before each
+  })
 
   it('should return backend response to index', async () => {
     json = await api.index({})
     expect(json).toEqual({})
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        method: 'POST',
+        data: {
+          options: {
+            filter: true,
+            ocr: false
+          }
+        }
+      })
+    )
+  })
+
+  it('should return backend response to index when language is specified', async () => {
+    json = await api.index({ language: 'fra' })
+    expect(json).toEqual({})
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        method: 'POST',
+        data: {
+          options: {
+            filter: true,
+            ocr: false,
+            language: 'fra',
+            ocrLanguage: 'fra'
+          }
+        }
+      })
+    )
   })
 
   it('should return backend response to findNames', async () => {
@@ -67,7 +96,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should throw a 401 if getSettings return a error', async () => {
-    axios.request.mockRejectedValue({ response: { status: 401 } })
+    mockAxios.request.mockRejectedValue({ response: { status: 401 } })
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
     try {
@@ -75,11 +104,11 @@ describe('Datashare backend client', () => {
     } catch (error) {
       expect(error.response.status).toBe(401)
     }
-    expect(axios.request).toBeCalledTimes(1)
+    expect(mockAxios.request).toBeCalledTimes(1)
     expect(mockCallback).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/settings') })
+    expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl('/settings') })
 
-    axios.request.mockResolvedValue({ data: {} })
+    mockAxios.request.mockResolvedValue({ data: {} })
   })
 
   it('should return backend response to setSettings', async () => {
@@ -97,7 +126,7 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getStarredDocuments', async () => {
+  it('should return backend response to fetchIndicesStarredDocuments', async () => {
     json = await api.getStarredDocuments('project')
     expect(json).toEqual({})
   })
@@ -132,7 +161,17 @@ describe('Datashare backend client', () => {
     const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
     const paths = ['one', 'or', 'two', 'paths']
     const published = true
-    json = await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
+    json = await api.batchSearch(
+      name,
+      csvFile,
+      description,
+      project,
+      phraseMatch,
+      fuzziness,
+      fileTypes,
+      paths,
+      published
+    )
 
     const data = new FormData()
     data.append('name', name)
@@ -148,11 +187,13 @@ describe('Datashare backend client', () => {
     data.append('paths', 'paths')
     data.append('published', published)
     expect(json).toEqual({})
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/batch/search/project'),
-      method: 'POST',
-      data
-    }))
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/batch/search/project'),
+        method: 'POST',
+        data
+      })
+    )
   })
 
   it('should return backend response to getBatchSearch', async () => {
@@ -190,7 +231,7 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getRecommendationsByProject', async () => {
+  it('should return backend response to fetchIndicesRecommendations', async () => {
     json = await api.getRecommendationsByProject()
     expect(json).toEqual({})
   })
@@ -259,7 +300,13 @@ describe('Datashare backend client', () => {
     json = await api.copyBatchSearch('12', 'copyName', 'copyDescription')
     const data = { description: 'copyDescription', name: 'copyName' }
     expect(json).toEqual({})
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search/copy/12'), method: 'POST', data, responseType: 'text', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
+    expect(mockAxios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/batch/search/copy/12'),
+      method: 'POST',
+      data,
+      responseType: 'text',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+    })
   })
 
   it('should return backend response to getUserHistory', async () => {
@@ -268,10 +315,16 @@ describe('Datashare backend client', () => {
   })
 
   it('should send a put JSON for addHistoryEvent', async () => {
-    json = await api.addHistoryEvent('project', 'DOCUMENT', 'docName', 'docUri')
-    const data = { project: 'project', type: 'DOCUMENT', name: 'docName', uri: 'docUri' }
+    json = await api.addHistoryEvent(['project1', 'project2'], 'DOCUMENT', 'docName', 'docUri')
+    const data = { projectIds: ['project1', 'project2'], type: 'DOCUMENT', name: 'docName', uri: 'docUri' }
     expect(json).toEqual({})
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history'), method: 'PUT', data, responseType: 'text', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
+    expect(mockAxios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/users/me/history'),
+      method: 'PUT',
+      data,
+      responseType: 'text',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+    })
   })
 
   it('should return a backend response to deleteUserHistory', async () => {
@@ -286,7 +339,7 @@ describe('Datashare backend client', () => {
 
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
-    axios.request.mockReturnValue(Promise.reject(error))
+    mockAxios.request.mockReturnValue(Promise.reject(error))
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 

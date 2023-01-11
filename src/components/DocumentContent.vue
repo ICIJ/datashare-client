@@ -1,15 +1,15 @@
 <script>
-import { once, pick, throttle } from 'lodash'
-import { mapGetters, mapState } from 'vuex'
+import { findLastIndex, entries, get, pick, range, throttle } from 'lodash'
+import { mapGetters } from 'vuex'
 
-import ContentTextLengthWarning from '@/components/ContentTextLengthWarning'
 import DocumentAttachments from '@/components/DocumentAttachments'
+import DocumentContentSlices from '@/components/DocumentContentSlices'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
-import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-import LocalSearchWorker from '@/utils/local-search.worker'
+
+import { addLocalSearchMarksClassByOffsets } from '@/utils/strings.js'
 
 /**
  * Display a document's extract text after applying a series of transformation with a pipeline.
@@ -17,13 +17,13 @@ import LocalSearchWorker from '@/utils/local-search.worker'
 export default {
   name: 'DocumentContent',
   components: {
-    ContentTextLengthWarning,
     DocumentAttachments,
+    DocumentContentSlices,
     DocumentGlobalSearchTermsTags,
     DocumentLocalSearchInput,
     Hook
   },
-  mixins: [ner, utils],
+  mixins: [utils],
   props: {
     /**
      * The selected document
@@ -34,7 +34,7 @@ export default {
     /**
      * The language to translate the content to
      */
-    contentTranslation: {
+    targetLanguage: {
       type: String,
       default: null
     },
@@ -44,136 +44,28 @@ export default {
     q: {
       type: String,
       default: ''
+    },
+    /**
+     * Page size when loading the document in slices
+     */
+    pageSize: {
+      type: Number,
+      default: 2500
     }
   },
-  data () {
+  data() {
     return {
-      hasNamedEntities: false,
       hasStickyToolbox: false,
+      contentSlices: {},
       localSearchIndex: 0,
+      localSearchIndexes: [],
       localSearchOccurrences: 0,
-      localSearchTerm: { label: this.q },
-      localSearchWorker: null,
-      localSearchWorkerInProgress: false,
-      transformedContent: '',
-      rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN']
-    }
-  },
-  async mounted () {
-    // Use already loaded named entities (if any) or count them with a promise
-    this.hasNamedEntities = !!this.namedEntities.length || !!await this.getNamedEntitiesTotal()
-    // Apply the transformation pipeline once
-    await this.transformContent()
-    // Initial local query, we need to jump to the result
-    if (this.q) {
-      this.hasStickyToolbox = true
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
-    }
-  },
-  beforeDestroy () {
-    this.terminateLocalSearchWorker()
-  },
-  watch: {
-    localSearchTerm: throttle(async function () {
-      await this.transformContent()
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
-    }, 300),
-    async showNamedEntities (value) {
-      if (value && this.hasNamedEntities) {
-        await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      }
-      return await this.transformContent()
-    },
-    contentTranslation () {
-      return this.transformContent()
-    },
-    contentPipelineFunctions () {
-      return this.transformContent()
-    },
-    showContentTextLengthWarning () {
-      this.transformContent()
-    }
-  },
-  methods: {
-    async loadContent () {
-      if (!this.showContentTextLengthWarning && !this.document.hasContent) {
-        await this.$store.dispatch('document/getContent')
-      }
-      this.$root.$emit('document::content-loaded')
-      return this.content
-    },
-    async transformContent () {
-      const transformedContent = await this.applyContentPipeline()
-      const body = this.$el.querySelector('.document-content__body')
-      if (this.rightToLeftLanguages.includes(this.document.source.language)) {
-        body.classList.add('document-content__body--rtl')
-      }
-      this.$set(this, 'transformedContent', transformedContent)
-    },
-    terminateLocalSearchWorker () {
-      if (this.localSearchWorker !== null) {
-        this.localSearchWorker.terminate()
-      }
-    },
-    createLocalSearchWorker () {
-      this.terminateLocalSearchWorker()
-      this.localSearchWorker = new LocalSearchWorker()
-    },
-    addLocalSearchMarks (content) {
-      if (!this.hasLocalSearchTerms) {
-        return content
-      }
-
-      this.createLocalSearchWorker()
-      this.localSearchWorkerInProgress = true
-
-      const workerPromise = new Promise(resolve => {
-        // We receive a content from the worker
-        this.localSearchWorker.addEventListener('message', once(({ data }) => {
-          this.localSearchOccurrences = data.localSearchOccurrences
-          this.localSearchIndex = data.localSearchIndex
-          this.localSearchWorkerInProgress = false
-          this.terminateLocalSearchWorker()
-          resolve(data.content)
-        }))
-        // Ignore errors
-        this.localSearchWorker.onerror = () => { resolve(content) }
-      })
-
-      this.localSearchWorker.postMessage({ content, localSearchTerm: this.localSearchTerm })
-
-      return workerPromise
-    },
-    async applyContentPipeline () {
-      const content = await this.loadContent()
-      return this.contentPipeline(content, this.contentPipelineParams)
-    },
-    findNextLocalSearchTerm () {
-      const localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
-      this.$set(this, 'localSearchIndex', localSearchIndex)
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
-    },
-    findPreviousLocalSearchTerm () {
-      const localSearchIndex = Math.max(1, this.localSearchIndex - 1)
-      this.$set(this, 'localSearchIndex', localSearchIndex)
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
-    },
-    jumpToActiveLocalSearchTerm () {
-      const searchTerms = this.$el.querySelectorAll('.local-search-term')
-      const activeSearchTerm = searchTerms[this.localSearchIndex - 1]
-      searchTerms.forEach(term => term.classList.remove('local-search-term--active'))
-      if (activeSearchTerm) {
-        activeSearchTerm.classList.add('local-search-term--active')
-        activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
-      }
-    },
-    getNamedEntitiesTotal () {
-      return this.$store.dispatch('document/getNamedEntitiesTotal')
+      localSearchTerm: this.q,
+      rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
+      maxOffsetTranslations: {}
     }
   },
   computed: {
-    ...mapState('document', ['isLoadingNamedEntities', 'showContentTextLengthWarning']),
-    ...mapGetters('document', ['namedEntities']),
     ...mapGetters('pipelines', {
       getPipelineChain: 'applyPipelineChainByCategory',
       getFullPipelineChain: 'getFullPipelineChainByCategory'
@@ -181,56 +73,270 @@ export default {
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms'
     }),
-    showNamedEntities: {
-      set (toggle) {
-        this.$store.commit('document/toggleShowNamedEntities', toggle)
-      },
-      get () {
-        return this.$store.state.document.showNamedEntities
-      }
+    isRightToLeft() {
+      const language = get(this.document, 'source.language', null)
+      return this.rightToLeftLanguages.includes(language)
     },
-    contentPipelineFunctions () {
+    contentPipelineFunctions() {
       return this.getFullPipelineChain('extracted-text')
     },
-    showNamedEntitiesToggle () {
-      return !this.translatedContent && this.hasNamedEntities
+    maxOffset() {
+      return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
     },
-    shouldApplyNamedEntitiesMarks () {
-      return !this.translatedContent && this.showNamedEntities
+    offsets() {
+      return range(0, this.maxOffset, this.pageSize)
     },
-    translatedContent () {
-      if (this.contentTranslation !== null) {
-        return this.document.translatedContentIn(this.contentTranslation)
-      }
-      return null
+    virtualContentSlices() {
+      return this.offsets.map((_, index) => {
+        return this.getVirtualContentSlice(index + 1)
+      })
     },
-    content: {
-      // Document's content is not a reactive property yet so we cannot use
-      // vue caching mechanism here.
-      cache: false,
-      get () {
-        return this.translatedContent || this.document.content || ''
-      }
+    contentPipeline() {
+      return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
     },
-    contentPipeline () {
-      return this.getPipelineChain('extracted-text', ...[
-        this.addLocalSearchMarks
-      ])
-    },
-    contentPipelineParams () {
+    contentPipelineParams() {
       return pick(this, [
         'hasStickyToolbox',
         'globalSearchTerms',
         'localSearchIndex',
         'localSearchOccurrences',
-        'localSearchTerm',
-        'localSearchWorkerInProgress',
-        'namedEntities',
-        'shouldApplyNamedEntitiesMarks'
+        'localSearchTerm'
       ])
     },
-    hasLocalSearchTerms () {
-      return this.localSearchTerm.label && this.localSearchTerm.label.length > 0
+    hasLocalSearchTerms() {
+      return this.localSearchTerm && this.localSearchTerm.length > 0
+    }
+  },
+  watch: {
+    localSearchTerm: throttle(async function () {
+      await this.retrieveTotalOccurrences()
+      await this.cookAllContentSlices()
+      await this.$nextTick()
+      await this.jumpToActiveLocalSearchTerm()
+    }, 300),
+    async targetLanguage(value) {
+      await this.loadMaxOffset(value)
+      await this.cookAllContentSlices()
+    }
+  },
+  async mounted() {
+    await this.loadMaxOffset()
+    // Initial local query, we need to jump to the result
+    if (this.q) {
+      this.hasStickyToolbox = true
+      await this.retrieveTotalOccurrences()
+      await this.cookAllContentSlices()
+      await this.$nextTick()
+      await this.jumpToActiveLocalSearchTerm()
+    }
+  },
+  methods: {
+    async loadMaxOffset(targetLanguage = this.targetLanguage) {
+      const key = targetLanguage ?? 'original'
+      // Ensure we load the map offset only once
+      const offset = await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
+      this.$set(this.maxOffsetTranslations, key, offset)
+      return offset
+    },
+    findContentSliceIndexArround(desiredOffset) {
+      return findLastIndex(this.offsets, (offset) => offset <= desiredOffset)
+    },
+    findAdjacentContentSlice(
+      { offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage },
+      defaultValue = null
+    ) {
+      const adjacentOffset = Number(offset) + Number(limit)
+      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }, defaultValue)
+    },
+    findPrecedingContentSlice(
+      { offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage },
+      defaultValue = null
+    ) {
+      const adjacentOffset = Number(offset) - Number(limit)
+      return this.getContentSlice({ offset: adjacentOffset, limit, targetLanguage }, defaultValue)
+    },
+    setContentSlice({
+      offset = 0,
+      limit = this.pageSize,
+      targetLanguage = this.targetLanguage,
+      content = '',
+      cookedContent = '',
+      ...rest
+    } = {}) {
+      const obj = this.contentSlices
+      const targetLanguageKey = targetLanguage || 'original'
+      // Reactivly set the nested values of contentSlices
+      this.$set(obj, offset, obj[offset] || {})
+      this.$set(obj[offset], limit, obj[offset][limit] || {})
+      this.$set(obj[offset][limit], targetLanguageKey, { ...rest, content, cookedContent })
+      return { ...rest, content, cookedContent }
+    },
+    makeContentSliceOrganic({
+      offset = 0,
+      limit = this.pageSize,
+      targetLanguage = this.targetLanguage,
+      content = ''
+    } = {}) {
+      // Find if the preceding content slice to know if it has an organic tail already
+      const { organicTail: organicHead = true } = this.findPrecedingContentSlice({ offset, limit, targetLanguage }, {})
+      // Find the adjacent content slice to add missing tailing content add the end of a line
+      const { content: adjacentContent = '\n' } = this.findAdjacentContentSlice({ offset, limit, targetLanguage }, {})
+      // The slice ends with a new line or its adjacent slice starts with a new line
+      const organicTail = content.endsWith('\n') || adjacentContent.startsWith('\n')
+      // Extract the content suffix from the adjacent content
+      const missingTailingContent = organicTail ? '' : adjacentContent.split('\n').shift()
+      // If the previous slice is not organic (organicHead), remove the first line from the content
+      const truncatedTailContent = organicHead ? content : content.split('\n').slice(1).join('\n')
+      // Add the missing tailing content (if any)
+      const organicContent = truncatedTailContent + missingTailingContent
+      // The offset of the content is not the same anymore
+      const organicOffset = organicHead ? offset : 1 + Number(offset) + content.split('\n').shift().length
+      return { organicContent, organicHead, organicTail, organicOffset }
+    },
+    async cookContentSlice({
+      offset = 0,
+      limit = this.pageSize,
+      targetLanguage = this.targetLanguage,
+      content = ''
+    } = {}) {
+      // Extract the content after making it "organic"
+      const sliceParams = { offset, limit, targetLanguage, content }
+      const { organicHead, organicTail, organicOffset, organicContent } = this.makeContentSliceOrganic(sliceParams)
+      // Apply the pipeline to on the content is organic
+      const pipelineParams = { organicOffset, ...this.contentPipelineParams }
+      const cookedContent = await this.contentPipeline(organicContent, pipelineParams)
+      // Finally, save the
+      this.setContentSlice({ ...sliceParams, organicOffset, cookedContent, organicHead, organicTail })
+    },
+    cookAllContentSlices({ minOffset = 0, maxOffset = this.maxOffset } = {}) {
+      const promises = []
+      for (const [offset, limits] of entries(this.contentSlices)) {
+        for (const [limit, targetLanguages] of entries(limits)) {
+          for (const [targetLanguage, contentSlice] of entries(targetLanguages)) {
+            if (offset >= minOffset && offset <= maxOffset) {
+              promises.push(this.cookContentSlice({ offset, limit, targetLanguage, ...contentSlice }))
+            }
+          }
+        }
+      }
+      return Promise.all(promises)
+    },
+    getContentSlice(
+      { offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {},
+      defaultValue = null
+    ) {
+      // Ensure the limit is not beyond limit
+      limit = Math.min(limit, this.maxOffset - offset)
+      const targetLanguageKey = targetLanguage || 'original'
+      return get(this.contentSlices, [offset, limit, targetLanguageKey], defaultValue)
+    },
+    hasContentSlice({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+      return !!this.getContentSlice({ offset, limit, targetLanguage })
+    },
+    loadContentSliceArround(desiredOffset) {
+      const desiredOffsetIndex = this.findContentSliceIndexArround(desiredOffset)
+      const offset = this.offsets[desiredOffsetIndex]
+      return this.loadContentSliceOnce({ offset })
+    },
+    async loadContentSlice({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+      // Ensure the limit is not beyond limit
+      limit = Math.min(limit, this.maxOffset - offset)
+      const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
+      return this.setContentSlice({ offset, limit, targetLanguage, content })
+    },
+    async loadContentSliceOnce({ offset = 0, limit = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+      if (!this.hasContentSlice({ offset, limit, targetLanguage })) {
+        await this.loadContentSlice({ offset, limit, targetLanguage })
+      }
+      return this.getContentSlice({ offset, limit, targetLanguage })
+    },
+    async retrieveTotalOccurrences() {
+      try {
+        const query = this.localSearchTerm
+        const targetLanguage = this.targetLanguage
+        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences', { query, targetLanguage })
+        this.localSearchIndexes = offsets
+        this.localSearchOccurrences = count
+        this.localSearchIndex = Number(!!count)
+      } catch (_) {
+        this.localSearchIndexes = []
+        this.localSearchOccurrences = 0
+        this.localSearchIndex = 0
+      }
+    },
+    addLocalSearchMarks(content, { organicOffset: delta = 0 } = {}) {
+      if (!this.hasLocalSearchTerms) {
+        return content
+      }
+
+      const offsets = this.localSearchIndexes
+      const term = this.localSearchTerm
+      return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
+    },
+    findNextLocalSearchTerm() {
+      const localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
+      this.$set(this, 'localSearchIndex', localSearchIndex)
+      this.$nextTick(this.jumpToActiveLocalSearchTerm)
+    },
+    findPreviousLocalSearchTerm() {
+      const localSearchIndex = Math.max(1, this.localSearchIndex - 1)
+      this.$set(this, 'localSearchIndex', localSearchIndex)
+      this.$nextTick(this.jumpToActiveLocalSearchTerm)
+    },
+    clearActiveLocalSearchTerm() {
+      const activeTerms = this.$el.querySelectorAll('.local-search-term--active')
+      activeTerms.forEach((term) => term.classList.remove('local-search-term--active'))
+    },
+    scrollToContentSlice(activeTermContentSlice = 0) {
+      if (this.$refs?.slices?.scrollToContentSlice) {
+        this.$refs?.slices?.scrollToContentSlice(activeTermContentSlice)
+      }
+    },
+    async jumpToActiveLocalSearchTerm() {
+      // Delete all existing "local-search-term--active" classes from other element
+      this.clearActiveLocalSearchTerm()
+      const activeTermOffset = this.localSearchIndexes[this.localSearchIndex - 1]
+      // Load missing content slice (if needed)
+      await this.loadContentSliceArround(activeTermOffset)
+      // Move to the content slice containing the term
+      const activeTermContentSlice = this.findContentSliceIndexArround(activeTermOffset)
+      this.scrollToContentSlice(activeTermContentSlice)
+      // Find the active search term according to `localSearchIndex`
+      const activeTermSelector = `.local-search-term[data-offset="${activeTermOffset}"]`
+      const activeTerm = this.$el.querySelector(activeTermSelector)
+      // Add the correct class and scroll the element into view
+      activeTerm?.classList.add('local-search-term--active')
+      activeTerm?.scrollIntoView({ block: 'center', inline: 'nearest' })
+    },
+    async onContentSlicePlaceholderVisible({ offset, limit }) {
+      await this.loadContentSliceOnce({ offset, limit })
+      // Cook preceding, current and adjacent content slices
+      const minOffset = offset - limit
+      const maxOffset = offset + limit
+      await this.cookAllContentSlices({ minOffset, maxOffset })
+    },
+    getContentSlicePageOffset(page) {
+      return (page - 1) * this.pageSize
+    },
+    getVirtualContentSlicePlaceholder(page) {
+      const id = `document-content-slice-placeholder-${page}`
+      const limit = this.pageSize
+      const offset = this.getContentSlicePageOffset(page)
+      const placeholder = true
+      return { placeholder, id, offset, limit }
+    },
+    getVirtualContentSlice(page) {
+      const offset = this.getContentSlicePageOffset(page)
+      // To return the actual content slice, the content must exists
+      if (this.hasContentSlice({ offset })) {
+        const { pageSize: limit, targetLanguage } = this
+        // Share the content in a getter function to avoid copying huge
+        // chunks of text into each virtual slice
+        const get = this.getContentSlice.bind(this)
+        const id = `document-content-slice-${page}`
+        return { id, get, offset, limit, targetLanguage }
+      }
+      return this.getVirtualContentSlicePlaceholder(page)
     }
   }
 }
@@ -239,96 +345,97 @@ export default {
 <template>
   <div class="document-content">
     <hook name="document.content:before"></hook>
-    <content-text-length-warning v-if="showContentTextLengthWarning"></content-text-length-warning>
-    <template v-else>
-      <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
-        <hook name="document.content.toolbox:before"></hook>
-        <document-global-search-terms-tags
-          :document="document"
-          @select="localSearchTerm = $event"
-          class="p-3 w-100"></document-global-search-terms-tags>
-        <document-local-search-input class="ml-auto"
-          v-model="localSearchTerm"
-          v-bind:activated.sync="hasStickyToolbox"
-          @next="findNextLocalSearchTerm"
-          @previous="findPreviousLocalSearchTerm"
-          :search-occurrences="localSearchOccurrences"
-          :search-index="localSearchIndex"
-          :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
-        <hook name="document.content.toolbox:after"></hook>
-      </div>
-      <div class="d-flex flex-row justify-content-end align-items-center px-3">
-        <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-        <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler"
-             v-if="showNamedEntitiesToggle">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler"
-                   :disabled="isLoadingNamedEntities">
-            <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
-              {{ $t('document.showNamedEntities') }}
-            </label>
-          </div>
-          <b-tooltip target="ner-toggler" :title="$t('document.highlightsCaution')"></b-tooltip>
-        </div>
-        <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
-      </div>
-      <hook name="document.content.body:before"></hook>
-      <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
-      <hook name="document.content.body:after"></hook>
-      <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
-    </template>
+    <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
+      <hook name="document.content.toolbox:before"></hook>
+      <document-global-search-terms-tags
+        class="p-3 w-100"
+        :document="document"
+        :target-language="targetLanguage"
+        @select="localSearchTerm = $event"
+      />
+      <document-local-search-input
+        v-model="localSearchTerm"
+        class="ml-auto"
+        :activated.sync="hasStickyToolbox"
+        :search-occurrences="localSearchOccurrences"
+        :search-index="localSearchIndex"
+        @next="findNextLocalSearchTerm"
+        @previous="findPreviousLocalSearchTerm"
+      />
+      <hook name="document.content.toolbox:after"></hook>
+    </div>
+    <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3">
+      <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
+      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
+      <hook
+        name="document.content.togglers:before"
+        class="d-flex flex-row justify-content-end align-items-center"
+      ></hook>
+      <hook
+        name="document.content.togglers:after"
+        class="d-flex flex-row justify-content-end align-items-center"
+      ></hook>
+      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
+    </div>
+
+    <hook name="document.content.body:before"></hook>
+    <document-content-slices
+      ref="slices"
+      :bufferize-all="!!localSearchOccurrences"
+      :class="{ 'document-content__body--rtl': isRightToLeft }"
+      :slices="virtualContentSlices"
+      class="document-content__body container-fluid py-3"
+      @placeholder-visible="onContentSlicePlaceholderVisible"
+    />
+    <hook name="document.content.body:after"></hook>
+
+    <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
     <hook name="document.content:after"></hook>
   </div>
 </template>
 
 <style lang="scss" scoped>
-  .document-content {
-    &__toolbox {
-      background: $lighter;
-      box-shadow: 0 -1 * $spacer 0 0 white;
-      left: 0;
-      margin: $spacer $grid-gutter-width * 0.5;
-      margin-bottom: 0;
-      position: static;
-      top: $spacer;
-      z-index: 50;
+.document-content {
+  &__toolbox {
+    background: $lighter;
+    box-shadow: 0 -1 * $spacer 0 0 white;
+    left: 0;
+    margin: $spacer $grid-gutter-width * 0.5;
+    margin-bottom: 0;
+    position: static;
+    top: $spacer;
+    z-index: 50;
 
-      &--sticky {
-        position: sticky;
-      }
-    }
-
-    &__body--rtl {
-      direction: rtl;
-      text-align: right;
-    }
-
-    &__ner-toggler {
-      & > .custom-control.custom-switch {
-        display: inline-block;
-      }
-    }
-
-    & /deep/ mark {
-      padding: 0;
-    }
-
-    & /deep/ .local-search-term {
-      background: $mark-bg;
-      color: black;
-      padding: 0;
-
-      &--active {
-        background: #38D878;
-        color: white;
-      }
-
-      > .global-search-term {
-        background: transparent;
-        color: inherit;
-        border-bottom: 2px solid transparent;
-        padding: 0;
-      }
+    &--sticky {
+      position: sticky;
     }
   }
+
+  &__body--rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  :deep(mark) {
+    padding: 0;
+  }
+
+  :deep(.local-search-term) {
+    background: $mark-bg;
+    color: black;
+    padding: 0;
+  }
+
+  :deep(.local-search-term--active) {
+    background: #38d878;
+    color: white;
+  }
+
+  :deep(.local-search-term > .global-search-term) {
+    background: transparent;
+    color: inherit;
+    border-bottom: 2px solid transparent;
+    padding: 0;
+  }
+}
 </style>

@@ -1,4 +1,4 @@
-export default function humanNumber (n, { K = '%K', M = '%M', B = '%B' } = { }) {
+export default function humanNumber(n, { K = '%K', M = '%M', B = '%B' } = {}) {
   switch (true) {
     case n < 1e3:
       return n

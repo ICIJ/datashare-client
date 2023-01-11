@@ -1,5 +1,4 @@
-import toLower from 'lodash/toLower'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import SearchBar from '@/components/SearchBar'
@@ -10,31 +9,53 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 describe('SearchBar.vue', function () {
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const project = toLower('SearchBar')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
-  let wrapper = null
+  const { index: project, es } = esConnectionHelper.build()
 
+  let wrapper = null
+  const shallowMountFactory = (propsData = {}) => {
+    return shallowMount(SearchBar, { i18n, localVue, router, store, propsData })
+  }
+  const mountFactory = (propsData = {}) => {
+    return mount(SearchBar, { i18n, localVue, router, store, propsData })
+  }
   beforeAll(() => store.commit('search/index', project))
 
   beforeEach(() => {
     store.commit('search/reset')
-    wrapper = shallowMount(SearchBar, { i18n, localVue, router, store })
   })
 
   afterAll(() => store.commit('search/reset'))
 
   it('should display search bar', () => {
+    wrapper = shallowMountFactory()
     expect(wrapper.find('.search-bar').element).toBeTruthy()
+    expect(wrapper.find('search-bar-input-stub').element).toBeTruthy()
+  })
+
+  it('should display a search bar input with dropdown field options', () => {
+    wrapper = mountFactory()
+    expect(wrapper.find('.search-bar__input').element).toBeTruthy()
+    expect(wrapper.find('.search-bar__field-options').element).toBeTruthy()
+  })
+
+  it('should display a suggestion dropdown when there are suggestions', async () => {
+    wrapper = mountFactory()
+    expect(wrapper.find('.search-bar__suggestions').element).toBeFalsy()
+    await wrapper.setData({ suggestions: ['suggestion1', 'suggestion2'] })
+    expect(wrapper.find('.search-bar__suggestions').element).toBeTruthy()
   })
 
   it('should display the shortkeys-modal component', async () => {
-    await wrapper.setProps({ settings: true })
-
+    const propsData = { settings: false }
+    wrapper = shallowMountFactory(propsData)
+    expect(wrapper.find('.search-bar shortkeys-modal-stub').element).toBeFalsy()
+    propsData.settings = true
+    wrapper = shallowMountFactory(propsData)
     expect(wrapper.find('.search-bar shortkeys-modal-stub').element).toBeTruthy()
   })
 
   it('should submit search', () => {
+    wrapper = shallowMountFactory()
     wrapper.vm.$set(wrapper.vm, 'query', 'foo')
     wrapper.vm.submit()
     expect(wrapper.vm.$store.state.search.query).toBe('foo')
@@ -45,6 +66,7 @@ describe('SearchBar.vue', function () {
   })
 
   it('should reset the from search parameter to 0', () => {
+    wrapper = shallowMountFactory()
     store.commit('search/from', 12)
     wrapper.vm.submit()
 
@@ -53,28 +75,30 @@ describe('SearchBar.vue', function () {
 
   describe('search suggestions', () => {
     it('should retrieve suggestions in NamedEntities and tags for default search', async () => {
-      await letData(es).have(new IndexedDocument('document', project)
-        .withNer('ne_01')
-        .withTags(['ne_tag'])
-      ).commit()
+      wrapper = shallowMountFactory()
+      await letData(es)
+        .have(new IndexedDocument('document', project).withNer('ne_01').withTags(['ne_tag']))
+        .commit()
 
       const suggestions = await wrapper.vm.suggestTerms([{ field: '<implicit>', term: 'ne_' }])
 
-      expect(suggestions.suggestions).toEqual([{ key: 'ne_01', doc_count: 1 }, { key: 'ne_tag', doc_count: 1 }])
+      expect(suggestions.suggestions).toEqual([
+        { key: 'ne_01', doc_count: 1 },
+        { key: 'ne_tag', doc_count: 1 }
+      ])
     })
 
     it('should order suggestions by doc_count descending', async () => {
-      await letData(es).have(new IndexedDocument('document_01', project)
-        .withNer('ne_01')
-        .withNer('ne_02')
-      ).commit()
-      await letData(es).have(new IndexedDocument('document_02', project)
-        .withNer('ne_02')
-      ).commit()
+      wrapper = shallowMountFactory()
+      await letData(es).have(new IndexedDocument('document_01', project).withNer('ne_01').withNer('ne_02')).commit()
+      await letData(es).have(new IndexedDocument('document_02', project).withNer('ne_02')).commit()
 
       const suggestions = await wrapper.vm.suggestTerms([{ field: '<implicit>', term: 'ne_' }])
 
-      expect(suggestions.suggestions).toEqual([{ key: 'ne_02', doc_count: 2 }, { key: 'ne_01', doc_count: 1 }])
+      expect(suggestions.suggestions).toEqual([
+        { key: 'ne_02', doc_count: 2 },
+        { key: 'ne_01', doc_count: 1 }
+      ])
     })
   })
 })

@@ -7,7 +7,7 @@
       <p class="text-muted">
         {{ $t('document.tagsVisibility') }}
       </p>
-      <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="true" />
+      <document-tags-form :document="document" :tags="tags" :display-tags="true" :display-form="true" />
     </div>
     <div class="document__content__shortcuts mb-3">
       <h5 class="mb-3">
@@ -35,15 +35,27 @@
       <p class="text-muted">
         {{ $t('document.detailsInfo') }}
       </p>
-      <div class="row document__content__details__children mx-2">
-      </div>
-      <div class="row document__content__details__item" v-for="field in filteredCanonicalFields" :key="field.name">
+      <div class="row document__content__details__children mx-2"></div>
+      <div v-for="field in filteredCanonicalFields" :key="field.name" class="row document__content__details__item">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="field.name">
             {{ field.label }}
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value), index } }">
+            <router-link
+              :to="
+                field.to || {
+                  name: 'search',
+                  query: {
+                    q: document.valueAsQueryParam(
+                      field.name,
+                      field.rawValue !== undefined ? field.rawValue : field.value
+                    ),
+                    indices
+                  }
+                }
+              "
+            >
               <fa icon="search" />
             </router-link>
           </div>
@@ -61,13 +73,13 @@
           </div>
         </div>
       </div>
-      <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name">
+      <div v-for="name in metaFieldsNames" :key="name" class="row document__content__details__item">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="name">
             <var>{{ document.shortMetaName(name) | startCase }}</var>
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name), index } }">
+            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name), indices } }">
               <fa icon="search" />
             </router-link>
           </div>
@@ -79,7 +91,7 @@
         </div>
       </div>
       <div class="text-center mt-4">
-        <button @click="metadataVisible = !metadataVisible" class="btn btn-outline-primary btn-sm">
+        <button class="btn btn-outline-primary btn-sm" @click="metadataVisible = !metadataVisible">
           {{ $t(metadataVisible ? 'document.showLessDetails' : 'document.showMoreDetails') }}
         </button>
       </div>
@@ -88,7 +100,7 @@
 </template>
 
 <script>
-import { filter, get, map, startCase } from 'lodash'
+import { filter, get, map, startCase, uniq } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentTagsForm from '@/components/DocumentTagsForm'
@@ -99,6 +111,12 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
  */
 export default {
   name: 'DocumentTabDetails',
+  components: {
+    DocumentTagsForm
+  },
+  filters: {
+    startCase
+  },
   props: {
     /**
      * The selected document
@@ -113,42 +131,41 @@ export default {
       type: Object
     }
   },
-  components: {
-    DocumentTagsForm
-  },
-  filters: {
-    startCase
-  },
-  data () {
+  data() {
     return {
-      index: this.$store.state.search.index,
       metadataVisible: false
     }
   },
   computed: {
     ...mapState('document', ['tags']),
-    documentPath () {
+    documentPath() {
       if (this.$config.get('mountedDataDir')) {
         return this.document.source.path.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
       } else {
         return this.document.source.path
       }
     },
-    documentDirname () {
+    documentDirname() {
       if (this.$config.get('mountedDataDir')) {
         return this.document.source.dirname.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
       } else {
         return this.document.source.dirname
       }
     },
-    metaFieldsNames () {
+    index() {
+      return this.document.index
+    },
+    indices() {
+      return uniq([this.index, ...this.$store.state.search.indices]).join(',')
+    },
+    metaFieldsNames() {
       if (this.metadataVisible) {
-        return filter(this.document.metas, name => map(this.canonicalFields, 'name').indexOf(name) === -1)
+        return filter(this.document.metas, (name) => map(this.canonicalFields, 'name').indexOf(name) === -1)
       } else {
         return []
       }
     },
-    canonicalFields () {
+    canonicalFields() {
       return [
         {
           name: '_id',
@@ -156,6 +173,13 @@ export default {
           class: 'document__content__id',
           value: this.document.id,
           component: 'code'
+        },
+        {
+          name: '_index',
+          label: this.$t('document.project'),
+          class: 'document__content__project',
+          value: this.document.index,
+          to: { name: 'search', query: { indices: this.document.index, q: '*' } }
         },
         {
           name: 'metadata.tika_metadata_resourcename',
@@ -176,16 +200,16 @@ export default {
           value: this.documentDirname
         },
         {
-          name: 'metadata.tika_metadata_creation_date',
+          name: 'metadata.tika_metadata_dcterms_created',
           label: this.$t('document.creationDate'),
           class: 'document__content__creation-date',
-          value: this.document.meta('creation_date')
+          value: this.document.meta('dcterms_created')
         },
         {
-          name: 'metadata.tika_metadata_author',
+          name: 'metadata.tika_metadata_dc_creator',
           label: this.$t('document.author'),
           class: 'document__content__author',
-          value: this.document.meta('author')
+          value: this.document.meta('dc_creator')
         },
         {
           name: 'extractionDate',
@@ -247,21 +271,23 @@ export default {
         }
       ]
     },
-    filteredCanonicalFields () {
-      return filter(this.canonicalFields, field => field.value)
+    filteredCanonicalFields() {
+      return filter(this.canonicalFields, (field) => field.value)
     },
-    searchChildrenDocumentParams () {
+    searchChildrenDocumentParams() {
+      const index = this.index
       const q = `_routing:${this.document.id}`
-      const query = { q, index: this.index }
+      const query = { q, index }
       return { name: 'search', query }
     },
-    searchDirnameDocumentParams () {
+    searchDirnameDocumentParams() {
+      const index = this.index
       const q = `dirname:"${this.documentDirname}"`
-      const query = { q, index: this.index }
+      const query = { q, index }
       return { name: 'search', query }
     }
   },
-  async created () {
+  async created() {
     await this.$store.dispatch('document/getTags')
   },
   methods: {
@@ -272,35 +298,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .tab-pane {
-    & div {
-      word-wrap: break-word;
-    }
+.tab-pane {
+  & div {
+    word-wrap: break-word;
   }
+}
 
-  .document {
+.document {
+  &__content {
+    &__details {
+      &__item {
+        padding: $spacer * 0.3 0;
 
-    &__content {
-
-      &__details {
-
-        &__item {
-          padding: $spacer * 0.3 0;
-
-          &__search {
-            display: none;
-          }
-
-          &:hover &__search {
-            display: block;
-          }
+        &__search {
+          display: none;
         }
 
-        &__item:nth-child(even) {
-          background: #f3f3f3;
+        &:hover &__search {
+          display: block;
         }
+      }
+
+      &__item:nth-child(even) {
+        background: #f3f3f3;
       }
     }
   }
-
+}
 </style>

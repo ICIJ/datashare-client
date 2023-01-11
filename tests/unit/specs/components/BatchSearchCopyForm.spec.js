@@ -2,24 +2,12 @@ import Murmur from '@icij/murmur'
 import VueRouter from 'vue-router'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import Api from '@/api'
 import { Core } from '@/core'
 import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
 
-Api.getFullUrl = jest.fn()
-
-jest.mock('@/api', () => {
-  return jest.fn(() => {
-    return {
-      copyBatchSearch: jest.fn(),
-      runBatchSearch: jest.fn()
-    }
-  })
-})
-
 describe('BatchSearchCopyForm.vue', () => {
   let wrapper
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  let i18n, localVue, store, wait
   const routes = [
     {
       name: 'batch-search',
@@ -44,7 +32,17 @@ describe('BatchSearchCopyForm.vue', () => {
     }
   }
 
-  beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
+  beforeAll(() => {
+    Murmur.config.merge({ mode: 'SERVER' })
+    const mockApi = jest.fn()
+    mockApi.copyBatchSearch = jest.fn()
+    mockApi.runBatchSearch = jest.fn()
+    const core = Core.init(createLocalVue(), mockApi).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
+  })
 
   beforeEach(async () => {
     await router.push({ name: 'batch-search.results' })

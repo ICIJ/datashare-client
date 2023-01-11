@@ -1,3 +1,10 @@
+process.env.VUE_APP_ES_ANOTHER_INDEX = 'another-index'
+process.env.VUE_APP_ES_LOG = 'debug'
+process.env.VUE_APP_ES_HOST = 'http://elasticsearch:9200'
+process.env.VUE_APP_DS_HOST = 'http://localhost:9009'
+process.env.VUE_APP_FEATURE_BATCH_DOWNLOAD = true
+process.env.VUE_APP_DS_COOKIE_NAME = '_ds_session_id'
+
 module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/unit/setup.js'],
   moduleFileExtensions: [
@@ -12,12 +19,12 @@ module.exports = {
     '^.+\\.jsx?$': 'babel-jest'
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(bootstrap-vue)/)'
+    '<rootDir>/node_modules/(?!(d3)|(bootstrap-vue))/',
+    '<rootDir>/node_modules/(?!d3-.*)/'
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    'tests/(.*)$': '<rootDir>/tests/$1',
-    '!!file-loader!pdfjs-dist/build/(.*)$': '<rootDir>/node_modules/pdfjs-dist/es5/build/$1'
+    'tests/(.*)$': '<rootDir>/tests/$1'
   },
   snapshotSerializers: [
     'jest-serializer-vue'

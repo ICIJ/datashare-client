@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
-import { Core } from '@/core'
-import Error from '@/pages/Error'
-import mode from '@/modes'
 import Auth from '@/api/resources/Auth'
+import { Core } from '@/core'
+import { getMode } from '@/mode'
+import Error from '@/pages/Error'
 
 describe('Error.vue local mode', () => {
   let wrapper
@@ -29,7 +29,7 @@ describe('Error.vue local mode', () => {
     const computed = { isServer: () => true }
     wrapper = shallowMount(Error, { i18n, localVue, computed })
     // Flush promises
-    await (new Promise(resolve => setImmediate(resolve)))
+    await new Promise((resolve) => setImmediate(resolve))
     // Render again
     expect(wrapper.find('.error__header').exists()).toBeTruthy()
   })
@@ -40,7 +40,7 @@ describe('Error.vue server mode', () => {
   let i18n
   let localVue
   beforeEach(() => {
-    const core = Core.init(createLocalVue(), new Auth(mode('server'))).useAll()
+    const core = Core.init(createLocalVue(), new Auth(getMode('server'))).useAll()
     i18n = core.i18n
     localVue = core.localVue
   })
@@ -50,7 +50,7 @@ describe('Error.vue server mode', () => {
     // Mock the isServer property
     wrapper = shallowMount(Error, { i18n, localVue })
     // Flush promises
-    await (new Promise(resolve => setImmediate(resolve)))
+    await new Promise((resolve) => setImmediate(resolve))
     // Render again
     expect(wrapper.find('.error__header').exists()).toBeFalsy()
   })

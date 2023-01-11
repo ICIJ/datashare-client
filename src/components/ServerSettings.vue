@@ -3,21 +3,22 @@
     <div v-if="!isServer">
       <div class="container my-4">
         <v-wait for="load server settings">
-          <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
+          <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
           <b-form @submit.prevent="onSubmit">
             <b-form-group
+              v-for="(_, name) in settings"
               :key="name"
               label-cols-xs="12"
               label-cols-sm="4"
               label-cols-lg="3"
-              v-for="(_, name) in settings">
-              <template v-slot:label>
+            >
+              <template #label>
                 <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
                   <span class="flex-grow-1 pb-1" :title="name">
                     {{ name | sentenceCase | capitalizeKnownAcronyms }}
                   </span>
                   <span>
-                    <b-btn variant="link text-muted" size="sm py-0" v-if="fieldChanged(name)" @click="restore(name)">
+                    <b-btn v-if="fieldChanged(name)" variant="link text-muted" size="sm py-0" @click="restore(name)">
                       <fa icon="undo"></fa>
                     </b-btn>
                   </span>
@@ -55,30 +56,33 @@ const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth'
  */
 export default {
   name: 'ServerSettings',
-  mixins: [utils],
   filters: {
-    sentenceCase (str) {
+    sentenceCase(str) {
       const result = str.replace(/([A-Z])/g, ' $1')
       return result.charAt(0).toUpperCase() + result.slice(1)
     },
-    capitalizeKnownAcronyms (str) {
-      return str.split(' ').map(word => {
-        const knownAcronyms = KNOWN_ACRONYMS.map(a => a.toUpperCase())
-        const index = knownAcronyms.indexOf(word.toUpperCase())
-        if (index > -1) {
-          return KNOWN_ACRONYMS[index]
-        }
-        return word
-      }).join(' ')
+    capitalizeKnownAcronyms(str) {
+      return str
+        .split(' ')
+        .map((word) => {
+          const knownAcronyms = KNOWN_ACRONYMS.map((a) => a.toUpperCase())
+          const index = knownAcronyms.indexOf(word.toUpperCase())
+          if (index > -1) {
+            return KNOWN_ACRONYMS[index]
+          }
+          return word
+        })
+        .join(' ')
     }
   },
-  data () {
+  mixins: [utils],
+  data() {
     return {
       master: {},
       settings: {}
     }
   },
-  async mounted () {
+  async mounted() {
     this.$wait.start('load server settings')
     const master = await this.$store.dispatch('settings/getSettings')
     this.$set(this, 'master', master)
@@ -86,13 +90,13 @@ export default {
     this.$wait.end('load server settings')
   },
   methods: {
-    fieldChanged (field) {
+    fieldChanged(field) {
       return this.settings[field] !== this.master[field]
     },
-    restore (field) {
+    restore(field) {
       this.$set(this.settings, field, this.master[field])
     },
-    async onSubmit () {
+    async onSubmit() {
       try {
         await this.$store.dispatch('settings/onSubmit', this.settings)
         this.$config.merge(this.settings)

@@ -1,19 +1,19 @@
-import Api from '@/api'
-
-export const api = new Api()
-
-export const actions = {
-  getSettings () {
-    try {
-      return api.getSettings()
-    } catch (_) {}
-  },
-  onSubmit (state, settings) {
-    return api.setSettings(settings)
+function actionBuilder(api) {
+  return {
+    getSettings() {
+      try {
+        return api.getSettings()
+      } catch (_) {}
+    },
+    onSubmit(state, settings) {
+      return api.setSettings(settings)
+    }
   }
 }
 
-export default {
-  namespaced: true,
-  actions
+export function settingsStoreBuilder(api) {
+  return {
+    namespaced: true,
+    actions: actionBuilder(api)
+  }
 }

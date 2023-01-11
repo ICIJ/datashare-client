@@ -1,17 +1,24 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
+import { flushPromises } from 'tests/unit/tests_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
 
+// Mock all api calls
+jest.mock('@/api')
+
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterPath.vue', () => {
+  const { index } = esConnectionHelper.build()
+  const { otherIndex } = esConnectionHelper.build()
   const filter = store.getters['search/getFilter']({ name: 'path' })
   let wrapper = null
 
   beforeEach(() => {
-    store.commit('search/index', 'FilterPathProject')
+    store.commit('search/index', index)
     store.commit('search/reset')
     Murmur.config.set('dataDir', '/data')
     wrapper = mount(FilterPath, {
@@ -33,32 +40,33 @@ describe('FilterPath.vue', () => {
 
   it('should reinitialize dataDir as path when project change', async () => {
     wrapper.vm.path = '/data/foo'
-    await store.commit('search/index', 'OtherProject')
-
+    store.commit('search/index', otherIndex)
+    await flushPromises()
     expect(wrapper.vm.path).toBe('/data')
   })
 
   it('should list selected paths according to the filter', async () => {
     const key = ['/data/foo', '/data/bar']
-    await store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
-
+    store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
+    await flushPromises()
     expect(wrapper.vm.selectedPaths).toContain('/data/foo')
     expect(wrapper.vm.selectedPaths).toContain('/data/bar')
   })
 
   it('should reset the selected paths when project change', async () => {
     const key = ['/data/foo', '/data/bar']
-    await store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
+    store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
+    await flushPromises()
     expect(wrapper.vm.selectedPaths).toHaveLength(2)
-
-    await store.commit('search/index', 'OtherProject')
+    store.commit('search/index', otherIndex)
+    await flushPromises()
     expect(wrapper.vm.selectedPaths).toHaveLength(0)
   })
 
-  it('should reset search from to 0 when selectedPaths change', () => {
+  it('should reset search from to 0 when selectedPaths change', async () => {
     store.commit('search/from', 25)
-    wrapper.vm.$set(wrapper.vm, 'selectedPaths', ['path'])
-
+    await flushPromises()
+    await wrapper.setData({ selectedPaths: ['path'] })
     expect(store.state.search.from).toBe(0)
   })
 

@@ -30,15 +30,15 @@ describe('HooksMixin', () => {
   it('should find one hooked components by its target name on the current project', async () => {
     core.registerHookForProject('first-index', { target: 'foo' })
     expect(core.store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(0)
-    core.store.commit('search/index', 'first-index')
+    core.store.commit('search/indices', 'first-index')
     expect(core.store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
   })
 
   it('should find no hooked components on the current project', async () => {
     core.registerHookForProject('first-index', { target: 'baz' })
-    core.store.commit('search/index', 'first-index')
+    core.store.commit('search/indices', 'first-index')
     expect(core.store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(1)
-    core.store.commit('search/index', 'second-index')
+    core.store.commit('search/indices', 'second-index')
     expect(core.store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(0)
   })
 

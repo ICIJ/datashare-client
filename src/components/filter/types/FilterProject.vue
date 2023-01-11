@@ -1,7 +1,7 @@
 <template>
-  <div class="filter card filter--hide-show-more filter--hide-search" v-if="showSelector">
+  <div v-if="showSelector" class="filter card">
     <div class="card-header px-2">
-      <h6 @click="toggleItems" class="pt-0">
+      <h6 class="pt-0" @click="toggleItems">
         <span class="filter__items__item__icon pl-0 pr-1">
           <fa icon="book" fixed-width />
         </span>
@@ -10,16 +10,13 @@
       </h6>
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
-      <div class="p-2">
-        <project-selector v-model="selectedProject" @input="select" class="border-0" />
-      </div>
+      <project-selector v-model="selectedProject" class="border-0" multiple @input="select" />
     </slide-up-down>
   </div>
 </template>
 
 <script>
-import uniq from 'lodash/uniq'
-
+import { compact, uniq } from 'lodash'
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 
@@ -28,70 +25,81 @@ import utils from '@/mixins/utils'
  */
 export default {
   name: 'FilterProject',
-  mixins: [utils],
   components: {
     ProjectSelector
   },
-  data () {
+  mixins: [utils],
+  data() {
     return {
-      projects: [],
       collapseItems: false
     }
   },
   computed: {
+    projects() {
+      const defaultProject = this.$config.get('defaultProject')
+      const projects = this.$config.get('groups_by_applications.datashare', [])
+      return compact(uniq([...projects, defaultProject]).sort())
+    },
     selectedProject: {
       get: function () {
-        return this.$store.state.search.index
+        return this.$store.state.search.indices
       },
-      set: function (project) {
-        this.$store.commit('search/index', project)
+      set: function (indices) {
+        if (indices.length) {
+          this.$store.commit('search/indices', indices)
+        }
       }
     },
-    headerIcon () {
+    headerIcon() {
       return this.collapseItems ? 'plus' : 'minus'
     },
-    showSelector () {
+    showSelector() {
       return this.isServer || this.projects.length > 1
     }
   },
-  async created () {
-    const defaultProjects = [this.$config.get('defaultProject')]
-    // @depracated this load the list from a depracated list of project for retro-compatibility
-    const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
-    const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
-    const sortedProjects = uniq([...projects, ...legacyProjects]).sort()
-    this.$set(this, 'projects', sortedProjects)
-    await this.$store.dispatch('search/getStarredDocuments')
-    await this.$store.dispatch('search/getIsDownloadAllowed')
-    await this.$store.dispatch('search/getRecommendationsByProject')
+  async created() {
+    await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+    await this.$store.dispatch('recommended/fetchIndicesRecommendations')
+    await this.$store.dispatch('downloads/fetchIndicesStatus')
   },
   methods: {
-    async select (project) {
-      this.$store.commit('search/index', project)
-      this.$store.commit('search/resetFilterValues')
-      this.$store.commit('search/resetQuery')
-      this.$root.$emit('filter::search::reset-filters', false)
-      await this.$store.dispatch('search/getStarredDocuments')
-      await this.$store.dispatch('search/getIsDownloadAllowed')
-      await this.$store.dispatch('search/getRecommendationsByProject')
+    async select(projects) {
+      this.$store.commit('search/indices', projects)
+      this.$store.commit('search/isReady', false)
+      await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+      await this.$store.dispatch('recommended/fetchIndicesRecommendations')
+      await this.$store.dispatch('downloads/fetchIndicesStatus')
       this.refreshRouteAndSearch()
     },
-    toggleItems () {
+    toggleItems() {
       this.collapseItems = !this.collapseItems
     },
-    refreshRouteAndSearch () {
+    refreshRouteAndSearch() {
       this.refreshRoute()
       this.refreshSearch()
     },
-    refreshRoute () {
+    refreshRoute() {
       const name = 'search'
       const query = this.$store.getters['search/toRouteQuery']()
       this.$router.push({ name, query }).catch(() => {})
     },
-    refreshSearch () {
+    refreshSearch() {
       this.$store.dispatch('search/query')
     }
   }
 }
-
 </script>
+
+<style scoped lang="scss">
+.filter {
+  & :deep.custom-control-label span {
+    padding: 0 $spacer-xxs;
+  }
+
+  & :deep.custom-control-input[disabled]:checked ~ .custom-control-label,
+  & :deep.custom-control-input:disabled:checked ~ .custom-control-label {
+    color: inherit;
+    font-weight: bold;
+  }
+}
+</style>

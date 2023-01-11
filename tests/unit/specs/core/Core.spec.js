@@ -1,23 +1,24 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue } from '@vue/test-utils'
-import axios from 'axios'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
-import Api from '@/api'
+import { Api } from '@/api'
 import { Core } from '@/core'
-
-jest.mock('axios', () => {
-  return {
-    get: jest.fn().mockResolvedValue({ data: {} }),
-    request: jest.fn().mockResolvedValue({ data: { userProjects: ['first-index'] } })
-  }
-})
 
 describe('Core', () => {
   let localVue
+  let mockAxios
+  let api
+
+  beforeAll(() => {
+    mockAxios = jest.fn()
+    mockAxios.get = jest.fn().mockResolvedValue({ data: {} })
+    mockAxios.request = jest.fn().mockResolvedValue({ data: { userProjects: ['first-index'], mode: 'LOCAL' } })
+    api = new Api(mockAxios, { $emit: jest.fn() })
+  })
 
   beforeEach(() => {
     localVue = createLocalVue()
@@ -27,17 +28,13 @@ describe('Core', () => {
     const app = document.createElement('div')
     app.setAttribute('id', 'core')
     document.body.appendChild(app)
-    axios.request.mockClear()
   })
 
-  it('should instantiate the Core class', () => {
-    const core = new Core(localVue)
-    expect(core).toBeInstanceOf(Core)
-  })
+  afterEach(() => mockAxios.request.mockClear())
 
   it('should instantiate the Core class using a static method', () => {
     const core = Core.init(localVue)
-    expect(core).toBeInstanceOf(Core)
+    expect(Core.isInstanceOfCore(core)).toBe(true)
   })
 
   it('should expose the router', () => {
@@ -76,18 +73,22 @@ describe('Core', () => {
     expect(vm).toBeInstanceOf(Vue)
   })
 
-  it('should call a global event "datashare:ready" after the core is configured', done => {
-    document.addEventListener('datashare:ready', ({ detail }) => {
-      expect(detail.core).toBeInstanceOf(Core)
-      done()
-    }, { once: true })
+  it('should call a global event "datashare:ready" after the core is configured', (done) => {
+    document.addEventListener(
+      'datashare:ready',
+      ({ detail }) => {
+        expect(Core.isInstanceOfCore(detail.core)).toBe(true)
+        done()
+      },
+      { once: true }
+    )
     // Create and configure the core
-    Core.init(localVue).useAll().configure()
+    Core.init(localVue, api).useAll().configure()
   })
 
   it('should resolve the `ready` promise after the core was configured', async () => {
     // Create and configure the core
-    const core = Core.init(localVue).useAll()
+    const core = Core.init(localVue, api).useAll()
     // For `ready` to be resolved, the core must configure
     await core.configure()
     await expect(core.ready).resolves.toBe(core)
@@ -95,21 +96,23 @@ describe('Core', () => {
 
   it('should call isDownloadAllowed API endpoint', async () => {
     const project = 'my-project'
-    const core = Core.init(localVue).useAll()
+    const core = Core.init(localVue, api).useAll()
     core.store.commit('search/index', project)
     await core.configure()
 
-    expect(axios.request).toBeCalledTimes(4)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/project/isDownloadAllowed/${project}`)
-    }))
+    expect(mockAxios.request).toBeCalledTimes(4)
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl(`/api/project/isDownloadAllowed/${project}`)
+      })
+    )
   })
 
   it('should install the internal `VueCore` plugin', () => {
     // Create and configure the core
     const core = Core.init(localVue).useAll()
     const vm = core.mount('#core')
-    expect(vm.$core).toBeInstanceOf(Core)
+    expect(Core.isInstanceOfCore(vm.$core)).toBe(true)
   })
 
   it('should return empty string if user has no projects', () => {
@@ -125,7 +128,7 @@ describe('Core', () => {
     expect(core.getDefaultProject()).toEqual('my_project')
   })
 
-  it('should return first user project when user doesn\'t have the default project', () => {
+  it("should return first user project when user doesn't have the default project", () => {
     const core = Core.init(localVue).useAll()
     core.config.set('groups_by_applications.datashare', ['user_project'])
     core.config.set('defaultProject', 'default_project')

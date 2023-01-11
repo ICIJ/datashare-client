@@ -1,21 +1,28 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import MountedDataLocation from '@/components/MountedDataLocation'
+import { Api } from '@/api'
 import { Core } from '@/core'
-
-jest.mock('axios')
+import MountedDataLocation from '@/components/MountedDataLocation'
 
 describe('MountedDataLocation', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
+  let wrapper, i18n, localVue, store, mockAxios, api
   Murmur.config.set('mountedDataDir', '/foo/bar')
-
-  beforeEach(() => {
-    wrapper = shallowMount(MountedDataLocation, { i18n, localVue, store })
+  beforeAll(() => {
+    mockAxios = { request: jest.fn() }
+    api = new Api(mockAxios)
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
   })
-
-  afterAll(() => jest.unmock('axios'))
+  beforeEach(() => {
+    wrapper = shallowMount(MountedDataLocation, {
+      i18n,
+      localVue,
+      store
+    })
+  })
 
   it('should display the delete index button', () => {
     expect(wrapper.find('.mounted-data-location__delete-index').exists()).toBeTruthy()

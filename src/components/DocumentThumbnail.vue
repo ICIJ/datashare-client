@@ -1,10 +1,7 @@
 <template>
   <div class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle">
-    <img :alt="thumbnailAlt"
-         class="document-thumbnail__image"
-         :src="thumbnailSrc"
-         v-if="isActivated">
-    <span class="document-thumbnail__placeholder" v-if="!loaded">
+    <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
+    <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
       <fa :icon="document.contentTypeIcon"></fa>
     </span>
   </div>
@@ -61,7 +58,7 @@ export default {
       default: null
     }
   },
-  data () {
+  data() {
     return {
       loaded: false,
       errored: false,
@@ -70,7 +67,7 @@ export default {
     }
   },
   computed: {
-    thumbnailClass () {
+    thumbnailClass() {
       return {
         'document-thumbnail--crop': this.crop,
         'document-thumbnail--errored': this.errored,
@@ -79,32 +76,40 @@ export default {
         [`document-thumbnail--${this.size}`]: isNaN(this.size)
       }
     },
-    thumbnailStyle () {
+    thumbnailStyle() {
       return {
         '--estimated-ratio': this.ratio,
         '--estimated-height': isNaN(this.size) ? null : `${this.size}px`
       }
     },
-    thumbnailUrl () {
+    thumbnailUrl() {
       const { index, id, routing } = this.document
       const { page, size } = this
       return this.getPreviewUrl({ index, id, routing }, { page, size })
     },
-    thumbnailAlt () {
+    thumbnailAlt() {
       return `${this.document.basename} preview`
     },
-    isActivated () {
+    isActivated() {
       return !!this.$config.get('previewHost')
     },
-    lazyLoadable () {
+    lazyLoadable() {
       return window && 'IntersectionObserver' in window
     }
   },
+  async mounted() {
+    // This component can be deactivated globally
+    if (!this.isActivated) return
+    // This component can be lazy loaded
+    if (this.lazy && this.lazyLoadable) return this.bindObserver()
+    // Fetch directly
+    await this.fetchAndLoad()
+  },
   methods: {
-    async fetchAsBase64 () {
+    async fetchAsBase64() {
       return this.fetchPreviewAsBase64(this.thumbnailUrl)
     },
-    async fetchAndLoad () {
+    async fetchAndLoad() {
       try {
         if (!this.loaded && !this.errored) {
           this.$set(this, 'thumbnailSrc', await this.fetchAsBase64())
@@ -126,8 +131,8 @@ export default {
         this.$emit('errored')
       }
     },
-    bindObserver () {
-      this.observer = new IntersectionObserver(async entries => {
+    bindObserver() {
+      this.observer = new IntersectionObserver(async (entries) => {
         if (entries[0].isIntersecting) {
           /**
            * The thumbnail enters the viewport.
@@ -142,85 +147,83 @@ export default {
       // Observe the component element
       this.observer.observe(this.$el)
     }
-  },
-  async mounted () {
-    // This component can be deactivated globally
-    if (!this.isActivated) return
-    // This component can be lazy loaded
-    if (this.lazy && this.lazyLoadable) return this.bindObserver()
-    // Fetch directly
-    await this.fetchAndLoad()
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .document-thumbnail {
-    $heights: (xs: 80px, sm: 310px, md: 540px, lg: 720px, xl: 960px);
+.document-thumbnail {
+  $heights: (
+    xs: 80px,
+    sm: 310px,
+    md: 540px,
+    lg: 720px,
+    xl: 960px
+  );
 
-    @each $name, $value in $heights {
-      --height-#{$name}: #{$value};
-    }
+  @each $name, $value in $heights {
+    --height-#{$name}: #{$value};
+  }
 
-    background: $body-bg;
-    color: mix($body-bg, $text-muted, 70%);
-    max-width: 100%;
-    min-width: 80px;
-    overflow: hidden;
-    position: relative;
+  background: $body-bg;
+  color: mix($body-bg, $text-muted, 70%);
+  max-width: 100%;
+  min-width: 80px;
+  overflow: hidden;
+  position: relative;
 
-    &--crop {
-      height: 80px;
-      width: 80px;
-    }
+  &--crop {
+    height: 80px;
+    width: 80px;
+  }
 
-    &--loaded:not(&--errored) &__image {
-      opacity: 1;
-    }
+  &--loaded:not(&--errored) &__image {
+    opacity: 1;
+  }
 
-    &--estimated-size:not(&--loaded):not(&--errored) {
-      &:before {
-        content: "";
-        display: inline-block;
-        max-width: calc(var(--estimated-height) / var(--estimated-ratio));
-        padding-top: calc(100% * var(--estimated-ratio));
-        width: 100%;
-      }
-
-      .document-thumbnail__image {
-        position: absolute;
-      }
-    }
-
-    @each $name, $value in $heights {
-      &--estimated-size:not(&--loaded):not(&--errored).document-thumbnail--#{$name} &__image {
-        height: $value;
-        width: calc(#{$value} / var(--estimated-ratio));
-      }
-    }
-
-    &__image {
+  &--estimated-size:not(&--loaded):not(&--errored) {
+    &:before {
+      content: '';
       display: inline-block;
-      margin: auto;
-      max-width: 100%;
-      opacity: 0;
-      transition: opacity 300ms;
+      max-width: calc(var(--estimated-height) / var(--estimated-ratio));
+      padding-top: calc(100% * var(--estimated-ratio));
+      width: 100%;
     }
 
-    &--crop &__image {
-      left: 50%;
-      min-height: 100%;
-      min-width: 100%;
+    .document-thumbnail__image {
       position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &__placeholder {
-      left: 50%;
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
     }
   }
+
+  @each $name, $value in $heights {
+    &--estimated-size:not(&--loaded):not(&--errored).document-thumbnail--#{$name} &__image {
+      height: $value;
+      width: calc(#{$value} / var(--estimated-ratio));
+    }
+  }
+
+  &__image {
+    display: inline-block;
+    margin: auto;
+    max-width: 100%;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+
+  &--crop &__image {
+    left: 50%;
+    min-height: 100%;
+    min-width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &__placeholder {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
 </style>

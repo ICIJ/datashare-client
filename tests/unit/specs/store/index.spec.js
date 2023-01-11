@@ -5,7 +5,7 @@ describe('store', () => {
     expect(store).toBeInstanceOf(Object)
   })
 
-  it('shouldn\'t be in strict mode', () => {
+  it("shouldn't be in strict mode", () => {
     expect(store.strict).toBeFalsy()
   })
 
@@ -21,8 +21,16 @@ describe('store', () => {
     expect(store.state.document).toBeDefined()
   })
 
+  it('should define a downloads module', () => {
+    expect(store.state.downloads).toBeDefined()
+  })
+
   it('should define an indexing module', () => {
     expect(store.state.indexing).toBeDefined()
+  })
+
+  it('should define a recommended module', () => {
+    expect(store.state.recommended).toBeDefined()
   })
 
   it('should define a search module', () => {

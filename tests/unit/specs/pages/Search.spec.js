@@ -4,17 +4,22 @@ import { errors as esErrors } from 'elasticsearch-browser'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
+// import { flushPromises } from 'tests/unit/tests_utils'
 import { Core } from '@/core'
 import Search from '@/pages/Search'
-import { state, getters, mutations, actions } from '@/store/modules/search'
+import { state, getters, mutations } from '@/store/modules/search'
+const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
+const flushPromisesAndAdvanceTimers = async (time) => {
+  jest.advanceTimersByTime(time)
+  await flushPromises()
+}
 
 describe('Search.vue', () => {
   let store
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const actionsStore = Object.assign(cloneDeep(actions), { query: jest.fn(), refresh: jest.fn(), updateFromRouteQuery: jest.fn() })
+  const actionsStore = { query: jest.fn(), refresh: jest.fn(), updateFromRouteQuery: jest.fn() }
   let wrapper = null
-  jest.setTimeout(1e4)
 
   beforeEach(() => {
     store = new Vuex.Store({
@@ -34,10 +39,15 @@ describe('Search.vue', () => {
     wrapper = shallowMount(Search, { i18n, localVue, router, store })
   })
 
-  it('should refresh the view on custom event', () => {
+  it('should search query on component creation', async () => {
+    expect(actionsStore.query).toBeCalledTimes(1)
+  })
+
+  it('should refresh the view on custom event', async () => {
+    actionsStore.query.mockClear()
     wrapper.vm.$root.$emit('index::delete::all')
 
-    expect(actionsStore.query).toBeCalledTimes(2)
+    expect(actionsStore.query).toBeCalledTimes(1)
   })
 
   it('should execute a new search on event "filter::starred::refresh"', () => {
@@ -48,8 +58,8 @@ describe('Search.vue', () => {
 
   it('should redirect to the complete query', async () => {
     const query = 'this is a query'
-    await store.commit('search/query', query)
-
+    store.commit('search/query', query)
+    await flushPromises()
     expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: query } })
   })
 
@@ -65,24 +75,41 @@ describe('Search.vue', () => {
     })
 
     it('should display a button to try again if error is RequestTimeout', async () => {
-      await store.commit('search/error', new esErrors.RequestTimeout())
+      store.commit('search/error', new esErrors.RequestTimeout())
+      await flushPromises()
       expect(wrapper.find('b-button-stub').exists()).toBeTruthy()
     })
   })
 
   describe('the progress bar', () => {
+    beforeEach(() => {
+      // Use fake timers to control times!
+      // @see https://jestjs.io/fr/docs/timer-mocks
+      jest.useFakeTimers()
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
     it('should increase of 2 per second', async () => {
-      await store.commit('search/isReady', false)
-      await new Promise(resolve => setTimeout(resolve, 5500))
+      // the timeout indicate the progress is finished after the time advance
+      setTimeout(() => store.commit('search/isReady', true), 6000)
+      store.commit('search/isReady', false)
+      await flushPromises()
+
+      await flushPromisesAndAdvanceTimers(5500)
+
       expect(wrapper.vm.$Progress.get()).toBe(10)
       expect(wrapper.vm.intervalId).not.toBe(-1)
-      await store.commit('search/isReady', true)
     })
 
     it('should be reset', async () => {
-      await store.commit('search/isReady', false)
-      await new Promise(resolve => setTimeout(resolve, 5500))
-      await store.commit('search/isReady', true)
+      setTimeout(() => store.commit('search/isReady', true), 5000)
+      store.commit('search/isReady', false)
+      await flushPromises()
+
+      await flushPromisesAndAdvanceTimers(5500)
+
       expect(wrapper.vm.$Progress.get()).toBe(100)
       expect(wrapper.vm.intervalId).toBe(-1)
     })

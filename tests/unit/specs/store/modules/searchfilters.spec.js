@@ -1,13 +1,11 @@
-import { cloneDeep, toLower } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 import store from '@/store'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('SearchFilters', () => {
-  const project = toLower('SearchFilters')
-  esConnectionHelper(project)
-  const es = esConnectionHelper.es
+  const { index: project, es } = esConnectionHelper.build()
 
   beforeAll(() => store.commit('search/index', project))
 
@@ -53,11 +51,11 @@ describe('SearchFilters', () => {
     })
 
     it('should find a "contentType" filter using object', () => {
-      expect(store.getters['search/getFilter']({ name: 'contentType' })).not.toBeUndefined()
+      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
     })
 
     it('should find a "contentType" filter using function', () => {
-      expect(store.getters['search/getFilter'](f => f.name === 'contentType')).not.toBeUndefined()
+      expect(store.getters['search/getFilter']((f) => f.name === 'contentType')).toBeDefined()
     })
 
     it('should count 2 documents of type "type_01"', async () => {
@@ -71,7 +69,9 @@ describe('SearchFilters', () => {
     })
 
     it('should use contentType (without charset)', async () => {
-      await letData(es).have(new IndexedDocument('document', project).withContentType('text/plain; charset=UTF-8')).commit()
+      await letData(es)
+        .have(new IndexedDocument('document', project).withContentType('text/plain; charset=UTF-8'))
+        .commit()
 
       const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
 
@@ -147,9 +147,15 @@ describe('SearchFilters', () => {
     })
 
     it('should return the indexing date buckets', async () => {
-      await letData(es).have(new IndexedDocument('doc_01.txt', project).withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
-      await letData(es).have(new IndexedDocument('doc_02.txt', project).withIndexingDate('2018-04-06T20:20:20.001Z')).commit()
-      await letData(es).have(new IndexedDocument('doc_03.txt', project).withIndexingDate('2018-05-04T20:20:20.001Z')).commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_01.txt', project).withIndexingDate('2018-04-04T20:20:20.001Z'))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_02.txt', project).withIndexingDate('2018-04-06T20:20:20.001Z'))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_03.txt', project).withIndexingDate('2018-05-04T20:20:20.001Z'))
+        .commit()
 
       const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
 
@@ -172,10 +178,18 @@ describe('SearchFilters', () => {
     })
 
     it('should aggregate only the not hidden named entities for PERSON category', async () => {
-      await letData(es).have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'PERSON', false)).commit()
-      await letData(es).have(new IndexedDocument('doc_02.csv', project).withNer('entity_01', 43, 'PERSON', false)).commit()
-      await letData(es).have(new IndexedDocument('doc_03.csv', project).withNer('entity_02', 44, 'PERSON', true)).commit()
-      await letData(es).have(new IndexedDocument('doc_04.csv', project).withNer('entity_03', 45, 'PERSON', false)).commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'PERSON', false))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_02.csv', project).withNer('entity_01', 43, 'PERSON', false))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_03.csv', project).withNer('entity_02', 44, 'PERSON', true))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_04.csv', project).withNer('entity_03', 45, 'PERSON', false))
+        .commit()
 
       const response = await store.dispatch('search/queryFilter', { name: 'namedEntityPerson' })
 
@@ -187,9 +201,15 @@ describe('SearchFilters', () => {
     })
 
     it('should aggregate named entities for LOCATION category', async () => {
-      await letData(es).have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'LOCATION', false)).commit()
-      await letData(es).have(new IndexedDocument('doc_02.csv', project).withNer('entity_02', 43, 'LOCATION', false)).commit()
-      await letData(es).have(new IndexedDocument('doc_03.csv', project).withNer('entity_03', 44, 'ORGANIZATION', true)).commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'LOCATION', false))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_02.csv', project).withNer('entity_02', 43, 'LOCATION', false))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_03.csv', project).withNer('entity_03', 44, 'ORGANIZATION', true))
+        .commit()
 
       const response = await store.dispatch('search/queryFilter', { name: 'namedEntityLocation', category: 'LOCATION' })
 
@@ -197,11 +217,20 @@ describe('SearchFilters', () => {
     })
 
     it('should aggregate named entities for ORGANIZATION category', async () => {
-      await letData(es).have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'ORGANIZATION', false)).commit()
-      await letData(es).have(new IndexedDocument('doc_02.csv', project).withNer('entity_02', 43, 'ORGANIZATION', false)).commit()
-      await letData(es).have(new IndexedDocument('doc_03.csv', project).withNer('entity_03', 44, 'PERSON', true)).commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'ORGANIZATION', false))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_02.csv', project).withNer('entity_02', 43, 'ORGANIZATION', false))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_03.csv', project).withNer('entity_03', 44, 'PERSON', true))
+        .commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'namedEntityOrganization', category: 'ORGANIZATION' })
+      const response = await store.dispatch('search/queryFilter', {
+        name: 'namedEntityOrganization',
+        category: 'ORGANIZATION'
+      })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
     })
@@ -211,31 +240,34 @@ describe('SearchFilters', () => {
     const name = 'creationDate'
 
     it('should merge all missing data', async () => {
-      await letData(es).have(new IndexedDocument('doc_01', project)
-        .withCreationDate('2018-04-01T00:00:00.001Z')).commit()
-      await letData(es).have(new IndexedDocument('doc_02', project)
-        .withCreationDate('2018-05-01T00:00:00.001Z')).commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_01', project).withCreationDate('2018-04-01T00:00:00.001Z'))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_02', project).withCreationDate('2018-05-01T00:00:00.001Z'))
+        .commit()
       await letData(es).have(new IndexedDocument('doc_03', project)).commit()
       await letData(es).have(new IndexedDocument('doc_04', project)).commit()
 
       const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
 
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(3)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].key).toBe(1525132800000)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].doc_count).toBe(1)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].key).toBe(1522540800000)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].doc_count).toBe(1)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].key).toBe(-62135596800000)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].doc_count).toBe(2)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets).toHaveLength(3)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].key).toBe(1525132800000)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].doc_count).toBe(1)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].key).toBe(1522540800000)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].doc_count).toBe(1)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[2].key).toBe(-62135596800000)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[2].doc_count).toBe(2)
     })
 
     it('should count only Document types and not the NamedEntities', async () => {
-      await letData(es).have(new IndexedDocument('doc_01', project)
-        .withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01')).commit()
+      await letData(es)
+        .have(new IndexedDocument('doc_01', project).withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01'))
+        .commit()
 
       const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
 
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(1)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets).toHaveLength(1)
     })
   })
 

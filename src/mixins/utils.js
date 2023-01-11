@@ -1,27 +1,22 @@
 const utils = {
-  data () {
+  data() {
     return {
-      termIndexColors: [
-        '#ECFC7A',
-        '#CDFD94',
-        '#A8FDAC',
-        '#52FDEA'
-      ]
+      termIndexColors: ['#ECFC7A', '#CDFD94', '#A8FDAC', '#52FDEA']
     }
   },
   computed: {
-    isServer () {
+    isServer() {
       return this.$config && this.$config.get('mode') === 'SERVER'
     }
   },
   methods: {
-    getTermIndexColor (index) {
+    getTermIndexColor(index) {
       return this.termIndexColors[index % this.termIndexColors.length]
     },
-    getTermIndexBorderColor (index) {
+    getTermIndexBorderColor(index) {
       return { 'border-color': this.getTermIndexColor(index) }
     },
-    getTermIndexBackgroundColor (index) {
+    getTermIndexBackgroundColor(index) {
       return { 'background-color': this.getTermIndexColor(index) }
     }
   }
