@@ -12,25 +12,34 @@ describe('FilterBoilerplate.vue', () => {
   const name = 'contentType'
   const filter = store.getters['search/getFilter']({ name })
   const propsData = { filter }
-  let wrapper = null
 
-  beforeEach(() => {
-    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData })
-  })
+  describe('setting a filter value', () => {
+    let wrapper = null
 
-  it('should commit a setFilterValue and then refresh the route and the search', () => {
-    jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
-    wrapper.vm.setValue(['42'])
-    expect(wrapper.vm.refreshRouteAndSearch).toBeCalled()
-  })
+    beforeEach(() => {
+      wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData })
+    })
 
-  it('should refresh the route', () => {
-    jest.spyOn(router, 'push')
-    wrapper.vm.refreshRoute()
-    expect(router.push).toBeCalled()
+    it('should commit a setFilterValue and then refresh the route and the search', () => {
+      jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
+      wrapper.vm.setValue(['42'])
+      expect(wrapper.vm.refreshRouteAndSearch).toBeCalled()
+    })
+
+    it('should refresh the route', () => {
+      jest.spyOn(router, 'push')
+      wrapper.vm.refreshRoute()
+      expect(router.push).toBeCalled()
+    })
   })
 
   describe('on resetFilterValues', () => {
+    let wrapper = null
+
+    beforeEach(() => {
+      wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData })
+    })
+
     it('should empty "selected" value', () => {
       wrapper.vm.$set(wrapper.vm, 'selected', ['item'])
       wrapper.vm.resetFilterValues()
@@ -71,20 +80,132 @@ describe('FilterBoilerplate.vue', () => {
     })
   })
 
-  it('should cast items into string', () => {
-    const computed = {
-      itemsWithExcludedValues() {
-        return [
-          { key: 0, doc_count: 12 },
-          { key: 1, doc_count: 15 }
-        ]
-      }
-    }
-    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter }, computed })
+  describe('with integers keys', () => {
+    let wrapper = null
 
-    expect(wrapper.vm.options).toEqual([
-      { item: { key: 0, doc_count: 12 }, value: '0', label: '0' },
-      { item: { key: 1, doc_count: 15 }, value: '1', label: '1' }
-    ])
+    beforeEach(() => {
+      const computed = {
+        itemsWithExcludedValues() {
+          return [
+            { key: 0, doc_count: 12 },
+            { key: 1, doc_count: 15 }
+          ]
+        }
+      }
+
+      wrapper = shallowMount(FilterBoilerplate, {
+        i18n,
+        localVue,
+        router,
+        store,
+        wait,
+        propsData: { filter },
+        computed
+      })
+    })
+
+    it('should cast items into string', () => {
+      expect(wrapper.vm.options).toEqual([
+        { item: { key: 0, doc_count: 12 }, value: '0', label: '0' },
+        { item: { key: 1, doc_count: 15 }, value: '1', label: '1' }
+      ])
+    })
+  })
+
+  describe('with integers keys', () => {
+    let wrapper = null
+
+    beforeEach(() => {
+      const computed = {
+        itemsWithExcludedValues() {
+          return [
+            { key: 0, doc_count: 12 },
+            { key: 1, doc_count: 15 }
+          ]
+        }
+      }
+
+      wrapper = shallowMount(FilterBoilerplate, {
+        i18n,
+        localVue,
+        router,
+        store,
+        wait,
+        propsData: { filter },
+        computed
+      })
+    })
+
+    it('should cast items into string', () => {
+      expect(wrapper.vm.options).toEqual([
+        { item: { key: 0, doc_count: 12 }, value: '0', label: '0' },
+        { item: { key: 1, doc_count: 15 }, value: '1', label: '1' }
+      ])
+    })
+  })
+
+  describe('with translated keys', () => {
+    let wrapper = null
+
+    beforeEach(() => {
+      const computed = {
+        itemsWithExcludedValues() {
+          return [
+            { key: 'lang.CATALAN', doc_count: 12 },
+            { key: 'lang.FRENCH', doc_count: 15 }
+          ]
+        }
+      }
+
+      wrapper = shallowMount(FilterBoilerplate, {
+        i18n,
+        localVue,
+        router,
+        store,
+        wait,
+        propsData: { filter },
+        computed
+      })
+    })
+
+    it('should show the translation', () => {
+      expect(wrapper.vm.options).toEqual([
+        { item: { key: 'lang.CATALAN', doc_count: 12 }, value: 'lang.CATALAN', label: 'Catalan' },
+        { item: { key: 'lang.FRENCH', doc_count: 15 }, value: 'lang.FRENCH', label: 'French' }
+      ])
+    })
+  })
+
+  describe('without translated keys', () => {
+    let wrapper = null
+
+    beforeEach(() => {
+      const noItemTranslation = true
+      const computed = {
+        itemsWithExcludedValues() {
+          return [
+            { key: 'lang.CATALAN', doc_count: 12 },
+            { key: 'lang.FRENCH', doc_count: 15 }
+          ]
+        }
+      }
+
+      wrapper = shallowMount(FilterBoilerplate, {
+        i18n,
+        localVue,
+        router,
+        store,
+        wait,
+        propsData: { filter, noItemTranslation },
+        computed
+      })
+    })
+
+    it('should show the orinal key value', () => {
+      expect(wrapper.vm.options).toEqual([
+        { item: { key: 'lang.CATALAN', doc_count: 12 }, value: 'lang.CATALAN', label: 'lang.CATALAN' },
+        { item: { key: 'lang.FRENCH', doc_count: 15 }, value: 'lang.FRENCH', label: 'lang.FRENCH' }
+      ])
+    })
   })
 })

@@ -24,7 +24,6 @@ describe('FilterNamedEntity.vue', () => {
 
   beforeAll(() => {
     api = new Api(null, null)
-    api.deleteNamedEntitiesByMentionNorm = jest.fn()
     api.fetchIndicesStarredDocuments = jest.fn()
     const core = Core.init(createLocalVue(), api).useAll()
     localVue = core.localVue
@@ -38,7 +37,6 @@ describe('FilterNamedEntity.vue', () => {
   })
 
   beforeEach(() => {
-    api.deleteNamedEntitiesByMentionNorm.mockReturnValue(jsonResp())
     api.fetchIndicesStarredDocuments.mockReturnValue(jsonResp())
 
     const filter = store.getters['search/getFilter']({ name })
@@ -51,7 +49,6 @@ describe('FilterNamedEntity.vue', () => {
 
   afterEach(() => {
     api.fetchIndicesStarredDocuments.mockClear()
-    api.deleteNamedEntitiesByMentionNorm.mockClear()
   })
 
   it('should filter items according to the content type filter search', async () => {
@@ -375,25 +372,6 @@ describe('FilterNamedEntity.vue', () => {
       await wrapper.vm.root.aggregate({ clearPages: true })
 
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    })
-  })
-
-  describe('Deletion', () => {
-    it('should display the "delete" button', async () => {
-      await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
-
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item .filter__items__item__delete')).toHaveLength(1)
-    })
-
-    it('should emit an event filter::hide::named-entities on delete named entity', async () => {
-      const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('filter::hide::named-entities', mockCallback)
-
-      await wrapper.vm.deleteNamedEntitiesByMentionNorm('ner_01')
-
-      expect(mockCallback.mock.calls).toHaveLength(1)
     })
   })
 })
