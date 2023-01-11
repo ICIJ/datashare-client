@@ -107,7 +107,7 @@ jobs:
           name: Save the generated doc for downstream jobs
           key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - ~/datashare-client/public/docs/client
+            - ~/datashare-client/docs/client
 
   # This job wll publish the doc to Datashare central Wiki
   publish_doc:
@@ -144,8 +144,8 @@ jobs:
       - run:
           name: Copy generated doc inside the Wiki with a flatten structure
           command: |
-            rm -f ~/datashare-client/public/docs/client/.gitignore
-            rsync --del -r ~/datashare-client/public/docs/client/ ~/datashare-wiki/client
+            rm -f ~/datashare-client/docs/client/.gitignore
+            rsync --del -r ~/datashare-client/docs/client/ ~/datashare-wiki/client
       - run:
           name: Add/Commit changes to the Wiki (if any)
           command: |

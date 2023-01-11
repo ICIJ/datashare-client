@@ -16,11 +16,11 @@
     "lint:fix": "yarn lint --fix",
     "test": "yarn test:unit && yarn test:e2e",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:components && yarn doc:components:toc && yarn doc:widgets",
-    "doc:api": "npm_config_yes=true npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'public/docs/client/Client-›-API.md'",
+    "doc:api": "npm_config_yes=true npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'docs/client/Client-›-API.md'",
     "doc:hooks": "node bin/collectHooks.js",
     "doc:components": "npm install -g vue@2 vue-docgen-cli@4 && vue-docgen",
     "doc:components:toc": "node bin/collectTocForComponentsDoc.js",
-    "doc:widgets": "npx jsdoc-to-markdown src/store/widgets/*.js > 'public/docs/client/Client-›-Widgets.md'"
+    "doc:widgets": "npx jsdoc-to-markdown src/store/widgets/*.js > 'docs/client/Client-›-Widgets.md'"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",

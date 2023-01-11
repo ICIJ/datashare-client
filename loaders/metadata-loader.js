@@ -18,7 +18,7 @@ function slugger(value) {
 module.exports = function metadataLoader(source) {
   this && this.cacheable && this.cacheable()
 
-  const resourcePath = relative('./public/docs/', this.resourcePath)
+  const resourcePath = relative('./docs/', this.resourcePath)
   const slug = resourcePath.replace(/\.md$/, '').split('/').map(slugger).join('-')
   const metadata = { resourcePath, slug }
 
