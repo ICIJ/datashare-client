@@ -75,6 +75,7 @@
       "on": "von ",
       "perPage": "pro Seite",
       "sortedByPath": "nach Pfad sortiert",
+      "batchDownloadNotAllowed": "Batch-Downloads sind bei mehreren Projekten nicht möglich.",
       "batchDownload": "Download results",
       "batchDownloadSubmit": "You are about to download 1 document. | You are about to download %{total} documents.",
       "warningNumber": "You cannot download more than %{number} documents.",
@@ -391,6 +392,7 @@
     "path": "Dokumentpfad",
     "dirname": "Dokumentenverzeichnis",
     "id": "Dokument-ID",
+    "project": "Project",
     "creationDate": "Erstellungsdatum",
     "size": "Dateigröße",
     "contentLanguage": "Sprache des Inhalts",
@@ -406,6 +408,7 @@
     "preview": "Vorschau",
     "downloadButton": "Download",
     "downloadRootButton": "Übergeordnetes Dokument herunterladen",
+    "downloadWithoutMetadata": "Download without metadata",
     "externalWindow": "In neuem Fenster öffnen",
     "selectAll": "Alle auswählen",
     "unselectAll": "Alle abwählen",
@@ -420,6 +423,7 @@
     "starFile": "Dokument zu Favoriten hinzufügen",
     "notFound": "Dokument wurde nicht gefunden",
     "notAvailable": "Für dieses Dokument ist keine Vorschau verfügbar.",
+    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "Keine Named Entities gefunden",
     "namedEntitiesNotSearched": "<p>Dokument nicht analysiert.</p><p class=\"text-muted small\">Um Named Entities zu durchsuchen, gehen Sie zu <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analysieren</a> und starten Sie eine neue Aufgabe \"@:indexing.findNamedEnties\".</p>",
     "generatingPreview": "Vorschau wird erstellt...",
@@ -488,40 +492,47 @@
     "receivedLink": "Empfangene E-Mails",
     "sentLink": "Gesendete Emails"
   },
+  "extractingLanguageFormControl": {
+    "nullOption": "Detect automatically (default)",
+    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">read the user guide</a> to know how to fix this."
+  },
   "indexing": {
     "title": "Dokumente analysieren",
     "description": "Bitte <a href=\"%{howToLink}\" target=\"_blank\">lesen Sie die Dokumentation</a> zum Hinzufügen von Dokumenten.",
     "go": "Los",
     "tasks": "Aufgaben",
     "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
-    "extractText": "Text extrahieren",
+    "extractText": "Add documents",
     "extractWithOcrLabel": "Möchten Sie Text auch aus Bildern und PDFs extrahieren?",
     "extractWithOcrHelp": "Wenn ja, führt Datashare OCR (Optische Zeichenerkennung) durch. Dies kann bis zu zehn Mal länger dauern.",
     "extractOnlyNewLabel": "Möchten Sie bereits indizierte Dateien überspringen?",
     "extractOnlyNewHelp": "Wenn ja, wird Datashare den Text nur aus Dateien extrahieren, die in Datashare noch nicht durchsuchbar sind.",
-    "findNamedEntities": "Leute, Organisationen, Standorte und E-Mail-Adressen finden",
+    "extractLanguage": "In which language are your documents?",
+    "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "Was möchten Sie tun?",
     "findNamedEntitiesSubheader": "Datashare verwendet Modelle zur Verarbeitung natürlicher Sprachen.",
     "findNamedEntitiesTooltip": "Die Texte müssen extrahiert werden, bevor Named Entities gefunden werden können",
     "pipelines": "Pipelines",
     "pipelineOptions": {
+      "email": "Find email",
       "corenlp": "Leute, Organisationen und Standorte mit CoreNLP finden",
-      "email": "E-Mail-Adressen finden"
+      "opennlp": "Find people, organizations and locations with OpenNLP",
+      "mitie": "Find people, organizations and locations with MITIE",
+      "ixapipe": "Find people, organizations and locations with IXA Pipe",
+      "gatenlp": "Find people, organizations and locations with GateNLP"
     },
-    "corenlp": "CoreNLP",
-    "opennlp": "OpenNLP",
-    "mitie": "MITIE",
-    "ixapipe": "IXA Pipe",
-    "email": "E-Mail-Extraktion",
     "default": "Standardmäßig - Bietet die höchste Wahrscheinlichkeit in den meisten Dokumenten zu funktionieren",
-    "syncModels": "Bitte aktivieren Sie dieses Kästchen, wenn Sie derzeit offline ohne Internetverbindung arbeiten.",
+    "syncModelsLabel": "Do you want to work offline?",
+    "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "Diese Aufgabe beenden",
     "stopPendingTasks": "Alle ausstehenden Aufgaben beenden",
     "deleteDoneTasks": "Erledigte Aufgaben löschen",
     "deleteIndexLabel": "Alle Ihre Dokumente aus Datashare entfernen",
     "deleteIndexDescription": "Um wirklich sicher zu sein, entfernen Sie bitte Ihre Dokumente aus dem Datashare-Ordner auf Ihrem Computer. Vergessen Sie nicht, den Papierkorb zu leeren, damit die Datashare-Dokumente gelöscht werden! Vergewissern Sie sich zuvor, dass Sie eine Kopie davon an einem anderen sicheren Ort haben.",
     "deleteSuccess": "Ihre Dokumente wurden aus Datashare entfernt.",
-    "deleteFailure": "Ein Problem ist aufgetreten. Die Dokumente konnten nicht entfernt werden."
+    "deleteFailure": "Something went wrong, unable to remove your documents.",
+    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare.",
+    "deleteBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
   },
   "menu": {
     "help": "Hilfsanfrage",
@@ -542,6 +553,7 @@
     "settingsShort": "Einstellungen",
     "logout": "Abmelden",
     "logoutShort": "Abmelden",
+    "logoutModal": "This session will remain open until you close this browser or clear your browser's site data. Until then you won't be logged out.",
     "addDocuments": "Wie fügt man Dokumente hinzu",
     "faq": "FAQ",
     "faqShort": "FAQ",
@@ -592,6 +604,7 @@
     "lead": "Mehrere Begriffe und Dokumente auf einmal suchen.",
     "title": "Batch-Suche",
     "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
+    "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "Neue Batch-Suche",
     "fileLabel": "CSV-Datei",
     "fileDescription": "Exportieren Sie Ihre Tabelle als CSV mit UTF-8-Kodierung. <ul><li>Nur CSV-Format akzeptiert.</li> <li>CSV-Datei sollte nicht mehr als 60.000 Abfragen enthalten.</li> <li>Die erste und einzige Spalte sollte die Suchbegriffe enthalten.</li> <li>Keine Zeilenumbrüche(n) in Zellen.</li> <li>Ohne 'do phrase match' können Sie die Operatoren AND OR NOT * ? ! + - und weitere Suchoperatoren, sowie reguläre Ausdrücke (RegEx) zwischen zwei Schrägstrichen benutzen</li></ul>",
@@ -602,7 +615,7 @@
     "submitSuccess": "Ihre Batch-Suche wurde hinzugefügt.",
     "submitError": "Etwas ist schief gelaufen, die Batch-Suche konnte nicht hinzugefügt werden.",
     "submitQueryLimitError": "Fehler in CSV-Datei: Die CSV-Datei enthält mehr als 60.000 Abfragen.",
-    "project": "Projekt",
+    "projects": "Projects",
     "name": "Name",
     "description": "Beschreibung",
     "fuzziness": "Unscharfe Suche",
@@ -617,10 +630,12 @@
     "date": "Datum",
     "nbResults": "Anzahl der Ergebnisse",
     "query": "keine Abfragen | 1 Abfrage | {count} Abfragen",
+    "clearFilters": "Clear filters",
     "delete": "Batch-Suche löschen",
     "deleted": "Die Batch-Suche wurde gelöscht.",
     "notDeleted": "Die Batch-Suche wurde nicht gelöscht.",
     "published": "Veröffentlicht",
+    "notPublished": "Not published",
     "publishedDescription": "Geben Sie anderen Mitgliedern des Projekts Zugriff auf diese Batch-Suche. Sie können dies später ändern.",
     "phraseMatch": "Exakte Suche",
     "phraseMatchDescription": "Ermöglicht Ihnen, nach Dokumenten zu suchen, die einen exakten Satz oder Ausdruck enthalten, anstatt eine Reihe von Schlüsselwörtern in zufälliger Reihenfolge zu vergleichen.",
@@ -632,7 +647,19 @@
     "errorTitle": "Fehler in der Abfrage",
     "errorQuery": "Sie haben einen Fehler auf Ihrer Abfrage <code>%{query}</code>.",
     "errorMessage": "Das System ist auf ein Problem gestoßen. Es kann ein Syntaxfehler in der CSV-Datei sein oder ein anderer Fehler. Bitte lesen Sie <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">auf dieser Hilfeseite</a>, auf der die häufigsten Fehler beschrieben werden.",
-    "placeholder": "Suche in Batch-Suchen..."
+    "placeholder": "Suche in Batch-Suchen...",
+    "status": {
+      "failure": "failure",
+      "queued": "queued",
+      "running": "running",
+      "success": "success"
+    },
+    "field": {
+      "all": "All fields",
+      "name": "Name",
+      "user_id": "Author",
+      "description": "Description"
+    }
   },
   "batchSearchResults": {
     "title": "Ergebnisse der Batch-Suche",
@@ -640,6 +667,7 @@
     "query": "Abfrage",
     "documentPath": "Dokumentenpfad",
     "creationDate": "Erstellungsdatum",
+    "project": "Project",
     "contentType": "Inhaltstyp",
     "size": "Größe",
     "downloadResults": "Ergebnisse herunterladen",
@@ -698,17 +726,46 @@
   "batchDownload": {
     "title": "Batch-Downloads",
     "empty": "You have not yet started any download tasks.",
+    "noFile": "The archive has expired.",
     "created": "Your download is being prepared",
     "warning": "Diese Funktion wird derzeit vom Datashare-Team entwickelt.",
-    "inProgress": "See all pending downloads"
+    "inProgress": "See all pending downloads",
+    "relaunch": {
+      "succeed": "Your download is being prepared",
+      "succeedBody": "The download should be available soon.",
+      "failed": "Unable to relaunch",
+      "failedBody": "Something happend when trying to relaunch this batch download."
+    },
+    "delete": {
+      "failed": "Unable to delete",
+      "failedBody": "Something happend when trying to delete this batch download."
+    },
+    "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
+  },
+  "batchDownloadActions": {
+    "relaunch": "Relaunch",
+    "search": "See search results",
+    "delete": "Delete"
   },
   "tasksList": {
     "empty": "You have not yet started any tasks.",
-    "stop": "Stop this task"
+    "stop": "Stop this task",
+    "encrypted": "This file is encrypted. The password has been sent to you by email."
   },
   "insights": {
     "title": "Einblicke",
     "selectProject": "Projekt auswählen"
+  },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Browse",
+        "close": "Close"
+      }
+    },
+    "browser": {
+      "empty": "No sub-folders"
+    }
   },
   "widget": {
     "noData": "Keine Daten",
@@ -741,7 +798,7 @@
       "people": "Keine Personen | eine Person | <strong>{count}</strong> Personen",
       "locations": "keine Orte | ein Ort | <strong>{count}</strong> Orte",
       "organizations": "keine Organisationen | eine Organisation | <strong>{count}</strong> Organisationen",
-      "emails": "keine E-Mail-Adressen | eine E-Mail-Adresse | <strong>{count}</strong> E-Mail-Adressen"
+      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
     },
     "treemap": {
       "seeDocuments": "Dokumente in Datashare ansehen",

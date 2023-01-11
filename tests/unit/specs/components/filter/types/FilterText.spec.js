@@ -409,7 +409,7 @@ describe('FilterText.vue', () => {
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('Fichier sur le disque')
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('Fichier sur disque')
   })
 
   it('should reload the filter on event "filter::refresh"', async () => {

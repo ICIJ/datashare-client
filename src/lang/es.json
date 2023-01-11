@@ -75,11 +75,12 @@
       "on": "sobre",
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
+      "batchDownloadNotAllowed": "No se pueden hacer búsquedas masivas en múltiples proyectos.",
       "batchDownload": "Descargar los resultados",
       "batchDownloadSubmit": "Está a punto de descargar 1 archivo. | Está a punto de descargar %{total} archivo.",
-      "warningNumber": "You cannot download more than %{number} documents.",
-      "warningSize": "You cannot download more than %{size}B.",
-      "warningConfirm": "Do you still want to download the first documents of this search?",
+      "warningNumber": "No puede descargar más de %{number} archivos.",
+      "warningSize": "No puede descargar más de %{size}B.",
+      "warningConfirm": "¿Quiere descargar los primeros documentos de esta búsqueda?",
       "sort": {
         "sortLabel": "Ordenar",
         "sort": "Ordenar por",
@@ -391,6 +392,7 @@
     "path": "Ruta del archivo",
     "dirname": "Directorio del archivo",
     "id": "ID del archivo",
+    "project": "Proyecto",
     "creationDate": "Fecha de creación",
     "size": "Tamaño del archivo",
     "contentLanguage": "Idioma del contenido",
@@ -406,6 +408,7 @@
     "preview": "Vista previa",
     "downloadButton": "Descargar",
     "downloadRootButton": "Descargar padre",
+    "downloadWithoutMetadata": "Descargar sin metadatos",
     "externalWindow": "Abrir en una nueva ventana",
     "selectAll": "Seleccionar todo",
     "unselectAll": "Deseleccionar todo",
@@ -420,6 +423,7 @@
     "starFile": "Marcar como favorito",
     "notFound": "Documento no encontrado",
     "notAvailable": "La vista previa no está disponible para este archivo.",
+    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
     "namedEntitiesNotSearched": "<p>Documento no analizado.</p><p class=\\\"text-muted small\\\">Para buscar entidades identificadas, vaya a <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> y comience una nueva tarea \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Generando visualización previa...",
@@ -488,40 +492,47 @@
     "receivedLink": "Correos electrónicos recibidos",
     "sentLink": "Correos electrónicos enviados"
   },
+  "extractingLanguageFormControl": {
+    "nullOption": "Detect automatically (default)",
+    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">read the user guide</a> to know how to fix this."
+  },
   "indexing": {
     "title": "Analiza tus documentos",
     "description": "Por favor, <a href=\"%{howToLink}\" target=\"_blank\">lea la documentación</a> sobre cómo añadir documentos.",
     "go": "Ir",
     "tasks": "Tareas",
     "empty": "Aún no has iniciado ninguna tarea. <a href=\"%{howToLink}\" target=\"_blank\">Lee más.</a>",
-    "extractText": "Extraer texto",
+    "extractText": "Add documents",
     "extractWithOcrLabel": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
     "extractWithOcrHelp": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
     "extractOnlyNewLabel": "¿Desea omitir archivos ya indexados?",
     "extractOnlyNewHelp": "Si es así, Datashare sólo extraerá texto de archivos que aún no se pueden buscar en Datashare.",
-    "findNamedEntities": "Buscar personas, organizaciones, ubicaciones y direcciones de correo electrónico",
+    "extractLanguage": "In which language are your documents?",
+    "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "¿Qué te gustaría hacer?",
     "findNamedEntitiesSubheader": "Datashare utiliza modelos de Programación Neuro-Lingüística (Natural Language Processing).",
     "findNamedEntitiesTooltip": "Los textos deben ser extraídos antes de iniciar el proceso para encontrar entidades identificadas",
     "pipelines": "Canales",
     "pipelineOptions": {
+      "email": "Find email",
       "corenlp": "Encuentra nombres de personas, organizaciones y lugares con CoreNLP",
-      "email": "Encontra direcciones de correo electrónico"
+      "opennlp": "Find people, organizations and locations with OpenNLP",
+      "mitie": "Find people, organizations and locations with MITIE",
+      "ixapipe": "Find people, organizations and locations with IXA Pipe",
+      "gatenlp": "Find people, organizations and locations with GateNLP"
     },
-    "corenlp": "CoreNLP",
-    "opennlp": "OpenNLP",
-    "mitie": "MITIE",
-    "ixapipe": "IXA Pipe",
-    "email": "Extracción de correos electrónicos",
     "default": "Por defecto - Ofrece la mayor probabilidad de trabajar en la mayoría de los documentos",
-    "syncModels": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
+    "syncModelsLabel": "Do you want to work offline?",
+    "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "Detener esta tarea",
     "stopPendingTasks": "Detener todas las tareas pendientes",
     "deleteDoneTasks": "Borrar tareas completadas",
     "deleteIndexLabel": "Elimina todos tus documentos de Datashare",
     "deleteIndexDescription": "Para estar 100% seguro, elimine sus documentos de la carpeta Datashare de su computadora. ¡No olvide vaciar su papelera de todos los documentos de Datashare! Asegúrese de tener una copia de ellos en otro lugar seguro de antemano.",
     "deleteSuccess": "Sus archivos han sido eliminados de Datashare.",
-    "deleteFailure": "Se ha producido un error al eliminar los archivos."
+    "deleteFailure": "Something went wrong, unable to remove your documents.",
+    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare.",
+    "deleteBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
   },
   "menu": {
     "help": "Pedir ayuda",
@@ -542,6 +553,7 @@
     "settingsShort": "Configuración",
     "logout": "Cerrar sesión",
     "logoutShort": "Cerrar sesión",
+    "logoutModal": "This session will remain open until you close this browser or clear your browser's site data. Until then you won't be logged out.",
     "addDocuments": "Cómo añadir documentos",
     "faq": "Preguntas frecuentes (FAQ)",
     "faqShort": "FAQ",
@@ -592,6 +604,7 @@
     "lead": "Buscar múltiples términos y documentos a la vez.",
     "title": "Búsquedas masivas",
     "empty": "Aún no ha iniciado una búsqueda masiva. <a href=\"%{howToLink}\">Leer más.</a>",
+    "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
     "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. <ul><li>Solo el formato CSV aceptado.</li> <li>El archivo CSV no debe contener más de 60 000 consultas.</li> <li>La primera y única columna debe contener los términos a buscar.</li> <li>No saltos de línea en las células.</li> <li>Solamente cuando 'Hacer la frase coincide exactamente' no esta marcado, puede utilizar operadores (AND OR NOT * ? ! + - etc), y las Regex entre 2 barras.</li></ul>",
@@ -602,7 +615,7 @@
     "submitSuccess": "La búsqueda masiva ha sido añadida.",
     "submitError": "Error, no se puede añadir la búsqueda masiva.",
     "submitQueryLimitError": "Error en CSV, su CSV excede 60 000 líneas.",
-    "project": "Proyecto",
+    "projects": "Proyectos",
     "name": "Nombre",
     "description": "Descripción",
     "fuzziness": "Fuzziness",
@@ -617,10 +630,12 @@
     "date": "Fecha",
     "nbResults": "Número de resultados",
     "query": "no hay consultas | 1 consulta | {count} consultas",
+    "clearFilters": "Clear filters",
     "delete": "Eliminar búsqueda masiva",
     "deleted": "La búsqueda masiva ha sido eliminado.",
     "notDeleted": "La búsqueda masiva no ha sido eliminada.",
     "published": "Publicado",
+    "notPublished": "Not published",
     "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
     "phraseMatch": "Hacer la frase coincide exactamente",
     "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
@@ -632,7 +647,19 @@
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
-    "placeholder": "Buscar en las búsquedas masivas..."
+    "placeholder": "Buscar en las búsquedas masivas...",
+    "status": {
+      "failure": "failure",
+      "queued": "queued",
+      "running": "running",
+      "success": "success"
+    },
+    "field": {
+      "all": "Todos los campos",
+      "name": "Nombre",
+      "user_id": "Autora",
+      "description": "Descripción"
+    }
   },
   "batchSearchResults": {
     "title": "Resultados de búsqueda masiva",
@@ -640,6 +667,7 @@
     "query": "Consulta",
     "documentPath": "Ruta del archivo",
     "creationDate": "Fecha de creación",
+    "project": "Proyecto",
     "contentType": "Tipo de contenido",
     "size": "Tamaño",
     "downloadResults": "Descargar los resultados",
@@ -698,17 +726,46 @@
   "batchDownload": {
     "title": "Descarga en lotes",
     "empty": "Aún no has iniciado ninguna tarea de descarga.",
+    "noFile": "The archive has expired.",
     "created": "Tu descarga está siendo procesada",
     "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare.",
-    "inProgress": "Ver todas las descargas pendientes"
+    "inProgress": "Ver todas las descargas pendientes",
+    "relaunch": {
+      "succeed": "Your download is being prepared",
+      "succeedBody": "The download should be available soon.",
+      "failed": "Unable to relaunch",
+      "failedBody": "Something happend when trying to relaunch this batch download."
+    },
+    "delete": {
+      "failed": "Unable to delete",
+      "failedBody": "Something happend when trying to delete this batch download."
+    },
+    "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
+  },
+  "batchDownloadActions": {
+    "relaunch": "Relaunch",
+    "search": "See search results",
+    "delete": "Delete"
   },
   "tasksList": {
     "empty": "Aún no has iniciado ninguna tarea.",
-    "stop": "Detener esta tarea"
+    "stop": "Detener esta tarea",
+    "encrypted": "Este archivo está cifrado. La contraseña se le ha enviado por correo electrónico."
   },
   "insights": {
     "title": "Estadísticas",
     "selectProject": "Seleccione un proyecto"
+  },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Browse",
+        "close": "Close"
+      }
+    },
+    "browser": {
+      "empty": "No sub-folders"
+    }
   },
   "widget": {
     "noData": "No hay datos",
@@ -741,7 +798,7 @@
       "people": "0 persona | una persona | <strong>{count}</strong> personas",
       "locations": "0 ubicación | una ubicación | <strong>{count}</strong> ubicaciones",
       "organizations": "0 organización | una organización | <strong>{count}</strong> organizaciones",
-      "emails": "0 dirección de correo electrónico | una dirección de correo electrónico | <strong>{count}</strong> direcciones de correo electrónico"
+      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
     },
     "treemap": {
       "seeDocuments": "Ver archivos en Datashare",

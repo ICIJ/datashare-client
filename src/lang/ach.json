@@ -75,6 +75,7 @@
       "on": "crwdns302:0crwdne302:0",
       "perPage": "crwdns304:0crwdne304:0",
       "sortedByPath": "crwdns1347:0crwdne1347:0",
+      "batchDownloadNotAllowed": "crwdns2556:0crwdne2556:0",
       "batchDownload": "crwdns2502:0crwdne2502:0",
       "batchDownloadSubmit": "crwdns2545:0%{total}crwdne2545:0",
       "warningNumber": "crwdns2547:0%{number}crwdne2547:0",
@@ -391,6 +392,7 @@
     "path": "crwdns2322:0crwdne2322:0",
     "dirname": "crwdns2324:0crwdne2324:0",
     "id": "crwdns2326:0crwdne2326:0",
+    "project": "crwdns2558:0crwdne2558:0",
     "creationDate": "crwdns1918:0crwdne1918:0",
     "size": "crwdns816:0crwdne816:0",
     "contentLanguage": "crwdns1920:0crwdne1920:0",
@@ -406,6 +408,7 @@
     "preview": "crwdns834:0crwdne834:0",
     "downloadButton": "crwdns1932:0crwdne1932:0",
     "downloadRootButton": "crwdns2368:0crwdne2368:0",
+    "downloadWithoutMetadata": "crwdns2555:0crwdne2555:0",
     "externalWindow": "crwdns1934:0crwdne1934:0",
     "selectAll": "crwdns2160:0crwdne2160:0",
     "unselectAll": "crwdns2162:0crwdne2162:0",
@@ -420,6 +423,7 @@
     "starFile": "crwdns1942:0crwdne1942:0",
     "notFound": "crwdns1944:0crwdne1944:0",
     "notAvailable": "crwdns2434:0crwdne2434:0",
+    "copyAsCsv": "crwdns2606:0crwdne2606:0",
     "namedEntitiesNotFound": "crwdns1948:0crwdne1948:0",
     "namedEntitiesNotSearched": "crwdns1950:0%{indexing_link}crwdne1950:0",
     "generatingPreview": "crwdns1952:0crwdne1952:0",
@@ -488,40 +492,47 @@
     "receivedLink": "crwdns1186:0crwdne1186:0",
     "sentLink": "crwdns1188:0crwdne1188:0"
   },
+  "extractingLanguageFormControl": {
+    "nullOption": "crwdns2639:0crwdne2639:0",
+    "ocrWarning": "crwdns2641:0crwdne2641:0"
+  },
   "indexing": {
     "title": "crwdns910:0crwdne910:0",
     "description": "crwdns912:0%{howToLink}crwdne912:0",
     "go": "crwdns918:0crwdne918:0",
     "tasks": "crwdns920:0crwdne920:0",
     "empty": "crwdns2522:0%{howToLink}crwdne2522:0",
-    "extractText": "crwdns1880:0crwdne1880:0",
+    "extractText": "crwdns2618:0crwdne2618:0",
     "extractWithOcrLabel": "crwdns1882:0crwdne1882:0",
     "extractWithOcrHelp": "crwdns1884:0crwdne1884:0",
     "extractOnlyNewLabel": "crwdns1886:0crwdne1886:0",
     "extractOnlyNewHelp": "crwdns1888:0crwdne1888:0",
-    "findNamedEntities": "crwdns1890:0crwdne1890:0",
+    "extractLanguage": "crwdns2638:0crwdne2638:0",
+    "findNamedEntities": "crwdns2620:0crwdne2620:0",
     "findNamedEntitiesHeader": "crwdns2416:0crwdne2416:0",
     "findNamedEntitiesSubheader": "crwdns2418:0crwdne2418:0",
     "findNamedEntitiesTooltip": "crwdns1896:0crwdne1896:0",
     "pipelines": "crwdns938:0crwdne938:0",
     "pipelineOptions": {
+      "email": "crwdns2622:0crwdne2622:0",
       "corenlp": "crwdns2456:0crwdne2456:0",
-      "email": "crwdns2422:0crwdne2422:0"
+      "opennlp": "crwdns2610:0crwdne2610:0",
+      "mitie": "crwdns2612:0crwdne2612:0",
+      "ixapipe": "crwdns2614:0crwdne2614:0",
+      "gatenlp": "crwdns2616:0crwdne2616:0"
     },
-    "corenlp": "crwdns2458:0crwdne2458:0",
-    "opennlp": "crwdns2460:0crwdne2460:0",
-    "mitie": "crwdns2462:0crwdne2462:0",
-    "ixapipe": "crwdns2464:0crwdne2464:0",
-    "email": "crwdns948:0crwdne948:0",
     "default": "crwdns950:0crwdne950:0",
-    "syncModels": "crwdns1898:0crwdne1898:0",
+    "syncModelsLabel": "crwdns2624:0crwdne2624:0",
+    "syncModels": "crwdns2626:0crwdne2626:0",
     "stopTask": "crwdns1900:0crwdne1900:0",
     "stopPendingTasks": "crwdns1902:0crwdne1902:0",
     "deleteDoneTasks": "crwdns1904:0crwdne1904:0",
     "deleteIndexLabel": "crwdns1906:0crwdne1906:0",
     "deleteIndexDescription": "crwdns1908:0crwdne1908:0",
     "deleteSuccess": "crwdns1910:0crwdne1910:0",
-    "deleteFailure": "crwdns1912:0crwdne1912:0"
+    "deleteFailure": "crwdns2649:0crwdne2649:0",
+    "deleteBatchSearchSuccess": "crwdns2647:0crwdne2647:0",
+    "deleteBatchSearchFailure": "crwdns2651:0crwdne2651:0"
   },
   "menu": {
     "help": "crwdns964:0crwdne964:0",
@@ -542,6 +553,7 @@
     "settingsShort": "crwdns2310:0crwdne2310:0",
     "logout": "crwdns974:0crwdne974:0",
     "logoutShort": "crwdns2314:0crwdne2314:0",
+    "logoutModal": "crwdns2653:0crwdne2653:0",
     "addDocuments": "crwdns976:0crwdne976:0",
     "faq": "crwdns978:0crwdne978:0",
     "faqShort": "crwdns2312:0crwdne2312:0",
@@ -592,6 +604,7 @@
     "lead": "crwdns1006:0crwdne1006:0",
     "title": "crwdns1008:0crwdne1008:0",
     "empty": "crwdns2524:0%{howToLink}crwdne2524:0",
+    "emptyWithFilter": "crwdns2572:0crwdne2572:0",
     "heading": "crwdns1234:0crwdne1234:0",
     "fileLabel": "crwdns1236:0crwdne1236:0",
     "fileDescription": "crwdns2424:0crwdne2424:0",
@@ -602,7 +615,7 @@
     "submitSuccess": "crwdns2026:0crwdne2026:0",
     "submitError": "crwdns2262:0crwdne2262:0",
     "submitQueryLimitError": "crwdns2410:0crwdne2410:0",
-    "project": "crwdns1148:0crwdne1148:0",
+    "projects": "crwdns2560:0crwdne2560:0",
     "name": "crwdns1150:0crwdne1150:0",
     "description": "crwdns1034:0crwdne1034:0",
     "fuzziness": "crwdns1134:0crwdne1134:0",
@@ -617,10 +630,12 @@
     "date": "crwdns1040:0crwdne1040:0",
     "nbResults": "crwdns1042:0crwdne1042:0",
     "query": "crwdns1044:0{count}crwdne1044:0",
+    "clearFilters": "crwdns2592:0crwdne2592:0",
     "delete": "crwdns1112:0crwdne1112:0",
     "deleted": "crwdns1116:0crwdne1116:0",
     "notDeleted": "crwdns1341:0crwdne1341:0",
     "published": "crwdns1124:0crwdne1124:0",
+    "notPublished": "crwdns2594:0crwdne2594:0",
     "publishedDescription": "crwdns1204:0crwdne1204:0",
     "phraseMatch": "crwdns1172:0crwdne1172:0",
     "phraseMatchDescription": "crwdns1174:0crwdne1174:0",
@@ -632,7 +647,19 @@
     "errorTitle": "crwdns2278:0crwdne2278:0",
     "errorQuery": "crwdns2284:0%{query}crwdne2284:0",
     "errorMessage": "crwdns2432:0crwdne2432:0",
-    "placeholder": "crwdns2336:0crwdne2336:0"
+    "placeholder": "crwdns2336:0crwdne2336:0",
+    "status": {
+      "failure": "crwdns2596:0crwdne2596:0",
+      "queued": "crwdns2598:0crwdne2598:0",
+      "running": "crwdns2600:0crwdne2600:0",
+      "success": "crwdns2602:0crwdne2602:0"
+    },
+    "field": {
+      "all": "crwdns2564:0crwdne2564:0",
+      "name": "crwdns2566:0crwdne2566:0",
+      "user_id": "crwdns2568:0crwdne2568:0",
+      "description": "crwdns2570:0crwdne2570:0"
+    }
   },
   "batchSearchResults": {
     "title": "crwdns2374:0crwdne2374:0",
@@ -640,6 +667,7 @@
     "query": "crwdns1048:0crwdne1048:0",
     "documentPath": "crwdns2328:0crwdne2328:0",
     "creationDate": "crwdns1052:0crwdne1052:0",
+    "project": "crwdns2562:0crwdne2562:0",
     "contentType": "crwdns1054:0crwdne1054:0",
     "size": "crwdns1056:0crwdne1056:0",
     "downloadResults": "crwdns1058:0crwdne1058:0",
@@ -698,17 +726,46 @@
   "batchDownload": {
     "title": "crwdns2452:0crwdne2452:0",
     "empty": "crwdns2539:0crwdne2539:0",
+    "noFile": "crwdns2604:0crwdne2604:0",
     "created": "crwdns2520:0crwdne2520:0",
     "warning": "crwdns2454:0crwdne2454:0",
-    "inProgress": "crwdns2518:0crwdne2518:0"
+    "inProgress": "crwdns2518:0crwdne2518:0",
+    "relaunch": {
+      "succeed": "crwdns2574:0crwdne2574:0",
+      "succeedBody": "crwdns2576:0crwdne2576:0",
+      "failed": "crwdns2578:0crwdne2578:0",
+      "failedBody": "crwdns2580:0crwdne2580:0"
+    },
+    "delete": {
+      "failed": "crwdns2586:0crwdne2586:0",
+      "failedBody": "crwdns2588:0crwdne2588:0"
+    },
+    "limitations": "crwdns2608:0%{maxNbFiles}crwdnd2608:0%{maxSize}crwdne2608:0"
+  },
+  "batchDownloadActions": {
+    "relaunch": "crwdns2582:0crwdne2582:0",
+    "search": "crwdns2584:0crwdne2584:0",
+    "delete": "crwdns2590:0crwdne2590:0"
   },
   "tasksList": {
     "empty": "crwdns2541:0crwdne2541:0",
-    "stop": "crwdns2543:0crwdne2543:0"
+    "stop": "crwdns2543:0crwdne2543:0",
+    "encrypted": "crwdns2553:0crwdne2553:0"
   },
   "insights": {
     "title": "crwdns2376:0crwdne2376:0",
     "selectProject": "crwdns1854:0crwdne1854:0"
+  },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "crwdns2628:0crwdne2628:0",
+        "close": "crwdns2630:0crwdne2630:0"
+      }
+    },
+    "browser": {
+      "empty": "crwdns2632:0crwdne2632:0"
+    }
   },
   "widget": {
     "noData": "crwdns2000:0crwdne2000:0",
@@ -741,7 +798,7 @@
       "people": "crwdns2436:0{count}crwdne2436:0",
       "locations": "crwdns2438:0{count}crwdne2438:0",
       "organizations": "crwdns2440:0{count}crwdne2440:0",
-      "emails": "crwdns2442:0{count}crwdne2442:0"
+      "emails": "crwdns2634:0{count}crwdne2634:0"
     },
     "treemap": {
       "seeDocuments": "crwdns2230:0crwdne2230:0",

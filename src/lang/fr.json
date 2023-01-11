@@ -1,6 +1,6 @@
 {
   "global": {
-    "all": "Tout",
+    "all": "Tous",
     "cancel": "Annuler",
     "enterCorrectUrl": "Veuillez saisir une URL valide.",
     "yes": "Oui",
@@ -75,11 +75,12 @@
       "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
+      "batchDownloadNotAllowed": "Les téléchargements en lots ne sont pas autorisés sur plusieurs projets.",
       "batchDownload": "Télécharger les résultats",
       "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger %{total} documents.",
-      "warningNumber": "You cannot download more than %{number} documents.",
-      "warningSize": "You cannot download more than %{size}B.",
-      "warningConfirm": "Do you still want to download the first documents of this search?",
+      "warningNumber": "Vous ne pouvez pas télécharger plus de %{number} documents.",
+      "warningSize": "Vous ne pouvez pas télécharger plus de %{size}B.",
+      "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?",
       "sort": {
         "sortLabel": "Trier",
         "sort": "Tri par",
@@ -369,7 +370,7 @@
     },
     "level": {
       "all": "Tous",
-      "level00": "Fichier sur le disque",
+      "level00": "Fichier sur disque",
       "level01": "1er",
       "level02": "2ème",
       "level03": "3ème",
@@ -391,6 +392,7 @@
     "path": "Chemin du document",
     "dirname": "Dossier du document",
     "id": "ID du document",
+    "project": "Projet",
     "creationDate": "Date de création",
     "size": "Taille du ficher",
     "contentLanguage": "Langue",
@@ -406,6 +408,7 @@
     "preview": "Prévisualisation",
     "downloadButton": "Télécharger",
     "downloadRootButton": "Télécharger le parent",
+    "downloadWithoutMetadata": "Télécharger sans les métadonnées",
     "externalWindow": "Ouvrir dans une nouvelle fenêtre",
     "selectAll": "Tout sélectionner",
     "unselectAll": "Désélectionner tout",
@@ -420,6 +423,7 @@
     "starFile": "Mettre en favoris le document",
     "notFound": "Document non trouvé",
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
+    "copyAsCsv": "Copier en format CSV",
     "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
     "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Génération d'une prévisualisation...",
@@ -488,6 +492,10 @@
     "receivedLink": "Emails reçus",
     "sentLink": "Emails envoyés"
   },
+  "extractingLanguageFormControl": {
+    "nullOption": "Détecter automatiquement (par défaut)",
+    "ocrWarning": "Il semble que la reconnaissance optique des caractères ne soit pas installée pour cette langue. Veuillez <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">lire le guide utilisateurice</a> pour savoir comment résoudre ce problème."
+  },
   "indexing": {
     "title": "Analyser vos documents",
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">Lire la documentation</a> sur comment ajouter des documents.",
@@ -499,30 +507,36 @@
     "extractWithOcrHelp": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
     "extractOnlyNewLabel": "Voulez-vous ignorer les fichiers déjà indexés ?",
     "extractOnlyNewHelp": "Si oui, Datashare extraira seulement le texte des fichiers qui ne sont pas déjà dans Datashare.",
+    "extractLanguage": "Dans quelle langue sont vos documents?",
     "findNamedEntities": "Trouver des personnes, organisations, lieux ou emails",
     "findNamedEntitiesHeader": "Que souhaitez-vous faire ?",
     "findNamedEntitiesSubheader": "Datashare utilise des modèles de Traitement du Language Naturel (Natural Language Processing).",
     "findNamedEntitiesTooltip": "Les documents doivent être indexés avant de chercher les entités nommées",
     "pipelines": "Algo(s)",
     "pipelineOptions": {
+      "email": "Trouver des emails",
       "corenlp": "Trouver des noms de personnes, organisations et lieux avec CoreNLP",
-      "email": "Trouver des emails"
+      "mitie": "Trouver les personnes, les organisations et les lieux avec MITIE",
+      "ixapipe": "Trouver les personnes, les organisations et les lieux avec IXA Pipe",
+      "gatenlp": "Trouver les personnes, les organisations et les lieux avec GateNLP"
     },
+    "default": "Par défaut - Meilleure probabilité de fonctionner pour tous les documents",
+    "syncModelsLabel": "Voulez-vous travailler hors ligne ?",
+    "syncModels": "Cochez cette case si vous travaillez sans connexion Internet.",
     "corenlp": "CoreNLP",
     "opennlp": "OpenNLP",
     "mitie": "MITIE",
     "ixapipe": "Ixa Pipe",
     "email": "Extraction d'adresses emails",
-    "default": "Par défaut - Meilleure probabilité de fonctionner avec la plupart des documents",
-    "syncModelsLabel": "Vous voulez travaillez hors ligne?",
-    "syncModels": "Si oui, vos documents seront analysés sans connexion internet.",
     "stopTask": "Arrêter cette tâche",
     "stopPendingTasks": "Arrêter les tâches en cours",
     "deleteDoneTasks": "Supprimer les tâches terminées",
     "deleteIndexLabel": "Effacer tous les documents de Datashare",
     "deleteIndexDescription": "Pour être 100% sûr·e, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr.",
     "deleteSuccess": "Vos documents sont maintenant supprimés de Datashare.",
-    "deleteFailure": "Une erreur est survenue, impossible de supprimer vos documents."
+    "deleteFailure": "Une erreur est survenue, impossible de supprimer vos documents.",
+    "deleteBatchSearchSuccess": "Les recherches en lots sont désormais supprimées de Datashare.",
+    "deleteBatchSearchFailure": "Une erreur est survenue, vos recherches en lot n'ont pas été supprimées."
   },
   "menu": {
     "help": "Demander de l'aide",
@@ -542,12 +556,13 @@
     "settings": "Paramètres",
     "settingsShort": "Réglages",
     "logout": "Déconnexion",
-    "logoutShort": "Se déconnecter",
+    "logoutShort": "Déconnexion",
+    "logoutModal": "Cette session restera ouverte jusqu'à ce que vous fermiez ce navigateur ou que vous supprimiez les données de votre navigateur. Sans cela, vous ne serez pas déconnecté•e.",
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
     "faqShort": "FAQ",
-    "userGuides": "Guides d'utilisateurs",
-    "userGuidesShort": "Guide d'utilisation",
+    "userGuides": "Guide utilisateur",
+    "userGuidesShort": "Guide utilisateur",
     "devWiki": "Wiki pour développeur•se•s",
     "connectedAs": "Vous êtes connecté•e en tant que <strong>{username}</strong>"
   },
@@ -593,6 +608,7 @@
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
     "title": "Recherches en lot",
     "empty": "Vous n'avez pas encore commencé de recherche en lot. <a href=\"%{howToLink}\">En savoir plus.</a>",
+    "emptyWithFilter": "La recherche filtrée n'a pas de résultats",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
     "fileDescription": "Exportez votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Uniquement quand 'Rechercher les termes exacts' n'est pas coché, vous pouvez utiliser AND OR NOT * ? + - et les autres opérateurs de recherche dans votre CSV, et utiliser une Regex entre 2 slashes</li></ul>",
@@ -603,7 +619,7 @@
     "submitSuccess": "Votre recherche en lot a été ajoutée.",
     "submitError": "Il ya eu une erreur, votre recherche en lot n'a pas été ajoutée.",
     "submitQueryLimitError": "Erreur dans le CSV, votre CSV dépasse 60 000 lignes.",
-    "project": "Projet",
+    "projects": "Projets",
     "name": "Nom",
     "description": "Description",
     "fuzziness": "Recherche approximative",
@@ -618,6 +634,7 @@
     "date": "Date",
     "nbResults": "Nombre de résultats",
     "query": "pas de recherche | 1 recherche | {count} recherches",
+    "clearFilters": "Effacer les filtres",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
     "notDeleted": "La recherche en lot n'a pas été supprimée.",
@@ -640,6 +657,12 @@
       "queued": "en attente",
       "running": "en cours",
       "success": "succès"
+    },
+    "field": {
+      "all": "Tous les champs",
+      "name": "Nom",
+      "user_id": "Auteur·e",
+      "description": "Description"
     }
   },
   "batchSearchResults": {
@@ -648,6 +671,7 @@
     "query": "Recherche",
     "documentPath": "Dossier",
     "creationDate": "Date de création",
+    "project": "Projet",
     "contentType": "Type de contenu",
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
@@ -709,23 +733,51 @@
     "noFile": "L'archive a expiré.",
     "created": "Votre téléchargement est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
-    "inProgress": "Voir tous les téléchargements en attente"
+    "inProgress": "Voir tous les téléchargements en attente",
+    "relaunch": {
+      "succeed": "Votre téléchargement est en cours de préparation",
+      "succeedBody": "Le téléchargement sera bientôt disponible.",
+      "failed": "Impossible de relancer",
+      "failedBody": "Une erreur est survenue pendant que la recherche en lot était relancée."
+    },
+    "delete": {
+      "failed": "Impossible de supprimer",
+      "failedBody": "Une erreur est survenue pendant que la recherche en lot était supprimée."
+    },
+    "limitations": "Les téléchargements en lots sont limités à %{maxNbFiles} fichiers et %{maxSize}B."
+  },
+  "batchDownloadActions": {
+    "relaunch": "Relancer",
+    "search": "Voir les résultats de la recherche",
+    "delete": "Supprimer"
   },
   "tasksList": {
     "empty": "Vous n'avez pas encore lancé de tâches.",
-    "stop": "Arrêter cette tâche"
+    "stop": "Arrêter cette tâche",
+    "encrypted": "Ce fichier est chiffré. Le mot de passe vous a été envoyé par e-mail."
   },
   "insights": {
     "title": "Aperçu",
     "selectProject": "Sélectionner un projet"
+  },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Parcourir",
+        "close": "Fermer"
+      }
+    },
+    "browser": {
+      "empty": "Pas de sous-dossiers"
+    }
   },
   "widget": {
     "noData": "Pas de données",
     "noFolders": "Aucun dossier",
     "barometer": {
       "document": "aucun document | 1 document | %{total} documents",
-      "amongWhich": "parmi le(s)quel(s)",
-      "onDisk": "sur le disque"
+      "amongWhich": "dont",
+      "onDisk": "sur disque"
     },
     "diskUsage": {
       "details": "Voir l'utilisation du disque",
@@ -788,7 +840,7 @@
     "install": "Installer",
     "uninstall": "Désinstaller",
     "update": "Mettre à jour",
-    "installFromUrl": "Installer le plugin depuis une URL"
+    "installFromUrl": "Installer un plugin depuis une URL"
   },
   "extensions": {
     "title": "Extensions",

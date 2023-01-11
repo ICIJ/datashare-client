@@ -75,6 +75,7 @@
       "on": "を表示。総数は",
       "perPage": "ページごと",
       "sortedByPath": "sorted by path",
+      "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",
       "batchDownload": "Download results",
       "batchDownloadSubmit": "You are about to download 1 document. | You are about to download %{total} documents.",
       "warningNumber": "You cannot download more than %{number} documents.",
@@ -391,6 +392,7 @@
     "path": "Document path",
     "dirname": "Document directory",
     "id": "Document ID",
+    "project": "Project",
     "creationDate": "作成日時",
     "size": "ファイルサイズ",
     "contentLanguage": "内容の言語",
@@ -406,6 +408,7 @@
     "preview": "プレビュー",
     "downloadButton": "ダウンロード",
     "downloadRootButton": "Download parent",
+    "downloadWithoutMetadata": "Download without metadata",
     "externalWindow": "新しいウインドウで開く",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",
@@ -420,6 +423,7 @@
     "starFile": "文書に星マークを付ける",
     "notFound": "ドキュメントが見つかりません。",
     "notAvailable": "Preview is not available for this document.",
+    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "固有表現が見つかりません",
     "namedEntitiesNotSearched": "<p>文書は解析されていません。</p><p class=\\\"text-muted small\\\">固有表現を検索するには、 <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> に行き、新たなタスクを開始してください \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "プレビューを生成しています…",
@@ -488,40 +492,47 @@
     "receivedLink": "受信メール",
     "sentLink": "送信メール"
   },
+  "extractingLanguageFormControl": {
+    "nullOption": "Detect automatically (default)",
+    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">read the user guide</a> to know how to fix this."
+  },
   "indexing": {
     "title": "文書の分析",
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">文書追加についての書類を読んでください</a>。",
     "go": "移動",
     "tasks": "作業",
     "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
-    "extractText": "テキストを抽出",
+    "extractText": "Add documents",
     "extractWithOcrLabel": "画像やPDFからもテキストを抽出しますか？",
     "extractWithOcrHelp": "その場合、データシェアはOCR（光学的文字認識）を作動させます。これは時間が最大10倍かかります",
     "extractOnlyNewLabel": "既にインデックスされたファイルは飛ばしますか？",
     "extractOnlyNewHelp": "その場合、データシェアがテキストを抽出する対象は、データシェア内でまだ検索できていないファイルだけとなります",
-    "findNamedEntities": "人物、組織、場所、メールアドレスを探す",
+    "extractLanguage": "In which language are your documents?",
+    "findNamedEntities": "Find people, organizations, locations and emails",
     "findNamedEntitiesHeader": "What would you like to do?",
     "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models.",
     "findNamedEntitiesTooltip": "固有表現を探す前に、テキストを抽出しなければなりません",
     "pipelines": "パイプライン（固有表現処理プロセス）",
     "pipelineOptions": {
+      "email": "Find email",
       "corenlp": "Find people, organizations and locations with CoreNLP",
-      "email": "Find email addresses"
+      "opennlp": "Find people, organizations and locations with OpenNLP",
+      "mitie": "Find people, organizations and locations with MITIE",
+      "ixapipe": "Find people, organizations and locations with IXA Pipe",
+      "gatenlp": "Find people, organizations and locations with GateNLP"
     },
-    "corenlp": "CoreNLP",
-    "opennlp": "OpenNLP",
-    "mitie": "MITIE",
-    "ixapipe": "IXA Pipe",
-    "email": "メール抽出",
     "default": "デフォルトで--大半の文書において、機能する可能性が最も高い",
-    "syncModels": "もし、現在インターネット接続がないオフライン状態で作業している場合、このボックスにチェックを入れてください",
+    "syncModelsLabel": "Do you want to work offline?",
+    "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "このタスクを止める",
     "stopPendingTasks": "途中になっているタスクを全て止める",
     "deleteDoneTasks": "完了済みタスクを削除",
     "deleteIndexLabel": "あなたの文書を全てデータシェアから取り除く",
     "deleteIndexDescription": "100%安全にするため、あなたのコンピューターのデータシェアのフォルダから、あなたの文書を取り除いてください。全てのデータシェア文書が送られた「ごみ箱」も空っぽにすることを忘れないで！ それに先立ち、あなたの文書のコピーを、安全性の高い別の場所に確実に入れておくこと。",
     "deleteSuccess": "Your documents are now removed from Datashare.",
-    "deleteFailure": "Something went wrong, unable to remove your documents."
+    "deleteFailure": "Something went wrong, unable to remove your documents.",
+    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare.",
+    "deleteBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
   },
   "menu": {
     "help": "ヘルプを求める",
@@ -542,6 +553,7 @@
     "settingsShort": "Settings",
     "logout": "ログアウト",
     "logoutShort": "Logout",
+    "logoutModal": "This session will remain open until you close this browser or clear your browser's site data. Until then you won't be logged out.",
     "addDocuments": "文書追加のしかた",
     "faq": "よくある質問",
     "faqShort": "FAQ",
@@ -592,6 +604,7 @@
     "lead": "複数の言葉や文書を一度に検索",
     "title": "まとめて検索（バッチサーチ）",
     "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
+    "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "新たなまとめ検索（バッチサーチ）",
     "fileLabel": "CSVファイル",
     "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
@@ -602,7 +615,7 @@
     "submitSuccess": "Your batch search has been added.",
     "submitError": "Something went wrong, unable to add your batch search.",
     "submitQueryLimitError": "Error in CSV, your CSV exceed 60.000 queries.",
-    "project": "プロジェクト",
+    "projects": "Projects",
     "name": "名称",
     "description": "詳細",
     "fuzziness": "あいまい検索",
@@ -617,10 +630,12 @@
     "date": "日付",
     "nbResults": "結果の数",
     "query": "検索語なし | 検索語１語 | 検索語{count} 語",
+    "clearFilters": "Clear filters",
     "delete": "まとめ検索（バッチサーチ）を削除",
     "deleted": "まとめ検索（バッチサーチ）は削除されました。",
     "notDeleted": "まとめ検索（バッチサーチ）は削除されていません。",
     "published": "公開済み",
+    "notPublished": "Not published",
     "publishedDescription": "このまとめ検索（バッチサーチ）へのアクセスを、プロジェクトの他の参加者にも認めます。この設定は後で変えられます。",
     "phraseMatch": "完全一致検索をする",
     "phraseMatchDescription": "文や語句が完全一致するものだけを文書内で検索できるようにします。複数の言葉の組み合わせを、その順序と関係なく照合するものではありません。",
@@ -632,7 +647,19 @@
     "errorTitle": "Error in query",
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
-    "placeholder": "Search in batch searches..."
+    "placeholder": "Search in batch searches...",
+    "status": {
+      "failure": "failure",
+      "queued": "queued",
+      "running": "running",
+      "success": "success"
+    },
+    "field": {
+      "all": "All fields",
+      "name": "Name",
+      "user_id": "Author",
+      "description": "Description"
+    }
   },
   "batchSearchResults": {
     "title": "Batch Search Results",
@@ -640,6 +667,7 @@
     "query": "検索語",
     "documentPath": "Document Path",
     "creationDate": "作成日",
+    "project": "Project",
     "contentType": "コンテンツの種類",
     "size": "サイズ",
     "downloadResults": "ダウンロード結果",
@@ -698,17 +726,46 @@
   "batchDownload": {
     "title": "Batch downloads",
     "empty": "You have not yet started any download tasks.",
+    "noFile": "The archive has expired.",
     "created": "Your download is being prepared",
     "warning": "This feature is currently being developped by the Datashare team.",
-    "inProgress": "See all pending downloads"
+    "inProgress": "See all pending downloads",
+    "relaunch": {
+      "succeed": "Your download is being prepared",
+      "succeedBody": "The download should be available soon.",
+      "failed": "Unable to relaunch",
+      "failedBody": "Something happend when trying to relaunch this batch download."
+    },
+    "delete": {
+      "failed": "Unable to delete",
+      "failedBody": "Something happend when trying to delete this batch download."
+    },
+    "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
+  },
+  "batchDownloadActions": {
+    "relaunch": "Relaunch",
+    "search": "See search results",
+    "delete": "Delete"
   },
   "tasksList": {
     "empty": "You have not yet started any tasks.",
-    "stop": "Stop this task"
+    "stop": "Stop this task",
+    "encrypted": "This file is encrypted. The password has been sent to you by email."
   },
   "insights": {
     "title": "Insights",
     "selectProject": "Select a project"
+  },
+  "inlineDirectoryPicker": {
+    "header": {
+      "browseBtn": {
+        "browse": "Browse",
+        "close": "Close"
+      }
+    },
+    "browser": {
+      "empty": "No sub-folders"
+    }
   },
   "widget": {
     "noData": "No data",
@@ -741,7 +798,7 @@
       "people": "0 people | one person | <strong>{count}</strong> people",
       "locations": "0 locations | one location | <strong>{count}</strong> locations",
       "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
-      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
+      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
     },
     "treemap": {
       "seeDocuments": "See documents in Datashare",
