@@ -9,16 +9,17 @@
       @focus="onFocus"
     />
     <div class="input-group-append">
-      <router-link
+      <a
         v-if="!hideTips"
         v-b-tooltip.bottomleft
-        :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }"
         class="search-bar-input__tips-addon input-group-text px-2"
+        target="_blank"
         :class="{ 'search-bar-input__tips-addon--active': showTips }"
+        :href="operatorLink"
         :title="$t('search.tips')"
       >
         <fa icon="question-circle" fixed-width />
-      </router-link>
+      </a>
       <slot name="fields"> </slot>
       <button type="submit" class="btn btn-dark search-bar-input__submit" :disabled="disableSubmit">
         {{ $t('search.buttonLabel') }}
@@ -29,6 +30,8 @@
 </template>
 
 <script>
+import settings from '@/utils/settings'
+
 /**
  * The general search input group with field options.
  */
@@ -77,6 +80,9 @@ export default {
     }
   },
   computed: {
+    operatorLink() {
+      return settings.documentationLinks.operators.default
+    },
     value: {
       get() {
         return this.query
