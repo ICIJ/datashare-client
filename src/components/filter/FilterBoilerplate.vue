@@ -219,6 +219,13 @@ export default {
     dark: {
       type: Boolean,
       default: true
+    },
+    /**
+     * Disable the attempt to translate an item value
+     */
+    noItemTranslation: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -257,8 +264,8 @@ export default {
       return map(this.itemsWithExcludedValues, (item) => {
         return {
           item,
-          value: item.key.toString(),
-          label: this.labelToHuman(this.filter.itemLabel(item))
+          value: item?.key?.toString(),
+          label: this.itemTranslation(item)
         }
       })
     },
@@ -561,6 +568,12 @@ export default {
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()
+    },
+    itemTranslation(item) {
+      if (this.noItemTranslation) {
+        return item?.key?.toString()
+      }
+      return this.labelToHuman(this.filter.itemLabel(item))
     }
   }
 }
