@@ -5,7 +5,7 @@ const { capitalize, compact } = require('lodash')
 const { basename, join } = require('path')
 const { repository } = require('../package.json')
 
-const DOC_PATH = join('public', 'docs', 'client')
+const DOC_PATH = join('docs', 'client')
 
 const build = Handlebars.compile(readFileSync('bin/DOCS.HOOKS.hbs', 'UTF-8'))
 const joinToDoc = (path) => join(DOC_PATH, path)

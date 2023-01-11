@@ -6,7 +6,7 @@ const { findIndex, filter, isArrayLike, startsWith, trimStart } = require('lodas
 
 const RE_HEADER = /^#+(.*)$/
 const RE_DESCRIPTION = /^>+(.*)$/
-const DOC_PATH = join('public', 'docs', 'client')
+const DOC_PATH = join('docs', 'client')
 
 const buildToc = Handlebars.compile(readFileSync('bin/DOCS.COMPONENTS.hbs', 'UTF-8'))
 const joinToDoc = (path) => join(DOC_PATH, path)
