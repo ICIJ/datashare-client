@@ -514,8 +514,7 @@
     "findNamedEntitiesTooltip": "Les documents doivent être indexés avant de chercher les entités nommées",
     "pipelines": "Algo(s)",
     "pipelineOptions": {
-      "email": "Trouver des emails"
-      "corenlp": "Trouver des noms de personnes, d'organisations et de localités avec CoreNLP",
+      "email": "Trouver des emails",
       "corenlp": "Trouver des noms de personnes, organisations et lieux avec CoreNLP",
       "mitie": "Trouver les personnes, les organisations et les lieux avec MITIE",
       "ixapipe": "Trouver les personnes, les organisations et les lieux avec IXA Pipe",
