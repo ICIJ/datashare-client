@@ -1,3 +1,7 @@
 files:
   - source: /src/lang/en.json
     translation: /src/lang/%two_letters_code%.json
+pull_request_title: "i18n: new Crowdin updates"
+pull_request_labels:
+  - crowdin
+  - i18n
