@@ -13,6 +13,10 @@ describe('LocalesMenu', () => {
     await core.loadI18Locale('en')
   })
 
+  afterAll(async () => {
+    await core.loadI18Locale('en')
+  })
+
   describe('should change the interface language according to configuration', () => {
     it('should display the interfaces in English by default', () => {
       wrapper = shallowMount(LocalesMenu, { localVue, i18n })

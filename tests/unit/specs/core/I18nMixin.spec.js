@@ -4,6 +4,10 @@ import { Core } from '@/core'
 describe('I18nMixin', () => {
   let core
 
+  afterAll(async () => {
+    localStorage.removeItem('locale')
+  })
+
   describe('without language in local storage', () => {
     beforeEach(async () => {
       localStorage.removeItem('locale')
