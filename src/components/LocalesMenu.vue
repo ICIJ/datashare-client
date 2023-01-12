@@ -18,7 +18,7 @@
           :key="locale.key"
           href="#"
           class="dropdown-item"
-          :class="{ active: locale === currentLocale }"
+          :class="{ active: locale.key === currentLocale.key }"
           @click.prevent="chooseLocale(locale.key)"
         >
           {{ locale.label }}
@@ -55,44 +55,29 @@ export default {
   },
   data() {
     return {
-      locales: settings.locales,
-      loadedLocales: [settings.defaultLocale]
+      locales: settings.locales
     }
   },
   computed: {
     currentLocale() {
-      const key = localStorage.getItem('locale') ? localStorage.getItem('locale') : this.$i18n.locale
-      this.loadLocale(key)
+      const key = this.$i18n.locale
       return find(this.locales, { key })
     },
     uniqueId() {
       return uniqueId('locales-menu')
     }
   },
+  watch: {
+    currentLocale({ key }) {
+      return this.$core.loadI18Locale(key)
+    }
+  },
   methods: {
     async chooseLocale(locale) {
-      await this.loadLocale(locale)
+      await this.$core.loadI18Locale(locale)
       if (this.$refs.popover) {
         this.$refs.popover.$emit('close')
       }
-    },
-    setI18nLanguage(locale) {
-      localStorage.setItem('locale', locale)
-      this.$i18n.locale = locale
-      return locale
-    },
-    loadLocale(locale) {
-      if (this.$i18n.locale !== locale) {
-        if (!this.loadedLocales.includes(locale)) {
-          return import(/* webpackChunkName: "[request]" */ '@/lang/' + locale + '.json').then((messages) => {
-            this.$i18n.setLocaleMessage(locale, messages.default)
-            this.loadedLocales.push(locale)
-            return this.setI18nLanguage(locale)
-          })
-        }
-        return Promise.resolve(this.setI18nLanguage(locale))
-      }
-      return Promise.resolve(locale)
     }
   }
 }
