@@ -16,6 +16,7 @@ import VueEllipseProgress from 'vue-ellipse-progress'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
+import I18nMixin from './I18nMixin'
 import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
 import WidgetsMixin from './WidgetsMixin'
@@ -31,13 +32,14 @@ import settings from '@/utils/settings'
 import { Api } from '@/api'
 
 class Base {}
-const Behaviors = compose(FiltersMixin, HooksMixin, PipelinesMixin, ProjectsMixin, WidgetsMixin)(Base)
+const Behaviors = compose(FiltersMixin, HooksMixin, I18nMixin, PipelinesMixin, ProjectsMixin, WidgetsMixin)(Base)
 
 /**
   @class
   @classdesc Class representing the core application with public methods for plugins.
   @mixes FiltersMixin
   @mixes HooksMixin
+  @mixes I18nMixin
   @mixes PipelinesMixin
   @mixes ProjectsMixin
   @mixes WidgetsMixin
@@ -195,6 +197,8 @@ class Core extends Behaviors {
       // Check if "Download" functionality is available for the selected project
       // Because otherwise, if the FilterPanel is closed, it is never called
       await this.store.dispatch('downloads/fetchIndicesStatus')
+      // Initialize current locale
+      await this.initializeI18n()
       // Hold a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {
