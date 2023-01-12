@@ -71,7 +71,7 @@ describe('I18nMixin', () => {
       expect(core.i18n.locale).toBe('ja')
     })
 
-    it('should have "ja" mjasage', async () => {
+    it('should have "ja" messages', async () => {
       await core.loadI18Locale('ja')
       expect(core.hasI18Locale('ja')).toBeTruthy()
     })
