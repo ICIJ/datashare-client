@@ -30,12 +30,12 @@
 
 <script>
 import { compact, get, some } from 'lodash'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 import AppSidebar from '@/components/AppSidebar'
 import Hook from '@/components/Hook'
 import ScrollTracker from '@/components/ScrollTracker'
 import { EventBus } from '@/utils/event-bus'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'App',
