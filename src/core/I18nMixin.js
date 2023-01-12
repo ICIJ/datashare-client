@@ -45,6 +45,7 @@ const I18nMixin = (superclass) =>
      * Load i18n messages for the given locale (if needed)
      * and set it as the current locale.
      * @memberof I18nMixin.prototype
+     * @param {String} locale - Key of the local (fr, de, en, ja, ...)
      * @returns {Promise}
      */
     async loadI18Locale(locale) {
