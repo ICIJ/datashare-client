@@ -5,30 +5,30 @@ import LocalesMenu from '@/components/LocalesMenu'
 import { Core } from '@/core'
 
 describe('LocalesMenu', () => {
-  const { localVue, i18n } = Core.init(createLocalVue()).useAll()
+  const core = Core.init(createLocalVue()).useAll()
+  const { localVue, i18n } = core
   let wrapper = null
 
-  afterEach(() => {
-    localStorage.removeItem('locale')
-    i18n.locale = 'en'
+  beforeEach(async () => {
+    await core.loadI18Locale('en')
   })
 
-  describe('should change the interface language according to localStorage', () => {
+  describe('should change the interface language according to configuration', () => {
     it('should display the interfaces in English by default', () => {
       wrapper = shallowMount(LocalesMenu, { localVue, i18n })
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
     })
 
-    it('should display the interface in French if localStorage says so', () => {
-      localStorage.setItem('locale', 'fr')
+    it('should display the interface in French if configuration says so', () => {
+      core.setI18nLocale('fr')
       wrapper = shallowMount(LocalesMenu, { localVue, i18n })
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('Français')
     })
 
-    it('should display the interface in Spanish if localStorage says so', () => {
-      localStorage.setItem('locale', 'es')
+    it('should display the interface in Spanish if configuration says so', () => {
+      core.setI18nLocale('es')
       wrapper = shallowMount(LocalesMenu, { localVue, i18n })
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('Español')
