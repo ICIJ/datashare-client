@@ -66,4 +66,30 @@ describe('DocumentTabPreview.vue', () => {
     })
     expect(wrapper.vm.previewComponent).toBe('TiffViewer')
   })
+
+  it('should call the AudioViewer component for audio document', async () => {
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType('audio/ogg'))
+      .commitAndGetLastDocument()
+
+    const wrapper = shallowMount(DocumentTabPreview, {
+      localVue,
+      propsData: { document, disabled },
+      mocks: { $t: (msg) => msg }
+    })
+    expect(wrapper.vm.previewComponent).toBe('AudioViewer')
+  })
+
+  it('should call the VideoViewer component for video document', async () => {
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType('video/mp4'))
+      .commitAndGetLastDocument()
+
+    const wrapper = shallowMount(DocumentTabPreview, {
+      localVue,
+      propsData: { document, disabled },
+      mocks: { $t: (msg) => msg }
+    })
+    expect(wrapper.vm.previewComponent).toBe('VideoViewer')
+  })
 })
