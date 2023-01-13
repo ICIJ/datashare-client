@@ -494,7 +494,7 @@
   },
   "extractingLanguageFormControl": {
     "nullOption": "Automatisch erkennen (Standard)",
-    "ocrWarning": "Es sieht so aus, als ob die optische Zeichenerkennung für diese Sprache nicht installiert ist. Bitte <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">lesen Sie das Benutzerhandbuch</a>, um zu erfahren, wie Sie dies beheben können."
+    "ocrWarning": "Es sieht so aus, als ob die optische Zeichenerkennung für diese Sprache nicht installiert ist. Bitte <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">lesen Sie das Benutzerhandbuch</a>, um zu erfahren, wie Sie dies beheben können."
   },
   "indexing": {
     "title": "Dokumente analysieren",
