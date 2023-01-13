@@ -30,7 +30,7 @@
           </div>
         </div>
         <search-results v-else-if="isReady" :layout="layout" />
-        <content-placeholder v-else class="bg-white p-3 mb-3" v-for="n in 3" :key="n" />
+        <content-placeholder v-for="n in 3" v-else :key="n" class="bg-white p-3 mb-3" />
       </component>
       <div v-if="showDocument" class="search__body__document">
         <search-document-navbar class="search__body__document__navbar" :is-shrinked="isShrinked" />
