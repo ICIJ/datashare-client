@@ -24,14 +24,36 @@ describe('Document', () => {
   describe('check if document is of JSON type', () => {
     it('should be a JSON file', () => {
       const doc = new Document({ _source: { contentType: 'application/json' } })
-
       expect(doc.isJson).toBeTruthy()
     })
 
     it('should NOT be a JSON file', () => {
       const doc = new Document({ _source: { contentType: 'application/pdf' } })
-
       expect(doc.isJson).toBeFalsy()
+    })
+  })
+
+  describe('check if document is of audio type', () => {
+    it('should be an audio file', () => {
+      const doc = new Document({ _source: { contentType: 'audio/mp3' } })
+      expect(doc.isAudio).toBeTruthy()
+    })
+
+    it('should NOT be an audio file', () => {
+      const doc = new Document({ _source: { contentType: 'application/pdf' } })
+      expect(doc.isAudio).toBeFalsy()
+    })
+  })
+
+  describe('check if document is of video type', () => {
+    it('should be an video file', () => {
+      const doc = new Document({ _source: { contentType: 'video/mp4' } })
+      expect(doc.isVideo).toBeTruthy()
+    })
+
+    it('should NOT be an video file', () => {
+      const doc = new Document({ _source: { contentType: 'application/pdf' } })
+      expect(doc.isVideo).toBeFalsy()
     })
   })
 
