@@ -300,6 +300,12 @@ export default class Document extends EsDoc {
   get isImage() {
     return this.contentType.indexOf('image/') === 0
   }
+  get isVideo() {
+    return this.contentType.indexOf('video/') === 0
+  }
+  get isAudio() {
+    return this.contentType.indexOf('audio/') === 0
+  }
   get isJson() {
     return this.contentType.indexOf('application/json') === 0
   }
