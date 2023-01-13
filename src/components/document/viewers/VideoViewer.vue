@@ -70,3 +70,12 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.video-viewer {
+  &__player {
+    // Quick and dirty solution to ensure the video is not taking to much space
+    max-height: calc(100vh - 300px);
+  }
+}
+</style>
