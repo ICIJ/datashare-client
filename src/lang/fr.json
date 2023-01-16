@@ -469,6 +469,16 @@
       "preview": "Aperçu de la page active PDF",
       "thumbnail": "Vignette de la page PDF"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Unsupported audio format"
+      },
+      "video": {
+        "unknownFormat": "Unsupported video format"
+      }
+    },
     "attachments": {
       "heading": "Pas de pièces jointes | Une pièce jointe | {total} pièces jointes",
       "more": "Plus de pièces jointes..."
