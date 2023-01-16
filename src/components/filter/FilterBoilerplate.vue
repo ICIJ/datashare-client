@@ -6,8 +6,7 @@
       'filter--hide-show-more': hideShowMore,
       'filter--hide-search': hideSearch,
       'filter--hide-header': hideHeader,
-      'filter--has-values': hasValues,
-      'filter--dark': dark
+      'filter--has-values': hasValues
     }"
   >
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
@@ -35,6 +34,7 @@
             class="filter__items__search"
             :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"
             :rounded="false"
+            :dark="dark"
             @submit.prevent="openFilterSearch"
           ></search-form-control>
         </slot>
@@ -640,21 +640,6 @@ export default {
 
     &__search {
       margin: 0 0.5rem;
-    }
-
-    .filter--dark &__search {
-      color: $light;
-
-      .search-form-control__input,
-      .search-form-control__addon__submit:last-of-type {
-        background: #000;
-        color: inherit;
-      }
-
-      .search-form-control__input:not(:focus),
-      .search-form-control__addon__submit:last-of-type {
-        border-color: #000;
-      }
     }
 
     & &__display {
