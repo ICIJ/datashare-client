@@ -469,6 +469,16 @@
       "preview": "Preview of the PDF active page",
       "thumbnail": "Thumbnail of the PDF page"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Unsupported audio format"
+      },
+      "video": {
+        "unknownFormat": "Unsupported video format"
+      }
+    },
     "attachments": {
       "heading": "添付なし | １件の添付 | {total} 件の添付",
       "more": "I need context"
