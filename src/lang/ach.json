@@ -469,6 +469,16 @@
       "preview": "crwdns2396:0crwdne2396:0",
       "thumbnail": "crwdns2398:0crwdne2398:0"
     },
+    "player": {
+      "autoplay": "crwdns2657:0crwdne2657:0",
+      "loop": "crwdns2659:0crwdne2659:0",
+      "audio": {
+        "unknownFormat": "crwdns2661:0crwdne2661:0"
+      },
+      "video": {
+        "unknownFormat": "crwdns2663:0crwdne2663:0"
+      }
+    },
     "attachments": {
       "heading": "crwdns1168:0{total}crwdne1168:0",
       "more": "crwdns1170:0crwdne1170:0"
