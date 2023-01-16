@@ -469,6 +469,16 @@
       "preview": "Vorschau der aktiven PDF-Seite",
       "thumbnail": "Vorschaubild der PDF-Seite"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Unsupported audio format"
+      },
+      "video": {
+        "unknownFormat": "Unsupported video format"
+      }
+    },
     "attachments": {
       "heading": "Keine Anhänge | Ein Anhang | {total} Anhänge",
       "more": "Weitere Anhänge..."
