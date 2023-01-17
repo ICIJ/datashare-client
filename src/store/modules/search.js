@@ -46,8 +46,8 @@ export function initialState() {
     layout: isNarrowScreen() ? 'table' : 'list',
     query: '',
     response: EsDocList.none(),
-    reversed: [],
-    contextualized: [],
+    reversedFilters: [],
+    contextualizedFilters: [],
     showFilters: true,
     size: 25,
     sort: settings.defaultSearchSort,
@@ -308,35 +308,35 @@ export const mutations = {
     }
   },
   contextualizeFilter(state, name) {
-    if (state.contextualized.indexOf(name) === -1) {
-      state.contextualized.push(name)
+    if (state.contextualizedFilters.indexOf(name) === -1) {
+      state.contextualizedFilters.push(name)
     }
   },
   decontextualizeFilter(state, name) {
-    Vue.delete(state.contextualized, state.contextualized.indexOf(name))
+    Vue.delete(state.contextualizedFilters, state.contextualizedFilters.indexOf(name))
   },
   toggleContextualizedFilter(state, name) {
-    const i = state.contextualized.indexOf(name)
+    const i = state.contextualizedFilters.indexOf(name)
     if (i === -1) {
-      state.contextualized.push(name)
+      state.contextualizedFilters.push(name)
     } else {
-      Vue.delete(state.contextualized, i)
+      Vue.delete(state.contextualizedFilters, i)
     }
   },
   excludeFilter(state, name) {
-    if (state.reversed.indexOf(name) === -1) {
-      state.reversed.push(name)
+    if (state.reversedFilters.indexOf(name) === -1) {
+      state.reversedFilters.push(name)
     }
   },
   includeFilter(state, name) {
-    Vue.delete(state.reversed, state.reversed.indexOf(name))
+    Vue.delete(state.reversedFilters, state.reversedFilters.indexOf(name))
   },
   toggleFilter(state, name) {
-    const i = state.reversed.indexOf(name)
+    const i = state.reversedFilters.indexOf(name)
     if (i === -1) {
-      state.reversed.push(name)
+      state.reversedFilters.push(name)
     } else if (i > -1) {
-      Vue.delete(state.reversed, i)
+      Vue.delete(state.reversedFilters, i)
     }
   },
   toggleFilters(state, toggler = !state.showFilters) {
