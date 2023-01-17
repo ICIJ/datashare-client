@@ -68,8 +68,8 @@ export default {
         if (values.length < 2) {
           return null
         }
-        const start = min(values)
-        const end = max(values)
+        const start = parseInt(min(values))
+        const end = parseInt(max(values))
         return { start, end }
       },
       set(range) {
