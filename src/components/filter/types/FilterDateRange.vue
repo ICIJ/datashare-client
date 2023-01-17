@@ -10,18 +10,43 @@
     <template #items>
       <div class="m-2">
         <date-picker
+          ref="calendar"
           :key="locale"
           v-model="selectedDate"
-          class="date-picker"
+          class="date-picker d-flex flex-grow-1"
+          :popover="{ visibility: 'focus' }"
           is-range
           is-dark
-          is-expanded
           color="yellow"
-          show-caps
           :model-config="{ type: 'number' }"
           :attributes="attributes"
           :locale="locale"
+          :update-on-input="false"
+          @dayclick="updateFocus"
         >
+          <template #default="{ inputValue, inputEvents }">
+            <div class="filter--date-range__inputs d-inline-flex justify-content-between align-items-center">
+              <input
+                ref="dateStart"
+                :title="$t('filter.dateRange.from', { dateFormat: placeholderMask })"
+                :alt="$t('filter.dateRange.startingDate')"
+                :placeholder="placeholderMask"
+                :value="inputValue.start"
+                class="filter--date-range__inputs__start"
+                v-on="inputEvents.start"
+              />
+              <fa icon="arrow-right" fixed-width />
+              <input
+                ref="dateEnd"
+                :title="$t('filter.dateRange.to', { dateFormat: placeholderMask })"
+                :alt="$t('filter.dateRange.endingDate')"
+                :placeholder="placeholderMask"
+                :value="inputValue.end"
+                class="filter--date-range__inputs__end"
+                v-on="inputEvents.end"
+              />
+            </div>
+          </template>
         </date-picker>
       </div>
     </template>
@@ -46,6 +71,11 @@ export default {
     FilterBoilerplate
   },
   extends: FilterAbstract,
+  data() {
+    return {
+      placeholderMask: ''
+    }
+  },
   computed: {
     attributes() {
       return [
@@ -84,12 +114,41 @@ export default {
         this.refreshRouteAndSearch()
       }
     }
+  },
+  watch: {
+    locale() {
+      this.updatePlaceholder()
+    }
+  },
+  async mounted() {
+    this.updatePlaceholder()
+  },
+  methods: {
+    updatePlaceholder() {
+      if (this.$refs.calendar && this.placeholderMask !== this.$refs.calendar.$locale?.masks?.L) {
+        this.placeholderMask = this.$refs.calendar.$locale?.masks?.L
+      }
+    },
+    async updateFocus(e) {
+      await this.$nextTick()
+      const start = this.$refs.dateStart
+      const end = this.$refs.dateEnd
+      if (start.value?.trim().length && start.value === end.value) {
+        end.focus()
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss">
 .filter.filter--date-range {
+  .filter--date-range__inputs {
+    flex: 0 1 100%;
+    input {
+      width: 45%;
+    }
+  }
   .date-picker {
     --yellow-500: #{$tertiary};
     --yellow-400: #{lighten($tertiary, 5)};
