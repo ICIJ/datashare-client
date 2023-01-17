@@ -64,7 +64,9 @@ export default {
       type: Boolean,
       default: false
     },
-
+    /**
+     * Display the input and button on a dark background
+     */
     dark: {
       type: Boolean,
       default: false
