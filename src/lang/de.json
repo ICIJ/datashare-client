@@ -383,6 +383,12 @@
       "level10": "10"
     },
     "tags": "Tags",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "Datumsbereich auswählen"
   },
   "document": {
