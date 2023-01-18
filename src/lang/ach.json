@@ -383,6 +383,12 @@
       "level10": "crwdns1789:0crwdne1789:0"
     },
     "tags": "crwdns1791:0crwdne1791:0",
+    "dateRange": {
+      "from": "crwdns2665:0{dateFormat}crwdne2665:0",
+      "to": "crwdns2667:0{dateFormat}crwdne2667:0",
+      "startingDate": "crwdns2669:0crwdne2669:0",
+      "endingDate": "crwdns2671:0crwdne2671:0"
+    },
     "selectDateRange": "crwdns1793:0crwdne1793:0"
   },
   "document": {
