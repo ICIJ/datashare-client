@@ -383,6 +383,12 @@
       "level10": "レベル１０"
     },
     "tags": "タグ",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "日付範囲を選択"
   },
   "document": {
