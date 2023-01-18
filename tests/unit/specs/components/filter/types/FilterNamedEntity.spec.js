@@ -327,7 +327,7 @@ describe('FilterNamedEntity.vue', () => {
         )
         .commit()
 
-      wrapper.findComponent({ ref: 'filter' }).setData({ sortBy: '_key', sortByOrder: 'asc' })
+      store.commit('search/sortFilter', { name, sortBy: '_key', sortByOrder: 'asc' })
       await wrapper.vm.root.aggregate({ clearPages: true })
 
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
