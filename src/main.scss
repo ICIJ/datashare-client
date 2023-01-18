@@ -210,3 +210,35 @@ $value in $theme-colors {
     }
   }
 }
+
+.vc-popover-content-wrapper {
+  z-index: $zindex-tooltip !important;
+  .vc-container {
+    --yellow-500: #{$tertiary};
+    --yellow-400: #{lighten($tertiary, 5)};
+    --yellow-300: #{lighten($tertiary, 10)};
+    --yellow-200: #{lighten($tertiary, 15)};
+    --yellow-100: #{lighten($tertiary, 20)};
+    --gray-900: #{$app-sidebar-bg};
+
+    font-size: 0.8rem;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    font-family: $font-family-base;
+
+    .vc-highlights {
+      .vc-day-layer {
+        .vc-highlight-base-start,
+        .vc-highlight-base-middle,
+        .vc-highlight-base-end {
+          background-color: rgba($tertiary, 0.4) !important;
+        }
+      }
+    }
+
+    .vc-day-content:hover {
+      background-color: rgba($tertiary, 0.1) !important;
+    }
+  }
+}

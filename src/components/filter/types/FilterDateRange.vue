@@ -81,9 +81,12 @@ export default {
       return [
         {
           key: 'today',
-          contentStyle: {
-            fontWeight: '700',
-            fontSize: '.9 rem'
+          highlight: {
+            style: {
+              backgroundColor: 'var(--yellow-900)',
+              opacity: '0.3',
+              borderRadius: 'var(--rounded-full)'
+            }
           },
           dates: new Date()
         }
@@ -147,46 +150,6 @@ export default {
     flex: 0 1 100%;
     input {
       width: 45%;
-    }
-  }
-  .date-picker {
-    --yellow-500: #{$tertiary};
-    --yellow-400: #{lighten($tertiary, 5)};
-    --yellow-300: #{lighten($tertiary, 10)};
-    --yellow-200: #{lighten($tertiary, 15)};
-    --yellow-100: #{lighten($tertiary, 20)};
-
-    font-family: $font-family-base;
-    border: 0;
-    font-size: 0.8rem;
-    color: inherit;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-
-    .vc-popover-content-wrapper {
-      z-index: $zindex-tooltip !important;
-    }
-
-    .vc-grid-cell {
-      .vc-highlights {
-        .vc-day-layer {
-          .vc-highlight-base-start,
-          .vc-highlight-base-middle,
-          .vc-highlight-base-end {
-            background-color: rgba($tertiary, 0.4);
-          }
-
-          .vc-rounded-full {
-            background-color: $tertiary;
-            border-color: $tertiary;
-          }
-        }
-      }
-
-      .vc-day-content:hover {
-        background-color: rgba($tertiary, 0.1);
-      }
     }
   }
 }
