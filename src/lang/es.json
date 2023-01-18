@@ -383,6 +383,12 @@
       "level10": "10°"
     },
     "tags": "Etiquetas",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "Selecciona un intervalo de fechas"
   },
   "document": {
