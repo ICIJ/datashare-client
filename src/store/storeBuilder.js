@@ -52,6 +52,7 @@ export function storeBuilder(api) {
           'search.values',
           'search.reversedFilters',
           'search.contextualizedFilters',
+          'search.sortedFilters',
           'search.sort',
           'search.field',
           'search.index',
