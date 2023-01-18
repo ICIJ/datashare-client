@@ -96,7 +96,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
 
-    wrapper.findComponent({ ref: 'filter' }).setData({ sortBy: '_key', sortByOrder: 'asc' })
+    store.commit('search/sortFilter', { name, sortBy: '_key', sortByOrder: 'asc' })
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)

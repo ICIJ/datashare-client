@@ -7,6 +7,7 @@ const { localVue, i18n } = Core.init(createLocalVue()).useAll()
 
 describe('FilterSortByDropdown', () => {
   const propsData = {
+    sort: { sortBy: '_count', sortByOrder: 'desc' },
     sortByOptions: [
       { sortBy: '_count', sortByOrder: 'asc' },
       { sortBy: '_count', sortByOrder: 'desc' },
@@ -20,7 +21,7 @@ describe('FilterSortByDropdown', () => {
     expect(wrapper.findAll('.dropdown-item')).toHaveLength(4)
   })
 
-  it('should use "_count" and "desc" order by default', () => {
+  it('should use "_count" and "desc" order', () => {
     const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     expect(wrapper.vm.sortBy).toBe('_count')
     expect(wrapper.vm.sortByOrder).toBe('desc')
@@ -29,17 +30,17 @@ describe('FilterSortByDropdown', () => {
 
   it('should switch "_count" and "asc" order', async () => {
     const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
-    wrapper.setProps({ sortBy: '_count', sortByOrder: 'asc' })
+    const sort = { sortBy: '_count', sortByOrder: 'asc' }
+    wrapper.setProps({ sort })
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.dropdown-item.active').text()).toBe('Occurrences (increasing)')
   })
 
-  it('should emit update:sortBy and update:sortByOrder when clicking on a new option', async () => {
+  it('should emit update:sort when clicking on a new option', async () => {
     const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     // Item 2 has a different sortBy and and different sortByOrder
     wrapper.findAll('.dropdown-item').at(2).trigger('click')
     await wrapper.vm.$nextTick()
-    expect(wrapper.emitted('update:sortBy')).toHaveLength(1)
-    expect(wrapper.emitted('update:sortByOrder')).toHaveLength(1)
+    expect(wrapper.emitted('update:sort')).toHaveLength(1)
   })
 })

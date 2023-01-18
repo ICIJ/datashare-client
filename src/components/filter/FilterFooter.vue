@@ -1,13 +1,6 @@
 <template>
   <div v-if="!hideFooter" class="filter__footer d-flex align-items-center text-nowrap p-1">
-    <filter-sort-by-dropdown
-      v-if="!hideSort"
-      :sort-by="sortBy"
-      :sort-by-order="sortByOrder"
-      :sort-by-options="sortByOptions"
-      @update:sortBy="$emit('update:sortBy', $event)"
-      @update:sortByOrder="$emit('update:sortByOrder', $event)"
-    />
+    <filter-sort-by-dropdown v-if="!hideSort" v-model="sort" :sort-by-options="sortByOptions" />
     <button
       v-if="shouldDisplayShowMore"
       class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm"
@@ -65,14 +58,6 @@ export default {
       type: Boolean,
       default: false
     },
-    sortBy: {
-      type: String,
-      default: '_count'
-    },
-    sortByOrder: {
-      type: String,
-      default: 'desc'
-    },
     sortByOptions: {
       type: Array,
       default: () => settings.filter.sortByOptions
@@ -110,6 +95,27 @@ export default {
          */
         this.$emit('contextualize-filter', this.filter)
       }
+    },
+    sort: {
+      get() {
+        const sortBy = this.sortBy
+        const sortByOrder = this.sortByOrder
+        return { sortBy, sortByOrder }
+      },
+      set({ sortBy, sortByOrder }) {
+        const name = this.filter.name
+        this.$store.commit('search/sortFilter', { name, sortBy, sortByOrder })
+        /**
+         * Triggered when the filter is "sorted"
+         */
+        this.$emit('sort-filter', this.filter)
+      }
+    },
+    sortBy() {
+      return this.$store.getters['search/filterSortedBy'](this.filter.name)
+    },
+    sortByOrder() {
+      return this.$store.getters['search/filterSortedByOrder'](this.filter.name)
     }
   },
   methods: {

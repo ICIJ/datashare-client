@@ -27,17 +27,13 @@ import settings from '@/utils/settings'
 export default {
   name: 'FilterSortByDropdown',
   model: {
-    prop: 'sortBy',
-    event: 'update:sortBy'
+    prop: 'sort',
+    event: 'update:sort'
   },
   props: {
-    sortBy: {
-      type: String,
-      default: '_count'
-    },
-    sortByOrder: {
-      type: String,
-      default: 'desc'
+    sort: {
+      type: Object,
+      default: () => ({ sortBy: '_count', sortByOrder: 'desc' })
     },
     sortByOptions: {
       type: Array,
@@ -45,6 +41,12 @@ export default {
     }
   },
   computed: {
+    sortBy() {
+      return this.sort.sortBy
+    },
+    sortByOrder() {
+      return this.sort.sortByOrder
+    },
     sortByOptionsWithLabels() {
       return this.sortByOptions.map(({ sortBy, sortByOrder }) => {
         const key = `filter.sortByDropdown.options.${sortBy}.${sortByOrder}`
@@ -54,16 +56,13 @@ export default {
     }
   },
   methods: {
-    selectOption({ sortByFromFilter, sortByOrderFromFilter }) {
-      if (sortByFromFilter !== this.sortBy) {
-        this.$emit('update:sortBy', sortByFromFilter)
-      }
-      if (sortByOrderFromFilter !== this.sortByOrder) {
-        this.$emit('update:sortByOrder', sortByOrderFromFilter)
+    selectOption({ sortByFromFilter: sortBy, sortByOrderFromFilter: sortByOrder }) {
+      if (sortBy !== this.sortBy || sortByOrder !== this.sortByOrder) {
+        this.$emit('update:sort', { sortBy, sortByOrder })
       }
     },
-    isOptionActive({ sortByFromFilter, sortByOrderFromFilter }) {
-      return this.sortBy === sortByFromFilter && this.sortByOrder === sortByOrderFromFilter
+    isOptionActive({ sortByFromFilter: sortBy, sortByOrderFromFilter: sortByOrder }) {
+      return this.sortBy === sortBy && this.sortByOrder === sortByOrder
     }
   }
 }

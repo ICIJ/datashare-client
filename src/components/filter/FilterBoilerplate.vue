@@ -107,10 +107,9 @@
         :hide-show-more="hideShowMore"
         :hide-sort="hideSort"
         :sort-by-options.sync="sortByOptions"
-        :sort-by-order.sync="sortByOrder"
-        :sort-by.sync="sortBy"
         @contextualize-filter="toggleContextualizeFilter"
         @open-filter-search="openFilterSearch"
+        @sort-filter="sortFilter"
         @toggle-filter="toggleFilter"
       />
     </b-collapse>
@@ -235,8 +234,6 @@ export default {
       mounted: false,
       pages: [],
       query: this.modelQuery,
-      sortBy: get(this, 'filter.sortBy', settings.filter.sortBy),
-      sortByOrder: get(this, 'filter.sortByOrder', settings.filter.sortByOrder),
       sortByOptions: get(this, 'filter.sortByOptions', settings.filter.sortByOptions),
       unwatch: () => {}
     }
@@ -351,6 +348,12 @@ export default {
       }
       return options
     },
+    sortBy() {
+      return get(this, 'filter.sortBy', settings.filter.sortBy)
+    },
+    sortByOrder() {
+      return get(this, 'filter.sortByOrder', settings.filter.sortByOrder)
+    },
     order() {
       return { [this.sortBy]: this.sortByOrder }
     },
@@ -396,12 +399,6 @@ export default {
     },
     collapseItems() {
       this.initialize()
-    },
-    sortBy() {
-      this.clearInfiniteScroll()
-    },
-    sortByOrder() {
-      this.clearInfiniteScroll()
     }
   },
   async mounted() {
@@ -541,6 +538,9 @@ export default {
     setValue(item) {
       this.setFilterValue(this.filter, item)
       this.refreshRouteAndSearch()
+    },
+    sortFilter() {
+      this.clearInfiniteScroll()
     },
     toggleFilter() {
       this.refreshRouteAndSearch()
