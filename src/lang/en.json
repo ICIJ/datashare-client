@@ -383,6 +383,12 @@
       "level10": "10th"
     },
     "tags": "Tags",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "Select a date range"
   },
   "document": {
@@ -469,6 +475,16 @@
       "preview": "Preview of the PDF active page",
       "thumbnail": "Thumbnail of the PDF page"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Unsupported audio format"
+      },
+      "video": {
+        "unknownFormat": "Unsupported video format"
+      }
+    },
     "attachments": {
       "heading": "No attachments | One attachment | {total} attachments",
       "more": "More attachments..."
@@ -494,7 +510,7 @@
   },
   "extractingLanguageFormControl": {
     "nullOption": "Detect automatically (default)",
-    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents#options-when-adding-documents\" target=\"_blank\">read the user guide</a> to know how to fix this."
+    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">read the user guide</a> to know how to fix this."
   },
   "indexing": {
     "title": "Analyze your documents",

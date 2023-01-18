@@ -3,19 +3,20 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
-import app from './modules/app'
-import { documentStoreBuilder } from './modules/document'
 import { batchStoreBuilder } from './modules/batchSearch'
 import { documentNotesStoreBuilder } from './modules/documentNotes'
+import { documentStoreBuilder } from './modules/document'
 import { downloadsBuilder } from './modules/downloads'
-import hooks from './modules/hooks'
 import { indexingStoreBuilder } from './modules/indexing'
-import insights from './modules/insights'
-import pipelines from './modules/pipelines'
 import { recommendedStoreBuilder } from './modules/recommended'
 import { searchStoreBuilder } from './modules/search'
 import { settingsStoreBuilder } from './modules/settings'
 import { starredStoreBuilder } from './modules/starred'
+import app from './modules/app'
+import hooks from './modules/hooks'
+import insights from './modules/insights'
+import pipelines from './modules/pipelines'
+import player from './modules/player'
 import treeView from './modules/treeView'
 
 Vue.use(Vuex)
@@ -30,6 +31,7 @@ export function storeBuilder(api) {
       hooks,
       indexing: indexingStoreBuilder(api),
       insights,
+      player,
       pipelines,
       recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api),
@@ -43,6 +45,8 @@ export function storeBuilder(api) {
         paths: [
           'app.redirectAfterLogin',
           'document.showTranslatedContent',
+          'player.autoplay',
+          'player.loop',
           'search.query',
           'search.size',
           'search.values',
@@ -57,7 +61,7 @@ export function storeBuilder(api) {
         ],
         filter(mutation) {
           // Only for some mutations
-          return some(['search/', 'app/', 'doc/'], (k) => mutation.type.indexOf(k) === 0)
+          return some(['search/', 'app/', 'doc/', 'player/'], (k) => mutation.type.indexOf(k) === 0)
         }
       })
     ]

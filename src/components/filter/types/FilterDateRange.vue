@@ -10,18 +10,43 @@
     <template #items>
       <div class="m-2">
         <date-picker
+          ref="calendar"
           :key="locale"
           v-model="selectedDate"
-          class="date-picker"
+          class="date-picker d-flex flex-grow-1"
+          :popover="{ visibility: 'focus' }"
           is-range
           is-dark
-          is-expanded
           color="yellow"
-          show-caps
           :model-config="{ type: 'number' }"
           :attributes="attributes"
           :locale="locale"
+          :update-on-input="false"
+          @dayclick="updateFocus"
         >
+          <template #default="{ inputValue, inputEvents }">
+            <div class="filter--date-range__inputs d-inline-flex justify-content-between align-items-center">
+              <input
+                ref="dateStart"
+                :title="$t('filter.dateRange.from', { dateFormat: placeholderMask })"
+                :alt="$t('filter.dateRange.startingDate')"
+                :placeholder="placeholderMask"
+                :value="inputValue.start"
+                class="filter--date-range__inputs__start"
+                v-on="inputEvents.start"
+              />
+              <fa icon="arrow-right" fixed-width />
+              <input
+                ref="dateEnd"
+                :title="$t('filter.dateRange.to', { dateFormat: placeholderMask })"
+                :alt="$t('filter.dateRange.endingDate')"
+                :placeholder="placeholderMask"
+                :value="inputValue.end"
+                class="filter--date-range__inputs__end"
+                v-on="inputEvents.end"
+              />
+            </div>
+          </template>
         </date-picker>
       </div>
     </template>
@@ -46,14 +71,22 @@ export default {
     FilterBoilerplate
   },
   extends: FilterAbstract,
+  data() {
+    return {
+      placeholderMask: ''
+    }
+  },
   computed: {
     attributes() {
       return [
         {
           key: 'today',
-          contentStyle: {
-            fontWeight: '700',
-            fontSize: '.9 rem'
+          highlight: {
+            style: {
+              backgroundColor: 'var(--yellow-900)',
+              opacity: '0.3',
+              borderRadius: 'var(--rounded-full)'
+            }
           },
           dates: new Date()
         }
@@ -68,8 +101,8 @@ export default {
         if (values.length < 2) {
           return null
         }
-        const start = min(values)
-        const end = max(values)
+        const start = parseInt(min(values))
+        const end = parseInt(max(values))
         return { start, end }
       },
       set(range) {
@@ -84,50 +117,39 @@ export default {
         this.refreshRouteAndSearch()
       }
     }
+  },
+  watch: {
+    locale() {
+      this.updatePlaceholder()
+    }
+  },
+  async mounted() {
+    this.updatePlaceholder()
+  },
+  methods: {
+    updatePlaceholder() {
+      if (this.$refs.calendar && this.placeholderMask !== this.$refs.calendar.$locale?.masks?.L) {
+        this.placeholderMask = this.$refs.calendar.$locale?.masks?.L
+      }
+    },
+    async updateFocus(e) {
+      await this.$nextTick()
+      const start = this.$refs.dateStart
+      const end = this.$refs.dateEnd
+      if (start.value?.trim().length && start.value === end.value) {
+        end.focus()
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss">
 .filter.filter--date-range {
-  .date-picker {
-    --yellow-500: #{$tertiary};
-    --yellow-400: #{lighten($tertiary, 5)};
-    --yellow-300: #{lighten($tertiary, 10)};
-    --yellow-200: #{lighten($tertiary, 15)};
-    --yellow-100: #{lighten($tertiary, 20)};
-
-    font-family: $font-family-base;
-    border: 0;
-    font-size: 0.8rem;
-    color: inherit;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-
-    .vc-popover-content-wrapper {
-      z-index: $zindex-tooltip !important;
-    }
-
-    .vc-grid-cell {
-      .vc-highlights {
-        .vc-day-layer {
-          .vc-highlight-base-start,
-          .vc-highlight-base-middle,
-          .vc-highlight-base-end {
-            background-color: rgba($tertiary, 0.4);
-          }
-
-          .vc-rounded-full {
-            background-color: $tertiary;
-            border-color: $tertiary;
-          }
-        }
-      }
-
-      .vc-day-content:hover {
-        background-color: rgba($tertiary, 0.1);
-      }
+  .filter--date-range__inputs {
+    flex: 0 1 100%;
+    input {
+      width: 45%;
     }
   }
 }

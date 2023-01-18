@@ -30,22 +30,16 @@
           </div>
         </div>
         <search-results v-else-if="isReady" :layout="layout" />
-        <div v-else>
-          <content-placeholder class="bg-white p-3 mb-3" />
-          <content-placeholder class="bg-white p-3 mb-3" />
-          <content-placeholder class="bg-white p-3 mb-3" />
-        </div>
+        <content-placeholder v-for="n in 3" v-else :key="n" class="bg-white p-3 mb-3" />
       </component>
-      <transition name="slide-right">
-        <div v-if="showDocument" class="search__body__document">
-          <search-document-navbar class="search__body__document__navbar" :is-shrinked="isShrinked" />
-          <div class="search__body__document__wrapper">
-            <div id="search__body__document__wrapper" class="overflow-auto text-break" @scroll="handleScroll">
-              <router-view class="search__body__document__wrapper__view" />
-            </div>
+      <div v-if="showDocument" class="search__body__document">
+        <search-document-navbar class="search__body__document__navbar" :is-shrinked="isShrinked" />
+        <div class="search__body__document__wrapper">
+          <div id="search__body__document__wrapper" class="overflow-auto text-break" @scroll="handleScroll">
+            <router-view class="search__body__document__wrapper__view" />
           </div>
         </div>
-      </transition>
+      </div>
       <router-link
         v-show="showDocument"
         class="search__body__backdrop"
@@ -309,17 +303,6 @@ export default {
 
       width: 100%;
       max-width: calc(100% - #{$search-results-list-width} - #{$spacer});
-
-      &.slide-right-enter-active,
-      &.slide-right-leave-active {
-        transition: 0.3s;
-      }
-
-      &.slide-right-enter,
-      &.slide-right-leave-to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
 
       &__wrapper {
         position: relative;

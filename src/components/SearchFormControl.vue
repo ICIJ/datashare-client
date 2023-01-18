@@ -63,6 +63,13 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    /**
+     * Display the input and button on a dark background
+     */
+    dark: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -72,7 +79,8 @@ export default {
         'search-form-control--show-submit-label': this.showSubmitLabel,
         'search-form-control--no-icon': this.noIcon,
         'search-form-control--rounded': this.rounded,
-        'search-form-control--loading': this.loading
+        'search-form-control--loading': this.loading,
+        'search-form-control--dark': this.dark
       }
     }
   }
@@ -168,6 +176,21 @@ export default {
     @include gradient-bg($primary);
     border-color: $primary;
     color: color-yiq($primary);
+  }
+
+  &--dark {
+    color: $light;
+
+    .search-form-control__input,
+    .search-form-control__addon__submit:last-of-type {
+      background: #000;
+      color: inherit;
+    }
+
+    .search-form-control__input:not(:focus),
+    .search-form-control__addon__submit:last-of-type {
+      border-color: #000;
+    }
   }
 }
 </style>

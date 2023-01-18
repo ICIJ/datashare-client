@@ -63,6 +63,10 @@ export default {
           return 'LegacySpreadsheetViewer'
         case this.document.isImage:
           return 'ImageViewer'
+        case this.document.isAudio:
+          return 'AudioViewer'
+        case this.document.isVideo:
+          return 'VideoViewer'
         default:
           return null
       }

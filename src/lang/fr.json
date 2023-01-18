@@ -510,7 +510,7 @@
   },
   "extractingLanguageFormControl": {
     "nullOption": "Détecter automatiquement (par défaut)",
-    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">read the user guide</a> to know how to fix this."
+    "ocrWarning": "Il semble que la reconnaissance optique des caractères ne soit pas installée pour cette langue. Veuillez <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">lire le guide utilisateurice</a> pour savoir comment résoudre ce problème."
   },
   "indexing": {
     "title": "Analyser vos documents",
