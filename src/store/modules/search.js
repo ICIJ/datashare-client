@@ -48,6 +48,7 @@ export function initialState() {
     response: EsDocList.none(),
     reversedFilters: [],
     contextualizedFilters: [],
+    sortedFilters: {},
     showFilters: true,
     size: 25,
     sort: settings.defaultSearchSort,
@@ -102,6 +103,21 @@ export const getters = {
       return !!find(getters.instantiatedFilters, (filter) => {
         return filter.name === name && filter.reverse
       })
+    }
+  },
+  filterSorted(state, getters) {
+    return (name) => {
+      return getters.getFilter({ name })
+    }
+  },
+  filterSortedBy(state, getters) {
+    return (name) => {
+      return getters.filterSorted(name).sortBy
+    }
+  },
+  filterSortedByOrder(state, getters) {
+    return (name) => {
+      return getters.filterSorted(name).sortByOrder
     }
   },
   activeFilters(state, getters) {
@@ -306,6 +322,12 @@ export const mutations = {
         state.filters.splice(position, 0, { type, options })
       }
     }
+  },
+  sortFilter(state, { name, sortBy = '_count', sortByOrder = 'desc' } = {}) {
+    Vue.set(state.sortedFilters, name, { sortBy, sortByOrder })
+  },
+  unsortFilter(state, name) {
+    Vue.delete(state.sortedFilters, name)
   },
   contextualizeFilter(state, name) {
     if (state.contextualizedFilters.indexOf(name) === -1) {
