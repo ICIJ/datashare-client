@@ -26,8 +26,6 @@ export default class FilterText {
     this.order = order
     this.fromElasticSearch = fromElasticSearch
     this.preference = preference
-    this.sortBy = '_count'
-    this.sortByOrder = 'desc'
   }
 
   itemParam(item) {
@@ -131,5 +129,13 @@ export default class FilterText {
 
   get contextualized() {
     return get(this, ['state', 'contextualizedFilters'], []).indexOf(this.name) > -1
+  }
+
+  get sortBy() {
+    return get(this, ['state', 'sortedFilters', this.name, 'sortBy'], '_count')
+  }
+
+  get sortByOrder() {
+    return get(this, ['state', 'sortedFilters', this.name, 'sortByOrder'], 'desc')
   }
 }
