@@ -13,8 +13,6 @@ export default class FilterNamedEntity extends FilterType {
     super(options)
     this.category = options.category || 'PERSON'
     this.component = 'FilterNamedEntity'
-    this.sortBy = '_count'
-    this.sortByOrder = 'desc'
     this.sortByOptions = [
       { sortBy: '_count', sortByOrder: 'asc' },
       { sortBy: '_count', sortByOrder: 'desc' },
