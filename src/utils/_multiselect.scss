@@ -1,0 +1,115 @@
+@import url('~node_modules/vue-multiselect/dist/vue-multiselect.min.css');
+
+.multiselect {
+
+  &.multiselect--md {
+    min-height: 0;
+
+    .multiselect__tags {
+      font-size: 1rem;
+      min-height: 0;
+      padding-top: 7px;
+    }
+
+    .multiselect__single,
+    .multiselect__placeholder {
+      padding-top: 0;
+      margin: 0;
+      font-size: 1rem;
+      min-height: 25px;
+    }
+
+    .multiselect__select {
+      height: 33px;
+    }
+
+    .multiselect__input {
+      margin-top: 0px;
+      margin-bottom: 5px;
+    }
+  }
+
+  &, &__input, &__single, &__input::placeholder {
+    font-size: 1rem;
+  }
+
+  &--disabled.multiselect &__current,
+  &--disabled.multiselect &__select {
+    background: transparent;
+  }
+
+  &--active .multiselect__tags {
+    background-color: $input-focus-bg;
+    border: 1px solid $input-focus-border-color;
+    border-radius: $input-border-radius;
+  }
+
+  & &__placeholder, &__input::placeholder {
+    color: $input-placeholder-color;
+    opacity: 1;
+    margin-bottom: 11px;
+  }
+
+  & &__input {
+    margin-top: 3px;
+    margin-bottom: 11px;
+    padding-left: 0;
+  }
+
+  & .multiselect__content {
+    max-width: 100%;
+  }
+
+  & .multiselect__option {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+    &--selected,
+    &--selected.multiselect__option--highlight,
+    &--selected.multiselect__option--highlight:after {
+      background: #f3f3f3;
+      color: $body-color;
+    }
+
+    &--selected:before {
+      content: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTMiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDEzIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xMS4zMzM1IDFMNC40NTg1IDcuODc1TDEuMzMzNSA0Ljc1IiBzdHJva2U9IiMwNzExMTEiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==');
+      margin-right: $spacer-xs;
+    }
+  }
+
+  & .multiselect__tag {
+    background: $primary;
+    border-radius: $btn-border-radius;
+    padding-top: $btn-padding-y;
+    padding-bottom: $btn-padding-y;
+
+    &-icon {
+
+      &:hover {
+        background: darken($primary, 10%);
+      }
+
+      &:after {
+        color: inherit;
+      }
+    }
+  }
+
+  &__option {
+    white-space: normal;
+  }
+
+  .multiselect__option--highlight {
+    font-weight: bold;
+
+    &, &:after {
+      color: $body-color;
+      background: $warning;
+    }
+
+    &:after {
+      font-weight: normal;
+    }
+  }
+}

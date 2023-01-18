@@ -36,17 +36,14 @@
             <b-form-textarea v-model="description" rows="2" max-rows="6"></b-form-textarea>
           </b-form-group>
           <b-form-group v-if="isServer" label-size="sm" :label="`${$t('batchSearch.projects')} *`">
-            <div class="batch-search-form__projects container p-0">
-              <b-form-checkbox-group v-model="projects" stacked>
-                <b-form-checkbox
-                  v-for="project in availableProjects"
-                  :key="project"
-                  :value="project"
-                  :disabled="isProjectDisabled(project)"
-                >
-                  {{ project | startCase }}
-                </b-form-checkbox>
-              </b-form-checkbox-group>
+            <div class="batch-search-form__projects">
+              <multiselect
+                v-model="projects"
+                :allow-empty="false"
+                :multiple="true"
+                :searchable="true"
+                :options="availableProjects"
+              />
             </div>
           </b-form-group>
           <b-form-group
@@ -196,6 +193,7 @@ import elasticsearch from '@/api/elasticsearch'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
+import Multiselect from 'vue-multiselect'
 
 /**
  * A form to create a new batch search.
@@ -203,7 +201,8 @@ import types from '@/utils/types.json'
 export default {
   name: 'BatchSearchForm',
   components: {
-    TreeView
+    TreeView,
+    Multiselect
   },
   filters: {
     startCase
@@ -444,9 +443,6 @@ export default {
       } else {
         this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
       }
-    },
-    isProjectDisabled(project) {
-      return this.projects.length === 1 && this.projects[0] === project
     }
   }
 }
@@ -460,11 +456,6 @@ export default {
 
   &__advanced-filters {
     cursor: pointer;
-  }
-
-  .container {
-    max-height: 5vw;
-    overflow-y: scroll;
   }
 }
 </style>
