@@ -27,7 +27,11 @@ describe('BatchSearchForm.vue', () => {
   beforeAll(() => Murmur.config.merge({ groups_by_applications: { datashare: [project] }, dataDir: '/root/project' }))
 
   beforeEach(() => {
+    Murmur.config.merge({ mode: 'LOCAL' })
     wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
+  })
+  afterEach(() => {
+    actions.onSubmit.mockReset()
   })
 
   afterAll(() => jest.unmock('lodash/throttle'))
@@ -40,13 +44,85 @@ describe('BatchSearchForm.vue', () => {
     expect(actions.onSubmit).toBeCalled()
     expect(wrapper.vm.resetForm).toBeCalled()
   })
+  describe('on LOCAL', () => {
+    it('should display a form with 7 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes and paths on LOCAL', () => {
+      expect(wrapper.find('.batch-search-form__name').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__fileLabel').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__description').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__phraseMatch').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__fuzziness').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__fileTypes').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__path').exists()).toBe(true)
+    })
+    it('should not display "Published" button', () => {
+      expect(wrapper.find('.batch-search-form__published').exists()).toBe(false)
+    })
+    it('should not display a project selector', () => {
+      expect(wrapper.find('.batch-search-form__projects').exists()).toBe(false)
+    })
+  })
 
-  it('should display a form with 8 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes, paths and published', () => {
-    expect(wrapper.findAll('.card-body b-form-group-stub')).toHaveLength(7)
-    expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(3)
-    expect(wrapper.findAll('.card-body b-form-file-stub')).toHaveLength(1)
-    expect(wrapper.findAll('.card-body b-form-textarea-stub')).toHaveLength(1)
-    expect(wrapper.findAll('.card-body b-form-checkbox-stub')).toHaveLength(1)
+  describe('on SERVER', () => {
+    beforeEach(() => {
+      Murmur.config.merge({ mode: 'SERVER' })
+      wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
+    })
+
+    it('should display "Published" button', () => {
+      expect(wrapper.find('.batch-search-form__published').exists()).toBe(true)
+    })
+    it('should display a project selector', () => {
+      expect(wrapper.find('.batch-search-form__projects').exists()).toBe(true)
+    })
+
+    describe('On project change', () => {
+      it('should reset fileType and path', async () => {
+        await wrapper.setData({ fileType: 'fileTypeTest' })
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.fileType).toBe('')
+      })
+
+      it('should reset fileTypes and paths', async () => {
+        await wrapper.setData({ fileTypes: ['fileType_01', 'fileType_02'] })
+        await wrapper.setData({ paths: ['path_01', 'path_02'] })
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.fileTypes).toEqual([])
+        expect(wrapper.vm.paths).toEqual([])
+      })
+
+      it('should reset allFileTypes', async () => {
+        await wrapper.setData({ allFileTypes: ['fileType_01', 'fileType_02'] })
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.allFileTypes).toEqual([])
+      })
+
+      it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
+        jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
+      })
+
+      it('should call retrieveFileTypes', async () => {
+        jest.spyOn(wrapper.vm, 'retrieveFileTypes')
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.retrieveFileTypes).toBeCalled()
+      })
+
+      it('should have at least one project to submit the form', async () => {
+        expect(wrapper.vm.availableProjects).toHaveLength(1)
+        await wrapper.vm.onSubmit()
+        expect(actions.onSubmit).toBeCalledTimes(1)
+        await wrapper.vm.$set(wrapper.vm, 'projects', [])
+        expect(wrapper.vm.projects).toHaveLength(0)
+        await wrapper.vm.onSubmit()
+        expect(actions.onSubmit).toBeCalledTimes(1)
+      })
+    })
   })
 
   it('should reset the form', () => {
@@ -71,10 +147,10 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.fuzziness).toBe(0)
     expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.paths).toEqual([])
-    expect(wrapper.vm.phraseMatch).toBeTruthy()
+    expect(wrapper.vm.phraseMatch).toBe(true)
     expect(wrapper.vm.projects).toContainEqual(project)
-    expect(wrapper.vm.published).toBeTruthy()
-    expect(wrapper.vm.showAdvancedFilters).toBeFalsy()
+    expect(wrapper.vm.published).toBe(true)
+    expect(wrapper.vm.showAdvancedFilters).toBe(false)
   })
 
   it('should reset the fuzziness to 0 on phraseMatch change', async () => {
@@ -84,20 +160,9 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.fuzziness).toBe(0)
   })
 
-  it('should not display "Published" button on local', () => {
-    expect(wrapper.find('.card-footer b-form-checkbox-stub').exists()).toBeFalsy()
-  })
-
-  it('should display "Published" button on server', () => {
-    Murmur.config.merge({ mode: 'SERVER' })
-    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
-
-    expect(wrapper.find('.card .published').exists()).toBeTruthy()
-  })
-
   describe('FileTypes suggestions', () => {
     it('should display suggestions', () => {
-      expect(wrapper.find('selectable-dropdown-stub').element).toBeTruthy()
+      expect(wrapper.find('.batch-search-form__fileTypes__suggestions').exists()).toBe(true)
     })
 
     it('should hide suggestions', () => {
@@ -181,45 +246,6 @@ describe('BatchSearchForm.vue', () => {
       const tree = wrapper.vm.buildTreeFromPaths(['/root/project/folder_01'])
 
       expect(tree).toEqual(['folder_01'])
-    })
-  })
-
-  describe('On project change', () => {
-    it('should reset fileType and path', async () => {
-      await wrapper.setData({ fileType: 'fileTypeTest' })
-      await wrapper.setData({ projects: [anotherProject] })
-
-      expect(wrapper.vm.fileType).toBe('')
-    })
-
-    it('should reset fileTypes and paths', async () => {
-      await wrapper.setData({ fileTypes: ['fileType_01', 'fileType_02'] })
-      await wrapper.setData({ paths: ['path_01', 'path_02'] })
-      await wrapper.setData({ projects: [anotherProject] })
-
-      expect(wrapper.vm.fileTypes).toEqual([])
-      expect(wrapper.vm.paths).toEqual([])
-    })
-
-    it('should reset allFileTypes', async () => {
-      await wrapper.setData({ allFileTypes: ['fileType_01', 'fileType_02'] })
-      await wrapper.setData({ projects: [anotherProject] })
-
-      expect(wrapper.vm.allFileTypes).toEqual([])
-    })
-
-    it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
-      jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
-      await wrapper.setData({ projects: [anotherProject] })
-
-      expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
-    })
-
-    it('should call retrieveFileTypes', async () => {
-      jest.spyOn(wrapper.vm, 'retrieveFileTypes')
-      await wrapper.setData({ projects: [anotherProject] })
-
-      expect(wrapper.vm.retrieveFileTypes).toBeCalled()
     })
   })
 

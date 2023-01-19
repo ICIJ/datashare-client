@@ -4,21 +4,25 @@
       <h5 v-if="!hideTitle" class="py-2 h6 text-uppercase text-muted">
         {{ $t('batchSearch.heading') }}
       </h5>
-      <div class="card w-100" :class="{ 'border-0': hideBorder }">
+      <div :class="{ 'border-0': hideBorder }" class="card w-100">
         <div class="card-body pb-1">
-          <b-form-group label-size="sm" :label="`${$t('batchSearch.name')} *`">
-            <b-form-input v-model="name" type="text" required></b-form-input>
+          <b-form-group :label="`${$t('batchSearch.name')} *`" class="batch-search-form__name" label-size="sm">
+            <b-form-input v-model="name" required type="text"></b-form-input>
           </b-form-group>
-          <b-form-group label-size="sm" class="mb-0" :label="`${$t('batchSearch.fileLabel')} *`">
+          <b-form-group
+            :label="`${$t('batchSearch.fileLabel')} *`"
+            class="batch-search-form__fileLabel mb-0"
+            label-size="sm"
+          >
             <template slot="description">
               <div v-html="$t('batchSearch.fileDescription')"></div>
             </template>
             <b-form-file
               v-model="csvFile"
               :placeholder="$t('batchSearch.filePlaceholder')"
+              :state="Boolean(csvFile)"
               accept=".csv"
               class="text-truncate"
-              :state="Boolean(csvFile)"
               no-drop
               required
             ></b-form-file>
@@ -32,25 +36,28 @@
               {{ $t('batchSearch.learnMore') }}
             </a>
           </p>
-          <b-form-group label-size="sm" :label="$t('batchSearch.description')">
-            <b-form-textarea v-model="description" rows="2" max-rows="6"></b-form-textarea>
-          </b-form-group>
-          <b-form-group v-if="isServer" label-size="sm" :label="`${$t('batchSearch.projects')} *`">
-            <div class="batch-search-form__projects">
-              <multiselect
-                v-model="projects"
-                :allow-empty="false"
-                :multiple="true"
-                :searchable="true"
-                :options="availableProjects"
-              />
-            </div>
+          <b-form-group :label="$t('batchSearch.description')" label-size="sm" class="batch-search-form__description">
+            <b-form-textarea v-model="description" max-rows="6" rows="2"></b-form-textarea>
           </b-form-group>
           <b-form-group
             v-if="isServer"
+            :label="`${$t('batchSearch.projects')} *`"
+            class="batch-search-form__projects"
             label-size="sm"
+          >
+            <multiselect
+              v-model="projects"
+              :allow-empty="false"
+              :multiple="true"
+              :options="availableProjects"
+              :searchable="true"
+            />
+          </b-form-group>
+          <b-form-group
+            v-if="isServer"
             :description="$t('batchSearch.publishedDescription')"
-            class="published"
+            class="batch-search-form__published"
+            label-size="sm"
           >
             <b-form-checkbox v-model="published" switch>
               {{ $t('batchSearch.published') }}
@@ -63,49 +70,55 @@
             </span>
           </div>
           <b-collapse id="advanced-filters" v-model="showAdvancedFilters" class="pt-2">
-            <b-form-group label-size="sm" :description="phraseMatchDescription">
+            <b-form-group :description="phraseMatchDescription" class="batch-search-form__phraseMatch" label-size="sm">
               <b-form-checkbox v-model="phraseMatch" switch>
                 {{ $t('batchSearch.phraseMatch') }}
               </b-form-checkbox>
             </b-form-group>
-            <b-form-group label-size="sm" class="mb-0" :label="fuzzinessLabel" :description="fuzzinessDescription">
-              <b-form-input v-model="fuzziness" type="number" min="0" :max="maxFuzziness"></b-form-input>
+            <b-form-group
+              :description="fuzzinessDescription"
+              :label="fuzzinessLabel"
+              class="batch-search-form__fuzziness mb-0"
+              label-size="sm"
+            >
+              <b-form-input v-model="fuzziness" :max="maxFuzziness" min="0" type="number"></b-form-input>
             </b-form-group>
             <p class="help small">
-              <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
+              <a :href="fuzzinessLearnMore" class="text-muted" target="_blank">
                 {{ $t('batchSearch.learnMore') }}
               </a>
             </p>
-            <b-form-group label-size="sm" :label="$t('batchSearch.fileTypes')">
-              <b-overlay :show="$wait.is('load all file types')" rounded opacity="0.6" spinner-small>
+            <b-form-group :label="$t('batchSearch.fileTypes')" label-size="sm" class="batch-search-form__fileTypes">
+              <b-overlay :show="$wait.is('load all file types')" opacity="0.6" rounded spinner-small>
                 <b-form-input
                   ref="fileType"
                   v-model="fileType"
-                  autocomplete="off"
                   :disabled="$wait.is('load all file types')"
+                  autocomplete="off"
                   @input="searchFileTypes"
                   @keydown.enter.prevent="searchFileType"
                 ></b-form-input>
               </b-overlay>
               <selectable-dropdown
                 ref="suggestionFileTypes"
+                class="batch-search-form__fileTypes__suggestions"
                 :hide="!suggestionFileTypes.length"
                 :items="suggestionFileTypes"
+                @deactivate="hideSuggestionsFileTypes"
                 @input="selectFileType"
                 @click.native="searchFileType"
-                @deactivate="hideSuggestionsFileTypes"
               >
                 <template #item-label="{ item }">
                   <div :id="item.mime">
                     {{ item.label }}
                   </div>
-                  <b-tooltip placement="right" :target="item.mime" :title="item.label"></b-tooltip>
+                  <b-tooltip :target="item.mime" :title="item.label" placement="right"></b-tooltip>
                 </template>
               </selectable-dropdown>
               <b-badge
                 v-for="(oneFileType, index) in fileTypes"
                 :key="oneFileType.mime"
-                class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
+                class="mt-2 mr-2 pl-1 batch-search-form__cursor"
                 pill
                 variant="warning"
                 @click.prevent="deleteFileType(index)"
@@ -114,29 +127,29 @@
                 {{ oneFileType.label }}
               </b-badge>
             </b-form-group>
-            <b-form-group label-size="sm" :label="$t('batchSearch.path')">
+            <b-form-group :label="$t('batchSearch.path')" label-size="sm" class="batch-search-form__path">
               <div v-b-modal.modal-select-path class="mr-3 py-1 px-2 border btn btn-link">
                 {{ $t('batchSearch.selectFolder') }}
               </div>
               <b-modal
                 id="modal-select-path"
+                :cancel-title="$t('global.cancel')"
+                :ok-title="$t('batchSearch.selectFolder')"
                 body-class="p-0 border-bottom"
                 cancel-variant="outline-primary"
-                :cancel-title="$t('global.cancel')"
                 hide-header
                 lazy
-                :ok-title="$t('batchSearch.selectFolder')"
                 scrollable
                 size="lg"
                 @ok="setPaths()"
               >
                 <tree-view
                   v-model="path"
-                  count
-                  size
                   :projects="projects"
-                  selectable
                   :selected-paths="selectedPaths"
+                  count
+                  selectable
+                  size
                   @checked="selectedPaths = $event"
                 ></tree-view>
               </b-modal>
@@ -144,7 +157,7 @@
                 <b-badge
                   v-for="(onePath, index) in paths"
                   :key="onePath"
-                  class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
+                  class="mt-2 mr-2 pl-1 batch-search-form__cursor"
                   pill
                   variant="warning"
                   @click.prevent="deletePath(index)"
@@ -273,7 +286,11 @@ export default {
     },
     fuse() {
       const keys = ['extensions', 'label', 'mime']
-      const options = { distance: 100, keys, shouldSort: true }
+      const options = {
+        distance: 100,
+        keys,
+        shouldSort: true
+      }
       return new Fuse(this.allFileTypes, options)
     }
   },
@@ -308,8 +325,8 @@ export default {
     },
     parseCsvQueries(queries) {
       const csvData = []
-      const lbreak = queries.split('\n')
-      lbreak.forEach((res) => {
+      const lBreak = queries.split('\n')
+      lBreak.forEach((res) => {
         csvData.push(res.split(','))
       })
       return csvData
@@ -346,7 +363,11 @@ export default {
           each(aggTypes, (aggType) => {
             const extensions = has(types, aggType) ? types[aggType].extensions : []
             const label = has(types, aggType) ? types[aggType].label : aggType
-            this.allFileTypes.push({ extensions, label, mime: aggType })
+            this.allFileTypes.push({
+              extensions,
+              label,
+              mime: aggType
+            })
           })
         } catch (e) {
           this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveFileTypes', this.projects.length), {
@@ -379,6 +400,7 @@ export default {
     },
     async onSubmit() {
       try {
+        if (!this.projects?.length) return
         await this.$store.dispatch('batchSearch/onSubmit', {
           name: this.name,
           csvFile: this.csvFile,
@@ -394,12 +416,18 @@ export default {
         if (this.$config.is('manageDocuments')) {
           try {
             await this.$store.dispatch('indexing/runBatchSearch')
-            this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
+            this.$root.$bvToast.toast(this.$t('batchSearch.success'), {
+              noCloseButton: true,
+              variant: 'success'
+            })
           } catch (_) {
             this.manageError(_.response.status, true)
           }
         } else {
-          this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
+          this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), {
+            noCloseButton: true,
+            variant: 'success'
+          })
         }
       } catch (_) {
         this.manageError(_.response.status, false)
@@ -420,7 +448,10 @@ export default {
           .size(0)
           .agg('composite', { sources: [{ field: { terms: { field } } }] }, options, name)
           .build()
-        searchResult = await elasticsearch.search({ index: this.projects.join(','), body })
+        searchResult = await elasticsearch.search({
+          index: this.projects.join(','),
+          body
+        })
         after = get(searchResult, ['aggregations', name, 'after_key'], null)
         responses = get(searchResult, ['aggregations', name, 'buckets'], [])
         result = concat(result, map(responses, 'key.field'))
@@ -446,9 +477,15 @@ export default {
           variant: 'danger'
         })
       } else if (manageDocuments) {
-        this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
+        this.$root.$bvToast.toast(this.$t('batchSearch.error'), {
+          noCloseButton: true,
+          variant: 'danger'
+        })
       } else {
-        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), {
+          noCloseButton: true,
+          variant: 'danger'
+        })
       }
     }
   }
@@ -461,7 +498,7 @@ export default {
     line-height: 1.2;
   }
 
-  &__advanced-filters {
+  &__cursor {
     cursor: pointer;
   }
 }
