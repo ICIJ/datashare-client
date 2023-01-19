@@ -28,7 +28,7 @@ export default {
     registerPoll({ fn, timeout = 2000, immediate = false } = {}) {
       // Scheddule the pool first to get its id
       const id = this.schedulePool({ fn, timeout, immediate })
-      // And add it to the list to retreive it later
+      // And add it to the list to retrieve it later
       this.registeredPolls.push({ fn, id })
     },
     registerPollOnce({ fn, ...rest } = {}) {

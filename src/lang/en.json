@@ -596,7 +596,7 @@
   },
   "userHistory": {
     "heading": "Your history",
-    "description": "On this page you can retreive the documents you opened and the searches you saved.",
+    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
     "empty": "Your history is empty",
     "clear": "Clear history",
     "document": "Documents",
@@ -611,7 +611,7 @@
     "notDeleted": "The search has not been deleted."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tasks",
