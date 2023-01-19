@@ -341,12 +341,19 @@ export default {
     async retrieveFileTypes() {
       if (this.showAdvancedFilters && isEmpty(this.allFileTypes)) {
         this.$wait.start('load all file types')
-        const aggTypes = await this.aggregate('contentType', 'contentType')
-        each(aggTypes, (aggType) => {
-          const extensions = has(types, aggType) ? types[aggType].extensions : []
-          const label = has(types, aggType) ? types[aggType].label : aggType
-          this.allFileTypes.push({ extensions, label, mime: aggType })
-        })
+        try {
+          const aggTypes = await this.aggregate('contentType', 'contentType')
+          each(aggTypes, (aggType) => {
+            const extensions = has(types, aggType) ? types[aggType].extensions : []
+            const label = has(types, aggType) ? types[aggType].label : aggType
+            this.allFileTypes.push({ extensions, label, mime: aggType })
+          })
+        } catch (e) {
+          this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveFileTypes', this.projects.length), {
+            noCloseButton: true,
+            variant: 'danger'
+          })
+        }
         this.$wait.end('load all file types')
       }
     },
