@@ -65,6 +65,6 @@ describe('WidgetTreeMap.vue', () => {
   })
 
   it('should display a link to a datashare search on the current path', async () => {
-    expect(wrapper.find('.widget__content__search').exists).toBeTruthy()
+    expect(wrapper.find('.widget__content__search').exists()).toBe(true)
   })
 })
