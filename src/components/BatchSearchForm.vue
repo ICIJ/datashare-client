@@ -308,14 +308,6 @@ export default {
     this.$set(this, 'projects', [this.availableProjects[0]] || [])
   },
   methods: {
-    parseCsvQueries(queries) {
-      const csvData = []
-      const lBreak = queries.split('\n')
-      lBreak.forEach((res) => {
-        csvData.push(res.split(','))
-      })
-      return csvData
-    },
     selectFileType(fileType = null) {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },
