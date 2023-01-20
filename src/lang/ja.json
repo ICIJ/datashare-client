@@ -595,7 +595,7 @@
   },
   "userHistory": {
     "heading": "あなたの履歴",
-    "description": "On this page you can retreive the documents you opened and the searches you saved.",
+    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
     "empty": "履歴がありません",
     "clear": "履歴のクリア",
     "document": "Documents",
@@ -610,7 +610,7 @@
     "notDeleted": "The search has not been deleted."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tasks",
@@ -663,6 +663,7 @@
     "errorTitle": "Error in query",
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
+    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Search in batch searches...",
     "status": {
       "failure": "failure",
