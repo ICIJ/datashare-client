@@ -308,15 +308,6 @@ export default {
     this.$set(this, 'projects', [this.availableProjects[0]] || [])
   },
   methods: {
-    verifyQueryLimit(csv) {
-      let csvQueries
-      const reader = new FileReader()
-      reader.readAsBinaryString(csv)
-      reader.onload = (event) => {
-        csvQueries = this.parseCsvQueries(event.target.result)
-        return csvQueries.length >= 3
-      }
-    },
     parseCsvQueries(queries) {
       const csvData = []
       const lBreak = queries.split('\n')
