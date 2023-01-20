@@ -17,7 +17,7 @@
       @sort-changed="sortChanged"
     >
       <template #table-busy>
-        <content-placeholder v-for="index in 3" slot="waiting" :key="index" class="p-3" :rows="placeholderRows" />
+        <content-placeholder v-for="index in 3" :key="index" class="p-3" :rows="placeholderRows" />
       </template>
       <template #empty>
         <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage" />
