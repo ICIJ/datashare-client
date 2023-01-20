@@ -510,7 +510,7 @@
   },
   "extractingLanguageFormControl": {
     "nullOption": "Automatisch erkennen (Standard)",
-    "ocrWarning": "Es sieht so aus, als ob die optische Zeichenerkennung für diese Sprache nicht installiert ist. Bitte <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">lesen Sie das Benutzerhandbuch</a>, um zu erfahren, wie Sie dies beheben können."
+    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">read the user guide</a> to know how to fix this."
   },
   "indexing": {
     "title": "Dokumente analysieren",
@@ -595,7 +595,7 @@
   },
   "userHistory": {
     "heading": "Ihr Verlauf",
-    "description": "On this page you can retreive the documents you opened and the searches you saved.",
+    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
     "empty": "Ihr Verlauf ist leer",
     "clear": "Verlauf löschen",
     "document": "Dokumente",
@@ -610,7 +610,7 @@
     "notDeleted": "The search has not been deleted."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Aufgaben",
@@ -663,6 +663,7 @@
     "errorTitle": "Fehler in der Abfrage",
     "errorQuery": "Sie haben einen Fehler auf Ihrer Abfrage <code>%{query}</code>.",
     "errorMessage": "Das System ist auf ein Problem gestoßen. Es kann ein Syntaxfehler in der CSV-Datei sein oder ein anderer Fehler. Bitte lesen Sie <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">auf dieser Hilfeseite</a>, auf der die häufigsten Fehler beschrieben werden.",
+    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Suche in Batch-Suchen...",
     "status": {
       "failure": "failure",
