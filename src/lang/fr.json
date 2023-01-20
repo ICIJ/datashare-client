@@ -510,7 +510,7 @@
   },
   "extractingLanguageFormControl": {
     "nullOption": "Détecter automatiquement (par défaut)",
-    "ocrWarning": "Il semble que la reconnaissance optique des caractères ne soit pas installée pour cette langue. Veuillez <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">lire le guide utilisateurice</a> pour savoir comment résoudre ce problème."
+    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">read the user guide</a> to know how to fix this."
   },
   "indexing": {
     "title": "Analyser vos documents",
@@ -595,7 +595,7 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "Sur cette page, vous retrouvez les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
+    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique",
     "document": "Documents",
@@ -610,7 +610,7 @@
     "notDeleted": "La recherche n'a pas été supprimée."
   },
   "userHistorySaveSearchForm": {
-    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches </a>."
+    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tâches",
@@ -663,6 +663,7 @@
     "errorTitle": "Erreur dans la requête",
     "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
     "errorMessage": "Le système a rencontré une erreur. Il peut s'agir d'une erreur de syntaxe que vous avez écrite dans votre CSV ou d'une autre erreur. Veuillez vous référer à <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">cette page d'aide</a> où les erreurs les plus courantes sont expliquées.",
+    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Rechercher dans les recherches en lot...",
     "status": {
       "failure": "échec",
