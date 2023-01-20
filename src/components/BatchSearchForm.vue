@@ -7,7 +7,7 @@
       <div :class="{ 'border-0': hideBorder }" class="card w-100">
         <div class="card-body pb-1">
           <b-form-group :label="`${$t('batchSearch.name')} *`" class="batch-search-form__name" label-size="sm">
-            <b-form-input v-model="name" required type="text"></b-form-input>
+            <b-form-input v-model="name" required type="text" trim></b-form-input>
           </b-form-group>
           <b-form-group
             :label="`${$t('batchSearch.fileLabel')} *`"
@@ -20,7 +20,7 @@
             <b-form-file
               v-model="csvFile"
               :placeholder="$t('batchSearch.filePlaceholder')"
-              :state="Boolean(csvFile)"
+              :state="!!csvFile"
               accept=".csv"
               class="text-truncate"
               no-drop
@@ -37,7 +37,7 @@
             </a>
           </p>
           <b-form-group :label="$t('batchSearch.description')" label-size="sm" class="batch-search-form__description">
-            <b-form-textarea v-model="description" max-rows="6" rows="2"></b-form-textarea>
+            <b-form-textarea v-model="description" max-rows="6" rows="2" trim></b-form-textarea>
           </b-form-group>
           <b-form-group
             v-if="isServer"
@@ -45,13 +45,7 @@
             class="batch-search-form__projects"
             label-size="sm"
           >
-            <multiselect
-              v-model="projects"
-              :allow-empty="false"
-              :multiple="true"
-              :options="availableProjects"
-              :searchable="true"
-            />
+            <multiselect v-model="projects" :allow-empty="false" :options="availableProjects" multiple />
           </b-form-group>
           <b-form-group
             v-if="isServer"
@@ -370,7 +364,7 @@ export default {
             })
           })
         } catch (e) {
-          this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveFileTypes', this.projects.length), {
+          this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveFileTypes', this.projects?.length), {
             noCloseButton: true,
             variant: 'danger'
           })
@@ -400,7 +394,6 @@ export default {
     },
     async onSubmit() {
       try {
-        if (!this.projects?.length) return
         await this.$store.dispatch('batchSearch/onSubmit', {
           name: this.name,
           csvFile: this.csvFile,

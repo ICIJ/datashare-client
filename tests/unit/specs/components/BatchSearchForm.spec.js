@@ -112,16 +112,6 @@ describe('BatchSearchForm.vue', () => {
 
         expect(wrapper.vm.retrieveFileTypes).toBeCalled()
       })
-
-      it('should have at least one project to submit the form', async () => {
-        expect(wrapper.vm.availableProjects).toHaveLength(1)
-        await wrapper.vm.onSubmit()
-        expect(actions.onSubmit).toBeCalledTimes(1)
-        await wrapper.vm.$set(wrapper.vm, 'projects', [])
-        expect(wrapper.vm.projects).toHaveLength(0)
-        await wrapper.vm.onSubmit()
-        expect(actions.onSubmit).toBeCalledTimes(1)
-      })
     })
   })
 
