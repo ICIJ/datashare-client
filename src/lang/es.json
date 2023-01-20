@@ -595,7 +595,7 @@
   },
   "userHistory": {
     "heading": "Tu historial de navegación",
-    "description": "En esta página puedes recuperar los archivos que has abierto y las búsquedas que has guardado.",
+    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
     "empty": "Tu historia está vacía",
     "clear": "Borrar historia",
     "document": "Archivos",
@@ -610,7 +610,7 @@
     "notDeleted": "La búsqueda ha sido eliminada."
   },
   "userHistorySaveSearchForm": {
-    "description": "Puede recuperar todas las búsquedas guardadas en <a href=\"{searchHistoryPath}\">Historial › Búsquedas</a>."
+    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tareas",
@@ -663,6 +663,7 @@
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
+    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Buscar en las búsquedas masivas...",
     "status": {
       "failure": "failure",
