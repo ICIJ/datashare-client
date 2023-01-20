@@ -595,7 +595,7 @@
   },
   "userHistory": {
     "heading": "crwdns998:0crwdne998:0",
-    "description": "crwdns2504:0crwdne2504:0",
+    "description": "crwdns2673:0crwdne2673:0",
     "empty": "crwdns1002:0crwdne1002:0",
     "clear": "crwdns1004:0crwdne1004:0",
     "document": "crwdns2506:0crwdne2506:0",
@@ -610,7 +610,7 @@
     "notDeleted": "crwdns2530:0crwdne2530:0"
   },
   "userHistorySaveSearchForm": {
-    "description": "crwdns2510:0{searchHistoryPath}crwdne2510:0"
+    "description": "crwdns2675:0{searchHistoryPath}crwdne2675:0"
   },
   "tasks": {
     "title": "crwdns2448:0crwdne2448:0",
@@ -663,6 +663,7 @@
     "errorTitle": "crwdns2278:0crwdne2278:0",
     "errorQuery": "crwdns2284:0%{query}crwdne2284:0",
     "errorMessage": "crwdns2432:0crwdne2432:0",
+    "unableToRetrieveFileTypes": "crwdns2677:0crwdne2677:0",
     "placeholder": "crwdns2336:0crwdne2336:0",
     "status": {
       "failure": "crwdns2596:0crwdne2596:0",
