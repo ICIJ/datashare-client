@@ -45,7 +45,13 @@
             class="batch-search-form__projects"
             label-size="sm"
           >
-            <multiselect v-model="projects" :allow-empty="false" :options="availableProjects" multiple />
+            <multiselect
+              v-model="projects"
+              :allow-empty="false"
+              :close-on-select="false"
+              :options="availableProjects"
+              multiple
+            />
           </b-form-group>
           <b-form-group
             v-if="isServer"
