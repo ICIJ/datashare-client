@@ -119,7 +119,8 @@ export default {
     }
   },
   watch: {
-    locale() {
+    async locale() {
+      await this.$nextTick()
       this.updatePlaceholder()
     }
   },
