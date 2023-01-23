@@ -1,5 +1,5 @@
 export const state = () => ({
-  autoplay: true,
+  autoplay: false,
   loop: true
 })
 
