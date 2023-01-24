@@ -54,7 +54,13 @@
         />
       </template>
       <template #head(published)="{ field }">
-        <batch-search-filter-dropdown :id="field.key" v-model="selectedStatus" :items="status" :name="field.label">
+        <batch-search-filter-dropdown
+          :id="field.key"
+          v-model="selectedStatus"
+          :items="status"
+          :eq="isSelected"
+          :name="field.label"
+        >
           <template #label="{ item }">
             {{ $t(`batchSearch.${item.label}`) }}
           </template>
@@ -445,7 +451,9 @@ export default {
     getProjectsNames(item) {
       return item.projects?.map((project) => project.name).join(', ') ?? ''
     },
-
+    isSelected(item) {
+      return item?.value === this.selectedStatus?.value
+    },
     linkGen(page) {
       return this.createBatchSearchRoute({ page })
     },

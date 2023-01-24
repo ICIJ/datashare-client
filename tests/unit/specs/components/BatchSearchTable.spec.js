@@ -225,6 +225,16 @@ describe('BatchSearchTable.vue', () => {
         wrapper.vm.selectedStates = []
         expect(router.push).toBeCalledWith(routeFactory())
       })
+
+      it('set selectedStatus', () => {
+        expect(wrapper.vm.selectedStatus).toEqual(null)
+        jest.spyOn(router, 'push')
+        wrapper.vm.selectedStatus = { label: 'published', value: '1' }
+        expect(router.push).toBeCalledTimes(1)
+        expect(router.push).toBeCalledWith(routeFactory({ publishState: '1' }))
+        wrapper.vm.selectedStatus = null
+        expect(router.push).toBeCalledWith(routeFactory())
+      })
     })
 
     describe('Retrieve values from search params', () => {

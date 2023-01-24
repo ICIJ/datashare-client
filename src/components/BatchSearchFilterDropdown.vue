@@ -6,6 +6,7 @@
         :items="items"
         deactivate-keys
         :multiple="multiple"
+        :eq="eq"
         class="shadow-none border-0"
       >
         <template #item-label="{ item }">
@@ -19,6 +20,7 @@
 <script>
 import BatchSearchFilter from '@/components/BatchSearchFilter'
 import { isEqual } from 'lodash'
+import eq from 'lodash/eq'
 
 export default {
   name: 'BatchSearchFilterDropdown',
@@ -31,6 +33,10 @@ export default {
     id: {
       type: String,
       required: true
+    },
+    eq: {
+      type: Function,
+      default: eq
     },
     name: {
       type: String,
@@ -50,7 +56,7 @@ export default {
   },
   computed: {
     isActive() {
-      return this.values?.length > 0 || this.values?.value !== undefined
+      return this.values?.length > 0 || !!this.values?.value
     },
     selectedValues: {
       get() {
