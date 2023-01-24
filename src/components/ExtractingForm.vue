@@ -20,11 +20,11 @@
         </div>
       </b-form-checkbox>
     </div>
-    <div class="extracting-form__group mb-4">
+    <div v-show="ocr" class="extracting-form__group pb-2">
       <fa icon="globe" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
         <p class="font-weight-bold">{{ $t('indexing.extractLanguage') }}</p>
-        <extracting-language-form-control v-model="language" dark :ocr-warning="!!ocr" />
+        <extracting-language-form-control v-model="language" dark @ocr-error="disableGo" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -41,7 +41,7 @@
     </div>
     <div class="extracting-form__footer mt-4 row no-gutters">
       <div class="col text-right">
-        <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
+        <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="goDisabled">
           {{ $t('indexing.go') }}
         </b-btn>
       </div>
@@ -81,19 +81,27 @@ export default {
   },
   data() {
     return {
-      disabled: false
+      disabled: false,
+      hasOcrError: false
     }
   },
   computed: {
-    ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language'])
+    ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language']),
+    goDisabled() {
+      return this.disabled || (this.ocr && this.hasOcrError)
+    }
   },
   methods: {
+    disableGo() {
+      this.hasOcrError = true
+    },
     async submitExtract() {
       this.disabled = true
       try {
         await this.$store.dispatch('indexing/submitExtract')
       } finally {
         this.$store.commit('indexing/resetExtractForm')
+        this.hasOcrError = false
         this.finally()
       }
     }
