@@ -509,8 +509,10 @@
     "sentLink": "Emails sent"
   },
   "extractingLanguageFormControl": {
+    "failedToRetrieveLanguages": "Failed to retrieve languages",
+    "noLanguagesAvailable": "No OCR language installed, you need to install one at least.",
     "nullOption": "Detect automatically (default)",
-    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">read the user guide</a> to know how to fix this."
+    "installOcr": "Missing yours? <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">Choose among {availableLanguages} languages to install</a>."
   },
   "indexing": {
     "title": "Analyze your documents",
