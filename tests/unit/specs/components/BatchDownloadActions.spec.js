@@ -40,8 +40,9 @@ describe('BatchDownloadActions.vue', () => {
       const { batchDownload: value } = mockRunBatchDownload('erroredTask', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      expect(wrapper.emitted().relaunchFailed).toBeUndefined()
       await wrapper.vm.relaunchTask()
-      expect(wrapper.emitted('reluanchFailed'))
+      expect(wrapper.emitted().relaunchFailed).toBeDefined()
     })
 
     it('should emit a success when the relaunch', async () => {
@@ -49,8 +50,9 @@ describe('BatchDownloadActions.vue', () => {
       const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      expect(wrapper.emitted().relaunched).toBeUndefined()
       await wrapper.vm.relaunchTask()
-      expect(wrapper.emitted('reluanched'))
+      expect(wrapper.emitted().relaunched).toBeDefined()
     })
 
     it('should call the API with a parsed query', async () => {
@@ -77,16 +79,18 @@ describe('BatchDownloadActions.vue', () => {
       const { name, batchDownload: value } = mockFailToDeleteBatchDownload('failing')
       const propsData = { name, value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      expect(wrapper.emitted().deleteFailed).toBeUndefined()
       await wrapper.vm.deleteTask()
-      expect(wrapper.emitted('deleteFailed'))
+      expect(wrapper.emitted().deleteFailed).toBeDefined()
     })
 
     it('should emit a success when the delete', async () => {
       const { name, batchDownload: value } = mockDeleteBatchDownload('successful')
       const propsData = { name, value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
+      expect(wrapper.emitted().deleted).toBeUndefined()
       await wrapper.vm.deleteTask()
-      expect(wrapper.emitted('deleted'))
+      expect(wrapper.emitted().deleted).toBeDefined()
     })
   })
 })
