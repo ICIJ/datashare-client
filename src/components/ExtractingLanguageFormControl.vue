@@ -23,8 +23,7 @@ export default {
   },
   data() {
     return {
-      textLanguages: [],
-      ocrLanguages: []
+      textLanguages: []
     }
   },
   computed: {
@@ -32,7 +31,7 @@ export default {
       return { value: null, text: this.$t('extractingLanguageFormControl.nullOption') }
     },
     options() {
-      return this.ocrLanguages.map((language) => {
+      return this.textLanguages.map((language) => {
         return { value: language.iso6392, text: this.$t(`filter.lang.${language.name}`) }
       })
     },
@@ -53,17 +52,8 @@ export default {
     async loadLanguages() {
       this.$wait.start(this.waitIdentifier)
       try {
-        const [textLanguages, ocrLanguages] = await Promise.all([
-          this.$core.api.textLanguages(),
-          this.$core.api.ocrLanguages()
-        ])
-        this.textLanguages = textLanguages
-        this.ocrLanguages = ocrLanguages
-        if (this.ocrLanguages.length === 0) {
-          this.$emit('ocr-error')
-        }
+        this.textLanguages = await this.$core.api.textLanguages()
       } catch (e) {
-        this.$emit('ocr-error')
         this.$root.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
           noCloseButton: true,
           variant: 'danger'
@@ -78,24 +68,18 @@ export default {
 <template>
   <b-overlay :show="!isReady" :variant="overlayVariant" class="extracting_language_form_control" rounded spinner-small>
     <b-alert
-      v-if="ocrLanguages.length === 0"
+      v-if="!textLanguages.length"
       show
       variant="danger"
-      class="extracting_language_form_control--no-ocr mt-3"
-      v-html="$t('extractingLanguageFormControl.noLanguagesAvailable')"
-    />
+      class="extracting_language_form_control--no-language mt-3"
+      >{{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}</b-alert
+    >
     <b-form-select
       v-else
       :value="value"
       :options="[nullOption, ...options]"
       class="extracting_language_form_control__ocr-options"
       @input="(newValue) => $emit('input', newValue)"
-    />
-    <b-alert
-      show
-      variant="info"
-      class="extracting_language_form_control__install_ocr mt-3"
-      v-html="$t('extractingLanguageFormControl.installOcr', { availableLanguages: textLanguages.length })"
     />
   </b-overlay>
 </template>
