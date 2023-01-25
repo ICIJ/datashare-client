@@ -9,6 +9,14 @@
       </div>
     </div>
     <div class="extracting-form__group mb-4">
+      <fa icon="globe" class="position-absolute mt-1 ml-1" size="lg" />
+      <div class="ml-4 pl-3">
+        <p class="font-weight-bold">{{ $t('indexing.extractLanguage') }}</p>
+        <extracting-language-form-control v-model="language" dark />
+      </div>
+    </div>
+
+    <div class="extracting-form__group mb-4">
       <b-form-checkbox v-model="ocr" name="check-button" switch>
         <div class="font-weight-bold ml-1">
           {{ $t('indexing.extractWithOcrLabel') }}
@@ -19,12 +27,8 @@
           </span>
         </div>
       </b-form-checkbox>
-    </div>
-    <div class="extracting-form__group mb-4">
-      <fa icon="globe" class="position-absolute mt-1 ml-1" size="lg" />
-      <div class="ml-4 pl-3">
-        <p class="font-weight-bold">{{ $t('indexing.extractLanguage') }}</p>
-        <extracting-language-form-control v-model="language" dark :ocr-warning="!!ocr" />
+      <div v-show="!!ocr" class="ml-4 pl-3">
+        <extracting-form-ocr-control :iso-lang="language" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -54,6 +58,7 @@ import { noop } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
 
 import ExtractingLanguageFormControl from './ExtractingLanguageFormControl.vue'
+import ExtractingFormOcrControl from './ExtractingFormOcrControl.vue'
 import InlineDirectoryPicker from './InlineDirectoryPicker.vue'
 
 const { mapFields } = createHelpers({
@@ -68,7 +73,8 @@ export default {
   name: 'ExtractingForm',
   components: {
     ExtractingLanguageFormControl,
-    InlineDirectoryPicker
+    InlineDirectoryPicker,
+    ExtractingFormOcrControl
   },
   props: {
     /**
