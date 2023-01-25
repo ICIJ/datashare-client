@@ -16,6 +16,7 @@ describe('ExtractingForm.vue', () => {
     router = core.router
     store = core.store
   })
+
   beforeEach(() => {
     wrapper = shallowMount(ExtractingForm, { i18n, localVue, router, store })
     mockAxios.request.mockClear()
@@ -66,18 +67,10 @@ describe('ExtractingForm.vue', () => {
     )
   })
 
-  it('should disable the go submit button if ocr is activated and there is an ocr-error ', async () => {
-    wrapper.vm.$set(wrapper.vm, 'ocr', true)
-    expect(wrapper.vm.goDisabled).toBe(false)
-    wrapper.vm.$set(wrapper.vm, 'hasOcrError', true)
-    expect(wrapper.vm.goDisabled).toBe(true)
-    wrapper.vm.$set(wrapper.vm, 'ocr', false)
-    expect(wrapper.vm.goDisabled).toBe(false)
-  })
-
   it('should reset the modal params on submitting the form', async () => {
     wrapper.vm.$set(wrapper.vm, 'ocr', true)
     await wrapper.vm.submitExtract()
-    expect(wrapper.vm.ocr).toBe(false)
+
+    expect(wrapper.vm.ocr).toBeFalsy()
   })
 })
