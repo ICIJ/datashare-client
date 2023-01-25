@@ -19,12 +19,6 @@ export default {
      */
     dark: {
       type: Boolean
-    },
-    /**
-     * Has ocr
-     */
-    hasOcr: {
-      type: Boolean
     }
   },
   data() {
