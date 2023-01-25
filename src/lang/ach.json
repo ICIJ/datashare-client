@@ -509,8 +509,10 @@
     "sentLink": "crwdns1188:0crwdne1188:0"
   },
   "extractingLanguageFormControl": {
+    "failedToRetrieveLanguages": "crwdns2679:0crwdne2679:0",
+    "noLanguagesAvailable": "crwdns2681:0crwdne2681:0",
     "nullOption": "crwdns2639:0crwdne2639:0",
-    "ocrWarning": "crwdns2655:0crwdne2655:0"
+    "installOcr": "crwdns2683:0{availableLanguages}crwdne2683:0"
   },
   "indexing": {
     "title": "crwdns910:0crwdne910:0",
