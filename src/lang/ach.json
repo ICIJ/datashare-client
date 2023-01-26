@@ -510,9 +510,12 @@
   },
   "extractingLanguageFormControl": {
     "failedToRetrieveLanguages": "crwdns2679:0crwdne2679:0",
-    "noLanguagesAvailable": "crwdns2681:0crwdne2681:0",
-    "nullOption": "crwdns2639:0crwdne2639:0",
-    "installOcr": "crwdns2683:0{availableLanguages}crwdne2683:0"
+    "nullOption": "crwdns2639:0crwdne2639:0"
+  },
+  "extractingFormOcrControl": {
+    "useDefault": "crwdns2685:0crwdne2685:0",
+    "isMissing": "crwdns2687:0{language}crwdne2687:0",
+    "installOcr": "crwdns2689:0{availableLanguages}crwdne2689:0"
   },
   "indexing": {
     "title": "crwdns910:0crwdne910:0",
