@@ -395,21 +395,13 @@ export default {
           published: this.published
         })
         this.resetForm()
-        if (this.$config.is('manageDocuments')) {
-          try {
-            await this.$store.dispatch('indexing/runBatchSearch')
-            this.$root.$bvToast.toast(this.$t('batchSearch.success'), {
-              noCloseButton: true,
-              variant: 'success'
-            })
-          } catch (_) {
-            this.manageError(_.response.status, true)
-          }
-        } else {
-          this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), {
+        try {
+          this.$root.$bvToast.toast(this.$t('batchSearch.success'), {
             noCloseButton: true,
             variant: 'success'
           })
+        } catch (_) {
+          this.manageError(_.response.status, true)
         }
       } catch (_) {
         this.manageError(_.response.status, false)
