@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
 import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
@@ -33,7 +32,7 @@ export default {
     BatchSearchClearFilters,
     BatchSearchTable
   },
-  mixins: [polling, utils],
+  mixins: [utils],
   computed: {
     ...mapState('batchSearch', ['hasBatchSearch']),
     howToLink() {
