@@ -11,11 +11,11 @@ export default {
     }
   },
   beforeDestroy() {
-    this.unregisteredPools()
+    this.unregisteredPolls()
   },
   methods: {
-    unregisteredPools() {
-      // Clear all pools
+    unregisteredPolls() {
+      // Clear all polls
       this.registeredPolls.forEach(this.unregisteredPoll)
     },
     unregisteredPoll({ id }) {
@@ -26,8 +26,8 @@ export default {
       this.registeredPolls.splice(index, 1)
     },
     registerPoll({ fn, timeout = 2000, immediate = false } = {}) {
-      // Scheddule the pool first to get its id
-      const id = this.schedulePool({ fn, timeout, immediate })
+      // Scheddule the poll first to get its id
+      const id = this.schedulePoll({ fn, timeout, immediate })
       // And add it to the list to retrieve it later
       this.registeredPolls.push({ fn, id })
     },
@@ -37,21 +37,21 @@ export default {
       // Register the poll again with the new option
       return this.registerPoll({ fn, ...rest })
     },
-    schedulePool({ fn, timeout, immediate = false }) {
+    schedulePoll({ fn, timeout, immediate = false }) {
       // Return the id of the setInterval
       return setTimeout(async () => {
-        const pool = find(this.registeredPolls, { fn })
+        const poll = find(this.registeredPolls, { fn })
         try {
-          // Call the pool's promise, shedule it again only if it returns true
+          // Call the poll's promise, shedule it again only if it returns true
           if (await fn()) {
-            // Update the pool id with the next one
-            pool.id = this.schedulePool({ fn, timeout })
+            // Update the poll id with the next one
+            poll.id = this.schedulePoll({ fn, timeout })
           } else {
-            this.unregisteredPoll(pool)
+            this.unregisteredPoll(poll)
           }
-          // Reject promise triggers unregistering of the pool
+          // Reject promise triggers unregistering of the poll
         } catch (_) {
-          this.unregisteredPoll(pool)
+          this.unregisteredPoll(poll)
         }
         // If immediate is true, the timeout is set to 0
       }, !immediate * this.callOrGetTimeout(timeout))
