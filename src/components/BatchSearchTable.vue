@@ -352,6 +352,9 @@ export default {
   watch: {
     $route() {
       return this.fetchWithLoader()
+    },
+    total() {
+      this.fetchAndRegisterPollWithLoader()
     }
   },
   mounted() {
