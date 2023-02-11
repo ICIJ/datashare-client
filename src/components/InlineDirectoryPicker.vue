@@ -22,12 +22,13 @@ export default {
     return {
       browse: false,
       browsingPath: null,
-      browsingTree: null
+      browsingTree: null,
+      separator: this.$core.config.get('pathSeparator')
     }
   },
   computed: {
     cannonicalDataDir() {
-      return trimEnd(this.dataDir, '/')
+      return trimEnd(this.dataDir, this.separator)
     },
     dataDir() {
       return this.$config.get('dataDir')
@@ -39,10 +40,10 @@ export default {
       if (!this.path) {
         return ['Home']
       }
-      return compact(['Home', ...this.pathWithoutDataDir.split('/')])
+      return compact(['Home', ...this.pathWithoutDataDir.split(this.separator)])
     },
     pathWithoutDataDir() {
-      return trim(this.path.split(this.dataDir).pop(), '/')
+      return trim(this.path.split(this.dataDir).pop(), this.separator)
     },
     waitIdentifier() {
       return uniqueId('inline-directory-picker-')
@@ -65,10 +66,10 @@ export default {
   },
   methods: {
     basename(path) {
-      return trim(path.split('/').pop(), '/')
+      return trim(path.split(this.separator).pop(), this.separator)
     },
     directoryTitle(index) {
-      return [this.cannonicalDataDir, ...this.directories.slice(1, index + 1)].join('/')
+      return [this.cannonicalDataDir, ...this.directories.slice(1, index + 1)].join(this.separator)
     },
     select(pathOrIndex, continueBrowsing = false) {
       this.browse = continueBrowsing
@@ -82,9 +83,9 @@ export default {
       const path = nonNullPath
         .split(this.cannonicalDataDir)
         .pop()
-        .split('/')
+        .split(this.separator)
         .slice(0, index + 1)
-        .join('/')
+        .join(this.separator)
       return this.selectPath(this.cannonicalDataDir + path)
     },
     selectPath(path) {
