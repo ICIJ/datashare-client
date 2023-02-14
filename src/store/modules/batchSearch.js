@@ -12,7 +12,7 @@ import {
   SELECTED_QUERIES,
   RESULTS,
   TOTAL,
-  HAS_BATCH_SEARCH
+  NB_BATCH_SEARCHES
 } from '@/store/mutation-types'
 
 export function initialState() {
@@ -23,7 +23,7 @@ export function initialState() {
     queries: {},
     selectedQueries: [],
     total: 0,
-    hasBatchSearch: false
+    nbBatchSearches: 0
   }
 }
 
@@ -35,6 +35,9 @@ export const getters = {
   },
   nbSelectedQueries(state) {
     return state.selectedQueries?.length ?? 0
+  },
+  hasBatchSearch(state) {
+    return state.nbBatchSearches > 0
   }
 }
 export const mutations = {
@@ -51,13 +54,14 @@ export const mutations = {
     Vue.set(state, 'batchSearches', batchSearches)
   },
   [REMOVE_BATCH_SEARCH](state, batchId) {
-    remove(state.batchSearches, (batchSearch) => batchSearch.uuid === batchId)
-    state.hasBatchSearch = state.batchSearches.length > 0
-    state.total = state.total - 1
+    const removed = remove(state.batchSearches, (batchSearch) => batchSearch.uuid === batchId)
+    if (removed.length) {
+      state.total = state.total - 1
+      state.nbBatchSearches = state.nbBatchSearches - 1
+    }
   },
   [CLEAR_BATCH_SEARCH](state) {
     state.batchSearches = []
-    state.hasBatchSearch = false
     state.total = 0
   },
   [SELECTED_QUERIES](state, selectedQueries) {
@@ -69,8 +73,8 @@ export const mutations = {
   [TOTAL](state, total) {
     state.total = total
   },
-  [HAS_BATCH_SEARCH](state, hasBatchSearch) {
-    state.hasBatchSearch = hasBatchSearch
+  [NB_BATCH_SEARCHES](state, nbBatchSearches) {
+    state.nbBatchSearches = nbBatchSearches
   }
 }
 
@@ -92,14 +96,6 @@ export function actionBuilder(api) {
         commit(SINGLE_BATCH_SEARCH_QUERIES, queries)
       }
     },
-    async hasBatchSearch({ commit }) {
-      try {
-        const batchSearches = await api.getBatchSearches()
-        commit(HAS_BATCH_SEARCH, batchSearches.total > 0)
-      } catch (e) {
-        commit(HAS_BATCH_SEARCH, false)
-      }
-    },
     async getBatchSearches(
       { commit },
       {
@@ -112,7 +108,8 @@ export function actionBuilder(api) {
         project = [],
         state = [],
         batchDate = null,
-        publishState = null
+        publishState = null,
+        init = false
       }
     ) {
       let batchSearches = []
@@ -135,8 +132,12 @@ export function actionBuilder(api) {
           total: 0
         }
       }
+
       commit(TOTAL, batchSearches.total)
       commit(BATCH_SEARCHES, batchSearches.items)
+      if (init) {
+        commit(NB_BATCH_SEARCHES, batchSearches.total)
+      }
     },
     async onSubmit(
       { commit, dispatch },
@@ -144,9 +145,8 @@ export function actionBuilder(api) {
     ) {
       // send the new batch search
       await api.batchSearch(name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published)
-      commit(HAS_BATCH_SEARCH, true)
       // get all batch searches including the new one
-      return dispatch('getBatchSearches', {})
+      return dispatch('getBatchSearches', { init: true })
     },
     async getBatchSearchResults({ commit }, { batchId, from, size, queries, sort, order }) {
       let results = []
