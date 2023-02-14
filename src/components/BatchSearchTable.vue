@@ -162,6 +162,17 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.fetchAndRegisterPollWithLoader()
+  },
+  watch: {
+    $route() {
+      return this.fetchWithLoader()
+    },
+    total() {
+      this.fetchAndRegisterPollWithLoader()
+    }
+  },
   computed: {
     ...mapState('batchSearch', ['total']),
     displayBatchSearches() {
@@ -348,17 +359,6 @@ export default {
     states() {
       return Object.values(settings.batchSearch.status)
     }
-  },
-  watch: {
-    $route() {
-      return this.fetchWithLoader()
-    },
-    total() {
-      this.fetchAndRegisterPollWithLoader()
-    }
-  },
-  mounted() {
-    this.fetchAndRegisterPollWithLoader()
   },
   methods: {
     createBatchSearchRoute({
