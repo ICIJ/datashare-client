@@ -44,7 +44,7 @@ export default {
   },
   mounted() {
     if (!this.hasBatchSearch) {
-      this.getBatchSearches()
+      return this.getBatchSearches()
     }
   },
   methods: {
