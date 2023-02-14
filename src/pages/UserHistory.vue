@@ -7,13 +7,13 @@
       :tab.sync="tab"
     >
       <template #tabs>
-        <b-tab :active="defaultTab == 0">
+        <b-tab :active="defaultTab === 0">
           <template #title>
             <fa icon="file" fixed-width class="mr-1" />
             {{ $t('userHistory.document') }}
           </template>
         </b-tab>
-        <b-tab :active="defaultTab == 1">
+        <b-tab :active="defaultTab === 1">
           <template #title>
             <fa icon="search" fixed-width class="mr-1" />
             {{ $t('userHistory.search') }}
