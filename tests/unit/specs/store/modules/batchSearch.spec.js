@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 Vue.use(Vuex)
 
@@ -97,8 +98,6 @@ describe('BatchSearchStore', () => {
         })
       )
       expect(store.state.batchSearch.batchSearches).toHaveLength(3)
-
-      mockAxiosApi.request.mockResolvedValue({ data: {} })
     })
 
     it('should submit the new batchSearch form with complete information', async () => {
@@ -194,8 +193,24 @@ describe('BatchSearchStore', () => {
       expect(store.state.batchSearch.batchSearches).toEqual([{ uuid: 'batchSearch_02' }, { uuid: 'batchSearch_03' }])
     })
 
+    it('should delete twice the same batchSearch', async () => {
+      store.state.batchSearch.batchSearches = [{ uuid: 'batchSearch_01' }, { uuid: 'batchSearch_02' }]
+      store.state.batchSearch.nbBatchSearches = 2
+      store.state.batchSearch.total = 2
+
+      await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
+      await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
+
+      expect(store.state.batchSearch.nbBatchSearches).toEqual(1)
+      expect(mockAxiosApi.request).toBeCalledTimes(2)
+    })
+
     it('should delete all the batchSearches', async () => {
-      store.state.batchSearch.batchSearches = ['batchSearch_01', 'batchSearch_02', 'batchSearch_03']
+      store.state.batchSearch.batchSearches = [
+        { uuid: 'batchSearch_01' },
+        { uuid: 'batchSearch_02' },
+        { uuid: 'batchSearch_03' }
+      ]
 
       await store.dispatch('batchSearch/deleteBatchSearches')
 
@@ -208,5 +223,74 @@ describe('BatchSearchStore', () => {
       )
       expect(store.state.batchSearch.batchSearches).toEqual([])
     })
+  })
+})
+
+describe('without using api', () => {
+  let api
+  let store
+
+  beforeAll(() => {
+    api = new Api({ request: jest.fn() }, { $emit: jest.fn() })
+    jest.spyOn(api, 'getBatchSearches')
+    store = storeBuilder(api)
+  })
+  beforeEach(() => {
+    store.state.batchSearch.nbBatchSearches = 0
+    store.state.batchSearch.total = 0
+    store.state.batchSearch.batchSearches = []
+    api.getBatchSearches.mockClear()
+  })
+
+  afterAll(() => {
+    api.getBatchSearches.mockReset()
+  })
+  it('should set nbBatchSearches on initial retrieve of batch searches', async () => {
+    // without init the nbBatchSearches is not updated
+    api.getBatchSearches.mockResolvedValueOnce({
+      items: [{ uuid: 'batchSearch_01' }, { uuid: 'batchSearch_02' }, { uuid: 'batchSearch_03' }],
+      total: 3
+    })
+    await store.dispatch('batchSearch/getBatchSearches', { init: false })
+    expect(store.state.batchSearch.nbBatchSearches).toEqual(0)
+    expect(store.getters['batchSearch/hasBatchSearch']).toBe(false)
+
+    // with init, it changes nbBatchSearches to 1
+    api.getBatchSearches.mockResolvedValueOnce({
+      items: [{ uuid: 'batchSearch_01' }],
+      total: 1
+    })
+    await store.dispatch('batchSearch/getBatchSearches', { init: true })
+
+    expect(store.state.batchSearch.nbBatchSearches).toEqual(1)
+    expect(store.getters['batchSearch/hasBatchSearch']).toBe(true)
+
+    // we deleted it, and reset changes nbBatchSearches to 0
+    await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
+    await flushPromises()
+    expect(store.state.batchSearch.nbBatchSearches).toEqual(0)
+    expect(store.getters['batchSearch/hasBatchSearch']).toBe(false)
+  })
+
+  it('should update the nbBatchSearches when submitting the new batchSearch form ', async () => {
+    api.getBatchSearches.mockResolvedValueOnce({
+      items: [{ uuid: 'name' }],
+      total: 1
+    })
+
+    expect(store.state.batchSearch.nbBatchSearches).toEqual(0)
+    await store.dispatch('batchSearch/onSubmit', {
+      name: 'name',
+      csvFile: 'csvFile',
+      description: 'description',
+      projects: ['project1', 'project2'],
+      phraseMatch: false,
+      fuzziness: 2,
+      fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }],
+      paths: ['/a/path/to/home', '/another/path'],
+      published: false
+    })
+
+    expect(store.state.batchSearch.nbBatchSearches).toEqual(1)
   })
 })

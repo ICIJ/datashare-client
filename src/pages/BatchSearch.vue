@@ -23,7 +23,7 @@ import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
 import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'BatchSearches',
@@ -34,7 +34,7 @@ export default {
   },
   mixins: [utils],
   computed: {
-    ...mapState('batchSearch', ['hasBatchSearch']),
+    ...mapGetters('batchSearch', ['hasBatchSearch']),
     howToLink() {
       return '#/docs/all-batch-search-documents'
     },
@@ -42,15 +42,15 @@ export default {
       return this.$t('batchSearch.empty', { howToLink: this.howToLink })
     }
   },
-  async mounted() {
+  mounted() {
     if (!this.hasBatchSearch) {
-      await this.getBatchSearch()
+      this.getBatchSearches()
     }
   },
   methods: {
-    async getBatchSearch() {
+    async getBatchSearches() {
       this.$wait.start('load haveBatchSearch')
-      await this.$store.dispatch('batchSearch/hasBatchSearch')
+      await this.$store.dispatch('batchSearch/getBatchSearches', { init: true })
       this.$wait.end('load haveBatchSearch')
     }
   }
