@@ -36,8 +36,11 @@ import { pathToRegexp } from 'path-to-regexp'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import Document from '@/api/resources/Document'
 
+/**
+ * List user's visited documents history
+ */
 export default {
-  name: 'UserHistorySaveSearchForm',
+  name: 'UserHistoryDocument',
   components: {
     DocumentThumbnail
   },
