@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 
 import { Core } from '@/core'
 import Document from '@/api/resources/Document'
@@ -16,11 +16,11 @@ describe('UserHistoryDocument.vue', () => {
           email: null,
           provider: 'local'
         },
-        creationDate: 'creation_date_01',
-        modificationDate: 'modification_date_01',
+        creationDate: '2023-02-14T11:00:32.683+00:00',
+        modificationDate: '2023-02-15T12:16:32.683+00:00',
         type: 'DOCUMENT',
         name: 'name_01',
-        uri: 'uri_01'
+        uri: '/uri_01'
       },
       {
         id: 'id_02',
@@ -30,19 +30,15 @@ describe('UserHistoryDocument.vue', () => {
           email: null,
           provider: 'local'
         },
-        creationDate: 'creation_date_02',
-        modificationDate: 'modification_date_02',
+        creationDate: '2023-02-14T14:00:32.683+00:00',
+        modificationDate: '2023-02-15T23:16:32.683+00:00',
         type: 'DOCUMENT',
         name: 'name_02',
-        uri: 'uri_02'
+        uri: '/uri_02'
       }
     ]
   }
-  let wrapper = null
-
-  beforeEach(async () => {
-    wrapper = await shallowMount(UserHistoryDocument, { i18n, localVue, propsData, router })
-  })
+  let wrapper
 
   it('should NOT display a list of documents', async () => {
     const propsData = { events: [] }
@@ -50,11 +46,41 @@ describe('UserHistoryDocument.vue', () => {
     expect(wrapper.findAll('.user-history__list__item')).toHaveLength(0)
   })
 
-  it('should display a list of documents', async () => {
-    expect(wrapper.findAll('.user-history__list__item')).toHaveLength(2)
+  it('should display a list of documents sorted by descendant date and time', async () => {
+    wrapper = await mount(UserHistoryDocument, { i18n, localVue, propsData, router })
+    const elements = wrapper.findAll('.user-history__list__item')
+    expect(elements).toHaveLength(2)
+    expect(elements.at(0).find('.user-history__list__item__time').text()).toBe('23:02')
+    expect(elements.at(1).find('.user-history__list__item__time').text()).toBe('12:02')
+  })
+
+  it('display the first row first cell containing date and time', async () => {
+    wrapper = await mount(UserHistoryDocument, { i18n, localVue, propsData, router })
+    const firstRow = wrapper.find('.user-history__list__item')
+    const date = firstRow.find('.user-history__list__item__date')
+    expect(date.exists()).toBe(true)
+    expect(date.text()).toBe('2023/02/15')
+    const time = firstRow.find('.user-history__list__item__time')
+    expect(time.exists()).toBe(true)
+    expect(time.text()).toBe('23:02')
+  })
+  it('display the first row second cell containing document thumbnail, name, link, external open button and haptic copy of the link', async () => {
+    wrapper = await mount(UserHistoryDocument, { i18n, localVue, propsData, router })
+    const firstRow = wrapper.find('.user-history__list__item')
+    const link = firstRow.find('.user-history__list__item__link')
+    expect(link.exists()).toBe(true)
+    expect(link.text()).toBe('name_02')
+    const externalLink = firstRow.find('.user-history__list__item__external-link')
+    expect(externalLink.exists()).toBe(true)
+    expect(externalLink.vm.to.path).toBe('/uri_02')
+    const hapticCopy = firstRow.find('.haptic-copy')
+    expect(hapticCopy.exists()).toBe(true)
+    expect(hapticCopy.vm.text).toBe('http://localhost:9009/#/uri_02')
   })
 
   it('should convert an event uri to a Document instance', async () => {
+    wrapper = await shallowMount(UserHistoryDocument, { i18n, localVue, propsData, router })
+
     const uri = '/ds/local-datashare/foo/bar'
     const document = wrapper.vm.eventAsDocument({ uri })
     expect(document).toBeInstanceOf(Document)
@@ -64,6 +90,8 @@ describe('UserHistoryDocument.vue', () => {
   })
 
   it('should convert an event uri to a Document instance, ignore query params', async () => {
+    wrapper = await shallowMount(UserHistoryDocument, { i18n, localVue, propsData, router })
+
     const uri = '/ds/local-datashare/foo/bar?q=baz'
     const document = wrapper.vm.eventAsDocument({ uri })
     expect(document).toBeInstanceOf(Document)
