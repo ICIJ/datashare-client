@@ -76,7 +76,7 @@ export default {
   },
   data() {
     return {
-      pathSeparator: this.$core.config.get('pathSeparator')
+      pathSeparator: this.$core.config.get('pathSeparator', '/')
     }
   },
   computed: {

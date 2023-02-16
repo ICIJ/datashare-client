@@ -23,7 +23,7 @@ export default {
       browse: false,
       browsingPath: null,
       browsingTree: null,
-      pathSeparator: this.$core.config.get('pathSeparator')
+      pathSeparator: this.$core.config.get('pathSeparator', '/')
     }
   },
   computed: {

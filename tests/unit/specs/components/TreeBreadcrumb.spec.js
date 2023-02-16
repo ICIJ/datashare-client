@@ -8,7 +8,6 @@ describe('TreeBreadcrumb.vue', () => {
 
   beforeAll(() => {
     config.set('dataDir', '/home/foo')
-    config.set('pathSeparator', '/')
   })
 
   it('should be a Vue instance', () => {
