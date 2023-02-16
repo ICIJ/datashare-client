@@ -64,7 +64,6 @@ describe('InlineDirectoryPicker.vue', () => {
       const api = jest.fn()
       const { localVue, i18n, wait, store, config } = Core.init(createLocalVue(), api).useAll()
       config.set('dataDir', '/home/dev/Datashare/')
-      config.set('pathSeparator', '/')
       wrapper = mount(InlineDirectoryPicker, { localVue, i18n, wait, store })
     })
 
