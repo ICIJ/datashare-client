@@ -74,13 +74,23 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      pathSeparator: this.$core.config.get('pathSeparator')
+    }
+  },
   computed: {
     fullTree() {
       return reduce(
-        this.path.split('/'),
+        this.path.split(this.pathSeparator),
         (tree, d) => {
           if (d !== '') {
-            tree.push([last(tree), basename(d)].join('/'))
+            if (tree.length === 0 && this.pathSeparator === '\\') {
+              // fix Windows : avoid having a separator at the beginning
+              tree.push(basename(d))
+            } else {
+              tree.push([last(tree), basename(d)].join('/'))
+            }
           }
           return tree
         },
