@@ -52,6 +52,7 @@
                 indices: projectName(uri)
               }
             }"
+            class="user-history__list__item__project"
           >
             {{ projectName(uri) }}
           </router-link>
