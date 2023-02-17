@@ -39,7 +39,7 @@
         </div>
       </template>
       <router-view :events="events" />
-      <div v-if="totalEvents > perPage" class="user-history__pagination pt-2">
+      <div v-if="showPagination" class="user-history__pagination pt-2">
         <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalEvents" />
       </div>
     </v-wait>
@@ -90,6 +90,9 @@ export default {
     }
   },
   computed: {
+    showPagination() {
+      return this.totalEvents > this.perPage
+    },
     tab: {
       get() {
         return findIndex(this.tabRoutes, (name) => {
@@ -143,14 +146,14 @@ export default {
     async getUserHistory() {
       const type = this.getTypeOfCurrentPage()
       const events = await this.$core.api.getUserHistory(type, this.pageOffset, this.perPage)
-      this.$set(this, 'events', events.items)
-      this.$set(this, 'totalEvents', events.total)
+      this.events = events.items
+      this.totalEvents = events.total
     },
     async deleteUserHistory() {
       const type = this.getTypeOfCurrentPage()
       await this.$core.api.deleteUserHistory(type)
-      this.$set(this, 'events', [])
-      this.$set(this, 'totalEvents', 0)
+      this.events = []
+      this.totalEvents = 0
     },
     getTypeOfCurrentPage() {
       const type = this.$route.path.split('/').pop()
@@ -176,10 +179,6 @@ export default {
     background: inherit;
     position: sticky;
     top: 0;
-  }
-
-  &__pagination {
-    max-width: 40%;
   }
 }
 </style>

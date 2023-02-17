@@ -31,7 +31,7 @@ describe('UserHistoryDocument.vue', () => {
           provider: 'local'
         },
         creationDate: '2023-02-14T14:00:32.683+00:00',
-        modificationDate: '2023-02-15T23:16:32.683+00:00',
+        modificationDate: '2023-02-15T23:09:32.683+00:00',
         type: 'DOCUMENT',
         name: 'name_02',
         uri: '/uri_02'
@@ -50,8 +50,8 @@ describe('UserHistoryDocument.vue', () => {
     wrapper = await mount(UserHistoryDocument, { i18n, localVue, propsData, router })
     const elements = wrapper.findAll('.user-history__list__item')
     expect(elements).toHaveLength(2)
-    expect(elements.at(0).find('.user-history__list__item__time').text()).toBe('23:02')
-    expect(elements.at(1).find('.user-history__list__item__time').text()).toBe('12:02')
+    expect(elements.at(0).find('.user-history__list__item__time').text()).toBe('23:09')
+    expect(elements.at(1).find('.user-history__list__item__time').text()).toBe('12:16')
   })
 
   it('display the first row first cell containing date and time', async () => {
@@ -62,7 +62,7 @@ describe('UserHistoryDocument.vue', () => {
     expect(date.text()).toBe('2023/02/15')
     const time = firstRow.find('.user-history__list__item__time')
     expect(time.exists()).toBe(true)
-    expect(time.text()).toBe('23:02')
+    expect(time.text()).toBe('23:09')
   })
   it('display the first row second cell containing document thumbnail, name, link, external open button and haptic copy of the link', async () => {
     wrapper = await mount(UserHistoryDocument, { i18n, localVue, propsData, router })
