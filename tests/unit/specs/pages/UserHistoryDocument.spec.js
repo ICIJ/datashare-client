@@ -75,7 +75,7 @@ describe('UserHistoryDocument.vue', () => {
     expect(externalLink.vm.to.path).toBe('/ds/server-project2/uri_02')
     const hapticCopy = firstRow.find('.haptic-copy')
     expect(hapticCopy.exists()).toBe(true)
-    expect(hapticCopy.vm.text).toBe('http://localhost:9009/#/uri_02')
+    expect(hapticCopy.vm.text).toBe('http://localhost:9009/#/ds/server-project2/uri_02')
   })
 
   it('should convert an event uri to a Document instance', async () => {
