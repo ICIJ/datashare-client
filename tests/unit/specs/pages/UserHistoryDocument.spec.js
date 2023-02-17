@@ -20,7 +20,7 @@ describe('UserHistoryDocument.vue', () => {
         modificationDate: '2023-02-15T12:16:32.683+00:00',
         type: 'DOCUMENT',
         name: 'name_01',
-        uri: '/uri_01'
+        uri: '/ds/server-project1/uri_01'
       },
       {
         id: 'id_02',
@@ -34,7 +34,7 @@ describe('UserHistoryDocument.vue', () => {
         modificationDate: '2023-02-15T23:09:32.683+00:00',
         type: 'DOCUMENT',
         name: 'name_02',
-        uri: '/uri_02'
+        uri: '/ds/server-project2/uri_02'
       }
     ]
   }
@@ -72,7 +72,7 @@ describe('UserHistoryDocument.vue', () => {
     expect(link.text()).toBe('name_02')
     const externalLink = firstRow.find('.user-history__list__item__external-link')
     expect(externalLink.exists()).toBe(true)
-    expect(externalLink.vm.to.path).toBe('/uri_02')
+    expect(externalLink.vm.to.path).toBe('/ds/server-project2/uri_02')
     const hapticCopy = firstRow.find('.haptic-copy')
     expect(hapticCopy.exists()).toBe(true)
     expect(hapticCopy.vm.text).toBe('http://localhost:9009/#/uri_02')
@@ -98,5 +98,28 @@ describe('UserHistoryDocument.vue', () => {
     expect(document.index).toBe('local-datashare')
     expect(document.id).toBe('foo')
     expect(document.routing).toBe('bar')
+  })
+  describe('Server mode', () => {
+    it('should display a third column containing project name', async () => {
+      wrapper = await shallowMount(UserHistoryDocument, { i18n, localVue, propsData, router })
+      expect(wrapper.vm.displayedFields).toHaveLength(2)
+      const computed = { isServer: () => true }
+      wrapper = await shallowMount(UserHistoryDocument, { i18n, localVue, propsData, router, computed })
+      expect(wrapper.vm.displayedFields).toHaveLength(3)
+    })
+
+    it('should display the project name based on the uri', async () => {
+      const computed = { isServer: () => true }
+      wrapper = await mount(UserHistoryDocument, { i18n, localVue, propsData, router, computed })
+      const projectLink = wrapper.find('.user-history__list__item__project')
+      expect(projectLink.text()).toEqual('server-project2')
+    })
+
+    it('adds a link on the project name to create a search based on the project', async () => {
+      const computed = { isServer: () => true }
+      wrapper = await mount(UserHistoryDocument, { i18n, localVue, propsData, router, computed })
+      const projectLink = wrapper.find('.user-history__list__item__project')
+      expect(projectLink.attributes().href).toEqual('#/?q=%2a&indices=server-project2')
+    })
   })
 })
