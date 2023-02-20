@@ -66,11 +66,19 @@ function actionsBuilder(api) {
       }
     },
     async fetchIndicesStarredDocuments({ commit, rootState }, indices = null) {
-      for (const index of castArray(indices || rootState.search.indices)) {
-        const ids = await api.getStarredDocuments(index)
-        const documents = castArray(ids).map((id) => ({ id, index }))
-        commit('documents', documents)
+      const promisesIds = []
+      const docs = []
+      const indicesArray = castArray(indices || rootState.search.indices)
+      for (const index of indicesArray) {
+        const getStarredDocs = api.getStarredDocuments(index).then((ids) => {
+          const items = castArray(ids).map((id) => ({ id, index }))
+          docs.push(...items)
+        })
+        promisesIds.push(getStarredDocs)
       }
+      // TODO: what to do on error?
+      await Promise.all(promisesIds)
+      commit('documents', docs)
     }
   }
 }

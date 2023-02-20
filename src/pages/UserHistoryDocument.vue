@@ -21,27 +21,30 @@
           </span>
           <span class="user-history__list__item__time d-inline-block">{{ humanReadableTime(modificationDate) }}</span>
         </template>
-        <template #cell(name)="{ item: { name, uri, id } }">
+        <template #cell(name)="{ item: { name, uri } }">
           <router-link :to="{ path: uri }" class="user-history__list__item__link d-flex align-items-center"
             ><document-thumbnail
               :document="eventAsDocument({ uri })"
               size="30"
               crop
               lazy
-              class="user-history__list__item__preview mr-3"
+              class="d-inline-flex user-history__list__item__preview mr-3"
             />
             {{ name }}
           </router-link>
-          <router-link-popup :to="{ path: uri }" class="user-history__list__item__external-link ml-2">
-            <fa :id="`external-link-${id}`" icon="external-link-alt" fixed-width style="padding-top: 1px" />
-          </router-link-popup>
-          <b-tooltip :target="`external-link-${id}`">
-            {{ $t('document.externalWindow') }}
-          </b-tooltip>
-          <haptic-copy :text="baseUrl + uri"
-            ><fa :id="`copy-link-${id}`" icon="clipboard" fixed-width class="p-0"
-          /></haptic-copy>
-          <b-tooltip :target="`copy-link-${id}`"> Copy link </b-tooltip>
+          <document-actions
+            class="d-flex"
+            :document="{
+              id: docId(uri),
+              route: uri,
+              index: projectName(uri),
+              routerParams: {
+                id: docId(uri),
+                index: projectName(uri),
+                routing: docId(uri)
+              }
+            }"
+          ></document-actions>
         </template>
         <template #cell(project)="{ item: { uri } }">
           <router-link
@@ -71,7 +74,7 @@ import { pathToRegexp } from 'path-to-regexp'
 import Document from '@/api/resources/Document'
 import moment from 'moment/moment'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
-import RouterLinkPopup from '@/components/RouterLinkPopup.vue'
+import DocumentActions from '@/components/DocumentActions.vue'
 import utils from '@/mixins/utils'
 
 /**
@@ -95,7 +98,7 @@ export default {
   name: 'UserHistoryDocument',
   components: {
     DocumentThumbnail,
-    RouterLinkPopup
+    DocumentActions
   },
   mixins: [utils],
   props: {
@@ -111,7 +114,7 @@ export default {
           key: NAME,
           label: 'Document name',
           sortable: true,
-          tdClass: 'd-flex align-items-center pr-1'
+          tdClass: 'd-flex align-items-center  justify-content-between pr-1'
         },
         {
           key: PROJECT,
@@ -165,10 +168,11 @@ export default {
       const routes = this.$router.getRoutes()
       const { path } = find(routes, { name: 'document-standalone' }) || {}
       return pathToRegexp(path)
-    },
-    baseUrl() {
-      return `${window.location.origin}/#`
     }
+  },
+  mounted() {
+    // No need to request starred docs once the state has already filled
+    if (!this.$store.state.starred.documents.length) return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
   },
   methods: {
     updateParams(queryParams) {
@@ -191,6 +195,9 @@ export default {
     },
     projectName(uri) {
       return uri.split('/')[2]
+    },
+    docId(uri) {
+      return uri.split('/')[3]
     }
   }
 }
