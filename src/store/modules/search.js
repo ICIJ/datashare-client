@@ -392,6 +392,7 @@ function actionsBuilder(api) {
       }
     },
     updateFromRouteQuery({ commit, getters }, query) {
+      commit('reset', ['field'])
       ;['q', 'index', 'indices', 'from', 'size', 'sort', 'field'].forEach((key) => {
         if (key in query) {
           // Add the query to the state with a mutation to avoid triggering a search
