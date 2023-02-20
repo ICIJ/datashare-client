@@ -347,6 +347,38 @@ describe('SearchStore', () => {
     expect(store.state.search.showFilters).toBe(!showFilters)
   })
 
+  describe('updateFromRouteQuery should not be cumulated with existing filter', () => {
+    it('should set the query to empty after the store is updated with a route query', async () => {
+      store.dispatch('search/updateFromRouteQuery', { q: 'foo' })
+      expect(store.state.search.query).toBe('foo')
+      store.dispatch('search/updateFromRouteQuery', { from: 0 })
+      expect(store.state.search.query).toBe('')
+    })
+
+    it('should set the from to 0 after the store is updated with a route query', async () => {
+      store.dispatch('search/updateFromRouteQuery', { q: 'foo', from: 10 })
+      expect(store.state.search.query).toBe('foo')
+      expect(store.state.search.from).toBe(10)
+      store.dispatch('search/updateFromRouteQuery', { q: 'bar' })
+      expect(store.state.search.query).toBe('bar')
+      expect(store.state.search.from).toBe(0)
+    })
+
+    it('should reset the contentType filter after the store is updated with a route query', async () => {
+      store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['application/pdf'] })
+      expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(1)
+      store.dispatch('search/updateFromRouteQuery', { q: 'bar' })
+      expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(0)
+    })
+
+    it('should not reset the "field" after the store is updated', async () => {
+      store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['application/pdf'], field: 'author' })
+      expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(1)
+      store.dispatch('search/updateFromRouteQuery', { q: 'bar' })
+      expect(store.state.search.field).toBe('author')
+    })
+  })
+
   describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the project of the store according to the url', async () => {
       store.commit('search/index', project)
