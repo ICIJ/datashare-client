@@ -39,19 +39,23 @@ function actionsBuilder(api) {
   return {
     async starDocuments({ commit }, documents = []) {
       const documentsByIndex = groupBy(castArray(documents), 'index')
+      const promises = []
       for (const [index, documents] of Object.entries(documentsByIndex)) {
         const documentIds = map(documents, 'id')
-        await api.starDocuments(index, documentIds)
-        commit('pushDocuments', documents)
+        promises.push(api.starDocuments(index, documentIds))
       }
+      await Promise.all(promises)
+      commit('pushDocuments', documents)
     },
     async unstarDocuments({ commit }, documents = []) {
       const documentsByIndex = groupBy(castArray(documents), 'index')
+      const promises = []
       for (const [index, documents] of Object.entries(documentsByIndex)) {
         const documentIds = map(documents, 'id')
-        await api.unstarDocuments(index, documentIds)
-        commit('removeDocuments', documents)
+        promises.push(api.unstarDocuments(index, documentIds))
       }
+      await Promise.all(promises)
+      commit('removeDocuments', documents)
     },
     toggleStarDocument({ state, dispatch }, { index, id } = {}) {
       const i = findIndex(state.documents, { index, id })
