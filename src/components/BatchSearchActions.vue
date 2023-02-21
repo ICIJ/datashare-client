@@ -151,13 +151,13 @@ export default {
   methods: {
     async deleteBatchSearch() {
       const batchId = this.uuid
-      const isDeleted = await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
-      if (isDeleted) {
+      try {
+        await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
         this.$root.$bvToast.toast(this.$t('batchSearch.deleted'), { noCloseButton: true, variant: 'success' })
-      } else {
-        this.$root.$bvToast.toast(this.$t('batchSearch.notDeleted'), { noCloseButton: true, variant: 'warning' })
+        return this.$router.push({ name: 'batch-search' })
+      } catch (e) {
+        this.$root.$bvToast.toast(this.$t('batchSearch.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
-      this.$router.push({ name: 'batch-search' })
     },
     getQueries() {
       return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.uuid)

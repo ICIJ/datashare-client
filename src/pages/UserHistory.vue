@@ -145,9 +145,15 @@ export default {
     },
     async getUserHistory() {
       const type = this.getTypeOfCurrentPage()
-      const events = await this.$core.api.getUserHistory(type, this.pageOffset, this.perPage)
-      this.events = events.items
-      this.totalEvents = events.total
+      try {
+        const events = await this.$core.api.getUserHistory(type, this.pageOffset, this.perPage)
+        this.events = events.items
+        this.totalEvents = events.total
+      } catch (e) {
+        this.$root.$bvToast.toast('Failed to fetch user history', { noCloseButton: true, variant: 'danger' })
+        this.events = []
+        this.totalEvents = 0
+      }
     },
     async deleteUserHistory() {
       const type = this.getTypeOfCurrentPage()
