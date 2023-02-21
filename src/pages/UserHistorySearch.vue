@@ -93,7 +93,7 @@ export default {
         await this.$core.api.deleteUserEvent(event.id)
         this.$root.$bvToast.toast(this.$t('userHistory.deleted'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
-        this.$root.$bvToast.toast(this.$t('userHistory.notDeleted'), { noCloseButton: true, variant: 'warning' })
+        this.$root.$bvToast.toast(this.$t('userHistory.deleteError'), { noCloseButton: true, variant: 'danger' })
       } finally {
         const searches = this.searches.filter((e) => !(e === event))
         this.$set(this, 'searches', searches)
