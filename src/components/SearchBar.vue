@@ -29,6 +29,8 @@
             class="search-bar__suggestions dropdown-menu"
             :hide="!suggestions.length"
             :items="suggestions"
+            @input="selectTerm"
+            @click.native="submit"
           >
             <template #item-label="{ item }">
               <div class="d-flex">

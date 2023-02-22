@@ -5,6 +5,7 @@ import SearchBar from '@/components/SearchBar'
 import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 describe('SearchBar.vue', function () {
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
@@ -15,8 +16,8 @@ describe('SearchBar.vue', function () {
   const shallowMountFactory = (propsData = {}) => {
     return shallowMount(SearchBar, { i18n, localVue, router, store, propsData })
   }
-  const mountFactory = (propsData = {}) => {
-    return mount(SearchBar, { i18n, localVue, router, store, propsData })
+  const mountFactory = (propsData = {}, data = () => ({ suggestions: [] })) => {
+    return mount(SearchBar, { i18n, localVue, router, store, propsData, data })
   }
   beforeAll(() => store.commit('search/index', project))
 
@@ -43,6 +44,13 @@ describe('SearchBar.vue', function () {
     expect(wrapper.find('.search-bar__suggestions').element).toBeFalsy()
     await wrapper.setData({ suggestions: ['suggestion1', 'suggestion2'] })
     expect(wrapper.find('.search-bar__suggestions').element).toBeTruthy()
+  })
+
+  it('should select the term when suggestion dropdown item is clicked', async () => {
+    wrapper = mountFactory({}, () => ({ suggestions: [{ key: 'bar' }], query: 'foo' }))
+    await flushPromises()
+    await wrapper.find('.selectable-dropdown__item').trigger('click')
+    expect(wrapper.vm.query).toBe('bar')
   })
 
   it('should display the shortkeys-modal component', async () => {
