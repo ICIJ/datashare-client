@@ -188,8 +188,10 @@ export class Api {
   getUser() {
     return this.sendAction('/api/users/me')
   }
-  getUserHistory(type, from, size) {
-    const params = { type: type, from: from, size: size }
+  getUserHistory(type, from, size, sort, desc, projects) {
+    sort = sort ?? 'modification_date'
+    desc = desc ?? true
+    const params = { type: type, from: from, size: size, sort, desc, projects }
     return this.sendAction('/api/users/me/history', { method: Method.GET, params })
   }
   addUserHistoryEvent(projectIds, type, name, uri) {
