@@ -192,14 +192,14 @@ export class Api {
     const params = { type: type, from: from, size: size }
     return this.sendAction('/api/users/me/history', { method: Method.GET, params })
   }
-  addHistoryEvent(projectIds, type, name, uri) {
+  addUserHistoryEvent(projectIds, type, name, uri) {
     const data = { projectIds, type, name, uri }
     return this.sendActionAsText('/api/users/me/history', { method: Method.PUT, data })
   }
   deleteUserHistory(type) {
     return this.sendAction('/api/users/me/history', { method: Method.DELETE, params: { type: type } })
   }
-  deleteUserEvent(id) {
+  deleteUserHistoryEvent(id) {
     return this.sendAction('/api/users/me/history/event', { method: Method.DELETE, params: { id: id } })
   }
   setMarkAsRecommended(project, data) {

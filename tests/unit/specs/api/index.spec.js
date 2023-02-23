@@ -314,7 +314,7 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should send a put JSON for addHistoryEvent', async () => {
+  it('should send a put JSON for addUserHistoryEvent', async () => {
     json = await api.addHistoryEvent(['project1', 'project2'], 'DOCUMENT', 'docName', 'docUri')
     const data = { projectIds: ['project1', 'project2'], type: 'DOCUMENT', name: 'docName', uri: 'docUri' }
     expect(json).toEqual({})
@@ -332,7 +332,7 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return a backend response to deleteUserEvent', async () => {
+  it('should return a backend response to deleteUserHistoryEvent', async () => {
     json = await api.deleteUserEvent()
     expect(json).toEqual({})
   })
