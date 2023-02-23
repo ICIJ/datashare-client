@@ -1,29 +1,25 @@
 <template>
-  <div class="batch-search-filter d-flex align-items-baseline">
-    <span class="batch-search-filter__label">
+  <div class="column-filter d-flex align-items-baseline">
+    <span class="column-filter__label">
       {{ name }}
     </span>
-    <b-btn :id="btnId" class="batch-search-filter__toggle" :class="btnClassName" radius variant="outline">
+    <b-btn :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline">
       <fa icon="filter" />
     </b-btn>
-    <batch-search-filter-badge :active="active" />
-    <b-popover
-      custom-class="batch-search-filter__popover popover-white popover-body-p-0"
-      :target="btnId"
-      triggers="focus"
-    >
+    <column-filter-badge :active="active" />
+    <b-popover custom-class="column-filter__popover popover-white popover-body-p-0" :target="btnId" triggers="focus">
       <slot></slot>
     </b-popover>
   </div>
 </template>
 
 <script>
-import BatchSearchFilterBadge from '@/components/BatchSearchFilterBadge'
+import ColumnFilterBadge from '@/components/ColumnFilterBadge'
 
 export default {
-  name: 'BatchSearchFilter',
+  name: 'ColumnFilter',
   components: {
-    BatchSearchFilterBadge
+    ColumnFilterBadge
   },
   model: {
     prop: 'selectedValues',
@@ -45,7 +41,7 @@ export default {
   },
   computed: {
     btnClassName() {
-      return `batch-search-filter__toggle--${this.id}`
+      return `column-filter__toggle--${this.id}`
     },
     btnId() {
       return `${this.btnClassName}-id`
@@ -54,7 +50,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.batch-search-filter {
+.column-filter {
   &__toggle {
     padding: 0 0.2em;
     margin: 0 0 0 1em;

@@ -24,20 +24,14 @@
       </template>
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
-        <batch-search-filter-dropdown
-          :id="field.key"
-          v-model="selectedStates"
-          :items="states"
-          :name="field.label"
-          multiple
-        >
+        <column-filter-dropdown :id="field.key" v-model="selectedStates" :items="states" :name="field.label" multiple>
           <template #label="{ item }">
             {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
           </template>
-        </batch-search-filter-dropdown>
+        </column-filter-dropdown>
       </template>
       <template #head(projects)="{ field }">
-        <batch-search-filter-dropdown
+        <column-filter-dropdown
           :id="field.key"
           v-model="selectedProjects"
           :items="projects"
@@ -54,7 +48,7 @@
         />
       </template>
       <template #head(published)="{ field }">
-        <batch-search-filter-dropdown
+        <column-filter-dropdown
           :id="field.key"
           v-model="selectedStatus"
           :items="status"
@@ -64,7 +58,7 @@
           <template #label="{ item }">
             {{ $t(`batchSearch.${item.label}`) }}
           </template>
-        </batch-search-filter-dropdown>
+        </column-filter-dropdown>
       </template>
       <!-- Cells -->
       <template #cell(name)="{ item }">
@@ -112,7 +106,7 @@
 </template>
 
 <script>
-import BatchSearchFilterDropdown from '@/components/BatchSearchFilterDropdown'
+import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import UserDisplay from '@/components/UserDisplay'
@@ -145,7 +139,7 @@ const SORT_ORDER = Object.freeze({
 
 export default {
   name: 'BatchSearchTable',
-  components: { UserDisplay, BatchSearchStatus, BatchSearchFilterDate, BatchSearchFilterDropdown },
+  components: { UserDisplay, BatchSearchStatus, BatchSearchFilterDate, ColumnFilterDropdown },
   mixins: [polling, utils],
   data() {
     return {
