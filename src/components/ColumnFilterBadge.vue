@@ -1,7 +1,7 @@
 <template>
   <fa
-    class="batch-search-filter-badge text-secondary"
-    :class="{ 'batch-search-filter-badge--inactive': !active }"
+    class="column-filter-badge text-secondary"
+    :class="{ 'column-filter-badge--inactive': !active }"
     icon="circle"
     width="8px"
   ></fa>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'BatchSearchFilterBadge',
+  name: 'ColumnFilterBadge',
   props: {
     active: {
       type: Boolean,
@@ -19,7 +19,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.batch-search-filter-badge--inactive {
+.column-filter-badge--inactive {
   visibility: hidden;
 }
 </style>

@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import BatchSearchFilter from '@/components/BatchSearchFilter'
+import ColumnFilter from '@/components/ColumnFilter.vue'
 import { Core } from '@/core'
 
-describe('BatchSearchFilter.vue', () => {
+describe('ColumnFilter.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
 
   function createContainer() {
@@ -16,21 +16,21 @@ describe('BatchSearchFilter.vue', () => {
     const propsData = { id: 'filter_id', name: 'filter_name', active: false }
     const attachTo = createContainer()
 
-    wrapper = shallowMount(BatchSearchFilter, { attachTo, i18n, localVue, propsData })
-    expect(wrapper.find('.batch-search-filter').exists()).toBeTruthy()
-    expect(wrapper.find('.batch-search-filter__label').text()).toBe('filter_name')
-    const toggleSelector = '#batch-search-filter__toggle--filter_id-id.batch-search-filter__toggle--filter_id'
+    wrapper = shallowMount(ColumnFilter, { attachTo, i18n, localVue, propsData })
+    expect(wrapper.find('.column-filter').exists()).toBeTruthy()
+    expect(wrapper.find('.column-filter__label').text()).toBe('filter_name')
+    const toggleSelector = '#column-filter__toggle--filter_id-id.column-filter__toggle--filter_id'
     expect(wrapper.find(toggleSelector).exists()).toBeTruthy()
-    expect(wrapper.find('batch-search-filter-badge-stub').exists()).toBeTruthy()
+    expect(wrapper.find('column-filter-badge-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-popover-stub').exists()).toBeTruthy()
   })
 
   it('shows set badge to active when filter is active', async () => {
     const propsData = { id: 'filter_id', name: 'filter_name', active: false }
-    wrapper = shallowMount(BatchSearchFilter, { i18n, localVue, propsData })
-    expect(wrapper.find('batch-search-filter-badge-stub').vm?.active).toBe(false)
+    wrapper = shallowMount(ColumnFilter, { i18n, localVue, propsData })
+    expect(wrapper.find('column-filter-badge-stub').vm?.active).toBe(false)
     await wrapper.setProps({ active: true })
-    expect(wrapper.find('batch-search-filter-badge-stub').vm?.active).toBe(true)
+    expect(wrapper.find('column-filter-badge-stub').vm?.active).toBe(true)
   })
 
   // TODO CD: test popover with slot?

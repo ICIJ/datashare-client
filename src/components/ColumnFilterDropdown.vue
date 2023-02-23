@@ -1,5 +1,5 @@
 <template>
-  <batch-search-filter :id="id" class="batch-search-filter-dropdown" :name="name" :active="isActive">
+  <column-filter :id="id" class="column-filter-dropdown" :name="name" :active="isActive">
     <keep-alive>
       <selectable-dropdown
         v-model="selectedValues"
@@ -14,17 +14,17 @@
         </template>
       </selectable-dropdown>
     </keep-alive>
-  </batch-search-filter>
+  </column-filter>
 </template>
 
 <script>
-import BatchSearchFilter from '@/components/BatchSearchFilter'
+import ColumnFilter from '@/components/ColumnFilter.vue'
 import { isEqual } from 'lodash'
 import eq from 'lodash/eq'
 
 export default {
-  name: 'BatchSearchFilterDropdown',
-  components: { BatchSearchFilter },
+  name: 'ColumnFilterDropdown',
+  components: { ColumnFilter },
   model: {
     prop: 'values',
     event: 'update'

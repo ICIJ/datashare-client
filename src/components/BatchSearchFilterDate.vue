@@ -1,5 +1,5 @@
 <template>
-  <batch-search-filter :id="id" :name="name" :active="isActive">
+  <column-filter :id="id" :name="name" :active="isActive">
     <keep-alive>
       <date-picker
         :key="`date-${id}`"
@@ -12,17 +12,17 @@
       >
       </date-picker>
     </keep-alive>
-  </batch-search-filter>
+  </column-filter>
 </template>
 
 <script>
-import BatchSearchFilter from '@/components/BatchSearchFilter'
+import ColumnFilter from '@/components/ColumnFilter'
 import moment from 'moment'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 export default {
   name: 'BatchSearchFilterDate',
   components: {
-    BatchSearchFilter,
+    ColumnFilter,
     DatePicker
   },
   model: {
