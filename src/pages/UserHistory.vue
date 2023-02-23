@@ -125,8 +125,23 @@ export default {
       },
       set(pageNumber) {
         this.page = pageNumber
-        this.$router.push({ query: { page: this.page, from: this.pageOffset, size: this.perPage } })
+        const query = {
+          ...this.$route.query,
+          page: this.page,
+          from: this.pageOffset,
+          size: this.perPage
+        }
+        this.$router.push({ query })
       }
+    },
+    sortDesc() {
+      return this.$route?.query?.desc
+    },
+    sortBy() {
+      return this.$route?.query?.sort
+    },
+    projectsFilter() {
+      return this.$route?.query?.projects
     }
   },
   watch: {
@@ -146,7 +161,14 @@ export default {
     async getUserHistory() {
       const type = this.getTypeOfCurrentPage()
       try {
-        const events = await this.$core.api.getUserHistory(type, this.pageOffset, this.perPage)
+        const events = await this.$core.api.getUserHistory(
+          type,
+          this.pageOffset,
+          this.perPage,
+          this.sortBy,
+          this.sortDesc,
+          this.projectsFilter
+        )
         this.events = events.items
         this.totalEvents = events.total
       } catch (e) {

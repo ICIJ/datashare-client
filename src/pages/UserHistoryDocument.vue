@@ -15,7 +15,7 @@
         thead-tr-class="text-nowrap"
         tbody-tr-class="user-history__list__item"
       >
-        <template #cell(modificationDate)="{ item: { modificationDate } }">
+        <template #cell(modification_date)="{ item: { modificationDate } }">
           <span class="user-history__list__item__date font-weight-bold mr-2"
             >{{ humanReadableDate(modificationDate) }}
           </span>
@@ -81,17 +81,13 @@ import utils from '@/mixins/utils'
  * List user's visited documents history
  */
 
-const LAST_VISITED = 'lastVisited'
-const MODIFICATION_DATE = 'modificationDate'
-const DOCUMENT_NAME = 'documentName'
+const MODIFICATION_DATE = 'modification_date'
 const NAME = 'name'
 const PROJECT = 'project'
 
 const sortKey = {
-  [LAST_VISITED]: MODIFICATION_DATE,
-  [DOCUMENT_NAME]: NAME,
-  [MODIFICATION_DATE]: LAST_VISITED,
-  [NAME]: DOCUMENT_NAME,
+  [MODIFICATION_DATE]: MODIFICATION_DATE,
+  [NAME]: NAME,
   [PROJECT]: PROJECT
 }
 export default {
@@ -120,7 +116,6 @@ export default {
           key: PROJECT,
           tdClass: 'align-middle ',
           label: 'Project',
-          sortable: true,
           serverOnly: true
         },
         {
@@ -138,8 +133,7 @@ export default {
       get() {
         const sortQuery = this.$route?.query?.sort
         const useDefaultSort = typeof sortQuery === 'undefined' || !sortKey[sortQuery]
-        const sortBy = useDefaultSort ? MODIFICATION_DATE : sortKey[sortQuery]
-        return sortBy
+        return useDefaultSort ? MODIFICATION_DATE : sortKey[sortQuery]
       },
       set(sortBy) {
         this.updateParams({ sort: sortKey[sortBy] })
@@ -150,10 +144,7 @@ export default {
         const descQuery = this.$route?.query?.desc
         const useDefault = typeof descQuery === 'undefined'
         if (!useDefault) {
-          if (typeof descQuery === 'string') {
-            return descQuery === 'true'
-          }
-          return descQuery
+          return typeof descQuery === 'string' ? descQuery === 'true' : descQuery
         }
         return useDefault
       },
