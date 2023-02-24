@@ -35,26 +35,25 @@ export const mutations = {
     }
   }
 }
+
+function batchOfDocuments(callback, documents) {
+  const documentsByIndex = groupBy(castArray(documents), 'index')
+  const promises = []
+  for (const [index, documents] of Object.entries(documentsByIndex)) {
+    const documentIds = map(documents, 'id')
+    promises.push(callback(index, documentIds))
+  }
+  return Promise.all(promises)
+}
+
 function actionsBuilder(api) {
   return {
     async starDocuments({ commit }, documents = []) {
-      const documentsByIndex = groupBy(castArray(documents), 'index')
-      const promises = []
-      for (const [index, documents] of Object.entries(documentsByIndex)) {
-        const documentIds = map(documents, 'id')
-        promises.push(api.starDocuments(index, documentIds))
-      }
-      await Promise.all(promises)
+      await batchOfDocuments(api.starDocuments.bind(api), documents)
       commit('pushDocuments', documents)
     },
     async unstarDocuments({ commit }, documents = []) {
-      const documentsByIndex = groupBy(castArray(documents), 'index')
-      const promises = []
-      for (const [index, documents] of Object.entries(documentsByIndex)) {
-        const documentIds = map(documents, 'id')
-        promises.push(api.unstarDocuments(index, documentIds))
-      }
-      await Promise.all(promises)
+      await batchOfDocuments(api.unstarDocuments.bind(api), documents)
       commit('removeDocuments', documents)
     },
     toggleStarDocument({ state, dispatch }, { index, id } = {}) {
@@ -68,8 +67,7 @@ function actionsBuilder(api) {
     async fetchIndicesStarredDocuments({ commit, rootState }, indices = null) {
       const promisesIds = []
       const docs = []
-      const indicesArray = castArray(indices || rootState.search.indices)
-      for (const index of indicesArray) {
+      for (const index of castArray(indices || rootState.search.indices)) {
         const getStarredDocs = api.getStarredDocuments(index).then((ids) => {
           const items = castArray(ids).map((id) => ({ id, index }))
           docs.push(...items)
