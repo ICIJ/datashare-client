@@ -24,7 +24,14 @@
                 {{ $t('batchSearch.projects') }}
               </dt>
               <dd>
-                {{ batchSearch.projects.map((project) => project.name).join(', ') }}
+                <a
+                  v-for="(project, index) in batchSearch.projects"
+                  :key="project.name"
+                  :href="projectLink(project.name)"
+                  target="_blank"
+                >
+                  {{ project.name }}<span v-if="index < batchSearch.projects.length - 1">,</span></a
+                >
               </dd>
             </div>
             <div v-if="isServer && isMyBatchSearch">
@@ -550,6 +557,9 @@ export default {
     openDocumentModal(pageIndex) {
       this.$set(this, 'documentInModalPageIndex', pageIndex)
       this.$bvModal.show('document-modal')
+    },
+    projectLink(projectName) {
+      return `/#/?indices=${projectName}`
     },
     moment
   }
