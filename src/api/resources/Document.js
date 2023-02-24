@@ -78,17 +78,18 @@ export default class Document extends EsDoc {
   }
   get folder() {
     // Extract location parts
-    const parts = this.path.split(_separator)
+    const pathSeparator = Murmur.config.get('pathSeparator', _separator)
+    const parts = this.path.split(pathSeparator)
     // Remove the file name
     parts.splice(-1, 1)
     // And return the new path
-    return parts.join(_separator) + _separator
+    return parts.join(pathSeparator) + pathSeparator
   }
   get location() {
     return this.folder.split(Murmur.config.get('dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
   }
   get basename() {
-    return last(this.path.split(_separator))
+    return last(this.path.split(Murmur.config.get('pathSeparator', _separator)))
   }
   get extension() {
     return extname(this.basename).toLowerCase()

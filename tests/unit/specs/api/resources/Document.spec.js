@@ -1,3 +1,4 @@
+import Murmur from '@icij/murmur'
 import Document from '@/api/resources/Document'
 
 describe('Document', () => {
@@ -175,5 +176,12 @@ describe('Document', () => {
     const doc = new Document({ _id: '42', _index: 'project', _routing: '12' })
 
     expect(doc.fullRootUrl).toBe('http://localhost:9009/api/project/documents/src/12?routing=12')
+  })
+
+  it('should return the correct basename on Windows', () => {
+    Murmur.config.set('pathSeparator', '\\')
+    const doc = new Document({ _source: { path: 'C:\\this\\is\\a\\specific.file' } })
+
+    expect(doc.basename).toBe('specific.file')
   })
 })
