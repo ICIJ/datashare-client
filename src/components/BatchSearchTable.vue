@@ -90,7 +90,7 @@
       </template>
       <template #cell(projects)="{ item }">
         <span v-b-tooltip.hover class="batch-search-table__item__projects text-truncate" :title="item.projectNames">
-          {{ item.projectNames }}
+          <a :href="projectLink(item.projectNames)"> {{ item.projectNames }}</a>
         </span>
       </template>
     </b-table>
@@ -155,17 +155,6 @@ export default {
         }
       ]
     }
-  },
-  watch: {
-    $route() {
-      return this.fetchWithLoader()
-    },
-    total() {
-      this.fetchAndRegisterPollWithLoader()
-    }
-  },
-  mounted() {
-    this.fetchAndRegisterPollWithLoader()
   },
   computed: {
     ...mapState('batchSearch', ['total']),
@@ -354,6 +343,17 @@ export default {
       return Object.values(settings.batchSearch.status)
     }
   },
+  watch: {
+    $route() {
+      return this.fetchWithLoader()
+    },
+    total() {
+      this.fetchAndRegisterPollWithLoader()
+    }
+  },
+  mounted() {
+    this.fetchAndRegisterPollWithLoader()
+  },
   methods: {
     createBatchSearchRoute({
       page = this.page,
@@ -471,6 +471,9 @@ export default {
     },
     updateRoute(params) {
       return this.$router.push(this.createBatchSearchRoute(params))
+    },
+    projectLink(projectName) {
+      return `/#/?indices=${projectName}`
     }
   }
 }
