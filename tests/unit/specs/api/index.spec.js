@@ -315,7 +315,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should send a put JSON for addUserHistoryEvent', async () => {
-    json = await api.addHistoryEvent(['project1', 'project2'], 'DOCUMENT', 'docName', 'docUri')
+    json = await api.addUserHistoryEvent(['project1', 'project2'], 'DOCUMENT', 'docName', 'docUri')
     const data = { projectIds: ['project1', 'project2'], type: 'DOCUMENT', name: 'docName', uri: 'docUri' }
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith({
@@ -333,7 +333,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should return a backend response to deleteUserHistoryEvent', async () => {
-    json = await api.deleteUserEvent()
+    json = await api.deleteUserHistoryEvent('event-id')
     expect(json).toEqual({})
   })
 
