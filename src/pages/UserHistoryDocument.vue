@@ -35,7 +35,7 @@
             <router-link :to="{ path: uri }" class="user-history__list__item__link d-flex align-items-center">
               <document-thumbnail
                 :document="eventAsDocument({ uri })"
-                class="d-none d-inline-flex user-history__list__item__preview mr-3"
+                class="user-history__list__item__preview d-none d-inline-flex mr-3"
                 crop
                 lazy
                 size="30"
@@ -53,7 +53,7 @@
                   routing: docId(uri)
                 }
               }"
-              class="d-flex"
+              class="user-history__list__item__actions d-flex"
             ></document-actions>
           </div>
         </template>
@@ -194,7 +194,10 @@ export default {
   },
   mounted() {
     // No need to request starred docs once the state has already filled
-    if (!this.$store.state.starred.documents.length) return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+    const starredDocs = this.$store?.state?.starred?.documents
+    if (starredDocs && !starredDocs.length) {
+      return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+    }
   },
   methods: {
     updateParams(queryParams) {
