@@ -1,20 +1,29 @@
 <template>
-  <div class="user-history">
+  <div class="user-history d-flex flex-column">
     <div class="my-4">
       <b-table
         v-if="events.length"
-        :items="events"
-        :fields="displayedFields"
         :empty-text="$t('global.emptyTextTable')"
+        :fields="displayedFields"
+        :items="events"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
-        striped
+        class="user-history__list card border-top-0"
         hover
         responsive
-        class="bg-white border-bottom m-0 user-history__list"
-        thead-tr-class="text-nowrap"
+        striped
         tbody-tr-class="user-history__list__item"
+        thead-tr-class="user-history__list__head text-nowrap"
       >
+        <template #head(project)="{ field }">
+          <column-filter-dropdown
+            id="projects"
+            v-model="selectedProjects"
+            :items="projects"
+            :name="field.label"
+            multiple
+          />
+        </template>
         <template #cell(modification_date)="{ item: { modificationDate } }">
           <span class="user-history__list__item__date font-weight-bold mr-2"
             >{{ humanReadableDate(modificationDate) }}
@@ -22,29 +31,31 @@
           <span class="user-history__list__item__time d-inline-block">{{ humanReadableTime(modificationDate) }}</span>
         </template>
         <template #cell(name)="{ item: { name, uri } }">
-          <router-link :to="{ path: uri }" class="user-history__list__item__link d-flex align-items-center"
-            ><document-thumbnail
-              :document="eventAsDocument({ uri })"
-              size="30"
-              crop
-              lazy
-              class="d-inline-flex user-history__list__item__preview mr-3"
-            />
-            {{ name }}
-          </router-link>
-          <document-actions
-            class="d-flex"
-            :document="{
-              id: docId(uri),
-              route: uri,
-              index: projectName(uri),
-              routerParams: {
+          <div class="d-flex align-items-center justify-content-between">
+            <router-link :to="{ path: uri }" class="user-history__list__item__link d-flex align-items-center">
+              <document-thumbnail
+                :document="eventAsDocument({ uri })"
+                class="d-none d-inline-flex user-history__list__item__preview mr-3"
+                crop
+                lazy
+                size="30"
+              />
+              <span class="d-inline-block text-nowrap text-truncate"> {{ name }}</span>
+            </router-link>
+            <document-actions
+              :document="{
                 id: docId(uri),
+                route: uri,
                 index: projectName(uri),
-                routing: docId(uri)
-              }
-            }"
-          ></document-actions>
+                routerParams: {
+                  id: docId(uri),
+                  index: projectName(uri),
+                  routing: docId(uri)
+                }
+              }"
+              class="d-flex"
+            ></document-actions>
+          </div>
         </template>
         <template #cell(project)="{ item: { uri } }">
           <router-link
@@ -74,7 +85,8 @@ import { pathToRegexp } from 'path-to-regexp'
 import Document from '@/api/resources/Document'
 import moment from 'moment/moment'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
-import DocumentActions from '@/components/DocumentActions.vue'
+import DocumentActions from '@/components/DocumentActions'
+import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import utils from '@/mixins/utils'
 
 /**
@@ -94,7 +106,8 @@ export default {
   name: 'UserHistoryDocument',
   components: {
     DocumentThumbnail,
-    DocumentActions
+    DocumentActions,
+    ColumnFilterDropdown
   },
   mixins: [utils],
   props: {
@@ -107,23 +120,24 @@ export default {
     return {
       fields: [
         {
-          key: NAME,
-          label: 'Document name',
-          sortable: true,
-          tdClass: 'd-flex align-items-center  justify-content-between pr-1'
-        },
-        {
-          key: PROJECT,
-          tdClass: 'align-middle ',
-          label: 'Project',
-          serverOnly: true
-        },
-        {
           key: MODIFICATION_DATE,
           label: 'Last visited',
           tdClass: 'align-middle  ',
           sortable: true,
-          thStyle: 'width:11em;'
+          thStyle: 'min-width:8em;width: 11em;'
+        },
+        {
+          key: NAME,
+          label: 'Document name',
+          sortable: true,
+          thStyle: 'min-width:375px'
+        },
+        {
+          key: PROJECT,
+          tdClass: 'align-middle',
+          label: 'Project',
+          serverOnly: true,
+          thStyle: 'min-width:10em;width: 12em;'
         }
       ]
     }
@@ -152,6 +166,23 @@ export default {
         this.updateParams({ desc: sortDesc })
       }
     },
+    projects() {
+      return this.$core.projects || []
+    },
+    selectedProjects: {
+      get() {
+        const param = this.$route?.query?.projects
+        let projects = param
+        if (typeof param === 'string') {
+          projects = param?.split(',') ?? []
+        }
+        return projects?.filter((p) => this.projects.includes(p)) ?? []
+      },
+      set(values) {
+        const projects = values?.length > 0 ? values?.join(',') : null
+        return this.updateParams({ projects })
+      }
+    },
     displayedFields() {
       return this.fields.filter((field) => (this.isServer ? true : !field.serverOnly))
     },
@@ -167,16 +198,28 @@ export default {
   },
   methods: {
     updateParams(queryParams) {
-      const query = { ...this.$route.query, sort: sortKey[this.sortBy], desc: this.sortDesc, ...queryParams }
+      const query = {
+        ...this.$route.query,
+        sort: sortKey[this.sortBy],
+        desc: this.sortDesc,
+        ...queryParams
+      }
 
-      const params = { name: 'document-history', query }
+      const params = {
+        name: 'document-history',
+        query
+      }
       this.$router.push(params)
     },
     eventAsDocument({ uri }) {
       // Ensure the URI starts with a / and doesn't contain query params
       const path = `/${trimStart(uri.split('?').shift(0), '/')}`
       const [, _index, _id, _routing] = this.documentPathRegexp.exec(path) || []
-      return new Document({ _index, _id, _routing })
+      return new Document({
+        _index,
+        _id,
+        _routing
+      })
     },
     humanReadableDate(date) {
       return moment(date).format('Y/MM/DD')
@@ -212,6 +255,10 @@ export default {
 
       a > div {
         min-width: 0;
+      }
+      &__link {
+        min-width: 100px;
+        max-width: 700px;
       }
     }
   }
