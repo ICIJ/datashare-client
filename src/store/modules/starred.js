@@ -36,24 +36,29 @@ export const mutations = {
   }
 }
 
-function batchOfDocuments(callback, documents) {
+function prepareDocumentIds(documents) {
   const documentsByIndex = groupBy(castArray(documents), 'index')
-  const promises = []
+  const indexWithDocIds = []
   for (const [index, documents] of Object.entries(documentsByIndex)) {
-    const documentIds = map(documents, 'id')
-    promises.push(callback(index, documentIds))
+    indexWithDocIds.push({ index, documentIds: map(documents, 'id') })
   }
-  return Promise.all(promises)
+  return indexWithDocIds
 }
 
 function actionsBuilder(api) {
   return {
     async starDocuments({ commit }, documents = []) {
-      await batchOfDocuments(api.starDocuments.bind(api), documents)
+      const starDocs = prepareDocumentIds(documents).map(function ({ index, documentIds }) {
+        return api.starDocuments(index, documentIds)
+      })
+      await Promise.all(starDocs)
       commit('pushDocuments', documents)
     },
     async unstarDocuments({ commit }, documents = []) {
-      await batchOfDocuments(api.unstarDocuments.bind(api), documents)
+      const unstarDocs = prepareDocumentIds(documents).map(function ({ index, documentIds }) {
+        return api.unstarDocuments(index, documentIds)
+      })
+      await Promise.all(unstarDocs)
       commit('removeDocuments', documents)
     },
     toggleStarDocument({ state, dispatch }, { index, id } = {}) {
