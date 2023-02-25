@@ -416,6 +416,7 @@
     "downloadRootButton": "Übergeordnetes Dokument herunterladen",
     "downloadWithoutMetadata": "Ohne Metadaten herunterladen",
     "externalWindow": "In neuem Fenster öffnen",
+    "copyLink": "Copy link",
     "selectAll": "Alle auswählen",
     "unselectAll": "Alle abwählen",
     "starButton": "Zu Favoriten hinzufügen",
@@ -612,7 +613,7 @@
     "delete": "Löschen",
     "deleted": "The search have been deleted.",
     "confirmDelete": "Are you sure you want to delete this saved search?",
-    "notDeleted": "The search has not been deleted."
+    "deleteError": "Something went wrong, unable to delete the record."
   },
   "userHistorySaveSearchForm": {
     "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
@@ -654,7 +655,7 @@
     "clearFilters": "Filter zurücksetzen",
     "delete": "Batch-Suche löschen",
     "deleted": "Die Batch-Suche wurde gelöscht.",
-    "notDeleted": "Die Batch-Suche wurde nicht gelöscht.",
+    "deleteError": "Something went wrong, unable to delete the batch search.",
     "published": "Veröffentlicht",
     "notPublished": "Not published",
     "publishedDescription": "Geben Sie anderen Mitgliedern des Projekts Zugriff auf diese Batch-Suche. Sie können dies später ändern.",
