@@ -416,6 +416,7 @@
     "downloadRootButton": "Download parent",
     "downloadWithoutMetadata": "Download without metadata",
     "externalWindow": "新しいウインドウで開く",
+    "copyLink": "Copy link",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",
     "starButton": "星マークをつける",
@@ -612,7 +613,7 @@
     "delete": "Delete",
     "deleted": "The search have been deleted.",
     "confirmDelete": "Are you sure you want to delete this saved search?",
-    "notDeleted": "The search has not been deleted."
+    "deleteError": "Something went wrong, unable to delete the record."
   },
   "userHistorySaveSearchForm": {
     "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
@@ -654,7 +655,7 @@
     "clearFilters": "Clear filters",
     "delete": "まとめ検索（バッチサーチ）を削除",
     "deleted": "まとめ検索（バッチサーチ）は削除されました。",
-    "notDeleted": "まとめ検索（バッチサーチ）は削除されていません。",
+    "deleteError": "Something went wrong, unable to delete the batch search.",
     "published": "公開済み",
     "notPublished": "Not published",
     "publishedDescription": "このまとめ検索（バッチサーチ）へのアクセスを、プロジェクトの他の参加者にも認めます。この設定は後で変えられます。",
