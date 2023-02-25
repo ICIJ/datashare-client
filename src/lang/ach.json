@@ -416,6 +416,7 @@
     "downloadRootButton": "crwdns2368:0crwdne2368:0",
     "downloadWithoutMetadata": "crwdns2555:0crwdne2555:0",
     "externalWindow": "crwdns1934:0crwdne1934:0",
+    "copyLink": "crwdns2691:0crwdne2691:0",
     "selectAll": "crwdns2160:0crwdne2160:0",
     "unselectAll": "crwdns2162:0crwdne2162:0",
     "starButton": "crwdns1936:0crwdne1936:0",
@@ -612,7 +613,7 @@
     "delete": "crwdns2533:0crwdne2533:0",
     "deleted": "crwdns2528:0crwdne2528:0",
     "confirmDelete": "crwdns2535:0crwdne2535:0",
-    "notDeleted": "crwdns2530:0crwdne2530:0"
+    "deleteError": "crwdns2693:0crwdne2693:0"
   },
   "userHistorySaveSearchForm": {
     "description": "crwdns2675:0{searchHistoryPath}crwdne2675:0"
@@ -654,7 +655,7 @@
     "clearFilters": "crwdns2592:0crwdne2592:0",
     "delete": "crwdns1112:0crwdne1112:0",
     "deleted": "crwdns1116:0crwdne1116:0",
-    "notDeleted": "crwdns1341:0crwdne1341:0",
+    "deleteError": "crwdns2695:0crwdne2695:0",
     "published": "crwdns1124:0crwdne1124:0",
     "notPublished": "crwdns2594:0crwdne2594:0",
     "publishedDescription": "crwdns1204:0crwdne1204:0",
