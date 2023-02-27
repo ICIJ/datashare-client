@@ -30,15 +30,6 @@
           </template>
         </column-filter-dropdown>
       </template>
-      <template #head(projects)="{ field }">
-        <column-filter-dropdown
-          :id="field.key"
-          v-model="selectedProjects"
-          :items="projects"
-          :name="field.label"
-          multiple
-        />
-      </template>
       <template #head(date)="{ field }">
         <batch-search-filter-date
           :id="field.key"
@@ -59,6 +50,15 @@
             {{ $t(`batchSearch.${item.label}`) }}
           </template>
         </column-filter-dropdown>
+      </template>
+      <template #head(projects)="{ field }">
+        <batch-search-filter-dropdown
+          :id="field.key"
+          v-model="selectedProjects"
+          :items="projects"
+          :name="field.label"
+          multiple
+        />
       </template>
       <!-- Cells -->
       <template #cell(name)="{ item }">
@@ -90,7 +90,17 @@
       </template>
       <template #cell(projects)="{ item }">
         <span v-b-tooltip.hover class="batch-search-table__item__projects text-truncate" :title="item.projectNames">
-          <a :href="projectLink(item.projectNames)"> {{ item.projectNames }}</a>
+          <router-link
+            :to="{
+              name: 'search',
+              query: {
+                q: '*',
+                indices: item.projectNames
+              }
+            }"
+          >
+            {{ item.projectNames }}
+          </router-link>
         </span>
       </template>
     </b-table>
@@ -182,12 +192,6 @@ export default {
           sortable: true,
           name: 'state'
         },
-        this.serverField({
-          key: 'projects',
-          label: this.$t('batchSearch.projects'),
-          sortable: true,
-          name: 'projects'
-        }),
         {
           key: 'name',
           label: this.$t('batchSearch.name'),
@@ -223,6 +227,12 @@ export default {
           label: this.$t('batchSearch.published'),
           sortable: true,
           name: 'published'
+        }),
+        this.serverField({
+          key: 'projects',
+          label: this.$t('batchSearch.projects'),
+          sortable: true,
+          name: 'projects'
         })
       ])
     },
@@ -471,9 +481,6 @@ export default {
     },
     updateRoute(params) {
       return this.$router.push(this.createBatchSearchRoute(params))
-    },
-    projectLink(projectName) {
-      return `/#/?indices=${projectName}`
     }
   }
 }
