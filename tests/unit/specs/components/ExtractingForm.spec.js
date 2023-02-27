@@ -5,7 +5,7 @@ import { Core } from '@/core'
 import ExtractingForm from '@/components/ExtractingForm'
 
 describe('ExtractingForm.vue', () => {
-  let wrapper, i18n, localVue, router, store, mockAxios, api
+  let wrapper, i18n, localVue, router, store, mockAxios, api, wait
 
   beforeAll(() => {
     mockAxios = { request: jest.fn(), get: jest.fn() }
@@ -15,10 +15,11 @@ describe('ExtractingForm.vue', () => {
     localVue = core.localVue
     router = core.router
     store = core.store
+    wait = core.wait
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(ExtractingForm, { i18n, localVue, router, store })
+    wrapper = shallowMount(ExtractingForm, { i18n, localVue, router, store, wait })
     mockAxios.request.mockClear()
     mockAxios.get.mockClear()
     mockAxios.request.mockResolvedValue({ data: {} })
