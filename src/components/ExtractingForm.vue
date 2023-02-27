@@ -45,9 +45,11 @@
     </div>
     <div class="extracting-form__footer mt-4 row no-gutters">
       <div class="col text-right">
-        <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
-          {{ $t('indexing.go') }}
-        </b-btn>
+        <b-overlay :show="isWaitingForSubmitExtract" opacity="0.6" rounded spinner-small class="d-inline-flex">
+          <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
+            {{ $t('indexing.go') }}
+          </b-btn>
+        </b-overlay>
       </div>
     </div>
   </form>
@@ -57,9 +59,10 @@
 import { noop } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
 
-import ExtractingLanguageFormControl from './ExtractingLanguageFormControl.vue'
-import ExtractingFormOcrControl from './ExtractingFormOcrControl.vue'
-import InlineDirectoryPicker from './InlineDirectoryPicker.vue'
+import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
+import ExtractingFormOcrControl from '@/components/ExtractingFormOcrControl'
+import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
+import { waitFor } from 'vue-wait'
 
 const { mapFields } = createHelpers({
   getterType: 'indexing/getField',
@@ -91,14 +94,21 @@ export default {
     }
   },
   computed: {
-    ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language'])
+    ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language']),
+    isWaitingForSubmitExtract() {
+      return this.$wait.is('submitExtract')
+    }
   },
   methods: {
+    dispatchExtract: waitFor('submitExtract', function () {
+      return this.$store.dispatch('indexing/submitExtract')
+    }),
     async submitExtract() {
       this.disabled = true
       try {
-        await this.$store.dispatch('indexing/submitExtract')
+        await this.dispatchExtract()
       } finally {
+        this.disabled = false
         this.$store.commit('indexing/resetExtractForm')
         this.finally()
       }
