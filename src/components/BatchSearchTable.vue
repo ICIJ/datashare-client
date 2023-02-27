@@ -231,7 +231,7 @@ export default {
         this.serverField({
           key: 'projects',
           label: this.$t('batchSearch.projects'),
-          sortable: true,
+          sortable: false,
           name: 'projects'
         })
       ])
