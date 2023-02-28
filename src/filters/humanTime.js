@@ -1,5 +1,5 @@
 import moment from 'moment'
 
-export function humanTime(date) {
-  return moment(date).format('HH:mm')
+export function humanTime(date, locale) {
+  return moment(date).locale(locale).format('HH:mm')
 }

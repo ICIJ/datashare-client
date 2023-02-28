@@ -4,6 +4,7 @@ process.env.VUE_APP_ES_HOST = 'http://elasticsearch:9200'
 process.env.VUE_APP_DS_HOST = 'http://localhost:9009'
 process.env.VUE_APP_FEATURE_BATCH_DOWNLOAD = true
 process.env.VUE_APP_DS_COOKIE_NAME = '_ds_session_id'
+process.env.TZ = 'UTC'
 
 module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/unit/setup.js'],

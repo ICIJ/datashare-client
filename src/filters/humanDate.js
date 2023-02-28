@@ -1,5 +1,5 @@
 import moment from 'moment'
 
-export function humanDate(date) {
-  return moment(date).format('Y/MM/DD')
+export function humanDate(date, locale) {
+  return moment(date).locale(locale).format('Y/MM/DD')
 }
