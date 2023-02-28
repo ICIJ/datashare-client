@@ -35,7 +35,7 @@
                     }
                   }"
                 >
-                  {{ project.name }}<span v-if="index < batchSearch.projects.length - 1">,</span>
+                  {{ project.name }}<span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">,</span>
                 </router-link>
               </dd>
             </div>
