@@ -25,10 +25,8 @@
           />
         </template>
         <template #cell(modification_date)="{ item: { modificationDate } }">
-          <span class="user-history__list__item__date font-weight-bold mr-2"
-            >{{ humanReadableDate(modificationDate) }}
-          </span>
-          <span class="user-history__list__item__time d-inline-block">{{ humanReadableTime(modificationDate) }}</span>
+          <span class="user-history__list__item__date font-weight-bold mr-2">{{ modificationDate | humanDate }} </span>
+          <span class="user-history__list__item__time d-inline-block">{{ modificationDate | humanTime }}</span>
         </template>
         <template #cell(name)="{ item: { name, uri } }">
           <div class="d-flex align-items-center justify-content-between">
@@ -83,11 +81,12 @@
 import { find, trimStart } from 'lodash'
 import { pathToRegexp } from 'path-to-regexp'
 import Document from '@/api/resources/Document'
-import moment from 'moment/moment'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import DocumentActions from '@/components/DocumentActions'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import utils from '@/mixins/utils'
+import { humanTime } from '@/filters/humanTime.js'
+import { humanDate } from '@/filters/humanDate.js'
 
 /**
  * List user's visited documents history
@@ -108,6 +107,10 @@ export default {
     DocumentThumbnail,
     DocumentActions,
     ColumnFilterDropdown
+  },
+  filters: {
+    humanDate,
+    humanTime
   },
   mixins: [utils],
   props: {
@@ -223,12 +226,6 @@ export default {
         _id,
         _routing
       })
-    },
-    humanReadableDate(date) {
-      return moment(date).format('Y/MM/DD')
-    },
-    humanReadableTime(date) {
-      return moment(date).format('HH:mm')
     },
     projectName(uri) {
       return uri.split('/')[2]

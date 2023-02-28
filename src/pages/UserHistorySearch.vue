@@ -2,24 +2,15 @@
   <div class="user-history">
     <div class="mt-4">
       <ul v-if="events.length" class="list-unstyled user-history__list card mb-4">
-        <li v-for="event in searches" :key="event.id" class="user-history__list__item">
-          <div class="user-history__list__item__delete float-right m-4">
-            <confirm-button
-              class="btn btn-outline-danger"
-              placement="leftbottom"
-              :confirmed="() => deleteUserEvent(event)"
-              :label="$t('userHistory.confirmDelete')"
-              :no="$t('global.no')"
-              :yes="$t('global.yes')"
-            >
-              <fa icon="trash-alt" />
-              {{ $t('userHistory.delete') }}
-            </confirm-button>
-          </div>
+        <li
+          v-for="event in searches"
+          :key="event.id"
+          class="user-history__list__item d-inline-flex justify-content-between"
+        >
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
-            <div class="user-history__list__item__name font-weight-bold mb-1">
+            <span class="user-history__list__item__name font-weight-bold mb-1">
               {{ event.name }}
-            </div>
+            </span>
             <div class="user-history__list__item__query">
               <applied-search-filters-item
                 v-for="(filter, index) in filtersItems(event)"
@@ -29,6 +20,27 @@
               />
             </div>
           </router-link>
+          <div
+            class="d-flex justify-content-between align-items-end align-items-md-center d-flex flex-column flex-md-row m-3"
+          >
+            <span class="text-muted text-nowrap mr-3"
+              ><span class="font-weight-bold mr-2">{{ event.creationDate | humanDate }}</span
+              >{{ event.creationDate | humanTime }}</span
+            >
+            <div class="user-history__list__item__delete mx-3">
+              <confirm-button
+                class="btn btn-outline-danger text-nowrap"
+                placement="leftbottom"
+                :confirmed="() => deleteUserEvent(event)"
+                :label="$t('userHistory.confirmDelete')"
+                :no="$t('global.no')"
+                :yes="$t('global.yes')"
+              >
+                <fa icon="trash-alt" />
+                {{ $t('userHistory.delete') }}
+              </confirm-button>
+            </div>
+          </div>
         </li>
       </ul>
       <div v-else class="text-muted text-center">
@@ -40,11 +52,17 @@
 
 <script>
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
+import { humanTime } from '@/filters/humanTime.js'
+import { humanDate } from '@/filters/humanDate.js'
 
 export default {
   name: 'UserHistorySearch',
   components: {
     AppliedSearchFiltersItem
+  },
+  filters: {
+    humanDate,
+    humanTime
   },
   props: {
     events: {
