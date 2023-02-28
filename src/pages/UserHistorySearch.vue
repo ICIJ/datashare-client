@@ -23,9 +23,9 @@
           <div
             class="d-flex justify-content-between align-items-end align-items-md-center d-flex flex-column flex-md-row m-3"
           >
-            <span class="text-muted text-nowrap mr-3"
-              ><span class="font-weight-bold mr-2">{{ event.creationDate | humanDate }}</span
-              >{{ event.creationDate | humanTime }}</span
+            <span class="user-history__list__item__date text-muted text-nowrap mr-3"
+              ><span class="font-weight-bold mr-2">{{ getDate(event.creationDate) }} </span
+              >{{ getTime(event.creationDate) }}</span
             >
             <div class="user-history__list__item__delete mx-3">
               <confirm-button
@@ -75,6 +75,12 @@ export default {
     }
   },
   methods: {
+    getDate(date) {
+      return humanDate(date, this.$i18n.locale)
+    },
+    getTime(time) {
+      return humanTime(time, this.$i18n.locale)
+    },
     filtersItems({ uri }) {
       return this.createFiltersFromURI(uri)
     },

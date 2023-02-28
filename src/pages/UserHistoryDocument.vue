@@ -25,8 +25,8 @@
           />
         </template>
         <template #cell(modification_date)="{ item: { modificationDate } }">
-          <span class="user-history__list__item__date font-weight-bold mr-2">{{ modificationDate | humanDate }} </span>
-          <span class="user-history__list__item__time d-inline-block">{{ modificationDate | humanTime }}</span>
+          <span class="user-history__list__item__date font-weight-bold mr-2">{{ getDate(modificationDate) }}</span>
+          <span class="user-history__list__item__time d-inline-block">{{ getTime(modificationDate) }}</span>
         </template>
         <template #cell(name)="{ item: { name, uri } }">
           <div class="d-flex align-items-center justify-content-between">
@@ -107,10 +107,6 @@ export default {
     DocumentThumbnail,
     DocumentActions,
     ColumnFilterDropdown
-  },
-  filters: {
-    humanDate,
-    humanTime
   },
   mixins: [utils],
   props: {
@@ -203,6 +199,12 @@ export default {
     }
   },
   methods: {
+    getDate(date) {
+      return humanDate(date, this.$i18n.locale)
+    },
+    getTime(time) {
+      return humanTime(time, this.$i18n.locale)
+    },
     updateParams(queryParams) {
       const query = {
         ...this.$route.query,

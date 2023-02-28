@@ -92,6 +92,21 @@ describe('UserHistorySearch.vue', () => {
     )
   })
 
+  it('should display date and time of the search', async () => {
+    const event = {
+      id: '1',
+      type: 'SEARCH',
+      name: 'name_01',
+      uri: 'uri_01',
+      creationDate: '2023-02-26T09:56:47.661+00:00'
+    }
+
+    const propsData = { events: [event] }
+    wrapper = await shallowMount(UserHistorySearch, { i18n, localVue, propsData })
+
+    expect(wrapper.find('.user-history__list__item__date').text()).toBe('2023/02/26 09:56')
+  })
+
   it('should parse uri with multiple fields with the same filter name', () => {
     const uri = '/?q=*&indices=cantina,local-datashare&f[language]=FRENCH&f[language]=ENGLISH'
     const filters = wrapper.vm.createFiltersFromURI(uri)
