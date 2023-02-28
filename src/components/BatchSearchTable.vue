@@ -52,7 +52,7 @@
         </column-filter-dropdown>
       </template>
       <template #head(projects)="{ field }">
-        <batch-search-filter-dropdown
+        <column-filter-dropdown
           :id="field.key"
           v-model="selectedProjects"
           :items="projects"
@@ -89,17 +89,24 @@
         {{ item.isPublished }}
       </template>
       <template #cell(projects)="{ item }">
-        <span v-b-tooltip.hover class="batch-search-table__item__projects text-truncate" :title="item.projectNames">
+        <span
+          v-for="(projectName, index) in item.projectsNames"
+          :key="projectName"
+          v-b-tooltip.hover
+          class="batch-search-table__item__projects text-truncate"
+          :title="projectName"
+        >
           <router-link
             :to="{
               name: 'search',
               query: {
                 q: '*',
-                indices: item.projectNames
+                indices: projectName
               }
             }"
           >
-            {{ item.projectNames }}
+            {{ projectName }}
+            <span v-if="isNotLastArrayItem(index, item.projectsNames.length)">,</span>
           </router-link>
         </span>
       </template>
@@ -142,6 +149,7 @@ const BATCHSEARCH_STATUS = Object.freeze({
     value: BATCHSEARCH_STATUS_VALUE.NOT_PUBLISHED
   }
 })
+
 const SORT_ORDER = Object.freeze({
   ASC: 'asc',
   DESC: 'desc'
@@ -180,7 +188,7 @@ export default {
           formatNbQueries: this.$n(batchSearch.nbQueries),
           formatNbResults: this.$n(batchSearch.nbResults),
           isPublished: batchSearch.published ? this.$t('global.yes') : this.$t('global.no'),
-          projectNames: this.getProjectsNames(batchSearch)
+          projectsNames: this.getProjectsNamesList(batchSearch)
         }
       })
     },
@@ -455,8 +463,11 @@ export default {
         ...(searchQueryExists && { query: { query: this.search } })
       }
     },
+    getProjectsNamesList(item) {
+      return item.projects?.map((project) => project.name)
+    },
     getProjectsNames(item) {
-      return item.projects?.map((project) => project.name).join(', ') ?? ''
+      return this.getProjectsNamesList(item).join(', ') ?? ''
     },
     isSelected(item) {
       return item?.value === this.selectedStatus?.value

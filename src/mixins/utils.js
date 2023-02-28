@@ -18,6 +18,9 @@ const utils = {
     },
     getTermIndexBackgroundColor(index) {
       return { 'background-color': this.getTermIndexColor(index) }
+    },
+    isNotLastArrayItem(index, arrayLength) {
+      return index < arrayLength - 1
     }
   }
 }
