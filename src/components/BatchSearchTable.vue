@@ -156,9 +156,6 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.fetchAndRegisterPollWithLoader()
-  },
   watch: {
     $route() {
       return this.fetchWithLoader()
@@ -166,6 +163,9 @@ export default {
     total() {
       this.fetchAndRegisterPollWithLoader()
     }
+  },
+  mounted() {
+    this.fetchAndRegisterPollWithLoader()
   },
   computed: {
     ...mapState('batchSearch', ['total']),
