@@ -66,13 +66,10 @@ export default {
     },
     createFiltersFromURI(uri) {
       const urlSearchParams = new URLSearchParams(uri.split('?').slice(1).pop())
-      const params = Object.fromEntries(urlSearchParams.entries())
-      // Reduce params list into an array
-      return Object.keys(params).reduce((filters, name) => {
-        let value = params[name]
-        // Skip ignored param
+      const filters = []
+      for (let [name, value] of urlSearchParams.entries()) {
         if (this.isIgnoredFilter({ name, value })) {
-          return filters
+          continue
         }
         // Filter value is a Date
         if (name.includes('Date')) {
@@ -83,10 +80,10 @@ export default {
         if (name.includes('indices')) {
           name = 'projects'
         }
-        // Finally, add the filter to the list of displayed filters
+
         filters.push({ name, value, label: value })
-        return filters
-      }, [])
+      }
+      return filters
     },
     async deleteUserEvent(event) {
       try {

@@ -91,4 +91,12 @@ describe('UserHistorySearch.vue', () => {
       })
     )
   })
+
+  it('should parse uri with multiple fields with the same filter name', () => {
+    const uri = '/?q=*&indices=cantina,local-datashare&f[language]=FRENCH&f[language]=ENGLISH'
+    const filters = wrapper.vm.createFiltersFromURI(uri)
+    expect(filters[0].name).toBe('projects')
+    expect(filters[1].name).toBe('f[language]')
+    expect(filters[2].name).toBe('f[language]')
+  })
 })
