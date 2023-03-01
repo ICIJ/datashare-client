@@ -34,6 +34,7 @@
                       indices: project.name
                     }
                   }"
+                  class="batch-search-results__info__project-link"
                 >
                   {{ project.name }}<span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">,</span>
                 </router-link>

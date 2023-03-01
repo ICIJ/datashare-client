@@ -363,6 +363,23 @@ describe('BatchSearchTable.vue', () => {
       const link = wrapper.findAll('.batch-search-table__item__link').at(0)
       expect(link.attributes('href')).toContain('/project_01,project_02/')
     })
+
+    it('the Projects column should be the last one', () => {
+      wrapper = mount(BatchSearchTable, { i18n, localVue, router: routerFactory(), store, wait })
+      const columns = wrapper.findAll('.batch-search-table__head [role="columnheader"]')
+      expect(columns.at(7).text()).toBe('Projects')
+    })
+
+    it('all projects should be displayed and clickable for a multiproject search', async () => {
+      wrapper = mount(BatchSearchTable, { i18n, localVue, router: routerFactory(), store, wait })
+      await flushPromises()
+      const projectLinks = wrapper.findAll('.batch-search-table__item__projects__link')
+      expect(projectLinks.at(0).element.tagName).toBe('A')
+      expect(projectLinks.at(0).attributes('href')).toBe(`/?q=%2a&indices=${batchSearchMock.items[0].projects[0].name}`)
+
+      expect(projectLinks.at(1).element.tagName).toBe('A')
+      expect(projectLinks.at(1).attributes('href')).toBe(`/?q=%2a&indices=${batchSearchMock.items[0].projects[1].name}`)
+    })
   })
 
   describe('LOCAL mode', () => {
