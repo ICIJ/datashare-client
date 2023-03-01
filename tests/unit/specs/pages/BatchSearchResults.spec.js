@@ -122,6 +122,20 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
   })
 
+  describe('Projects column', () => {
+    it('should contain all the projects in which the batch search is performed', () => {
+      console.log(wrapper.html())
+      const projectLinks = wrapper.findAll('.batch-search-results__info__project-link')
+      expect(projectLinks).toHaveLength(2)
+    })
+
+    it('should display project names as clickable links', () => {
+      const projectLinks = wrapper.findAll('.batch-search-results__info__project-link')
+      expect(projectLinks.at(0).element.tagName).toBe('ROUTER-LINK-STUB')
+      expect(projectLinks.at(1).element.tagName).toBe('ROUTER-LINK-STUB')
+    })
+  })
+
   it('should redirect on sort changed', () => {
     jest.spyOn(router, 'push')
 
