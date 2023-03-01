@@ -106,9 +106,9 @@
             }"
             class="batch-search-table__item__projects__link"
           >
-            {{ projectName }}
-            <span v-if="isNotLastArrayItem(index, item.projectsNames.length)">,</span>
+            <span>{{ projectName }}</span>
           </router-link>
+          <span v-if="isNotLastArrayItem(index, item.projectsNames.length)">, </span>
         </span>
       </template>
     </b-table>

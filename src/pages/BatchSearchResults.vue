@@ -24,20 +24,21 @@
                 {{ $t('batchSearch.projects') }}
               </dt>
               <dd>
-                <router-link
-                  v-for="(project, index) in batchSearch.projects"
-                  :key="project.name"
-                  :to="{
-                    name: 'search',
-                    query: {
-                      q: '*',
-                      indices: project.name
-                    }
-                  }"
-                  class="batch-search-results__info__project-link"
-                >
-                  {{ project.name }}<span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">,</span>
-                </router-link>
+                <span v-for="(project, index) in batchSearch.projects" :key="project.name">
+                  <router-link
+                    :to="{
+                      name: 'search',
+                      query: {
+                        q: '*',
+                        indices: project.name
+                      }
+                    }"
+                    class="batch-search-results__info__project-link"
+                  >
+                    <span>{{ project.name }}</span
+                    ><span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">, </span>
+                  </router-link>
+                </span>
               </dd>
             </div>
             <div v-if="isServer && isMyBatchSearch">
