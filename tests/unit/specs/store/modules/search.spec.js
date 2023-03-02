@@ -377,6 +377,15 @@ describe('SearchStore', () => {
       store.dispatch('search/updateFromRouteQuery', { q: 'bar' })
       expect(store.state.search.field).toBe('author')
     })
+
+    it('should not empty "index" and "indices" after the store is updated', async () => {
+      store.dispatch('search/updateFromRouteQuery', { index: 'local', indices: ['local', 'project'] })
+      expect(store.state.search.index).toBe('local')
+      expect(store.state.search.indices).toEqual(['local', 'project'])
+      store.dispatch('search/updateFromRouteQuery', { from: 0 })
+      expect(store.state.search.index).toBe('local')
+      expect(store.state.search.indices).toEqual(['local', 'project'])
+    })
   })
 
   describe('updateFromRouteQuery should restore search state from url', () => {
