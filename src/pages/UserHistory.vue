@@ -56,9 +56,7 @@ export default {
     PageHeader
   },
   beforeRouteEnter(to, from, next) {
-    console.log('HELLO')
     return next((vm) => {
-      console.log('WORLD')
       const defaultTab = vm.tabRoutes.indexOf(to.name)
       if (!isEqual(from.path, to.path)) {
         vm.page = 1

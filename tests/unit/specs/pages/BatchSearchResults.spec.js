@@ -124,7 +124,6 @@ describe('BatchSearchResults.vue', () => {
 
   describe('Projects column', () => {
     it('should contain all the projects in which the batch search is performed', () => {
-      console.log(wrapper.html())
       const projectLinks = wrapper.findAll('.batch-search-results__info__project-link')
       expect(projectLinks).toHaveLength(2)
     })
