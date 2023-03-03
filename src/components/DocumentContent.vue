@@ -77,9 +77,6 @@ export default {
       const language = get(this.document, 'source.language', null)
       return this.rightToLeftLanguages.includes(language)
     },
-    contentPipelineFunctions() {
-      return this.getFullPipelineChain('extracted-text')
-    },
     maxOffset() {
       return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
     },
