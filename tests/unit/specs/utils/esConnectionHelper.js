@@ -3,6 +3,7 @@ import elasticsearch from 'elasticsearch-browser'
 
 import esMapping from './datashare_index_mappings.json'
 import esSettings from './datashare_index_settings.json'
+import esSettingsWindows from './datashare_index_settings_windows.json'
 
 function slugger(value) {
   return value
@@ -12,7 +13,7 @@ function slugger(value) {
     .replace(/\s/g, '-')
 }
 
-function esConnectionHelper(indexOrIndices = []) {
+function esConnectionHelper(indexOrIndices = [], ifWindows = false) {
   jest.setTimeout(1e4)
   const indices = castArray(indexOrIndices)
 
@@ -20,7 +21,10 @@ function esConnectionHelper(indexOrIndices = []) {
     await Promise.all(
       map(indices, async (index) => {
         if (!(await es.indices.exists({ index }))) {
-          await es.indices.create({ index, body: { settings: esSettings, mappings: esMapping } })
+          await es.indices.create({
+            index,
+            body: { settings: ifWindows ? esSettingsWindows : esSettings, mappings: esMapping }
+          })
         }
       })
     )
@@ -44,10 +48,10 @@ function esConnectionHelper(indexOrIndices = []) {
   return indices
 }
 
-function build(prefix = 'spec') {
+function build(prefix = 'spec', isWindows = false) {
   const randomKey = Math.random().toString(36).slice(2)
   const randomIndex = [prefix, randomKey, uniqueId()].map(slugger).join('-')
-  const [index] = esConnectionHelper(randomIndex)
+  const [index] = esConnectionHelper(randomIndex, isWindows)
   return { index, es }
 }
 

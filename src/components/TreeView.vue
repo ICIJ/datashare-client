@@ -248,7 +248,8 @@ export default {
       pages: [],
       tree: [],
       infiniteScrollId: uniqueId('infinite-scroll-'),
-      allDirectoriesInputId: uniqueId('all-directories-input-')
+      allDirectoriesInputId: uniqueId('all-directories-input-'),
+      pathSeparator: this.$core.config.get('pathSeparator', '/')
     }
   },
   computed: {
@@ -294,9 +295,11 @@ export default {
       return get(this, 'lastPage.aggregations.totalContentLength.value', -1)
     },
     aggregationOptions() {
+      const include = this.suffixPathTokens(this.pathSeparator.concat('.*')).join('|')
+      const exclude = this.suffixPathTokens(this.pathSeparator.concat('.*', this.pathSeparator, '.*')).join('|')
       return {
-        include: this.suffixPathTokens('/.*').join('|'),
-        exclude: this.suffixPathTokens('/.*/.*').join('|'),
+        include: this.pathSeparator === '\\' ? this.doubleWindowsSeparator(include) : include,
+        exclude: this.pathSeparator === '\\' ? this.doubleWindowsSeparator(exclude) : exclude,
         size: this.nextOffset,
         order: this.order
       }
@@ -359,6 +362,9 @@ export default {
     humanNumber,
     suffixPathTokens(suffix = '') {
       return this.pathTokens.map((token) => `${token}${suffix}`)
+    },
+    doubleWindowsSeparator(paths) {
+      return paths.split('\\').join('\\\\')
     },
     selectPaths(paths) {
       /**

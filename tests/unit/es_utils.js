@@ -1,7 +1,7 @@
 import { castArray, find, isArray, isObject, uniqueId } from 'lodash'
-import { dirname } from 'path'
-
 import EsDocList from '@/api/resources/EsDocList'
+
+const pathUtil = require('path')
 
 function letData(index) {
   return new IndexBuilder(index)
@@ -69,7 +69,7 @@ class IndexedDocuments {
 class IndexedDocument {
   constructor(path = uniqueId('/path/to/document/'), index = 'default-index') {
     this.path = path
-    this.dirname = dirname(path)
+    this.dirname = pathUtil.win32.dirname(path)
     this.join = { name: 'Document' }
     this.type = 'Document'
     this.language = 'ENGLISH'
