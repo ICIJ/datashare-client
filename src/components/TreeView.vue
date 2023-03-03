@@ -298,8 +298,8 @@ export default {
       const include = this.suffixPathTokens(this.pathSeparator.concat('.*')).join('|')
       const exclude = this.suffixPathTokens(this.pathSeparator.concat('.*', this.pathSeparator, '.*')).join('|')
       return {
-        include: this.pathSeparator === '\\' ? this.doubleWindowsSeparator(include) : include,
-        exclude: this.pathSeparator === '\\' ? this.doubleWindowsSeparator(exclude) : exclude,
+        include: this.usesWindowsSepator ? this.doubleWindowsSeparator(include) : include,
+        exclude: this.usesWindowsSepator ? this.doubleWindowsSeparator(exclude) : exclude,
         size: this.nextOffset,
         order: this.order
       }
@@ -318,6 +318,9 @@ export default {
        * are different).
        */
       return uniq([this.path, this.path.toLowerCase()])
+    },
+    usesWindowsSepator() {
+      return this.pathSeparator === '\\'
     },
     selected: {
       get() {
