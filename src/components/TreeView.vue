@@ -69,7 +69,7 @@
                 href
                 @click.prevent="$emit('input', directory.key)"
               >
-                {{ basename(directory.key) }}
+                {{ getBasename(directory.key) }}
               </a>
               <div
                 v-if="size && directory.contentLength"
@@ -118,9 +118,8 @@
 </template>
 
 <script>
-import { difference, flatten, filter, get, identity, includes, noop, round, uniq, uniqBy, uniqueId } from 'lodash'
+import { difference, flatten, filter, get, identity, includes, noop, round, uniq, uniqBy, uniqueId, last } from 'lodash'
 import bodybuilder from 'bodybuilder'
-import { posix, win32 } from 'path'
 import { waitFor } from 'vue-wait'
 import InfiniteLoading from 'vue-infinite-loading'
 
@@ -323,9 +322,6 @@ export default {
     usesWindowsSeparator() {
       return this.pathSeparator === '\\'
     },
-    basename() {
-      return this.usesWindowsSeparator ? win32.basename : posix.basename
-    },
     selected: {
       get() {
         return this.selectedPaths
@@ -372,6 +368,9 @@ export default {
     },
     doubleWindowsSeparator(paths) {
       return paths.split('\\').join('\\\\')
+    },
+    getBasename(value) {
+      return last(value.split(this.pathSeparator))
     },
     selectPaths(paths) {
       /**
