@@ -294,12 +294,18 @@ export default {
     total() {
       return get(this, 'lastPage.aggregations.totalContentLength.value', -1)
     },
+    includeOption() {
+      const paths = this.suffixPathTokens(this.pathSeparator.concat('.*')).join('|')
+      return this.usesWindowsSeparator ? this.doubleWindowsSeparator(paths) : paths
+    },
+    excludeOption() {
+      const paths = this.suffixPathTokens(this.pathSeparator.concat('.*', this.pathSeparator, '.*')).join('|')
+      return this.usesWindowsSeparator ? this.doubleWindowsSeparator(paths) : paths
+    },
     aggregationOptions() {
-      const include = this.suffixPathTokens(this.pathSeparator.concat('.*')).join('|')
-      const exclude = this.suffixPathTokens(this.pathSeparator.concat('.*', this.pathSeparator, '.*')).join('|')
       return {
-        include: this.usesWindowsSeparator ? this.doubleWindowsSeparator(include) : include,
-        exclude: this.usesWindowsSeparator ? this.doubleWindowsSeparator(exclude) : exclude,
+        include: this.includeOption,
+        exclude: this.excludeOption,
         size: this.nextOffset,
         order: this.order
       }
