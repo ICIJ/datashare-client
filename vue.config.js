@@ -68,6 +68,7 @@ module.exports = {
     config.resolve.alias
       .set('images', resolve('src/assets/images'))
       .set('node_modules', resolve('node_modules'))
+      .set('path', resolve('node_modules/path'))
       .set('mixins', resolve('src/mixins'))
       .set('tests', resolve('tests'))
 

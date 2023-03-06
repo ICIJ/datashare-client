@@ -92,6 +92,21 @@ describe('TreeView.vue', () => {
       expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(3)
     })
 
+    it('should be a display a correct basename', async () => {
+      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
+        .commit()
+      await wrapper.vm.loadData({ clearPages: true })
+
+      expect(wrapper.findAll('.tree-view__directories__item__label').at(0).text()).toBe('bar')
+      expect(wrapper.findAll('.tree-view__directories__item__label').at(1).text()).toBe('baz')
+      expect(wrapper.findAll('.tree-view__directories__item__label').at(2).text()).toBe('01FOO')
+    })
+
     it('should init selected on component creation', () => {
       expect(wrapper.vm.selected).toEqual(['path_01', 'path_02'])
     })
@@ -169,6 +184,21 @@ describe('TreeView.vue', () => {
       wrapper = shallowMount(TreeView, { api, i18n, localVue, propsData, store, wait })
     })
 
+    it('should be a display a correct basename on windows', async () => {
+      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE_WIN)
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\bar\\doc_01').withIndex(index).count(5))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\baz\\doc_02').withIndex(index).count(5))
+        .commit()
+      await wrapper.vm.loadData({ clearPages: true })
+
+      expect(wrapper.findAll('.tree-view__directories__item__label').at(0).text()).toBe('bar')
+      expect(wrapper.findAll('.tree-view__directories__item__label').at(1).text()).toBe('baz')
+      expect(wrapper.findAll('.tree-view__directories__item__label').at(2).text()).toBe('01FOO')
+    })
+
     it('should display 3 directories including one from the tree on windows', async () => {
       wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE_WIN)
       await letData(es)
@@ -178,7 +208,6 @@ describe('TreeView.vue', () => {
         .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\baz\\doc_02').withIndex(index).count(5))
         .commit()
       await wrapper.vm.loadData({ clearPages: true })
-      await wrapper.vm.$nextTick()
 
       expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
       expect(wrapper.find('.tree-view__header__hits').text()).toBe('10 docs')

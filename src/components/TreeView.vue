@@ -64,8 +64,12 @@
                 :value="directory.key"
                 class="tree-view__directories__item__checkbox"
               ></b-form-checkbox>
-              <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
-                {{ directory.key | basename }}
+              <a
+                class="tree-view__directories__item__label flex-grow-1"
+                href
+                @click.prevent="$emit('input', directory.key)"
+              >
+                {{ basename(directory.key) }}
               </a>
               <div
                 v-if="size && directory.contentLength"
@@ -116,7 +120,7 @@
 <script>
 import { difference, flatten, filter, get, identity, includes, noop, round, uniq, uniqBy, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
-import { basename } from 'path'
+import { posix, win32 } from 'path'
 import { waitFor } from 'vue-wait'
 import InfiniteLoading from 'vue-infinite-loading'
 
@@ -133,9 +137,6 @@ export default {
   components: {
     InfiniteLoading,
     TreeBreadcrumb
-  },
-  filters: {
-    basename
   },
   model: {
     prop: 'path',
@@ -298,8 +299,8 @@ export default {
       const include = this.suffixPathTokens(this.pathSeparator.concat('.*')).join('|')
       const exclude = this.suffixPathTokens(this.pathSeparator.concat('.*', this.pathSeparator, '.*')).join('|')
       return {
-        include: this.usesWindowsSepator ? this.doubleWindowsSeparator(include) : include,
-        exclude: this.usesWindowsSepator ? this.doubleWindowsSeparator(exclude) : exclude,
+        include: this.usesWindowsSeparator ? this.doubleWindowsSeparator(include) : include,
+        exclude: this.usesWindowsSeparator ? this.doubleWindowsSeparator(exclude) : exclude,
         size: this.nextOffset,
         order: this.order
       }
@@ -319,8 +320,11 @@ export default {
        */
       return uniq([this.path, this.path.toLowerCase()])
     },
-    usesWindowsSepator() {
+    usesWindowsSeparator() {
       return this.pathSeparator === '\\'
+    },
+    basename() {
+      return this.usesWindowsSeparator ? win32.basename : posix.basename
     },
     selected: {
       get() {
