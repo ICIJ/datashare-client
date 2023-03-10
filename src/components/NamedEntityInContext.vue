@@ -83,7 +83,8 @@ export default {
   },
   async mounted() {
     await this.loadContent()
-    await this.$nextTick(this.scrollToFirstMark)
+    await this.$nextTick()
+    await this.scrollToFirstMark()
   },
   methods: {
     async loadContent() {
