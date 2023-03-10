@@ -229,6 +229,7 @@ export default {
   },
   data() {
     return {
+      // TODO: hasValues is a computed property, don't know how to fix this one
       collapseItems: this.collapsedIfNoValues && !this.hasValues,
       infiniteId: uniqueId(),
       mounted: false,
