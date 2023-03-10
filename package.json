@@ -71,27 +71,18 @@
     "xss": "^1.0.13"
   },
   "devDependencies": {
+    "@icij/eslint-config-icij": "^1.0.0",
     "@types/jest": "^26.0.23",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-e2e-nightwatch": "^4.5.13",
     "@vue/cli-plugin-eslint": "^4.5.13",
     "@vue/cli-plugin-unit-jest": "^4.5.13",
     "@vue/cli-service": "^4.5.13",
-    "@vue/eslint-config-standard": "^6.0.0",
     "@vue/test-utils": "^1.2.1",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.3",
     "babel-jest": "^26.6.3",
     "babel-plugin-transform-require-context": "^0.1.1",
     "canvas": "^2.9.3",
-    "eslint": "^7.30.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-standard": "^5.0.0",
-    "eslint-plugin-vue": "^7.13.0",
     "file-loader": "^6.2.0",
     "front-matter": "^4.0.2",
     "git-revision-webpack-plugin": "^5.0.0",
@@ -123,6 +114,11 @@
   "engines": {
     "node": ">= 16",
     "npm": ">= 8"
+  },
+  "eslintConfig": {
+    "extends": [
+      "icij"
+    ]
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
