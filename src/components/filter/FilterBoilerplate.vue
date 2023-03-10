@@ -229,6 +229,7 @@ export default {
   },
   data() {
     return {
+      collapseItems: this.collapsedIfNoValues && !this.hasValues,
       infiniteId: uniqueId(),
       mounted: false,
       pages: [],
@@ -238,9 +239,6 @@ export default {
     }
   },
   computed: {
-    collapseItems() {
-      return this.collapsedIfNoValues && !this.hasValues
-    },
     waitIdentifier() {
       return `items for ${this.filter.name} on ${this.$options.name}`
     },
