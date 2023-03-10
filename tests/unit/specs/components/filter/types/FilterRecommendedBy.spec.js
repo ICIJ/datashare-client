@@ -79,7 +79,7 @@ describe('FilterRecommendedBy.vue', () => {
         url: Api.getFullUrl('/api/users/recommendations'),
         method: 'GET',
         params: {
-          project: project
+          project
         }
       })
     )

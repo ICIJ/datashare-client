@@ -1,6 +1,8 @@
 import { reduce, template } from 'lodash'
-import { Highlight } from '@/utils/highlight'
+
 import IdentityPipeline from './IdentityPipeline'
+
+import { Highlight } from '@/utils/highlight'
 
 class AddNamedEntitiesPipeline extends IdentityPipeline {
   apply(content, { namedEntities, shouldApplyNamedEntitiesMarks }) {

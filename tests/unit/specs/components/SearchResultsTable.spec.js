@@ -1,8 +1,8 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
-
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
 import { Api } from '@/api'
 import { Core } from '@/core'
 import SearchResultsTable from '@/components/SearchResultsTable'

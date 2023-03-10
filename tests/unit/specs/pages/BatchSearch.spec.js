@@ -2,11 +2,11 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
-
 import { flushPromises } from 'tests/unit/tests_utils'
+import Vuex from 'vuex'
+
 import { Core } from '@/core'
 import BatchSearch from '@/pages/BatchSearch'
-import Vuex from 'vuex'
 import { Api } from '@/api'
 
 describe('BatchSearch.vue', () => {

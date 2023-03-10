@@ -37,6 +37,7 @@
 
 <script>
 import { findIndex } from 'lodash'
+
 import utils from '@/mixins/utils'
 import BatchSearchForm from '@/components/BatchSearchForm'
 import PageHeader from '@/components/PageHeader'

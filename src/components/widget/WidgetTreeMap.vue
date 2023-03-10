@@ -23,10 +23,10 @@ import { get, isNull, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { format, hierarchy, select, treemap } from 'd3'
 import { basename } from 'path'
+import VueScrollTo from 'vue-scrollto'
 
 import elasticsearch from '@/api/elasticsearch'
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
-import VueScrollTo from 'vue-scrollto'
 
 /**
  * Widget to display a tree map on the insights page.

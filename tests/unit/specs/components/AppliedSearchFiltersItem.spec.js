@@ -1,9 +1,9 @@
 import find from 'lodash/find'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 
 const { localVue, store, i18n } = Core.init(createLocalVue()).useAll()

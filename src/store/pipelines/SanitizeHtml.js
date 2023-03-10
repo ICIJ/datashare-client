@@ -1,4 +1,5 @@
 import xss from 'xss'
+
 import IdentityPipeline from './IdentityPipeline'
 
 class SanitizeHtml extends IdentityPipeline {

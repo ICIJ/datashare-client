@@ -58,11 +58,11 @@
 <script>
 import { noop } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
+import { waitFor } from 'vue-wait'
 
 import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
 import ExtractingFormOcrControl from '@/components/ExtractingFormOcrControl'
 import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
-import { waitFor } from 'vue-wait'
 
 const { mapFields } = createHelpers({
   getterType: 'indexing/getField',

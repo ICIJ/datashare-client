@@ -1,6 +1,7 @@
+import isFunction from 'lodash/isFunction'
+
 import shortkeys from '@/utils/shortkeys.json'
 import { getShortkeyOS } from '@/utils/utils'
-import isFunction from 'lodash/isFunction'
 
 export default {
   props: {

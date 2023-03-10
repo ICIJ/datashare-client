@@ -2,11 +2,11 @@ import find from 'lodash/find'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueI18n from 'vue-i18n'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 import { Core } from '@/core'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterText from '@/components/filter/types/FilterText'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messagesFr from '@/lang/fr'
 
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()

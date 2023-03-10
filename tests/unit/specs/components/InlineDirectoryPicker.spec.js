@@ -1,6 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-
 import { flushPromises } from 'tests/unit/tests_utils'
+
 import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
 import { Core } from '@/core'
 

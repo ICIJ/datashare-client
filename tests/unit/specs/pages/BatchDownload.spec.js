@@ -1,8 +1,9 @@
 import { flushPromises } from 'tests/unit/tests_utils'
+import { createLocalVue, mount } from '@vue/test-utils'
+
 import { Api } from '@/api'
 import BatchDownload from '@/pages/BatchDownload'
 import { Core } from '@/core'
-import { createLocalVue, mount } from '@vue/test-utils'
 import { getMode, MODE_NAME } from '@/mode'
 import { storeBuilder } from '@/store/storeBuilder'
 

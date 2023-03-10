@@ -23,6 +23,7 @@
 
 <script>
 import { isEqual } from 'lodash'
+
 import elasticsearch from '@/api/elasticsearch'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'

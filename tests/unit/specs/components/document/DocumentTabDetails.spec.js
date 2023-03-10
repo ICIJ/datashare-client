@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
-
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
+
 import { Core } from '@/core'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import { Api } from '@/api'

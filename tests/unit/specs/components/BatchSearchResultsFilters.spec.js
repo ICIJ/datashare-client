@@ -1,10 +1,10 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import { Core } from '@/core'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { Api } from '@/api'
 
 describe('BatchSearchResultsFilters.vue', () => {

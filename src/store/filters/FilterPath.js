@@ -1,6 +1,7 @@
 import compact from 'lodash/compact'
 import trimEnd from 'lodash/trimEnd'
 import uniq from 'lodash/uniq'
+
 import FilterDocument from './FilterDocument'
 
 export default class FilterPath extends FilterDocument {

@@ -1,5 +1,6 @@
-import FilterPath from '@/store/filters/FilterPath'
 import bodybuilder from 'bodybuilder'
+
+import FilterPath from '@/store/filters/FilterPath'
 
 describe('FilterPath.js', () => {
   it('should add slash to path in json if path doesnt have one', () => {

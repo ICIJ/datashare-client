@@ -201,12 +201,12 @@ import {
 import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
+import Multiselect from 'vue-multiselect'
 
 import elasticsearch from '@/api/elasticsearch'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
-import Multiselect from 'vue-multiselect'
 
 /**
  * A form to create a new batch search.

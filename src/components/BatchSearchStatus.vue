@@ -28,8 +28,8 @@
 
 <script>
 import { capitalize, get } from 'lodash'
-import { toVariant } from '@/utils/utils'
 
+import { toVariant } from '@/utils/utils'
 import EllipseStatus from '@/components/EllipseStatus'
 import JsonFormatter from '@/components/JsonFormatter'
 

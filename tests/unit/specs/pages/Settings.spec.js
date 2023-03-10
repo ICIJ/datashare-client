@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { Core } from '@/core'
 
+import { Core } from '@/core'
 import Settings from '@/pages/Settings'
 
 describe('Settings.vue', () => {

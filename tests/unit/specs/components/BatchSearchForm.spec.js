@@ -1,11 +1,11 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import { Core } from '@/core'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('lodash/throttle', () => jest.fn((fn) => fn))
 

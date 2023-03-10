@@ -17,6 +17,7 @@
 
 <script>
 import { compact, uniq } from 'lodash'
+
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 

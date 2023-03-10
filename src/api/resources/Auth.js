@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-
 import { getCookie } from 'tiny-cookie'
 
 export default class Auth {

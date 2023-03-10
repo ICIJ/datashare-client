@@ -1,5 +1,6 @@
 import { createLocalVue } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
+
 import { Api } from '@/api'
 import { Core } from '@/core'
 import { getMode } from '@/mode'

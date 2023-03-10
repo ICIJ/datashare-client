@@ -1,5 +1,6 @@
 <script>
 import { get } from 'lodash'
+
 import types from '@/utils/types'
 import { findContentTypeIcon } from '@/utils/font-awesome-files'
 

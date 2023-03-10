@@ -1,8 +1,8 @@
 import { cloneDeep } from 'lodash'
-
-import store from '@/store'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
+import store from '@/store'
 
 describe('SearchFilters', () => {
   const { index: project, es } = esConnectionHelper.build()

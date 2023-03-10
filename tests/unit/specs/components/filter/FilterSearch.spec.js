@@ -1,11 +1,10 @@
 import { createLocalVue, mount } from '@vue/test-utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import FilterSearch from '@/components/filter/FilterSearch'
 import FilterText from '@/components/filter/types/FilterText'
-
 import { Core } from '@/core'
 import filters from '@/mixins/filters'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 // Mock all api calls
 jest.mock('@/api')

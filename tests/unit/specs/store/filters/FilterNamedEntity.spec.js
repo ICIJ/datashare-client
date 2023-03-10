@@ -1,5 +1,6 @@
-import FilterNamedEntity from '@/store/filters/FilterNamedEntity'
 import bodybuilder from 'bodybuilder'
+
+import FilterNamedEntity from '@/store/filters/FilterNamedEntity'
 
 describe('FilterNamedEntity.js', () => {
   it('should filter on existing category', () => {

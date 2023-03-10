@@ -1,5 +1,6 @@
 import { isInteger, max, min, uniq } from 'lodash'
 import moment from 'moment'
+
 import FilterDate from './FilterDate'
 
 export default class FilterDateRange extends FilterDate {

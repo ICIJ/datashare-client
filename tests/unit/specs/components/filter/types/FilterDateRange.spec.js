@@ -1,9 +1,9 @@
 import find from 'lodash/find'
 import { createLocalVue, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterDateRange from '@/components/filter/types/FilterDateRange'
 
 const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()

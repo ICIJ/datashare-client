@@ -1,10 +1,11 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
 import { flushPromises } from 'tests/unit/tests_utils'
+
 import JsonViewer from '@/components/document/viewers/JsonViewer'
 import JsonFormatter from '@/components/JsonFormatter'
 import { Core } from '@/core'
 import { Api } from '@/api'
+
 const documentJson = require('tests/unit/resources/document.json')
 
 describe('JsonViewer.vue', () => {

@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
 import { flushPromises } from 'tests/unit/tests_utils'
+
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import { Core } from '@/core'
 

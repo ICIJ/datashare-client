@@ -7,7 +7,7 @@
     >
       <h4 class="m-0 flex-grow-1" v-html="widget.title"></h4>
       <div class="widget__header__selectors d-flex align-items-center">
-        <slot name="selector" :selectedPath="selectedPath" :setSelectedPath="setSelectedPath"></slot>
+        <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath"></slot>
         <div class="btn-group">
           <span
             v-for="(value, interval) in intervals"

@@ -1,10 +1,9 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-
-import SearchResultsHeader from '@/components/SearchResultsHeader'
-import { Core } from '@/core'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
+import SearchResultsHeader from '@/components/SearchResultsHeader'
+import { Core } from '@/core'
 import { Api } from '@/api'
 
 describe('SearchResultsHeader.vue', () => {

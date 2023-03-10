@@ -91,8 +91,8 @@
 <script>
 import { get } from 'lodash'
 import { mapGetters } from 'vuex'
-import { Api } from '@/api'
 
+import { Api } from '@/api'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
 import humanNumber from '@/filters/humanNumber'

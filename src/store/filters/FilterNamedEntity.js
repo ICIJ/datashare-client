@@ -1,5 +1,6 @@
-import FilterType from './FilterType'
 import includes from 'lodash/includes'
+
+import FilterType from './FilterType'
 
 export const namedEntityCategoryTranslation = {
   namedEntityPerson: 'PERSON',

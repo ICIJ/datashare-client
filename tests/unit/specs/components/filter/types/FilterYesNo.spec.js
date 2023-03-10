@@ -1,11 +1,11 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-
-import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FilterStarred from '@/components/filter/types/FilterStarred'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { flushPromises } from 'tests/unit/tests_utils'
+
+import FilterStarred from '@/components/filter/types/FilterStarred'
+import { Core } from '@/core'
 import { Api } from '@/api'
 
 // Mock the refreshRouteAndSearch method to avoid unecessary route update

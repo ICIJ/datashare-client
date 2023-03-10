@@ -1,6 +1,7 @@
 import { map, toLower } from 'lodash'
 
 import FilterText from './FilterText'
+
 import types from '@/utils/types.json'
 import { getDocumentTypeLabel } from '@/utils/utils'
 

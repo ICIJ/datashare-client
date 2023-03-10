@@ -1,7 +1,6 @@
 import Murmur from '@icij/murmur'
 import { map, sortBy } from 'lodash'
 import { removeCookie, setCookie } from 'tiny-cookie'
-
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from 'tests/unit/tests_utils'

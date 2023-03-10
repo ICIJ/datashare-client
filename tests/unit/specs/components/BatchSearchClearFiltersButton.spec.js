@@ -1,9 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import VueRouter from 'vue-router'
 
 import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
-
 import { Core } from '@/core'
-import VueRouter from 'vue-router'
 
 describe('BatchSearchClearFilters.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()

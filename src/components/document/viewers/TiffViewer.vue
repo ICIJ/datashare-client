@@ -37,6 +37,7 @@
 <script>
 import { range } from 'lodash'
 import Tiff from 'tiff.js'
+
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**

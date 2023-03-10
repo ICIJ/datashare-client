@@ -1,4 +1,5 @@
 import Murmur from '@icij/murmur'
+
 import Document from '@/api/resources/Document'
 
 describe('Document', () => {

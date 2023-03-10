@@ -18,9 +18,10 @@
 </template>
 
 <script>
-import ColumnFilter from '@/components/ColumnFilter.vue'
 import { isEqual } from 'lodash'
 import eq from 'lodash/eq'
+
+import ColumnFilter from '@/components/ColumnFilter.vue'
 
 export default {
   name: 'ColumnFilterDropdown',

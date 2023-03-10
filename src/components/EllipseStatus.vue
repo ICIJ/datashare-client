@@ -1,5 +1,6 @@
 <script>
 import { uniqueId } from 'lodash'
+
 import { toVariant, toVariantIcon, toVariantColor } from '@/utils/utils'
 
 /**

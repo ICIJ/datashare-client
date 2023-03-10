@@ -46,6 +46,7 @@
 
 <script>
 import { some, random } from 'lodash'
+
 import BatchDownloadActions from '@/components/BatchDownloadActions'
 import TasksList from '@/components/TasksList'
 import features from '@/mixins/features'
