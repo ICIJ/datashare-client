@@ -2,8 +2,8 @@ import { library as fortawesome } from '@fortawesome/fontawesome-svg-core'
 
 import * as icons from '@/utils/font-awesome'
 import { createCore } from '@/core'
-// TODO: add .scss in list of allowed extensions
-//eslint-disable-next-line import/extensions
+// TODO: add .scss in list of allowed extensions in eslint-config-icij
+// eslint-disable-next-line import/extensions
 import '@/main.scss'
 
 // Register exported icons
