@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import ColumnFilter from '@/components/ColumnFilter.vue'
+import ColumnFilter from '@/components/ColumnFilter'
 import { Core } from '@/core'
 
 describe('ColumnFilter.vue', () => {

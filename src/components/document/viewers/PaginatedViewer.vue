@@ -73,7 +73,7 @@ import { get, range, uniqueId } from 'lodash'
 import axios from 'axios'
 
 import preview from '@/mixins/preview'
-import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
+import DocumentThumbnail from '@/components/DocumentThumbnail'
 
 /**
  * Display a paginated preview of a document using the preview server.

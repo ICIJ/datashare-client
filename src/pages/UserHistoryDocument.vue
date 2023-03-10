@@ -86,8 +86,8 @@ import DocumentThumbnail from '@/components/DocumentThumbnail'
 import DocumentActions from '@/components/DocumentActions'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import utils from '@/mixins/utils'
-import { humanTime } from '@/filters/humanTime.js'
-import { humanDate } from '@/filters/humanDate.js'
+import { humanTime } from '@/filters/humanTime'
+import { humanDate } from '@/filters/humanDate'
 
 /**
  * List user's visited documents history

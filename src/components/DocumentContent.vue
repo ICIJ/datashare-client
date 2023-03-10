@@ -8,7 +8,7 @@ import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTerm
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
 import utils from '@/mixins/utils'
-import { addLocalSearchMarksClassByOffsets } from '@/utils/strings.js'
+import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 
 /**
  * Display a document's extract text after applying a series of transformation with a pipeline.

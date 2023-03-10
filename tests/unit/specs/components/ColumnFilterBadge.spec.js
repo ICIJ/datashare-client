@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import ColumnFiltersBadge from '@/components/ColumnFilterBadge.vue'
+import ColumnFiltersBadge from '@/components/ColumnFilterBadge'
 import { Core } from '@/core'
 
 describe('ColumnFiltersBadge.vue', () => {

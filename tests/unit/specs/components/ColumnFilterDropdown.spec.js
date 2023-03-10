@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
-import ColumnFilterDropdown from '@/components/ColumnFilterDropdown.vue'
+import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 
 describe('ColumnFilterDropdown.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()

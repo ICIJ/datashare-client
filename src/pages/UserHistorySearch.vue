@@ -52,8 +52,8 @@
 
 <script>
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
-import { humanTime } from '@/filters/humanTime.js'
-import { humanDate } from '@/filters/humanDate.js'
+import { humanTime } from '@/filters/humanTime'
+import { humanDate } from '@/filters/humanDate'
 
 export default {
   name: 'UserHistorySearch',
