@@ -2,7 +2,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 
 import { Core } from '@/core'
 import Document from '@/api/resources/Document'
-import ImageViewer from '@/components/document/viewers/ImageViewer.vue'
+import ImageViewer from '@/components/document/viewers/ImageViewer'
 
 const { localVue } = Core.init(createLocalVue()).useAll()
 

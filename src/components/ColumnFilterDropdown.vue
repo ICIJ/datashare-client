@@ -21,7 +21,7 @@
 import { isEqual } from 'lodash'
 import eq from 'lodash/eq'
 
-import ColumnFilter from '@/components/ColumnFilter.vue'
+import ColumnFilter from '@/components/ColumnFilter'
 
 export default {
   name: 'ColumnFilterDropdown',
