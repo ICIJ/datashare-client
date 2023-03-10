@@ -1,4 +1,5 @@
 import { createLocalVue } from '@vue/test-utils'
+
 import { Core } from '@/core'
 
 describe('PipelinesMixin', () => {

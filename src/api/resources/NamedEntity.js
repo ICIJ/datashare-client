@@ -1,4 +1,5 @@
 import { get } from 'lodash'
+
 import EsDoc from './EsDoc'
 
 export default class NamedEntity extends EsDoc {

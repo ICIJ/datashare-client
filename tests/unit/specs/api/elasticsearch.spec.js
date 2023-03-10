@@ -1,10 +1,10 @@
 import bodybuilder from 'bodybuilder'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import elasticsearch from '@/api/elasticsearch'
 import { FilterText, FilterNamedEntity } from '@/store/filters'
 import { EventBus } from '@/utils/event-bus'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('elasticsearch', () => {
   const { index, es } = esConnectionHelper.build()

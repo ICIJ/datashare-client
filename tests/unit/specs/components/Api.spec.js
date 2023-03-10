@@ -1,13 +1,13 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 import { Api } from '@/api'
 import ApiPage from '@/components/Api'
 import { Core } from '@/core'
 import { storeBuilder } from '@/store/storeBuilder'
 import { getMode, MODE_NAME } from '@/mode'
-import { flushPromises } from 'tests/unit/tests_utils'
 
 describe('Api.vue', () => {
   let i18n, localVue, router, wrapper, store, mockAxios

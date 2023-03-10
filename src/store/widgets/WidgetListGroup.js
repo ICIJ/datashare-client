@@ -1,5 +1,6 @@
-import Component from '@/components/widget/WidgetListGroup'
 import WidgetEmpty from './WidgetEmpty'
+
+import Component from '@/components/widget/WidgetListGroup'
 
 /**
  * Widget to display a list of items or links on the insights page

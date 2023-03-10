@@ -1,7 +1,7 @@
 import remove from 'lodash/remove'
 import map from 'lodash/map'
-
 import Vue from 'vue'
+
 import {
   RESET,
   SINGLE_BATCH_SEARCH,

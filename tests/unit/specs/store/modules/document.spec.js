@@ -1,10 +1,10 @@
 import { indexOf, orderBy, uniqueId } from 'lodash'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 import { initialState } from '@/store/modules/document'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('DocumentStore', () => {
   const { index, es } = esConnectionHelper.build()

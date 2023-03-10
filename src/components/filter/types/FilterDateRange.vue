@@ -55,11 +55,11 @@
 
 <script>
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
-import FilterAbstract from '@/components/filter/types/FilterAbstract'
-import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
-
 import max from 'lodash/max'
 import min from 'lodash/min'
+
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 
 /**
  * A Filter component to pick a date range.

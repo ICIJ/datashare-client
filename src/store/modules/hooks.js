@@ -2,6 +2,7 @@ import filter from 'lodash/filter'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 import orderBy from 'lodash/orderBy'
+
 import { HookedComponent } from '@/store/hooks'
 
 export const state = {

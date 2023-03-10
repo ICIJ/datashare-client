@@ -1,4 +1,5 @@
 import { castArray, find, isArray, isObject, uniqueId } from 'lodash'
+
 import EsDocList from '@/api/resources/EsDocList'
 
 const pathUtil = require('path')
@@ -175,7 +176,7 @@ class IndexedDocument {
     return this.parentDocument !== undefined
   }
   hideNer(mention) {
-    const ner = find(this.nerList, { mention: mention })
+    const ner = find(this.nerList, { mention })
     ner.isHidden = true
     return ner
   }
@@ -233,7 +234,7 @@ class IndexBuilder {
       for (let i = 0; i < this.document.nerList.length; i++) {
         const ner = this.document.nerList[i]
         await this.index.create({
-          index: index,
+          index,
           refresh: true,
           id: ner.id,
           routing: id,

@@ -1,5 +1,6 @@
-import Component from '@/components/widget/WidgetFileBarometer'
 import WidgetEmpty from './WidgetEmpty'
+
+import Component from '@/components/widget/WidgetFileBarometer'
 
 /**
  * Widget to display the number of indexed files on the insights page

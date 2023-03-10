@@ -1,5 +1,6 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import { Api } from '@/api'
 import { Core } from '@/core'
 import { MODE_NAME } from '@/mode'

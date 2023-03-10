@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import VueRouter from 'vue-router'
+import Murmur from '@icij/murmur'
 
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
 import { Core } from '@/core'
-import VueRouter from 'vue-router'
-import Murmur from '@icij/murmur'
 
 describe('BatchSearchFilterQuery.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()

@@ -16,9 +16,10 @@
 </template>
 
 <script>
-import ColumnFilter from '@/components/ColumnFilter'
 import moment from 'moment'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+
+import ColumnFilter from '@/components/ColumnFilter'
 export default {
   name: 'BatchSearchFilterDate',
   components: {

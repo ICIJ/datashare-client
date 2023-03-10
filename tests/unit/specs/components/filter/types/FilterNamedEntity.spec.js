@@ -1,7 +1,6 @@
 import { noop } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
@@ -9,6 +8,7 @@ import { Api } from '@/api'
 import { Core } from '@/core'
 import mixin from '@/mixins/filters'
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
+
 const { jsonResp } = require('tests/unit/tests_utils')
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update

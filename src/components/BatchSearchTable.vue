@@ -124,16 +124,17 @@
 </template>
 
 <script>
+import moment from 'moment'
+import { compact, find, some, random } from 'lodash'
+import { mapState } from 'vuex'
+
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import UserDisplay from '@/components/UserDisplay'
-import moment from 'moment'
-import { compact, find, some, random } from 'lodash'
 import settings from '@/utils/settings'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
-import { mapState } from 'vuex'
 
 const BATCHSEARCH_STATUS_VALUE = Object.freeze({
   PUBLISHED: '1',
@@ -326,7 +327,7 @@ export default {
         return { sort: this.sort, order: this.order }
       },
       set({ sort, order }) {
-        const params = { page: this.page, sort: sort, order: order }
+        const params = { page: this.page, sort, order }
         return this.updateRoute(params)
       }
     },

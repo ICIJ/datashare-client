@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
-import { flushPromises } from 'tests/unit/tests_utils'
 
 Vue.use(Vuex)
 

@@ -44,6 +44,7 @@
 <script>
 import { mapState } from 'vuex'
 import { find, join } from 'lodash'
+
 import elasticsearch from '@/api/elasticsearch'
 import DocumentContent from '@/components/DocumentContent'
 

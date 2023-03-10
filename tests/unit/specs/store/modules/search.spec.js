@@ -1,11 +1,11 @@
 import { cloneDeep, find, omit } from 'lodash'
+import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
 import { storeBuilder } from '@/store/storeBuilder'
-import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { Api } from '@/api'
 
 describe('SearchStore', () => {

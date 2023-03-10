@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
+
 import Auth from '@/api/resources/Auth'
 import { Core } from '@/core'
 import { getMode } from '@/mode'

@@ -1,6 +1,6 @@
-import { Core } from '@/core'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
+import { Core } from '@/core'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
 

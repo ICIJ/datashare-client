@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash'
+
 import settings from '@/utils/settings'
 
 /**

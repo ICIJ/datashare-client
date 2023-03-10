@@ -3,7 +3,6 @@ import { flushPromises } from 'tests/unit/tests_utils'
 
 import { Api } from '@/api'
 import { Core } from '@/core'
-
 import Plugins from '@/components/Plugins'
 
 const pluginsMock = [

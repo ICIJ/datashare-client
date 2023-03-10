@@ -19,9 +19,11 @@
 
 <script>
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
-import { hasOverflow, getTranslateValues } from '@/utils/style'
+
 import DocumentContentSlicePlaceholder from './DocumentContentSlicePlaceholder'
 import DocumentContentSlice from './DocumentContentSlice'
+
+import { hasOverflow, getTranslateValues } from '@/utils/style'
 
 export default {
   name: 'DocumentContentSlices',

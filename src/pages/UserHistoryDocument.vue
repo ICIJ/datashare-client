@@ -80,6 +80,7 @@
 <script>
 import { find, trimStart } from 'lodash'
 import { pathToRegexp } from 'path-to-regexp'
+
 import Document from '@/api/resources/Document'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import DocumentActions from '@/components/DocumentActions'

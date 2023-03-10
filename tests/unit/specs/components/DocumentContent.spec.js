@@ -1,12 +1,12 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-
-import { Api } from '@/api'
-import { Core } from '@/core'
-import DocumentContent from '@/components/DocumentContent'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { letTextContent } from 'tests/unit/api_mock'
 import { flushPromises } from 'tests/unit/tests_utils'
+
+import DocumentContent from '@/components/DocumentContent'
+import { Core } from '@/core'
+import { Api } from '@/api'
 
 // Disable lodash throttle to avoid side-effets
 jest.mock('lodash', () => {

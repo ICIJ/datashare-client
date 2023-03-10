@@ -1,9 +1,10 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
+import { flushPromises } from 'tests/unit/tests_utils'
+
 import { Api } from '@/api'
 import { Core } from '@/core'
 import UserHistory from '@/pages/UserHistory'
-import { flushPromises } from 'tests/unit/tests_utils'
 
 describe('UserHistory.vue', () => {
   let i18n, localVue, store, wait, router

@@ -71,8 +71,8 @@
 <script>
 import { get, range, uniqueId } from 'lodash'
 import axios from 'axios'
-import preview from '@/mixins/preview'
 
+import preview from '@/mixins/preview'
 import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 
 /**

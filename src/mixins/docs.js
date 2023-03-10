@@ -1,4 +1,5 @@
 import { castArray, get, filter, template, trimStart } from 'lodash'
+
 import settings from '@/utils/settings'
 import { getOS } from '@/utils/utils'
 

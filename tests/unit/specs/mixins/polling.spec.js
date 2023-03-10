@@ -1,4 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import polling from '@/mixins/polling'
 
 // A few helper functions

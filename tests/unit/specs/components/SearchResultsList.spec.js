@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
-
-import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
+
+import { Core } from '@/core'
 import SearchResultsList from '@/components/SearchResultsList'
 
 const { localVue, i18n, store } = Core.init(createLocalVue()).useAll()

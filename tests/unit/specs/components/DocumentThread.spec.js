@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import DocumentThread from '@/components/DocumentThread'
 import { Core } from '@/core'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('DocumentThread.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()

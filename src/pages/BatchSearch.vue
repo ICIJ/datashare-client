@@ -19,11 +19,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
 import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'BatchSearches',

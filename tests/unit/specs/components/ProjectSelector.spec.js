@@ -1,6 +1,7 @@
-import ProjectSelector from '@/components/ProjectSelector'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import ProjectSelector from '@/components/ProjectSelector'
 import { Core } from '@/core'
 
 const { localVue, store } = Core.init(createLocalVue()).useAll()

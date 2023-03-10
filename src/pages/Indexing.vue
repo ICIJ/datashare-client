@@ -87,7 +87,6 @@ import { mapState } from 'vuex'
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import TasksList from '@/components/TasksList'
-
 import elasticsearch from '@/api/elasticsearch'
 import polling from '@/mixins/polling'
 import settings from '@/utils/settings'

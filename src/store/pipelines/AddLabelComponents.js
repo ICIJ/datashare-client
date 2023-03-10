@@ -1,5 +1,6 @@
 import castArray from 'lodash/castArray'
 import isString from 'lodash/isString'
+
 import IdentityPipeline from './IdentityPipeline'
 
 class AddLabelComponents extends IdentityPipeline {

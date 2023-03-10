@@ -3,6 +3,7 @@ const { execSync } = require('child_process')
 const { readFileSync, writeFileSync } = require('fs')
 const { capitalize, compact } = require('lodash')
 const { basename, join } = require('path')
+
 const { repository } = require('../package.json')
 
 const DOC_PATH = join('dist', 'docs')

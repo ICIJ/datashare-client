@@ -1,4 +1,5 @@
 import { get, map } from 'lodash'
+
 import FilterText from './FilterText'
 
 export default class FilterStarred extends FilterText {

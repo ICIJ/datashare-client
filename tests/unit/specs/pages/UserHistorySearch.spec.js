@@ -1,4 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import { Api } from '@/api'
 import { Core } from '@/core'
 import UserHistorySearch from '@/pages/UserHistorySearch'

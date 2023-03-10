@@ -1,5 +1,6 @@
-import Component from '@/components/widget/WidgetDocumentsByCreationDate'
 import WidgetText from './WidgetText'
+
+import Component from '@/components/widget/WidgetDocumentsByCreationDate'
 
 /**
  * Widget to display the number of file by creation date on the insights page.
