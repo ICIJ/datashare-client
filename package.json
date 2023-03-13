@@ -71,7 +71,7 @@
     "xss": "^1.0.13"
   },
   "devDependencies": {
-    "@icij/eslint-config-icij": "^1.0.0",
+    "@icij/eslint-config-icij": "^1.0.1",
     "@types/jest": "^26.0.23",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-e2e-nightwatch": "^4.5.13",

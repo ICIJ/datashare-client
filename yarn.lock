@@ -1337,10 +1337,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@icij/eslint-config-icij@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@icij/eslint-config-icij/-/eslint-config-icij-1.0.0.tgz#1244e88b612d2e44ca3d76624350a1c3e08cc93c"
-  integrity sha512-D6MoTqsgxmpqvbW1UN75dQR4U7JLM5AWaUpZPQ1ge9S9D0msBE+9XGJ+uMI25OKtgYIOsm8/J0PfaCXq6oW2AA==
+"@icij/eslint-config-icij@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@icij/eslint-config-icij/-/eslint-config-icij-1.0.1.tgz#43c6100f2d69b804ea7f2dea9bb90ff6827be269"
+  integrity sha512-jpIBs/qkz7YYuN3QHDKvJMIdv2xD+T4VaAOsyq6O/6x09dgOmBzKAu6JNI1HelFkS8XyBMIJ10xcS6n8EY9ypQ==
 
 "@icij/murmur@3.2.3":
   version "3.2.3"
