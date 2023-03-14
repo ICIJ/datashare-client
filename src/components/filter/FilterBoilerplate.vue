@@ -6,7 +6,7 @@
       'filter--hide-show-more': hideShowMore,
       'filter--hide-search': hideSearch,
       'filter--hide-header': hideHeader,
-      'filter--has-values': hasValues
+      'filter--has-values': hasValues()
     }"
   >
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
@@ -229,8 +229,7 @@ export default {
   },
   data() {
     return {
-      // TODO: hasValues is a computed property, don't know how to fix this one
-      collapseItems: this.collapsedIfNoValues && !this.hasValues,
+      collapseItems: this.shouldCollapseItems(),
       infiniteId: uniqueId(),
       mounted: false,
       pages: [],
@@ -378,12 +377,6 @@ export default {
     },
     isReversed() {
       return this.$store.getters['search/isFilterReversed'](this.filter.name)
-    },
-    hasValues: {
-      cache: false,
-      get() {
-        return this.$store.getters['search/hasFilterValues'](this.filter.name)
-      }
     }
   },
   watch: {
@@ -471,6 +464,12 @@ export default {
         this.$set(this, 'unwatch', unwatch)
       }
     },
+    shouldCollapseItems() {
+      return this.collapsedIfNoValues && !this.hasValues
+    },
+    hasValues() {
+      return this.$store.getters['search/hasFilterValues'](this.filter.name)
+    },
     clearInfiniteScroll() {
       this.$set(this, 'infiniteId', uniqueId())
       this.aggregateWithThrottle({ clearPages: true })
@@ -520,7 +519,7 @@ export default {
       return get($infiniteLoadingState, method, noop)()
     },
     toggleItems() {
-      this.collapseItems = !this.collapseItems
+      this.collapseItems = !this.shouldCollapseItems()
     },
     getPageItems(page) {
       return get(page, this.pageItemsPath, [])
