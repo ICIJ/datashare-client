@@ -67,6 +67,7 @@ jobs:
 
   # This job will run unit tests for the client
   test:
+    resource_class: large
     docker:
       - image: cimg/node:16.16.0
       - image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
