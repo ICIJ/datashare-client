@@ -45,8 +45,15 @@ describe('ExtractingFormOcrControl.vue', () => {
     it('should display an alert indicating that no ocr are installed', async () => {
       wrapper = mount(ExtractingFormOcrControl, { wait, store, i18n, localVue, propsData: { isoLang: 'ita' } })
       await flushPromises()
-      expect(wrapper.find('.extracting_language_form_control__install_ocr').exists()).toBe(true)
-      expect(wrapper.find('.extracting_language_form_control__install_ocr').text()).toContain("'Italian'")
+      expect(wrapper.find('.extracting_language_form_control__install_ocr_language').exists()).toBe(true)
+      expect(wrapper.find('.extracting_language_form_control').text()).not.toContain('Tesseract OCR is not installed.')
+    })
+
+    it('should display an alert indicating that tesseract is not installed', async () => {
+      wrapper = mount(ExtractingFormOcrControl, { wait, store, i18n, localVue, propsData: { isoLang: 'ita' } })
+      wrapper.setData({ hasTesseract: false })
+      await flushPromises()
+      expect(wrapper.find('.extracting_language_form_control').text()).toContain('Tesseract OCR is not installed.')
     })
   })
 })

@@ -18,7 +18,8 @@ export default {
   data() {
     return {
       textLanguages: [],
-      ocrLanguages: []
+      ocrLanguages: [],
+      hasTesseract: true
     }
   },
   computed: {
@@ -30,7 +31,10 @@ export default {
       return 'default'
     },
     isOcrLanguage() {
-      return !this.isoLang || !!find(this.ocrLanguages, (language) => language.iso6392 === this.isoLang)
+      return (
+        (this.hasTesseract && !this.isoLang) ||
+        !!find(this.ocrLanguages, (language) => language.iso6392 === this.isoLang)
+      )
     },
     waitIdentifier() {
       return uniqueId('extracting-form-ocr-control-')
@@ -56,10 +60,14 @@ export default {
         this.textLanguages = textLanguages
         this.ocrLanguages = ocrLanguages
       } catch (e) {
-        this.$root.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
-          noCloseButton: true,
-          variant: 'danger'
-        })
+        if (e.response.status === 503) {
+          this.$set(this, 'hasTesseract', false)
+        } else {
+          this.$root.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
+            noCloseButton: true,
+            variant: 'danger'
+          })
+        }
       }
       this.$wait.end(this.waitIdentifier)
     }
@@ -69,12 +77,21 @@ export default {
 
 <template>
   <b-overlay :show="!isReady" :variant="overlayVariant" class="extracting_language_form_control" rounded spinner-small>
-    <b-alert :show="!isOcrLanguage" variant="warning" class="extracting_language_form_control__install_ocr mt-3"
+    <b-alert
+      :show="!hasTesseract"
+      variant="warning"
+      class="extracting_language_form_control__tesseract_not_installed mt-3"
+      >{{ $t('extractingFormOcrControl.tesseractNotInstalled') }}
+    </b-alert>
+    <b-alert
+      :show="!isOcrLanguage"
+      variant="warning"
+      class="extracting_language_form_control__install_ocr_language mt-3"
       >{{ $t('extractingFormOcrControl.isMissing', { language: languageName }) }}
       {{ $t('extractingFormOcrControl.useDefault') }}
 
       <a href="https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages" target="_blank">
-        {{ $t('extractingFormOcrControl.installOcr', { availableLanguages: textLanguages.length }) }}
+        {{ $t('extractingFormOcrControl.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
       </a>
     </b-alert>
   </b-overlay>
