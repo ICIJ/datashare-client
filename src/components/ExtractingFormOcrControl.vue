@@ -30,11 +30,14 @@ export default {
       }
       return 'default'
     },
+    isLanguageAvailable() {
+      return !!find(this.ocrLanguages, (language) => language.iso6392 === this.isoLang)
+    },
     isOcrLanguage() {
-      return (
-        (this.hasTesseract && !this.isoLang) ||
-        !!find(this.ocrLanguages, (language) => language.iso6392 === this.isoLang)
-      )
+      return !this.isoLang || this.isLanguageAvailable
+    },
+    shouldDisplayLanguageMessage() {
+      return this.hasTesseract && !this.isOcrLanguage
     },
     waitIdentifier() {
       return uniqueId('extracting-form-ocr-control-')
@@ -60,9 +63,9 @@ export default {
         this.textLanguages = textLanguages
         this.ocrLanguages = ocrLanguages
       } catch (e) {
-        if (e.response.status === 503) {
-          this.$set(this, 'hasTesseract', false)
-        } else {
+        this.hasTesseract = e.response.status !== 503
+
+        if (this.hasTesseract) {
           this.$root.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
             noCloseButton: true,
             variant: 'danger'
@@ -84,7 +87,7 @@ export default {
       >{{ $t('extractingFormOcrControl.tesseractNotInstalled') }}
     </b-alert>
     <b-alert
-      :show="!isOcrLanguage"
+      :show="shouldDisplayLanguageMessage"
       variant="warning"
       class="extracting_language_form_control__install_ocr_language mt-3"
       >{{ $t('extractingFormOcrControl.isMissing', { language: languageName }) }}
