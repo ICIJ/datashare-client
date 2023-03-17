@@ -516,7 +516,8 @@
   "extractingFormOcrControl": {
     "useDefault": "crwdns2685:0crwdne2685:0",
     "isMissing": "crwdns2687:0{language}crwdne2687:0",
-    "installOcr": "crwdns2689:0{availableLanguages}crwdne2689:0"
+    "installOcrLanguage": "crwdns2697:0{availableLanguages}crwdne2697:0",
+    "tesseractNotInstalled": "crwdns2699:0crwdne2699:0"
   },
   "indexing": {
     "title": "crwdns910:0crwdne910:0",
