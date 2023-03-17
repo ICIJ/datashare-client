@@ -516,7 +516,8 @@
   "extractingFormOcrControl": {
     "useDefault": "Default OCR language is used.",
     "isMissing": " OCR for '{language}' is not installed.",
-    "installOcr": "Choose among {availableLanguages} languages to install."
+    "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
+    "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
   "indexing": {
     "title": "Analyser vos documents",
