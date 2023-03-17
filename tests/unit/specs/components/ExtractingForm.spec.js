@@ -7,6 +7,15 @@ import ExtractingForm from '@/components/ExtractingForm'
 describe('ExtractingForm.vue', () => {
   let wrapper, i18n, localVue, router, store, mockAxios, api, wait
 
+  const propsData = {
+    textLanguages: [
+      { name: 'ENGLISH', iso6392: 'eng' },
+      { name: 'FRENCH', iso6392: 'fra' }
+    ],
+    ocrLanguages: [{ name: 'ENGLISH', iso6392: 'eng' }],
+    hasTesseract: true
+  }
+
   beforeAll(() => {
     mockAxios = { request: jest.fn(), get: jest.fn() }
     api = new Api(mockAxios, null)
@@ -19,7 +28,7 @@ describe('ExtractingForm.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(ExtractingForm, { i18n, localVue, router, store, wait })
+    wrapper = shallowMount(ExtractingForm, { i18n, localVue, propsData, router, store, wait })
     mockAxios.request.mockClear()
     mockAxios.get.mockClear()
     mockAxios.request.mockResolvedValue({ data: {} })
@@ -73,5 +82,21 @@ describe('ExtractingForm.vue', () => {
     await wrapper.vm.submitExtract()
 
     expect(wrapper.vm.ocr).toBeFalsy()
+  })
+
+  it('should call retrieve text and ocr languages', () => {
+    wrapper.vm.loadLanguages()
+
+    expect(mockAxios.request).toBeCalledTimes(2)
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/settings/text/languages')
+      })
+    )
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/settings/ocr/languages')
+      })
+    )
   })
 })

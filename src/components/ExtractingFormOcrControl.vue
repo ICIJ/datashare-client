@@ -1,5 +1,5 @@
 <script>
-import { find, uniqueId } from 'lodash'
+import { find } from 'lodash'
 
 /**
  * A form-control to select the extracting language.
@@ -13,13 +13,21 @@ export default {
      */
     isoLang: {
       type: String
-    }
-  },
-  data() {
-    return {
-      textLanguages: [],
-      ocrLanguages: [],
-      hasTesseract: true
+    },
+    textLanguages: {
+      type: Array,
+      default: () => []
+    },
+    ocrLanguages: {
+      type: Array,
+      default: () => []
+    },
+    hasTesseract: {
+      type: Boolean,
+      default: true
+    },
+    isReady: {
+      type: Boolean
     }
   },
   computed: {
@@ -39,40 +47,8 @@ export default {
     shouldDisplayLanguageMessage() {
       return this.hasTesseract && !this.isOcrLanguage
     },
-    waitIdentifier() {
-      return uniqueId('extracting-form-ocr-control-')
-    },
-    isReady() {
-      return !this.$wait.is(this.waitIdentifier)
-    },
     overlayVariant() {
       return this.dark ? 'dark' : 'light'
-    }
-  },
-  async mounted() {
-    await this.loadLanguages()
-  },
-  methods: {
-    async loadLanguages() {
-      this.$wait.start(this.waitIdentifier)
-      try {
-        const [textLanguages, ocrLanguages] = await Promise.all([
-          this.$core.api.textLanguages(),
-          this.$core.api.ocrLanguages()
-        ])
-        this.textLanguages = textLanguages
-        this.ocrLanguages = ocrLanguages
-      } catch (e) {
-        this.hasTesseract = e.response.status !== 503
-
-        if (this.hasTesseract) {
-          this.$root.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
-            noCloseButton: true,
-            variant: 'danger'
-          })
-        }
-      }
-      this.$wait.end(this.waitIdentifier)
     }
   }
 }

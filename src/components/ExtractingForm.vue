@@ -27,8 +27,14 @@
           </span>
         </div>
       </b-form-checkbox>
-      <div v-show="!!ocr" class="ml-4 pl-3">
-        <extracting-form-ocr-control :iso-lang="language" />
+      <div v-show="showOcrMessage" class="ml-4 pl-3">
+        <extracting-form-ocr-control
+          :iso-lang="language"
+          :text-languages="textLanguages"
+          :ocr-languages="ocrLanguages"
+          :has-tesseract="hasTesseract"
+          :is-ready="isReady"
+        />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -56,7 +62,7 @@
 </template>
 
 <script>
-import { noop } from 'lodash'
+import { noop, uniqueId, castArray } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
 import { waitFor } from 'vue-wait'
 
@@ -88,16 +94,56 @@ export default {
       default: noop
     }
   },
+  data() {
+    return {
+      textLanguages: [],
+      ocrLanguages: [],
+      hasTesseract: true
+    }
+  },
   computed: {
     ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language']),
     isWaitingForSubmitExtract() {
       return this.$wait.is('submitExtract')
+    },
+    waitOcrIdentifier() {
+      return uniqueId('extracting-form-ocr-control-')
+    },
+    isReady() {
+      return !this.$wait.is(this.waitOcrIdentifier)
+    },
+    showOcrMessage() {
+      return !this.hasTesseract || !!this.ocr
     }
+  },
+  async mounted() {
+    await this.loadLanguages()
   },
   methods: {
     dispatchExtract: waitFor('submitExtract', function () {
       return this.$store.dispatch('indexing/submitExtract')
     }),
+    async loadLanguages() {
+      this.$wait.start(this.waitOcrIdentifier)
+      try {
+        const [textLanguages, ocrLanguages] = await Promise.all([
+          this.$core.api.textLanguages(),
+          this.$core.api.ocrLanguages()
+        ])
+        this.textLanguages = castArray(textLanguages)
+        this.ocrLanguages = castArray(ocrLanguages)
+      } catch (e) {
+        this.hasTesseract = e.response.status !== 503
+
+        if (this.hasTesseract) {
+          this.$root.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
+            noCloseButton: true,
+            variant: 'danger'
+          })
+        }
+      }
+      this.$wait.end(this.waitOcrIdentifier)
+    },
     async submitExtract() {
       try {
         await this.dispatchExtract()
