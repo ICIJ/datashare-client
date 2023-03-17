@@ -17,7 +17,7 @@
     </div>
 
     <div class="extracting-form__group mb-4">
-      <b-form-checkbox v-model="ocr" name="check-button" switch>
+      <b-form-checkbox v-model="ocr" name="check-button" :disabled="!hasTesseract" switch>
         <div class="font-weight-bold ml-1">
           {{ $t('indexing.extractWithOcrLabel') }}
         </div>
