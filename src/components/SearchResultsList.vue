@@ -117,7 +117,7 @@ export default {
     }
 
     .nav-link {
-      color: mix($tertiary, text-contrast($tertiary), 0.7);
+      color: mix($tertiary, text-contrast($tertiary), 70%);
     }
   }
 
