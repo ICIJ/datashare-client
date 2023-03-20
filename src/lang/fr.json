@@ -480,10 +480,10 @@
       "autoplay": "Play automatically",
       "loop": "Play in loop",
       "audio": {
-        "unknownFormat": "Unsupported audio format"
+        "unknownFormat": "Format audio non pris en charge"
       },
       "video": {
-        "unknownFormat": "Unsupported video format"
+        "unknownFormat": "Format vidéo non pris en charge"
       }
     },
     "attachments": {
@@ -510,14 +510,14 @@
     "sentLink": "Emails envoyés"
   },
   "extractingLanguageFormControl": {
-    "failedToRetrieveLanguages": "Failed to retrieve languages",
+    "failedToRetrieveLanguages": "Impossible de récupérer les langues",
     "nullOption": "Détecter automatiquement (par défaut)"
   },
   "extractingFormOcrControl": {
-    "useDefault": "Default OCR language is used.",
-    "isMissing": " OCR for '{language}' is not installed.",
-    "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
-    "tesseractNotInstalled": "Tesseract OCR is not installed."
+    "useDefault": "La langue OCR par défaut est utilisée.",
+    "isMissing": " L'OCR pour '{language}' n'est pas installé.",
+    "installOcrLanguage": "Choisissez parmi les {availableLanguages} langues à installer.",
+    "tesseractNotInstalled": "Tesseract OCR n'est pas installé."
   },
   "indexing": {
     "title": "Analyser vos documents",
@@ -602,7 +602,7 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
+    "description": "Sur cette page, vous pouvez retrouver les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique",
     "document": "Documents",
@@ -614,10 +614,10 @@
     "delete": "Supprimer",
     "deleted": "La recherche a été supprimée.",
     "confirmDelete": "Êtes-vous sûr(e) de vouloir supprimer cette recherche sauvegardée ?",
-    "deleteError": "Something went wrong, unable to delete the record."
+    "deleteError": "Une erreur s'est produite, impossible de supprimer l'enregistrement."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches</a>."
   },
   "tasks": {
     "title": "Tâches",
@@ -656,7 +656,7 @@
     "clearFilters": "Effacer les filtres",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
-    "deleteError": "Something went wrong, unable to delete the batch search.",
+    "deleteError": "Une erreur s'est produite, impossible de supprimer la recherche par lot.",
     "published": "Publiée",
     "notPublished": "Non publiée",
     "publishedDescription": "Donner accès aux autres membres du projet à cette recherche en lot. Vous pourrez changer ceci plus tard.",
@@ -670,7 +670,7 @@
     "errorTitle": "Erreur dans la requête",
     "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
     "errorMessage": "Le système a rencontré une erreur. Il peut s'agir d'une erreur de syntaxe que vous avez écrite dans votre CSV ou d'une autre erreur. Veuillez vous référer à <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">cette page d'aide</a> où les erreurs les plus courantes sont expliquées.",
-    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
+    "unableToRetrieveFileTypes": "Impossible de récupérer les types de fichiers dans le projet sélectionné | Impossible de récupérer les types de fichiers dans les projets sélectionnés",
     "placeholder": "Rechercher dans les recherches en lot...",
     "status": {
       "failure": "échec",
