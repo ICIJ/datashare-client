@@ -104,12 +104,16 @@ export default {
     }
   },
   watch: {
-    localSearchTerm: throttle(async function () {
-      await this.retrieveTotalOccurrences()
-      await this.cookAllContentSlices()
-      await this.$nextTick()
-      await this.jumpToActiveLocalSearchTerm()
-    }, 300),
+    localSearchTerm: throttle(
+      async function () {
+        await this.retrieveTotalOccurrences()
+        await this.cookAllContentSlices()
+        await this.$nextTick()
+        await this.jumpToActiveLocalSearchTerm()
+      },
+      300,
+      { leading: false }
+    ),
     async targetLanguage(value) {
       await this.loadMaxOffset(value)
       await this.cookAllContentSlices()
