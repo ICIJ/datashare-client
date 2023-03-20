@@ -464,11 +464,11 @@ export default {
         this.$set(this, 'unwatch', unwatch)
       }
     },
-    shouldCollapseItems() {
-      return this.collapsedIfNoValues && !this.hasValues
-    },
     hasValues() {
       return this.$store.getters['search/hasFilterValues'](this.filter.name)
+    },
+    shouldCollapseItems() {
+      return this.collapsedIfNoValues && !this.hasValues()
     },
     clearInfiniteScroll() {
       this.$set(this, 'infiniteId', uniqueId())
@@ -519,7 +519,7 @@ export default {
       return get($infiniteLoadingState, method, noop)()
     },
     toggleItems() {
-      this.collapseItems = !this.shouldCollapseItems()
+      this.collapseItems = !this.collapseItems
     },
     getPageItems(page) {
       return get(page, this.pageItemsPath, [])
