@@ -383,6 +383,12 @@
       "level10": "レベル１０"
     },
     "tags": "タグ",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "日付範囲を選択"
   },
   "document": {
@@ -410,6 +416,7 @@
     "downloadRootButton": "Download parent",
     "downloadWithoutMetadata": "Download without metadata",
     "externalWindow": "新しいウインドウで開く",
+    "copyLink": "Copy link",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",
     "starButton": "星マークをつける",
@@ -469,6 +476,16 @@
       "preview": "Preview of the PDF active page",
       "thumbnail": "Thumbnail of the PDF page"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Unsupported audio format"
+      },
+      "video": {
+        "unknownFormat": "Unsupported video format"
+      }
+    },
     "attachments": {
       "heading": "添付なし | １件の添付 | {total} 件の添付",
       "more": "I need context"
@@ -493,8 +510,14 @@
     "sentLink": "送信メール"
   },
   "extractingLanguageFormControl": {
-    "nullOption": "Detect automatically (default)",
-    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">read the user guide</a> to know how to fix this."
+    "failedToRetrieveLanguages": "Failed to retrieve languages",
+    "nullOption": "Detect automatically (default)"
+  },
+  "extractingFormOcrControl": {
+    "useDefault": "Default OCR language is used.",
+    "isMissing": " OCR for '{language}' is not installed.",
+    "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
+    "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
   "indexing": {
     "title": "文書の分析",
@@ -591,7 +614,7 @@
     "delete": "Delete",
     "deleted": "The search have been deleted.",
     "confirmDelete": "Are you sure you want to delete this saved search?",
-    "notDeleted": "The search has not been deleted."
+    "deleteError": "Something went wrong, unable to delete the record."
   },
   "userHistorySaveSearchForm": {
     "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
@@ -633,7 +656,7 @@
     "clearFilters": "Clear filters",
     "delete": "まとめ検索（バッチサーチ）を削除",
     "deleted": "まとめ検索（バッチサーチ）は削除されました。",
-    "notDeleted": "まとめ検索（バッチサーチ）は削除されていません。",
+    "deleteError": "Something went wrong, unable to delete the batch search.",
     "published": "公開済み",
     "notPublished": "Not published",
     "publishedDescription": "このまとめ検索（バッチサーチ）へのアクセスを、プロジェクトの他の参加者にも認めます。この設定は後で変えられます。",
@@ -647,6 +670,7 @@
     "errorTitle": "Error in query",
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
+    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Search in batch searches...",
     "status": {
       "failure": "failure",

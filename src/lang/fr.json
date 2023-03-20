@@ -50,7 +50,7 @@
       "author": "Auteur·e",
       "recipients": "Destinataires",
       "content": "Contenu",
-      "path": "Dossier",
+      "path": "Chemin",
       "thread": "ID du fil de discussion",
       "description": "Description"
     },
@@ -91,8 +91,8 @@
         "creationDateOldest": "Date de création (croissante)",
         "sizeLargest": "Taille (décroissante)",
         "sizeSmallest": "Taille (croissante)",
-        "path": "Dossier (A à Z)",
-        "pathReverse": "Dossier (Z à A)",
+        "path": "Chemin du fichier (A à Z)",
+        "pathReverse": "Chemin du fichier (Z à A)",
         "default": "par défaut",
         "count": "fréquence"
       }
@@ -149,7 +149,7 @@
     "namedEntityLocation": "Lieux",
     "namedEntityOrganization": "Organisations",
     "namedEntityEmail": "Emails",
-    "path": "Dossiers",
+    "path": "Chemins du fichier",
     "indexingDate": "Dates d'indexation",
     "extractionLevel": "Niveaux d'extraction",
     "creationDate": "Dates de création",
@@ -383,6 +383,12 @@
       "level10": "10ème"
     },
     "tags": "Tags",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "Sélectionner une période"
   },
   "document": {
@@ -410,6 +416,7 @@
     "downloadRootButton": "Télécharger le parent",
     "downloadWithoutMetadata": "Télécharger sans les métadonnées",
     "externalWindow": "Ouvrir dans une nouvelle fenêtre",
+    "copyLink": "Copy link",
     "selectAll": "Tout sélectionner",
     "unselectAll": "Désélectionner tout",
     "starButton": "Mettre en favoris",
@@ -469,6 +476,16 @@
       "preview": "Aperçu de la page active PDF",
       "thumbnail": "Vignette de la page PDF"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Format audio non pris en charge"
+      },
+      "video": {
+        "unknownFormat": "Format vidéo non pris en charge"
+      }
+    },
     "attachments": {
       "heading": "Pas de pièces jointes | Une pièce jointe | {total} pièces jointes",
       "more": "Plus de pièces jointes..."
@@ -493,8 +510,14 @@
     "sentLink": "Emails envoyés"
   },
   "extractingLanguageFormControl": {
-    "nullOption": "Détecter automatiquement (par défaut)",
-    "ocrWarning": "Il semble que la reconnaissance optique des caractères ne soit pas installée pour cette langue. Veuillez <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">lire le guide utilisateurice</a> pour savoir comment résoudre ce problème."
+    "failedToRetrieveLanguages": "Impossible de récupérer les langues",
+    "nullOption": "Détecter automatiquement (par défaut)"
+  },
+  "extractingFormOcrControl": {
+    "useDefault": "La langue OCR par défaut est utilisée.",
+    "isMissing": " L'OCR pour '{language}' n'est pas installé.",
+    "installOcrLanguage": "Choisissez parmi les {availableLanguages} langues à installer.",
+    "tesseractNotInstalled": "Tesseract OCR n'est pas installé."
   },
   "indexing": {
     "title": "Analyser vos documents",
@@ -508,14 +531,15 @@
     "extractOnlyNewLabel": "Voulez-vous ignorer les fichiers déjà indexés ?",
     "extractOnlyNewHelp": "Si oui, Datashare extraira seulement le texte des fichiers qui ne sont pas déjà dans Datashare.",
     "extractLanguage": "Dans quelle langue sont vos documents?",
-    "findNamedEntities": "Trouver des personnes, organisations, lieux ou emails",
+    "findNamedEntities": "Trouver les personnes, les organisations, les lieux et les adresses e-mail",
     "findNamedEntitiesHeader": "Que souhaitez-vous faire ?",
     "findNamedEntitiesSubheader": "Datashare utilise des modèles de Traitement du Language Naturel (Natural Language Processing).",
-    "findNamedEntitiesTooltip": "Les documents doivent être indexés avant de chercher les entités nommées",
+    "findNamedEntitiesTooltip": "Les textes doivent être extraits avant de chercher les entités nommées",
     "pipelines": "Algo(s)",
     "pipelineOptions": {
-      "email": "Trouver des emails",
-      "corenlp": "Trouver des noms de personnes, organisations et lieux avec CoreNLP",
+      "email": "Trouver les adresses e-mail",
+      "corenlp": "Trouver des noms de personnes, d'organisations et de localités avec CoreNLP",
+      "opennlp": "Trouver les personnes, les organisations et les lieux avec CoreNLP",
       "mitie": "Trouver les personnes, les organisations et les lieux avec MITIE",
       "ixapipe": "Trouver les personnes, les organisations et les lieux avec IXA Pipe",
       "gatenlp": "Trouver les personnes, les organisations et les lieux avec GateNLP"
@@ -523,13 +547,8 @@
     "default": "Par défaut - Meilleure probabilité de fonctionner pour tous les documents",
     "syncModelsLabel": "Voulez-vous travailler hors ligne ?",
     "syncModels": "Cochez cette case si vous travaillez sans connexion Internet.",
-    "corenlp": "CoreNLP",
-    "opennlp": "OpenNLP",
-    "mitie": "MITIE",
-    "ixapipe": "Ixa Pipe",
-    "email": "Extraction d'adresses emails",
     "stopTask": "Arrêter cette tâche",
-    "stopPendingTasks": "Arrêter les tâches en cours",
+    "stopPendingTasks": "Arrêter toutes les tâches en cours",
     "deleteDoneTasks": "Supprimer les tâches terminées",
     "deleteIndexLabel": "Effacer tous les documents de Datashare",
     "deleteIndexDescription": "Pour être 100% sûr·e, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr.",
@@ -583,7 +602,7 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "Sur cette page, vous retrouvez les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
+    "description": "Sur cette page, vous pouvez retrouver les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique",
     "document": "Documents",
@@ -595,10 +614,10 @@
     "delete": "Supprimer",
     "deleted": "La recherche a été supprimée.",
     "confirmDelete": "Êtes-vous sûr(e) de vouloir supprimer cette recherche sauvegardée ?",
-    "notDeleted": "La recherche n'a pas été supprimée."
+    "deleteError": "Une erreur s'est produite, impossible de supprimer l'enregistrement."
   },
   "userHistorySaveSearchForm": {
-    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches </a>."
+    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches</a>."
   },
   "tasks": {
     "title": "Tâches",
@@ -627,7 +646,7 @@
     "proximitySearches": "Recherches approximatives",
     "proximitySearchesDescription": "Nombre maximum d'opérations sur les termes (insertions, suppressions, substitutions ou transpositions) nécessaire pour qu'une expression recherchée corresponde à une expression trouvée.",
     "fileTypes": "Types de fichiers",
-    "path": "Dossier",
+    "path": "Chemin",
     "queries": "Recherches",
     "state": "Status",
     "seeError": "Voir l'erreur",
@@ -637,7 +656,7 @@
     "clearFilters": "Effacer les filtres",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
-    "notDeleted": "La recherche en lot n'a pas été supprimée.",
+    "deleteError": "Une erreur s'est produite, impossible de supprimer la recherche par lot.",
     "published": "Publiée",
     "notPublished": "Non publiée",
     "publishedDescription": "Donner accès aux autres membres du projet à cette recherche en lot. Vous pourrez changer ceci plus tard.",
@@ -651,6 +670,7 @@
     "errorTitle": "Erreur dans la requête",
     "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
     "errorMessage": "Le système a rencontré une erreur. Il peut s'agir d'une erreur de syntaxe que vous avez écrite dans votre CSV ou d'une autre erreur. Veuillez vous référer à <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">cette page d'aide</a> où les erreurs les plus courantes sont expliquées.",
+    "unableToRetrieveFileTypes": "Impossible de récupérer les types de fichiers dans le projet sélectionné | Impossible de récupérer les types de fichiers dans les projets sélectionnés",
     "placeholder": "Rechercher dans les recherches en lot...",
     "status": {
       "failure": "échec",
@@ -669,7 +689,7 @@
     "title": "Résultats de recherche en lot",
     "rank": "Rang",
     "query": "Recherche",
-    "documentPath": "Dossier",
+    "documentPath": "Chemin du document",
     "creationDate": "Date de création",
     "project": "Projet",
     "contentType": "Type de contenu",

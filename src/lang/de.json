@@ -383,6 +383,12 @@
       "level10": "10"
     },
     "tags": "Tags",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "Datumsbereich auswählen"
   },
   "document": {
@@ -410,6 +416,7 @@
     "downloadRootButton": "Übergeordnetes Dokument herunterladen",
     "downloadWithoutMetadata": "Ohne Metadaten herunterladen",
     "externalWindow": "In neuem Fenster öffnen",
+    "copyLink": "Copy link",
     "selectAll": "Alle auswählen",
     "unselectAll": "Alle abwählen",
     "starButton": "Zu Favoriten hinzufügen",
@@ -469,6 +476,16 @@
       "preview": "Vorschau der aktiven PDF-Seite",
       "thumbnail": "Vorschaubild der PDF-Seite"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Unsupported audio format"
+      },
+      "video": {
+        "unknownFormat": "Unsupported video format"
+      }
+    },
     "attachments": {
       "heading": "Keine Anhänge | Ein Anhang | {total} Anhänge",
       "more": "Weitere Anhänge..."
@@ -493,8 +510,14 @@
     "sentLink": "Gesendete Emails"
   },
   "extractingLanguageFormControl": {
-    "nullOption": "Automatisch erkennen (Standard)",
-    "ocrWarning": "Es sieht so aus, als ob die optische Zeichenerkennung für diese Sprache nicht installiert ist. Bitte <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">lesen Sie das Benutzerhandbuch</a>, um zu erfahren, wie Sie dies beheben können."
+    "failedToRetrieveLanguages": "Failed to retrieve languages",
+    "nullOption": "Automatisch erkennen (Standard)"
+  },
+  "extractingFormOcrControl": {
+    "useDefault": "Default OCR language is used.",
+    "isMissing": " OCR for '{language}' is not installed.",
+    "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
+    "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
   "indexing": {
     "title": "Dokumente analysieren",
@@ -591,7 +614,7 @@
     "delete": "Löschen",
     "deleted": "The search have been deleted.",
     "confirmDelete": "Are you sure you want to delete this saved search?",
-    "notDeleted": "The search has not been deleted."
+    "deleteError": "Something went wrong, unable to delete the record."
   },
   "userHistorySaveSearchForm": {
     "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
@@ -633,7 +656,7 @@
     "clearFilters": "Filter zurücksetzen",
     "delete": "Batch-Suche löschen",
     "deleted": "Die Batch-Suche wurde gelöscht.",
-    "notDeleted": "Die Batch-Suche wurde nicht gelöscht.",
+    "deleteError": "Something went wrong, unable to delete the batch search.",
     "published": "Veröffentlicht",
     "notPublished": "Not published",
     "publishedDescription": "Geben Sie anderen Mitgliedern des Projekts Zugriff auf diese Batch-Suche. Sie können dies später ändern.",
@@ -647,6 +670,7 @@
     "errorTitle": "Fehler in der Abfrage",
     "errorQuery": "Sie haben einen Fehler auf Ihrer Abfrage <code>%{query}</code>.",
     "errorMessage": "Das System ist auf ein Problem gestoßen. Es kann ein Syntaxfehler in der CSV-Datei sein oder ein anderer Fehler. Bitte lesen Sie <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">auf dieser Hilfeseite</a>, auf der die häufigsten Fehler beschrieben werden.",
+    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Suche in Batch-Suchen...",
     "status": {
       "failure": "failure",

@@ -383,6 +383,12 @@
       "level10": "10°"
     },
     "tags": "Etiquetas",
+    "dateRange": {
+      "from": "From {dateFormat}",
+      "to": "To {dateFormat}",
+      "startingDate": "Starting date",
+      "endingDate": "Ending date"
+    },
     "selectDateRange": "Selecciona un intervalo de fechas"
   },
   "document": {
@@ -410,6 +416,7 @@
     "downloadRootButton": "Descargar padre",
     "downloadWithoutMetadata": "Descargar sin metadatos",
     "externalWindow": "Abrir en una nueva ventana",
+    "copyLink": "Copy link",
     "selectAll": "Seleccionar todo",
     "unselectAll": "Deseleccionar todo",
     "starButton": "Marcar como favorito",
@@ -469,6 +476,16 @@
       "preview": "Vista previa de la página activa de PDF",
       "thumbnail": "Miniatura de la página PDF"
     },
+    "player": {
+      "autoplay": "Play automatically",
+      "loop": "Play in loop",
+      "audio": {
+        "unknownFormat": "Unsupported audio format"
+      },
+      "video": {
+        "unknownFormat": "Unsupported video format"
+      }
+    },
     "attachments": {
       "heading": "No hay adjuntos | Un adjunto | {total} adjuntos",
       "more": "Más adjuntos..."
@@ -493,8 +510,14 @@
     "sentLink": "Correos electrónicos enviados"
   },
   "extractingLanguageFormControl": {
-    "nullOption": "Detect automatically (default)",
-    "ocrWarning": "It looks like optical character recognition is not installed for this language. Please <a href=\"https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages\" target=\"_blank\">read the user guide</a> to know how to fix this."
+    "failedToRetrieveLanguages": "Failed to retrieve languages",
+    "nullOption": "Detect automatically (default)"
+  },
+  "extractingFormOcrControl": {
+    "useDefault": "Default OCR language is used.",
+    "isMissing": " OCR for '{language}' is not installed.",
+    "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
+    "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
   "indexing": {
     "title": "Analiza tus documentos",
@@ -579,7 +602,7 @@
   },
   "userHistory": {
     "heading": "Tu historial de navegación",
-    "description": "En esta página puedes recuperar los archivos que has abierto y las búsquedas que has guardado.",
+    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
     "empty": "Tu historia está vacía",
     "clear": "Borrar historia",
     "document": "Archivos",
@@ -591,10 +614,10 @@
     "delete": "Eliminar",
     "deleted": "La búsqueda ha sido eliminada.",
     "confirmDelete": "¿Estás seguro que quieres eliminar esta búsqueda guardada?",
-    "notDeleted": "La búsqueda ha sido eliminada."
+    "deleteError": "Something went wrong, unable to delete the record."
   },
   "userHistorySaveSearchForm": {
-    "description": "Puede recuperar todas las búsquedas guardadas en <a href=\"{searchHistoryPath}\">Historial › Búsquedas</a>."
+    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tareas",
@@ -633,7 +656,7 @@
     "clearFilters": "Clear filters",
     "delete": "Eliminar búsqueda masiva",
     "deleted": "La búsqueda masiva ha sido eliminado.",
-    "notDeleted": "La búsqueda masiva no ha sido eliminada.",
+    "deleteError": "Something went wrong, unable to delete the batch search.",
     "published": "Publicado",
     "notPublished": "Not published",
     "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
@@ -647,6 +670,7 @@
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
+    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Buscar en las búsquedas masivas...",
     "status": {
       "failure": "failure",
