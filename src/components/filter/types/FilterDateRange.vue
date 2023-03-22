@@ -48,18 +48,26 @@
             </div>
           </template>
         </date-picker>
+        <v-wait :for="loader">loading</v-wait>
       </div>
     </template>
   </filter-boilerplate>
 </template>
 
 <script>
+import bodybuilder from 'bodybuilder'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import max from 'lodash/max'
 import min from 'lodash/min'
+import get from 'lodash/get'
+import uniqueId from 'lodash/uniqueId'
+import { mapState } from 'vuex'
 
+import elasticsearch from '@/api/elasticsearch'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
+import FilterDate from '@/store/filters/FilterDate'
+import { assertCatchClause } from '@babel/types'
 
 /**
  * A Filter component to pick a date range.
@@ -73,10 +81,13 @@ export default {
   extends: FilterAbstract,
   data() {
     return {
-      placeholderMask: ''
+      placeholderMask: '',
+      electedInterval: 'month',
+      data: []
     }
   },
   computed: {
+    ...mapState('search', ['indices']),
     attributes() {
       return [
         {
@@ -97,6 +108,8 @@ export default {
     },
     selectedDate: {
       get() {
+        console.log('this.filter.name', this.filter.name)
+        console.log('getFilterValuesByName', this.getFilterValuesByName(this.filter.name))
         const values = this.getFilterValuesByName(this.filter.name) || []
         if (values.length < 2) {
           return null
@@ -116,6 +129,9 @@ export default {
         this.setFilterValue(this.filter, { key: [start, end] })
         this.refreshRouteAndSearch()
       }
+    },
+    loader() {
+      return uniqueId('loading-creation-date-histogram')
     }
   },
   watch: {
@@ -126,6 +142,7 @@ export default {
   },
   async mounted() {
     this.updatePlaceholder()
+    await this.loadData()
   },
   methods: {
     updatePlaceholder() {
@@ -140,6 +157,46 @@ export default {
       if (start.value?.trim().length && start.value === end.value) {
         end.focus()
       }
+    },
+    aggDateHistogramOptions() {
+      return {
+        ...FilterDate.getIntervalOptions(this.selectedInterval),
+        order: { _key: 'asc' },
+        min_doc_count: 1
+      }
+    },
+    bodybuilderBase({ size = 1000, from = 0 } = {}) {
+      const field = 'metadata.tika_metadata_dcterms_created'
+      return bodybuilder()
+        .size(0)
+        .andQuery('match', 'type', 'Document')
+        .agg(
+          'date_histogram',
+          field,
+          'agg_by_creation_date',
+          (sub) => {
+            return sub.agg('bucket_sort', { size, from }, 'bucket_sort_truncate')
+          },
+          this.aggDateHistogramOptions()
+        )
+    },
+    async loadData() {
+      this.$wait.start(this.loader)
+      const body = this.bodybuilderBase().build()
+      console.log(body)
+      const preference = 'widget-documents-by-creation-date'
+
+      console.log('before search')
+      const res = await elasticsearch.search({ index: this.indices, size: 0, body, preference })
+
+      console.log('res')
+      const aggregation = get(res, 'aggregations.agg_by_creation_date.buckets', [])
+      console.log(aggregation)
+      const data = aggregation.reduce((acc, { key_as_string, doc_count }) => {
+        return [...acc, ...Array.from({ length: doc_count }, () => key_as_string)]
+      }, [])
+      this.$set(this, 'data', data)
+      this.$wait.end(this.loader)
     }
   }
 }
