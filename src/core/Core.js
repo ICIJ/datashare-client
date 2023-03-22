@@ -13,6 +13,7 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
+import HistogramSlider from 'vue-histogram-slider'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
@@ -135,6 +136,8 @@ class Core extends Behaviors {
     this.use(VueScrollTo)
     this.use(VueScrollTo)
     this.use(VueEllipseProgress)
+    this.use(HistogramSlider)
+
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
