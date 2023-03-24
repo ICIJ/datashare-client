@@ -47,7 +47,7 @@ export default {
      */
     pageSize: {
       type: Number,
-      default: 500
+      default: 2500
     }
   },
   data() {
@@ -107,39 +107,44 @@ export default {
     },
     hasLocalSearchTerms() {
       return this.localSearchTerm && this.localSearchTerm.length > 0
+    },
+    activeTermOffset() {
+      // Find the active search term according to `localSearchIndex`
+      return this.localSearchIndexes[this.localSearchIndex - 1]
     }
   },
   watch: {
-    localSearchTerm: throttle(
-      async function () {
-        await this.retrieveTotalOccurrences()
-        await this.cookAllContentSlices()
-        await this.$nextTick()
-        await this.jumpToActiveLocalSearchTerm()
-      },
-      300,
-      { leading: false }
-    ),
+    localSearchTerm: throttle(async function () {
+      await this.retrieveTotalOccurrences()
+      await this.activateContentSliceAround()
+      await this.jumpToActiveLocalSearchTerm()
+    }, 300),
     async targetLanguage(value) {
       await this.loadMaxOffset(value)
       await this.cookAllContentSlices()
     },
-    page() {
-      const offset = this.activeContentSliceOffset
-      const endOffset = this.activeContentSliceOffset + this.pageSize
-      this.activateContentSlice({ offset, endOffset })
+    async page() {
+      if (this.q) {
+        this.hasStickyToolbox = true
+        await this.activateContentSliceAround()
+        await this.jumpToActiveLocalSearchTerm()
+      } else {
+        const offset = this.activeContentSliceOffset
+        const endOffset = this.activeContentSliceOffset + this.pageSize
+        await this.activateContentSlice({ offset, endOffset })
+      }
     }
   },
   async mounted() {
     await this.loadMaxOffset()
-    await this.activateContentSlice({ offset: 0, limit: this.pageSize })
     // Initial local query, we need to jump to the result
     if (this.q) {
       this.hasStickyToolbox = true
       await this.retrieveTotalOccurrences()
-      await this.cookAllContentSlices()
-      await this.$nextTick()
+      await this.activateContentSliceAround()
       await this.jumpToActiveLocalSearchTerm()
+    } else {
+      await this.activateContentSlice({ offset: 0, endOffset: this.pageSize })
     }
   },
   methods: {
@@ -150,16 +155,16 @@ export default {
       this.$set(this.maxOffsetTranslations, key, offset)
       return offset
     },
-    findContentSliceIndexArround(desiredOffset) {
+    findContentSliceIndexAround(desiredOffset) {
       return findLastIndex(this.offsets, (offset) => offset <= desiredOffset)
     },
-    findAdjacentContentSlice(
+    findNextContentSlice(
       { offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage },
       defaultValue = null
     ) {
-      const adjacentOffset = Number(offset) + Number(this.pageSize)
+      const nextOffset = Number(offset) + Number(this.pageSize)
       return this.getContentSlice(
-        { offset: adjacentOffset, endOffset: adjacentOffset + this.pageSize, targetLanguage },
+        { offset: nextOffset, endOffset: nextOffset + this.pageSize, targetLanguage },
         defaultValue
       )
     },
@@ -167,8 +172,8 @@ export default {
       { offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage },
       defaultValue = null
     ) {
-      const precedingOffset = Number(offset) - Number(this.pageSize)
-      return this.getContentSlice({ offset: precedingOffset, endOffset: offset, targetLanguage }, defaultValue)
+      const previousOffset = Number(offset) - Number(this.pageSize)
+      return this.getContentSlice({ offset: previousOffset, endOffset: offset, targetLanguage }, defaultValue)
     },
     setContentSlice({
       offset = 0,
@@ -195,26 +200,23 @@ export default {
       targetLanguage = this.targetLanguage,
       content = ''
     } = {}) {
-      // Find if the preceding content slice to know if it has an organic tail already
+      // Find if the previous content slice to know if it has an organic tail already
       const { organicTail: organicHead = true } = this.findPrecedingContentSlice(
         { offset, endOffset, targetLanguage },
         {}
       )
-      // Find the adjacent content slice to add missing tailing content add the end of a line
-      const { content: adjacentContent = '\n' } = this.findAdjacentContentSlice(
-        { offset, endOffset, targetLanguage },
-        {}
-      )
-      // The slice ends with a new line or its adjacent slice starts with a new line
-      const organicTail = content.endsWith('\n') || adjacentContent.startsWith('\n')
-      // Extract the content suffix from the adjacent content
-      const missingTailingContent = organicTail ? '' : adjacentContent.split('\n').shift()
+      // Find the next content slice to add missing tailing content add the end of a line
+      const { content: nextContent = '\n' } = this.findNextContentSlice({ offset, endOffset, targetLanguage }, {})
+      // The slice ends with a new line or its next slice starts with a new line
+      const organicTail = content.endsWith('\n') || nextContent.startsWith('\n')
+      // Extract the content suffix from the next content
+      const missingTailingContent = organicTail ? '' : nextContent.split('\n').shift()
       // If the previous slice is not organic (organicHead), remove the first line from the content
       const truncatedTailContent = organicHead ? content : content.split('\n').slice(1).join('\n')
       // Add the missing tailing content (if any)
       const organicContent = truncatedTailContent + missingTailingContent
       // The offset of the content is not the same anymore
-      const organicOffset = organicHead ? offset : 1 + Number(offset) + content.split('\n').shift().length
+      const organicOffset = organicHead ? Number(offset) : 1 + Number(offset) + content.split('\n').shift().length
       return { organicContent, organicHead, organicTail, organicOffset }
     },
     async cookContentSlice({
@@ -261,18 +263,14 @@ export default {
     hasContentSlice({ offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       return !!this.getContentSlice({ offset, endOffset, targetLanguage })
     },
-    loadContentSliceArround(desiredOffset) {
-      const desiredOffsetIndex = this.findContentSliceIndexArround(desiredOffset)
-      const offset = this.offsets[desiredOffsetIndex]
-      return this.loadContentSliceOnce({ offset })
-    },
     async loadContentSlice({ offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       // Ensure the limit is not beyond limit
       const limit = Math.max(Math.min(endOffset, this.maxOffset) - offset, 0)
+
       const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
       return this.setContentSlice({ offset, endOffset, targetLanguage, content })
     },
-    async loadContentSliceOnce({ offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+    async loadContentSliceOnce({ offset = 0, endOffset, targetLanguage = this.targetLanguage } = {}) {
       if (!this.hasContentSlice({ offset, endOffset, targetLanguage })) {
         await this.loadContentSlice({ offset, endOffset, targetLanguage })
       }
@@ -301,15 +299,15 @@ export default {
       const term = this.localSearchTerm
       return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
     },
-    findNextLocalSearchTerm() {
-      const localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
-      this.$set(this, 'localSearchIndex', localSearchIndex)
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
+    async findNextLocalSearchTerm() {
+      this.localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
+      await this.activateContentSliceAround()
+      await this.jumpToActiveLocalSearchTerm()
     },
-    findPreviousLocalSearchTerm() {
-      const localSearchIndex = Math.max(1, this.localSearchIndex - 1)
-      this.$set(this, 'localSearchIndex', localSearchIndex)
-      this.$nextTick(this.jumpToActiveLocalSearchTerm)
+    async findPreviousLocalSearchTerm() {
+      this.localSearchIndex = Math.max(1, this.localSearchIndex - 1)
+      await this.activateContentSliceAround()
+      await this.jumpToActiveLocalSearchTerm()
     },
     clearActiveLocalSearchTerm() {
       const activeTerms = this.$el.querySelectorAll('.local-search-term--active')
@@ -323,41 +321,49 @@ export default {
     async jumpToActiveLocalSearchTerm() {
       // Delete all existing "local-search-term--active" classes from other element
       this.clearActiveLocalSearchTerm()
-      const activeTermOffset = this.localSearchIndexes[this.localSearchIndex - 1]
-      // Load missing content slice (if needed)
-      await this.loadContentSliceArround(activeTermOffset)
-      // Move to the content slice containing the term
-      const activeTermContentSlice = this.findContentSliceIndexArround(activeTermOffset)
-      this.scrollToContentSlice(activeTermContentSlice)
-      // Find the active search term according to `localSearchIndex`
-      const activeTermSelector = `.local-search-term[data-offset="${activeTermOffset}"]`
+      // Ensure the rendered HTML is the latest one from `currentContentPage`
+      await this.$nextTick()
+      const activeTermSelector = `.local-search-term[data-offset="${this.activeTermOffset}"]`
       const activeTerm = this.$el.querySelector(activeTermSelector)
       // Add the correct class and scroll the element into view
       activeTerm?.classList.add('local-search-term--active')
       activeTerm?.scrollIntoView({ block: 'center', inline: 'nearest' })
     },
-    async loadPrecedentContentSliceOnce({ offset = 0 } = {}) {
+    async loadPreviousContentSliceOnce({ offset = 0 } = {}) {
       const minOffset = offset - this.pageSize
       if (offset > 0) {
         await this.loadContentSliceOnce({ offset: minOffset, endOffset: offset })
       }
       return minOffset
     },
-    async loadAdjacentContentSliceOnce({ endOffset = this.pageSize } = {}) {
+    async loadNextContentSliceOnce({ endOffset = this.pageSize } = {}) {
       const maxOffset = endOffset + this.pageSize
       if (endOffset < this.maxOffset) {
         await this.loadContentSliceOnce({ offset: endOffset, endOffset: maxOffset })
       }
       return maxOffset
     },
+    async loadContentSliceAround(desiredOffset) {
+      const desiredOffsetIndex = this.findContentSliceIndexAround(desiredOffset)
+      const offset = this.offsets[desiredOffsetIndex]
+      const endOffset = offset + this.pageSize
+      const slice = await this.loadContentSliceOnce({ offset, endOffset })
+
+      return { ...slice, offset, endOffset }
+    },
+    async activateContentSliceAround(desiredOffset = this.activeTermOffset) {
+      const { offset, endOffset } = await this.loadContentSliceAround(desiredOffset)
+      return this.activateContentSlice({ offset, endOffset })
+    },
     async activateContentSlice({ offset = 0, endOffset = this.pageSize } = {}) {
       this.$wait.start('loadContentSlice')
-      const minOffset = await this.loadPrecedentContentSliceOnce({ offset })
-      const maxOffset = await this.loadAdjacentContentSliceOnce({ endOffset })
+      const minOffset = await this.loadPreviousContentSliceOnce({ offset })
+      const maxOffset = await this.loadNextContentSliceOnce({ endOffset })
       // This load the current page
       await this.loadContentSliceOnce({ offset, endOffset })
-      // Cook preceding, current and adjacent content slices
+      // Cook previous, current and next content slices
       await this.cookAllContentSlices({ minOffset, maxOffset })
+      this.activeContentSliceOffset = offset
       this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset, endOffset }).cookedContent
       this.$wait.end('loadContentSlice')
     }
@@ -402,7 +408,7 @@ export default {
     </div>
 
     <div class="border shadow-sm m-3">
-      <div class="p-1 bg-lighter" v-if="nbPages > 1">
+      <div v-if="nbPages > 1" class="p-1 bg-lighter">
         <b-pagination
           v-model="page"
           align="center"
