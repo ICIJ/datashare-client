@@ -392,7 +392,7 @@ function actionsBuilder(api) {
       }
     },
     updateFromRouteQuery({ commit, getters }, query) {
-      const excludedKeys = ['index', 'indices', 'field']
+      const excludedKeys = ['index', 'indices', 'field', 'layout']
       commit('reset', excludedKeys)
       ;['q', 'index', 'indices', 'from', 'size', 'sort', 'field'].forEach((key) => {
         if (key in query) {

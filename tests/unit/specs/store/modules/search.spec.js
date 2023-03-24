@@ -386,6 +386,13 @@ describe('SearchStore', () => {
       expect(store.state.search.index).toBe('local')
       expect(store.state.search.indices).toEqual(['local', 'project'])
     })
+
+    it('should not empty "layout" after the store is updated', async () => {
+      store.commit('search/layout', 'grid')
+      expect(store.state.search.layout).toBe('grid')
+      store.dispatch('search/updateFromRouteQuery', { from: 0 })
+      expect(store.state.search.layout).toBe('grid')
+    })
   })
 
   describe('updateFromRouteQuery should restore search state from url', () => {
