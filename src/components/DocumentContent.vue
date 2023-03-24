@@ -402,8 +402,15 @@ export default {
     </div>
 
     <div class="border shadow-sm m-3">
-      <div class="p-1 bg-lighter">
-        <custom-pagination v-model="page" compact size="sm" :pages="nbPages"></custom-pagination>
+      <div class="p-1 bg-lighter" v-if="nbPages > 1">
+        <b-pagination
+          v-model="page"
+          align="center"
+          class="m-0"
+          size="sm"
+          :per-page="1"
+          :total-rows="nbPages"
+        ></b-pagination>
       </div>
       <b-overlay :show="$wait.is('loadContentSlice')" opacity="0.6" rounded spinner-small>
         <hook name="document.content.body:before"></hook>
