@@ -114,7 +114,7 @@ export const mutations = {
     }
     return state.rootDocument
   },
-  toogleShowTransatedContent(state, toggle = null) {
+  toggleShowTranslatedContent(state, toggle = null) {
     Vue.set(state, 'showTranslatedContent', toggle !== null ? toggle : !state.showTranslatedContent)
   },
   addTag(state, { tag, userId }) {

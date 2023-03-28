@@ -53,7 +53,7 @@ describe('DocumentTranslatedContent.vue', () => {
   })
   beforeEach(() => {
     api.getDocumentSlice.mockClear()
-    store.commit('document/toogleShowTransatedContent', true)
+    store.commit('document/toggleShowTranslatedContent', true)
   })
 
   afterEach(async () => {
