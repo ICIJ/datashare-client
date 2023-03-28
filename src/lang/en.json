@@ -415,6 +415,7 @@
     "downloadButton": "Download",
     "downloadRootButton": "Download parent",
     "downloadWithoutMetadata": "Download without metadata",
+    "downloadExtractedText": "Download extracted text",
     "externalWindow": "Open in a new window",
     "copyLink": "Copy link",
     "selectAll": "Select all",

@@ -30,14 +30,15 @@
             {{ $t('document.downloadButton') }}
           </span>
         </a>
-        <b-dropdown
-          v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
-          right
-          toggle-class="py-0"
-          size="sm"
-        >
-          <b-dropdown-item :href="documentFullUrlWithoutMetadata">
+        <b-dropdown right toggle-class="py-0" size="sm">
+          <b-dropdown-item
+            v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
+            :href="documentFullUrlWithoutMetadata"
+          >
             {{ $t('document.downloadWithoutMetadata') }}
+          </b-dropdown-item>
+          <b-dropdown-item @click="documentOriginalExtractedText">
+            {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
@@ -261,6 +262,15 @@ export default {
     }
   },
   methods: {
+    async documentOriginalExtractedText() {
+      if (!this.document.content) {
+        await this.$store.dispatch('document/getContent')
+      }
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(new Blob([this.document.content], { type: 'text/plain;charset=UTF-8' }))
+      a.download = `${this.document.title}.txt`
+      a.click()
+    },
     classAttributeToObject(str) {
       const list = str.split(' ')
       return Object.assign({}, ...list.map((key) => ({ [key]: true })))
