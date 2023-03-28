@@ -95,7 +95,7 @@ import utils from '@/mixins/utils'
  * Document navbar in the context of a search.
  */
 export default {
-  name: 'SearchDocumentNavbar',
+  name: 'DocumentNavbar',
   components: {
     DocumentActions,
     UserDisplay

@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     toggleTranslatedContent() {
-      this.$store.commit('document/toogleShowTransatedContent')
+      this.$store.commit('document/toggleShowTranslatedContent')
     },
     async loadAvailableTranslations() {
       const _source = join([

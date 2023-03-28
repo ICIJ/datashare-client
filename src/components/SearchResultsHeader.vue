@@ -292,7 +292,7 @@ export default {
         width: 172px;
       }
 
-      &:deep(&__toogler__hits) {
+      &:deep(&__toggler__hits) {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
