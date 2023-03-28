@@ -9,7 +9,7 @@ import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 describe('DocumentTranslatedContent.vue', () => {
-  let i18n, localVue, store, api
+  let i18n, localVue, store, wait, api
   const { index, es } = esConnectionHelper.build()
 
   function mockedDocumentContentFactory(id, content = '') {
@@ -50,6 +50,7 @@ describe('DocumentTranslatedContent.vue', () => {
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
+    wait = core.wait
   })
   beforeEach(() => {
     api.getDocumentSlice.mockClear()
@@ -67,7 +68,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const mocked = mockedDocumentContentFactory('document-without-translation', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withNoContentTranslated()
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
+    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, wait, propsData: { document } })
     await wrapper.vm.loadAvailableTranslations()
     await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
@@ -80,7 +81,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-italian', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('Primo', 'FRENCH', 'ITALIAN')
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
+    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, wait, propsData: { document } })
     await wrapper.vm.loadAvailableTranslations()
     await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
@@ -93,7 +94,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-english', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('First', 'FRENCH', 'ENGLISH')
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
+    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, wait, propsData: { document } })
     await wrapper.vm.loadAvailableTranslations()
     await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()

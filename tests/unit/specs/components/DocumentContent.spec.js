@@ -27,7 +27,7 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('DocumentContent.vue', () => {
   const api = new Api(null, null)
-  const { i18n, localVue, store } = Core.init(createLocalVue(), api).useAll()
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
 
@@ -69,7 +69,13 @@ describe('DocumentContent.vue', () => {
         'this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'
       const { document } = await mockDocumentContentSlice(content)
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = shallowMount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       await wrapper.vm.cookAllContentSlices()
@@ -80,7 +86,13 @@ describe('DocumentContent.vue', () => {
       const content = 'this is a <mark>document</mark>'
       const { document } = await mockDocumentContentSlice(content)
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = shallowMount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       await wrapper.vm.cookAllContentSlices()
@@ -90,9 +102,17 @@ describe('DocumentContent.vue', () => {
     it('should display the text right to left for arabic', async () => {
       const content =
         'المنال ويتلذذ بالآلام، الألم هو الألم ولكن نتيجة لظروف ما قد تكمن السعاده فيما نتحمله من كد وأسي.'
-      const { document } = await mockDocumentContentSlice(content, { language: 'ARABIC' })
+      const { document } = await mockDocumentContentSlice(content, {
+        language: 'ARABIC'
+      })
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = shallowMount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.find('.document-content__body--rtl').exists()).toBeTruthy()
@@ -101,7 +121,13 @@ describe('DocumentContent.vue', () => {
     it('should NOT display the text right to left for english', async () => {
       const { document } = await mockDocumentContentSlice('foo')
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = shallowMount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.find('.document-content__body--rtl').exists()).toBeFalsy()
@@ -119,7 +145,13 @@ describe('DocumentContent.vue', () => {
       it('should not sticky the toolbox by default', async () => {
         const { document } = await mockDocumentContentSlice('')
         const propsData = { document }
-        const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+        const wrapper = shallowMount(DocumentContent, {
+          i18n,
+          localVue,
+          store,
+          propsData,
+          wait
+        })
         await flushPromises()
         expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeFalsy()
       })
@@ -135,7 +167,13 @@ describe('DocumentContent.vue', () => {
           return { count: 2, offsets: [10, 15] }
         })
         const propsData = { document }
-        wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+        wrapper = mount(DocumentContent, {
+          i18n,
+          localVue,
+          store,
+          propsData,
+          wait
+        })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
         // Use vm.$set method to set nested value reactivly
@@ -148,7 +186,7 @@ describe('DocumentContent.vue', () => {
       })
 
       it('should highlight the first occurrence of the searched term', async () => {
-        const { innerHTML } = wrapper.find('.document-content__body .document-content-slice').element
+        const { innerHTML } = wrapper.find('.document-content__body').element
         expect(wrapper.vm.localSearchIndex).toEqual(1)
         expect(innerHTML).toEqual(
           '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
@@ -156,7 +194,7 @@ describe('DocumentContent.vue', () => {
       })
 
       it('should find the previous and next occurrence, as a loop', async () => {
-        const { element } = wrapper.find('.document-content__body  .document-content-slice')
+        const { element } = wrapper.find('.document-content__body')
 
         expect(wrapper.vm.localSearchIndex).toEqual(1)
         expect(element.innerHTML).toEqual(
@@ -199,7 +237,13 @@ describe('DocumentContent.vue', () => {
           return { count: 3, offsets: [10, 15, 28] }
         })
         const propsData = { document }
-        wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+        wrapper = mount(DocumentContent, {
+          i18n,
+          localVue,
+          store,
+          propsData,
+          wait
+        })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
       })
@@ -219,7 +263,13 @@ describe('DocumentContent.vue', () => {
       const content = 'this is a content'
       const { document } = await mockDocumentContentSlice(content)
       const propsData = { document }
-      const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = mount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.vm.getContentSlice().content).toBe('this is a content')
@@ -231,7 +281,13 @@ describe('DocumentContent.vue', () => {
       const { document } = await mockDocumentContentSlice(content)
       const pageSize = 10
       const propsData = { document, pageSize }
-      const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = mount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       // Load the first slice
       await wrapper.vm.loadContentSlice({ offset: 0 })
@@ -249,7 +305,13 @@ describe('DocumentContent.vue', () => {
       const { document } = await mockDocumentContentSlice(content)
       const pageSize = 30
       const propsData = { document, pageSize }
-      const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = mount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       // Load two slices
       await wrapper.vm.loadContentSlice({ offset: 0 })
@@ -274,7 +336,13 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice(content)
         const pageSize = 25
         const propsData = { document, pageSize }
-        const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+        const wrapper = mount(DocumentContent, {
+          i18n,
+          localVue,
+          store,
+          propsData,
+          wait
+        })
         wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'long')
         await flushPromises()
         // Load two slices
@@ -301,7 +369,13 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice(content)
         const pageSize = 25
         const propsData = { document, pageSize }
-        const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+        const wrapper = mount(DocumentContent, {
+          i18n,
+          localVue,
+          store,
+          propsData,
+          wait
+        })
         wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'or')
         await flushPromises()
         // Load two slices
@@ -321,7 +395,13 @@ describe('DocumentContent.vue', () => {
       const { document } = await mockDocumentContentSlice(content)
       const pageSize = 11
       const propsData = { document, pageSize }
-      const wrapper = mount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = mount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData,
+        wait
+      })
       await flushPromises()
       // Load the first slice
       // Load two slices

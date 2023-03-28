@@ -216,7 +216,7 @@ export default {
       // Add the missing tailing content (if any)
       const organicContent = truncatedTailContent + missingTailingContent
       // The offset of the content is not the same anymore
-      const organicOffset = organicHead ? Number(offset) : 1 + Number(offset) + content.split('\n').shift().length
+      const organicOffset = organicHead ? Number(offset) : 1 + offset + content.split('\n').shift().length
       return { organicContent, organicHead, organicTail, organicOffset }
     },
     async cookContentSlice({
@@ -251,7 +251,7 @@ export default {
       }
     },
     getContentSlice(
-      { offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage } = {},
+      { offset = 0, endOffset = offset + this.pageSize, targetLanguage = this.targetLanguage } = {},
       defaultValue = null
     ) {
       const targetLanguageKey = targetLanguage || 'original'
@@ -263,10 +263,13 @@ export default {
     hasContentSlice({ offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
       return !!this.getContentSlice({ offset, endOffset, targetLanguage })
     },
-    async loadContentSlice({ offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
+    async loadContentSlice({
+      offset = 0,
+      endOffset = offset + this.pageSize,
+      targetLanguage = this.targetLanguage
+    } = {}) {
       // Ensure the limit is not beyond limit
       const limit = Math.max(Math.min(endOffset, this.maxOffset) - offset, 0)
-
       const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
       return this.setContentSlice({ offset, endOffset, targetLanguage, content })
     },
