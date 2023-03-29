@@ -136,6 +136,9 @@
     "viewOriginal": "View original text",
     "viewTranslated": "View translated text"
   },
+  "documentContent": {
+    "noContent": "No content extracted for this document"
+  },
   "filter": {
     "none": "No values",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",

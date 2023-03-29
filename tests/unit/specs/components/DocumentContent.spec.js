@@ -45,7 +45,7 @@ describe('DocumentContent.vue', () => {
     await store.dispatch('document/get', { id, index })
     const document = store.state.document.doc
     // Finally flush all promises and return all necessary values
-    flushPromises()
+    await flushPromises()
     return { content, contentSlice, document }
   }
 
@@ -86,13 +86,7 @@ describe('DocumentContent.vue', () => {
       const content = 'this is a <mark>document</mark>'
       const { document } = await mockDocumentContentSlice(content)
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       await wrapper.vm.cookAllContentSlices()
@@ -131,6 +125,20 @@ describe('DocumentContent.vue', () => {
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.find('.document-content__body--rtl').exists()).toBeFalsy()
+    })
+
+    it('should display "No content extracted for this document" and disable the search input when the extracted text is empty', async () => {
+      const { document } = await mockDocumentContentSlice('')
+      const propsData = { document }
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
+      await flushPromises()
+      await wrapper.vm.loadContentSlice()
+      const element = wrapper.find('.document-content__body--no-content')
+      expect(element.exists()).toBe(true)
+      expect(element.text()).toBe('No content extracted for this document')
+      const input = wrapper.find('document-local-search-input-stub')
+      expect(input.exists()).toBe(true)
+      expect(input.attributes('disabled')).toBe('true')
     })
   })
 

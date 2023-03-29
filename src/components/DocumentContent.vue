@@ -64,55 +64,6 @@ export default {
       maxOffsetTranslations: {}
     }
   },
-  computed: {
-    ...mapGetters('pipelines', {
-      getPipelineChain: 'applyPipelineChainByCategory',
-      getFullPipelineChain: 'getFullPipelineChainByCategory'
-    }),
-    ...mapGetters('search', {
-      globalSearchTerms: 'retrieveContentQueryTerms'
-    }),
-    nbPages() {
-      return Math.floor(this.maxOffset / this.pageSize) + 1
-    },
-    page: {
-      get() {
-        return Math.floor(this.activeContentSliceOffset / this.pageSize) + 1
-      },
-      set(page) {
-        this.activeContentSliceOffset = (page - 1) * this.pageSize
-      }
-    },
-    isRightToLeft() {
-      const language = get(this.document, 'source.language', null)
-      return this.rightToLeftLanguages.includes(language)
-    },
-    maxOffset() {
-      return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
-    },
-    offsets() {
-      return range(0, this.maxOffset, this.pageSize)
-    },
-    contentPipeline() {
-      return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
-    },
-    contentPipelineParams() {
-      return pick(this, [
-        'hasStickyToolbox',
-        'globalSearchTerms',
-        'localSearchIndex',
-        'localSearchOccurrences',
-        'localSearchTerm'
-      ])
-    },
-    hasLocalSearchTerms() {
-      return this.localSearchTerm && this.localSearchTerm.length > 0
-    },
-    activeTermOffset() {
-      // Find the active search term according to `localSearchIndex`
-      return this.localSearchIndexes[this.localSearchIndex - 1]
-    }
-  },
   watch: {
     localSearchTerm: throttle(async function () {
       await this.retrieveTotalOccurrences()
@@ -145,6 +96,61 @@ export default {
       await this.jumpToActiveLocalSearchTerm()
     } else {
       await this.activateContentSlice({ offset: 0, endOffset: this.pageSize })
+    }
+  },
+  computed: {
+    ...mapGetters('pipelines', {
+      getPipelineChain: 'applyPipelineChainByCategory',
+      getFullPipelineChain: 'getFullPipelineChainByCategory'
+    }),
+    ...mapGetters('search', {
+      globalSearchTerms: 'retrieveContentQueryTerms'
+    }),
+    activeTermOffset() {
+      // Find the active search term according to `localSearchIndex`
+      return this.localSearchIndexes[this.localSearchIndex - 1]
+    },
+    contentPipeline() {
+      return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
+    },
+    contentPipelineParams() {
+      return pick(this, [
+        'hasStickyToolbox',
+        'globalSearchTerms',
+        'localSearchIndex',
+        'localSearchOccurrences',
+        'localSearchTerm'
+      ])
+    },
+    hasLocalSearchTerms() {
+      return this.localSearchTerm && this.localSearchTerm.length > 0
+    },
+    isRightToLeft() {
+      const language = get(this.document, 'source.language', null)
+      return this.rightToLeftLanguages.includes(language)
+    },
+    page: {
+      get() {
+        return Math.floor(this.activeContentSliceOffset / this.pageSize) + 1
+      },
+      set(page) {
+        this.activeContentSliceOffset = (page - 1) * this.pageSize
+      }
+    },
+    hasExtractedContent() {
+      return this.maxOffset > 0
+    },
+    hasContentTextLength() {
+      return this.document.contentTextLength > 0
+    },
+    maxOffset() {
+      return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
+    },
+    nbPages() {
+      return Math.floor(this.maxOffset / this.pageSize) + 1
+    },
+    offsets() {
+      return range(0, this.maxOffset, this.pageSize)
     }
   },
   methods: {
@@ -359,7 +365,7 @@ export default {
       return this.activateContentSlice({ offset, endOffset })
     },
     async activateContentSlice({ offset = 0, endOffset = this.pageSize } = {}) {
-      this.$wait.start('loadContentSlice')
+      this.$wait.start('loaderContentSlice')
       const minOffset = await this.loadPreviousContentSliceOnce({ offset })
       const maxOffset = await this.loadNextContentSliceOnce({ endOffset })
       // This load the current page
@@ -368,7 +374,7 @@ export default {
       await this.cookAllContentSlices({ minOffset, maxOffset })
       this.activeContentSliceOffset = offset
       this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset, endOffset }).cookedContent
-      this.$wait.end('loadContentSlice')
+      this.$wait.end('loaderContentSlice')
     }
   }
 }
@@ -388,6 +394,7 @@ export default {
       <document-local-search-input
         v-model="localSearchTerm"
         class="ml-auto"
+        :disabled="!hasExtractedContent"
         :activated.sync="hasStickyToolbox"
         :search-occurrences="localSearchOccurrences"
         :search-index="localSearchIndex"
@@ -410,8 +417,8 @@ export default {
       <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
     </div>
 
-    <div class="border shadow-sm m-3">
-      <div v-if="nbPages > 1" class="p-1 bg-lighter">
+    <div class="document-content__wrapper border shadow-sm m-3">
+      <div v-if="nbPages > 1" class="document-content__wrapper__pagination p-1 bg-lighter">
         <b-pagination
           v-model="page"
           align="center"
@@ -421,15 +428,18 @@ export default {
           :total-rows="nbPages"
         ></b-pagination>
       </div>
-      <b-overlay :show="$wait.is('loadContentSlice')" opacity="0.6" rounded spinner-small>
-        <hook name="document.content.body:before"></hook>
+      <hook name="document.content.body:before"></hook>
+      <b-overlay v-if="hasContentTextLength" :show="$wait.is('loaderContentSlice')" opacity="0.6" rounded spinner-small>
         <div
           :class="{ 'document-content__body--rtl': isRightToLeft }"
           class="document-content__body container-fluid p-3"
           v-html="currentContentPage"
         ></div>
-        <hook name="document.content.body:after"></hook>
       </b-overlay>
+      <p v-else class="document-content__body--no-content text-muted text-center pt-3">
+        {{ $t('documentContent.noContent') }}
+      </p>
+      <hook name="document.content.body:after"></hook>
     </div>
     <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
     <hook name="document.content:after"></hook>

@@ -37,7 +37,11 @@
           >
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
-          <b-dropdown-item @click="documentOriginalExtractedText">
+          <b-dropdown-item
+            v-if="hasContentLength"
+            class="document-actions__download--extracted-text"
+            @click="documentOriginalExtractedText"
+          >
             {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
         </b-dropdown>
@@ -259,6 +263,9 @@ export default {
     },
     hasRootCleanableContentType() {
       return this.hasRoot && this.cleanableContentTypes.includes(this.document.root.contentType)
+    },
+    hasContentLength() {
+      return this.document?.contentLength > 0
     }
   },
   methods: {

@@ -1,7 +1,6 @@
 export { default as IdentityPipeline } from './IdentityPipeline'
 export { default as SimplePipeline } from './SimplePipeline'
 export { default as AddGlobalSearchMarks } from './AddGlobalSearchMarks'
-export { default as AddNamedEntitiesPipeline } from './AddNamedEntitiesPipeline'
 export { default as AddLineBreaksPipeline } from './AddLineBreaksPipeline'
 export { default as DeleteEmptyParagraphsPipeline } from './DeleteEmptyParagraphsPipeline'
 export { default as AddLabelComponents } from './AddLabelComponents'
