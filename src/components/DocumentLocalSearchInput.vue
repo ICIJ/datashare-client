@@ -41,6 +41,12 @@ export default {
      */
     loading: {
       type: Boolean
+    },
+    /**
+     * Disable input
+     */
+    disabled: {
+      type: Boolean
     }
   },
   data() {
@@ -61,6 +67,9 @@ export default {
     },
     searchLabel() {
       return `${this.searchIndex} ${this.$t('document.of')} ${this.searchOccurrences}`
+    },
+    searchTermIsEmpty() {
+      return this.searchTerm?.length === 0
     }
   },
   watch: {
@@ -115,7 +124,7 @@ export default {
     class="document-local-search-input form-inline px-3"
     :class="{
       'document-local-search-input--active': isActive,
-      'document-local-search-input--pristine': searchTerm.length > 0
+      'document-local-search-input--pristine': !searchTermIsEmpty
     }"
   >
     <div class="form-group py-2 mr-2">
@@ -128,12 +137,13 @@ export default {
           v-shortkey="getKeys('findInDocument')"
           type="search"
           :value="searchTerm"
+          :disabled="disabled"
           :placeholder="$t('document.find')"
           class="form-control document-local-search-input__term"
           @input="$emit('input', $event.target.value)"
           @shortkey="getAction('findInDocument')"
         />
-        <div v-if="searchTerm.length > 0" class="document-local-search-input__count input-group-append w-25">
+        <div v-if="!searchTermIsEmpty" class="document-local-search-input__count input-group-append w-25">
           <span v-if="loading" class="input-group-text w-100 text-center d-inline-block">
             <fa icon="circle-notch" spin></fa>
           </span>
@@ -152,14 +162,14 @@ export default {
     <div class="form-group">
       <button
         class="document-local-search-input__previous btn btn-sm p-2"
-        :disabled="searchOccurrences === 0 || searchTerm.length === 0"
+        :disabled="searchOccurrences === 0 || searchTermIsEmpty"
         @click="previous"
       >
         <fa icon="angle-up"></fa>
       </button>
       <button
         class="document-local-search-input__next btn btn-sm p-2"
-        :disabled="searchOccurrences === 0 || searchTerm.length === 0"
+        :disabled="searchOccurrences === 0 || searchTermIsEmpty"
         @click="next"
       >
         <fa icon="angle-down"></fa>

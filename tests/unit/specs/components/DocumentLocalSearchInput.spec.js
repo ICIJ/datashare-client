@@ -18,4 +18,16 @@ describe('DocumentLocalSearchInput.vue', () => {
     expect(wrapper.find('.document-local-search-input__term').exists()).toBeTruthy()
     expect(wrapper.find('.document-local-search-input__count').exists()).toBeTruthy()
   })
+
+  it('should disable input when disabled props is true', async () => {
+    const wrapper = shallowMount(DocumentLocalSearchInput, {
+      localVue,
+      store,
+      propsData: { disabled: false },
+      mocks: { $t: (msg) => msg }
+    })
+    expect(wrapper.find('.document-local-search-input__term').attributes('disabled')).toBeUndefined()
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.document-local-search-input__term').attributes('disabled')).toBe('disabled')
+  })
 })
