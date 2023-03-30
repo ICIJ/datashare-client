@@ -136,6 +136,9 @@
     "viewOriginal": "crwdns356:0crwdne356:0",
     "viewTranslated": "crwdns358:0crwdne358:0"
   },
+  "documentContent": {
+    "noContent": "crwdns2701:0crwdne2701:0"
+  },
   "filter": {
     "none": "crwdns1351:0crwdne1351:0",
     "noMatches": "crwdns1353:0crwdne1353:0",
@@ -416,6 +419,7 @@
     "downloadButton": "crwdns1932:0crwdne1932:0",
     "downloadRootButton": "crwdns2368:0crwdne2368:0",
     "downloadWithoutMetadata": "crwdns2555:0crwdne2555:0",
+    "downloadExtractedText": "crwdns2703:0crwdne2703:0",
     "externalWindow": "crwdns1934:0crwdne1934:0",
     "copyLink": "crwdns2691:0crwdne2691:0",
     "selectAll": "crwdns2160:0crwdne2160:0",
