@@ -136,6 +136,9 @@
     "viewOriginal": "Ausgangstext anzeigen",
     "viewTranslated": "Übersetzten Text anzeigen"
   },
+  "documentContent": {
+    "noContent": "No content extracted for this document"
+  },
   "filter": {
     "none": "Keine Werte",
     "noMatches": "Keine Übereinstimmungen.<br />Drücken Sie <kbd>Enter</kbd>, um in allen Dokumenten zu suchen",
@@ -416,6 +419,7 @@
     "downloadButton": "Download",
     "downloadRootButton": "Übergeordnetes Dokument herunterladen",
     "downloadWithoutMetadata": "Ohne Metadaten herunterladen",
+    "downloadExtractedText": "Download extracted text",
     "externalWindow": "In neuem Fenster öffnen",
     "copyLink": "Copy link",
     "selectAll": "Alle auswählen",
