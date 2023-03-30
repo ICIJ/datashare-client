@@ -65,10 +65,11 @@ export default {
     }
   },
   watch: {
-    localSearchTerm: throttle(async function () {
-      await this.retrieveTotalOccurrences()
-      await this.activateContentSliceAround()
-      await this.jumpToActiveLocalSearchTerm()
+    q(value) {
+      this.localSearchTerm = value
+    },
+    localSearchTerm: throttle(async function (value) {
+      await this.updateContent(true)
     }, 300),
     async targetLanguage(value) {
       await this.loadMaxOffset(value)
@@ -81,8 +82,7 @@ export default {
         await this.jumpToActiveLocalSearchTerm()
       } else {
         const offset = this.activeContentSliceOffset
-        const endOffset = this.activeContentSliceOffset + this.pageSize
-        await this.activateContentSlice({ offset, endOffset })
+        await this.activateContentSlice({ offset })
       }
     }
   },
@@ -91,24 +91,22 @@ export default {
     // Initial local query, we need to jump to the result
     if (this.q) {
       this.hasStickyToolbox = true
-      await this.retrieveTotalOccurrences()
-      await this.activateContentSliceAround()
-      await this.jumpToActiveLocalSearchTerm()
+      await this.updateContent(true)
     } else {
-      await this.activateContentSlice({ offset: 0, endOffset: this.pageSize })
+      await this.activateContentSlice({ offset: 0 })
     }
   },
+  // eslint-disable-next-line vue/order-in-components
   computed: {
     ...mapGetters('pipelines', {
-      getPipelineChain: 'applyPipelineChainByCategory',
-      getFullPipelineChain: 'getFullPipelineChainByCategory'
+      getPipelineChain: 'applyPipelineChainByCategory'
     }),
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms'
     }),
     activeTermOffset() {
       // Find the active search term according to `localSearchIndex`
-      return this.localSearchIndexes[this.localSearchIndex - 1]
+      return this.localSearchIndexes[this.localSearchIndex - 1] // renvoie undefined si le tableau est vide
     },
     contentPipeline() {
       return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
@@ -164,26 +162,16 @@ export default {
     findContentSliceIndexAround(desiredOffset) {
       return findLastIndex(this.offsets, (offset) => offset <= desiredOffset)
     },
-    findNextContentSlice(
-      { offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage },
-      defaultValue = null
-    ) {
+    findNextContentSlice({ offset, targetLanguage = this.targetLanguage }, defaultValue = null) {
       const nextOffset = Number(offset) + Number(this.pageSize)
-      return this.getContentSlice(
-        { offset: nextOffset, endOffset: nextOffset + this.pageSize, targetLanguage },
-        defaultValue
-      )
+      return this.getContentSlice({ offset: nextOffset, targetLanguage }, defaultValue)
     },
-    findPrecedingContentSlice(
-      { offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage },
-      defaultValue = null
-    ) {
+    findPrecedingContentSlice({ offset = 0, targetLanguage = this.targetLanguage }, defaultValue = null) {
       const previousOffset = Number(offset) - Number(this.pageSize)
-      return this.getContentSlice({ offset: previousOffset, endOffset: offset, targetLanguage }, defaultValue)
+      return this.getContentSlice({ offset: previousOffset, targetLanguage }, defaultValue)
     },
     setContentSlice({
       offset = 0,
-      endOffset = this.pageSize,
       targetLanguage = this.targetLanguage,
       content = '',
       cookedContent = '',
@@ -193,97 +181,58 @@ export default {
       const targetLanguageKey = targetLanguage || 'original'
       // Ensure offsets are in bounds
       offset = clamp(offset, 0, this.maxOffset)
-      endOffset = clamp(endOffset, 0, this.maxOffset)
       // Reactivly set the nested values of contentSlices
       this.$set(obj, offset, obj[offset] || {})
-      this.$set(obj[offset], endOffset, obj[offset][endOffset] || {})
-      this.$set(obj[offset][endOffset], targetLanguageKey, { ...rest, content, cookedContent })
+      this.$set(obj[offset], targetLanguageKey, { ...rest, content, cookedContent })
       return { ...rest, content, cookedContent }
     },
-    makeContentSliceOrganic({
-      offset = 0,
-      endOffset = this.pageSize,
-      targetLanguage = this.targetLanguage,
-      content = ''
-    } = {}) {
-      // Find if the previous content slice to know if it has an organic tail already
-      const { organicTail: organicHead = true } = this.findPrecedingContentSlice(
-        { offset, endOffset, targetLanguage },
-        {}
-      )
-      // Find the next content slice to add missing tailing content add the end of a line
-      const { content: nextContent = '\n' } = this.findNextContentSlice({ offset, endOffset, targetLanguage }, {})
-      // The slice ends with a new line or its next slice starts with a new line
-      const organicTail = content.endsWith('\n') || nextContent.startsWith('\n')
-      // Extract the content suffix from the next content
-      const missingTailingContent = organicTail ? '' : nextContent.split('\n').shift()
-      // If the previous slice is not organic (organicHead), remove the first line from the content
-      const truncatedTailContent = organicHead ? content : content.split('\n').slice(1).join('\n')
-      // Add the missing tailing content (if any)
-      const organicContent = truncatedTailContent + missingTailingContent
-      // The offset of the content is not the same anymore
-      const organicOffset = organicHead ? Number(offset) : 1 + offset + content.split('\n').shift().length
-      return { organicContent, organicHead, organicTail, organicOffset }
-    },
-    async cookContentSlice({
-      offset = 0,
-      endOffset = this.pageSize,
-      targetLanguage = this.targetLanguage,
-      content = ''
-    } = {}) {
-      // Extract the content after making it "organic"
-      const sliceParams = { offset, endOffset, targetLanguage, content }
-      const { organicHead, organicTail, organicOffset, organicContent } = this.makeContentSliceOrganic(sliceParams)
-      // Apply the pipeline to on the content is organic
-      const pipelineParams = { organicOffset, ...this.contentPipelineParams }
-      const cookedContent = await this.contentPipeline(organicContent, pipelineParams)
-      // Finally, save the
-      this.setContentSlice({ ...sliceParams, organicOffset, cookedContent, organicHead, organicTail })
+    async cookContentSlice({ offset = 0, targetLanguage = this.targetLanguage, content = '' } = {}) {
+      // Apply the pipeline to on the content
+      const cookedContent = await this.contentPipeline(content, { offset, ...this.contentPipelineParams })
+      // Finally, save the slice
+      this.setContentSlice({ offset, targetLanguage, content, cookedContent })
     },
     async cookAllContentSlices({ minOffset = 0, maxOffset = this.maxOffset } = {}) {
-      for (const [offset, endOffsets] of entries(this.contentSlices)) {
-        for (const [endOffset, targetLanguages] of entries(endOffsets)) {
-          for (const [targetLanguage, contentSlice] of entries(targetLanguages)) {
-            if (offset >= minOffset && offset <= maxOffset) {
-              await this.cookContentSlice({
-                offset,
-                endOffset,
-                targetLanguage,
-                ...contentSlice
-              })
-            }
+      for (const [offset, targetLanguages] of entries(this.contentSlices)) {
+        for (const [targetLanguage, contentSlice] of entries(targetLanguages)) {
+          if (offset >= minOffset && offset <= maxOffset) {
+            await this.cookContentSlice({
+              offset,
+              targetLanguage,
+              ...contentSlice
+            })
           }
         }
       }
     },
-    getContentSlice(
-      { offset = 0, endOffset = offset + this.pageSize, targetLanguage = this.targetLanguage } = {},
-      defaultValue = null
-    ) {
+    getContentSlice({ offset = 0, targetLanguage = this.targetLanguage } = {}, defaultValue = null) {
       const targetLanguageKey = targetLanguage || 'original'
       // Ensure offsets are in bounds
       offset = clamp(offset, 0, this.maxOffset)
-      endOffset = clamp(endOffset, 0, this.maxOffset)
-      return get(this.contentSlices, [offset, endOffset, targetLanguageKey], defaultValue)
+      return get(this.contentSlices, [offset, targetLanguageKey], defaultValue)
     },
-    hasContentSlice({ offset = 0, endOffset = this.pageSize, targetLanguage = this.targetLanguage } = {}) {
-      return !!this.getContentSlice({ offset, endOffset, targetLanguage })
+    hasContentSlice({ offset = 0, targetLanguage = this.targetLanguage } = {}) {
+      return !!this.getContentSlice({ offset, targetLanguage })
     },
-    async loadContentSlice({
-      offset = 0,
-      endOffset = offset + this.pageSize,
-      targetLanguage = this.targetLanguage
-    } = {}) {
+    async loadContentSlice({ offset = 0, targetLanguage = this.targetLanguage } = {}) {
       // Ensure the limit is not beyond limit
+      const endOffset = offset + this.pageSize
       const limit = Math.max(Math.min(endOffset, this.maxOffset) - offset, 0)
       const { content } = await this.$store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
-      return this.setContentSlice({ offset, endOffset, targetLanguage, content })
+      return this.setContentSlice({ offset, targetLanguage, content })
     },
-    async loadContentSliceOnce({ offset = 0, endOffset, targetLanguage = this.targetLanguage } = {}) {
-      if (!this.hasContentSlice({ offset, endOffset, targetLanguage })) {
-        await this.loadContentSlice({ offset, endOffset, targetLanguage })
+    async loadContentSliceOnce({ offset = 0, targetLanguage = this.targetLanguage } = {}) {
+      if (!this.hasContentSlice({ offset, targetLanguage })) {
+        await this.loadContentSlice({ offset, targetLanguage })
       }
-      return this.getContentSlice({ offset, endOffset, targetLanguage })
+      return this.getContentSlice({ offset, targetLanguage })
+    },
+    async updateContent(retrieveOccurrences = false) {
+      if (retrieveOccurrences) {
+        await this.retrieveTotalOccurrences()
+      }
+      await this.activateContentSliceAround()
+      await this.jumpToActiveLocalSearchTerm()
     },
     async retrieveTotalOccurrences() {
       try {
@@ -299,24 +248,41 @@ export default {
         this.localSearchIndex = 0
       }
     },
-    addLocalSearchMarks(content, { organicOffset: delta = 0 } = {}) {
+    async activateContentSliceAround(desiredOffset = this.activeTermOffset) {
+      const { offset } = await this.loadContentSliceAround(desiredOffset)
+      return this.activateContentSlice({ offset })
+    },
+    async activateContentSlice({ offset = 0 } = {}) {
+      this.$wait.start('loaderContentSlice')
+      const minOffset = await this.loadPreviousContentSliceOnce({ offset })
+      const maxOffset = await this.loadNextContentSliceOnce({ offset })
+      // This load the current page
+      await this.loadContentSliceOnce({ offset })
+      // Cook previous, current and next content slices
+      await this.cookAllContentSlices({ minOffset, maxOffset })
+      this.activeContentSliceOffset = offset
+      this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset }).cookedContent
+      this.$wait.end('loaderContentSlice')
+    },
+    addLocalSearchMarks(content, { offset: delta = 0 } = {}) {
       if (!this.hasLocalSearchTerms) {
         return content
       }
-
       const offsets = this.localSearchIndexes
       const term = this.localSearchTerm
       return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
     },
     async findNextLocalSearchTerm() {
       this.localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
-      await this.activateContentSliceAround()
-      await this.jumpToActiveLocalSearchTerm()
+      await this.updateContent()
     },
     async findPreviousLocalSearchTerm() {
       this.localSearchIndex = Math.max(1, this.localSearchIndex - 1)
-      await this.activateContentSliceAround()
-      await this.jumpToActiveLocalSearchTerm()
+      await this.updateContent()
+    },
+    clearHighlightedLocalSearchTerm() {
+      const highlightedTerms = this.$el.querySelectorAll('.local-search-term')
+      highlightedTerms.forEach((term) => term.classList.remove('local-search-term'))
     },
     clearActiveLocalSearchTerm() {
       const activeTerms = this.$el.querySelectorAll('.local-search-term--active')
@@ -334,47 +300,34 @@ export default {
       await this.$nextTick()
       const activeTermSelector = `.local-search-term[data-offset="${this.activeTermOffset}"]`
       const activeTerm = this.$el.querySelector(activeTermSelector)
-      // Add the correct class and scroll the element into view
-      activeTerm?.classList.add('local-search-term--active')
-      activeTerm?.scrollIntoView({ block: 'center', inline: 'nearest' })
+      if (activeTerm) {
+        // Add the correct class and scroll the element into view
+        activeTerm?.classList.add('local-search-term--active')
+        activeTerm?.scrollIntoView({ block: 'center', inline: 'nearest' })
+      } else {
+        this.$el.scrollTop = 0
+      }
     },
-    async loadPreviousContentSliceOnce({ offset = 0 } = {}) {
+    async loadPreviousContentSliceOnce({ offset }) {
       const minOffset = offset - this.pageSize
       if (offset > 0) {
-        await this.loadContentSliceOnce({ offset: minOffset, endOffset: offset })
+        await this.loadContentSliceOnce({ offset: minOffset })
       }
       return minOffset
     },
-    async loadNextContentSliceOnce({ endOffset = this.pageSize } = {}) {
-      const maxOffset = endOffset + this.pageSize
-      if (endOffset < this.maxOffset) {
-        await this.loadContentSliceOnce({ offset: endOffset, endOffset: maxOffset })
+    async loadNextContentSliceOnce({ offset }) {
+      const maxOffset = offset + this.pageSize
+      if (maxOffset < this.maxOffset) {
+        await this.loadContentSliceOnce({ offset: maxOffset })
       }
       return maxOffset
     },
     async loadContentSliceAround(desiredOffset) {
       const desiredOffsetIndex = this.findContentSliceIndexAround(desiredOffset)
       const offset = this.offsets[desiredOffsetIndex]
-      const endOffset = offset + this.pageSize
-      const slice = await this.loadContentSliceOnce({ offset, endOffset })
+      const slice = await this.loadContentSliceOnce({ offset })
 
-      return { ...slice, offset, endOffset }
-    },
-    async activateContentSliceAround(desiredOffset = this.activeTermOffset) {
-      const { offset, endOffset } = await this.loadContentSliceAround(desiredOffset)
-      return this.activateContentSlice({ offset, endOffset })
-    },
-    async activateContentSlice({ offset = 0, endOffset = this.pageSize } = {}) {
-      this.$wait.start('loaderContentSlice')
-      const minOffset = await this.loadPreviousContentSliceOnce({ offset })
-      const maxOffset = await this.loadNextContentSliceOnce({ endOffset })
-      // This load the current page
-      await this.loadContentSliceOnce({ offset, endOffset })
-      // Cook previous, current and next content slices
-      await this.cookAllContentSlices({ minOffset, maxOffset })
-      this.activeContentSliceOffset = offset
-      this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset, endOffset }).cookedContent
-      this.$wait.end('loaderContentSlice')
+      return { ...slice, offset }
     }
   }
 }
