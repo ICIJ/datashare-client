@@ -136,6 +136,9 @@
     "viewOriginal": "原文を見る",
     "viewTranslated": "翻訳された文を見る"
   },
+  "documentContent": {
+    "noContent": "No content extracted for this document"
+  },
   "filter": {
     "none": "値なし",
     "noMatches": "一致するものがありません。全ての文書を検索するには<br /><kbd>Enter</kbd>キーを押してください",
@@ -416,6 +419,7 @@
     "downloadButton": "ダウンロード",
     "downloadRootButton": "Download parent",
     "downloadWithoutMetadata": "Download without metadata",
+    "downloadExtractedText": "Download extracted text",
     "externalWindow": "新しいウインドウで開く",
     "copyLink": "Copy link",
     "selectAll": "Select all",
