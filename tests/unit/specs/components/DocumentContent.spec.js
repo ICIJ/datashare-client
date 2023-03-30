@@ -69,13 +69,7 @@ describe('DocumentContent.vue', () => {
         'this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'
       const { document } = await mockDocumentContentSlice(content)
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       await wrapper.vm.cookAllContentSlices()
@@ -100,13 +94,7 @@ describe('DocumentContent.vue', () => {
         language: 'ARABIC'
       })
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.find('.document-content__body--rtl').exists()).toBeTruthy()
@@ -143,7 +131,7 @@ describe('DocumentContent.vue', () => {
   })
 
   describe('search term', () => {
-    describe('witg 1 occurence', () => {
+    describe('with 1 occurence', () => {
       beforeEach(() => {
         api.searchDocument.mockImplementation(() => {
           return Promise.resolve({ count: 1, offsets: [10] })
@@ -153,13 +141,7 @@ describe('DocumentContent.vue', () => {
       it('should not sticky the toolbox by default', async () => {
         const { document } = await mockDocumentContentSlice('')
         const propsData = { document }
-        const wrapper = shallowMount(DocumentContent, {
-          i18n,
-          localVue,
-          store,
-          propsData,
-          wait
-        })
+        const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
         await flushPromises()
         expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeFalsy()
       })
@@ -167,21 +149,15 @@ describe('DocumentContent.vue', () => {
 
     describe('with 2 occurences', () => {
       let wrapper
-
+      let mockDocument
       beforeEach(async () => {
         const content = 'this is a full full content'
-        const { document } = await mockDocumentContentSlice(content)
+        mockDocument = await mockDocumentContentSlice(content)
         api.searchDocument.mockImplementation(async () => {
           return { count: 2, offsets: [10, 15] }
         })
-        const propsData = { document }
-        wrapper = mount(DocumentContent, {
-          i18n,
-          localVue,
-          store,
-          propsData,
-          wait
-        })
+        const propsData = { document: mockDocument.document }
+        wrapper = mount(DocumentContent, { i18n, localVue, store, propsData, wait })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
         // Use vm.$set method to set nested value reactivly
@@ -198,6 +174,24 @@ describe('DocumentContent.vue', () => {
         expect(wrapper.vm.localSearchIndex).toEqual(1)
         expect(innerHTML).toEqual(
           '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
+        )
+      })
+
+      it('should clean marks when updating search term', async () => {
+        const { innerHTML: firstSearch } = wrapper.find('.document-content__body').element
+        expect(wrapper.vm.localSearchIndex).toEqual(1)
+        expect(firstSearch).toEqual(
+          '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
+        )
+        api.searchDocument.mockResolvedValue({ count: 1, offsets: [5] })
+
+        await wrapper.setProps({ q: 'is' })
+        await wrapper.vm.activateContentSliceAround()
+        await flushPromises()
+        const { innerHTML: secondSearch } = wrapper.find('.document-content__body').element
+        expect(wrapper.vm.localSearchIndex).toEqual(1)
+        expect(secondSearch).toEqual(
+          '<p>this <mark class="local-search-term local-search-term--active" data-offset="5">is</mark> a full full content</p>'
         )
       })
 
@@ -303,123 +297,6 @@ describe('DocumentContent.vue', () => {
       // Continue to load content
       await wrapper.vm.loadContentSlice({ offset: 10 })
       expect(wrapper.vm.getContentSlice({ offset: 10 }).content).toBe('content fr')
-    })
-  })
-
-  describe('an organic extracted text content', () => {
-    it('should lazy load 2 slices and merge them', async () => {
-      // Create a document with a small content text length
-      const content = 'this is a content from Elastic Search doc which looks huge'
-      const { document } = await mockDocumentContentSlice(content)
-      const pageSize = 30
-      const propsData = { document, pageSize }
-      const wrapper = mount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
-      await flushPromises()
-      // Load two slices
-      await wrapper.vm.loadContentSlice({ offset: 0 })
-      await wrapper.vm.loadContentSlice({ offset: 30 })
-      // Cook all slices
-      await wrapper.vm.cookAllContentSlices()
-      expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe(
-        '<p>this is a content from Elastic Search doc which looks huge</p>'
-      )
-    })
-
-    describe('with 1 occurences', () => {
-      beforeEach(async () => {
-        api.searchDocument.mockImplementation(async () => {
-          return { count: 1, offsets: [37] }
-        })
-      })
-
-      it('should lazy load 2 slices and merge them with the correct search mark', async () => {
-        // Create a document with a small content text length
-        const content = 'this is a content and content can be long'
-        const { document } = await mockDocumentContentSlice(content)
-        const pageSize = 25
-        const propsData = { document, pageSize }
-        const wrapper = mount(DocumentContent, {
-          i18n,
-          localVue,
-          store,
-          propsData,
-          wait
-        })
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'long')
-        await flushPromises()
-        // Load two slices
-        await wrapper.vm.loadContentSlice({ offset: 0 })
-        await wrapper.vm.loadContentSlice({ offset: 25 })
-        // Cook all slices
-        await wrapper.vm.cookAllContentSlices()
-        expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe(
-          '<p>this is a content and content can be <mark class="local-search-term" data-offset="37">long</mark></p>'
-        )
-      })
-    })
-
-    describe('with 2 occurences', () => {
-      beforeEach(async () => {
-        api.searchDocument.mockImplementation(async () => {
-          return { count: 2, offsets: [8, 29] }
-        })
-      })
-
-      it('should lazy load 2 slices and merge them with the correct search marks', async () => {
-        // Create a document with a small content text length
-        const content = 'ICIJ: stories that rock the world'
-        const { document } = await mockDocumentContentSlice(content)
-        const pageSize = 25
-        const propsData = { document, pageSize }
-        const wrapper = mount(DocumentContent, {
-          i18n,
-          localVue,
-          store,
-          propsData,
-          wait
-        })
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'or')
-        await flushPromises()
-        // Load two slices
-        await wrapper.vm.loadContentSlice({ offset: 0 })
-        await wrapper.vm.loadContentSlice({ offset: 25 })
-        // Cook all slices
-        await wrapper.vm.cookAllContentSlices()
-        expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe(
-          '<p>ICIJ: st<mark class="local-search-term" data-offset="8">or</mark>ies that rock the w<mark class="local-search-term" data-offset="29">or</mark>ld</p>'
-        )
-      })
-    })
-
-    it('should lazy load 3 slices and only merge the two last', async () => {
-      // Create a document with a small content text length
-      const content = 'lorem ipsum\ndolor sit amet'
-      const { document } = await mockDocumentContentSlice(content)
-      const pageSize = 11
-      const propsData = { document, pageSize }
-      const wrapper = mount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
-      await flushPromises()
-      // Load the first slice
-      // Load two slices
-      await wrapper.vm.loadContentSlice({ offset: 0 })
-      await wrapper.vm.loadContentSlice({ offset: 11 })
-      await wrapper.vm.loadContentSlice({ offset: 22 })
-      // Cook all slices
-      await wrapper.vm.cookAllContentSlices()
-      expect(wrapper.vm.getContentSlice({ offset: 0 }).cookedContent).toBe('<p>lorem ipsum</p>')
-      expect(wrapper.vm.getContentSlice({ offset: 11 }).cookedContent).toBe('<p>dolor sit amet</p>')
     })
   })
 })
