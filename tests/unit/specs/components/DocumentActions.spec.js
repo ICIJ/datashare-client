@@ -115,7 +115,34 @@ describe('DocumentActions.vue', () => {
     document.contentLength = 10
 
     wrapper = shallowMount(DocumentActions, options)
+    expect(wrapper.find('.document-actions__download--extracted-text').exists()).toBe(false)
+
+    const showDownloadOptions = {
+      i18n,
+      localVue,
+      store,
+      propsData: { document, isDownloadAllowed: true, displayDownloadExtractedText: true },
+      sync: false
+    }
+    wrapper = shallowMount(DocumentActions, showDownloadOptions)
     expect(wrapper.find('.document-actions__download--extracted-text').exists()).toBe(true)
+  })
+  it('should not display "Download extracted text" when there is no text ', () => {
+    const options = {
+      i18n,
+      localVue,
+      store,
+      propsData: { document, isDownloadAllowed: true, displayDownloadExtractedText: true },
+      sync: false
+    }
+    document.contentLength = 10
+    wrapper = shallowMount(DocumentActions, options)
+
+    expect(wrapper.find('.document-actions__download--extracted-text').exists()).toBe(true)
+
+    document.contentLength = 0
+    wrapper = shallowMount(DocumentActions, options)
+    expect(wrapper.find('.document-actions__download--extracted-text').exists()).toBe(false)
   })
 
   it('should NOT display "Download parent" button if document has no parent', () => {

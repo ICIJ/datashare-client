@@ -30,7 +30,7 @@
             {{ $t('document.downloadButton') }}
           </span>
         </a>
-        <b-dropdown right toggle-class="py-0" size="sm">
+        <b-dropdown v-if="displayDownloadExtractedText" right toggle-class="py-0" size="sm">
           <b-dropdown-item
             v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
             :href="documentFullUrlWithoutMetadata"
@@ -38,7 +38,7 @@
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
           <b-dropdown-item
-            v-if="hasContentLength"
+            v-if="hasContentLength && displayDownloadExtractedText"
             class="document-actions__download--extracted-text"
             @click="documentOriginalExtractedText"
           >
@@ -71,13 +71,20 @@
           </span>
         </a>
         <b-dropdown
-          v-if="displayDownloadWithoutMetadata && hasRootCleanableContentType"
+          v-if="displayDownloadExtractedText || (displayDownloadWithoutMetadata && hasRootCleanableContentType)"
           right
           toggle-class="py-0"
           size="sm"
         >
           <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
             {{ $t('document.downloadWithoutMetadata') }}
+          </b-dropdown-item>
+          <b-dropdown-item
+            v-if="hasContentLength"
+            class="document-actions__download--extracted-text"
+            @click="documentOriginalExtractedText"
+          >
+            {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
@@ -150,6 +157,13 @@ export default {
      */
     displayDownloadWithoutMetadata: {
       type: Boolean
+    },
+    /**
+     * Show a dropdown item button to download extracted text when available
+     */
+    displayDownloadExtractedText: {
+      type: Boolean,
+      default: false
     },
     /**
      * True if download is allowed for the document
