@@ -113,13 +113,13 @@ export default {
         display: none;
       }
     }
+  }
 
-    .filter--dark & .list-group-item {
-      border-bottom: 0;
+  &--dark &__tree-view :deep(.tree-view) .list-group-item {
+    border-bottom: 0;
 
-      a {
-        color: $light;
-      }
+    a {
+      color: $light;
     }
   }
 }
