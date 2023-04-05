@@ -6,6 +6,7 @@
       'filter--hide-show-more': hideShowMore,
       'filter--hide-search': hideSearch,
       'filter--hide-header': hideHeader,
+      'filter--dark': dark,
       'filter--has-values': hasValues()
     }"
   >
