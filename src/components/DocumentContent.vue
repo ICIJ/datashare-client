@@ -103,6 +103,9 @@ export default {
       // Find the active search term according to `localSearchIndex`
       return this.localSearchIndexes[this.localSearchIndex - 1] // renvoie undefined si le tableau est vide
     },
+    isPaginated () {
+      return this.nbPages > 1
+    },
     contentPipeline() {
       return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
     },
@@ -329,7 +332,7 @@ export default {
 </script>
 
 <template>
-  <div class="document-content">
+  <div class="document-content" :class="{ 'document-content--paginated': isPaginated  }">
     <hook name="document.content:before"></hook>
     <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
       <hook name="document.content.toolbox:before"></hook>
@@ -365,8 +368,8 @@ export default {
       <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
     </div>
 
-    <div class="document-content__wrapper border shadow-sm m-3">
-      <div v-if="nbPages > 1" class="document-content__wrapper__pagination p-1 bg-lighter">
+    <div class="document-content__wrapper">
+      <div v-if="isPaginated" class="document-content__wrapper__pagination p-1 bg-lighter">
         <b-pagination
           v-model="page"
           align="center"
@@ -436,6 +439,12 @@ export default {
     color: inherit;
     border-bottom: 2px solid transparent;
     padding: 0;
+  }
+
+  &--paginated &__wrapper {
+     border: $border-color 1px soldid;
+     box-shadow: $box-shadow-sm;
+     margin: $spacer;
   }
 }
 </style>
