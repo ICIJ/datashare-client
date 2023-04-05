@@ -69,6 +69,7 @@ export default {
       this.localSearchTerm = value
     },
     localSearchTerm: throttle(async function (value) {
+      this.hasStickyToolbox = true
       await this.updateContent(true)
     }, 300),
     async targetLanguage(value) {
@@ -76,14 +77,8 @@ export default {
       await this.cookAllContentSlices()
     },
     async page() {
-      if (this.q) {
-        this.hasStickyToolbox = true
-        await this.activateContentSliceAround()
-        await this.jumpToActiveLocalSearchTerm()
-      } else {
-        const offset = this.activeContentSliceOffset
-        await this.activateContentSlice({ offset })
-      }
+      const offset = this.activeContentSliceOffset
+      await this.activateContentSlice({ offset })
     }
   },
   async mounted() {
