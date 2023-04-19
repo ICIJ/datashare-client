@@ -154,7 +154,6 @@ describe('BatchDownload.vue', () => {
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(2) .tasks-list__tasks__item__size').exists()).toBeTruthy()
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__size').exists()).toBeFalsy()
   })
-
   it('should disable the download when the file doesnt exist anymore', async () => {
     const span = wrapper.find('#batch-download__item--uuid_02 .batch-download__item__link--disabled')
     expect(span.exists()).toBeTruthy()
