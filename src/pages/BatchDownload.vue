@@ -52,6 +52,10 @@ import TasksList from '@/components/TasksList'
 import features from '@/mixins/features'
 import polling from '@/mixins/polling'
 
+function extractDateFromTask(task) {
+  const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/
+  return task?.properties?.batchDownload?.filename?.match(dateRegExp)?.[0] ?? null
+}
 export default {
   name: 'BatchDownload',
   components: {
@@ -96,18 +100,22 @@ export default {
       return fn()
     },
     async getDownloadTasks() {
-      this.tasks = this.sortByDateTime(await this.$core.api.getTasks('BatchDownloadRunner'))
+      try {
+        const tasks = await this.$core.api.getTasks('BatchDownloadRunner')
+        this.tasks = this.sortByDateTime(tasks)
+      } catch (e) {
+        // hot fix to prevent showing endless loading placeholders
+        console.log('e', e)
+        this.$wait.end('load download tasks')
+      }
+
       // Return true if it has pending download tasks to tell the
       // polling function to continue to poll tasks.
       return this.hasPendingBatchDownloadTasks
     },
     sortByDateTime(tasks) {
-      const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/
       return tasks.sort(function (a, b) {
-        return (
-          new Date(b.properties.batchDownload.filename.match(dateRegExp)[0]) -
-          new Date(a.properties.batchDownload.filename.match(dateRegExp)[0])
-        )
+        return new Date(extractDateFromTask(b)) - new Date(extractDateFromTask(a))
       })
     },
     downloadResultsUrl(name) {
