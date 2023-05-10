@@ -74,26 +74,34 @@ describe('ShortkeysModal', () => {
   })
 
   it('should filter shortkeys that are not for the current page', () => {
-    expect(wrapper.vm.shortkeys).toHaveLength(4)
+    expect(wrapper.vm.flatShortkeys).toHaveLength(4)
   })
 
   it('should extract shortkeys keys and action on component creation', () => {
-    expect(wrapper.vm.shortkeys).toHaveLength(4)
-    expect(wrapper.vm.shortkeys).toEqual([
-      {
+    expect(wrapper.vm.flatShortkeys).toHaveLength(4)
+    expect(wrapper.vm.flatShortkeys).toEqual([
+      expect.objectContaining({
         keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] },
         action: 'action_01',
         icon: 'icon_01',
         page: ''
-      },
-      { keys: { mac: ['meta', 'key_02'], default: ['ctrl', 'key_02'] }, action: 'action_02', page: '' },
-      {
+      }),
+      expect.objectContaining({ 
+        keys: { mac: ['meta', 'key_02'], default: ['ctrl', 'key_02'] }, 
+        action: 'action_02', 
+        page: '' 
+      }),
+      expect.objectContaining({
         keys: { mac: ['meta', 'key_03'], default: ['ctrl', 'key_03'] },
         action: 'action_03',
         icon: 'icon_03',
         label: 'This is a translation'
-      },
-      { keys: { mac: ['meta', 'key_04'], default: ['ctrl', 'key_04'] }, action: 'action_04', icon: 'icon_04' }
+      }),
+      expect.objectContaining({ 
+        keys: { mac: ['meta', 'key_04'], default: ['ctrl', 'key_04'] }, 
+        action: 'action_04', 
+        icon: 'icon_04' 
+      })
     ])
   })
 

@@ -14,7 +14,7 @@
       </span>
     </b-button>
     <b-modal id="shortkeys" title="Keyboard Shortcuts" hide-footer>
-      <div v-for="(shortkey, index) in shortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
+      <div v-for="(shortkey, index) in flatShortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
         <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row no-gutters w-100 mb-1">
           <div class="col-sm-1 pr-2">
             <fa v-if="shortkey.icon" :icon="shortkey.icon" fixed-width></fa>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { capitalize, get, isArray, join, map } from 'lodash'
+import { compact, capitalize, flattenDeep, get, isArray, join, map } from 'lodash'
 
 import shortkeys from '@/utils/shortkeys.json'
 import { getShortkeyOS } from '@/utils/utils'
@@ -49,39 +49,41 @@ export default {
       return join(map(values, capitalize), '+')
     }
   },
-  data() {
-    return {
-      shortkeys: []
-    }
-  },
   computed: {
-    getShortkeyOS
-  },
-  created() {
-    const currentPage = get(this, '$route.name', '')
-    map(shortkeys, (action) => {
-      map(action, (shortkey) => {
+    getShortkeyOS,
+    matchedRoutesNames () {
+      return compact(this?.$route?.matched.map(match => match.name))
+    },
+    shortkeys () {
+      return Object.entries(shortkeys).map(([_, action]) => {
         // Filter only shortkeys of the current page
-        if (shortkey.page !== currentPage) return
-        // Check if multiple keys
-        if (isArray(shortkey.keys.default)) {
-          this.shortkeys.push(shortkey)
-        } else {
-          map(shortkey.keys.default, (_, action) => {
-            const newShortkey = {
+        return Object.entries(action).map(([_, shortkey]) => {
+          if (shortkey.page && !this.matchedRoutesNames.includes(shortkey.page)) {
+            return
+          }
+
+          if (isArray(shortkey.keys.default)) {
+            return shortkey
+          }
+
+          return Object.entries(shortkey.keys.default).map(([action]) => {
+            return {
               action,
-              keys: { default: shortkey.keys.default[action], mac: shortkey.keys.mac[action] },
+              icon: get(shortkey, ['icon', action], false),
+              keys: { 
+                default: shortkey.keys.default[action], 
+                mac: shortkey.keys.mac[action] 
+              },
+              label: get(shortkey, ['label', action], false),
               link: shortkey.link
             }
-            const label = get(shortkey, ['label', action], false)
-            if (label) newShortkey.label = label
-            const icon = get(shortkey, ['icon', action], false)
-            if (icon) newShortkey.icon = icon
-            this.shortkeys.push(newShortkey)
           })
-        }
+        })
       })
-    })
+    },
+    flatShortkeys () {
+      return compact(flattenDeep(this.shortkeys))
+    }
   },
   methods: {
     getLabel(shortkey) {

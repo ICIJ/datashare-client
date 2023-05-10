@@ -96,35 +96,27 @@
         "mac": {
           "activateSearchBar": ["meta", "f"],
           "deactivateSearchBar": ["esc"],
-          "findPreviousOccurrence": ["shift", "enter"],
-          "findPreviousOccurrenceAlt": ["shift", "f3"],
-          "findNextOccurrence": ["enter"],
-          "findNextOccurrenceAlt": ["f3"]
+          "findPreviousOccurrence": ["shift", "f3"],
+          "findNextOccurrence": ["f3"]
         },
         "default": {
           "activateSearchBar": ["ctrl", "f"],
           "deactivateSearchBar": ["esc"],
-          "findPreviousOccurrence": ["shift", "enter"],
-          "findPreviousOccurrenceAlt": ["shift", "f3"],
-          "findNextOccurrence": ["enter"],
-          "findNextOccurrenceAlt": ["f3"]
+          "findPreviousOccurrence": ["shift", "f3"],
+          "findNextOccurrence": ["f3"]
         }
       },
       "action": "shortkeyAction",
       "icon": {
         "activateSearchBar": "search",
         "findPreviousOccurrence": "angle-up",
-        "findPreviousOccurrenceAlt": "angle-up",
-        "findNextOccurrence": "angle-down",
-        "findNextOccurrenceAlt": "angle-down"
+        "findNextOccurrence": "angle-down"
       },
       "label": {
         "activateSearchBar": "shortkeys.activateSearchBar",
         "deactivateSearchBar": "shortkeys.deactivateSearchBar",
         "findPreviousOccurrence": "shortkeys.findPreviousOccurrence",
-        "findPreviousOccurrenceAlt": "shortkeys.findPreviousOccurrenceAlt",
-        "findNextOccurrence": "shortkeys.findNextOccurrence",
-        "findNextOccurrenceAlt": "shortkeys.findNextOccurrenceAlt"
+        "findNextOccurrence": "shortkeys.findNextOccurrence"
       },
       "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#find-in-document",
       "page": "search"
