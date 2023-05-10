@@ -1,5 +1,5 @@
 <script>
-import { clamp, findLastIndex, entries, get, pick, range, throttle } from 'lodash'
+import { clamp, findLastIndex, entries, isEmpty, get, pick, range, throttle } from 'lodash'
 import { mapGetters } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
@@ -134,7 +134,7 @@ export default {
       }
     },
     hasExtractedContent() {
-      return this.maxOffset > 0
+      return  this.maxOffset > 0
     },
     maxOffset() {
       return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
@@ -144,14 +144,19 @@ export default {
     },
     offsets() {
       return range(0, this.maxOffset, this.pageSize)
+    },
+    loadedOnce () {
+      return !isEmpty(this.maxOffsetTranslations) && !isEmpty(this.contentSlices)
     }
   },
   methods: {
     async loadMaxOffset(targetLanguage = this.targetLanguage) {
+      this.$wait.start('loaderMaxOffset')
       const key = targetLanguage ?? 'original'
       // Ensure we load the map offset only once
       const offset = await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
       this.$set(this.maxOffsetTranslations, key, offset)
+      this.$wait.end('loaderMaxOffset')
       return offset
     },
     findContentSliceIndexAround(desiredOffset) {
@@ -331,27 +336,42 @@ export default {
 <template>
   <div class="document-content" :class="{ 'document-content--paginated': isPaginated }">
     <hook name="document.content:before"></hook>
-    <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
+    <div class="document-content__toolbox mt-3 mx-3" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
       <hook name="document.content.toolbox:before"></hook>
-      <document-global-search-terms-tags
-        class="p-3 w-100"
-        :document="document"
-        :target-language="targetLanguage"
-        @select="localSearchTerm = $event"
-      />
-      <document-local-search-input
-        v-model="localSearchTerm"
-        class="ml-auto"
-        :disabled="!hasExtractedContent"
-        :activated.sync="hasStickyToolbox"
-        :search-occurrences="localSearchOccurrences"
-        :search-index="localSearchIndex"
-        @next="findNextLocalSearchTerm"
-        @previous="findPreviousLocalSearchTerm"
-      />
-      <hook name="document.content.toolbox:after"></hook>
-    </div>
-    <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3">
+      <b-overlay :show="$wait.is('loader*')" opacity="0.6" rounded spinner-small class="">
+        <div class="d-flex align-items-center">
+          <div class="text-nowrap">
+            <b-pagination
+              v-if="isPaginated && loadedOnce"
+              v-model="page"
+              align="center"
+              class="m-2"
+              :limit="4"
+              :per-page="1"
+              :total-rows="nbPages"
+            ></b-pagination>
+          </div>
+          <document-local-search-input
+            v-model="localSearchTerm"
+            class="ml-auto"
+            :disabled="!hasExtractedContent"
+            :activated.sync="hasStickyToolbox"
+            :search-occurrences="localSearchOccurrences"
+            :search-index="localSearchIndex"
+            @next="findNextLocalSearchTerm"
+            @previous="findPreviousLocalSearchTerm"
+          />
+          <hook name="document.content.toolbox:after"></hook>
+        </div>
+        <document-global-search-terms-tags
+          class="p-2"
+          :document="document"
+          :target-language="targetLanguage"
+          @select="localSearchTerm = $event"
+        />
+      </b-overlay>
+    </div>    
+    <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3 m-0">
       <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
       <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
       <hook
@@ -364,27 +384,15 @@ export default {
       ></hook>
       <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
     </div>
-
     <div class="document-content__wrapper">
-      <div v-if="isPaginated" class="document-content__wrapper__pagination p-1 bg-lighter">
-        <b-pagination
-          v-model="page"
-          align="center"
-          class="m-0"
-          size="sm"
-          :per-page="1"
-          :total-rows="nbPages"
-        ></b-pagination>
-      </div>
       <hook name="document.content.body:before"></hook>
-      <b-overlay v-if="hasExtractedContent" :show="$wait.is('loaderContentSlice')" opacity="0.6" rounded spinner-small>
-        <div
-          :class="{ 'document-content__body--rtl': isRightToLeft }"
-          class="document-content__body container-fluid p-3"
-          v-html="currentContentPage"
-        ></div>
-      </b-overlay>
-      <p v-else class="document-content__body--no-content text-muted text-center pt-3">
+      <div
+        :class="{ 'document-content__body--rtl': isRightToLeft }"
+        class="document-content__body container-fluid p-3"
+        v-html="currentContentPage"
+        v-if="hasExtractedContent"
+      ></div>
+      <p v-else-if="loadedOnce" class="document-content__body--no-content text-muted text-center pt-3">
         {{ $t('documentContent.noContent') }}
       </p>
       <hook name="document.content.body:after"></hook>
@@ -400,13 +408,11 @@ export default {
     background: $lighter;
     box-shadow: 0 -1 * $spacer 0 0 white;
     left: 0;
-    margin: $spacer $grid-gutter-width * 0.5;
-    margin-bottom: 0;
     position: static;
     top: $spacer;
     z-index: 50;
 
-    &--sticky {
+    &--sticky, .document-content--paginated &  {
       position: sticky;
     }
   }
@@ -439,7 +445,7 @@ export default {
   }
 
   &--paginated &__wrapper {
-    border: $border-color 1px soldid;
+    border: $border-color 1px solid;
     box-shadow: $box-shadow-sm;
     margin: $spacer;
   }
