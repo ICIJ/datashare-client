@@ -51,15 +51,15 @@ export default {
   },
   computed: {
     getShortkeyOS,
-    matchedRoutesNames () {
-      return compact(this?.$route?.matched.map(match => match.name))
+    matchedRoutesNames() {
+      return compact(this?.$route?.matched.map((match) => match.name))
     },
-    shortkeys () {
+    shortkeys() {
       return Object.entries(shortkeys).map(([_, action]) => {
         // Filter only shortkeys of the current page
         return Object.entries(action).map(([_, shortkey]) => {
           if (shortkey.page && !this.matchedRoutesNames.includes(shortkey.page)) {
-            return
+            return null
           }
 
           if (isArray(shortkey.keys.default)) {
@@ -70,9 +70,9 @@ export default {
             return {
               action,
               icon: get(shortkey, ['icon', action], false),
-              keys: { 
-                default: shortkey.keys.default[action], 
-                mac: shortkey.keys.mac[action] 
+              keys: {
+                default: shortkey.keys.default[action],
+                mac: shortkey.keys.mac[action]
               },
               label: get(shortkey, ['label', action], false),
               link: shortkey.link
@@ -81,7 +81,7 @@ export default {
         })
       })
     },
-    flatShortkeys () {
+    flatShortkeys() {
       return compact(flattenDeep(this.shortkeys))
     }
   },

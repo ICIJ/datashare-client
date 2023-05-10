@@ -86,10 +86,10 @@ describe('ShortkeysModal', () => {
         icon: 'icon_01',
         page: ''
       }),
-      expect.objectContaining({ 
-        keys: { mac: ['meta', 'key_02'], default: ['ctrl', 'key_02'] }, 
-        action: 'action_02', 
-        page: '' 
+      expect.objectContaining({
+        keys: { mac: ['meta', 'key_02'], default: ['ctrl', 'key_02'] },
+        action: 'action_02',
+        page: ''
       }),
       expect.objectContaining({
         keys: { mac: ['meta', 'key_03'], default: ['ctrl', 'key_03'] },
@@ -97,10 +97,10 @@ describe('ShortkeysModal', () => {
         icon: 'icon_03',
         label: 'This is a translation'
       }),
-      expect.objectContaining({ 
-        keys: { mac: ['meta', 'key_04'], default: ['ctrl', 'key_04'] }, 
-        action: 'action_04', 
-        icon: 'icon_04' 
+      expect.objectContaining({
+        keys: { mac: ['meta', 'key_04'], default: ['ctrl', 'key_04'] },
+        action: 'action_04',
+        icon: 'icon_04'
       })
     ])
   })

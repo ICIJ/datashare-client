@@ -134,7 +134,7 @@ export default {
       }
     },
     hasExtractedContent() {
-      return  this.maxOffset > 0
+      return this.maxOffset > 0
     },
     maxOffset() {
       return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
@@ -145,7 +145,7 @@ export default {
     offsets() {
       return range(0, this.maxOffset, this.pageSize)
     },
-    loadedOnce () {
+    loadedOnce() {
       return !isEmpty(this.maxOffsetTranslations) && !isEmpty(this.contentSlices)
     }
   },
@@ -371,7 +371,7 @@ export default {
           @select="localSearchTerm = $event"
         />
       </b-overlay>
-    </div>    
+    </div>
     <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3 m-0">
       <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
       <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
@@ -388,10 +388,10 @@ export default {
     <div class="document-content__wrapper">
       <hook name="document.content.body:before"></hook>
       <div
+        v-if="hasExtractedContent"
         :class="{ 'document-content__body--rtl': isRightToLeft }"
         class="document-content__body container-fluid p-3"
         v-html="currentContentPage"
-        v-if="hasExtractedContent"
       ></div>
       <p v-else-if="loadedOnce" class="document-content__body--no-content text-muted text-center pt-3">
         {{ $t('documentContent.noContent') }}
@@ -413,7 +413,8 @@ export default {
     top: $spacer;
     z-index: 50;
 
-    &--sticky, .document-content--paginated &  {
+    &--sticky,
+    .document-content--paginated & {
       position: sticky;
     }
   }
