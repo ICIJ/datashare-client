@@ -351,6 +351,13 @@ export default {
               :per-page="1"
               :total-rows="nbPages"
             ></custom-pagination>
+            <document-global-search-terms-tags
+              v-else-if="!isPaginated"
+              class="p-2"
+              :document="document"
+              :target-language="targetLanguage"
+              @select="localSearchTerm = $event"
+            />
           </div>
           <document-local-search-input
             v-model="localSearchTerm"
@@ -366,6 +373,7 @@ export default {
         </div>
         <document-global-search-terms-tags
           class="p-2"
+          v-if="isPaginated && loadedOnce"
           :document="document"
           :target-language="targetLanguage"
           @select="localSearchTerm = $event"
