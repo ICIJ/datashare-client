@@ -136,9 +136,6 @@ export default {
     hasExtractedContent() {
       return this.maxOffset > 0
     },
-    hasContentTextLength() {
-      return this.document.contentTextLength > 0
-    },
     maxOffset() {
       return this.maxOffsetTranslations[this.targetLanguage ?? 'original'] || 0
     },
@@ -380,7 +377,7 @@ export default {
         ></b-pagination>
       </div>
       <hook name="document.content.body:before"></hook>
-      <b-overlay v-if="hasContentTextLength" :show="$wait.is('loaderContentSlice')" opacity="0.6" rounded spinner-small>
+      <b-overlay v-if="hasExtractedContent" :show="$wait.is('loaderContentSlice')" opacity="0.6" rounded spinner-small>
         <div
           :class="{ 'document-content__body--rtl': isRightToLeft }"
           class="document-content__body container-fluid p-3"
