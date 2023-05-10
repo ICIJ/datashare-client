@@ -1,6 +1,6 @@
 <p align="center">
 <a href="https://datashare.icij.org/">
-  <img src="https://datashare.icij.org/apple-touch-icon.png" width="158px">
+  <img src="https://datashare.icij.org/android-chrome-512x512.png" width="158px">
 </a>
 <br>
 Web Client for Datashare
