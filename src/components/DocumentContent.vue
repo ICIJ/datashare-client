@@ -341,15 +341,16 @@ export default {
       <b-overlay :show="$wait.is('loader*')" opacity="0.6" rounded spinner-small class="">
         <div class="d-flex align-items-center">
           <div class="text-nowrap">
-            <b-pagination
+            <custom-pagination
               v-if="isPaginated && loadedOnce"
               v-model="page"
-              align="center"
-              class="m-2"
+              compact
+              class="p-2"
+              size="sm"
               :limit="4"
               :per-page="1"
               :total-rows="nbPages"
-            ></b-pagination>
+            ></custom-pagination>
           </div>
           <document-local-search-input
             v-model="localSearchTerm"
