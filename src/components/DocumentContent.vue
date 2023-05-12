@@ -74,7 +74,7 @@ export default {
     }, 300),
     async targetLanguage(value) {
       await this.loadMaxOffset(value)
-      await this.cookAllContentSlices()
+      await this.activateContentSlice({ offset: 0 })
     },
     async page() {
       const offset = this.activeContentSliceOffset
