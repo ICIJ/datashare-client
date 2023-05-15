@@ -13,14 +13,10 @@ describe('BatchSearchStore', () => {
   const mockAxiosApi = { request: jest.fn() }
   const mockEventbus = { $emit: jest.fn() }
 
-  beforeAll(() => {
+  beforeEach(() => {
     api = new Api(mockAxiosApi, mockEventbus)
     api.getBatchSearchQueries = jest.fn()
     store = storeBuilder(api)
-  })
-
-  beforeEach(() => {
-    api.getBatchSearchQueries.mockClear()
     mockAxiosApi.request.mockClear()
     mockAxiosApi.request.mockResolvedValue({ data: {} })
   })
