@@ -238,7 +238,6 @@ export default {
     position: absolute;
   }
 
-
   &--list.search .search__body__results {
     background: white;
     right: auto;

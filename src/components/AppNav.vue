@@ -50,7 +50,7 @@ export default {
   position: relative;
   width: auto;
   z-index: 15;
-  
+
   &__container {
     &__main {
       border-radius: $border-radius-lg 0 0 0;

@@ -121,7 +121,7 @@ export default {
       width: $app-context-sidebar-width;
       z-index: 10;
     }
-    
+
     & &__view {
       background: $body-bg;
       z-index: 20;
