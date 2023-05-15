@@ -99,17 +99,13 @@ export default {
     background: $body-bg;
     box-shadow: $box-shadow-lg;
     padding-bottom: 0;
+    mask: 0 0 no-repeat luminance url('../assets/images/corner-top.svg'),
+      0 100% no-repeat luminance url('../assets/images/corner-bottom.svg'),
+      0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
+    mask-composite: exclude;
 
     &--has-context-sidebar {
       background: $app-context-sidebar-bg;
-    }
-
-    &,
-    &--has-context-sidebar &__view {
-      mask: 0 0 no-repeat luminance url('../assets/images/corner-top.svg'),
-        0 100% no-repeat luminance url('../assets/images/corner-bottom.svg'),
-        0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
-      mask-composite: exclude;
     }
 
     & &__context-sidebar {
@@ -123,10 +119,12 @@ export default {
       position: sticky;
       top: 0;
       width: $app-context-sidebar-width;
+      z-index: 10;
     }
-
+    
     & &__view {
       background: $body-bg;
+      z-index: 20;
     }
   }
 }

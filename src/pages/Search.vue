@@ -283,7 +283,7 @@ export default {
       right: 0;
       z-index: 20;
       width: $document-max-width;
-      max-width: calc(100vw - #{$app-context-sidebar-width + $app-sidebar-reduced-width});
+      max-width: calc(100vw - #{$app-sidebar-reduced-width});
 
       &__wrapper {
         position: relative;
@@ -317,6 +317,7 @@ export default {
       position: fixed;
       top: 0;
       bottom: 0;
+      right: 0;
       width: 100%;
       background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
       display: block;
