@@ -3,7 +3,6 @@ import find from 'lodash/find'
 import get from 'lodash/get'
 import trim from 'lodash/trim'
 import { faFile as defaultIcon } from '@fortawesome/free-solid-svg-icons/faFile'
-
 import types from '@/utils/types.json'
 
 export { faFile as defaultIcon } from '@fortawesome/free-solid-svg-icons/faFile'
