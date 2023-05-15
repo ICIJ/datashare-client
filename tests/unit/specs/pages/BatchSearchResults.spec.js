@@ -66,10 +66,7 @@ describe('BatchSearchResults.vue', () => {
     ])
     api.getBatchSearch = jest.fn().mockResolvedValue({
       uuid: '12',
-      projects: [
-        { name: 'batchsearchresults' }, 
-        { name: 'anotherbatchsearchresults' }
-      ],
+      projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
       name: 'BatchSearch Test',
       description: 'This is the description of the batch search',
       state: 'SUCCESS',

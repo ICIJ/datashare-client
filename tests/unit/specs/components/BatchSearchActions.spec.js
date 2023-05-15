@@ -78,14 +78,14 @@ describe('BatchSearchActions.vue', () => {
 
   it('should display number of selected queries', async () => {
     let storeMock = new Vuex.Store({
-      modules: { 
-        batchSearch: { 
-          namespaced: true, 
-          state: { selectedQueries: [] }, 
-          getters, 
-          mutations, 
-          actions: actionBuilder(api) 
-        } 
+      modules: {
+        batchSearch: {
+          namespaced: true,
+          state: { selectedQueries: [] },
+          getters,
+          mutations,
+          actions: actionBuilder(api)
+        }
       }
     })
 
@@ -95,17 +95,17 @@ describe('BatchSearchActions.vue', () => {
     expect(wrapper.find('.batch-search-actions__item__counter').exists()).toBeFalsy()
 
     storeMock = new Vuex.Store({
-      modules: { 
-        batchSearch: { 
-          namespaced: true, 
-          state: { selectedQueries: ['test'] }, 
-          getters, 
-          mutations, 
-          actions: actionBuilder(api) 
-        } 
+      modules: {
+        batchSearch: {
+          namespaced: true,
+          state: { selectedQueries: ['test'] },
+          getters,
+          mutations,
+          actions: actionBuilder(api)
+        }
       }
     })
-    
+
     wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store: storeMock, wait })
     await flushPromises()
 

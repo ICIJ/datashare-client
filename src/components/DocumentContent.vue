@@ -341,30 +341,30 @@ export default {
       <b-overlay :show="$wait.is('loader*')" opacity="0.6" rounded spinner-small class="">
         <div class="d-flex align-items-center">
           <tiny-pagination
+            v-if="isPaginated && loadedOnce"
+            v-model="page"
             :limit="4"
             :per-page="1"
             :total-rows="nbPages"
             class="p-2"
             compact
             size="sm"
-            v-if="isPaginated && loadedOnce"
-            v-model="page"
           />
           <div class="ml-auto d-flex">
             <document-global-search-terms-tags
               :document="document"
               :target-language="targetLanguage"
-              @select="localSearchTerm = $event"
               class="p-2"
+              @select="localSearchTerm = $event"
             />
             <document-local-search-input
+              v-model="localSearchTerm"
               :activated.sync="hasStickyToolbox"
               :disabled="!hasExtractedContent"
               :search-index="localSearchIndex"
               :search-occurrences="localSearchOccurrences"
               @next="findNextLocalSearchTerm"
               @previous="findPreviousLocalSearchTerm"
-              v-model="localSearchTerm"
             />
           </div>
           <hook name="document.content.toolbox:after"></hook>
