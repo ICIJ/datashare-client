@@ -161,14 +161,14 @@ export default {
     </div>
     <div class="form-group">
       <button
-        class="document-local-search-input__previous btn btn-sm p-2"
+        class="document-local-search-input__previous btn btn-sm btn-link p-2"
         :disabled="searchOccurrences === 0 || searchTermIsEmpty"
         @click="previous"
       >
         <fa icon="angle-up"></fa>
       </button>
       <button
-        class="document-local-search-input__next btn btn-sm p-2"
+        class="document-local-search-input__next btn btn-sm btn-link p-2"
         :disabled="searchOccurrences === 0 || searchTermIsEmpty"
         @click="next"
       >
