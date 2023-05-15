@@ -143,13 +143,13 @@ export default {
           @input="$emit('input', $event.target.value)"
           @shortkey="getAction('findInDocument')"
         />
-        <div v-if="!searchTermIsEmpty" class="document-local-search-input__count input-group-append w-25">
+        <div v-if="!searchTermIsEmpty" class="document-local-search-input__count input-group-append">
           <span v-if="loading" class="input-group-text w-100 text-center d-inline-block">
             <fa icon="circle-notch" spin></fa>
           </span>
           <span
             v-else
-            class="input-group-text w-100 text-center d-inline-block px-0 text-truncate"
+            class="input-group-text w-100 text-center d-inline-block px-2 text-truncate"
             :title="searchLabel"
           >
             <span>

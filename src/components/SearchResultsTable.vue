@@ -208,7 +208,7 @@ export default {
         {
           key: 'highlight',
           headerTitle: 'highlight',
-          formatter: (value) => value?.content?.join(' [...] ') || ''
+          formatter: (value) => value?.content?.join(' … ') || ''
         },
         {
           key: 'creationDateHumanShort',
@@ -296,6 +296,11 @@ export default {
     .table.b-table > thead > tr > th.fit {
       background-position: right 0.1rem center;
       padding-right: 0.85em;
+    }
+
+    tr td mark {
+      font-weight: bold;
+      background: transparent;
     }
 
     &__row {

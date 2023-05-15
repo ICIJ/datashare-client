@@ -20,7 +20,7 @@
       <div
         v-if="document.highlight"
         class="search-results-list-link__fragments"
-        v-html="document.highlight.content.join(' [...] ')"
+        v-html="document.highlight.content.join(' … ')"
       ></div>
     </div>
   </router-link>
@@ -141,6 +141,11 @@ export default {
     color: $body-color;
     font-size: $font-size-sm;
     margin-top: $spacer * 0.5;
+
+    &:deep(mark) {
+      font-weight: bold;
+      background: transparent;
+    }
   }
 }
 </style>

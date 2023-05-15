@@ -167,8 +167,8 @@ export function datasharePlugin(Client) {
     body.rawOption('highlight', {
       fields: {
         content: {
-          fragment_size: 50,
-          number_of_fragments: 3,
+          fragment_size: 280,
+          number_of_fragments: 2,
           pre_tags: ['<mark>'],
           post_tags: ['</mark>']
         }
