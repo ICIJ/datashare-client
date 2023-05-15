@@ -238,39 +238,15 @@ export default {
     position: absolute;
   }
 
-  &--grid,
-  &--table {
-    &.search .search__body__backdrop {
-      display: block;
-    }
 
-    &.search .search__body__document {
-      background: white;
-      border-radius: 0;
-      bottom: 0;
-      box-shadow: $modal-content-box-shadow-sm-up;
-      max-width: calc(100vw - var(--app-sidebar-width));
-      position: fixed;
-      right: 0;
-      top: 0;
-      width: $document-min-width;
-      z-index: 20;
-    }
-  }
-
-  &--list {
-    &.search .search__body__results {
-      background: white;
-      right: auto;
-      width: calc(#{$search-results-list-width} - #{$spacer * 2});
-    }
-
-    &.search .search__body__document,
-    &.search .search__body__results {
-      border-radius: $card-border-radius;
-      box-shadow: 0 2px 10px 0 rgba(black, 0.05), 0 2px 30px 0 rgba(black, 0.02);
-      overflow: hidden;
-    }
+  &--list.search .search__body__results {
+    background: white;
+    right: auto;
+    width: 100%;
+    max-width: calc(#{$search-results-list-width} - #{$spacer * 2});
+    border-radius: $card-border-radius;
+    box-shadow: 0 2px 10px 0 rgba(black, 0.05), 0 2px 30px 0 rgba(black, 0.02);
+    overflow: hidden;
   }
 
   &__body {
@@ -293,16 +269,21 @@ export default {
     }
 
     & &__document {
-      z-index: 20;
-      right: $spacer;
-      padding: 0;
-      margin: 0;
-      flex: 1 0 auto;
+      background: white;
+      border-radius: 0;
+      bottom: 0;
+      box-shadow: $modal-content-box-shadow-sm-up;
       display: flex;
       flex-direction: column;
-
-      width: 100%;
-      max-width: calc(100% - #{$search-results-list-width} - #{$spacer});
+      flex: 1 0 auto;
+      margin: 0;
+      padding: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 20;
+      width: $document-max-width;
+      max-width: calc(100vw - #{$app-context-sidebar-width + $app-sidebar-reduced-width});
 
       &__wrapper {
         position: relative;
@@ -328,19 +309,6 @@ export default {
           }
         }
       }
-
-      @media (max-width: $document-float-breakpoint-width) {
-        z-index: 20;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        width: $document-min-width;
-        max-width: calc(100vw - var(--app-sidebar-width));
-        background: white;
-        border-radius: 0;
-        box-shadow: $modal-content-box-shadow-sm-up;
-      }
     }
 
     &__backdrop {
@@ -351,7 +319,7 @@ export default {
       bottom: 0;
       width: 100%;
       background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
-      display: none;
+      display: block;
 
       @media (max-width: $document-float-breakpoint-width) {
         display: block;

@@ -49,17 +49,8 @@ export default {
   color: $body-color;
   position: relative;
   width: auto;
-  z-index: 25;
-
-  @media (max-width: $document-float-breakpoint-width) {
-    z-index: 15;
-  }
-
-  .search--grid &,
-  .search--table & {
-    z-index: 15;
-  }
-
+  z-index: 15;
+  
   &__container {
     &__main {
       border-radius: $border-radius-lg 0 0 0;
