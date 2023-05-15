@@ -8,7 +8,7 @@
         <b-dropdown
           class="search-results-header__settings__sort"
           menu-class="search-results-header__settings__sort__dropdown"
-          toggle-class="text-decoration-none py-2 px-2 border search-results-header__settings__sort__toggler"
+          toggle-class="text-decoration-none px-2 border search-results-header__settings__sort__toggler"
           size="sm"
           variant="link"
         >
