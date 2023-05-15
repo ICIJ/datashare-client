@@ -102,16 +102,16 @@ describe('SearchResultsHeader.vue', () => {
   it('should show labels by default', async () => {
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
     await store.dispatch('search/query', 'bar')
-    expect(wrapper.find('.search-results-header__settings__btn-download').text()).toBe('Download results')
+    expect(wrapper.find('.search-results-header__settings__btn-download').text().trim()).toBe('Download results')
   })
 
   it('should not show labels when noLabels property is set', async () => {
     wrapper.setProps({ noLabels: true })
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
     await store.dispatch('search/query', 'bar')
-
-    expect(wrapper.find('.search-results-header__settings__btn-download').text()).toHaveLength(1) // confirm-button component spans a - character
+    expect(wrapper.find('.search-results-header__settings__btn-download').text().trim()).toHaveLength(0)
   })
+
   it('should send api request when batch download method is called', async () => {
     const query = 'bar'
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent(query)).commit()
