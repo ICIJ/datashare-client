@@ -132,7 +132,7 @@ $value in $theme-colors {
     }
 
     .text-muted {
-      color: mix($popover-body-color, $popover-bg, 60) !important;
+      color: mix($popover-body-color, $popover-bg, 60%) !important;
     }
 
     .card-header {
