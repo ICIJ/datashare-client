@@ -340,44 +340,35 @@ export default {
       <hook name="document.content.toolbox:before"></hook>
       <b-overlay :show="$wait.is('loader*')" opacity="0.6" rounded spinner-small class="">
         <div class="d-flex align-items-center">
-          <div class="text-nowrap">
-            <custom-pagination
-              v-if="isPaginated && loadedOnce"
-              v-model="page"
-              compact
-              class="p-2"
-              size="sm"
-              :limit="4"
-              :per-page="1"
-              :total-rows="nbPages"
-            ></custom-pagination>
+          <tiny-pagination
+            :limit="4"
+            :per-page="1"
+            :total-rows="nbPages"
+            class="p-2"
+            compact
+            size="sm"
+            v-if="isPaginated && loadedOnce"
+            v-model="page"
+          />
+          <div class="ml-auto d-flex">
             <document-global-search-terms-tags
-              v-else-if="!isPaginated"
-              class="p-2"
               :document="document"
               :target-language="targetLanguage"
               @select="localSearchTerm = $event"
+              class="p-2"
+            />
+            <document-local-search-input
+              :activated.sync="hasStickyToolbox"
+              :disabled="!hasExtractedContent"
+              :search-index="localSearchIndex"
+              :search-occurrences="localSearchOccurrences"
+              @next="findNextLocalSearchTerm"
+              @previous="findPreviousLocalSearchTerm"
+              v-model="localSearchTerm"
             />
           </div>
-          <document-local-search-input
-            v-model="localSearchTerm"
-            class="ml-auto"
-            :disabled="!hasExtractedContent"
-            :activated.sync="hasStickyToolbox"
-            :search-occurrences="localSearchOccurrences"
-            :search-index="localSearchIndex"
-            @next="findNextLocalSearchTerm"
-            @previous="findPreviousLocalSearchTerm"
-          />
           <hook name="document.content.toolbox:after"></hook>
         </div>
-        <document-global-search-terms-tags
-          class="p-2"
-          v-if="isPaginated && loadedOnce"
-          :document="document"
-          :target-language="targetLanguage"
-          @select="localSearchTerm = $event"
-        />
       </b-overlay>
     </div>
     <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3 m-0">

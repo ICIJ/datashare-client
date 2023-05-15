@@ -200,7 +200,7 @@ export default {
     white-space: nowrap;
 
     .input-group {
-      width: 300px;
+      width: 200px;
 
       .input-group-text {
         background: $input-bg;

@@ -80,7 +80,7 @@ module.exports = {
     port: 9009,
     proxy: {
       '^/': {
-        target: 'http://localhost:8080'
+        target: 'http://localhost:8008'
       }
     }
   },

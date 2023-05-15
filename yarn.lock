@@ -1139,10 +1139,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur@3.2.3":
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-3.2.3.tgz#b8ee8c1642e9b47e250249364850e64b5e05f763"
-  integrity sha512-U2dESS+aoJfuaa7lEVeDqJXVUzRvEVTL+nNfkzHDd2CZezjCJQYgZqHxiu+s9NGHGJkYCvTG6RQl5z1+eO7fXQ==
+"@icij/murmur@3.6":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-3.6.0.tgz#d7493c5e8118c08229d076ba59b89e8a9da0c86e"
+  integrity sha512-VuK6mNMjSN1IFgUkHDymhSoqmKLoOQAbQ38Gyd0hX5d/XjYf2BDiITtQz6xe/EPIy6ZZuoPU0lALIEXJkfpY2Q==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^6.1.2"
@@ -1157,11 +1157,12 @@
     jsonp "^0.2.1"
     lodash "4.17.21"
     mutationobserver-shim "^0.3.7"
-    path-browserify "^1.0.1"
     querystring-es3 "^0.2.1"
     resize-observer-polyfill "^1.5.1"
     topojson "^3.0.2"
+    vue-class-component "^7.2.3"
     vue-headroom "^0.10.1"
+    vue-property-decorator "^9.1.2"
     vue-virtual-scroller "^1.0.10"
 
 "@intervolga/optimize-cssnano-plugin@^1.0.5":
@@ -10347,11 +10348,6 @@ path-browserify@0.0.1:
   resolved "https://registry.yarnpkg.com/path-browserify/-/path-browserify-0.0.1.tgz#e6c4ddd7ed3aa27c68a20cc4e50e1a4ee83bbc4a"
   integrity sha512-BapA40NHICOS+USX9SN4tyhq+A2RrN/Ws5F0Z5aMHDp98Fl86lX8Oti8B7uN93L4Ifv4fHOEA+pQw87gmMO/lQ==
 
-path-browserify@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/path-browserify/-/path-browserify-1.0.1.tgz#d98454a9c3753d5790860f16f68867b9e46be1fd"
-  integrity sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==
-
 path-dirname@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/path-dirname/-/path-dirname-1.0.2.tgz#cc33d24d525e099a5388c0336c6e32b9160609e0"
@@ -13341,6 +13337,11 @@ vm2@^3.9.8:
     acorn "^8.7.0"
     acorn-walk "^8.2.0"
 
+vue-class-component@^7.2.3:
+  version "7.2.6"
+  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-7.2.6.tgz#8471e037b8e4762f5a464686e19e5afc708502e4"
+  integrity sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==
+
 vue-ellipse-progress@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/vue-ellipse-progress/-/vue-ellipse-progress-1.3.1.tgz#07653fbd97e06312b1e319e97e5ea199a6968abb"
@@ -13442,6 +13443,11 @@ vue-progressbar@^0.7.4:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/vue-progressbar/-/vue-progressbar-0.7.5.tgz#414730892252b1e45582d4979dec93038e007f79"
   integrity sha512-VeNG/inMsFbvdCTS7lJ1gjDAKSUZdqkhW9gS1tb0we1rqFKxR+BCEiVUgw5C84vODKb14M2GWHTw0WVdpoVg6g==
+
+vue-property-decorator@^9.1.2:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-9.1.2.tgz#266a2eac61ba6527e2e68a6933cfb98fddab5457"
+  integrity sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==
 
 vue-resize@^0.4.5:
   version "0.4.5"
