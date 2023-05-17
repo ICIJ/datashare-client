@@ -171,6 +171,12 @@ export function datasharePlugin(Client) {
           number_of_fragments: 2,
           pre_tags: ['<mark>'],
           post_tags: ['</mark>']
+        },
+        'content_translated.content': {
+          fragment_size: 280,
+          number_of_fragments: 2,
+          pre_tags: ['<mark>'],
+          post_tags: ['</mark>']
         }
       }
     })

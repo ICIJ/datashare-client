@@ -143,6 +143,11 @@ export default class Document extends EsDoc {
   get highlight() {
     return this.raw.highlight
   }
+  get highlights() {
+    const content = this.get(['highlight', 'content'], [])
+    const contentTranslated = this.get(['highlight', 'content_translated.content'], [])
+    return [...content, ...contentTranslated]
+  }
   get route() {
     return `/ds/${this.index}/${this.id}/${this.routing}`
   }
@@ -265,8 +270,9 @@ export default class Document extends EsDoc {
     return this.get('_source.metadata.tika_metadata_message_to', null)
   }
   get excerpt() {
-    const content = this.get('highlight.content[0]', '')
-    return trim(content)
+    const content = this.get(['highlight', 'content', 0], '')
+    const contentTranslated = this.get(['highlight', 'content_translated.content', 0], '')
+    return trim(content || contentTranslated)
   }
   set translations(translations) {
     this.set('_source.content_translated', translations)

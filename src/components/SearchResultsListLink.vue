@@ -18,9 +18,9 @@
         </span>
       </active-text-truncate>
       <div
-        v-if="document.highlight"
+        v-if="document.highlights.length"
         class="search-results-list-link__fragments"
-        v-html="document.highlight.content.join(' … ')"
+        v-html="document.highlights.join(' … ')"
       ></div>
     </div>
   </router-link>
