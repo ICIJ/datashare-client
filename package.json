@@ -1,6 +1,6 @@
 {
   "name": "datashare-client",
-  "version": "0.1.0-canary.1",
+  "version": "11.2.0-alpha0",
   "private": false,
   "repository": {
     "type": "git",
