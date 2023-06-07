@@ -116,18 +116,18 @@ export default {
         year: {
           xAxisFormat: '%Y',
           tooltipFormat: '%Y',
-          time: d3.timeYear,
-          bins: d3.timeYears
+          time: d3.utcYear,
+          bins: d3.utcYears
         },
         month: {
           xAxisFormat: (date) => {
             if (date.getMonth() === 0) {
-              return d3.timeFormat('%Y')(date)
+              return d3.utcFormat('%Y')(date)
             }
           },
           tooltipFormat: '%B, %Y',
-          time: d3.timeMonth,
-          bins: d3.timeMonths
+          time: d3.utcMonth,
+          bins: d3.utcMonths
         }
       },
       mounted: false,
@@ -177,7 +177,7 @@ export default {
       return d3.extent(this.data, (d) => d.date)
     },
     datesScale() {
-      return d3.scaleTime().domain(this.datesExtent).rangeRound([0, this.chartWidth])
+      return d3.scaleUtc().domain(this.datesExtent).rangeRound([0, this.chartWidth])
     },
     datesHistogram() {
       const minTime = this.selectedIntervalTime.offset(this.datesExtent[0], -1)
@@ -325,13 +325,13 @@ export default {
       if (isFunction(this.selectedTooltipFormat)) {
         return this.selectedTooltipFormat(date)
       }
-      return d3.timeFormat(this.selectedTooltipFormat)(date)
+      return d3.utcFormat(this.selectedTooltipFormat)(date)
     },
     xAxisTickFormat(date) {
       if (isFunction(this.selectedIntervalFormat)) {
         return this.selectedIntervalFormat(date)
       }
-      return d3.timeFormat(this.selectedIntervalFormat)(date)
+      return d3.utcFormat(this.selectedIntervalFormat)(date)
     },
     jumpToSelectionRange({ target, clientX }) {
       const { width } = target.getBBox()
