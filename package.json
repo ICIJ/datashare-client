@@ -20,11 +20,11 @@
     "doc:api": "npm_config_yes=true npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'dist/docs/README.md'",
     "doc:hooks": "node bin/collectHooks.js",
     "doc:vue": "npm install -g vue@2 vue-docgen-cli@4 && vue-docgen",
-    "doc:vue:touch": "find dist/docs/vue -type d -exec touch '{}/README.md' \\;",
+    "doc:vue:readme": "node bin/collectReadmeForComponentsDoc.js",
     "doc:vue:toc": "node bin/collectTocForComponentsDoc.js",
     "doc:widgets": "npx jsdoc-to-markdown src/store/widgets/*.js > 'dist/docs/widgets.md'",
     "predoc": "yarn doc:dir",
-    "postdoc:vue": "yarn doc:vue:touch && yarn doc:vue:toc"
+    "postdoc:vue": "yarn doc:vue:readme && yarn doc:vue:toc"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",
