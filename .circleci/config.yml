@@ -14,7 +14,6 @@ workflows:
       - generate_doc:
           requires:
             - build
-            - test
           filters:
             branches:
               only:
@@ -154,4 +153,4 @@ jobs:
             git -C ~/datashare-docs commit -am "doc: update client documentation [${CIRCLE_SHA1}]" || true
       - run:
           name: Push changes to the Documentation (if any)
-          command: git -C ~/datashare-docs push origin master
+          command: git -C ~/datashare-docs push origin main
