@@ -54,7 +54,12 @@
                 {{ $t('batchSearch.state') }}
               </dt>
               <dd>
-                <batch-search-status :batch-search="batchSearch" />
+                <task-item-status
+                  :task-item="{
+                    ...batchSearch,
+                    errorText: $t('batchSearch.errorMessage')
+                  }"
+                />
               </dd>
             </div>
             <div>
@@ -253,7 +258,7 @@ import moment from 'moment'
 import { mapState } from 'vuex'
 
 import BatchSearchActions from '@/components/BatchSearchActions'
-import BatchSearchStatus from '@/components/BatchSearchStatus'
+import TaskItemStatus from '@/components/TaskItemStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import DocumentNavbar from '@/components/document/DocumentNavbar'
 import QuickItemNav from '@/components/QuickItemNav'
@@ -271,7 +276,7 @@ export default {
   name: 'BatchSearchResults',
   components: {
     BatchSearchActions,
-    BatchSearchStatus,
+    TaskItemStatus,
     ContentTypeBadge,
     DocumentNavbar,
     DocumentView,
