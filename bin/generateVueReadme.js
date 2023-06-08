@@ -3,8 +3,8 @@ const { writeFileSync } = require('fs')
 const { capitalize } = require('lodash')
 
 const components = {
-  collectReadme() {
-    return this.directories.map(filepath => {
+  generateReadme() {
+    return this.directories.map((filepath) => {
       const title = filepath.split('/').slice(3, -1).map(capitalize).join(' - ')
       const readmepath = `${filepath}README.md`
       writeFileSync(readmepath, `# ${title}`)
@@ -16,4 +16,4 @@ const components = {
   }
 }
 
-components.collectReadme()
+components.generateReadme()
