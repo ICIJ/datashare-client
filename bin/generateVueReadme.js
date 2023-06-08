@@ -4,7 +4,7 @@ const { capitalize } = require('lodash')
 
 const components = {
   generateReadme() {
-    return this.directories.map((filepath) => {
+    this.directories.forEach((filepath) => {
       const title = filepath.split('/').slice(3, -1).map(capitalize).join(' - ')
       const readmepath = `${filepath}README.md`
       writeFileSync(readmepath, `# ${title}`)
