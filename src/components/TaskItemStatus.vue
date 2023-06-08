@@ -7,7 +7,6 @@
             <span v-html="$t('batchDownload.errorTitle', { taskId: taskItem.uuid })" />
           </div>
         </slot>
-        <div></div>
         <div v-if="taskItem.errorMessage">
           <template v-if="errorMessageAsJson">
             <json-formatter
