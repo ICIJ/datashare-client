@@ -73,7 +73,18 @@
         </span>
       </template>
       <template #cell(state)="{ item }">
-        <batch-search-status :batch-search="item" />
+        <task-item-status
+          :task-item="{
+            ...item,
+            errorText: $t('batchSearch.errorMessage')
+          }"
+        >
+          <template #title>
+            <div v-if="item.errorQuery" class="task-item-status__modal__error-query mb-2 font-weight-bolder">
+              <span item.errorQuery v-html="$t('batchSearch.errorQuery', { query: item.errorQuery })"></span>
+            </div>
+          </template>
+        </task-item-status>
       </template>
       <template #cell(date)="{ item }">
         <span :title="item.dateTitle">{{ item.dateContent }}</span>
@@ -130,7 +141,7 @@ import { mapState } from 'vuex'
 
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
-import BatchSearchStatus from '@/components/BatchSearchStatus'
+import TaskItemStatus from '@/components/TaskItemStatus'
 import UserDisplay from '@/components/UserDisplay'
 import settings from '@/utils/settings'
 import polling from '@/mixins/polling'
@@ -159,7 +170,7 @@ const SORT_ORDER = Object.freeze({
 
 export default {
   name: 'BatchSearchTable',
-  components: { UserDisplay, BatchSearchStatus, BatchSearchFilterDate, ColumnFilterDropdown },
+  components: { UserDisplay, TaskItemStatus, BatchSearchFilterDate, ColumnFilterDropdown },
   mixins: [polling, utils],
   data() {
     return {

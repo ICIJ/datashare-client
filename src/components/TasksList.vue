@@ -15,8 +15,10 @@
           <p class="text-center m-0" v-html="$t('tasksList.empty')"></p>
         </slot>
       </template>
-      <template #cell(state)="{ item: { state, progress } }">
-        <ellipse-status :status="state" :progress="progress * 100" horizontal />
+      <template #cell(state)="{ item }">
+        <slot name="status" v-bind="{ item }">
+          <ellipse-status :status="item.state" :progress="item.progress * 100" horizontal />
+        </slot>
       </template>
       <template #cell(name)="{ item }">
         <div class="tasks-list__tasks__item__name m-0 font-weight-bold">
