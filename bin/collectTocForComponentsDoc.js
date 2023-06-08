@@ -22,8 +22,7 @@ const components = {
       const nextToTitle = nonEmptyLines[titleIndex + 1] || ''
       const description = nextToTitle.match(RE_DESCRIPTION) ? trimStart(nextToTitle, '> ') : ''
       const path = relative(DOC_PATH, filepath)
-      const wikiPath = basename(filepath, '.md')
-      return { title, description, path, wikiPath }
+      return { title, description, path }
     })
   },
   collectAllTocs() {
@@ -35,19 +34,19 @@ const components = {
     }, {})
   },
   get widgets() {
-    return glob.sync(joinToDoc('Client-›-Components-›-Widget*.md'))
+    return glob.sync(joinToDoc('components/widget/*.md'))
   },
   get filters() {
-    return glob.sync(joinToDoc('Client-›-Components-›-Filter-›-Types-›-Filter*.md'))
+    return glob.sync(joinToDoc('components/filter/types/Filter*.md'))
   },
   get pages() {
-    return glob.sync(joinToDoc('Client-›-Pages-›-*.md'))
+    return glob.sync(joinToDoc('pages/*.md'))
   },
   get others() {
-    const all = glob.sync(joinToDoc('Client-›-Components-›-*.md'))
+    const all = glob.sync(joinToDoc('components/*.md'))
     return filter(all, (f) => {
-      const sw = (target) => startsWith(basename(f).split('-›-').pop(), target)
-      return sw('Filters') || !(sw('Filter') || sw('Widget'))
+      const sw = (target) => startsWith(basename(f).split('/').pop(), target)
+      return sw('filters') || !(sw('filter') || sw('widget'))
     })
   }
 }
@@ -55,4 +54,4 @@ const components = {
 // Compile templates using components collections
 const toc = buildToc(components.collectAllTocs())
 // Write the table of content for all components!
-writeFileSync(joinToDoc('Client-›-Table of Content.md'), toc)
+writeFileSync(joinToDoc('README.md'), toc)
