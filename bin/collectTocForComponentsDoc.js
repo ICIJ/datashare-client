@@ -34,16 +34,20 @@ const components = {
     }, {})
   },
   get widgets() {
-    return glob.sync(joinToDoc('components/widget/*.md'))
+    const ignore = ['**/README.md']
+    return glob.sync(joinToDoc('components/widget/*.md'), { ignore })
   },
   get filters() {
-    return glob.sync(joinToDoc('components/filter/types/Filter*.md'))
+    const ignore = ['**/README.md']
+    return glob.sync(joinToDoc('components/filter/types/Filter*.md'), { ignore })
   },
   get pages() {
-    return glob.sync(joinToDoc('pages/*.md'))
+    const ignore = ['**/README.md']
+    return glob.sync(joinToDoc('pages/*.md'), { ignore })
   },
   get others() {
-    const all = glob.sync(joinToDoc('components/*.md'))
+    const ignore = ['**/README.md']
+    const all = glob.sync(joinToDoc('components/*.md'), { ignore })
     return filter(all, (f) => {
       const sw = (target) => startsWith(basename(f).split('/').pop(), target)
       return sw('filters') || !(sw('filter') || sw('widget'))
