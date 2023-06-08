@@ -54,4 +54,4 @@ const components = {
 // Compile templates using components collections
 const toc = buildToc(components.collectAllTocs())
 // Write the table of content for all components!
-writeFileSync(joinToDoc('README.md'), toc)
+writeFileSync(joinToDoc('vue.md'), toc)
