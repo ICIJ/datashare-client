@@ -14,7 +14,7 @@ const joinToDoc = (path) => join(DOC_PATH, path)
 function srcToDocumentationPath(src) {
   const name = basename(src, '.vue')
   const path = src.split('/').slice(0, -1).map(kebabCase).join('/')
-  return `${path}/${name}.md`
+  return `vue/${path}/${name}.md`
 }
 
 // Collect hook occurrences with `git grep`
