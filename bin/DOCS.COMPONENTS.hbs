@@ -1,3 +1,5 @@
+# Vue components
+
 This project uses [Vue.js](https://vuejs.org) framework. Here are all the
 components used in this application.
 

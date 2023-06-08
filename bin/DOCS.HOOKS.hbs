@@ -1,6 +1,8 @@
+# Plugin hooks
+
 To allow external developers to add their own components, we added markers
 called "hooks" in strategic locations on the user interface  where a user can
-define new Vue Component.
+define new Vue Component through plugins.
 
 ## Hooks locations
 

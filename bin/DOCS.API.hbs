@@ -1,3 +1,5 @@
+# Frontend API
+
 This documentation is intended to help you create plugins for Datashare client.
 All methods currently exposed in the [Core](#Core) class are available to a
 global variable called `datashare`.
