@@ -129,28 +129,29 @@ jobs:
              chmod 700 ~/.ssh
       - add_ssh_keys:
           fingerprints:
-            # This deploy key has read-write permission on Datashare repository
+            # This deploy key has read-write permission on ICIJ/datashare-docs repository
             # @see https://app.circleci.com/settings/project/github/ICIJ/datashare-client/ssh
-            - "ee:80:dd:ca:56:91:b8:9b:ee:b4:f8:53:63:77:e4:8a"
+            # @see https://github.com/ICIJ/datashare-docs/settings/keys
+            - "d0:5d:4a:ba:8a:55:2e:1f:6f:ad:57:c5:e0:21:ce:34"
       - run:
           name: Configure Git identity
           command: |
             git config --global user.name $CIRCLE_USERNAME
             git config --global user.email "engineering@icij.org"
       - run:
-          name: Checkout Datashare Wiki repository
+          name: Checkout ICIJ/datashare-docs repository
           command: |
             ssh-keyscan github.com >> ~/.ssh/known_hosts
-            git clone git@github.com:ICIJ/datashare.wiki.git ~/datashare-wiki
+            git clone git@github.com:ICIJ/datashare-docs.git ~/datashare-docs
       - run:
-          name: Copy generated doc inside the Wiki with a flatten structure
+          name: Copy generated doc inside the Wiki with a flatten structure (no subdirectories)
           command: |
-            rsync --del -r ~/datashare-client/dist/docs/ ~/datashare-wiki/client
+            rsync --del -r ~/datashare-client/dist/docs/ ~/datashare-docs/developers/client
       - run:
           name: Add/Commit changes to the Wiki (if any)
           command: |
-            git -C ~/datashare-wiki add -A
-            git -C ~/datashare-wiki commit -am "Publish client documentation [${CIRCLE_SHA1}]" || true
+            git -C ~/datashare-docs add -A
+            git -C ~/datashare-docs commit -am "doc: update client documentation [${CIRCLE_SHA1}]" || true
       - run:
           name: Push changes to the Wiki (if any)
-          command: git -C ~/datashare-wiki push origin master
+          command: git -C ~/datashare-docs push origin master
