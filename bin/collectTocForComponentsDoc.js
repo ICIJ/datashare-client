@@ -6,7 +6,7 @@ const { findIndex, filter, isArrayLike, startsWith, trimStart } = require('lodas
 
 const RE_HEADER = /^#+(.*)$/
 const RE_DESCRIPTION = /^>+(.*)$/
-const DOC_PATH = join('dist', 'docs')
+const DOC_PATH = join('dist', 'docs', 'vue')
 
 const buildToc = Handlebars.compile(readFileSync('bin/DOCS.COMPONENTS.hbs', 'UTF-8'))
 const joinToDoc = (path) => join(DOC_PATH, path)
@@ -54,4 +54,4 @@ const components = {
 // Compile templates using components collections
 const toc = buildToc(components.collectAllTocs())
 // Write the table of content for all components!
-writeFileSync(joinToDoc('vue.md'), toc)
+writeFileSync(joinToDoc('README.md'), toc)

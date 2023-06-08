@@ -8,11 +8,10 @@ const { resolve: apiOptions } = require('@vue/cli-service/webpack.config.js')
 module.exports = {
   componentsRoot: 'src/',
   components: '**/[A-Z]*.vue',
-  outDir: 'dist/docs/',
+  outDir: 'dist/docs/vue/',
   getDestFile: (file, config) => {
     const outPath = dirname(file).split('/').map(kebabCase).join('/')
     const outFile = basename(file).replace(/\.vue$/, '.md')
-    // Flattn structure to be display correctly by Github Wiki
     return join(config.outDir, `${outPath}/${outFile}`)
   },
   // inform vue-docgen-api of Webpack aliases
