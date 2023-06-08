@@ -38,7 +38,7 @@ import JsonFormatter from '@/components/JsonFormatter'
  * A badge to display batch search status.
  */
 export default {
-  name: 'BatchSearchStatus',
+  name: 'TaskItemStatus',
   components: {
     EllipseStatus,
     JsonFormatter
