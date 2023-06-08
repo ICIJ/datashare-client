@@ -1,5 +1,5 @@
 const { join, basename, dirname } = require('path')
-const { capitalize } = require('lodash')
+const { kebabCase } = require('lodash')
 // This looks like it's a hack but in fact it's the documented way
 // to import Webpack configuration:
 // https://cli.vuejs.org/guide/webpack.html#using-resolved-config-as-a-file)
@@ -10,10 +10,10 @@ module.exports = {
   components: '**/[A-Z]*.vue',
   outDir: 'dist/docs/',
   getDestFile: (file, config) => {
-    const outPath = dirname(file).split('/').map(capitalize).join('-›-')
+    const outPath = dirname(file).split('/').map(kebabCase).join('/')
     const outFile = basename(file).replace(/\.vue$/, '.md')
     // Flattn structure to be display correctly by Github Wiki
-    return join(config.outDir, `Client-›-${outPath}-›-${outFile}`)
+    return join(config.outDir, `${outPath}/${outFile}`)
   },
   // inform vue-docgen-api of Webpack aliases
   apiOptions
