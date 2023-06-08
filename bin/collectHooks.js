@@ -2,12 +2,11 @@ const Handlebars = require('handlebars')
 const { execSync } = require('child_process')
 const { readFileSync, writeFileSync } = require('fs')
 const { kebabCase, compact } = require('lodash')
-const { basename, join, relative } = require('path')
+const { basename, join } = require('path')
 
 const { repository } = require('../package.json')
 
 const DOC_PATH = join('dist', 'docs')
-const SRC_PATH = join('src')
 
 const build = Handlebars.compile(readFileSync('bin/DOCS.HOOKS.hbs', 'UTF-8'))
 const joinToDoc = (path) => join(DOC_PATH, path)
