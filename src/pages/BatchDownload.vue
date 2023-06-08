@@ -5,6 +5,16 @@
         <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
       </div>
       <tasks-list :tasks="tasks">
+        <template #status="{ item: { properties, state, error } }">
+          <task-item-status
+            :task-item="{
+              ...properties.batchDownload,
+              state,
+              errorMessage: error,
+              errorText: $t('batchSearch.errorMessage')
+            }"
+          />
+        </template>
         <template #default="{ item: { name, properties, state } }">
           <div :id="'batch-download__item--' + properties.batchDownload.uuid" class="d-flex batch-download__item">
             <a
@@ -47,6 +57,7 @@
 <script>
 import { some, random } from 'lodash'
 
+import TaskItemStatus from '@/components/TaskItemStatus'
 import BatchDownloadActions from '@/components/BatchDownloadActions'
 import TasksList from '@/components/TasksList'
 import features from '@/mixins/features'
@@ -60,6 +71,7 @@ export default {
   name: 'BatchDownload',
   components: {
     BatchDownloadActions,
+    TaskItemStatus,
     TasksList
   },
   filters: {
