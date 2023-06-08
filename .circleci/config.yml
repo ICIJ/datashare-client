@@ -153,5 +153,5 @@ jobs:
             git -C ~/datashare-docs add -A
             git -C ~/datashare-docs commit -am "doc: update client documentation [${CIRCLE_SHA1}]" || true
       - run:
-          name: Push changes to the Wiki (if any)
+          name: Push changes to the Documentation (if any)
           command: git -C ~/datashare-docs push origin master
