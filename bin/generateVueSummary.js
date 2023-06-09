@@ -62,7 +62,7 @@ function getDirectories(path) {
 /**
  * Removes the sublist from the summary.
  * @param {Array} summaryLines - The lines of the summary.
- * @param {number} vueComponentsItemIndex - The index of the "Vue components" line.
+ * @param {number} vueComponentsItemIndex - The index of the "Vue app" line.
  * @param {number} nextItemIndex - The index of the next line at the same level of indentation.
  * @returns {Array} The summary lines without the sublist.
  */
@@ -75,12 +75,12 @@ function removeSublistFromSummary(summaryLines, vueComponentsItemIndex, nextItem
 }
 
 /**
- * Finds the index of the "Vue components" line in the summary.
+ * Finds the index of the "Vue app" line in the summary.
  * @param {Array} summaryLines - The lines of the summary.
- * @returns {number} The index of the "Vue components" line.
+ * @returns {number} The index of the "Vue app" line.
  */
 function findVueComponentsItemIndex(summaryLines) {
-  const vueComponentsToken = '* [Vue components](developers/client/vue/README.md)'
+  const vueComponentsToken = '* [Vue app](developers/client/vue/README.md)'
   return findIndex(summaryLines, (line) => line.includes(vueComponentsToken))
 }
 
@@ -96,8 +96,8 @@ function countIndents(line) {
 /**
  * Finds the index of the next line at the same level of indentation.
  * @param {Array} summaryLines - The lines of the summary.
- * @param {number} vueComponentsItemIndex - The index of the "Vue components" line.
- * @param {number} vueComponentsIndents - The number of spaces at the beginning of the "Vue components" line.
+ * @param {number} vueComponentsItemIndex - The index of the "Vue app" line.
+ * @param {number} vueComponentsIndents - The number of spaces at the beginning of the "Vue app" line.
  * @returns {number} The index of the next line at the same level of indentation.
  */
 function findNextItemIndex(summaryLines, vueComponentsItemIndex, vueComponentsIndents) {
