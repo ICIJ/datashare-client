@@ -757,17 +757,19 @@
     "empty": "crwdns2539:0crwdne2539:0",
     "noFile": "crwdns2604:0crwdne2604:0",
     "created": "crwdns2520:0crwdne2520:0",
-    "warning": "crwdns2454:0crwdne2454:0",
+    "warning": "crwdns2707:0crwdne2707:0",
     "inProgress": "crwdns2518:0crwdne2518:0",
+    "errorMessage": "crwdns2709:0crwdne2709:0",
+    "errorTitle": "crwdns2717:0%{taskId}crwdne2717:0",
     "relaunch": {
       "succeed": "crwdns2574:0crwdne2574:0",
       "succeedBody": "crwdns2576:0crwdne2576:0",
       "failed": "crwdns2578:0crwdne2578:0",
-      "failedBody": "crwdns2580:0crwdne2580:0"
+      "failedBody": "crwdns2713:0crwdne2713:0"
     },
     "delete": {
       "failed": "crwdns2586:0crwdne2586:0",
-      "failedBody": "crwdns2588:0crwdne2588:0"
+      "failedBody": "crwdns2715:0crwdne2715:0"
     },
     "limitations": "crwdns2608:0%{maxNbFiles}crwdnd2608:0%{maxSize}crwdne2608:0"
   },
