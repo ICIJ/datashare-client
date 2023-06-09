@@ -1,12 +1,12 @@
-const Handlebars = require('handlebars');
-const { execSync } = require('child_process');
-const { readFileSync, writeFileSync } = require('fs');
-const { kebabCase, compact } = require('lodash');
-const { basename, join } = require('path');
+const Handlebars = require('handlebars')
+const { execSync } = require('child_process')
+const { readFileSync, writeFileSync } = require('fs')
+const { kebabCase, compact } = require('lodash')
+const { basename, join } = require('path')
 
-const { repository } = require('../package.json');
+const { repository } = require('../package.json')
 
-const DOC_PATH = join('dist', 'docs');
+const DOC_PATH = join('dist', 'docs')
 
 /**
  * Compiles the Handlebars template.
@@ -14,8 +14,8 @@ const DOC_PATH = join('dist', 'docs');
  * @returns {Function} The compiled Handlebars template function.
  */
 function compileTemplate(templatePath) {
-  const templateContent = readFileSync(templatePath, 'UTF-8');
-  return Handlebars.compile(templateContent);
+  const templateContent = readFileSync(templatePath, 'UTF-8')
+  return Handlebars.compile(templateContent)
 }
 
 /**
@@ -24,7 +24,7 @@ function compileTemplate(templatePath) {
  * @returns {string} The joined path.
  */
 function joinToDoc(pathSegment) {
-  return join(DOC_PATH, pathSegment);
+  return join(DOC_PATH, pathSegment)
 }
 
 /**
@@ -33,9 +33,9 @@ function joinToDoc(pathSegment) {
  * @returns {string} The documentation path.
  */
 function srcToDocumentationPath(src) {
-  const name = basename(src, '.vue');
-  const path = src.split('/').slice(0, -1).map(kebabCase).join('/');
-  return `vue/${path}/${name}.md`;
+  const name = basename(src, '.vue')
+  const path = src.split('/').slice(0, -1).map(kebabCase).join('/')
+  return `vue/${path}/${name}.md`
 }
 
 /**
@@ -43,16 +43,16 @@ function srcToDocumentationPath(src) {
  * @returns {Array} An array of hook objects containing component, source, line, path, and hook information.
  */
 function collectHookOccurrences() {
-  const occurrences = execSync('git grep --line --no-color --extended-regexp \'<hook name="(.*:\\w*)"\'').toString();
+  const occurrences = execSync('git grep --line --no-color --extended-regexp \'<hook name="(.*:\\w*)"\'').toString()
   return compact(occurrences.split('\n')).map((occurrence) => {
-    const component = occurrence.split(':')[0].split('/').slice(1).join('/');
-    const line = occurrence.split(':')[1];
-    const match = occurrence.split(':').slice(2).join(':');
-    const hook = (match.match(/\"(.*:\w*)\"/) || [])[1];
-    const path = srcToDocumentationPath(component);
-    const source = new URL(`blob/master/src/${component}#L${line}`, repository.url);
-    return { component, source, line, path, hook };
-  });
+    const component = occurrence.split(':')[0].split('/').slice(1).join('/')
+    const line = occurrence.split(':')[1]
+    const match = occurrence.split(':').slice(2).join(':')
+    const hook = (match.match(/\"(.*:\w*)\"/) || [])[1]
+    const path = srcToDocumentationPath(component)
+    const source = new URL(`blob/master/src/${component}#L${line}`, repository.url)
+    return { component, source, line, path, hook }
+  })
 }
 
 /**
@@ -62,7 +62,7 @@ function collectHookOccurrences() {
  * @returns {string} The built content.
  */
 function buildContent(template, hooks) {
-  return template({ hooks });
+  return template({ hooks })
 }
 
 /**
@@ -71,14 +71,14 @@ function buildContent(template, hooks) {
  * @param {string} content - The content to be written.
  */
 function writeContentToFile(filePath, content) {
-  writeFileSync(filePath, content);
+  writeFileSync(filePath, content)
 }
 
 // Compile the Handlebars template
-const template = compileTemplate('bin/DOCS.HOOKS.hbs');
+const template = compileTemplate('bin/DOCS.HOOKS.hbs')
 // Collect hook occurrences
-const hooks = collectHookOccurrences();
+const hooks = collectHookOccurrences()
 // Build content using the template and hook collection
-const content = buildContent(template, hooks);
+const content = buildContent(template, hooks)
 // Write the content to a file
-writeContentToFile(joinToDoc('hooks.md'), content);
+writeContentToFile(joinToDoc('hooks.md'), content)

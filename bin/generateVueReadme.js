@@ -1,17 +1,17 @@
-const glob = require('glob');
-const { writeFileSync } = require('fs');
-const { capitalize } = require('lodash');
+const glob = require('glob')
+const { writeFileSync } = require('fs')
+const { capitalize } = require('lodash')
 
 /**
  * Generates README files for each directory.
  */
 function generateReadme() {
-  const directories = getDirectories();
+  const directories = getDirectories()
   directories.forEach((filepath) => {
-    const title = generateTitle(filepath);
-    const readmepath = `${filepath}README.md`;
-    writeReadmeFile(readmepath, title);
-  });
+    const title = generateTitle(filepath)
+    const readmepath = `${filepath}README.md`
+    writeReadmeFile(readmepath, title)
+  })
 }
 
 /**
@@ -19,8 +19,8 @@ function generateReadme() {
  * @returns {string[]} An array of directory paths.
  */
 function getDirectories() {
-  const mark = true;
-  return glob.sync('dist/docs/vue/**/*/', { mark });
+  const mark = true
+  return glob.sync('dist/docs/vue/**/*/', { mark })
 }
 
 /**
@@ -29,9 +29,9 @@ function getDirectories() {
  * @returns {string} The generated title.
  */
 function generateTitle(filepath) {
-  const pathSegments = filepath.split('/').slice(3, -1);
-  const capitalizedSegments = pathSegments.map(capitalize);
-  return capitalizedSegments.join(' - ');
+  const pathSegments = filepath.split('/').slice(3, -1)
+  const capitalizedSegments = pathSegments.map(capitalize)
+  return capitalizedSegments.join(' - ')
 }
 
 /**
@@ -40,8 +40,8 @@ function generateTitle(filepath) {
  * @param {string} title - The title to be included in the README.
  */
 function writeReadmeFile(readmepath, title) {
-  const content = `# ${title}`;
-  writeFileSync(readmepath, content);
+  const content = `# ${title}`
+  writeFileSync(readmepath, content)
 }
 
-generateReadme();
+generateReadme()
