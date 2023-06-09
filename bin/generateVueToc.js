@@ -2,16 +2,35 @@ const Handlebars = require('handlebars')
 const glob = require('glob')
 const { readFileSync, writeFileSync } = require('fs')
 const { basename, join, relative } = require('path')
-const { findIndex, filter, isArrayLike, startsWith, trimStart } = require('lodash')
+const { findIndex, filter, startsWith, trimStart } = require('lodash')
 
 const RE_HEADER = /^#+(.*)$/
 const RE_DESCRIPTION = /^>+(.*)$/
 const DOC_PATH = join('dist', 'docs', 'vue')
 
-const buildToc = Handlebars.compile(readFileSync('bin/DOCS.COMPONENTS.hbs', 'UTF-8'))
-const joinToDoc = (path) => join(DOC_PATH, path)
+class ComponentDocumentation {
+  constructor() {
+    this.widgetsIgnore = ['**/README.md']
+    this.filtersIgnore = ['**/README.md']
+    this.pagesIgnore = ['**/README.md']
+    this.othersIgnore = ['**/README.md']
+  }
 
-const components = {
+  /**
+   * Build the table of contents (TOC) using the template file
+   * @returns {Array} The array of TOC objects containing title, description, and path information.
+   */
+  buildToc() {
+    const templateContent = readFileSync('bin/DOCS.COMPONENTS.hbs', 'UTF-8')
+    const compiledTemplate = Handlebars.compile(templateContent)
+    return compiledTemplate(this.collectAllTocs())
+  }
+
+  /**
+   * Collects the table of contents (TOC) for the specified files.
+   * @param {Array} files - The files to collect TOC from.
+   * @returns {Array} The array of TOC objects containing title, description, and path information.
+   */
   collectToc(files) {
     return files.map((filepath) => {
       const content = readFileSync(filepath, 'UTF-8')
@@ -24,30 +43,62 @@ const components = {
       const path = relative(DOC_PATH, filepath)
       return { title, description, path }
     })
-  },
+  }
+
+  /**
+   * Collects the table of contents (TOC) for all component collections.
+   * @returns {Object} The object containing TOCs for each component collection.
+   */
   collectAllTocs() {
-    return Object.entries(this).reduce((result, [key, value]) => {
-      if (isArrayLike(value)) {
-        result[key] = this.collectToc(value)
-      }
+    return this.entries.reduce((result, [key, value]) => {
+      result[key] = this.collectToc(value)
       return result
     }, {})
-  },
+  }
+
+  /**
+   * Retrieves the component collections as key-value pairs.
+   * @returns {Array<Array<string, Array>>} The array of component collections as key-value pairs.
+   */
+  get entries() {
+    return Object.entries({
+      widgets: this.widgets,
+      filters: this.filters,
+      pages: this.pages,
+      others: this.others
+    })
+  }
+
+  /**
+   * Retrieves the paths to widget files.
+   * @returns {Array} The array of widget file paths.
+   */
   get widgets() {
-    const ignore = ['**/README.md']
-    return glob.sync(joinToDoc('components/widget/*.md'), { ignore })
-  },
+    return glob.sync(join(DOC_PATH, 'components/widget/*.md'), { ignore: this.widgetsIgnore })
+  }
+
+  /**
+   * Retrieves the paths to filter files.
+   * @returns {Array} The array of filter file paths.
+   */
   get filters() {
-    const ignore = ['**/README.md']
-    return glob.sync(joinToDoc('components/filter/types/Filter*.md'), { ignore })
-  },
+    return glob.sync(join(DOC_PATH, 'components/filter/types/Filter*.md'), { ignore: this.filtersIgnore })
+  }
+
+  /**
+   * Retrieves the paths to page files.
+   * @returns {Array} The array of page file paths.
+   */
   get pages() {
-    const ignore = ['**/README.md']
-    return glob.sync(joinToDoc('pages/*.md'), { ignore })
-  },
+    return glob.sync(join(DOC_PATH, 'pages/*.md'), { ignore: this.pagesIgnore })
+  }
+
+  /**
+   * Retrieves the paths to other component files.
+   * @returns {Array} The array of other component file paths.
+   */
   get others() {
-    const ignore = ['**/README.md']
-    const all = glob.sync(joinToDoc('components/*.md'), { ignore })
+    const all = glob.sync(join(DOC_PATH, 'components/*.md'), { ignore: this.othersIgnore })
     return filter(all, (f) => {
       const sw = (target) => startsWith(basename(f).split('/').pop(), target)
       return sw('filters') || !(sw('filter') || sw('widget'))
@@ -55,7 +106,10 @@ const components = {
   }
 }
 
-// Compile templates using components collections
-const toc = buildToc(components.collectAllTocs())
-// Write the table of content for all components!
-writeFileSync(joinToDoc('README.md'), toc)
+// Create an instance of the ComponentDocumentation class
+const componentDocs = new ComponentDocumentation()
+// Compile templates using component collections and generate the table of contents
+const toc = componentDocs.buildToc()
+
+// Write the table of contents for all components!
+writeFileSync(join(DOC_PATH, 'README.md'), toc)
