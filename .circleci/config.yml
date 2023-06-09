@@ -13,8 +13,7 @@ workflows:
             - build
       - generate_doc:
           requires:
-            - lint
-            - test
+            - build
           filters:
             branches:
               only:
@@ -120,11 +119,6 @@ jobs:
           name: Restore app bundle (repo + dependencies) from the `build` job
           key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-           name: Append list of components to icij/datashare-docs SUMMARY.md
-           environment:
-             SUMMARY_FILE: ~/datashare-docs/SUMMARY.md
-           command: cat $SUMMARY_FILE | yarn doc:vue:summary | ( tee TMP.md ; mv TMP.md $SUMMARY_FILE )
-      - run:
            name: Ensure rsync is installed
            command: (sudo apt update || /bin/true) && sudo apt install rsync
       - run:
@@ -152,6 +146,11 @@ jobs:
           name: Copy generated doc inside the Wiki with a flatten structure (no subdirectories)
           command: |
             rsync --del -r ~/datashare-client/dist/docs/ ~/datashare-docs/developers/client
+      - run:
+           name: Append list of components to icij/datashare-docs SUMMARY.md
+           environment:
+             SUMMARY_FILE: ~/datashare-docs/SUMMARY.md
+           command: cat $SUMMARY_FILE | yarn doc:vue:summary | ( tee TMP.md ; mv TMP.md $SUMMARY_FILE )
       - run:
           name: Add/Commit changes to the Wiki (if any)
           command: |
