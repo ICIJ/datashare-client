@@ -757,17 +757,19 @@
     "empty": "You have not yet started any download tasks.",
     "noFile": "The archive has expired.",
     "created": "Your download is being prepared",
-    "warning": "This feature is currently being developped by the Datashare team.",
+    "warning": "This feature is currently being developed by the Datashare team.",
     "inProgress": "See all pending downloads",
+    "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
+    "errorTitle": "Batch download task <code class=\"font-weight-bold\">%{taskId}</code> is in error.",
     "relaunch": {
       "succeed": "Your download is being prepared",
       "succeedBody": "The download should be available soon.",
       "failed": "Unable to relaunch",
-      "failedBody": "Something happend when trying to relaunch this batch download."
+      "failedBody": "Something happened when trying to relaunch this batch download."
     },
     "delete": {
       "failed": "Unable to delete",
-      "failedBody": "Something happend when trying to delete this batch download."
+      "failedBody": "Something happened when trying to delete this batch download."
     },
     "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
   },
