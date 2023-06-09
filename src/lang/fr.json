@@ -757,17 +757,19 @@
     "empty": "Vous n'avez pas encore lancé de tâches de téléchargement.",
     "noFile": "L'archive a expiré.",
     "created": "Votre téléchargement est en cours de préparation",
-    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
+    "warning": "This feature is currently being developed by the Datashare team.",
     "inProgress": "Voir tous les téléchargements en attente",
+    "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
+    "errorTitle": "Batch download task <code class=\"font-weight-bold\">%{taskId}</code> is in error.",
     "relaunch": {
       "succeed": "Votre téléchargement est en cours de préparation",
       "succeedBody": "Le téléchargement sera bientôt disponible.",
       "failed": "Impossible de relancer",
-      "failedBody": "Une erreur est survenue pendant que la recherche en lot était relancée."
+      "failedBody": "Something happened when trying to relaunch this batch download."
     },
     "delete": {
       "failed": "Impossible de supprimer",
-      "failedBody": "Une erreur est survenue pendant que la recherche en lot était supprimée."
+      "failedBody": "Something happened when trying to delete this batch download."
     },
     "limitations": "Les téléchargements en lots sont limités à %{maxNbFiles} fichiers et %{maxSize}B."
   },
