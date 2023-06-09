@@ -13,7 +13,8 @@ workflows:
             - build
       - generate_doc:
           requires:
-            - build
+            - lint
+            - test
           filters:
             branches:
               only:
