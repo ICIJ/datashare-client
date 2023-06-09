@@ -20,7 +20,7 @@ function generateMarkdownList(items, depth = 0) {
       markdown += `${indent}* [${item.title}](${item.wikiPath})\n`
     }
   }
-  return trimEnd(markdown)
+  return markdown
 }
 
 /**
@@ -104,7 +104,7 @@ function findNextItemIndex(summaryLines, vueComponentsItemIndex, vueComponentsIn
   const relativeNextItemIndex = findIndex(summaryLines.slice(vueComponentsItemIndex + 1), (line) => {
     return line.length - line.trimStart().length <= vueComponentsIndents
   })
-  return relativeNextItemIndex < -1 ? summaryLines.length : relativeNextItemIndex + vueComponentsItemIndex + 1
+  return relativeNextItemIndex < -1 ? summaryLines.length : relativeNextItemIndex + vueComponentsItemIndex
 }
 
 /**
@@ -118,14 +118,9 @@ function updateSummaryWithNewItemList(newItemList, summary) {
   const itemIndex = findVueComponentsItemIndex(lines)
   const indentCount = countIndents(lines[itemIndex])
   const nextIndex = findNextItemIndex(lines, itemIndex, indentCount)
-
   const linesWithoutSublist = removeSublistFromSummary(lines, itemIndex, nextIndex)
-
   linesWithoutSublist.splice(itemIndex + 1, 0, newItemList)
-
-  const updatedSummary = linesWithoutSublist.join('\n')
-
-  return updatedSummary
+  return linesWithoutSublist.join('\n')
 }
 
 if (process.stdin.isTTY) {
@@ -134,7 +129,7 @@ if (process.stdin.isTTY) {
 }
 
 // Build the sublist to append to the summary
-const newItemList = generateMarkdownList(generateVueSummary(), 2)
+const newItemList = trimEnd(generateMarkdownList(generateVueSummary(), 2))
 // Read from stdin, STDIN_FILENO = 0
 const summary = readFileSync(0).toString()
 const updatedSummary = updateSummaryWithNewItemList(newItemList, summary)
