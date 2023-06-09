@@ -22,6 +22,7 @@
     "doc:vue": "npm install -g vue@2 vue-docgen-cli@4 && vue-docgen",
     "doc:vue:readme": "node bin/generateVueReadme.js",
     "doc:vue:toc": "node bin/generateVueToc.js",
+    "doc:vue:summary": "node bin/generateVueSummary.js",
     "doc:widgets": "npx jsdoc-to-markdown --separators --no-gfm --template bin/DOCS.WIDGETS.hbs src/store/widgets/*.js > 'dist/docs/widgets.md'",
     "predoc": "yarn doc:dir",
     "postdoc:vue": "yarn doc:vue:readme && yarn doc:vue:toc"
