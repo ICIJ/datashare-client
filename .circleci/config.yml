@@ -150,7 +150,7 @@ jobs:
            name: Append list of components to icij/datashare-docs SUMMARY.md
            environment:
              SUMMARY_FILE: ~/datashare-docs/SUMMARY.md
-           command: cat $SUMMARY_FILE | yarn doc:vue:summary | ( tee TMP.md ; mv TMP.md $SUMMARY_FILE )
+           command: cat $SUMMARY_FILE | yarn doc:vue:summary > TMP.md ; ( mv TMP.md $SUMMARY_FILE )
       - run:
           name: Add/Commit changes to the Wiki (if any)
           command: |
