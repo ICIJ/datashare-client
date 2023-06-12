@@ -75,7 +75,7 @@ function writeContentToFile(filePath, content) {
 }
 
 // Compile the Handlebars template
-const template = compileTemplate('bin/DOCS.HOOKS.hbs')
+const template = compileTemplate('bin/dmd/hooks.hbs')
 // Collect hook occurrences
 const hooks = collectHookOccurrences()
 // Build content using the template and hook collection

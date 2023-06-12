@@ -21,7 +21,7 @@ class ComponentDocumentation {
    * @returns {Array} The array of TOC objects containing title, description, and path information.
    */
   buildToc() {
-    const templateContent = readFileSync('bin/DOCS.COMPONENTS.hbs', 'UTF-8')
+    const templateContent = readFileSync('bin/dmd/vue.hbs', 'UTF-8')
     const compiledTemplate = Handlebars.compile(templateContent)
     return compiledTemplate(this.collectAllTocs())
   }
