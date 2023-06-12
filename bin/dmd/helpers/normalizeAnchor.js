@@ -10,8 +10,10 @@ exports.normalizeAnchor = function (url) {
   // Check if the URL has an anchor
   if (urlParts.length === 2) {
     // Convert the anchor to lowercase
-    const lowercaseAnchor = urlParts[1].toLowerCase()
-
+    const lowercaseAnchor = urlParts[1]
+      .toLowerCase()
+      .replace(/[ -_]+/g, '-')
+      .replace(/[^a-z0-9_ -]/g, '')
     // Reconstruct the URL with the lowercase anchor
     return `${urlParts[0]}#${lowercaseAnchor}`
   }
