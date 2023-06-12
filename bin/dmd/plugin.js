@@ -1,6 +1,8 @@
+const { join } = require('path')
+
 module.exports = function () {
   return {
-    partial: __dirname + '/partials/**/*.hbs',
-    helper: __dirname + '/helpers/**/*.js'
+    partial: join(__dirname, '/partials/**/*.hbs'),
+    helper: join(__dirname, '/helpers/**/*.js')
   }
 }
