@@ -17,7 +17,7 @@ GOALS:
 
 {{#link to~}}
 {{#if url~}}
-<a href="{{{url}}}">`{{#if ../../caption}}{{../../../caption}}{{else}}{{name}}{{/if}}`</a>
+<a href="{{{normalizeAnchor url}}}">`{{#if ../../caption}}{{../../../caption}}{{else}}{{name}}{{/if}}`</a>
 {{~else~}}
 {{#if ../../caption}}{{../../../caption}}{{else}}{{name}}{{/if~}}
 {{/if~}}
@@ -27,7 +27,7 @@ GOALS:
 
 {{#link to~}}
 {{#if url~}}
-[`{{#if ../../caption}}{{escape ../../../caption}}{{else}}{{escape name}}{{/if}}`]({{{url}}})
+[`{{#if ../../caption}}{{escape ../../../caption}}{{else}}{{escape name}}{{/if}}`]({{{normalizeAnchor url}}})
 {{~else~}}
 {{#if ../../caption}}{{escape ../../../caption}}{{else}}{{escape name}}{{/if~}}
 {{/if~}}
