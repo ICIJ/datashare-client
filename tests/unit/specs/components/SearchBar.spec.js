@@ -46,6 +46,24 @@ describe('SearchBar.vue', function () {
     expect(wrapper.find('.search-bar__suggestions').element).toBeTruthy()
   })
 
+  it('should display a the query typed by the user as first suggestion in the dropdown when there are suggestions', async () => {
+    const query = 'barba'
+    const suggestTermsMock = jest.fn().mockResolvedValue({
+      suggestions: [
+        { key: 'barbar', doc_count: 1 },
+        { key: 'barbaz', doc_count: 1 }
+      ],
+      query
+    })
+    wrapper = mountFactory({}, () => ({ query }))
+    wrapper.vm.suggestTerms = suggestTermsMock
+    await wrapper.vm.onFocus()
+    await flushPromises()
+    const items = wrapper.findAll('.selectable-dropdown__item')
+    expect(items).toHaveLength(3)
+    expect(items.at(0).text()).toBe('barba')
+  })
+
   it('should select the term when suggestion dropdown item is clicked', async () => {
     wrapper = mountFactory({}, () => ({ suggestions: [{ key: 'bar' }], query: 'foo' }))
     await flushPromises()

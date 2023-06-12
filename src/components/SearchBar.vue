@@ -35,7 +35,10 @@
             <template #item-label="{ item }">
               <div class="d-flex">
                 <div class="flex-grow-1 text-truncate">
-                  <span v-html="injectTermInQuery(item.key)"></span>
+                  <template v-if="item.current">
+                    <span v-html="item.key" />
+                  </template>
+                  <span v-else v-html="injectTermInQuery(item.key, null, true)"></span>
                 </div>
               </div>
             </template>
@@ -152,7 +155,8 @@ export default {
       field: this.$store.state.search.field,
       focused: false,
       query: this.$store.state.search.query,
-      suggestions: []
+      suggestions: [],
+      currentQuery: { key: '', current: true }
     }
   },
   computed: {
@@ -202,6 +206,7 @@ export default {
       })
       const preference = 'search-bar-suggestions'
       const response = await elasticsearch.search({ index, body: body.build(), preference })
+
       let suggestions = []
       each(fields, (field) => {
         suggestions = concat(suggestions, get(response, `aggregations.${field}.buckets`, []))
@@ -249,18 +254,23 @@ export default {
       }
     },
     selectTerm(term) {
-      this.$set(this, 'query', term ? this.injectTermInQuery(term.key, null, false) : this.query)
+      let query = this.query
+      if (term) {
+        query = term.current ? term.key : this.injectTermInQuery(term.key, null, false)
+      }
+      this.query = query
     },
     searchTerms: throttle(async function () {
       try {
         if (this.suggestionsAllowed) {
+          this.currentQuery = { key: this.query, current: true }
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
-
           // Avoid setting suggestions if user lost the focus on the input
           if (this.focused) {
             // Is the query still valid
-            this.$set(this, 'suggestions', query === this.query ? suggestions : [])
-            this.$refs.suggestions.activeItemIndexes = []
+            const suggestionList = suggestions.length ? [this.currentQuery, ...suggestions] : suggestions
+            this.$set(this, 'suggestions', query === this.query ? suggestionList : [])
+            this.$refs.suggestions.activeItems = []
           }
         } else {
           this.$set(this, 'suggestions', [])
