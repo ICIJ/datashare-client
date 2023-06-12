@@ -117,7 +117,6 @@ export default {
         this.tasks = this.sortByDateTime(tasks)
       } catch (e) {
         // hot fix to prevent showing endless loading placeholders
-        console.log('e', e)
         this.$wait.end('load download tasks')
       }
 
