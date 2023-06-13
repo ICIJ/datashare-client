@@ -254,11 +254,9 @@ export default {
       }
     },
     selectTerm(term) {
-      let query = this.query
       if (term) {
-        query = term.current ? term.key : this.injectTermInQuery(term.key, null, false)
+        this.query = term.current ? term.key : this.injectTermInQuery(term.key, null, false)
       }
-      this.query = query
     },
     searchTerms: throttle(async function () {
       try {
