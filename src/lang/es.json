@@ -725,7 +725,7 @@
     "findPreviousOccurrence": "Encontrar la ocurrencia previa en el documento",
     "findPreviousOccurrenceAlt": "Encontrar la ocurrencia previa en el documento",
     "findNextOccurrence": "Encontrar la próxima ocurrencia en el documento",
-    "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento",
+    "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
   },
   "server": {
     "title": "Configuración",
