@@ -5,10 +5,12 @@
     class="applied-search-filters-item p-0 my-1 mr-2 mw-100 text-truncate"
     variant="warning"
     :pill="hideFilterLabel"
-    :class="appliedSearchFiltersItemClassList"
     @click.prevent="deleteQueryTerm()"
   >
-    <span class="applied-search-filters-item__wrapper d-inline-flex flex-column">
+    <span
+      class="applied-search-filters-item__wrapper d-inline-flex flex-column"
+      :class="appliedSearchFiltersItemClassList"
+    >
       <span v-if="!hideFilterLabel" class="applied-search-filters-item__wrapper__label p-1">
         {{ filterName }}
       </span>
@@ -68,9 +70,9 @@ export default {
       return uniqueId('applied-search-filters-item-')
     },
     appliedSearchFiltersItemClassList() {
+      console.log(' this.filter.negation', this.filter.negation)
       return {
-        'applied-search-filters-item--negation': this.filter.negation,
-        'applied-search-filters-item--read-only': this.readOnly
+        'applied-search-filters-item--negation': this.filter.negation
       }
     },
     displayedFilterValue() {
@@ -83,7 +85,8 @@ export default {
       if (this.isQueryTerm) {
         return this.$t('filter.searchTerm')
       }
-      const name = this.filter.name.split('f[').pop().split(']').shift()
+      let name = this.filter.name.split('f[').pop().split(']').shift()
+      name = this.filter.negation && name[0] === '-' ? name.substring(1) : name
       const localeKey = `filter.${name}`
       return this.$te(localeKey) ? this.$t(localeKey) : name
     },
@@ -116,9 +119,8 @@ export default {
   cursor: pointer;
 
   &--negation {
-    text-decoration: line-through;
+    text-decoration-line: line-through;
   }
-
   &__wrapper {
     &__label {
       font-size: 0.8em;
