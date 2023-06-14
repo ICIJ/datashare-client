@@ -70,7 +70,6 @@ export default {
       return uniqueId('applied-search-filters-item-')
     },
     appliedSearchFiltersItemClassList() {
-      console.log(' this.filter.negation', this.filter.negation)
       return {
         'applied-search-filters-item--negation': this.filter.negation
       }
