@@ -726,8 +726,7 @@
     "findPreviousOccurrence": "Find the previous occurrence in the document",
     "findPreviousOccurrenceAlt": "Find the previous occurrence in the document",
     "findNextOccurrence": "Find the next occurrence in the document",
-    "findNextOccurrenceAlt": "Find the next occurrence in the document",
-    "openAnyway": "Open anyway"
+    "findNextOccurrenceAlt": "Find the next occurrence in the document"
   },
   "server": {
     "title": "Settings",

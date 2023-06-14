@@ -726,7 +726,6 @@
     "findPreviousOccurrenceAlt": "検索結果のうち直前の語に移動",
     "findNextOccurrence": "検索結果のうち次の語に移動",
     "findNextOccurrenceAlt": "検索結果のうち次の語に移動",
-    "openAnyway": "Open anyway"
   },
   "server": {
     "title": "Settings",
