@@ -104,8 +104,8 @@ export default {
         if (name.includes('indices')) {
           name = 'projects'
         }
-
-        filters.push({ name, value, label: value })
+        const negation = name.startsWith('f[-')
+        filters.push({ name, value, label: value, negation })
       }
       return filters
     },
