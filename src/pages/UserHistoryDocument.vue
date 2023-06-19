@@ -38,7 +38,7 @@
                 lazy
                 size="30"
               />
-              <span class="d-inline-block text-nowrap text-truncate"> {{ name }}</span>
+              <span class="d-inline-block w-100 text-nowrap text-truncate"> {{ name }}</span>
             </router-link>
             <document-actions
               :document="{
