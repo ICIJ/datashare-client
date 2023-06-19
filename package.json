@@ -17,7 +17,7 @@
     "test": "yarn test:unit && yarn test:e2e",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:vue && yarn doc:widgets",
     "doc:dir": "mkdir -p dist/docs",
-    "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.js --separators --no-gfm --template bin/dmd/api.hbs src/core/*.js > 'dist/docs/README.md'",
+    "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.js --separators --no-gfm --template bin/dmd/api.hbs src/core/*.js > 'dist/docs/api.md'",
     "doc:hooks": "node bin/generateHook.js",
     "doc:vue": "npm install -g vue@2 vue-docgen-cli@4 && vue-docgen",
     "doc:vue:readme": "node bin/generateVueReadme.js",
