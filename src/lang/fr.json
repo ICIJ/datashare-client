@@ -725,8 +725,7 @@
     "findPreviousOccurrence": "Aller à l'occurrence précédente dans le document",
     "findPreviousOccurrenceAlt": "Aller à l'occurrence précédente dans le document",
     "findNextOccurrence": "Aller à l'occurrence suivante dans le document",
-    "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document",
-    "openAnyway": "Ouvrir quand même"
+    "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document"
   },
   "server": {
     "title": "Paramètres",
