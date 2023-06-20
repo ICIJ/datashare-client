@@ -725,8 +725,7 @@
     "findPreviousOccurrence": "Das vorherige Vorkommen im Dokument finden",
     "findPreviousOccurrenceAlt": "Das vorherige Vorkommen im Dokument finden",
     "findNextOccurrence": "Das nächsten Vorkommen im Dokument finden",
-    "findNextOccurrenceAlt": "Das nächsten Vorkommen im Dokument finden",
-    "openAnyway": "Trotzdem öffnen"
+    "findNextOccurrenceAlt": "Das nächsten Vorkommen im Dokument finden"
   },
   "server": {
     "title": "Einstellungen",
