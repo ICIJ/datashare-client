@@ -50,7 +50,7 @@
       :disabled="isRelaunched"
       @click="$refs['batch-search-copy-form'].show()"
     >
-      <fa icon="redo" />
+      <fa icon="redo" class="mr-1" />
       {{ $t('batchSearchResults.relaunch') }}
       <b-modal
         ref="batch-search-copy-form"
@@ -63,16 +63,23 @@
       </b-modal>
     </b-btn>
 
-    <b-btn
-      v-b-tooltip.hover
-      class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
-      variant="light"
-      :title="$t('batchSearchResults.downloadQueriesTooltip')"
-      :href="downloadQueriesUrl"
-    >
-      <fa icon="download" />
-      {{ $t('batchSearchResults.downloadQueries') }}
-    </b-btn>
+    <b-dropdown 
+        split 
+        right
+        v-b-tooltip.hover
+        class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
+        variant="light"
+        :split-href="downloadQueriesUrl"
+        :title="$t('batchSearchResults.downloadQueriesTooltip')">
+      <template #button-content>
+        <fa icon="download" class="mr-1" />
+        {{ $t('batchSearchResults.downloadQueries') }}
+      </template>
+      <b-dropdown-item :href="downloadQueriesWithoutResultsUrl">
+        <fa icon="download" class="mr-1" />
+        {{ $t('batchSearchResults.downloadQueriesWithoutResults') }}
+      </b-dropdown-item>
+    </b-dropdown>
 
     <b-btn
       v-if="isEnded"
@@ -82,7 +89,7 @@
       :title="$t('batchSearchResults.downloadQueriesTooltip')"
       :href="downloadResultsUrl"
     >
-      <fa icon="download" />
+      <fa icon="download" class="mr-1" />
       {{ $t('batchSearchResults.downloadResults') }}
     </b-btn>
   </div>
@@ -139,6 +146,9 @@ export default {
     },
     downloadQueriesUrl() {
       return Api.getFullUrl(`/api/batch/search/${this.uuid}/queries?format=csv`)
+    },
+    downloadQueriesWithoutResultsUrl() {
+      return Api.getFullUrl(`/api/batch/search/${this.uuid}/queries?format=csv&maxResults=0`)
     },
     downloadResultsUrl() {
       return Api.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
