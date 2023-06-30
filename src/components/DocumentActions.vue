@@ -57,8 +57,8 @@
               {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
             <b-dropdown-item
-              :href="rootDocumentFullUrlWithoutMetadata"
               v-if="hasRootCleanableContentType"
+              :href="rootDocumentFullUrlWithoutMetadata"
               class="document-actions__download--parent-without-metadata"
             >
               <fa icon="box-archive" fixed-width />
@@ -262,11 +262,13 @@ export default {
     hasContentLength() {
       return this.document?.contentTextLength > 0 || this.document?.contentLength > 0
     },
-    hasDownloadDropdown () {
-      return this.hasRoot 
-        || (this.hasCleanableContentType && this.displayDownloadWithoutMetadata) 
-        || (this.hasRootCleanableContentType && this.displayDownloadWithoutMetadata) 
-        || (this.displayDownloadExtractedText)
+    hasDownloadDropdown() {
+      return (
+        this.hasRoot ||
+        (this.hasCleanableContentType && this.displayDownloadWithoutMetadata) ||
+        (this.hasRootCleanableContentType && this.displayDownloadWithoutMetadata) ||
+        this.displayDownloadExtractedText
+      )
     }
   },
   methods: {
