@@ -293,6 +293,12 @@ export default {
         this.$refs?.slices?.scrollToContentSlice(activeTermContentSlice)
       }
     },
+    scrollUp () {
+      // Only if the top of $el is above
+      if (this.$el && this.$el.getBoundingClientRect().top < 0) {
+        this.$el.scrollIntoView({ block: 'start', inline: 'nearest' })
+      }
+    },
     async jumpToActiveLocalSearchTerm() {
       // Delete all existing "local-search-term--active" classes from other element
       this.clearActiveLocalSearchTerm()
@@ -343,6 +349,7 @@ export default {
           <tiny-pagination
             v-if="isPaginated && loadedOnce"
             v-model="page"
+            @input="scrollUp()"
             :limit="4"
             :per-page="1"
             :total-rows="nbPages"
@@ -409,7 +416,7 @@ export default {
     box-shadow: 0 -1 * $spacer 0 0 white;
     left: 0;
     position: static;
-    top: $spacer;
+    top: 0;
     z-index: 50;
 
     &--sticky,
