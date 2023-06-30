@@ -703,6 +703,7 @@
     "size": "Size",
     "downloadResults": "Download results",
     "downloadQueries": "Download queries",
+    "downloadQueriesWithoutResults": "Download queries without results",
     "downloadQueriesTooltip": "Download as CSV",
     "relaunch": "Relaunch",
     "relaunchTitle": "Relaunch batch search",
