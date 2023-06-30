@@ -63,14 +63,15 @@
       </b-modal>
     </b-btn>
 
-    <b-dropdown 
-        split 
-        right
-        v-b-tooltip.hover
-        class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
-        variant="light"
-        :split-href="downloadQueriesUrl"
-        :title="$t('batchSearchResults.downloadQueriesTooltip')">
+    <b-dropdown
+      v-b-tooltip.hover
+      split
+      right
+      class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
+      variant="light"
+      :split-href="downloadQueriesUrl"
+      :title="$t('batchSearchResults.downloadQueriesTooltip')"
+    >
       <template #button-content>
         <fa icon="download" class="mr-1" />
         {{ $t('batchSearchResults.downloadQueries') }}
