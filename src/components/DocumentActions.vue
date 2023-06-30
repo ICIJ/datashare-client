@@ -26,34 +26,23 @@
           target="_blank"
         >
           <fa icon="download" fixed-width />
-          <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
+          <span class="ml-1" :class="{ 'sr-only': !downloadBtnLabel }">
             {{ $t('document.downloadButton') }}
           </span>
         </a>
-        <b-dropdown v-if="hasDownloadDropdown" right toggle-class="py-0" size="sm">
-          <b-dropdown-item
-            v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
-            :href="documentFullUrlWithoutMetadata"
-          >
-            <fa icon="download" fixed-width />
+        <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
+          <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
+            <fa icon="download" class="mr-1 text-secondary" fixed-width />
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
-          <b-dropdown-item
-            v-if="displayDownloadExtractedText"
-            class="document-actions__download--extracted-text"
-            @click="documentOriginalExtractedText"
-          >
-            <fa icon="file-lines" fixed-width />
+          <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
+            <fa icon="file-lines" class="mr-1 text-secondary" fixed-width />
             {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
           <template v-if="hasRoot">
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item
-              :id="downloadRootBtnId"
-              :href="document.fullRootUrl"
-              class="document-actions__download--parent"
-            >
-              <fa icon="box-archive" fixed-width />
+            <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
+              <fa icon="box-archive" class="mr-1 text-secondary" fixed-width />
               {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
             <b-dropdown-item
@@ -61,7 +50,7 @@
               :href="rootDocumentFullUrlWithoutMetadata"
               class="document-actions__download--parent-without-metadata"
             >
-              <fa icon="box-archive" fixed-width />
+              <fa icon="box-archive" class="mr-1 text-secondary" fixed-width />
               {{ $t('document.downloadRootWithoutMetadataButton') }}
             </b-dropdown-item>
           </template>
@@ -76,7 +65,6 @@
         <document-type-card :document="document" />
       </b-popover>
     </template>
-
     <router-link-popup
       :id="popupBtnId"
       class="document-actions__popup btn"
@@ -134,15 +122,9 @@ export default {
       default: 'top'
     },
     /**
-     * Use a dropdown to download document without metadata
+     * Use a dropdown to for advanced download options
      */
-    displayDownloadWithoutMetadata: {
-      type: Boolean
-    },
-    /**
-     * Show a dropdown item button to download extracted text when available
-     */
-    displayDownloadExtractedText: {
+    displayDownloadOptions: {
       type: Boolean,
       default: false
     },
@@ -235,9 +217,6 @@ export default {
     downloadBtnId() {
       return uniqueId('document-actions-download-button-')
     },
-    downloadRootBtnId() {
-      return uniqueId('document-actions-download-root-button-')
-    },
     popupBtnId() {
       return uniqueId('document-actions-popup-button-')
     },
@@ -251,24 +230,13 @@ export default {
       return this.isDownloadAllowed
     },
     hasRoot() {
-      return this.document.root
+      return !!this.document.root
     },
     hasCleanableContentType() {
       return this.cleanableContentTypes.includes(this.document.contentType)
     },
     hasRootCleanableContentType() {
       return this.hasRoot && this.cleanableContentTypes.includes(this.document.root.contentType)
-    },
-    hasContentLength() {
-      return this.document?.contentTextLength > 0 || this.document?.contentLength > 0
-    },
-    hasDownloadDropdown() {
-      return (
-        this.hasRoot ||
-        (this.hasCleanableContentType && this.displayDownloadWithoutMetadata) ||
-        (this.hasRootCleanableContentType && this.displayDownloadWithoutMetadata) ||
-        this.displayDownloadExtractedText
-      )
     }
   },
   methods: {
