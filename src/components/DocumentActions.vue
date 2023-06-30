@@ -56,9 +56,10 @@
               <fa icon="box-archive" fixed-width />
               {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
-            <b-dropdown-item 
+            <b-dropdown-item
               :href="rootDocumentFullUrlWithoutMetadata"
-              class="document-actions__download--parent-without-metadata">
+              class="document-actions__download--parent-without-metadata"
+            >
               <fa icon="box-archive" fixed-width />
               {{ $t('document.downloadRootWithoutMetadataButton') }}
             </b-dropdown-item>
