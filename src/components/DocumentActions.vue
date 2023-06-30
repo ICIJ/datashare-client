@@ -35,6 +35,7 @@
             v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
             :href="documentFullUrlWithoutMetadata"
           >
+            <fa icon="download" fixed-width />
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
           <b-dropdown-item
@@ -42,8 +43,26 @@
             class="document-actions__download--extracted-text"
             @click="documentOriginalExtractedText"
           >
+            <fa icon="file-lines" fixed-width />
             {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
+          <template v-if="hasRoot">
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item
+              :id="downloadRootBtnId"
+              class="document-actions__download--parent"
+              :href="document.fullRootUrl"
+            >
+              <fa icon="box-archive" fixed-width />
+              {{ $t('document.downloadRootButton') }}
+            </b-dropdown-item>
+            <b-dropdown-item 
+              :href="rootDocumentFullUrlWithoutMetadata"
+              class="document-actions__download--parent-without-metadata">
+              <fa icon="box-archive" fixed-width />
+              {{ $t('document.downloadRootWithoutMetadataButton') }}
+            </b-dropdown-item>
+          </template>
         </b-dropdown>
       </b-btn-group>
       <b-popover
@@ -53,48 +72,6 @@
         triggers="hover focus"
       >
         <document-type-card :document="document" />
-      </b-popover>
-    </template>
-
-    <template v-if="canIDownload && hasRoot">
-      <b-btn-group :class="downloadBtnGroupClass">
-        <a
-          :id="downloadRootBtnId"
-          class="document-actions__download-root btn"
-          :class="downloadBtnClass"
-          :href="document.fullRootUrl"
-          target="_blank"
-        >
-          <fa icon="download" fixed-width />
-          <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
-            {{ $t('document.downloadRootButton') }}
-          </span>
-        </a>
-        <b-dropdown
-          v-if="displayDownloadExtractedText || (displayDownloadWithoutMetadata && hasRootCleanableContentType)"
-          right
-          toggle-class="py-0"
-          size="sm"
-        >
-          <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
-            {{ $t('document.downloadWithoutMetadata') }}
-          </b-dropdown-item>
-          <b-dropdown-item
-            v-if="hasContentLength"
-            class="document-actions__download--extracted-text"
-            @click="documentOriginalExtractedText"
-          >
-            {{ $t('document.downloadExtractedText') }}
-          </b-dropdown-item>
-        </b-dropdown>
-      </b-btn-group>
-      <b-popover
-        :placement="tooltipsPlacement"
-        :target="downloadRootBtnId"
-        :title="document.rootContentTypeLabel"
-        triggers="hover focus"
-      >
-        <document-type-card :document="document.root" />
       </b-popover>
     </template>
 
@@ -118,6 +95,7 @@
 <script>
 import { findIndex, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
+import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
@@ -129,6 +107,7 @@ export default {
   name: 'DocumentActions',
   components: {
     DocumentTypeCard,
+    FontAwesomeLayers,
     RouterLinkPopup
   },
   props: {
@@ -279,7 +258,7 @@ export default {
       return this.hasRoot && this.cleanableContentTypes.includes(this.document.root.contentType)
     },
     hasContentLength() {
-      return this.document?.contentLength > 0
+      return this.document?.contentTextLength > 0 || this.document?.contentLength > 0
     }
   },
   methods: {

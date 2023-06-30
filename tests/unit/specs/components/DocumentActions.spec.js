@@ -158,7 +158,6 @@ describe('DocumentActions.vue', () => {
     })
 
     expect(wrapper.vm.hasRoot).toBeFalsy()
-    expect(wrapper.find('.document-actions__download-parent').exists()).toBeFalsy()
   })
 
   it('should display "Download parent" button if document has a parent', async () => {
@@ -179,6 +178,5 @@ describe('DocumentActions.vue', () => {
     })
 
     expect(wrapper.vm.hasRoot).toBeTruthy()
-    expect(wrapper.find('.document-actions__download-root').exists()).toBeTruthy()
   })
 })

@@ -418,6 +418,7 @@
     "preview": "Preview",
     "downloadButton": "Download",
     "downloadRootButton": "Download parent",
+    "downloadRootWithoutMetadataButton": "Download parent without metadata",
     "downloadWithoutMetadata": "Download without metadata",
     "downloadExtractedText": "Download extracted text",
     "externalWindow": "Open in a new window",
