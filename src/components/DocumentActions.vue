@@ -36,13 +36,13 @@
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
           <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
-            <fa icon="file-lines" class="mr-1 text-secondary" fixed-width />
+            <fa icon="download" class="mr-1 text-secondary" fixed-width />
             {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
           <template v-if="hasRoot">
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
-              <fa icon="box-archive" class="mr-1 text-secondary" fixed-width />
+              <fa icon="download" class="mr-1 text-secondary" fixed-width />
               {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
             <b-dropdown-item
@@ -50,7 +50,7 @@
               :href="rootDocumentFullUrlWithoutMetadata"
               class="document-actions__download--parent-without-metadata"
             >
-              <fa icon="box-archive" class="mr-1 text-secondary" fixed-width />
+              <fa icon="download" class="mr-1 text-secondary" fixed-width />
               {{ $t('document.downloadRootWithoutMetadataButton') }}
             </b-dropdown-item>
           </template>
