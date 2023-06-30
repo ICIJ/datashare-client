@@ -293,7 +293,7 @@ export default {
         this.$refs?.slices?.scrollToContentSlice(activeTermContentSlice)
       }
     },
-    scrollUp () {
+    scrollUp() {
       // Only if the top of $el is above
       if (this.$el && this.$el.getBoundingClientRect().top < 0) {
         this.$el.scrollIntoView({ block: 'start', inline: 'nearest' })
@@ -349,13 +349,13 @@ export default {
           <tiny-pagination
             v-if="isPaginated && loadedOnce"
             v-model="page"
-            @input="scrollUp()"
             :limit="4"
             :per-page="1"
             :total-rows="nbPages"
             class="p-2"
             compact
             size="sm"
+            @input="scrollUp()"
           />
           <div class="ml-auto d-flex">
             <document-global-search-terms-tags
