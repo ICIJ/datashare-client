@@ -30,7 +30,7 @@
             {{ $t('document.downloadButton') }}
           </span>
         </a>
-        <b-dropdown v-if="displayDownloadExtractedText" right toggle-class="py-0" size="sm">
+        <b-dropdown v-if="hasDownloadDropdown" right toggle-class="py-0" size="sm">
           <b-dropdown-item
             v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
             :href="documentFullUrlWithoutMetadata"
@@ -39,7 +39,7 @@
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
           <b-dropdown-item
-            v-if="hasContentLength && displayDownloadExtractedText"
+            v-if="displayDownloadExtractedText"
             class="document-actions__download--extracted-text"
             @click="documentOriginalExtractedText"
           >
@@ -50,14 +50,15 @@
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item
               :id="downloadRootBtnId"
-              class="document-actions__download--parent"
               :href="document.fullRootUrl"
+              class="document-actions__download--parent"
             >
               <fa icon="box-archive" fixed-width />
               {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
             <b-dropdown-item
               :href="rootDocumentFullUrlWithoutMetadata"
+              v-if="hasRootCleanableContentType"
               class="document-actions__download--parent-without-metadata"
             >
               <fa icon="box-archive" fixed-width />
@@ -260,6 +261,12 @@ export default {
     },
     hasContentLength() {
       return this.document?.contentTextLength > 0 || this.document?.contentLength > 0
+    },
+    hasDownloadDropdown () {
+      return this.hasRoot 
+        || (this.hasCleanableContentType && this.displayDownloadWithoutMetadata) 
+        || (this.hasRootCleanableContentType && this.displayDownloadWithoutMetadata) 
+        || (this.displayDownloadExtractedText)
     }
   },
   methods: {
