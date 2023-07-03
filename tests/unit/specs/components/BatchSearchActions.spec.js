@@ -125,6 +125,11 @@ describe('BatchSearchActions.vue', () => {
     expect(wrapper.find('.batch-search-actions__item--download-queries').exists()).toBeTruthy()
   })
 
+  it('should build a link to download queries without results', () => {
+    wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
+    expect(wrapper.vm.downloadQueriesWithoutResultsUrl).toContain("maxResults=0")
+  })
+
   it('should display a button to download results', async () => {
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await flushPromises()
