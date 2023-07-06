@@ -159,6 +159,7 @@ describe('Datashare backend client', () => {
     const phraseMatch = false
     const fuzziness = 2
     const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
+    const tags = [{ tag: 'tag_01' }, { tag: 'tag_02' }]
     const paths = ['one', 'or', 'two', 'paths']
     const published = true
     json = await api.batchSearch(
@@ -169,6 +170,7 @@ describe('Datashare backend client', () => {
       phraseMatch,
       fuzziness,
       fileTypes,
+      tags,
       paths,
       published
     )
@@ -181,6 +183,8 @@ describe('Datashare backend client', () => {
     data.append('fuzziness', fuzziness)
     data.append('fileTypes', 'application/pdf')
     data.append('fileTypes', 'text/plain')
+    data.append('tags', 'tag_01')
+    data.append('tags', 'tag_02')
     data.append('paths', 'one')
     data.append('paths', 'or')
     data.append('paths', 'two')

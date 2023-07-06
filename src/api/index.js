@@ -124,7 +124,7 @@ export class Api {
     const params = { query, routing, targetLanguage }
     return this.sendAction(`/api/${project}/documents/searchContent/${documentId}`, { method: Method.GET, params })
   }
-  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
+  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, tags, paths, published) {
     const data = new FormData()
     data.append('name', name)
     data.append('csvFile', csvFile)
@@ -132,6 +132,7 @@ export class Api {
     data.append('phrase_matches', phraseMatch)
     data.append('fuzziness', fuzziness)
     map(fileTypes, (fileType) => data.append('fileTypes', fileType.mime))
+    map(tags, (tag) => data.append('tags', tag.tag))
     map(paths, (path) => data.append('paths', path))
     data.append('published', published)
     return this.sendActionAsText(`/api/batch/search/${project}`, { method: Method.POST, data })
