@@ -45,13 +45,14 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
   describe('on LOCAL', () => {
-    it('should display a form with 7 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes and paths on LOCAL', () => {
+    it('should display a form with 8 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes, tags and paths on LOCAL', () => {
       expect(wrapper.find('.batch-search-form__name').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__fileLabel').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__description').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__phraseMatch').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__fuzziness').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__fileTypes').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__tags').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__path').exists()).toBe(true)
     })
     it('should not display "Published" button', () => {
@@ -76,19 +77,22 @@ describe('BatchSearchForm.vue', () => {
     })
 
     describe('On project change', () => {
-      it('should reset fileType and path', async () => {
-        await wrapper.setData({ fileType: 'fileTypeTest' })
+      it('should reset fileType, tags and path', async () => {
+        await wrapper.setData({ fileType: 'fileTypeTest', tag:'tagTest' })
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.fileType).toBe('')
+        expect(wrapper.vm.tag).toBe('')
       })
 
       it('should reset fileTypes and paths', async () => {
         await wrapper.setData({ fileTypes: ['fileType_01', 'fileType_02'] })
+        await wrapper.setData({ tags: ['tag_01', 'tag_02'] })
         await wrapper.setData({ paths: ['path_01', 'path_02'] })
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.fileTypes).toEqual([])
+        expect(wrapper.vm.tags).toEqual([])
         expect(wrapper.vm.paths).toEqual([])
       })
 
@@ -99,11 +103,20 @@ describe('BatchSearchForm.vue', () => {
         expect(wrapper.vm.allFileTypes).toEqual([])
       })
 
-      it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
+      it('should reset allTags', async () => {
+        await wrapper.setData({ allTags: ['tag_01', 'tag_02'] })
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.allTags).toEqual([])
+      })
+
+      it('should call hideSuggestionsFileTypes, hideSuggestionsTags and hideSuggestionsPaths', async () => {
         jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
+        jest.spyOn(wrapper.vm, 'hideSuggestionsTags')
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
+        expect(wrapper.vm.hideSuggestionsTags).toBeCalled()
       })
 
       it('should call retrieveFileTypes', async () => {
@@ -111,6 +124,13 @@ describe('BatchSearchForm.vue', () => {
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.retrieveFileTypes).toBeCalled()
+      })
+
+      it('should call retrieveTags', async () => {
+        jest.spyOn(wrapper.vm, 'retrieveTags')
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.retrieveTags).toBeCalled()
       })
     })
   })
@@ -120,6 +140,8 @@ describe('BatchSearchForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
     wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
     wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'PDF' }])
+    wrapper.vm.$set(wrapper.vm, 'tag', 'tagTest')
+    wrapper.vm.$set(wrapper.vm, 'tags', [{ tag: 'tagTest' }])
     wrapper.vm.$set(wrapper.vm, 'fuzziness', 2)
     wrapper.vm.$set(wrapper.vm, 'name', 'Example')
     wrapper.vm.$set(wrapper.vm, 'paths', ['This', 'is', 'a', 'multiple', 'paths'])
@@ -134,6 +156,8 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.description).toBe('')
     expect(wrapper.vm.fileType).toBe('')
     expect(wrapper.vm.fileTypes).toEqual([])
+    expect(wrapper.vm.tag).toBe('')
+    expect(wrapper.vm.tags).toEqual([])
     expect(wrapper.vm.fuzziness).toBe(0)
     expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.paths).toEqual([])
@@ -209,6 +233,57 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.fileTypes).toEqual([
         { label: 'Excel 2003 XML spreadsheet visio' },
         { label: 'StarWriter 5 document' }
+      ])
+    })
+  })
+
+  describe('Tags suggestions', () => {
+    it('should display suggestions', () => {
+      expect(wrapper.find('.batch-search-form__tags__suggestions').exists()).toBe(true)
+    })
+
+    it('should hide suggestions', () => {
+      wrapper.vm.$set(wrapper.vm, 'suggestionTags', ['suggestion_01', 'suggestion_02', 'suggestion_03'])
+
+      wrapper.vm.hideSuggestionsTags()
+
+      expect(wrapper.vm.suggestionTags).toEqual([])
+    })
+
+    it('should filter tags according to the tag input', () => {
+      wrapper.vm.$set(wrapper.vm, 'allTags', [
+        { tag: 'tag_number_01' },
+        { tag: 'tag_number_02' },
+        { tag: 'random_tag' }
+      ])
+      wrapper.vm.$set(wrapper.vm, 'tag', 'number')
+
+      wrapper.vm.searchTags()
+
+      expect(wrapper.vm.suggestionTags).toHaveLength(2)
+      expect(wrapper.vm.suggestionTags[0].tag).toBe('tag_number_01')
+      expect(wrapper.vm.suggestionTags[1].tag).toBe('tag_number_02')
+    })
+
+    it('should hide already selected tags from suggestions', () => {
+      wrapper.vm.$set(wrapper.vm, 'tags', [{ tag: 'tag_01' }])
+      wrapper.vm.$set(wrapper.vm, 'tag', 'tag_01')
+
+      wrapper.vm.searchTags()
+
+      expect(wrapper.vm.suggestionTags).toHaveLength(0)
+    })
+
+    it('should set the clicked item in tags', () => {
+      wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
+      wrapper.vm.$set(wrapper.vm, 'tags', [{ tag: 'tag_01' }])
+      wrapper.vm.$set(wrapper.vm, 'selectedTag', { tag: 'tag_02' })
+
+      wrapper.vm.searchTag()
+
+      expect(wrapper.vm.tags).toEqual([
+        { tag: 'tag_01' },
+        { tag: 'tag_02' }
       ])
     })
   })

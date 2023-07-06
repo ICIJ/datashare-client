@@ -653,6 +653,7 @@
     "proximitySearches": "Proximity searches",
     "proximitySearchesDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
     "fileTypes": "File types",
+    "tags": "Tags",
     "path": "Path",
     "queries": "Queries",
     "state": "State",
@@ -678,6 +679,7 @@
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
+    "unableToRetrieveTags": "Unable to retrieve tags from selected project | Failed to retrieve tags from selected projects",
     "placeholder": "Search in batch searches...",
     "status": {
       "failure": "failure",

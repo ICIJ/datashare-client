@@ -127,6 +127,45 @@
                 {{ oneFileType.label }}
               </b-badge>
             </b-form-group>
+            <b-form-group :label="$t('batchSearch.tags')" label-size="sm" class="batch-search-form__tags">
+              <b-overlay :show="$wait.is('load all tags')" opacity="0.6" rounded spinner-small>
+                <b-form-input
+                  ref="tag"
+                  v-model="tag"
+                  :disabled="$wait.is('load all tags')"
+                  autocomplete="off"
+                  @input="searchTags"
+                  @keydown.enter.prevent="searchTag"
+                ></b-form-input>
+              </b-overlay>
+              <selectable-dropdown
+                ref="suggestionTags"
+                class="batch-search-form__tags__suggestions"
+                :hide="!suggestionTags.length"
+                :items="suggestionTags"
+                @deactivate="hideSuggestionsTags"
+                @input="selectTag"
+                @click.native="searchTag"
+              >
+                <template #item-label="{ item }">
+                  <div :id="item.tag">
+                    {{ item.tag }}
+                  </div>
+                  <b-tooltip :target="item.tag" :title="item.tag" placement="right"></b-tooltip>
+                </template>
+              </selectable-dropdown>
+              <b-badge
+                v-for="(oneTag, index) in tags"
+                :key="oneTag.tag"
+                class="mt-2 mr-2 pl-1 batch-search-form__cursor"
+                pill
+                variant="warning"
+                @click.prevent="deleteTag(index)"
+              >
+                <fa icon="times-circle"></fa>
+                {{ oneTag.tag }}
+              </b-badge>
+            </b-form-group>
             <b-form-group :label="$t('batchSearch.path')" label-size="sm" class="batch-search-form__path">
               <div v-b-modal.modal-select-path class="mr-3 py-1 px-2 border btn btn-link">
                 {{ $t('batchSearch.selectFolder') }}
@@ -238,10 +277,13 @@ export default {
   data() {
     return {
       allFileTypes: [],
+      allTags: [],
       csvFile: null,
       description: '',
       fileType: '',
       fileTypes: [],
+      tag: '',
+      tags: [],
       fuzziness: 0,
       name: '',
       path: this.$config.get('mountedDataDir') || this.$config.get('dataDir'),
@@ -250,9 +292,11 @@ export default {
       projects: [],
       published: true,
       selectedFileType: '',
+      selectedTag: '',
       selectedPaths: [],
       showAdvancedFilters: false,
-      suggestionFileTypes: []
+      suggestionFileTypes: [],
+      suggestionTags: []
     }
   },
   computed: {
@@ -284,7 +328,7 @@ export default {
     advancedFiltersIcon() {
       return this.showAdvancedFilters ? 'angle-down' : 'angle-right'
     },
-    fuse() {
+    fuseFileTypes() {
       const keys = ['extensions', 'label', 'mime']
       const options = {
         distance: 100,
@@ -292,7 +336,17 @@ export default {
         shouldSort: true
       }
       return new Fuse(this.allFileTypes, options)
+    },
+    fuseTags() {
+      const keys = ['tag']
+      const options = {
+        distance: 100,
+        keys,
+        shouldSort: true
+      }
+      return new Fuse(this.allTags, options)
     }
+
   },
   watch: {
     phraseMatch() {
@@ -301,13 +355,19 @@ export default {
     projects() {
       this.$set(this, 'fileType', '')
       this.$set(this, 'fileTypes', [])
+      this.$set(this, 'tag', '')
+      this.$set(this, 'tags', [])
       this.$set(this, 'paths', [])
       this.$set(this, 'allFileTypes', [])
+      this.$set(this, 'allTags', [])
       this.hideSuggestionsFileTypes()
+      this.hideSuggestionsTags()
       this.retrieveFileTypes()
+      this.retrieveTags()
     },
     showAdvancedFilters() {
       this.retrieveFileTypes()
+      this.retrieveTags()
     }
   },
   created() {
@@ -318,7 +378,7 @@ export default {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },
     searchFileTypes: throttle(function () {
-      const fileTypes = this.fuse.search(this.fileType).map(({ item }) => item)
+      const fileTypes = this.fuseFileTypes.search(this.fileType).map(({ item }) => item)
       const fileTypesWithoutSelection = filter(fileTypes, (item) => {
         return !includes(map(this.fileTypes, 'mime'), item.mime)
       })
@@ -361,6 +421,55 @@ export default {
         this.$wait.end('load all file types')
       }
     },
+    selectTag(tag = null) {
+      this.$set(this, 'selectedTag', tag || this.selectedTag)
+    },
+    searchTags: throttle(function () {
+      const keys = ['tag']
+      const options = {
+        distance: 100,
+        keys,
+        shouldSort: true
+      }
+      const tags = this.fuseTags.search(this.tag).map(({ item }) => item)
+      const tagsWithoutSelection = filter(tags, (item) => {
+        return !includes(map(this.tags, 'tag'), item.tag)
+      })
+      this.$set(this, 'suggestionTags', tagsWithoutSelection)
+    }, 200),
+    searchTag() {
+      if (this.selectedTag) {
+        this.tags.push(this.selectedTag)
+        this.hideSuggestionsTags()
+        this.$set(this, 'tag', '')
+        if (this.$refs && this.$refs.tag) this.$refs.tag.focus()
+      }
+    },
+    hideSuggestionsTags() {
+      this.$set(this, 'suggestionTags', [])
+    },
+    deleteTag(index) {
+      this.tags.splice(index, 1)
+    },
+    async retrieveTags() {
+      if (this.showAdvancedFilters && isEmpty(this.allTags)) {
+        this.$wait.start('load all tags')
+        try {
+          const aggTags = await this.aggregate('tags', 'tags')
+          each(aggTags, (aggTag) => {
+            this.allTags.push({
+              tag: aggTag
+            })
+          })
+        } catch (e) {
+          this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveTags', this.projects?.length), {
+            noCloseButton: true,
+            variant: 'danger'
+          })
+        }
+        this.$wait.end('load all tags')
+      }
+    },
     setPaths() {
       this.$set(this, 'paths', this.selectedPaths)
       this.$set(this, 'path', this.$config.get('mountedDataDir') || this.$config.get('dataDir'))
@@ -373,6 +482,8 @@ export default {
       this.$set(this, 'description', '')
       this.$set(this, 'fileType', '')
       this.$set(this, 'fileTypes', [])
+      this.$set(this, 'tag', '')
+      this.$set(this, 'tags', [])
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'name', '')
       this.$set(this, 'paths', [])
