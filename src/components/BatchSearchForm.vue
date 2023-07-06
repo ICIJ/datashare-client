@@ -346,7 +346,6 @@ export default {
       }
       return new Fuse(this.allTags, options)
     }
-
   },
   watch: {
     phraseMatch() {
@@ -425,12 +424,6 @@ export default {
       this.$set(this, 'selectedTag', tag || this.selectedTag)
     },
     searchTags: throttle(function () {
-      const keys = ['tag']
-      const options = {
-        distance: 100,
-        keys,
-        shouldSort: true
-      }
       const tags = this.fuseTags.search(this.tag).map(({ item }) => item)
       const tagsWithoutSelection = filter(tags, (item) => {
         return !includes(map(this.tags, 'tag'), item.tag)

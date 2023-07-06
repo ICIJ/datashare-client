@@ -78,7 +78,7 @@ describe('BatchSearchForm.vue', () => {
 
     describe('On project change', () => {
       it('should reset fileType, tags and path', async () => {
-        await wrapper.setData({ fileType: 'fileTypeTest', tag:'tagTest' })
+        await wrapper.setData({ fileType: 'fileTypeTest', tag: 'tagTest' })
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.fileType).toBe('')
@@ -282,9 +282,7 @@ describe('BatchSearchForm.vue', () => {
       wrapper.vm.searchTag()
 
       expect(wrapper.vm.tags).toEqual([
-        { tag: 'tag_01' },
-        { tag: 'tag_02' }
-      ])
+        { tag: 'tag_01' }, { tag: 'tag_02' }])
     })
   })
 
