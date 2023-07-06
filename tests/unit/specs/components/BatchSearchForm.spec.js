@@ -281,8 +281,7 @@ describe('BatchSearchForm.vue', () => {
 
       wrapper.vm.searchTag()
 
-      expect(wrapper.vm.tags).toEqual([
-        { tag: 'tag_01' }, { tag: 'tag_02' }])
+      expect(wrapper.vm.tags).toEqual([{ tag: 'tag_01' }, { tag: 'tag_02' }])
     })
   })
 
