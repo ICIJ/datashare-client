@@ -141,10 +141,10 @@ export function actionBuilder(api) {
     },
     async onSubmit(
       { commit, dispatch },
-      { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published }
+      { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, tags, paths, published }
     ) {
       // send the new batch search
-      await api.batchSearch(name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published)
+      await api.batchSearch(name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, tags, paths, published)
       // get all batch searches including the new one
       return dispatch('getBatchSearches', { init: true })
     },

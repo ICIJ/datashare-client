@@ -495,6 +495,7 @@ export default {
           phraseMatch: this.phraseMatch,
           fuzziness: this.fuzziness,
           fileTypes: this.fileTypes,
+          tags: this.tags,
           paths: this.paths,
           published: this.published
         })
