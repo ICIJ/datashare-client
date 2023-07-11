@@ -1,7 +1,5 @@
 <template>
   <div class="batch-search-results__queries">
-    {{ results.length }} results from {{ queryKeys.length }} queries <b-btn @click="clearFilters">Clear filters</b-btn>
-
     <div class="card">
       <b-table
         :busy="isBusy"
@@ -23,7 +21,7 @@
         <template #head(contentType)="{ field }">
           <column-filter-dropdown
             :id="field.key"
-            v-model="selectedContentType"
+            v-model="selectedContentTypes"
             :items="contentTypes"
             :name="field.label"
             multiple
@@ -48,7 +46,7 @@
               <batch-search-results-filters
                 v-model="selectedQueries"
                 :query-keys="queryKeys"
-                :indices="['local-datashare']"
+                :indices="indices"
                 hide-border
               />
             </template>
@@ -96,12 +94,18 @@
       </b-table>
       <!--      </v-wait>-->
     </div>
-    <slot name="pagination"> </slot>
+    <custom-pagination
+      v-model="page"
+      class="batch-search-results__pagination my-4"
+      :per-page="perPage"
+      :total-rows="totalItems"
+      :page="page"
+    />
   </div>
 </template>
 
 <script>
-import { compact, find, get, isEqual, sumBy, uniq, map, isArray } from 'lodash'
+import { compact, find, get, isEqual, uniq, isArray } from 'lodash'
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 
@@ -114,7 +118,6 @@ import { fileExtension } from '@/filters/fileExtension'
 import { humanLongDate, humanShortDate } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
-import { SELECTED_QUERIES } from '@/store/mutation-types'
 
 /**
  * This page will list all the results of a batch search.
@@ -142,38 +145,45 @@ export default {
   },
   data() {
     return {
-      documentInModalPageIndex: null,
-      order: settings.batchSearchResults.order,
-      page: 1,
-      sort: settings.batchSearchResults.sort
+      documentInModalPageIndex: null
+      //  order: settings.batchSearchResults.order,
+      // page: 1
+      // sort: settings.batchSearchResults.sort
+    }
+  },
+  watch: {
+    page() {
+      return this.fetch()
+    },
+    sort() {
+      return this.fetch()
+    },
+    order() {
+      return this.fetch()
+    },
+    selectedContentTypes() {
+      return this.fetch()
+    },
+    selectedQueries() {
+      return this.fetch()
+    },
+    queriesExcluded() {
+      return this.fetch()
     }
   },
   computed: {
-    ...mapState('batchSearch', ['batchSearch', 'results']),
-    ...mapGetters('batchSearch', ['queryKeys']),
+    ...mapState('batchSearch', ['batchSearch', 'results', 'contentTypes']),
+    ...mapGetters('batchSearch', ['queryKeys', 'nbSelectedQueries', 'totalItems']),
     isBusy() {
       return this.$wait.waiting('load batchSearch results table')
     },
-    contentTypes() {
-      return uniq(map(this.results, 'contentType'))
-    },
-    currentPage: {
-      get() {
-        return this.page
-      },
-      set(pageNumber) {
-        this.page = pageNumber
-        return this.updateRoute({ page: pageNumber })
-      }
-    },
-    selectedContentType: {
+    selectedContentTypes: {
       get() {
         const param = this.$route?.query?.contentTypes ?? null
         const contentTypes = param?.split(',') ?? []
         return uniq(contentTypes)
       },
       set(values) {
-        console.log('values', values)
         const contentTypes = values?.length > 0 ? values?.join(',') : null
         return this.updateRoute({ page: 1, contentTypes })
       }
@@ -186,7 +196,6 @@ export default {
       },
       set(values) {
         const queries = values?.length > 0 ? values?.join(',') : null
-        this.$store.commit(`batchSearch/${SELECTED_QUERIES}`, queries?.length ?? 0)
         return this.updateRoute({ page: 1, queries })
       }
     },
@@ -241,12 +250,13 @@ export default {
         }
       ])
     },
-    generateTo() {
-      const baseTo = { name: 'batch-search' }
-      const searchQueryExists = this.$route.query.query
-      return {
-        ...baseTo,
-        ...(searchQueryExists && { query: { query: this.$route.query.query } })
+    page: {
+      get() {
+        const page = this.$route?.query?.page
+        return page ? parseInt(page) : 1
+      },
+      set(pageNumber) {
+        return this.updateRoute({ page: pageNumber })
       }
     },
     perPage() {
@@ -255,27 +265,17 @@ export default {
     sortBy() {
       return find(this.fields, (item) => item.name === this.sort).key
     },
+    queriesExcluded() {
+      return !!this.$route?.query?.queriesExcluded
+    },
     orderBy() {
       return this.order.toLowerCase() === 'desc'
     },
-    nbSelectedQueries() {
-      return this.selectedQueries?.length ?? 0
+    order() {
+      return this.$route.query?.order ?? settings.batchSearchResults.order
     },
-    totalItems() {
-      if (this.selectedQueries.length === 0) {
-        return this.batchSearch.nbResults
-      } else {
-        const queryKeys = Object.keys(this.batchSearch.queries)
-        return sumBy(queryKeys, (query) => {
-          const findQuery = find(this.selectedQueries, ['label', query])
-          if (findQuery) {
-            return this.batchSearch.queries[query]
-          }
-        })
-      }
-    },
-    numberOfPages() {
-      return Math.ceil(this.totalItems / this.perPage)
+    sort() {
+      return this.$route.query?.sort ?? settings.batchSearchResults.sort
     },
     hasDocumentInModal() {
       const pageIndex = this.documentInModalPageIndex
@@ -317,19 +317,22 @@ export default {
       return this.batchSearch.projects.length > 1
     }
   },
-  watch: {
-    $route() {
-      return this.fetch()
-    }
-  },
   async created() {
-    return Promise.all([this.fetch(), this.setIsMyBatchSearch(), this.getQueries()])
+    await Promise.all([this.fetch(), this.setIsMyBatchSearch(), this.getQueries()])
   },
   methods: {
     async fetch() {
       this.$wait.start('load batchSearch results table')
-      const { order, sort, selectedQueries, perPage: size, pageOffset: from } = this
-      const params = { batchId: this.batchSearch.uuid, from, size, queries: selectedQueries, sort, order }
+      const {
+        order,
+        sort,
+        selectedQueries: queries,
+        perPage: size,
+        pageOffset: from,
+        selectedContentTypes: contentTypes,
+        queriesExcluded
+      } = this
+      const params = { batchId: this.batchSearch.uuid, from, size, queries, sort, order, contentTypes, queriesExcluded }
       await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
       this.$wait.end('load batchSearch results table')
     },
@@ -343,7 +346,6 @@ export default {
     async sortChanged(ctx) {
       const sort = find(this.fields, (item) => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-
       return this.updateRoute({ page: this.page, sort, order })
     },
     filter() {
@@ -358,12 +360,9 @@ export default {
         return this.$router.push(to)
       }
     },
-    clearFilters() {
-      this.updateRoute({ queries: [], contentTypes: [], page: 1 })
-    },
     generateLinkToBatchSearchResults({
       page = this.page,
-      contentTypes = this.selectedContentType,
+      contentTypes = this.selectedContentTypes,
       sort = this.sort,
       order = this.order,
       queries = this.selectedQueries
