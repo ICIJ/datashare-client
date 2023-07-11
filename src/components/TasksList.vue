@@ -97,9 +97,6 @@ export default {
     },
     tasksFields() {
       return this.tasks.length ? ['state', 'name'] : []
-    },
-    isZipEncrypted() {
-      return this.$config.get('batchDownloadEncrypt')
     }
   },
   methods: {

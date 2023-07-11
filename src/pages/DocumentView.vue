@@ -255,16 +255,6 @@ export default {
         ['document__content__pane--' + name]: true
       }
     },
-    shortKeyAction(event) {
-      switch (event.srcKey) {
-        case 'goToPreviousTab':
-          this.goToPreviousTab()
-          break
-        case 'goToNextTab':
-          this.goToNextTab()
-          break
-      }
-    },
     goToPreviousTab() {
       const indexPreviousActiveTab = this.indexActiveTab === 0 ? this.visibleTabs.length - 1 : this.indexActiveTab - 1
       this.$set(this, 'activeTab', this.visibleTabs[indexPreviousActiveTab].name)
