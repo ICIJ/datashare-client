@@ -709,6 +709,7 @@
     "relaunch": "Relaunch",
     "relaunchTitle": "Relaunch batch search",
     "deleteAfterRelaunch" : "Delete current batch search after relaunch",
+    "backToResults" : "Back to results",
     "empty": "No results"
   },
   "batchSearchResultsFilters": {

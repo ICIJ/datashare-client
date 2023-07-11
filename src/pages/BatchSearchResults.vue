@@ -225,7 +225,7 @@
             <a role="button" class="small text-white" @click="$bvModal.hide('document-modal')">
               <fa icon="chevron-circle-left"></fa>
               <span class="ml-2">
-                {{ $t('Back to results') }}
+                {{ $t('batchSearchResults.backToResults') }}
               </span>
             </a>
           </template>
