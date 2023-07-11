@@ -37,6 +37,7 @@
           </template>
           <template #head(query)="{ field }">
             <column-filter-dropdown
+              v-if="queryKeys.length"
               :id="field.key"
               v-model="selectedQueries"
               :items="queryKeys"
@@ -174,6 +175,7 @@ export default {
         return this.$router.push({ query: { contentType } })
       }
     },
+
     projectField() {
       return this.hasMultipleProjects
         ? {
@@ -316,8 +318,7 @@ export default {
     }
   },
   async created() {
-    await this.fetch()
-    await this.setIsMyBatchSearch()
+    return Promise.all([this.fetch(), this.setIsMyBatchSearch(), this.getQueries()])
   },
   methods: {
     async fetch() {
@@ -330,6 +331,9 @@ export default {
     async setIsMyBatchSearch() {
       const username = await this.$core.auth.getUsername()
       this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
+    },
+    getQueries() {
+      return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.batchSearch.uuid)
     },
     async sortChanged(ctx) {
       const sort = find(this.fields, (item) => item.key === ctx.sortBy).name
