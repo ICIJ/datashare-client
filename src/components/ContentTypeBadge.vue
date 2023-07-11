@@ -3,6 +3,7 @@ import { get } from 'lodash'
 
 import types from '@/utils/types'
 import { findContentTypeIcon } from '@/utils/font-awesome-files'
+import { fileExtension } from '@/filters/fileExtension'
 
 /**
  * A small badge to display content type nicely.
@@ -17,7 +18,7 @@ export default {
       type: String
     },
     /**
-     * Document name to extract the extension in case the content type is not reconized.
+     * Document name to extract the extension in case the content type is not recognized.
      */
     documentName: {
       type: String,
@@ -29,13 +30,7 @@ export default {
       return findContentTypeIcon(this.value)
     },
     extension() {
-      return get(types, [this.value, 'extensions', 0], this.extensionFallback)
-    },
-    extensionFallback() {
-      if (this.documentName) {
-        return '.' + this.documentName.split('.').pop()
-      }
-      return '.' + this.value.split('/').pop()
+      return fileExtension(this.value, this.documentName)
     },
     title() {
       const descriptions = get(types, [this.value, 'description'], {})
