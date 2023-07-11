@@ -5,9 +5,11 @@
     </span>
     <b-btn :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline">
       <fa icon="filter" />
+      <slot name="badge" :active="active" :counter="counter">
+        <column-filter-badge :active="active" :counter="counter" />
+      </slot>
     </b-btn>
-    <column-filter-badge :active="active" />
-    <b-popover custom-class="column-filter__popover popover-white popover-body-p-0" :target="btnId" triggers="focus">
+    <b-popover :custom-class="popoverClassList" :target="btnId" triggers="focus" lazy>
       <slot></slot>
     </b-popover>
   </div>
@@ -37,6 +39,14 @@ export default {
     active: {
       type: Boolean,
       default: false
+    },
+    counter: {
+      type: Number,
+      default: null
+    },
+    popoverWhite: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -45,13 +55,18 @@ export default {
     },
     btnId() {
       return `${this.btnClassName}-id`
+    },
+    popoverClassList() {
+      return `column-filter__popover popover-body-p-0 ${this.popoverWhite ? 'popover-white' : ''}`
     }
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .column-filter {
   &__toggle {
+    position: relative;
     padding: 0 0.2em;
     margin: 0 0 0 1em;
     line-height: 1.3em;

@@ -1,32 +1,5 @@
 <template>
   <div class="batch-search-actions">
-    <b-btn
-      id="batch-search-actions-filters-toggle"
-      v-b-tooltip.hover
-      class="batch-search-actions__item"
-      variant="light"
-      :title="$t('batchSearchResultsFilters.queries.heading')"
-    >
-      <fa icon="filter" />
-      <span class="sr-only">
-        {{ $t('batchSearchResultsFilters.queries.heading') }}
-      </span>
-      <b-badge v-if="nbSelectedQueries" variant="secondary" class="batch-search-actions__item__counter">
-        {{ nbSelectedQueries | humanNumber }}
-      </b-badge>
-      <keep-alive>
-        <b-popover
-          custom-class="popover-body-p-0"
-          lazy
-          placement="bottom"
-          target="batch-search-actions-filters-toggle"
-          triggers="focus"
-        >
-          <batch-search-results-filters :query-keys="queryKeys" :indices="projects" hide-border />
-        </b-popover>
-      </keep-alive>
-    </b-btn>
-
     <confirm-button
       v-if="isMyBatchSearch"
       v-b-tooltip.hover
