@@ -134,7 +134,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { compact, find, some, random } from 'lodash'
 import { mapState } from 'vuex'
 
