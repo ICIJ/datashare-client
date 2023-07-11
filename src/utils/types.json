@@ -5,7 +5,7 @@
       ".pdf"
     ],
     "description": {
-      "en": "Opens directly in Chrome. Otherwise open using Preview on a Mac or Acrobat Reader on Windows."
+      "en": "Open directly in Chrome. Otherwise open using Preview on a Mac or Acrobat Reader on Windows."
     },
     "preview": "yes"
   },
