@@ -28,37 +28,46 @@
         ></search-form-control>
       </div>
       <div class="small">
-        <selectable-dropdown
-          v-if="filteredQueries.length"
-          v-model="filterQueries"
-          class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
-          deactivate-keys
-          multiple
-          scroller-height="280px"
-          :height="35"
-          :eq="(item, other) => item.label === other.label"
-          :items="filteredQueries"
-        >
-          <template #item-label="{ item }">
-            <div class="d-flex batch-search-results-filters__queries__dropdown__item">
-              <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
-                {{ item.label }}
-              </span>
-              <span class="batch-search-results-filters__queries__dropdown__item__count">
-                <b-badge class="px-2" variant="tertiary" pill>
-                  {{ $n(item.count) }}
-                </b-badge>
-              </span>
-              <span
-                class="batch-search-results-filters__queries__dropdown__item__search"
-                @click.stop.prevent="executeSearch(item.label)"
-              >
-                <fa icon="search" class="text-tertiary"></fa>
-              </span>
-            </div>
-          </template>
-        </selectable-dropdown>
+        <template v-if="filteredQueries.length">
+          <selectable-dropdown
+            v-model="filterQueries"
+            class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
+            deactivate-keys
+            multiple
+            scroller-height="280px"
+            :height="35"
+            :eq="(item, other) => item.label === other.label"
+            :items="filteredQueries"
+          >
+            <template #item-label="{ item }">
+              <div class="d-flex batch-search-results-filters__queries__dropdown__item">
+                <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
+                  {{ item.label }}
+                </span>
+                <span class="batch-search-results-filters__queries__dropdown__item__count">
+                  <b-badge class="px-2" variant="tertiary" pill>
+                    {{ $n(item.count) }}
+                  </b-badge>
+                </span>
+                <span
+                  class="batch-search-results-filters__queries__dropdown__item__search"
+                  @click.stop.prevent="executeSearch(item.label)"
+                >
+                  <fa icon="search" class="text-tertiary"></fa>
+                </span>
+              </div>
+            </template>
+          </selectable-dropdown>
+        </template>
         <div v-else class="text-center text-dark">Loading queries ...</div>
+        <filter-footer
+          class="batch-search-results-filters__footer p-2"
+          :filter="{ name: 'queries', key: 'queries' }"
+          hide-sort
+          hide-contextualize
+          hide-show-more
+          @toggle-filter="excludeSelectedQueries"
+        />
       </div>
     </div>
   </div>
@@ -69,7 +78,7 @@ import { compact, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
 import SearchFormControl from '@/components/SearchFormControl'
-import { SELECTED_QUERIES } from '@/store/mutation-types'
+import FilterFooter from '@/components/filter/FilterFooter'
 
 /**
  * Form to filter a batch search results by query
@@ -77,7 +86,8 @@ import { SELECTED_QUERIES } from '@/store/mutation-types'
 export default {
   name: 'BatchSearchResultsFilters',
   components: {
-    SearchFormControl
+    SearchFormControl,
+    FilterFooter
   },
   model: {
     prop: 'selectedQueries',
@@ -125,6 +135,9 @@ export default {
         return this.queryKeys
       }
     },
+    queriesExcluded() {
+      return !!this.$route?.query?.queriesExcluded
+    },
     filteredQueries() {
       return this.queriesFilter ? this.fuse.search(this.queriesFilter).map((result) => result.item) : this.queries
     },
@@ -146,7 +159,6 @@ export default {
   watch: {
     filterQueries: {
       handler(values) {
-        this.$store.commit(`batchSearch/${SELECTED_QUERIES}`, values)
         this.$emit('update:selected-queries', map(values, 'label'))
       }
     }
@@ -160,10 +172,16 @@ export default {
       }
     },
     executeSearch(q) {
+      console.log('toto')
+
       this.$store.commit('search/reset')
       this.$router
         .push({ name: 'search', query: { queries: this.selectedQueries, q, indices: this.indices.join(',') } })
         .catch(() => {})
+    },
+    excludeSelectedQueries() {
+      const query = { ...this.routeQuery, queriesExcluded: !this.queriesExcluded }
+      this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
     },
     sort(queriesSort) {
       const query = { ...this.routeQuery, queries_sort: queriesSort }
@@ -214,6 +232,9 @@ export default {
         }
       }
     }
+  }
+  &__footer {
+    background-color: #000;
   }
 }
 </style>
