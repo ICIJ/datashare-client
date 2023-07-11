@@ -1,0 +1,280 @@
+<template>
+  <div class="batch-search-results-details card">
+    <div class="card-body d-flex align-items-center">
+      <h5 class="m-0 flex-grow-1">{{ batchSearch.name }}</h5>
+      <batch-search-actions :batch-search="batchSearch" />
+    </div>
+    <div class="card-footer p-0 overflow-hidden">
+      <p v-if="batchSearch.description" class="p-3 m-0 border-bottom">{{ batchSearch.description }}</p>
+      <dl class="batch-search-results-details__info">
+        <div v-if="isServer">
+          <dt>{{ $t('batchSearch.projects') }}</dt>
+          <dd>
+            <span v-for="(project, index) in batchSearch.projects" :key="project.name">
+              <router-link
+                :to="{
+                  name: 'search',
+                  query: {
+                    q: '*',
+                    indices: project.name
+                  }
+                }"
+                class="batch-search-results-details__info__project-link"
+              >
+                <span>{{ project.name }}</span
+                ><span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">, </span>
+              </router-link>
+            </span>
+          </dd>
+        </div>
+        <div v-if="isServer && isMyBatchSearch">
+          <dt>{{ $t('batchSearch.published') }}</dt>
+          <dd><b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" /></dd>
+        </div>
+        <div>
+          <dt>{{ $t('batchSearch.state') }}</dt>
+          <dd>
+            <task-item-status
+              :task-item="{
+                ...batchSearch,
+                errorText: $t('batchSearch.errorMessage')
+              }"
+            />
+          </dd>
+        </div>
+        <div>
+          <dt>{{ $t('batchSearch.date') }}</dt>
+          <dd>{{ localeLongDate(batchSearch.date) }}</dd>
+        </div>
+        <div>
+          <dt>{{ $t('batchSearch.nbResults') }}</dt>
+          <dd :title="batchSearch.nbResults">{{ batchSearch.nbResults | humanNumber }}</dd>
+        </div>
+        <div>
+          <dt>{{ $t('batchSearch.queries') }}</dt>
+          <dd :title="batchSearch.nbQueries">{{ batchSearch.nbQueries | humanNumber }}</dd>
+        </div>
+        <div v-if="batchSearch.phraseMatches">
+          <dt>{{ $t('batchSearch.phraseMatch') }}</dt>
+          <dd>{{ $t('global.yes') }}</dd>
+        </div>
+        <div v-if="batchSearch.fuzziness > 0">
+          <dt>{{ fuzzinessLabel }}</dt>
+          <dd>{{ batchSearch.fuzziness }}</dd>
+        </div>
+        <div v-if="batchSearch.fileTypes.length">
+          <dt>
+            {{ $t('batchSearch.fileTypes') }}
+          </dt>
+          <dd>
+            <ul class="list-unstyled list-group list-group-horizontal mt-1">
+              <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
+                <content-type-badge :value="fileType" />
+              </li>
+            </ul>
+          </dd>
+        </div>
+        <div v-if="batchSearch.paths.length">
+          <dt>
+            {{ $t('batchSearch.path') }}
+          </dt>
+          <dd>
+            <ul class="list-unstyled list-group list-group-horizontal">
+              <li v-for="path in batchSearch.paths" :key="path" class="mr-2">
+                <b-badge variant="dark">
+                  {{ path }}
+                </b-badge>
+              </li>
+            </ul>
+          </dd>
+        </div>
+        <div v-if="isServer">
+          <dt>
+            {{ $t('batchSearch.author') }}
+          </dt>
+          <dd>
+            <user-display :username="batchSearch.user.id" />
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<script>
+import { find, get, sumBy } from 'lodash'
+import { mapState } from 'vuex'
+
+import BatchSearchActions from '@/components/BatchSearchActions'
+import TaskItemStatus from '@/components/TaskItemStatus'
+import ContentTypeBadge from '@/components/ContentTypeBadge'
+import UserDisplay from '@/components/UserDisplay'
+import humanSize from '@/filters/humanSize'
+import humanNumber from '@/filters/humanNumber'
+import { humanLongDate } from '@/filters/humanDate'
+import utils from '@/mixins/utils'
+import settings from '@/utils/settings'
+
+/**
+ * This page will list all the results of a batch search.
+ */
+export default {
+  name: 'BatchSearchResults',
+  components: {
+    BatchSearchActions,
+    TaskItemStatus,
+    ContentTypeBadge,
+    UserDisplay
+  },
+  filters: {
+    humanNumber
+  },
+  mixins: [utils],
+
+  data() {
+    return {
+      documentInModalPageIndex: null,
+      isMyBatchSearch: false,
+      order: settings.batchSearchResults.order,
+      page: 1,
+      published: false,
+      queries: [],
+      sort: settings.batchSearchResults.sort
+    }
+  },
+  computed: {
+    ...mapState('batchSearch', ['batchSearch', 'results']),
+    isLoaded() {
+      return !!Object.keys(this.batchSearch).length
+    },
+    projectField() {
+      return this.hasMultipleProjects
+        ? {
+            key: 'project.name',
+            label: this.$t('batchSearchResults.project'),
+            sortable: true,
+            name: 'prj_id'
+          }
+        : null
+    },
+    selectedQueries() {
+      return get(this, '$store.state.batchSearch.selectedQueries', [])
+    },
+    generateTo() {
+      const baseTo = { name: 'batch-search' }
+      const searchQueryExists = this.$route.query.query
+      return {
+        ...baseTo,
+        ...(searchQueryExists && { query: { query: this.$route.query.query } })
+      }
+    },
+    fuzzinessLabel() {
+      if (this.batchSearch.phraseMatches) {
+        return this.$t('batchSearch.proximitySearches')
+      }
+      return this.$t('batchSearch.fuzziness')
+    },
+    totalItems() {
+      if (this.selectedQueries.length === 0) {
+        return this.batchSearch.nbResults
+      } else {
+        const queryKeys = Object.keys(this.batchSearch.queries)
+        return sumBy(queryKeys, (query) => {
+          const findQuery = find(this.selectedQueries, ['label', query])
+          if (findQuery) {
+            return this.batchSearch.queries[query]
+          }
+        })
+      }
+    },
+    hasMultipleProjects() {
+      return this.batchSearch.projects.length > 1
+    }
+  },
+  created() {
+    this.setIsMyBatchSearch()
+  },
+  methods: {
+    async setIsMyBatchSearch() {
+      const username = await this.$core.auth.getUsername()
+      this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
+    },
+
+    getDocumentSize(value) {
+      const size = humanSize(value)
+      return size === 'unknown' ? '-' : size
+    },
+    changePublished(published) {
+      this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
+    },
+    localeLongDate(date) {
+      return humanLongDate(date, this.$i18n.locale)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.batch-search-results-details {
+  &__info {
+    display: grid;
+    overflow: hidden;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 0px;
+    margin: 0 -1px -1px;
+    border-left: 1px solid $border-color;
+
+    & > div {
+      padding: $spacer $spacer $spacer;
+      border: 1px solid $border-color;
+      border-left: 0;
+      border-top: 0;
+
+      dt {
+        text-overflow: ellipsis;
+        font-weight: normal;
+        color: $text-muted;
+      }
+
+      dd {
+        font-size: 1rem;
+        font-weight: bolder;
+      }
+    }
+  }
+
+  &__queries {
+    &:deep(.table-responsive) {
+      margin: 0;
+    }
+
+    &:deep(table) {
+      margin: 0;
+
+      thead tr {
+        border-top: 0;
+
+        th {
+          border-top: 0;
+          white-space: nowrap;
+
+          &[aria-sort]:hover {
+            background-color: $lighter;
+          }
+        }
+      }
+    }
+
+    &__query__link {
+      &:visited {
+        color: mix(#609, white, 50%);
+      }
+
+      &__path {
+        display: block;
+        max-width: 30vw;
+      }
+    }
+  }
+}
+</style>
