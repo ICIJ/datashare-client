@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { find, get, sumBy } from 'lodash'
+import { get } from 'lodash'
 import { mapState } from 'vuex'
 
 import BatchSearchActions from '@/components/BatchSearchActions'
@@ -113,7 +113,6 @@ import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
 import { humanLongDate } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
-import settings from '@/utils/settings'
 
 /**
  * This page will list all the results of a batch search.
@@ -135,11 +134,8 @@ export default {
     return {
       documentInModalPageIndex: null,
       isMyBatchSearch: false,
-      order: settings.batchSearchResults.order,
-      page: 1,
       published: false,
-      queries: [],
-      sort: settings.batchSearchResults.sort
+      queries: []
     }
   },
   computed: {
@@ -160,9 +156,6 @@ export default {
           }
         : null
     },
-    selectedQueries() {
-      return get(this, '$store.state.batchSearch.selectedQueries', [])
-    },
     generateTo() {
       const baseTo = { name: 'batch-search' }
       const searchQueryExists = this.$route.query.query
@@ -176,19 +169,6 @@ export default {
         return this.$t('batchSearch.proximitySearches')
       }
       return this.$t('batchSearch.fuzziness')
-    },
-    totalItems() {
-      if (this.selectedQueries.length === 0) {
-        return this.batchSearch.nbResults
-      } else {
-        const queryKeys = Object.keys(this.batchSearch.queries)
-        return sumBy(queryKeys, (query) => {
-          const findQuery = find(this.selectedQueries, ['label', query])
-          if (findQuery) {
-            return this.batchSearch.queries[query]
-          }
-        })
-      }
     },
     hasMultipleProjects() {
       return this.batchSearch.projects.length > 1

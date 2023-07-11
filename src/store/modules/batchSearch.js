@@ -1,6 +1,7 @@
 import remove from 'lodash/remove'
 import map from 'lodash/map'
 import Vue from 'vue'
+import { sumBy, uniq } from 'lodash'
 
 import {
   RESET,
@@ -36,8 +37,33 @@ export const getters = {
   nbSelectedQueries(state) {
     return state.selectedQueries?.length ?? 0
   },
+  nbCurrentQueries(state, getters) {
+    return getters.nbSelectedQueries > 0 ? getters.nbSelectedQueries : getters.queryKeys.length
+  },
+  nbResults(state) {
+    return state.batchSearch?.nbResults
+  },
   hasBatchSearch(state) {
     return state.nbBatchSearches > 0
+  },
+  totalItems(state, getters) {
+    if (!state.batchSearch || state.results.length === 0) {
+      return 0
+    }
+
+    const queryKeys = Object.keys(state.queries)
+    if (getters.nbSelectedQueries === 0) {
+      return state.batchSearch?.nbResults
+    } else {
+      const sum = sumBy(queryKeys, (query) => {
+        const findQuery = state.selectedQueries.includes(query)
+
+        if (findQuery) {
+          return state.queries[query]
+        }
+      })
+      return sum
+    }
   }
 }
 export const mutations = {
@@ -48,7 +74,7 @@ export const mutations = {
     Vue.set(state, 'batchSearch', batchSearch)
   },
   [SINGLE_BATCH_SEARCH_QUERIES](state, queries) {
-    state.queries = queries
+    Vue.set(state, 'queries', queries)
   },
   [BATCH_SEARCHES](state, batchSearches) {
     Vue.set(state, 'batchSearches', batchSearches)
@@ -148,12 +174,26 @@ export function actionBuilder(api) {
       // get all batch searches including the new one
       return dispatch('getBatchSearches', { init: true })
     },
-    async getBatchSearchResults({ commit }, { batchId, from, size, queries, sort, order }) {
+    async getBatchSearchResults(
+      { commit },
+      { batchId, from, size, queries, sort, order, contentTypes, queriesExcluded }
+    ) {
       let results = []
       try {
-        results = await api.getBatchSearchResults(batchId, from, size, queries, sort, order)
+        results = await api.getBatchSearchResults(
+          batchId,
+          from,
+          size,
+          queries,
+          sort,
+          order,
+          contentTypes,
+          queriesExcluded
+        )
+        commit(SELECTED_QUERIES, queries)
       } catch (_) {
         results = []
+        commit(SELECTED_QUERIES, [])
       }
       commit(RESULTS, results)
     },
