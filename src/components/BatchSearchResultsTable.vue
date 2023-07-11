@@ -35,6 +35,21 @@
               </template>
             </column-filter-dropdown>
           </template>
+          <template #head(query)="{ field }">
+            <column-filter-dropdown
+              :id="field.key"
+              v-model="selectedQueries"
+              :items="queryKeys"
+              :name="field.label"
+              :counter="nbSelectedQueries"
+              :popover-white="false"
+              multiple
+            >
+              <template #dropdown>
+                <batch-search-results-filters :query-keys="queryKeys" :indices="['local-datashare']" hide-border />
+              </template>
+            </column-filter-dropdown>
+          </template>
           <template #cell(documentNumber)="{ item }">
             {{ item.documentNumber + 1 }}
           </template>
@@ -84,8 +99,9 @@
 <script>
 import { compact, find, get, isEqual, sumBy, uniq, map } from 'lodash'
 import moment from 'moment'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
+import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import humanSize from '@/filters/humanSize'
@@ -102,7 +118,8 @@ export default {
   name: 'BatchSearchResultsTable',
   components: {
     ContentTypeBadge,
-    ColumnFilterDropdown
+    ColumnFilterDropdown,
+    BatchSearchResultsFilters
   },
   filters: {
     humanSize,
@@ -128,6 +145,8 @@ export default {
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results', 'selectedQueries']),
+    ...mapGetters('batchSearch', ['nbSelectedQueries', 'queryKeys']),
+
     isBusy() {
       return this.$wait.waiting('load batchSearch results table')
     },
