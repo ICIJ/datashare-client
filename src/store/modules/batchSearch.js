@@ -24,7 +24,8 @@ export function initialState() {
     queries: {},
     selectedQueries: [],
     total: 0,
-    nbBatchSearches: 0
+    nbBatchSearches: 0,
+    contentTypes: []
   }
 }
 
@@ -95,6 +96,10 @@ export const mutations = {
   },
   [RESULTS](state, results) {
     Vue.set(state, 'results', results)
+    const contentTypes = uniq(map(results, 'contentType'))
+    if (state.contentTypes.length < contentTypes.length) {
+      state.contentTypes = contentTypes
+    }
   },
   [TOTAL](state, total) {
     state.total = total
