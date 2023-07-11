@@ -11,7 +11,7 @@ export default {
   mixins: [shortkeys],
   model: {
     prop: 'index',
-    event: 'input'
+    event: 'change'
   },
   props: {
     /**
@@ -78,26 +78,18 @@ export default {
   },
   methods: {
     goToPreviousItem() {
-      this.setIndex(Math.max(0, this.index - 1))
       /**
        * Triggered when user click on the `previous` button.
        */
-      this.$emit('previous')
+      const previousIndex = Math.max(0, this.index - 1)
+      this.$emit('change', previousIndex)
     },
     goToNextItem() {
-      this.setIndex(Math.min(this.totalItems - 1, this.index + 1))
       /**
        * Triggered when user click on the `next` button.
        */
-      this.$emit('next')
-    },
-    setIndex(index) {
-      if (index !== this.index) {
-        /**
-         * Triggered when the value of `index` changes.
-         */
-        this.$emit('input', index)
-      }
+      const nextIndex = Math.min(this.totalItems - 1, this.index + 1)
+      this.$emit('change', nextIndex)
     }
   }
 }
