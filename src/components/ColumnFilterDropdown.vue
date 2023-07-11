@@ -1,18 +1,27 @@
 <template>
-  <column-filter :id="id" class="column-filter-dropdown" :name="name" :active="isActive">
+  <column-filter
+    :id="id"
+    class="column-filter-dropdown"
+    :name="name"
+    :active="isActive"
+    :counter="counter"
+    :popover-white="popoverWhite"
+  >
     <keep-alive>
-      <selectable-dropdown
-        v-model="selectedValues"
-        :items="items"
-        deactivate-keys
-        :multiple="multiple"
-        :eq="eq"
-        class="shadow-none border-0"
-      >
-        <template #item-label="{ item }">
-          <slot name="label" :item="item">{{ labelItem(item) }}</slot>
-        </template>
-      </selectable-dropdown>
+      <slot name="dropdown">
+        <selectable-dropdown
+          v-model="selectedValues"
+          :items="items"
+          deactivate-keys
+          :multiple="multiple"
+          :eq="eq"
+          class="shadow-none border-0"
+        >
+          <template #item-label="{ item }">
+            <slot name="label" :item="item">{{ labelItem(item) }}</slot>
+          </template>
+        </selectable-dropdown>
+      </slot>
     </keep-alive>
   </column-filter>
 </template>
@@ -53,6 +62,14 @@ export default {
     },
     multiple: {
       type: Boolean
+    },
+    counter: {
+      type: Number,
+      default: null
+    },
+    popoverWhite: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
