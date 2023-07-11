@@ -1,104 +1,107 @@
 <template>
   <div class="batch-search-results__queries">
+    {{ results.length }} results from {{ queryKeys.length }} queries <b-btn @click="clearFilters">Clear filters</b-btn>
+
     <div class="card">
-      <v-wait for="load batchSearch results table">
-        <div slot="waiting" class="card py-2">
-          <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
-        </div>
-        <b-table
-          :busy="isBusy"
-          :empty-text="$t('global.emptyTextTable')"
-          :fields="fields"
-          :items="results"
-          :per-page="perPage"
-          :sort-by="sortBy"
-          :sort-desc="orderBy"
-          hover
-          no-local-sorting
-          no-sort-reset
-          responsive
-          show-empty
-          striped
-          tbody-tr-class="batch-search-results__queries__query "
-          @sort-changed="sortChanged"
-        >
-          <template #head(contentType)="{ field }">
-            <column-filter-dropdown
-              :id="field.key"
-              v-model="selectedContentType"
-              :items="contentTypes"
-              :name="field.label"
-              multiple
+      <b-table
+        :busy="isBusy"
+        :empty-text="$t('global.emptyTextTable')"
+        :fields="fields"
+        :items="results"
+        :per-page="perPage"
+        :sort-by="sortBy"
+        :sort-desc="orderBy"
+        hover
+        no-local-sorting
+        no-sort-reset
+        responsive
+        show-empty
+        striped
+        tbody-tr-class="batch-search-results__queries__query "
+        @sort-changed="sortChanged"
+      >
+        <template #head(contentType)="{ field }">
+          <column-filter-dropdown
+            :id="field.key"
+            v-model="selectedContentType"
+            :items="contentTypes"
+            :name="field.label"
+            multiple
+          >
+            <template #label="{ item }">
+              {{ item | fileExtension }}
+            </template>
+          </column-filter-dropdown>
+        </template>
+        <template #head(query)="{ field }">
+          <column-filter-dropdown
+            v-if="queryKeys.length"
+            :id="field.key"
+            :values="selectedQueries"
+            :items="queryKeys"
+            :name="field.label"
+            :counter="nbSelectedQueries"
+            :popover-white="false"
+            multiple
+          >
+            <template #dropdown>
+              <batch-search-results-filters
+                v-model="selectedQueries"
+                :query-keys="queryKeys"
+                :indices="['local-datashare']"
+                hide-border
+              />
+            </template>
+          </column-filter-dropdown>
+        </template>
+        <template #cell(documentNumber)="{ item }">
+          {{ item.documentNumber + 1 }}
+        </template>
+        <template #cell(documentPath)="{ item, index }">
+          <router-link
+            class="batch-search-results__queries__query__link"
+            target="_blank"
+            :to="{
+              name: 'document-standalone',
+              params: { index: item.project.name, id: item.documentId, routing: item.rootId },
+              query: { q: item.query }
+            }"
+            @click.native.prevent="openDocumentModal(index)"
+          >
+            <active-text-truncate
+              v-b-tooltip.hover
+              class="batch-search-results__queries__query__link__path"
+              :title="item.documentPath"
             >
-              <template #label="{ item }">
-                {{ item | fileExtension }}
-              </template>
-            </column-filter-dropdown>
-          </template>
-          <template #head(query)="{ field }">
-            <column-filter-dropdown
-              v-if="queryKeys.length"
-              :id="field.key"
-              v-model="selectedQueries"
-              :items="queryKeys"
-              :name="field.label"
-              :counter="nbSelectedQueries"
-              :popover-white="false"
-              multiple
-            >
-              <template #dropdown>
-                <batch-search-results-filters :query-keys="queryKeys" :indices="['local-datashare']" hide-border />
-              </template>
-            </column-filter-dropdown>
-          </template>
-          <template #cell(documentNumber)="{ item }">
-            {{ item.documentNumber + 1 }}
-          </template>
-          <template #cell(documentPath)="{ item, index }">
-            <router-link
-              class="batch-search-results__queries__query__link"
-              target="_blank"
-              :to="{
-                name: 'document-standalone',
-                params: { index: item.project.name, id: item.documentId, routing: item.rootId },
-                query: { q: item.query }
-              }"
-              @click.native.prevent="openDocumentModal(index)"
-            >
-              <active-text-truncate
-                v-b-tooltip.hover
-                class="batch-search-results__queries__query__link__path"
-                :title="item.documentPath"
-              >
-                {{ item.documentPath }}
-              </active-text-truncate>
-            </router-link>
-          </template>
-          <template #cell(creationDate)="{ item }">
-            <span :title="localeLongDate(item.creationDate)">
-              {{ localeShortDate(item.creationDate) }}
-            </span>
-          </template>
-          <template #cell(contentType)="{ item }">
-            <content-type-badge :value="item.contentType" :document-name="item.documentPath"></content-type-badge>
-          </template>
-          <template #cell(contentLength)="{ item }">
-            <span class="text-nowrap">{{ getDocumentSize(item.contentLength) }}</span>
-          </template>
-          <template #cell(empty)>
-            <div class="text-center">
-              {{ $t('batchSearchResults.empty') }}
-            </div>
-          </template>
-        </b-table>
-      </v-wait>
+              {{ item.documentPath }}
+            </active-text-truncate>
+          </router-link>
+        </template>
+        <template #cell(creationDate)="{ item }">
+          <span :title="localeLongDate(item.creationDate)">
+            {{ localeShortDate(item.creationDate) }}
+          </span>
+        </template>
+        <template #cell(contentType)="{ item }">
+          <content-type-badge :value="item.contentType" :document-name="item.documentPath"></content-type-badge>
+        </template>
+        <template #cell(contentLength)="{ item }">
+          <span class="text-nowrap">{{ getDocumentSize(item.contentLength) }}</span>
+        </template>
+        <template #cell(empty)>
+          <div class="text-center">
+            {{ $t('batchSearchResults.empty') }}
+          </div>
+        </template>
+      </b-table>
+      <!--      </v-wait>-->
     </div>
     <slot name="pagination"> </slot>
   </div>
 </template>
 
 <script>
-import { compact, find, get, isEqual, sumBy, uniq, map } from 'lodash'
+import { compact, find, get, isEqual, sumBy, uniq, map, isArray } from 'lodash'
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 
@@ -111,6 +114,7 @@ import { fileExtension } from '@/filters/fileExtension'
 import { humanLongDate, humanShortDate } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
+import { SELECTED_QUERIES } from '@/store/mutation-types'
 
 /**
  * This page will list all the results of a batch search.
@@ -145,15 +149,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('batchSearch', ['batchSearch', 'results', 'selectedQueries']),
-    ...mapGetters('batchSearch', ['nbSelectedQueries', 'queryKeys']),
-
+    ...mapState('batchSearch', ['batchSearch', 'results']),
+    ...mapGetters('batchSearch', ['queryKeys']),
     isBusy() {
       return this.$wait.waiting('load batchSearch results table')
     },
     contentTypes() {
-      const elems = this.selectedQueries.length ? this.selectedQueries : this.results
-      return uniq(map(elems, 'contentType'))
+      return uniq(map(this.results, 'contentType'))
     },
     currentPage: {
       get() {
@@ -161,21 +163,33 @@ export default {
       },
       set(pageNumber) {
         this.page = pageNumber
-        this.$router.push(this.generateLinkToBatchSearchResults(pageNumber, this.selectedQueries))
+        return this.updateRoute({ page: pageNumber })
       }
     },
     selectedContentType: {
       get() {
-        const param = this.$route?.query?.contentType
+        const param = this.$route?.query?.contentTypes ?? null
         const contentTypes = param?.split(',') ?? []
         return uniq(contentTypes)
       },
       set(values) {
-        const contentType = values?.length > 0 ? values?.join(',') : null
-        return this.$router.push({ query: { contentType } })
+        console.log('values', values)
+        const contentTypes = values?.length > 0 ? values?.join(',') : null
+        return this.updateRoute({ page: 1, contentTypes })
       }
     },
-
+    selectedQueries: {
+      get() {
+        const param = this.$route?.query?.queries ?? null
+        const queries = param?.split(',') ?? []
+        return uniq(queries)
+      },
+      set(values) {
+        const queries = values?.length > 0 ? values?.join(',') : null
+        this.$store.commit(`batchSearch/${SELECTED_QUERIES}`, queries?.length ?? 0)
+        return this.updateRoute({ page: 1, queries })
+      }
+    },
     projectField() {
       return this.hasMultipleProjects
         ? {
@@ -242,7 +256,10 @@ export default {
       return find(this.fields, (item) => item.name === this.sort).key
     },
     orderBy() {
-      return this.order === 'desc'
+      return this.order.toLowerCase() === 'desc'
+    },
+    nbSelectedQueries() {
+      return this.selectedQueries?.length ?? 0
     },
     totalItems() {
       if (this.selectedQueries.length === 0) {
@@ -301,20 +318,8 @@ export default {
     }
   },
   watch: {
-    page() {
-      this.fetch()
-    },
-    queries(queries, oldQueries = []) {
-      // Check array values to avoid unnecessary fetching
-      if (!isEqual(queries, oldQueries)) {
-        this.fetch()
-      }
-    },
-    sort() {
-      this.fetch()
-    },
-    order() {
-      this.fetch()
+    $route() {
+      return this.fetch()
     }
   },
   async created() {
@@ -323,8 +328,8 @@ export default {
   methods: {
     async fetch() {
       this.$wait.start('load batchSearch results table')
-      const { order, sort, queries, perPage: size, pageOffset: from } = this
-      const params = { batchId: this.batchSearch.uuid, from, size, queries, sort, order }
+      const { order, sort, selectedQueries, perPage: size, pageOffset: from } = this
+      const params = { batchId: this.batchSearch.uuid, from, size, queries: selectedQueries, sort, order }
       await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
       this.$wait.end('load batchSearch results table')
     },
@@ -338,29 +343,62 @@ export default {
     async sortChanged(ctx) {
       const sort = find(this.fields, (item) => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-      this.$router.push(this.generateLinkToBatchSearchResults(this.page, this.selectedQueries, sort, order))
+
+      return this.updateRoute({ page: this.page, sort, order })
     },
     filter() {
-      this.$router.push(this.generateLinkToBatchSearchResults(1, this.selectedQueries))
+      return this.updateRoute({ page: 1 })
     },
     linkGen(page) {
-      return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
+      return this.generateLinkToBatchSearchResults({ page })
     },
-    generateLinkToBatchSearchResults(page = this.page, queries = this.queries, sort = this.sort, order = this.order) {
+    updateRoute(query) {
+      const to = this.generateLinkToBatchSearchResults(query)
+      if (!isEqual(to.query, this.$route.query)) {
+        return this.$router.push(to)
+      }
+    },
+    clearFilters() {
+      this.updateRoute({ queries: [], contentTypes: [], page: 1 })
+    },
+    generateLinkToBatchSearchResults({
+      page = this.page,
+      contentTypes = this.selectedContentType,
+      sort = this.sort,
+      order = this.order,
+      queries = this.selectedQueries
+    }) {
+      if (isArray(queries)) {
+        queries = queries.join(',')
+      }
+      if (isArray(contentTypes)) {
+        contentTypes = contentTypes.join(',')
+      }
+      contentTypes = isEqual(this.contentTypes, contentTypes) ? undefined : contentTypes
+
+      const queryParams = {
+        page: page.toString(),
+        queries,
+        contentTypes,
+        sort,
+        order,
+        queries_sort: this.$route.query.queries_sort || undefined
+      }
+      this.removeEmptySearchParams(queryParams)
+
       return {
         name: 'batch-search.results',
         params: {
           indices: this.indices,
           uuid: this.batchSearch.uuid
         },
-        query: {
-          page,
-          queries: queries.map((query) => query.label),
-          sort,
-          order,
-          queries_sort: this.$route.query.queries_sort || undefined
-        }
+        query: queryParams
       }
+    },
+    removeEmptySearchParams(query) {
+      if (!query?.contentTypes || !query?.contentTypes?.length) delete query?.contentTypes
+      if (!query?.queries || !query?.queries?.length) delete query?.queries
+      if (!query?.queries_sort) delete query?.queries_sort
     },
     getDocumentSize(value) {
       const size = humanSize(value)
@@ -370,8 +408,7 @@ export default {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.batchSearch.uuid, published })
     },
     openDocumentModal(pageIndex) {
-      this.$set(this, 'documentInModalPageIndex', pageIndex)
-      this.$emit.show('document-modal')
+      this.$emit('show-document-modal', pageIndex)
     },
     localeLongDate(date) {
       return humanLongDate(date, this.$i18n.locale)

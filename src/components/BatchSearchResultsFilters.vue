@@ -30,7 +30,7 @@
       <div class="small">
         <selectable-dropdown
           v-if="filteredQueries.length"
-          v-model="selectedQueries"
+          v-model="filterQueries"
           class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
           deactivate-keys
           multiple
@@ -65,10 +65,11 @@
 </template>
 
 <script>
-import { castArray, cloneDeep, compact, find, isEqual, map, orderBy } from 'lodash'
+import { compact, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
 import SearchFormControl from '@/components/SearchFormControl'
+import { SELECTED_QUERIES } from '@/store/mutation-types'
 
 /**
  * Form to filter a batch search results by query
@@ -77,6 +78,10 @@ export default {
   name: 'BatchSearchResultsFilters',
   components: {
     SearchFormControl
+  },
+  model: {
+    prop: 'selectedQueries',
+    event: 'update:selected-queries'
   },
   props: {
     /**
@@ -91,13 +96,20 @@ export default {
      */
     indices: {
       type: [String, Array]
+    },
+    selectedQueries: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       queriesFilter: null,
-      sortField: 'count',
-      sortFields: ['default', 'count']
+      // sortField: 'count',
+      sortFields: ['default', 'count'],
+      filterQueries: map(this.selectedQueries, (q) => ({
+        label: q
+      }))
     }
   },
   computed: {
@@ -119,52 +131,43 @@ export default {
     hasMultipleQueries() {
       return this.queries && this.queries.length > 1
     },
-    selectedQueries: {
-      set(queries) {
-        this.$store.commit('batchSearch/selectedQueries', cloneDeep(queries))
-        this.updateRoute()
-      },
-      get() {
-        return this.$store.state.batchSearch.selectedQueries
-      }
-    },
     routeQuery() {
       return this.$route?.query ?? {}
+    },
+    sortField: {
+      get() {
+        return this.$route?.query?.queries_sort === 'default' ? 'default' : 'count'
+      },
+      set(sortField) {
+        return this.$router.push({ query: { queries_sort: sortField } })
+      }
     }
   },
   watch: {
-    $route() {
-      this.readQueryFromRoute()
+    filterQueries: {
+      handler(values) {
+        this.$store.commit(`batchSearch/${SELECTED_QUERIES}`, values)
+        this.$emit('update:selected-queries', map(values, 'label'))
+      }
     }
-  },
-  mounted() {
-    this.readQueryFromRoute()
   },
   methods: {
     updateRoute() {
       const queries = compact(map(this.selectedQueries, 'label'))
       if (!isEqual(this.routeQuery.queries || [], queries)) {
         const query = { ...this.routeQuery, queries }
-        this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
+        return this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
       }
     },
     executeSearch(q) {
       this.$store.commit('search/reset')
-      this.$router.push({ name: 'search', query: { q, indices: this.indices.join(',') } }).catch(() => {})
+      this.$router
+        .push({ name: 'search', query: { queries: this.selectedQueries, q, indices: this.indices.join(',') } })
+        .catch(() => {})
     },
     sort(queriesSort) {
       const query = { ...this.routeQuery, queries_sort: queriesSort }
       this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
-    },
-    readQueryFromRoute() {
-      if (this.$route?.query?.queries_sort === 'default') {
-        this.$set(this, 'sortField', 'default')
-      } else {
-        this.$set(this, 'sortField', 'count')
-      }
-
-      const queries = castArray(this.$route?.query?.queries ?? [])
-      this.selectedQueries = queries.map((label) => find(this.queries, { label }))
     }
   }
 }

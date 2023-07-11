@@ -9,7 +9,7 @@
         <column-filter-badge :active="active" :counter="counter" />
       </slot>
     </b-btn>
-    <b-popover :custom-class="popoverClassList" :target="btnId" triggers="focus" lazy>
+    <b-popover :custom-class="popoverClassList" :target="btnId" triggers="click blur" lazy>
       <slot></slot>
     </b-popover>
   </div>
