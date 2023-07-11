@@ -145,6 +145,7 @@ import UserDisplay from '@/components/UserDisplay'
 import settings from '@/utils/settings'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
+import { humanLongDate, humanShortDate } from '@/filters/humanDate'
 
 const BATCHSEARCH_STATUS_VALUE = Object.freeze({
   PUBLISHED: '1',
@@ -193,8 +194,8 @@ export default {
         return {
           ...batchSearch,
           queries: this.$n(batchSearch.queries),
-          dateTitle: moment(batchSearch.date).locale(this.$i18n.locale).format('LLL'),
-          dateContent: moment(batchSearch.date).locale(this.$i18n.locale).format('LL'),
+          dateTitle: humanLongDate(batchSearch.date, this.$i18n.locale),
+          dateContent: humanShortDate(batchSearch.date, this.$i18n.locale),
           userId: batchSearch.user?.id,
           hasUser: !!batchSearch.user,
           formatNbQueries: this.$n(batchSearch.nbQueries),

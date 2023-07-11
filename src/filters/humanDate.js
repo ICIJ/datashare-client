@@ -6,7 +6,6 @@ export function humanDate(date, locale) {
 export function humanLongDate(date, locale) {
   return moment(date).locale(locale).format('LLL')
 }
-
 export function humanShortDate(date, locale) {
-  return moment(date).locale(locale).format('LLL')
+  return moment(date).locale(locale).format('LL')
 }
