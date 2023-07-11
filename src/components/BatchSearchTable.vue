@@ -8,6 +8,7 @@
       :sort-desc="isDesc"
       class="card border-top-0"
       hover
+      no-local-sorting
       no-sort-reset
       responsive
       show-empty
