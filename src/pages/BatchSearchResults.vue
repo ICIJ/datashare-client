@@ -67,7 +67,7 @@
                 {{ $t('batchSearch.date') }}
               </dt>
               <dd>
-                {{ moment(batchSearch.date).locale($i18n.locale).format('LLL') }}
+                {{ localeLongDate(batchSearch.date) }}
               </dd>
             </div>
             <div>
@@ -188,12 +188,8 @@
                 </router-link>
               </template>
               <template #cell(creationDate)="{ item }">
-                <span :title="moment(item.creationDate).locale($i18n.locale).format('LLL')">
-                  {{
-                    moment(item.creationDate).isValid()
-                      ? moment(item.creationDate).locale($i18n.locale).format('LL')
-                      : ''
-                  }}
+                <span :title="localeLongDate(item.creationDate)">
+                  {{ localeShortDate(item.creationDate) }}
                 </span>
               </template>
               <template #cell(contentType)="{ item }">
@@ -265,6 +261,7 @@ import QuickItemNav from '@/components/QuickItemNav'
 import UserDisplay from '@/components/UserDisplay'
 import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
+import { humanLongDate, humanShortDate } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import DocumentView from '@/pages/DocumentView'
 import settings from '@/utils/settings'
@@ -573,7 +570,12 @@ export default {
       this.$set(this, 'documentInModalPageIndex', pageIndex)
       this.$bvModal.show('document-modal')
     },
-    moment
+    localeLongDate(date) {
+      return humanLongDate(date, this.$i18n.locale)
+    },
+    localeShortDate(date) {
+      return moment(date).isValid() ? humanShortDate(date, this.$i18n.locale) : ''
+    }
   }
 }
 </script>
