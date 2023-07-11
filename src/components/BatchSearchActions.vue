@@ -71,10 +71,8 @@
 
 <script>
 import { get } from 'lodash'
-import { mapGetters } from 'vuex'
 
 import { Api } from '@/api'
-import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
 import humanNumber from '@/filters/humanNumber'
 
@@ -84,7 +82,6 @@ import humanNumber from '@/filters/humanNumber'
 export default {
   name: 'BatchSearchActions',
   components: {
-    BatchSearchResultsFilters,
     BatchSearchCopyForm
   },
   filters: {
@@ -105,7 +102,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('batchSearch', ['nbSelectedQueries', 'queryKeys']),
     user() {
       return get(this, 'batchSearch.user.id')
     },
@@ -130,7 +126,6 @@ export default {
   },
   async created() {
     this.isMyBatchSearch = (await this.$core.auth.getUsername()) === this.user
-    this.getQueries()
   },
   methods: {
     async deleteBatchSearch() {
@@ -142,9 +137,6 @@ export default {
       } catch (e) {
         this.$root.$bvToast.toast(this.$t('batchSearch.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
-    },
-    getQueries() {
-      return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.uuid)
     }
   }
 }
