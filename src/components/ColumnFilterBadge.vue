@@ -4,7 +4,7 @@
   </b-badge>
   <fa
     v-else
-    class="column-filter-badge text-secondary"
+    class="column-filter-badge__icon text-secondary"
     :class="{ 'column-filter-badge--inactive': !active }"
     icon="circle"
     width="8px"
@@ -35,7 +35,10 @@ export default {
   &--inactive {
     visibility: hidden;
   }
-
+  &__icon {
+    vertical-align: top;
+    margin-left: 0.1em;
+  }
   &__counter {
     margin: 0;
     position: absolute;
