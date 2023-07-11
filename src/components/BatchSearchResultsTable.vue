@@ -31,7 +31,7 @@
               multiple
             >
               <template #label="{ item }">
-                {{ item.toLowerCase() | fileExtension }}
+                {{ item | fileExtension }}
               </template>
             </column-filter-dropdown>
           </template>
@@ -67,7 +67,7 @@
             <content-type-badge :value="item.contentType" :document-name="item.documentPath"></content-type-badge>
           </template>
           <template #cell(contentLength)="{ item }">
-            <span class="text-nowrap">{{ getDocumentSize(item.contentLength, '-') }}</span>
+            <span class="text-nowrap">{{ getDocumentSize(item.contentLength) }}</span>
           </template>
           <template #cell(empty)>
             <div class="text-center">
@@ -133,9 +133,7 @@ export default {
     },
     contentTypes() {
       const elems = this.selectedQueries.length ? this.selectedQueries : this.results
-      const elements = uniq(map(elems, 'contentType'))
-      console.log(elements)
-      return elements //
+      return uniq(map(elems, 'contentType'))
     },
     currentPage: {
       get() {
@@ -144,6 +142,17 @@ export default {
       set(pageNumber) {
         this.page = pageNumber
         this.$router.push(this.generateLinkToBatchSearchResults(pageNumber, this.selectedQueries))
+      }
+    },
+    selectedContentType: {
+      get() {
+        const param = this.$route?.query?.contentType
+        const contentTypes = param?.split(',') ?? []
+        return uniq(contentTypes)
+      },
+      set(values) {
+        const contentType = values?.length > 0 ? values?.join(',') : null
+        return this.$router.push({ query: { contentType } })
       }
     },
     projectField() {
