@@ -58,6 +58,10 @@ export default {
     readOnly: {
       type: Boolean
     },
+    isSearchFilter: {
+      type: Boolean,
+      default: true
+    },
     /**
      * Hide the label of the filter
      */
@@ -71,7 +75,7 @@ export default {
     },
     appliedSearchFiltersItemClassList() {
       return {
-        'applied-search-filters-item--negation': this.filter.negation
+        'applied-search-filters-item--negation': this.filter?.negation
       }
     },
     displayedFilterValue() {
@@ -98,7 +102,10 @@ export default {
       if (this.readOnly) {
         return
       }
-
+      if (!this.isSearchFilter) {
+        this.$emit('delete', this.filter)
+        return
+      }
       if (this.isQueryTerm) {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       } else {
@@ -107,7 +114,7 @@ export default {
       }
 
       const query = this.$store.getters['search/toRouteQuery']()
-      this.$router.push({ name: 'search', query }).catch(() => {})
+      return this.$router.push({ name: 'search', query }).catch(() => {})
     }
   }
 }
