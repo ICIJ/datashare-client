@@ -5,7 +5,10 @@
       <template v-if="hasBatchSearch">
         <div class="d-flex flex-wrap align-items-center">
           <batch-search-filter-query class="batch-search__search-bar my-1" />
-          <batch-search-clear-filters class="batch-search__clear-filter-btn m-1" />
+          <batch-search-clear-filters
+            class="batch-search__clear-filter-btn m-1"
+            :local-search-params="LOCAL_SEARCH_PARAMS"
+          />
         </div>
         <batch-search-table />
       </template>
@@ -25,7 +28,16 @@ import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
 import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
-
+const LOCAL_SEARCH_PARAMS = Object.freeze({
+  query: true,
+  publishState: false,
+  project: false,
+  dateStart: true,
+  dateEnd: true,
+  state: true,
+  order: true,
+  sort: true
+})
 export default {
   name: 'BatchSearches',
   components: {
@@ -34,6 +46,9 @@ export default {
     BatchSearchTable
   },
   mixins: [utils],
+  data() {
+    return { LOCAL_SEARCH_PARAMS }
+  },
   computed: {
     ...mapGetters('batchSearch', ['hasBatchSearch']),
     howToLink() {
