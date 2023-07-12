@@ -7,6 +7,7 @@
           <batch-search-filter-query class="batch-search__search-bar my-1" />
           <batch-search-clear-filters
             class="batch-search__clear-filter-btn m-1"
+            route-name="batch-search"
             :local-search-params="LOCAL_SEARCH_PARAMS"
           />
         </div>
