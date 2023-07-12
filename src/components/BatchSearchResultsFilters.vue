@@ -172,8 +172,6 @@ export default {
       }
     },
     executeSearch(q) {
-      console.log('toto')
-
       this.$store.commit('search/reset')
       this.$router
         .push({ name: 'search', query: { queries: this.selectedQueries, q, indices: this.indices.join(',') } })
