@@ -340,6 +340,7 @@ export default {
           padding: $spacer * 0.75 $spacer;
           position: relative;
           text-transform: uppercase;
+          border-radius: $border-radius $border-radius 0 0;
 
           &:hover {
             background: rgba(white, 0.05);
@@ -352,7 +353,9 @@ export default {
             font-weight: bold;
 
             &:before {
-              border-top: 2px solid $secondary;
+              border-radius: $border-radius $border-radius 0 0;
+              background: $secondary;
+              height: 2px;
               box-shadow: 0 0 10px 0 $secondary;
               content: '';
               left: 0;

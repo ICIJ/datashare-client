@@ -102,9 +102,9 @@ export default {
         .nav-link {
           font-size: 1rem;
           font-weight: bold;
-          border-radius: 0;
+          border-radius: $border-radius $border-radius 0 0;
           border-bottom: 0;
-          border-top: 0;
+          border-top: 0;      
 
           &:hover:not(.active) {
             border-color: transparent;
@@ -124,8 +124,10 @@ export default {
             top: 0;
             left: 0;
             right: 0;
-            border-top: 2px solid $secondary;
+            background: $secondary;
+            height: 2px;
             box-shadow: 0 0 10px 0 $secondary;
+            border-radius: $border-radius $border-radius 0 0;
           }
         }
       }
