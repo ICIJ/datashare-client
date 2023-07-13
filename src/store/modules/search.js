@@ -392,14 +392,11 @@ function actionsBuilder(api) {
       }
     },
     updateFromRouteQuery({ commit, getters }, query) {
-      const excludedKeys = ['index', 'indices', 'field', 'layout']
+      const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout']
+      const updatedKeys = ['q', 'index', 'indices', 'from', 'size', 'sort', 'field']
       commit('reset', excludedKeys)
-      ;['q', 'index', 'indices', 'from', 'size', 'sort', 'field'].forEach((key) => {
-        if (key in query) {
-          // Add the query to the state with a mutation to avoid triggering a search
-          commit(key, query[key])
-        }
-      })
+      // Add the query to the state with a mutation to avoid triggering a search
+      updatedKeys.forEach((key) => (key in query ? commit(key, query[key]) : null))
       // Iterate over the list of filter
       each(getters.instantiatedFilters, (filter) => {
         // The filter key are formatted in the URL as follow.
