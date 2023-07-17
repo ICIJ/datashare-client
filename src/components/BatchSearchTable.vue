@@ -101,25 +101,23 @@
       </template>
       <template #cell(projects)="{ item }">
         <span
-          v-for="(projectName, index) in item.projectsNames"
-          :key="projectName"
-          v-b-tooltip.hover
-          class="batch-search-table__item__projects text-truncate"
-          :title="projectName"
+          v-for="(project, index) in item.projects"
+          :key="project.name"
+          class="batch-search-table__item__projects d-inline-block mr-1"
         >
           <router-link
             :to="{
               name: 'search',
               query: {
                 q: '*',
-                indices: projectName
+                indices: project.name
               }
             }"
             class="batch-search-table__item__projects__link"
           >
-            <span>{{ projectName }}</span>
+            <span>{{ project.label || project.name }}</span>
           </router-link>
-          <span v-if="isNotLastArrayItem(index, item.projectsNames.length)">, </span>
+          <span v-if="isNotLastArrayItem(index, item.projects.length)">, </span>
         </span>
       </template>
     </b-table>
@@ -249,7 +247,7 @@ export default {
           sortable: true,
           name: 'published'
         }),
-        this.serverField({
+        this.withProjectsField({
           key: 'projects',
           label: this.$t('batchSearch.projects'),
           sortable: false,
@@ -291,7 +289,7 @@ export default {
       return Math.ceil(this.total / this.perPage)
     },
     projects() {
-      return this.$core.projects
+      return this.$core.projectIds
     },
     selectedDateRange: {
       get() {
@@ -490,6 +488,9 @@ export default {
     },
     serverField(field) {
       return this.isServer ? field : null
+    },
+    withProjectsField(field) {
+      return this.isServer || this.projects.length > 1 ? field : null
     },
     async sortChanged(ctx) {
       this.selectedSort = {

@@ -6,6 +6,7 @@
         v-model="selectedDateRange"
         is-range
         color="gray"
+        class="border-0"
         :max-date="new Date()"
         :model-config="modelConfig"
         :locale="locale"
