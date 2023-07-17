@@ -48,8 +48,9 @@ export default {
       return this.$core.projects
     },
     projectOptions() {
-      return this.projects.map((value) => {
-        const text = startCase(value)
+      return this.projects.map((project) => {
+        const text = project.label || startCase(project.name)
+        const value = project.name
         const disabled = this.multiple && isEqual(this.selectedProject, [value])
         return { disabled, text, value }
       })

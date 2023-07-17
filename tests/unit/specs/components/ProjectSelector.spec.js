@@ -13,7 +13,7 @@ describe('ProjectSelector.vue', () => {
     beforeEach(() => {
       Murmur.config.merge({
         defaultProject: 'first-index',
-        groups_by_applications: { datashare: ['second-index', 'third-index'] }
+        projects: [{ name: 'second-index' }, { name: 'third-index' }]
       })
       wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: 'first-index' } })
     })
@@ -38,7 +38,9 @@ describe('ProjectSelector.vue', () => {
     let wrapper
 
     beforeEach(() => {
-      Murmur.config.merge({ groups_by_applications: { datashare: ['first-index', 'second-index', 'third-index'] } })
+      Murmur.config.merge({
+        projects: [{ name: 'first-index' }, { name: 'second-index' }, { name: 'third-index' }]
+      })
       wrapper = shallowMount(ProjectSelector, {
         localVue,
         store,
