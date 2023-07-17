@@ -1,9 +1,9 @@
 <template>
   <div class="project-cards container-fluid p-0">
     <div class="row">
-      <div v-for="project in projects" :key="project" class="col-4 mb-4">
+      <div v-for="project in projects" :key="project.name" class="col-4 mb-4">
         <router-link
-          :to="{ name: 'search', query: { indices: project, q: '*' } }"
+          :to="{ name: 'search', query: { indices: project.name, q: '*' } }"
           class="project-cards__item d-flex justify-content-start text-nowrap"
           :class="{ 'project-cards__item--active': isActive(project) }"
         >
@@ -11,7 +11,7 @@
             <fa icon="book"></fa>
           </div>
           <div class="project-cards__item__body py-2 px-3 font-weight-bold">
-            {{ startCase(project) }}
+            {{ project.label || startCase(project.name) }}
           </div>
         </router-link>
       </div>
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     isActive(project) {
-      return this.$store.state.search.indices.includes(project)
+      return this.$store.state.search.indices.includes(project.name)
     },
     startCase
   }

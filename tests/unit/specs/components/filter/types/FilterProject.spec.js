@@ -27,7 +27,7 @@ describe('FilterProject.vue', () => {
     localVue.config.optionMergeStrategies.created = (parent, _) => mergeCreatedStrategy(parent)
     localVue.mixin({ created() {} })
 
-    Murmur.config.merge({ groups_by_applications: { datashare: JSON.stringify([project, anotherProject]) } })
+    Murmur.config.set('projects', [{ name: project }, { name: anotherProject }])
     store.commit('search/index', project)
   })
 

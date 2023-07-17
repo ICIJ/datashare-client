@@ -9,7 +9,7 @@
       <hook name="landing.form.heading:after"></hook>
       <search-bar class="landing__form__search-bar py-3" size="md"></search-bar>
       <hook name="landing.form.project:before"></hook>
-      <div v-if="isServer" class="mt-5 text-white">
+      <div v-if="showProjects" class="mt-5 text-white">
         <div class="landing__form__projects">
           <h2 class="text-uppercase h5">
             {{ $t('filter.projects') }}
@@ -36,7 +36,12 @@ export default {
     ProjectCards,
     SearchBar
   },
-  mixins: [utils]
+  mixins: [utils],
+  computed: {
+    showProjects() {
+      return this.isServer || this.$core.projects.length > 1
+    }
+  }
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showSelector" class="filter card">
+  <div class="filter card" v-if="showProjects">
     <div class="card-header px-2">
       <h6 class="pt-0" @click="toggleItems">
         <span class="filter__items__item__icon pl-0 pr-1">
@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import { compact, uniq } from 'lodash'
-
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 
@@ -36,10 +34,8 @@ export default {
     }
   },
   computed: {
-    projects() {
-      const defaultProject = this.$config.get('defaultProject')
-      const projects = this.$config.get('groups_by_applications.datashare', [])
-      return compact(uniq([...projects, defaultProject]).sort())
+    showProjects() {
+      return this.isServer || this.$core.projects.length > 1
     },
     selectedProject: {
       get: function () {
@@ -53,9 +49,6 @@ export default {
     },
     headerIcon() {
       return this.collapseItems ? 'plus' : 'minus'
-    },
-    showSelector() {
-      return this.isServer || this.projects.length > 1
     }
   },
   async created() {
