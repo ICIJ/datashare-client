@@ -40,16 +40,18 @@
             <b-form-textarea v-model="description" max-rows="6" rows="2" trim></b-form-textarea>
           </b-form-group>
           <b-form-group
-            v-if="isServer"
+            v-if="showProjectsInput"
             :label="`${$t('batchSearch.projects')} *`"
             class="batch-search-form__projects"
             label-size="sm"
           >
             <multiselect
-              v-model="projects"
+              v-model="selectedProjects"
               :allow-empty="false"
               :close-on-select="false"
-              :options="availableProjects"
+              :options="projectOptions"
+              track-by="name"
+              label="label"
               multiple
             />
           </b-form-group>
@@ -183,13 +185,17 @@
 
 <script>
 import {
+  castArray,
   compact,
   concat,
   each,
+  find,
+  first,
   filter,
   flatten,
   get,
   has,
+  iteratee,
   includes,
   isEmpty,
   map,
@@ -247,8 +253,8 @@ export default {
       path: this.$config.get('mountedDataDir') || this.$config.get('dataDir'),
       paths: [],
       phraseMatch: true,
-      projects: [],
       published: true,
+      selectedProjects: [],
       selectedFileType: '',
       selectedPaths: [],
       showAdvancedFilters: false,
@@ -256,11 +262,28 @@ export default {
     }
   },
   computed: {
+    showProjectsInput() {
+      return this.isServer || this.$core.projects.length > 1
+    },
     maxFuzziness() {
       return this.phraseMatch ? 100 : 2
     },
-    availableProjects() {
+    projectOptions() {
       return this.$core.projects
+    },
+    defaultSelectedProjects() {
+      return compact(castArray(first(this.projectOptions)))
+    },
+    projects: {
+      get() {
+        return this.selectedProjects.map(iteratee('name'))
+      },
+      set(projects) {
+        const selectedProjects = projects.map((name) => {
+          return find(this.projectOptions, { name })
+        })
+        this.$set(this, 'selectedProjects', selectedProjects)
+      }
     },
     phraseMatchDescription() {
       return (
@@ -311,7 +334,7 @@ export default {
     }
   },
   created() {
-    this.$set(this, 'projects', [this.availableProjects[0]] || [])
+    this.$set(this, 'selectedProjects', this.defaultSelectedProjects)
   },
   methods: {
     selectFileType(fileType = null) {
@@ -377,7 +400,7 @@ export default {
       this.$set(this, 'name', '')
       this.$set(this, 'paths', [])
       this.$set(this, 'phraseMatch', true)
-      this.$set(this, 'projects', [this.availableProjects[0]] || [])
+      this.$set(this, 'selectedProjects', this.defaultSelectedProjects)
       this.$set(this, 'published', true)
       this.$set(this, 'showAdvancedFilters', false)
     },

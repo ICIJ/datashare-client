@@ -19,7 +19,7 @@
             {{ batchSearch.description }}
           </p>
           <dl class="batch-search-results__info">
-            <div v-if="isServer">
+            <div v-if="showProjects">
               <dt>
                 {{ $t('batchSearch.projects') }}
               </dt>
@@ -35,9 +35,9 @@
                     }"
                     class="batch-search-results__info__project-link"
                   >
-                    <span>{{ project.name }}</span
-                    ><span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">, </span>
+                    <span>{{ project.name }}</span>
                   </router-link>
+                  <span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">, </span>
                 </span>
               </dd>
             </div>
@@ -346,6 +346,9 @@ export default {
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results']),
+    showProjects() {
+      return this.isServer || this.$core.projects.length > 1
+    },
     isLoaded() {
       return !!Object.keys(this.batchSearch).length
     },

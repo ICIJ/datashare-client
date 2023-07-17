@@ -24,7 +24,10 @@ describe('BatchSearchForm.vue', () => {
   })
   let wrapper = null
 
-  beforeAll(() => Murmur.config.merge({ groups_by_applications: { datashare: [project] }, dataDir: '/root/project' }))
+  beforeAll(() => {
+    Murmur.config.set('projects', [{ name: project }])
+    Murmur.config.set('dataDir', '/root/project')
+  })
 
   beforeEach(() => {
     Murmur.config.merge({ mode: 'LOCAL' })
@@ -116,17 +119,17 @@ describe('BatchSearchForm.vue', () => {
   })
 
   it('should reset the form', () => {
-    wrapper.vm.$set(wrapper.vm, 'csvFile', new File(['File content'], 'test_file.csv', { type: 'text/csv' }))
-    wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
-    wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
-    wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'PDF' }])
-    wrapper.vm.$set(wrapper.vm, 'fuzziness', 2)
-    wrapper.vm.$set(wrapper.vm, 'name', 'Example')
-    wrapper.vm.$set(wrapper.vm, 'paths', ['This', 'is', 'a', 'multiple', 'paths'])
-    wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
-    wrapper.vm.$set(wrapper.vm, 'projects', ['project-example'])
-    wrapper.vm.$set(wrapper.vm, 'published', false)
-    wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
+    wrapper.setData({ csvFile: new File(['File content'], 'test_file.csv', { type: 'text/csv' }) })
+    wrapper.setData({ description: 'This is a description' })
+    wrapper.setData({ fileType: 'PDF' })
+    wrapper.setData({ fileTypes: [{ label: 'PDF' }] })
+    wrapper.setData({ fuzziness: 2 })
+    wrapper.setData({ name: 'Example' })
+    wrapper.setData({ paths: ['This', 'is', 'a', 'multiple', 'paths'] })
+    wrapper.setData({ phraseMatch: false })
+    wrapper.setData({ projects: ['project-example'] })
+    wrapper.setData({ published: false })
+    wrapper.setData({ showAdvancedFilters: true })
 
     wrapper.vm.resetForm()
 
@@ -156,7 +159,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should hide suggestions', () => {
-      wrapper.vm.$set(wrapper.vm, 'suggestionFileTypes', ['suggestion_01', 'suggestion_02', 'suggestion_03'])
+      wrapper.setData({ suggestionFileTypes: ['suggestion_01', 'suggestion_02', 'suggestion_03'] })
 
       wrapper.vm.hideSuggestionsFileTypes()
 
@@ -164,12 +167,14 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter fileTypes according to the fileTypes input on mime file', () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [
-        { label: 'Visio document', mime: 'visio' },
-        { label: 'StarWriter 5 document', mime: 'vision' },
-        { label: 'Something else', mime: 'else' }
-      ])
-      wrapper.vm.$set(wrapper.vm, 'fileType', 'visi')
+      wrapper.setData({
+        fileType: 'visi',
+        allFileTypes: [
+          { label: 'Visio document', mime: 'visio' },
+          { label: 'StarWriter 5 document', mime: 'vision' },
+          { label: 'Something else', mime: 'else' }
+        ]
+      })
 
       wrapper.vm.searchFileTypes()
 
@@ -179,11 +184,13 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter according to the fileTypes input on label file', () => {
-      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [
-        { label: 'Label PDF', mime: 'PDF' },
-        { label: 'another type', mime: 'other' }
-      ])
-      wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
+      wrapper.setData({
+        fileType: 'PDF',
+        allFileTypes: [
+          { label: 'Label PDF', mime: 'PDF' },
+          { label: 'another type', mime: 'other' }
+        ]
+      })
 
       wrapper.vm.searchFileTypes()
 
@@ -192,8 +199,8 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should hide already selected file type from suggestions', () => {
-      wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }])
-      wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
+      wrapper.setData({ fileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }] })
+      wrapper.setData({ fileType: 'PDF' })
 
       wrapper.vm.searchFileTypes()
 
@@ -202,8 +209,8 @@ describe('BatchSearchForm.vue', () => {
 
     it('should set the clicked item in fileTypes', () => {
       wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
-      wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'Excel 2003 XML spreadsheet visio' }])
-      wrapper.vm.$set(wrapper.vm, 'selectedFileType', { label: 'StarWriter 5 document' })
+      wrapper.setData({ fileTypes: [{ label: 'Excel 2003 XML spreadsheet visio' }] })
+      wrapper.setData({ selectedFileType: { label: 'StarWriter 5 document' } })
       wrapper.vm.searchFileType()
 
       expect(wrapper.vm.fileTypes).toEqual([
@@ -301,8 +308,8 @@ describe('BatchSearchForm.vue', () => {
 
   describe('setPaths', () => {
     it('should set paths from selected ones', () => {
-      wrapper.vm.$set(wrapper.vm, 'paths', ['path_01', 'path_02'])
-      wrapper.vm.$set(wrapper.vm, 'selectedPaths', ['path_02', 'path_03'])
+      wrapper.setData({ paths: ['path_01', 'path_02'] })
+      wrapper.setData({ selectedPaths: ['path_02', 'path_03'] })
 
       wrapper.vm.setPaths()
 
@@ -311,7 +318,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should reset the path', () => {
-      wrapper.vm.$set(wrapper.vm, 'path', 'path_00')
+      wrapper.setData({ path: 'path_00' })
 
       wrapper.vm.setPaths()
 
