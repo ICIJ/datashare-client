@@ -21,14 +21,11 @@
           </template>
         </b-tab>
       </template>
-      <div v-if="$route.name === 'batch-search'">
-        <b-btn class="ml-auto my-1 text-nowrap" variant="primary" @click="$refs['batch-search-form'].show()">
+      <div v-if="$route.name === 'batch-search-list'">
+        <b-btn class="ml-auto my-1 text-nowrap" variant="primary" :to="{ name: 'new-batch-search' }">
           <fa class="mr-1" icon="plus" />
           {{ $t('batchSearch.heading') }}
         </b-btn>
-        <b-modal ref="batch-search-form" :title="$t('batchSearch.heading')" body-class="p-0" hide-footer size="md">
-          <batch-search-form hide-border hide-title @submit="$refs['batch-search-form'].hide()"></batch-search-form>
-        </b-modal>
       </div>
     </page-header>
     <router-view />
@@ -39,13 +36,11 @@
 import { findIndex } from 'lodash'
 
 import utils from '@/mixins/utils'
-import BatchSearchForm from '@/components/BatchSearchForm'
 import PageHeader from '@/components/PageHeader'
 
 export default {
   name: 'Tasks',
   components: {
-    BatchSearchForm,
     PageHeader
   },
   mixins: [utils],
@@ -55,7 +50,7 @@ export default {
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
       } else if (!vm.$route.name.includes('batch-search')) {
-        vm.$router.push({ name: 'batch-search' })
+        vm.$router.push({ name: 'batch-search-list' })
       }
     })
   },
@@ -75,14 +70,17 @@ export default {
       },
       set(value) {
         const name = this.tabRoutes[value]
+        const resolvedPath = this.$router.resolve({ name })?.route?.path
+        // Must be the current route or one of its children
+        const isMatchedRoute = this.$route.matched.some((m) => m.path.startsWith(resolvedPath))
         // Change tab only if the route changed
-        if (name !== this.$route.name) {
+        if (!isMatchedRoute) {
           this.$router.push({ name })
         }
       }
     },
     tabRoutes() {
-      return ['batch-search', 'batch-download', 'indexing']
+      return ['batch-search-list', 'batch-download', 'indexing']
     }
   }
 }
