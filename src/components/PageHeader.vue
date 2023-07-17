@@ -104,7 +104,7 @@ export default {
           font-weight: bold;
           border-radius: $border-radius $border-radius 0 0;
           border-bottom: 0;
-          border-top: 0;      
+          border-top: 0;
 
           &:hover:not(.active) {
             border-color: transparent;
