@@ -37,16 +37,16 @@ describe('AppSidebar.vue', () => {
   afterAll(() => jest.unmock('@/utils/utils'))
 
   describe('the help link', () => {
-    it('should be a github link if NOT in SERVER mode', () => {
+    it('should be a gitbook link if NOT in SERVER mode', () => {
       expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(
-        expect.stringContaining('github.com')
+        expect.stringContaining('gitbook.io')
       )
     })
 
     it('should be another github link if in SERVER mode', () => {
       wrapper = setServerMode()
       expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toBe(
-        'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
+        'https://icij.gitbook.io/datashare/ask-for-help'
       )
     })
   })
