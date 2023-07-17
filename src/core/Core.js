@@ -13,6 +13,7 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
+import { iteratee } from 'lodash'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
@@ -207,8 +208,10 @@ class Core extends Behaviors {
   }
 
   getDefaultProject() {
-    const userProjects = this.config.get('groups_by_applications.datashare', [])
-    if (userProjects.length === 0) return ''
+    const userProjects = this.config.get('projects', []).map(iteratee('name'))
+    if (userProjects.length === 0) {
+      return ''
+    }
     const defaultProject = this.config.get('defaultProject', '')
     return userProjects.indexOf(defaultProject) === -1 ? userProjects[0] : defaultProject
   }
