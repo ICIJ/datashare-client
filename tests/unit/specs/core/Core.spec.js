@@ -123,14 +123,14 @@ describe('Core', () => {
 
   it('should getDefaultProject when user has it', () => {
     const core = Core.init(localVue).useAll()
-    core.config.set('groups_by_applications.datashare', ['my_project'])
+    core.config.set('projects', [{ name: 'my_project' }])
     core.config.set('defaultProject', 'my_project')
     expect(core.getDefaultProject()).toEqual('my_project')
   })
 
   it("should return first user project when user doesn't have the default project", () => {
     const core = Core.init(localVue).useAll()
-    core.config.set('groups_by_applications.datashare', ['user_project'])
+    core.config.set('projects', [{ name: 'user_project' }])
     core.config.set('defaultProject', 'default_project')
     expect(core.getDefaultProject()).toEqual('user_project')
   })

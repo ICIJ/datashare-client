@@ -25,8 +25,8 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     }
   }
 
-  function checkUserProjects(to, _from, next) {
-    const projects = config.get('groups_by_applications.datashare', [])
+  function checkUserProjects(to, from, next) {
+    const projects = config.get('projects', [])
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
       const title = i18n.t('error.noProjects')
