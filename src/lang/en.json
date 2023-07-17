@@ -693,8 +693,11 @@
       "description": "Description"
     }
   },
+  "newBatchSearch": {
+    "title": "Start a new batch search"
+  },
   "batchSearchResults": {
-    "title": "Batch Search Results",
+    "title": "Batch search results",
     "rank": "Rank",
     "query": "Query",
     "documentPath": "Document Path",
