@@ -151,7 +151,7 @@ export const router = {
               }
             },
             {
-              name: 'batch-search-list',
+              name: 'batch-search',
               path: 'batch-search',
               components: {
                 default: () => import('@/pages/BatchSearch')
