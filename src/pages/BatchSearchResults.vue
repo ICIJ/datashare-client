@@ -1,11 +1,14 @@
 <template>
   <div v-if="isLoaded" class="batch-search-results">
     <div class="my-4 container">
-      <div class="mx-1 mb-2">
+      <div class="mx-1 mb-2 d-flex">
         <router-link :to="generateTo">
           <fa icon="angle-left" class="mr-1" fixed-width />
           {{ $t('batchSearch.title') }}
         </router-link>
+        <span class="border-left border-dark pl-3 ml-3 font-weight-bold">
+          {{ $t('batchSearchResults.title') }}
+        </span>
       </div>
       <batch-search-results-details :batch-search="batchSearch" @update:published="changePublished" />
     </div>
@@ -123,7 +126,7 @@ export default {
         : null
     },
     generateTo() {
-      const baseTo = { name: 'batch-search' }
+      const baseTo = { name: 'batch-search-list' }
       return {
         ...baseTo,
         ...(this.$route.query?.query && { query: { query: this.$route.query.query } })

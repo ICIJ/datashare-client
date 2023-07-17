@@ -146,6 +146,6 @@ describe('BatchSearchActions.vue', () => {
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.deleteBatchSearch()
     expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({ name: 'batch-search' })
+    expect(router.push).toBeCalledWith({ name: 'batch-search-list' })
   })
 })
