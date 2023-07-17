@@ -68,7 +68,7 @@ export default {
         if (this.deleteAfterRelaunch) {
           await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
         }
-        this.$router.push({ name: 'batch-search' })
+        this.$router.push({ name: 'batch-search-list' })
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
       }

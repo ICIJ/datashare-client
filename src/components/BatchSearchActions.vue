@@ -133,7 +133,7 @@ export default {
       try {
         await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
         this.$root.$bvToast.toast(this.$t('batchSearch.deleted'), { noCloseButton: true, variant: 'success' })
-        return this.$router.push({ name: 'batch-search' })
+        return this.$router.push({ name: 'batch-search-list' })
       } catch (e) {
         this.$root.$bvToast.toast(this.$t('batchSearch.deleteError'), { noCloseButton: true, variant: 'danger' })
       }

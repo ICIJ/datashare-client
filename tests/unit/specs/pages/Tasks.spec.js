@@ -16,7 +16,7 @@ describe('Tasks.vue', () => {
         children: [
           { name: 'indexing', path: 'indexing' },
           { name: 'batch-download', path: 'batch-download' },
-          { name: 'batch-search', path: 'batch-search' }
+          { name: 'batch-search-list', path: 'batch-search' }
         ]
       }
     ]
@@ -32,13 +32,6 @@ describe('Tasks.vue', () => {
     replaceRouteby({ name: 'tasks' })
     wrapper = shallowMount(Tasks, { i18n, localVue, store, router })
     expect(wrapper.vm.tab).toBe(null)
-  })
-
-  it('should add the new "batch-search" form in a modal', async () => {
-    replaceRouteby({ name: 'batch-search' })
-    wrapper = shallowMount(Tasks, { i18n, localVue, store, router })
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.$refs['batch-search-form']).not.toBeUndefined()
   })
 
   it('should select the "batch-download" tab when the route is active', () => {

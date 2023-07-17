@@ -86,7 +86,7 @@ export const router = {
         {
           path: 'batch-search',
           redirect: {
-            name: 'batch-search'
+            name: 'batch-search-list'
           }
         },
         {
@@ -106,7 +106,7 @@ export const router = {
           path: 'tasks',
           component: () => import('@/pages/Tasks'),
           redirect: {
-            name: 'batch-search'
+            name: 'batch-search-list'
           },
           meta: {
             title: ({ i18n }) => i18n.t('tasks.title')
@@ -151,34 +151,59 @@ export const router = {
               }
             },
             {
-              name: 'batch-search',
+              name: 'batch-search-list',
               path: 'batch-search',
               components: {
                 default: () => import('@/pages/BatchSearch')
               },
-              meta: {
-                title: ({ i18n }) => i18n.t('batchSearch.title'),
-                docs: [
-                  {
-                    title: 'How to use batch searches',
-                    path: 'all/batch-search-documents'
+              children: [
+                {
+                  path: '',
+                  name: 'batch-search-list',
+                  components: {
+                    default: () => import('@/pages/BatchSearchList')
+                  },
+                  meta: {
+                    title: ({ i18n }) => i18n.t('batchSearch.title'),
+                    docs: [
+                      {
+                        title: 'How to use batch searches',
+                        path: 'all/batch-search-documents'
+                      }
+                    ]
                   }
-                ]
-              }
-            },
-            {
-              name: 'batch-search.results',
-              path: 'batch-search/:index/:uuid',
-              components: {
-                default: () => import('@/pages/BatchSearchResults')
-              },
-              props: {
-                default: true,
-                sidebar: true
-              },
-              meta: {
-                title: ({ i18n }) => i18n.t('batchSearchResults.title')
-              }
+                },
+                {
+                  name: 'new-batch-search',
+                  path: 'new',
+                  components: {
+                    default: () => import('@/pages/NewBatchSearch')
+                  },
+                  meta: {
+                    title: ({ i18n }) => i18n.t('newBatchSearch.title'),
+                    docs: [
+                      {
+                        title: 'How to use batch searches',
+                        path: 'all/batch-search-documents'
+                      }
+                    ]
+                  }
+                },
+                {
+                  name: 'batch-search.results',
+                  path: ':index/:uuid',
+                  components: {
+                    default: () => import('@/pages/BatchSearchResults')
+                  },
+                  props: {
+                    default: true,
+                    sidebar: true
+                  },
+                  meta: {
+                    title: ({ i18n }) => i18n.t('batchSearchResults.title')
+                  }
+                }
+              ]
             }
           ]
         },

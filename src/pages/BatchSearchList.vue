@@ -1,21 +1,17 @@
 <template>
-  <div class="batch-search container h-100 pt-4">
-    <v-wait class="batch-search__wait" for="load haveBatchSearch">
+  <div class="batch-search-list container h-100 pt-4">
+    <v-wait class="batch-search-list__wait" for="load haveBatchSearch">
       <fa slot="waiting" class="d-flex mx-auto mt-5" icon="circle-notch" size="2x" spin />
       <template v-if="hasBatchSearch">
         <div class="d-flex flex-wrap align-items-center">
-          <batch-search-filter-query class="batch-search__search-bar my-1" />
-          <batch-search-clear-filters
-            class="batch-search__clear-filter-btn m-1"
-            route-name="batch-search"
-            :local-search-params="LOCAL_SEARCH_PARAMS"
-          />
+          <batch-search-filter-query class="batch-search-list__search-bar my-1" />
+          <batch-search-clear-filters class="batch-search-list__clear-filter-btn m-1" />
         </div>
         <batch-search-table />
       </template>
       <template v-else>
-        <div class="batch-search__none text-center">
-          <div class="batch-search__none__message b-table-empty-row" v-html="noBatchSearch" />
+        <div class="batch-search-list__none text-center">
+          <div class="batch-search-list__none__message b-table-empty-row" v-html="noBatchSearch" />
         </div>
       </template>
     </v-wait>
@@ -29,27 +25,15 @@ import utils from '@/mixins/utils'
 import BatchSearchTable from '@/components/BatchSearchTable'
 import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
-const LOCAL_SEARCH_PARAMS = Object.freeze({
-  query: true,
-  publishState: false,
-  project: false,
-  dateStart: true,
-  dateEnd: true,
-  state: true,
-  order: true,
-  sort: true
-})
+
 export default {
-  name: 'BatchSearches',
+  name: 'BatchSearchList',
   components: {
     BatchSearchFilterQuery,
     BatchSearchClearFilters,
     BatchSearchTable
   },
   mixins: [utils],
-  data() {
-    return { LOCAL_SEARCH_PARAMS }
-  },
   computed: {
     ...mapGetters('batchSearch', ['hasBatchSearch']),
     howToLink() {
@@ -73,3 +57,10 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.batch-search-list__none__message {
+  padding: 0.75em;
+  border: 1px solid #dee2e6;
+  background-color: white;
+}
+</style>
