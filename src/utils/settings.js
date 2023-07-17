@@ -209,10 +209,9 @@ export default {
       { sortBy: '_key', sortByOrder: 'desc' }
     ]
   },
-  helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',
-  faqLink: 'https://icij.gitbook.io/datashare/faq/table-of-contents',
-  userGuidesLink: 'https://icij.gitbook.io/datashare/',
-  devWikiLink: 'https://github.com/icij/datashare/wiki',
+  helpLink: 'https://icij.gitbook.io/datashare/ask-for-help',
+  faqLink: 'https://icij.gitbook.io/datashare/usage/faq',
+  documentationLink: 'https://icij.gitbook.io/datashare/',
   widgetTextDefaultContent: `Welcome to Datashare Insights!
                              The smartest way to get insights about your documents in minutes.
                              Each widget can be customized with plugins, depending on your project

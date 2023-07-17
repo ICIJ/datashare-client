@@ -45,11 +45,8 @@ export default {
     faqLink() {
       return this.$config.get('faqLink', settings.faqLink)
     },
-    userGuidesLink() {
-      return this.$config.get('userGuidesLink', settings.userGuidesLink)
-    },
-    devWikiLink() {
-      return this.$config.get('devWikiLink', settings.devWikiLink)
+    documentationLink() {
+      return this.$config.get('documentationLink', settings.documentationLink)
     },
     showHeader() {
       return this.isServer && !!this.username
@@ -102,15 +99,9 @@ export default {
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
-            <a :href="userGuidesLink" target="_blank">
+            <a :href="documentationLink" target="_blank">
               <fa icon="book" fixed-width class="error__container__links__item__icon mr-1"></fa>
               {{ $t('menu.userGuides') }}
-            </a>
-          </li>
-          <li class="list-inline-item error__container__links__item">
-            <a :href="devWikiLink" target="_blank">
-              <fa icon="server" fixed-width class="error__container__links__item__icon mr-1"></fa>
-              {{ $t('menu.devWiki') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
