@@ -80,6 +80,8 @@ export default {
       this.$set(this, 'form', {
         name: null,
         label: null,
+        sourcePath: this.$config.get('dataDir'),
+        allowedMask: '*',
         description: null,
         logoUrl: null,
         sourceUrl: null,
