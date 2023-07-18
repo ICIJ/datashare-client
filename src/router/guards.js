@@ -2,7 +2,7 @@ import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
 export default ({ router, auth, store, config, i18n, setPageTitle }) => {
-  async function checkUserAuthentication(to, from, next) {
+  async function checkUserAuthentication(to, _from, next) {
     try {
       // This route skip auth
       if (to.matched.some((r) => get(r, 'meta.skipsAuth', false))) {
@@ -25,29 +25,41 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     }
   }
 
-  function checkUserProjects(to, from, next) {
+  function checkUserProjects(to, _from, next) {
     const projects = config.get('groups_by_applications.datashare', [])
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
-      const description = i18n.t('error.noProjects')
-      next({ name: 'error', params: { description } })
+      const title = i18n.t('error.noProjects')
+      next({ name: 'error', params: { title } })
     } else {
       next()
     }
   }
 
-  function reduceAppSideBar(to, from, next) {
+  function reduceAppSideBar(_to, _from, next) {
     store.dispatch('app/toggleSidebar', true)
     next()
   }
 
-  async function setPageTitleFromMeta({ meta }, from, next) {
+  async function setPageTitleFromMeta({ meta }, _from, next) {
     const params = { router, auth, store, config, i18n }
     const title = isFunction(meta.title) ? await meta.title(params) : meta.title
     setPageTitle(title)
     next()
   }
 
+  function checkMode({ meta }, _from, next) {
+    const currentMode = config.get('mode')
+    const allowedModes = get(meta, 'allowedModes', [])
+    if (allowedModes.length === 0 || allowedModes.includes(currentMode)) {
+      next()
+    } else {
+      const title = i18n.t('error.notFound')
+      next({ name: 'error', params: { title } })
+    }
+  }
+
+  router.beforeEach(checkMode)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
   router.beforeEach(reduceAppSideBar)

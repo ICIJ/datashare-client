@@ -200,6 +200,9 @@ export const router = {
               path: 'new',
               components: {
                 default: () => import('@/pages/NewProject')
+              },
+              meta: {
+                allowedModes: ['LOCAL', 'EMBEDDED']
               }
             }
           ]
