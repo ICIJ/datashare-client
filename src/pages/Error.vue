@@ -15,16 +15,20 @@ export default {
   mixins: [utils],
   props: {
     error: {
-      type: [String, Error]
+      type: [String, Error],
+      default: null
     },
     title: {
-      type: String
+      type: String,
+      default: null
     },
     description: {
-      type: String
+      type: String,
+      default: null
     },
     code: {
-      type: Number
+      type: Number,
+      default: null
     }
   },
   data() {
