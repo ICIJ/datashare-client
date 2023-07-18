@@ -716,6 +716,47 @@
       "heading": "Filter by queries"
     }
   },
+  "newProject": {
+    "title": "New project",
+    "description": "",
+    "submit": "Create project"
+  },
+  "projectForm": {
+    "form": {
+      "name": {
+        "label": "ID",
+        "description": "This value is used internally to identify the project."
+      },
+      "label": {
+        "label": "Label",
+        "description": "",
+        "invalidFeedback": "The label \"{label}\" is a reserved word."
+      },
+      "description": {
+        "label": "Description",
+        "description": ""
+      },
+      "logoUrl": {
+        "label": "Logo URL",
+        "description": ""
+      },
+      "sourceUrl": {
+        "label": "Source URL",
+        "description": ""
+      },
+      "publisherName": {
+        "label": "Publisher name",
+        "description": "The people or organization that published the files in this project."
+      },
+      "maintainerName": {
+        "label": "Maintainer name",
+        "description": "The people or organization that will be in charge of maintaining this project on Datashare."
+      }
+    },
+    "reset": "Reset",
+    "resetConfirmation": "Are you sure you want to reset the form to its initial values?",
+    "submit": "Submit"
+  },
   "shortkeys": {
     "title": "Search shortcuts",
     "goToPreviousDocument": "Go to the previous document",
