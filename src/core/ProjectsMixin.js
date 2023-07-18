@@ -49,7 +49,7 @@ const ProjectsMixin = (superclass) =>
      */
     createDefaultProject() {
       const defaultProject = this.config.get('defaultProject')
-      return this.api.createProject(defaultProject)
+      return this.api.createIndex(defaultProject)
     }
     /**
      * List all projects this user has access to.

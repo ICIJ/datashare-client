@@ -75,8 +75,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to createProject', async () => {
-    json = await api.createProject()
+  it('should return backend response to createIndex', async () => {
+    json = await api.createIndex()
     expect(json).toEqual({})
   })
 
@@ -344,7 +344,7 @@ describe('Datashare backend client', () => {
     EventBus.$on('http::error', mockCallback)
 
     try {
-      await api.createProject()
+      await api.createIndex()
     } catch (err) {
       expect(err).toEqual(error)
     }
