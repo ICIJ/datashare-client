@@ -4,17 +4,32 @@ import { every, cloneDeep, kebabCase } from 'lodash'
 import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
 import { slugger, isUrl } from '@/utils/strings'
 
+/**
+ * Build project form (to create or edit a project).
+ */
 export default {
   name: 'ProjectForm',
   components: {
     InlineDirectoryPicker
   },
   props: {
+    /**
+     * Display the form in a card
+     */
     card: {
       type: Boolean
     },
+    /**
+     * Disable all inputs
+     */
     disabled: {
       type: Boolean
+    },
+    /**
+     * Default values of the form
+     */
+    values: {
+      type: Object
     }
   },
   data() {
@@ -27,7 +42,10 @@ export default {
         logoUrl: null,
         sourceUrl: null,
         publisherName: null,
-        maintainerName: null
+        maintainerName: null,
+        // Merge with this properties to be able to initialize
+        // the form with an existing project
+        ...this.values
       }
     }
   },
@@ -86,7 +104,10 @@ export default {
         logoUrl: null,
         sourceUrl: null,
         publisherName: null,
-        maintainerName: null
+        maintainerName: null,
+        // Merge with this properties to be able to initialize
+        // the form with an existing project
+        ...this.values
       })
     }
   }
