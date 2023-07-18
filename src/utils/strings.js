@@ -1,4 +1,4 @@
-import { escapeRegExp } from 'lodash'
+import { escapeRegExp, some, trimEnd } from 'lodash'
 
 export function slugger(value = '') {
   return value
@@ -6,6 +6,18 @@ export function slugger(value = '') {
     .trim()
     .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
     .replace(/\s/g, '-')
+}
+
+export function isUrl(value, protocols = ['https', 'http']) {
+  let url
+
+  try {
+    url = new URL(value)
+  } catch (_) {
+    return false
+  }
+
+  return some(protocols, (protocol) => protocol === trimEnd(url.protocol, ':'))
 }
 
 export function addLocalSearchMarksClassByOffsets({ content = '', term = '', offsets = [], delta = 0 } = {}) {
@@ -49,17 +61,4 @@ export function addLocalSearchMarksClass(content = '<div></div>', localSearchTer
   } catch (error) {
     return { content, localSearchIndex, localSearchOccurrences }
   }
-}
-
-export function isUrl(url = '') {
-  const pattern = new RegExp(
-    '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
-    'i'
-  ) // fragment locator
-  return !!pattern.test(url)
 }
