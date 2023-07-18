@@ -130,4 +130,11 @@ describe('ProjectForm.vue', () => {
     await wrapper.trigger('submit')
     expect(wrapper.emitted().submit).toBeFalsy()
   })
+
+  it('should initialize the form with default project values', () => {
+    const values = { name: 'foo' }
+    const propsData = { values }
+    wrapper = mount(ProjectForm, { localVue, i18n, wait, store, config, propsData })
+    expect(wrapper.find('input[name=name]').element.value).toBe('foo')
+  })
 })
