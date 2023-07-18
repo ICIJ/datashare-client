@@ -156,5 +156,15 @@ describe('strings', () => {
       const url = 'http://www.google.fr'
       expect(isUrl(url)).toBeTruthy()
     })
+
+    it('should return false if it is an sftp url', () => {
+      const url = 'sftp://www.google.fr'
+      expect(isUrl(url)).toBeFalsy()
+    })
+
+    it('should return true if it is an sftp url as requested', () => {
+      const url = 'sftp://www.google.fr'
+      expect(isUrl(url, ['sftp'])).toBeTruthy()
+    })
   })
 })
