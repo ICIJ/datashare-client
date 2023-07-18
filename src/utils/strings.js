@@ -1,5 +1,11 @@
 import { escapeRegExp, some, trimEnd } from 'lodash'
 
+/**
+ * Slugify a string value.
+ *
+ * @param {string} [value=''] - The string to be slugified.
+ * @return {string} - The slugified string.
+ */
 export function slugger(value = '') {
   return value
     .toLowerCase()
@@ -8,6 +14,13 @@ export function slugger(value = '') {
     .replace(/\s/g, '-')
 }
 
+/**
+ * Check if a value is a valid URL.
+ *
+ * @param {string} value - The value to check.
+ * @param {string[]} [protocols=['https', 'http']] - The protocols to validate against.
+ * @return {boolean} - True if the value is a valid URL, false otherwise.
+ */
 export function isUrl(value, protocols = ['https', 'http']) {
   let url
 
@@ -20,6 +33,16 @@ export function isUrl(value, protocols = ['https', 'http']) {
   return some(protocols, (protocol) => protocol === trimEnd(url.protocol, ':'))
 }
 
+/**
+ * Add a mark class to a string based on search term offsets.
+ *
+ * @param {Object} [params={}] - The parameters for marking.
+ * @param {string} [params.content=''] - The string content to search in.
+ * @param {string} [params.term=''] - The search term.
+ * @param {number[]} [params.offsets=[]] - The offsets of the search term in the content.
+ * @param {number} [params.delta=0] - Optional offset correction.
+ * @return {string} - The content string with marked search terms.
+ */
 export function addLocalSearchMarksClassByOffsets({ content = '', term = '', offsets = [], delta = 0 } = {}) {
   // Create one chunk for each letter
   const chunks = content.split('')
@@ -37,6 +60,15 @@ export function addLocalSearchMarksClassByOffsets({ content = '', term = '', off
   return chunks.join('')
 }
 
+/**
+ * Highlight search term occurrences in the given content.
+ *
+ * @param {string} [content='<div></div>'] - The HTML content to search in.
+ * @param {Object} [localSearchTerm={ label: '' }] - The search term object.
+ * @param {string} [localSearchTerm.label=''] - The label of the search term.
+ * @param {boolean} [localSearchTerm.regex=false] - Indicates if the term is a regular expression.
+ * @return {Object} - An object with updated content, local search index and local search occurrences count.
+ */
 export function addLocalSearchMarksClass(content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
   // In case the searched term is split on 2 lines in the content
