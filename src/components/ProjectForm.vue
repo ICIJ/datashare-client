@@ -43,7 +43,7 @@ export default {
         sourceUrl: null,
         publisherName: null,
         maintainerName: null,
-        // Merge with this properties to be able to initialize
+        // Merge with this property to be able to initialize
         // the form with an existing project
         ...this.values
       }
@@ -105,7 +105,7 @@ export default {
         sourceUrl: null,
         publisherName: null,
         maintainerName: null,
-        // Merge with this properties to be able to initialize
+        // Merge with this propertiy to be able to initialize
         // the form with an existing project
         ...this.values
       })
