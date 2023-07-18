@@ -1,10 +1,14 @@
 <script>
 import { every, cloneDeep, kebabCase } from 'lodash'
 
+import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
 import { slugger, isUrl } from '@/utils/strings'
 
 export default {
   name: 'ProjectForm',
+  components: {
+    InlineDirectoryPicker
+  },
   props: {
     card: {
       type: Boolean
@@ -18,6 +22,7 @@ export default {
       form: {
         name: null,
         label: null,
+        sourcePath: this.$config.get('dataDir'),
         description: null,
         logoUrl: null,
         sourceUrl: null,
@@ -127,6 +132,15 @@ export default {
         :validated="isPresent(form.description)"
       >
         <b-form-textarea v-model="form.description" placeholder="" rows="3" max-rows="8" />
+      </b-form-group>
+      <b-form-group
+        class="project-form__group project-form__group--source-path"
+        :label="$t('projectForm.form.sourcePath.label')"
+        :description="$t('projectForm.form.sourcePath.description')"
+        :disabled="disabled"
+        :validated="isPresent(form.sourcePath)"
+      >
+        <inline-directory-picker v-model="form.sourcePath" />
       </b-form-group>
       <b-form-group
         class="project-form__group project-form__group--logo-url"

@@ -3,13 +3,13 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import ProjectForm from '@/components/ProjectForm'
 import { Core } from '@/core'
 
-const { localVue, i18n } = Core.init(createLocalVue()).useAll()
+const { localVue, i18n, wait, store, config } = Core.init(createLocalVue()).useAll()
 
 describe('ProjectForm.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = mount(ProjectForm, { localVue, i18n })
+    wrapper = mount(ProjectForm, { localVue, i18n, wait, store, config })
   })
 
   it('should not use b-card-* components by default', () => {

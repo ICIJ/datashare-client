@@ -736,6 +736,10 @@
         "label": "Description",
         "description": ""
       },
+      "sourcePath": {
+        "label": "Project folder",
+        "description": "This is the folder where the project's files are located."
+      },
       "logoUrl": {
         "label": "Logo URL",
         "description": ""
