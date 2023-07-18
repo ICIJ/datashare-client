@@ -30,6 +30,12 @@ export default {
      */
     values: {
       type: Object
+    },
+    /**
+     * Freeze name and sourcePath in edit mode
+     */
+    edit: {
+      type: Boolean
     }
   },
   data() {
@@ -71,8 +77,11 @@ export default {
   },
   watch: {
     'form.label': function (label) {
-      // Transform to kebab case first to insert a "minus" when input is using camel case
-      this.form.name = slugger(kebabCase(label)).toLowerCase()
+      // The name cannot change when `edit` is set
+      if (!this.edit) {
+        // Transform to kebab case first to insert a "minus" when input is using camel case
+        this.form.name = slugger(kebabCase(label)).toLowerCase()
+      }
     }
   },
   methods: {
@@ -154,9 +163,10 @@ export default {
         :disabled="disabled"
         :validated="isPresent(form.description)"
       >
-        <b-form-textarea v-model="form.description" placeholder="" rows="3" max-rows="8" />
+        <b-form-textarea v-model="form.description" name="description" placeholder="" rows="3" max-rows="8" />
       </b-form-group>
       <b-form-group
+        v-if="!edit"
         class="project-form__group project-form__group--source-path"
         :label="$t('projectForm.form.sourcePath.label')"
         :description="$t('projectForm.form.sourcePath.description')"
