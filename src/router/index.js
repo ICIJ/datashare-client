@@ -183,6 +183,28 @@ export const router = {
           ]
         },
         {
+          path: 'p',
+          components: {
+            default: () => import('@/pages/Project')
+          },
+          children: [
+            {
+              path: '',
+              name: 'project',
+              redirect: {
+                name: 'project.new'
+              }
+            },
+            {
+              name: 'project.new',
+              path: 'new',
+              components: {
+                default: () => import('@/pages/NewProject')
+              }
+            }
+          ]
+        },
+        {
           name: 'user-history',
           path: 'user-history',
           component: () => import('@/pages/UserHistory'),

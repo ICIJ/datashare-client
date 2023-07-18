@@ -57,8 +57,11 @@ export class Api {
   getTasks(filter) {
     return this.sendAction('/api/task/all', { params: { filter } })
   }
-  createProject(project) {
-    return this.sendActionAsText(`/api/index/${project}`, { method: Method.PUT })
+  createIndex(index) {
+    return this.sendActionAsText(`/api/index/${index}`, { method: Method.PUT })
+  }
+  createProject(data) {
+    return this.sendActionAsText(`/api/project/`, { method: Method.POST, data })
   }
   deleteAll(project) {
     return this.sendActionAsText(`/api/project/${project}`, { method: Method.DELETE })
