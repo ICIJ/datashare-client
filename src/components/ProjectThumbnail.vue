@@ -19,7 +19,8 @@ export default {
      * will be used to generate the thumbnail consistently.
      */
     project: {
-      type: Object
+      type: Object,
+      required: true
     },
     /**
      * Default width (and height) or the thumbnail which is always a square. Can be any valid CSS size.
