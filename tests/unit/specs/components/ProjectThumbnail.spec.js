@@ -88,4 +88,11 @@ describe('ProjectThumbnail.vue', () => {
     const wrapper = shallowMount(ProjectThumbnail, { localVue, propsData })
     expect(wrapper.attributes('style')).toContain('width: 1.5em')
   })
+
+  it('should hide the caption when `noCaption` is set', () => {
+    const project = { name: 'foo' }
+    const propsData = { project, noCaption: true }
+    const wrapper = shallowMount(ProjectThumbnail, { localVue, propsData })
+    expect(wrapper.attributes('data-caption')).toBeUndefined()
+  })
 })
