@@ -757,7 +757,7 @@
       },
       "publisherName": {
         "label": "Publisher name",
-        "description": "The people or organization that published the files in this project."
+        "description": "The people or organization who published the files in this project."
       },
       "maintainerName": {
         "label": "Maintainer name",
