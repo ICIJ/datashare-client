@@ -29,7 +29,8 @@ export default {
      * Default values of the form
      */
     values: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     /**
      * Freeze name and sourcePath in edit mode
