@@ -94,3 +94,25 @@ export function addLocalSearchMarksClass(content = '<div></div>', localSearchTer
     return { content, localSearchIndex, localSearchOccurrences }
   }
 }
+
+/**
+ * Retrieves consonants from a given string.
+ *
+ * @param {string} [value=''] - The input string. Default is an empty string.
+ * @returns {string[]} An array containing the consonants extracted from the input string.
+ */
+export function getConsonants(value = '') {
+  const vowels = ['a', 'e', 'i', 'o', 'u']
+  const consonants = []
+
+  for (let i = 0; i < value.length; i++) {
+    const char = value[i].toLowerCase()
+    // Check if the character is an alphabet and not a vowel
+    if (/^[a-z]$/.test(char) && !vowels.includes(char)) {
+      // Push the original value to keep the case
+      consonants.push(value[i])
+    }
+  }
+
+  return consonants
+}
