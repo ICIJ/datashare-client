@@ -19,7 +19,7 @@ export default {
         this.$wait.start('creating')
         await this.$core.api.createProject(project)
         this.notifyCreationSucceed()
-        this.$router.push({ name: 'landing' })
+        this.redirectToProject(project)
       } catch (error) {
         this.notifyCreationFailed(error)
       } finally {
@@ -37,6 +37,10 @@ export default {
       const variant = 'danger'
       const body = get(error, 'response.data.error') ?? this.$t('newProject.notify.failedBody')
       this.$root.$bvToast.toast(body, { variant, title })
+    },
+    redirectToProject({ name }) {
+      const params = { name }
+      this.$router.push({ name: 'project.view', params })
     }
   }
 }
