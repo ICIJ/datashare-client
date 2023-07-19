@@ -44,7 +44,6 @@ describe('guards', () => {
     })
   })
 
-
   describe('checkMode', () => {
     let wrapper
 
