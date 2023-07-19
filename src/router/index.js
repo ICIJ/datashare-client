@@ -196,8 +196,19 @@ export const router = {
               }
             },
             {
+              name: 'project.new',
+              path: 'new',
+              components: {
+                default: () => import('@/pages/NewProject')
+              },
+              meta: {
+                allowedModes: ['LOCAL', 'EMBEDDED']
+              }
+            },
+            {
               name: 'project.view',
               path: ':name',
+              props: true,
               component: () => import('@/pages/ProjectView'),
               children: [
                 {
@@ -207,16 +218,6 @@ export const router = {
                   component: () => import('@/pages/ProjectInsights')
                 }
               ]
-            },
-            {
-              name: 'project.new',
-              path: 'new',
-              components: {
-                default: () => import('@/pages/NewProject')
-              },
-              meta: {
-                allowedModes: ['LOCAL', 'EMBEDDED']
-              }
             }
           ]
         },
