@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     project() {
-      return { name: this.$core.findProject(this.name), label: 'Local Datashare' }
+      return this.$core.findProject(this.name)
     },
     tab: {
       get() {
@@ -39,13 +39,24 @@ export default {
     tabRoutes() {
       return ['project.view.insights']
     }
+  },
+  beforeMount() {
+    if (!this.project) {
+      const title = this.$t('error.notFound')
+      this.$router.push({ name: 'error', params: { title } })
+    }
   }
 }
 </script>
 
 <template>
   <div class="project-view">
-    <page-header v-model="tabIndex" :title="project.label || project.name" :tab.sync="tab">
+    <page-header
+      v-model="tabIndex"
+      :title="project.label || project.name"
+      :description="project.description"
+      :tab.sync="tab"
+    >
       <template #preTitle>
         <project-thumbnail :project="project" width="4em" class="mr-3 rounded shaddow" />
       </template>
