@@ -722,7 +722,7 @@
     "description": "",
     "notify": {
       "succeed": "The project was created",
-      "succeedBody": "You can now add documents to this project.",
+      "succeedBody": "Now, you can add documents to this project.",
       "failed": "Unable to create the project",
       "failedBody": "Something happened when trying to create this project."
     },
