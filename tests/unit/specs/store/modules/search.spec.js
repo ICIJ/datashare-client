@@ -559,6 +559,15 @@ describe('SearchStore', () => {
       ])
     })
 
+    it('should filter on fuzziness number', () => {
+      store.commit('search/query', 'term_01~2 term_02')
+
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([
+        { field: '', label: 'term_01', negation: false, regex: false },
+        { field: '', label: 'term_02', negation: false, regex: false }
+      ])
+    })
+
     it('should not split an exact search sentence', () => {
       store.commit('search/query', 'term_01 "and an exact term" term_02')
 
