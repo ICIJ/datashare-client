@@ -33,6 +33,12 @@ export default {
      */
     checked: {
       type: Boolean
+    },
+    /**
+     * Disable the caption generation.
+     */
+    noCaption: {
+      type: Boolean
     }
   },
   computed: {
@@ -45,13 +51,16 @@ export default {
       return compact([start, middle, end]).join('')
     },
     caption() {
+      if (this.noCaption || this.hasBackgroundWithLogo) {
+        return null
+      }
       return this.abbr.length === 3 ? this.abbr : this.captionBase.slice(0, 3)
     },
     captionBase() {
       return (this.project.label || this.project.name || '').toLowerCase()
     },
     background() {
-      return this.isBackgroundWithLogo ? this.backgroundWithLogo : this.backgroundWithoutLogo
+      return this.hasBackgroundWithLogo ? this.backgroundWithLogo : this.backgroundWithoutLogo
     },
     backgroundWithLogo() {
       return `url("${this.project.logoUrl}") no-repeat center center #000`
@@ -60,7 +69,7 @@ export default {
       return this.backgroundColor
     },
     backgroundColor() {
-      return this.isBackgroundWithLogo ? '#000' : stringToColor(this.project.name)
+      return this.hasBackgroundWithLogo ? '#000' : stringToColor(this.project.name)
     },
     color() {
       if (this.checked) {
@@ -75,7 +84,7 @@ export default {
       const yiq = (red * 299 + green * 587 + blue * 114) / 1000
       return yiq >= 128
     },
-    isBackgroundWithLogo() {
+    hasBackgroundWithLogo() {
       return !!this.project.logoUrl
     },
     style() {
@@ -83,7 +92,7 @@ export default {
     },
     classList() {
       return {
-        'project-thumbnail--colorized': !this.isBackgroundWithLogo,
+        'project-thumbnail--colorized': !this.hasBackgroundWithLogo,
         'project-thumbnail--checked': this.checked,
         'project-thumbnail--dark-foreground': this.isForegroundDark
       }
