@@ -51,6 +51,7 @@
     "path-to-regexp": "^6.2.1",
     "release": "^6.3.1",
     "resize-observer-polyfill": "^1.5.1",
+    "string-to-color": "^2.2.2",
     "tiff.js": "^1.0.0",
     "tiny-cookie": "^2.1.2",
     "v-calendar": "2.4.1",
