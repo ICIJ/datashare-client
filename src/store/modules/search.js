@@ -168,13 +168,13 @@ export const getters = {
   },
   retrieveQueryTerms(state) {
     let terms = []
-    function getTerm(query, path, start, operator) {
+    function getTerm(query, path, start, operator, isFuzzyNumber = false) {
       const term = get(query, join([path, 'term'], '.'), '')
       const field = get(query, join([path, 'field'], '.'), '')
       const prefix = get(query, join([path, 'prefix'], '.'), '')
       const regex = get(query, join([path, 'regex'], '.'), false)
       const negation = ['-', '!'].includes(prefix) || start === 'NOT' || endsWith(operator, 'NOT')
-      if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term)) {
+      if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term) && !isFuzzyNumber) {
         terms = concat(terms, {
           field: field === '<implicit>' ? '' : field,
           label: term.replace('\\', ''),
@@ -186,12 +186,13 @@ export const getters = {
         retTerms(get(query, 'left'))
       }
     }
-    function retTerms(query, operator = null) {
-      getTerm(query, 'left', get(query, 'start', null), operator)
+    function retTerms(query, operator = null, isLeftFuzzyNumber = false) {
+      getTerm(query, 'left', get(query, 'start', null), operator, isLeftFuzzyNumber)
+      const isRightFuzzyNumber = get(query, 'left.similarity', null) !== null
       if (get(query, 'right.left', null) === null) {
-        getTerm(query, 'right', null, get(query, 'operator', null))
+        getTerm(query, 'right', null, get(query, 'operator', null), isRightFuzzyNumber)
       } else {
-        retTerms(get(query, 'right'), get(query, 'operator', null))
+        retTerms(get(query, 'right'), get(query, 'operator', null), isRightFuzzyNumber)
       }
     }
     try {
