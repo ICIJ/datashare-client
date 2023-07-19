@@ -10,11 +10,6 @@ export default {
     PageHeader,
     ProjectForm
   },
-  data() {
-    return {
-      project: {}
-    }
-  },
   methods: {
     async submit(project) {
       try {
