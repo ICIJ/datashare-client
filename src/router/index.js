@@ -245,14 +245,6 @@ export const router = {
           component: () => import('@/pages/Settings')
         },
         {
-          name: 'insights',
-          path: '/insights',
-          meta: {
-            title: ({ i18n }) => i18n.t('insights.title')
-          },
-          component: () => import('@/pages/Insights')
-        },
-        {
           name: 'document-standalone',
           path: '/ds/:index/:id/:routing?',
           meta: {
@@ -262,6 +254,19 @@ export const router = {
             return { ...route.params, ...route.query }
           },
           component: () => import('@/pages/DocumentStandalone')
+        },
+        {
+          name: 'project.view',
+          path: '/p/:name',
+          component: () => import('@/pages/ProjectView'),
+          children: [
+            {
+              name: 'project.view.insights',
+              path: '',
+              props: true,
+              component: () => import('@/pages/ProjectInsights')
+            }
+          ]
         }
       ]
     },
