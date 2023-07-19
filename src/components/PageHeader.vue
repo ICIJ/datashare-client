@@ -1,25 +1,33 @@
 <template>
   <div class="page-header">
     <div class="bg-white">
-      <div class="container py-5">
-        <div class="float-right">
-          <slot></slot>
-        </div>
-        <div class="d-flex align-items-center">
-          <slot name="preTitle"></slot>
-          <div class="">
-            <h3 class="page-header__title d-flex align-items-center m-0">
+      <div :class="classList">
+        <div class="py-5">
+          <div class="float-right">
+            <slot></slot>
+          </div>
+          <div class="d-flex align-items-center">
+            <slot name="preTitle">
               <page-icon v-if="icon" :icon="icon" class="mr-3" />
-              {{ title }}
-            </h3>
-            <div v-if="description" class="page-header__description text-muted" v-html="description"></div>
+            </slot>
+            <div class="">
+              <h3 class="page-header__title d-flex align-items-center m-0">
+                {{ title }}
+              </h3>
+              <div v-if="description" class="page-header__description text-muted" v-html="description"></div>
+            </div>
           </div>
         </div>
+        <b-tabs
+          v-if="hasTabs"
+          v-model="tabIndex"
+          class="page-header__tabs px-0"
+          nav-wrapper-class="page-header__tabs__nav"
+        >
+          <slot name="tabs" :tab-index="tabIndex" />
+        </b-tabs>
       </div>
     </div>
-    <b-tabs v-if="hasTabs" v-model="tabIndex" class="page-header__tabs px-0" nav-wrapper-class="page-header__tabs__nav">
-      <slot name="tabs" :tab-index="tabIndex" />
-    </b-tabs>
   </div>
 </template>
 
@@ -62,9 +70,18 @@ export default {
     tab: {
       type: Number,
       default: 0
+    },
+    /**
+     * Use fluid container
+     */
+    containerFluid: {
+      type: Boolean
     }
   },
   computed: {
+    classList() {
+      return this.containerFluid ? ['container-fluid'] : ['container']
+    },
     hasTabs() {
       return this.$slots.tabs
     },
@@ -91,13 +108,6 @@ export default {
       border-bottom: $border-color 1px solid;
 
       .nav-tabs {
-        @include make-container();
-        @each $breakpoint, $container-max-width in $container-max-widths {
-          @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
-            max-width: $container-max-width;
-          }
-        }
-
         border: 0;
         padding: 0;
 
