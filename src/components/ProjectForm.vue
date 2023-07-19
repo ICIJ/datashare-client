@@ -93,7 +93,7 @@ export default {
       return isUrl(value)
     },
     isPresent(value) {
-      return value !== null && value !== ''
+      return value?.trim()?.length > 0
     },
     isBlank(value) {
       return !this.isPresent(value)
