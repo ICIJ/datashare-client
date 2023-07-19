@@ -102,7 +102,7 @@ export function addLocalSearchMarksClass(content = '<div></div>', localSearchTer
  * @returns {string[]} An array containing the consonants extracted from the input string.
  */
 export function getConsonants(value = '') {
-  const vowels = ['a', 'e', 'i', 'o', 'u']
+  const vowels = ['a', 'e', 'i', 'o', 'u', 'y']
   const consonants = []
 
   for (let i = 0; i < value.length; i++) {
