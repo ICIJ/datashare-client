@@ -49,7 +49,7 @@ export default {
     <page-header icon="database" :title="$t('newProject.title')" :description="$t('newProject.description')" />
     <div class="container">
       <b-overlay rounded="sm" opacity="0.6" :show="$wait.is('creating')">
-        <project-form class="my-4" card :disbaled="$wait.is('creating')" @submit="submit">
+        <project-form class="my-4" card :disabled="$wait.is('creating')" @submit="submit">
           <template #submit-text>
             {{ $t('newProject.submit') }}
           </template>
