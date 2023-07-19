@@ -1,4 +1,4 @@
-import { castArray, iteratee, sortBy, get, noop } from 'lodash'
+import { castArray, find, get, iteratee, noop, sortBy } from 'lodash'
 
 /**
   Mixin class extending the core to add helpers for projects.
@@ -50,6 +50,14 @@ const ProjectsMixin = (superclass) =>
     createDefaultProject() {
       const defaultProject = this.config.get('defaultProject')
       return this.api.createIndex(defaultProject)
+    }
+    /**
+     * Retreive a project by its name
+     * @param {String} name Name of the project to retreive
+     * @returns {Object} The project matching with this name
+     */
+    findProject(name) {
+      return find(this.projects, name)
     }
     /**
      * List all projects this user has access to.

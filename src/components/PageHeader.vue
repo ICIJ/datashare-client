@@ -16,7 +16,7 @@
       </div>
     </div>
     <b-tabs v-if="hasTabs" v-model="tabIndex" class="page-header__tabs px-0" nav-wrapper-class="page-header__tabs__nav">
-      <slot name="tabs" />
+      <slot name="tabs" :tab-index="tabIndex" />
     </b-tabs>
   </div>
 </template>

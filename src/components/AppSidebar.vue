@@ -58,19 +58,6 @@
           <router-link
             v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
-            :title="$t('menu.insights')"
-            :to="{ name: 'insights' }"
-          >
-            <fa icon="chart-bar" fixed-width></fa>
-            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t(reduced ? 'menu.insightsShort' : 'menu.insights') }}
-            </span>
-          </router-link>
-        </li>
-        <li class="app-sidebar__container__menu__item">
-          <router-link
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
-            class="app-sidebar__container__menu__item__link"
             :title="$t('menu.settings')"
             :to="{ name: 'settings' }"
           >
