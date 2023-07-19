@@ -6,6 +6,9 @@ import VersionNumber from '@/components/VersionNumber'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
+/**
+ * This page display error.
+ */
 export default {
   name: 'Error',
   components: {
@@ -14,18 +17,30 @@ export default {
   },
   mixins: [utils],
   props: {
+    /**
+     * An Error object or the error message directly.
+     */
     error: {
       type: [String, Error],
       default: null
     },
+    /**
+     * Title of the error page.
+     */
     title: {
       type: String,
       default: null
     },
+    /**
+     * Description (bellow the title) of the error page.
+     */
     description: {
       type: String,
       default: null
     },
+    /**
+     * HTTP error code (if appliable).
+     */
     code: {
       type: Number,
       default: null
