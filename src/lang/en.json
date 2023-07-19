@@ -732,7 +732,7 @@
     "form": {
       "name": {
         "label": "ID",
-        "description": "This value is used internally to identify the project."
+        "description": "The internal project identifier."
       },
       "label": {
         "label": "Label",
