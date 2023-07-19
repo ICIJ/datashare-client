@@ -1,5 +1,5 @@
 <template>
-  <span class="project-thumbnail" :style="style" :class="classList" :data-caption="caption" checked></span>
+  <span class="project-thumbnail" :style="style" :class="classList" :data-caption="caption"></span>
 </template>
 
 <script>
@@ -70,7 +70,7 @@ export default {
       return this.backgroundColor
     },
     backgroundColor() {
-      return this.hasBackgroundWithLogo ? '#000' : stringToColor(this.project.name)
+      return this.hasBackgroundWithLogo ? '#000' : stringToColor(this.captionBase)
     },
     color() {
       if (this.checked) {
