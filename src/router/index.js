@@ -196,6 +196,19 @@ export const router = {
               }
             },
             {
+              name: 'project.view',
+              path: ':name',
+              component: () => import('@/pages/ProjectView'),
+              children: [
+                {
+                  name: 'project.view.insights',
+                  path: '',
+                  props: true,
+                  component: () => import('@/pages/ProjectInsights')
+                }
+              ]
+            },
+            {
               name: 'project.new',
               path: 'new',
               components: {
@@ -254,19 +267,6 @@ export const router = {
             return { ...route.params, ...route.query }
           },
           component: () => import('@/pages/DocumentStandalone')
-        },
-        {
-          name: 'project.view',
-          path: '/p/:name',
-          component: () => import('@/pages/ProjectView'),
-          children: [
-            {
-              name: 'project.view.insights',
-              path: '',
-              props: true,
-              component: () => import('@/pages/ProjectInsights')
-            }
-          ]
         }
       ]
     },
