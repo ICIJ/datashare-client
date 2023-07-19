@@ -1,4 +1,4 @@
-import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants } from '@/utils/strings'
 
 describe('strings', () => {
   describe('addLocalSearchMarksClass', () => {
@@ -165,6 +165,20 @@ describe('strings', () => {
     it('should return true if it is an sftp url as requested', () => {
       const url = 'sftp://www.google.fr'
       expect(isUrl(url, ['sftp'])).toBeTruthy()
+    })
+  })
+
+  describe('getConsonants', () => {
+    it('get 3 consonants from `local` string', () => {
+      expect(getConsonants('local').join('')).toBe('lcl')
+    })
+
+    it('get 3 consonants from `LOCAL` string while keeping the case', () => {
+      expect(getConsonants('LOCAL').join('')).toBe('LCL')
+    })
+
+    it('get 0 consonants from `oui` string', () => {
+      expect(getConsonants('oui')).toHaveLength(0)
     })
   })
 })
