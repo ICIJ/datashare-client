@@ -4,6 +4,9 @@ import { get } from 'lodash'
 import PageHeader from '@/components/PageHeader'
 import ProjectForm from '@/components/ProjectForm'
 
+/**
+ * This page display a form to create a new project.
+ */
 export default {
   name: 'NewProject',
   components: {
