@@ -1,10 +1,12 @@
 <script>
 import PageHeader from '@/components/PageHeader'
+import ProjectThumbnail from '@/components/ProjectThumbnail'
 
 export default {
   name: 'ProjectView',
   components: {
-    PageHeader
+    PageHeader,
+    ProjectThumbnail
   },
   props: {
     /**
@@ -21,7 +23,7 @@ export default {
   },
   computed: {
     project() {
-      return this.$core.findProject(this.name)
+      return { name: this.$core.findProject(this.name), label: 'Local Datashare' }
     },
     tab: {
       get() {
@@ -43,7 +45,10 @@ export default {
 
 <template>
   <div class="project-view">
-    <page-header v-model="tabIndex" :title="project" :tab.sync="tab">
+    <page-header v-model="tabIndex" :title="project.label || project.name" :tab.sync="tab">
+      <template #preTitle>
+        <project-thumbnail :project="project" width="4em" class="mr-3 rounded shaddow" />
+      </template>
       <template #tabs>
         <b-tab>
           <template #title>
