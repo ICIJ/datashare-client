@@ -5,13 +5,15 @@
         <div class="float-right">
           <slot></slot>
         </div>
-        <h3 class="page-header__title">
-          <page-icon v-if="icon" :icon="icon"></page-icon>
+        <div class="d-flex align-items-center">
           <slot name="preTitle"></slot>
-          {{ title }}
-        </h3>
-        <div class="page-header__description">
-          <span v-html="description"></span>
+          <div class="">
+            <h3 class="page-header__title d-flex align-items-center m-0">
+              <page-icon v-if="icon" :icon="icon" class="mr-3" />
+              {{ title }}
+            </h3>
+            <div v-if="description" class="page-header__description text-muted" v-html="description"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -38,7 +40,7 @@ export default {
      */
     description: {
       type: String,
-      default: 'Description'
+      default: null
     },
     /**
      * A FortAwesome definition object
