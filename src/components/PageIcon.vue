@@ -1,6 +1,6 @@
 <template>
   <div class="page-icon p-1 bg-secondary text-white d-inline-block mr-1 rounded">
-    <fa :icon="icon" fixed-width></fa>
+    <fa :icon="icon" fixed-width :size="size"></fa>
   </div>
 </template>
 
@@ -11,11 +11,18 @@
 export default {
   name: 'PageIcon',
   props: {
+    /**
+     * A FortAwesome definition object
+     */
     icon: {
-      /**
-       * A FortAwesome definition object
-       */
       type: [String, Array, Object]
+    },
+    /**
+     * A FortAwesome size string
+     */
+    size: {
+      type: String,
+      default: '2x'
     }
   }
 }
