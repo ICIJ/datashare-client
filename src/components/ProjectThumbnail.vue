@@ -8,16 +8,29 @@ import { compact } from 'lodash'
 
 import { getConsonants } from '@/utils/strings'
 
+/**
+ * Generates a thumbnail for a given project
+ */
 export default {
   name: 'ProjectThumbnail',
   props: {
+    /**
+     * The project to use to generate the thumbnail. Can contain `name`, `label` and `logoUrl` which
+     * will be used to generate the thumbnail consistently.
+     */
     project: {
       type: Object
     },
+    /**
+     * Default width (and height) or the thumbnail which is always a square. Can be any valid CSS size.
+     */
     width: {
       type: String,
       default: '100%'
     },
+    /**
+     * When set to true, the thumbnail appearance will be "checked".
+     */
     checked: {
       type: Boolean
     }
