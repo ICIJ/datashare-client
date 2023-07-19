@@ -761,7 +761,7 @@
       },
       "maintainerName": {
         "label": "Maintainer name",
-        "description": "The people or organization that will be in charge of maintaining this project on Datashare."
+        "description": "The people or organization who will be in charge of maintaining this project on Datashare."
       }
     },
     "reset": "Reset",
