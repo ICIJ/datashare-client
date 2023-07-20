@@ -13,7 +13,7 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
-import { iteratee } from 'lodash'
+import { iteratee, noop } from 'lodash'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
@@ -188,7 +188,9 @@ class Core extends Behaviors {
       this.config.merge(serverSettings)
       // Create the default project for the current user or redirect to login
       if (serverSettings.mode === 'LOCAL' || serverSettings.mode === 'EMBEDDED') {
-        await this.createDefaultProject()
+        if (!(await this.defaultProjectExists())) {
+          await this.createDefaultProject()
+        }
       }
       this._auth = new Auth(getMode(serverSettings.mode))
       // Set the default project

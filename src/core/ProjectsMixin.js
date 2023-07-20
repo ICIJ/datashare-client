@@ -48,8 +48,24 @@ const ProjectsMixin = (superclass) =>
      * @returns {Promise:Object} The HTTP response object
      */
     createDefaultProject() {
-      const defaultProject = this.config.get('defaultProject')
-      return this.api.createIndex(defaultProject)
+      const name = this.config.get('defaultProject')
+      const label = 'Default'
+      const description = 'Your main project on Datashare'
+      const sourcePath = this.config.get('dataDir')
+      const allowedMask = '*'
+      return this.api.createProject({ name, label, description, sourcePath, allowedMask })
+    }
+    /**
+     * Return true if the default project exist
+     * @returns {Promise:Boolean}
+     */
+    async defaultProjectExists() {
+      try {
+        const name = this.config.get('defaultProject')
+        return !!(await this.api.getProject(name))
+      } catch (_) {
+        return false
+      }
     }
     /**
      * Retreive a project by its name
@@ -57,7 +73,7 @@ const ProjectsMixin = (superclass) =>
      * @returns {Object} The project matching with this name
      */
     findProject(name) {
-      return find(this.projects, name)
+      return find(this.projects, { name })
     }
     /**
      * List all projects this user has access to.
