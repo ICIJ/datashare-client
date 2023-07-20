@@ -7,17 +7,24 @@
       <v-wait for="duplicate-counters" transition="fade">
         <fa slot="waiting" icon="circle-notch" spin size="2x" class="m-auto d-block"></fa>
         <div>
-          <stacked-bar-chart
-            :data="data"
-            :x-axis-tick-format="humanNumber"
-            label-above
-            :bar-colors="colors"
-            :keys="keys"
-            :groups="groups"
-          ></stacked-bar-chart>
-          <p class="small text-muted mb-0">
-            {{ $t('widget.duplicates.duplicated') }}
-          </p>
+          <template v-if="anyData">
+            <stacked-bar-chart
+              :data="data"
+              :x-axis-tick-format="humanNumber"
+              label-above
+              :bar-colors="colors"
+              :keys="keys"
+              :groups="groups"
+            ></stacked-bar-chart>
+            <p class="small text-muted mb-0">
+              {{ $t('widget.duplicates.duplicated') }}
+            </p>
+          </template>
+          <template v-else>
+            <p class="text-muted text-center m-0">
+              {{ $t('widget.noData') }}
+            </p>
+          </template>
         </div>
       </v-wait>
     </div>
@@ -25,7 +32,7 @@
 </template>
 
 <script>
-import get from 'lodash/get'
+import { get, sum } from 'lodash'
 import { waitFor } from 'vue-wait'
 
 import elasticsearch from '@/api/elasticsearch'
@@ -50,6 +57,11 @@ export default {
       colors: ['#193D87', '#6081c4'],
       keys: ['duplicates', 'documents'],
       groups: ['Duplicates*', 'Documents']
+    }
+  },
+  computed: {
+    anyData() {
+      return sum(Object.values(this.data[0] ?? {})) > 0
     }
   },
   async created() {
