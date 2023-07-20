@@ -102,15 +102,37 @@ describe('ProjectsMixin', () => {
     expect(withoutFn).toBeCalledTimes(2)
   })
 
-  it('should create the default project', () => {
-    const defaultProject = 'default-project'
-    core.config.set('defaultProject', defaultProject)
-    core.createDefaultProject()
+  it('should create the default project', async () => {
+    const name = 'default-project'
+    core.config.set('defaultProject', name)
+    await core.createDefaultProject()
 
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl(`/api/index/${defaultProject}`)
+        url: Api.getFullUrl(`/api/project/`),
+        data: expect.objectContaining({ name })
       })
     )
+  })
+
+  it('should add a new project to the settings', () => {
+    core.config.set('projects', [])
+    core.setProject({ name: 'foo' })
+    expect(core.projects).toHaveLength(1)
+  })
+
+  it('should add three new projects to the settings', () => {
+    core.config.set('projects', [])
+    core.setProject({ name: 'riri' })
+    core.setProject({ name: 'fifi' })
+    core.setProject({ name: 'loulou' })
+    expect(core.projects).toHaveLength(3)
+  })
+
+  it('should update an existing project in the settings', () => {
+    core.config.set('projects', [{ name: 'foo', label: 'Foo' }])
+    core.setProject({ name: 'foo', label: 'Foo V2' })
+    expect(core.projects).toHaveLength(1)
+    expect(core.findProject('foo').label).toBe('Foo V2')
   })
 })
