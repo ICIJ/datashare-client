@@ -1,7 +1,7 @@
 import remove from 'lodash/remove'
 import map from 'lodash/map'
 import Vue from 'vue'
-import { sumBy, uniq } from 'lodash'
+import { uniq } from 'lodash'
 
 import {
   RESET,
@@ -21,6 +21,7 @@ export function initialState() {
     batchSearch: {},
     batchSearches: [],
     results: [],
+    batchSearchPagination: {},
     queries: {},
     selectedQueries: [],
     total: 0,
@@ -48,23 +49,7 @@ export const getters = {
     return state.nbBatchSearches > 0
   },
   totalItems(state, getters) {
-    if (!state.batchSearch || state.results.length === 0) {
-      return 0
-    }
-
-    const queryKeys = Object.keys(state.queries)
-    if (getters.nbSelectedQueries === 0) {
-      return state.batchSearch?.nbResults
-    } else {
-      const sum = sumBy(queryKeys, (query) => {
-        const findQuery = state.selectedQueries.includes(query)
-
-        if (findQuery) {
-          return state.queries[query]
-        }
-      })
-      return sum
-    }
+    return state.batchSearchPagination?.total ?? 0
   }
 }
 export const mutations = {
@@ -95,8 +80,9 @@ export const mutations = {
     Vue.set(state, 'selectedQueries', selectedQueries)
   },
   [RESULTS](state, results) {
-    Vue.set(state, 'results', results)
-    const contentTypes = uniq(map(results, 'contentType'))
+    Vue.set(state, 'results', results.items)
+    Vue.set(state, 'batchSearchPagination', results.pagination)
+    const contentTypes = uniq(map(results.items, 'contentType'))
     if (state.contentTypes.length < contentTypes.length) {
       state.contentTypes = contentTypes
     }
@@ -164,10 +150,10 @@ export function actionBuilder(api) {
         }
       }
 
-      commit(TOTAL, batchSearches.total)
+      commit(TOTAL, batchSearches.pagination.total)
       commit(BATCH_SEARCHES, batchSearches.items)
       if (init) {
-        commit(NB_BATCH_SEARCHES, batchSearches.total)
+        commit(NB_BATCH_SEARCHES, batchSearches.pagination.total)
       }
     },
     async onSubmit(
