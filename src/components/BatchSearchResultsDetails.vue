@@ -118,7 +118,7 @@ import utils from '@/mixins/utils'
  * This page will list all the results of a batch search.
  */
 export default {
-  name: 'BatchSearchResults',
+  name: 'BatchSearchResultsDetails',
   components: {
     BatchSearchActions,
     TaskItemStatus,
