@@ -1,3 +1,4 @@
+export { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard'
 export { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft'
 export { faAmbulance } from '@fortawesome/free-solid-svg-icons/faAmbulance'
 export { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons/faAngleDoubleLeft'
