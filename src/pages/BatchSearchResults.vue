@@ -35,7 +35,12 @@
       </b-row>
 
       <batch-search-results-table @show-document-modal="openDocumentModal"> </batch-search-results-table>
-      <document-in-modal v-model="documentInModalPageIndex" :total-items="1" @update-route="updateRoute" />
+      <document-in-modal
+        v-model="documentInModalPageIndex"
+        :page="page"
+        @update:page="updatePage"
+        @update:doc-index="updateDocIndex"
+      />
     </div>
   </div>
 </template>
@@ -84,13 +89,15 @@ export default {
      * The unique id of the batch search
      */
     uuid: {
-      type: String
+      type: String,
+      required: true
     },
     /**
      * The indices of the current batch search
      */
     indices: {
-      type: [String, Array]
+      type: [String, Array],
+      required: true
     }
   },
   data() {
@@ -99,16 +106,14 @@ export default {
       documentInModalPageIndex: null,
       isMyBatchSearch: false,
       order: settings.batchSearchResults.order,
-      page: 1,
       published: false,
-      queries: [],
       sort: settings.batchSearchResults.sort,
       request: { page: 1, sort: 'asc', order: 'query' }
     }
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results', 'contentTypes']),
-    ...mapGetters('batchSearch', ['queryKeys', 'nbSelectedQueries', 'nbResults', 'nbCurrentQueries', 'totalItems']),
+    ...mapGetters('batchSearch', ['totalItems']),
 
     isLoaded() {
       return !!Object.keys(this.batchSearch).length
@@ -145,7 +150,9 @@ export default {
     queriesExcluded() {
       return !!this.$route?.query?.queriesExcluded
     },
-
+    page() {
+      return parseInt(this.$route.query?.page) ?? 1
+    },
     pageOffset() {
       return (this.page - 1) * this.perPage
     },
@@ -172,9 +179,13 @@ export default {
       }, {})
     },
     selectedContentTypes() {
+      console.log('selectedContentTypes', this.$route.query?.contentTypes)
+
       return this.$route.query?.contentTypes?.split(',') ?? []
     },
     selectedQueries() {
+      console.log('selectedQueries', this.$route.query?.contentTypes)
+
       return this.$route.query?.queries?.split(',') ?? []
     }
   },
@@ -194,18 +205,15 @@ export default {
       const username = await this.$core.auth.getUsername()
       this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
     },
-    async sortChanged(ctx) {
-      const sort = find(this.fields, (item) => item.key === ctx.sortBy).name
-      const order = ctx.sortDesc ? 'desc' : 'asc'
-      return this.$router.push(this.generateLinkToBatchSearchResults(this.page, this.selectedQueries, sort, order))
-    },
-    filter() {
-      return this.$router.push(this.generateLinkToBatchSearchResults(1, this.selectedQueries))
-    },
     linkGen(page) {
       return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
     },
-    generateLinkToBatchSearchResults(page = this.page, queries = this.queries, sort = this.sort, order = this.order) {
+    generateLinkToBatchSearchResults(
+      page = this.page,
+      queries = this.selectedQueries,
+      sort = this.sort,
+      order = this.order
+    ) {
       return {
         name: 'batch-search.results',
         params: {
@@ -228,8 +236,8 @@ export default {
     changePublished(published) {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
     },
-    openDocumentModal(pageIndex) {
-      this.documentInModalPageIndex = pageIndex
+    openDocumentModal(docIndex) {
+      this.documentInModalPageIndex = docIndex
       this.$bvModal.show('document-modal')
     },
     localeLongDate(date) {
@@ -238,8 +246,11 @@ export default {
     localeShortDate(date) {
       return moment(date).isValid() ? humanShortDate(date, this.$i18n.locale) : ''
     },
-    updateRoute() {
-      return this.$router.push(this.generateLinkToBatchSearchResults(this.currentPage, this.selectedQueries))
+    updatePage(page) {
+      return this.$router.push(this.generateLinkToBatchSearchResults(page))
+    },
+    updateDocIndex(event) {
+      this.documentInModalPageIndex = event.docIndex
     },
     clearQueriesParams(filter) {
       const query = { ...this.$route.query }
@@ -248,11 +259,14 @@ export default {
       this.$router.push({ query })
     },
     clearContentTypeParams(filter) {
-      const queryElement = this.selectedContentTypes.split(',')
-      const removeIndex = queryElement.indexOf(filter.value)
-      queryElement.splice(removeIndex, 1)
-
-      this.$router.push({ query: { ...this.$route.query, [filter.queryParam]: queryElement.toString() } })
+      const newContentTypes = this.selectedContentTypes.filter((e) => e !== filter.value)
+      const newQuery = { query: { ...this.$route.query } }
+      if (newContentTypes?.length) {
+        newQuery.query[filter.queryParam] = newContentTypes.toString()
+      } else {
+        delete newQuery.query[filter.queryParam]
+      }
+      this.$router.push(newQuery)
     }
   }
 }

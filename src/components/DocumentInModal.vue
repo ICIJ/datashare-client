@@ -11,7 +11,7 @@
     <div v-if="documentInModal" :key="documentInModalIndex">
       <document-navbar :id="documentInModal.id" :index="documentInModal.index" :routing="documentInModal.routing">
         <template #back>
-          <a role="button" class="small text-white" @click="$bvModal.hide('document-modal')">
+          <a role="button" class="small text-white" @click="hideModal">
             <fa icon="chevron-circle-left"></fa>
             <span class="ml-2">
               {{ $t('batchSearchResults.backToResults') }}
@@ -35,9 +35,12 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
+
 import DocumentNavbar from '@/components/document/DocumentNavbar.vue'
 import DocumentView from '@/pages/DocumentView.vue'
 import QuickItemNav from '@/components/QuickItemNav.vue'
+import settings from '@/utils/settings'
 
 export default {
   name: 'DocumentInModal',
@@ -55,21 +58,14 @@ export default {
       type: Number,
       default: null
     },
-    results: {
-      type: Array,
-      default: () => []
-    },
-    totalItems: {
+    page: {
       type: Number,
       default: 1
     }
   },
-  data: function () {
-    return {
-      documentInModalNavIndex: this.documentInModalPageIndex
-    }
-  },
   computed: {
+    ...mapState('batchSearch', ['results', 'totalItems']),
+    ...mapGetters('batchSearch', ['totalItems']),
     hasDocumentInModal() {
       const pageIndex = this.documentInModalPageIndex
       return pageIndex !== null && this.results[pageIndex]
@@ -89,13 +85,18 @@ export default {
       },
       set(index) {
         if (index >= this.pageOffset + this.perPage) {
-          this.page++
+          this.$emit('update:page', this.page + 1)
         } else if (index < this.pageOffset) {
-          this.page--
+          this.$emit('update:page', this.page - 1)
         }
         this.$emit('change', index - this.pageOffset)
-        // this.documentInModalPageIndex = index - this.pageOffset
       }
+    },
+    perPage() {
+      return settings.batchSearchResults.size
+    },
+    pageOffset() {
+      return (this.page - 1) * this.perPage
     },
     isFirstDocument() {
       return this.documentInModalPageIndex === 0
@@ -108,9 +109,12 @@ export default {
   methods: {
     handlePrevNextRoute(newIndex) {
       if (this.isFirstDocument || this.isLastDocument) {
-        this.$emit('update-route', { currentPage: this.currentPage, selectedQueries: this.selectedQueries })
+        this.$emit('update:doc-index', { docIndex: newIndex })
         // this.$router.push(this.generateLinkToBatchSearchResults(, this.selectedQueries))
       }
+    },
+    hideModal() {
+      this.$bvModal.hide('document-modal')
     }
   }
 }
