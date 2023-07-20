@@ -13,7 +13,7 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
-import { iteratee, noop } from 'lodash'
+import { iteratee } from 'lodash'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
