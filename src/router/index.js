@@ -118,11 +118,11 @@ export const router = {
               component: () => import('@/pages/Indexing'),
               meta: {
                 title: ({ i18n }) => i18n.t('indexing.title'),
+                allowedModes: ['LOCAL', 'EMBEDDED'],
                 docs: [
                   {
                     title: 'Add documents to Datashare',
-                    path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
-                    mode: ['LOCAL', 'EMBEDDED']
+                    path: '<%- os %>/add-documents-to-datashare-on-<%- os %>'
                   },
                   {
                     title: 'Analyse documents',
