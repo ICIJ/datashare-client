@@ -18,6 +18,7 @@ export default {
       try {
         this.$wait.start('creating')
         await this.$core.api.createProject(project)
+        await this.$core.setProject(project)
         this.notifyCreationSucceed()
         this.redirectToProject(project)
       } catch (error) {
