@@ -891,6 +891,17 @@
     "names": {
       "total": "0 names | one name | <strong>{humanTotal}</strong> names"
     },
+    "project": {
+      "fields": {
+        "name": "ID",
+        "sourcePath": "Folder",
+        "maintainerName": "Maintained by",
+        "publisherName": "Published by",
+        "sourceUrl": "Source",
+        "creationDate": "Created",
+        "updateDate": "Updated"
+      }
+    },
     "treemap": {
       "seeDocuments": "See documents in Datashare",
       "others": "Others"
