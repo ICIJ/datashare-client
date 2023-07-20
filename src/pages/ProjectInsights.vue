@@ -31,6 +31,11 @@ export default {
   computed: {
     ...mapGetters('insights', ['instantiatedWidgets'])
   },
+  watch: {
+    name(name) {
+      this.$store.commit('insights/project', this.name)
+    }
+  },
   beforeMount() {
     this.$store.commit('insights/project', this.name)
   }
