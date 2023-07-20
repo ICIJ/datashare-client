@@ -63,6 +63,9 @@ export class Api {
   deleteAll(project) {
     return this.sendActionAsText(`/api/project/${project}`, { method: Method.DELETE })
   }
+  getProject(project) {
+    return this.sendAction(`/api/project/${project}`)
+  }
   getVersion() {
     return this.sendAction('/version')
   }
