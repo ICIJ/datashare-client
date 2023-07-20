@@ -1,4 +1,4 @@
-import { castArray, find, get, iteratee, noop, sortBy } from 'lodash'
+import { castArray, find, findIndex, get, iteratee, noop, sortBy } from 'lodash'
 
 /**
   Mixin class extending the core to add helpers for projects.
@@ -47,13 +47,14 @@ const ProjectsMixin = (superclass) =>
      * @memberof ProjectsMixin.prototype
      * @returns {Promise:Object} The HTTP response object
      */
-    createDefaultProject() {
+    async createDefaultProject() {
       const name = this.config.get('defaultProject')
       const label = 'Default'
       const description = 'Your main project on Datashare'
       const sourcePath = this.config.get('dataDir')
-      const allowedMask = '*'
-      return this.api.createProject({ name, label, description, sourcePath, allowedMask })
+      const allowFromMask = '*'
+      const project = await this.api.createProject({ name, label, description, sourcePath, allowFromMask })
+      return this.setProject(project)
     }
     /**
      * Return true if the default project exist
@@ -74,6 +75,23 @@ const ProjectsMixin = (superclass) =>
      */
     findProject(name) {
       return find(this.projects, { name })
+    }
+    /**
+     * Update a project in the list or add it if doesn't exists yet.
+     * @param {Object} project
+     * @returns {Object} The project
+     */
+    setProject(project) {
+      // Create a new projects list so we avoid mutating object
+      const projects = [...this.projects]
+      const index = findIndex(projects, { name: project?.name })
+      if (index > -1) {
+        projects[index] = project
+      } else {
+        projects.push(project)
+      }
+      this.config.set('projects', projects)
+      return project
     }
     /**
      * List all projects this user has access to.
