@@ -1,5 +1,5 @@
 <template>
-  <div class="page-icon p-1 bg-secondary text-white d-inline-block mr-1 rounded">
+  <div class="page-icon bg-secondary text-white mr-1 rounded">
     <fa :icon="icon" fixed-width :size="size"></fa>
   </div>
 </template>
@@ -27,3 +27,13 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.page-icon {
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
