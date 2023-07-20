@@ -6,6 +6,7 @@ export { default as WidgetEntities } from './WidgetEntities'
 export { default as WidgetFileBarometer } from './WidgetFileBarometer'
 export { default as WidgetListGroup } from './WidgetListGroup'
 export { default as WidgetNames } from './WidgetNames'
+export { default as WidgetProject } from './WidgetProject'
 export { default as WidgetSearchBar } from './WidgetSearchBar'
 export { default as WidgetText } from './WidgetText'
 export { default as WidgetTreeMap } from './WidgetTreeMap'
@@ -19,12 +20,11 @@ const widgets = [
     type: 'WidgetSearchBar'
   },
   {
-    name: 'default-text',
+    name: 'project',
     order: 10,
     card: true,
     cols: 6,
-    type: 'WidgetDuplicates',
-    title: 'Number of duplicates in your documents'
+    type: 'WidgetProject'
   },
   {
     name: 'file-barometer',
