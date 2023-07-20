@@ -5,10 +5,18 @@ export { default as WidgetEmpty } from './WidgetEmpty'
 export { default as WidgetEntities } from './WidgetEntities'
 export { default as WidgetFileBarometer } from './WidgetFileBarometer'
 export { default as WidgetListGroup } from './WidgetListGroup'
+export { default as WidgetSearchBar } from './WidgetSearchBar'
 export { default as WidgetText } from './WidgetText'
 export { default as WidgetTreeMap } from './WidgetTreeMap'
 
 const widgets = [
+  {
+    name: 'search-bar',
+    order: 5,
+    card: true,
+    cols: 12,
+    type: 'WidgetSearchBar'
+  },
   {
     name: 'default-text',
     order: 10,
