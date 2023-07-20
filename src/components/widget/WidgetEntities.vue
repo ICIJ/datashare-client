@@ -5,15 +5,20 @@
         <fa icon="circle-notch" spin size="2x" />
       </div>
       <div class="widget__content row text-center" :class="{ 'card-body': widget.card }">
-        <div
-          v-for="category in categories"
-          :key="category"
-          class="widget__content__count col-3"
-          :class="{ 'widget__content__count--muted': !entities[category] }"
-        >
-          <fa fixed-width :icon="category | namedEntityIcon" class="mr-1" />
-          <span v-html="$tc(`widget.entities.${category}`, entities[category], { count: humanEntities[category] })" />
+        <div v-if="total > 0">
+          <div
+            v-for="category in categories"
+            :key="category"
+            class="widget__content__count col-3"
+            :class="{ 'widget__content__count--muted': !entities[category] }"
+          >
+            <fa fixed-width :icon="category | namedEntityIcon" class="mr-1" />
+            <span v-html="$tc(`widget.entities.${category}`, entities[category], { count: humanEntities[category] })" />
+          </div>
         </div>
+        <p v-else class="text-muted text-center mb-0 col-12">
+          {{ $t('widget.noEntities') }}
+        </p>
       </div>
     </v-wait>
   </div>

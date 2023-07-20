@@ -855,6 +855,7 @@
   "widget": {
     "noData": "No data",
     "noFolders": "No folders",
+    "noEntities": "No named entities",
     "barometer": {
       "document": "no documents | 1 document | %{total} documents",
       "amongWhich": "among which",
@@ -884,6 +885,9 @@
       "locations": "0 locations | one location | <strong>{count}</strong> locations",
       "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
       "emails": "0 emails | one email address | <strong>{count}</strong> emails"
+    },
+    "names": {
+      "total": "0 names | one name | <strong>{humanTotal}</strong> names"
     },
     "treemap": {
       "seeDocuments": "See documents in Datashare",
