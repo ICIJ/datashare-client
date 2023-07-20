@@ -7,9 +7,11 @@
         <strong class="widget__main-figure" :title="total">
           {{ $tc('widget.barometer.document', total, { total: humanNumber(total, $t('human.number')) }) }}
         </strong>
-        {{ $t('widget.barometer.amongWhich') }}
-        <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span>
-        {{ $t('widget.barometer.onDisk') }}
+        <template v-if="onDisk != total">
+          {{ $t('widget.barometer.amongWhich') }}
+          <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span>
+          {{ $t('widget.barometer.onDisk') }}
+        </template>
       </p>
     </v-wait>
   </div>
