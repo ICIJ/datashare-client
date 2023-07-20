@@ -1,6 +1,6 @@
 <template>
   <div class="widget widget--project">
-    <ul class="list-group list-group-flush widget__fields">
+    <ul class="list-group list-group-flush widget__fields small">
       <li
         v-for="{ key, label, href, value, classList } in metadata"
         :key="key"
@@ -74,13 +74,13 @@ export default {
         {
           key: 'creationDate',
           formatter: ({ rawValue }) => {
-            return moment(rawValue).locale(this.$i18n.locale).format('LLL')
+            return moment(rawValue).locale(this.$i18n.locale).format('LL')
           }
         },
         {
           key: 'updateDate',
           formatter: ({ rawValue }) => {
-            return moment(rawValue).locale(this.$i18n.locale).format('LLL')
+            return moment(rawValue).locale(this.$i18n.locale).format('LL')
           }
         }
       ]
