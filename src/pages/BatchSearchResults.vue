@@ -96,8 +96,7 @@ export default {
      * The indices of the current batch search
      */
     indices: {
-      type: [String, Array],
-      required: true
+      type: [String, Array]
     }
   },
   data() {
@@ -179,13 +178,9 @@ export default {
       }, {})
     },
     selectedContentTypes() {
-      console.log('selectedContentTypes', this.$route.query?.contentTypes)
-
       return this.$route.query?.contentTypes?.split(',') ?? []
     },
     selectedQueries() {
-      console.log('selectedQueries', this.$route.query?.contentTypes)
-
       return this.$route.query?.queries?.split(',') ?? []
     }
   },
@@ -255,7 +250,7 @@ export default {
     clearQueriesParams(filter) {
       const query = { ...this.$route.query }
       delete query.queriesExcluded
-      delete query.query[filter.name]
+      delete query?.query?.[filter.name]
       this.$router.push({ query })
     },
     clearContentTypeParams(filter) {
