@@ -99,7 +99,6 @@
       class="batch-search-results__pagination my-4"
       :per-page="perPage"
       :total-rows="totalItems"
-      :page="page"
     />
   </div>
 </template>
@@ -180,6 +179,10 @@ export default {
     selectedContentTypes: {
       get() {
         const param = this.$route?.query?.contentTypes ?? null
+
+        if (isArray(param)) {
+          return uniq(param)
+        }
         const contentTypes = param?.split(',') ?? []
         return uniq(contentTypes)
       },
@@ -262,6 +265,9 @@ export default {
     perPage() {
       return settings.batchSearchResults.size
     },
+    pageOffset() {
+      return (this.page - 1) * this.perPage
+    },
     sortBy() {
       return find(this.fields, (item) => item.name === this.sort).key
     },
@@ -276,35 +282,6 @@ export default {
     },
     sort() {
       return this.$route.query?.sort ?? settings.batchSearchResults.sort
-    },
-    hasDocumentInModal() {
-      const pageIndex = this.documentInModalPageIndex
-      return pageIndex !== null && this.results[pageIndex]
-    },
-    documentInModal() {
-      if (!this.hasDocumentInModal) {
-        return null
-      }
-      const document = this.results[this.documentInModalPageIndex]
-      const { documentId: id, rootId: routing, query: q, project } = document
-      const index = project.name
-      return { index, id, routing, q }
-    },
-    documentInModalIndex: {
-      get() {
-        return this.pageOffset + this.documentInModalPageIndex
-      },
-      async set(index) {
-        if (index >= this.pageOffset + this.perPage) {
-          this.page++
-        } else if (index < this.pageOffset) {
-          this.page--
-        }
-        this.documentInModalPageIndex = index - this.pageOffset
-      }
-    },
-    pageOffset() {
-      return (this.page - 1) * this.perPage
     },
     isFirstDocument() {
       return this.documentInModalPageIndex === 0
@@ -406,8 +383,8 @@ export default {
     changePublished(published) {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.batchSearch.uuid, published })
     },
-    openDocumentModal(pageIndex) {
-      this.$emit('show-document-modal', pageIndex)
+    openDocumentModal(docIndex) {
+      this.$emit('show-document-modal', docIndex)
     },
     localeLongDate(date) {
       return humanLongDate(date, this.$i18n.locale)
