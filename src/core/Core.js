@@ -178,21 +178,14 @@ class Core extends Behaviors {
       // Override Murmur default value for content-placeholder
       this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
       // Get the config object
-      const serverSettings = await this.api.getSettings()
-      // Load the user
-      this.config.merge(await this.getUser())
-      // Murmur exposes a config attribute which share a Config object
-      // with the current vue instance.
-      this.config.merge(getMode(serverSettings.mode))
-      // The backend can yet override some configuration
-      this.config.merge(serverSettings)
+      await this.loadSettings()
       // Create the default project for the current user or redirect to login
-      if (serverSettings.mode === 'LOCAL' || serverSettings.mode === 'EMBEDDED') {
+      if (!this.mode.modeName !== 'server') {
         if (!(await this.defaultProjectExists())) {
           await this.createDefaultProject()
         }
       }
-      this._auth = new Auth(getMode(serverSettings.mode))
+      this._auth = new Auth(this.mode)
       // Set the default project
       if (!this.store.state.search.indices.length) {
         this.store.commit('search/indices', [this.getDefaultProject()])
@@ -263,10 +256,35 @@ class Core extends Behaviors {
    * Get the current signed user.
    * @async
    * @fullfil {Object} Current user
-   * @type {Promise<Object>}
+   * @returns {Promise<Object>}
    */
   getUser() {
     return this.api.getUser()
+  }
+  /**
+   * Get and update user definitionin place
+   * @async
+   * @returns {Promise}
+   */
+  async loadUser() {
+    // Load the user
+    this.config.merge(await this.getUser())
+  }
+  /**
+   * Get settings (both from the server settings and the current mode)
+   * @async
+   * @returns {Promise}
+   */
+  async loadSettings() {
+    // Get the config object
+    const serverSettings = await this.api.getSettings()
+    // Load the user and update the settings accordingly
+    await this.loadUser()
+    // Murmur exposes a config attribute which shares a Config object
+    // with the current vue instance.
+    this.config.merge(getMode(serverSettings.mode))
+    // The backend can yet override some configuration
+    this.config.merge(serverSettings)
   }
   /**
    * Append the given title to the page title
@@ -338,6 +356,13 @@ class Core extends Behaviors {
    */
   get api() {
     return this._api
+  }
+  /**
+   * Get current Datashare mode
+   * @type {String}
+   */
+  get mode() {
+    return getMode(this.config.get('mode'))
   }
   /**
    * instantiate a Core class (useful for chaining usage or mapping)
