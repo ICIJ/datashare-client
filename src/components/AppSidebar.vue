@@ -40,6 +40,19 @@
             </span>
           </router-link>
         </li>
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--projects">
+          <router-link
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            class="app-sidebar__container__menu__item__link"
+            :title="$t('menu.projects')"
+            :to="{ name: 'project.list' }"
+          >
+            <fa icon="bar-chart" fixed-width></fa>
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ $t(reduced ? 'menu.projectsShort' : 'menu.projects') }}
+            </span>
+          </router-link>
+        </li>
         <li class="app-sidebar__container__menu__item">
           <router-link
             v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
