@@ -719,6 +719,12 @@
       "heading": "Filter by queries"
     }
   },
+  "projectList": {
+    "fields": {
+      "label": "Label",
+      "updateDate": "Updated"
+    }
+  },
   "newProject": {
     "title": "New project",
     "description": "",

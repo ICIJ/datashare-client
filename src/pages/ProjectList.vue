@@ -13,7 +13,7 @@
             <project-thumbnail :project="project" class="rounded" width="3rem" />
           </router-link>
         </template>
-        <template #cell(name)="{ item: project }">
+        <template #cell(label)="{ item: project }">
           <router-link :to="{ name: 'project.view', params: project }" class="font-weight-bold">
             {{ project.label || project.name }}
           </router-link>
@@ -45,13 +45,14 @@ export default {
           class: 'align-middle'
         },
         {
-          key: 'name',
+          key: 'label',
+          label: this.$t('projectList.fields.label'),
           sortable: true,
           class: 'align-middle'
         },
         {
           key: 'updateDate',
-          label: 'Updated',
+          label: this.$t('projectList.fields.updateDate'),
           sortable: true,
           class: 'text-nowrap align-middle',
           formatter: (updateDate) => {
