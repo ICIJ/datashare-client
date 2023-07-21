@@ -47,7 +47,7 @@
             :title="$t('menu.projects')"
             :to="{ name: 'project.list' }"
           >
-            <fa icon="bar-chart" fixed-width></fa>
+            <fa icon="database" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.projectsShort' : 'menu.projects') }}
             </span>
