@@ -38,7 +38,7 @@ describe('BatchSearch.vue', () => {
           state: 'FAILURE'
         }
       ],
-      total: 2
+      pagination: { total: 2 }
     })
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
