@@ -161,7 +161,7 @@ describe('BatchSearchResultsFilters.vue', () => {
       expect(wrapper.vm.$router.push).toBeCalled()
       expect(wrapper.vm.$router.push).toBeCalledWith({
         name: 'search',
-        query: { q: 'query_02', indices: project.concat(',', anotherProject) }
+        query: { q: 'query_02', indices: project.concat(',', anotherProject), queries: [] }
       })
       spy.mockClear()
     })
@@ -235,6 +235,27 @@ describe('BatchSearchResultsFilters.vue', () => {
       expect(wrapper.vm.$router.push).toBeCalledWith({
         name: 'batch-search.results',
         query: { order: undefined, page: undefined, queries_sort: 'default', sort: undefined }
+      })
+    })
+    it('adds exclude selected queries filter', async () => {
+      wrapper = await mount(BatchSearchResultsFilters, {
+        i18n,
+        localVue,
+        router,
+        store,
+        propsData: propsDataMultipleQueries
+      })
+      const spy = jest.spyOn(wrapper.vm.$router, 'push')
+      spy.mockClear()
+      const excludeFilter = wrapper.find('.filter__footer__action input')
+      expect(excludeFilter.exists()).toBe(true)
+      await excludeFilter.trigger('click')
+
+      expect(wrapper.vm.$router.push).toBeCalled()
+      expect(wrapper.vm.$router.push).toBeCalledTimes(1)
+      expect(wrapper.vm.$router.push).toBeCalledWith({
+        name: 'batch-search.results',
+        query: { queriesExcluded: true }
       })
     })
   })

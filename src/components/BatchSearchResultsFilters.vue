@@ -115,7 +115,6 @@ export default {
   data() {
     return {
       queriesFilter: null,
-      // sortField: 'count',
       sortFields: ['default', 'count'],
       filterQueries: map(this.selectedQueries, (q) => ({
         label: q
