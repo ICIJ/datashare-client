@@ -13,7 +13,8 @@ import {
   SELECTED_QUERIES,
   RESULTS,
   TOTAL,
-  NB_BATCH_SEARCHES
+  NB_BATCH_SEARCHES,
+  SINGLE_BATCH_SEARCH_PUBLISHED
 } from '@/store/mutation-types'
 
 export function initialState() {
@@ -86,6 +87,9 @@ export const mutations = {
     if (state.contentTypes.length < contentTypes.length) {
       state.contentTypes = contentTypes
     }
+  },
+  [SINGLE_BATCH_SEARCH_PUBLISHED](state, published) {
+    Vue.set(state, 'batchSearch', { ...state.batchSearch, published })
   },
   [TOTAL](state, total) {
     state.total = total
@@ -197,9 +201,10 @@ export function actionBuilder(api) {
         return false
       }
     },
-    async updateBatchSearch(_, { batchId, published }) {
+    async updateBatchSearch({ commit }, { batchId, published }) {
       try {
         await api.updateBatchSearch(batchId, published)
+        commit(SINGLE_BATCH_SEARCH_PUBLISHED, published)
       } catch (_) {
         // TODO do something
       }

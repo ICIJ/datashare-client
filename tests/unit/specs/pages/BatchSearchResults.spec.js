@@ -6,7 +6,6 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
-import UserDisplay from '@/components/UserDisplay'
 import BatchSearchResults from '@/pages/BatchSearchResults'
 
 describe('BatchSearchResults.vue', () => {
@@ -104,31 +103,9 @@ describe('BatchSearchResults.vue', () => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
 
-  it('should display 7 info about the BatchSearch', () => {
-    expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(7)
-  })
-
-  it('should display the author of the BatchSearch', async () => {
-    expect(wrapper.findComponent(UserDisplay).attributes('username')).toBe('test')
-  })
-
   it('should display the list of the queries of this batch search', () => {
     expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
     expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
-  })
-
-  describe('Projects column', () => {
-    it('should contain all the projects in which the batch search is performed', () => {
-      const projectLinks = wrapper.findAll('.batch-search-results__info__project-link')
-      expect(projectLinks).toHaveLength(2)
-    })
-
-    it('should display project names as clickable links', () => {
-      const projectLinks = wrapper.findAll('.batch-search-results__info__project-link')
-      expect(projectLinks.at(0).element.tagName).toBe('ROUTER-LINK-STUB')
-      expect(projectLinks.at(1).element.tagName).toBe('ROUTER-LINK-STUB')
-    })
   })
 
   it('should redirect on sort changed', () => {

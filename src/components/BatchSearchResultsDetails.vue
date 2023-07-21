@@ -5,7 +5,9 @@
       <batch-search-actions :batch-search="batchSearch" />
     </div>
     <div class="card-footer p-0 overflow-hidden">
-      <p v-if="batchSearch.description" class="p-3 m-0 border-bottom">{{ batchSearch.description }}</p>
+      <p v-if="hasDescription" class="batch-search-results-details__info__description m-0 border-bottom">
+        {{ batchSearch.description }}
+      </p>
       <dl class="batch-search-results-details__info">
         <div v-if="showProjects">
           <dt>{{ $t('batchSearch.projects') }}</dt>
@@ -27,9 +29,9 @@
             </span>
           </dd>
         </div>
-        <div v-if="isServer && isMyBatchSearch">
+        <div v-if="isServer && isMyBatchSearch" class="batch-search-results-details__info__published">
           <dt>{{ $t('batchSearch.published') }}</dt>
-          <dd><b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" /></dd>
+          <dd><b-form-checkbox :checked="batchSearch.published" switch @change="changePublished" /></dd>
         </div>
         <div>
           <dt>{{ $t('batchSearch.state') }}</dt>
@@ -103,7 +105,6 @@
 
 <script>
 import { get } from 'lodash'
-import { mapState } from 'vuex'
 
 import BatchSearchActions from '@/components/BatchSearchActions'
 import TaskItemStatus from '@/components/TaskItemStatus'
@@ -129,19 +130,25 @@ export default {
     humanNumber
   },
   mixins: [utils],
-
+  props: {
+    batchSearch: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       documentInModalPageIndex: null,
       isMyBatchSearch: false,
-      published: false,
       queries: []
     }
   },
   computed: {
-    ...mapState('batchSearch', ['batchSearch', 'results']),
     showProjects() {
       return this.isServer || this.$core.projects.length > 1
+    },
+    hasDescription() {
+      return this.batchSearch?.description?.trim().length > 0
     },
     isLoaded() {
       return !!Object.keys(this.batchSearch).length
@@ -188,7 +195,7 @@ export default {
       return size === 'unknown' ? '-' : size
     },
     changePublished(published) {
-      this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
+      this.$emit('update:published', published)
     },
     localeLongDate(date) {
       return humanLongDate(date, this.$i18n.locale)
