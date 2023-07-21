@@ -15,7 +15,7 @@
         </template>
         <template #cell(name)="{ item: project }">
           <router-link :to="{ name: 'project.view', params: project }" class="font-weight-bold">
-            {{  project.label || project.name }}
+            {{ project.label || project.name }}
           </router-link>
           <p class="text-muted m-0">{{ project.description }}</p>
         </template>
