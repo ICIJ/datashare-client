@@ -102,10 +102,10 @@ export default {
 
 <style lang="scss">
 .page-header {
+  border-bottom: $border-color 1px solid;
   &__tabs {
     &__nav {
       background: $white;
-      border-bottom: $border-color 1px solid;
 
       .nav-tabs {
         border: 0;
