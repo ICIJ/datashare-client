@@ -10,22 +10,27 @@ import SearchBar from '@/components/SearchBar'
 describe('SearchBar.vue', function () {
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const { index: project, es } = esConnectionHelper.build()
+  const { index, es } = esConnectionHelper.build('search-bar')
+  const { index: indexFoo } = esConnectionHelper.build('search-bar-foo')
 
   let wrapper = null
+
   const shallowMountFactory = (propsData = {}) => {
     return shallowMount(SearchBar, { i18n, localVue, router, store, propsData })
   }
+
   const mountFactory = (propsData = {}, data = () => ({ suggestions: [] })) => {
     return mount(SearchBar, { i18n, localVue, router, store, propsData, data })
   }
-  beforeAll(() => store.commit('search/index', project))
 
   beforeEach(() => {
+    store.commit('search/index', index)
     store.commit('search/reset')
   })
 
-  afterAll(() => store.commit('search/reset'))
+  afterAll(() => {
+    store.commit('search/reset')
+  })
 
   it('should display search bar', () => {
     wrapper = shallowMountFactory()
@@ -99,11 +104,17 @@ describe('SearchBar.vue', function () {
     expect(store.state.search.from).toBe(0)
   })
 
+  it('should submit the from with a different index', () => {
+    wrapper = shallowMountFactory({ indices: [indexFoo] })
+    wrapper.vm.submit()
+    expect(store.state.search.indices).toContain(indexFoo)
+  })
+
   describe('search suggestions', () => {
     it('should retrieve suggestions in NamedEntities and tags for default search', async () => {
       wrapper = shallowMountFactory()
       await letData(es)
-        .have(new IndexedDocument('document', project).withNer('ne_01').withTags(['ne_tag']))
+        .have(new IndexedDocument('document', index).withNer('ne_01').withTags(['ne_tag']))
         .commit()
 
       const suggestions = await wrapper.vm.suggestTerms([{ field: '<implicit>', term: 'ne_' }])
@@ -116,8 +127,8 @@ describe('SearchBar.vue', function () {
 
     it('should order suggestions by doc_count descending', async () => {
       wrapper = shallowMountFactory()
-      await letData(es).have(new IndexedDocument('document_01', project).withNer('ne_01').withNer('ne_02')).commit()
-      await letData(es).have(new IndexedDocument('document_02', project).withNer('ne_02')).commit()
+      await letData(es).have(new IndexedDocument('document_01', index).withNer('ne_01').withNer('ne_02')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withNer('ne_02')).commit()
 
       const suggestions = await wrapper.vm.suggestTerms([{ field: '<implicit>', term: 'ne_' }])
 
