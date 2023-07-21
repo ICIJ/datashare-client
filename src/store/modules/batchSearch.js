@@ -21,7 +21,7 @@ export function initialState() {
     batchSearch: {},
     batchSearches: [],
     results: [],
-    batchSearchPagination: {},
+    batchSearchResultsPagination: {},
     queries: {},
     selectedQueries: [],
     total: 0,
@@ -48,8 +48,8 @@ export const getters = {
   hasBatchSearch(state) {
     return state.nbBatchSearches > 0
   },
-  totalItems(state, getters) {
-    return state.batchSearchPagination?.total ?? 0
+  totalItems(state) {
+    return state.batchSearchResultsPagination?.total ?? 0
   }
 }
 export const mutations = {
@@ -129,7 +129,7 @@ export function actionBuilder(api) {
         init = false
       }
     ) {
-      let batchSearches = []
+      let batchSearches = {}
       try {
         batchSearches = await api.getBatchSearches(
           from,
@@ -146,7 +146,7 @@ export function actionBuilder(api) {
       } catch (_) {
         batchSearches = {
           items: [],
-          total: 0
+          pagination: { total: 0 }
         }
       }
 
