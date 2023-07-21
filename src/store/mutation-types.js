@@ -3,6 +3,7 @@
 // Batch search
 export const RESET = 'reset'
 export const SINGLE_BATCH_SEARCH = 'batchSearch'
+export const SINGLE_BATCH_SEARCH_PUBLISHED = 'batchSearchPublished'
 export const SINGLE_BATCH_SEARCH_QUERIES = 'batchSearchQueries'
 export const BATCH_SEARCHES = 'batchSearches'
 export const SELECTED_QUERIES = 'selectedQueries'

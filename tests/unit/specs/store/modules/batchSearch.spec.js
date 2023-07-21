@@ -11,10 +11,8 @@ describe('BatchSearchStore', () => {
   let api
   let store
   let apiMocks
-  // const mockAxiosApi = { request: jest.fn() }
-  const mockEventbus = { $emit: jest.fn() }
   beforeAll(() => {
-    api = new Api(null, mockEventbus)
+    api = new Api(null, null)
     apiMocks = [
       (api.getBatchSearchQueries = jest.fn()),
       (api.getBatchSearch = jest.fn()),

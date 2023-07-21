@@ -7,7 +7,7 @@
           {{ $t('batchSearch.title') }}
         </router-link>
       </div>
-      <batch-search-results-details :batch-search="batchSearch" />
+      <batch-search-results-details :batch-search="batchSearch" @update:published="changePublished" />
     </div>
 
     <div class="container">
