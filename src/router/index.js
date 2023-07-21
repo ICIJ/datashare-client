@@ -190,9 +190,9 @@ export const router = {
           children: [
             {
               path: '',
-              name: 'project',
-              redirect: {
-                name: 'project.new'
+              name: 'project.list',
+              components: {
+                default: () => import('@/pages/ProjectList')
               }
             },
             {
