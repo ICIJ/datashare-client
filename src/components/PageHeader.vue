@@ -95,6 +95,9 @@ export default {
 
 <style lang="scss">
 .page-header {
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
 
   &__tabs {
     &__nav {
@@ -107,12 +110,11 @@ export default {
         left: -50vw;
         right: -50vw;
         top: -50vh;
-        bottom: -1px;
+        bottom: 0px;
         display: block;
         border-bottom: $border-color 1px solid;
         z-index: -1;
       }
-
 
       .nav-tabs {
         border: 0;
