@@ -1,5 +1,4 @@
 import { remove } from 'lodash'
-import { getField, updateField } from 'vuex-map-fields'
 import Vue from 'vue'
 
 export function initialState() {
@@ -10,6 +9,7 @@ export function initialState() {
       ocr: false,
       offline: false,
       path: null,
+      defaultProject: null,
       pipeline: 'CORENLP'
     },
     tasks: []
@@ -18,15 +18,7 @@ export function initialState() {
 
 export const state = initialState()
 
-// indexing/getField is used with vuex-map-field in:
-// - FindNamedEntitiesForm.vue
-// - ExtractingForm.vue
-export const getters = {
-  getField
-}
-
 export const mutations = {
-  updateField,
   reset(state) {
     // acquire initial state
     const s = initialState()
@@ -52,6 +44,27 @@ export const mutations = {
   resetFindNamedEntitiesForm(state) {
     state.form.pipeline = initialState().form.pipeline
     state.form.offline = initialState().form.offline
+  },
+  formOcr(state, value) {
+    state.form.ocr = value
+  },
+  formFilter(state, value) {
+    state.form.filter = value
+  },
+  formPath(state, value) {
+    state.form.path = value
+  },
+  formLanguage(state, value) {
+    state.form.language = value
+  },
+  formDefaultProject(state, value) {
+    state.form.defaultProject = value
+  },
+  formPipeline(state, value) {
+    state.form.pipeline = value
+  },
+  formOffline(state, value) {
+    state.form.offline = value
   }
 }
 
@@ -67,7 +80,9 @@ function actionsBuilder(api) {
       return api.runBatchSearch()
     },
     submitFindNamedEntities({ state }) {
-      return api.findNames(state.form.pipeline, { syncModels: !state.form.offline })
+      const defaultProject = state.form.defaultProject ?? null
+      const options = { syncModels: !state.form.offline, defaultProject }
+      return api.findNames(state.form.pipeline, options)
     },
     async stopPendingTasks({ commit }) {
       try {
@@ -110,7 +125,6 @@ export function indexingStoreBuilder(api) {
   return {
     namespaced: true,
     state,
-    getters,
     mutations,
     actions: actionsBuilder(api)
   }

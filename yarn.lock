@@ -14009,11 +14009,6 @@ vue@2.7.10:
     "@vue/compiler-sfc" "2.7.10"
     csstype "^3.1.0"
 
-vuex-map-fields@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/vuex-map-fields/-/vuex-map-fields-1.4.1.tgz#3f22f0c3d39e25968d3a74fc2b43738c23c4ae4d"
-  integrity sha512-jvIcpvoIPqwvJCOfRkPU9Rj0EbjWuk7GlNC5LXU9mCXVGZph6bWGHZssnoUzpLMxJtXQEHoVyZkKf7YQV+/bnQ==
-
 vuex-persistedstate@^4.0.0-beta.1:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/vuex-persistedstate/-/vuex-persistedstate-4.1.0.tgz#127165f85f5b4534fb3170a5d3a8be9811bd2a53"

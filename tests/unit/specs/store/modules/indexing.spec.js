@@ -114,7 +114,7 @@ describe('IndexingStore', () => {
   })
 
   it('should reset the extracting form', () => {
-    store.commit('indexing/updateField', { path: 'form.ocr', value: true })
+    store.commit('indexing/formOcr', true)
     expect(store.state.indexing.form.ocr).toBeTruthy()
 
     store.commit('indexing/resetExtractForm')
@@ -122,8 +122,8 @@ describe('IndexingStore', () => {
   })
 
   it('should reset the Find Named Entities form', () => {
-    store.commit('indexing/updateField', { path: 'form.pipeline', value: 'OPENNLP' })
-    store.commit('indexing/updateField', { path: 'form.offline', value: true })
+    store.commit('indexing/formPipeline', 'OPENNLP')
+    store.commit('indexing/formOffline', true)
     expect(store.state.indexing.form.pipeline).toBe('OPENNLP')
     expect(store.state.indexing.form.offline).toBeTruthy()
 
