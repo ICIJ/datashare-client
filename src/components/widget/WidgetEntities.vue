@@ -4,8 +4,8 @@
       <div slot="waiting" class="widget__spinner">
         <fa icon="circle-notch" spin size="2x" />
       </div>
-      <div class="widget__content row text-center" :class="{ 'card-body': widget.card }">
-        <div v-if="total > 0">
+      <div class="widget__content text-center" :class="{ 'card-body': widget.card }">
+        <div v-if="total > 0" class="row">
           <div
             v-for="category in categories"
             :key="category"
