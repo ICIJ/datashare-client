@@ -1,4 +1,4 @@
-import { join, map, replace, trim, toLower } from 'lodash'
+import { isNull, join, map, omitBy, replace, trim, toLower } from 'lodash'
 
 const Method = Object.freeze({
   POST: 'POST',
@@ -16,20 +16,15 @@ export class Api {
   tree(path) {
     return this.sendAction('/api/tree/' + trim(path, '/'), { method: Method.GET })
   }
-  index({ ocr = false, filter = true, language = null } = {}) {
-    const ocrLanguage = language
-    const options = Object.fromEntries(
-      Object.entries({ ocr, filter, language, ocrLanguage }).filter(([_, v]) => v !== null)
-    )
-    const data = { options }
-    return this.sendActionAsText('/api/task/batchUpdate/index/file', { method: Method.POST, data })
+  index(options = {}) {
+    return this.indexPath('file', options)
   }
-  indexPath(path, { ocr = false, filter = true, language = null } = {}) {
+  indexPath(path, { ocr = false, filter = true, language = null, defaultProject = null } = {}) {
     const ocrLanguage = language
-    const options = Object.fromEntries(
-      Object.entries({ ocr, filter, language, ocrLanguage }).filter(([_, v]) => v !== null)
-    )
-    const data = Object.fromEntries(Object.entries({ options }).filter(([_, v]) => v != null))
+    const queueName = defaultProject ? `extract:queue:${defaultProject}` : null
+    const reportName = defaultProject ? `extract:report:${defaultProject}` : null
+    const options = omitBy({ ocr, filter, language, ocrLanguage, defaultProject, queueName, reportName }, isNull)
+    const data = { options }
     const trimedPath = trim(path, '/')
     return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
   }
