@@ -202,17 +202,11 @@ export default {
     max-width: 540px; /* prevent from loosing responsive on user history document table*/
   }
 }
+
 .user-history {
   background: $body-bg;
   color: $body-color;
   overflow: auto;
   position: relative;
-
-  &__header {
-    z-index: 100;
-    background: inherit;
-    position: sticky;
-    top: 0;
-  }
 }
 </style>
