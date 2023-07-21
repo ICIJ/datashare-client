@@ -3,7 +3,7 @@
     <div class="row">
       <div v-for="project in projects" :key="project.name" class="col-4 mb-4">
         <router-link
-          :to="{ name: 'search', query: { indices: project.name, q: '*' } }"
+          :to="{ name: 'search', query: { indices: project.name } }"
           class="project-cards__item d-flex justify-content-start text-nowrap"
           :class="{ 'project-cards__item--active': isActive(project) }"
         >
