@@ -1,32 +1,25 @@
 <template>
   <div class="page-header">
-    <div class="bg-white">
-      <div :class="classList">
-        <div class="py-5">
-          <div class="float-right">
-            <slot></slot>
-          </div>
-          <div class="d-flex align-items-center">
-            <slot name="preTitle">
-              <page-icon v-if="icon" :icon="icon" class="mr-3" />
-            </slot>
-            <div class="">
-              <h3 class="page-header__title d-flex align-items-center m-0">
-                {{ title }}
-              </h3>
-              <div v-if="description" class="page-header__description text-muted" v-html="description"></div>
-            </div>
+    <div :class="classList">
+      <div class="py-5">
+        <div class="float-right">
+          <slot></slot>
+        </div>
+        <div class="d-flex align-items-center">
+          <slot name="preTitle">
+            <page-icon v-if="icon" :icon="icon" class="mr-3" />
+          </slot>
+          <div class="">
+            <h3 class="page-header__title d-flex align-items-center m-0">
+              {{ title }}
+            </h3>
+            <div v-if="description" class="page-header__description text-muted" v-html="description"></div>
           </div>
         </div>
-        <b-tabs
-          v-if="hasTabs"
-          v-model="tabIndex"
-          class="page-header__tabs px-0"
-          nav-wrapper-class="page-header__tabs__nav"
-        >
-          <slot name="tabs" :tab-index="tabIndex" />
-        </b-tabs>
       </div>
+      <b-tabs v-model="tabIndex" class="page-header__tabs px-0" nav-wrapper-class="page-header__tabs__nav">
+        <slot name="tabs" :tab-index="tabIndex" />
+      </b-tabs>
     </div>
   </div>
 </template>
@@ -102,10 +95,24 @@ export default {
 
 <style lang="scss">
 .page-header {
-  border-bottom: $border-color 1px solid;
+
   &__tabs {
     &__nav {
-      background: $white;
+      position: relative;
+
+      &:before {
+        content: '';
+        background: white;
+        position: absolute;
+        left: -50vw;
+        right: -50vw;
+        top: -50vh;
+        bottom: -1px;
+        display: block;
+        border-bottom: $border-color 1px solid;
+        z-index: -1;
+      }
+
 
       .nav-tabs {
         border: 0;
