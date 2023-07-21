@@ -2,32 +2,41 @@
   <v-wait for="load ner pipelines">
     <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
     <form class="find-named-entities-form position-relative" @submit.prevent="submitFindNamedEntities">
-      <fa icon="tags" class="position-absolute mt-1 ml-1" size="lg" />
-      <div class="ml-4 pl-3">
-        <p class="find-named-entities-form__header font-weight-bold mb-0">
-          {{ $t('indexing.findNamedEntitiesHeader') }}
-        </p>
-        <div class="find-named-entities-form__body form-group mb-4">
-          <p class="mb-2 small">
-            {{ $t('indexing.findNamedEntitiesSubheader') }}
-          </p>
-          <fieldset class="list-group">
-            <div
-              v-for="(translationReference, pip) in pipelines"
-              :key="pip"
-              class="list-group-item bg-transparent border-light"
-            >
-              <b-form-radio v-model="pipeline" name="pipeline" :value="pip">
-                {{ $t(`${translationReference}`) }}
-                <div v-if="pip === 'corenlp'" class="font-italic small">
-                  {{ $t('indexing.default') }}
-                </div>
-              </b-form-radio>
-            </div>
-          </fieldset>
+      <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
+        <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
+        <div class="ml-4 pl-3">
+          <p class="font-weight-bold">In which project do you want to find names?</p>
+          <project-selector v-model="defaultProject" />
         </div>
       </div>
-      <div v-if="$config.is('manageDocuments')" class="find-named-entities-form__offline form-group">
+      <div class="find-named-entities-form__group mb-4">
+        <fa icon="tags" class="position-absolute mt-1 ml-1" size="lg" />
+        <div class="ml-4 pl-3">
+          <p class="find-named-entities-form__header font-weight-bold mb-0">
+            {{ $t('indexing.findNamedEntitiesHeader') }}
+          </p>
+          <div class="find-named-entities-form__body form-group mb-4">
+            <p class="mb-2 small">
+              {{ $t('indexing.findNamedEntitiesSubheader') }}
+            </p>
+            <fieldset class="list-group">
+              <div
+                v-for="(translationReference, pip) in pipelines"
+                :key="pip"
+                class="list-group-item bg-transparent border-light"
+              >
+                <b-form-radio v-model="pipeline" name="pipeline" :value="pip">
+                  {{ $t(`${translationReference}`) }}
+                  <div v-if="pip === 'corenlp'" class="font-italic small">
+                    {{ $t('indexing.default') }}
+                  </div>
+                </b-form-radio>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div class="find-named-entities-form__offline form-group">
         <b-form-checkbox v-model="offline" switch>
           <div class="font-weight-bold ml-1">
             {{ $t('indexing.syncModelsLabel') }}
@@ -49,21 +58,19 @@
 </template>
 
 <script>
-import { lowerCase, noop, startCase, map } from 'lodash'
-import { createHelpers } from 'vuex-map-fields'
+import { lowerCase, noop, startCase, values } from 'lodash'
 
+import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
-
-const { mapFields } = createHelpers({
-  getterType: 'indexing/getField',
-  mutationType: 'indexing/updateField'
-})
 
 /**
  * A form to start indexing named entities in indexed documents.
  */
 export default {
   name: 'FindNamedEntitiesForm',
+  components: {
+    ProjectSelector
+  },
   filters: {
     lowerCase,
     startCase
@@ -85,13 +92,38 @@ export default {
     }
   },
   computed: {
-    ...mapFields(['form.offline', 'form.pipeline'])
+    offline: {
+      set(value) {
+        this.$store.commit('indexing/formOffline', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.offline
+      }
+    },
+    pipeline: {
+      set(value) {
+        this.$store.commit('indexing/formPipeline', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.pipeline
+      }
+    },
+    defaultProject: {
+      set(value) {
+        this.$store.commit('indexing/formDefaultProject', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.defaultProject || this.$config.get('defaultProject')
+      }
+    },
+    showProjectSelector() {
+      return this.$core.projects.length > 1 || this.defaultProject !== this.$config.get('defaultProject')
+    }
   },
   async mounted() {
     this.$wait.start('load ner pipelines')
-    let pipelines = await this.$store.dispatch('indexing/getNerPipelines')
-    pipelines = map(pipelines, lowerCase)
-    this.$set(this, 'pipelines', this.handlePipelinesTranslation(pipelines))
+    const pipelines = await this.$store.dispatch('indexing/getNerPipelines')
+    this.$set(this, 'pipelines', this.handlePipelinesTranslation(values(pipelines).map(lowerCase)))
     this.$wait.end('load ner pipelines')
   },
   methods: {

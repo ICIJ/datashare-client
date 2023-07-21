@@ -5,7 +5,7 @@ import { Core } from '@/core'
 import ExtractingForm from '@/components/ExtractingForm'
 
 describe('ExtractingForm.vue', () => {
-  let wrapper, i18n, localVue, router, store, mockAxios, api, wait
+  let wrapper, i18n, localVue, router, store, mockAxios, api, wait, config
 
   const propsData = {
     textLanguages: [
@@ -17,10 +17,11 @@ describe('ExtractingForm.vue', () => {
   }
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn(), get: jest.fn() }
+    mockAxios = { request: jest.fn().mockResolvedValue([]), get: jest.fn().mockResolvedValue([]) }
     api = new Api(mockAxios, null)
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
+    config = core.config
     localVue = core.localVue
     router = core.router
     store = core.store
@@ -28,6 +29,8 @@ describe('ExtractingForm.vue', () => {
   })
 
   beforeEach(() => {
+    config.set('defaultProject', 'local-datashare')
+    config.set('projects', [{ name: 'local-datashare' }])
     wrapper = shallowMount(ExtractingForm, { i18n, localVue, propsData, router, store, wait })
     mockAxios.request.mockClear()
     mockAxios.get.mockClear()
@@ -46,10 +49,10 @@ describe('ExtractingForm.vue', () => {
         url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
         method: 'POST',
         data: {
-          options: {
+          options: expect.objectContaining({
             ocr: false,
             filter: true
-          }
+          })
         }
       })
     )
@@ -66,12 +69,12 @@ describe('ExtractingForm.vue', () => {
         url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
         method: 'POST',
         data: {
-          options: {
+          options: expect.objectContaining({
             ocr: true,
             filter: true,
             language: 'fra',
             ocrLanguage: 'fra'
-          }
+          })
         }
       })
     )
@@ -80,7 +83,6 @@ describe('ExtractingForm.vue', () => {
   it('should reset the modal params on submitting the form', async () => {
     wrapper.vm.$set(wrapper.vm, 'ocr', true)
     await wrapper.vm.submitExtract()
-
     expect(wrapper.vm.ocr).toBeFalsy()
   })
 
@@ -98,5 +100,15 @@ describe('ExtractingForm.vue', () => {
         url: Api.getFullUrl('/api/settings/ocr/languages')
       })
     )
+  })
+
+  it('should show the project selector when there is several projects', async () => {
+    await config.set('defaultProject', 'foo')
+    await config.set('projects', [{ name: 'bar' }, { name: 'foo' }])
+    expect(wrapper.findComponent({ name: 'ProjectSelector' }).exists()).toBeTruthy()
+  })
+
+  it('should show the project selector when there is only one project', async () => {
+    expect(wrapper.findComponent({ name: 'ProjectSelector' }).exists()).toBeFalsy()
   })
 })
