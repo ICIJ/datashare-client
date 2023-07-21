@@ -64,7 +64,7 @@
             :title="$t('userHistory.saveSearch')"
           >
             <user-history-save-search-form
-              :indices="indices"
+              :indices="formIndices"
               :uri="uri"
               @submit="$refs['user-history-save-search-form'].hide()"
             />
@@ -148,6 +148,13 @@ export default {
     size: {
       type: String,
       default: 'md'
+    },
+    /**
+     * Force the search bar to search intogiven indices
+     */
+    indices: {
+      type: Array,
+      default: null
     }
   },
   data() {
@@ -160,8 +167,8 @@ export default {
     }
   },
   computed: {
-    indices() {
-      return this.$store.state.search.indices
+    formIndices() {
+      return this.indices && this.indices.length ? this.indices : this.$store.state.search.indices
     },
     uniqueId() {
       return uniqueId('search-bar-')
@@ -192,11 +199,13 @@ export default {
       this.$store.commit('search/field', this.field)
       this.$store.commit('search/query', this.query)
       this.$store.commit('search/from', 0)
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQueryWithStamp']() })
+      const indices = this.formIndices
+      const query = { ...this.$store.getters['search/toRouteQueryWithStamp'](), indices }
+      this.$router.push({ name: 'search', query })
     },
     async suggestTerms(candidates) {
       const query = this.query
-      const index = this.$store.state.search.indices.join(',')
+      const index = this.formIndices.join(',')
       const candidate = last(candidates)
       const fields = castArray(candidate.field === '<implicit>' ? settings.suggestedImplicitFields : candidate.field)
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`

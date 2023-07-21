@@ -1,10 +1,12 @@
 <template>
   <div class="widget widget--search-bar" :class="{ 'card-body': widget.card }">
-    <search-bar class="p-0" />
+    <search-bar class="p-0" :indices="indices" />
   </div>
 </template>
 
 <script>
+import { castArray } from 'lodash'
+
 import SearchBar from '@/components/SearchBar'
 
 /**
@@ -21,6 +23,11 @@ export default {
      */
     widget: {
       type: Object
+    }
+  },
+  computed: {
+    indices() {
+      return castArray(this.$store.state.insights.project)
     }
   }
 }
