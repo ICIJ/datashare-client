@@ -1,5 +1,12 @@
 <template>
   <form class="extracting-form position-relative" @submit.prevent="submitExtract">
+    <div v-if="showProjectSelector" class="extracting-form__group mb-4">
+      <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
+      <div class="ml-4 pl-3">
+        <p class="font-weight-bold">In which project store your documents?</p>
+        <project-selector v-model="defaultProject" />
+      </div>
+    </div>
     <div class="extracting-form__group mb-4">
       <fa icon="folder-open" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
@@ -63,17 +70,12 @@
 
 <script>
 import { noop, uniqueId, castArray } from 'lodash'
-import { createHelpers } from 'vuex-map-fields'
 import { waitFor } from 'vue-wait'
 
 import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
 import ExtractingFormOcrControl from '@/components/ExtractingFormOcrControl'
 import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
-
-const { mapFields } = createHelpers({
-  getterType: 'indexing/getField',
-  mutationType: 'indexing/updateField'
-})
+import ProjectSelector from '@/components/ProjectSelector'
 
 /**
  * A form to start indexing documents in the data directory.
@@ -83,7 +85,8 @@ export default {
   components: {
     ExtractingLanguageFormControl,
     InlineDirectoryPicker,
-    ExtractingFormOcrControl
+    ExtractingFormOcrControl,
+    ProjectSelector
   },
   props: {
     /**
@@ -102,7 +105,46 @@ export default {
     }
   },
   computed: {
-    ...mapFields(['form.filter', 'form.ocr', 'form.path', 'form.language']),
+    ocr: {
+      set(value) {
+        this.$store.commit('indexing/formOcr', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.ocr
+      }
+    },
+    filter: {
+      set(value) {
+        this.$store.commit('indexing/formFilter', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.filter
+      }
+    },
+    path: {
+      set(value) {
+        this.$store.commit('indexing/formPath', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.path
+      }
+    },
+    language: {
+      set(value) {
+        this.$store.commit('indexing/formLanguage', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.language
+      }
+    },
+    defaultProject: {
+      set(value) {
+        this.$store.commit('indexing/formDefaultProject', value)
+      },
+      get() {
+        return this.$store.state.indexing.form.defaultProject || this.$config.get('defaultProject')
+      }
+    },
     isWaitingForSubmitExtract() {
       return this.$wait.is('submitExtract')
     },
@@ -114,6 +156,9 @@ export default {
     },
     showOcrMessage() {
       return !this.hasTesseract || !!this.ocr
+    },
+    showProjectSelector() {
+      return this.$core.projects.length > 1 || this.defaultProject !== this.$config.get('defaultProject')
     }
   },
   async mounted() {
