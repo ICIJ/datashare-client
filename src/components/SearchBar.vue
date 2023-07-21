@@ -196,11 +196,11 @@ export default {
     submit() {
       this.hideSuggestions()
       // Change the route after update the store with the new query
+      this.$store.commit('search/indices', this.formIndices)
       this.$store.commit('search/field', this.field)
       this.$store.commit('search/query', this.query)
       this.$store.commit('search/from', 0)
-      const indices = this.formIndices
-      const query = { ...this.$store.getters['search/toRouteQueryWithStamp'](), indices }
+      const query = this.$store.getters['search/toRouteQueryWithStamp']()
       this.$router.push({ name: 'search', query })
     },
     async suggestTerms(candidates) {
