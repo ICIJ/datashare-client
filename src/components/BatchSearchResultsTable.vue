@@ -178,12 +178,10 @@ export default {
     },
     selectedContentTypes: {
       get() {
-        const param = this.$route?.query?.contentTypes ?? null
-
-        if (isArray(param)) {
-          return uniq(param)
+        let contentTypes = this.$route.query?.contentTypes ?? []
+        if (typeof contentTypes === 'string') {
+          contentTypes = contentTypes?.split(',')
         }
-        const contentTypes = param?.split(',') ?? []
         return uniq(contentTypes)
       },
       set(values) {
@@ -193,8 +191,10 @@ export default {
     },
     selectedQueries: {
       get() {
-        const param = this.$route?.query?.queries ?? null
-        const queries = param?.split(',') ?? []
+        let queries = this.$route.query?.queries ?? []
+        if (typeof queries === 'string') {
+          queries = queries?.split(',')
+        }
         return uniq(queries)
       },
       set(values) {
