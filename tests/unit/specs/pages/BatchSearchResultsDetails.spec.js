@@ -10,7 +10,6 @@ import BatchSearchResultsDetails from '@/components/BatchSearchResultsDetails'
 
 describe('BatchSearchResultsDetails.vue', () => {
   let wrapper = null
-  let api
   let i18n, localVue, store, wait, config, auth
   const router = new VueRouter({
     routes: [
@@ -100,6 +99,7 @@ describe('BatchSearchResultsDetails.vue', () => {
     await checkbox.setChecked(false)
     expect(wrapper2.emitted()['update:published']).toEqual([[false]])
   })
+
   describe('Projects column', () => {
     it('should contain all the projects in which the batch search is performed', () => {
       const projectLinks = wrapper.findAll('.batch-search-results-details__info__project-link')
