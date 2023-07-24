@@ -32,7 +32,7 @@ const batchSearchMock = {
       state: 'FAILURE'
     }
   ],
-  total: 2
+  pagination: { total: 2 }
 }
 const routerFactory = () => {
   return new VueRouter({
