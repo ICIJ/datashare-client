@@ -1,10 +1,10 @@
 <template>
-  <b-badge v-if="counter" variant="secondary" class="column-filter-badge__counter">
+  <b-badge v-if="counter" variant="secondary" class="column-filter-badge column-filter-badge__counter">
     {{ counter | humanNumber }}
   </b-badge>
   <fa
     v-else
-    class="column-filter-badge__icon text-secondary"
+    class="column-filter-badge column-filter-badge__icon text-secondary"
     :class="{ 'column-filter-badge--inactive': !active }"
     icon="circle"
     width="8px"
