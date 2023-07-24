@@ -150,26 +150,6 @@ export default {
       // sort: settings.batchSearchResults.sort
     }
   },
-  watch: {
-    page() {
-      return this.fetch()
-    },
-    sort() {
-      return this.fetch()
-    },
-    order() {
-      return this.fetch()
-    },
-    selectedContentTypes() {
-      return this.fetch()
-    },
-    selectedQueries() {
-      return this.fetch()
-    },
-    queriesExcluded() {
-      return this.fetch()
-    }
-  },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results', 'contentTypes']),
     ...mapGetters('batchSearch', ['queryKeys', 'nbSelectedQueries', 'totalItems']),
@@ -292,6 +272,26 @@ export default {
     },
     hasMultipleProjects() {
       return this.batchSearch.projects.length > 1
+    }
+  },
+  watch: {
+    page() {
+      return this.fetch()
+    },
+    sort() {
+      return this.fetch()
+    },
+    order() {
+      return this.fetch()
+    },
+    selectedContentTypes() {
+      return this.fetch()
+    },
+    selectedQueries() {
+      return this.fetch()
+    },
+    queriesExcluded() {
+      return this.fetch()
     }
   },
   async created() {
