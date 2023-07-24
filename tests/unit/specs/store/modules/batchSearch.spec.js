@@ -247,7 +247,7 @@ describe('without using api', () => {
   it('should update the nbBatchSearches when submitting the new batchSearch form ', async () => {
     api.getBatchSearches.mockResolvedValueOnce({
       items: [{ uuid: 'name' }],
-      total: 1
+      pagination: { total: 1 }
     })
 
     expect(store.state.batchSearch.nbBatchSearches).toEqual(0)
