@@ -14,6 +14,7 @@
       <b-row class="d-flex justify-content-end align-items-center">
         <applied-search-filters-item
           v-if="selectedQueries.length"
+          class="batch-search-results__applied-search-filters__queries"
           :filter="selectedQueriesFilter"
           hide-filter-label
           :is-search-filter="false"
@@ -22,6 +23,7 @@
         <applied-search-filters-item
           v-for="(cType, i) in selectedContentTypes"
           :key="`${cType}+${i}`"
+          class="batch-search-results__applied-search-filters__content-types"
           :filter="contentTypeFilter[cType]"
           hide-filter-label
           :is-search-filter="false"
@@ -247,10 +249,10 @@ export default {
     updateDocIndex(event) {
       this.documentInModalPageIndex = event.docIndex
     },
-    clearQueriesParams(filter) {
+    clearQueriesParams() {
       const query = { ...this.$route.query }
       delete query.queriesExcluded
-      delete query?.query?.[filter.name]
+      delete query?.queries
       this.$router.push({ query })
     },
     clearContentTypeParams(filter) {
