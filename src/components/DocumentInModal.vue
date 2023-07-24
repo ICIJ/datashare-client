@@ -35,9 +35,9 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 
-import DocumentNavbar from '@/components/document/DocumentNavbar.vue'
-import DocumentView from '@/pages/DocumentView.vue'
-import QuickItemNav from '@/components/QuickItemNav.vue'
+import DocumentNavbar from '@/components/document/DocumentNavbar'
+import DocumentView from '@/pages/DocumentView'
+import QuickItemNav from '@/components/QuickItemNav'
 import settings from '@/utils/settings'
 
 export default {

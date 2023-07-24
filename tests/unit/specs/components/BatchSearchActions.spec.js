@@ -2,13 +2,11 @@ import VueRouter from 'vue-router'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { flushPromises } from 'tests/unit/tests_utils'
-import Vuex from 'vuex'
 
 import { Core } from '@/core'
 import BatchSearchActions from '@/components/BatchSearchActions'
 import { getMode, MODE_NAME } from '@/mode'
 import { Api } from '@/api'
-import { getters, mutations, actionBuilder } from '@/store/modules/batchSearch'
 
 describe('BatchSearchActions.vue', () => {
   let wrapper, i18n, localVue, store, wait, router, api

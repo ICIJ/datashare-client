@@ -12,6 +12,7 @@
 
     <div class="container">
       <b-row class="d-flex justify-content-end align-items-center">
+      <b-row class="batch-search-results__applied-search-filters d-flex justify-content-end align-items-center">
         <applied-search-filters-item
           v-if="selectedQueries.length"
           class="batch-search-results__applied-search-filters__queries"
@@ -35,7 +36,6 @@
           :local-search-params="params"
         />
       </b-row>
-
       <batch-search-results-table @show-document-modal="openDocumentModal"> </batch-search-results-table>
       <document-in-modal v-model="documentInModalPageIndex" :page="page" @update:page="updatePage" />
     </div>
@@ -56,7 +56,7 @@ import humanNumber from '@/filters/humanNumber'
 import { humanLongDate, humanShortDate } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
-import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem.vue'
+import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 const SEARCH_PARAMS_LOCAL = Object.freeze({
   queries: true,
   indices: false,
