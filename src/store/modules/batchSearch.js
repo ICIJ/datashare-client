@@ -82,7 +82,7 @@ export const mutations = {
   },
   [RESULTS](state, results) {
     Vue.set(state, 'results', results.items)
-    Vue.set(state, 'batchSearchPagination', results.pagination)
+    Vue.set(state, 'batchSearchResultsPagination', results.pagination)
     const contentTypes = uniq(map(results.items, 'contentType'))
     if (state.contentTypes.length < contentTypes.length) {
       state.contentTypes = contentTypes
