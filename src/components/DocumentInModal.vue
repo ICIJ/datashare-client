@@ -64,7 +64,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('batchSearch', ['results', 'totalItems']),
+    ...mapState('batchSearch', ['results']),
     ...mapGetters('batchSearch', ['totalItems']),
     hasDocumentInModal() {
       const pageIndex = this.documentInModalPageIndex
