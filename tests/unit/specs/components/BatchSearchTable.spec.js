@@ -100,6 +100,7 @@ describe('BatchSearchTable.vue', () => {
       it('should display a pagination when perPage inferior to 2', async () => {
         await wrapper.setData({ perPage: 1 })
         expect(wrapper.find('.pagination.b-pagination').exists()).toBeTruthy()
+        expect(wrapper.vm.numberOfPages).toBe(2)
         await wrapper.setData({ perPage: 5 })
         expect(wrapper.find('.pagination.b-pagination').exists()).toBeFalsy()
       })
@@ -111,6 +112,7 @@ describe('BatchSearchTable.vue', () => {
         wrapper = mount(BatchSearchTable, { i18n, localVue, store, wait })
         await flushPromises()
         expect(wrapper.find('.batch-search-table__item__no-item').exists()).toBeTruthy()
+        expect(wrapper.find('b-pagination-nav-stub').exists()).toBeFalsy()
       })
     })
 
