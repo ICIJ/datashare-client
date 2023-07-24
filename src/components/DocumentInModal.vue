@@ -85,11 +85,12 @@ export default {
       },
       set(index) {
         if (index >= this.pageOffset + this.perPage) {
-          this.$emit('update:page', this.page + 1)
+          this.$emit('update:page', { page: this.page + 1, docIndex: index % this.perPage })
         } else if (index < this.pageOffset) {
-          this.$emit('update:page', this.page - 1)
+          this.$emit('update:page', { page: this.page - 1, docIndex: index % this.perPage })
+        } else {
+          this.$emit('update:page', { page: this.page, docIndex: index % this.perPage })
         }
-        this.$emit('change', index - this.pageOffset)
       }
     },
     perPage() {
@@ -108,9 +109,8 @@ export default {
   },
   methods: {
     handlePrevNextRoute(newIndex) {
-      if (this.isFirstDocument || this.isLastDocument) {
-        this.$emit('update:doc-index', { docIndex: newIndex })
-        // this.$router.push(this.generateLinkToBatchSearchResults(, this.selectedQueries))
+      if (!this.isFirstDocument || !this.isLastDocument) {
+        this.$emit('change', newIndex - this.pageOffset)
       }
     },
     hideModal() {

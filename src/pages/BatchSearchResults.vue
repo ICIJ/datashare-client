@@ -37,18 +37,13 @@
       </b-row>
 
       <batch-search-results-table @show-document-modal="openDocumentModal"> </batch-search-results-table>
-      <document-in-modal
-        v-model="documentInModalPageIndex"
-        :page="page"
-        @update:page="updatePage"
-        @update:doc-index="updateDocIndex"
-      />
+      <document-in-modal v-model="documentInModalPageIndex" :page="page" @update:page="updatePage" />
     </div>
   </div>
 </template>
 
 <script>
-import { compact, find, get } from 'lodash'
+import { compact, find, get, uniq } from 'lodash'
 import moment from 'moment'
 import { mapGetters, mapState } from 'vuex'
 
@@ -151,8 +146,14 @@ export default {
     queriesExcluded() {
       return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
     },
-    page() {
-      return parseInt(this.$route.query?.page) ?? 1
+    page: {
+      get() {
+        const page = this.$route.query?.page ?? 1
+        return parseInt(page) ?? 1
+      },
+      set(newPage) {
+        return this.$router.push(this.generateLinkToBatchSearchResults(newPage))
+      }
     },
     pageOffset() {
       return (this.page - 1) * this.perPage
@@ -180,10 +181,18 @@ export default {
       }, {})
     },
     selectedContentTypes() {
-      return this.$route.query?.contentTypes?.split(',') ?? []
+      let contentTypes = this.$route.query?.contentTypes ?? []
+      if (typeof contentTypes === 'string') {
+        contentTypes = contentTypes?.split(',')
+      }
+      return uniq(contentTypes)
     },
     selectedQueries() {
-      return this.$route.query?.queries?.split(',') ?? []
+      let queries = this.$route.query?.queries ?? []
+      if (typeof queries === 'string') {
+        queries = queries?.split(',')
+      }
+      return uniq(queries)
     }
   },
   async created() {
@@ -243,11 +252,10 @@ export default {
     localeShortDate(date) {
       return moment(date).isValid() ? humanShortDate(date, this.$i18n.locale) : ''
     },
-    updatePage(page) {
-      return this.$router.push(this.generateLinkToBatchSearchResults(page))
-    },
-    updateDocIndex(event) {
-      this.documentInModalPageIndex = event.docIndex
+    async updatePage(event) {
+      await this.$router.push(this.generateLinkToBatchSearchResults(event.page)).then(() => {
+        this.documentInModalPageIndex = event.docIndex
+      })
     },
     clearQueriesParams() {
       const query = { ...this.$route.query }
