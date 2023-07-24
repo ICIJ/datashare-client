@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-search-results__queries">
+  <div class="batch-search-results-table">
     <div class="card">
       <b-table
         :busy="isBusy"
@@ -15,7 +15,7 @@
         responsive
         show-empty
         striped
-        tbody-tr-class="batch-search-results__queries__query "
+        tbody-tr-class="batch-search-results-table__queries__query "
         @sort-changed="sortChanged"
       >
         <template #head(contentType)="{ field }">
@@ -57,7 +57,7 @@
         </template>
         <template #cell(documentPath)="{ item, index }">
           <router-link
-            class="batch-search-results__queries__query__link"
+            class="batch-search-results-table__queries__query__link"
             target="_blank"
             :to="{
               name: 'document-standalone',
@@ -68,7 +68,7 @@
           >
             <active-text-truncate
               v-b-tooltip.hover
-              class="batch-search-results__queries__query__link__path"
+              class="batch-search-results-table__query__link__path"
               :title="item.documentPath"
             >
               {{ item.documentPath }}
@@ -96,7 +96,7 @@
     </div>
     <custom-pagination
       v-model="page"
-      class="batch-search-results__pagination my-4"
+      class="batch-search-results-table__pagination my-4"
       :per-page="perPage"
       :total-rows="totalItems"
     />
@@ -135,6 +135,13 @@ export default {
   },
   mixins: [utils],
   props: {
+    /**
+     * The unique id of the batch search
+     */
+    uuid: {
+      type: String,
+      required: true
+    },
     /**
      * The indices of the current batch search
      */
@@ -267,11 +274,11 @@ export default {
       return this.documentInModalPageIndex === 0
     },
     isLastDocument() {
-      const totalResultsIndices = this.results.length - 1
+      const totalResultsIndices = this.results?.length - 1
       return this.documentInModalPageIndex === totalResultsIndices
     },
     hasMultipleProjects() {
-      return this.batchSearch.projects.length > 1
+      return this.batchSearch.projects?.length > 1
     }
   },
   watch: {
@@ -309,7 +316,7 @@ export default {
         selectedContentTypes: contentTypes,
         queriesExcluded
       } = this
-      const params = { batchId: this.batchSearch.uuid, from, size, queries, sort, order, contentTypes, queriesExcluded }
+      const params = { batchId: this.uuid, from, size, queries, sort, order, contentTypes, queriesExcluded }
       await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
       this.$wait.end('load batchSearch results table')
     },
@@ -318,7 +325,7 @@ export default {
       this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
     },
     getQueries() {
-      return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.batchSearch.uuid)
+      return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.uuid)
     },
     async sortChanged(ctx) {
       const sort = find(this.fields, (item) => item.key === ctx.sortBy).name
@@ -366,7 +373,7 @@ export default {
         name: 'batch-search.results',
         params: {
           indices: this.indices,
-          uuid: this.batchSearch.uuid
+          uuid: this.uuid
         },
         query: queryParams
       }
@@ -397,65 +404,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.batch-search-results {
-  &__info {
-    display: grid;
-    overflow: hidden;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 0px;
-    margin: 0 -1px -1px;
-    border-left: 1px solid $border-color;
+.batch-search-results-table {
+  &:deep(.table-responsive) {
+    margin: 0;
+  }
 
-    & > div {
-      padding: $spacer $spacer $spacer;
-      border: 1px solid $border-color;
-      border-left: 0;
+  &:deep(table) {
+    margin: 0;
+
+    thead tr {
       border-top: 0;
 
-      dt {
-        text-overflow: ellipsis;
-        font-weight: normal;
-        color: $text-muted;
-      }
+      th {
+        border-top: 0;
+        white-space: nowrap;
 
-      dd {
-        font-size: 1rem;
-        font-weight: bolder;
+        &[aria-sort]:hover {
+          background-color: $lighter;
+        }
       }
     }
   }
 
-  &__queries {
-    &:deep(.table-responsive) {
-      margin: 0;
+  &__query__link {
+    &:visited {
+      color: mix(#609, white, 50%);
     }
 
-    &:deep(table) {
-      margin: 0;
-
-      thead tr {
-        border-top: 0;
-
-        th {
-          border-top: 0;
-          white-space: nowrap;
-
-          &[aria-sort]:hover {
-            background-color: $lighter;
-          }
-        }
-      }
-    }
-
-    &__query__link {
-      &:visited {
-        color: mix(#609, white, 50%);
-      }
-
-      &__path {
-        display: block;
-        max-width: 30vw;
-      }
+    &__path {
+      display: block;
+      max-width: 30vw;
     }
   }
 }

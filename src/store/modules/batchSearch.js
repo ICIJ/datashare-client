@@ -24,7 +24,7 @@ export function initialState() {
     batchSearches: [],
     results: [],
     batchSearchResultsPagination: {},
-    queries: {},
+    queries: [],
     selectedQueries: [],
     total: 0,
     nbBatchSearches: 0,
@@ -40,9 +40,6 @@ export const getters = {
   },
   nbSelectedQueries(state) {
     return state.selectedQueries?.length ?? 0
-  },
-  nbCurrentQueries(state, getters) {
-    return getters.nbSelectedQueries > 0 ? getters.nbSelectedQueries : getters.queryKeys.length
   },
   nbResults(state) {
     return state.batchSearch?.nbResults

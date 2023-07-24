@@ -36,7 +36,8 @@
           :local-search-params="params"
         />
       </b-row>
-      <batch-search-results-table @show-document-modal="openDocumentModal"> </batch-search-results-table>
+      <batch-search-results-table :indices="indices" :uuid="uuid" @show-document-modal="openDocumentModal">
+      </batch-search-results-table>
       <document-in-modal v-model="documentInModalPageIndex" :page="page" @update:page="updatePage" />
     </div>
   </div>

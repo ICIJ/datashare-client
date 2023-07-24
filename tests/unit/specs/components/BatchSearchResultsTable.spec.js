@@ -32,38 +32,41 @@ describe('BatchSearchResultsTable.vue', () => {
     Murmur.config.merge({ mode: 'SERVER' })
     const api = jest.fn()
     api.getBatchSearchQueries = jest.fn()
-    api.getBatchSearchResults = jest.fn().mockResolvedValue([
-      {
-        creationDate: '2011-10-11T04:12:49.000+0000',
-        documentId: 42,
-        documentNumber: 0,
-        documentName: '42.pdf',
-        contentType: 'type_03',
-        query: 'query_01',
-        project: 'batchsearchresults',
-        rootId: 42
-      },
-      {
-        creationDate: '2011-10-11T04:12:49.000+0000',
-        documentId: 43,
-        documentNumber: 1,
-        documentName: '43.pdf',
-        contentType: 'type_02',
-        query: 'query_01',
-        project: 'anotherbatchsearchresults',
-        rootId: 43
-      },
-      {
-        creationDate: '2011-10-11T04:12:49.000+0000',
-        documentId: 44,
-        documentNumber: 2,
-        documentName: '44.pdf',
-        contentType: 'type_01',
-        query: 'query_02',
-        project: 'anotherbatchsearchresults',
-        rootId: 44
-      }
-    ])
+    api.getBatchSearchResults = jest.fn().mockResolvedValue({
+      items: [
+        {
+          creationDate: '2011-10-11T04:12:49.000+0000',
+          documentId: 42,
+          documentNumber: 0,
+          documentName: '42.pdf',
+          contentType: 'type_03',
+          query: 'query_01',
+          project: 'batchsearchresults',
+          rootId: 42
+        },
+        {
+          creationDate: '2011-10-11T04:12:49.000+0000',
+          documentId: 43,
+          documentNumber: 1,
+          documentName: '43.pdf',
+          contentType: 'type_02',
+          query: 'query_01',
+          project: 'anotherbatchsearchresults',
+          rootId: 43
+        },
+        {
+          creationDate: '2011-10-11T04:12:49.000+0000',
+          documentId: 44,
+          documentNumber: 2,
+          documentName: '44.pdf',
+          contentType: 'type_01',
+          query: 'query_02',
+          project: 'anotherbatchsearchresults',
+          rootId: 44
+        }
+      ],
+      pagination: { total: 3 }
+    })
     api.getBatchSearch = jest.fn().mockResolvedValue({
       uuid: '12',
       projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
@@ -105,11 +108,11 @@ describe('BatchSearchResultsTable.vue', () => {
   })
 
   it('should display the list of the queries of this batch search', () => {
-    expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
-    expect(wrapper.find('batch-search-results-table-stub').attributes('items').split(',')).toHaveLength(3)
+    expect(wrapper.find('.batch-search-results-table').exists()).toBeTruthy()
+    expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
   })
 
-  it('should redirect on sort changed', () => {
+  it('should redirect on contentType changed', () => {
     jest.spyOn(router, 'push')
 
     wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
@@ -118,13 +121,13 @@ describe('BatchSearchResultsTable.vue', () => {
     expect(router.push).toBeCalledWith({
       name: 'batch-search.results',
       params: { indices: project.concat(',', anotherProject), uuid: '12' },
-      query: { page: 1, queries: [], sort: 'content_type', order: 'desc' }
+      query: { page: '1', sort: 'content_type', order: 'desc' }
     })
   })
 
   it('should redirect on sort change but keep the selectedQueries selected', () => {
     jest.spyOn(router, 'push')
-    store.commit('batchSearch/selectedQueries', [{ id: 'query_01', label: 'query_01' }])
+    router.push({ query: { queries: ['query_01', 'query_02'] } })
 
     wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
 
@@ -132,7 +135,13 @@ describe('BatchSearchResultsTable.vue', () => {
     expect(router.push).toBeCalledWith({
       name: 'batch-search.results',
       params: { indices: project.concat(',', anotherProject), uuid: '12' },
-      query: { page: 1, queries: ['query_01'], sort: 'content_type', order: 'desc', queries_sort: undefined }
+      query: {
+        page: '1',
+        queries: 'query_01,query_02',
+        sort: 'content_type',
+        order: 'desc',
+        queries_sort: undefined
+      }
     })
   })
 
