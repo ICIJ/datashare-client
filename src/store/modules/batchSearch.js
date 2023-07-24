@@ -14,7 +14,8 @@ import {
   RESULTS,
   TOTAL,
   NB_BATCH_SEARCHES,
-  SINGLE_BATCH_SEARCH_PUBLISHED
+  SINGLE_BATCH_SEARCH_PUBLISHED,
+  CLEAR_BATCH_SEARCH_RESULTS
 } from '@/store/mutation-types'
 
 export function initialState() {
@@ -80,8 +81,12 @@ export const mutations = {
   [SELECTED_QUERIES](state, selectedQueries) {
     Vue.set(state, 'selectedQueries', selectedQueries)
   },
+  [CLEAR_BATCH_SEARCH_RESULTS](state) {
+    // CD: help force update modal viewer (to improve )
+    Vue.set(state, 'results', [])
+  },
   [RESULTS](state, results) {
-    Vue.set(state, 'results', results.items)
+    Vue.set(state, 'results', [...results.items])
     Vue.set(state, 'batchSearchResultsPagination', results.pagination)
     const contentTypes = uniq(map(results.items, 'contentType'))
     if (state.contentTypes.length < contentTypes.length) {
@@ -101,6 +106,9 @@ export const mutations = {
 
 export function actionBuilder(api) {
   return {
+    clearBatchSearchResults({ commit }) {
+      commit(CLEAR_BATCH_SEARCH_RESULTS)
+    },
     async getBatchSearch({ commit }, batchId) {
       let batchSearch = {}
       try {
