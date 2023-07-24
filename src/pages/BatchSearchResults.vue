@@ -253,9 +253,12 @@ export default {
       return moment(date).isValid() ? humanShortDate(date, this.$i18n.locale) : ''
     },
     async updatePage(event) {
-      await this.$router.push(this.generateLinkToBatchSearchResults(event.page)).then(() => {
-        this.documentInModalPageIndex = event.docIndex
-      })
+      await this.$store.dispatch(`batchSearch/clearBatchSearchResults`)
+
+      await this.$router.push(this.generateLinkToBatchSearchResults(event.page))
+      await this.$nextTick()
+
+      this.documentInModalPageIndex = event.docIndex
     },
     clearQueriesParams() {
       const query = { ...this.$route.query }

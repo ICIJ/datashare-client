@@ -19,17 +19,15 @@
           </a>
         </template>
         <template #nav>
-          <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems" @change="handlePrevNextRoute" />
+          <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems" />
         </template>
       </document-navbar>
-      <v-wait for="load batchSearch results">
-        <document-view
-          :id="documentInModal.id"
-          :index="documentInModal.index"
-          :q="documentInModal.q"
-          :routing="documentInModal.routing"
-        />
-      </v-wait>
+      <document-view
+        :id="documentInModal.id"
+        :index="documentInModal.index"
+        :q="documentInModal.q"
+        :routing="documentInModal.routing"
+      />
     </div>
   </b-modal>
 </template>
@@ -84,12 +82,13 @@ export default {
         return this.pageOffset + this.documentInModalPageIndex
       },
       set(index) {
+        const docIndex = index % this.perPage
         if (index >= this.pageOffset + this.perPage) {
-          this.$emit('update:page', { page: this.page + 1, docIndex: index % this.perPage })
+          this.$emit('update:page', { page: this.page + 1, docIndex })
         } else if (index < this.pageOffset) {
-          this.$emit('update:page', { page: this.page - 1, docIndex: index % this.perPage })
+          this.$emit('update:page', { page: this.page - 1, docIndex })
         } else {
-          this.$emit('update:page', { page: this.page, docIndex: index % this.perPage })
+          this.$emit('change', Math.max(index - this.pageOffset, 0))
         }
       }
     },
@@ -108,11 +107,6 @@ export default {
     }
   },
   methods: {
-    handlePrevNextRoute(newIndex) {
-      if (!this.isFirstDocument || !this.isLastDocument) {
-        this.$emit('change', newIndex - this.pageOffset)
-      }
-    },
     hideModal() {
       this.$bvModal.hide('document-modal')
     }
