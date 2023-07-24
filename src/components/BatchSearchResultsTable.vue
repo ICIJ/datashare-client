@@ -272,7 +272,7 @@ export default {
       return find(this.fields, (item) => item.name === this.sort).key
     },
     queriesExcluded() {
-      return !!this.$route?.query?.queriesExcluded
+      return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
     },
     orderBy() {
       return this.order.toLowerCase() === 'desc'

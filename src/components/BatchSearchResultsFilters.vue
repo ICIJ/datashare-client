@@ -135,7 +135,7 @@ export default {
       }
     },
     queriesExcluded() {
-      return !!this.$route?.query?.queriesExcluded
+      return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
     },
     filteredQueries() {
       return this.queriesFilter ? this.fuse.search(this.queriesFilter).map((result) => result.item) : this.queries

@@ -149,7 +149,7 @@ export default {
       return Math.ceil(this.totalItems / this.perPage)
     },
     queriesExcluded() {
-      return !!this.$route?.query?.queriesExcluded
+      return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
     },
     page() {
       return parseInt(this.$route.query?.page) ?? 1
