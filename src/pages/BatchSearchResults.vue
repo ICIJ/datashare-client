@@ -17,7 +17,7 @@
           class="batch-search-results__applied-search-filters__queries"
           :filter="selectedQueriesFilter"
           hide-filter-label
-          :is-search-filter="false"
+          :update-search-store="false"
           @delete="clearQueriesParams"
         ></applied-search-filters-item>
         <applied-search-filters-item
@@ -26,7 +26,7 @@
           class="batch-search-results__applied-search-filters__content-types"
           :filter="contentTypeFilter[cType]"
           hide-filter-label
-          :is-search-filter="false"
+          :update-search-store="false"
           @delete="clearContentTypeParams"
         ></applied-search-filters-item>
         <batch-search-clear-filters
