@@ -11,26 +11,41 @@
     </div>
 
     <div class="container">
-      <batch-search-results-table @openDocumentModal="openDocumentModal">
-        <template #pagination>
-          <custom-pagination
-            v-model="currentPage"
-            class="batch-search-results__pagination my-4"
-            :per-page="perPage"
-            :total-rows="totalItems"
-          />
-        </template>
-      </batch-search-results-table>
-      <document-in-modal v-model="documentInModalPageIndex" :total-items="totalItems" @update-route="updateRoute" />
+      <b-row class="d-flex justify-content-end align-items-center">
+        <applied-search-filters-item
+          v-if="selectedQueries.length"
+          :filter="selectedQueriesFilter"
+          hide-filter-label
+          :is-search-filter="false"
+          @delete="clearQueriesParams"
+        ></applied-search-filters-item>
+        <applied-search-filters-item
+          v-for="(cType, i) in selectedContentTypes"
+          :key="`${cType}+${i}`"
+          :filter="contentTypeFilter[cType]"
+          hide-filter-label
+          :is-search-filter="false"
+          @delete="clearContentTypeParams"
+        ></applied-search-filters-item>
+        <batch-search-clear-filters
+          class="batch-search__clear-filter-btn m-1"
+          route-name="batch-search.results"
+          :local-search-params="params"
+        />
+      </b-row>
+
+      <batch-search-results-table @show-document-modal="openDocumentModal"> </batch-search-results-table>
+      <document-in-modal v-model="documentInModalPageIndex" :total-items="1" @update-route="updateRoute" />
     </div>
   </div>
 </template>
 
 <script>
-import { castArray, find, get, isEqual, sumBy } from 'lodash'
+import { compact, find, get } from 'lodash'
 import moment from 'moment'
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
+import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 import BatchSearchResultsDetails from '@/components/BatchSearchResultsDetails'
 import DocumentInModal from '@/components/DocumentInModal'
 import BatchSearchResultsTable from '@/components/BatchSearchResultsTable'
@@ -39,13 +54,22 @@ import humanNumber from '@/filters/humanNumber'
 import { humanLongDate, humanShortDate } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
-
+import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem.vue'
+const SEARCH_PARAMS_LOCAL = Object.freeze({
+  queries: true,
+  indices: false,
+  contentTypes: true,
+  order: true,
+  sort: true
+})
 /**
  * This page will list all the results of a batch search.
  */
 export default {
   name: 'BatchSearchResults',
   components: {
+    AppliedSearchFiltersItem,
+    BatchSearchClearFilters,
     BatchSearchResultsDetails,
     BatchSearchResultsTable,
     DocumentInModal
@@ -55,37 +79,6 @@ export default {
     humanNumber
   },
   mixins: [utils],
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      vm.$set(vm, 'published', vm.batchSearch.published)
-      vm.$set(vm, 'page', parseInt(get(to, 'query.page', vm.page)))
-      vm.$set(vm, 'queries', castArray(get(to, 'query.queries', vm.queries)))
-      vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
-      vm.$set(vm, 'order', get(to, 'query.order', vm.order))
-      const queries = castArray(get(to, 'query.queries', vm.queries))
-      const selectedQueries = queries.map((query) => {
-        return { label: query }
-      })
-      vm.$store.commit('batchSearch/selectedQueries', selectedQueries)
-    })
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.$set(this, 'page', parseInt(get(to, 'query.page', this.page)))
-    this.$set(this, 'queries', castArray(get(to, 'query.queries', this.queries)))
-    this.$set(this, 'sort', get(to, 'query.sort', this.sort))
-    this.$set(this, 'order', get(to, 'query.order', this.order))
-    const queries = castArray(get(to, 'query.queries', this.queries))
-    const selectedQueries = queries.map((query) => {
-      return { label: query }
-    })
-    this.$store.commit('batchSearch/selectedQueries', selectedQueries)
-    next()
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('batchSearch/batchSearch', {})
-    this.$store.commit('batchSearch/selectedQueries', [])
-    next()
-  },
   props: {
     /**
      * The unique id of the batch search
@@ -102,28 +95,23 @@ export default {
   },
   data() {
     return {
+      params: SEARCH_PARAMS_LOCAL,
       documentInModalPageIndex: null,
       isMyBatchSearch: false,
       order: settings.batchSearchResults.order,
       page: 1,
       published: false,
       queries: [],
-      sort: settings.batchSearchResults.sort
+      sort: settings.batchSearchResults.sort,
+      request: { page: 1, sort: 'asc', order: 'query' }
     }
   },
   computed: {
-    ...mapState('batchSearch', ['batchSearch', 'results']),
+    ...mapState('batchSearch', ['batchSearch', 'results', 'contentTypes']),
+    ...mapGetters('batchSearch', ['queryKeys', 'nbSelectedQueries', 'nbResults', 'nbCurrentQueries', 'totalItems']),
+
     isLoaded() {
       return !!Object.keys(this.batchSearch).length
-    },
-    currentPage: {
-      get() {
-        return this.page
-      },
-      set(pageNumber) {
-        this.page = pageNumber
-        this.$router.push(this.generateLinkToBatchSearchResults(pageNumber, this.selectedQueries))
-      }
     },
     projectField() {
       return this.hasMultipleProjects
@@ -135,15 +123,11 @@ export default {
           }
         : null
     },
-    selectedQueries() {
-      return get(this, '$store.state.batchSearch.selectedQueries', [])
-    },
     generateTo() {
       const baseTo = { name: 'batch-search' }
-      const searchQueryExists = this.$route.query.query
       return {
         ...baseTo,
-        ...(searchQueryExists && { query: { query: this.$route.query.query } })
+        ...(this.$route.query?.query && { query: { query: this.$route.query.query } })
       }
     },
     perPage() {
@@ -155,21 +139,11 @@ export default {
     orderBy() {
       return this.order === 'desc'
     },
-    totalItems() {
-      if (this.selectedQueries.length === 0) {
-        return this.batchSearch.nbResults
-      } else {
-        const queryKeys = Object.keys(this.batchSearch.queries)
-        return sumBy(queryKeys, (query) => {
-          const findQuery = find(this.selectedQueries, ['label', query])
-          if (findQuery) {
-            return this.batchSearch.queries[query]
-          }
-        })
-      }
-    },
     numberOfPages() {
       return Math.ceil(this.totalItems / this.perPage)
+    },
+    queriesExcluded() {
+      return !!this.$route?.query?.queriesExcluded
     },
 
     pageOffset() {
@@ -177,28 +151,36 @@ export default {
     },
     hasMultipleProjects() {
       return this.batchSearch.projects.length > 1
-    }
-  },
-  watch: {
-    page() {
-      this.fetch()
     },
-    queries(queries, oldQueries = []) {
-      // Check array values to avoid unnecessary fetching
-      if (!isEqual(queries, oldQueries)) {
-        this.fetch()
+    selectedQueriesFilter() {
+      return {
+        name: 'queries',
+        value: `${this.selectedQueries.length} queries`,
+        negation: this.queriesExcluded,
+        queryParams: 'queries'
       }
     },
-    sort() {
-      this.fetch()
+    contentTypeFilter() {
+      return this.selectedContentTypes.reduce((acc, elem) => {
+        acc[elem] = {
+          name: 'contentType',
+          value: elem,
+          negation: false,
+          queryParam: 'contentTypes'
+        }
+        return acc
+      }, {})
     },
-    order() {
-      this.fetch()
+    selectedContentTypes() {
+      return this.$route.query?.contentTypes?.split(',') ?? []
+    },
+    selectedQueries() {
+      return this.$route.query?.queries?.split(',') ?? []
     }
   },
   async created() {
     await this.fetch()
-    await this.setIsMyBatchSearch()
+    return this.setIsMyBatchSearch()
   },
   methods: {
     async fetch() {
@@ -232,10 +214,10 @@ export default {
         },
         query: {
           page,
-          queries: queries.map((query) => query.label),
+          queries: compact(queries.map((query) => query.label)),
           sort,
           order,
-          queries_sort: this.$route.query.queries_sort || undefined
+          queries_sort: this.$route.query?.queries_sort || undefined
         }
       }
     },
@@ -248,6 +230,7 @@ export default {
     },
     openDocumentModal(pageIndex) {
       this.documentInModalPageIndex = pageIndex
+      this.$bvModal.show('document-modal')
     },
     localeLongDate(date) {
       return humanLongDate(date, this.$i18n.locale)
@@ -257,6 +240,19 @@ export default {
     },
     updateRoute() {
       return this.$router.push(this.generateLinkToBatchSearchResults(this.currentPage, this.selectedQueries))
+    },
+    clearQueriesParams(filter) {
+      const query = { ...this.$route.query }
+      delete query.queriesExcluded
+      delete query.query[filter.name]
+      this.$router.push({ query })
+    },
+    clearContentTypeParams(filter) {
+      const queryElement = this.selectedContentTypes.split(',')
+      const removeIndex = queryElement.indexOf(filter.value)
+      queryElement.splice(removeIndex, 1)
+
+      this.$router.push({ query: { ...this.$route.query, [filter.queryParam]: queryElement.toString() } })
     }
   }
 }
