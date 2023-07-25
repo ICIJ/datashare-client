@@ -6,7 +6,6 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
-import BatchSearchResults from '@/pages/BatchSearchResults'
 import BatchSearchResultsTable from '@/components/BatchSearchResultsTable'
 
 describe('BatchSearchResultsTable.vue', () => {
@@ -152,21 +151,14 @@ describe('BatchSearchResultsTable.vue', () => {
   it('should return the document size as human readable', () => {
     expect(wrapper.vm.getDocumentSize(42)).toBe('42.00 B')
   })
-
-  describe('count the number of pages', () => {
-    it('should display all results', () => {
-      expect(wrapper.vm.numberOfPages).toBe(4)
-    })
-
-    it('should filter results and adapt number of pages', () => {
-      store.commit('batchSearch/selectedQueries', [{ count: 1, label: 'query_01' }])
-
-      expect(wrapper.vm.numberOfPages).toBe(1)
-    })
+  it('should display a pagination navigation ', () => {
+    const find = wrapper.find('custom-pagination-stub')
+    expect(find.exists()).toBeTruthy()
+    expect(find.attributes('totalrows')).toBe('3')
   })
 
   it('should redirect to document including the search query', async () => {
-    wrapper = mount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
+    wrapper = mount(BatchSearchResultsTable, { i18n, localVue, store, router, wait, propsData })
     await wrapper.vm.$router
       .push({
         name: 'batch-search.results',
@@ -177,46 +169,29 @@ describe('BatchSearchResultsTable.vue', () => {
 
     await wrapper.vm.fetch()
 
-    expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href')).toBe(
+    expect(wrapper.findAll('.batch-search-results-table__queries__query')).toHaveLength(3)
+    expect(wrapper.find('.batch-search-results-table__queries__query__link').attributes('href')).toBe(
       `#/ds/${project.concat(',', anotherProject)}/42/42?q=query_01`
     )
   })
 
-  it('should cast queries param into array on beforeRouteEnter and beforeRouteUpdate', async () => {
-    wrapper = await shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
-    const indices = project.concat(',', anotherProject)
-    const toObject = {
-      name: 'batch-search.results',
-      params: { indices, uuid: '12' },
-      query: { page: 1, queries: 'simple_text' }
-    }
-
-    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, toObject, undefined, (fn) => fn(wrapper.vm))
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.queries).toEqual(['simple_text'])
-
-    wrapper.vm.$store.commit('batchSearch/selectedQueries', [])
-
-    BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, toObject, undefined, jest.fn())
-    expect(wrapper.vm.queries).toEqual(['simple_text'])
+  it('should cast queries and contentTypes param into array from the url', async () => {
+    wrapper = await shallowMount(BatchSearchResultsTable, { i18n, localVue, store, router, wait, propsData })
+    await wrapper.vm.$router.push({ query: { queries: 'simple_text', contentTypes: 'type_02,type_03' } })
+    expect(wrapper.vm.selectedQueries).toEqual(['simple_text'])
+    expect(wrapper.vm.selectedContentTypes).toEqual(['type_02', 'type_03'])
   })
 
-  it('should set "selectedQueries" according to the url params on beforeRouteEnter and beforeRouteUpdate', async () => {
-    wrapper = await shallowMount(BatchSearchResults, { i18n, localVue, propsData, router, store, wait })
-    const indices = project.concat(',', anotherProject)
-    const to = {
-      name: 'batch-search.results',
-      params: { indices, uuid: '12' },
-      query: { page: 1, queries: 'simple_text' }
+  it('should cast array params like queries into string before updating route', async () => {
+    wrapper.vm.updateRoute = jest.fn()
+    const localThis = {
+      updateRoute({ _, queries }) {
+        return queries
+      }
     }
-
-    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, to, undefined, (fn) => fn(wrapper.vm))
-    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual([{ label: 'simple_text' }])
-
-    wrapper.vm.$store.commit('batchSearch/selectedQueries', [])
-
-    BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, to, undefined, jest.fn())
-    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual([{ label: 'simple_text' }])
+    expect(BatchSearchResultsTable.computed.selectedQueries.set.call(localThis, ['simple_text', 'double_text'])).toBe(
+      'simple_text,double_text'
+    )
+    expect(BatchSearchResultsTable.computed.selectedQueries.set.call(localThis, [])).toBeNull()
   })
 })
