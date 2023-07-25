@@ -104,7 +104,6 @@
 
 <script>
 import { compact, find, get, isEqual, uniq, isArray } from 'lodash'
-import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
@@ -113,7 +112,7 @@ import ContentTypeBadge from '@/components/ContentTypeBadge'
 import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
 import { fileExtension } from '@/filters/fileExtension'
-import { humanLongDate, humanShortDate } from '@/filters/humanDate'
+import { humanLongDate, humanShortDate, isDateValid } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
@@ -396,7 +395,7 @@ export default {
       return humanLongDate(date, this.$i18n.locale)
     },
     localeShortDate(date) {
-      return moment(date).isValid() ? humanShortDate(date, this.$i18n.locale) : ''
+      return isDateValid(date) ? humanShortDate(date, this.$i18n.locale) : ''
     }
   }
 }

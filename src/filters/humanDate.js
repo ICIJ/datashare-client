@@ -9,3 +9,6 @@ export function humanLongDate(date, locale) {
 export function humanShortDate(date, locale) {
   return moment(date).locale(locale).format('LL')
 }
+export function isDateValid(date) {
+  return moment(date).isValid()
+}
