@@ -157,8 +157,17 @@ export class Api {
     const data = { from, size, sort, order, query, field, project, state, batchDate, publishState }
     return this.sendActionAsText('/api/batch/search', { method: Method.POST, data })
   }
-  getBatchSearchResults(batchId, from = 0, size = 100, queries = [], sort = 'doc_nb', order = 'desc') {
-    const data = { from, size, queries, sort, order }
+  getBatchSearchResults(
+    batchId,
+    from = 0,
+    size = 100,
+    queries = [],
+    sort = 'doc_nb',
+    order = 'desc',
+    contentTypes = [],
+    queriesExcluded = false
+  ) {
+    const data = { from, size, queries, sort, order, contentTypes, queriesExcluded }
     return this.sendActionAsText(`/api/batch/search/result/${batchId}`, { method: Method.POST, data })
   }
   copyBatchSearch(batchId, name, description) {
