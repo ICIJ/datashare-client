@@ -34,8 +34,10 @@ export class Api {
   runBatchDownload(options) {
     return this.sendAction('/api/task/batchDownload', { method: Method.POST, data: { options } })
   }
-  findNames(pipeline, options) {
-    return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: Method.POST, data: { options } })
+  findNames(pipeline, { syncModels = true, defaultProject = null } = {}) {
+    const options = omitBy({ syncModels, defaultProject }, isNull)
+    const data = { options }
+    return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: Method.POST, data })
   }
   stopPendingTasks() {
     return this.sendAction('/api/task/stopAll', { method: Method.PUT })
