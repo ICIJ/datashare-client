@@ -58,7 +58,10 @@ export default {
     readOnly: {
       type: Boolean
     },
-    isSearchFilter: {
+    /**
+     * Update search store on click, if false, only emits "delete" event
+     */
+    updateSearchStore: {
       type: Boolean,
       default: true
     },
@@ -102,7 +105,7 @@ export default {
       if (this.readOnly) {
         return
       }
-      if (!this.isSearchFilter) {
+      if (!this.updateSearchStore) {
         this.$emit('delete', this.filter)
         return
       }
