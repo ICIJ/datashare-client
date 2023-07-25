@@ -243,12 +243,6 @@ export default {
       this.documentInModalPageIndex = docIndex
       this.$bvModal.show('document-modal')
     },
-    localeLongDate(date) {
-      return humanLongDate(date, this.$i18n.locale)
-    },
-    localeShortDate(date) {
-      return moment(date).isValid() ? humanShortDate(date, this.$i18n.locale) : ''
-    },
     async updatePage(event) {
       await this.$store.dispatch(`batchSearch/clearBatchSearchResults`)
 
