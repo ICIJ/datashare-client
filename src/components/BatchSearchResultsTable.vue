@@ -92,7 +92,6 @@
           </div>
         </template>
       </b-table>
-      <!--      </v-wait>-->
     </div>
     <custom-pagination
       v-model="page"
