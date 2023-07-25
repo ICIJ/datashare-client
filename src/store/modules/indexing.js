@@ -20,11 +20,7 @@ export const state = initialState()
 
 export const mutations = {
   reset(state) {
-    // acquire initial state
-    const s = initialState()
-    Object.keys(s).forEach((key) => {
-      state[key] = s[key]
-    })
+    Object.assign(state, initialState())
   },
   stopPendingTasks(state) {
     remove(state.tasks, (item) => item.state === 'RUNNING')
@@ -40,6 +36,9 @@ export const mutations = {
   },
   resetExtractForm(state) {
     state.form.ocr = initialState().form.ocr
+    state.form.language = initialState().form.language
+    state.form.filter = initialState().form.filter
+    state.form.path = initialState().form.path
   },
   resetFindNamedEntitiesForm(state) {
     state.form.pipeline = initialState().form.pipeline
