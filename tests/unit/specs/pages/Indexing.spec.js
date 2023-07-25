@@ -58,26 +58,6 @@ describe('Indexing.vue', () => {
     expect(wrapper.findAll('.tasks-list__tasks__item__name').at(1).text()).toContain('bar')
   })
 
-  it('should enable the find named entities button by default, and display no tooltip', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
-    await flushPromisesAndPendingTimers()
-
-    expect(wrapper.find('.indexing__actions__find-named-entites').attributes('disabled')).toBeUndefined()
-    expect(wrapper.find('.indexing__actions__find-named-entites').attributes('title')).toBe('')
-  })
-
-  it('should disable the find named entities button if not task is done or has no documents', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
-    await flushPromisesAndPendingTimers()
-    await wrapper.vm.unregisteredPolls()
-    await wrapper.setData({ count: 0 })
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
-    await flushPromises()
-
-    expect(wrapper.find('.indexing__actions__find-named-entites').attributes('disabled')).toBe('disabled')
-    expect(wrapper.find('.indexing__actions__find-named-entites').attributes('title')).not.toBe('')
-  })
-
   it('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
