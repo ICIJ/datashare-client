@@ -335,15 +335,15 @@ export default {
       return this.updateRoute({ page: 1 })
     },
     linkGen(page) {
-      return this.generateLinkToBatchSearchResults({ page })
+      return this.generateRoute({ page })
     },
     updateRoute(query) {
-      const to = this.generateLinkToBatchSearchResults(query)
+      const to = this.generateRoute(query)
       if (!isEqual(to.query, this.$route.query)) {
         return this.$router.push(to)
       }
     },
-    generateLinkToBatchSearchResults({
+    generateRoute({
       page = this.page,
       contentTypes = this.selectedContentTypes,
       sort = this.sort,
