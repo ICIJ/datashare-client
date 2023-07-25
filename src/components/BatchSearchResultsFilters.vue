@@ -116,9 +116,7 @@ export default {
     return {
       queriesFilter: null,
       sortFields: ['default', 'count'],
-      filterQueries: map(this.selectedQueries, (q) => ({
-        label: q
-      }))
+      filterQueries: map(this.selectedQueries, (label) => ({ label }))
     }
   },
   computed: {
