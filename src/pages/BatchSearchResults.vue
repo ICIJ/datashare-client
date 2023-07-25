@@ -44,7 +44,6 @@
 
 <script>
 import { compact, find, get, uniq } from 'lodash'
-import moment from 'moment'
 import { mapGetters, mapState } from 'vuex'
 
 import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
@@ -53,7 +52,6 @@ import DocumentInModal from '@/components/DocumentInModal'
 import BatchSearchResultsTable from '@/components/BatchSearchResultsTable'
 import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
-import { humanLongDate, humanShortDate } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
