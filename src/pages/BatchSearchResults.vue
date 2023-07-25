@@ -161,7 +161,7 @@ export default {
     selectedQueriesFilter() {
       return {
         name: 'queries',
-        value: `${this.selectedQueries.length} queries`,
+        value: this.$tc('batchSearchResults.queriesFilter', this.selectedQueries.length),
         negation: this.queriesExcluded,
         queryParams: 'queries'
       }

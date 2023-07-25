@@ -710,7 +710,8 @@
     "relaunchTitle": "Relaunch batch search",
     "deleteAfterRelaunch" : "Delete current batch search after relaunch",
     "backToResults" : "Back to results",
-    "empty": "No results"
+    "empty": "No results",
+    "queriesFilter": "1 query | %{n} queries"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Filter queries...",
