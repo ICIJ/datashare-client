@@ -11,7 +11,6 @@
     </div>
 
     <div class="container">
-      <b-row class="d-flex justify-content-end align-items-center">
       <b-row class="batch-search-results__applied-search-filters d-flex justify-content-end align-items-center">
         <applied-search-filters-item
           v-if="selectedQueries.length"
