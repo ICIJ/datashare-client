@@ -34,8 +34,7 @@
             v-b-modal:[findNamedEntitiesFormId]
             variant="primary"
             class="indexing__actions__find-named-entites mr-2"
-            :disabled="!canOpenFindNamedEntitiesForm"
-            :title="findNamedEntitiesTooltip"
+            :title="$t('indexing.findNamedEntitiesTooltip')"
           >
             <fa icon="user-tag" class="mr-2" />
             {{ $t('indexing.findNamedEntities') }}
@@ -127,14 +126,8 @@ export default {
     extractingFormId() {
       return uniqueId('extracting-form-')
     },
-    canOpenFindNamedEntitiesForm() {
-      return this.hasDoneTasks || this.hasIndexedDocuments
-    },
     findNamedEntitiesFormId() {
       return uniqueId('find-named-entities-form-')
-    },
-    findNamedEntitiesTooltip() {
-      return !this.canOpenFindNamedEntitiesForm ? this.$t('indexing.findNamedEntitiesTooltip') : ''
     },
     howToLink() {
       const os = getOS()
