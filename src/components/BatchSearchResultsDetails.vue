@@ -7,7 +7,7 @@
     <div class="card-footer p-0 overflow-hidden">
       <p v-if="batchSearch.description" class="p-3 m-0 border-bottom">{{ batchSearch.description }}</p>
       <dl class="batch-search-results-details__info">
-        <div v-if="isServer">
+        <div v-if="showProjects">
           <dt>{{ $t('batchSearch.projects') }}</dt>
           <dd>
             <span v-for="(project, index) in batchSearch.projects" :key="project.name">
@@ -144,6 +144,9 @@ export default {
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results']),
+    showProjects() {
+      return this.isServer || this.$core.projects.length > 1
+    },
     isLoaded() {
       return !!Object.keys(this.batchSearch).length
     },
