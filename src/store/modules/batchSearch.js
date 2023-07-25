@@ -85,10 +85,8 @@ export const mutations = {
   [RESULTS](state, results) {
     Vue.set(state, 'results', [...results.items])
     Vue.set(state, 'batchSearchResultsPagination', results.pagination)
-    const contentTypes = uniq(map(results.items, 'contentType'))
-    if (state.contentTypes.length < contentTypes.length) {
-      state.contentTypes = contentTypes
-    }
+    const contentTypes = map(results.items, 'contentType')
+    state.contentTypes = uniq(state.contentTypes.concat(contentTypes)).sort()
   },
   [SINGLE_BATCH_SEARCH_PUBLISHED](state, published) {
     Vue.set(state, 'batchSearch', { ...state.batchSearch, published })
