@@ -83,6 +83,7 @@ export default {
        */
       const previousIndex = Math.max(0, this.index - 1)
       this.$emit('change', previousIndex)
+      this.$emit('previous', previousIndex)
     },
     goToNextItem() {
       /**
@@ -90,6 +91,7 @@ export default {
        */
       const nextIndex = Math.min(this.totalItems - 1, this.index + 1)
       this.$emit('change', nextIndex)
+      this.$emit('next', nextIndex)
     }
   }
 }
