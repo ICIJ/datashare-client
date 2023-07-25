@@ -141,9 +141,6 @@ export default {
     orderBy() {
       return this.order === 'desc'
     },
-    numberOfPages() {
-      return Math.ceil(this.totalItems / this.perPage)
-    },
     queriesExcluded() {
       return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
     },
