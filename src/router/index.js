@@ -263,16 +263,16 @@ export const router = {
           path: 'user-history',
           component: () => import('@/pages/UserHistory'),
           redirect: {
-            name: 'document-history'
+            name: 'user-history.document.list'
           },
           meta: {
             title: ({ i18n }) => i18n.t('userHistory.heading')
           },
           children: [
             {
-              name: 'document-history',
+              name: 'user-history.document.list',
               path: 'document',
-              component: () => import('@/pages/UserHistoryDocument'),
+              component: () => import('@/pages/UserHistoryDocumentList'),
               meta: {
                 title: ({ i18n }) => i18n.t('userHistory.heading')
               }

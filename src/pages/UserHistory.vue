@@ -64,8 +64,8 @@ export default {
       }
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
-      } else if (vm.$route.name !== 'document-history') {
-        vm.$router.push({ name: 'document-history' })
+      } else if (vm.$route.name !== 'user-history.document.list') {
+        vm.$router.push({ name: 'user-history.document.list' })
       }
     })
   },
@@ -76,8 +76,8 @@ export default {
     }
     if (defaultTab > -1) {
       this.defaultTab = defaultTab
-    } else if (this.$route.name !== 'document-history') {
-      this.$router.push({ name: 'document-history' })
+    } else if (this.$route.name !== 'user-history.document.list') {
+      this.$router.push({ name: 'user-history.document.list' })
     }
     next()
   },
@@ -109,7 +109,7 @@ export default {
       }
     },
     tabRoutes() {
-      return ['document-history', 'search-history']
+      return ['user-history.document.list', 'search-history']
     },
     loader() {
       return uniqueId('user-history-load-events-')
