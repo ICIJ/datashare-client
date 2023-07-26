@@ -180,7 +180,7 @@ class Core extends Behaviors {
       // Get the config object
       await this.loadSettings()
       // Create the default project for the current user or redirect to login
-      if (!this.mode.modeName !== 'server') {
+      if (this.mode.modeName !== 'server') {
         if (!(await this.defaultProjectExists())) {
           await this.createDefaultProject()
         }
