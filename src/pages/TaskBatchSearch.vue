@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  name: 'BatchSearch'
+  name: 'TaskBatchSearch'
 }
 </script>
