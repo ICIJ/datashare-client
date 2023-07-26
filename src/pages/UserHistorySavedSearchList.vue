@@ -1,17 +1,17 @@
 <template>
-  <div class="user-history">
+  <div class="user-history-saved-search-list">
     <div class="mt-4">
-      <ul v-if="events.length" class="list-unstyled user-history__list card mb-4">
+      <ul v-if="events.length" class="list-unstyled user-history-saved-search-list__list card mb-4">
         <li
           v-for="event in searches"
           :key="event.id"
-          class="user-history__list__item d-inline-flex justify-content-between"
+          class="user-history-saved-search-list__list__item d-inline-flex justify-content-between"
         >
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
-            <span class="user-history__list__item__name font-weight-bold mb-1">
+            <span class="user-history-saved-search-list__list__item__name font-weight-bold mb-1">
               {{ event.name }}
             </span>
-            <div class="user-history__list__item__query">
+            <div class="user-history-saved-search-list__list__item__query">
               <applied-search-filters-item
                 v-for="(filter, index) in filtersItems(event)"
                 :key="index"
@@ -23,11 +23,11 @@
           <div
             class="d-flex justify-content-between align-items-end align-items-md-center d-flex flex-column flex-md-row m-3"
           >
-            <span class="user-history__list__item__date text-muted text-nowrap mr-3"
+            <span class="user-history-saved-search-list__list__item__date text-muted text-nowrap mr-3"
               ><span class="font-weight-bold mr-2">{{ getDate(event.creationDate) }} </span
               >{{ getTime(event.creationDate) }}</span
             >
-            <div class="user-history__list__item__delete mx-3">
+            <div class="user-history-saved-search-list__list__item__delete mx-3">
               <confirm-button
                 class="btn btn-outline-danger text-nowrap"
                 placement="leftbottom"
@@ -56,7 +56,7 @@ import { humanTime } from '@/filters/humanTime'
 import { humanDate } from '@/filters/humanDate'
 
 export default {
-  name: 'UserHistorySearch',
+  name: 'UserHistorySavedSearchList',
   components: {
     AppliedSearchFiltersItem
   },
@@ -125,7 +125,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user-history {
+.user-history-saved-search-list {
   &__list {
     &__item {
       a:hover {
