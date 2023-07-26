@@ -14,7 +14,7 @@ describe('Tasks.vue', () => {
         name: 'tasks',
         path: '/tasks',
         children: [
-          { name: 'indexing', path: 'indexing' },
+          { name: 'task.analysis.list', path: 'analysis' },
           { name: 'task.batch-download.list', path: 'batch-download' },
           { name: 'task.batch-search.list', path: 'batch-search' }
         ]
@@ -48,7 +48,7 @@ describe('Tasks.vue', () => {
   })
 
   it('should select the "indexing" tab when the route is active', () => {
-    replaceRouteby({ name: 'indexing' })
+    replaceRouteby({ name: 'task.analysis.list' })
     wrapper = shallowMount(Tasks, { i18n, localVue, store, router })
     expect(wrapper.vm.tab).toBe(2)
   })

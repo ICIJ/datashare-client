@@ -90,12 +90,6 @@ export const router = {
           }
         },
         {
-          path: 'indexing',
-          redirect: {
-            name: 'indexing'
-          }
-        },
-        {
           path: 'batch-search/:index/:uuid',
           redirect: {
             name: 'task.batch-search.view.results'
@@ -113,9 +107,15 @@ export const router = {
           },
           children: [
             {
-              name: 'indexing',
               path: 'indexing',
-              component: () => import('@/pages/Indexing'),
+              redirect: {
+                name: 'task.analysis.list'
+              }
+            },
+            {
+              name: 'task.analysis',
+              path: 'analysis',
+              component: () => import('@/pages/TaskAnalysis'),
               meta: {
                 title: ({ i18n }) => i18n.t('indexing.title'),
                 allowedModes: ['LOCAL', 'EMBEDDED'],
@@ -129,7 +129,17 @@ export const router = {
                     path: 'all/analyze-documents'
                   }
                 ]
-              }
+              },
+              children: [
+                {
+                  name: 'task.analysis.list',
+                  path: '',
+                  component: () => import('@/pages/TaskAnalysisList'),
+                  meta: {
+                    title: ({ i18n }) => i18n.t('indexing.title')
+                  }
+                }
+              ]
             },
             {
               name: 'task.batch-download',
