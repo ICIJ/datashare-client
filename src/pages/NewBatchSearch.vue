@@ -8,7 +8,7 @@ export default {
   },
   computed: {
     batchSearchRoute() {
-      return { name: 'batch-search-list' }
+      return { name: 'task.batch-search.list' }
     }
   },
   methods: {

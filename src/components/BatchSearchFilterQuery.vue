@@ -64,7 +64,7 @@ export default {
       const params = this.$route?.query ?? {}
       return this.$router
         .push({
-          name: 'batch-search-list',
+          name: 'task.batch-search.list',
           query: { ...params, page: 1, query: this.search, field: this.field }
         })
         .catch((_) => {

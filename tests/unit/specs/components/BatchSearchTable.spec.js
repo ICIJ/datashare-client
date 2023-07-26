@@ -38,7 +38,7 @@ const routerFactory = () => {
   return new VueRouter({
     routes: [
       {
-        name: 'batch-search-list',
+        name: 'task.batch-search.list',
         path: 'batch-search'
       },
       {
@@ -52,7 +52,7 @@ const routerFactory = () => {
 
 const routeFactory = function (args) {
   return {
-    name: 'batch-search-list',
+    name: 'task.batch-search.list',
     query: { page: 1, sort: 'batch_date', order: 'desc', field: 'all', ...args }
   }
 }
@@ -246,7 +246,7 @@ describe('BatchSearchTable.vue', () => {
       })
       it('get params with accepted values', async () => {
         await router.push({
-          name: 'batch-search-list',
+          name: 'task.batch-search.list',
           query: {
             query: 'test',
             page: 2,
@@ -275,7 +275,7 @@ describe('BatchSearchTable.vue', () => {
 
       it('get params with invalid values', async () => {
         await router.push({
-          name: 'batch-search-list',
+          name: 'task.batch-search.list',
           query: {
             page: -1,
             sort: 'not_existing_sort',
@@ -302,7 +302,7 @@ describe('BatchSearchTable.vue', () => {
       it('clear all filters in table', async () => {
         // GIVEN
         await router.push({
-          name: 'batch-search-list',
+          name: 'task.batch-search.list',
           query: {
             query: 'test',
             page: 2,
@@ -320,7 +320,7 @@ describe('BatchSearchTable.vue', () => {
 
         // THEN
         await router.push({
-          name: 'batch-search-list',
+          name: 'task.batch-search.list',
           query: {}
         })
         expect(wrapper.vm.search).toBe('')
@@ -339,7 +339,7 @@ describe('BatchSearchTable.vue', () => {
         const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
         expect(fetchSpy).not.toBeCalled()
         await router.push({
-          name: 'batch-search-list',
+          name: 'task.batch-search.list',
           query: {
             query: 'new search'
           }

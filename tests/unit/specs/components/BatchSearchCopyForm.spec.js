@@ -10,7 +10,7 @@ describe('BatchSearchCopyForm.vue', () => {
   let i18n, localVue, store, wait
   const routes = [
     {
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       path: '/batch-search'
     },
     {

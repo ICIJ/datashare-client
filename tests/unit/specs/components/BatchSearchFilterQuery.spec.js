@@ -30,7 +30,7 @@ describe('BatchSearchFilterQuery.vue', () => {
       router = new VueRouter({
         routes: [
           {
-            name: 'batch-search-list',
+            name: 'task.batch-search.list',
             path: 'batch-search'
           }
         ],
@@ -67,7 +67,7 @@ describe('BatchSearchFilterQuery.vue', () => {
     })
     it('gets query from search params', async () => {
       await router.push({
-        name: 'batch-search-list',
+        name: 'task.batch-search.list',
         query: { query: 'search_from_url' }
       })
       const wrapper = shallowMount(BatchSearchFilterQuery, { i18n, localVue, router })
@@ -80,7 +80,7 @@ describe('BatchSearchFilterQuery.vue', () => {
 
     it('should execute "filterByQuery" on submit one time', async () => {
       await router.push({
-        name: 'batch-search-list',
+        name: 'task.batch-search.list',
         query: { query: 'search_from_url' }
       })
       const wrapper = mount(BatchSearchFilterQuery, { i18n, localVue, router })

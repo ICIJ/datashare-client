@@ -6,10 +6,10 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import Vuex from 'vuex'
 
 import { Core } from '@/core'
-import BatchSearchList from '@/pages/BatchSearchList'
+import TaskBatchSearchList from '@/pages/TaskBatchSearchList'
 import { Api } from '@/api'
 
-describe('BatchSearchList.vue', () => {
+describe('TaskBatchSearchList.vue', () => {
   let i18n, localVue, store, wait, api
   let wrapper = null
   const router = new VueRouter()
@@ -51,7 +51,7 @@ describe('BatchSearchList.vue', () => {
     await flushPromises()
   })
   beforeEach(async () => {
-    wrapper = mount(BatchSearchList, { i18n, localVue, router, store, wait })
+    wrapper = mount(TaskBatchSearchList, { i18n, localVue, router, store, wait })
     await flushPromises()
   })
 
@@ -60,7 +60,7 @@ describe('BatchSearchList.vue', () => {
   })
 
   it('should display a search bar', () => {
-    expect(wrapper.find('.batch-search-list__search-bar').exists()).toBeTruthy()
+    expect(wrapper.find('.task-batch-search-list__search-bar').exists()).toBeTruthy()
   })
 
   it('should display a batch search table', () => {
@@ -79,9 +79,9 @@ describe('BatchSearchList.vue', () => {
     const actions = { getBatchSearches: jest.fn() }
     const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, getters, actions } } })
 
-    wrapper = mount(BatchSearchList, { i18n, localVue, router, store, wait })
+    wrapper = mount(TaskBatchSearchList, { i18n, localVue, router, store, wait })
     await flushPromises()
 
-    expect(wrapper.find('.batch-search-list__none').exists()).toBeTruthy()
+    expect(wrapper.find('.task-batch-search-list__none').exists()).toBeTruthy()
   })
 })

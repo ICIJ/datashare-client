@@ -126,7 +126,7 @@ export default {
         : null
     },
     generateTo() {
-      const baseTo = { name: 'batch-search-list' }
+      const baseTo = { name: 'task.batch-search.list' }
       return {
         ...baseTo,
         ...(this.$route.query?.query && { query: { query: this.$route.query.query } })
