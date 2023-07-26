@@ -2,7 +2,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 
 import { Api } from '@/api'
 import { Core } from '@/core'
-import Indexing from '@/pages/Indexing'
+import TaskAnalysisList from '@/pages/TaskAnalysisList'
 
 // We use a custom flushPromises function with s`setImmediate`
 // which is not mocked by jest when using fake timers
@@ -23,7 +23,7 @@ jest.mock('@/api/elasticsearch', () => {
     }
   }
 })
-describe('Indexing.vue', () => {
+describe('TaskAnalysisList.vue', () => {
   let i18n, localVue, store, wait, api, mockAxios
 
   const mockIndexedFiles = [
@@ -50,7 +50,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should display tasks list', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
 
     expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(2)
@@ -59,51 +59,51 @@ describe('Indexing.vue', () => {
   })
 
   it('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [])
     await flushPromises()
-    expect(wrapper.find('.indexing__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
-    expect(wrapper.find('.indexing__actions__delete-done-tasks').attributes('disabled')).toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).toBe('disabled')
   })
 
   it('should not disable the "Stop pending tasks" button, if a task is running', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
-    expect(wrapper.find('.indexing__actions__stop-pending-tasks').attributes('disabled')).not.toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).not.toBe('disabled')
   })
 
   it('should disable the "Stop pending tasks" if no tasks are running', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
-    expect(wrapper.find('.indexing__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
   })
 
   it('should not disable the "Delete done tasks" if a task is done', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
-    expect(wrapper.find('.indexing__actions__delete-done-tasks').attributes('disabled')).not.toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).not.toBe('disabled')
   })
 
   it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
 
     mockAxios.request.mockClear()
-    wrapper.find('.indexing__actions__stop-pending-tasks').trigger('click')
+    wrapper.find('.task-analysis-list__actions__stop-pending-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
     const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
@@ -111,14 +111,14 @@ describe('Indexing.vue', () => {
   })
 
   it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
 
     mockAxios.request.mockClear()
-    wrapper.find('.indexing__actions__delete-done-tasks').trigger('click')
+    wrapper.find('.task-analysis-list__actions__delete-done-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
     const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
@@ -126,14 +126,14 @@ describe('Indexing.vue', () => {
   })
 
   it('should display 1 available "Stop task" buttons if 1 tasks are running', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     expect(wrapper.findAll('.tasks-list__tasks__item__stop')).toHaveLength(1)
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     mockAxios.request.mockClear()
@@ -145,12 +145,12 @@ describe('Indexing.vue', () => {
   })
 
   it('should display 1 disabled "Stop task" button if 1 task is done', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
-    expect(wrapper.findAll('.indexing__actions__stop-pending-tasks')).toHaveLength(1)
-    expect(wrapper.find('.indexing__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
+    expect(wrapper.findAll('.task-analysis-list__actions__stop-pending-tasks')).toHaveLength(1)
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
   })
 })

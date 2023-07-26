@@ -80,7 +80,7 @@ export default {
       }
     },
     tabRoutes() {
-      return ['task.batch-search.list', 'task.batch-download.list', 'indexing']
+      return ['task.batch-search.list', 'task.batch-download.list', 'task.analysis.list']
     }
   }
 }
