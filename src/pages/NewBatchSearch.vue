@@ -26,10 +26,7 @@ export default {
         <fa icon="angle-left" class="mr-1" fixed-width />
         {{ $t('batchSearch.title') }}
       </router-link>
-      <span class="border-left border-dark pl-3 ml-3 font-weight-bold">
-        {{ $t('newBatchSearch.title') }}
-      </span>
     </div>
-    <batch-search-form hide-title @submit="submit"></batch-search-form>
+    <batch-search-form @submit="submit"></batch-search-form>
   </div>
 </template>
