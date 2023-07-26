@@ -174,10 +174,10 @@ export const router = {
                   }
                 },
                 {
-                  name: 'new-batch-search',
+                  name: 'task.batch-search.new',
                   path: 'new',
                   components: {
-                    default: () => import('@/pages/NewBatchSearch')
+                    default: () => import('@/pages/TaskBatchSearchNew')
                   },
                   meta: {
                     title: ({ i18n }) => i18n.t('newBatchSearch.title'),

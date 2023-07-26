@@ -2,7 +2,7 @@
 import BatchSearchForm from '@/components/BatchSearchForm'
 
 export default {
-  name: 'NewBatchSearch',
+  name: 'TaskBatchSearchNew',
   components: {
     BatchSearchForm
   },
