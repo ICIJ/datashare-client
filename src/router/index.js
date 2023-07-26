@@ -151,10 +151,10 @@ export const router = {
               }
             },
             {
-              name: 'batch-search',
+              name: 'task.batch-search',
               path: 'batch-search',
               components: {
-                default: () => import('@/pages/BatchSearch')
+                default: () => import('@/pages/TaskBatchSearch')
               },
               children: [
                 {
