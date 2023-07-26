@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-download mt-4 container">
+  <div class="task-batch-download-list mt-4 container">
     <v-wait for="load download tasks">
       <div slot="waiting" class="card py-2">
         <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
@@ -16,11 +16,14 @@
           />
         </template>
         <template #default="{ item: { name, properties, state } }">
-          <div :id="'batch-download__item--' + properties.batchDownload.uuid" class="d-flex batch-download__item">
+          <div
+            :id="'task-batch-download-list__item--' + properties.batchDownload.uuid"
+            class="d-flex task-batch-download-list__item"
+          >
             <a
               v-if="properties.batchDownload.exists"
               :href="downloadResultsUrl(name)"
-              class="batch-download__item__link"
+              class="task-batch-download-list__item__link"
               target="_blank"
             >
               <fa icon="download" fixed-width />
@@ -29,7 +32,7 @@
             <span
               v-else
               v-b-tooltip
-              class="batch-download__item__link batch-download__item__link--disabled"
+              class="task-batch-download-list__item__link task-batch-download-list__item__link--disabled"
               :title="$t('batchDownload.noFile')"
             >
               <fa icon="times" fixed-width />
@@ -68,7 +71,7 @@ function extractDateFromTask(task) {
   return task?.properties?.batchDownload?.filename?.match(dateRegExp)?.[0] ?? null
 }
 export default {
-  name: 'BatchDownload',
+  name: 'TaskBatchDownloadList',
   components: {
     BatchDownloadActions,
     TaskItemStatus,
