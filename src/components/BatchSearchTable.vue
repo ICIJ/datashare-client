@@ -401,7 +401,7 @@ export default {
       this.removeEmptySearchParams(queryParams)
 
       return {
-        name: 'batch-search-list',
+        name: 'task.batch-search.list',
         query: queryParams
       }
     },

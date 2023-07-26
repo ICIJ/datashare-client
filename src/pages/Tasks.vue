@@ -21,7 +21,7 @@
           </template>
         </b-tab>
       </template>
-      <div v-if="$route.name === 'batch-search-list'">
+      <div v-if="$route.name === 'task.batch-search.list'">
         <b-btn class="ml-auto my-1 text-nowrap" variant="primary" :to="{ name: 'new-batch-search' }">
           <fa class="mr-1" icon="plus" />
           {{ $t('batchSearch.heading') }}
@@ -50,7 +50,7 @@ export default {
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
       } else if (!vm.$route.name.includes('batch-search')) {
-        vm.$router.push({ name: 'batch-search-list' })
+        vm.$router.push({ name: 'task.batch-search.list' })
       }
     })
   },
@@ -80,7 +80,7 @@ export default {
       }
     },
     tabRoutes() {
-      return ['batch-search-list', 'batch-download', 'indexing']
+      return ['task.batch-search.list', 'batch-download', 'indexing']
     }
   }
 }

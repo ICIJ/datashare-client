@@ -86,7 +86,7 @@ export const router = {
         {
           path: 'batch-search',
           redirect: {
-            name: 'batch-search-list'
+            name: 'task.batch-search.list'
           }
         },
         {
@@ -106,7 +106,7 @@ export const router = {
           path: 'tasks',
           component: () => import('@/pages/Tasks'),
           redirect: {
-            name: 'batch-search-list'
+            name: 'task.batch-search.list'
           },
           meta: {
             title: ({ i18n }) => i18n.t('tasks.title')
@@ -159,9 +159,9 @@ export const router = {
               children: [
                 {
                   path: '',
-                  name: 'batch-search-list',
+                  name: 'task.batch-search.list',
                   components: {
-                    default: () => import('@/pages/BatchSearchList')
+                    default: () => import('@/pages/TaskBatchSearchList')
                   },
                   meta: {
                     title: ({ i18n }) => i18n.t('batchSearch.title'),

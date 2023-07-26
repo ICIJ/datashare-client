@@ -13,7 +13,7 @@ describe('BatchSearchClearFilters.vue', () => {
     router = new VueRouter({
       routes: [
         {
-          name: 'batch-search-list',
+          name: 'task.batch-search.list',
           path: 'batch-search'
         }
       ]
@@ -32,7 +32,7 @@ describe('BatchSearchClearFilters.vue', () => {
     const button = wrapper.find('.batch-search-clear-filters')
     expect(button.attributes().disabled).toBeTruthy()
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { page: 1, query: 'hello' }
     })
     const buttonEnabled = wrapper.find('.batch-search-clear-filters')
@@ -41,7 +41,7 @@ describe('BatchSearchClearFilters.vue', () => {
 
   it('trigger clear filters button', async () => {
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { page: 1, query: 'hello' }
     })
     wrapper = shallowMount(BatchSearchClearFilters, { i18n, localVue, router, propsData })
@@ -52,14 +52,14 @@ describe('BatchSearchClearFilters.vue', () => {
 
   it('is active only on batch search filters', async () => {
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { test: 'test' }
     })
     wrapper = shallowMount(BatchSearchClearFilters, { i18n, localVue, router, propsData })
     expect(wrapper.vm.$route.query).toEqual({ test: 'test' })
     expect(wrapper.vm.hasActiveFilter).toBe(false)
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { query: 'hello' }
     })
     expect(wrapper.vm.$route.query).toEqual({ query: 'hello' })
@@ -67,7 +67,7 @@ describe('BatchSearchClearFilters.vue', () => {
   })
   it('is not active when not listed in local search params', async () => {
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { publishState: 'publishState' }
     })
     const propsData = { routeName: 'batch-search', localSearchParams: { publishState: false } }
@@ -75,7 +75,7 @@ describe('BatchSearchClearFilters.vue', () => {
     wrapper = shallowMount(BatchSearchClearFilters, { i18n, localVue, router, propsData })
     expect(wrapper.vm.$route.query).toEqual({ publishState: 'publishState' })
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { project: 'project' }
     })
     expect(wrapper.vm.$route.query).toEqual({ project: 'project' })
@@ -84,7 +84,7 @@ describe('BatchSearchClearFilters.vue', () => {
   it('is active with server batch search filters', async () => {
     const computed = { isServer: () => true }
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { publishState: 'publishState' }
     })
     wrapper = shallowMount(BatchSearchClearFilters, { i18n, localVue, router, computed, propsData })
@@ -92,7 +92,7 @@ describe('BatchSearchClearFilters.vue', () => {
     expect(wrapper.vm.hasActiveFilter).toBe(true)
 
     await router.push({
-      name: 'batch-search-list',
+      name: 'task.batch-search.list',
       query: { project: 'project' }
     })
     expect(wrapper.vm.$route.query).toEqual({ project: 'project' })

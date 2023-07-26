@@ -16,7 +16,7 @@ describe('Tasks.vue', () => {
         children: [
           { name: 'indexing', path: 'indexing' },
           { name: 'batch-download', path: 'batch-download' },
-          { name: 'batch-search-list', path: 'batch-search' }
+          { name: 'task.batch-search.list', path: 'batch-search' }
         ]
       }
     ]
