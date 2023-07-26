@@ -208,7 +208,7 @@ export const router = {
           ]
         },
         {
-          path: 'p',
+          path: 'project',
           components: {
             default: () => import('@/pages/Project')
           },
