@@ -49,7 +49,7 @@ export default {
     searchHistoryPath() {
       const {
         route: { path }
-      } = this.$router.resolve({ name: 'search-history' })
+      } = this.$router.resolve({ name: 'user-history.saved-search.list' })
       return `/#${path}`
     }
   },
@@ -57,7 +57,7 @@ export default {
     async saveSearch() {
       try {
         await this.$core.api.addUserHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
-        const { href } = this.$router.resolve({ name: 'search-history' })
+        const { href } = this.$router.resolve({ name: 'user-history.saved-search.list' })
         const toastParams = { href, noCloseButton: true, variant: 'success' }
         this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
       } catch (_) {

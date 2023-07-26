@@ -2,7 +2,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Api } from '@/api'
 import { Core } from '@/core'
-import UserHistorySearch from '@/pages/UserHistorySearch'
+import UserHistorySavedSearchList from '@/pages/UserHistorySavedSearchList'
 
 const propsData = {
   events: [
@@ -37,7 +37,7 @@ const propsData = {
   ]
 }
 
-describe('UserHistorySearch.vue', () => {
+describe('UserHistorySavedSearchList.vue', () => {
   let i18n, localVue, mockAxios
 
   let wrapper = null
@@ -52,17 +52,17 @@ describe('UserHistorySearch.vue', () => {
   beforeEach(async () => {
     mockAxios.request.mockClear()
     mockAxios.request.mockResolvedValue({})
-    wrapper = await shallowMount(UserHistorySearch, { i18n, localVue, propsData })
+    wrapper = await shallowMount(UserHistorySavedSearchList, { i18n, localVue, propsData })
   })
 
   it('should NOT display a list of search', async () => {
     const propsData = { events: [] }
-    wrapper = await shallowMount(UserHistorySearch, { i18n, localVue, propsData })
-    expect(wrapper.findAll('.user-history__list__item')).toHaveLength(0)
+    wrapper = await shallowMount(UserHistorySavedSearchList, { i18n, localVue, propsData })
+    expect(wrapper.findAll('.user-history-saved-search-list__list__item')).toHaveLength(0)
   })
 
   it('should display a list of search', async () => {
-    expect(wrapper.findAll('.user-history__list__item')).toHaveLength(2)
+    expect(wrapper.findAll('.user-history-saved-search-list__list__item')).toHaveLength(2)
   })
 
   it('should convert an uri to filters', async () => {
@@ -103,9 +103,9 @@ describe('UserHistorySearch.vue', () => {
     }
 
     const propsData = { events: [event] }
-    wrapper = await shallowMount(UserHistorySearch, { i18n, localVue, propsData })
+    wrapper = await shallowMount(UserHistorySavedSearchList, { i18n, localVue, propsData })
 
-    expect(wrapper.find('.user-history__list__item__date').text()).toBe('2023/02/26 09:56')
+    expect(wrapper.find('.user-history-saved-search-list__list__item__date').text()).toBe('2023/02/26 09:56')
   })
 
   it('should parse uri with multiple fields with the same filter name', () => {

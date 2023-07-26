@@ -109,7 +109,7 @@ export default {
       }
     },
     tabRoutes() {
-      return ['user-history.document.list', 'search-history']
+      return ['user-history.document.list', 'user-history.saved-search.list']
     },
     loader() {
       return uniqueId('user-history-load-events-')

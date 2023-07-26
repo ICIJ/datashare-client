@@ -278,9 +278,15 @@ export const router = {
               }
             },
             {
-              name: 'search-history',
               path: 'search',
-              component: () => import('@/pages/UserHistorySearch'),
+              redirect: {
+                name: 'user-history.saved-search.list'
+              }
+            },
+            {
+              name: 'user-history.saved-search.list',
+              path: 'saved-search',
+              component: () => import('@/pages/UserHistorySavedSearchList'),
               meta: {
                 title: ({ i18n }) => i18n.t('userHistory.heading')
               }
