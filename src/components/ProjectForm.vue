@@ -41,20 +41,7 @@ export default {
   },
   data() {
     return {
-      form: {
-        name: null,
-        label: null,
-        sourcePath: this.$config.get('dataDir'),
-        allowFromMask: '*',
-        description: null,
-        logoUrl: null,
-        sourceUrl: null,
-        publisherName: null,
-        maintainerName: null,
-        // Merge with this property to be able to initialize
-        // the form with an existing project
-        ...this.values
-      }
+      form: this.initialFormValues()
     }
   },
   computed: {
@@ -105,8 +92,8 @@ export default {
         this.$emit('submit', cloneDeep(this.form))
       }
     },
-    reset() {
-      this.$set(this, 'form', {
+    initialFormValues() {
+      return {
         name: null,
         label: null,
         sourcePath: this.$config.get('dataDir'),
@@ -119,7 +106,10 @@ export default {
         // Merge with this propertiy to be able to initialize
         // the form with an existing project
         ...this.values
-      })
+      }
+    },
+    reset() {
+      this.$set(this, 'form', this.initialFormValues())
     }
   }
 }
