@@ -118,17 +118,7 @@ export const router = {
               component: () => import('@/pages/TaskAnalysis'),
               meta: {
                 title: ({ i18n }) => i18n.t('indexing.title'),
-                allowedModes: ['LOCAL', 'EMBEDDED'],
-                docs: [
-                  {
-                    title: 'Add documents to Datashare',
-                    path: '<%- os %>/add-documents-to-datashare-on-<%- os %>'
-                  },
-                  {
-                    title: 'Analyse documents',
-                    path: 'all/analyze-documents'
-                  }
-                ]
+                allowedModes: ['LOCAL', 'EMBEDDED']
               },
               children: [
                 {
@@ -136,7 +126,18 @@ export const router = {
                   path: '',
                   component: () => import('@/pages/TaskAnalysisList'),
                   meta: {
-                    title: ({ i18n }) => i18n.t('indexing.title')
+                    title: ({ i18n }) => i18n.t('indexing.title'),
+                    allowedModes: ['LOCAL', 'EMBEDDED'],
+                    docs: [
+                      {
+                        title: 'Add documents to Datashare',
+                        path: '<%- os %>/add-documents-to-datashare-on-<%- os %>'
+                      },
+                      {
+                        title: 'Analyse documents',
+                        path: 'all/analyze-documents'
+                      }
+                    ]
                   }
                 }
               ]

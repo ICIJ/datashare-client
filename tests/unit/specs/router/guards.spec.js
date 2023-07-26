@@ -56,15 +56,15 @@ describe('guards', () => {
       return wrapper.vm.$router.push('/').catch(jest.fn())
     })
 
-    it('should redirect indexing to error in SERVER mode', async () => {
+    it('should redirect task.analysis.list to error in SERVER mode', async () => {
       config.set('mode', 'SERVER')
-      await wrapper.vm.$router.push({ name: 'indexing' }).catch(jest.fn())
+      await wrapper.vm.$router.push({ name: 'task.analysis.list' }).catch(jest.fn())
       expect(wrapper.vm.$route.name).toBe('error')
     })
 
-    it('should not redirect indexing to error in LOCAL mode', async () => {
+    it('should not redirect task.analysis.list to error in LOCAL mode', async () => {
       config.set('mode', 'LOCAL')
-      await wrapper.vm.$router.push({ name: 'indexing' }).catch(jest.fn())
+      await wrapper.vm.$router.push({ name: 'task.analysis.list' }).catch(jest.fn())
       expect(wrapper.vm.$route.name).not.toBe('error')
     })
 
