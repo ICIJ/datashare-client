@@ -52,7 +52,7 @@ const ProjectsMixin = (superclass) =>
       const label = 'Default'
       const description = 'Your main project on Datashare'
       const sourcePath = this.config.get('dataDir')
-      const allowFromMask = '*'
+      const allowFromMask = '*.*.*.*'
       const project = await this.api.createProject({ name, label, description, sourcePath, allowFromMask })
       return this.setProject(project)
     }

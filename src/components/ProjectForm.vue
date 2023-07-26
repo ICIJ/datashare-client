@@ -97,7 +97,7 @@ export default {
         name: null,
         label: null,
         sourcePath: this.$config.get('dataDir'),
-        allowFromMask: '*',
+        allowFromMask: '*.*.*.*',
         description: null,
         logoUrl: null,
         sourceUrl: null,
