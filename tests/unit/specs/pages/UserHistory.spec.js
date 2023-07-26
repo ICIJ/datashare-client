@@ -63,7 +63,7 @@ describe('UserHistory.vue', () => {
           name: 'user-history',
           path: '/user-history',
           children: [
-            { name: 'document-history', path: 'document' },
+            { name: 'user-history.document.list', path: 'document' },
             { name: 'search-history', path: 'search' }
           ]
         }
@@ -77,20 +77,20 @@ describe('UserHistory.vue', () => {
 
   it('should load the history page', async () => {
     await router.replace({ name: 'user-history' })
-    wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
+    wrapper = shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     expect(wrapper.find('page-header-stub').exists()).toBeTruthy()
   })
 
   it('should load the document history page by default', async () => {
     await router.replace({ name: 'user-history' })
-    wrapper = await mount(UserHistory, { i18n, localVue, router, store, wait })
+    wrapper = mount(UserHistory, { i18n, localVue, router, store, wait })
     await flushPromises()
-    expect(wrapper.vm.$route.name).toBe('document-history')
+    expect(wrapper.vm.$route.name).toBe('user-history.document.list')
   })
 
   it('should call get user history when page is loaded', async () => {
-    await router.replace({ name: 'document-history' })
-    wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
+    await router.replace({ name: 'user-history.document.list' })
+    wrapper = shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     await wrapper.vm.$nextTick()
     expect(mockAxios.request).toBeCalledTimes(1)
     expect(mockAxios.request).toBeCalledWith(
@@ -110,8 +110,8 @@ describe('UserHistory.vue', () => {
   })
 
   it('should call delete user history api function is called', async () => {
-    await router.replace({ name: 'document-history' })
-    wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
+    await router.replace({ name: 'user-history.document.list' })
+    wrapper = shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     await wrapper.vm.deleteUserHistory()
     await wrapper.vm.$nextTick()
 

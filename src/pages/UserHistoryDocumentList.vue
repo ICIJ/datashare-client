@@ -1,5 +1,5 @@
 <template>
-  <div class="user-history d-flex flex-column">
+  <div class="user-history-document-list d-flex flex-column">
     <div class="my-4">
       <b-table
         v-if="events.length"
@@ -8,12 +8,12 @@
         :items="events"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
-        class="user-history__list card border-top-0"
+        class="user-history-document-list__list card border-top-0"
         hover
         responsive
         striped
-        tbody-tr-class="user-history__list__item"
-        thead-tr-class="user-history__list__head text-nowrap"
+        tbody-tr-class="user-history-document-list__list__item"
+        thead-tr-class="user-history-document-list__list__head text-nowrap"
       >
         <template #head(project)="{ field }">
           <column-filter-dropdown
@@ -25,15 +25,22 @@
           />
         </template>
         <template #cell(modification_date)="{ item: { modificationDate } }">
-          <span class="user-history__list__item__date font-weight-bold mr-2">{{ getDate(modificationDate) }}</span>
-          <span class="user-history__list__item__time d-inline-block">{{ getTime(modificationDate) }}</span>
+          <span class="user-history-document-list__list__item__date font-weight-bold mr-2">{{
+            getDate(modificationDate)
+          }}</span>
+          <span class="user-history-document-list__list__item__time d-inline-block">{{
+            getTime(modificationDate)
+          }}</span>
         </template>
         <template #cell(name)="{ item: { name, uri } }">
           <div class="d-flex align-items-center justify-content-between">
-            <router-link :to="{ path: uri }" class="user-history__list__item__link d-flex align-items-center">
+            <router-link
+              :to="{ path: uri }"
+              class="user-history-document-list__list__item__link d-flex align-items-center"
+            >
               <document-thumbnail
                 :document="eventAsDocument({ uri })"
-                class="user-history__list__item__preview d-none d-inline-flex mr-3"
+                class="user-history-document-list__list__item__preview d-none d-inline-flex mr-3"
                 crop
                 lazy
                 size="30"
@@ -51,7 +58,7 @@
                   routing: docId(uri)
                 }
               }"
-              class="user-history__list__item__actions d-flex"
+              class="user-history-document-list__list__item__actions d-flex"
             ></document-actions>
           </div>
         </template>
@@ -64,7 +71,7 @@
                 indices: projectName(uri)
               }
             }"
-            class="user-history__list__item__project"
+            class="user-history-document-list__list__item__project"
           >
             {{ projectName(uri) }}
           </router-link>
@@ -103,7 +110,7 @@ const sortKey = {
   [PROJECT]: PROJECT
 }
 export default {
-  name: 'UserHistoryDocument',
+  name: 'UserHistoryDocumentList',
   components: {
     DocumentThumbnail,
     DocumentActions,
@@ -215,7 +222,7 @@ export default {
       }
 
       const params = {
-        name: 'document-history',
+        name: 'user-history.document.list',
         query
       }
       this.$router.push(params)

@@ -58,7 +58,7 @@
             v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.history')"
-            :to="{ name: 'user-history' }"
+            :to="{ name: 'user-history.document.list' }"
             @click.prevent="$root.$emit('history::toggle')"
           >
             <fa icon="clock" fixed-width></fa>
