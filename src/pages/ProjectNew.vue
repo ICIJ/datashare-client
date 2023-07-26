@@ -8,7 +8,7 @@ import ProjectForm from '@/components/ProjectForm'
  * This page display a form to create a new project.
  */
 export default {
-  name: 'NewProject',
+  name: 'ProjectNew',
   components: {
     PageHeader,
     ProjectForm
@@ -28,33 +28,33 @@ export default {
       }
     },
     notifyCreationSucceed() {
-      const title = this.$t('newProject.notify.succeed')
+      const title = this.$t('projectNew.notify.succeed')
       const variant = 'success'
-      const body = this.$t('newProject.notify.succeedBody')
+      const body = this.$t('projectNew.notify.succeedBody')
       this.$root.$bvToast.toast(body, { variant, title })
     },
     notifyCreationFailed(error) {
-      const title = this.$t('newProject.notify.failed')
+      const title = this.$t('projectNew.notify.failed')
       const variant = 'danger'
-      const body = get(error, 'response.data.error') ?? this.$t('newProject.notify.failedBody')
+      const body = get(error, 'response.data.error') ?? this.$t('projectNew.notify.failedBody')
       this.$root.$bvToast.toast(body, { variant, title })
     },
     redirectToProject({ name }) {
       const params = { name }
-      this.$router.push({ name: 'project.view', params })
+      return this.$router.push({ name: 'project.view', params })
     }
   }
 }
 </script>
 
 <template>
-  <div class="new-project">
-    <page-header icon="database" :title="$t('newProject.title')" :description="$t('newProject.description')" />
+  <div class="project-new">
+    <page-header icon="database" :title="$t('projectNew.title')" :description="$t('projectNew.description')" />
     <div class="container">
       <b-overlay rounded="sm" opacity="0.6" :show="$wait.is('creating')">
         <project-form class="my-4" card :disabled="$wait.is('creating')" @submit="submit">
           <template #submit-text>
-            {{ $t('newProject.submit') }}
+            {{ $t('projectNew.submit') }}
           </template>
         </project-form>
       </b-overlay>

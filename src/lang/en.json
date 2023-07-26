@@ -728,7 +728,7 @@
       "updateDate": "Updated"
     }
   },
-  "newProject": {
+  "projectNew": {
     "title": "New project",
     "description": "",
     "notify": {
