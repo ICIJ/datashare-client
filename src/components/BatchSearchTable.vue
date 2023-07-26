@@ -458,7 +458,7 @@ export default {
     },
     generateTo(item) {
       const baseTo = {
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         params: {
           index: this.getProjectsNames(item).replace(/\s/g, ''),
           uuid: item.uuid

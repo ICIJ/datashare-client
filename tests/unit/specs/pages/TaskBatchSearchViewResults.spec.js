@@ -6,15 +6,15 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
-import BatchSearchResults from '@/pages/BatchSearchResults'
+import TaskBatchSearchViewResults from '@/pages/TaskBatchSearchViewResults'
 
-describe('BatchSearchResults.vue', () => {
+describe('TaskBatchSearchViewResults.vue', () => {
   let wrapper = null
   let i18n, localVue, store, wait
   const router = new VueRouter({
     routes: [
       {
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         path: 'batch-search/:indices/:uuid'
       },
       {
@@ -61,7 +61,7 @@ describe('BatchSearchResults.vue', () => {
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
-    wrapper = shallowMount(BatchSearchResults, { i18n, localVue, propsData, router, store, wait })
+    wrapper = shallowMount(TaskBatchSearchViewResults, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.fetch()
   })
 
@@ -74,24 +74,28 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('batch-search-results-details-stub').exists()).toBeTruthy()
   })
   it('should display one queries active filter has applied search filters', async () => {
-    expect(wrapper.find('.batch-search-results__applied-search-filters__queries').exists()).toBeFalsy()
+    expect(wrapper.find('.task-batch-search-view-results__applied-search-filters__queries').exists()).toBeFalsy()
 
     await router.push({
-      name: 'batch-search.result',
+      name: 'task.batch-search.view.results',
       params: { indices: 'toto', uuid: 'test' },
       query: { queries: 'query_01, query_02' }
     })
-    expect(wrapper.find('.batch-search-results__applied-search-filters__queries').exists()).toBeTruthy()
+    expect(wrapper.find('.task-batch-search-view-results__applied-search-filters__queries').exists()).toBeTruthy()
   })
   it('should display content type active filters has applied search filters', async () => {
-    expect(wrapper.findAll('.batch-search-results__applied-search-filters__content-types').exists()).toBeFalsy()
+    expect(
+      wrapper.findAll('.task-batch-search-view-results__applied-search-filters__content-types').exists()
+    ).toBeFalsy()
 
     await router.push({
-      name: 'batch-search.result',
+      name: 'task.batch-search.view.results',
       params: { indices: 'toto', uuid: 'test' },
       query: { contentTypes: 'type_01, type_02' }
     })
-    expect(wrapper.findAll('.batch-search-results__applied-search-filters__content-types').exists()).toBeTruthy()
+    expect(
+      wrapper.findAll('.task-batch-search-view-results__applied-search-filters__content-types').exists()
+    ).toBeTruthy()
   })
   it('should display clear filters button', () => {
     expect(wrapper.find('batch-search-clear-filters-stub').exists()).toBeTruthy()

@@ -14,7 +14,7 @@ describe('BatchSearchCopyForm.vue', () => {
       path: '/batch-search'
     },
     {
-      name: 'batch-search.results',
+      name: 'task.batch-search.view.results',
       path: '/batch-search/:index/:uuid'
     },
     {
@@ -45,7 +45,7 @@ describe('BatchSearchCopyForm.vue', () => {
   })
 
   beforeEach(async () => {
-    await router.push({ name: 'batch-search.results' })
+    await router.push({ name: 'task.batch-search.view.results' })
     wrapper = shallowMount(BatchSearchCopyForm, { i18n, localVue, propsData, router, store, wait })
   })
 

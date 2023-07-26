@@ -44,7 +44,7 @@ describe('BatchSearchActions.vue', () => {
     wait = core.wait
     const routes = [
       {
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         path: 'batch-search/:index/:uuid'
       },
       {
@@ -56,7 +56,7 @@ describe('BatchSearchActions.vue', () => {
   })
 
   beforeEach(async () => {
-    await router.push({ name: 'batch-search.results' }).catch(() => {}) // TODO only for the last test?
+    await router.push({ name: 'task.batch-search.view.results' }).catch(() => {}) // TODO only for the last test?
     await flushPromises()
   })
 

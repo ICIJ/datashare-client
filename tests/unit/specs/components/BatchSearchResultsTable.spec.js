@@ -14,7 +14,7 @@ describe('BatchSearchResultsTable.vue', () => {
   const router = new VueRouter({
     routes: [
       {
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         path: 'batch-search/:indices/:uuid'
       },
       {
@@ -118,7 +118,7 @@ describe('BatchSearchResultsTable.vue', () => {
 
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
-      name: 'batch-search.results',
+      name: 'task.batch-search.view.results',
       params: { indices: project.concat(',', anotherProject), uuid: '12' },
       query: { page: '1', sort: 'content_type', order: 'desc' }
     })
@@ -132,7 +132,7 @@ describe('BatchSearchResultsTable.vue', () => {
 
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
-      name: 'batch-search.results',
+      name: 'task.batch-search.view.results',
       params: { indices: project.concat(',', anotherProject), uuid: '12' },
       query: {
         page: '1',
@@ -161,7 +161,7 @@ describe('BatchSearchResultsTable.vue', () => {
     wrapper = mount(BatchSearchResultsTable, { i18n, localVue, store, router, wait, propsData })
     await wrapper.vm.$router
       .push({
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         params: { indices: project.concat(',', anotherProject), uuid: '12' },
         query: { page: 1 }
       })
