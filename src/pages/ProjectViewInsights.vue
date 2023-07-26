@@ -1,9 +1,9 @@
 <template>
-  <div class="project-insights">
-    <div class="container project-insights__container">
+  <div class="project-view-insights">
+    <div class="container project-view-insights__container">
       <b-row class="align-items-stretch">
         <b-col v-for="(widget, index) in instantiatedWidgets" :key="index" :md="widget.cols">
-          <div class="project-insights__container__widget" :class="{ card: widget.card }">
+          <div class="project-view-insights__container__widget" :class="{ card: widget.card }">
             <component :is="widget.component" :widget="widget" class="flex-grow-1" />
           </div>
         </b-col>
@@ -19,6 +19,7 @@ import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 
 export default {
+  name: 'ProjectViewInsights',
   components: {
     ProjectSelector
   },
@@ -43,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.project-insights {
+.project-view-insights {
   &__container {
     margin-top: $spacer;
 
