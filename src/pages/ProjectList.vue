@@ -55,7 +55,7 @@ export default {
           sortable: true,
           class: 'text-nowrap align-middle',
           formatter: (updateDate) => {
-            return humanShortDate(updateDate, this.$i18n.locale)
+            return updateDate ? humanShortDate(updateDate, this.$i18n.locale) : ''
           }
         }
       ]
