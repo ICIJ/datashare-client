@@ -240,7 +240,7 @@ export const router = {
                   name: 'project.view.insights',
                   path: '',
                   props: true,
-                  component: () => import('@/pages/ProjectInsights')
+                  component: () => import('@/pages/ProjectViewInsights')
                 }
               ]
             }
