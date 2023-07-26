@@ -132,23 +132,30 @@ export const router = {
               }
             },
             {
-              name: 'batch-download',
+              name: 'task.batch-download',
               path: 'batch-download',
-              component: () => import('@/pages/BatchDownload'),
-              meta: {
-                title: ({ i18n }) => i18n.t('batchDownload.title'),
-                docs: [
-                  {
-                    title: 'Add documents to Datashare',
-                    path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
-                    mode: ['LOCAL', 'EMBEDDED']
-                  },
-                  {
-                    title: 'Analyse documents',
-                    path: 'all/analyze-documents'
+              component: () => import('@/pages/TaskBatchDownload'),
+              children: [
+                {
+                  name: 'task.batch-download.list',
+                  path: '',
+                  component: () => import('@/pages/TaskBatchDownloadList'),
+                  meta: {
+                    title: ({ i18n }) => i18n.t('batchDownload.title'),
+                    docs: [
+                      {
+                        title: 'Add documents to Datashare',
+                        path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
+                        mode: ['LOCAL', 'EMBEDDED']
+                      },
+                      {
+                        title: 'Analyse documents',
+                        path: 'all/analyze-documents'
+                      }
+                    ]
                   }
-                ]
-              }
+                }
+              ]
             },
             {
               name: 'task.batch-search',

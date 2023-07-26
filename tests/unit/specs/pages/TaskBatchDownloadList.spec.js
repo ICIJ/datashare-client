@@ -2,12 +2,12 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { Api } from '@/api'
-import BatchDownload from '@/pages/BatchDownload'
+import TaskBatchDownloadList from '@/pages/TaskBatchDownloadList'
 import { Core } from '@/core'
 import { getMode, MODE_NAME } from '@/mode'
 import { storeBuilder } from '@/store/storeBuilder'
 
-describe('BatchDownload.vue', () => {
+describe('TaskBatchDownloadList.vue', () => {
   let i18n, localVue, wrapper, store, wait, mockAxios
 
   beforeAll(() => {
@@ -19,6 +19,7 @@ describe('BatchDownload.vue', () => {
     wait = core.wait
     store = storeBuilder(api)
   })
+
   beforeEach(async () => {
     mockAxios.request.mockResolvedValue({
       data: [
@@ -117,7 +118,7 @@ describe('BatchDownload.vue', () => {
         }
       ]
     })
-    wrapper = mount(BatchDownload, { i18n, localVue, store, wait })
+    wrapper = mount(TaskBatchDownloadList, { i18n, localVue, store, wait })
     mockAxios.request.mockClear()
     await flushPromises()
   })
@@ -154,8 +155,11 @@ describe('BatchDownload.vue', () => {
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(2) .tasks-list__tasks__item__size').exists()).toBeTruthy()
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__size').exists()).toBeFalsy()
   })
+
   it('should disable the download when the file doesnt exist anymore', async () => {
-    const span = wrapper.find('#batch-download__item--uuid_02 .batch-download__item__link--disabled')
+    const span = wrapper.find(
+      '#task-batch-download-list__item--uuid_02 .task-batch-download-list__item__link--disabled'
+    )
     expect(span.exists()).toBeTruthy()
     expect(span.element.title).toEqual('The archive has expired.')
   })
