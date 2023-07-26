@@ -1,10 +1,10 @@
 <template>
   <div class="batch-search-form">
     <b-form @submit.prevent="onSubmit">
-      <h5 v-if="!hideTitle" class="py-2 h6 text-uppercase text-muted">
-        {{ $t('batchSearch.heading') }}
-      </h5>
       <div :class="{ 'border-0': hideBorder }" class="card w-100">
+        <h5 v-if="!hideTitle" class="card-header">
+          {{ $t('batchSearch.heading') }}
+        </h5>
         <div class="card-body pb-1">
           <b-form-group :label="`${$t('batchSearch.name')} *`" class="batch-search-form__name" label-size="sm">
             <b-form-input v-model="name" required type="text" trim></b-form-input>
