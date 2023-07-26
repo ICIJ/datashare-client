@@ -25,8 +25,7 @@
 </template>
 
 <script>
-import moment from 'moment'
-
+import { humanShortDate } from '@/filters/humanDate'
 import PageHeader from '@/components/PageHeader'
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 
@@ -56,7 +55,7 @@ export default {
           sortable: true,
           class: 'text-nowrap align-middle',
           formatter: (updateDate) => {
-            return humanShortDate(updateDate,this.$i18n.locale)
+            return humanShortDate(updateDate, this.$i18n.locale)
           }
         }
       ]
