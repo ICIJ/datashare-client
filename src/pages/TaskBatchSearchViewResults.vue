@@ -1,23 +1,22 @@
 <template>
-  <div v-if="isLoaded" class="batch-search-results">
+  <div v-if="isLoaded" class="task-batch-search-view-results">
     <div class="my-4 container">
       <div class="mx-1 mb-2 d-flex">
         <router-link :to="generateTo">
           <fa icon="angle-left" class="mr-1" fixed-width />
           {{ $t('batchSearch.title') }}
         </router-link>
-        <span class="border-left border-dark pl-3 ml-3 font-weight-bold">
-          {{ $t('batchSearchResults.title') }}
-        </span>
       </div>
       <batch-search-results-details :batch-search="batchSearch" @update:published="changePublished" />
     </div>
 
     <div class="container">
-      <b-row class="batch-search-results__applied-search-filters d-flex justify-content-end align-items-center">
+      <b-row
+        class="task-batch-search-view-results__applied-search-filters d-flex justify-content-end align-items-center"
+      >
         <applied-search-filters-item
           v-if="selectedQueries.length"
-          class="batch-search-results__applied-search-filters__queries"
+          class="task-batch-search-view-results__applied-search-filters__queries"
           :filter="selectedQueriesFilter"
           hide-filter-label
           :update-search-store="false"
@@ -26,7 +25,7 @@
         <applied-search-filters-item
           v-for="(cType, i) in selectedContentTypes"
           :key="`${cType}+${i}`"
-          class="batch-search-results__applied-search-filters__content-types"
+          class="task-batch-search-view-results__applied-search-filters__content-types"
           :filter="contentTypeFilter[cType]"
           hide-filter-label
           :update-search-store="false"
@@ -34,7 +33,7 @@
         ></applied-search-filters-item>
         <batch-search-clear-filters
           class="batch-search__clear-filter-btn m-1"
-          route-name="batch-search.results"
+          route-name="task.batch-search.view.results"
           :local-search-params="params"
         />
       </b-row>
@@ -69,7 +68,7 @@ const SEARCH_PARAMS_LOCAL = Object.freeze({
  * This page will list all the results of a batch search.
  */
 export default {
-  name: 'BatchSearchResults',
+  name: 'TaskBatchSearchViewResults',
   components: {
     AppliedSearchFiltersItem,
     BatchSearchClearFilters,
@@ -219,7 +218,7 @@ export default {
       order = this.order
     ) {
       return {
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         params: {
           indices: this.indices,
           uuid: this.uuid

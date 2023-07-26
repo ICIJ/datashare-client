@@ -368,7 +368,7 @@ export default {
       this.removeEmptySearchParams(queryParams)
 
       return {
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         params: {
           indices: this.indices,
           uuid: this.uuid

@@ -98,7 +98,7 @@ export const router = {
         {
           path: 'batch-search/:index/:uuid',
           redirect: {
-            name: 'batch-search.results'
+            name: 'task.batch-search.view.results'
           }
         },
         {
@@ -190,15 +190,20 @@ export const router = {
                   }
                 },
                 {
-                  name: 'batch-search.results',
+                  name: 'task.batch-search.view',
                   path: ':index/:uuid',
                   components: {
-                    default: () => import('@/pages/BatchSearchResults')
+                    default: () => import('@/pages/TaskBatchSearchView')
                   },
-                  props: {
-                    default: true,
-                    sidebar: true
-                  },
+                  props: true,
+                  children: [
+                    {
+                      name: 'task.batch-search.view.results',
+                      path: '',
+                      props: true,
+                      component: () => import('@/pages/TaskBatchSearchViewResults')
+                    }
+                  ],
                   meta: {
                     title: ({ i18n }) => i18n.t('batchSearchResults.title')
                   }

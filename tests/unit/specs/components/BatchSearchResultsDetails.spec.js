@@ -14,7 +14,7 @@ describe('BatchSearchResultsDetails.vue', () => {
   const router = new VueRouter({
     routes: [
       {
-        name: 'batch-search.results',
+        name: 'task.batch-search.view.results',
         path: 'batch-search/:indices/:uuid'
       }
     ]

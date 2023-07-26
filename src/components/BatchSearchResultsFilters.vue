@@ -165,7 +165,7 @@ export default {
       const queries = compact(map(this.selectedQueries, 'label'))
       if (!isEqual(this.routeQuery.queries || [], queries)) {
         const query = { ...this.routeQuery, queries }
-        return this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
+        return this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
       }
     },
     executeSearch(q) {
@@ -176,11 +176,11 @@ export default {
     },
     excludeSelectedQueries() {
       const query = { ...this.routeQuery, queriesExcluded: !this.queriesExcluded }
-      this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
+      this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
     },
     sort(queriesSort) {
       const query = { ...this.routeQuery, queries_sort: queriesSort }
-      this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
+      this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
     }
   }
 }
