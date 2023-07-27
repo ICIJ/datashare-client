@@ -337,6 +337,20 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should return a backend response to updateProject', async () => {
+    const data= {name:"hello"}
+    json = await api.updateProject(data)
+    expect(json).toEqual({})
+
+    expect(mockAxios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/project/hello'),
+      method: 'PUT',
+      data,
+      responseType: 'text',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+    })
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     mockAxios.request.mockReturnValue(Promise.reject(error))
