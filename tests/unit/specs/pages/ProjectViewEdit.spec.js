@@ -4,7 +4,6 @@ import { Api } from '@/api'
 import { Core } from '@/core'
 import ProjectViewEdit from '@/pages/ProjectViewEdit'
 
-
 describe('ProjectViewEdit.vue', () => {
   let config, i18n, localVue, store, wait, api
 
@@ -40,7 +39,7 @@ describe('ProjectViewEdit.vue', () => {
 
   it('call api.updateProject when the form is submitted', async () => {
     const propsData = { name: 'local-datashare' }
-    const wrapper= mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData })
+    const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData })
     const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
     await projectForm.trigger('submit')
     expect(api.updateProject).toBeCalled()

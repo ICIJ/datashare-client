@@ -338,7 +338,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should return a backend response to createProject', async () => {
-    const data= {}
+    const data = {}
     json = await api.createProject(data)
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith({
@@ -351,7 +351,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should return a backend response to updateProject', async () => {
-    const data= {name:"hello"}
+    const data = { name: 'hello' }
     json = await api.updateProject(data)
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith({

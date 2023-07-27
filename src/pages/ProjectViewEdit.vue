@@ -14,6 +14,7 @@
 
 <script>
 import { get, uniqueId } from 'lodash'
+
 import ProjectForm from '@/components/ProjectForm'
 /**
  * Project edit form
@@ -31,6 +32,14 @@ export default {
       type: String
     }
   },
+  computed: {
+    project() {
+      return this.$core.findProject(this.name)
+    },
+    loaderId() {
+      return uniqueId('project-view-edit:updating:')
+    }
+  },
   methods: {
     async submit(project) {
       try {
@@ -43,7 +52,7 @@ export default {
       } catch (error) {
         this.notifyUpdateFailed(error)
         this.$wait.end(this.loaderId)
-      } 
+      }
     },
     notifyUpdateSucceed() {
       const title = this.$t('projectViewEdit.notify.succeed')
@@ -60,14 +69,6 @@ export default {
     redirectToProject({ name }) {
       const params = { name }
       return this.$router.push({ name: 'project.view', params })
-    }
-  },
-  computed: {  
-    project() {
-      return this.$core.findProject(this.name)
-    },
-    loaderId() {
-      return uniqueId('project-view-edit:updating:')
     }
   }
 }

@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import { Core } from '@/core'
 import ProjectView from '@/pages/ProjectView'
 
-
 describe('ProjectView.vue', () => {
   let config, i18n, localVue, router, store, wait
 
@@ -19,7 +18,6 @@ describe('ProjectView.vue', () => {
       {
         name: 'project.view.insights',
         path: 'insights'
-
       },
       {
         name: 'project.view.edit',
