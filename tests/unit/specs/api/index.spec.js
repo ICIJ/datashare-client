@@ -337,11 +337,23 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should return a backend response to createProject', async () => {
+    const data= {}
+    json = await api.createProject(data)
+    expect(json).toEqual({})
+    expect(mockAxios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/project/'),
+      method: 'POST',
+      data,
+      responseType: 'text',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+    })
+  })
+
   it('should return a backend response to updateProject', async () => {
     const data= {name:"hello"}
     json = await api.updateProject(data)
     expect(json).toEqual({})
-
     expect(mockAxios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/project/hello'),
       method: 'PUT',
