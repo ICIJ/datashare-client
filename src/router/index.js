@@ -264,6 +264,15 @@ export const router = {
                   path: '',
                   props: true,
                   component: () => import('@/pages/ProjectViewInsights')
+                },
+                {
+                  name: 'project.view.edit',
+                  path: 'edit',
+                  props: true,
+                  component: () => import('@/pages/ProjectViewEdit'),
+                  meta: {
+                    allowedModes: ['LOCAL', 'EMBEDDED']
+                  }
                 }
               ]
             }
