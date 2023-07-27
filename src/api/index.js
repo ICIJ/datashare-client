@@ -60,6 +60,10 @@ export class Api {
   createProject(data) {
     return this.sendActionAsText(`/api/project/`, { method: Method.POST, data })
   }
+  updateProject(data) {
+    const { name } = data
+    return this.sendActionAsText(`/api/project/${name}`, { method: Method.PUT, data })
+  }
   deleteAll(project) {
     return this.sendActionAsText(`/api/project/${project}`, { method: Method.DELETE })
   }
