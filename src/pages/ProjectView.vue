@@ -12,7 +12,7 @@ export default {
     PageHeader,
     ProjectThumbnail
   },
-  mixins:[utils],
+  mixins: [utils],
   props: {
     /**
      * Name of the project
@@ -44,7 +44,7 @@ export default {
     tabRoutes() {
       return ['project.view.insights', 'project.view.edit']
     }
-  }, 
+  },
   beforeMount() {
     if (!this.project) {
       const title = this.$t('error.notFound')
@@ -72,7 +72,7 @@ export default {
             Insights
           </template>
         </b-tab>
-        <b-tab title-item-class="ml-auto project-view__tab project-view__tab--edit" v-if="!isServer">
+        <b-tab v-if="!isServer" title-item-class="ml-auto project-view__tab project-view__tab--edit">
           <template #title>
             <fa icon="pen" fixed-width class="mr-1" />
             Edit
