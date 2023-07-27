@@ -7,12 +7,12 @@ export const MODE_NAME = Object.freeze({
 const MODES = Object.freeze({
   [MODE_NAME.LOCAL]: {
     modeName: 'local',
-    multipleProjects: false,
+    multipleProjects: true,
     manageDocuments: true
   },
   [MODE_NAME.EMBEDDED]: {
     modeName: 'embedded',
-    multipleProjects: false,
+    multipleProjects: true,
     manageDocuments: true
   },
   [MODE_NAME.SERVER]: {
