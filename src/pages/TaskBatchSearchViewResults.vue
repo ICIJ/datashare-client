@@ -114,16 +114,6 @@ export default {
     isLoaded() {
       return !!Object.keys(this.batchSearch).length
     },
-    projectField() {
-      return this.hasMultipleProjects
-        ? {
-            key: 'project.name',
-            label: this.$t('batchSearchResults.project'),
-            sortable: true,
-            name: 'prj_id'
-          }
-        : null
-    },
     generateTo() {
       const baseTo = { name: 'task.batch-search.list' }
       return {
