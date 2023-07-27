@@ -30,7 +30,7 @@
       >
         <tree-view
           :path="treeViewPath || selectedPath"
-          :project="project"
+          :projects="projects"
           count
           size
           @input="treeViewPath = $event"
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { castArray } from 'lodash'
 import { mapState } from 'vuex'
 
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
@@ -74,6 +75,9 @@ export default {
     ...mapState('insights', ['project']),
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
+    },
+    projects() {
+      return castArray(this.project)
     }
   },
   watch: {
