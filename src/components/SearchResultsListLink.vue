@@ -11,9 +11,13 @@
       <active-text-truncate class="search-results-list-link__location">
         <span class="d-inline-flex align-items-center">
           <fa icon="folder" class="mr-1" />
-          <b-badge v-if="showIndex" variant="light" class="mr-2">
-            {{ document.index | startCase }}
-          </b-badge>
+          <project-link
+            v-if="showIndex"
+            :project="document.index"
+            class="badge badge-light mr-2"
+            hide-thumbnail
+            disabled
+          />
           {{ location }}
         </span>
       </active-text-truncate>
@@ -32,6 +36,7 @@ import { mapState } from 'vuex'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
+import ProjectLink from '@/components/ProjectLink'
 import ner from '@/mixins/ner'
 
 /**
@@ -41,7 +46,8 @@ export default {
   name: 'SearchResultsLink',
   components: {
     DocumentSlicedName,
-    DocumentThumbnail
+    DocumentThumbnail,
+    ProjectLink
   },
   filters: {
     startCase
