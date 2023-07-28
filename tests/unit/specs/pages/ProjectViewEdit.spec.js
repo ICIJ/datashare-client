@@ -18,10 +18,11 @@ describe('ProjectViewEdit.vue', () => {
     localVue = core.localVue
     store = core.store
     wait = core.wait
+  })
+  beforeEach(() => {
     // Ensure the local-datashare project can be found
     config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
-
   afterAll(() => {
     jest.clearAllMocks()
   })
@@ -69,13 +70,12 @@ describe('ProjectViewEdit.vue', () => {
     const propsData = { name: 'local-datashare' }
 
     const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData, config })
-    expect(wrapper.vm.$core.projects).toHaveLength(1)
+    expect(wrapper.vm.$core.projects.length).toBe(1)
 
     const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
-    projectForm.vm.$emit('delete', { name: 'local-datashare' })
+    projectForm.vm.$emit('delete', 'local-datashare')
     await flushPromises()
-
-    expect(wrapper.vm.$core.projects).toHaveLength(0)
+    expect(wrapper.vm.$core.projects.length).toBe(0)
     expect(api.deleteProject).toBeCalledWith('local-datashare')
   })
 })
