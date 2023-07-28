@@ -102,14 +102,13 @@ describe('BatchSearchResultsDetails.vue', () => {
 
   describe('Projects column', () => {
     it('should contain all the projects in which the batch search is performed', () => {
-      const projectLinks = wrapper.findAll('.batch-search-results-details__info__project-link')
+      const projectLinks = wrapper.findAll('.batch-search-results-details__info__projects__link')
       expect(projectLinks).toHaveLength(2)
     })
 
     it('should display project names as clickable links', () => {
-      const projectLinks = wrapper.findAll('.batch-search-results-details__info__project-link')
-      expect(projectLinks.at(0).element.tagName).toBe('ROUTER-LINK-STUB')
-      expect(projectLinks.at(1).element.tagName).toBe('ROUTER-LINK-STUB')
+      const projects = wrapper.find('.batch-search-results-details__info__projects')
+      expect(projects.findAllComponents({ name: 'ProjectLink' })).toHaveLength(2)
     })
   })
 })
