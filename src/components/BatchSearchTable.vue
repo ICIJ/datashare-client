@@ -101,24 +101,14 @@
         {{ item.isPublished }}
       </template>
       <template #cell(projects)="{ item }">
-        <span
-          v-for="(project, index) in item.projects"
-          :key="project.name"
-          class="batch-search-table__item__projects d-inline-block mr-1"
-        >
-          <router-link
-            :to="{
-              name: 'search',
-              query: {
-                q: '*',
-                indices: project.name
-              }
-            }"
-            class="batch-search-table__item__projects__link"
+        <span class="batch-search-table__item__projects">
+          <span
+            v-for="{ name } in item.projects"
+            :key="name"
+            class="batch-search-table__item__projects__link d-inline-block mr-1"
           >
-            <span>{{ project.label || project.name }}</span>
-          </router-link>
-          <span v-if="isNotLastArrayItem(index, item.projects.length)">, </span>
+            <project-link :project="name" class="btn btn-sm btn-light p-1" />
+          </span>
         </span>
       </template>
     </b-table>
@@ -139,6 +129,7 @@ import { mapState } from 'vuex'
 
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
+import ProjectLink from '@/components/ProjectLink'
 import TaskItemStatus from '@/components/TaskItemStatus'
 import UserDisplay from '@/components/UserDisplay'
 import settings from '@/utils/settings'
@@ -169,7 +160,7 @@ const SORT_ORDER = Object.freeze({
 
 export default {
   name: 'BatchSearchTable',
-  components: { UserDisplay, TaskItemStatus, BatchSearchFilterDate, ColumnFilterDropdown },
+  components: { ProjectLink, UserDisplay, TaskItemStatus, BatchSearchFilterDate, ColumnFilterDropdown },
   mixins: [polling, utils],
   data() {
     return {
