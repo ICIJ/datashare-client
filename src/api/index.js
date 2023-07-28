@@ -64,6 +64,9 @@ export class Api {
     const { name } = data
     return this.sendActionAsText(`/api/project/${name}`, { method: Method.PUT, data })
   }
+  deleteProject(name) {
+    return this.sendActionAsText(`/api/project/${name}`, { method: Method.DELETE })
+  }
   deleteAll(project) {
     return this.sendActionAsText(`/api/project/${project}`, { method: Method.DELETE })
   }
