@@ -103,8 +103,11 @@ export default {
       if (this.browse) {
         this.$wait.start(this.waitIdentifier)
         this.browsingPath = this.path || this.cannonicalDataDir
-        this.browsingTree = await this.$core.api.tree(this.browsingPath)
-        this.$wait.end(this.waitIdentifier)
+        try {
+          this.browsingTree = await this.$core.api.tree(this.browsingPath)
+        } finally {
+          this.$wait.end(this.waitIdentifier)
+        }
       }
     }
   }
