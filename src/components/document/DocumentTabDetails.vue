@@ -179,7 +179,7 @@ export default {
           label: this.$t('document.project'),
           class: 'document__content__project',
           value: this.document.index,
-          to: { name: 'search', query: { indices: this.document.index, q: '*' } }
+          to: { name: 'project.view', params: { name: this.document.index } }
         },
         {
           name: 'metadata.tika_metadata_resourcename',
