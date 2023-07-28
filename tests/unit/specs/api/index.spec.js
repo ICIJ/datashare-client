@@ -363,6 +363,18 @@ describe('Datashare backend client', () => {
     })
   })
 
+  it('should return a backend response to deleteProject', async () => {
+    const name = 'hello'
+    json = await api.deleteProject(name)
+    expect(json).toEqual({})
+    expect(mockAxios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/project/hello'),
+      method: 'DELETE',
+      responseType: 'text',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+    })
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     mockAxios.request.mockReturnValue(Promise.reject(error))
