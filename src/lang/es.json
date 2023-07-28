@@ -458,8 +458,6 @@
     "tagsNew": "Añadir una nueva etiqueta",
     "details": "Etiqueta & Detalles",
     "detailsInfo": "Esta información se extrae de los metadatos del documento.",
-    "showMoreDetails": "Más detalles",
-    "showLessDetails": "Menos detalles",
     "author": "Autor",
     "extractionDate": "Fecha de índice",
     "parent": "Archivo de base",

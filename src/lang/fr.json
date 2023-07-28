@@ -458,8 +458,6 @@
     "tagsNew": "Ajouter un nouveau tag",
     "details": "Détails",
     "detailsInfo": "Ces informations sont tirées des méta-données du document.",
-    "showMoreDetails": "Afficher plus de détails",
-    "showLessDetails": "Afficher moins de détails",
     "author": "Auteur·e",
     "extractionDate": "Date d'indexation",
     "parent": "Parent",

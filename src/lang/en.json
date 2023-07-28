@@ -459,8 +459,6 @@
     "tagsNew": "Add a new tag",
     "details": "Details",
     "detailsInfo": "These information are extracted from the document's metadata.",
-    "showMoreDetails": "Show more details",
-    "showLessDetails": "Show less details",
     "author": "Author",
     "extractionDate": "Indexing date",
     "parent": "Parent",

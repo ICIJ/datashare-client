@@ -458,8 +458,6 @@
     "tagsNew": "新規タグを追加",
     "details": "詳細",
     "detailsInfo": "これらの情報は文書のメタデータから抽出されました",
-    "showMoreDetails": "詳細をもっと表示",
-    "showLessDetails": "詳細を少なく表示",
     "author": "筆者",
     "extractionDate": "インデックスの日付",
     "parent": "親",
