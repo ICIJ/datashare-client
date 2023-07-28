@@ -185,12 +185,13 @@ export default {
       this.totalEvents = 0
     },
     getTypeOfCurrentPage() {
-      const type = this.$route.path.split('/').pop()
-      if (this.tabRoutes.some((tab) => tab?.startsWith(type))) {
-        return type
-      } else {
-        return this.defaultType
+      const typeRouteMapping = {
+        'user-history.document': 'document',
+        'user-history.document.list': 'document',
+        'user-history.saved-search': 'search',
+        'user-history.saved-search.list': 'search'
       }
+      return typeRouteMapping[this.$route.name] ?? this.defaultType
     }
   }
 }
