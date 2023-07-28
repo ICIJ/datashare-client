@@ -458,8 +458,6 @@
     "tagsNew": "Einen Tag hinzufügen",
     "details": "Details",
     "detailsInfo": "Diese Informationen werden aus den Metadaten des Dokuments extrahiert.",
-    "showMoreDetails": "Mehr Details anzeigen",
-    "showLessDetails": "Weniger Details anzeigen",
     "author": "Autor",
     "extractionDate": "Indizierungsdatum",
     "parent": "Container-Datei",
