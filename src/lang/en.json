@@ -744,7 +744,7 @@
     "notify": {
       "delete": {
         "succeed": "The project was deleted",
-        "succeedBody": "The project deleted.",
+        "succeedBody": "The documents in this project have been removed from Datashare.",
         "failed": "Unable to delete the project",
         "failedBody": "Something happened when trying to delete this project."
       },
