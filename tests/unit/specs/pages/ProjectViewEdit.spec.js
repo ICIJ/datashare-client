@@ -1,4 +1,5 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 import { Api } from '@/api'
 import { Core } from '@/core'
@@ -10,6 +11,7 @@ describe('ProjectViewEdit.vue', () => {
   beforeAll(() => {
     api = new Api(null, null)
     api.updateProject = jest.fn().mockResolvedValue({})
+    api.deleteProject = jest.fn().mockResolvedValue({})
     const core = Core.init(createLocalVue(), api).useAll()
     config = core.config
     i18n = core.i18n
@@ -37,11 +39,43 @@ describe('ProjectViewEdit.vue', () => {
     expect(projectForm.vm.edit).toBeTruthy()
   })
 
-  it('call api.updateProject when the form is submitted', async () => {
+  it('updates values of a project when the form is submitted', async () => {
+    // Given
     const propsData = { name: 'local-datashare' }
     const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData })
+    expect(wrapper.vm.$core.projects[0].label).toBe('Default')
+    const projectFormValues = {
+      allowFromMask: '*.*.*.*',
+      description: null,
+      label: 'Default',
+      logoUrl: null,
+      maintainerName: null,
+      name: 'local-datashare',
+      publisherName: null,
+      sourcePath: '/',
+      sourceUrl: null
+    }
+    // when
     const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
-    await projectForm.trigger('submit')
-    expect(api.updateProject).toBeCalled()
+    await projectForm.vm.$emit('submit', { ...projectFormValues, label: 'NEWLABEL' })
+    await flushPromises()
+
+    // then
+    expect(api.updateProject).toBeCalledWith({ ...projectFormValues, label: 'NEWLABEL' })
+    expect(wrapper.vm.$core.projects[0].label).toBe('NEWLABEL')
+  })
+
+  it('deletes the project when the form emits a deleted event', async () => {
+    const propsData = { name: 'local-datashare' }
+
+    const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData, config })
+    expect(wrapper.vm.$core.projects).toHaveLength(1)
+
+    const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
+    projectForm.vm.$emit('delete', { name: 'local-datashare' })
+    await flushPromises()
+
+    expect(wrapper.vm.$core.projects).toHaveLength(0)
+    expect(api.deleteProject).toBeCalledWith('local-datashare')
   })
 })

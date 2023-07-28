@@ -742,10 +742,18 @@
   "projectViewEdit":{
     "title": "Edit project",
     "notify": {
-      "succeed": "The project was saved",
-      "succeedBody": "Project saved.",
-      "failed": "Unable to edit the project",
-      "failedBody": "Something happened when trying to edit this project."
+      "delete": {
+        "succeed": "The project was deleted",
+        "succeedBody": "The project deleted.",
+        "failed": "Unable to delete the project",
+        "failedBody": "Something happened when trying to delete this project."
+      },
+      "update":{
+        "succeed": "The project was saved",
+        "succeedBody": "Project saved.",
+        "failed": "Unable to edit the project",
+        "failedBody": "Something happened when trying to edit this project."
+      }
     },
     "submit": "Edit project"
   },
