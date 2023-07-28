@@ -787,7 +787,9 @@
     },
     "reset": "Reset",
     "resetConfirmation": "Are you sure you want to reset the form to its initial values?",
-    "submit": "Submit"
+    "submit": "Submit",
+    "deleteConfirmation": "Are you sure you want to delete the project?",
+    "delete": "Delete"
   },
   "shortkeys": {
     "title": "Search shortcuts",

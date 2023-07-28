@@ -37,6 +37,12 @@ export default {
      */
     edit: {
       type: Boolean
+    },
+    /**
+     * Show delete project button
+     */
+    showDeleteButton: {
+      type: Boolean
     }
   },
   data() {
@@ -110,6 +116,9 @@ export default {
     },
     reset() {
       this.$set(this, 'form', this.initialFormValues())
+    },
+    emitDelete() {
+      this.$emit('delete', this.name)
     }
   }
 }
@@ -224,14 +233,23 @@ export default {
     </component>
     <component :is="footerComponent" class="d-flex">
       <confirm-button
+        v-if="showDeleteButton"
         type="button"
-        class="btn btn-outline-primary mr-3"
+        class="project-form__action--delete btn btn-danger mr-3"
+        :confirmed="emitDelete"
+        :label="$t('projectForm.deleteConfirmation')"
+      >
+        <slot name="delete-text">{{ $t('projectForm.delete') }}</slot>
+      </confirm-button>
+      <confirm-button
+        type="button"
+        class="project-form__action--reset btn btn-outline-primary ml-auto"
         :confirmed="reset"
         :label="$t('projectForm.resetConfirmation')"
       >
         <slot name="reset-text">{{ $t('projectForm.reset') }}</slot>
       </confirm-button>
-      <b-button type="submit" variant="primary" class="ml-auto" :disabled="!valid">
+      <b-button type="submit" variant="primary" class="ml-2" :disabled="!valid">
         <slot name="submit-text">{{ $t('projectForm.submit') }}</slot>
       </b-button>
     </component>
