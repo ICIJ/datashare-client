@@ -102,12 +102,8 @@
       </template>
       <template #cell(projects)="{ item }">
         <span class="batch-search-table__item__projects">
-          <span
-            v-for="{ name } in item.projects"
-            :key="name"
-            class="batch-search-table__item__projects__link d-inline-block mr-1"
-          >
-            <project-link :project="name" class="btn btn-sm btn-light p-1" />
+          <span v-for="{ name } in item.projects" :key="name" class="batch-search-table__item__projects__link">
+            <project-link :project="name" class="btn btn-sm btn-light p-1 mr-1 mb-1" />
           </span>
         </span>
       </template>
