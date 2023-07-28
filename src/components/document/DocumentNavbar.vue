@@ -18,6 +18,7 @@
     </slot>
     <div v-if="doc" class="ml-auto d-flex align-items-center">
       <slot name="nav" />
+      <project-link :project="doc.index" class="btn btn-sm btn-light p-0 pr-1 ml-1" />
       <b-btn
         class="mx-2 px-2 py-0 document-navbar__recommended-by"
         size="sm"
@@ -88,6 +89,7 @@
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
+import ProjectLink from '@/components/ProjectLink'
 import UserDisplay from '@/components/UserDisplay'
 import utils from '@/mixins/utils'
 
@@ -98,6 +100,7 @@ export default {
   name: 'DocumentNavbar',
   components: {
     DocumentActions,
+    ProjectLink,
     UserDisplay
   },
   mixins: [utils],
