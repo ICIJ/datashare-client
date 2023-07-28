@@ -2,7 +2,15 @@
   <div class="project-view-edit">
     <div class="container">
       <b-overlay rounded="sm" opacity="0.6" :show="$wait.is(loaderId)">
-        <project-form class="my-4" edit card :disabled="$wait.is(loaderId)" :values="project" @submit="submit">
+        <project-form
+          class="my-4"
+          edit
+          card
+          :disabled="$wait.is(loaderId)"
+          :values="project"
+          @submit="submit"
+          @delete="deleteProject"
+        >
           <template #submit-text>
             {{ $t('projectViewEdit.submit') }}
           </template>
@@ -16,6 +24,9 @@
 import { get, uniqueId } from 'lodash'
 
 import ProjectForm from '@/components/ProjectForm'
+
+const OPERATION = Object.freeze({ DELETE: 'delete', UPDATE: 'update' })
+
 /**
  * Project edit form
  */
@@ -45,30 +56,43 @@ export default {
       try {
         this.$wait.start(this.loaderId)
         await this.$core.api.updateProject(project)
-        await this.$core.setProject(project)
-        this.notifyUpdateSucceed()
+        this.$core.setProject(project)
+        this.notifySucceed(OPERATION.UPDATE)
         this.$wait.end(this.loaderId)
         return this.redirectToProject(project)
       } catch (error) {
-        this.notifyUpdateFailed(error)
+        this.notifyFailed(error, OPERATION.UPDATE)
         this.$wait.end(this.loaderId)
       }
     },
-    notifyUpdateSucceed() {
-      const title = this.$t('projectViewEdit.notify.succeed')
+    notifySucceed(operation) {
+      const title = this.$t(`projectViewEdit.notify.${operation}.succeed`)
       const variant = 'success'
-      const body = this.$t('projectViewEdit.notify.succeedBody')
+      const body = this.$t(`projectViewEdit.notify.${operation}.succeedBody`)
       this.$root.$bvToast.toast(body, { variant, title })
     },
-    notifyUpdateFailed(error) {
-      const title = this.$t('projectViewEdit.notify.failed')
+    notifyFailed(error, operation) {
+      const title = this.$t(`projectViewEdit.notify.${operation}.failed`)
       const variant = 'danger'
-      const body = get(error, 'response.data.error') ?? this.$t('projectViewEdit.notify.failedBody')
+      const body = get(error, 'response.data.error') ?? this.$t(`projectViewEdit.notify.${operation}.failedBody`)
       this.$root.$bvToast.toast(body, { variant, title })
     },
     redirectToProject({ name }) {
       const params = { name }
       return this.$router.push({ name: 'project.view', params })
+    },
+    async deleteProject({ name }) {
+      try {
+        this.$wait.start(this.loaderId)
+        await this.$core.api.deleteProject(name)
+        this.$core.deleteProject(name)
+        this.notifySucceed(OPERATION.DELETE)
+        this.$wait.end(this.loaderId)
+        return this.redirectToProject({ name })
+      } catch (error) {
+        this.notifyFailed(error, OPERATION.DELETE)
+        this.$wait.end(this.loaderId)
+      }
     }
   }
 }

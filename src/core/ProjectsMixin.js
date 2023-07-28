@@ -57,7 +57,7 @@ const ProjectsMixin = (superclass) =>
       return this.setProject(project)
     }
     /**
-     * Return true if the default project exist
+     * Return true if the default project exists
      * @returns {Promise:Boolean}
      */
     async defaultProjectExists() {
@@ -69,15 +69,32 @@ const ProjectsMixin = (superclass) =>
       }
     }
     /**
-     * Retreive a project by its name
-     * @param {String} name Name of the project to retreive
+     * Retrieve a project by its name
+     * @param {String} name Name of the project to retrieve
      * @returns {Object} The project matching with this name
      */
     findProject(name) {
       return find(this.projects, { name })
     }
     /**
-     * Update a project in the list or add it if doesn't exists yet.
+     * Delete a project by it name identifier.
+     * @param {String} name Name of the project to retrieve
+     * @returns {Integer} Index of the project deleted or -1 if project does not exist
+     */
+    deleteProject(name) {
+      // Create a new projects list so we avoid mutating object
+      const projects = [...this.projects]
+      const index = findIndex(projects, { name })
+
+      if (index > -1) {
+        projects.splice(index, 1)
+        this.config.set('projects', projects)
+      }
+
+      return index
+    }
+    /**
+     * Update a project in the list or add it if it doesn't exist yet.
      * @param {Object} project
      * @returns {Object} The project
      */
@@ -101,7 +118,7 @@ const ProjectsMixin = (superclass) =>
       return sortBy(this.config.get('projects', []), iteratee('name'))
     }
     /**
-     * List all projects this user has access to.
+     * List all projects name ids this user has access to.
      * @returns {Array:String}
      */
     get projectIds() {
