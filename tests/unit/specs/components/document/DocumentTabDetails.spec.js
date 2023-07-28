@@ -53,7 +53,9 @@ describe('DocumentTabDetails.vue', () => {
       propsData: { document: store.state.document.doc }
     })
 
-    expect(wrapper.find('.document__content__content-type input[type=text]').vm.value).toBe('Portable Document Format (PDF)')
+    expect(wrapper.find('.document__content__content-type input[type=text]').vm.value).toBe(
+      'Portable Document Format (PDF)'
+    )
   })
 
   it('should display a child document', async () => {

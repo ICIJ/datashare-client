@@ -37,7 +37,7 @@
       <p class="text-muted">
         {{ $t('document.detailsInfo') }}
       </p>
-      <b-table :items="items" :fields="fields" :tbody-tr-class="itemRowClass" responsive striped borderless >
+      <b-table :items="items" :fields="fields" :tbody-tr-class="itemRowClass" responsive striped borderless>
         <template #cell(label)="{ item: { name, label, value } }">
           <div class="font-weight-bold d-flex justify-content-between">
             <div class="text-truncate mr-1 w-100" :title="name">
