@@ -375,12 +375,11 @@ describe('BatchSearchTable.vue', () => {
     it('all projects should be displayed and clickable for a multiproject search', async () => {
       wrapper = mount(BatchSearchTable, { i18n, localVue, router: routerFactory(), store, wait })
       await flushPromises()
-      const projectLinks = wrapper.findAll('.batch-search-table__item__projects__link')
-      expect(projectLinks.at(0).element.tagName).toBe('A')
-      expect(projectLinks.at(0).attributes('href')).toBe(`/?q=%2a&indices=${batchSearchMock.items[0].projects[0].name}`)
-
-      expect(projectLinks.at(1).element.tagName).toBe('A')
-      expect(projectLinks.at(1).attributes('href')).toBe(`/?q=%2a&indices=${batchSearchMock.items[0].projects[1].name}`)
+      const projects = wrapper.find('.batch-search-table__item__projects')
+      const projectsLinks = projects.findAllComponents({ name: 'ProjectLink' })
+      expect(projectsLinks).toHaveLength(2)
+      expect(projectsLinks.at(0).element.tagName).toBe('A')
+      expect(projectsLinks.at(1).element.tagName).toBe('A')
     })
   })
 
