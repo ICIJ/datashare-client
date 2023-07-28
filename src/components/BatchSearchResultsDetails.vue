@@ -11,21 +11,13 @@
       <dl class="batch-search-results-details__info">
         <div v-if="showProjects">
           <dt>{{ $t('batchSearch.projects') }}</dt>
-          <dd>
-            <span v-for="(project, index) in batchSearch.projects" :key="project.name">
-              <router-link
-                :to="{
-                  name: 'search',
-                  query: {
-                    q: '*',
-                    indices: project.name
-                  }
-                }"
-                class="batch-search-results-details__info__project-link"
-              >
-                <span>{{ project.name }}</span
-                ><span v-if="isNotLastArrayItem(index, batchSearch.projects.length)">, </span>
-              </router-link>
+          <dd class="batch-search-results-details__info__projects">
+            <span
+              v-for="{ name } in batchSearch.projects"
+              :key="name"
+              class="batch-search-results-details__info__projects__link"
+            >
+              <project-link :project="name" class="btn btn-sm btn-light p-1 mr-1" />
             </span>
           </dd>
         </div>
@@ -110,6 +102,7 @@ import BatchSearchActions from '@/components/BatchSearchActions'
 import TaskItemStatus from '@/components/TaskItemStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import UserDisplay from '@/components/UserDisplay'
+import ProjectLink from '@/components/ProjectLink'
 import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
 import { humanLongDate } from '@/filters/humanDate'
@@ -122,8 +115,9 @@ export default {
   name: 'BatchSearchResultsDetails',
   components: {
     BatchSearchActions,
-    TaskItemStatus,
     ContentTypeBadge,
+    ProjectLink,
+    TaskItemStatus,
     UserDisplay
   },
   filters: {
