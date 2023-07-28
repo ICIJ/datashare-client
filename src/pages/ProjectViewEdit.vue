@@ -7,6 +7,7 @@
           edit
           card
           :disabled="$wait.is(loaderId)"
+          show-delete-button
           :values="project"
           @submit="submit"
           @delete="deleteProject"
