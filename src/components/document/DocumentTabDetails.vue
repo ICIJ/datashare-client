@@ -9,6 +9,7 @@
       </p>
       <document-tags-form :document="document" :tags="tags" :display-tags="true" :display-form="true" />
     </div>
+
     <div class="document__content__shortcuts mb-3">
       <h5 class="mb-3">
         {{ $t('document.shortcuts') }}
@@ -28,6 +29,7 @@
         </li>
       </ul>
     </div>
+
     <div class="document__content__details">
       <h5>
         {{ $t('document.details') }}
@@ -35,66 +37,37 @@
       <p class="text-muted">
         {{ $t('document.detailsInfo') }}
       </p>
-      <div class="row document__content__details__children mx-2"></div>
-      <div v-for="field in filteredCanonicalFields" :key="field.name" class="row document__content__details__item">
-        <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
-          <div class="text-truncate mr-1 w-100" :title="field.name">
-            {{ field.label }}
+      <b-table :items="items" :fields="fields" :tbody-tr-class="itemRowClass" responsive striped borderless >
+        <template #cell(label)="{ item: { name, label, value } }">
+          <div class="font-weight-bold d-flex justify-content-between">
+            <div class="text-truncate mr-1 w-100" :title="name">
+              <var>{{ document.shortMetaName(label || name) | startCase }}</var>
+            </div>
+            <div class="ml-auto document__content__details__item__label__search">
+              <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name, value), indices } }">
+                <fa icon="search" />
+              </router-link>
+            </div>
           </div>
-          <div class="mr-auto document__content__details__item__search">
-            <router-link
-              :to="
-                field.to || {
-                  name: 'search',
-                  query: {
-                    q: document.valueAsQueryParam(
-                      field.name,
-                      field.rawValue !== undefined ? field.rawValue : field.value
-                    ),
-                    indices
-                  }
-                }
-              "
-            >
-              <fa icon="search" />
-            </router-link>
-          </div>
-        </div>
-        <div class="col-sm-8">
-          <div class="w-100" :class="field.class">
-            <component :is="field.component || 'div'" :title="field.value">
-              <span v-if="field.value === 'unknown'">
-                {{ $t('document.unknown') }}
-              </span>
-              <active-text-truncate v-else>
-                {{ field.value }}
-              </active-text-truncate>
-            </component>
-          </div>
-        </div>
-      </div>
-      <div v-for="name in metaFieldsNames" :key="name" class="row document__content__details__item">
-        <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
-          <div class="text-truncate mr-1 w-100" :title="name">
-            <var>{{ document.shortMetaName(name) | startCase }}</var>
-          </div>
-          <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name), indices } }">
-              <fa icon="search" />
-            </router-link>
-          </div>
-        </div>
-        <div class="col-sm-8">
-          <active-text-truncate>
-            {{ document.meta(name) }}
-          </active-text-truncate>
-        </div>
-      </div>
-      <div class="text-center mt-4">
-        <button class="btn btn-outline-primary btn-sm" @click="metadataVisible = !metadataVisible">
-          {{ $t(metadataVisible ? 'document.showLessDetails' : 'document.showMoreDetails') }}
-        </button>
-      </div>
+        </template>
+        <template #cell(value)="{ item: field }">
+          <component :is="field.component" v-if="field.component" v-bind="field.componentBinding" />
+          <span v-else-if="field.value === 'unknown'" class="text-muted">
+            {{ $t('document.unknown') }}
+          </span>
+          <b-input-group v-else size="sm" class="document__content__details__item__input-group">
+            <b-input :value="field.value" readonly class="document__content__details__item__input-group__input" />
+            <b-input-group-append>
+              <haptic-copy
+                class="btn btn-light document__content__details__item__input-group__copy"
+                hide-label
+                :text="String(field.value)"
+                tooltip-placement="left"
+              />
+            </b-input-group-append>
+          </b-input-group>
+        </template>
+      </b-table>
     </div>
   </div>
 </template>
@@ -131,11 +104,6 @@ export default {
       type: Object
     }
   },
-  data() {
-    return {
-      metadataVisible: false
-    }
-  },
   computed: {
     ...mapState('document', ['tags']),
     documentPath() {
@@ -158,121 +126,143 @@ export default {
     indices() {
       return uniq([this.index, ...this.$store.state.search.indices]).join(',')
     },
-    metaFieldsNames() {
-      if (this.metadataVisible) {
-        return filter(this.document.metas, (name) => map(this.canonicalFields, 'name').indexOf(name) === -1)
-      } else {
-        return []
-      }
+    fields() {
+      return [
+        {
+          key: 'label',
+          sortable: true,
+          tdClass: 'align-middle document__content__details__item__label'
+        },
+        {
+          key: 'value'
+        }
+      ]
     },
-    canonicalFields() {
+    items() {
+      return this.presentCanonicalItems.concat(this.metaItems)
+    },
+    metaItems() {
+      return this.metaItemsNames.map((name) => {
+        const label = this.document.shortMetaName(name)
+        const value = this.document.meta(name)
+        return { label, name, value }
+      })
+    },
+    metaItemsNames() {
+      return filter(this.document.metas, (name) => {
+        return !this.canonicalItemsNames.includes(`metadata.${name}`) && !this.canonicalItemsNames.includes(name)
+      })
+    },
+    canonicalItems() {
       return [
         {
           name: '_id',
           label: this.$t('document.id'),
-          class: 'document__content__id',
-          value: this.document.id,
-          component: 'code'
+          trClass: 'document__content__id',
+          value: this.document.id
         },
         {
           name: '_index',
           label: this.$t('document.project'),
-          class: 'document__content__project',
+          trClass: 'document__content__project',
           value: this.document.index,
           to: { name: 'project.view', params: { name: this.document.index } }
         },
         {
           name: 'metadata.tika_metadata_resourcename',
           label: this.$t('document.name'),
-          class: 'document__content__basename',
+          trClass: 'document__content__basename',
           value: this.document.basename
         },
         {
           name: 'path',
           label: this.$t('document.path'),
-          class: 'document__content__path',
+          trClass: 'document__content__path',
           value: this.documentPath
         },
         {
           name: 'dirname',
           label: this.$t('document.dirname'),
-          class: 'document__content__dirname',
+          trClass: 'document__content__dirname',
           value: this.documentDirname
         },
         {
           name: 'metadata.tika_metadata_dcterms_created',
           label: this.$t('document.creationDate'),
-          class: 'document__content__creation-date',
+          trClass: 'document__content__creation-date',
           value: this.document.meta('dcterms_created')
         },
         {
           name: 'metadata.tika_metadata_dc_creator',
           label: this.$t('document.author'),
-          class: 'document__content__author',
+          trClass: 'document__content__author',
           value: this.document.meta('dc_creator')
         },
         {
           name: 'extractionDate',
           label: this.$t('document.extractionDate'),
-          class: 'document__content__extraction-date',
+          trClass: 'document__content__extraction-date',
           value: this.document.source.extractionDate
         },
         {
           name: 'contentLength',
           label: this.$t('document.size'),
-          class: 'document__content__content-length',
+          trClass: 'document__content__content-length',
           value: this.document.humanSize,
           rawValue: this.document.contentLength
         },
         {
           name: 'language',
           label: this.$t('document.contentLanguage'),
-          class: 'document__content__language',
+          trClass: 'document__content__language',
           value: this.$t(`filter.lang.${this.document.source.language}`),
           rawValue: this.document.source.language
         },
         {
-          name: 'contentType',
+          name: 'metadata.tika_metadata_content_type',
           label: this.$t('document.contentType'),
-          class: 'document__content__content-type',
+          trClass: 'document__content__content-type',
           value: this.getDocumentTypeLabel(this.document.source.contentType),
           rawValue: this.document.source.contentType
         },
         {
           name: 'contentEncoding',
           label: this.$t('document.contentEncoding'),
-          class: 'document__content__content-encoding',
+          trClass: 'document__content__content-encoding',
           value: this.document.source.contentEncoding
         },
         {
           name: 'extractionLevel',
           label: this.$t('filter.extractionLevel'),
-          class: 'document__content__tree-level',
+          trClass: 'document__content__tree-level',
           value: this.$t(this.getExtractionLevelTranslationKey(this.document.source.extractionLevel)),
           rawValue: this.document.source.extractionLevel
         },
         {
           name: 'metadata.tika_metadata_message_raw_header_thread_index',
           label: this.$t('document.threadIndex'),
-          class: 'document__content__thread',
+          trClass: 'document__content__thread',
           value: this.document.threadIndex
         },
         {
           name: 'parentDocument',
           label: this.$t('document.parent'),
-          class: 'document__content__parent',
+          trClass: 'document__content__parent',
           value: get(this, 'parentDocument.basename', null)
         },
         {
           name: 'contentTextLength',
           label: this.$t('document.contentTextLength'),
-          class: 'document__content__content-text-length',
+          trClass: 'document__content__content-text-length',
           value: this.document.source.contentTextLength
         }
       ]
     },
-    filteredCanonicalFields() {
-      return filter(this.canonicalFields, (field) => field.value)
+    canonicalItemsNames() {
+      return map(this.canonicalItems, 'name')
+    },
+    presentCanonicalItems() {
+      return filter(this.canonicalItems, (field) => field.value)
     },
     searchChildrenDocumentParams() {
       const index = this.index
@@ -292,35 +282,41 @@ export default {
   },
   methods: {
     getDocumentTypeLabel,
-    getExtractionLevelTranslationKey
+    getExtractionLevelTranslationKey,
+    itemRowClass(item) {
+      return ['document__content__details__item', item.trClass]
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.tab-pane {
-  & div {
-    word-wrap: break-word;
-  }
-}
-
+<style lang="scss">
 .document {
   &__content {
     &__details {
       &__item {
-        padding: $spacer * 0.3 0;
+        &__label {
+          max-width: 6em;
 
-        &__search {
-          display: none;
+          &__search {
+            visibility: hidden;
+          }
         }
 
-        &:hover &__search {
-          display: block;
+        &:hover &__label__search {
+          visibility: visible;
         }
-      }
 
-      &__item:nth-child(even) {
-        background: #f3f3f3;
+        &__input-group {
+          & &__input,
+          & &__copy {
+            background: $input-bg;
+          }
+
+          & &__copy {
+            border-color: $input-border-color;
+          }
+        }
       }
     }
   }
