@@ -81,17 +81,19 @@ export default {
       const params = { name }
       return this.$router.push({ name: 'project.view', params })
     },
-    async deleteProject({ name }) {
+    redirectToProjectList() {
+      return this.$router.push({ name: 'project.list' })
+    },
+    async deleteProject(name) {
       try {
         this.$wait.start(this.loaderId)
         await this.$core.api.deleteProject(name)
         this.$core.deleteProject(name)
-        this.notifySucceed(OPERATION.DELETE)
         this.$wait.end(this.loaderId)
-        return this.redirectToProject({ name })
+        return this.redirectToProjectList().then(() => this.notifySucceed(OPERATION.DELETE))
       } catch (error) {
-        this.notifyFailed(error, OPERATION.DELETE)
         this.$wait.end(this.loaderId)
+        this.notifyFailed(error, OPERATION.DELETE)
       }
     }
   }
