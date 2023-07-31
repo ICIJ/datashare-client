@@ -133,6 +133,7 @@ export default {
       font-weight: bolder;
       font-size: 40cqw;
       line-height: 1;
+      white-space: nowrap;
     }
   }
 
