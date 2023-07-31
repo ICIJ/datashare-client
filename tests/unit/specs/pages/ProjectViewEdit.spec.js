@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import { flushPromises } from 'tests/unit/tests_utils'
+import VueRouter from 'vue-router'
 
 import { Api } from '@/api'
 import { Core } from '@/core'
@@ -68,8 +69,15 @@ describe('ProjectViewEdit.vue', () => {
 
   it('deletes the project when the form emits a deleted event', async () => {
     const propsData = { name: 'local-datashare' }
-
-    const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData, config })
+    const router = new VueRouter({
+      routes: [
+        {
+          name: 'project.list',
+          path: 'project'
+        }
+      ]
+    })
+    const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData, config, router })
     expect(wrapper.vm.$core.projects).toHaveLength(1)
 
     const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
