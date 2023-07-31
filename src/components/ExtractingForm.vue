@@ -3,14 +3,14 @@
     <div v-if="showProjectSelector" class="extracting-form__group mb-4">
       <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
-        <p class="font-weight-bold">In which project store your documents?</p>
+        <p class="font-weight-bold">In which project index documents?</p>
         <project-selector v-model="defaultProject" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
       <fa icon="folder-open" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
-        <p class="font-weight-bold mb-0">Which folder do you want to index?</p>
+        <p class="font-weight-bold mb-0">In which folder do you want to index?</p>
         <p class="small mb-2">The entire Datashare folder will be indexed by default.</p>
         <inline-directory-picker v-model="path" hide-folder-icon dark />
       </div>
