@@ -15,6 +15,7 @@ import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
 import { iteratee } from 'lodash'
 
+import ComponentsMixin from './ComponentsMixin'
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
 import I18nMixin from './I18nMixin'
@@ -33,7 +34,15 @@ import settings from '@/utils/settings'
 import { Api } from '@/api'
 
 class Base {}
-const Behaviors = compose(FiltersMixin, HooksMixin, I18nMixin, PipelinesMixin, ProjectsMixin, WidgetsMixin)(Base)
+const Behaviors = compose(
+  ComponentsMixin,
+  FiltersMixin,
+  HooksMixin,
+  I18nMixin,
+  PipelinesMixin,
+  ProjectsMixin,
+  WidgetsMixin
+)(Base)
 
 /**
   @class
