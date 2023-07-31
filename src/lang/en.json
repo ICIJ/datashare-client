@@ -755,7 +755,7 @@
         "failedBody": "Something happened when trying to edit this project."
       }
     },
-    "submit": "Edit project"
+    "submit": "Save"
   },
   "projectForm": {
     "form": {
@@ -793,7 +793,7 @@
         "description": "The people or organization who will be in charge of maintaining this project on Datashare."
       }
     },
-    "reset": "Reset",
+    "reset": "Cancel",
     "resetConfirmation": "Are you sure you want to reset the form to its initial values?",
     "submit": "Submit",
     "deleteConfirmation": "Are you sure you want to delete the project?",

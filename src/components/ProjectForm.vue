@@ -239,6 +239,7 @@ export default {
         :confirmed="emitDelete"
         :label="$t('projectForm.deleteConfirmation')"
       >
+        <fa icon="trash-alt" class="mr-1" />
         <slot name="delete-text">{{ $t('projectForm.delete') }}</slot>
       </confirm-button>
       <confirm-button
