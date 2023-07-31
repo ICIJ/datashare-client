@@ -1,4 +1,4 @@
-import { find, kebabCase, iteratee } from 'lodash'
+import { find, kebabCase, iteratee, uniq } from 'lodash'
 
 import { slugger } from '@/utils/strings'
 
@@ -16,11 +16,38 @@ const ComponentMixin = (superclass) =>
      * @param {string} name - The name of the component to find.
      * @returns {Promise<object|null>} - A promise that resolves with the found component object, or null if not found.
      */
-    async findComponent(name) {
-      const componentKey = find(this.lazyComponents.keys(), (key) => {
-        return this.componentNameSlugger(name) === this.componentNameSlugger(key)
-      })
-      return componentKey ? this.lazyComponents(componentKey).then(iteratee('default')) : null
+    findComponent(name) {
+      return this.getComponent(name).catch(() => null)
+    }
+
+    /**
+     * Asynchronously get a component from the lazyComponents object based on its name.
+     * @async
+     * @function
+     * @param {string} name - The name of the component to retrieve.
+     * @returns {Promise<object|Error>} - A promise that resolves with the found component object, or rejects with an Error if not found.
+     */
+    async getComponent(name) {
+      // Find the component name key in lazyComponents object that matches the given name when slugified.
+      const key = find(this.lazyComponents.keys(), (key) => this.sameComponentNames(name, key))
+      // If a matching key is found, return the component object from the lazyComponents object.
+      if (key) {
+        return this.lazyComponents(key).then(iteratee('default'))
+      }
+      // Otherwise, return an Error indicating that the component cannot be found.
+      throw new Error(`Cannot find component '${name}'`)
+    }
+
+    /**
+     * Check if multiple component names are the same when slugified.
+     * @function
+     * @param {...string} names - The component names to compare.
+     * @returns {boolean} - True if all names are the same when slugified, false otherwise.
+     */
+    sameComponentNames(...names) {
+      // Map each component name to its slugified version using the componentNameSlugger function,
+      // then remove duplicate entries and check if there is only one unique slug.
+      return uniq(names.map(this.componentNameSlug)).length === 1
     }
 
     /**
@@ -29,7 +56,7 @@ const ComponentMixin = (superclass) =>
      * @param {string} name - The name of the component to slugify.
      * @returns {string} - The slugified component name.
      */
-    componentNameSlugger(name) {
+    componentNameSlug(name) {
       // Remove the leading './' from the name and split it by '/' to extract the path.
       const path = name.replace(/^\.\//, '').split('/').slice(0, -1).join('/') || ''
       // Split the name by '/' and get the last element (the file name) from the array.

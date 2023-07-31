@@ -10,7 +10,9 @@ describe('ComponentsMixin', () => {
     localVue = createLocalVue()
     core = Core.init(localVue).useAll()
     // Mock the `lazyComponents` to ensure it returns an API similar to Webpack's
-    const context = async (name) => ({ default: { name: basename(name, '.vue'), template: `<div>${name}</div>` } })
+    const context = async (name = null) => ({
+      default: { name: basename(name, '.vue'), template: `<div>${name}</div>` }
+    })
     context.keys = () => ['./TreeView.vue', './PageIcon.vue', './Fa.js', './widget/WidgetDiskUsage.vue']
     jest.spyOn(core, 'lazyComponents', 'get').mockReturnValue(context)
   })
@@ -35,8 +37,17 @@ describe('ComponentsMixin', () => {
     expect(TreeView.name).toBe('TreeView')
   })
 
-  it('should returns null with unknown component', async () => {
+  it('should return null with unknown component', async () => {
     expect(await core.findComponent('foo')).toBeNull()
+  })
+
+  it('should throw an exception with unknown component', async () => {
+    expect.assertions(1)
+    try {
+      await core.getComponent('foo')
+    } catch (e) {
+      expect(e.message).toEqual("Cannot find component 'foo'")
+    }
   })
 
   it('should find an instantiable component', async () => {
