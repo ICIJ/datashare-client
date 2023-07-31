@@ -77,6 +77,7 @@ import { filter, get, map, startCase, uniq } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentTagsForm from '@/components/DocumentTagsForm'
+import ProjectLink from '@/components/ProjectLink'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 /**
@@ -85,7 +86,8 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
 export default {
   name: 'DocumentTabDetails',
   components: {
-    DocumentTagsForm
+    DocumentTagsForm,
+    ProjectLink
   },
   filters: {
     startCase
@@ -134,7 +136,8 @@ export default {
           tdClass: 'align-middle document__content__details__item__label'
         },
         {
-          key: 'value'
+          key: 'value',
+          tdClass: 'align-middle document__content__details__item__value'
         }
       ]
     },
@@ -166,7 +169,10 @@ export default {
           label: this.$t('document.project'),
           trClass: 'document__content__project',
           value: this.document.index,
-          to: { name: 'project.view', params: { name: this.document.index } }
+          component: ProjectLink,
+          componentBinding: {
+            project: this.document.index
+          }
         },
         {
           name: 'metadata.tika_metadata_resourcename',
