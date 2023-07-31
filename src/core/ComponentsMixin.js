@@ -52,5 +52,4 @@ const ComponentMixin = (superclass) =>
     }
   }
 
-
 export default ComponentMixin
