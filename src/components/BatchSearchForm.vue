@@ -201,7 +201,8 @@ import {
   map,
   range,
   startCase,
-  uniq
+  uniq,
+  clamp
 } from 'lodash'
 // In order to be mocked in the test class
 import throttle from 'lodash/throttle'
@@ -273,13 +274,7 @@ export default {
         return this.selectedFuzziness
       },
       set(value) {
-        if (value < 0) {
-          this.selectedFuzziness = 0
-        } else if (value > this.maxFuzziness) {
-          this.selectedFuzziness = this.maxFuzziness
-        } else {
-          this.selectedFuzziness = value
-        }
+        this.selectedFuzziness = clamp(value, 0, this.maxFuzziness)
       }
     },
     projectOptions() {
