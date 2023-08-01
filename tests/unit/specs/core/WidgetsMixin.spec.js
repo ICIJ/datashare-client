@@ -1,5 +1,6 @@
 import { createLocalVue } from '@vue/test-utils'
 
+import WidgetEmpty from '@/store/widgets/WidgetEmpty'
 import { Core } from '@/core'
 
 describe('WidgetsMixin', () => {
@@ -108,6 +109,43 @@ describe('WidgetsMixin', () => {
     expect(widgets[0].name).toBe('foo')
     core.replaceWidget('foo', { order: 10, name: 'bar' })
     widgets = core.store.getters['insights/instantiatedWidgets']
+    expect(widgets).toHaveLength(1)
+    expect(widgets[0].name).toBe('foo')
+  })
+
+  it('should register a widget with a custom type with a function', () => {
+    core.clearWidgets()
+    core.registerWidget({
+      name: 'foo',
+      type(WidgetEmpty) {
+        return class WidgetTest extends WidgetEmpty {
+          get component() {
+            return {
+              name: 'WidgetTest',
+              template: '<div>WidgetTest</div>'
+            }
+          }
+        }
+      }
+    })
+    const widgets = core.store.getters['insights/instantiatedWidgets']
+    expect(widgets).toHaveLength(1)
+    expect(widgets[0].name).toBe('foo')
+  })
+
+  it('should register a widget with a custom type with a class', () => {
+    class WidgetTest extends WidgetEmpty {
+      get component() {
+        return {
+          name: 'WidgetTest',
+          template: '<div>WidgetTest</div>'
+        }
+      }
+    }
+
+    core.clearWidgets()
+    core.registerWidget({ name: 'foo', type: WidgetTest })
+    const widgets = core.store.getters['insights/instantiatedWidgets']
     expect(widgets).toHaveLength(1)
     expect(widgets[0].name).toBe('foo')
   })
