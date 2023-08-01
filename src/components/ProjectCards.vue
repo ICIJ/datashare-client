@@ -6,28 +6,34 @@
           <template #default>
             <div class="row no-gutters">
               <div class="col-2">
-                <project-thumbnail class="rounded shadow" :project="project" />
+                <project-thumbnail class="rounded" :project="project" />
               </div>
               <div class="col pl-3 flex-column justify-content-between">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <h4 class="mb-0">
-                    <router-link :to="{ name: 'project.view', params: { name: project.name } }">
-                      {{ project.label }}</router-link
-                    >
+                    <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
+                      {{ project.label }}
+                    </router-link>
                   </h4>
                   <fa icon="thumbtack" fixed-width class="mr-1 project-cards__project-card__thumbtack" />
                 </div>
                 <p class="text-truncate text-truncate--2 d-flex flex-grow-1 mb-2">
-                  {{ project.description }} Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem
-                  ipsum
+                  {{ project.description }}
                 </p>
                 <p class="mb-2">
-                  <fa icon="file-lines" fixed-width class="mr-1" />{{ humanNumber(1200) }} documents —
-                  <router-link :to="{ name: 'project.view', params: { name: project.name } }"> About</router-link>
+                  <router-link :to="{ name: 'search', query: { indices: project.name } }">
+                    <fa icon="file-lines" fixed-width />
+                    {{
+                      $tc('projectCards.documentsCount', getDocumentsCountByProject(project), {
+                        count: humanNumber(getDocumentsCountByProject(project))
+                      })
+                    }}
+                  </router-link>
+                  —
+                  <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
+                    {{ $t('projectCards.landing') }}
+                  </router-link>
                 </p>
-                <b-btn variant="outline-primary my-1" :to="{ name: 'search', query: { indices: project.name } }"
-                  ><fa icon="search" fixed-width class="mr-1" />Search</b-btn
-                >
               </div>
             </div>
           </template>
@@ -43,23 +49,50 @@ import { startCase } from 'lodash'
 import humanNumber from '../filters/humanNumber'
 
 import ProjectThumbnail from '@/components/ProjectThumbnail.vue'
+import elasticsearch from '@/api/elasticsearch'
 
 /**
  * List all the projects with cards linking to the search.
  */
 export default {
   components: { ProjectThumbnail },
+  data() {
+    return {
+      documentsByProject: {}
+    }
+  },
   computed: {
     projects() {
       return this.$core.projects
+    },
+    projectIds() {
+      return this.$core.projectIds.join(',')
     }
   },
+  async created() {
+    return this.fetchDocumentsCountByProject()
+  },
   methods: {
+    async fetchDocumentsCountByProject() {
+      const nbDocByProject = await elasticsearch.countByProject(this.projectIds, { match: { type: 'Document' } })
+      this.documentsByProject = nbDocByProject?.aggregations?.index?.buckets?.reduce((res, agg) => {
+        res[agg.key] = agg.doc_count
+        return res
+      }, {})
+    },
+    getDocumentsCountByProject({ name }) {
+      return this.documentsByProject[name] ?? 0
+    },
     humanNumber,
     isActive(project) {
       return this.$store.state.search.indices.includes(project.name)
     },
-    startCase
+    startCase,
+    async countDocsProject(name) {
+      const result = await this.$core.api.getProjectNbDoc(name)
+      const count = result.aggregations?.index?.buckets?.[0]?.doc_count
+      return count
+    }
   }
 }
 </script>
@@ -75,6 +108,7 @@ export default {
       white-space: normal;
     }
     &__thumbtack {
+      display: none;
       transform: rotate(45deg);
     }
   }
