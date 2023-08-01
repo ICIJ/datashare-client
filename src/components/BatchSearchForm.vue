@@ -248,7 +248,7 @@ export default {
       description: '',
       fileType: '',
       fileTypes: [],
-      fuzziness: 0,
+      selectedFuzziness: 0,
       name: '',
       path: this.$config.get('mountedDataDir') || this.$config.get('dataDir'),
       paths: [],
@@ -267,6 +267,20 @@ export default {
     },
     maxFuzziness() {
       return this.phraseMatch ? 100 : 2
+    },
+    fuzziness: {
+      get() {
+        return this.selectedFuzziness
+      },
+      set(value) {
+        if (value < 0) {
+          this.selectedFuzziness = 0
+        } else if (value > this.maxFuzziness) {
+          this.selectedFuzziness = this.maxFuzziness
+        } else {
+          this.selectedFuzziness = value
+        }
+      }
     },
     projectOptions() {
       return this.$core.projects

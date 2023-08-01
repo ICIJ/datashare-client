@@ -146,6 +146,20 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.showAdvancedFilters).toBe(false)
   })
 
+  it('should set the fuzziness (without phraseMatch) to 0 when the input is below than 0', async () => {
+    await wrapper.setData({ phraseMatch: false })
+    await wrapper.setData({ fuzziness: -7 })
+
+    expect(wrapper.vm.fuzziness).toBe(0)
+  })
+
+  it('should set the fuzziness (without phraseMatch) to 2 when the input is higher than maxFuzziness', async () => {
+    await wrapper.setData({ phraseMatch: false })
+    await wrapper.setData({ fuzziness: 12 })
+
+    expect(wrapper.vm.fuzziness).toBe(2)
+  })
+
   it('should reset the fuzziness to 0 on phraseMatch change', async () => {
     await wrapper.setData({ fuzziness: 12 })
     await wrapper.setData({ phraseMatch: false })
