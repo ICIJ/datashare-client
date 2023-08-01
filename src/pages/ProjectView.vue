@@ -63,7 +63,7 @@ export default {
       :tab.sync="tab"
     >
       <template #preTitle>
-        <project-thumbnail :project="project" width="4em" class="mr-3 rounded shaddow" />
+        <project-thumbnail :project="project" width="4em" class="mr-3 rounded" />
       </template>
       <template #tabs>
         <b-tab title-item-class=" project-view__tab project-view__tab--insights">

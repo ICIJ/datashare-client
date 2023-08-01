@@ -1002,5 +1002,9 @@
       "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
       "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
     }
+  },
+  "projectCards": {
+    "documentsCount": "No documents | Browse 1 document | Browse %{count} documents",
+    "about": "About"
   }
 }
