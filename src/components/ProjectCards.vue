@@ -1,13 +1,13 @@
 <template>
   <div class="project-cards container-fluid p-0">
     <div class="row">
-      <div v-for="project in projects" :key="project.name" class="col-12 col-md-6 mb-4">
+      <div v-for="project in projects" :key="project.name" class="d-flex col-12 col-md-6 mb-4">
         <div class="project-cards__item card card-body" :class="{ 'project-cards__item--active': isActive(project) }">
-          <div class="row no-gutters">
+          <div class="row no-gutters h-100">
             <div class="col-2">
               <project-thumbnail class="rounded" :project="project" />
             </div>
-            <div class="col pl-3 flex-column justify-content-between">
+            <div class="col pl-3 d-flex flex-column justify-content-between">
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <h4 class="project-cards__item__heading mb-0">
                   <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
@@ -31,9 +31,11 @@
                   {{ $t('projectCards.about') }}
                 </router-link>
               </p>
-              <b-btn variant="outline-primary" :to="{ name: 'search', query: { indices: project.name } }">
-                <fa icon="search" fixed-width class="mr-1" /> {{ $t('projectCards.search') }}
-              </b-btn>
+              <p class="mb-0">
+                <b-btn variant="outline-primary" :to="{ name: 'search', query: { indices: project.name } }">
+                  <fa icon="search" fixed-width class="mr-1" /> {{ $t('projectCards.search') }}
+                </b-btn>
+              </p>
             </div>
           </div>
         </div>
