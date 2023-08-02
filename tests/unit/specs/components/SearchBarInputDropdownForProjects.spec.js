@@ -16,7 +16,7 @@ describe('SearchBarInputDropdownForProjects.vue', function () {
     ])
   })
 
-  it('should display a dropdown with 3 options fields', () => {
+  it('should display a dropdown with 3 options for each project', () => {
     const propsData = { value: [{ name: 'local-datashare' }] }
     const wrapper = mount(SearchBarInputDropdownForProjects, { propsData, i18n, localVue, router, store })
     expect(wrapper.findAll('.dropdown-item')).toHaveLength(3)
