@@ -18,6 +18,6 @@ describe('Landing.vue', () => {
   })
 
   it('should display project cards', () => {
-    expect(wrapper.find('.landing__form__projects').exists()).toBeTruthy()
+    expect(wrapper.find('.landing__projects').exists()).toBeTruthy()
   })
 })
