@@ -9,7 +9,7 @@
     }"
     :disabled="disabled"
     :no-caret="noCaret"
-    :field-options="projectsOptions"
+    :options="options"
   >
     <template #button-content>
       <span
@@ -99,7 +99,7 @@ export default {
     slicedProjects() {
       return this.selectedProjects.slice(0, this.sliceSize + 1)
     },
-    projectsOptions() {
+    options() {
       return this.$core.projects
     },
     hasOneProject() {

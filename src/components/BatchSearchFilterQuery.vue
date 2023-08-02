@@ -7,11 +7,11 @@
       hide-tips
       :disable-submit="emptySearch"
     >
-      <template #fields>
+      <template #addons>
         <search-bar-input-dropdown
           v-model="field"
-          :field-options="fieldOptions"
-          :field-options-path="fieldOptionsPath"
+          :options="fieldOptions"
+          :options-path="fieldOptionsPath"
           class="batch-search-filter-query__field"
         />
       </template>
