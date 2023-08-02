@@ -5,13 +5,20 @@ import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 import { Core } from '@/core'
 
 describe('SearchBarInputDropdown.vue', function () {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, store, config } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
 
-  it('should display a dropdown with 8 options fields with All fields selected by default', () => {
+  beforeAll(() => {
+    config.set('projects', [{ name: 'local-datashare', label: 'default' }])
+  })
+
+  it('should display a dropdown with 8 options fields', () => {
     const wrapper = shallowMount(SearchBarInputDropdown, { i18n, localVue, router, store })
-    expect(wrapper.find('.search-bar-input-fields').element).toBeTruthy()
-    expect(wrapper.find('.search-bar-input-fields').element.getAttribute('text')).toBe('All fields')
     expect(wrapper.findAll('b-dropdown-item-stub')).toHaveLength(8)
+  })
+
+  it('should display a dropdown with "All fields" selected by default', () => {
+    const wrapper = shallowMount(SearchBarInputDropdown, { i18n, localVue, router, store })
+    expect(wrapper.find('b-dropdown-item-stub[active=true]').text().trim()).toBe('All fields')
   })
 })
