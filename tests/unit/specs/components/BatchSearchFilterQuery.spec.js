@@ -97,9 +97,9 @@ describe('BatchSearchFilterQuery.vue', () => {
       Murmur.config.merge({ mode: 'SERVER' })
       const wrapper = mount(BatchSearchFilterQuery, { i18n, localVue })
 
-      const fields = wrapper.findAll('.search-bar-input-fields__option')
+      const fields = wrapper.findAll('.search-bar-input-dropdown__option')
       expect(fields).toHaveLength(4)
-      const field = wrapper.find('.search-bar-input-fields__option:nth-child(4)')
+      const field = wrapper.find('.search-bar-input-dropdown__option:nth-child(4)')
       expect(field.text()).toContain('Author')
     })
 
@@ -107,9 +107,9 @@ describe('BatchSearchFilterQuery.vue', () => {
       Murmur.config.merge({ mode: 'LOCAL' })
       const wrapper = mount(BatchSearchFilterQuery, { i18n, localVue })
 
-      const fieldsLOCAL = wrapper.findAll('.search-bar-input-fields__option')
+      const fieldsLOCAL = wrapper.findAll('.search-bar-input-dropdown__option')
       expect(fieldsLOCAL).toHaveLength(3)
-      const noAuthorField = wrapper.find('.search-bar-input-fields__option:nth-child(4)')
+      const noAuthorField = wrapper.find('.search-bar-input-dropdown__option:nth-child(4)')
       expect(noAuthorField.exists()).toBeFalsy()
     })
   })
