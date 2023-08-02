@@ -13,9 +13,9 @@
     variant="outline-light"
   >
     <template #button-content>
-      <slot name="button-content" v-bind="{ value }">
-        <span v-for="(value, v) in values" :key="v">
-          {{ $t(optionsPathValue + value) }}
+      <slot name="button-content">
+        <span v-for="v in values" :key="v">
+          {{ $t(optionsPathValue + v) }}
         </span>
       </slot>
     </template>
