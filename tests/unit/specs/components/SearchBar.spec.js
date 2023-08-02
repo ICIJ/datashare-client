@@ -47,8 +47,8 @@ describe('SearchBar.vue', function () {
 
   it('should display a search bar input with dropdown field options', () => {
     wrapper = mountFactory()
-    expect(wrapper.find('.search-bar__input').element).toBeTruthy()
-    expect(wrapper.find('.search-bar__field-options').element).toBeTruthy()
+    expect(wrapper.findComponent({ name: 'SearchBarInput' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ name: 'SearchBarInputDropdownForField' }).exists()).toBeTruthy()
   })
 
   it('should display a suggestion dropdown when there are suggestions', async () => {

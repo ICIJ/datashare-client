@@ -15,19 +15,19 @@
     <template #button-content>
       <slot name="button-content" v-bind="{ value }">
         <span v-for="(value, v) in values" :key="v">
-          {{ $t(fieldOptionsPathValue + value) }}
+          {{ $t(optionsPathValue + value) }}
         </span>
       </slot>
     </template>
     <b-dropdown-item
-      v-for="(option, o) in fieldOptions"
+      v-for="(option, o) in options"
       :key="o"
       :active="hasValue(option)"
       class="search-bar-input-dropdown__option"
       @click="toggleValue(option)"
     >
       <slot name="dropdown-item" v-bind="{ option }">
-        {{ $t(fieldOptionsPathValue + option) }}
+        {{ $t(optionsPathValue + option) }}
       </slot>
     </b-dropdown-item>
   </b-dropdown>
@@ -35,8 +35,6 @@
 
 <script>
 import { castArray, includes, without } from 'lodash'
-
-import settings from '@/utils/settings'
 
 /**
  * The general search input dropdown.
@@ -49,20 +47,18 @@ export default {
   },
   props: {
     /**
-     * Search field configuration dictionary.
+     * Options list.
      */
-    fieldOptions: {
+    options: {
       type: Array,
-      default() {
-        return settings.searchFields.map((field) => field.key)
-      }
+      default: () => []
     },
     /**
-     * Field option translation path
+     * Translation path for each option value.
      */
-    fieldOptionsPath: {
+    optionsPath: {
       type: Array,
-      default: () => ['search', 'field']
+      default: () => []
     },
     /**
      * Selected value
@@ -91,8 +87,8 @@ export default {
     }
   },
   computed: {
-    fieldOptionsPathValue() {
-      return `${this.fieldOptionsPath.join('.')}.`
+    optionsPathValue() {
+      return `${this.optionsPath.join('.')}.`
     },
     values() {
       return castArray(this.value)

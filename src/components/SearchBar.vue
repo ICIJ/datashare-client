@@ -15,14 +15,8 @@
         @input="onInput"
         @focus="onFocus"
       >
-        <template #fields>
-          <search-bar-input-dropdown
-            v-if="!hideFieldDropdown"
-            v-model="field"
-            class="search-bar__field-options"
-            :field-options="fieldOptions"
-            :field-options-path="fieldOptionsPath"
-          />
+        <template #addons>
+          <search-bar-input-dropdown-for-field v-if="!hideFieldDropdown" v-model="field" />
           <search-bar-input-dropdown-for-projects v-model="selectedProjects" :disabled="indices" :no-caret="indices" />
         </template>
         <template #suggestions>
@@ -85,7 +79,7 @@ import lucene from 'lucene'
 import elasticsearch from '@/api/elasticsearch'
 import ShortkeysModal from '@/components/ShortkeysModal'
 import SearchBarInput from '@/components/SearchBarInput'
-import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import SearchBarInputDropdownForField from '@/components/SearchBarInputDropdownForField'
 import SearchBarInputDropdownForProjects from '@/components/SearchBarInputDropdownForProjects'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
@@ -104,7 +98,7 @@ export default {
     SearchBarInput,
     ShortkeysModal,
     UserHistorySaveSearchForm,
-    SearchBarInputDropdown,
+    SearchBarInputDropdownForField,
     SearchBarInputDropdownForProjects
   },
   props: {
@@ -134,22 +128,6 @@ export default {
      */
     hideFieldDropdown: {
       type: Boolean
-    },
-    /**
-     * Search field configuration dictionary.
-     */
-    fieldOptions: {
-      type: Array,
-      default() {
-        return settings.searchFields.map((field) => field.key)
-      }
-    },
-    /**
-     * Field option translation path
-     */
-    fieldOptionsPath: {
-      type: Array,
-      default: () => ['search', 'field']
     },
     /**
      * Search input size
