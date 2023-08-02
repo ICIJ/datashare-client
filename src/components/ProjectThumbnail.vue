@@ -1,5 +1,7 @@
 <template>
-  <span class="project-thumbnail" :style="style" :class="classList" :data-caption="caption"></span>
+  <span class="project-thumbnail" :style="style" :class="classList" :data-caption="caption">
+    <span class="project-thumbnail__caption">{{ caption }}</span>
+  </span>
 </template>
 
 <script>
@@ -121,8 +123,7 @@ export default {
       @include gradient-directional(rgba(#000, 0.25), rgba(#fff, 0.25));
     }
 
-    &:after {
-      content: attr(data-caption);
+    .project-thumbnail__caption {
       font-family: $font-family-monospace;
       position: absolute;
       top: 50%;
@@ -148,8 +149,7 @@ export default {
       background: #000;
     }
 
-    &:after {
-      content: '✔';
+    .project-thumbnail__caption {
       position: absolute;
       top: 0;
       left: 0;
