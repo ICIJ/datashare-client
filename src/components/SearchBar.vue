@@ -17,11 +17,13 @@
       >
         <template #fields>
           <search-bar-input-dropdown
+            v-if="!hideFieldDropdown"
             v-model="field"
             class="search-bar__field-options"
             :field-options="fieldOptions"
             :field-options-path="fieldOptionsPath"
           />
+          <search-bar-input-dropdown-for-projects v-model="selectedProjects" :disabled="indices" :no-caret="indices" />
         </template>
         <template #suggestions>
           <selectable-dropdown
@@ -76,7 +78,7 @@
 </template>
 
 <script>
-import { castArray, concat, escapeRegExp, each, get, last, orderBy, some, throttle, uniqueId } from 'lodash'
+import { castArray, concat, escapeRegExp, each, get, iteratee, last, orderBy, some, throttle, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 
@@ -84,6 +86,7 @@ import elasticsearch from '@/api/elasticsearch'
 import ShortkeysModal from '@/components/ShortkeysModal'
 import SearchBarInput from '@/components/SearchBarInput'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import SearchBarInputDropdownForProjects from '@/components/SearchBarInputDropdownForProjects'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
 
@@ -101,7 +104,8 @@ export default {
     SearchBarInput,
     ShortkeysModal,
     UserHistorySaveSearchForm,
-    SearchBarInputDropdown
+    SearchBarInputDropdown,
+    SearchBarInputDropdownForProjects
   },
   props: {
     /**
@@ -123,6 +127,12 @@ export default {
      * Display the shortcuts button.
      */
     settings: {
+      type: Boolean
+    },
+    /**
+     * Hide the field dropdown
+     */
+    hideFieldDropdown: {
       type: Boolean
     },
     /**
@@ -167,8 +177,17 @@ export default {
     }
   },
   computed: {
+    selectedProjects: {
+      get() {
+        return (this.indices ?? this.$store.state.search.indices).map((name) => ({ name }))
+      },
+      set(projects) {
+        const indices = projects.map(iteratee('name'))
+        this.$store.commit('search/indices', indices)
+      }
+    },
     formIndices() {
-      return this.indices && this.indices.length ? this.indices : this.$store.state.search.indices
+      return this.selectedProjects.map(iteratee('name'))
     },
     uniqueId() {
       return uniqueId('search-bar-')
@@ -311,6 +330,29 @@ export default {
 
 <style lang="scss" scoped>
 .search-bar {
+  .foo {
+    display: inline-flex;
+    align-items: center;
+
+    &::v-deep(.btn) {
+      background: $input-bg !important;
+      font-size: inherit;
+    }
+
+    &::v-deep(.project-thumbnail:not(:first-of-type)) {
+      margin-left: -0.5em;
+      box-shadow: -1px 0 0 0 white;
+    }
+
+    &::v-deep(.project-thumbnail:last-of-type) {
+      background: grey;
+    }
+  }
+
+  &::v-deep(.search-bar-input__input) {
+    height: auto;
+  }
+
   &--focused.search-bar--animated {
     :deep(.input-group) {
       filter: drop-shadow(0 0.3em 0.6em rgba(black, 0.2));
