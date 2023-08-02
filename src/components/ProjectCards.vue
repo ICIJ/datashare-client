@@ -2,42 +2,41 @@
   <div class="project-cards container-fluid p-0">
     <div class="row">
       <div v-for="project in projects" :key="project.name" class="col-12 col-md-6 mb-4">
-        <b-card class="project-cards__project-card">
-          <template #default>
-            <div class="row no-gutters">
-              <div class="col-2">
-                <project-thumbnail class="rounded" :project="project" />
-              </div>
-              <div class="col pl-3 flex-column justify-content-between">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h4 class="mb-0">
-                    <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
-                      {{ project.label }}
-                    </router-link>
-                  </h4>
-                  <fa icon="thumbtack" fixed-width class="mr-1 project-cards__project-card__thumbtack" />
-                </div>
-                <p class="text-truncate text-truncate--2 d-flex flex-grow-1 mb-2">
-                  {{ project.description }}
-                </p>
-                <p class="mb-2">
-                  <router-link :to="{ name: 'search', query: { indices: project.name } }">
-                    <fa icon="file-lines" fixed-width />
-                    {{
-                      $tc('projectCards.documentsCount', getDocumentsCountByProject(project), {
-                        count: humanNumber(getDocumentsCountByProject(project))
-                      })
-                    }}
-                  </router-link>
-                  —
-                  <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
-                    {{ $t('projectCards.landing') }}
-                  </router-link>
-                </p>
-              </div>
+        <div class="project-cards__item card card-body" :class="{ 'project-cards__item--active': isActive(project) }">
+          <div class="row no-gutters">
+            <div class="col-2">
+              <project-thumbnail class="rounded" :project="project" />
             </div>
-          </template>
-        </b-card>
+            <div class="col pl-3 flex-column justify-content-between">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="project-cards__item__heading mb-0">
+                  <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
+                    {{ project.label || project.name }}
+                  </router-link>
+                </h4>
+                <fa icon="thumbtack" fixed-width class="mr-1 project-cards__item__thumbtack" />
+              </div>
+              <p class="text-truncate text-truncate--2 d-flex flex-grow-1 mb-2">
+                {{ project.description }}
+              </p>
+              <p class="mb-3">
+                <fa icon="file-lines" fixed-width />
+                {{
+                  $tc('projectCards.documentsCount', getDocumentsCountByProject(project), {
+                    count: humanNumber(getDocumentsCountByProject(project))
+                  })
+                }}
+                —
+                <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
+                  {{ $t('projectCards.about') }}
+                </router-link>
+              </p>
+              <b-btn variant="outline-primary" :to="{ name: 'search', query: { indices: project.name } }">
+                <fa icon="search" fixed-width class="mr-1" /> {{ $t('projectCards.search') }}
+              </b-btn>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -48,7 +47,7 @@ import { startCase } from 'lodash'
 
 import humanNumber from '../filters/humanNumber'
 
-import ProjectThumbnail from '@/components/ProjectThumbnail.vue'
+import ProjectThumbnail from '@/components/ProjectThumbnail'
 import elasticsearch from '@/api/elasticsearch'
 
 /**
@@ -99,33 +98,34 @@ export default {
 
 <style lang="scss" scoped>
 .project-cards {
-  &__project-card {
+  &__item {
     color: black;
+    position: relative;
+
     .text-truncate.text-truncate--2 {
       display: -webkit-box !important;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       white-space: normal;
     }
+
     &__thumbtack {
       display: none;
       transform: rotate(45deg);
     }
-  }
-  &__item {
-    background: $primary;
-    border: darken($primary, 10%) 1px solid;
-    border-radius: $border-radius-sm;
-    color: white;
-    display: block;
-
-    &:hover {
-      background: darken($primary, 5);
-      color: white;
-    }
 
     &--active {
-      box-shadow: 0 0 0 2px $warning;
+      box-shadow: 0 0 0 2px $primary;
+
+      &:after {
+        content: '';
+        position: absolute;
+        right: -1px;
+        top: -1px;
+        border: 1rem solid $primary;
+        border-left-color: transparent;
+        border-bottom-color: transparent;
+      }
     }
   }
 }
