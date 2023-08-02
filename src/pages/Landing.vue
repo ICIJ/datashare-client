@@ -7,7 +7,7 @@
         <img src="~images/logo-color.svg" alt="Datashare" />
       </h1>
       <hook name="landing.form.heading:after"></hook>
-      <search-bar class="landing__form__search-bar py-3 container" size="md"></search-bar>
+      <search-bar class="landing__form__search-bar py-3 container" hide-field-dropdown size="md"></search-bar>
     </div>
     <hook name="landing.form:after"></hook>
     <div v-if="showProjects" class="mt-5 text-white container">
