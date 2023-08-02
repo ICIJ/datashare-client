@@ -77,9 +77,15 @@ export default {
     multiple: {
       type: Boolean
     },
+    /**
+     * The dropdown toggler must be disabled.
+     */
     disabled: {
       type: Boolean
     },
+    /**
+     * The caret in the dropdown toggler must be hidden.
+     */
     noCaret: {
       type: Boolean
     }
