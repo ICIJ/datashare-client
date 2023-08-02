@@ -1005,5 +1005,8 @@
     "documentsCount": "No documents | 1 document | %{count} documents",
     "about": "About",
     "search": "Search"
+  },
+  "searchBarInputDropdownForProjects": {
+    "projectsCount": "%{count} projects"
   }
 }
