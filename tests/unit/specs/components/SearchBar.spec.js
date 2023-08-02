@@ -8,7 +8,7 @@ import { Core } from '@/core'
 import SearchBar from '@/components/SearchBar'
 
 describe('SearchBar.vue', function () {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, store, config } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
   const { index, es } = esConnectionHelper.build('search-bar')
   const { index: indexFoo } = esConnectionHelper.build('search-bar-foo')
@@ -22,6 +22,13 @@ describe('SearchBar.vue', function () {
   const mountFactory = (propsData = {}, data = () => ({ suggestions: [] })) => {
     return mount(SearchBar, { i18n, localVue, router, store, propsData, data })
   }
+
+  beforeAll(() => {
+    config.set('projects', [
+      { name: index, label: 'default' },
+      { name: indexFoo, label: 'foo' }
+    ])
+  })
 
   beforeEach(() => {
     store.commit('search/index', index)
