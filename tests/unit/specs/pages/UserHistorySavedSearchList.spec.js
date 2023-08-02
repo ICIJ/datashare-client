@@ -38,20 +38,21 @@ const propsData = {
 }
 
 describe('UserHistorySavedSearchList.vue', () => {
-  let i18n, localVue, mockAxios
+  let i18n, localVue, api
 
   let wrapper = null
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    const api = new Api(mockAxios, null)
+    api = new Api(null, null)
+    api.deleteUserHistoryEvent = jest.fn()
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
   })
   beforeEach(async () => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({})
+    api.deleteUserHistoryEvent.mockClear()
+    api.deleteUserHistoryEvent.mockResolvedValue({})
+
     wrapper = await shallowMount(UserHistorySavedSearchList, { i18n, localVue, propsData })
   })
 
@@ -81,16 +82,8 @@ describe('UserHistorySavedSearchList.vue', () => {
     await wrapper.vm.deleteUserEvent(event)
     await wrapper.vm.$nextTick()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl('/api/users/me/history/event'),
-        method: 'DELETE',
-        params: {
-          id: event.id
-        }
-      })
-    )
+    expect(api.deleteUserHistoryEvent).toBeCalledTimes(1)
+    expect(api.deleteUserHistoryEvent).toBeCalledWith(event.id)
   })
 
   it('should display date and time of the search', async () => {
