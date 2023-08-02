@@ -1004,7 +1004,8 @@
     }
   },
   "projectCards": {
-    "documentsCount": "No documents | Browse 1 document | Browse %{count} documents",
-    "about": "About"
+    "documentsCount": "No documents | 1 document | %{count} documents",
+    "about": "About",
+    "search": "Search"
   }
 }
