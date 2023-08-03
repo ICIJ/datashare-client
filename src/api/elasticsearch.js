@@ -200,7 +200,8 @@ export function datasharePlugin(Client) {
   Client.prototype.countByProject = function (index, query = {}) {
     const aggs = { index: { terms: { field: '_index', size: 1000 } } }
     const body = { size: 0, query, aggs }
-    return this._search({ index, body })
+    const preference = 'count-by-project'
+    return this._search({ index, body, preference })
   }
 }
 
