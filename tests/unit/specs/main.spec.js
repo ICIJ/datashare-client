@@ -2,7 +2,6 @@ import Vue from 'vue'
 import { createLocalVue } from '@vue/test-utils'
 
 import { createCore } from '@/core'
-import { Api } from '@/api'
 
 describe('main', () => {
   const { localVue } = createLocalVue()
@@ -11,14 +10,17 @@ describe('main', () => {
   let api = null
 
   beforeAll(() => {
-    api = new Api(null, null)
-    api.getUser = jest.fn()
-    api.getSettings = jest.fn().mockResolvedValue({})
-    api.getProject = jest.fn().mockResolvedValue({})
+    api = {
+      getUser: jest.fn(),
+      getSettings: jest.fn(),
+      getProject: jest.fn()
+    }
+    api.getSettings.mockResolvedValue({})
+    api.getProject.mockResolvedValue({})
   })
 
   beforeEach(async () => {
-    api.getUser = jest.fn().mockClear()
+    api.getUser.mockClear()
     const app = document.createElement('div')
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
