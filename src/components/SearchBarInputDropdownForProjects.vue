@@ -31,8 +31,8 @@
         </template>
       </span>
     </template>
-    <template #dropdown-item="{ option: project }">
-      <span class="d-inline-flex align-items-center justify-self-center">
+    <template #dropdown-item="{ option: project, toggleValue }">
+      <span class="d-inline-flex align-items-center justify-self-center px-3 py-2" @click="toggleValue($event, project)">
         <span class="mr-2 d-inline-flex align-items-center justify-self-center">
           <project-thumbnail :project="project" no-caption width="1.2em" class="rounded" />
         </span>
