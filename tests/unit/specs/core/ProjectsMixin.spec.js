@@ -1,21 +1,15 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 
 describe('ProjectsMixin', () => {
   const project = toLower('ProjectsMixin')
   const anotherProject = toLower('AnotherProjectsMixin')
-  let core, api, mockAxios
+  let core
 
-  beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios)
-  })
   beforeEach(() => {
-    mockAxios.request.mockClear()
-    core = Core.init(createLocalVue(), api).useAll()
+    core = Core.init(createLocalVue()).useAll()
     core.store.commit('search/indices', [anotherProject])
   })
 
@@ -103,16 +97,18 @@ describe('ProjectsMixin', () => {
   })
 
   it('should create the default project', async () => {
+    const api = { createProject: jest.fn() }
+    core = Core.init(createLocalVue(), api).useAll()
     const name = 'default-project'
     core.config.set('defaultProject', name)
     await core.createDefaultProject()
-
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl(`/api/project/`),
-        data: expect.objectContaining({ name })
-      })
-    )
+    expect(api.createProject).toBeCalledWith({
+      allowFromMask: '*.*.*.*',
+      description: 'Your main project on Datashare',
+      label: 'Default',
+      name: 'default-project',
+      sourcePath: undefined
+    })
   })
 
   it('should add a new project to the settings', () => {
