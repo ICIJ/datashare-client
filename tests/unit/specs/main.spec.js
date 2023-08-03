@@ -8,17 +8,17 @@ describe('main', () => {
   const { localVue } = createLocalVue()
   let core = null
   let vm = null
+  let api = null
 
-  const mockAxios = {
-    request: jest.fn(),
-    get: jest.fn()
-  }
-  const api = new Api(mockAxios, null)
+  beforeAll(() => {
+    api = new Api(null, null)
+    api.getUser = jest.fn()
+    api.getSettings = jest.fn().mockResolvedValue({})
+    api.getProject = jest.fn().mockResolvedValue({})
+  })
 
   beforeEach(async () => {
-    mockAxios.request.mockResolvedValue({ data: { userProjects: ['first-index'] } })
-    mockAxios.get.mockResolvedValue({ data: {} })
-
+    api.getUser = jest.fn().mockClear()
     const app = document.createElement('div')
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
@@ -26,19 +26,16 @@ describe('main', () => {
     vm = await core.ready
     vm = vm.mount()
   })
-  afterEach(() => {
-    mockAxios.request.mockClear()
-    mockAxios.get.mockClear()
-  })
 
   it('should instantiate Vue', () => {
+    api.getUser.mockResolvedValue({})
     expect(vm).toBeInstanceOf(Vue)
     expect(vm.$router).toBeDefined()
     expect(vm.$store).toBeDefined()
   })
 
   it('should set the config', async () => {
-    mockAxios.request.mockReturnValue({ data: { userProjects: ['first-index'], key: 'value' } })
+    api.getUser.mockResolvedValue({ userProjects: ['first-index'], key: 'value' })
     const app = document.createElement('div')
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
