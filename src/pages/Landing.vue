@@ -24,7 +24,6 @@
 import Hook from '@/components/Hook'
 import ProjectCards from '@/components/ProjectCards'
 import SearchBar from '@/components/SearchBar'
-import utils from '@/mixins/utils'
 
 export default {
   name: 'Landing',
