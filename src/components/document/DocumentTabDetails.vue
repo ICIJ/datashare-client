@@ -178,7 +178,7 @@ export default {
           name: 'metadata.tika_metadata_resourcename',
           label: this.$t('document.name'),
           trClass: 'document__content__basename',
-          value: this.document.basename
+          value: this.document.meta('resourcename')
         },
         {
           name: 'path',

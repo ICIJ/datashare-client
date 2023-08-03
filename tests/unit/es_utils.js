@@ -75,6 +75,7 @@ class IndexedDocument {
     this.type = 'Document'
     this.language = 'ENGLISH'
     this.metadata = {
+      tika_metadata_resourcename: 'document',
       tika_metadata_another_metadata: null,
       tika_metadata_content_type: null,
       tika_metadata_dcterms_created: null,
@@ -111,6 +112,10 @@ class IndexedDocument {
   }
   withIndexingDate(indexingDate) {
     this.extractionDate = indexingDate
+    return this
+  }
+  withResourceName(resourceName) {
+    this.metadata.tika_metadata_resourcename = resourceName
     return this
   }
   withAuthor(author) {
