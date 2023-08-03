@@ -1,5 +1,5 @@
 <template>
-  <component :is="is" :to="projectRoute" class="project-link d-inline-flex align-items-center">
+  <component :is="is" :to="projectRoute" class="project-link d-inline-flex align-items-center text-nowrap">
     <project-thumbnail
       v-if="showThumbnail"
       :project="resolvedProject"
