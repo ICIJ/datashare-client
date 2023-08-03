@@ -24,7 +24,8 @@
   "error": {
     "title": "Quelque chose ne va pas",
     "description": "Une erreur s'est produite. Merci de réessayer plus tard ou contacter votre administrateur•rice si le problème persiste.",
-    "noProjects": "Vous n'avez pas encore de projet. Veuillez contacter votre administrateur•rice."
+    "noProjects": "La liste de projet est vide. Merci de contacter votre administrateur•rice.",
+    "notFound": "Page non trouvée."
   },
   "search": {
     "title": "Rechercher",
@@ -137,7 +138,7 @@
     "viewTranslated": "Voir le texte traduit"
   },
   "documentContent": {
-    "noContent": "No content extracted for this document"
+    "noContent": "Aucun contenu extrait pour ce document"
   },
   "filter": {
     "none": "Aucune valeur distincte",
@@ -237,7 +238,7 @@
       "GEORGIAN": "Géorgien",
       "GERMAN": "Allemand",
       "GREEK": "Grec",
-      "MODERN GREEK (1453-)": "Greek",
+      "MODERN GREEK (1453-)": "Grec",
       "GUARANI": "Guarani",
       "GUJARATI": "Gujarati",
       "HAITIAN": "Haïtien",
@@ -388,10 +389,10 @@
     },
     "tags": "Tags",
     "dateRange": {
-      "from": "From {dateFormat}",
-      "to": "To {dateFormat}",
-      "startingDate": "Starting date",
-      "endingDate": "Ending date"
+      "from": "De {dateFormat}",
+      "to": "À {dateFormat}",
+      "startingDate": "Date début",
+      "endingDate": "Date fin"
     },
     "selectDateRange": "Sélectionner une période"
   },
@@ -417,12 +418,12 @@
     "translations": "Traductions",
     "preview": "Prévisualisation",
     "downloadButton": "Télécharger",
-    "downloadRootButton": "Parent file",
-    "downloadRootWithoutMetadataButton": "Parent file without metadata",
-    "downloadWithoutMetadata": "Without metadata",
-    "downloadExtractedText": "Extracted text",
+    "downloadRootButton": "Fichier parent",
+    "downloadRootWithoutMetadataButton": "Fichier parent sans métadonnées",
+    "downloadWithoutMetadata": "Sans métadonnées",
+    "downloadExtractedText": "Texte extrait",
     "externalWindow": "Ouvrir dans une nouvelle fenêtre",
-    "copyLink": "Copy link",
+    "copyLink": "Copier le lien",
     "selectAll": "Tout sélectionner",
     "unselectAll": "Désélectionner tout",
     "starButton": "Mettre en favoris",
@@ -481,8 +482,8 @@
       "thumbnail": "Vignette de la page PDF"
     },
     "player": {
-      "autoplay": "Play automatically",
-      "loop": "Play in loop",
+      "autoplay": "Lecture automatique",
+      "loop": "Lecutre en boucle",
       "audio": {
         "unknownFormat": "Format audio non pris en charge"
       },
@@ -574,8 +575,8 @@
     "searchShort": "Rechercher",
     "history": "Votre historique",
     "historyShort": "Historique",
-    "insights": "Aperçu",
-    "insightsShort": "Aperçu",
+    "projects": "Projets",
+    "projectsShort": "Projets",
     "settings": "Paramètres",
     "settingsShort": "Réglages",
     "logout": "Déconnexion",
@@ -616,7 +617,7 @@
     "submitSuccess": "Votre recherche a été sauvegardée.",
     "submitError": "Erreur, votre recherche n'a pas pu être sauvegardée.",
     "delete": "Supprimer",
-    "deleted": "La recherche a été supprimée.",
+    "deleted": "La recherche sauvegardée a été supprimée.",
     "confirmDelete": "Êtes-vous sûr(e) de vouloir supprimer cette recherche sauvegardée ?",
     "deleteError": "Une erreur s'est produite, impossible de supprimer l'enregistrement."
   },
@@ -636,7 +637,7 @@
     "fileLabel": "Fichier CSV",
     "fileDescription": "Exportez votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Uniquement quand 'Rechercher les termes exacts' n'est pas coché, vous pouvez utiliser AND OR NOT * ? + - et les autres opérateurs de recherche dans votre CSV, et utiliser une Regex entre 2 slashes</li></ul>",
     "filePlaceholder": "Choisir un fichier...",
-    "submit": "Ajouter",
+    "submit": "Lancer",
     "success": "Votre recherche en lot est en cours d'exécution.",
     "error": "Il y a eu une erreur, votre recherche en lot n'a pas pu être effectuée.",
     "submitSuccess": "Votre recherche en lot a été ajoutée.",
@@ -689,6 +690,9 @@
       "description": "Description"
     }
   },
+  "newBatchSearch": {
+    "title": "Start a new batch search"
+  },
   "batchSearchResults": {
     "title": "Résultats de recherche en lot",
     "rank": "Rang",
@@ -700,17 +704,97 @@
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
     "downloadQueries": "Télécharger les requêtes",
+    "downloadQueriesWithoutResults": "Télécharger les requêtes sans résultats",
     "downloadQueriesTooltip": "Télécharger au format CSV",
     "relaunch": "Relancer",
     "relaunchTitle": "Relancer la recherche en lot",
     "deleteAfterRelaunch": "Supprimer et remplacer la recherche existante",
-    "empty": "Pas de résultat"
+    "backToResults": "Retour aux résultats",
+    "empty": "Pas de résultat",
+    "queriesFilter": "1 requête | %{n} requêtes"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Filtrer par requêtes...",
     "queries": {
       "heading": "Filtrer par requêtes"
     }
+  },
+  "projectList": {
+    "fields": {
+      "label": "Libellé",
+      "updateDate": "Mis à jour"
+    }
+  },
+  "projectNew": {
+    "title": "Nouveau projet",
+    "description": "Un projet est un ensemble de documents à explorer.",
+    "notify": {
+      "succeed": "Le projet est créé",
+      "succeedBody": "Maintenant, vous pouvez ajouter des documents à ce projet.",
+      "failed": "Impossible de créer le projet",
+      "failedBody": "Une erreur est survenue pendant la création du projet."
+    },
+    "submit": "Créer un projet"
+  },
+  "projectViewEdit": {
+    "title": "Modifier le projet",
+    "notify": {
+      "delete": {
+        "succeed": "Le projet a été supprimé",
+        "succeedBody": "Les documents de ce projet ont été supprimés de Datashare.",
+        "failed": "Impossible de supprimer le projet",
+        "failedBody": "Une erreur est survenue pendant la suppression du projet."
+      },
+      "update": {
+        "succeed": "Le projet a été enregistré",
+        "succeedBody": "Projet sauvegardé.",
+        "failed": "Impossible de modifier le projet",
+        "failedBody": "Une erreur est survenue pendant la modification du projet."
+      }
+    },
+    "submit": "Mettre à jour"
+  },
+  "projectForm": {
+    "form": {
+      "name": {
+        "label": "ID",
+        "description": "L'identifiant interne du projet."
+      },
+      "label": {
+        "label": "Libellé",
+        "description": "",
+        "invalidFeedback": "Le libellé \"{label}\" est un mot réservé."
+      },
+      "description": {
+        "label": "Description",
+        "description": ""
+      },
+      "sourcePath": {
+        "label": "Dossier du projet",
+        "description": "Le dossier où se trouvent les fichiers du projet."
+      },
+      "logoUrl": {
+        "label": "URL du logo",
+        "description": ""
+      },
+      "sourceUrl": {
+        "label": "URL de la source",
+        "description": ""
+      },
+      "publisherName": {
+        "label": "Nom de l'éditeur·ice",
+        "description": "Les personnes ou l'organisation qui ont publié les fichiers dans ce projet."
+      },
+      "maintainerName": {
+        "label": "Nom du mainteneur",
+        "description": "Les personnes ou l'organisation qui seront responsables du maintien de ce projet sur Datashare."
+      }
+    },
+    "reset": "Annuler",
+    "resetConfirmation": "Êtes-vous sûr·e de vouloir réinitialiser le formulaire aux valeurs par défaut ?",
+    "submit": "Valider",
+    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer ce projet?",
+    "delete": "Supprimer"
   },
   "shortkeys": {
     "title": "Rechercher dans les raccourcis clavier",
@@ -755,19 +839,19 @@
     "empty": "Vous n'avez pas encore lancé de tâches de téléchargement.",
     "noFile": "L'archive a expiré.",
     "created": "Votre téléchargement est en cours de préparation",
-    "warning": "This feature is currently being developed by the Datashare team.",
+    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "inProgress": "Voir tous les téléchargements en attente",
-    "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
-    "errorTitle": "Batch download task <code class=\"font-weight-bold\">%{taskId}</code> is in error.",
+    "errorMessage": "Le système a rencontré un problème. Veuillez vous référer à ces informations lorsque vous contactez le support.",
+    "errorTitle": "La tâche de téléchargement de lots <code class=\"font-weight-bold\">%{taskId}</code> est en erreur.",
     "relaunch": {
       "succeed": "Votre téléchargement est en cours de préparation",
       "succeedBody": "Le téléchargement sera bientôt disponible.",
       "failed": "Impossible de relancer",
-      "failedBody": "Something happened when trying to relaunch this batch download."
+      "failedBody": "Une erreur est survenue lorsque la recherche en lot a été relancée."
     },
     "delete": {
       "failed": "Impossible de supprimer",
-      "failedBody": "Something happened when trying to delete this batch download."
+      "failedBody": "Une erreur est survenue lorsquela recherche en lot a été supprimée."
     },
     "limitations": "Les téléchargements en lots sont limités à %{maxNbFiles} fichiers et %{maxSize}B."
   },
@@ -799,6 +883,7 @@
   "widget": {
     "noData": "Pas de données",
     "noFolders": "Aucun dossier",
+    "noEntities": "Aucune entités nommées",
     "barometer": {
       "document": "aucun document | 1 document | %{total} documents",
       "amongWhich": "dont",
@@ -828,6 +913,20 @@
       "locations": "0 lieu | un lieu | <strong>{count}</strong> lieux",
       "organizations": "0 organisation | une organisation | <strong>{count}</strong>organisations",
       "emails": "0 adresse e-mail | une adresse e-mail | <strong>{count}</strong> adresses e-mail"
+    },
+    "names": {
+      "total": "Aucun nom | un nom | <strong>{humanTotal}</strong> noms"
+    },
+    "project": {
+      "fields": {
+        "name": "ID",
+        "sourcePath": "Dossier",
+        "maintainerName": "Maintenu par",
+        "publisherName": "Publié par",
+        "sourceUrl": "Source",
+        "creationDate": "Créé",
+        "updateDate": "Mis à jour"
+      }
     },
     "treemap": {
       "seeDocuments": "Voir les documents dans Datashare",
@@ -900,5 +999,13 @@
       "tooltipMac": "Document suivant (<kbd>⌘</kbd> + <kbd>→</kbd>)",
       "tooltipOthers": "Document suivant (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
     }
+  },
+  "projectCards": {
+    "documentsCount": "Aucun document | 1 document | %{count} documents",
+    "about": "A propos",
+    "search": "Rechercher"
+  },
+  "searchBarInputDropdownForProjects": {
+    "projectsCount": "%{count} projects"
   }
 }
