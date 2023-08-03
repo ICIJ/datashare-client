@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import toLower from 'lodash/toLower'
 
-import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 
 describe('IndexingStore', () => {
