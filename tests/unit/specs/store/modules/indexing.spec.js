@@ -9,21 +9,23 @@ describe('IndexingStore', () => {
   let store, api
 
   beforeAll(() => {
-    api = new Api(null)
-    api.index = jest.fn()
-    api.indexPath = jest.fn()
-    api.findNames = jest.fn()
-    api.stopPendingTasks = jest.fn()
-    api.stopTask = jest.fn()
-    api.getTasks = jest.fn()
-    api.deleteDoneTasks = jest.fn()
-    api.deleteAll = jest.fn()
-    api.getNerPipelines = jest.fn()
+    api = {
+      index: jest.fn(),
+      indexPath: jest.fn(),
+      findNames: jest.fn(),
+      stopPendingTasks: jest.fn(),
+      stopTask: jest.fn(),
+      getTasks: jest.fn(),
+      deleteDoneTasks: jest.fn(),
+      deleteAll: jest.fn(),
+      getNerPipelines: jest.fn()
+    }
     store = storeBuilder(api)
     store.commit('search/index', project)
   })
 
   beforeEach(() => {
+    jest.clearAllMocks()
     store.commit('indexing/reset')
   })
 
