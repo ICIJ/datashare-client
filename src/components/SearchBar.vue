@@ -17,7 +17,11 @@
       >
         <template #addons>
           <search-bar-input-dropdown-for-field v-if="!hideFieldDropdown" v-model="field" />
-          <search-bar-input-dropdown-for-projects v-model="selectedProjects" :disabled="indices" :no-caret="indices" />
+          <search-bar-input-dropdown-for-projects
+            v-model="selectedProjects"
+            :disabled="!!indices"
+            :no-caret="!!indices"
+          />
         </template>
         <template #suggestions>
           <selectable-dropdown
