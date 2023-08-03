@@ -15,7 +15,7 @@
   >
     <template #button-content>
       <slot name="button-content">
-        <span v-for="v in values" :key="v" >
+        <span v-for="v in values" :key="v">
           {{ $t(optionsPathValue + v) }}
         </span>
       </slot>
