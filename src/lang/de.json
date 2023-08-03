@@ -24,7 +24,8 @@
   "error": {
     "title": "Hier stimmt etwas nicht",
     "description": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut oder wenden Sie sich an Ihren Administrator, falls das Problem weiterhin besteht.",
-    "noProjects": "Sie haben noch keine Projekte. Bitte kontaktieren Sie Ihren Administrator."
+    "noProjects": "Your project list is empty. Please contact your administrator.",
+    "notFound": "Page not found."
   },
   "search": {
     "title": "Suche",
@@ -574,8 +575,8 @@
     "searchShort": "Suche",
     "history": "Ihr Verlauf",
     "historyShort": "Verlauf",
-    "insights": "Einblicke",
-    "insightsShort": "Einblicke",
+    "projects": "Projects",
+    "projectsShort": "Projects",
     "settings": "Einstellungen",
     "settingsShort": "Einstellungen",
     "logout": "Abmelden",
@@ -610,13 +611,13 @@
     "empty": "Ihr Verlauf ist leer",
     "clear": "Verlauf löschen",
     "document": "Dokumente",
-    "search": "Suchen",
+    "search": "Saved searches",
     "name": "Name",
     "saveSearch": "Diese Suche speichern",
-    "submitSuccess": "Your search has been added.",
-    "submitError": "Something went wrong, unable to add your search.",
+    "submitSuccess": "Your search has been saved.",
+    "submitError": "Something went wrong, unable to save your search.",
     "delete": "Löschen",
-    "deleted": "The search have been deleted.",
+    "deleted": "The saved search have been deleted.",
     "confirmDelete": "Are you sure you want to delete this saved search?",
     "deleteError": "Something went wrong, unable to delete the record."
   },
@@ -636,7 +637,7 @@
     "fileLabel": "CSV-Datei",
     "fileDescription": "Exportieren Sie Ihre Tabelle als CSV mit UTF-8-Kodierung. <ul><li>Nur CSV-Format akzeptiert.</li> <li>CSV-Datei sollte nicht mehr als 60.000 Abfragen enthalten.</li> <li>Die erste und einzige Spalte sollte die Suchbegriffe enthalten.</li> <li>Keine Zeilenumbrüche(n) in Zellen.</li> <li>Ohne 'do phrase match' können Sie die Operatoren AND OR NOT * ? ! + - und weitere Suchoperatoren, sowie reguläre Ausdrücke (RegEx) zwischen zwei Schrägstrichen benutzen</li></ul>",
     "filePlaceholder": "Datei auswählen...",
-    "submit": "Hinzufügen",
+    "submit": "Launch",
     "success": "Ihre Batch-Suche läuft jetzt.",
     "error": "Etwas ist schief gelaufen, die Batch-Suche konnte nicht gestartet werden.",
     "submitSuccess": "Ihre Batch-Suche wurde hinzugefügt.",
@@ -689,8 +690,11 @@
       "description": "Beschreibung"
     }
   },
+  "newBatchSearch": {
+    "title": "Start a new batch search"
+  },
   "batchSearchResults": {
-    "title": "Ergebnisse der Batch-Suche",
+    "title": "Batch search results",
     "rank": "Rang",
     "query": "Abfrage",
     "documentPath": "Dokumentenpfad",
@@ -700,17 +704,97 @@
     "size": "Größe",
     "downloadResults": "Ergebnisse herunterladen",
     "downloadQueries": "Abfragen herunterladen",
+    "downloadQueriesWithoutResults": "Download queries without results",
     "downloadQueriesTooltip": "Als CSV herunterladen",
     "relaunch": "Neustart",
     "relaunchTitle": "Batch-Suche neu starten",
     "deleteAfterRelaunch": "Aktuelle Batch-Suche nach Neustart löschen",
-    "empty": "Keine Ergebnisse"
+    "backToResults": "Back to results",
+    "empty": "Keine Ergebnisse",
+    "queriesFilter": "1 query | %{n} queries"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Abfragen filtern...",
     "queries": {
       "heading": "Filter nach Abfragen"
     }
+  },
+  "projectList": {
+    "fields": {
+      "label": "Label",
+      "updateDate": "Updated"
+    }
+  },
+  "projectNew": {
+    "title": "New project",
+    "description": "A project is a separated set of documents to explore.",
+    "notify": {
+      "succeed": "The project was created",
+      "succeedBody": "Now, you can add documents to this project.",
+      "failed": "Unable to create the project",
+      "failedBody": "Something happened when trying to create this project."
+    },
+    "submit": "Create project"
+  },
+  "projectViewEdit": {
+    "title": "Edit project",
+    "notify": {
+      "delete": {
+        "succeed": "The project was deleted",
+        "succeedBody": "The documents in this project have been removed from Datashare.",
+        "failed": "Unable to delete the project",
+        "failedBody": "Something happened when trying to delete this project."
+      },
+      "update": {
+        "succeed": "The project was saved",
+        "succeedBody": "Project saved.",
+        "failed": "Unable to edit the project",
+        "failedBody": "Something happened when trying to edit this project."
+      }
+    },
+    "submit": "Save"
+  },
+  "projectForm": {
+    "form": {
+      "name": {
+        "label": "ID",
+        "description": "The internal project identifier."
+      },
+      "label": {
+        "label": "Label",
+        "description": "",
+        "invalidFeedback": "The label \"{label}\" is a reserved word."
+      },
+      "description": {
+        "label": "Description",
+        "description": ""
+      },
+      "sourcePath": {
+        "label": "Project folder",
+        "description": "The folder where the project's files are located."
+      },
+      "logoUrl": {
+        "label": "Logo URL",
+        "description": ""
+      },
+      "sourceUrl": {
+        "label": "Source URL",
+        "description": ""
+      },
+      "publisherName": {
+        "label": "Publisher name",
+        "description": "The people or organization who published the files in this project."
+      },
+      "maintainerName": {
+        "label": "Maintainer name",
+        "description": "The people or organization who will be in charge of maintaining this project on Datashare."
+      }
+    },
+    "reset": "Cancel",
+    "resetConfirmation": "Are you sure you want to reset the form to its initial values?",
+    "submit": "Submit",
+    "deleteConfirmation": "Are you sure you want to delete the project?",
+    "delete": "Delete"
   },
   "shortkeys": {
     "title": "Tastaturkürzel",
@@ -799,6 +883,7 @@
   "widget": {
     "noData": "Keine Daten",
     "noFolders": "Keine Ordner",
+    "noEntities": "No named entities",
     "barometer": {
       "document": "keine Dokumente | 1 Dokument | %{total} Dokumente",
       "amongWhich": "davon sind",
@@ -828,6 +913,20 @@
       "locations": "keine Orte | ein Ort | <strong>{count}</strong> Orte",
       "organizations": "keine Organisationen | eine Organisation | <strong>{count}</strong> Organisationen",
       "emails": "0 emails | one email address | <strong>{count}</strong> emails"
+    },
+    "names": {
+      "total": "0 names | one name | <strong>{humanTotal}</strong> names"
+    },
+    "project": {
+      "fields": {
+        "name": "ID",
+        "sourcePath": "Folder",
+        "maintainerName": "Maintained by",
+        "publisherName": "Published by",
+        "sourceUrl": "Source",
+        "creationDate": "Created",
+        "updateDate": "Updated"
+      }
     },
     "treemap": {
       "seeDocuments": "Dokumente in Datashare ansehen",
@@ -900,5 +999,13 @@
       "tooltipMac": "Nächstes Dokument (<kbd>⌘</kbd> + <kbd>←</kbd>)",
       "tooltipOthers": "Nächstes Dokument (<kbd>Strg</kbd> + <kbd>←</kbd>)"
     }
+  },
+  "projectCards": {
+    "documentsCount": "No documents | 1 document | %{count} documents",
+    "about": "About",
+    "search": "Search"
+  },
+  "searchBarInputDropdownForProjects": {
+    "projectsCount": "%{count} projects"
   }
 }
