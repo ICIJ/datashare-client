@@ -266,7 +266,7 @@ export const mutations = {
   },
   indices(state, indices) {
     // Clean indices list to ensure we received an array. This means
-    // this mutation can also receive a string with a commat separated
+    // this mutation can also receive a string with a comma separated
     // list of indices.
     const cleaned = flatten(castArray(indices).map((str) => str.split(',')))
     Vue.set(state, 'indices', cleaned)
