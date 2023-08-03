@@ -10,11 +10,12 @@
     menu-class="search-bar-input-dropdown__menu"
     toggle-class="d-inline-flex align-items-center"
     right
+    boundary="window"
     variant="outline-light"
   >
     <template #button-content>
       <slot name="button-content">
-        <span v-for="v in values" :key="v">
+        <span v-for="v in values" :key="v" >
           {{ $t(optionsPathValue + v) }}
         </span>
       </slot>
@@ -24,10 +25,12 @@
       :key="o"
       :active="hasValue(option)"
       class="search-bar-input-dropdown__option"
-      @click="toggleValue(option)"
+      link-class="p-0"
     >
-      <slot name="dropdown-item" v-bind="{ option }">
-        {{ $t(optionsPathValue + option) }}
+      <slot name="dropdown-item" v-bind="{ option, toggleValue }">
+        <span class="px-3 py-2 d-block" @click="toggleValue($event, option)">
+          {{ $t(optionsPathValue + option) }}
+        </span>
       </slot>
     </b-dropdown-item>
   </b-dropdown>
@@ -115,7 +118,10 @@ export default {
         this.selectedValue = without(this.values, value)
       }
     },
-    toggleValue(value) {
+    toggleValue(event, value) {
+      if (this.multiple) {
+        event.stopPropagation()
+      }
       return this.hasValue(value) ? this.unselectValue(value) : this.selectValue(value)
     },
     hasValue(value) {
