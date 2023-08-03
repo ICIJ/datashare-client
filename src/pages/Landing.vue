@@ -10,7 +10,7 @@
       <search-bar class="landing__form__search-bar py-3 container" hide-field-dropdown size="md"></search-bar>
     </div>
     <hook name="landing.form:after"></hook>
-    <div v-if="showProjects" class="mt-5 text-white container">
+    <div class="mt-5 text-white container">
       <hook name="landing.form.project:before"></hook>
       <div class="landing__projects">
         <project-cards class="mt-3"></project-cards>
@@ -32,12 +32,6 @@ export default {
     Hook,
     ProjectCards,
     SearchBar
-  },
-  mixins: [utils],
-  computed: {
-    showProjects() {
-      return this.isServer || this.$core.projects.length > 1
-    }
   }
 }
 </script>
