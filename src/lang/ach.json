@@ -24,7 +24,8 @@
   "error": {
     "title": "crwdns1834:0crwdne1834:0",
     "description": "crwdns1916:0crwdne1916:0",
-    "noProjects": "crwdns1838:0crwdne1838:0"
+    "noProjects": "crwdns2729:0crwdne2729:0",
+    "notFound": "crwdns2731:0crwdne2731:0"
   },
   "search": {
     "title": "crwdns2370:0crwdne2370:0",
@@ -574,8 +575,8 @@
     "searchShort": "crwdns2304:0crwdne2304:0",
     "history": "crwdns972:0crwdne972:0",
     "historyShort": "crwdns2306:0crwdne2306:0",
-    "insights": "crwdns1824:0crwdne1824:0",
-    "insightsShort": "crwdns2308:0crwdne2308:0",
+    "projects": "crwdns2795:0crwdne2795:0",
+    "projectsShort": "crwdns2797:0crwdne2797:0",
     "settings": "crwdns1856:0crwdne1856:0",
     "settingsShort": "crwdns2310:0crwdne2310:0",
     "logout": "crwdns974:0crwdne974:0",
@@ -610,13 +611,13 @@
     "empty": "crwdns1002:0crwdne1002:0",
     "clear": "crwdns1004:0crwdne1004:0",
     "document": "crwdns2506:0crwdne2506:0",
-    "search": "crwdns2508:0crwdne2508:0",
+    "search": "crwdns2821:0crwdne2821:0",
     "name": "crwdns2474:0crwdne2474:0",
     "saveSearch": "crwdns2476:0crwdne2476:0",
-    "submitSuccess": "crwdns2478:0crwdne2478:0",
-    "submitError": "crwdns2480:0crwdne2480:0",
+    "submitSuccess": "crwdns2823:0crwdne2823:0",
+    "submitError": "crwdns2825:0crwdne2825:0",
     "delete": "crwdns2533:0crwdne2533:0",
-    "deleted": "crwdns2528:0crwdne2528:0",
+    "deleted": "crwdns2827:0crwdne2827:0",
     "confirmDelete": "crwdns2535:0crwdne2535:0",
     "deleteError": "crwdns2693:0crwdne2693:0"
   },
@@ -636,7 +637,7 @@
     "fileLabel": "crwdns1236:0crwdne1236:0",
     "fileDescription": "crwdns2424:0crwdne2424:0",
     "filePlaceholder": "crwdns1240:0crwdne1240:0",
-    "submit": "crwdns1242:0crwdne1242:0",
+    "submit": "crwdns2881:0crwdne2881:0",
     "success": "crwdns1244:0crwdne1244:0",
     "error": "crwdns2260:0crwdne2260:0",
     "submitSuccess": "crwdns2026:0crwdne2026:0",
@@ -689,8 +690,11 @@
       "description": "crwdns2570:0crwdne2570:0"
     }
   },
+  "newBatchSearch": {
+    "title": "crwdns2799:0crwdne2799:0"
+  },
   "batchSearchResults": {
-    "title": "crwdns2374:0crwdne2374:0",
+    "title": "crwdns2801:0crwdne2801:0",
     "rank": "crwdns1232:0crwdne1232:0",
     "query": "crwdns1048:0crwdne1048:0",
     "documentPath": "crwdns2328:0crwdne2328:0",
@@ -700,17 +704,97 @@
     "size": "crwdns1056:0crwdne1056:0",
     "downloadResults": "crwdns1058:0crwdne1058:0",
     "downloadQueries": "crwdns2046:0crwdne2046:0",
+    "downloadQueriesWithoutResults": "crwdns2727:0crwdne2727:0",
     "downloadQueriesTooltip": "crwdns2342:0crwdne2342:0",
     "relaunch": "crwdns2356:0crwdne2356:0",
     "relaunchTitle": "crwdns2358:0crwdne2358:0",
     "deleteAfterRelaunch": "crwdns2360:0crwdne2360:0",
-    "empty": "crwdns1088:0crwdne1088:0"
+    "backToResults": "crwdns2791:0crwdne2791:0",
+    "empty": "crwdns1088:0crwdne1088:0",
+    "queriesFilter": "crwdns2793:0%{n}crwdne2793:0"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "crwdns2064:0crwdne2064:0",
     "queries": {
       "heading": "crwdns2030:0crwdne2030:0"
     }
+  },
+  "projectList": {
+    "fields": {
+      "label": "crwdns2803:0crwdne2803:0",
+      "updateDate": "crwdns2805:0crwdne2805:0"
+    }
+  },
+  "projectNew": {
+    "title": "crwdns2829:0crwdne2829:0",
+    "description": "crwdns2843:0crwdne2843:0",
+    "notify": {
+      "succeed": "crwdns2833:0crwdne2833:0",
+      "succeedBody": "crwdns2835:0crwdne2835:0",
+      "failed": "crwdns2837:0crwdne2837:0",
+      "failedBody": "crwdns2839:0crwdne2839:0"
+    },
+    "submit": "crwdns2841:0crwdne2841:0"
+  },
+  "projectViewEdit": {
+    "title": "crwdns2845:0crwdne2845:0",
+    "notify": {
+      "delete": {
+        "succeed": "crwdns2857:0crwdne2857:0",
+        "succeedBody": "crwdns2859:0crwdne2859:0",
+        "failed": "crwdns2861:0crwdne2861:0",
+        "failedBody": "crwdns2863:0crwdne2863:0"
+      },
+      "update": {
+        "succeed": "crwdns2865:0crwdne2865:0",
+        "succeedBody": "crwdns2867:0crwdne2867:0",
+        "failed": "crwdns2869:0crwdne2869:0",
+        "failedBody": "crwdns2871:0crwdne2871:0"
+      }
+    },
+    "submit": "crwdns2873:0crwdne2873:0"
+  },
+  "projectForm": {
+    "form": {
+      "name": {
+        "label": "crwdns2747:0crwdne2747:0",
+        "description": "crwdns2749:0crwdne2749:0"
+      },
+      "label": {
+        "label": "crwdns2751:0crwdne2751:0",
+        "description": "",
+        "invalidFeedback": "crwdns2755:0{label}crwdne2755:0"
+      },
+      "description": {
+        "label": "crwdns2757:0crwdne2757:0",
+        "description": ""
+      },
+      "sourcePath": {
+        "label": "crwdns2761:0crwdne2761:0",
+        "description": "crwdns2763:0crwdne2763:0"
+      },
+      "logoUrl": {
+        "label": "crwdns2765:0crwdne2765:0",
+        "description": ""
+      },
+      "sourceUrl": {
+        "label": "crwdns2769:0crwdne2769:0",
+        "description": ""
+      },
+      "publisherName": {
+        "label": "crwdns2773:0crwdne2773:0",
+        "description": "crwdns2775:0crwdne2775:0"
+      },
+      "maintainerName": {
+        "label": "crwdns2777:0crwdne2777:0",
+        "description": "crwdns2779:0crwdne2779:0"
+      }
+    },
+    "reset": "crwdns2875:0crwdne2875:0",
+    "resetConfirmation": "crwdns2783:0crwdne2783:0",
+    "submit": "crwdns2785:0crwdne2785:0",
+    "deleteConfirmation": "crwdns2877:0crwdne2877:0",
+    "delete": "crwdns2879:0crwdne2879:0"
   },
   "shortkeys": {
     "title": "crwdns1090:0crwdne1090:0",
@@ -799,6 +883,7 @@
   "widget": {
     "noData": "crwdns2000:0crwdne2000:0",
     "noFolders": "crwdns2054:0crwdne2054:0",
+    "noEntities": "crwdns2787:0crwdne2787:0",
     "barometer": {
       "document": "crwdns2014:0%{total}crwdne2014:0",
       "amongWhich": "crwdns2016:0crwdne2016:0",
@@ -828,6 +913,20 @@
       "locations": "crwdns2438:0{count}crwdne2438:0",
       "organizations": "crwdns2440:0{count}crwdne2440:0",
       "emails": "crwdns2634:0{count}crwdne2634:0"
+    },
+    "names": {
+      "total": "crwdns2789:0{humanTotal}crwdne2789:0"
+    },
+    "project": {
+      "fields": {
+        "name": "crwdns2807:0crwdne2807:0",
+        "sourcePath": "crwdns2809:0crwdne2809:0",
+        "maintainerName": "crwdns2811:0crwdne2811:0",
+        "publisherName": "crwdns2813:0crwdne2813:0",
+        "sourceUrl": "crwdns2815:0crwdne2815:0",
+        "creationDate": "crwdns2817:0crwdne2817:0",
+        "updateDate": "crwdns2819:0crwdne2819:0"
+      }
     },
     "treemap": {
       "seeDocuments": "crwdns2230:0crwdne2230:0",
@@ -900,5 +999,13 @@
       "tooltipMac": "crwdns2386:0crwdne2386:0",
       "tooltipOthers": "crwdns2388:0crwdne2388:0"
     }
+  },
+  "projectCards": {
+    "documentsCount": "crwdns2883:0%{count}crwdne2883:0",
+    "about": "crwdns2885:0crwdne2885:0",
+    "search": "crwdns2887:0crwdne2887:0"
+  },
+  "searchBarInputDropdownForProjects": {
+    "projectsCount": "crwdns2889:0%{count}crwdne2889:0"
   }
 }
