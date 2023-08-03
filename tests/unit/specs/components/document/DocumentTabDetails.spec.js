@@ -60,7 +60,7 @@ describe('DocumentTabDetails.vue', () => {
 
   it('should display a child document', async () => {
     const parentDocument = 'parentDocument'
-    await letData(es).have(new IndexedDocument(parentDocument, index)).commit()
+    await letData(es).have(new IndexedDocument(parentDocument, index).withResourceName('parentDocument')).commit()
     await letData(es).have(new IndexedDocument(id, index).withParent(parentDocument)).commit()
     await store
       .dispatch('document/get', { index, id, routing: parentDocument })
