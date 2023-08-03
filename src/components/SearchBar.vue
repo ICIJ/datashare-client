@@ -308,25 +308,6 @@ export default {
 
 <style lang="scss" scoped>
 .search-bar {
-  .foo {
-    display: inline-flex;
-    align-items: center;
-
-    &::v-deep(.btn) {
-      background: $input-bg !important;
-      font-size: inherit;
-    }
-
-    &::v-deep(.project-thumbnail:not(:first-of-type)) {
-      margin-left: -0.5em;
-      box-shadow: -1px 0 0 0 white;
-    }
-
-    &::v-deep(.project-thumbnail:last-of-type) {
-      background: grey;
-    }
-  }
-
   &::v-deep(.search-bar-input__input) {
     height: auto;
   }
