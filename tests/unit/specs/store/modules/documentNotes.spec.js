@@ -1,18 +1,17 @@
-import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 
 describe('DocumentNotesStore', () => {
   const project = 'projectName'
-  let mockAxios, store, api
+  let store, api
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios, null)
+    api = {
+      retrieveNotes: jest.fn()
+    }
     store = storeBuilder(api)
   })
 
   beforeEach(() => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: {} })
+    jest.clearAllMocks()
   })
 
   afterEach(() => {
@@ -22,16 +21,16 @@ describe('DocumentNotesStore', () => {
   it('should call the retrieveNotes url', async () => {
     await store.dispatch('documentNotes/retrieveNotes', { project })
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl('/api/projectName/notes') })
+    expect(api.retrieveNotes).toBeCalledTimes(1)
+    expect(api.retrieveNotes).toBeCalledWith(project)
   })
 
   it('should call the API endpoint only once', async () => {
     await store.dispatch('documentNotes/retrieveNotes', { project })
     await store.dispatch('documentNotes/retrieveNotes', { project })
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl('/api/projectName/notes') })
+    expect(api.retrieveNotes).toBeCalledTimes(1)
+    expect(api.retrieveNotes).toBeCalledWith(project)
   })
 
   it('should filter on document path', async () => {
