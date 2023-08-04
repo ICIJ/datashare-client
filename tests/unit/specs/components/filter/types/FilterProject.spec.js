@@ -4,19 +4,21 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import VueRouter from 'vue-router'
 import find from 'lodash/find'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import FilterProject from '@/components/filter/types/FilterProject'
 
 describe('FilterProject.vue', () => {
-  let i18n, localVue, store, wait, wrapper, api, mockAxios
+  let i18n, localVue, store, wait, wrapper, api
 
   const { index: project } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios, null)
+    api = {
+      getStarredDocuments: jest.fn(),
+      isDownloadAllowed: jest.fn(),
+      getRecommendationsByProject: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -32,8 +34,7 @@ describe('FilterProject.vue', () => {
   })
 
   beforeEach(() => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: [] })
+    jest.clearAllMocks()
     wrapper = shallowMount(FilterProject, {
       i18n,
       localVue,
@@ -61,6 +62,8 @@ describe('FilterProject.vue', () => {
 
   describe('on project change', () => {
     beforeEach(() => {
+      api.getStarredDocuments.mockResolvedValue([])
+
       wrapper = shallowMount(FilterProject, {
         i18n,
         localVue,
@@ -71,8 +74,6 @@ describe('FilterProject.vue', () => {
       })
       store.commit('downloads/clear')
     })
-
-    afterEach(() => mockAxios.request.mockClear())
 
     it('should not reset search state', async () => {
       store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
@@ -87,34 +88,22 @@ describe('FilterProject.vue', () => {
     it('should refresh the starred documents', async () => {
       await wrapper.vm.select(anotherProject)
 
-      expect(mockAxios.request).toBeCalledTimes(3)
-      expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${anotherProject}/documents/starred`) })
+      expect(api.getStarredDocuments).toBeCalledTimes(1)
+      expect(api.getStarredDocuments).toBeCalledWith(anotherProject)
     })
 
     it('should refresh the download store', async () => {
       await wrapper.vm.select(anotherProject)
 
-      expect(mockAxios.request).toBeCalledTimes(3)
-      expect(mockAxios.request).toBeCalledWith(
-        expect.objectContaining({
-          url: Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherProject}`)
-        })
-      )
+      expect(api.isDownloadAllowed).toBeCalledTimes(1)
+      expect(api.isDownloadAllowed).toBeCalledWith(anotherProject)
     })
 
     it('should refresh the recommendedByUsers', async () => {
       await wrapper.vm.select(anotherProject)
 
-      expect(mockAxios.request).toBeCalledTimes(3)
-      expect(mockAxios.request).toBeCalledWith(
-        expect.objectContaining({
-          url: Api.getFullUrl('/api/users/recommendations'),
-          method: 'GET',
-          params: {
-            project: anotherProject
-          }
-        })
-      )
+      expect(api.getRecommendationsByProject).toBeCalledTimes(1)
+      expect(api.getRecommendationsByProject).toBeCalledWith(anotherProject)
     })
 
     it('should refresh the route', async () => {
