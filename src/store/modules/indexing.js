@@ -109,10 +109,8 @@ function actionsBuilder(api) {
         commit('updateTasks', [])
       }
     },
-    async deleteAll({ rootState }) {
-      for (const index of rootState.search.indices) {
-        await api.deleteAll(index)
-      }
+    async deleteAll() {
+      await api.deleteAll()
     },
     getNerPipelines() {
       return api.getNerPipelines()
