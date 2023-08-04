@@ -3,19 +3,17 @@ import VueRouter from 'vue-router'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import SearchResultsTable from '@/components/SearchResultsTable'
 
 describe('SearchResultsTable.vue', () => {
-  let i18n, localVue, store, wait, router, wrapper, api, mockAxios
+  let i18n, localVue, store, wait, router, wrapper, api
 
   const { index, es } = esConnectionHelper.build()
 
   beforeAll(() => {
     router = new VueRouter()
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios, null)
+    api = { starDocuments: jest.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -26,9 +24,6 @@ describe('SearchResultsTable.vue', () => {
   })
 
   beforeEach(async () => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: {} })
-
     await letData(es).have(new IndexedDocuments().setBaseName('document').withIndex(index).count(4)).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
     wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store, wait })
@@ -61,14 +56,8 @@ describe('SearchResultsTable.vue', () => {
 
     wrapper.findAll('.list-group-item-action').at(1).trigger('click')
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl('/api/' + index + '/documents/batchUpdate/star'),
-        method: 'POST',
-        data: ['document_01', 'document_02']
-      })
-    )
+    expect(api.starDocuments).toBeCalledTimes(1)
+    expect(api.starDocuments).toBeCalledWith(index, ['document_01', 'document_02'])
   })
 
   it('should translate an unknown size', () => {
@@ -84,9 +73,6 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should select all documents', async () => {
-    mockAxios.request.mockResolvedValue({
-      data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }]
-    })
     wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
     await wrapper.setData({ selected: [{ id: 'document_01' }] })
     await wrapper.vm.$nextTick()
