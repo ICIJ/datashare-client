@@ -13,13 +13,11 @@ FilterStarred.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterStarred.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  let filter, mockAxios, api, store, i18n, localVue, router, wait
+  let filter, store, i18n, localVue, router, wait
   let wrapper
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn().mockResolvedValue({ data: [] }) }
-    api = new Api(mockAxios, null)
-    const core = Core.init(createLocalVue(), api).useAll()
+    const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
