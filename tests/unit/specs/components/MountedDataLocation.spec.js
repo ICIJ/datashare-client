@@ -1,17 +1,14 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import MountedDataLocation from '@/components/MountedDataLocation'
 
 describe('MountedDataLocation', () => {
-  let wrapper, i18n, localVue, store, mockAxios, api
+  let wrapper, i18n, localVue, store
   Murmur.config.set('mountedDataDir', '/foo/bar')
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios)
-    const core = Core.init(createLocalVue(), api).useAll()
+    const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
