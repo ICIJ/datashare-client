@@ -1,6 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import TaskAnalysisList from '@/pages/TaskAnalysisList'
 
@@ -24,15 +23,20 @@ jest.mock('@/api/elasticsearch', () => {
   }
 })
 describe('TaskAnalysisList.vue', () => {
-  let i18n, localVue, store, wait, api, mockAxios
+  let i18n, localVue, store, wait, api
 
   const mockIndexedFiles = [
     { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' },
     { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
   ]
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios)
+    api = {
+      index: jest.fn(),
+      getTasks: jest.fn(),
+      deleteDoneTasks: jest.fn(),
+      stopPendingTasks: jest.fn(),
+      stopTask: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -40,8 +44,8 @@ describe('TaskAnalysisList.vue', () => {
     wait = core.wait
   })
   beforeEach(() => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: mockIndexedFiles })
+    jest.clearAllMocks()
+    api.getTasks.mockResolvedValue(mockIndexedFiles)
     store.commit('indexing/reset')
   })
 
@@ -102,12 +106,10 @@ describe('TaskAnalysisList.vue', () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
 
-    mockAxios.request.mockClear()
     wrapper.find('.task-analysis-list__actions__stop-pending-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
-    const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
-    expect(calledUrls).toContain(Api.getFullUrl('/api/task/stopAll'))
+    expect(api.stopPendingTasks).toBeCalledTimes(1)
   })
 
   it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
@@ -117,12 +119,10 @@ describe('TaskAnalysisList.vue', () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
 
-    mockAxios.request.mockClear()
     wrapper.find('.task-analysis-list__actions__delete-done-tasks').trigger('click')
     await flushPromisesAndPendingTimers()
 
-    const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
-    expect(calledUrls).toContain(Api.getFullUrl('/api/task/clean'))
+    expect(api.deleteDoneTasks).toBeCalledTimes(1)
   })
 
   it('should display 1 available "Stop task" buttons if 1 tasks are running', async () => {
@@ -136,12 +136,10 @@ describe('TaskAnalysisList.vue', () => {
     const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPolls()
-    mockAxios.request.mockClear()
     wrapper.find('.tasks-list__tasks__item__stop').trigger('click')
     await flushPromisesAndPendingTimers()
-    const calledUrls = mockAxios.request.mock.calls.map((call) => call[0].url)
-    const stopUrl = Api.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.baz@456'))
-    expect(calledUrls).toContain(stopUrl)
+    expect(api.stopTask).toBeCalledTimes(1)
+    expect(api.stopTask).toBeCalledWith('foo.baz@456')
   })
 
   it('should display 1 disabled "Stop task" button if 1 task is done', async () => {
