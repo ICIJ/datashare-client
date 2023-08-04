@@ -6,18 +6,15 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import DocumentActions from '@/components/DocumentActions'
 import { Core } from '@/core'
-import { Api } from '@/api'
 
 describe('DocumentActions.vue', () => {
-  let i18n, localVue, store, mockAxios, api
+  let i18n, localVue, store
   const { index: project, es } = esConnectionHelper.build()
   let document = null
   let wrapper = null
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn().mockResolvedValue({ data: {} }) }
-    api = new Api(mockAxios, null)
-    const core = Core.init(createLocalVue(), api).useAll()
+    const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
