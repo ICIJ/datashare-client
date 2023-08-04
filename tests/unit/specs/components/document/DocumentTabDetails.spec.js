@@ -10,11 +10,9 @@ import { Api } from '@/api'
 describe('DocumentTabDetails.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
-  let wrapper, i18n, localVue, store, router, api, mockAxios
+  let wrapper, i18n, localVue, store, router
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios, null)
-    const core = Core.init(createLocalVue(), api).useAll()
+    const core = Core.init(createLocalVue(), null).useAll()
     i18n = core.i18n
     localVue = core.localVue
     router = core.router
