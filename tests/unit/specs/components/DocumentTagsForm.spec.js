@@ -6,13 +6,12 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from 'tests/unit/tests_utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import settings from '@/utils/settings'
 
 describe('DocumentTagsForm.vue', () => {
-  let wrapper, i18n, localVue, store, api, mockAxios
+  let wrapper, i18n, localVue, store, api
   const { index: project, es } = esConnectionHelper.build()
   const id = 'document'
 
@@ -24,11 +23,7 @@ describe('DocumentTagsForm.vue', () => {
     displayTags = true,
     displayForm = true
   }) {
-    mockAxios.request.mockResolvedValue({
-      data: map(tags, (item) => {
-        return { label: item, user: { id: 'test-user' } }
-      })
-    })
+    api.getTags.mockResolvedValue(map(tags, (item) => ({ label: item, user: { id: 'test-user' } })))
     await letData(es).have(new IndexedDocument(documentId, project).withTags(tags)).commit()
     await store.dispatch('document/get', { id: documentId, index: project })
     await store.dispatch('document/getTags')
@@ -44,8 +39,11 @@ describe('DocumentTagsForm.vue', () => {
   }
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios, null)
+    api = {
+      getTags: jest.fn(),
+      tagDocuments: jest.fn(),
+      untagDocuments: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -54,7 +52,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   beforeEach(() => {
-    mockAxios.request.mockClear()
+    jest.clearAllMocks()
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
@@ -62,7 +60,6 @@ describe('DocumentTagsForm.vue', () => {
 
   afterAll(() => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    jest.unmock('mockAxios')
   })
 
   it('should display form to add new tag', async () => {
@@ -128,21 +125,12 @@ describe('DocumentTagsForm.vue', () => {
   it('should call API endpoint to add a tag', async () => {
     wrapper = await createView({ es, project, tags: ['tag_01'] })
 
-    mockAxios.request.mockClear()
     wrapper.vm.tag = 'tag_02'
     await wrapper.vm.addTag()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/tag`),
-        method: 'POST',
-        data: {
-          docIds: [id],
-          tags: ['tag_02']
-        }
-      })
-    )
+    expect(api.tagDocuments).toBeCalledTimes(1)
+    expect(api.tagDocuments).toBeCalledWith(project, [id], ['tag_02'])
+
     expect(store.state.document.tags).toHaveLength(2)
     expect(sortBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
     expect(sortBy(store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
@@ -151,60 +139,30 @@ describe('DocumentTagsForm.vue', () => {
   it('should split tags by space', async () => {
     wrapper = await createView({ es, project })
 
-    mockAxios.request.mockClear()
     wrapper.vm.tag = 'tag_01 tag_02 tag_03'
     await wrapper.vm.addTag()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/tag`),
-        method: 'POST',
-        data: {
-          docIds: [id],
-          tags: ['tag_01', 'tag_02', 'tag_03']
-        }
-      })
-    )
+    expect(api.tagDocuments).toBeCalledTimes(1)
+    expect(api.tagDocuments).toBeCalledWith(project, [id], ['tag_01', 'tag_02', 'tag_03'])
   })
 
   it('should compact tags to remove empty tags', async () => {
     wrapper = await createView({ es, project })
 
-    mockAxios.request.mockClear()
     wrapper.vm.tag = 'tag_01        tag_02'
     await wrapper.vm.addTag()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/tag`),
-        method: 'POST',
-        data: {
-          docIds: [id],
-          tags: ['tag_01', 'tag_02']
-        }
-      })
-    )
+    expect(api.tagDocuments).toBeCalledTimes(1)
+    expect(api.tagDocuments).toBeCalledWith(project, [id], ['tag_01', 'tag_02'])
   })
 
   it('should call API endpoint to remove a tag', async () => {
     wrapper = await createView({ es, project, tags: ['tag_01', 'tag_02'] })
 
-    mockAxios.request.mockClear()
     await wrapper.vm.deleteTag({ label: 'tag_01' })
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/untag`),
-        method: 'POST',
-        data: {
-          docIds: [id],
-          tags: ['tag_01']
-        }
-      })
-    )
+    expect(api.untagDocuments).toBeCalledTimes(1)
+    expect(api.untagDocuments).toBeCalledWith(project, [id], ['tag_01'])
   })
 
   it('should emit a filter::refresh event on adding a tag', async () => {
