@@ -11,7 +11,10 @@ describe('UserHistory.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    api = {}
+    api = {
+      getUserHistory: jest.fn(),
+      deleteUserHistory: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -53,7 +56,6 @@ describe('UserHistory.vue', () => {
   })
 
   it('should call get user history when page is loaded', async () => {
-    api.getUserHistory = jest.fn()
     await router.replace({ name: 'user-history.document.list' })
     wrapper = shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     await wrapper.vm.$nextTick()
@@ -62,8 +64,6 @@ describe('UserHistory.vue', () => {
   })
 
   it('should call delete user history api function is called', async () => {
-    api.deleteUserHistory = jest.fn()
-
     await router.replace({ name: 'user-history.document.list' })
     wrapper = shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     await wrapper.vm.deleteUserHistory()
