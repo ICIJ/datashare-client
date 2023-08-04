@@ -270,9 +270,9 @@ function actionBuilder(api) {
     async tag({ state, dispatch }, { documents, tag, userId }) {
       const index = state.doc ? state.doc.index : get(documents, '0.index', null)
       await api.tagDocuments(index, map(documents, 'id'), compact(tag.split(' ')))
-      if (documents.length === 1) await dispatch('addTag', { tag, userId })
+      if (documents.length === 1) dispatch('addTag', { tag, userId })
     },
-    async addTag({ state, commit }, { tag, userId }) {
+    addTag({ state, commit }, { tag, userId }) {
       commit('addTag', { tag, userId })
     },
     async deleteTag({ state, commit }, { documents, tag }) {
