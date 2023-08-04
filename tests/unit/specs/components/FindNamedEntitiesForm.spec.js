@@ -1,15 +1,13 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 
 describe('FindNamedEntitiesForm.vue', () => {
-  let wrapper, i18n, localVue, store, wait, api, mockAxios, config
+  let wrapper, i18n, localVue, store, wait, api, config
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios)
+    api = { getNerPipelines: jest.fn(), findNames: jest.fn() }
   })
 
   beforeEach(() => {
@@ -21,31 +19,20 @@ describe('FindNamedEntitiesForm.vue', () => {
     wait = core.wait
     config.set('defaultProject', 'local-datashare')
     config.set('projects', [{ name: 'local-datashare' }])
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: {} })
     store.commit('indexing/reset')
     wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
   })
 
   it('should load NER pipelines on component mounted', () => {
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl('/api/ner/pipelines')
-      })
-    )
+    expect(api.getNerPipelines).toBeCalledTimes(1)
   })
 
   it('should call findNames action with CORENLP pipeline, by default', () => {
     wrapper.vm.submitFindNamedEntities()
-    expect(mockAxios.request).toBeCalledWith(
+    expect(api.findNames).toBeCalledWith(
+      'CORENLP',
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/findNames/CORENLP'),
-        method: 'POST',
-        data: {
-          options: expect.objectContaining({
-            syncModels: true
-          })
-        }
+        syncModels: true
       })
     )
   })
@@ -53,15 +40,10 @@ describe('FindNamedEntitiesForm.vue', () => {
   it('should call findNames action with ANOTHERNLP pipeline', () => {
     wrapper.vm.$set(wrapper.vm, 'pipeline', 'ANOTHERNLP')
     wrapper.vm.submitFindNamedEntities()
-    expect(mockAxios.request).toBeCalledWith(
+    expect(api.findNames).toBeCalledWith(
+      'ANOTHERNLP',
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/findNames/ANOTHERNLP'),
-        method: 'POST',
-        data: {
-          options: expect.objectContaining({
-            syncModels: true
-          })
-        }
+        syncModels: true
       })
     )
   })
@@ -70,15 +52,10 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'pipeline', 'CORENLP')
     wrapper.vm.$set(wrapper.vm, 'offline', true)
     wrapper.vm.submitFindNamedEntities()
-    expect(mockAxios.request).toBeCalledWith(
+    expect(api.findNames).toBeCalledWith(
+      'CORENLP',
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/findNames/CORENLP'),
-        method: 'POST',
-        data: {
-          options: expect.objectContaining({
-            syncModels: false
-          })
-        }
+        syncModels: false
       })
     )
   })
