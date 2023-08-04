@@ -134,9 +134,6 @@ export default {
     },
     downloadResultsUrl(name) {
       return `/api/task/${name}/result`
-    },
-    cleanName(name) {
-      return name.split('.').pop().split('@').shift()
     }
   }
 }

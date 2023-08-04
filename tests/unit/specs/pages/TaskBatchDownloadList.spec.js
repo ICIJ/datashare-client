@@ -1,18 +1,112 @@
 import { flushPromises } from 'tests/unit/tests_utils'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import TaskBatchDownloadList from '@/pages/TaskBatchDownloadList'
 import { Core } from '@/core'
 import { getMode, MODE_NAME } from '@/mode'
 import { storeBuilder } from '@/store/storeBuilder'
 
 describe('TaskBatchDownloadList.vue', () => {
-  let i18n, localVue, wrapper, store, wait, mockAxios
-
+  let i18n, localVue, wrapper, store, wait, api
+  const BatchDownloadList = [
+    {
+      name: 'BatchDownloadTask_01_name',
+      result: 'BatchDownloadTask_01_result',
+      progress: 1,
+      state: 'DONE',
+      user: {
+        id: 'test',
+        provider: 'test',
+        email: null,
+        name: null
+      },
+      properties: {
+        batchDownload: {
+          uuid: 'uuid_01',
+          encrypted: false,
+          filename: 'filename_01_2021-01-01T12:45:25',
+          query: 'query_01',
+          zipSize: 150,
+          exists: true,
+          project: {
+            name: 'project',
+            sourcePath: 'source'
+          },
+          user: {
+            id: 'test',
+            provider: 'test',
+            email: null,
+            name: null
+          }
+        }
+      }
+    },
+    {
+      name: 'BatchDownloadTask_02_name',
+      result: 'BatchDownloadTask_02_result',
+      progress: 1,
+      state: 'DONE',
+      user: {
+        id: 'test',
+        provider: 'test',
+        email: null,
+        name: null
+      },
+      properties: {
+        batchDownload: {
+          uuid: 'uuid_02',
+          encrypted: true,
+          exists: false,
+          filename: 'filename_02_2020-01-01T19:50:00',
+          query: 'query_02',
+          project: {
+            name: 'project',
+            sourcePath: 'source'
+          },
+          user: {
+            id: 'test',
+            provider: 'test',
+            email: null,
+            name: null
+          }
+        }
+      }
+    },
+    {
+      name: 'BatchDownloadTask_03_name',
+      result: 'BatchDownloadTask_03_result',
+      progress: 0.5,
+      state: 'RUNNING',
+      user: {
+        id: 'test',
+        provider: 'test',
+        email: null,
+        name: null
+      },
+      properties: {
+        batchDownload: {
+          uuid: 'uuid_03',
+          encrypted: false,
+          filename: 'filename_03_2020-12-07T17:35:20',
+          query: 'query_03',
+          project: {
+            name: 'project',
+            sourcePath: 'source'
+          },
+          user: {
+            id: 'test',
+            provider: 'test',
+            email: null,
+            name: null
+          }
+        }
+      }
+    }
+  ]
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    const api = new Api(mockAxios, null)
+    api = {
+      getTasks: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -21,118 +115,17 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   beforeEach(async () => {
-    mockAxios.request.mockResolvedValue({
-      data: [
-        {
-          name: 'BatchDownloadTask_01_name',
-          result: 'BatchDownloadTask_01_result',
-          progress: 1,
-          state: 'DONE',
-          user: {
-            id: 'test',
-            provider: 'test',
-            email: null,
-            name: null
-          },
-          properties: {
-            batchDownload: {
-              uuid: 'uuid_01',
-              encrypted: false,
-              filename: 'filename_01_2021-01-01T12:45:25',
-              query: 'query_01',
-              zipSize: 150,
-              exists: true,
-              project: {
-                name: 'project',
-                sourcePath: 'source'
-              },
-              user: {
-                id: 'test',
-                provider: 'test',
-                email: null,
-                name: null
-              }
-            }
-          }
-        },
-        {
-          name: 'BatchDownloadTask_02_name',
-          result: 'BatchDownloadTask_02_result',
-          progress: 1,
-          state: 'DONE',
-          user: {
-            id: 'test',
-            provider: 'test',
-            email: null,
-            name: null
-          },
-          properties: {
-            batchDownload: {
-              uuid: 'uuid_02',
-              encrypted: true,
-              exists: false,
-              filename: 'filename_02_2020-01-01T19:50:00',
-              query: 'query_02',
-              project: {
-                name: 'project',
-                sourcePath: 'source'
-              },
-              user: {
-                id: 'test',
-                provider: 'test',
-                email: null,
-                name: null
-              }
-            }
-          }
-        },
-        {
-          name: 'BatchDownloadTask_03_name',
-          result: 'BatchDownloadTask_03_result',
-          progress: 0.5,
-          state: 'RUNNING',
-          user: {
-            id: 'test',
-            provider: 'test',
-            email: null,
-            name: null
-          },
-          properties: {
-            batchDownload: {
-              uuid: 'uuid_03',
-              encrypted: false,
-              filename: 'filename_03_2020-12-07T17:35:20',
-              query: 'query_03',
-              project: {
-                name: 'project',
-                sourcePath: 'source'
-              },
-              user: {
-                id: 'test',
-                provider: 'test',
-                email: null,
-                name: null
-              }
-            }
-          }
-        }
-      ]
-    })
+    jest.clearAllMocks()
+    api.getTasks.mockResolvedValue(BatchDownloadList)
     wrapper = mount(TaskBatchDownloadList, { i18n, localVue, store, wait })
-    mockAxios.request.mockClear()
     await flushPromises()
   })
 
   it('should get all batch download tasks', async () => {
     await wrapper.vm.getDownloadTasks()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({
-      url: Api.getFullUrl('/api/task/all'),
-      params: {
-        filter: 'BatchDownloadRunner'
-      }
-    })
+    expect(api.getTasks).toBeCalledTimes(2) // 1 on mount and 1 in the getDownloadTasks
+    expect(api.getTasks).toBeCalledWith('BatchDownloadRunner')
   })
 
   it('should display a list of batch download tasks', async () => {
