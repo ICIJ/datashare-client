@@ -4,16 +4,14 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import { Core } from '@/core'
-import { Api } from '@/api'
 
 describe('SearchResultsHeader.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const { index: anotherIndex } = esConnectionHelper.build()
-  let wrapper, i18n, localVue, router, store, mockAxios
+  let wrapper, i18n, localVue, router, store, api
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    const api = new Api(mockAxios)
+    api = { runBatchDownload: jest.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -23,8 +21,6 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   beforeEach(() => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: {} })
     wrapper = mount(SearchResultsHeader, { i18n, localVue, router, store })
     store.commit('search/reset')
   })
@@ -120,28 +116,21 @@ describe('SearchResultsHeader.vue', () => {
     wrapper.vm.tag = 'tag_02'
 
     await wrapper.vm.batchDownload()
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchDownload'),
-        method: 'POST',
-        data: {
-          options: {
-            projectIds: [index, anotherIndex],
-            uri: expect.any(String),
-            query: {
-              bool: {
-                must: [
-                  { match_all: {} },
-                  { bool: { should: [{ query_string: { query: 'bar' } }] } },
-                  { match: { type: 'Document' } }
-                ]
-              }
-            }
-          }
+    expect(api.runBatchDownload).toBeCalledTimes(1)
+    const data = {
+      projectIds: [index, anotherIndex],
+      uri: expect.any(String),
+      query: {
+        bool: {
+          must: [
+            { match_all: {} },
+            { bool: { should: [{ query_string: { query: 'bar' } }] } },
+            { match: { type: 'Document' } }
+          ]
         }
-      })
-    )
+      }
+    }
+    expect(api.runBatchDownload).toBeCalledWith(expect.objectContaining(data))
   })
 
   describe('firstDocument', () => {
