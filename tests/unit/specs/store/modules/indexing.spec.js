@@ -139,7 +139,7 @@ describe('IndexingStore', () => {
     expect(mockAxios.request).toBeCalledTimes(1)
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl(`/api/project/${project}`),
+        url: Api.getFullUrl(`/api/project/`),
         method: 'DELETE'
       })
     )
