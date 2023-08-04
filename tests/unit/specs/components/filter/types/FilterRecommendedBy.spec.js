@@ -1,7 +1,6 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 
@@ -20,12 +19,14 @@ FilterRecommendedBy.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterRecommendedBy.vue', () => {
   const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
-  let i18n, localVue, router, store, wait, wrapper, api, mockAxios
+  let i18n, localVue, router, store, wait, wrapper, api
   const project = toLower('FilterRecommendedBy')
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios, null)
+    api = {
+      getRecommendationsByProject: jest.fn(),
+      getDocumentsRecommendedBy: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -37,25 +38,23 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({
-      data: {
-        totalCount: 42,
-        aggregates: [
-          {
-            item: { id: 'user_00' },
-            count: 2
-          },
-          {
-            item: { id: 'user_01' },
-            count: 1
-          },
-          {
-            item: { id: 'user_02' },
-            count: 3
-          }
-        ]
-      }
+    jest.clearAllMocks()
+    api.getRecommendationsByProject.mockResolvedValue({
+      totalCount: 42,
+      aggregates: [
+        {
+          item: { id: 'user_00' },
+          count: 2
+        },
+        {
+          item: { id: 'user_01' },
+          count: 1
+        },
+        {
+          item: { id: 'user_02' },
+          count: 3
+        }
+      ]
     })
     const filter = store.getters['search/getFilter']({ name: 'recommendedBy' })
     const propsData = { filter }
@@ -73,16 +72,8 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   it('should load users who recommended documents in this project', () => {
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project
-        }
-      })
-    )
+    expect(api.getRecommendationsByProject).toBeCalledTimes(1)
+    expect(api.getRecommendationsByProject).toBeCalledWith(project)
     expect(wrapper.vm.recommendedByUsers).toEqual([
       { user: 'user_00', count: 2 },
       { user: 'user_01', count: 1 },
@@ -105,32 +96,20 @@ describe('FilterRecommendedBy.vue', () => {
 
   it('should retrieve documents recommended by selected users', async () => {
     const documents = ['document_01', 'document_02', 'document_03']
-    mockAxios.request.mockResolvedValue({ data: documents })
-    mockAxios.request.mockClear()
+    api.getDocumentsRecommendedBy.mockResolvedValue(documents)
     await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
-        method: 'GET',
-        params: {
-          userids: 'user_01,user_02'
-        }
-      })
-    )
+    expect(api.getDocumentsRecommendedBy).toBeCalledWith(project, ['user_01', 'user_02'])
     expect(store.state.recommended.documents).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeFalsy()
   })
 
   it('should select no users', async () => {
-    mockAxios.request.mockResolvedValue({ data: [] })
-    mockAxios.request.mockClear()
-
     await wrapper.vm.selectUsers([])
     await wrapper.vm.$nextTick()
 
-    expect(mockAxios.request).toBeCalledTimes(0)
+    expect(api.getDocumentsRecommendedBy).toBeCalledTimes(0)
     expect(store.state.recommended.documents).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeTruthy()
