@@ -12,7 +12,7 @@
       <div class="ml-4 pl-3">
         <p class="font-weight-bold mb-0">In which folder do you want to index?</p>
         <p class="small mb-2">The entire Datashare folder will be indexed by default.</p>
-        <inline-directory-picker v-model="path" hide-folder-icon dark />
+        <inline-directory-picker v-model="path" :source-path="sourcePath" hide-folder-icon dark />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -144,6 +144,10 @@ export default {
       get() {
         return this.$store.state.indexing.form.defaultProject || this.$config.get('defaultProject')
       }
+    },
+    sourcePath() {
+      const project = this.$core.findProject(this.defaultProject)
+      return project?.sourcePath?.split('file://').pop() ?? this.$config.get('dataDir')
     },
     isWaitingForSubmitExtract() {
       return this.$wait.is('submitExtract')

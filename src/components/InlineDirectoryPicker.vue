@@ -16,6 +16,10 @@ export default {
     },
     hideFolderIcon: {
       type: Boolean
+    },
+    sourcePath: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -23,15 +27,15 @@ export default {
       browse: false,
       browsingPath: null,
       browsingTree: null,
-      pathSeparator: this.$core.config.get('pathSeparator', '/')
+      pathSeparator: this.$config.get('pathSeparator', '/')
     }
   },
   computed: {
-    cannonicalDataDir() {
-      return trimEnd(this.dataDir, this.pathSeparator)
-    },
     dataDir() {
       return this.$config.get('dataDir')
+    },
+    cannonicalDataDir() {
+      return trimEnd(this.sourcePath ?? this.dataDir, this.pathSeparator)
     },
     browsingTreeDirectories() {
       return filter(get(this.browsingTree, 'contents', []), { type: 'directory' })
@@ -64,6 +68,11 @@ export default {
       return this.dark ? 'dark' : 'light'
     }
   },
+  watch: {
+    sourcePath(path) {
+      this.selectPath(path)
+    }
+  },
   methods: {
     basename(path) {
       return trim(path.split(this.pathSeparator).pop(), this.pathSeparator)
@@ -89,7 +98,8 @@ export default {
       return this.selectPath(this.cannonicalDataDir + path)
     },
     selectPath(path) {
-      this.$emit('input', path)
+      this.browsingPath = trimEnd(path, this.pathSeparator)
+      this.$emit('input', this.browsingPath)
       return path
     },
     async selectAndBrowse(pathOrIndex) {
