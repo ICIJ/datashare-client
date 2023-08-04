@@ -60,16 +60,17 @@ export default {
     }
   },
   methods: {
-    async deleteAll() {
+    async deleteAllProjects() {
       try {
         await this.$store.dispatch('indexing/deleteAll')
-        this.$root.$emit('index::delete::all')
         this.$bvToast.toast(this.$t('indexing.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (error) {
         if (error && error.response && error.response.status !== 404) {
           this.$bvToast.toast(this.$t('indexing.deleteFailure'), { noCloseButton: true, variant: 'danger' })
         }
       }
+    },
+    async deleteAllBatchSearches() {
       try {
         await this.$store.dispatch('batchSearch/deleteBatchSearches')
         this.$bvToast.toast(this.$t('indexing.deleteBatchSearchSuccess'), { noCloseButton: true, variant: 'success' })
@@ -78,6 +79,14 @@ export default {
           this.$bvToast.toast(this.$t('indexing.deleteBatchSearchFailure'), { noCloseButton: true, variant: 'danger' })
         }
       }
+    },
+    async deleteAll() {
+      await this.deleteAllProjects()
+      await this.deleteAllBatchSearches()
+      await this.$core.createDefaultProject()
+      await this.$core.loadUser()
+      this.$store.commit('search/index', this.$config.get('defaultProject'))
+      this.$root.$emit('index::delete::all')
     },
     showTreeView() {
       this.$set(this, 'path', this.dataDir)
