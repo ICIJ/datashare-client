@@ -104,13 +104,13 @@ export default {
   methods: {
     async getHashedApiKey() {
       const username = await this.$core.auth.getUsername()
-      const { hashedKey } = await this.$core.api.getApiKey(username)
-      this.hashedKey = hashedKey
+      const key = await this.$core.api.getApiKey(username)
+      this.hashedKey = key.hashedKey
     },
     async createApiKey() {
       const username = await this.$core.auth.getUsername()
-      const { apiKey } = await this.$core.api.createApiKey(username) // why hash is not returned at the same time?
-      this.apiKey = apiKey
+      const key = await this.$core.api.createApiKey(username) // why hash is not returned at the same time?
+      this.apiKey = key.apiKey
       await this.getHashedApiKey()
     },
     async deleteApiKey() {
