@@ -5,7 +5,6 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 import { Core } from '@/core'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
-import { Api } from '@/api'
 
 describe('DocumentTabDetails.vue', () => {
   const { index, es } = esConnectionHelper.build()

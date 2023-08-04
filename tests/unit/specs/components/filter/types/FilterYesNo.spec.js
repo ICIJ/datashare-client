@@ -6,7 +6,6 @@ import { flushPromises } from 'tests/unit/tests_utils'
 
 import FilterStarred from '@/components/filter/types/FilterStarred'
 import { Core } from '@/core'
-import { Api } from '@/api'
 
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
 FilterStarred.methods.refreshRouteAndSearch = jest.fn()

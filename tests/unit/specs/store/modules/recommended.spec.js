@@ -1,6 +1,5 @@
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 
 describe('RecommendedStore', () => {
