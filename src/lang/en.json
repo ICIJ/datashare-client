@@ -94,6 +94,8 @@
         "sizeSmallest": "Size (increasing)",
         "path": "File path (A to Z)",
         "pathReverse": "File path (Z to A)",
+        "name": "File name (A to Z)",
+        "nameReverse": "File name (Z to A)",
         "default": "default",
         "count": "frequency"
       }

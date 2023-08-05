@@ -155,6 +155,14 @@ export default {
       name: 'pathReverse',
       field: 'path',
       desc: true
+    },
+    {
+      name: 'name',
+      desc: false
+    },
+    {
+      name: 'nameReverse',
+      desc: true
     }
   ],
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],

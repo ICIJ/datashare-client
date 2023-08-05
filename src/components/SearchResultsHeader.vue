@@ -151,6 +151,8 @@ export default {
         'creationDateOldest',
         'sizeLargest',
         'sizeSmallest',
+        'name',
+        'nameReverse',
         'path',
         'pathReverse',
         'dateNewest',
