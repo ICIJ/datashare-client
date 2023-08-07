@@ -1,12 +1,11 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { flushPromises } from 'tests/unit/tests_utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import Extensions from '@/components/Extensions'
 
 describe('Extensions.vue', () => {
-  let wrapper, i18n, localVue, api, mockAxios
+  let wrapper, i18n, localVue, api
   const mockedExtensions = [
     {
       id: 'extension_01_id',
@@ -60,16 +59,20 @@ describe('Extensions.vue', () => {
     }
   ]
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios, null)
+    api = {
+      getExtensions: jest.fn(),
+      installExtensionFromId: jest.fn(),
+      installExtensionFromUrl: jest.fn(),
+      uninstallExtension: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
   })
 
   beforeEach(async () => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: mockedExtensions })
+    jest.clearAllMocks()
+    api.getExtensions.mockResolvedValue(mockedExtensions)
     wrapper = shallowMount(Extensions, {
       i18n,
       localVue
@@ -225,24 +228,20 @@ describe('Extensions.vue', () => {
   })
 
   it('should search for matching extensions', async () => {
-    mockAxios.request.mockClear()
+    api.getExtensions.mockReset() // has previously been called on mounted
     await wrapper.setData({ searchTerm: '02_desc' })
     await wrapper.vm.search()
     await flushPromises()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl('/api/extensions?filter=.*02_desc.*') })
+    expect(api.getExtensions).toBeCalledTimes(1)
+    expect(api.getExtensions).toBeCalledWith('02_desc')
   })
 
   it('should call for extension installation from extensionId', () => {
-    mockAxios.request.mockClear()
     wrapper.vm.installExtensionFromId('extension_01_id')
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({
-      method: 'PUT',
-      url: Api.getFullUrl('/api/extensions/install?id=extension_01_id')
-    })
+    expect(api.installExtensionFromId).toBeCalledTimes(1)
+    expect(api.installExtensionFromId).toBeCalledWith('extension_01_id')
     expect(wrapper.vm.extensions[0].show).toBeTruthy()
   })
 
@@ -254,27 +253,19 @@ describe('Extensions.vue', () => {
         return { url: 'this.is.an.url' }
       }
     })
-    mockAxios.request.mockClear()
 
     wrapper.vm.installExtensionFromUrl()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({
-      method: 'PUT',
-      url: Api.getFullUrl('/api/extensions/install?url=this.is.an.url')
-    })
+    expect(api.installExtensionFromUrl).toBeCalledTimes(1)
+    expect(api.installExtensionFromUrl).toBeCalledWith('this.is.an.url')
     expect(wrapper.vm.isInstallingFromUrl).toBeTruthy()
   })
 
   it('should call for extension uninstallation', () => {
-    mockAxios.request.mockClear()
     wrapper.vm.uninstallExtension('extension_01_id')
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({
-      method: 'DELETE',
-      url: Api.getFullUrl('/api/extensions/uninstall?id=extension_01_id')
-    })
+    expect(api.uninstallExtension).toBeCalledTimes(1)
+    expect(api.uninstallExtension).toBeCalledWith('extension_01_id')
     expect(wrapper.vm.extensions[0].show).toBeTruthy()
   })
 })
