@@ -34,10 +34,11 @@ describe('BatchSearchCopyForm.vue', () => {
 
   beforeAll(() => {
     Murmur.config.merge({ mode: 'SERVER' })
-    const mockApi = jest.fn()
-    mockApi.copyBatchSearch = jest.fn()
-    mockApi.runBatchSearch = jest.fn()
-    const core = Core.init(createLocalVue(), mockApi).useAll()
+    const api = {
+      copyBatchSearch: jest.fn(),
+      runBatchSearch: jest.fn()
+    }
+    const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
