@@ -3,11 +3,9 @@ import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import { Core } from '@/core'
 import Document from '@/api/resources/Document'
 import UserHistoryDocumentList from '@/pages/UserHistoryDocumentList'
-import { Api } from '@/api'
 
 describe('UserHistoryDocumentList.vue', () => {
-  const api = new Api(null, null)
-  const { i18n, localVue, router, store } = Core.init(createLocalVue(), api).useAll()
+  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
   const propsData = {
     events: [
       {
