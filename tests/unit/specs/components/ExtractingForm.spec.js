@@ -1,11 +1,10 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import ExtractingForm from '@/components/ExtractingForm'
 
 describe('ExtractingForm.vue', () => {
-  let wrapper, i18n, localVue, router, store, mockAxios, api, wait, config
+  let wrapper, i18n, localVue, router, store, api, wait, config
 
   const propsData = {
     textLanguages: [
@@ -17,8 +16,11 @@ describe('ExtractingForm.vue', () => {
   }
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn().mockResolvedValue([]), get: jest.fn().mockResolvedValue([]) }
-    api = new Api(mockAxios, null)
+    api = {
+      textLanguages: jest.fn(),
+      ocrLanguages: jest.fn(),
+      index: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     config = core.config
@@ -29,13 +31,10 @@ describe('ExtractingForm.vue', () => {
   })
 
   beforeEach(() => {
+    jest.clearAllMocks()
     config.set('defaultProject', 'local-datashare')
     config.set('projects', [{ name: 'local-datashare' }])
     wrapper = shallowMount(ExtractingForm, { i18n, localVue, propsData, router, store, wait })
-    mockAxios.request.mockClear()
-    mockAxios.get.mockClear()
-    mockAxios.request.mockResolvedValue({ data: {} })
-    mockAxios.get.mockResolvedValue({ data: {} })
   })
 
   afterEach(() => store.commit('indexing/reset'))
@@ -43,17 +42,11 @@ describe('ExtractingForm.vue', () => {
   it('should call extract action without OCR option, by default', () => {
     wrapper.vm.submitExtract()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
+    expect(api.index).toBeCalledTimes(1)
+    expect(api.index).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
-        method: 'POST',
-        data: {
-          options: expect.objectContaining({
-            ocr: false,
-            filter: true
-          })
-        }
+        ocr: false,
+        filter: true
       })
     )
   })
@@ -62,20 +55,12 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'ocr', true)
     wrapper.vm.$set(wrapper.vm, 'language', 'fra')
     wrapper.vm.submitExtract()
-
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith(
+    expect(api.index).toBeCalledTimes(1)
+    expect(api.index).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
-        method: 'POST',
-        data: {
-          options: expect.objectContaining({
-            ocr: true,
-            filter: true,
-            language: 'fra',
-            ocrLanguage: 'fra'
-          })
-        }
+        ocr: true,
+        filter: true,
+        language: 'fra'
       })
     )
   })
@@ -83,23 +68,16 @@ describe('ExtractingForm.vue', () => {
   it('should reset the modal params on submitting the form', async () => {
     wrapper.vm.$set(wrapper.vm, 'ocr', true)
     await wrapper.vm.submitExtract()
-    expect(wrapper.vm.ocr).toBeFalsy()
+    expect(wrapper.vm.ocr).toBe(false)
   })
 
   it('should call retrieve text and ocr languages', () => {
+    api.textLanguages.mockReset() // called on mounted
+    api.ocrLanguages.mockReset() // called on mounted
     wrapper.vm.loadLanguages()
 
-    expect(mockAxios.request).toBeCalledTimes(2)
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl('/api/settings/text/languages')
-      })
-    )
-    expect(mockAxios.request).toBeCalledWith(
-      expect.objectContaining({
-        url: Api.getFullUrl('/api/settings/ocr/languages')
-      })
-    )
+    expect(api.textLanguages).toBeCalledTimes(1)
+    expect(api.ocrLanguages).toBeCalledTimes(1)
   })
 
   it('should show the project selector when there is several projects', async () => {
