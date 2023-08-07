@@ -12,11 +12,11 @@ jest.mock('@/utils/utils', () => {
 })
 
 describe('AppSidebar.vue', () => {
-  const mockApi = {
+  const api = {
     getVersion: jest.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } })
   }
 
-  const { config, i18n, localVue, router, store } = Core.init(createLocalVue(), mockApi).useAll()
+  const { config, i18n, localVue, router, store } = Core.init(createLocalVue(), api).useAll()
   let wrapper = null
 
   function setServerMode() {
