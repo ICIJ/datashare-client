@@ -6,17 +6,21 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
 
-// Mock all api calls
-jest.mock('@/api')
-
-const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('FilterPath.vue', () => {
   const { index } = esConnectionHelper.build()
   const { otherIndex } = esConnectionHelper.build()
-  const filter = store.getters['search/getFilter']({ name: 'path' })
+  let filter, i18n, localVue, router, store, wait, api
   let wrapper = null
-
+  beforeAll(() => {
+    api = { tree: jest.fn() }
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    router = core.router
+    store = core.store
+    wait = core.wait
+    filter = store.getters['search/getFilter']({ name: 'path' })
+  })
   beforeEach(() => {
     store.commit('search/index', index)
     store.commit('search/reset')

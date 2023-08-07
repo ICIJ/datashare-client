@@ -4,8 +4,9 @@ import FiltersPanel from '@/components/FiltersPanel'
 import { Core } from '@/core'
 
 describe('FiltersPanel.vue', () => {
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
+  const api = { tree: jest.fn() }
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), api).useAll()
 
   beforeEach(() => {
     wrapper = shallowMount(FiltersPanel, { i18n, localVue, router, store, wait })

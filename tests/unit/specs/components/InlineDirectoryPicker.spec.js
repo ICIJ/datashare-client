@@ -57,11 +57,19 @@ const HOME_01FOO_TREE = {
 }
 
 describe('InlineDirectoryPicker.vue', () => {
+  let api
+  beforeAll(() => {
+    api = {
+      tree: jest.fn()
+    }
+  })
+  beforeEach(() => {
+    api.tree.mockClear()
+  })
   describe('without path', () => {
     let wrapper
 
     beforeEach(() => {
-      const api = jest.fn()
       const { localVue, i18n, wait, store, config } = Core.init(createLocalVue(), api).useAll()
       config.set('dataDir', '/home/dev/Datashare/')
       wrapper = mount(InlineDirectoryPicker, { localVue, i18n, wait, store })
@@ -74,7 +82,7 @@ describe('InlineDirectoryPicker.vue', () => {
     })
 
     it('should render the "Home" tree when clicking on "Browse"', async () => {
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      api.tree.mockResolvedValue(HOME_TREE)
       wrapper.find('.inline-directory-picker__header__browse').trigger('click')
       await flushPromises()
       const subDirectories = wrapper.findAll('.inline-directory-picker__browser__item__link')
@@ -83,7 +91,7 @@ describe('InlineDirectoryPicker.vue', () => {
     })
 
     it('should close the browsing tree when clicking again on the browsing button', async () => {
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      api.tree.mockResolvedValue(HOME_TREE)
       wrapper.find('.inline-directory-picker__header__browse').trigger('click')
       await flushPromises()
       expect(wrapper.vm.browse).toBeTruthy()
@@ -93,7 +101,7 @@ describe('InlineDirectoryPicker.vue', () => {
     })
 
     it('should show a "Close" label on the browsing when browsing', async () => {
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      api.tree.mockResolvedValue(HOME_TREE)
       const btn = wrapper.find('.inline-directory-picker__header__browse')
       expect(btn.text()).toBe('Browse')
       btn.trigger('click')
@@ -103,11 +111,11 @@ describe('InlineDirectoryPicker.vue', () => {
 
     it('should enter the "01FOO" tree when clicking on the sub-directory', async () => {
       // Load the sub directories from Home
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      api.tree.mockResolvedValue(HOME_TREE)
       wrapper.find('.inline-directory-picker__header__browse').trigger('click')
       await flushPromises()
       // Load the sub directories from HOME/01FOO
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_01FOO_TREE)
+      api.tree.mockResolvedValue(HOME_01FOO_TREE)
       wrapper.findAll('.inline-directory-picker__browser__item__link').at(0).trigger('click')
       await flushPromises()
 
@@ -128,7 +136,7 @@ describe('InlineDirectoryPicker.vue', () => {
 
     it('should emit an input event when selecting "01FOO" in the browsing tree', async () => {
       // Start to browse tree
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      api.tree.mockResolvedValue(HOME_TREE)
       wrapper.find('.inline-directory-picker__header__browse').trigger('click')
       await flushPromises()
       // Select the first directory
@@ -144,13 +152,12 @@ describe('InlineDirectoryPicker.vue', () => {
     let wrapper
 
     beforeEach(() => {
-      const api = jest.fn()
       const path = '/home/dev/Datashare/01FOO'
       const propsData = { path }
       const { localVue, i18n, wait, store, config } = Core.init(createLocalVue(), api).useAll()
       config.set('dataDir', '/home/dev/Datashare/')
       wrapper = mount(InlineDirectoryPicker, { localVue, i18n, wait, store, propsData })
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_01FOO_TREE)
+      api.tree.mockResolvedValue(HOME_01FOO_TREE)
     })
 
     it('should render the directory list with "Home" and "01FOO"', () => {
