@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { flushPromises } from 'tests/unit/tests_utils'
 
-import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 
 Vue.use(Vuex)
@@ -193,20 +192,14 @@ describe('without using api', () => {
   let store
 
   beforeAll(() => {
-    api = new Api({ request: jest.fn() }, { $emit: jest.fn() })
-    jest.spyOn(api, 'getBatchSearches')
     store = storeBuilder(api)
   })
   beforeEach(() => {
     store.state.batchSearch.nbBatchSearches = 0
     store.state.batchSearch.total = 0
     store.state.batchSearch.batchSearches = {}
-    api.getBatchSearches.mockClear()
   })
 
-  afterAll(() => {
-    api.getBatchSearches.mockReset()
-  })
   it('should set nbBatchSearches on initial retrieve of batch searches', async () => {
     // without init the nbBatchSearches is not updated
     api.getBatchSearches.mockResolvedValueOnce({
