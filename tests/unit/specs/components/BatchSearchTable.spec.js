@@ -5,7 +5,6 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import BatchSearchTable from '@/components/BatchSearchTable'
 
