@@ -6,7 +6,6 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import { Core } from '@/core'
 import BatchSearchActions from '@/components/BatchSearchActions'
 import { getMode, MODE_NAME } from '@/mode'
-import { Api } from '@/api'
 
 describe('BatchSearchActions.vue', () => {
   let wrapper, i18n, localVue, store, wait, router, api
@@ -36,7 +35,7 @@ describe('BatchSearchActions.vue', () => {
   }
 
   beforeAll(() => {
-    api = new Api(null, null)
+    api = { deleteBatchSearch: jest.fn() }
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -56,6 +55,7 @@ describe('BatchSearchActions.vue', () => {
   })
 
   beforeEach(async () => {
+    api.deleteBatchSearch.mockClear()
     await router.push({ name: 'task.batch-search.view.results' }).catch(() => {}) // TODO only for the last test?
     await flushPromises()
   })
@@ -140,7 +140,6 @@ describe('BatchSearchActions.vue', () => {
   })
 
   it('should redirect on batchSearch deletion', async () => {
-    api.deleteBatchSearch = jest.fn()
     api.deleteBatchSearch.mockResolvedValue(true)
     jest.spyOn(router, 'push')
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
