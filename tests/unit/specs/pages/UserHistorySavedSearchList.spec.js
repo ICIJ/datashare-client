@@ -1,6 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import UserHistorySavedSearchList from '@/pages/UserHistorySavedSearchList'
 
@@ -43,8 +42,7 @@ describe('UserHistorySavedSearchList.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    api = new Api(null, null)
-    api.deleteUserHistoryEvent = jest.fn()
+    api = { deleteUserHistoryEvent: jest.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
