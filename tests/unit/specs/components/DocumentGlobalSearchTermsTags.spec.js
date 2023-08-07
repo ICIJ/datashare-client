@@ -3,7 +3,6 @@ import { IndexedDocument } from 'tests/unit/es_utils'
 import { flushPromises } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-import { Api } from '@/api'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import { Core } from '@/core'
 
@@ -46,8 +45,9 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
   let i18n, localVue, store, api
 
   beforeAll(() => {
-    api = new Api(null, null)
-    api.searchDocument = jest.fn()
+    api = {
+      searchDocument: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
