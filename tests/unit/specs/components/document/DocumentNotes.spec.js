@@ -3,11 +3,15 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import DocumentNotes from '@/components/document/DocumentNotes'
 import { Core } from '@/core'
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentNotes.vue', () => {
-  let wrapper
-
+  let wrapper, i18n, localVue, store, api
+  beforeAll(() => {
+    api = { retrieveNotes: jest.fn() }
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+  })
   beforeEach(() => {
     wrapper = shallowMount(DocumentNotes, { i18n, localVue, store })
   })
