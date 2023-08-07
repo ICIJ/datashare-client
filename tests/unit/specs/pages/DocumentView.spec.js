@@ -29,6 +29,7 @@ describe('DocumentView.vue', () => {
   })
 
   beforeEach(async () => {
+    jest.clearAllMocks()
     await letData(es).have(new IndexedDocument(parentId, project)).commit()
     await letData(es).have(new IndexedDocument(id, project).withParent(parentId)).commit()
     store.commit('document/doc', { _id: id, _index: project, _source: { extractionLevel: 1 } })
@@ -116,7 +117,7 @@ describe('DocumentView.vue', () => {
 
     await wrapper.vm.getDoc()
 
-    expect(api.addUserHistoryEvent).toBeCalledTimes(2) // 1 during mount and 1 explicit call
+    expect(api.addUserHistoryEvent).toBeCalledTimes(1)
   })
 
   describe('navigate through tabs as loop', () => {
