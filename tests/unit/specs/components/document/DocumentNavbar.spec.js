@@ -28,6 +28,7 @@ describe('DocumentNavbar.vue', () => {
   })
 
   beforeEach(() => {
+    jest.clearAllMocks()
     const computed = { isServer: () => true }
     wrapper = shallowMount(DocumentNavbar, { i18n, localVue, store, router, computed })
   })
@@ -42,9 +43,8 @@ describe('DocumentNavbar.vue', () => {
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
     })
-
     beforeEach(() => {
-      jest.clearAllMocks()
+      api.getRecommendationsByProject.mockClear()
     })
 
     it('should display a "Mark as recommended" button', () => {
@@ -52,7 +52,7 @@ describe('DocumentNavbar.vue', () => {
     })
 
     it('should call batchUpdate api function, MARK document as recommended and update recommendedBy in search store', async () => {
-      api.getRecommendationsByProject.mockResolvedValue({ aggregates: [{ item: { id: 'Jean-Michel' }, count: 1 }] })
+      api.getRecommendationsByProject.mockResolvedValueOnce({ aggregates: [{ item: { id: 'Jean-Michel' }, count: 1 }] })
       await wrapper.vm.toggleAsRecommended()
 
       expect(api.setMarkAsRecommended).toBeCalledTimes(1)
