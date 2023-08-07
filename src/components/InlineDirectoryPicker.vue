@@ -146,7 +146,7 @@ export default {
               variant="link"
               :title="directoryTitle(i)"
             >
-              {{ basename(directory) }}
+              {{ basename(decodeURI(directory)) }}
             </b-btn>
           </div>
         </active-text-truncate>
