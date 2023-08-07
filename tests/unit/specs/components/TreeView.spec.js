@@ -56,6 +56,7 @@ describe('TreeView.vue', () => {
 
     beforeEach(() => {
       api.tree.mockClear()
+      api.tree.mockResolvedValue(HOME_TREE)
       wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
     })
 
@@ -78,7 +79,7 @@ describe('TreeView.vue', () => {
     })
 
     it('should display 3 directories including one from the tree', async () => {
-      api.tree.mockResolvedValue(HOME_TREE)
+      // api.tree.mockResolvedValue(HOME_TREE)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
         .commit()
@@ -93,7 +94,7 @@ describe('TreeView.vue', () => {
     })
 
     it('should be a display a correct basename', async () => {
-      api.tree.mockResolvedValue(HOME_TREE)
+      // api.tree.mockResolvedValue(HOME_TREE)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
         .commit()
@@ -181,11 +182,11 @@ describe('TreeView.vue', () => {
 
     beforeEach(() => {
       api.tree.mockClear()
+      api.tree.mockResolvedValue(HOME_TREE_WIN)
       wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
     })
 
     it('should be a display a correct basename on windows', async () => {
-      api.tree.mockResolvedValue(HOME_TREE_WIN)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\bar\\doc_01').withIndex(index).count(5))
         .commit()
@@ -200,7 +201,6 @@ describe('TreeView.vue', () => {
     })
 
     it('should display 3 directories including one from the tree on windows', async () => {
-      api.tree.mockResolvedValue(HOME_TREE_WIN)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\bar\\doc_01').withIndex(index).count(5))
         .commit()
