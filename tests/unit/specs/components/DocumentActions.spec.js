@@ -12,9 +12,10 @@ describe('DocumentActions.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
   let document = null
   let wrapper = null
-
+  let api
   beforeAll(() => {
-    const core = Core.init(createLocalVue()).useAll()
+    api = { starDocuments: jest.fn(), unstarDocuments: jest.fn() }
+    const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
