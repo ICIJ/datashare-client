@@ -6,7 +6,6 @@ import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
 import { storeBuilder } from '@/store/storeBuilder'
-import { Api } from '@/api'
 
 describe('SearchStore', () => {
   const { index: project, es } = esConnectionHelper.build()
@@ -14,7 +13,7 @@ describe('SearchStore', () => {
 
   let store
   beforeAll(() => {
-    store = storeBuilder(new Api({ request: jest.fn() }, null))
+    store = storeBuilder()
     store.commit('search/index', project)
   })
 
