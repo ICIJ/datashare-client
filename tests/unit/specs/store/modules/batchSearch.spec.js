@@ -188,10 +188,15 @@ describe('BatchSearchStore', () => {
 })
 
 describe('without using api', () => {
-  let api
-  let store
+  let store, api
 
   beforeAll(() => {
+    api = {
+      getBatchSearches: jest.fn(),
+      deleteBatchSearch: jest.fn(),
+      batchSearch: jest.fn()
+    }
+
     store = storeBuilder(api)
   })
   beforeEach(() => {
