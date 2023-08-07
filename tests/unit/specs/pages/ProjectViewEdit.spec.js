@@ -2,7 +2,6 @@ import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import { flushPromises } from 'tests/unit/tests_utils'
 import VueRouter from 'vue-router'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import ProjectViewEdit from '@/pages/ProjectViewEdit'
 
@@ -10,9 +9,10 @@ describe('ProjectViewEdit.vue', () => {
   let config, i18n, localVue, store, wait, api
 
   beforeAll(() => {
-    api = new Api(null, null)
-    api.updateProject = jest.fn().mockResolvedValue({})
-    api.deleteProject = jest.fn().mockResolvedValue({})
+    api = {
+      updateProject: jest.fn(),
+      deleteProject: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     config = core.config
     i18n = core.i18n
@@ -23,9 +23,6 @@ describe('ProjectViewEdit.vue', () => {
   beforeEach(() => {
     // Ensure the local-datashare project can be found
     config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
-  })
-  afterAll(() => {
-    jest.clearAllMocks()
   })
 
   it('contains a ProjectForm', () => {
