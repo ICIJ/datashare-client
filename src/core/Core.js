@@ -31,7 +31,6 @@ import router from '@/router'
 import guards from '@/router/guards'
 import { storeBuilder } from '@/store/storeBuilder'
 import settings from '@/utils/settings'
-import { Api } from '@/api'
 
 class Base {}
 const Behaviors = compose(
