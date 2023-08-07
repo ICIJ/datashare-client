@@ -6,7 +6,6 @@ import { flushPromises } from 'tests/unit/tests_utils'
 
 import DocumentContent from '@/components/DocumentContent'
 import { Core } from '@/core'
-import { Api } from '@/api'
 
 // Disable lodash throttle to avoid side-effets
 jest.mock('lodash', () => {
@@ -26,11 +25,18 @@ jest.mock('@/utils/style', () => {
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('DocumentContent.vue', () => {
-  const api = new Api(null, null)
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
+  let i18n, localVue, store, wait, api
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
 
+  beforeAll(() => {
+    api = { getDocumentSlice: jest.fn(), searchDocument: jest.fn() }
+    const core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
+    wait = core.wait
+  })
   async function mockDocumentContentSlice(content = '', { language = 'ENGLISH' } = {}) {
     const contentSlice = letTextContent().withContent(content).getResponse()
     // Index the document
@@ -50,17 +56,17 @@ describe('DocumentContent.vue', () => {
   }
 
   beforeEach(() => {
-    api.getDocumentSlice = jest.fn()
-    api.searchDocument = jest.fn()
+    jest.clearAllMocks()
   })
 
   afterEach(async () => {
     // Ensure all promise are flushed...
     await flushPromises()
-    // Then clear all mocks
-    jest.clearAllMocks()
     // Remove document
     store.commit('document/reset')
+  })
+  afterAll(() => {
+    jest.mock('@/utils/style')
   })
 
   describe('the extracted text content', () => {
