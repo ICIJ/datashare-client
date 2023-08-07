@@ -7,8 +7,12 @@ describe('StarredStore', () => {
   const { index, es } = esConnectionHelper.build()
   let store, filter, api
   beforeAll(() => {
-    api = { getStarredDocuments: jest.fn() }
-    store = storeBuilder()
+    api = {
+      getStarredDocuments: jest.fn(),
+      starDocuments: jest.fn(),
+      unstarDocuments: jest.fn()
+    }
+    store = storeBuilder(api)
     filter = store.getters['search/getFilter']({ name: 'starred' })
   })
   beforeEach(() => {
