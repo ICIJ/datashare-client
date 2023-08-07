@@ -35,19 +35,28 @@ export default {
       return this.$config.get('dataDir')
     },
     cannonicalDataDir() {
-      return trimEnd(this.sourcePath ?? this.dataDir, this.pathSeparator)
+      return trimEnd(this.dataDir, this.pathSeparator)
+    },
+    cannonicalSourcePath() {
+      return trimEnd(this.sourcePath, this.pathSeparator)
+    },
+    baseDir() {
+      return this.sourcePath ? this.cannonicalSourcePath : this.cannonicalDataDir
+    },
+    baseDirLabel() {
+      return this.baseDir === this.cannonicalDataDir ? 'Home' : this.basename(this.baseDir)
     },
     browsingTreeDirectories() {
       return filter(get(this.browsingTree, 'contents', []), { type: 'directory' })
     },
     directories() {
       if (!this.path) {
-        return ['Home']
+        return [this.baseDirLabel]
       }
-      return compact(['Home', ...this.pathWithoutDataDir.split(this.pathSeparator)])
+      return compact([this.baseDirLabel, ...this.pathWithoutBaseDir.split(this.pathSeparator)])
     },
-    pathWithoutDataDir() {
-      return trim(this.path.split(this.dataDir).pop(), this.pathSeparator)
+    pathWithoutBaseDir() {
+      return trim(this.path.split(this.baseDir).pop(), this.pathSeparator)
     },
     waitIdentifier() {
       return uniqueId('inline-directory-picker-')
@@ -69,8 +78,9 @@ export default {
     }
   },
   watch: {
-    sourcePath(path) {
-      this.selectPath(path)
+    async sourcePath(path) {
+      this.select(path)
+      await this.loadBrowsingPath()
     }
   },
   methods: {
@@ -78,7 +88,7 @@ export default {
       return trim(path.split(this.pathSeparator).pop(), this.pathSeparator)
     },
     directoryTitle(index) {
-      return [this.cannonicalDataDir, ...this.directories.slice(1, index + 1)].join(this.pathSeparator)
+      return [this.baseDir, ...this.directories.slice(1, index + 1)].join(this.pathSeparator)
     },
     select(pathOrIndex, continueBrowsing = false) {
       this.browse = continueBrowsing
@@ -88,14 +98,14 @@ export default {
       return this.selectIndex(pathOrIndex)
     },
     selectIndex(index) {
-      const nonNullPath = this.path || this.cannonicalDataDir
+      const nonNullPath = this.path || this.baseDir
       const path = nonNullPath
-        .split(this.cannonicalDataDir)
+        .split(this.baseDir)
         .pop()
         .split(this.pathSeparator)
         .slice(0, index + 1)
         .join(this.pathSeparator)
-      return this.selectPath(this.cannonicalDataDir + path)
+      return this.selectPath(this.baseDir + path)
     },
     selectPath(path) {
       this.browsingPath = trimEnd(path, this.pathSeparator)
@@ -106,18 +116,21 @@ export default {
       this.select(pathOrIndex, true)
       // Browse only if we are already browsing
       await this.$nextTick()
-      this.toggleBrowser(this.browse)
+      await this.toggleBrowser(this.browse)
     },
     async toggleBrowser(browse = null) {
       this.browse = browse ?? !this.browse
       if (this.browse) {
-        this.$wait.start(this.waitIdentifier)
-        this.browsingPath = this.path || this.cannonicalDataDir
-        try {
-          this.browsingTree = await this.$core.api.tree(this.browsingPath)
-        } finally {
-          this.$wait.end(this.waitIdentifier)
-        }
+        await this.loadBrowsingPath()
+      }
+    },
+    async loadBrowsingPath() {
+      this.$wait.start(this.waitIdentifier)
+      this.browsingPath = this.path || this.baseDir
+      try {
+        this.browsingTree = await this.$core.api.tree(this.browsingPath)
+      } finally {
+        this.$wait.end(this.waitIdentifier)
       }
     }
   }
