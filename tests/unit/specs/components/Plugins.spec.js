@@ -59,18 +59,22 @@ const pluginsMock = [
 ]
 
 describe('Plugins.vue', () => {
-  let wrapper, i18n, localVue, api, mockAxios
+  let wrapper, i18n, localVue, api
 
   beforeAll(() => {
-    mockAxios = { request: jest.fn() }
-    api = new Api(mockAxios)
+    api = {
+      getPlugins: jest.fn(),
+      installPluginFromId: jest.fn(),
+      installPluginFromUrl: jest.fn(),
+      uninstallPlugin: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
   })
   beforeEach(async () => {
-    mockAxios.request.mockClear() // TODO CD suggestion: mock each plugin api function getPlugins, installPlugin, uninstallPlugin instead of mocking axios
-    mockAxios.request.mockResolvedValue({ data: pluginsMock })
+    jest.clearAllMocks()
+    api.getPlugins.mockResolvedValue(pluginsMock)
     wrapper = shallowMount(Plugins, {
       i18n,
       localVue,
@@ -226,23 +230,19 @@ describe('Plugins.vue', () => {
   })
 
   it('should search for matching plugins', async () => {
-    mockAxios.request.mockClear()
+    api.getPlugins.mockReset()
     await wrapper.setData({ searchTerm: '02_desc' })
     await wrapper.vm.search()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl('/api/plugins?filter=.*02_desc.*') })
+    expect(api.getPlugins).toBeCalledTimes(1)
+    expect(api.getPlugins).toBeCalledWith('02_desc')
   })
 
   it('should call for plugin installation from pluginId', () => {
-    mockAxios.request.mockClear()
     wrapper.vm.installPluginFromId('plugin_01_id')
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({
-      method: 'PUT',
-      url: Api.getFullUrl('/api/plugins/install?id=plugin_01_id')
-    })
+    expect(api.installPluginFromId).toBeCalledTimes(1)
+    expect(api.installPluginFromId).toBeCalledWith('plugin_01_id')
     expect(wrapper.vm.plugins[0].show).toBeTruthy()
   })
 
@@ -254,27 +254,19 @@ describe('Plugins.vue', () => {
         return { url: 'this.is.an.url' }
       }
     })
-    mockAxios.request.mockClear()
 
     wrapper.vm.installPluginFromUrl()
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({
-      method: 'PUT',
-      url: Api.getFullUrl('/api/plugins/install?url=this.is.an.url')
-    })
+    expect(api.installPluginFromUrl).toBeCalledTimes(1)
+    expect(api.installPluginFromUrl).toBeCalledWith('this.is.an.url')
     expect(wrapper.vm.isInstallingFromUrl).toBeTruthy()
   })
 
   it('should call for plugin uninstallation', () => {
-    mockAxios.request.mockClear()
     wrapper.vm.uninstallPlugin('plugin_01_id')
 
-    expect(mockAxios.request).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({
-      method: 'DELETE',
-      url: Api.getFullUrl('/api/plugins/uninstall?id=plugin_01_id')
-    })
+    expect(api.uninstallPlugin).toBeCalledTimes(1)
+    expect(api.uninstallPlugin).toBeCalledWith('plugin_01_id')
     expect(wrapper.vm.plugins[0].show).toBeTruthy()
   })
 })
