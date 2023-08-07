@@ -52,8 +52,7 @@ describe('DocumentNavbar.vue', () => {
     })
 
     it('should call batchUpdate api function, MARK document as recommended and update recommendedBy in search store', async () => {
-      api.setMarkAsRecommended.mockResolvedValue({ aggregates: [{ item: { id: 'Jean-Michel' }, count: 1 }] })
-
+      api.getRecommendationsByProject.mockResolvedValue({ aggregates: [{ item: { id: 'Jean-Michel' }, count: 1 }] })
       await wrapper.vm.toggleAsRecommended()
 
       expect(api.setMarkAsRecommended).toBeCalledTimes(1)
