@@ -63,8 +63,9 @@ describe('BatchSearchTable.vue', () => {
   beforeAll(() => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
 
-    api = new Api(null, null)
-    api.getBatchSearches = jest.fn().mockResolvedValue(batchSearchMock)
+    api = {
+      getBatchSearches: jest.fn().mockResolvedValue(batchSearchMock)
+    }
 
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
