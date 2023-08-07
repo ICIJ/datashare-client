@@ -1,4 +1,3 @@
-import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 
 describe('DownloadsStore', () => {
@@ -6,8 +5,7 @@ describe('DownloadsStore', () => {
   const anotherIndex = 'downloadStoreBar'
   let store
   beforeAll(() => {
-    const api = new Api(null, null)
-    store = storeBuilder(api)
+    store = storeBuilder()
     store.commit('search/indices', index)
   })
   beforeEach(() => {
