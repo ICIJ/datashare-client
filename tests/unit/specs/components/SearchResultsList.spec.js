@@ -5,7 +5,7 @@ import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 
 import { Core } from '@/core'
 import SearchResultsList from '@/components/SearchResultsList'
-import settings from "@/utils/settings";
+import settings from '@/utils/settings'
 
 const { localVue, i18n, store } = Core.init(createLocalVue()).useAll()
 
