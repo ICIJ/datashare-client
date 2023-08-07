@@ -2,6 +2,7 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 import elasticsearch from '@/api/elasticsearch'
 import { Core } from '@/core'
@@ -114,10 +115,10 @@ describe('DocumentView.vue', () => {
 
   it('should call the API to add document to history', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
-
+    await flushPromises()
     await wrapper.vm.getDoc()
 
-    expect(api.addUserHistoryEvent).toBeCalledTimes(1)
+    expect(api.addUserHistoryEvent).toBeCalledTimes(2) // mounter + call
   })
 
   describe('navigate through tabs as loop', () => {
