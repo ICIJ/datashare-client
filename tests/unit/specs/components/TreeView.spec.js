@@ -36,8 +36,8 @@ const HOME_TREE_WIN = {
 describe('TreeView.vue', () => {
   describe('Posix', () => {
     const { index, es } = esConnectionHelper.build()
-
-    const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+    const api = { tree: jest.fn() }
+    const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
     const propsData = {
       projects: [index],
       path: '/home/foo',
@@ -55,8 +55,8 @@ describe('TreeView.vue', () => {
     })
 
     beforeEach(() => {
-      const api = jest.fn()
-      wrapper = shallowMount(TreeView, { api, i18n, localVue, propsData, store, wait })
+      api.tree.mockClear()
+      wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
     })
 
     it('should be a Vue instance', () => {
@@ -78,7 +78,7 @@ describe('TreeView.vue', () => {
     })
 
     it('should display 3 directories including one from the tree', async () => {
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      api.tree.mockResolvedValue(HOME_TREE)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
         .commit()
@@ -93,7 +93,7 @@ describe('TreeView.vue', () => {
     })
 
     it('should be a display a correct basename', async () => {
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE)
+      api.tree.mockResolvedValue(HOME_TREE)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
         .commit()
@@ -161,9 +161,9 @@ describe('TreeView.vue', () => {
   })
   describe('Windows', () => {
     let wrapper = null
-
+    const api = { tree: jest.fn() }
     const { index, es } = esConnectionHelper.build('spec', true)
-    const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+    const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
 
     const propsData = {
       projects: [index],
@@ -180,12 +180,12 @@ describe('TreeView.vue', () => {
     })
 
     beforeEach(() => {
-      const api = jest.fn()
-      wrapper = shallowMount(TreeView, { api, i18n, localVue, propsData, store, wait })
+      api.tree.mockClear()
+      wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
     })
 
     it('should be a display a correct basename on windows', async () => {
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE_WIN)
+      api.tree.mockResolvedValue(HOME_TREE_WIN)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\bar\\doc_01').withIndex(index).count(5))
         .commit()
@@ -200,7 +200,7 @@ describe('TreeView.vue', () => {
     })
 
     it('should display 3 directories including one from the tree on windows', async () => {
-      wrapper.vm.$core.api.tree = jest.fn().mockResolvedValue(HOME_TREE_WIN)
+      api.tree.mockResolvedValue(HOME_TREE_WIN)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\bar\\doc_01').withIndex(index).count(5))
         .commit()
