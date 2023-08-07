@@ -5,11 +5,12 @@ import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 
 import { Core } from '@/core'
 import SearchResultsList from '@/components/SearchResultsList'
+import settings from "@/utils/settings";
 
 const { localVue, i18n, store } = Core.init(createLocalVue()).useAll()
 
-async function createView(query = '*', from = 0, size = 25) {
-  await store.dispatch('search/query', { query, from, size })
+async function createView(query = '*', from = 0, size = 25, field = settings.defaultSearchField) {
+  await store.dispatch('search/query', { query, from, size, field })
   return shallowMount(SearchResultsList, {
     localVue,
     i18n,
@@ -165,6 +166,32 @@ describe('SearchResultsList.vue', () => {
 
       wrapper = await createView('"this should be an exact content"')
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(1)
+    })
+
+    it('should search the content without case sensitivity', async () => {
+      await letData(es).have(new IndexedDocument('doc_01', index).withContent('météo')).commit()
+      await letData(es).have(new IndexedDocument('doc_02', index).withContent('meteo')).commit()
+      await letData(es).have(new IndexedDocument('doc_03', index).withContent('garçon')).commit()
+
+      wrapper = await createView('meteo')
+      expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
+
+      wrapper = await createView('météo')
+      expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
+
+      wrapper = await createView('garcon')
+      expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(1)
+    })
+
+    it('should search the title without case sensitivity', async () => {
+      await letData(es).have(new IndexedDocument('meteo', index).withResourceName('meteo')).commit()
+      await letData(es).have(new IndexedDocument('météo', index).withResourceName('météo')).commit()
+
+      wrapper = await createView('météo*', 0, 25, 'title')
+      expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
+
+      wrapper = await createView('meteo*', 0, 25, 'title')
+      expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
     })
   })
 })
