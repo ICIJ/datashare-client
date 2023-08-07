@@ -34,14 +34,12 @@ describe('auth backend client', () => {
 
     it('should throw error when testing basic auth and response is other than 200 or 401', async () => {
       api.getUser.mockRejectedValue({ response: { status: 500, statusText: 'message' } })
+      expect.assertions(1)
       try {
         await auth._getBasicAuthUserName()
       } catch (e) {
         expect(e).toEqual(new Error('500 message'))
-        return
       }
-      // helps to check if we pass in the catch
-      expect(true).toBe(false)
     })
   })
 
