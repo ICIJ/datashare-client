@@ -28,6 +28,7 @@ describe('Api.vue', () => {
   beforeEach(() => {
     Murmur.config.merge({ mode: MODE_NAME.SERVER })
     jest.clearAllMocks()
+    api.getApiKey.mockResolvedValue({ hashedKey: null })
   })
 
   afterAll(() => {
