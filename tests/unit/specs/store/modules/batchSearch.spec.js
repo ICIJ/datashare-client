@@ -10,28 +10,20 @@ Vue.use(Vuex)
 describe('BatchSearchStore', () => {
   let api
   let store
-  let apiMocks
   beforeAll(() => {
-    api = new Api(null, null)
-    apiMocks = [
-      (api.getBatchSearchQueries = jest.fn()),
-      (api.getBatchSearch = jest.fn()),
-      (api.getBatchSearchResults = jest.fn()),
-      (api.getBatchSearches = jest.fn()),
-      (api.batchSearch = jest.fn()),
-      (api.deleteBatchSearch = jest.fn()),
-      (api.deleteBatchSearches = jest.fn()),
-      (api.batchSearch = jest.fn())
-    ]
+    api = {
+      getBatchSearchQueries: jest.fn(),
+      getBatchSearch: jest.fn(),
+      getBatchSearchResults: jest.fn(),
+      getBatchSearches: jest.fn(),
+      batchSearch: jest.fn(),
+      deleteBatchSearch: jest.fn(),
+      deleteBatchSearches: jest.fn()
+    }
   })
   beforeEach(() => {
-    apiMocks.forEach((m) => {
-      m.mockClear()
-    })
-    store = storeBuilder(api)
-  })
-  afterAll(() => {
     jest.clearAllMocks()
+    store = storeBuilder(api)
   })
 
   describe('actions', () => {
