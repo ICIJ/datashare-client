@@ -2,14 +2,13 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import { storeBuilder } from '@/store/storeBuilder'
-import { Api } from '@/api'
 
 describe('StarredStore', () => {
   const { index, es } = esConnectionHelper.build()
   let store, filter, api
   beforeAll(() => {
-    api = new Api(null, null)
-    store = storeBuilder(api)
+    api = { getStarredDocuments: jest.fn() }
+    store = storeBuilder()
     filter = store.getters['search/getFilter']({ name: 'starred' })
   })
   beforeEach(() => {
@@ -56,7 +55,7 @@ describe('StarredStore', () => {
   })
 
   it('should return the list of the starredDocuments', async () => {
-    api.getStarredDocuments = jest.fn().mockResolvedValue([12])
+    api.getStarredDocuments.mockResolvedValue([12])
     await store.dispatch('starred/fetchIndicesStarredDocuments')
     expect(store.state.starred.documents).toEqual([{ index, id: 12 }])
     expect(filter.starredDocuments).toEqual([{ index, id: 12 }])
