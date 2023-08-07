@@ -5,8 +5,8 @@ import BatchDownloadActions from '@/components/BatchDownloadActions'
 import { Core } from '@/core'
 
 describe('BatchDownloadActions.vue', () => {
-  const mockApi = { runBatchDownload: jest.fn(), deleteTask: jest.fn() }
-  const { i18n, localVue } = Core.init(createLocalVue(), mockApi).useAll()
+  const api = { runBatchDownload: jest.fn(), deleteTask: jest.fn() }
+  const { i18n, localVue } = Core.init(createLocalVue(), api).useAll()
   const projects = [{ name: 'project' }]
 
   function mockRunBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
@@ -16,17 +16,17 @@ describe('BatchDownloadActions.vue', () => {
       user: batchDownload.user,
       properties: { batchDownload }
     }
-    mockApi.runBatchDownload.mockResolvedValue(data)
+    api.runBatchDownload.mockResolvedValue(data)
     return { batchDownload, name, state }
   }
 
   function mockDeleteBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
-    mockApi.deleteTask.mockResolvedValue(true)
+    api.deleteTask.mockResolvedValue(true)
     return { batchDownload, name, state }
   }
 
   function mockFailToDeleteBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
-    mockApi.deleteTask.mockRejectedValue(new Error(''))
+    api.deleteTask.mockRejectedValue(new Error(''))
     return { batchDownload, name, state }
   }
 
@@ -62,7 +62,7 @@ describe('BatchDownloadActions.vue', () => {
       const propsData = { value }
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       await wrapper.vm.relaunchTask()
-      expect(mockApi.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ query: { foo: 'bar' } }))
+      expect(api.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ query: { foo: 'bar' } }))
     })
 
     it('should call the API with a list of projects', async () => {
@@ -71,7 +71,7 @@ describe('BatchDownloadActions.vue', () => {
       const projectIds = ['project']
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       await wrapper.vm.relaunchTask()
-      expect(mockApi.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ projectIds }))
+      expect(api.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ projectIds }))
     })
   })
 
