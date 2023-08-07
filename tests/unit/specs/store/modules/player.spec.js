@@ -1,12 +1,10 @@
-import { Api } from '@/api'
 import { storeBuilder } from '@/store/storeBuilder'
 
 describe('PlayerStore', () => {
   let store
 
   beforeAll(() => {
-    const api = new Api(null, null)
-    store = storeBuilder(api)
+    store = storeBuilder()
   })
 
   it('should change the autoplay value to true', () => {
