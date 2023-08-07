@@ -3,7 +3,6 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
-import { Api } from '@/api'
 
 describe('UserHistorySaveSearchForm.vue', () => {
   let wrapper
@@ -15,8 +14,7 @@ describe('UserHistorySaveSearchForm.vue', () => {
 
   beforeAll(() => {
     Murmur.config.merge({ mode: 'SERVER' })
-    const api = new Api(null, null)
-    const core = Core.init(createLocalVue(), api).useAll()
+    const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
     localVue = core.localVue
     router = core.router
