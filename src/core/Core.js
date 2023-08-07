@@ -62,7 +62,7 @@ class Core extends Behaviors {
    * @param api - Datashare api interface
    * @param mode - mode of authentication ('local' or 'server'
    */
-  constructor(LocalVue = Vue, api = new Api(null, null), mode = getMode(MODE_NAME.LOCAL)) {
+  constructor(LocalVue = Vue, api = null, mode = getMode(MODE_NAME.LOCAL)) {
     super(LocalVue)
     this.LocalVue = LocalVue
     this._api = api
