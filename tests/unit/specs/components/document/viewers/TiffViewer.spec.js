@@ -3,14 +3,12 @@ import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from 'tests
 
 import TiffViewer from '@/components/document/viewers/TiffViewer'
 import { Core } from '@/core'
-import { Api } from '@/api'
 import { getMode, MODE_NAME } from '@/mode'
 
 describe('TiffViewer.vue', () => {
   let i18n, localVue, api
   beforeAll(async () => {
-    api = new Api(null, null)
-    api.getSource = jest.fn()
+    api = { getSource: jest.fn() }
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
     localVue = core.localVue
