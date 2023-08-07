@@ -5,10 +5,11 @@ import { Core } from '@/core'
 import MountedDataLocation from '@/components/MountedDataLocation'
 
 describe('MountedDataLocation', () => {
-  let wrapper, i18n, localVue, store
+  let wrapper, i18n, localVue, store, api
   Murmur.config.set('mountedDataDir', '/foo/bar')
   beforeAll(() => {
-    const core = Core.init(createLocalVue()).useAll()
+    api = { deleteBatchSearches: jest.fn() }
+    const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
