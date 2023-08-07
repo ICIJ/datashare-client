@@ -3,21 +3,17 @@ import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from 'tests
 
 import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
 import { Core } from '@/core'
-import { Api } from '@/api'
 
 describe('LegacySpreadsheetViewer.vue', () => {
   let wrapper, api, i18n, localVue
   beforeAll(async () => {
-    api = new Api()
-    api.getSource = jest.fn()
+    api = { getSource: jest.fn(({ url }) => mockArrayBuffer(url, false)) }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
   })
 
   beforeEach(() => {
-    api.getSource.mockClear()
-    api.getSource = jest.fn(({ url }) => mockArrayBuffer(url, false))
     wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue })
   })
 
