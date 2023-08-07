@@ -35,8 +35,8 @@ const HOME_TREE_WIN = {
 
 describe('TreeView.vue', () => {
   describe('Posix', () => {
-    const { index, es } = esConnectionHelper.build()
     const api = { tree: jest.fn() }
+    const { index, es } = esConnectionHelper.build()
     const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
     const propsData = {
       projects: [index],
@@ -79,7 +79,6 @@ describe('TreeView.vue', () => {
     })
 
     it('should display 3 directories including one from the tree', async () => {
-      // api.tree.mockResolvedValue(HOME_TREE)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
         .commit()
@@ -161,8 +160,9 @@ describe('TreeView.vue', () => {
     })
   })
   describe('Windows', () => {
-    let wrapper = null
     const api = { tree: jest.fn() }
+
+    let wrapper = null
     const { index, es } = esConnectionHelper.build('spec', true)
     const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
 
