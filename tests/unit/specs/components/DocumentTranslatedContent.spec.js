@@ -4,7 +4,6 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { flushPromises } from 'tests/unit/tests_utils'
 import { letTextContent } from 'tests/unit/api_mock'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
@@ -43,8 +42,7 @@ describe('DocumentTranslatedContent.vue', () => {
     }
   }
   beforeAll(() => {
-    api = new Api(null, null)
-    api.getDocumentSlice = jest.fn()
+    api = { getDocumentSlice: jest.fn() }
 
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
