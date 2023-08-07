@@ -5,10 +5,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import { Core } from '@/core'
-import { Api } from '@/api'
 
 describe('BatchSearchResultsFilters.vue', () => {
-  let i18n, localVue, router, store, api
+  let i18n, localVue, router, store
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
@@ -26,9 +25,8 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   beforeAll(() => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-    api = new Api(null, null)
 
-    const core = Core.init(createLocalVue(), api).useAll()
+    const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
     store = core.store
     localVue = core.localVue
