@@ -7,16 +7,17 @@ import { flushPromises } from 'tests/unit/tests_utils'
 import FilterStarred from '@/components/filter/types/FilterStarred'
 import { Core } from '@/core'
 
-// Mock the refreshRouteAndSearch method to avoid unecessary route update
+// Mock the refreshRouteAndSearch method to avoid unnecessary route update
 FilterStarred.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterStarred.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  let filter, store, i18n, localVue, router, wait
+  let filter, store, i18n, localVue, router, wait, api
   let wrapper
 
   beforeAll(() => {
-    const core = Core.init(createLocalVue()).useAll()
+    api = { getStarredDocuments: jest.fn().mockResolvedValue([]) }
+    const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
