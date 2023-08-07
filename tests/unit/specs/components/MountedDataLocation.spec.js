@@ -4,11 +4,16 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Core } from '@/core'
 import MountedDataLocation from '@/components/MountedDataLocation'
 
-describe('MountedDataLocation', () => {
+describe('MountedDataLocation.vue', () => {
   let wrapper, i18n, localVue, store, api
   Murmur.config.set('mountedDataDir', '/foo/bar')
   beforeAll(() => {
-    api = { deleteBatchSearches: jest.fn() }
+    api = {
+      deleteBatchSearches: jest.fn(),
+      deleteAll: jest.fn(),
+      getUser: jest.fn(),
+      createProject: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
