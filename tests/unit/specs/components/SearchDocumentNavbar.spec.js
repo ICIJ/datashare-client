@@ -2,7 +2,6 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import toLower from 'lodash/toLower'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import { Api } from '@/api'
 import { Core } from '@/core'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 
@@ -10,10 +9,9 @@ jest.mock('@/utils/utils')
 
 describe('SearchDocumentNavbar.vue', () => {
   const project = toLower('SearchDocumentNavbar')
-  let wrapper, i18n, localVue, store, router, api
+  let wrapper, i18n, localVue, store, router
   beforeAll(() => {
-    api = new Api(null, null)
-    const core = Core.init(createLocalVue(), api).useAll()
+    const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
