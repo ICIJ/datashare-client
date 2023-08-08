@@ -115,7 +115,7 @@ describe('DocumentView.vue', () => {
 
   it('should call the API to add document to history', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
-    await flushPromises()
+    await wrapper.vm.$nextTick()
     await wrapper.vm.getDoc()
 
     expect(api.addUserHistoryEvent).toBeCalledTimes(2) // mounter + call
