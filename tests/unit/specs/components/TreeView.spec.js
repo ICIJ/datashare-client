@@ -93,7 +93,6 @@ describe('TreeView.vue', () => {
     })
 
     it('should be a display a correct basename', async () => {
-      // api.tree.mockResolvedValue(HOME_TREE)
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
         .commit()
