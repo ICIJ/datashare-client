@@ -96,8 +96,8 @@ export default {
   },
   mixins: [shortkeys],
   beforeRouteEnter(to, _from, next) {
-    next(async (vm) => {
-      await vm.getDoc(to.params)
+    next((vm) => {
+      return vm.getDoc(to.params)
     })
   },
   async beforeRouteUpdate(to, _from, next) {
