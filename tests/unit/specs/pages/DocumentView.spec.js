@@ -30,6 +30,8 @@ describe('DocumentView.vue', () => {
   })
 
   beforeEach(async () => {
+    await flushPromises()
+
     jest.clearAllMocks()
     await letData(es).have(new IndexedDocument(parentId, project)).commit()
     await letData(es).have(new IndexedDocument(id, project).withParent(parentId)).commit()
@@ -116,10 +118,8 @@ describe('DocumentView.vue', () => {
   it('should call the API to add document to history', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
     await flushPromises()
-    api.addUserHistoryEvent.mockReset()
     await wrapper.vm.getDoc()
-
-    expect(api.addUserHistoryEvent).toBeCalledTimes(1)
+    expect(api.addUserHistoryEvent).toBeCalledTimes(2)
   })
 
   describe('navigate through tabs as loop', () => {
