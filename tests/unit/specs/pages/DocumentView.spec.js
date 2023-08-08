@@ -115,10 +115,11 @@ describe('DocumentView.vue', () => {
 
   it('should call the API to add document to history', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
-    await wrapper.vm.$nextTick()
+    await flushPromises()
+    api.addUserHistoryEvent.mockReset()
     await wrapper.vm.getDoc()
 
-    expect(api.addUserHistoryEvent).toBeCalledTimes(2) // mounter + call
+    expect(api.addUserHistoryEvent).toBeCalledTimes(1)
   })
 
   describe('navigate through tabs as loop', () => {
