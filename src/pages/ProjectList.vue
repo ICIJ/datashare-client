@@ -1,9 +1,9 @@
 <template>
   <div class="project-list">
-    <page-header title="Projects" icon="database">
+    <page-header :title="$t('projectList.title')" icon="database">
       <b-btn v-if="!isServer" class="ml-auto my-1 text-nowrap" variant="primary" :to="{ name: 'project.new' }">
         <fa class="mr-1" icon="plus" />
-        {{ $t('projectForm.newProject') }}
+        {{ $t('projectList.newProject') }}
       </b-btn>
     </page-header>
     <div class="container py-4">

@@ -273,6 +273,16 @@ export const router = {
                   meta: {
                     allowedModes: ['LOCAL', 'EMBEDDED']
                   }
+                },
+                {
+                  name: 'project.view.document-extract',
+                  path: 'document-extract',
+                  components: {
+                    default: () => import('@/pages/ProjectViewDocumentExtract.vue')
+                  },
+                  meta: {
+                    allowedModes: ['LOCAL', 'EMBEDDED']
+                  }
                 }
               ]
             }
