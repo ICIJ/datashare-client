@@ -722,6 +722,8 @@
     }
   },
   "projectList": {
+    "title": "Projects",
+    "newProject": "New project",
     "fields": {
       "label": "Label",
       "updateDate": "Updated"
@@ -757,7 +759,6 @@
     "submit": "Save"
   },
   "projectForm": {
-    "newProject": "New project",
     "form": {
       "name": {
         "label": "ID",

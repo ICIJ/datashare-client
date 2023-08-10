@@ -42,7 +42,7 @@ export default {
       }
     },
     tabRoutes() {
-      return ['project.view.insights', 'project.view.edit']
+      return ['project.view.insights', 'project.view.document-extract', 'project.view.edit']
     }
   },
   beforeMount() {
@@ -70,6 +70,12 @@ export default {
           <template #title>
             <fa icon="chart-bar" fixed-width class="mr-1" />
             Insights
+          </template>
+        </b-tab>
+        <b-tab title-item-class=" project-view__tab project-view__tab--insights">
+          <template #title>
+            <fa icon="file" fixed-width class="mr-1" />
+            Add documents
           </template>
         </b-tab>
         <b-tab v-if="!isServer" title-item-class="ml-auto project-view__tab project-view__tab--edit">
