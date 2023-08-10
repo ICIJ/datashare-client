@@ -757,6 +757,7 @@
     "submit": "Save"
   },
   "projectForm": {
+    "newProject": "New project",
     "form": {
       "name": {
         "label": "ID",
