@@ -13,6 +13,11 @@ export default {
     PageHeader,
     ProjectForm
   },
+  computed: {
+    projectRoute() {
+      return { name: 'project.list' }
+    }
+  },
   methods: {
     async submit(project) {
       try {
@@ -51,8 +56,14 @@ export default {
   <div class="project-new">
     <page-header icon="database" :title="$t('projectNew.title')" :description="$t('projectNew.description')" />
     <div class="container">
+      <div class="mx-1 mb-2 mt-3">
+        <router-link :to="projectRoute">
+          <fa icon="angle-left" class="mr-1" fixed-width />
+          {{ $t('projectList.title') }}
+        </router-link>
+      </div>
       <b-overlay rounded="sm" opacity="0.6" :show="$wait.is('creating')">
-        <project-form class="my-4" card :disabled="$wait.is('creating')" @submit="submit">
+        <project-form class="mb-4" card :disabled="$wait.is('creating')" @submit="submit">
           <template #submit-text>
             {{ $t('projectNew.submit') }}
           </template>
