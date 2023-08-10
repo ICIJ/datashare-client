@@ -1,5 +1,9 @@
 <template>
-  <form class="extracting-form position-relative" @submit.prevent="submitExtract">
+  <form
+    class="extracting-form position-relative"
+    :class="{ 'extracting-form--dark': dark }"
+    @submit.prevent="submitExtract"
+  >
     <div v-if="showProjectSelector" class="extracting-form__group mb-4">
       <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
@@ -69,7 +73,7 @@
 </template>
 
 <script>
-import { noop, uniqueId, castArray } from 'lodash'
+import { uniqueId, castArray } from 'lodash'
 import { waitFor } from 'vue-wait'
 
 import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
@@ -90,11 +94,10 @@ export default {
   },
   props: {
     /**
-     * Callback function to call when the form have been submitted (this should be replaced by an event in future versions).
+     * Dark mode option
      */
-    finally: {
-      type: Function,
-      default: noop
+    dark: {
+      type: Boolean
     }
   },
   data() {
@@ -201,7 +204,7 @@ export default {
         await this.dispatchExtract()
       } finally {
         this.$store.commit('indexing/resetExtractForm')
-        this.finally()
+        this.$emit('submit')
       }
     }
   }
@@ -209,7 +212,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.extracting-form {
+.extracting-form--dark {
   background: darken($primary, 20);
   color: white;
 }

@@ -76,15 +76,6 @@ export default {
     startCase
   },
   mixins: [utils],
-  props: {
-    /**
-     * Callback function to call when the form have been submitted (this should be replaced by an event in future versions).
-     */
-    finally: {
-      type: Function,
-      default: noop
-    }
-  },
   data() {
     return {
       pipelines: [],
@@ -133,7 +124,7 @@ export default {
         await this.$store.dispatch('indexing/submitFindNamedEntities')
       } finally {
         this.$store.commit('indexing/resetFindNamedEntitiesForm')
-        this.finally()
+        this.$emit('submit')
       }
     },
     handlePipelinesTranslation(pipelines) {
