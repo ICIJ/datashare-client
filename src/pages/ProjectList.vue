@@ -1,6 +1,11 @@
 <template>
   <div class="project-list">
-    <page-header title="Projects" icon="database" />
+    <page-header title="Projects" icon="database">
+      <b-btn v-if="!isServer" class="ml-auto my-1 text-nowrap" variant="primary" :to="{ name: 'project.new' }">
+        <fa class="mr-1" icon="plus" />
+        {{ $t('projectForm.newProject') }}
+      </b-btn>
+    </page-header>
     <div class="container py-4">
       <b-table striped :items="projects" :fields="fields" outlined class="bg-white">
         <template #table-colgroup>
@@ -28,6 +33,7 @@
 import { humanShortDate } from '@/filters/humanDate'
 import PageHeader from '@/components/PageHeader'
 import ProjectThumbnail from '@/components/ProjectThumbnail'
+import utils from '@/mixins/utils'
 
 export default {
   name: 'ProjectList',
@@ -35,6 +41,7 @@ export default {
     PageHeader,
     ProjectThumbnail
   },
+  mixins: [utils],
   data() {
     return {
       fields: [
