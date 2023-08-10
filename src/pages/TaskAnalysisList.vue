@@ -51,7 +51,7 @@
               <fa icon="search-plus" class="mr-1" />
               {{ $t('indexing.extractText') }}
             </template>
-            <extracting-form id="extracting-form" :finally="closeExtractingForm" />
+            <extracting-form id="extracting-form" dark @submit="closeExtractingForm" />
           </b-modal>
           <b-modal
             :id="findNamedEntitiesFormId"
@@ -64,7 +64,7 @@
               <fa icon="user-tag" class="mr-1" />
               {{ $t('indexing.findNamedEntities') }}
             </template>
-            <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
+            <find-named-entities-form id="find-named-entities-form" @submit="closeFindNamedEntitiesForm" />
           </b-modal>
         </div>
       </div>
