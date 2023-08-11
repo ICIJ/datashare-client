@@ -1,7 +1,11 @@
 <template>
   <v-wait for="load ner pipelines">
     <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
-    <form class="find-named-entities-form position-relative" @submit.prevent="submitFindNamedEntities">
+    <form
+      class="find-named-entities-form position-relative"
+      :class="{ 'find-named-entities-form--dark': dark }"
+      @submit.prevent="submitFindNamedEntities"
+    >
       <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
         <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
         <div class="ml-4 pl-3">
@@ -47,18 +51,20 @@
         </b-form-checkbox>
       </div>
       <div class="find-named-entities-form__footer mt-4 row no-gutters">
-        <div class="col text-right">
-          <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
-            {{ $t('indexing.go') }}
-          </b-btn>
-        </div>
+        <slot name="footer" :disabled="disabled">
+          <div class="col text-right">
+            <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
+              {{ $t('indexing.go') }}
+            </b-btn>
+          </div>
+        </slot>
       </div>
     </form>
   </v-wait>
 </template>
 
 <script>
-import { lowerCase, noop, startCase, values } from 'lodash'
+import { lowerCase, startCase, values } from 'lodash'
 
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
@@ -76,6 +82,11 @@ export default {
     startCase
   },
   mixins: [utils],
+  props: {
+    dark: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       pipelines: [],
@@ -140,8 +151,10 @@ export default {
 
 <style lang="scss" scoped>
 .find-named-entities-form {
-  background: darken($primary, 20);
-  color: white;
+  &--dark {
+    background: darken($primary, 20);
+    color: white;
+  }
 
   &__header h4 {
     font-size: 1.2em;
