@@ -275,10 +275,20 @@ export const router = {
                   }
                 },
                 {
-                  name: 'project.view.document-extract',
-                  path: 'document-extract',
+                  name: 'project.view.add-documents',
+                  path: 'add-documents',
                   components: {
-                    default: () => import('@/pages/ProjectViewDocumentExtract.vue')
+                    default: () => import('@/pages/ProjectViewAddDocuments.vue')
+                  },
+                  meta: {
+                    allowedModes: ['LOCAL', 'EMBEDDED']
+                  }
+                },
+                {
+                  name: 'project.view.find-named-entities',
+                  path: 'find-named-entities',
+                  components: {
+                    default: () => import('@/pages/ProjectViewFindNamedEntities.vue')
                   },
                   meta: {
                     allowedModes: ['LOCAL', 'EMBEDDED']
