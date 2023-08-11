@@ -64,7 +64,7 @@
               <fa icon="user-tag" class="mr-1" />
               {{ $t('indexing.findNamedEntities') }}
             </template>
-            <find-named-entities-form id="find-named-entities-form" @submit="closeFindNamedEntitiesForm" />
+            <find-named-entities-form id="find-named-entities-form" dark @submit="closeFindNamedEntitiesForm" />
           </b-modal>
         </div>
       </div>
