@@ -61,13 +61,15 @@
       </b-form-checkbox>
     </div>
     <div class="extracting-form__footer mt-4 row no-gutters">
-      <div class="col text-right">
-        <b-overlay :show="isWaitingForSubmitExtract" opacity="0.6" rounded spinner-small class="d-inline-flex">
-          <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="isWaitingForSubmitExtract">
-            {{ $t('indexing.go') }}
-          </b-btn>
-        </b-overlay>
-      </div>
+      <slot name="footer" :disabled="isWaitingForSubmitExtract">
+        <div class="col text-right">
+          <b-overlay :show="isWaitingForSubmitExtract" opacity="0.6" rounded spinner-small class="d-inline-flex">
+            <b-btn variant="primary" class="ml-2" type="submit" :disabled="isWaitingForSubmitExtract">
+              {{ $t('indexing.go') }}
+            </b-btn>
+          </b-overlay>
+        </div>
+      </slot>
     </div>
   </form>
 </template>
