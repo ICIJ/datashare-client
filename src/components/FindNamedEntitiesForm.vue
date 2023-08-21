@@ -135,6 +135,7 @@ export default {
         await this.$store.dispatch('indexing/submitFindNamedEntities')
       } finally {
         this.$store.commit('indexing/resetFindNamedEntitiesForm')
+        this.disabled = false
         this.$emit('submit')
       }
     },
