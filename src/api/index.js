@@ -1,5 +1,7 @@
 import { isNull, join, map, omitBy, replace, trim, toLower } from 'lodash'
 
+import elasticsearch from '@/api/elasticsearch'
+
 const Method = Object.freeze({
   POST: 'POST',
   PUT: 'PUT',
@@ -11,6 +13,7 @@ const Method = Object.freeze({
 export class Api {
   constructor(_axios, _EventBus) {
     this.axios = _axios
+    this.elasticsearch = elasticsearch
     this.eventBus = _EventBus
   }
   tree(path) {
