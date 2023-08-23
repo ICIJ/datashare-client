@@ -7,9 +7,11 @@ import { Core } from '@/core'
 import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
+
+  const api = { elasticsearch: es }
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
   const propsData = { widget: { title: 'Hello world' } }
   let wrapper = null
 
