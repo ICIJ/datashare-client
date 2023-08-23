@@ -18,7 +18,6 @@
 import { sum, uniqueId, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
-import elasticsearch from '@/api/elasticsearch'
 import humanNumber from '@/filters/humanNumber'
 
 /**
@@ -77,7 +76,7 @@ export default {
       const index = this.project
       const body = this.bodybuilderFor(category).build()
       const preference = 'widget-names'
-      const { count = 0 } = await elasticsearch.count({ index, body, preference })
+      const { count = 0 } = await this.$core.api.elasticsearch.count({ index, body, preference })
       return count
     },
     bodybuilderFor(category) {
