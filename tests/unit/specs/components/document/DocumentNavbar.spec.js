@@ -16,7 +16,8 @@ describe('DocumentNavbar.vue', () => {
     api = {
       setMarkAsRecommended: jest.fn(),
       setUnmarkAsRecommended: jest.fn(),
-      getRecommendationsByProject: jest.fn()
+      getRecommendationsByProject: jest.fn(),
+      elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
