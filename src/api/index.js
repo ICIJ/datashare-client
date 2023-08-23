@@ -282,9 +282,13 @@ export class Api {
     return this.sendAction('/api/settings/text/languages')
   }
   async sendAction(url, config = {}) {
+    const res = await this.sendActionRaw(url, config)
+    return res.data ?? null
+  }
+  async sendActionRaw(url, config = {}) {
     try {
       const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })
-      return r ? r.data : null
+      return r ?? null
     } catch (error) {
       this.eventBus?.$emit('http::error', error)
       throw error
