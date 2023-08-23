@@ -123,7 +123,6 @@ import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
 import InfiniteLoading from 'vue-infinite-loading'
 
-import elasticsearch from '@/api/elasticsearch'
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 import humanNumber from '@/filters/humanNumber'
 import humanSize from '@/filters/humanSize'
@@ -455,7 +454,7 @@ export default {
       const size = this.bucketsSize
       const body = this.preBodyBuild(this.bodybuilderBase({ from, size })).build()
       const preference = 'tree-view-paths'
-      const res = await elasticsearch.search({ index, body, preference, size: 0 })
+      const res = await this.$core.api.elasticsearch.search({ index, body, preference, size: 0 })
       // Clear the list of pages (to start over!)
       if (clearPages) await this.clearPagesAndLoadTree()
       // Add the result as a page
