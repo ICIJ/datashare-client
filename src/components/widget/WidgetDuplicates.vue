@@ -35,7 +35,6 @@
 import { get, sum } from 'lodash'
 import { waitFor } from 'vue-wait'
 
-import elasticsearch from '@/api/elasticsearch'
 import humanNumber from '@/filters/humanNumber'
 
 /**
@@ -79,7 +78,7 @@ export default {
     async count(query) {
       const index = this.$store.state.insights.project
       const body = { track_total_hits: true, query: { query_string: { query } } }
-      const res = await elasticsearch.search({ index, body, size: 0 })
+      const res = await this.$core.api.elasticsearch.search({ index, body, size: 0 })
       return get(res, 'hits.total.value', 0)
     },
     countTotal() {
