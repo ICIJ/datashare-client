@@ -30,7 +30,7 @@ describe('DocumentContent.vue', () => {
   const id = 'document'
 
   beforeAll(() => {
-    api = { getDocumentSlice: jest.fn(), searchDocument: jest.fn() }
+    api = { getDocumentSlice: jest.fn(), searchDocument: jest.fn(), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
