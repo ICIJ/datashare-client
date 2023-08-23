@@ -7,20 +7,20 @@ import { Core } from '@/core'
 import SearchResultsList from '@/components/SearchResultsList'
 import settings from '@/utils/settings'
 
-const { localVue, i18n, store } = Core.init(createLocalVue()).useAll()
-
-async function createView(query = '*', from = 0, size = 25, field = settings.defaultSearchField) {
-  await store.dispatch('search/query', { query, from, size, field })
-  return shallowMount(SearchResultsList, {
-    localVue,
-    i18n,
-    store
-  })
-}
-
 describe('SearchResultsList.vue', () => {
-  const { index, es } = esConnectionHelper.build()
   let wrapper
+
+  const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { localVue, i18n, store } = Core.init(createLocalVue(), api).useAll()
+  async function createView(query = '*', from = 0, size = 25, field = settings.defaultSearchField) {
+    await store.dispatch('search/query', { query, from, size, field })
+    return shallowMount(SearchResultsList, {
+      localVue,
+      i18n,
+      store
+    })
+  }
 
   beforeAll(() => {
     Murmur.config.merge({ userProjects: [index] })
