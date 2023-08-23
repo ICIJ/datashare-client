@@ -22,7 +22,7 @@ describe('FilterNamedEntity.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    api = { fetchIndicesStarredDocuments: jest.fn() }
+    api = { fetchIndicesStarredDocuments: jest.fn(), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     localVue = core.localVue
     i18n = core.i18n
