@@ -5,10 +5,10 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import NamedEntityInContext from '@/components/NamedEntityInContext'
 import { Core } from '@/core'
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('NamedEntityInContext.vue', () => {
   const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
 
   // A quick function to generate the default propsData for most tests
   const defaultPropsData = async function ({ namedEntityIndex = 0, extractLength = 16 } = {}) {
