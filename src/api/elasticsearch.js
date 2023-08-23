@@ -211,4 +211,4 @@ const elasticsearch = new es.Client({
   requestTimeout: settings.elasticsearch.requestTimeout
 })
 
-export default elasticsearch
+export { elasticsearch }
