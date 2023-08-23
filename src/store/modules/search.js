@@ -507,9 +507,10 @@ function actionsBuilder(api) {
       return dispatch('query')
     },
     async runBatchDownload({ state, getters }, uri = null) {
+      // CD TODO: untested function
       const q = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
       const { indices: projectIds } = state
-      const { query } = elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
+      const { query } = api.elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
       return api.runBatchDownload({
         projectIds,
         query,
