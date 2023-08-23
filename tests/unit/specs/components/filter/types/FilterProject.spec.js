@@ -10,14 +10,15 @@ import FilterProject from '@/components/filter/types/FilterProject'
 describe('FilterProject.vue', () => {
   let i18n, localVue, store, wait, wrapper, api
 
-  const { index: project } = esConnectionHelper.build()
+  const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
   beforeAll(() => {
     api = {
       getStarredDocuments: jest.fn(),
       isDownloadAllowed: jest.fn(),
-      getRecommendationsByProject: jest.fn()
+      getRecommendationsByProject: jest.fn(),
+      elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
