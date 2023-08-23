@@ -13,7 +13,7 @@ describe('SearchStore', () => {
 
   let store
   beforeAll(() => {
-    store = storeBuilder()
+    store = storeBuilder({ elasticsearch: es })
     store.commit('search/index', project)
   })
 

@@ -5,6 +5,8 @@ import esMapping from './datashare_index_mappings.json'
 import esSettings from './datashare_index_settings.json'
 import esSettingsWindows from './datashare_index_settings_windows.json'
 
+import { datasharePlugin } from '@/api/elasticsearch'
+
 function slugger(value) {
   return value
     .toLowerCase()
@@ -57,6 +59,6 @@ function build(prefix = 'spec', isWindows = false) {
 
 export default esConnectionHelper
 // The default Elasticsearch client, shared between tests
-export const es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST })
+const es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST, plugins: [datasharePlugin] })
 esConnectionHelper.es = es
 esConnectionHelper.build = build
