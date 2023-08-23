@@ -159,10 +159,10 @@ describe('TreeView.vue', () => {
     })
   })
   describe('Windows', () => {
-    const api = { tree: jest.fn() }
-
     let wrapper = null
     const { index, es } = esConnectionHelper.build('spec', true)
+    const api = { tree: jest.fn(), elasticsearch: es }
+
     const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
 
     const propsData = {
