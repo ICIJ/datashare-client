@@ -10,9 +10,11 @@ import { Core } from '@/core'
 jest.mock('lodash/throttle', () => jest.fn((fn) => fn))
 
 describe('BatchSearchForm.vue', () => {
-  const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
+
+  const api = { elasticsearch: es }
+  const { i18n, localVue, wait } = Core.init(createLocalVue(), api).useAll()
 
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
