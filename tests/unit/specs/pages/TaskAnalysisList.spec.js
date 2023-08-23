@@ -35,7 +35,8 @@ describe('TaskAnalysisList.vue', () => {
       getTasks: jest.fn(),
       deleteDoneTasks: jest.fn(),
       stopPendingTasks: jest.fn(),
-      stopTask: jest.fn()
+      stopTask: jest.fn(),
+      elasticsearch: { count: jest.fn().mockResolvedValue({}) }
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n

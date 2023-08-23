@@ -86,7 +86,6 @@ import { mapState } from 'vuex'
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import TasksList from '@/components/TasksList'
-import elasticsearch from '@/api/elasticsearch'
 import polling from '@/mixins/polling'
 import settings from '@/utils/settings'
 import { getOS } from '@/utils/utils'
@@ -151,7 +150,7 @@ export default {
     async countAny() {
       const index = this.indices.join(',')
       const preference = 'indexing'
-      const { count = 0 } = await elasticsearch.count({ index, preference })
+      const { count = 0 } = await this.$core.api.elasticsearch.count({ index, preference })
       return count
     },
     closeExtractingForm() {
