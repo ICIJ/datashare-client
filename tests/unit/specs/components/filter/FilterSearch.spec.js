@@ -12,8 +12,9 @@ jest.mock('@/api')
 filters.methods.refreshRoute = jest.fn()
 
 describe('FilterSearch.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const { index } = esConnectionHelper.build()
+  const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
   let wrapper = null
 
   beforeEach(() => {
