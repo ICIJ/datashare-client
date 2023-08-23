@@ -18,7 +18,8 @@ describe('DocumentStore', () => {
       untagDocuments: jest.fn(),
       setMarkAsRecommended: jest.fn(),
       setUnmarkAsRecommended: jest.fn(),
-      getRecommendationsByDocuments: jest.fn()
+      getRecommendationsByDocuments: jest.fn(),
+      elasticsearch: es
     }
     store = storeBuilder(api)
   })

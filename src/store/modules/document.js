@@ -1,7 +1,6 @@
 import { compact, concat, findIndex, flattenDeep, get, keys, map, sortBy, sumBy, uniqBy, values } from 'lodash'
 import Vue from 'vue'
 
-import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
 
 export function initialState() {
@@ -148,7 +147,7 @@ function actionBuilder(api) {
     async get({ commit, state }, idAndRouting) {
       try {
         const { id, index, routing } = idAndRouting
-        const doc = await elasticsearch.getDocumentWithoutContent(index, id, routing)
+        const doc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
         commit('idAndRouting', idAndRouting)
         commit('doc', doc)
       } catch (_) {
