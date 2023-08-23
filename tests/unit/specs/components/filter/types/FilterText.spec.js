@@ -9,11 +9,11 @@ import { Core } from '@/core'
 import FilterText from '@/components/filter/types/FilterText'
 import messagesFr from '@/lang/fr'
 
-const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('FilterText.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const { index: anotherIndex } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), api).useAll()
   const name = 'contentType'
   const filter = store.getters['search/getFilter']({ name })
   let wrapper = null
