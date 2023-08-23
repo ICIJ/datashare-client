@@ -7,8 +7,9 @@ import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEnti
 import { Core } from '@/core'
 
 describe('DocumentTabNamedEntities.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
   const id = 'document'
   let document = null
   let wrapper = null
