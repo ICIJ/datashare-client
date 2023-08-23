@@ -24,8 +24,6 @@ import bodybuilder from 'bodybuilder'
 import flatten from 'lodash/flatten'
 import sum from 'lodash/sum'
 
-import elasticsearch from '@/api/elasticsearch'
-
 /**
  * A list of attachments for a document (usually, it's child documents)
  */
@@ -66,7 +64,7 @@ export default {
       this.isReady = false
       const { index } = this.document
       const body = this.searchBody().build()
-      const response = await elasticsearch.search({ index, body })
+      const response = await this.$core.api.elasticsearch.search({ index, body })
       this.pages.push(new Response(response))
       this.isReady = true
     },
