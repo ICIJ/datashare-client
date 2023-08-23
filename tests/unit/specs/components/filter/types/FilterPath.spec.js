@@ -7,12 +7,12 @@ import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
 
 describe('FilterPath.vue', () => {
-  const { index } = esConnectionHelper.build()
+  const { index, es } = esConnectionHelper.build()
   const { otherIndex } = esConnectionHelper.build()
   let filter, i18n, localVue, router, store, wait, api
   let wrapper = null
   beforeAll(() => {
-    api = { tree: jest.fn() }
+    api = { tree: jest.fn(), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
