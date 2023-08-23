@@ -62,7 +62,6 @@
 import { findIndex, reduce } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
-import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 import EmailString from '@/components/EmailString'
@@ -196,7 +195,7 @@ export default {
     async getThread() {
       try {
         if (this.threadBody) {
-          const raw = await elasticsearch.search({
+          const raw = await this.$core.api.elasticsearch.search({
             _source_excludes: 'content,content_translated',
             index: this.document.index,
             body: this.threadBody.build()

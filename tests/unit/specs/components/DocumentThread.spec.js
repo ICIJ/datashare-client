@@ -6,8 +6,9 @@ import DocumentThread from '@/components/DocumentThread'
 import { Core } from '@/core'
 
 describe('DocumentThread.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
   let wrapper = null
 
   describe('getThread', () => {
