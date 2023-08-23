@@ -12,8 +12,9 @@ jest.mock('@/api')
 filters.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterDate.vue', () => {
-  const { i18n, localVue, store, wait, router } = Core.init(createLocalVue()).useAll()
   const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { i18n, localVue, store, wait, router } = Core.init(createLocalVue(), api).useAll()
   const filter = store.getters['search/getFilter']({ name: 'indexingDate' })
   const propsData = { filter }
 
