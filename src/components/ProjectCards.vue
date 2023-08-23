@@ -89,12 +89,7 @@ export default {
     isActive(project) {
       return this.$store.state.search.indices.includes(project.name)
     },
-    startCase,
-    async countDocsProject(name) {
-      const result = await this.$core.api.getProjectNbDoc(name)
-      const count = result.aggregations?.index?.buckets?.[0]?.doc_count
-      return count
-    }
+    startCase
   }
 }
 </script>
