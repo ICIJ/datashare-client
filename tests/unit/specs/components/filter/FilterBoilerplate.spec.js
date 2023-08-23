@@ -8,7 +8,9 @@ import filters from '@/mixins/filters'
 filters.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterBoilerplate.vue', () => {
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), {
+    elasticsearch: { searchFilter: jest.fn().mockResolvedValue({}) }
+  }).useAll()
   const name = 'contentType'
   const filter = store.getters['search/getFilter']({ name })
   const propsData = { filter }
