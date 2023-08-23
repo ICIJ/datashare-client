@@ -210,7 +210,6 @@ import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
 import Multiselect from 'vue-multiselect'
 
-import elasticsearch from '@/api/elasticsearch'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
@@ -454,7 +453,7 @@ export default {
           .size(0)
           .agg('composite', { sources: [{ field: { terms: { field } } }] }, options, name)
           .build()
-        searchResult = await elasticsearch.search({
+        searchResult = await this.$core.api.elasticsearch.search({
           index: this.projects.join(','),
           body
         })
