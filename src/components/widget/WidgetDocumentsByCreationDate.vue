@@ -94,7 +94,6 @@ import * as d3 from 'd3'
 import { mapState } from 'vuex'
 
 import FilterDate from '@/store/filters/FilterDate'
-import elasticsearch from '@/api/elasticsearch'
 
 /**
  * Widget to display the number of file by creation date on the insights page.
@@ -289,7 +288,7 @@ export default {
       this.missing = 0
       const body = this.bodybuilderBase().build()
       const preference = 'widget-documents-by-creation-date'
-      const res = await elasticsearch.search({ index: this.project, size: 0, body, preference })
+      const res = await this.$core.api.elasticsearch.search({ index: this.project, size: 0, body, preference })
       const aggregation = get(res, 'aggregations.agg_by_creation_date.buckets', [])
       const data = aggregation.reduce((buckets, bucket) => {
         if (this.isBucketKeyInRange(bucket.key)) {
