@@ -6,11 +6,12 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { Core } from '@/core'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 
-const { localVue, store, i18n } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('AppliedSearchFiltersItem.vue', () => {
-  const { index } = esConnectionHelper.build()
+  const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { localVue, store, i18n } = Core.init(createLocalVue(), api).useAll()
   let wrapper
 
   beforeAll(() => store.commit('search/index', index))
