@@ -25,7 +25,6 @@ import { format, hierarchy, select, treemap } from 'd3'
 import { basename } from 'path'
 import VueScrollTo from 'vue-scrollto'
 
-import elasticsearch from '@/api/elasticsearch'
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 
 /**
@@ -117,7 +116,7 @@ export default {
           sub.agg('bucket_sort', { size: 50, from: 0 }, 'bucket_truncate')
         )
         .build()
-      const result = await elasticsearch.search({ index: this.widget.index, body, size: 0 })
+      const result = await this.$core.api.elasticsearch.search({ index: this.widget.index, body, size: 0 })
       const children = get(result, 'aggregations.byDirname.buckets', [])
       const others = get(result, 'aggregations.byDirname.sum_other_doc_count', [])
       return { children, others }
