@@ -159,7 +159,7 @@ function actionBuilder(api) {
       if (state.doc !== null) {
         const { id, routing } = state.idAndRouting
         const { index } = state.doc
-        const doc = await elasticsearch.getDocumentWithContent(index, id, routing)
+        const doc = await api.elasticsearch.getDocumentWithContent(index, id, routing)
         const translations = get(doc, '_source.content_translated')
         const content = get(doc, '_source.content')
         commit('translations', translations)
@@ -202,7 +202,7 @@ function actionBuilder(api) {
         try {
           const { index } = state.doc
           const { parentDocument: id, rootDocument: routing } = state.doc.raw._source
-          const doc = await elasticsearch.getDocumentWithoutContent(index, id, routing)
+          const doc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
           commit('parentDocument', doc)
         } catch (_) {
           commit('parentDocument', null)
@@ -215,7 +215,7 @@ function actionBuilder(api) {
         try {
           const { index } = state.doc
           const { rootDocument: id } = state.doc.raw._source
-          const doc = await elasticsearch.getDocumentWithoutContent(index, id, id)
+          const doc = await api.elasticsearch.getDocumentWithoutContent(index, id, id)
           commit('rootDocument', doc)
         } catch (_) {
           commit('rootDocument', null)
@@ -237,7 +237,7 @@ function actionBuilder(api) {
         const from = getters.countNamedEntitiesInCategory(category)
         const index = state.doc.index
         const { id, routing } = state.doc
-        const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(
+        const raw = await api.elasticsearch.getDocumentNamedEntitiesInCategory(
           index,
           id,
           routing,
