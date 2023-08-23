@@ -26,7 +26,6 @@ import {
 import lucene from 'lucene'
 import Vue from 'vue'
 
-import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
 import filters from '@/store/filters'
 import * as filterTypes from '@/store/filters'
@@ -374,7 +373,7 @@ function actionsBuilder(api) {
       commit('error', null)
       try {
         const indices = state.indices.join(',')
-        const raw = await elasticsearch.searchDocs(
+        const raw = await api.elasticsearch.searchDocs(
           indices,
           state.query,
           getters.instantiatedFilters,
@@ -446,7 +445,7 @@ function actionsBuilder(api) {
       return dispatch('refresh', true)
     },
     queryFilter({ state, getters }, params) {
-      return elasticsearch
+      return api.elasticsearch
         .searchFilter(
           state.indices.join(','),
           getters.getFilter({ name: params.name }),
