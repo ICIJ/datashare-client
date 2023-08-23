@@ -24,7 +24,6 @@
 <script>
 import { isEqual } from 'lodash'
 
-import elasticsearch from '@/api/elasticsearch'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import TreeView from '@/components/TreeView'
@@ -91,7 +90,7 @@ export default {
         // Add every filter to the search body
         this.instantiatedFilters.forEach((filter) => filter.addFilter(body))
         // Add query to the search body
-        elasticsearch.addQueryToFilter(this.$store.state.search.query || '*', body)
+        this.$core.api.elasticsearch.addQueryToFilter(this.$store.state.search.query || '*', body)
       }
       return body
     }
