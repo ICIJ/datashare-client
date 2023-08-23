@@ -16,7 +16,7 @@ describe('FilterStarred.vue', () => {
   let wrapper
 
   beforeAll(() => {
-    api = { getStarredDocuments: jest.fn().mockResolvedValue([]) }
+    api = { getStarredDocuments: jest.fn().mockResolvedValue([]), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
