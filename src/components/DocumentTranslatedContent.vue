@@ -45,7 +45,6 @@
 import { mapState } from 'vuex'
 import { find, join } from 'lodash'
 
-import elasticsearch from '@/api/elasticsearch'
 import DocumentContent from '@/components/DocumentContent'
 
 /**
@@ -106,7 +105,7 @@ export default {
         'content_translated.translator'
       ])
       const { index, id, routing } = this.document
-      const data = await elasticsearch.getSource({ index, id, routing, _source })
+      const data = await this.$core.api.elasticsearch.getSource({ index, id, routing, _source })
       this.$set(this, 'translations', data.content_translated)
     }
   }
