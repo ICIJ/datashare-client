@@ -46,7 +46,8 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
 
   beforeAll(() => {
     api = {
-      searchDocument: jest.fn()
+      searchDocument: jest.fn(),
+      elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
