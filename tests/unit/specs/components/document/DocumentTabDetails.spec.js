@@ -11,7 +11,8 @@ describe('DocumentTabDetails.vue', () => {
   const id = 'document'
   let wrapper, i18n, localVue, store, router
   beforeAll(() => {
-    const core = Core.init(createLocalVue(), null).useAll()
+    const api = { elasticsearch: es }
+    const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
     router = core.router
