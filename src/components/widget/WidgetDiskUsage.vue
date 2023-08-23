@@ -31,7 +31,6 @@ import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
 import { mapState } from 'vuex'
 
-import elasticsearch from '@/api/elasticsearch'
 import TreeView from '@/components/TreeView'
 import humanSize from '@/filters/humanSize'
 
@@ -90,7 +89,7 @@ export default {
         .aggregation('sum', 'contentLength')
         .build()
       const preference = 'widget-disk-usage'
-      const res = await elasticsearch.search({ index, body, preference, size: 0 })
+      const res = await this.$core.api.elasticsearch.search({ index, body, preference, size: 0 })
       // eslint-disable-next-line camelcase
       return res?.aggregations?.agg_sum_contentLength?.value || 0
     },
