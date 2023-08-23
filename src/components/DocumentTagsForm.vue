@@ -64,7 +64,6 @@ import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import moment from 'moment'
 
-import elasticsearch from '@/api/elasticsearch'
 import displayUser from '@/filters/displayUser'
 import settings from '@/utils/settings'
 
@@ -126,7 +125,7 @@ export default {
       const index = get(this.documents, '0.index', null)
       const include = `.*${value.toLowerCase()}.*`
       const body = bodybuilder().size(0).agg('terms', 'tags', { include }).build()
-      const response = await elasticsearch.search({ index, body })
+      const response = await this.$core.api.elasticsearch.search({ index, body })
       const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
       this.$set(this, 'suggestions', map(buckets, 'key'))
     }, 200),
