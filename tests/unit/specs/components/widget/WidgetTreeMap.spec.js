@@ -12,10 +12,21 @@ jest.mock('@/api/elasticsearch', () => {
 })
 
 describe('WidgetTreeMap.vue', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   let wrapper = null
+  let core, i18n, localVue, store, api
 
   beforeAll(() => {
+    api = {
+      elasticsearch: {
+        search: jest.fn().mockResolvedValue({
+          aggregations: { byDirname: { buckets: [{ key: '/home/dev/data/folders', doc_count: 50 }] } }
+        })
+      }
+    }
+    core = Core.init(createLocalVue(), api).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+    store = core.store
     document.body.innerHTML = '<div id="widget_tree_map"><svg></svg></div>'
   })
 
@@ -31,8 +42,6 @@ describe('WidgetTreeMap.vue', () => {
       }
     })
   })
-
-  afterAll(() => jest.unmock('@/api/elasticsearch'))
 
   it('should be a Vue instance', () => {
     expect(wrapper).toBeTruthy()
