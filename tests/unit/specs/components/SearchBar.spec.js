@@ -8,10 +8,10 @@ import { Core } from '@/core'
 import SearchBar from '@/components/SearchBar'
 
 describe('SearchBar.vue', function () {
-  const { i18n, localVue, store, config } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
   const { index, es } = esConnectionHelper.build('search-bar')
   const { index: indexFoo } = esConnectionHelper.build('search-bar-foo')
+  const { i18n, localVue, store, config } = Core.init(createLocalVue(), { elasticsearch: es }).useAll()
 
   let wrapper = null
 
