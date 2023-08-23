@@ -80,7 +80,6 @@ import { castArray, concat, escapeRegExp, each, get, iteratee, last, orderBy, so
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 
-import elasticsearch from '@/api/elasticsearch'
 import ShortkeysModal from '@/components/ShortkeysModal'
 import SearchBarInput from '@/components/SearchBarInput'
 import SearchBarInputDropdownForField from '@/components/SearchBarInputDropdownForField'
@@ -215,7 +214,7 @@ export default {
         body.aggregation('terms', field, { include }, field)
       })
       const preference = 'search-bar-suggestions'
-      const response = await elasticsearch.search({ index, body: body.build(), preference })
+      const response = await this.$core.api.elasticsearch.search({ index, body: body.build(), preference })
 
       let suggestions = []
       each(fields, (field) => {
