@@ -4,7 +4,6 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from 'tests/unit/tests_utils'
 
-import elasticsearch from '@/api/elasticsearch'
 import { Core } from '@/core'
 import DocumentView from '@/pages/DocumentView'
 
@@ -19,7 +18,8 @@ describe('DocumentView.vue', () => {
       getUser: jest.fn(),
       addUserHistoryEvent: jest.fn(),
       getRecommendationsByDocuments: jest.fn(),
-      getTags: jest.fn()
+      getTags: jest.fn(),
+      elasticsearch: es
     }
     core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -52,9 +52,9 @@ describe('DocumentView.vue', () => {
 
   it('should call the elasticsearch to retrieve document parent', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
-    const spyElasticsearchGet = jest.spyOn(elasticsearch, 'get')
+    const spyElasticsearchGet = jest.spyOn(api.elasticsearch, 'get')
     await wrapper.vm.getDoc()
-    const payload = { index: project, id: parentId, routing: null }
+    const payload = { index: project, id: parentId, routing: null, _source_excludes: 'content,content_translated' }
     expect(spyElasticsearchGet).toBeCalledWith(expect.objectContaining(payload))
   })
 
