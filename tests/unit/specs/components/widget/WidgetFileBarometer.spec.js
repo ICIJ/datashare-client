@@ -6,8 +6,9 @@ import WidgetFileBarometer from '@/components/widget/WidgetFileBarometer'
 import { Core } from '@/core'
 
 describe('WidgetFileBarometer.vue', () => {
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const { index: project, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
   const propsData = { widget: { title: 'Hello world' } }
   let wrapper = null
 
