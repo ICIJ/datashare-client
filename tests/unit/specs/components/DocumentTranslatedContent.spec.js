@@ -42,7 +42,7 @@ describe('DocumentTranslatedContent.vue', () => {
     }
   }
   beforeAll(() => {
-    api = { getDocumentSlice: jest.fn() }
+    api = { getDocumentSlice: jest.fn(), elasticsearch: es }
 
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
