@@ -2,11 +2,11 @@ import { cloneDeep } from 'lodash'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-import store from '@/store'
+import { storeBuilder } from '@/store/storeBuilder'
 
 describe('SearchFilters', () => {
   const { index: project, es } = esConnectionHelper.build()
-
+  const store = storeBuilder({ elasticsearch: es })
   beforeAll(() => store.commit('search/index', project))
 
   afterEach(() => store.commit('search/reset'))
