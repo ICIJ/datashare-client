@@ -42,7 +42,8 @@ describe('DocumentTagsForm.vue', () => {
     api = {
       getTags: jest.fn(),
       tagDocuments: jest.fn(),
-      untagDocuments: jest.fn()
+      untagDocuments: jest.fn(),
+      elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
