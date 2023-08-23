@@ -50,7 +50,6 @@ import { startCase } from 'lodash'
 import humanNumber from '../filters/humanNumber'
 
 import ProjectThumbnail from '@/components/ProjectThumbnail'
-import elasticsearch from '@/api/elasticsearch'
 
 /**
  * List all the projects with cards linking to the search.
@@ -75,7 +74,9 @@ export default {
   },
   methods: {
     async fetchDocumentsCountByProject() {
-      const nbDocByProject = await elasticsearch.countByProject(this.projectIds, { match: { type: 'Document' } })
+      const nbDocByProject = await this.$core.api.elasticsearch.countByProject(this.projectIds, {
+        match: { type: 'Document' }
+      })
       this.documentsByProject = nbDocByProject?.aggregations?.index?.buckets?.reduce((res, agg) => {
         res[agg.key] = agg.doc_count
         return res

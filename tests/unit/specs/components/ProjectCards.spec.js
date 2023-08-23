@@ -1,14 +1,26 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { set } from 'lodash'
 
 import ProjectCards from '@/components/ProjectCards'
 import { Core } from '@/core'
 
-const { localVue, store, i18n } = Core.init(createLocalVue()).useAll()
-
 describe('ProjectCards.vue', () => {
-  let wrapper
+  let wrapper, localVue, store, i18n, api
 
+  beforeAll(() => {
+    const nbDocByProject = set({}, 'aggregations.index.buckets', [
+      { key: 'first-index', doc_count: 10 },
+      { key: 'foo', doc_count: 10 }
+    ])
+    api = {
+      elasticsearch: { countByProject: jest.fn().mockResolvedValue(nbDocByProject) }
+    }
+    const core = Core.init(createLocalVue(), api).useAll()
+    localVue = core.localVue
+    store = core.store
+    i18n = core.i18n
+  })
   it('should display one card for first-index', () => {
     Murmur.config.set('projects', [{ name: 'foo' }])
     wrapper = shallowMount(ProjectCards, { localVue, store, i18n })
