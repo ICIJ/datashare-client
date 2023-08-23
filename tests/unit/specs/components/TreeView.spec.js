@@ -35,8 +35,8 @@ const HOME_TREE_WIN = {
 
 describe('TreeView.vue', () => {
   describe('Posix', () => {
-    const api = { tree: jest.fn() }
     const { index, es } = esConnectionHelper.build()
+    const api = { tree: jest.fn(), elasticsearch: es }
     const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
     const propsData = {
       projects: [index],
