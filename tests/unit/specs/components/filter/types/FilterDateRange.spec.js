@@ -6,11 +6,12 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { Core } from '@/core'
 import FilterDateRange from '@/components/filter/types/FilterDateRange'
 
-const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('FilterDateRange.vue', () => {
-  const { index } = esConnectionHelper.build()
+  const { index, es } = esConnectionHelper.build()
+  const api = { elasticsearch: es }
+  const { localVue, i18n, store, wait } = Core.init(createLocalVue(), api).useAll()
   const name = 'creationDate'
   const filter = store.getters['search/getFilter']({ name })
   let wrapper = null
