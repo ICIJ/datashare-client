@@ -13,6 +13,7 @@ describe('DocumentActions.vue', () => {
   let document = null
   let wrapper = null
   let api
+
   beforeAll(() => {
     api = { starDocuments: jest.fn(), unstarDocuments: jest.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
@@ -20,7 +21,10 @@ describe('DocumentActions.vue', () => {
     localVue = core.localVue
     store = core.store
 
-    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] })
+    Murmur.config.merge({
+      projects: [process.env.VUE_APP_ES_INDEX],
+      embeddedDocumentDownloadMaxSize: '1G'
+    })
   })
 
   beforeEach(async () => {
