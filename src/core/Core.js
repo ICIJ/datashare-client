@@ -118,6 +118,9 @@ class Core extends Behaviors {
     this.use(BootstrapVue, {
       BPopover: {
         boundaryPadding: 14
+      },
+      BTooltip: {
+        boundaryPadding: 0
       }
     })
     return this
