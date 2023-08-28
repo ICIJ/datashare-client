@@ -18,18 +18,24 @@
 
     <template v-if="canIDownload">
       <b-btn-group :class="downloadBtnGroupClass">
-        <a
-          :id="downloadBtnId"
-          class="document-actions__download btn"
-          :class="downloadBtnClass"
-          :href="document.fullUrl"
-          target="_blank"
-        >
-          <fa icon="download" fixed-width />
-          <span class="ml-1" :class="{ 'sr-only': !downloadBtnLabel }">
-            {{ $t('document.downloadButton') }}
-          </span>
-        </a>
+        <span :id="downloadBtnWrapperId">
+          <b-btn
+            :id="downloadBtnId"
+            class="document-actions__download btn"
+            :class="downloadBtnClass"
+            :disabled="isRootTooBig"
+            :href="document.fullUrl"
+            target="_blank"
+          >
+            <fa icon="download" fixed-width />
+            <span class="ml-1" :class="{ 'sr-only': !downloadBtnLabel }">
+              {{ $t('document.downloadButton') }}
+            </span>
+          </b-btn>
+        </span>
+        <b-tooltip v-if="isRootTooBig" :target="downloadBtnWrapperId" triggers="hover">
+          {{ $t('document.downloadMaxRootSizeAlert', { humanMaxRootSize }) }}
+        </b-tooltip>
         <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
           <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
             <fa icon="download" class="mr-1 text-secondary" fixed-width />
@@ -87,6 +93,8 @@ import { findIndex, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
+import byteSize from '@/filters/byteSize'
+import humanSize from '@/filters/humanSize'
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
 
@@ -217,6 +225,9 @@ export default {
     downloadBtnId() {
       return uniqueId('document-actions-download-button-')
     },
+    downloadBtnWrapperId() {
+      return uniqueId('document-actions-download-button-wrapper-')
+    },
     popupBtnId() {
       return uniqueId('document-actions-popup-button-')
     },
@@ -237,6 +248,18 @@ export default {
     },
     hasRootCleanableContentType() {
       return this.hasRoot && this.cleanableContentTypes.includes(this.document.root.contentType)
+    },
+    isRootTooBig() {
+      return this.hasRoot && this.rootSize > this.maxRootSize
+    },
+    rootSize() {
+      return this.document?.root?.contentLength
+    },
+    maxRootSize() {
+      return byteSize(this.$config.get('embeddedDocumentDownloadMaxSize'))
+    },
+    humanMaxRootSize() {
+      return humanSize(this.maxRootSize)
     }
   },
   methods: {
