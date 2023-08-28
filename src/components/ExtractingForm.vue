@@ -167,6 +167,9 @@ export default {
   },
   async mounted() {
     await this.loadLanguages()
+    // This trick ensure the default project is not null
+    // when submiting the form
+    this.$store.commit('indexing/formDefaultProject', this.defaultProject)
   },
   methods: {
     dispatchExtract: waitFor('submitExtract', function () {
