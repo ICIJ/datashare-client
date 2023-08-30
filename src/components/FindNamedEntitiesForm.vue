@@ -159,8 +159,8 @@ export default {
         this.$wait.start('launch ner task')
         await this.$store.dispatch('indexing/submitFindNamedEntities')
         this.$emit('submit', { error: false })
-      } catch (e) {
-        this.$emit('submit', { error: e })
+      } catch (error) {
+        this.$emit('submit', { error })
       } finally {
         this.$wait.end('launch ner task')
         this.$store.commit('indexing/resetFindNamedEntitiesForm')
