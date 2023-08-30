@@ -108,13 +108,12 @@ export default {
   },
   data() {
     return {
-      pipelines: [],
-      waiting: false
+      pipelines: []
     }
   },
   computed: {
     disabled() {
-      return this.pipeline && this.waiting
+      return this.pipeline && !this.$wait.waiting('load ner pipelines')
     },
     offline: {
       set(value) {
