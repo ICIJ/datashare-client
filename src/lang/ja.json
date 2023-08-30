@@ -406,6 +406,7 @@
     "project": "Project",
     "creationDate": "作成日時",
     "size": "ファイルサイズ",
+    "downloadMaxRootSizeAlert": "You cannot download this document because its parent is bigger than {humanMaxRootSize}.",
     "contentLanguage": "内容の言語",
     "contentType": "内容のタイプ",
     "contentEncoding": "内容のエンコーディング",
