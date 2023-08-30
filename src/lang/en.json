@@ -762,6 +762,26 @@
     },
     "submit": "Save"
   },
+  "projectViewAddDocuments": {
+    "title": "Add documents to project",
+    "notify": {
+      "succeed": "Add document task launched",
+      "succeedBody": "Indexing task to add documents has been launched.",
+      "seeTasks": "See tasks",
+      "failed": "Add document task failed",
+      "failedBody": "An error occurred when launching indexing task to add documents."
+    }
+  },
+  "projectViewFindNamedEntities": {
+    "title": "Find named entities",
+    "notify": {
+      "succeed": "Find named entities task launched",
+      "succeedBody": "Finding named entities has been launched.",
+      "seeTasks": "See tasks",
+      "failed": "Find named entities task failed",
+      "failedBody": "An error occurred when launching indexing task to add documents."
+    }
+  },
   "projectForm": {
     "form": {
       "name": {

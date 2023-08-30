@@ -14,37 +14,35 @@ export default {
   computed: {
     projectRoute() {
       return { name: 'project.document-extract' }
+    },
+    projectName() {
+      return this.$route.params?.name
     }
   },
   methods: {
-    async submit(project) {
-      try {
-        this.$wait.start('creating')
-        await this.$core.api.createProject(project)
-        await this.$core.setProject(project)
-        this.notifyCreationSucceed()
-        this.redirectToProject(project)
-      } catch (error) {
-        this.notifyCreationFailed(error)
-      } finally {
-        this.$wait.end('creating')
-      }
-    },
     notifyCreationSucceed() {
-      const title = this.$t('projectNew.notify.succeed')
+      const title = this.$t('projectViewAddDocuments.notify.succeed')
       const variant = 'success'
-      const body = this.$t('projectNew.notify.succeedBody')
+      const message = this.$t('projectViewAddDocuments.notify.succeedBody')
+      const linkText = this.$t('projectViewAddDocuments.notify.seeTasks')
+      const body = this.$createElement('div', {}, [
+        this.$createElement('p', {}, message),
+        this.$createElement('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
+      ])
       this.$root.$bvToast.toast(body, { variant, title })
     },
     notifyCreationFailed(error) {
-      const title = this.$t('projectNew.notify.failed')
+      const title = this.$t('projectViewAddDocuments.notify.failed')
       const variant = 'danger'
-      const body = get(error, 'response.data.error') ?? this.$t('projectNew.notify.failedBody')
+      const body = get(error, 'response.data.error') ?? this.$t('projectViewAddDocuments.notify.failedBody')
       this.$root.$bvToast.toast(body, { variant, title })
     },
-    redirectToProject({ name }) {
-      const params = { name }
-      return this.$router.push({ name: 'project.view', params })
+    submit({ error }) {
+      if (error) {
+        this.notifyCreationFailed(error)
+      } else {
+        this.notifyCreationSucceed()
+      }
     }
   }
 }
@@ -55,10 +53,15 @@ export default {
     <div class="container p-4">
       <div class="card">
         <h4 class="card-header">Add documents</h4>
-        <extracting-form id="extracting-form" class="card-body">
+        <extracting-form
+          id="extracting-form"
+          class="card-body"
+          :project-name="projectName"
+          disable-project-selection
+          @submit="submit"
+        >
           <template #footer="{ disabled }">
             <div class="col text-right">
-              <b-btn variant="outline-primary" type="reset" :disabled="disabled"> Reset </b-btn>
               <b-btn variant="primary" class="ml-2" type="submit" :disabled="disabled">
                 {{ $t('indexing.go') }}
               </b-btn>
