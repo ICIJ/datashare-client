@@ -406,6 +406,7 @@
     "project": "Projet",
     "creationDate": "Date de création",
     "size": "Taille du ficher",
+    "downloadMaxRootSizeAlert": "You cannot download this document because its parent is bigger than {humanMaxRootSize}.",
     "contentLanguage": "Langue",
     "contentType": "Type de contenu",
     "contentEncoding": "Encodage",
