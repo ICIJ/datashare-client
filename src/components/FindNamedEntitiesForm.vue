@@ -31,9 +31,9 @@
                 :key="pip"
                 class="list-group-item bg-transparent border-light"
               >
-                <b-form-radio v-model="pipeline" name="pipeline" :value="pip">
+                <b-form-radio v-model="pipeline" name="pipeline" :value="pip.toUpperCase()">
                   {{ $t(`${translationReference}`) }}
-                  <div v-if="pip.toLowerCase() === 'corenlp'" class="font-italic small">
+                  <div v-if="pip.toUpperCase() === 'CORENLP'" class="font-italic small">
                     {{ $t('indexing.default') }}
                   </div>
                 </b-form-radio>
@@ -129,7 +129,7 @@ export default {
         this.$store.commit('indexing/formPipeline', value)
       },
       get() {
-        return this.$store.state.indexing.form.pipeline.toLowerCase()
+        return this.$store.state.indexing.form.pipeline.toUpperCase()
       }
     },
     defaultProject: {
