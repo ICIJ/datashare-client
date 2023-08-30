@@ -57,7 +57,7 @@ export default {
           id="find-named-entities-form p-4"
           class="card-body"
           :project-name="projectName"
-          disable-project-selection
+          hide-project-selector
           @submit="submit"
         >
           <template #footer="{ disabled }">

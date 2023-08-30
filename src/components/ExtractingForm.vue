@@ -8,7 +8,7 @@
       <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
         <p class="font-weight-bold">{{ $t('indexing.projectIndexationSelection') }}</p>
-        <project-selector v-model="defaultProject" :disabled="disableProjectSelection" />
+        <project-selector v-model="defaultProject" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -100,6 +100,13 @@ export default {
      */
     dark: {
       type: Boolean
+    },
+    /**
+     * Force hiding the project selector input
+     */
+    hideProjectSelector: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -167,7 +174,11 @@ export default {
       return !this.hasTesseract || !!this.ocr
     },
     showProjectSelector() {
-      return this.$core.projects.length > 1 || this.defaultProject !== this.$config.get('defaultProject')
+      return (
+        !this.hideProjectSelector ||
+        this.$core.projects.length > 1 ||
+        this.defaultProject !== this.$config.get('defaultProject')
+      )
     }
   },
   async mounted() {
