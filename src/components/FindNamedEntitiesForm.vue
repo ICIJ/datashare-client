@@ -9,8 +9,10 @@
       <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
         <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
         <div class="ml-4 pl-3">
-          <p class="font-weight-bold">In which project do you want to find names?</p>
-          <project-selector v-model="defaultProject" />
+          <p class="font-weight-bold">
+            {{ $t('indexing.findNamedEntitiesProjectSelection') }}
+          </p>
+          <project-selector v-model="defaultProject" :disabled="disableProjectSelection" />
         </div>
       </div>
       <div class="find-named-entities-form__group mb-4">
@@ -31,7 +33,7 @@
               >
                 <b-form-radio v-model="pipeline" name="pipeline" :value="pip">
                   {{ $t(`${translationReference}`) }}
-                  <div v-if="pip === 'corenlp'" class="font-italic small">
+                  <div v-if="pip.toLowerCase() === 'corenlp'" class="font-italic small">
                     {{ $t('indexing.default') }}
                   </div>
                 </b-form-radio>
@@ -83,17 +85,37 @@ export default {
   },
   mixins: [utils],
   props: {
+    /**
+     * Dark mode background option
+     */
     dark: {
       type: Boolean
+    },
+    /**
+     * Project name to select in the input instead of default project
+     */
+    projectName: {
+      type: String,
+      default: null
+    },
+    /**
+     * Disable project selection select input
+     */
+    disableProjectSelection: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       pipelines: [],
-      disabled: false
+      waiting: false
     }
   },
   computed: {
+    disabled() {
+      return this.pipeline && this.waiting
+    },
     offline: {
       set(value) {
         this.$store.commit('indexing/formOffline', value)
@@ -107,7 +129,7 @@ export default {
         this.$store.commit('indexing/formPipeline', value)
       },
       get() {
-        return this.$store.state.indexing.form.pipeline
+        return this.$store.state.indexing.form.pipeline.toLowerCase()
       }
     },
     defaultProject: {
@@ -115,7 +137,7 @@ export default {
         this.$store.commit('indexing/formDefaultProject', value)
       },
       get() {
-        return this.$store.state.indexing.form.defaultProject || this.$config.get('defaultProject')
+        return this.projectName || this.$store.state.indexing.form.defaultProject || this.$config.get('defaultProject')
       }
     },
     showProjectSelector() {
@@ -123,19 +145,20 @@ export default {
     }
   },
   async mounted() {
-    this.$wait.start('load ner pipelines')
+    if (this.$core.findProject(this.projectName)) {
+      this.defaultProject = this.projectName
+    }
+    this.$wait.start('load ner pipelinesccccc')
     const pipelines = await this.$store.dispatch('indexing/getNerPipelines')
     this.$set(this, 'pipelines', this.handlePipelinesTranslation(values(pipelines).map(lowerCase)))
     this.$wait.end('load ner pipelines')
   },
   methods: {
     async submitFindNamedEntities() {
-      this.disabled = true
       try {
         await this.$store.dispatch('indexing/submitFindNamedEntities')
       } finally {
         this.$store.commit('indexing/resetFindNamedEntitiesForm')
-        this.disabled = false
         this.$emit('submit')
       }
     },

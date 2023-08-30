@@ -7,15 +7,15 @@
     <div v-if="showProjectSelector" class="extracting-form__group mb-4">
       <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
-        <p class="font-weight-bold">In which project index documents?</p>
-        <project-selector v-model="defaultProject" />
+        <p class="font-weight-bold">{{ $t('indexing.projectIndexationSelection') }}</p>
+        <project-selector v-model="defaultProject" :disabled="disableProjectSelection" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
       <fa icon="folder-open" class="position-absolute mt-1 ml-1" size="lg" />
       <div class="ml-4 pl-3">
-        <p class="font-weight-bold mb-0">In which folder do you want to index?</p>
-        <p class="small mb-2">The entire Datashare folder will be indexed by default.</p>
+        <p class="font-weight-bold mb-0">{{ $t('indexing.folderSelection') }}</p>
+        <p class="small mb-2">{{ $t('indexing.folderSelectionDescription') }}</p>
         <inline-directory-picker v-model="path" :source-path="sourcePath" hide-folder-icon dark />
       </div>
     </div>
@@ -171,6 +171,9 @@ export default {
     }
   },
   async mounted() {
+    if (this.$core.findProject(this.projectName)) {
+      this.defaultProject = this.projectName
+    }
     await this.loadLanguages()
     // This trick ensure the default project is not null
     // when submiting the form
