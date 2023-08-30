@@ -528,7 +528,8 @@
   "indexing": {
     "title": "Analyze your documents",
     "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
-    "go": "Go",
+    "go": "Launch",
+    "goAndSee": "Launch and see tasks",
     "tasks": "Tasks",
     "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "Add documents",
@@ -538,6 +539,7 @@
     "extractOnlyNewHelp": "If yes, Datashare will only extract text from files that are not yet searchable in Datashare.",
     "extractLanguage": "In which language are your documents?",
     "findNamedEntities": "Find people, organizations, locations and emails",
+    "findNamedEntitiesProjectSelection": "In which project do you want to find named entities?",
     "findNamedEntitiesHeader": "What would you like to do?",
     "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models.",
     "findNamedEntitiesTooltip": "Texts must be extracted before finding named entities",
@@ -549,8 +551,10 @@
       "mitie": "Find people, organizations and locations with MITIE",
       "ixapipe": "Find people, organizations and locations with IXA Pipe",
       "gatenlp": "Find people, organizations and locations with GateNLP"
-
     },
+    "projectIndexationSelection": "In which project do you want to add documents?",
+    "folderSelection": "Which folder do you want to index?",
+    "folderSelectionDescription": "By default, the entire project folder is selected.",
     "default": "By default - Offers the highest probability of working in most documents",
     "syncModelsLabel": "Do you want to work offline?",
     "syncModels": "Check this box if you are working without internet connection.",
