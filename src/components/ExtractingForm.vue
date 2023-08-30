@@ -208,8 +208,8 @@ export default {
       try {
         await this.dispatchExtract()
         this.$emit('submit', { error: false })
-      } catch (e) {
-        this.$emit('submit', { error: e })
+      } catch (error) {
+        this.$emit('submit', { error })
       } finally {
         this.$store.commit('indexing/resetExtractForm')
       }
