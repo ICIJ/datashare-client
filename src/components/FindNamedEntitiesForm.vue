@@ -148,7 +148,7 @@ export default {
     if (this.$core.findProject(this.projectName)) {
       this.defaultProject = this.projectName
     }
-    this.$wait.start('load ner pipelinesccccc')
+    this.$wait.start('load ner pipelines')
     const pipelines = await this.$store.dispatch('indexing/getNerPipelines')
     this.$set(this, 'pipelines', this.handlePipelinesTranslation(values(pipelines).map(lowerCase)))
     this.$wait.end('load ner pipelines')
