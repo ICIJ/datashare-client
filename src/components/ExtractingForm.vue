@@ -175,9 +175,8 @@ export default {
     },
     showProjectSelector() {
       return (
-        !this.hideProjectSelector ||
-        this.$core.projects.length > 1 ||
-        this.defaultProject !== this.$config.get('defaultProject')
+        !this.hideProjectSelector &&
+        (this.$core.projects.length > 1 || this.defaultProject !== this.$config.get('defaultProject'))
       )
     }
   },
