@@ -54,6 +54,7 @@
       </div>
       <div class="find-named-entities-form__footer mt-4 row no-gutters">
         <slot name="footer" :disabled="disabled">
+          disabled {{ disabled }}
           <div class="col text-right">
             <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
               {{ $t('indexing.go') }}
@@ -113,7 +114,7 @@ export default {
   },
   computed: {
     disabled() {
-      return this.pipeline && !this.$wait.waiting('load ner pipelines')
+      return !this.pipeline && (!this.$wait.waiting('load ner pipelines') || !this.$wait.waiting('launch ner task'))
     },
     offline: {
       set(value) {
@@ -128,7 +129,7 @@ export default {
         this.$store.commit('indexing/formPipeline', value)
       },
       get() {
-        return this.$store.state.indexing.form.pipeline.toUpperCase()
+        return this.$store.state.indexing.form.pipeline?.toUpperCase()
       }
     },
     defaultProject: {
@@ -155,11 +156,13 @@ export default {
   methods: {
     async submitFindNamedEntities() {
       try {
+        this.$wait.start('launch ner task')
         await this.$store.dispatch('indexing/submitFindNamedEntities')
         this.$emit('submit', { error: false })
       } catch (e) {
         this.$emit('submit', { error: e })
       } finally {
+        this.$wait.end('launch ner task')
         this.$store.commit('indexing/resetFindNamedEntitiesForm')
       }
     },
