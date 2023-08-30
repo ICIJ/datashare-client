@@ -57,7 +57,7 @@ export default {
           id="extracting-form"
           class="card-body"
           :project-name="projectName"
-          disable-project-selection
+          hide-project-selector
           @submit="submit"
         >
           <template #footer="{ disabled }">

@@ -12,7 +12,7 @@
           <p class="font-weight-bold">
             {{ $t('indexing.findNamedEntitiesProjectSelection') }}
           </p>
-          <project-selector v-model="defaultProject" :disabled="disableProjectSelection" />
+          <project-selector v-model="defaultProject" />
         </div>
       </div>
       <div class="find-named-entities-form__group mb-4">
@@ -100,9 +100,9 @@ export default {
       default: null
     },
     /**
-     * Disable project selection select input
+     * Force hiding the project selector input
      */
-    disableProjectSelection: {
+    hideProjectSelector: {
       type: Boolean,
       default: false
     }
@@ -141,7 +141,11 @@ export default {
       }
     },
     showProjectSelector() {
-      return this.$core.projects.length > 1 || this.defaultProject !== this.$config.get('defaultProject')
+      return (
+        !this.hideProjectSelector ||
+        this.$core.projects.length > 1 ||
+        this.defaultProject !== this.$config.get('defaultProject')
+      )
     }
   },
   async mounted() {
