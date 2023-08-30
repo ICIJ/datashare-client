@@ -207,9 +207,11 @@ export default {
     async submitExtract() {
       try {
         await this.dispatchExtract()
+        this.$emit('submit', { error: false })
+      } catch (e) {
+        this.$emit('submit', { error: e })
       } finally {
         this.$store.commit('indexing/resetExtractForm')
-        this.$emit('submit')
       }
     }
   }
