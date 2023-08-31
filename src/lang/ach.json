@@ -528,7 +528,7 @@
   "indexing": {
     "title": "crwdns910:0crwdne910:0",
     "description": "crwdns912:0%{howToLink}crwdne912:0",
-    "go": "crwdns918:0crwdne918:0",
+    "go": "crwdns2893:0crwdne2893:0",
     "tasks": "crwdns920:0crwdne920:0",
     "empty": "crwdns2522:0%{howToLink}crwdne2522:0",
     "extractText": "crwdns2618:0crwdne2618:0",
@@ -538,6 +538,7 @@
     "extractOnlyNewHelp": "crwdns1888:0crwdne1888:0",
     "extractLanguage": "crwdns2638:0crwdne2638:0",
     "findNamedEntities": "crwdns2620:0crwdne2620:0",
+    "findNamedEntitiesProjectSelection": "crwdns2895:0crwdne2895:0",
     "findNamedEntitiesHeader": "crwdns2416:0crwdne2416:0",
     "findNamedEntitiesSubheader": "crwdns2418:0crwdne2418:0",
     "findNamedEntitiesTooltip": "crwdns1896:0crwdne1896:0",
@@ -550,6 +551,9 @@
       "ixapipe": "crwdns2614:0crwdne2614:0",
       "gatenlp": "crwdns2616:0crwdne2616:0"
     },
+    "projectIndexationSelection": "crwdns2897:0crwdne2897:0",
+    "folderSelection": "crwdns2899:0crwdne2899:0",
+    "folderSelectionDescription": "crwdns2901:0crwdne2901:0",
     "default": "crwdns950:0crwdne950:0",
     "syncModelsLabel": "crwdns2624:0crwdne2624:0",
     "syncModels": "crwdns2626:0crwdne2626:0",
@@ -721,6 +725,8 @@
     }
   },
   "projectList": {
+    "title": "crwdns2903:0crwdne2903:0",
+    "newProject": "crwdns2905:0crwdne2905:0",
     "fields": {
       "label": "crwdns2803:0crwdne2803:0",
       "updateDate": "crwdns2805:0crwdne2805:0"
@@ -754,6 +760,26 @@
       }
     },
     "submit": "crwdns2873:0crwdne2873:0"
+  },
+  "projectViewAddDocuments": {
+    "title": "crwdns2907:0crwdne2907:0",
+    "notify": {
+      "succeed": "crwdns2909:0crwdne2909:0",
+      "succeedBody": "crwdns2911:0crwdne2911:0",
+      "seeTasks": "crwdns2913:0crwdne2913:0",
+      "failed": "crwdns2915:0crwdne2915:0",
+      "failedBody": "crwdns2917:0crwdne2917:0"
+    }
+  },
+  "projectViewFindNamedEntities": {
+    "title": "crwdns2919:0crwdne2919:0",
+    "notify": {
+      "succeed": "crwdns2921:0crwdne2921:0",
+      "succeedBody": "crwdns2923:0crwdne2923:0",
+      "seeTasks": "crwdns2925:0crwdne2925:0",
+      "failed": "crwdns2927:0crwdne2927:0",
+      "failedBody": "crwdns2929:0crwdne2929:0"
+    }
   },
   "projectForm": {
     "form": {
