@@ -528,7 +528,7 @@
   "indexing": {
     "title": "Dokumente analysieren",
     "description": "Bitte <a href=\"%{howToLink}\" target=\"_blank\">lesen Sie die Dokumentation</a> zum Hinzufügen von Dokumenten.",
-    "go": "Los",
+    "go": "Launch",
     "tasks": "Aufgaben",
     "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "Dokumente hinzufügen",
@@ -538,6 +538,7 @@
     "extractOnlyNewHelp": "Wenn ja, wird Datashare den Text nur aus Dateien extrahieren, die in Datashare noch nicht durchsuchbar sind.",
     "extractLanguage": "In welcher Sprache sind Ihre Dokumente?",
     "findNamedEntities": "Find people, organizations, locations and emails",
+    "findNamedEntitiesProjectSelection": "In which project do you want to find named entities?",
     "findNamedEntitiesHeader": "Was möchten Sie tun?",
     "findNamedEntitiesSubheader": "Datashare verwendet Modelle zur Verarbeitung natürlicher Sprachen.",
     "findNamedEntitiesTooltip": "Die Texte müssen extrahiert werden, bevor Named Entities gefunden werden können",
@@ -550,6 +551,9 @@
       "ixapipe": "Find people, organizations and locations with IXA Pipe",
       "gatenlp": "Find people, organizations and locations with GateNLP"
     },
+    "projectIndexationSelection": "In which project do you want to add documents?",
+    "folderSelection": "Which folder do you want to index?",
+    "folderSelectionDescription": "By default, the entire project folder is selected.",
     "default": "Standardmäßig - Bietet die höchste Wahrscheinlichkeit in den meisten Dokumenten zu funktionieren",
     "syncModelsLabel": "Do you want to work offline?",
     "syncModels": "Check this box if you are working without internet connection.",
@@ -721,6 +725,8 @@
     }
   },
   "projectList": {
+    "title": "Projects",
+    "newProject": "New project",
     "fields": {
       "label": "Label",
       "updateDate": "Updated"
@@ -754,6 +760,26 @@
       }
     },
     "submit": "Save"
+  },
+  "projectViewAddDocuments": {
+    "title": "Add documents to project",
+    "notify": {
+      "succeed": "Add document task launched",
+      "succeedBody": "Indexing task to add documents has been launched.",
+      "seeTasks": "See tasks",
+      "failed": "Add document task failed",
+      "failedBody": "An error occurred when launching indexing task to add documents."
+    }
+  },
+  "projectViewFindNamedEntities": {
+    "title": "Find named entities",
+    "notify": {
+      "succeed": "Find named entities task launched",
+      "succeedBody": "Finding named entities has been launched.",
+      "seeTasks": "See tasks",
+      "failed": "Find named entities task failed",
+      "failedBody": "An error occurred when launching indexing task to add documents."
+    }
   },
   "projectForm": {
     "form": {
