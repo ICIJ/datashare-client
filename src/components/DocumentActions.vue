@@ -26,6 +26,7 @@
             :disabled="isRootTooBig"
             :href="document.fullUrl"
             target="_blank"
+            variant="transparent"
           >
             <fa icon="download" fixed-width />
             <span class="ml-1" :class="{ 'sr-only': !downloadBtnLabel }">
