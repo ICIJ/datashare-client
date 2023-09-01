@@ -202,6 +202,5 @@ describe('DocumentTabDetails.vue', () => {
     })
 
     expect(wrapper.find('.document__content__title').exists()).toBeTruthy()
-    expect(wrapper.find('.document__content__title-norm').exists()).toBeTruthy()
   })
 })

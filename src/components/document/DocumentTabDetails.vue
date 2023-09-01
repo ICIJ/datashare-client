@@ -181,12 +181,6 @@ export default {
           value: this.document.title
         },
         {
-          name: 'title',
-          label: this.$t('document.titleNorm'),
-          trClass: 'document__content__title-norm',
-          value: this.document.titleNorm
-        },
-        {
           name: 'path',
           label: this.$t('document.path'),
           trClass: 'document__content__path',
