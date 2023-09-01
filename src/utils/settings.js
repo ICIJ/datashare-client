@@ -158,10 +158,12 @@ export default {
     },
     {
       name: 'name',
+      field: 'titleNorm',
       desc: false
     },
     {
       name: 'nameReverse',
+      field: 'titleNorm',
       desc: true
     }
   ],

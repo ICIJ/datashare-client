@@ -199,4 +199,34 @@ describe('elasticsearch', () => {
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(1)
   })
+
+  it('should sort by file name', async () => {
+    await letData(es).have(new IndexedDocument('document_01', index).withContent('this is a document')).commit()
+
+    await letData(es)
+      .have(new IndexedDocument('DOCUMENT_02', index).withContent('this is a different document'))
+      .commit()
+
+    await letData(es).have(new IndexedDocument('document_03', index).withContent('this is another document')).commit()
+
+    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, 'name', [])
+    expect(response.hits.hits[0]._id).toEqual('document_01')
+    expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
+    expect(response.hits.hits[2]._id).toEqual('document_03')
+  })
+
+  it('should sort by file name (reverse)', async () => {
+    await letData(es).have(new IndexedDocument('document_01', index).withContent('this is a document')).commit()
+
+    await letData(es)
+      .have(new IndexedDocument('DOCUMENT_02', index).withContent('this is a different document'))
+      .commit()
+
+    await letData(es).have(new IndexedDocument('document_03', index).withContent('this is another document')).commit()
+
+    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, 'nameReverse', [])
+    expect(response.hits.hits[0]._id).toEqual('document_03')
+    expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
+    expect(response.hits.hits[2]._id).toEqual('document_01')
+  })
 })
