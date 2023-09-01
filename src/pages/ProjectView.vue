@@ -77,13 +77,13 @@ export default {
             Insights
           </template>
         </b-tab>
-        <b-tab title-item-class=" project-view__tab project-view__tab--insights">
+        <b-tab v-if="!isServer" title-item-class=" project-view__tab project-view__tab--insights">
           <template #title>
             <fa icon="file" fixed-width class="mr-1" />
             Add documents
           </template>
         </b-tab>
-        <b-tab title-item-class=" project-view__tab project-view__tab--insights">
+        <b-tab v-if="!isServer" title-item-class=" project-view__tab project-view__tab--insights">
           <template #title>
             <fa icon="user-tag" fixed-width class="mr-1" />
             Find named entities
