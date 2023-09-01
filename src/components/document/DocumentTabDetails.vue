@@ -175,10 +175,16 @@ export default {
           }
         },
         {
-          name: 'metadata.tika_metadata_resourcename',
-          label: this.$t('document.name'),
-          trClass: 'document__content__basename',
-          value: this.document.meta('resourcename')
+          name: 'title',
+          label: this.$t('document.title'),
+          trClass: 'document__content__title',
+          value: this.document.title
+        },
+        {
+          name: 'title',
+          label: this.$t('document.titleNorm'),
+          trClass: 'document__content__title-norm',
+          value: this.document.titleNorm
         },
         {
           name: 'path',
@@ -191,6 +197,12 @@ export default {
           label: this.$t('document.dirname'),
           trClass: 'document__content__dirname',
           value: this.documentDirname
+        },
+        {
+          name: 'metadata.tika_metadata_resourcename',
+          label: this.$t('document.name'),
+          trClass: 'document__content__basename',
+          value: this.document.meta('resourcename')
         },
         {
           name: 'metadata.tika_metadata_dcterms_created',
