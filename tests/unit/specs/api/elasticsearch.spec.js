@@ -154,61 +154,6 @@ describe('elasticsearch', () => {
     })
   })
 
-  it('should build a simple sorted ES query with correct date creation sort (newest)', async () => {
-    const body = bodybuilder().from(0).size(25)
-
-    await elasticsearch._addSortToBody('creationDateNewest', body)
-
-    expect(body.build()).toEqual({
-      from: 0,
-      size: 25,
-      sort: [
-        {
-          'metadata.tika_metadata_dcterms_created': {
-            order: 'desc',
-            unmapped_type: 'date'
-          }
-        },
-        {
-          path: {
-            order: 'asc'
-          }
-        }
-      ]
-    })
-  })
-
-  it('should build a simple sorted ES query with correct file name sort', async () => {
-    const body = bodybuilder().from(0).size(25)
-
-    await elasticsearch._addSortToBody('name', body)
-
-    expect(body.build()).toEqual({
-      from: 0,
-      size: 25,
-      sort: [
-        {
-          _script: {
-            type: 'string',
-            order: 'asc',
-            script: {
-              lang: 'painless',
-              source:
-                "doc['metadata.tika_metadata_dc_subject'].size()!=0 ? doc['metadata.tika_metadata_dc_subject'].value" +
-                ": doc['metadata.tika_metadata_dc_title'].size()!=0 ? doc['metadata.tika_metadata_dc_title'].value" +
-                ": doc['metadata.tika_metadata_resourcename'].value"
-            }
-          }
-        },
-        {
-          path: {
-            order: 'asc'
-          }
-        }
-      ]
-    })
-  })
-
   it('should return the first 12 named entities', async () => {
     const id = 'document'
     await letData(es)

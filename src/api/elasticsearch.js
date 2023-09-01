@@ -141,23 +141,6 @@ export function datasharePlugin(Client) {
           }
         }
       ])
-    } else if (name === 'name' || name === 'nameReverse') {
-      body.sort([
-        {
-          _script: {
-            type: 'string',
-            order: desc ? 'desc' : 'asc',
-            script: {
-              lang: 'painless',
-              // The script returns dc_subject if exists else returns dc_title if exists else returns the resourcename
-              source:
-                "doc['metadata.tika_metadata_dc_subject'].size()!=0 ? doc['metadata.tika_metadata_dc_subject'].value" +
-                ": doc['metadata.tika_metadata_dc_title'].size()!=0 ? doc['metadata.tika_metadata_dc_title'].value" +
-                ": doc['metadata.tika_metadata_resourcename'].value"
-            }
-          }
-        }
-      ])
     } else {
       body.sort(field, desc ? 'desc' : 'asc')
     }
