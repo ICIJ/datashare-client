@@ -401,7 +401,6 @@
     "document": "Document",
     "name": "Document name",
     "title": "Title",
-    "titleNorm": "Title Normalized",
     "path": "Document path",
     "dirname": "Document directory",
     "id": "Document ID",
