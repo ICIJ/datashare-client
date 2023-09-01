@@ -103,11 +103,13 @@ export default class Document extends EsDoc {
     return resourceName
   }
   get title() {
-    const titles = [this.shortId, this.basename]
-    if (this.extractionLevel > 0) {
-      titles.push(this.resourceName)
-    }
+    const title = this.get('_source.title', null)
+    const resourceName = this.extractionLevel ? this.resourceName : null
+    const titles = [this.shortId, this.basename, resourceName, title]
     return last(compact(titles))
+  }
+  get titleNorm() {
+    return this.get('_source.titleNorm', null)
   }
   get subject() {
     const titles = [this.title]

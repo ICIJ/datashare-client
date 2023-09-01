@@ -74,8 +74,10 @@ class IndexedDocument {
     this.join = { name: 'Document' }
     this.type = 'Document'
     this.language = 'ENGLISH'
+    this.title = path
+    this.titleNorm = path
     this.metadata = {
-      tika_metadata_resourcename: 'document',
+      tika_metadata_resourcename: path,
       tika_metadata_another_metadata: null,
       tika_metadata_content_type: null,
       tika_metadata_dcterms_created: null,

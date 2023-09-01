@@ -189,4 +189,19 @@ describe('DocumentTabDetails.vue', () => {
     expect(wrapper.find('.document__content__content-length').exists()).toBeTruthy()
     expect(wrapper.find('.document__content__content-length input[type=text]').vm.value).toBe('120.56 KB (123456 B)')
   })
+
+  it('should display the title and the normalized title', async () => {
+    await letData(es).have(new IndexedDocument(id, index)).commit()
+    await store.dispatch('document/get', { id, index })
+    wrapper = mount(DocumentTabDetails, {
+      i18n,
+      localVue,
+      store,
+      router,
+      propsData: { document: store.state.document.doc }
+    })
+
+    expect(wrapper.find('.document__content__title').exists()).toBeTruthy()
+    expect(wrapper.find('.document__content__title-norm').exists()).toBeTruthy()
+  })
 })
