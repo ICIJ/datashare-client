@@ -397,7 +397,7 @@
     "selectDateRange": "日付範囲を選択"
   },
   "document": {
-    "title": "Document",
+    "title": "Title",
     "document": "Document",
     "name": "Document name",
     "path": "Document path",
