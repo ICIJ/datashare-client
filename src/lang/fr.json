@@ -397,7 +397,7 @@
     "selectDateRange": "Sélectionner une période"
   },
   "document": {
-    "title": "Document",
+    "title": "Title",
     "document": "Document",
     "name": "Nom du document",
     "path": "Chemin du document",
