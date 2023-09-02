@@ -397,7 +397,7 @@
     "selectDateRange": "Datumsbereich auswählen"
   },
   "document": {
-    "title": "Dokument",
+    "title": "Title",
     "document": "Dokument",
     "name": "Dokumentname",
     "path": "Dokumentpfad",
