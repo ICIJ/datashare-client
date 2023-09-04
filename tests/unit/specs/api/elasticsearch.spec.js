@@ -209,7 +209,7 @@ describe('elasticsearch', () => {
 
     await letData(es).have(new IndexedDocument('document_03', index).withContent('this is another document')).commit()
 
-    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, 'name', [])
+    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, 'titleNorm', [])
     expect(response.hits.hits[0]._id).toEqual('document_01')
     expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
     expect(response.hits.hits[2]._id).toEqual('document_03')
@@ -224,7 +224,7 @@ describe('elasticsearch', () => {
 
     await letData(es).have(new IndexedDocument('document_03', index).withContent('this is another document')).commit()
 
-    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, 'nameReverse', [])
+    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, 'titleNormReverse', [])
     expect(response.hits.hits[0]._id).toEqual('document_03')
     expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
     expect(response.hits.hits[2]._id).toEqual('document_01')
