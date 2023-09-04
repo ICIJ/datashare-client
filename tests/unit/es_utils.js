@@ -75,7 +75,7 @@ class IndexedDocument {
     this.type = 'Document'
     this.language = 'ENGLISH'
     this.title = path
-    this.titleNorm = path.normalize("NFD").toLowerCase()
+    this.titleNorm = path.normalize('NFD').toLowerCase()
     this.metadata = {
       tika_metadata_resourcename: path,
       tika_metadata_another_metadata: null,
