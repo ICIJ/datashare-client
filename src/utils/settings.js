@@ -157,12 +157,12 @@ export default {
       desc: true
     },
     {
-      name: 'name',
+      name: 'titleNorm',
       field: 'titleNorm',
       desc: false
     },
     {
-      name: 'nameReverse',
+      name: 'titleNormReverse',
       field: 'titleNorm',
       desc: true
     }

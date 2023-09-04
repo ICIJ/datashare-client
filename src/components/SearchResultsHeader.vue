@@ -19,7 +19,7 @@
             {{ $t('search.settings.sortBy') }}
           </b-dropdown-header>
           <b-dropdown-item
-            v-for="selectedSort in sorts"
+            v-for="selectedSort in visibleSorts"
             :key="selectedSort"
             :active="selectedSort === sort"
             @click="selectSort(selectedSort)"
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { cloneDeep, min } from 'lodash'
+import { cloneDeep, every, get, min } from 'lodash'
 import { mapState } from 'vuex'
 
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
@@ -144,6 +144,7 @@ export default {
     return {
       batchDownloadMaxNbFiles: this.$config.get('batchDownloadMaxNbFiles'),
       batchDownloadMaxSize: this.$config.get('batchDownloadMaxSize'),
+      mappings: {},
       sizes: [10, 25, 50, 100],
       sorts: [
         'relevance',
@@ -151,8 +152,8 @@ export default {
         'creationDateOldest',
         'sizeLargest',
         'sizeSmallest',
-        'name',
-        'nameReverse',
+        'titleNorm',
+        'titleNormReverse',
         'path',
         'pathReverse',
         'dateNewest',
@@ -203,6 +204,9 @@ export default {
         total: this.$n(this.response.total)
       })}`
     },
+    projectIds() {
+      return this.$core.projectIds.join(',')
+    },
     uriFromStore() {
       const from = 0
       const query = { ...this.$store.getters['search/toRouteQuery'](), from }
@@ -210,9 +214,14 @@ export default {
         route: { fullPath }
       } = this.$router.resolve({ name: 'search', query })
       return fullPath
+    },
+    visibleSorts() {
+      return this.sorts.filter(this.isSortVisible)
     }
   },
-  mounted() {
+  async mounted() {
+    // We need to load all mappings to filter out non-sortable fields
+    this.mappings = await this.$core.api.sendAction(`/api/index/search/${this.projectIds}/_mapping`)
     // Force page to scroll top at each load
     // Specially for pagination
     document.body.scrollTop = document.documentElement.scrollTop = 0
@@ -223,6 +232,14 @@ export default {
     },
     isDisplayed() {
       return this.response.total > this.size
+    },
+    isSortVisible(sort) {
+      if (sort.startsWith('titleNorm')) {
+        return every(this.mappings, (mapping) => {
+          return get(mapping, 'mappings.properties.titleNorm.type') === 'keyword'
+        })
+      }
+      return true
     },
     selectSize(size) {
       // Store new search size into store
