@@ -94,6 +94,8 @@
         "sizeSmallest": "Tamaño (aumentado)",
         "path": "Ruta del archivo (de A a Z)",
         "pathReverse": "Ruta del archivo (de A a Z)",
+        "titleNorm": "File name (A to Z)",
+        "titleNormReverse": "File name (Z to A)",
         "default": "por defecto",
         "count": "frecuencia"
       }
