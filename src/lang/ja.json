@@ -94,6 +94,8 @@
         "sizeSmallest": "サイズ(小さい順)",
         "path": "ファイルパス(A→Z)",
         "pathReverse": "ファイルパス(Z→A)",
+        "titleNorm": "File name (A to Z)",
+        "titleNormReverse": "File name (Z to A)",
         "default": "デフォルト",
         "count": "frequency"
       }
