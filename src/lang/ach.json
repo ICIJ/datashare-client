@@ -94,6 +94,8 @@
         "sizeSmallest": "crwdns320:0crwdne320:0",
         "path": "crwdns322:0crwdne322:0",
         "pathReverse": "crwdns324:0crwdne324:0",
+        "titleNorm": "crwdns2933:0crwdne2933:0",
+        "titleNormReverse": "crwdns2935:0crwdne2935:0",
         "default": "crwdns1343:0crwdne1343:0",
         "count": "crwdns1797:0crwdne1797:0"
       }
