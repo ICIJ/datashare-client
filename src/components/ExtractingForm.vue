@@ -107,6 +107,13 @@ export default {
     hideProjectSelector: {
       type: Boolean,
       default: false
+    },
+    /**
+     * Project name to select in the input instead of default project
+     */
+    projectName: {
+      type: String,
+      default: null
     }
   },
   data() {
