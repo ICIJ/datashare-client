@@ -346,7 +346,7 @@ export default {
         return this.toDirectories(this.selectedPaths)
       },
       set(paths) {
-        // Ensute the given apths are directorues paths
+        // Ensute the given paths are directories paths
         paths = this.toDirectories(paths)
         const diff = difference(paths, this.selectedPaths)
         // True if the current path just has been selected.
