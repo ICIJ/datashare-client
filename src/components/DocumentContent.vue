@@ -254,12 +254,10 @@ export default {
     },
     async activateContentSlice({ offset = 0 } = {}) {
       this.$wait.start('loaderContentSlice')
-      const minOffset = await this.loadPreviousContentSliceOnce({ offset })
-      const maxOffset = await this.loadNextContentSliceOnce({ offset })
       // This load the current page
       await this.loadContentSliceOnce({ offset })
-      // Cook previous, current and next content slices
-      await this.cookAllContentSlices({ minOffset, maxOffset })
+      // Cook all available content slices
+      await this.cookAllContentSlices()
       this.activeContentSliceOffset = offset
       this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset }).cookedContent
       this.$wait.end('loaderContentSlice')
@@ -313,20 +311,6 @@ export default {
       } else {
         this.$el.scrollTop = 0
       }
-    },
-    async loadPreviousContentSliceOnce({ offset }) {
-      const minOffset = offset - this.pageSize
-      if (offset > 0) {
-        await this.loadContentSliceOnce({ offset: minOffset })
-      }
-      return minOffset
-    },
-    async loadNextContentSliceOnce({ offset }) {
-      const maxOffset = offset + this.pageSize
-      if (maxOffset < this.maxOffset) {
-        await this.loadContentSliceOnce({ offset: maxOffset })
-      }
-      return maxOffset
     },
     async loadContentSliceAround(desiredOffset) {
       const desiredOffsetIndex = this.findContentSliceIndexAround(desiredOffset)
