@@ -41,7 +41,7 @@
             >
               <b-form-checkbox
                 :id="allDirectoriesInputId"
-                :value="path"
+                :value="toDirectory(path)"
                 class="tree-view__directories__item__checkbox"
               />
               <label class="flex-grow-1 m-0 text-light" :for="allDirectoriesInputId">
@@ -61,7 +61,7 @@
             >
               <b-form-checkbox
                 v-if="selectable"
-                :value="directory.key"
+                :value="toDirectory(directory.key)"
                 class="tree-view__directories__item__checkbox"
               ></b-form-checkbox>
               <a
@@ -118,7 +118,21 @@
 </template>
 
 <script>
-import { difference, flatten, filter, get, identity, includes, noop, round, uniq, uniqBy, uniqueId, last } from 'lodash'
+import {
+  difference,
+  flatten,
+  filter,
+  get,
+  identity,
+  includes,
+  noop,
+  round,
+  trimEnd,
+  uniq,
+  uniqBy,
+  uniqueId,
+  last
+} from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -329,20 +343,25 @@ export default {
     },
     selected: {
       get() {
-        return this.selectedPaths
+        return this.toDirectories(this.selectedPaths)
       },
       set(paths) {
+        // Ensute the given apths are directorues paths
+        paths = this.toDirectories(paths)
         const diff = difference(paths, this.selectedPaths)
         // True if the current path just has been selected.
         // This is equivalent to select "all.
-        if (diff.includes(this.path)) {
+        if (diff.includes(this.dirPath)) {
           paths = this.pathsWihtoutSiblings(paths)
           // True if a sibling directory is selected, not the current path
-        } else if (diff.length && paths.includes(this.path)) {
+        } else if (diff.length && paths.includes(this.dirPath)) {
           paths = this.pathsWithoutCurrent(paths)
         }
         return this.selectPaths(paths)
       }
+    },
+    dirPath() {
+      return this.toDirectory(this.path)
     }
   },
   watch: {
@@ -377,20 +396,28 @@ export default {
     getBasename(value) {
       return last(value.split(this.pathSeparator))
     },
+    toDirectory(path) {
+      return trimEnd(path, this.pathSeparator) + this.pathSeparator
+    },
+    toDirectories(paths) {
+      return paths.map(this.toDirectory)
+    },
     selectPaths(paths) {
+      // Ensure the paths are directories paths (with a tailing /)
+      const dirPaths = this.toDirectories(paths)
       /**
        * The selectedPaths are updated (deprecated event).
        *
        * @event checked
        */
-      this.$emit('checked', paths)
+      this.$emit('checked', dirPaths)
       /**
        * The selectedPaths are updated. New way to propagate change compatible with the .sync modifier.
        *
        * @see https://vuejs.org/v2/guide/components-custom-events.html#sync-Modifier
        * @event update:selectedPaths
        */
-      this.$emit('update:selectedPaths', paths)
+      this.$emit('update:selectedPaths', dirPaths)
     },
     pathsWihtoutSiblings(paths) {
       return filter(paths, (path) => {

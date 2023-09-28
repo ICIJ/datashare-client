@@ -107,7 +107,7 @@ describe('TreeView.vue', () => {
     })
 
     it('should init selected on component creation', () => {
-      expect(wrapper.vm.selected).toEqual(['path_01', 'path_02'])
+      expect(wrapper.vm.selected).toEqual(['path_01/', 'path_02/'])
     })
 
     it('should display checkboxes if component is selectable', async () => {
