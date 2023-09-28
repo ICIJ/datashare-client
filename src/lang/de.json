@@ -414,7 +414,7 @@
     "namedEntities": "Named Entities",
     "namedEntityFilter": "Named Entities filtern",
     "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
-    "extractedText": "Extrahierter Text",
+    "extractedText": "Text",
     "translations": "Übersetzungen",
     "preview": "Vorschau",
     "downloadButton": "Download",

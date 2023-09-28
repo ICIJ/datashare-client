@@ -414,7 +414,7 @@
     "namedEntities": "Entidades Identificadas",
     "namedEntityFilter": "Filtrar entidades identificadas",
     "namedEntitiesOccurences": "no hay ocurrencias | una ocurrencia | {count} ocurrencias",
-    "extractedText": "Texto Extraído",
+    "extractedText": "Texto",
     "translations": "Traducciones",
     "preview": "Vista previa",
     "downloadButton": "Descargar",
