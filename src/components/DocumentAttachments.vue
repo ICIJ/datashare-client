@@ -1,5 +1,5 @@
 <template>
-  <div v-if="total !== null && total > 0" class="document-attachments">
+  <div class="document-attachments" v-if="isReady && hasAttachments">
     <h6>{{ $tc('document.attachments.heading', total, { total }) }}</h6>
     <ul class="document-attachments__list list-unstyled d-flex-inline">
       <li v-for="attachment in attachments" :key="attachment.id" class="document-attachments__list__item">
@@ -21,8 +21,8 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import flatten from 'lodash/flatten'
-import sum from 'lodash/sum'
+import EsDocList from '@/api/resources/EsDocList'
+import { flatten, get, sum } from 'lodash'
 
 /**
  * A list of attachments for a document (usually, it's child documents)
@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       pages: [],
-      isReady: false,
       size: 50
     }
   },
@@ -49,24 +48,29 @@ export default {
       return flatten(this.pages.map((page) => page.hits))
     },
     total() {
-      return this.pages.length ? this.pages[0].total : null
+      return get(this, 'pages.0.total', null)
     },
     from() {
       return sum(this.pages.map((page) => page.hits.length))
+    },
+    isReady() {
+      return !this.$wait.is('document-attachement')
+    },
+    hasAttachments() {
+      return !!this.attachments.length
     }
   },
   async mounted() {
     await this.loadMore()
-    this.$emit('document:attachments', this.total)
   },
   methods: {
     async loadMore() {
-      this.isReady = false
+      this.$wait.start('document-attachement')
       const { index } = this.document
       const body = this.searchBody().build()
       const response = await this.$core.api.elasticsearch.search({ index, body })
-      this.pages.push(new Response(response))
-      this.isReady = true
+      this.pages.push(new EsDocList(response))
+      this.$wait.end('document-attachement')
     },
     searchBody() {
       return bodybuilder()
