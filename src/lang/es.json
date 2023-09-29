@@ -399,7 +399,7 @@
     "selectDateRange": "Selecciona un intervalo de fechas"
   },
   "document": {
-    "title": "Title",
+    "title": "Document",
     "document": "Archivo",
     "name": "Nombre del archivo",
     "path": "Ruta del archivo",
