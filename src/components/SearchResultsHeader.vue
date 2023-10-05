@@ -52,7 +52,7 @@
             @click="selectSize(selectedSize)"
           >
             <div class="d-flex align-items-center">
-              <span> {{ selectedSize }} {{ $t('search.results.perPage') }} </span>
+              <span>{{ selectedSize }} {{ $t('search.results.perPage') }}</span>
             </div>
           </b-dropdown-item>
         </b-dropdown>
@@ -86,9 +86,10 @@
 </template>
 
 <script>
-import { cloneDeep, every, get, min } from 'lodash'
+import { cloneDeep, every, find, get, min } from 'lodash'
 import { mapState } from 'vuex'
 
+import settings from '@/utils/settings'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 import Pagination from '@/components/Pagination'
 import features from '@/mixins/features'
@@ -146,6 +147,7 @@ export default {
       batchDownloadMaxSize: this.$config.get('batchDownloadMaxSize'),
       mappings: {},
       sizes: [10, 25, 50, 100],
+      keywordSorts: ['titleNorm', 'titleNormReverse'],
       sorts: [
         'relevance',
         'creationDateNewest',
@@ -220,8 +222,9 @@ export default {
     }
   },
   async mounted() {
+    const fields = this.keywordSorts.map(this.getSortField).join(',')
     // We need to load all mappings to filter out non-sortable fields
-    this.mappings = await this.$core.api.sendAction(`/api/index/search/${this.projectIds}/_mapping`)
+    this.mappings = await this.$core.api.sendAction(`/api/index/search/${this.projectIds}/_mapping/field/${fields}`)
     // Force page to scroll top at each load
     // Specially for pagination
     document.body.scrollTop = document.documentElement.scrollTop = 0
@@ -234,12 +237,16 @@ export default {
       return this.response.total > this.size
     },
     isSortVisible(sort) {
-      if (sort.startsWith('titleNorm')) {
+      if (this.keywordSorts.includes(sort)) {
+        const field = this.getSortField(sort)
         return every(this.mappings, (mapping) => {
-          return get(mapping, 'mappings.properties.titleNorm.type') === 'keyword'
+          return get(mapping, ['mappings', field, 'mapping', field, 'type']) === 'keyword'
         })
       }
       return true
+    },
+    getSortField(name) {
+      return find(settings.searchSortFields, { name })?.field
     },
     selectSize(size) {
       // Store new search size into store
