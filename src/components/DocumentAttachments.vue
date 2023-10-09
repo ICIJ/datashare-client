@@ -1,5 +1,5 @@
 <template>
-  <div class="document-attachments" v-if="isReady && hasAttachments">
+  <div v-if="isReady && hasAttachments" class="document-attachments">
     <h6>{{ $tc('document.attachments.heading', total, { total }) }}</h6>
     <ul class="document-attachments__list list-unstyled d-flex-inline">
       <li v-for="attachment in attachments" :key="attachment.id" class="document-attachments__list__item">
@@ -21,8 +21,9 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import EsDocList from '@/api/resources/EsDocList'
 import { flatten, get, sum } from 'lodash'
+
+import EsDocList from '@/api/resources/EsDocList'
 
 /**
  * A list of attachments for a document (usually, it's child documents)
