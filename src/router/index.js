@@ -209,7 +209,7 @@ export const router = {
                 },
                 {
                   name: 'task.batch-search.view',
-                  path: ':index/:uuid',
+                  path: ':indices/:uuid',
                   components: {
                     default: () => import('@/pages/TaskBatchSearchView')
                   },
