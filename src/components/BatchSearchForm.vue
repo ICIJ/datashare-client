@@ -185,12 +185,10 @@
 
 <script>
 import {
-  castArray,
   compact,
   concat,
   each,
   find,
-  first,
   filter,
   flatten,
   get,
@@ -280,7 +278,11 @@ export default {
       return this.$core.projects
     },
     defaultSelectedProjects() {
-      return compact(castArray(first(this.projectOptions)))
+      return filter(this.projectOptions, ({ name }) => {
+        // In case the store is not initalized yet,
+        // all project are selected by default
+        return get(this, '$store.state.search.indices', [name]).includes(name)
+      })
     },
     projects: {
       get() {
