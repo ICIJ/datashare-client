@@ -42,7 +42,7 @@ const routerFactory = () => {
       },
       {
         name: 'task.batch-search.view.results',
-        path: 'batch-search/:index/:uuid'
+        path: 'batch-search/:indices/:uuid'
       }
     ],
     mode: 'abstract'
