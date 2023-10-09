@@ -1029,6 +1029,11 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.3.0.tgz#51f734e64511dbc3674cd347044d02f4dd26e86b"
   integrity sha512-4BC1NMoacEBzSXRwKjZ/X/gmnbp/HU5Qqat7E8xqorUtBFZS+bwfGH5/wqOC2K6GV0rgEobp3OjGRMa5fK9pFg==
 
+"@fortawesome/fontawesome-common-types@6.4.2":
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.4.2.tgz#1766039cad33f8ad87f9467b98e0d18fbc8f01c5"
+  integrity sha512-1DgP7f+XQIJbLFCTX1V2QnxVmpLdKdzzo2k8EmvDOePfchaIGQ9eCHj2up3/jNEbZuBqel5OxiaOJf37TWauRA==
+
 "@fortawesome/fontawesome-common-types@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.7.tgz#4336c4b06d0b5608ff1215464b66fcf9f4795284"
@@ -1040,6 +1045,13 @@
   integrity sha512-uz9YifyKlixV6AcKlOX8WNdtF7l6nakGyLYxYaCa823bEBqyj/U2ssqtctO38itNEwXb8/lMzjdoJ+aaJuOdrw==
   dependencies:
     "@fortawesome/fontawesome-common-types" "6.3.0"
+
+"@fortawesome/fontawesome-svg-core@^6.4.2":
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-6.4.2.tgz#37f4507d5ec645c8b50df6db14eced32a6f9be09"
+  integrity sha512-gjYDSKv3TrM2sLTOKBc5rH9ckje8Wrwgx1CxAPbN5N3Fm4prfi7NsJVWd1jklp7i5uSCVwhZS5qlhMXqLrpAIg==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "6.4.2"
 
 "@fortawesome/fontawesome@^1.1.4":
   version "1.1.8"
@@ -1144,13 +1156,13 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur@3.6.1":
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-3.6.1.tgz#b8d804e9f14a0efe5f608aba1a6a5ab9521bc265"
-  integrity sha512-lHVzmHdVpSujDmCo1oiC4t0VkNm5XtHta4TJddi+IXmD1PMcfu5Rv6dpCEhS8U0D3X/HE3kAw8ofC1kHFQSxBg==
+"@icij/murmur@3.6.2":
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-3.6.2.tgz#f74d06f6be43af53d85bf53119cc1d7921c3fe78"
+  integrity sha512-J+cd3MOO0Op17AfhRhkMcVz2cj1LzeXbprsu6jfQQz11q4Gyf3BF4akx9PuLcyGSQrP1yHZ/xC1BmENHsA7UTw==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
-    "@fortawesome/fontawesome-svg-core" "^6.1.2"
+    "@fortawesome/fontawesome-svg-core" "^6.4.2"
     "@fortawesome/free-brands-svg-icons" "^6.1.2"
     "@fortawesome/free-regular-svg-icons" "^6.1.2"
     "@fortawesome/free-solid-svg-icons" "^6.1.2"
