@@ -368,10 +368,7 @@ export default {
     path() {
       return this.reloadDataWithSpinner()
     },
-    sortBy() {
-      return this.reloadDataWithSpinner()
-    },
-    sortByOrder() {
+    order(){
       return this.reloadDataWithSpinner()
     },
     directories() {

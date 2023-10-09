@@ -157,6 +157,13 @@ describe('TreeView.vue', () => {
       })
       expect(wrapper.findAll('b-form-checkbox-stub')).toHaveLength(0)
     })
+
+    it('should load the tree one time when sortBy and order are changed', async () => {
+      const spyLoadTree = jest.spyOn(wrapper.vm, 'reloadDataWithSpinner')
+      await wrapper.setProps({ sortBy: '_key', sortByOrder: 'asc'})
+
+      expect(spyLoadTree).toBeCalledTimes(1)
+    })
   })
   describe('Windows', () => {
     let wrapper = null
