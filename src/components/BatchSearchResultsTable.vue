@@ -144,7 +144,7 @@ export default {
      * The indices of the current batch search
      */
     indices: {
-      type: [String, Array]
+      type: String
     }
   },
   data() {

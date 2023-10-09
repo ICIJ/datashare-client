@@ -51,7 +51,7 @@
                 </span>
                 <span
                   class="batch-search-results-filters__queries__dropdown__item__search"
-                  @click.stop.prevent="executeSearch(item.label)"
+                  @click.stop.prevent="searchQuery(item.label)"
                 >
                   <fa icon="search" class="text-tertiary"></fa>
                 </span>
@@ -105,7 +105,7 @@ export default {
      * The batch search indices
      */
     indices: {
-      type: [String, Array]
+      type: String
     },
     selectedQueries: {
       type: Array,
@@ -168,11 +168,12 @@ export default {
         return this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
       }
     },
-    executeSearch(q) {
+    searchQuery(q) {
       this.$store.commit('search/reset')
-      this.$router
-        .push({ name: 'search', query: { queries: this.selectedQueries, q, indices: this.indices.join(',') } })
-        .catch(() => {})
+      const queries = this.selectedQueries
+      const indices = this.indices
+      const query = { queries, q, indices }
+      return this.$router.push({ name: 'search', query })
     },
     excludeSelectedQueries() {
       const query = { ...this.routeQuery, queriesExcluded: !this.queriesExcluded }
