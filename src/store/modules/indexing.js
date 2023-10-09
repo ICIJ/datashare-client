@@ -75,9 +75,6 @@ function actionsBuilder(api) {
       }
       return api.index(state.form)
     },
-    runBatchSearch() {
-      return api.runBatchSearch()
-    },
     submitFindNamedEntities({ state }) {
       const defaultProject = state.form.defaultProject ?? null
       const options = { syncModels: !state.form.offline, defaultProject }

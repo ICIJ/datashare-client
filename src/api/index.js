@@ -29,9 +29,6 @@ export class Api {
     const trimedPath = trim(path, '/')
     return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
   }
-  runBatchSearch() {
-    return this.sendAction('/api/task/batchSearch', { method: Method.POST })
-  }
   runBatchDownload(options) {
     return this.sendAction('/api/task/batchDownload', { method: Method.POST, data: { options } })
   }

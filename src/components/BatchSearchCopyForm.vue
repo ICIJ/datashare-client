@@ -48,23 +48,11 @@ export default {
     }
   },
   methods: {
-    async runBatchSearch() {
-      try {
-        await this.$store.dispatch('indexing/runBatchSearch')
-        this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
-      } catch (_) {
-        this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
-      }
-    },
     async copyBatchSearch() {
       try {
         const { uuid: batchId } = this.batchSearch
         await this.$core.api.copyBatchSearch(batchId, this.name, this.description)
-        if (!this.isServer) {
-          this.runBatchSearch()
-        } else {
-          this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
-        }
+        this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
         if (this.deleteAfterRelaunch) {
           await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
         }
