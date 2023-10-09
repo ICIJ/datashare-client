@@ -110,7 +110,6 @@
         :sort-by-options.sync="sortByOptions"
         @contextualize-filter="toggleContextualizeFilter"
         @open-filter-search="openFilterSearch"
-        @sort-filter="sortFilter"
         @toggle-filter="toggleFilter"
       />
     </b-collapse>
@@ -539,9 +538,6 @@ export default {
     setValue(item) {
       this.setFilterValue(this.filter, item)
       this.refreshRouteAndSearch()
-    },
-    sortFilter() {
-      this.clearInfiniteScroll()
     },
     toggleFilter() {
       this.refreshRouteAndSearch()
