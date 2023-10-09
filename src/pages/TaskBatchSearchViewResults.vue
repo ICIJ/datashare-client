@@ -37,8 +37,7 @@
           :local-search-params="params"
         />
       </b-row>
-      <batch-search-results-table :indices="indices" :uuid="uuid" @show-document-modal="openDocumentModal">
-      </batch-search-results-table>
+      <batch-search-results-table :indices="indices" :uuid="uuid" @show-document-modal="openDocumentModal" />
       <document-in-modal v-model="documentInModalPageIndex" :page="page" @update:page="updatePage" />
     </div>
   </div>
@@ -57,6 +56,7 @@ import humanNumber from '@/filters/humanNumber'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
+
 const SEARCH_PARAMS_LOCAL = Object.freeze({
   queries: true,
   indices: false,
@@ -64,6 +64,7 @@ const SEARCH_PARAMS_LOCAL = Object.freeze({
   order: true,
   sort: true
 })
+
 /**
  * This page will list all the results of a batch search.
  */
@@ -93,7 +94,7 @@ export default {
      * The indices of the current batch search
      */
     indices: {
-      type: [String, Array]
+      type: String
     }
   },
   data() {
@@ -184,7 +185,7 @@ export default {
   },
   async created() {
     await this.fetch()
-    return this.setIsMyBatchSearch()
+    await this.setIsMyBatchSearch()
   },
   methods: {
     async fetch() {

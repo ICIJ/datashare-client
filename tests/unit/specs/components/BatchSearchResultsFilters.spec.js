@@ -17,7 +17,7 @@ describe('BatchSearchResultsFilters.vue', () => {
       { label: 'query_02', count: 3 },
       { label: 'query_03', count: 2 }
     ],
-    indices: [project, anotherProject]
+    indices: [project, anotherProject].join(',')
   }
   const propsDataSingleQuery = { queryKeys: [{ label: 'query_04', count: 12 }], indices: project }
 
@@ -153,7 +153,7 @@ describe('BatchSearchResultsFilters.vue', () => {
         propsData: propsDataMultipleQueries
       })
       await wrapper.vm.$nextTick()
-      const spy = jest.spyOn(wrapper.vm.$router, 'push')
+      const spy = jest.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
 
       expect(wrapper.vm.$router.push).toBeCalled()
@@ -223,7 +223,7 @@ describe('BatchSearchResultsFilters.vue', () => {
         },
         propsData: propsDataMultipleQueries
       })
-      const spy = jest.spyOn(wrapper.vm.$router, 'push')
+      const spy = jest.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       spy.mockClear()
 
       await wrapper.vm.sort('default')
@@ -243,7 +243,7 @@ describe('BatchSearchResultsFilters.vue', () => {
         store,
         propsData: propsDataMultipleQueries
       })
-      const spy = jest.spyOn(wrapper.vm.$router, 'push')
+      const spy = jest.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       spy.mockClear()
       const excludeFilter = wrapper.find('.filter__footer__action input')
       expect(excludeFilter.exists()).toBe(true)
