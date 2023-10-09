@@ -368,7 +368,7 @@ export default {
     path() {
       return this.reloadDataWithSpinner()
     },
-    order(){
+    order() {
       return this.reloadDataWithSpinner()
     },
     directories() {
