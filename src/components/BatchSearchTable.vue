@@ -447,7 +447,7 @@ export default {
       const baseTo = {
         name: 'task.batch-search.view.results',
         params: {
-          index: this.getProjectsNames(item).replace(/\s/g, ''),
+          indices: this.getProjectsNamesList(item).join(','),
           uuid: item.uuid
         },
         query: {
