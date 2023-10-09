@@ -48,7 +48,7 @@ const ProjectsMixin = (superclass) =>
      * @returns {Promise:Object} The HTTP response object
      */
     async createDefaultProject() {
-      const name = this.config.get('defaultProject')
+      const name = this.defaultProject
       const label = 'Default'
       const description = 'Your main project on Datashare'
       const sourcePath = this.config.get('dataDir')
@@ -62,8 +62,7 @@ const ProjectsMixin = (superclass) =>
      */
     async defaultProjectExists() {
       try {
-        const name = this.config.get('defaultProject')
-        return !!(await this.api.getProject(name))
+        return !!(await this.api.getProject(this.defaultProject))
       } catch (_) {
         return false
       }
@@ -79,9 +78,9 @@ const ProjectsMixin = (superclass) =>
     /**
      * Delete a project by it name identifier.
      * @param {String} name Name of the project to retrieve
-     * @returns {Integer} Index of the project deleted or -1 if project does not exist
+     * @returns {Promise:Integer} Index of the project deleted or -1 if project does not exist
      */
-    deleteProject(name) {
+    async deleteProject(name) {
       // Create a new projects list so we avoid mutating object
       const projects = [...this.projects]
       const index = findIndex(projects, { name })
@@ -91,7 +90,29 @@ const ProjectsMixin = (superclass) =>
         this.config.set('projects', projects)
       }
 
+      // Deleting the default project will recreate it instantly
+      if (name === this.defaultProject) {
+        await this.createDefaultProject()
+      }
+
+      // Ensure there is no conflict with existing search
+      this.deleteProjectFromSearch(name)
+
       return index
+    }
+    /**
+     * Delete a project from the search store
+     * @param {String} name Name of the project to delete fropm the store
+     */
+    deleteProjectFromSearch(name) {
+      // Delete the project only if it's already
+      // used by the search store. We use a safe accessor
+      // to ensure this method won't throw an error when
+      // the search store is not initialized yet.
+      if (get(this, 'store.state.search.indices', []).includes(name)) {
+        this.store.commit('search/index', this.defaultProject)
+        this.store.commit('search/reset')
+      }
     }
     /**
      * Update a project in the list or add it if it doesn't exist yet.
@@ -123,6 +144,13 @@ const ProjectsMixin = (superclass) =>
      */
     get projectIds() {
       return this.projects.map(iteratee('name'))
+    }
+    /**
+     * Get the name of the default project
+     * @returns {String}
+     */
+    get defaultProject() {
+      return this.config.get('defaultProject', this.projects[0]?.name)
     }
   }
 
