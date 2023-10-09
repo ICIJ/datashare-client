@@ -11,7 +11,7 @@ describe('SearchResultsHeader.vue', () => {
   let wrapper, i18n, localVue, router, store, api
 
   beforeAll(() => {
-    api = { runBatchDownload: jest.fn(), elasticsearch: es }
+    api = { runBatchDownload: jest.fn(), elasticsearch: es, sendAction: jest.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
