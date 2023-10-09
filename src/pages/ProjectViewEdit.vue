@@ -90,10 +90,9 @@ export default {
         this.$wait.start(this.loaderId)
         await this.$core.api.deleteProject(name)
         this.$wait.end(this.loaderId)
-        return this.redirectToProjectList().then(() => {
-          this.$core.deleteProject(name)
-          this.notifySucceed(OPERATION.DELETE)
-        })
+        await this.redirectToProjectList()
+        await this.$core.deleteProject(name)
+        this.notifySucceed(OPERATION.DELETE)
       } catch (error) {
         this.$wait.end(this.loaderId)
         this.notifyFailed(error, OPERATION.DELETE)
