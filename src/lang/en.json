@@ -626,10 +626,12 @@
     "delete": "Delete",
     "deleted": "The saved search have been deleted.",
     "confirmDelete": "Are you sure you want to delete this saved search?",
-    "deleteError": "Something went wrong, unable to delete the record."
+    "deleteError": "Something went wrong, unable to delete the record.",
+    "renameSavedSearch": "Rename saved search"
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>.",
+    "save": "Save"
   },
   "tasks": {
     "title": "Tasks",

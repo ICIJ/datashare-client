@@ -3,13 +3,23 @@
     <div class="mt-4">
       <ul v-if="events.length" class="list-unstyled user-history-saved-search-list__list card mb-4">
         <li
-          v-for="event in searches"
+          v-for="(event, eventIdx) in searches"
           :key="event.id"
           class="user-history-saved-search-list__list__item d-inline-flex justify-content-between"
         >
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
             <span class="user-history-saved-search-list__list__item__name font-weight-bold mb-1">
               {{ event.name }}
+              <b-btn
+                v-b-tooltip.hover.bottomleft
+                :title="$t('userHistory.renameSavedSearch')"
+                class="user-history-saved-search-list__list__item__name--rename text-dark py-0"
+                size="md"
+                variant="transparent"
+                @click.prevent="showEvent({ ...event, idx: eventIdx })"
+              >
+                <fa icon="pen" fixed-width size="1x" />
+              </b-btn>
             </span>
             <div class="user-history-saved-search-list__list__item__query">
               <applied-search-filters-item
@@ -47,18 +57,33 @@
         {{ $t('userHistory.empty') }}
       </div>
     </div>
+    <keep-alive>
+      <b-modal
+        ref="user-history-save-search-form"
+        :visible="show"
+        body-class="p-0"
+        hide-footer
+        size="md"
+        :title="$t('userHistory.renameSavedSearch')"
+        @hide="show = false"
+      >
+        <user-history-save-search-form :event="currentEvent" @submit:rename="updateEvent" @submit="show = false" />
+      </b-modal>
+    </keep-alive>
   </div>
 </template>
 
 <script>
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
+import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import { humanTime } from '@/filters/humanTime'
 import { humanDate } from '@/filters/humanDate'
 
 export default {
   name: 'UserHistorySavedSearchList',
   components: {
-    AppliedSearchFiltersItem
+    AppliedSearchFiltersItem,
+    UserHistorySaveSearchForm
   },
   filters: {
     humanDate,
@@ -71,7 +96,9 @@ export default {
   },
   data() {
     return {
-      searches: this.events
+      show: false,
+      searches: this.events,
+      currentEvent: null
     }
   },
   methods: {
@@ -119,6 +146,13 @@ export default {
         const searches = this.searches.filter((e) => !(e === event))
         this.$set(this, 'searches', searches)
       }
+    },
+    showEvent(event) {
+      this.currentEvent = event
+      this.show = true
+    },
+    updateEvent({ event }) {
+      this.searches[this.currentEvent.idx] = { ...this.currentEvent, name: event.name }
     }
   }
 }
@@ -128,6 +162,9 @@ export default {
 .user-history-saved-search-list {
   &__list {
     &__item {
+      &__name--rename {
+        vertical-align: bottom;
+      }
       a:hover {
         text-decoration: none;
         color: $table-hover-color;

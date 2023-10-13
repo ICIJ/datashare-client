@@ -215,12 +215,19 @@ export class Api {
     const data = { projectIds, type, name, uri }
     return this.sendActionAsText('/api/users/me/history', { method: Method.PUT, data })
   }
+  renameSavedSearch(eventId, newName) {
+    return this.sendAction('/api/users/me/history', {
+      method: Method.PUT,
+      data: { eventId, name: newName, type: 'SEARCH' }
+    })
+  }
   deleteUserHistory(type) {
     return this.sendAction('/api/users/me/history', { method: Method.DELETE, params: { type } })
   }
   deleteUserHistoryEvent(id) {
     return this.sendAction('/api/users/me/history/event', { method: Method.DELETE, params: { id } })
   }
+
   setMarkAsRecommended(project, data) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: Method.POST, data })
   }
