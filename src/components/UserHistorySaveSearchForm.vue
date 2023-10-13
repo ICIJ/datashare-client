@@ -10,7 +10,7 @@
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
           <b-btn type="submit" variant="primary">
-            {{ $t('global.submit') }}
+            {{ $t('userHistorySaveSearchForm.save') }}
           </b-btn>
         </div>
       </div>
@@ -29,12 +29,20 @@ export default {
      * The indices of the current item.
      */
     indices: {
-      type: [String, Array]
+      type: [String, Array],
+      default: ''
+    },
+    /**
+     * The indices of the current item.
+     */
+    event: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
-      name: ''
+      name: this.event?.name || ''
     }
   },
   computed: {
@@ -56,7 +64,12 @@ export default {
   methods: {
     async saveSearch() {
       try {
-        await this.$core.api.addUserHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
+        if (this.event) {
+          await this.$core.api.renameSavedSearch(this.event.id, this.name)
+          this.$emit('submit:rename', { event: { ...this.event, name: this.name } })
+        } else {
+          await this.$core.api.addUserHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
+        }
         const { href } = this.$router.resolve({ name: 'user-history.saved-search.list' })
         const toastParams = { href, noCloseButton: true, variant: 'success' }
         this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
