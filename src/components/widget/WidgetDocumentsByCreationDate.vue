@@ -28,45 +28,31 @@
           <fa icon="circle-notch" spin size="2x"></fa>
         </div>
         <div v-if="data.length > 0" class="widget__content__chart align-items-center">
-          <column-chart :data="slicedDataForMurmur" :max-value="maxValue" :x-axis-tick-format="xAxisTickFormat">
+          <column-chart :data="aggregatedDataSlice" :max-value="maxValue" :x-axis-tick-format="xAxisTickFormat">
             <template #tooltip="{ datum: { date, value: total } }">
               <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
               <p class="m-0">{{ $tc('widget.creationDate.document', total, { total }) }}</p>
             </template>
           </column-chart>
-          <div v-if="isDatesRangeSliced" class="widget__content__chart__range">
-            <div
-              class="widget__content__chart__range__selection border border-primary"
-              :style="datesRangeSelectionStyle"
-            >
-              <b-button
-                v-if="hasPreviousDatesRangeSlice"
-                pill
-                variant="outline-dark"
-                class="widget__content__chart__range__selection__previous bg-white"
-                @click="previousDatesRangeSlice"
-              >
-                <fa icon="angle-left" />
-              </b-button>
-              <b-button
-                v-if="hasNextDatesRangeSlice"
-                pill
-                variant="outline-dark"
-                class="widget__content__chart__range__selection__next bg-white"
-                @click="nextDatesRangeSlice"
-              >
-                <fa icon="angle-right" />
-              </b-button>
-            </div>
+          <range-picker
+            v-if="isDatesRangeSliced"
+            v-model="sliceRange"
+            :snap="1 / aggregatedData.length"
+            class="widget__content__chart__range"
+            rounded
+            variant="secondary"
+          >
             <column-chart
-              :data="dataForMurmur"
+              :key="selectedInterval"
+              :data="aggregatedData"
               :fixed-height="100"
+              :bar-padding="0"
+              :bar-margin="4"
               no-tooltips
               no-x-axis
               no-y-axis
-              @click.native="jumpToSelectionRange"
             />
-          </div>
+          </range-picker>
           <div class="d-flex align-items-center mt-2">
             <p
               v-if="missing"
@@ -88,6 +74,7 @@
 <script>
 import bodybuilder from 'bodybuilder'
 import get from 'lodash/get'
+import clamp from 'lodash/clamp'
 import isFunction from 'lodash/isFunction'
 import uniqueId from 'lodash/uniqueId'
 import * as d3 from 'd3'
@@ -106,6 +93,13 @@ export default {
      */
     widget: {
       type: Object
+    },
+    /**
+     * Minimum width of the columns
+     */
+    minColumnWidth: {
+      type: Number,
+      default: 45
     }
   },
   data() {
@@ -131,7 +125,8 @@ export default {
       },
       mounted: false,
       missing: 0,
-      sliceStart: 0,
+      startTick: 0,
+      endTick: 1,
       selectedInterval: 'year',
       selectedPath: null
     }
@@ -143,9 +138,6 @@ export default {
         return this.$el.querySelector('.widget__content__chart')?.offsetWidth || 0
       }
       return 0
-    },
-    maxTicks() {
-      return Math.floor(this.chartWidth / 35)
     },
     maxValue() {
       return d3.max(this.data, ({ doc_count: value = 0 }) => value)
@@ -190,42 +182,49 @@ export default {
         .thresholds(this.datesScale.ticks(bins.length))
       return histogram(this.data)
     },
-    slicedDatesHistogram() {
-      return this.datesHistogram.slice(this.datesRangeSliceStart, this.datesRangeSliceEnd)
+    datesHistogramSlice() {
+      return this.datesHistogram.slice(this.startTick, this.endTick)
     },
-    maxSliceStart() {
-      return Math.max(0, this.datesHistogram.length - this.maxTicks)
+    ticks() {
+      return clamp(1, this.endTick - this.startTick, this.maxTicks)
     },
-    datesRangeSliceStart() {
-      return Math.min(this.sliceStart, this.maxSliceStart)
+    maxTicks() {
+      return Math.floor(this.chartWidth / this.minColumnWidth)
     },
-    datesRangeSliceEnd() {
-      return this.datesRangeSliceStart + this.maxTicks
+    sliceRange: {
+      get() {
+        return [this.sliceRangeStart, this.sliceRangeEnd]
+      },
+      set([start, end]) {
+        const ticks = Math.round((end - start) * this.datesHistogram.length)
+        const reachedMax = ticks > this.maxTicks
+        const startDelta = reachedMax && end > this.sliceRangeEnd ? ticks - this.maxTicks : 0
+        const endDelta = reachedMax && start < this.sliceRangeStart ? ticks - this.maxTicks : 0
+        this.startTick = Math.round(start * this.datesHistogram.length) + startDelta
+        this.endTick = Math.round(end * this.datesHistogram.length) - endDelta
+      }
     },
-    hasNextDatesRangeSlice() {
-      return this.datesRangeSliceStart < this.maxSliceStart
+    sliceRangeStart() {
+      return this.startTick / this.datesHistogram.length
     },
-    hasPreviousDatesRangeSlice() {
-      return this.datesRangeSliceStart > 0
+    sliceRangeEnd() {
+      return this.endTick / this.datesHistogram.length
+    },
+    maxstartingTick() {
+      return Math.max(0, this.datesHistogram.length - this.ticks)
     },
     isDatesRangeSliced() {
-      return this.datesHistogram.length > this.maxTicks
+      return this.datesHistogram.length > this.ticks
     },
-    dataForMurmur() {
+    aggregatedData() {
       return this.datesHistogram.map((bin) => {
         return { date: bin.x0, value: d3.sum(bin, (d) => d.doc_count) }
       })
     },
-    slicedDataForMurmur() {
-      return this.slicedDatesHistogram.map((bin) => {
+    aggregatedDataSlice() {
+      return this.datesHistogramSlice.map((bin) => {
         return { date: bin.x0, value: d3.sum(bin, (d) => d.doc_count) }
       })
-    },
-    datesRangeSelectionStyle() {
-      const ticks = this.datesHistogram.length
-      const left = `${(this.datesRangeSliceStart / ticks) * 100}%`
-      const right = `${((ticks - this.datesRangeSliceEnd) / ticks) * 100}%`
-      return { right, left }
     },
     aggDateHistogramOptions() {
       return {
@@ -243,20 +242,21 @@ export default {
   },
   watch: {
     project() {
-      this.$set(this, 'mounted', false)
-      this.$set(this, 'selectedPath', this.dataDir)
+      this.mounted = false
+      this.selectedPath = this.dataDir
       this.init()
     }
   },
   mounted() {
-    this.$set(this, 'selectedPath', this.dataDir)
-    this.$nextTick(() => this.init())
+    this.selectedPath = this.dataDir
+    this.$nextTick(this.init)
   },
   methods: {
     async init() {
       await this.loadData()
       this.mounted = true
-      this.sliceStart = this.maxSliceStart
+      this.endTick = this.datesHistogram.length
+      this.startTick = this.endTick - this.maxTicks
     },
     isBucketKeyInRange(key) {
       return key > 0 && key < new Date().getTime()
@@ -312,14 +312,6 @@ export default {
       this.selectedInterval = value
       this.init()
     },
-    nextDatesRangeSlice() {
-      const step = Math.round(this.slicedDatesHistogram.length * 0.1)
-      this.sliceStart = Math.min(this.sliceStart + step, this.maxSliceStart)
-    },
-    previousDatesRangeSlice() {
-      const step = Math.round(this.slicedDatesHistogram.length * 0.1)
-      this.sliceStart = Math.max(this.sliceStart - step, 0)
-    },
     tooltipFormat(date) {
       if (isFunction(this.selectedTooltipFormat)) {
         return this.selectedTooltipFormat(date)
@@ -331,13 +323,6 @@ export default {
         return this.selectedIntervalFormat(date)
       }
       return d3.utcFormat(this.selectedIntervalFormat)(date)
-    },
-    jumpToSelectionRange({ target, clientX }) {
-      const { width } = target.getBBox()
-      const { left } = target.getBoundingClientRect()
-      const x = (clientX - left) / width
-      const sliceStart = Math.round(this.datesHistogram.length * x)
-      this.sliceStart = Math.min(sliceStart, this.maxSliceStart)
     }
   }
 }
@@ -359,39 +344,8 @@ export default {
     }
 
     &__chart {
-      &__range {
-        position: relative;
-
-        &__selection {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          background: rgba($gray-300, 0.5);
-          pointer-events: none;
-
-          &__previous,
-          &__next {
-            pointer-events: all;
-            position: absolute;
-            top: 50%;
-            width: 2.5rem;
-            height: 2.5rem;
-            line-height: 2.5rem;
-            padding: 0;
-            background: white;
-          }
-
-          &__previous {
-            left: 0;
-            transform: translate(-50%, -50%);
-          }
-
-          &__next {
-            right: 0;
-            transform: translate(50%, -50%);
-          }
-        }
+      &__range:hover {
+        background: $light;
       }
     }
   }
