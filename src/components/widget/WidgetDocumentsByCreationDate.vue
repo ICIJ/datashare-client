@@ -12,8 +12,8 @@
           <span
             v-for="(value, interval) in intervals"
             :key="interval"
-            class="btn btn-link border py-1 px-2"
             :class="{ active: selectedInterval === interval }"
+            class="btn btn-link border py-1 px-2"
           >
             <span class="widget__header__selectors__selector" @click="setSelectedInterval(interval)">
               {{ $t('widget.creationDate.intervals.' + interval) }}
@@ -73,12 +73,9 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import get from 'lodash/get'
-import clamp from 'lodash/clamp'
-import isFunction from 'lodash/isFunction'
-import uniqueId from 'lodash/uniqueId'
-import * as d3 from 'd3'
+import { clamp, get, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
+import * as d3 from 'd3'
 
 import FilterDate from '@/store/filters/FilterDate'
 
@@ -107,8 +104,8 @@ export default {
       data: [],
       intervals: {
         year: {
-          xAxisFormat: '%Y',
-          tooltipFormat: '%Y',
+          xAxisFormat: d3.utcFormat('%Y'),
+          tooltipFormat: d3.utcFormat('%Y'),
           time: d3.utcYear,
           bins: d3.utcYears
         },
@@ -118,7 +115,7 @@ export default {
               return d3.utcFormat('%Y')(date)
             }
           },
-          tooltipFormat: '%B, %Y',
+          tooltipFormat: d3.utcFormat('%B, %Y'),
           time: d3.utcMonth,
           bins: d3.utcMonths
         }
@@ -144,12 +141,6 @@ export default {
     },
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
-    },
-    selectedIntervalFormat() {
-      return this.intervals[this.selectedInterval].xAxisFormat
-    },
-    selectedTooltipFormat() {
-      return this.intervals[this.selectedInterval].tooltipFormat
     },
     selectedIntervalTime() {
       return this.intervals[this.selectedInterval].time
@@ -313,16 +304,10 @@ export default {
       this.init()
     },
     tooltipFormat(date) {
-      if (isFunction(this.selectedTooltipFormat)) {
-        return this.selectedTooltipFormat(date)
-      }
-      return d3.utcFormat(this.selectedTooltipFormat)(date)
+      return this.intervals[this.selectedInterval].tooltipFormat(date)
     },
     xAxisTickFormat(date) {
-      if (isFunction(this.selectedIntervalFormat)) {
-        return this.selectedIntervalFormat(date)
-      }
-      return d3.utcFormat(this.selectedIntervalFormat)(date)
+      return this.intervals[this.selectedInterval].xAxisFormat(date)
     }
   }
 }
