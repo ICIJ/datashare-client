@@ -149,13 +149,6 @@ export default {
     selectedIntervalBins() {
       return this.intervals[this.selectedInterval].bins
     },
-    binByDate() {
-      return this.datesHistogram.reduce((res, bin) => {
-        const key = bin.x0.getTime()
-        res[key] = bin
-        return res
-      }, {})
-    },
     datesExtent() {
       return d3.extent(this.data, (d) => d.date)
     },
@@ -201,9 +194,6 @@ export default {
     },
     sliceRangeEnd() {
       return this.endTick / this.datesHistogram.length
-    },
-    maxstartingTick() {
-      return Math.max(0, this.datesHistogram.length - this.ticks)
     },
     isDatesRangeSliced() {
       return this.datesHistogram.length > this.ticks
