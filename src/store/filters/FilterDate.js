@@ -5,9 +5,11 @@ export default class FilterDate extends FilterDocument {
     super(options)
     this.component = 'FilterDate'
   }
+
   itemLabel(item) {
     return item.key_as_string
   }
+
   queryBuilder(body, param, func) {
     return body.query('bool', (sub) => {
       param.values.forEach((date) => {
@@ -23,29 +25,35 @@ export default class FilterDate extends FilterDocument {
       return sub
     })
   }
-  body(body, { size = 0, interval = 'month ' } = {}) {
-    return body.query('match', 'type', 'Document').agg(
-      'date_histogram',
-      this.key,
-      {
-        ...FilterDate.getIntervalOptions(interval),
-        order: { _key: 'desc' },
-        min_doc_count: 1
-      },
-      this.key,
-      (a) => a.agg('bucket_sort', { size }, 'bucket_sort_truncate')
-    )
+
+  body(body, { size = 0, interval = 'month' } = {}) {
+    return body
+      .query('match', 'type', 'Document')
+      .agg('date_histogram', this.key, FilterDate.getHistogramAggregation(interval), this.key, (a) => {
+        return a.agg('bucket_sort', { size }, 'bucket_sort_truncate')
+      })
   }
+
+  static getHistogramAggregation(interval = 'month') {
+    return {
+      ...FilterDate.getIntervalOptions(interval),
+      min_doc_count: 1,
+      order: {
+        _key: 'desc'
+      }
+    }
+  }
+
   static getIntervalOptions(interval = 'month') {
     switch (interval) {
       case 'day':
-        return { interval: '1d', format: 'yyyy-MM-dd', missing: '0001-01-01' }
+        return { interval: '1d', format: 'yyyy-MM-dd', missing: '1970-01-01' }
       case 'month':
-        return { interval: '1M', format: 'yyyy-MM', missing: '0001-01' }
+        return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
       case 'year':
-        return { interval: '1y', format: 'yyyy', missing: '0001' }
+        return { interval: '1y', format: 'yyyy', missing: '1970' }
       default:
-        return { interval: '1M', format: 'yyyy-MM', missing: '0001-01' }
+        return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
     }
   }
 }
