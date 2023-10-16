@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { camelCase, flatten, get, noop, reduce } from 'lodash'
+import { camelCase, flatten, get, reduce } from 'lodash'
 
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
@@ -48,13 +48,6 @@ export default {
         },
         {}
       )
-    },
-    async bindOnRoot(...args) {
-      if (!this.mounted) {
-        await this.$nextTick()
-      }
-      // Bind the function with safety net in case no "root" is mounted yet
-      return get(this, 'root.$on', noop).call(this, ...args)
     }
   }
 }
