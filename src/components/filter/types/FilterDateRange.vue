@@ -7,13 +7,13 @@
     hide-contextualize
     hide-sort
   >
-    <template #items>
+    <template #items="{ items }">
       <div class="m-2">
         <date-picker
           ref="calendar"
           :key="locale"
           v-model="selectedDate"
-          class="date-picker d-flex flex-grow-1"
+          class="date-picker d-flex flex-grow-1 mb-3"
           :popover="{ visibility: 'focus' }"
           is-range
           is-dark
@@ -32,7 +32,7 @@
                 :alt="$t('filter.dateRange.startingDate')"
                 :placeholder="placeholderMask"
                 :value="inputValue.start"
-                class="filter--date-range__inputs__start"
+                class="filter--date-range__inputs__start form-control form-control-sm"
                 v-on="inputEvents.start"
               />
               <fa icon="arrow-right" fixed-width />
@@ -42,12 +42,13 @@
                 :alt="$t('filter.dateRange.endingDate')"
                 :placeholder="placeholderMask"
                 :value="inputValue.end"
-                class="filter--date-range__inputs__end"
+                class="filter--date-range__inputs__end form-control form-control-sm"
                 v-on="inputEvents.end"
               />
             </div>
           </template>
         </date-picker>
+        <column-chart-picker v-model="selectedDate" :data="items" :interval="filter.interval" />
       </div>
     </template>
   </filter-boilerplate>
@@ -58,6 +59,7 @@ import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import max from 'lodash/max'
 import min from 'lodash/min'
 
+import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 
@@ -68,6 +70,7 @@ export default {
   name: 'FilterDateRange',
   components: {
     DatePicker,
+    ColumnChartPicker,
     FilterBoilerplate
   },
   extends: FilterAbstract,
@@ -133,7 +136,7 @@ export default {
         this.placeholderMask = this.$refs.calendar.$locale?.masks?.L
       }
     },
-    async updateFocus(e) {
+    async updateFocus() {
       await this.$nextTick()
       const start = this.$refs.dateStart
       const end = this.$refs.dateEnd
