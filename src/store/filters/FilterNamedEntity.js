@@ -84,4 +84,8 @@ export default class FilterNamedEntity extends FilterType {
         return sub.agg('bucket_sort', { size, from }, 'bucket_truncate')
       })
   }
+
+  get isNamedEntityFilter() {
+    return true
+  }
 }
