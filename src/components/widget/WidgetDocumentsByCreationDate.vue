@@ -40,6 +40,7 @@
             :snap="1 / aggregatedData.length"
             class="widget__content__chart__range"
             rounded
+            hover
             variant="secondary"
           >
             <column-chart
@@ -268,9 +269,7 @@ export default {
           'date_histogram',
           field,
           'agg_by_creation_date',
-          (sub) => {
-            return sub.agg('bucket_sort', { size, from }, 'bucket_sort_truncate')
-          },
+          (sub) => sub.agg('bucket_sort', { size, from }, 'bucket_sort_truncate'),
           this.aggDateHistogramOptions
         )
     },
@@ -326,12 +325,6 @@ export default {
       text-align: center;
       background: $card-bg;
       padding: $spacer;
-    }
-
-    &__chart {
-      &__range:hover {
-        background: $light;
-      }
     }
   }
 }
