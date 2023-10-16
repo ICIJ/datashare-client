@@ -82,7 +82,7 @@
         >
           <template #title>
             <div v-if="item.errorQuery" class="task-item-status__modal__error-query mb-2 font-weight-bolder">
-              <span item.errorQuery v-html="$t('batchSearch.errorQuery', { query: item.errorQuery })"></span>
+              <span v-html="$t('batchSearch.errorQuery', { query: item.errorQuery })"></span>
             </div>
           </template>
         </task-item-status>
