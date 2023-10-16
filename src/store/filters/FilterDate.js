@@ -13,7 +13,7 @@ export default class FilterDate extends FilterDocument {
   queryBuilder(body, param, func) {
     return body.query('bool', (sub) => {
       param.values.forEach((date) => {
-        if (parseInt(date) === -62167219200000) {
+        if (parseInt(date) === 0) {
           sub.notQuery('exists', this.key)
         } else {
           const gte = new Date(parseInt(date))
