@@ -11,9 +11,9 @@
             <span class="user-history-saved-search-list__list__item__name font-weight-bold mb-1">
               {{ event.name }}
               <b-btn
-                v-b-tooltip.hover.bottomleft
+                v-b-tooltip.hover.topright
                 :title="$t('userHistory.renameSavedSearch')"
-                class="user-history-saved-search-list__list__item__name--rename text-dark py-0"
+                class="user-history-saved-search-list__list__item__name--rename text-dark px-1 py-0 ml-1"
                 size="md"
                 variant="transparent"
                 @click.prevent="showEvent({ ...event, idx: eventIdx })"
