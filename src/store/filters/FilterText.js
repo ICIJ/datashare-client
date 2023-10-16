@@ -1,6 +1,4 @@
 import get from 'lodash/get'
-import includes from 'lodash/includes'
-import some from 'lodash/some'
 
 // Private properties keys
 const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
@@ -73,30 +71,15 @@ export default class FilterText {
 
   addFilter(body) {
     if (this.hasValues()) {
-      if (this.reverse) {
-        if (this.isNamedEntityAggregation(body)) {
-          return this.addParentExcludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
-        } else {
-          return this.addChildExcludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
-        }
-      } else {
-        if (this.isNamedEntityAggregation(body)) {
-          return this.addParentIncludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
-        } else {
-          return this.addChildIncludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
-        }
-      }
+      const filterType = this.isNamedEntityFilter ? 'Parent' : 'Child'
+      const filterName = this.reverse ? 'Exclude' : 'Include'
+      const options = { name: this.name, values: this.values, reverse: this.reverse }
+      return this[`add${filterType}${filterName}Filter`](body, options)
     }
   }
 
   hasValues() {
     return this.values.length > 0
-  }
-
-  isNamedEntityAggregation(body) {
-    return some(['"must":{"term":{"type":"NamedEntity"}}', '"must":[{"term":{"type":"NamedEntity"}}'], (str) =>
-      includes(JSON.stringify(body.build()), str)
-    )
   }
 
   applyTo(body) {
@@ -105,6 +88,10 @@ export default class FilterText {
 
   bindRootState(rootState) {
     this[_ROOT_STATE] = this[_ROOT_STATE] || rootState
+  }
+
+  get isNamedEntityFilter() {
+    return false
   }
 
   get rootState() {
