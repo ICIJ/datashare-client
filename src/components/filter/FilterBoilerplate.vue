@@ -231,7 +231,6 @@ export default {
     return {
       collapseItems: this.shouldCollapseItems(),
       infiniteId: uniqueId(),
-      mounted: false,
       pages: [],
       query: this.modelQuery,
       sortByOptions: get(this, 'filter.sortByOptions', settings.filter.sortByOptions),
@@ -396,42 +395,10 @@ export default {
     }
   },
   async mounted() {
-    await this.$nextTick()
-    this.mounted = true
     // Listen for event to refresh the filter
     this.$root.$on('filter::refresh', () => this.aggregateWithLoading())
     // Listen for deletion of a filter value
-    this.$root.$on('filter::delete', (filterName, { label: key }) => {
-      // No need to update this filter when it doesn't match
-      // with the event's filter
-      if (this.filter.name !== filterName) {
-        return
-      }
-      // Collects all indexes of the deleted item in the components loaded pages
-      const itemIndexes = this.pages.map((page) => {
-        return findIndex(this.getPageItems(page), { key })
-      })
-      // Iterate on the list of indexes for each page
-      itemIndexes.forEach((itemIndex, pageIndex) => {
-        // The item wasn't found in this page
-        if (itemIndex === -1) {
-          return
-        }
-        // Get the item object merge pageIndex, with this.pageItemsPath and
-        // itemIndex. The value of this.pageItemsPath is an array so it needs
-        // to be deconstructed into another array to merge it with the two indexes
-        const item = get(this.pages, [pageIndex, ...this.pageItemsPath, itemIndex])
-        // The item still have more than one occurrence, we just need to
-        // update the doc count
-        if (item.doc_count > 1) {
-          item.doc_count--
-          // The item as only one occurrence, meaning it must be
-          // deleted from the page's items.
-        } else {
-          get(this.pages, [pageIndex, ...this.pageItemsPath]).splice(itemIndex, 1)
-        }
-      })
-    })
+    this.$root.$on('filter::delete', (filterName, { label: key }) => this.deleteFilterKey({ filterName, key }))
     // Initialize the filter for the first time
     this.initialize()
   },
@@ -483,6 +450,37 @@ export default {
        * Triggered when user starts to search in the filter values.
        */
       this.$emit('async-search', this.filter, this.query)
+    },
+    deleteFilterKey({ filterName, key }) {
+      // No need to update this filter when it doesn't match
+      // with the event's filter
+      if (this.filter.name !== filterName) {
+        return
+      }
+      // Collects all indexes of the deleted item in the components loaded pages
+      const itemIndexes = this.pages.map((page) => {
+        return findIndex(this.getPageItems(page), { key })
+      })
+      // Iterate on the list of indexes for each page
+      itemIndexes.forEach((itemIndex, pageIndex) => {
+        // The item wasn't found in this page
+        if (itemIndex === -1) {
+          return
+        }
+        // Get the item object merge pageIndex, with this.pageItemsPath and
+        // itemIndex. The value of this.pageItemsPath is an array so it needs
+        // to be deconstructed into another array to merge it with the two indexes
+        const item = get(this.pages, [pageIndex, ...this.pageItemsPath, itemIndex])
+        // The item still have more than one occurrence, we just need to
+        // update the doc count
+        if (item.doc_count > 1) {
+          item.doc_count--
+          // The item as only one occurrence, meaning it must be
+          // deleted from the page's items.
+        } else {
+          get(this.pages, [pageIndex, ...this.pageItemsPath]).splice(itemIndex, 1)
+        }
+      })
     },
     async aggregateWithLoading(...args) {
       this.$wait.start(this.waitIdentifier)
