@@ -14,6 +14,9 @@ global.console = Object.assign(global.console, {
   info: jest.fn()
 })
 
+document.fonts = {}
+document.fonts.ready = Promise.resolve()
+
 window.matchMedia = jest.fn().mockImplementation((query) => {
   return {
     matches: false,
