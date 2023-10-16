@@ -69,7 +69,7 @@ export default {
   methods: {
     async getBatchSearches() {
       this.$wait.start('load haveBatchSearch')
-      await this.$store.dispatch('batchSearch/getBatchSearches', { init: true })
+      await this.$store.dispatch('batchSearch/getBatchSearches', { from: 0, size: 0, init: true })
       this.$wait.end('load haveBatchSearch')
     }
   }
