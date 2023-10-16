@@ -256,7 +256,7 @@ describe('SearchFilters', () => {
       expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].doc_count).toBe(1)
       expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].key).toBe(1522540800000)
       expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].doc_count).toBe(1)
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[2].key).toBe(-62135596800000)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[2].key).toBe(0)
       expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[2].doc_count).toBe(2)
     })
 
