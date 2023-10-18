@@ -6,7 +6,7 @@
     hide-exclude
     hide-sort
     hide-contextualize
-    :infinite-scroll="false"
+    no-infinite-scroll
     @reset-filter-values="resetFilterValues"
   >
     <template #all>

@@ -6,6 +6,7 @@
     hide-show-more
     hide-contextualize
     hide-sort
+    no-infinite-scroll
   >
     <template #items="{ items }">
       <div class="m-2">
@@ -48,7 +49,13 @@
             </div>
           </template>
         </date-picker>
-        <column-chart-picker v-model="selectedDate" :data="items" :interval="filter.interval" />
+        <column-chart-picker
+          v-if="items.length"
+          v-model="selectedDate"
+          class="mx-1"
+          :data="items"
+          :interval="filter.interval"
+        />
       </div>
     </template>
   </filter-boilerplate>
@@ -84,14 +91,14 @@ export default {
       return [
         {
           key: 'today',
+          dates: new Date(),
           highlight: {
             style: {
               backgroundColor: 'var(--yellow-900)',
               opacity: '0.3',
               borderRadius: 'var(--rounded-full)'
             }
-          },
-          dates: new Date()
+          }
         }
       ]
     },
