@@ -29,14 +29,14 @@ export default class FilterDate extends FilterDocument {
   body(body, { size = 0, interval = 'month' } = {}) {
     return body
       .query('match', 'type', 'Document')
-      .agg('date_histogram', this.key, FilterDate.getHistogramAggregation(interval), this.key, (a) => {
+      .agg('date_histogram', this.key, FilterDate.getIntervalAgg(interval), this.key, (a) => {
         return a.agg('bucket_sort', { size }, 'bucket_sort_truncate')
       })
   }
 
-  static getHistogramAggregation(interval = 'month') {
+  static getIntervalAgg(interval = 'month') {
     return {
-      ...FilterDate.getIntervalOptions(interval),
+      ...FilterDate.getIntervalOption(interval),
       min_doc_count: 1,
       order: {
         _key: 'desc'
@@ -44,16 +44,14 @@ export default class FilterDate extends FilterDocument {
     }
   }
 
-  static getIntervalOptions(interval = 'month') {
+  static getIntervalOption(interval = 'month') {
     switch (interval) {
       case 'day':
         return { interval: '1d', format: 'yyyy-MM-dd', missing: '1970-01-01' }
       case 'month':
         return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
-      case 'year':
-        return { interval: '1y', format: 'yyyy', missing: '1970' }
       default:
-        return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
+        return { interval: '1y', format: 'yyyy', missing: '1970' }
     }
   }
 }
