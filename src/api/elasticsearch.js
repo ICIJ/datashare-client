@@ -197,7 +197,7 @@ export function datasharePlugin(Client) {
     return this._search({ index, body })
   }
 
-  Client.prototype.countByProject = function (index, query = {}, size = 1000) {
+  Client.prototype.countByProject = function (index, query = undefined, size = 1000) {
     const aggs = { index: { terms: { field: '_index', size } } }
     const body = { size: 0, query, aggs }
     const preference = 'count-by-project'
