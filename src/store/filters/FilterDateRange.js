@@ -4,10 +4,10 @@ import moment from 'moment'
 import FilterDate from './FilterDate'
 
 export default class FilterDateRange extends FilterDate {
-  constructor(options) {
+  constructor({ interval = 'year', ...options }) {
     super(options)
     this.component = 'FilterDateRange'
-    this.interval = 'year'
+    this.interval = interval
   }
 
   itemLabel(item) {
