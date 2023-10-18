@@ -34,7 +34,7 @@
             </template>
           </column-chart>
           <column-chart-picker
-            v-if="sliceRange"
+            v-if="hasRangePicker"
             v-model="sliceRange"
             column-snap
             :throttle="0"
@@ -214,6 +214,9 @@ export default {
     },
     missings() {
       return this.missingData.reduce((sum, { doc_count: count }) => sum + count, 0)
+    },
+    hasRangePicker() {
+      return this.sliceRange && this.datesHistogram.length > Math.round(this.chartWidth / this.minColumnWidth) 
     }
   },
   watch: {
