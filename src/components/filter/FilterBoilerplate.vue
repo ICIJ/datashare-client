@@ -206,18 +206,18 @@ export default {
       default: true
     },
     /**
-     * Either or not results should be loaded on scroll
-     */
-    infiniteScroll: {
-      type: Boolean,
-      default: true
-    },
-    /**
      * Display the filter on dark background
      */
     dark: {
       type: Boolean,
       default: true
+    },
+    /**
+     * Either or not results should be loaded on scroll
+     */
+    noInfiniteScroll: {
+      type: Boolean,
+      default: false
     },
     /**
      * Disable the attempt to translate an item value
@@ -310,7 +310,7 @@ export default {
       return this.isReady && this.items.length === 0
     },
     useInfiniteScroll() {
-      return this.infiniteScroll && this.offset > 0 && this.items.length >= this.size
+      return !this.noInfiniteScroll && this.offset > 0 && this.items.length >= this.size
     },
     fromElasticSearch() {
       return get(this, 'filter.fromElasticSearch', false)
