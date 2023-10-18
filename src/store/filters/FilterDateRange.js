@@ -13,7 +13,8 @@ export default class FilterDateRange extends FilterDate {
   itemLabel(item) {
     if (isInteger(item.key)) {
       const timestamp = item.key + new Date().getTimezoneOffset() * 60 * 1000
-      return moment(timestamp).locale(localStorage.getItem('locale')).format('L')
+      const locale = localStorage.getItem('locale')
+      return moment(timestamp).locale(locale).format('L')
     } else {
       return item.key
     }
@@ -21,39 +22,31 @@ export default class FilterDateRange extends FilterDate {
 
   queryBuilder(body, param, func) {
     return body.query('bool', (sub) => {
-      sub[func]('range', this.key, { gte: new Date(min(param.values)), lte: new Date(max(param.values)) })
+      const gte = new Date(min(param.values))
+      const lte = new Date(max(param.values))
+      sub[func]('range', this.key, { gte, lte })
       return sub
     })
   }
 
-  body(body, { size = 0, interval = this.interval } = {}) {
+  body(body, { interval = this.interval } = {}) {
     return body
       .query('match', 'type', 'Document')
-      .agg('date_histogram', this.key, FilterDateRange.getHistogramAgg(interval), this.key, (a) => {
-        return a.agg('bucket_sort', { size }, 'bucket_sort_truncate')
-      })
+      .agg('date_histogram', this.key, FilterDateRange.getIntervalAgg(interval), this.key)
   }
 
-  static getHistogramAgg(interval = this.interval) {
-    return {
-      ...FilterDate.getIntervalOptions(interval),
-      min_doc_count: 1,
-      order: {
-        _key: 'desc'
-      }
-    }
+  static getIntervalAgg(interval = this.interval) {
+    return { ...FilterDate.getIntervalOption(interval), min_doc_count: 1 }
   }
 
-  static getIntervalOptions(interval = this.interval) {
+  static getIntervalOption(interval = this.interval) {
     switch (interval) {
       case 'day':
         return { interval: '1d', format: 'yyyy-MM-dd', missing: '1970-01-01' }
       case 'month':
         return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
-      case 'year':
-        return { interval: '1y', format: 'yyyy', missing: '1970' }
       default:
-        return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
+        return { interval: '1y', format: 'yyyy', missing: '1970' }
     }
   }
 
