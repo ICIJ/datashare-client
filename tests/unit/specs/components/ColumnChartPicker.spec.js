@@ -1,4 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
+
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import { Core } from '@/core'
 
@@ -50,7 +51,7 @@ describe('ColumnChartPicker.vue', () => {
     await wrapper.setData({ range: [0.2, 0.8] })
 
     expect(wrapper.emitted().update).toBeTruthy()
-    expect(wrapper.emitted().update[0]).toEqual([{ start: expect.any(Number), end: expect.any(Number) }])
+    expect(wrapper.emitted().update[0]).toEqual([{ start: expect.any(Date), end: expect.any(Date) }])
   })
 
   it('computes the "aggregatedData" correctly', () => {
