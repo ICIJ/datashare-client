@@ -278,7 +278,7 @@ export const router = {
                   name: 'project.view.add-documents',
                   path: 'add-documents',
                   components: {
-                    default: () => import('@/pages/ProjectViewAddDocuments.vue')
+                    default: () => import('@/pages/ProjectViewAddDocuments')
                   },
                   meta: {
                     allowedModes: ['LOCAL', 'EMBEDDED']
@@ -288,7 +288,7 @@ export const router = {
                   name: 'project.view.find-named-entities',
                   path: 'find-named-entities',
                   components: {
-                    default: () => import('@/pages/ProjectViewFindNamedEntities.vue')
+                    default: () => import('@/pages/ProjectViewFindNamedEntities')
                   },
                   meta: {
                     allowedModes: ['LOCAL', 'EMBEDDED']
