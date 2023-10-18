@@ -251,13 +251,11 @@ describe('SearchFilters', () => {
 
       const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
 
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets).toHaveLength(3)
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].key).toBe(1525132800000)
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].doc_count).toBe(1)
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].key).toBe(1522540800000)
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].doc_count).toBe(1)
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[2].key).toBe(0)
-      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[2].doc_count).toBe(2)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets).toHaveLength(2)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].key).toBe(0)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].doc_count).toBe(2)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].key).toBe(1514764800000)
+      expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[1].doc_count).toBe(2)
     })
 
     it('should count only Document types and not the NamedEntities', async () => {
