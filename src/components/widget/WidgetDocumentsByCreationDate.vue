@@ -46,7 +46,7 @@
         </div>
         <div v-if="missings" class="widget__content__missing small d-flex align-items-center mt-2">
           <p class="my-0 text-muted" :title="$t('widget.creationDate.missingTooltip')">
-            {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
+            {{ $tc('widget.creationDate.missing', missings, { total: $n(missings) }) }}
           </p>
         </div>
         <div v-else class="text-muted text-center">
@@ -216,7 +216,7 @@ export default {
       return this.missingData.reduce((sum, { doc_count: count }) => sum + count, 0)
     },
     hasRangePicker() {
-      return this.sliceRange && this.datesHistogram.length > Math.round(this.chartWidth / this.minColumnWidth) 
+      return this.sliceRange && this.datesHistogram.length > Math.round(this.chartWidth / this.minColumnWidth)
     }
   },
   watch: {
