@@ -223,6 +223,19 @@ export default {
     project() {
       this.selectedPath = this.dataDir
       this.init()
+    },
+    sliceRange({ start, end }, { start: prevStart, end: prevEnd }) {
+      // The new range size is bigger than the allowed ticks number
+      if (this.endTick - this.startTick > this.maxSliceTicks) {
+        // We are moving the range from the start
+        if (start < prevStart) {
+          this.sliceRange.end = this.ticksScale.invert(this.startTick + this.maxSliceTicks)
+        }
+        // We are moving the range from the end
+        if (end > prevEnd) {
+          this.sliceRange.start = this.ticksScale.invert(this.endTick - this.maxSliceTicks)
+        }
+      }
     }
   },
   async mounted() {
