@@ -10,14 +10,13 @@
         <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath"></slot>
         <div class="btn-group">
           <span
-            v-for="(value, interval) in intervals"
+            v-for="(_, interval) in intervals"
             :key="interval"
             :class="{ active: selectedInterval === interval }"
-            class="btn btn-link border py-1 px-2"
+            class="btn btn-link border py-1 px-2 widget__header__selectors__selector"
+            @click="setSelectedInterval(interval)"
           >
-            <span class="widget__header__selectors__selector" @click="setSelectedInterval(interval)">
-              {{ $t('widget.creationDate.intervals.' + interval) }}
-            </span>
+            {{ $t('widget.creationDate.intervals.' + interval) }}
           </span>
         </div>
       </div>
@@ -34,35 +33,21 @@
               <p class="m-0">{{ $tc('widget.creationDate.document', total, { total }) }}</p>
             </template>
           </column-chart>
-          <range-picker
-            v-if="isDatesRangeSliced"
+          <column-chart-picker
+            v-if="sliceRange"
             v-model="sliceRange"
-            :snap="1 / aggregatedData.length"
-            class="widget__content__chart__range"
-            rounded
-            hover
-            variant="secondary"
-          >
-            <column-chart
-              :key="selectedInterval"
-              :data="aggregatedData"
-              :fixed-height="100"
-              :bar-padding="0"
-              :bar-margin="4"
-              no-tooltips
-              no-x-axis
-              no-y-axis
-            />
-          </range-picker>
-          <div class="d-flex align-items-center mt-2">
-            <p
-              v-if="missing"
-              class="widget__content__missing small my-0 text-muted"
-              :title="$t('widget.creationDate.missingTooltip')"
-            >
-              {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
-            </p>
-          </div>
+            column-snap
+            :throttle="0"
+            :interval="selectedInterval"
+            :data="cleanData"
+            :column-margin="2"
+            :column-height-ratio="0.1"
+          />
+        </div>
+        <div v-if="missings" class="widget__content__missing small d-flex align-items-center mt-2">
+          <p class="my-0 text-muted" :title="$t('widget.creationDate.missingTooltip')">
+            {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
+          </p>
         </div>
         <div v-else class="text-muted text-center">
           {{ $t('widget.noData') }}
@@ -78,6 +63,7 @@ import { clamp, get, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import * as d3 from 'd3'
 
+import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterDate from '@/store/filters/FilterDate'
 
 /**
@@ -85,6 +71,9 @@ import FilterDate from '@/store/filters/FilterDate'
  */
 export default {
   name: 'WidgetDocumentsByCreationDate',
+  components: {
+    ColumnChartPicker
+  },
   props: {
     /**
      * The widget definition object.
@@ -122,9 +111,7 @@ export default {
         }
       },
       mounted: false,
-      missing: 0,
-      startTick: 0,
-      endTick: 1,
+      sliceRange: null,
       selectedInterval: 'year',
       selectedPath: null
     }
@@ -138,7 +125,7 @@ export default {
       return 0
     },
     maxValue() {
-      return d3.max(this.data, ({ doc_count: value = 0 }) => value)
+      return d3.max(this.cleanData, ({ doc_count: value = 0 }) => value)
     },
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
@@ -150,10 +137,24 @@ export default {
       return this.intervals[this.selectedInterval].bins
     },
     datesExtent() {
-      return d3.extent(this.data, (d) => d.date)
+      if (this.data.length) {
+        return d3.extent(this.cleanData, (d) => d.date)
+      }
+      return []
+    },
+    intervalDatesExtent() {
+      const start = this.toIntervalStart(this.datesExtent[0])
+      const end = this.toIntervalEnd(this.datesExtent[1])
+      return [start, end]
     },
     datesScale() {
-      return d3.scaleUtc().domain(this.datesExtent).rangeRound([0, this.chartWidth])
+      return d3.scaleUtc().domain(this.intervalDatesExtent)
+    },
+    widthScale() {
+      return this.datesScale.rangeRound([0, this.chartWidth])
+    },
+    ticksScale() {
+      return this.datesScale.rangeRound([0, this.datesHistogram.length]).interpolate(d3.interpolateRound)
     },
     datesHistogram() {
       const minTime = this.selectedIntervalTime.offset(this.datesExtent[0], -1)
@@ -163,40 +164,21 @@ export default {
       const histogram = d3
         .histogram()
         .value((d) => d.date)
-        .domain(this.datesScale.domain())
-        .thresholds(this.datesScale.ticks(bins.length))
-      return histogram(this.data)
+        .domain(this.widthScale.domain())
+        .thresholds(this.widthScale.ticks(bins.length))
+      return histogram(this.cleanData)
     },
     datesHistogramSlice() {
       return this.datesHistogram.slice(this.startTick, this.endTick)
     },
-    ticks() {
-      return clamp(1, this.endTick - this.startTick, this.maxTicks)
+    maxSliceTicks() {
+      return clamp(1, Math.round(this.chartWidth / this.minColumnWidth), this.datesHistogram.length)
     },
-    maxTicks() {
-      return Math.floor(this.chartWidth / this.minColumnWidth)
+    startTick() {
+      return this.ticksScale(this.sliceRange?.start)
     },
-    sliceRange: {
-      get() {
-        return [this.sliceRangeStart, this.sliceRangeEnd]
-      },
-      set([start, end]) {
-        const ticks = Math.round((end - start) * this.datesHistogram.length)
-        const reachedMax = ticks > this.maxTicks
-        const startDelta = reachedMax && end > this.sliceRangeEnd ? ticks - this.maxTicks : 0
-        const endDelta = reachedMax && start < this.sliceRangeStart ? ticks - this.maxTicks : 0
-        this.startTick = Math.round(start * this.datesHistogram.length) + startDelta
-        this.endTick = Math.round(end * this.datesHistogram.length) - endDelta
-      }
-    },
-    sliceRangeStart() {
-      return this.startTick / this.datesHistogram.length
-    },
-    sliceRangeEnd() {
-      return this.endTick / this.datesHistogram.length
-    },
-    isDatesRangeSliced() {
-      return this.datesHistogram.length > this.ticks
+    endTick() {
+      return this.ticksScale(this.sliceRange?.end)
     },
     aggregatedData() {
       return this.datesHistogram.map((bin) => {
@@ -210,7 +192,7 @@ export default {
     },
     aggDateHistogramOptions() {
       return {
-        ...FilterDate.getIntervalOptions(this.selectedInterval),
+        ...FilterDate.getIntervalOption(this.selectedInterval),
         order: { _key: 'asc' },
         min_doc_count: 1
       }
@@ -220,27 +202,44 @@ export default {
     },
     loader() {
       return uniqueId('loading-creation-date-buckets')
+    },
+    cleanData() {
+      return this.data.filter(this.isBucketValid).map((bucket) => {
+        bucket.date = new Date(bucket.key)
+        return bucket
+      })
+    },
+    missingData() {
+      return this.data.filter((bucket) => !this.isBucketValid(bucket))
+    },
+    missings() {
+      return this.missingData.reduce((sum, { doc_count: count }) => sum + count, 0)
     }
   },
   watch: {
     project() {
-      this.mounted = false
       this.selectedPath = this.dataDir
       this.init()
     }
   },
-  mounted() {
+  async mounted() {
     this.selectedPath = this.dataDir
-    this.$nextTick(this.init)
+    await this.$nextTick()
+    await this.init()
   },
   methods: {
     async init() {
       await this.loadData()
       this.mounted = true
-      this.endTick = this.datesHistogram.length
-      this.startTick = this.endTick - this.maxTicks
+      if (this.cleanData.length) {
+        const end = this.intervalDatesExtent[1]
+        const endTick = this.ticksScale(end)
+        const startTick = Math.max(0, endTick - Math.max(1, this.maxSliceTicks))
+        const start = this.ticksScale.invert(startTick)
+        this.sliceRange = { start, end }
+      }
     },
-    isBucketKeyInRange(key) {
+    isBucketValid({ key }) {
       return key > 0 && key < new Date().getTime()
     },
     bodybuilderBase({ size = 1000, from = 0 } = {}) {
@@ -265,21 +264,10 @@ export default {
     },
     async loadData() {
       this.$wait.start(this.loader)
-      this.missing = 0
       const body = this.bodybuilderBase().build()
       const preference = 'widget-documents-by-creation-date'
       const res = await this.$core.api.elasticsearch.search({ index: this.project, size: 0, body, preference })
-      const aggregation = get(res, 'aggregations.agg_by_creation_date.buckets', [])
-      const data = aggregation.reduce((buckets, bucket) => {
-        if (this.isBucketKeyInRange(bucket.key)) {
-          bucket.date = new Date(bucket.key)
-          buckets.push(bucket)
-        } else {
-          this.missing += bucket.doc_count
-        }
-        return buckets
-      }, [])
-      this.$set(this, 'data', data)
+      this.$set(this, 'data', get(res, 'aggregations.agg_by_creation_date.buckets', []))
       this.$wait.end(this.loader)
     },
     setSelectedPath(path) {
@@ -297,6 +285,17 @@ export default {
     },
     xAxisTickFormat(date) {
       return this.intervals[this.selectedInterval].xAxisFormat(date)
+    },
+    toIntervalStart(date) {
+      const startMonth = this.selectedInterval === 'year' ? 0 : date.getMonth()
+      const startDay = this.selectedInterval !== 'day' ? 1 : date.getDate()
+      return new Date(Date.UTC(date.getFullYear(), startMonth, startDay))
+    },
+    toIntervalEnd(date) {
+      const monthOffset = Number(this.selectedInterval !== 'day')
+      const endMonth = (this.selectedInterval === 'year' ? 11 : date.getMonth()) + monthOffset
+      const endDay = this.selectedInterval !== 'day' ? 0 : date.getDate()
+      return new Date(Date.UTC(date.getFullYear(), endMonth, endDay, 23, 59, 59))
     }
   }
 }
