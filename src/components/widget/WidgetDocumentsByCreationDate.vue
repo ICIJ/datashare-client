@@ -317,13 +317,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .widget {
   min-height: 100%;
-
-  &__header__selectors__selector {
-    cursor: pointer;
-  }
 
   &__content {
     &__spinner {
@@ -331,6 +327,10 @@ export default {
       background: $card-bg;
       padding: $spacer;
     }
+  }
+
+  &:deep(.column-chart-picker .column-chart__columns__item) {
+    fill: $primary;
   }
 }
 </style>
