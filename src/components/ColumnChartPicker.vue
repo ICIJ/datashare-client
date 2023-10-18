@@ -263,7 +263,7 @@ export default {
 .column-chart-picker {
   &__range {
     &__chart {
-      color: currentColor;
+      fill: currentColor;
 
       &:deep(.column-chart__columns__item) {
         cursor: pointer;
