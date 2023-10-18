@@ -50,7 +50,7 @@
           </template>
         </date-picker>
         <column-chart-picker
-          v-if="items.length"
+          v-if="items.length > 1"
           v-model="selectedDate"
           class="mx-1"
           :data="items"
