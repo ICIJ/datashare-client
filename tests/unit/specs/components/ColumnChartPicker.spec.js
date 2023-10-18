@@ -1,5 +1,4 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import { Core } from '@/core'
 
@@ -52,5 +51,38 @@ describe('ColumnChartPicker.vue', () => {
 
     expect(wrapper.emitted().update).toBeTruthy()
     expect(wrapper.emitted().update[0]).toEqual([{ start: expect.any(Number), end: expect.any(Number) }])
+  })
+
+  it('computes the "aggregatedData" correctly', () => {
+    const aggregatedData = wrapper.vm.aggregatedData
+    expect(aggregatedData).toHaveLength(16)
+    expect(aggregatedData[0]).toEqual({ date: expect.any(Date), value: expect.any(Number) })
+  })
+
+  it('computes the "startYear" correctly', () => {
+    expect(wrapper.vm.startYear).toBe(2008)
+  })
+
+  it('computes the "endYear" correctly', () => {
+    expect(wrapper.vm.endYear).toBe(2023)
+  })
+
+  it('computes the "intervalTimesExtent" correctly', () => {
+    expect(wrapper.vm.intervalTimesExtent).toEqual([
+      new Date(Date.UTC(2008, 0, 1)).getTime(),
+      new Date(Date.UTC(2023, 11, 31, 23, 59, 59)).getTime()
+    ])
+  })
+
+  it('computes the "intervalDatesExtent" correctly', () => {
+    expect(wrapper.vm.intervalDatesExtent).toEqual([
+      new Date(Date.UTC(2008, 0, 1)),
+      new Date(Date.UTC(2023, 11, 31, 23, 59, 59))
+    ])
+  })
+
+  it('executes "isBucketValid" method correctly', () => {
+    expect(wrapper.vm.isBucketValid({ key: 1234567890 })).toBe(true)
+    expect(wrapper.vm.isBucketValid({ key: 0 })).toBe(false)
   })
 })
