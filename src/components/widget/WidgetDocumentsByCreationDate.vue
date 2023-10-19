@@ -1,11 +1,7 @@
 <template>
   <div class="widget">
-    <div
-      v-if="widget.title"
-      class="widget__header d-md-flex align-items-center"
-      :class="{ 'card-header': widget.card }"
-    >
-      <h4 class="m-0 flex-grow-1" v-html="widget.title"></h4>
+    <div v-if="widget.title" class="widget__header d-md-flex align-items-center" :class="{ 'card-body': widget.card }">
+      <h3 class="m-0 flex-grow-1 h5" v-html="widget.title"></h3>
       <div class="widget__header__selectors d-flex align-items-center">
         <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath"></slot>
         <div class="btn-group">

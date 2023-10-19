@@ -1,7 +1,7 @@
 <template>
   <div class="widget widget--text">
-    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
-      <h4 class="m-0 h" v-html="widget.title"></h4>
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-body': widget.card }">
+      <h3 class="m-0 h5" v-html="widget.title"></h3>
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }" v-html="content"></div>
   </div>
