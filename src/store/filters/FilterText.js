@@ -77,7 +77,8 @@ export default class FilterText {
       const filterType = this.isNamedEntityAggregation(body) ? 'Parent' : 'Child'
       const filterName = this.reverse ? 'Exclude' : 'Include'
       const options = { name: this.name, values: this.values, reverse: this.reverse }
-      return get(this, `add${filterType}${filterName}Filter`, noop)(body, options)
+      const method = `add${filterType}${filterName}Filter`
+      return this[method] ? this[method](body, options) : null
     }
   }
 
