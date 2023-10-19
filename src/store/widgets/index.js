@@ -1,3 +1,5 @@
+import types from '@/utils/types'
+
 export { default as WidgetDiskUsage } from './WidgetDiskUsage'
 export { default as WidgetDocumentsByCreationDateByPath } from './WidgetDocumentsByCreationDateByPath'
 export { default as WidgetDuplicates } from './WidgetDuplicates'
@@ -10,6 +12,7 @@ export { default as WidgetProject } from './WidgetProject'
 export { default as WidgetSearchBar } from './WidgetSearchBar'
 export { default as WidgetText } from './WidgetText'
 export { default as WidgetTreeMap } from './WidgetTreeMap'
+export { default as WidgetFieldFacets } from './WidgetFieldFacets'
 
 const widgets = [
   {
@@ -54,6 +57,38 @@ const widgets = [
     cols: 12,
     type: 'WidgetDocumentsByCreationDateByPath',
     title: 'Number of documents by creation date'
+  },
+  {
+    name: 'languages',
+    order: 50,
+    icon: 'language',
+    card: true,
+    cols: 4,
+    field: 'language',
+    routeQueryField: 'f[language]',
+    bucketTranslation: ({ key }) => `filter.lang.${key}`,
+    type: 'WidgetFieldFacets'
+  },
+  {
+    name: 'content-types',
+    order: 50,
+    icon: 'file',
+    card: true,
+    cols: 4,
+    field: 'contentType',
+    routeQueryField: 'f[contentType]',
+    bucketTranslation: ({ key }) => types[key]?.label ?? key,
+    type: 'WidgetFieldFacets'
+  },
+  {
+    name: 'authors',
+    order: 50,
+    icon: 'users',
+    card: true,
+    cols: 4,
+    field: 'metadata.tika_metadata_dc_creator.keyword',
+    routeQueryField: null,
+    type: 'WidgetFieldFacets'
   }
 ]
 
