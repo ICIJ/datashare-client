@@ -46,13 +46,24 @@ export default {
 <style lang="scss" scoped>
 .project-view-insights {
   &__container {
-    margin-top: $spacer;
+    margin: $spacer-lg auto;
+
+    .row {
+      margin-right: $spacer-xxs;
+      margin-left: $spacer-xxs;
+
+      & > .col,
+      & > [class*='col-'] {
+        padding-right: $spacer-xxs;
+        padding-left: $spacer-xxs;
+      }
+    }
 
     &__widget {
       display: flex;
       flex-direction: row;
-      margin-bottom: $grid-gutter-width;
-      min-height: calc(100% - #{$grid-gutter-width});
+      margin-bottom: $spacer-xs;
+      min-height: calc(100% - #{$spacer-xs});
       position: relative;
     }
   }
