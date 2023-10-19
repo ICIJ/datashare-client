@@ -1,7 +1,7 @@
 <template>
   <div class="widget widget--list-group">
-    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
-      <h4 class="m-0 h" v-html="widget.title"></h4>
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-body': widget.card }">
+      <h3 class="m-0 h" v-html="widget.title"></h3>
     </div>
     <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
       <component

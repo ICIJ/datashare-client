@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     total() {
-      return Math.pow(123, 3) + sum(values(this.entities))
+      return sum(values(this.entities))
     },
     humanTotal() {
       return humanNumber(this.total)

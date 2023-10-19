@@ -37,17 +37,17 @@ describe('WidgetText.vue', () => {
     expect(wrapper.find('.widget__header').text()).toBe('Hello world')
   })
 
-  it('should contain a title with a `card-header` class', () => {
+  it('should contain a title with a `card-body` class', () => {
     const widget = { title: 'Hello world', card: true }
     const propsData = { widget }
     const wrapper = shallowMount(WidgetText, { localVue, store, propsData })
-    expect(wrapper.find('.widget__header').attributes('class')).toContain('card-header')
+    expect(wrapper.find('.widget__header').attributes('class')).toContain('card-body')
   })
 
-  it('should contain a title without `card-header` class', () => {
+  it('should contain a title without `card-body` class', () => {
     const widget = { title: 'Hello world', card: false }
     const propsData = { widget }
     const wrapper = shallowMount(WidgetText, { localVue, store, propsData })
-    expect(wrapper.find('.widget__header').attributes('class')).not.toContain('card-header')
+    expect(wrapper.find('.widget__header').attributes('class')).not.toContain('card-body')
   })
 })

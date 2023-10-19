@@ -1,6 +1,6 @@
 <template>
   <div class="widget widget--tree-map">
-    <div v-if="widget.title" class="widget__header" :class="{ 'card-header': widget.card }">
+    <div v-if="widget.title" class="widget__header" :class="{ 'card-body': widget.card }">
       <h4 class="m-0 h" v-html="widget.title"></h4>
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }">

@@ -26,20 +26,20 @@ describe('WidgetListGroup.vue', () => {
     expect(wrapper.attributes('class')).toContain('widget--list-group')
   })
 
-  it('should contain a title with a `card-header` class', async () => {
+  it('should contain a title with a `card-body` class', async () => {
     const propsData = { widget: { title: 'Hello world', card: true } }
     const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
     await new Promise((resolve) => setImmediate(resolve))
 
-    expect(wrapper.find('.widget__header').attributes('class')).toContain('card-header')
+    expect(wrapper.find('.widget__header').attributes('class')).toContain('card-body')
   })
 
-  it('should contain a title without `card-header` class', async () => {
+  it('should contain a title without `card-body` class', async () => {
     const propsData = { widget: { title: 'Hello world', card: false } }
     const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
     await new Promise((resolve) => setImmediate(resolve))
 
-    expect(wrapper.find('.widget__header').attributes('class')).not.toContain('card-header')
+    expect(wrapper.find('.widget__header').attributes('class')).not.toContain('card-body')
   })
 
   it('should contain a 3 items', async () => {
