@@ -17,8 +17,8 @@
           :href="item.href"
           :class="{ active: item.active }"
         >
-          <div class="row no-gutters align-items-center">
-            <div class="widget__list__item__label col">
+          <div class="d-flex align-items-center">
+            <div class="widget__list__item__label">
               {{ item.label }}
             </div>
             <b-badge class="widget__list__item__count ml-auto" pill variant="dark">{{ $n(item.count) }}</b-badge>
@@ -221,6 +221,7 @@ export default {
 
       &__label {
         color: inherit;
+        word-break: break-all;
       }
 
       &__bar {
