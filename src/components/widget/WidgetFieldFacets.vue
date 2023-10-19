@@ -63,7 +63,7 @@ export default {
      */
     widget: {
       type: Object,
-      default:()=>{}
+      default: () => {}
     },
     bucketsSize: {
       type: Number,
@@ -132,7 +132,7 @@ export default {
     },
     async loadFirstPage() {
       this.clearPages()
-     await this.loadPageWithLoader()
+      await this.loadPageWithLoader()
     },
     async loadPageWithLoader() {
       this.$wait.start(this.loader)
