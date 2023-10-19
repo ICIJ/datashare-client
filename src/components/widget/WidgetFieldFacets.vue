@@ -40,7 +40,7 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { get, flatten, camelCase, noop, round, uniqueId } from 'lodash'
+import { get, flatten, camelCase, iteratee, noop, round, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import InfiniteLoading from 'vue-infinite-loading'
 
@@ -72,21 +72,26 @@ export default {
   data() {
     return {
       pages: [],
-      total: 0,
       infiniteScrollId: uniqueId('infinite-scroll-')
     }
   },
   computed: {
     ...mapState('insights', ['project']),
     // The items list is just a concatenation of all pages
+    buckets() {
+      return flatten(this.pages.map(iteratee('aggregations.facets.buckets')))
+    },
     items() {
-      return flatten(this.pages).map(this.bucketToItem)
+      return this.buckets.map(this.bucketToItem)
     },
     field() {
       return this.widget.field
     },
     routeQueryField() {
       return this.widget.routeQueryField ?? 'q'
+    },
+    total() {
+      return get(this.pages, '0.hits.total.value', 0)
     },
     title() {
       if (this.$te(this.titleTranslationKey)) {
@@ -136,9 +141,7 @@ export default {
     async loadPage() {
       const body = this.bodybuilderBase().build()
       const preference = 'widget-field-facets-' + this.widget.name
-      const res = await this.$core.api.elasticsearch.search({ index: this.project, size: 0, body, preference })
-      const page = get(res, 'aggregations.facets.buckets', [])
-      this.total = get(res, 'hits.total.value', 0)
+      const page = await this.$core.api.elasticsearch.search({ index: this.project, size: 0, body, preference })
       this.pages.push(page)
     },
     async loadNextPage($infiniteLoadingState) {
@@ -152,7 +155,7 @@ export default {
       const size = this.nextOffset
       return bodybuilder()
         .size(0)
-        .rawOption('track_total_hits', true)
+        .rawOption('track_total_hits', this.pages.length === 0)
         .query('match', 'type', 'Document')
         .agg('terms', this.field, { size }, 'facets', (sub) => {
           const from = this.offset
