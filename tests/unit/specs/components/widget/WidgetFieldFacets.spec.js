@@ -14,8 +14,8 @@ describe('WidgetFieldFacets.vue', () => {
 
   beforeAll(() => {
     store.commit('insights/project', project)
-    // Mock the axios API call using jest.mock
-    elasticsearch.search = jest.fn().mockImplementation(() => {
+    // Mock all elasticsearch search calls using a mock
+    elasticsearch.search = jest.fn().mockImplementationOnce(() => {
       return Promise.resolve({
         aggregations: {
           facets: {
