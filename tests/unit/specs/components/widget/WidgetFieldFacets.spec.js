@@ -15,7 +15,7 @@ describe('WidgetFieldFacets.vue', () => {
   beforeAll(() => {
     store.commit('insights/project', project)
     // Mock all elasticsearch search calls using a mock
-    elasticsearch.search = jest.fn().mockImplementationOnce(() => {
+    elasticsearch.search = jest.fn().mockImplementation(() => {
       return Promise.resolve({
         aggregations: {
           facets: {
@@ -49,7 +49,6 @@ describe('WidgetFieldFacets.vue', () => {
       }
     })
     // Wait for the loading of the first page
-    await wrapper.vm.loadFirstPage()
     await flushPromises()
   })
 
