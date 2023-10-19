@@ -1,6 +1,5 @@
 import get from 'lodash/get'
 import includes from 'lodash/includes'
-import noop from 'lodash/noop'
 import some from 'lodash/some'
 
 // Private properties keys
