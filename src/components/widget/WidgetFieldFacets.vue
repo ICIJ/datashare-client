@@ -62,7 +62,8 @@ export default {
      * The widget definition object.
      */
     widget: {
-      type: Object
+      type: Object,
+      default:()=>{}
     },
     bucketsSize: {
       type: Number,
@@ -122,8 +123,8 @@ export default {
       return this.offset > 0 && !this.reachedTheEnd
     }
   },
-  async mounted() {
-    await this.loadFirstPage()
+  mounted() {
+    return this.loadFirstPage()
   },
   methods: {
     clearPages() {
@@ -131,7 +132,7 @@ export default {
     },
     async loadFirstPage() {
       this.clearPages()
-      this.loadPageWithLoader()
+     await this.loadPageWithLoader()
     },
     async loadPageWithLoader() {
       this.$wait.start(this.loader)
