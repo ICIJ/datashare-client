@@ -1,5 +1,6 @@
 import get from 'lodash/get'
 import includes from 'lodash/includes'
+import noop from 'lodash/noop'
 import some from 'lodash/some'
 
 // Private properties keys
@@ -76,7 +77,7 @@ export default class FilterText {
       const filterType = this.isNamedEntityAggregation(body) ? 'Parent' : 'Child'
       const filterName = this.reverse ? 'Exclude' : 'Include'
       const options = { name: this.name, values: this.values, reverse: this.reverse }
-      return this[`add${filterType}${filterName}Filter`](body, options)
+      return get(this, `add${filterType}${filterName}Filter`, noop)(body, options)
     }
   }
 
