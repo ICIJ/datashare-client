@@ -913,6 +913,15 @@
     "noData": "No data",
     "noFolders": "No folders",
     "noEntities": "No named entities",
+    "languages": {
+      "title": "Languages"
+    },
+    "contentTypes": {
+      "title": "File types"
+    },
+    "authors": {
+      "title": "Authors"
+    },
     "barometer": {
       "document": "no documents | 1 document | %{total} documents",
       "amongWhich": "among which",
