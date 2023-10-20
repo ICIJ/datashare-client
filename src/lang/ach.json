@@ -915,6 +915,15 @@
     "noData": "crwdns2000:0crwdne2000:0",
     "noFolders": "crwdns2054:0crwdne2054:0",
     "noEntities": "crwdns2787:0crwdne2787:0",
+    "languages": {
+      "title": "crwdns2944:0crwdne2944:0"
+    },
+    "contentTypes": {
+      "title": "crwdns2946:0crwdne2946:0"
+    },
+    "authors": {
+      "title": "crwdns2948:0crwdne2948:0"
+    },
     "barometer": {
       "document": "crwdns2014:0%{total}crwdne2014:0",
       "amongWhich": "crwdns2016:0crwdne2016:0",
