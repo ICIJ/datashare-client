@@ -14,7 +14,7 @@
             <router-link
               v-if="searchable"
               :to="searchInPathRoute(path)"
-              class="tree-view__header__search ml-2 btn-outline-primary btn btn-sm rounded-pill"
+              class="tree-view__header__search ml-2 btn-primary btn btn-sm rounded-pill"
             >
               <fa icon="search"></fa>
               {{ $t('treeView.searchPath') }}
