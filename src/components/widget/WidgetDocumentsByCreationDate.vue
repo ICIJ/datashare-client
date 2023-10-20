@@ -24,6 +24,7 @@
         </div>
         <div v-if="data.length > 0" class="widget__content__chart align-items-center">
           <column-chart
+            hover
             :chart-height-ratio="0.4"
             :data="aggregatedDataSlice"
             :max-value="maxValue"
