@@ -226,7 +226,10 @@ export default {
       this.selectedPath = this.dataDir
       this.init()
     },
-    sliceRange({ start, end }, { start: prevStart, end: prevEnd }) {
+    sliceRange(value, previousValue) {
+      // Safe access to the slice range values
+      const { start, end } = value ?? { start: 0, end: 1 }
+      const { start: prevStart = 0, end: prevEnd = 1 } = previousValue ?? { start: 0, end: 1 }
       // The new range size is bigger than the allowed ticks number
       if (this.endTick - this.startTick > this.maxSliceTicks) {
         // We are moving the range from the start
