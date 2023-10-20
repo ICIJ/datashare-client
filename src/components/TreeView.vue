@@ -625,7 +625,6 @@ export default {
 
       &:hover &__search.btn {
         display: inline-block;
-
       }
 
       &__bar {
