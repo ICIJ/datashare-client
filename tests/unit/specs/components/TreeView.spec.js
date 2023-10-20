@@ -164,7 +164,39 @@ describe('TreeView.vue', () => {
 
       expect(spyLoadTree).toBeCalledTimes(1)
     })
+
+    it('should show a search button in the header', async () => {
+      await wrapper.setProps({ searchable: true })
+      await wrapper.vm.loadData({ clearPages: true })
+      expect(wrapper.find('.tree-view__header__search').exists()).toBeTruthy()
+    })
+
+    it('should not show a search button in the header', async () => {
+      await wrapper.setProps({ searchable: false })
+      await wrapper.vm.loadData({ clearPages: true })
+      expect(wrapper.find('.tree-view__header__search').exists()).toBeFalsy()
+    })
+
+    it('should show a search button in each items', async () => {
+      await wrapper.setProps({ searchable: true })
+      await wrapper.setData({
+        pages: [
+          {
+            aggregations: {
+              byDirname: {
+                buckets: [
+                  { key: 'bar', contentLength: { value: 1024 } },
+                  { key: 'baz', contentLength: { value: 1024 } }
+                ]
+              }
+            }
+          }
+        ]
+      })
+      expect(wrapper.findAll('.tree-view__directories__item__search').length).toBe(2)
+    })
   })
+
   describe('Windows', () => {
     let wrapper = null
     const { index, es } = esConnectionHelper.build('spec', true)
