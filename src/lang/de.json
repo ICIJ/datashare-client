@@ -915,6 +915,15 @@
     "noData": "Keine Daten",
     "noFolders": "Keine Ordner",
     "noEntities": "No named entities",
+    "languages": {
+      "title": "Languages"
+    },
+    "contentTypes": {
+      "title": "File types"
+    },
+    "authors": {
+      "title": "Authors"
+    },
     "barometer": {
       "document": "keine Dokumente | 1 Dokument | %{total} Dokumente",
       "amongWhich": "davon sind",
