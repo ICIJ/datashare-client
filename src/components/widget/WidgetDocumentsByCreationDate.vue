@@ -28,6 +28,7 @@
             :data="aggregatedDataSlice"
             :max-value="maxValue"
             :x-axis-tick-format="xAxisTickFormat"
+            @select="searchInterval"
           >
             <template #tooltip="{ datum: { date, value: total } }">
               <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
@@ -313,6 +314,23 @@ export default {
       const endMonth = (this.selectedInterval === 'year' ? 11 : date.getMonth()) + monthOffset
       const endDay = this.selectedInterval !== 'day' ? 0 : date.getDate()
       return new Date(Date.UTC(date.getFullYear(), endMonth, endDay, 23, 59, 59))
+    },
+    searchInterval({ date }) {
+      const bin = this.dateToBin(date)
+      const query = this.binToQuery(bin)
+      this.$router.push({ name: 'search', query })
+    },
+    dateToBin(date) {
+      return this.datesHistogram.find(({ x0, x1 }) => date >= x0 && date < x1)
+    },
+    binToQueryValues({ x0, x1 }) {
+      return [x0.getTime(), x1.getTime()]
+    },
+    binToQuery(bin) {
+      const indices = [this.project]
+      const routeQueryField = 'f[creationDate]'
+      const values = this.binToQueryValues(bin)
+      return { [routeQueryField]: values, indices }
     }
   }
 }
@@ -330,8 +348,9 @@ export default {
     }
   }
 
-  &:deep(.column-chart-picker .column-chart__columns__item) {
+  &:deep(.column-chart__columns__item) {
     fill: $primary;
+    cursor: pointer;
   }
 }
 </style>
