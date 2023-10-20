@@ -417,7 +417,7 @@
     "namedEntities": "Entidades Identificadas",
     "namedEntityFilter": "Filtrar entidades identificadas",
     "namedEntitiesOccurences": "no hay ocurrencias | una ocurrencia | {count} ocurrencias",
-    "extractedText": "Texto",
+    "extractedText": "Text",
     "translations": "Traducciones",
     "preview": "Vista previa",
     "downloadButton": "Descargar",
@@ -915,6 +915,15 @@
     "noData": "No hay datos",
     "noFolders": "Sin carpetas",
     "noEntities": "No named entities",
+    "languages": {
+      "title": "Languages"
+    },
+    "contentTypes": {
+      "title": "File types"
+    },
+    "authors": {
+      "title": "Authors"
+    },
     "barometer": {
       "document": "no hay archivos | 1 archivo | %{total} archivos",
       "amongWhich": "entre los cuales",
