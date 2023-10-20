@@ -9,8 +9,10 @@
         </strong>
         <template v-if="onDisk != total">
           {{ $t('widget.barometer.amongWhich') }}
-          <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span>
-          {{ $t('widget.barometer.onDisk') }}
+          <router-link :to="searchOnDiskRoute">
+            {{ onDisk | humanNumber($t('human.number')) }}
+            {{ $t('widget.barometer.onDisk') }}
+          </router-link>
         </template>
       </p>
     </v-wait>
@@ -40,6 +42,13 @@ export default {
     return {
       onDisk: null,
       total: null
+    }
+  },
+  computed: {
+    searchOnDiskRoute() {
+      const indices = [this.$store.state.insights.project]
+      const query = { 'f[extractionLevel]': 0, indices }
+      return { name: 'search', query }
     }
   },
   async created() {
