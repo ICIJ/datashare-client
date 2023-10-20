@@ -1,7 +1,7 @@
 <template>
   <div class="tree-view" :class="{ 'tree-view--compact': compact }">
     <b-collapse :visible="!noHeader">
-      <div class="tree-view__header d-flex flex-row text-nowrap">
+      <div class="tree-view__header d-flex flex-row align-items-center text-nowrap">
         <tree-breadcrumb
           :path="path"
           :max-directories="compact ? 2 : 5"
@@ -11,7 +11,15 @@
         ></tree-breadcrumb>
         <transition name="fade">
           <div v-if="!$wait.waiting('loading tree view data')">
-            <span v-if="size" class="tree-view__header__size">
+            <router-link
+              v-if="searchable"
+              :to="searchInPathRoute(path)"
+              class="tree-view__header__search ml-2 btn-outline-primary btn btn-sm rounded-pill"
+            >
+              <fa icon="search"></fa>
+              {{ $t('treeView.searchPath') }}
+            </router-link>
+            <span v-if="size" class="tree-view__header__size ml-3">
               <fa icon="weight"></fa>
               {{ humanSize(total, false, $t('human.size')) }}
             </span>
@@ -71,9 +79,17 @@
               >
                 {{ getBasename(directory.key) }}
               </a>
+              <router-link
+                v-if="searchable"
+                :to="searchInPathRoute(directory.key)"
+                class="tree-view__directories__item__search ml-2 btn-primary btn btn-sm rounded-pill"
+              >
+                <fa icon="search"></fa>
+                <span>&nbsp;{{ $t('treeView.searchPath') }}</span>
+              </router-link>
               <div
                 v-if="size && directory.contentLength"
-                class="font-weight-bold ml-2"
+                class="tree-view__directories__item__content-length font-weight-bold ml-2"
                 :title="$n(directory.contentLength.value)"
               >
                 {{ humanSize(directory.contentLength.value, false, $t('human.size')) }}
@@ -81,7 +97,7 @@
               <span
                 v-if="count"
                 :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
-                class="ml-2 badge badge-light badge-pill"
+                class="tree-view__directories__item__count ml-2 badge badge-light badge-pill"
               >
                 <span v-if="!directory.doc_count"> - </span>
                 <span v-else-if="compact">
@@ -231,6 +247,13 @@ export default {
     infiniteScroll: {
       type: Boolean,
       default: true
+    },
+    /**
+     * Display a link to search by path.
+     */
+    searchable: {
+      type: Boolean,
+      default: false
     },
     /**
      * Key to sort the directories
@@ -503,6 +526,11 @@ export default {
     },
     async loadTree() {
       this.tree = await this.$core.api.tree(this.path)
+    },
+    searchInPathRoute(path) {
+      const indices = this.projects
+      const query = { 'f[path]': path, indices }
+      return { name: 'search', query }
     }
   }
 }
@@ -567,6 +595,37 @@ export default {
         &--no-folders {
           padding: 0.5rem;
         }
+      }
+
+      &__search.btn {
+        margin: -0.5rem 0;
+        display: none;
+        text-align: center;
+        line-height: 1.5;
+        width: 100%;
+        max-width: calc(1rem + #{$btn-padding-x-sm * 2});
+        transition: max-width 300ms;
+        white-space: nowrap;
+        overflow: hidden;
+
+        & > span {
+          opacity: 0;
+          transition: opacity 300ms;
+        }
+
+        &:hover {
+          width: auto;
+          max-width: 200px;
+
+          & > span {
+            opacity: 1;
+          }
+        }
+      }
+
+      &:hover &__search.btn {
+        display: inline-block;
+
       }
 
       &__bar {

@@ -1030,6 +1030,7 @@
     "docs": "doc | docs",
     "datadir": "Home",
     "all": "All",
+    "searchPath": "Search in this directory",
     "includingIndividualDocuments": "including individual documents"
   },
   "quickItemNav": {
