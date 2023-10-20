@@ -75,5 +75,19 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
       expect(wrapper.vm.selectedInterval).toBe('year')
       expect(wrapper.vm.data).toHaveLength(0)
     })
+
+    it('should give the correct search query params for a date', async () => {
+      await wrapper.setData({
+        data: [
+          { date: new Date(2012, 0), key: 1325372400000, doc_count: 2 },
+          { date: new Date(2013, 0), key: 1356994800000, doc_count: 4 },
+          { date: new Date(2014, 0), key: 1388534400000, doc_count: 4 }
+        ]
+      })
+
+      const bin = wrapper.vm.dateToBin(new Date(2013, 0))
+      const query = wrapper.vm.binToQuery(bin)
+      expect(query).toStrictEqual({ 'f[creationDate]': [1356998400000, 1388534400000], indices: [anotherProject] })
+    })
   })
 })
