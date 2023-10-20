@@ -23,7 +23,12 @@
           <fa icon="circle-notch" spin size="2x"></fa>
         </div>
         <div v-if="data.length > 0" class="widget__content__chart align-items-center">
-          <column-chart :data="aggregatedDataSlice" :max-value="maxValue" :x-axis-tick-format="xAxisTickFormat">
+          <column-chart
+            :chart-height-ratio="0.4"
+            :data="aggregatedDataSlice"
+            :max-value="maxValue"
+            :x-axis-tick-format="xAxisTickFormat"
+          >
             <template #tooltip="{ datum: { date, value: total } }">
               <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
               <p class="m-0">{{ $tc('widget.creationDate.document', total, { total }) }}</p>
