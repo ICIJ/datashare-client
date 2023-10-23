@@ -31,7 +31,7 @@
           >
             <template #tooltip="{ datum: { date, value: total } }">
               <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
-              <p class="m-0">{{ $tc('widget.creationDate.document', total, { total }) }}</p>
+              <p class="m-0 text-nowrap">{{ $tc('widget.creationDate.document', total, { total }) }}</p>
             </template>
           </column-chart>
           <column-chart-picker
