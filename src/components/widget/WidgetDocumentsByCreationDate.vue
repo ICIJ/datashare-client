@@ -112,7 +112,7 @@ export default {
         }
       },
       mounted: false,
-      sliceRange: null,
+      sliceRange: { start: null, end: null },
       selectedInterval: 'year',
       selectedPath: null
     }
