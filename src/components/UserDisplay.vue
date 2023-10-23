@@ -155,7 +155,7 @@ export default {
 <template>
   <component :is="tag" class="user-display d-inline-flex align-items-center" :style="userDisplayStyle">
     <template v-if="showAvatar">
-      <img class="user-display__avatar mr-2 rounded-circle" :src="avatarSrc" :alt="avatarAlt" />
+      <img class="user-display__avatar mr-2 rounded-circle" :src="avatarSrc" :alt="avatarAlt" loading="lazy" />
     </template>
     <component
       :is="usernameTag"
