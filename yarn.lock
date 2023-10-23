@@ -1156,10 +1156,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur@3.9.4":
-  version "3.9.4"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-3.9.4.tgz#c06a549ca15c7081904a0b277848ef59813e522d"
-  integrity sha512-gsM9iRGEYHOp1MnUzrKFiYlx2RA8Z7HSccyF7whoY3RIFe9RvwB5iA3XEWNSYlo4dKyJE/oHhSSs+DueimSe7g==
+"@icij/murmur@3.9.5":
+  version "3.9.5"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-3.9.5.tgz#f1d2127e776aef6bfdfe3b4ecc60a812689c4123"
+  integrity sha512-YQa2H2knRoetQvB3OX1k8JpovDK4J8oMHGhP5CBCjBOL+O/tFLHASQr6O16S4wMUT2wf7kfMGFPGbYqHNUP5AA==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^6.4.2"
