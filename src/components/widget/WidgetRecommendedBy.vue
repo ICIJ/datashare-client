@@ -2,7 +2,7 @@
   <div class="widget widget--recommended-by">
     <div class="widget__header d-flex align-items-center" :class="{ 'card-body': widget.card }">
       <fa icon="users" fixed-width class="mr-2" />
-      <h3 class="m-0 p-0 h5">Latest recommended documents</h3>
+      <h3 class="m-0 p-0 h5">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
     <v-wait :for="loader" transition="fade">
       <div slot="waiting" class="widget__spinner text-center p-4">

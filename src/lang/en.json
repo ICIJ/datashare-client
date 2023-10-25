@@ -919,6 +919,9 @@
     "languages": {
       "title": "Languages"
     },
+    "recommendedBy": {
+      "title": "Latest recommended documents"
+    },
     "contentTypes": {
       "title": "File types"
     },
