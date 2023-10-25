@@ -45,13 +45,13 @@
             :column-height-ratio="0.1"
           />
         </div>
+        <div v-else class="text-muted text-center">
+          {{ $t('widget.noData') }}
+        </div>
         <div v-if="missings" class="widget__content__missing small d-flex align-items-center mt-2">
           <p class="my-0 text-muted" :title="$t('widget.creationDate.missingTooltip')">
             {{ $tc('widget.creationDate.missing', missings, { total: $n(missings) }) }}
           </p>
-        </div>
-        <div v-else class="text-muted text-center">
-          {{ $t('widget.noData') }}
         </div>
       </v-wait>
     </div>
