@@ -42,3 +42,15 @@ export function humanShortDate(date, locale) {
 export function isDateValid(date) {
   return moment(date).isValid()
 }
+
+/**
+ * Returns a string representing the time from now to the given date.
+ *
+ * @param {string|Date} date - The date to be compared with now.
+ * @param {string} locale - The locale code for formatting the string.
+ * @param {boolean} [ago=false] - If true, includes the word 'ago' in the returned string.
+ * @returns {string} The formatted string representing the time from now to the given date.
+ */
+export function fromNow(date, locale, ago = false) {
+  return moment(date).locale(locale).fromNow(ago)
+}
