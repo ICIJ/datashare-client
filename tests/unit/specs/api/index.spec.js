@@ -375,6 +375,19 @@ describe('Datashare backend client', () => {
     })
   })
 
+  it('should return a backend response to mappings', async () => {
+    const projectIds = ['prj1', 'prj2']
+    const fields = ['title', 'title2']
+    json = await api.getMappings(projectIds, fields)
+    expect(json).toEqual({})
+    expect(mockAxios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/index/search/prj1,prj2/_mapping/field/title,title2`),
+      method: 'GET',
+      responseType: 'text',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+    })
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     mockAxios.request.mockReturnValue(Promise.reject(error))

@@ -165,6 +165,9 @@ export default {
   },
   computed: {
     ...mapState('search', ['from', 'response', 'size', 'sort']),
+    fields() {
+      return this.keywordSorts.map(this.getSortField).join(',')
+    },
     firstDocument() {
       return this.lastDocument === 0 ? 0 : this.from + 1
     },
@@ -221,10 +224,9 @@ export default {
       return this.sorts.filter(this.isSortVisible)
     }
   },
-  async mounted() {
-    const fields = this.keywordSorts.map(this.getSortField).join(',')
+  async created() {
     // We need to load all mappings to filter out non-sortable fields
-    this.mappings = await this.$core.api.sendAction(`/api/index/search/${this.projectIds}/_mapping/field/${fields}`)
+    this.mappings = await this.$core.api.getMappings(this.projectIds, this.fields)
     // Force page to scroll top at each load
     // Specially for pagination
     document.body.scrollTop = document.documentElement.scrollTop = 0

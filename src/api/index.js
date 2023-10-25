@@ -289,6 +289,11 @@ export class Api {
   textLanguages() {
     return this.sendAction('/api/settings/text/languages')
   }
+
+  getMappings(projectIds, fields) {
+    return this.sendActionAsText(`/api/index/search/${projectIds}/_mapping/field/${fields}`, { method: Method.GET })
+  }
+
   async sendAction(url, config = {}) {
     try {
       const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })
