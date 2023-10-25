@@ -5,7 +5,8 @@
       :class="{
         'document-sliced-name--sliced': isSliced(),
         'document-sliced-name--truncate': hasActiveTextTruncate(),
-        'document-sliced-name--has-subject': hasSubject()
+        'document-sliced-name--has-subject': hasSubject(),
+        'document-sliced-name--wrap': wrap
       }"
     >
       <span
@@ -14,7 +15,7 @@
         class="document-sliced-name__item"
         :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }"
       >
-        <span v-if="isMiddleSlice(slice)"> … </span>
+        <span v-if="isMiddleSlice(slice)">&nbsp;…&nbsp;</span>
         <span v-else-if="hasContentSlice(slice)" class="d-inline-flex flex-row align-items-end">
           <span class="document-sliced-name__item__short-id">
             {{ slice }}
@@ -82,6 +83,13 @@ export default {
      */
     showSubject: {
       type: Boolean
+    },
+    /**
+     * Wrap title text (and disable activate text truncate)
+     */
+    wrap: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -98,7 +106,7 @@ export default {
       return { id: this.document.source.rootDocument || this.document.id }
     },
     baseComponent() {
-      return this.hasActiveTextTruncate ? ActiveTextTruncate : 'span'
+      return this.hasActiveTextTruncate() ? ActiveTextTruncate : 'span'
     },
     baseComponentProps() {
       if (isString(this.activeTextTruncate) && this.activeTextTruncate !== '') {
@@ -127,7 +135,7 @@ export default {
       return this.isSliced && this.interactiveRoot
     },
     hasActiveTextTruncate() {
-      return this.activeTextTruncate !== null
+      return !this.wrap && this.activeTextTruncate !== null
     },
     hasSubject() {
       return this.showSubject && !this.isSliced() && this.document.hasSubject
@@ -144,7 +152,7 @@ export default {
   display: inline-block;
   padding: 0.1em 0;
 
-  &--truncate {
+  &--truncate:not(&--wrap) {
     white-space: nowrap;
   }
 
