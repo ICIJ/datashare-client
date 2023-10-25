@@ -101,7 +101,7 @@ body {
 
 // Truncated element in a flexbox child must not fully collapse when the
 // flex container is resized down. 
-// @see https: //drafts.csswg.org/css-flexbox/#min-size-auto
+// @see https://drafts.csswg.org/css-flexbox/#min-size-auto
 .flex-truncate,
 .flex-truncate.d-flex > *,
 .flex-truncate.d-inline-flex > *,
