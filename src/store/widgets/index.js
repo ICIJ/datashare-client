@@ -13,6 +13,7 @@ export { default as WidgetSearchBar } from './WidgetSearchBar'
 export { default as WidgetText } from './WidgetText'
 export { default as WidgetTreeMap } from './WidgetTreeMap'
 export { default as WidgetFieldFacets } from './WidgetFieldFacets'
+export { default as WidgetRecommendedBy } from './WidgetRecommendedBy'
 
 const widgets = [
   {
@@ -59,8 +60,15 @@ const widgets = [
     title: 'Number of documents by creation date'
   },
   {
-    name: 'languages',
+    name: 'recommended-by',
     order: 50,
+    card: true,
+    cols: 12,
+    type: 'WidgetRecommendedBy'
+  },
+  {
+    name: 'languages',
+    order: 60,
     icon: 'language',
     card: true,
     cols: 4,
@@ -71,7 +79,7 @@ const widgets = [
   },
   {
     name: 'content-types',
-    order: 50,
+    order: 60,
     icon: 'file',
     card: true,
     cols: 4,
@@ -82,8 +90,8 @@ const widgets = [
   },
   {
     name: 'authors',
-    order: 50,
-    icon: 'users',
+    order: 60,
+    icon: 'file-signature',
     card: true,
     cols: 4,
     field: 'metadata.tika_metadata_dc_creator.keyword',
