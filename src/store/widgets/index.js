@@ -14,6 +14,7 @@ export { default as WidgetText } from './WidgetText'
 export { default as WidgetTreeMap } from './WidgetTreeMap'
 export { default as WidgetFieldFacets } from './WidgetFieldFacets'
 export { default as WidgetRecommendedBy } from './WidgetRecommendedBy'
+export { default as WidgetNested } from './WidgetNested'
 
 const widgets = [
   {
