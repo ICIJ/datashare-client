@@ -15,7 +15,9 @@
           class="list-group-item list-group-item-action widget__list__item d-flex align-items-center flex-truncate"
           :href="href"
         >
-          <document-thumbnail v-if="widget.cols >= 6" :document="document" crop lazy class="d-none d-md-block mr-3" />
+          <div v-if="!widget.hideThumbnails && widget.cols > 6" class="d-none d-md-block">
+            <document-thumbnail :document="document" crop lazy class="mr-3" />
+          </div>
           <div class="flex-grow-1">
             <div class="widget__list__item__label d-flex align-items-start">
               <document-sliced-name wrap :document="document" class="text-primary" />
