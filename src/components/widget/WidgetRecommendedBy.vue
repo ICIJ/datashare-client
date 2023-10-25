@@ -19,7 +19,7 @@
             <document-thumbnail :document="document" crop lazy class="mr-3" />
           </div>
           <div class="flex-grow-1">
-            <div class="widget__list__item__label d-flex align-items-start">
+            <div class="widget__list__item__label d-flex align-items-start mb-1">
               <document-sliced-name wrap :document="document" class="text-primary" />
               <div class="ml-auto pl-1 d-flex align-items-center text-muted flex-shrink-0">
                 <user-display :username="user.id" hide-link class="text-nowrap" />
