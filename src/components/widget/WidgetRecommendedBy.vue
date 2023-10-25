@@ -185,18 +185,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.widget {
-  &--recommended-by {
-    min-height: 100%;
-  }
+.widget--recommended-by {
+  min-height: 100%;
 
-  &__list {
-    max-height: 350px;
+  .widget__list {
+    max-height: 400px;
     overflow: auto;
-
-    &__item {
-      color: $body-color;
-    }
   }
 }
 </style>

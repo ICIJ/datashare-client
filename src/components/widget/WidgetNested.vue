@@ -1,7 +1,7 @@
 <template>
-  <div class="widget widget--nested">
-    <div class="widget__container">
-      <b-row class="align-items-stretch">
+  <div class="widget widget--nested d-flex flex-column">
+    <div class="widget__container d-flex flex-column flex-grow-1">
+      <b-row class="align-items-stretch flex-grow-1">
         <b-col v-for="(w, index) in instantiatedWidgets" :key="index" :lg="w.cols">
           <div class="widget__container__widget" :class="{ card: w.card }">
             <component :is="w.component" :widget="w" class="flex-grow-1" />
@@ -46,10 +46,10 @@ export default {
 <style lang="scss" scoped>
 @use 'sass:math';
 
-.widget {
+.widget--nested {
   width: 100%;
 
-  &__container {
+  .widget__container {
     .row {
       margin-right: -$spacer-xxs;
       margin-left: -$spacer-xxs;
