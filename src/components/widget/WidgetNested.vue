@@ -23,7 +23,8 @@ export default {
      * The widget definition object.
      */
     widget: {
-      type: Object
+      type: Object,
+      required: true
     }
   },
   computed: {
