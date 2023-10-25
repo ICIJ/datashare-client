@@ -25,25 +25,38 @@ const widgets = [
     type: 'WidgetSearchBar'
   },
   {
-    name: 'project',
-    order: 10,
+    name: 'project-and-files',
+    order: 15,
+    card: false,
+    cols: 6,
+    type: 'WidgetNested',
+    widgets: [
+      {
+        name: 'project',
+        card: true,
+        cols: 12,
+        type: 'WidgetProject'
+      },
+      {
+        name: 'file-barometer',
+        card: true,
+        cols: 6,
+        type: 'WidgetFileBarometer'
+      },
+      {
+        name: 'disk-usage',
+        card: true,
+        cols: 6,
+        type: 'WidgetDiskUsage'
+      }
+    ]
+  },
+  {
+    name: 'recommended-by',
+    order: 25,
     card: true,
     cols: 6,
-    type: 'WidgetProject'
-  },
-  {
-    name: 'file-barometer',
-    order: 20,
-    card: true,
-    cols: 3,
-    type: 'WidgetFileBarometer'
-  },
-  {
-    name: 'disk-usage',
-    order: 30,
-    card: true,
-    cols: 3,
-    type: 'WidgetDiskUsage'
+    type: 'WidgetRecommendedBy'
   },
   {
     name: 'entities',
@@ -59,13 +72,6 @@ const widgets = [
     cols: 12,
     type: 'WidgetDocumentsByCreationDateByPath',
     title: 'Number of documents by creation date'
-  },
-  {
-    name: 'recommended-by',
-    order: 50,
-    card: true,
-    cols: 12,
-    type: 'WidgetRecommendedBy'
   },
   {
     name: 'languages',
