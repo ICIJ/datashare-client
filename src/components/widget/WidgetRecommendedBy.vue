@@ -15,7 +15,7 @@
           class="list-group-item list-group-item-action widget__list__item d-flex align-items-center flex-truncate"
           :href="href"
         >
-          <div v-if="!widget.hideThumbnails && widget.cols > 6" class="d-none d-md-block">
+          <div v-if="!widget.hideThumbnails && widget.cols >= 6" class="d-none d-md-block flex-shrink-0">
             <document-thumbnail :document="document" crop lazy class="mr-3" />
           </div>
           <div class="flex-grow-1">
@@ -191,7 +191,7 @@ export default {
   }
 
   &__list {
-    max-height: 400px;
+    max-height: 350px;
     overflow: auto;
 
     &__item {
