@@ -913,6 +913,7 @@
   },
   "widget": {
     "noData": "No data",
+    "noRecommendations": "No recommendations",
     "noFolders": "No folders",
     "noEntities": "No named entities",
     "languages": {
