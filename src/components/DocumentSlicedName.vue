@@ -3,9 +3,9 @@
     <span
       class="document-sliced-name"
       :class="{
-        'document-sliced-name--sliced': isSliced(),
-        'document-sliced-name--truncate': hasActiveTextTruncate(),
-        'document-sliced-name--has-subject': hasSubject(),
+        'document-sliced-name--sliced': isSliced,
+        'document-sliced-name--truncate': hasActiveTextTruncate,
+        'document-sliced-name--has-subject': hasSubject,
         'document-sliced-name--wrap': wrap
       }"
     >
@@ -25,7 +25,7 @@
           </span>
         </span>
         <router-link
-          v-else-if="hasInteractiveRoot()"
+          v-else-if="hasInteractiveRoot"
           class="document-sliced-name__item__root"
           :to="{ name: 'document', params: rootParams }"
         >
@@ -35,7 +35,7 @@
           {{ slice }}
         </span>
       </span>
-      <span v-if="hasSubject()" class="document-sliced-name__subject">
+      <span v-if="hasSubject" class="document-sliced-name__subject">
         {{ subject }}
       </span>
     </span>
@@ -106,16 +106,28 @@ export default {
       return { id: this.document.source.rootDocument || this.document.id }
     },
     baseComponent() {
-      return this.hasActiveTextTruncate() ? ActiveTextTruncate : 'span'
+      return this.hasActiveTextTruncate ? ActiveTextTruncate : 'span'
     },
     baseComponentProps() {
       if (isString(this.activeTextTruncate) && this.activeTextTruncate !== '') {
         return { direction: this.activeTextTruncate }
       }
-      if (this.textTruncateRtlAttachments && this.isSliced()) {
+      if (this.textTruncateRtlAttachments && this.isSliced) {
         return { direction: 'rtl' }
       }
       return {}
+    },
+    hasInteractiveRoot() {
+      return this.isSliced && this.interactiveRoot
+    },
+    hasActiveTextTruncate() {
+      return !this.wrap && this.activeTextTruncate !== null
+    },
+    hasSubject() {
+      return this.showSubject && !this.isSliced && this.document.hasSubject
+    },
+    isSliced() {
+      return this.slices.length > 1
     }
   },
   methods: {
@@ -130,18 +142,6 @@ export default {
     },
     hasContentSlice(slice) {
       return !this.isFirstSlice(slice) && this.isLastSlice(slice)
-    },
-    hasInteractiveRoot() {
-      return this.isSliced && this.interactiveRoot
-    },
-    hasActiveTextTruncate() {
-      return !this.wrap && this.activeTextTruncate !== null
-    },
-    hasSubject() {
-      return this.showSubject && !this.isSliced() && this.document.hasSubject
-    },
-    isSliced() {
-      return this.slices.length > 1
     }
   }
 }
