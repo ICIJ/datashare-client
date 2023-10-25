@@ -33,7 +33,7 @@ export default {
     ...mapGetters('insights', ['instantiatedWidgets'])
   },
   watch: {
-    name(name) {
+    name() {
       this.$store.commit('insights/project', this.name)
     }
   },
