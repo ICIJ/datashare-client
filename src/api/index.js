@@ -1,4 +1,4 @@
-import { isNull, join, map, omitBy, replace, trim, toLower } from 'lodash'
+import { isNull, join, map, omitBy, replace, toLower, trim } from 'lodash'
 
 const Method = Object.freeze({
   POST: 'POST',
@@ -162,9 +162,28 @@ export class Api {
     batchDate = null,
     publishState = null
   ) {
-    const data = { from, size, sort, order, query, field, project, state, batchDate, publishState }
-    return this.sendActionAsText('/api/batch/search', { method: Method.POST, data })
+    const searchParams = new URLSearchParams()
+
+    const queryData = {
+      from,
+      size,
+      sort,
+      order,
+      query,
+      field,
+      project: project.length ?? null,
+      state: state.length ?? null,
+      batchDate,
+      publishState
+    }
+    for (const q in queryData) {
+      if (queryData[q]) {
+        searchParams.append(q, queryData[q])
+      }
+    }
+    return this.sendActionAsText('/api/batch/search?' + searchParams, { method: Method.GET })
   }
+
   getBatchSearchResults(
     batchId,
     from = 0,
