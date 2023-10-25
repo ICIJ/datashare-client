@@ -47,13 +47,13 @@ export default {
 .project-view-insights {
   &__container {
     margin: $spacer-lg auto;
-
     .row {
       margin-right: $spacer-xxs;
       margin-left: $spacer-xxs;
 
       & > .col,
       & > [class*='col-'] {
+        min-width: 0;
         padding-right: $spacer-xxs;
         padding-left: $spacer-xxs;
       }
@@ -65,6 +65,10 @@ export default {
       margin-bottom: $spacer-xs;
       min-height: calc(100% - #{$spacer-xs});
       position: relative;
+
+      & > * {
+        min-width: 0;
+      }
     }
   }
 }
