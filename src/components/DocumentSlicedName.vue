@@ -15,7 +15,7 @@
         class="document-sliced-name__item"
         :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }"
       >
-        <span v-if="isMiddleSlice(slice)">&nbsp;…&nbsp;</span>
+        <span v-if="isMiddleSlice(slice)" class="text-nowrap"> … </span>
         <span v-else-if="hasContentSlice(slice)" class="d-inline-flex flex-row align-items-end">
           <span class="document-sliced-name__item__short-id">
             {{ slice }}
