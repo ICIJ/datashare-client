@@ -227,7 +227,6 @@ export class Api {
   deleteUserHistoryEvent(id) {
     return this.sendAction('/api/users/me/history/event', { method: Method.DELETE, params: { id } })
   }
-
   setMarkAsRecommended(project, data) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: Method.POST, data })
   }
@@ -239,6 +238,10 @@ export class Api {
   }
   getRecommendationsByProject(project) {
     return this.sendAction('/api/users/recommendations', { method: Method.GET, params: { project } })
+  }
+  getDocumentUserRecommendations(from, size, project) {
+    const params = { from, size, project }
+    return this.sendAction('/api/document-user-recommendation/', { method: Method.GET, params })
   }
   getDocumentsRecommendedBy(project, users = []) {
     const userids = join(users)
