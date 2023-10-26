@@ -665,7 +665,7 @@
     "state": "State",
     "seeError": "See error",
     "date": "Date",
-    "nbResults": "Number of results",
+    "nbResults": "Results",
     "query": "no queries | 1 query | {count} queries",
     "clearFilters": "Clear filters",
     "delete": "Delete batch search",

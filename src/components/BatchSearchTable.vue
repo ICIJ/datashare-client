@@ -17,6 +17,9 @@
       thead-tr-class="batch-search-table__head text-nowrap"
       @sort-changed="sortChanged"
     >
+      <template #table-colgroup="scope">
+        <col v-for="field in scope.fields" :key="field.key" :style="fieldStyle(field.key)" />
+      </template>
       <template #table-busy>
         <content-placeholder v-for="index in 3" :key="index" class="p-3" :rows="placeholderRows" />
       </template>
@@ -69,7 +72,7 @@
         <p class="m-0 text-muted small">{{ item.description }}</p>
       </template>
       <template #cell(queries)="{ item }">
-        <span class="batch-search-table__item__queries">
+        <span class="batch-search-table__item__queries text-nowrap">
           {{ item.formatNbQueries }}
         </span>
       </template>
@@ -88,14 +91,16 @@
         </task-item-status>
       </template>
       <template #cell(date)="{ item }">
-        <span :title="item.dateTitle">{{ item.dateContent }}</span>
+        <span v-b-tooltip :title="item.dateTitle" class="text-nowrap">{{ item.dateContent }}</span>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #cell(user.id)="{ item }">
         <user-display v-if="item.hasUser" :username="item.userId" style="vertical-align: center" />
       </template>
       <template #cell(nbResults)="{ item }">
-        <span class="batch-search-table__item__results">{{ item.formatNbResults }}</span>
+        <span class="batch-search-table__item__results text-nowrap">
+          {{ item.formatNbResults }}
+        </span>
       </template>
       <template #cell(published)="{ item }">
         {{ item.isPublished }}
@@ -108,7 +113,6 @@
         </span>
       </template>
     </b-table>
-
     <b-pagination-nav
       v-if="numberOfPages > 1"
       :link-gen="linkGen"
@@ -131,7 +135,7 @@ import UserDisplay from '@/components/UserDisplay'
 import settings from '@/utils/settings'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
-import { humanLongDate, humanShortDate } from '@/filters/humanDate'
+import { humanLongDate, fromNow } from '@/filters/humanDate'
 
 const BATCHSEARCH_STATUS_VALUE = Object.freeze({
   PUBLISHED: '1',
@@ -181,7 +185,7 @@ export default {
           ...batchSearch,
           queries: this.$n(batchSearch.queries),
           dateTitle: humanLongDate(batchSearch.date, this.$i18n.locale),
-          dateContent: humanShortDate(batchSearch.date, this.$i18n.locale),
+          dateContent: fromNow(batchSearch.date, this.$i18n.locale),
           userId: batchSearch.user?.id,
           hasUser: !!batchSearch.user,
           formatNbQueries: this.$n(batchSearch.nbQueries),
@@ -218,12 +222,6 @@ export default {
           name: 'query'
         },
         {
-          key: 'date',
-          label: this.$t('batchSearch.date'),
-          sortable: true,
-          name: 'batch_date'
-        },
-        {
           key: 'nbResults',
           label: this.$t('batchSearch.nbResults'),
           sortable: true,
@@ -235,6 +233,12 @@ export default {
           sortable: true,
           name: 'published'
         }),
+        {
+          key: 'date',
+          label: this.$t('batchSearch.date'),
+          sortable: true,
+          name: 'batch_date'
+        },
         this.withProjectsField({
           key: 'projects',
           label: this.$t('batchSearch.projects'),
@@ -485,6 +489,13 @@ export default {
         sort: this.fieldNameByKey(ctx.sortBy),
         order: ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
       }
+    },
+    fieldStyle(fieldKey) {
+      const styles = {
+        name: { width: 'auto', wordWrap: 'break-word' },
+        projects: { width: '200px' }
+      }
+      return styles[fieldKey] ?? {}
     },
     fieldNameByKey(fieldKey) {
       return find(this.fields, (item) => item.key === fieldKey)?.name

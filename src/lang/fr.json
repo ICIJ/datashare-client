@@ -667,7 +667,7 @@
     "state": "Status",
     "seeError": "Voir l'erreur",
     "date": "Date",
-    "nbResults": "Results",
+    "nbResults": "Résultats",
     "query": "pas de recherche | 1 recherche | {count} recherches",
     "clearFilters": "Effacer les filtres",
     "delete": "Supprimer la recherche en lot",
