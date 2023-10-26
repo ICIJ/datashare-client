@@ -75,6 +75,13 @@ export default {
     usernamePipeline: {
       type: String,
       default: 'user-display-username'
+    },
+    /**
+     * Move the avatar after the username
+     */
+    flip: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -103,6 +110,11 @@ export default {
     userDisplayStyle() {
       return {
         '--avatar-height': this.avatarHeight
+      }
+    },
+    userDisplayClass() {
+      return {
+        'user-display--flip': this.flip
       }
     },
     usernameTag() {
@@ -153,9 +165,14 @@ export default {
 </script>
 
 <template>
-  <component :is="tag" class="user-display d-inline-flex align-items-center" :style="userDisplayStyle">
+  <component
+    :is="tag"
+    class="user-display d-inline-flex align-items-center"
+    :style="userDisplayStyle"
+    :class="userDisplayClass"
+  >
     <template v-if="showAvatar">
-      <img class="user-display__avatar mr-2 rounded-circle" :src="avatarSrc" :alt="avatarAlt" loading="lazy" />
+      <img class="user-display__avatar rounded-circle" :src="avatarSrc" :alt="avatarAlt" loading="lazy" />
     </template>
     <component
       :is="usernameTag"
@@ -179,8 +196,23 @@ export default {
 .user-display {
   --avatar-height: 1.75em;
 
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &--flip {
+    flex-direction: row-reverse;
+  }
+
   &__avatar {
     height: var(--avatar-height);
+    margin-right: $spacer-xxs;
+  }
+
+  &--flip &__avatar {
+    margin-right: 0;
+    margin-left: $spacer-xxs;
   }
 }
 </style>
