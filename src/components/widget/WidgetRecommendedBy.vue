@@ -12,25 +12,37 @@
         <a
           v-for="({ document, href, user, creationDate }, i) in items"
           :key="i"
-          class="list-group-item list-group-item-action widget__list__item d-flex align-items-center flex-truncate"
+          class="list-group-item list-group-item-action widget__list__item d-flex align-items-start flex-truncate"
           :href="href"
         >
           <div v-if="!widget.hideThumbnails && widget.cols >= 6" class="d-none d-md-block flex-shrink-0">
-            <document-thumbnail :document="document" crop lazy class="mr-3" />
+            <document-thumbnail :document="document" crop lazy class="mt-1 mr-3" />
           </div>
           <div class="flex-grow-1">
-            <div class="widget__list__item__label d-flex align-items-start mb-1">
-              <document-sliced-name wrap :document="document" class="text-primary" />
-              <div class="ml-auto pl-1 d-flex align-items-center text-muted flex-shrink-0">
-                <user-display :username="user.id" hide-link class="text-nowrap" />
+            <div class="widget__list__item__heading d-flex align-items-start">
+              <document-sliced-name
+                wrap
+                :document="document"
+                class="widget__list__item__heading__name text-primary py-1"
+              />
+              <div
+                class="widget__list__item__heading__meta ml-auto py-1 pl-3 d-flex align-items-center text-muted flex-shrink-0"
+              >
                 <span
                   v-if="creationDate"
                   v-b-tooltip
-                  class="ml-1 text-nowrap"
+                  class="widget__list__item__heading__meta__creation-date text-nowrap d-flex"
                   :title="creationDate | humanLongDate($i18n.locale)"
                 >
-                  · {{ creationDate | fromNow($i18n.locale, true) }}
+                  {{ creationDate | fromNow($i18n.locale, true) }}
                 </span>
+                <user-display
+                  :username="user.id"
+                  avatar-height="1em"
+                  flip
+                  hide-link
+                  class="widget__list__item__heading__meta__user text-nowrap"
+                />
               </div>
             </div>
             <div class="widget__list__item__path text-muted text-truncate">
@@ -191,6 +203,19 @@ export default {
   .widget__list {
     max-height: 400px;
     overflow: auto;
+
+    &__item {
+      &__heading {
+        &__meta {
+          &__creation-date {
+            &:after {
+              content: '·';
+              margin: 0 $spacer-xxs;
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
