@@ -5,7 +5,7 @@
       <batch-search-actions :batch-search="batchSearch" />
     </div>
     <div class="card-footer p-0 overflow-hidden">
-      <p v-if="hasDescription" class="batch-search-results-details__info__description m-0 border-bottom">
+      <p v-if="hasDescription" class="batch-search-results-details__info__description m-0 p-3 border-bottom">
         {{ batchSearch.description }}
       </p>
       <dl class="batch-search-results-details__info">
