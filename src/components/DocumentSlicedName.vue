@@ -150,10 +150,11 @@ export default {
 <style lang="scss" scoped>
 .document-sliced-name {
   display: inline-block;
-  padding: 0.1em 0;
+  word-break: break-all;
 
   &--truncate:not(&--wrap) {
     white-space: nowrap;
+    word-break: keep-all;
   }
 
   &__item {
