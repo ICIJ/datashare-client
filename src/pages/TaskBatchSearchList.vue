@@ -79,7 +79,7 @@ export default {
 <style lang="scss" scoped>
 .task-batch-search-list__none__message {
   padding: 0.75em;
-  border: 1px solid #dee2e6;
-  background-color: white;
+  border: 1px solid $border-color;
+  background-color: $table-accent-bg;
 }
 </style>
