@@ -97,13 +97,15 @@ export default {
      * The selected document
      */
     document: {
-      type: Object
+      type: Object,
+      required: true
     },
     /**
      * The parent document (if any)
      */
     parentDocument: {
-      type: Object
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
