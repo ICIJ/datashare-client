@@ -378,7 +378,7 @@ describe('Datashare backend client', () => {
   it('should return a backend response to mappings', async () => {
     const projectIds = ['prj1', 'prj2']
     const fields = ['title', 'title2']
-    json = await api.getMappings(projectIds, fields)
+    json = await api.getMappingsByFields(projectIds, fields)
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith({
       url: Api.getFullUrl(`/api/index/search/prj1,prj2/_mapping/field/title,title2`),

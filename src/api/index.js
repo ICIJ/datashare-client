@@ -309,7 +309,7 @@ export class Api {
     return this.sendAction('/api/settings/text/languages')
   }
 
-  getMappings(projectIds, fields) {
+  getMappingsByFields(projectIds, fields) {
     return this.sendActionAsText(`/api/index/search/${projectIds}/_mapping/field/${fields}`, { method: Method.GET })
   }
 

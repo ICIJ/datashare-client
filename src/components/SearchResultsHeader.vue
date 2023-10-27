@@ -226,7 +226,9 @@ export default {
   },
   async created() {
     // We need to load all mappings to filter out non-sortable fields
-    this.mappings = await this.$core.api.getMappings(this.projectIds, this.fields)
+    this.mappings = await this.$core.api.getMappingsByFields(this.projectIds, this.fields)
+  },
+  async mounted() {
     // Force page to scroll top at each load
     // Specially for pagination
     document.body.scrollTop = document.documentElement.scrollTop = 0
