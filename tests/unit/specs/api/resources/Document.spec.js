@@ -185,4 +185,24 @@ describe('Document', () => {
 
     expect(doc.basename).toBe('specific.file')
   })
+
+  it('retrieve metadata as query parameter', () => {
+    const doc = new Document({
+      _id: '01234567890123456789',
+      _source: {
+        path: '/this/is/a/specific.file',
+        contentType: 'application/json; twint',
+        metadata: {
+          tika_metadata_dc_title: 'This is a nice tweet title',
+          tika_metadata_resourcename: '=?and?something?else?but a resourceName?='
+        },
+        extractionLevel: 1
+      }
+    })
+    expect(doc.metaAsQueryParam('_id', '01234567890123456789')).toBe('_id:"01234567890123456789"')
+    expect(doc.metaAsQueryParam('path', '/this/is/a/specific.file')).toBe('path:"/this/is/a/specific.file"')
+    expect(doc.metaAsQueryParam('tika_metadata_dc_title', 'This is a nice tweet title')).toBe(
+      'metadata.tika_metadata_dc_title:"This is a nice tweet title"'
+    )
+  })
 })
