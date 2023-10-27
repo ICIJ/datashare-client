@@ -319,7 +319,7 @@ export default {
     :deep(.input-group) {
       filter: drop-shadow(0 0.3em 0.6em rgba(black, 0.2));
       transition: transform 0.2s;
-      transform: translateY(-0.25em);
+      transform: translateY(-4px);
     }
   }
 
