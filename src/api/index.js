@@ -171,8 +171,8 @@ export class Api {
       order,
       query,
       field,
-      project: project.length ?? null,
-      state: state.length ?? null,
+      project: project.length ? project : null,
+      state: state.length ? state : null,
       batchDate,
       publishState
     }
