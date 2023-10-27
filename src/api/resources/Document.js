@@ -40,7 +40,9 @@ export default class Document extends EsDoc {
     return `${name}:"${value}"`
   }
   metaAsQueryParam(name, defaultValue) {
-    const rawName = name in this.raw ? name : `metadata.tika_metadata_${this.shortMetaName(name)}`
+    const rawName =
+      name in this.raw || name in this.raw?._source ? name : `metadata.tika_metadata_${this.shortMetaName(name)}`
+
     return this.valueAsQueryParam(rawName, this.meta(name, defaultValue))
   }
   shortMetaName(name) {

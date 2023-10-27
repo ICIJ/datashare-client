@@ -195,19 +195,19 @@ export default {
           value: this.documentDirname
         },
         {
-          name: 'metadata.tika_metadata_resourcename',
+          name: 'tika_metadata_resourcename',
           label: this.$t('document.name'),
           trClass: 'document__content__basename',
           value: this.document.meta('resourcename')
         },
         {
-          name: 'metadata.tika_metadata_dcterms_created',
+          name: 'tika_metadata_dcterms_created',
           label: this.$t('document.creationDate'),
           trClass: 'document__content__creation-date',
           value: this.document.meta('dcterms_created')
         },
         {
-          name: 'metadata.tika_metadata_dc_creator',
+          name: 'tika_metadata_dc_creator',
           label: this.$t('document.author'),
           trClass: 'document__content__author',
           value: this.document.meta('dc_creator')
@@ -233,7 +233,7 @@ export default {
           rawValue: this.document.source.language
         },
         {
-          name: 'metadata.tika_metadata_content_type',
+          name: 'tika_metadata_content_type',
           label: this.$t('document.contentType'),
           trClass: 'document__content__content-type',
           value: this.getDocumentTypeLabel(this.document.source.contentType),
@@ -253,7 +253,7 @@ export default {
           rawValue: this.document.source.extractionLevel
         },
         {
-          name: 'metadata.tika_metadata_message_raw_header_thread_index',
+          name: 'tika_metadata_message_raw_header_thread_index',
           label: this.$t('document.threadIndex'),
           trClass: 'document__content__thread',
           value: this.document.threadIndex
