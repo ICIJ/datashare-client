@@ -665,7 +665,7 @@
     "state": "Status",
     "seeError": "Fehler anzeigen",
     "date": "Datum",
-    "nbResults": "Anzahl der Ergebnisse",
+    "nbResults": "Results",
     "query": "keine Abfragen | 1 Abfrage | {count} Abfragen",
     "clearFilters": "Filter zurücksetzen",
     "delete": "Batch-Suche löschen",
@@ -913,10 +913,14 @@
   },
   "widget": {
     "noData": "Keine Daten",
+    "noRecommendations": "No recommendations",
     "noFolders": "Keine Ordner",
     "noEntities": "No named entities",
     "languages": {
       "title": "Languages"
+    },
+    "recommendedBy": {
+      "title": "Latest recommended documents"
     },
     "contentTypes": {
       "title": "File types"
@@ -1026,6 +1030,7 @@
     "docs": "Dok | Doks",
     "datadir": "Startseite",
     "all": "Alle",
+    "searchPath": "Search in this directory",
     "includingIndividualDocuments": "einschließlich individueller Dokumente"
   },
   "quickItemNav": {
