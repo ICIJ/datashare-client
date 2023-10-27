@@ -39,13 +39,16 @@
                 tag="li"
               ></hook>
               <li :key="tab.name" class="document__header__nav__item list-inline-item" :title="$t(tab.label)">
-                <a :class="{ active: isTabActive(tab.name) }" @click="$root.$emit('document::tab', tab.name)">
+                <router-link
+                  :class="{ active: isTabActive(tab.name) }"
+                  :to="{ query: { q: $route.query.q, tab: tab.name } }"
+                >
                   <hook :name="`document.header.nav.${tab.name}:before`"></hook>
                   <fa v-if="tab.icon" :icon="tab.icon" class="mr-2"></fa>
                   <component :is="tab.labelComponent" v-if="tab.labelComponent"></component>
                   <template v-else>{{ $t(tab.label) }}</template>
                   <hook :name="`document.header.nav.${tab.name}:after`"></hook>
-                </a>
+                </router-link>
               </li>
               <hook
                 :key="`hook.${tab.name}:after`"
@@ -192,6 +195,9 @@ export default {
     }
   },
   watch: {
+    $route({ query }) {
+      this.activateTab(query.tab ?? 'extracted-text')
+    },
     doc() {
       return this.setTabs()
     }
@@ -202,8 +208,6 @@ export default {
     }
     await this.getDownloadStatus()
     await this.setTabs()
-    // Listen for event to switch tab
-    this.$root.$on('document::tab', this.activateTab)
   },
   methods: {
     async getDoc(params = { id: this.id, routing: this.routing, index: this.index }) {
