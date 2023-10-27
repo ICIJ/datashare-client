@@ -13,7 +13,11 @@ describe('SearchResultsTable.vue', () => {
 
   beforeAll(() => {
     router = new VueRouter()
-    api = { starDocuments: jest.fn(), elasticsearch: es, sendAction: jest.fn() }
+    api = {
+      starDocuments: jest.fn(),
+      elasticsearch: es,
+      getMappingsByFields: jest.fn()
+    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue

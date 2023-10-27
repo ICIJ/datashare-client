@@ -14,7 +14,7 @@ describe('SearchResultsHeader.vue', () => {
     api = {
       runBatchDownload: jest.fn(),
       elasticsearch: es,
-      getMappings: jest.fn()
+      getMappingsByFields: jest.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
