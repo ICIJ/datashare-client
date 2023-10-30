@@ -196,9 +196,13 @@ export default {
   },
   watch: {
     $route: {
-      immediate: true,
       handler({ query }) {
         this.activateTab(query.tab ?? 'extracted-text')
+      }
+    },
+    visibleTabs(tabs) {
+      if (tabs.length) {
+        this.activateTab(this.$route.query.tab ?? 'extracted-text')
       }
     },
     doc() {
