@@ -43,7 +43,7 @@ export const router = {
                 path: 'all/filter-documents'
               },
               {
-                title: 'Search with pperators',
+                title: 'Search with operators',
                 path: 'all/search-with-operators'
               },
               {
