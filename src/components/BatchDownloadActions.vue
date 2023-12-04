@@ -7,6 +7,12 @@ export default {
     /**
      * Name of the batch download's task
      */
+    id: {
+      type: String
+    },
+    /**
+     * Name of the batch download's task
+     */
     name: {
       type: String
     },
@@ -49,7 +55,7 @@ export default {
     async deleteTask() {
       try {
         this.closePopover()
-        await this.$core.api.deleteTask(this.name)
+        await this.$core.api.deleteTask(this.id)
         this.notifyDeleteSucceed()
       } catch (error) {
         this.notifyDeleteFailed(error)
