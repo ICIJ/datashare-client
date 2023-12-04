@@ -10,6 +10,7 @@ describe('TaskBatchDownloadList.vue', () => {
   let i18n, localVue, wrapper, store, wait, api
   const BatchDownloadList = [
     {
+      id: 'BatchDownloadTask_01_id',
       name: 'BatchDownloadTask_01_name',
       result: 'BatchDownloadTask_01_result',
       progress: 1,
@@ -42,6 +43,7 @@ describe('TaskBatchDownloadList.vue', () => {
       }
     },
     {
+      id: 'BatchDownloadTask_02_id',
       name: 'BatchDownloadTask_02_name',
       result: 'BatchDownloadTask_02_result',
       progress: 1,
