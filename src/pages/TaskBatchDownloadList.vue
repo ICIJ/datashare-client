@@ -15,14 +15,14 @@
             }"
           />
         </template>
-        <template #default="{ item: { name, properties, state } }">
+        <template #default="{ item: { id, name, properties, state } }">
           <div
             :id="'task-batch-download-list__item--' + properties.batchDownload.uuid"
             class="d-flex task-batch-download-list__item"
           >
             <a
               v-if="properties.batchDownload.exists"
-              :href="downloadResultsUrl(name)"
+              :href="downloadResultsUrl(id)"
               class="task-batch-download-list__item__link"
               target="_blank"
             >
@@ -40,6 +40,7 @@
             </span>
             <batch-download-actions
               class="ml-auto"
+              :id="id"
               :name="name"
               :state="state"
               :value="properties.batchDownload"
