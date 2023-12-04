@@ -8,7 +8,8 @@ export default {
      * Name of the batch download's task
      */
     id: {
-      type: String
+      type: String,
+      required: true
     },
     /**
      * Name of the batch download's task
