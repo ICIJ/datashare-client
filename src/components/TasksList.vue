@@ -104,11 +104,7 @@ export default {
       return item.name.includes('BatchDownload') && item.properties.batchDownload.encrypted
     },
     hasZipSize(item) {
-      return (
-        item.name.includes('BatchDownload') &&
-        item.state !== 'ERROR' &&
-        item.result?.size !== undefined
-      )
+      return item.name.includes('BatchDownload') && item.state !== 'ERROR' && item.result?.size !== undefined
     },
     async stopPendingTasks() {
       await this.$store.dispatch('indexing/stopPendingTasks')
