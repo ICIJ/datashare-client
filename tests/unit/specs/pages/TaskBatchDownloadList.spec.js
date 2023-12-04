@@ -12,7 +12,10 @@ describe('TaskBatchDownloadList.vue', () => {
     {
       id: 'BatchDownloadTask_01_id',
       name: 'BatchDownloadTask_01_name',
-      result: 'BatchDownloadTask_01_result',
+      result: {
+        file: 'BatchDownloadTask_01_result',
+        size: 1024
+      },
       progress: 1,
       state: 'DONE',
       user: {
@@ -27,7 +30,6 @@ describe('TaskBatchDownloadList.vue', () => {
           encrypted: false,
           filename: 'filename_01_2021-01-01T12:45:25',
           query: 'query_01',
-          zipSize: 150,
           exists: true,
           project: {
             name: 'project',
@@ -45,7 +47,6 @@ describe('TaskBatchDownloadList.vue', () => {
     {
       id: 'BatchDownloadTask_02_id',
       name: 'BatchDownloadTask_02_name',
-      result: 'BatchDownloadTask_02_result',
       progress: 1,
       state: 'DONE',
       user: {
@@ -75,8 +76,8 @@ describe('TaskBatchDownloadList.vue', () => {
       }
     },
     {
+      id: 'BatchDownloadTask_03_id',
       name: 'BatchDownloadTask_03_name',
-      result: 'BatchDownloadTask_03_result',
       progress: 0.5,
       state: 'RUNNING',
       user: {
@@ -141,9 +142,9 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('should sort the list with pending tasks first then sort by datetime descending', async () => {
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(1)').text()).toContain('BatchDownloadTask_03_name')
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(2)').text()).toContain('BatchDownloadTask_01_name')
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3)').text()).toContain('BatchDownloadTask_02_name')
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(1)').text()).toContain('BatchDownloadTask_03_id')
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(2)').text()).toContain('BatchDownloadTask_01_id')
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3)').text()).toContain('BatchDownloadTask_02_id')
   })
 
   it('should display the zip size if there is any', async () => {

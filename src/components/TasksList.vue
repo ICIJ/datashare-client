@@ -28,7 +28,7 @@
         </div>
         <div class="d-flex align-items-center">
           <b-badge variant="light" class="tasks-list__tasks__item__id my-1">
-            {{ item.name | taskToId }}
+            {{ item.id }}
           </b-badge>
           <template v-if="item.state === 'RUNNING' && stoppable">
             <span class="px-1"> – </span>
@@ -46,7 +46,7 @@
           {{ $t('tasksList.encrypted') }}
         </div>
         <div v-if="hasZipSize(item)" class="tasks-list__tasks__item__size m-0 font-weight-bold">
-          {{ humanSize(item.properties.batchDownload.zipSize, false, $t('human.size')) | taskToId }}
+          {{ humanSize(item.result.size, false, $t('human.size')) | taskToId }}
         </div>
       </template>
       <template #table-colgroup="{ fields }">
@@ -107,7 +107,7 @@ export default {
       return (
         item.name.includes('BatchDownload') &&
         item.state !== 'ERROR' &&
-        item.properties.batchDownload.zipSize !== undefined
+        item.result?.size !== undefined
       )
     },
     async stopPendingTasks() {
