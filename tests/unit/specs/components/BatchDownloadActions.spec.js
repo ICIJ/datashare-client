@@ -1,8 +1,8 @@
-import {flushPromises} from 'tests/unit/tests_utils'
-import {createLocalVue, mount} from '@vue/test-utils'
+import { flushPromises } from 'tests/unit/tests_utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 
 import BatchDownloadActions from '@/components/BatchDownloadActions'
-import {Core} from '@/core'
+import { Core } from '@/core'
 
 describe('BatchDownloadActions.vue', () => {
   const api = { runBatchDownload: jest.fn(), deleteTask: jest.fn() }
