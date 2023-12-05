@@ -23,7 +23,7 @@
       <template #cell(name)="{ item }">
         <div class="tasks-list__tasks__item__name m-0 font-weight-bold">
           <slot v-bind="{ item }">
-            {{ item.name | taskToName }}
+            {{ item.name }}
           </slot>
         </div>
         <div class="d-flex align-items-center">
@@ -46,7 +46,7 @@
           {{ $t('tasksList.encrypted') }}
         </div>
         <div v-if="hasZipSize(item)" class="tasks-list__tasks__item__size m-0 font-weight-bold">
-          {{ humanSize(item.result.size, false, $t('human.size')) | taskToId }}
+          {{ humanSize(item.result.size, false, $t('human.size')) }}
         </div>
       </template>
       <template #table-colgroup="{ fields }">
@@ -66,14 +66,6 @@ export default {
   name: 'TasksList',
   components: {
     EllipseStatus
-  },
-  filters: {
-    taskToName(taskName) {
-      return taskName.split('.').pop().split('@').shift()
-    },
-    taskToId(taskName) {
-      return taskName.split('@').pop()
-    }
   },
   props: {
     /**
