@@ -1,33 +1,34 @@
-import { flushPromises } from 'tests/unit/tests_utils'
-import { createLocalVue, mount } from '@vue/test-utils'
+import {flushPromises} from 'tests/unit/tests_utils'
+import {createLocalVue, mount} from '@vue/test-utils'
 
 import BatchDownloadActions from '@/components/BatchDownloadActions'
-import { Core } from '@/core'
+import {Core} from '@/core'
 
 describe('BatchDownloadActions.vue', () => {
   const api = { runBatchDownload: jest.fn(), deleteTask: jest.fn() }
   const { i18n, localVue } = Core.init(createLocalVue(), api).useAll()
   const projects = [{ name: 'project' }]
 
-  function mockRunBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
+  function mockRunBatchDownload(id = 'id', name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
     const data = {
+      id,
       name,
       state,
       user: batchDownload.user,
       properties: { batchDownload }
     }
     api.runBatchDownload.mockResolvedValue(data)
-    return { batchDownload, name, state }
+    return { value: batchDownload, id, name, state }
   }
 
-  function mockDeleteBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
+  function mockDeleteBatchDownload(id = 'id', name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
     api.deleteTask.mockResolvedValue(true)
-    return { batchDownload, name, state }
+    return { value: batchDownload, id, name, state }
   }
 
-  function mockFailToDeleteBatchDownload(name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
+  function mockFailToDeleteBatchDownload(id = 'id', name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
     api.deleteTask.mockRejectedValue(new Error(''))
-    return { batchDownload, name, state }
+    return { value: batchDownload, id, name, state }
   }
 
   beforeEach(async () => {
@@ -38,8 +39,7 @@ describe('BatchDownloadActions.vue', () => {
   describe('relaunchTask method', () => {
     it('should emit an error when the relaunch fails', async () => {
       const query = ';ERRORED;'
-      const { batchDownload: value } = mockRunBatchDownload('erroredTask', { projects, query })
-      const propsData = { value }
+      const propsData = mockRunBatchDownload('id', 'erroredTask', { projects, query })
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.emitted().relaunchFailed).toBeUndefined()
       await wrapper.vm.relaunchTask()
@@ -48,8 +48,7 @@ describe('BatchDownloadActions.vue', () => {
 
     it('should emit a success when the relaunch', async () => {
       const query = '{ }'
-      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
-      const propsData = { value }
+      const propsData = mockRunBatchDownload('id', 'task', { projects, query })
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.emitted().relaunched).toBeUndefined()
       await wrapper.vm.relaunchTask()
@@ -58,16 +57,14 @@ describe('BatchDownloadActions.vue', () => {
 
     it('should call the API with a parsed query', async () => {
       const query = '{ "foo": "bar" }'
-      const { batchDownload: value } = mockRunBatchDownload('task', { projects, query })
-      const propsData = { value }
+      const propsData = mockRunBatchDownload('id', 'task', { projects, query })
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       await wrapper.vm.relaunchTask()
       expect(api.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ query: { foo: 'bar' } }))
     })
 
     it('should call the API with a list of projects', async () => {
-      const { batchDownload: value } = mockRunBatchDownload('task', { projects })
-      const propsData = { value }
+      const propsData = mockRunBatchDownload('id', 'task', { projects })
       const projectIds = ['project']
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       await wrapper.vm.relaunchTask()
@@ -77,8 +74,7 @@ describe('BatchDownloadActions.vue', () => {
 
   describe('deleteTask method', () => {
     it('should emit an error when the delete fails', async () => {
-      const { name, batchDownload: value } = mockFailToDeleteBatchDownload('failing')
-      const propsData = { name, value }
+      const propsData = mockFailToDeleteBatchDownload('id', 'failing')
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.emitted().deleteFailed).toBeUndefined()
       await wrapper.vm.deleteTask()
@@ -86,8 +82,7 @@ describe('BatchDownloadActions.vue', () => {
     })
 
     it('should emit a success when the delete', async () => {
-      const { name, batchDownload: value } = mockDeleteBatchDownload('successful')
-      const propsData = { name, value }
+      const propsData = mockDeleteBatchDownload('id', 'successful')
       const wrapper = mount(BatchDownloadActions, { propsData, i18n, localVue })
       expect(wrapper.emitted().deleted).toBeUndefined()
       await wrapper.vm.deleteTask()
