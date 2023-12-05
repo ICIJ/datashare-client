@@ -5,7 +5,7 @@ export default {
   name: 'BatchDownloadActions',
   props: {
     /**
-     * Name of the batch download's task
+     * id of the batch download's task
      */
     id: {
       type: String,
