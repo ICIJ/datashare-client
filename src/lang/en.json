@@ -660,6 +660,7 @@
     "proximitySearches": "Proximity searches",
     "proximitySearchesDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
     "fileTypes": "File types",
+    "tags": "Tags",
     "path": "Path",
     "queries": "Queries",
     "state": "State",
