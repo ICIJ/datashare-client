@@ -400,6 +400,11 @@ export default {
     this.$set(this, 'selectedProjects', this.defaultSelectedProjects)
   },
   methods: {
+    createQueryBody() {
+      const tagFilter = new FilterText({name: "tags", key: "tags"})
+      this.$set(tagFilter, 'values', this.tags)
+      return this.$core.api.elasticsearch.rootSearch([tagFilter], '<query>').build()
+    },
     selectFileType(fileType = null) {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },

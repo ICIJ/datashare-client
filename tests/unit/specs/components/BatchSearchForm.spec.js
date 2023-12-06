@@ -313,6 +313,43 @@ describe('BatchSearchForm.vue', () => {
     })
   })
 
+  describe('Generate ES query body',  () =>  {
+    it('should build query body', async() => {
+      const queryBody = wrapper.vm.createQueryBody()
+      expect(queryBody).toEqual(
+        {
+          "query": {
+            "bool":
+              {
+                "must": [
+                  { "match_all": {} },
+                  { "bool": { "should": [{"query_string": {"query": "<query>"}}] } },
+                  { "match": { "type": "Document"}}
+                ]
+              }
+          }
+      })
+    })
+
+    it('should build query with listed tags when they are selected', async() => {
+      await wrapper.setData({ tags: ['tag_01', 'tag_02']})
+      const queryBody = wrapper.vm.createQueryBody()
+      expect(queryBody).toEqual(
+        {
+        "query": {
+          "bool":
+            {
+              "filter": { "terms": { "tags": [ "tag_01", "tag_02" ]} },
+              "must": [
+                { "match_all": {} },
+                { "bool": { "should": [{"query_string": {"query": "<query>"}}] } },
+                { "match": { "type": "Document"}}
+              ]
+            }
+        }
+      })
+    })
+  })
 
 
   describe('buildTreeFromPaths', () => {
