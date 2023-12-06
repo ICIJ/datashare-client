@@ -169,6 +169,38 @@
                 </b-badge>
               </div>
             </b-form-group>
+            <b-form-group :label="$t('batchSearch.tags')" label-size="sm" class="batch-search-form__tags">
+              <b-overlay :show="$wait.is('load all tags')" opacity="0.6" rounded spinner-small>
+                <b-form-input
+                  ref="tag"
+                  v-model="tag"
+                  :disabled="$wait.is('load all tags')"
+                  autocomplete="off"
+                  @input="searchTags"
+                  @keydown.enter.prevent="searchTags"
+                ></b-form-input>
+              </b-overlay>
+              <selectable-dropdown
+                ref="suggestionTags"
+                class="batch-search-form__tags__suggestions"
+                :hide="!suggestionTags.length"
+                :items="suggestionTags"
+                @deactivate="hideSuggestionsTags"
+                @input="selectTag"
+                @click.native="searchTag"
+              />
+              <b-badge
+                v-for="(oneTag, index) in tags"
+                :key="oneTag.mime"
+                class="mt-2 mr-2 pl-1 batch-search-form__cursor"
+                pill
+                variant="warning"
+                @click.prevent="deleteTag(index)"
+              >
+                <fa icon="times-circle"></fa>
+                {{ oneTag }}
+              </b-badge>
+            </b-form-group>
           </b-collapse>
         </div>
         <div class="card-footer">
@@ -211,6 +243,7 @@ import Multiselect from 'vue-multiselect'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
+import {FilterText} from "@/store/filters";
 
 /**
  * A form to create a new batch search.
@@ -242,10 +275,13 @@ export default {
   data() {
     return {
       allFileTypes: [],
+      allTags: [],
       csvFile: null,
       description: '',
       fileType: '',
       fileTypes: [],
+      tag: '',
+      tags: [],
       selectedFuzziness: 0,
       name: '',
       path: this.$config.get('mountedDataDir') || this.$config.get('dataDir'),
@@ -254,9 +290,12 @@ export default {
       published: true,
       selectedProjects: [],
       selectedFileType: '',
+      selectedTag: '',
       selectedPaths: [],
+      excludeTags: false,
       showAdvancedFilters: false,
-      suggestionFileTypes: []
+      suggestionFileTypes: [],
+      suggestionTags: []
     }
   },
   computed: {
@@ -279,7 +318,7 @@ export default {
     },
     defaultSelectedProjects() {
       return filter(this.projectOptions, ({ name }) => {
-        // In case the store is not initalized yet,
+        // In case the store is not initialized yet,
         // all project are selected by default
         return get(this, '$store.state.search.indices', [name]).includes(name)
       })
@@ -317,7 +356,7 @@ export default {
     advancedFiltersIcon() {
       return this.showAdvancedFilters ? 'angle-down' : 'angle-right'
     },
-    fuse() {
+    fuseFileTypes() {
       const keys = ['extensions', 'label', 'mime']
       const options = {
         distance: 100,
@@ -325,7 +364,15 @@ export default {
         shouldSort: true
       }
       return new Fuse(this.allFileTypes, options)
+    },
+    fuseTags() {
+      const options = {
+        distance: 100,
+        shouldSort: true
+      }
+      return new Fuse(this.allTags, options)
     }
+
   },
   watch: {
     phraseMatch() {
@@ -334,13 +381,19 @@ export default {
     projects() {
       this.$set(this, 'fileType', '')
       this.$set(this, 'fileTypes', [])
+      this.$set(this, 'tag', '')
+      this.$set(this, 'tags', [])
       this.$set(this, 'paths', [])
       this.$set(this, 'allFileTypes', [])
+      this.$set(this, 'allTags', [])
       this.hideSuggestionsFileTypes()
+      this.hideSuggestionsTags()
       this.retrieveFileTypes()
+      this.retrieveTags()
     },
     showAdvancedFilters() {
       this.retrieveFileTypes()
+      this.retrieveTags();
     }
   },
   created() {
@@ -351,7 +404,7 @@ export default {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },
     searchFileTypes: throttle(function () {
-      const fileTypes = this.fuse.search(this.fileType).map(({ item }) => item)
+      const fileTypes = this.fuseFileTypes.search(this.fileType).map(({ item }) => item)
       const fileTypesWithoutSelection = filter(fileTypes, (item) => {
         return !includes(map(this.fileTypes, 'mime'), item.mime)
       })
@@ -394,6 +447,45 @@ export default {
         this.$wait.end('load all file types')
       }
     },
+    selectTag(tag = null) {
+      this.$set(this, 'selectedTag', tag || this.selectedTag)
+    },
+    searchTags: throttle(function () {
+      const tags = this.fuseTags.search(this.tag).map(({ item }) => item)
+      const tagsWithoutSelection = filter(tags, (item) => {
+        return !includes(this.tags, item)
+      })
+      this.$set(this, 'suggestionTags', tagsWithoutSelection)
+    }, 200),
+    searchTag() {
+      if (this.selectedTag) {
+        this.tags.push(this.selectedTag)
+        this.hideSuggestionsTags()
+        this.$set(this, 'tag', '')
+        if (this.$refs && this.$refs.tag) this.$refs.tag.focus()
+      }
+    },
+    hideSuggestionsTags() {
+      this.$set(this, 'suggestionTags', [])
+    },
+    async retrieveTags() {
+      if (this.showAdvancedFilters && isEmpty(this.allTags)) {
+        this.$wait.start('load all tags')
+        try {
+          const tags = await this.aggregate('tags', 'tags')
+          this.allTags.push(...tags)
+        } catch (e) {
+          this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveTags', this.projects?.length), {
+            noCloseButton: true,
+            variant: 'danger'
+          })
+        }
+        this.$wait.end('load all tags')
+      }
+    },
+    deleteTag(index) {
+      this.tags.splice(index, 1)
+    },
     setPaths() {
       this.$set(this, 'paths', this.selectedPaths)
       this.$set(this, 'path', this.$config.get('mountedDataDir') || this.$config.get('dataDir'))
@@ -406,11 +498,15 @@ export default {
       this.$set(this, 'description', '')
       this.$set(this, 'fileType', '')
       this.$set(this, 'fileTypes', [])
+      this.$set(this, 'tag', '')
+      this.$set(this, 'tags', [])
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'name', '')
       this.$set(this, 'paths', [])
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'selectedProjects', this.defaultSelectedProjects)
+      this.$set(this, 'selectedTags', []),
+      this.$set(this, 'excludeTags', false),
       this.$set(this, 'published', true)
       this.$set(this, 'showAdvancedFilters', false)
     },
