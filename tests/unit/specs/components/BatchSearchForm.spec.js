@@ -57,6 +57,7 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.find('.batch-search-form__phraseMatch').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__fuzziness').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__fileTypes').exists()).toBe(true)
+      expect(wrapper.find('.batch-search-form__tags').exists()).toBe(true)
       expect(wrapper.find('.batch-search-form__path').exists()).toBe(true)
     })
     it('should not display "Published" button', () => {
@@ -81,15 +82,18 @@ describe('BatchSearchForm.vue', () => {
     })
 
     describe('On project change', () => {
-      it('should reset fileType and path', async () => {
+      it('should reset fileType and tag', async () => {
         await wrapper.setData({ fileType: 'fileTypeTest' })
+        await wrapper.setData({ tag: 'tagTest' })
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.fileType).toBe('')
+        expect(wrapper.vm.tag).toBe('')
       })
 
-      it('should reset fileTypes and paths', async () => {
+      it('should reset fileTypes, tags and paths', async () => {
         await wrapper.setData({ fileTypes: ['fileType_01', 'fileType_02'] })
+        await wrapper.setData({ tags: ['tag_01', 'tag_02'] })
         await wrapper.setData({ paths: ['path_01', 'path_02'] })
         await wrapper.setData({ projects: [anotherProject] })
 
@@ -104,11 +108,20 @@ describe('BatchSearchForm.vue', () => {
         expect(wrapper.vm.allFileTypes).toEqual([])
       })
 
-      it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
+      it('should reset allTags', async () => {
+        await wrapper.setData({ allTags: ['tag_01', 'tag_02'] })
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.allTags).toEqual([])
+      })
+
+      it('should call hideSuggestionsFileTypes and hideSuggestionsTags', async () => {
         jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
+        jest.spyOn(wrapper.vm, 'hideSuggestionsTags')
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
+        expect(wrapper.vm.hideSuggestionsTags).toBeCalled()
       })
 
       it('should call retrieveFileTypes', async () => {
@@ -116,6 +129,13 @@ describe('BatchSearchForm.vue', () => {
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.retrieveFileTypes).toBeCalled()
+      })
+
+      it('should call retrieveTags', async () => {
+        jest.spyOn(wrapper.vm, 'retrieveTags')
+        await wrapper.setData({ projects: [anotherProject] })
+
+        expect(wrapper.vm.retrieveTags).toBeCalled()
       })
     })
   })
@@ -125,6 +145,8 @@ describe('BatchSearchForm.vue', () => {
     wrapper.setData({ description: 'This is a description' })
     wrapper.setData({ fileType: 'PDF' })
     wrapper.setData({ fileTypes: [{ label: 'PDF' }] })
+    wrapper.setData({ tag: 'foo' })
+    wrapper.setData({ tags: ['foo'] })
     wrapper.setData({ fuzziness: 2 })
     wrapper.setData({ name: 'Example' })
     wrapper.setData({ paths: ['This', 'is', 'a', 'multiple', 'paths'] })
@@ -139,6 +161,8 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.description).toBe('')
     expect(wrapper.vm.fileType).toBe('')
     expect(wrapper.vm.fileTypes).toEqual([])
+    expect(wrapper.vm.tag).toBe('')
+    expect(wrapper.vm.tags).toEqual([])
     expect(wrapper.vm.fuzziness).toBe(0)
     expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.paths).toEqual([])
@@ -236,6 +260,61 @@ describe('BatchSearchForm.vue', () => {
     })
   })
 
+  describe('Tags suggestions', () => {
+    it('should display suggestions', () => {
+      expect(wrapper.find('.batch-search-form__tags__suggestions').exists()).toBe(true)
+    })
+
+    it('should hide suggestions', () => {
+      wrapper.setData({ suggestionTags: ['suggestion_01', 'suggestion_02', 'suggestion_03'] })
+
+      wrapper.vm.hideSuggestionsTags()
+
+      expect(wrapper.vm.suggestionTags).toEqual([])
+    })
+
+    it('should filter tags', () => {
+      wrapper.setData({
+        tag: 'tag_0',
+        allTags: [
+          'tag_01',
+          'tag_02',
+          'another_03'
+        ]
+      })
+
+      wrapper.vm.searchTags()
+
+      expect(wrapper.vm.suggestionTags).toHaveLength(2)
+      expect(wrapper.vm.suggestionTags[0]).toBe('tag_01')
+      expect(wrapper.vm.suggestionTags[1]).toBe('tag_02')
+    })
+
+
+    it('should hide already selected tag from suggestions', () => {
+      wrapper.setData({ tags: ['tag_01'] })
+      wrapper.setData({ fileType: 'tag_0' })
+
+      wrapper.vm.searchTags()
+
+      expect(wrapper.vm.suggestionTags).toHaveLength(0)
+    })
+
+    it('should set the clicked item in tags', () => {
+      wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
+      wrapper.setData({ tags: ['tag_01'] })
+      wrapper.setData({ selectedTag: 'tag_02' })
+      wrapper.vm.searchTag()
+
+      expect(wrapper.vm.tags).toEqual([
+        'tag_01',
+        'tag_02'
+      ])
+    })
+  })
+
+
+
   describe('buildTreeFromPaths', () => {
     it('should extract all the first level paths', () => {
       const tree = wrapper.vm.buildTreeFromPaths(['/folder_01', '/folder_02', '/folder_03'])
@@ -319,6 +398,38 @@ describe('BatchSearchForm.vue', () => {
           mime: 'application/test'
         }
       ])
+    })
+  })
+
+  describe('should load tags from the current project', () => {
+    beforeEach(async () => {
+      await wrapper.setData({ allTags: [] })
+      await wrapper.setData({ showAdvancedFilters: true })
+    })
+
+    it('should call retrieveTags on showAdvancedFilters change', async () => {
+      jest.spyOn(wrapper.vm, 'retrieveTags')
+      await wrapper.setData({ showAdvancedFilters: false })
+
+      expect(wrapper.vm.retrieveTags).toBeCalled()
+    })
+
+    it('should return all the tags', async () => {
+      await letData(es).have(new IndexedDocument('document_01', project).withTags(['tag_01', 'tag_04'])).commit()
+      await letData(es).have(new IndexedDocument('document_02', project).withTags(['tag_02'])).commit()
+      await letData(es).have(new IndexedDocument('document_03', project).withTags(['tag_03'])).commit()
+      await letData(es).have(new IndexedDocument('document_04', project).withTags(['tag_04'])).commit()
+      await letData(es).have(new IndexedDocument('document_05', project).withTags(['tag_05'])).commit()
+      await letData(es).have(new IndexedDocument('document_06', project).withTags(['tag_06'])).commit()
+      await letData(es).have(new IndexedDocument('document_07', project).withTags(['tag_07'])).commit()
+      await letData(es).have(new IndexedDocument('document_08', project).withTags(['tag_08'])).commit()
+      await letData(es).have(new IndexedDocument('document_09', project).withTags(['tag_09'])).commit()
+      await letData(es).have(new IndexedDocument('document_10', project).withTags(['tag_10'])).commit()
+      await letData(es).have(new IndexedDocument('document_11', project).withTags(['tag_11', 'tag_12'])).commit()
+
+      await wrapper.vm.retrieveTags()
+
+      expect(wrapper.vm.allTags).toHaveLength(12)
     })
   })
 
