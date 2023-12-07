@@ -200,7 +200,7 @@
                 <fa icon="times-circle"></fa>
                 {{ oneTag }}
               </b-badge>
-              <b-form-checkbox size="sm" v-model="excludeTags" switch>
+              <b-form-checkbox v-model="excludeTags" size="sm" switch>
                 {{ $t('batchSearch.excludeTags') }}
               </b-form-checkbox>
             </b-form-group>
@@ -246,7 +246,7 @@ import Multiselect from 'vue-multiselect'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
-import {FilterText} from "@/store/filters";
+import { FilterText } from '@/store/filters'
 
 /**
  * A form to create a new batch search.
@@ -375,7 +375,6 @@ export default {
       }
       return new Fuse(this.allTags, options)
     }
-
   },
   watch: {
     phraseMatch() {
@@ -396,7 +395,7 @@ export default {
     },
     showAdvancedFilters() {
       this.retrieveFileTypes()
-      this.retrieveTags();
+      this.retrieveTags()
     }
   },
   created() {
@@ -404,7 +403,7 @@ export default {
   },
   methods: {
     createQueryBody() {
-      const tagFilter = new FilterText({name: "tags", key: "tags", forceExclude: this.excludeTags})
+      const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
       this.$set(tagFilter, 'values', this.tags)
       return this.$core.api.elasticsearch.rootSearch([tagFilter], '<query>').build()
     },
@@ -513,8 +512,8 @@ export default {
       this.$set(this, 'paths', [])
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'selectedProjects', this.defaultSelectedProjects)
-      this.$set(this, 'selectedTags', []),
-      this.$set(this, 'excludeTags', false),
+      this.$set(this, 'selectedTags', [])
+      this.$set(this, 'excludeTags', false)
       this.$set(this, 'published', true)
       this.$set(this, 'showAdvancedFilters', false)
     },
