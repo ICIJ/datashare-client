@@ -351,6 +351,25 @@ describe('BatchSearchForm.vue', () => {
         }
       })
     })
+
+    it('should build query with excluded tags', async() => {
+      await wrapper.setData({ tags: ['tag_01'], excludeTags: true})
+      const queryBody = wrapper.vm.createQueryBody()
+      expect(queryBody).toEqual(
+        {
+          "query": {
+            "bool":
+              {
+                "filter": { "bool": { "must_not": [{ "terms": { "tags": [ "tag_01" ]} }] }},
+                "must": [
+                  { "match_all": {} },
+                  { "bool": { "should": [{"query_string": {"query": "<query>"}}] } },
+                  { "match": { "type": "Document"}}
+                ]
+              }
+          }
+        })
+    })
   })
 
 

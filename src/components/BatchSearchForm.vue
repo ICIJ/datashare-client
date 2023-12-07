@@ -404,7 +404,7 @@ export default {
   },
   methods: {
     createQueryBody() {
-      const tagFilter = new FilterText({name: "tags", key: "tags"})
+      const tagFilter = new FilterText({name: "tags", key: "tags", forceExclude: this.excludeTags})
       this.$set(tagFilter, 'values', this.tags)
       return this.$core.api.elasticsearch.rootSearch([tagFilter], '<query>').build()
     },
