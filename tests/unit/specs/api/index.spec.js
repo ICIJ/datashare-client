@@ -161,6 +161,19 @@ describe('Datashare backend client', () => {
     const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
     const paths = ['one', 'or', 'two', 'paths']
     const published = true
+    const queryBody = {
+      query: {
+        bool: {
+          filter: { terms: { tags: ['tag_01'] } },
+          must: [
+            { match_all: {} },
+            { bool: { should: [{ query_string: { query: '<query>~2' } }] } },
+            { match: { type: 'Document' } }
+          ]
+        }
+      }
+    }
+
     json = await api.batchSearch(
       name,
       csvFile,
@@ -170,7 +183,8 @@ describe('Datashare backend client', () => {
       fuzziness,
       fileTypes,
       paths,
-      published
+      published,
+      queryBody
     )
 
     const data = new FormData()
@@ -186,6 +200,7 @@ describe('Datashare backend client', () => {
     data.append('paths', 'two')
     data.append('paths', 'paths')
     data.append('published', published)
+    data.append('es_body', queryBody)
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
