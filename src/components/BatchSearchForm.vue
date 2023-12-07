@@ -200,6 +200,9 @@
                 <fa icon="times-circle"></fa>
                 {{ oneTag }}
               </b-badge>
+              <b-form-checkbox size="sm" v-model="excludeTags" switch>
+                {{ $t('batchSearch.excludeTags') }}
+              </b-form-checkbox>
             </b-form-group>
           </b-collapse>
         </div>
