@@ -278,11 +278,7 @@ describe('BatchSearchForm.vue', () => {
     it('should filter tags', () => {
       wrapper.setData({
         tag: 'tag_0',
-        allTags: [
-          'tag_01',
-          'tag_02',
-          'another_03'
-        ]
+        allTags: ['tag_01', 'tag_02', 'another_03']
       })
 
       wrapper.vm.searchTags()
@@ -291,7 +287,6 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.suggestionTags[0]).toBe('tag_01')
       expect(wrapper.vm.suggestionTags[1]).toBe('tag_02')
     })
-
 
     it('should hide already selected tag from suggestions', () => {
       wrapper.setData({ tags: ['tag_01'] })
@@ -308,70 +303,60 @@ describe('BatchSearchForm.vue', () => {
       wrapper.setData({ selectedTag: 'tag_02' })
       wrapper.vm.searchTag()
 
-      expect(wrapper.vm.tags).toEqual([
-        'tag_01',
-        'tag_02'
-      ])
+      expect(wrapper.vm.tags).toEqual(['tag_01', 'tag_02'])
     })
   })
 
-  describe('Generate ES query body',  () =>  {
-    it('should build query body', async() => {
+  describe('Generate ES query body', () => {
+    it('should build query body', async () => {
       const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
-        {
-          "query": {
-            "bool":
-              {
-                "must": [
-                  { "match_all": {} },
-                  { "bool": { "should": [{"query_string": {"query": "<query>"}}] } },
-                  { "match": { "type": "Document"}}
-                ]
-              }
+      expect(queryBody).toEqual({
+        query: {
+          bool: {
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
-      })
-    })
-
-    it('should build query with listed tags when they are selected', async() => {
-      await wrapper.setData({ tags: ['tag_01', 'tag_02']})
-      const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
-        {
-        "query": {
-          "bool":
-            {
-              "filter": { "terms": { "tags": [ "tag_01", "tag_02" ]} },
-              "must": [
-                { "match_all": {} },
-                { "bool": { "should": [{"query_string": {"query": "<query>"}}] } },
-                { "match": { "type": "Document"}}
-              ]
-            }
         }
       })
     })
 
-    it('should build query with excluded tags', async() => {
-      await wrapper.setData({ tags: ['tag_01'], excludeTags: true})
+    it('should build query with listed tags when they are selected', async () => {
+      await wrapper.setData({ tags: ['tag_01', 'tag_02'] })
       const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
-        {
-          "query": {
-            "bool":
-              {
-                "filter": { "bool": { "must_not": [{ "terms": { "tags": [ "tag_01" ]} }] }},
-                "must": [
-                  { "match_all": {} },
-                  { "bool": { "should": [{"query_string": {"query": "<query>"}}] } },
-                  { "match": { "type": "Document"}}
-                ]
-              }
+      expect(queryBody).toEqual({
+        query: {
+          bool: {
+            filter: { terms: { tags: ['tag_01', 'tag_02'] } },
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
-        })
+        }
+      })
+    })
+
+    it('should build query with excluded tags', async () => {
+      await wrapper.setData({ tags: ['tag_01'], excludeTags: true })
+      const queryBody = wrapper.vm.createQueryBody()
+      expect(queryBody).toEqual({
+        query: {
+          bool: {
+            filter: { bool: { must_not: [{ terms: { tags: ['tag_01'] } }] } },
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
+              { match: { type: 'Document' } }
+            ]
+          }
+        }
+      })
     })
   })
-
 
   describe('buildTreeFromPaths', () => {
     it('should extract all the first level paths', () => {
@@ -473,17 +458,39 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should return all the tags', async () => {
-      await letData(es).have(new IndexedDocument('document_01', project).withTags(['tag_01', 'tag_04'])).commit()
-      await letData(es).have(new IndexedDocument('document_02', project).withTags(['tag_02'])).commit()
-      await letData(es).have(new IndexedDocument('document_03', project).withTags(['tag_03'])).commit()
-      await letData(es).have(new IndexedDocument('document_04', project).withTags(['tag_04'])).commit()
-      await letData(es).have(new IndexedDocument('document_05', project).withTags(['tag_05'])).commit()
-      await letData(es).have(new IndexedDocument('document_06', project).withTags(['tag_06'])).commit()
-      await letData(es).have(new IndexedDocument('document_07', project).withTags(['tag_07'])).commit()
-      await letData(es).have(new IndexedDocument('document_08', project).withTags(['tag_08'])).commit()
-      await letData(es).have(new IndexedDocument('document_09', project).withTags(['tag_09'])).commit()
-      await letData(es).have(new IndexedDocument('document_10', project).withTags(['tag_10'])).commit()
-      await letData(es).have(new IndexedDocument('document_11', project).withTags(['tag_11', 'tag_12'])).commit()
+      await letData(es)
+        .have(new IndexedDocument('document_01', project).withTags(['tag_01', 'tag_04']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_02', project).withTags(['tag_02']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_03', project).withTags(['tag_03']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_04', project).withTags(['tag_04']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_05', project).withTags(['tag_05']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_06', project).withTags(['tag_06']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_07', project).withTags(['tag_07']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_08', project).withTags(['tag_08']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_09', project).withTags(['tag_09']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_10', project).withTags(['tag_10']))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocument('document_11', project).withTags(['tag_11', 'tag_12']))
+        .commit()
 
       await wrapper.vm.retrieveTags()
 
