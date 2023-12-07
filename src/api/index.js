@@ -132,7 +132,7 @@ export class Api {
     const params = { query, routing, targetLanguage }
     return this.sendAction(`/api/${project}/documents/searchContent/${documentId}`, { method: Method.GET, params })
   }
-  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
+  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published, es_body) {
     const data = new FormData()
     data.append('name', name)
     data.append('csvFile', csvFile)
@@ -142,6 +142,7 @@ export class Api {
     map(fileTypes, (fileType) => data.append('fileTypes', fileType.mime))
     map(paths, (path) => data.append('paths', path))
     data.append('published', published)
+    data.append('es_body', es_body)
     return this.sendActionAsText(`/api/batch/search/${project}`, { method: Method.POST, data })
   }
   getBatchSearch(batchId) {
