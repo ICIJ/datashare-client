@@ -374,6 +374,22 @@ export default {
         shouldSort: true
       }
       return new Fuse(this.allTags, options)
+    },
+    queryString() {
+      const queryTemplateValue = '<query>'
+      const fuzziness = this.fuzziness
+      console.log(fuzziness)
+      console.log(this.phraseMatch)
+      let queryString
+      if (this.phraseMatch) {
+        queryString = '"' + queryTemplateValue + '"' + (fuzziness === 0 ? '' : '~' + fuzziness)
+      } else if (fuzziness > 0) {
+        console.log('ffffffffffff')
+        queryString = queryTemplateValue + '~' + fuzziness
+      } else {
+        queryString = queryTemplateValue
+      }
+      return queryString
     }
   },
   watch: {
@@ -396,6 +412,7 @@ export default {
     showAdvancedFilters() {
       this.retrieveFileTypes()
       this.retrieveTags()
+      this.retrieveTags()
     }
   },
   created() {
@@ -405,7 +422,7 @@ export default {
     createQueryBody() {
       const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
       this.$set(tagFilter, 'values', this.tags)
-      return this.$core.api.elasticsearch.rootSearch([tagFilter], '<query>').build()
+      return this.$core.api.elasticsearch.rootSearch([tagFilter], this.queryString).build()
     },
     selectFileType(fileType = null) {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
