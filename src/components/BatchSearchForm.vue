@@ -378,13 +378,10 @@ export default {
     queryString() {
       const queryTemplateValue = '<query>'
       const fuzziness = this.fuzziness
-      console.log(fuzziness)
-      console.log(this.phraseMatch)
       let queryString
       if (this.phraseMatch) {
         queryString = '"' + queryTemplateValue + '"' + (fuzziness === 0 ? '' : '~' + fuzziness)
       } else if (fuzziness > 0) {
-        console.log('ffffffffffff')
         queryString = queryTemplateValue + '~' + fuzziness
       } else {
         queryString = queryTemplateValue
