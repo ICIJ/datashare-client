@@ -15,7 +15,8 @@ export default class FilterText {
     alternativeSearch = () => {},
     order = null,
     fromElasticSearch = true,
-    preference = '_local'
+    preference = '_local',
+    forceExclude = false
   } = {}) {
     this.name = name
     this.key = key
@@ -26,6 +27,7 @@ export default class FilterText {
     this.order = order
     this.fromElasticSearch = fromElasticSearch
     this.preference = preference
+    this.forceExclude = forceExclude
   }
 
   itemParam(item) {
@@ -74,8 +76,9 @@ export default class FilterText {
   addFilter(body) {
     if (this.hasValues()) {
       const filterType = this.isNamedEntityAggregation(body) ? 'Parent' : 'Child'
-      const filterName = this.reverse ? 'Exclude' : 'Include'
-      const options = { name: this.name, values: this.values, reverse: this.reverse }
+      const exclude = this.reverse || this.forceExclude
+      const filterName = exclude ? 'Exclude' : 'Include'
+      const options = { name: this.name, values: this.values, reverse: exclude }
       const method = `add${filterType}${filterName}Filter`
       return this[method] ? this[method](body, options) : null
     }
