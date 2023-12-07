@@ -39,8 +39,8 @@
               {{ properties.batchDownload.filename | basename }}
             </span>
             <batch-download-actions
-              class="ml-auto"
               :id="id"
+              class="ml-auto"
               :name="name"
               :state="state"
               :value="properties.batchDownload"
