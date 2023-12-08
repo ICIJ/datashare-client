@@ -312,14 +312,12 @@ describe('BatchSearchForm.vue', () => {
       const queryBody = wrapper.vm.createQueryBody()
       expect(queryBody).toEqual(
         JSON.stringify({
-          query: {
-            bool: {
-              must: [
-                { match_all: {} },
-                { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
-                { match: { type: 'Document' } }
-              ]
-            }
+          bool: {
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
         })
       )
@@ -330,15 +328,13 @@ describe('BatchSearchForm.vue', () => {
       const queryBody = wrapper.vm.createQueryBody()
       expect(queryBody).toEqual(
         JSON.stringify({
-          query: {
-            bool: {
-              filter: { terms: { tags: ['tag_01', 'tag_02'] } },
-              must: [
-                { match_all: {} },
-                { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
-                { match: { type: 'Document' } }
-              ]
-            }
+          bool: {
+            filter: { terms: { tags: ['tag_01', 'tag_02'] } },
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
         })
       )
@@ -349,15 +345,13 @@ describe('BatchSearchForm.vue', () => {
       const queryBody = wrapper.vm.createQueryBody()
       expect(queryBody).toEqual(
         JSON.stringify({
-          query: {
-            bool: {
-              filter: { bool: { must_not: [{ terms: { tags: ['tag_01'] } }] } },
-              must: [
-                { match_all: {} },
-                { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
-                { match: { type: 'Document' } }
-              ]
-            }
+          bool: {
+            filter: { bool: { must_not: [{ terms: { tags: ['tag_01'] } }] } },
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
         })
       )
@@ -368,15 +362,13 @@ describe('BatchSearchForm.vue', () => {
       const queryBody = wrapper.vm.createQueryBody()
       expect(queryBody).toEqual(
         JSON.stringify({
-          query: {
-            bool: {
-              filter: { terms: { tags: ['tag_01'] } },
-              must: [
-                { match_all: {} },
-                { bool: { should: [{ query_string: { query: '<query>' } }] } },
-                { match: { type: 'Document' } }
-              ]
-            }
+          bool: {
+            filter: { terms: { tags: ['tag_01'] } },
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
         })
       )
@@ -387,15 +379,13 @@ describe('BatchSearchForm.vue', () => {
       const queryBody = wrapper.vm.createQueryBody()
       expect(queryBody).toEqual(
         JSON.stringify({
-          query: {
-            bool: {
-              filter: { terms: { tags: ['tag_01'] } },
-              must: [
-                { match_all: {} },
-                { bool: { should: [{ query_string: { query: '"<query>"~2' } }] } },
-                { match: { type: 'Document' } }
-              ]
-            }
+          bool: {
+            filter: { terms: { tags: ['tag_01'] } },
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '"<query>"~2' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
         })
       )
@@ -407,15 +397,13 @@ describe('BatchSearchForm.vue', () => {
       const queryBody = wrapper.vm.createQueryBody()
       expect(queryBody).toEqual(
         JSON.stringify({
-          query: {
-            bool: {
-              filter: { terms: { tags: ['tag_01'] } },
-              must: [
-                { match_all: {} },
-                { bool: { should: [{ query_string: { query: '<query>~2' } }] } },
-                { match: { type: 'Document' } }
-              ]
-            }
+          bool: {
+            filter: { terms: { tags: ['tag_01'] } },
+            must: [
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '<query>~2' } }] } },
+              { match: { type: 'Document' } }
+            ]
           }
         })
       )
