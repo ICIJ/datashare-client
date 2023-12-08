@@ -543,7 +543,8 @@ export default {
           fuzziness: this.fuzziness,
           fileTypes: this.fileTypes,
           paths: this.paths,
-          published: this.published
+          published: this.published,
+          queryBody: this.createQueryBody()
         })
         this.resetForm()
         try {
