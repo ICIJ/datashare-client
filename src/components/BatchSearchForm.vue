@@ -419,7 +419,7 @@ export default {
     createQueryBody() {
       const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
       this.$set(tagFilter, 'values', this.tags)
-      const { query } = this.$core.api.elasticsearch.rootSearch([tagFilter], this.queryString).build();
+      const { query } = this.$core.api.elasticsearch.rootSearch([tagFilter], this.queryString).build()
       return JSON.stringify(query)
     },
     selectFileType(fileType = null) {
