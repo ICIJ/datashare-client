@@ -315,7 +315,7 @@ describe('BatchSearchForm.vue', () => {
           bool: {
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
+              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_0>' } }] } },
               { match: { type: 'Document' } }
             ]
           }
@@ -332,7 +332,7 @@ describe('BatchSearchForm.vue', () => {
             filter: { terms: { tags: ['tag_01', 'tag_02'] } },
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
+              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_0>' } }] } },
               { match: { type: 'Document' } }
             ]
           }
@@ -349,7 +349,7 @@ describe('BatchSearchForm.vue', () => {
             filter: { bool: { must_not: [{ terms: { tags: ['tag_01'] } }] } },
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '"<query>"' } }] } },
+              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_0>' } }] } },
               { match: { type: 'Document' } }
             ]
           }
@@ -366,7 +366,7 @@ describe('BatchSearchForm.vue', () => {
             filter: { terms: { tags: ['tag_01'] } },
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query>' } }] } },
+              { bool: { should: [{ query_string: { query: '<query><fuzziness_0>' } }] } },
               { match: { type: 'Document' } }
             ]
           }
@@ -383,7 +383,7 @@ describe('BatchSearchForm.vue', () => {
             filter: { terms: { tags: ['tag_01'] } },
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '"<query>"~2' } }] } },
+              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_2>' } }] } },
               { match: { type: 'Document' } }
             ]
           }
@@ -401,7 +401,7 @@ describe('BatchSearchForm.vue', () => {
             filter: { terms: { tags: ['tag_01'] } },
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query>~2' } }] } },
+              { bool: { should: [{ query_string: { query: '<query><fuzziness_2>' } }] } },
               { match: { type: 'Document' } }
             ]
           }

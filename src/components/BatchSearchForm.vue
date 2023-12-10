@@ -248,6 +248,12 @@ import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
 import { FilterText } from '@/store/filters'
 
+const TEMPLATE_VALUES = Object.freeze({
+  QUERY: '<query>',
+  PHRASE_MATCH: '<phrase_match>',
+  FUZZINESS: '<fuzziness_%d>'
+})
+
 /**
  * A form to create a new batch search.
  */
@@ -376,15 +382,14 @@ export default {
       return new Fuse(this.allTags, options)
     },
     queryString() {
-      const queryTemplateValue = '<query>'
-      const fuzziness = this.fuzziness
+      const queryTemplateValue = TEMPLATE_VALUES.QUERY
+      const phraseMatchTemplateValue = TEMPLATE_VALUES.PHRASE_MATCH
+      const fuzzinessMatchTemplateValue = TEMPLATE_VALUES.FUZZINESS.replace('%d', this.fuzziness)
       let queryString
       if (this.phraseMatch) {
-        queryString = '"' + queryTemplateValue + '"' + (fuzziness === 0 ? '' : '~' + fuzziness)
-      } else if (fuzziness > 0) {
-        queryString = queryTemplateValue + '~' + fuzziness
+        queryString = queryTemplateValue + phraseMatchTemplateValue + fuzzinessMatchTemplateValue
       } else {
-        queryString = queryTemplateValue
+        queryString = queryTemplateValue + fuzzinessMatchTemplateValue
       }
       return queryString
     }
