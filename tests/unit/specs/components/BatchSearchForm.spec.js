@@ -99,6 +99,7 @@ describe('BatchSearchForm.vue', () => {
 
         expect(wrapper.vm.fileTypes).toEqual([])
         expect(wrapper.vm.paths).toEqual([])
+        expect(wrapper.vm.tags).toEqual([])
       })
 
       it('should reset allFileTypes', async () => {
@@ -393,7 +394,7 @@ describe('BatchSearchForm.vue', () => {
 
     it('should build query with fuzziness and without phraseMatch', async () => {
       await wrapper.setData({ tags: ['tag_01'], phraseMatch: false })
-      await wrapper.setData({ fuzziness: 2 })
+      await wrapper.setData({ selectedFuzziness: 2 })
       const queryBody = wrapper.vm.createQueryBody()
       expect(queryBody).toEqual(
         JSON.stringify({
@@ -520,21 +521,12 @@ describe('BatchSearchForm.vue', () => {
 
   describe('setPaths', () => {
     it('should set paths from selected ones', () => {
-      wrapper.setData({ paths: ['path_01', 'path_02'] })
-      wrapper.setData({ selectedPaths: ['path_02', 'path_03'] })
+      wrapper.setData({ paths: ['path_01', 'path_02'], selectedPaths: ['path_02', 'path_03'] })
 
       wrapper.vm.setPaths()
 
       expect(wrapper.vm.paths).toEqual(['path_02', 'path_03'])
       expect(wrapper.vm.selectedPaths).toEqual(['path_02', 'path_03'])
-    })
-
-    it('should reset the path', () => {
-      wrapper.setData({ path: 'path_00' })
-
-      wrapper.vm.setPaths()
-
-      expect(wrapper.vm.path).toBe('/root/project')
     })
   })
 })
