@@ -316,7 +316,7 @@ describe('BatchSearchForm.vue', () => {
           bool: {
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_0>' } }] } },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
               { match: { type: 'Document' } }
             ]
           }
@@ -333,7 +333,7 @@ describe('BatchSearchForm.vue', () => {
             filter: { terms: { tags: ['tag_01', 'tag_02'] } },
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_0>' } }] } },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
               { match: { type: 'Document' } }
             ]
           }
@@ -350,59 +350,7 @@ describe('BatchSearchForm.vue', () => {
             filter: { bool: { must_not: [{ terms: { tags: ['tag_01'] } }] } },
             must: [
               { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_0>' } }] } },
-              { match: { type: 'Document' } }
-            ]
-          }
-        })
-      )
-    })
-
-    it('should build query without phraseMatch', async () => {
-      await wrapper.setData({ tags: ['tag_01'], phraseMatch: false })
-      const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
-        JSON.stringify({
-          bool: {
-            filter: { terms: { tags: ['tag_01'] } },
-            must: [
-              { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query><fuzziness_0>' } }] } },
-              { match: { type: 'Document' } }
-            ]
-          }
-        })
-      )
-    })
-
-    it('should build query with fuzziness', async () => {
-      await wrapper.setData({ tags: ['tag_01'], fuzziness: 2 })
-      const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
-        JSON.stringify({
-          bool: {
-            filter: { terms: { tags: ['tag_01'] } },
-            must: [
-              { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query><phrase_match><fuzziness_2>' } }] } },
-              { match: { type: 'Document' } }
-            ]
-          }
-        })
-      )
-    })
-
-    it('should build query with fuzziness and without phraseMatch', async () => {
-      await wrapper.setData({ tags: ['tag_01'], phraseMatch: false })
-      await wrapper.setData({ selectedFuzziness: 2 })
-      const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
-        JSON.stringify({
-          bool: {
-            filter: { terms: { tags: ['tag_01'] } },
-            must: [
-              { match_all: {} },
-              { bool: { should: [{ query_string: { query: '<query><fuzziness_2>' } }] } },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
               { match: { type: 'Document' } }
             ]
           }

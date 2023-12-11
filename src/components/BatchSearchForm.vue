@@ -248,10 +248,8 @@ import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
 import { FilterText } from '@/store/filters'
 
-const TEMPLATE_VALUES = Object.freeze({
-  QUERY: '<query>',
-  PHRASE_MATCH: '<phrase_match>',
-  FUZZINESS: '<fuzziness_%d>'
+const TEMPLATE_VALUE = Object.freeze({
+  QUERY: '<query>'
 })
 
 const initDataProject = {
@@ -387,12 +385,6 @@ export default {
         shouldSort: true
       }
       return new Fuse(this.allTags, options)
-    },
-    queryString() {
-      const templateFuzziness = TEMPLATE_VALUES.FUZZINESS.replace('%d', this.fuzziness)
-      return this.phraseMatch
-        ? TEMPLATE_VALUES.QUERY + TEMPLATE_VALUES.PHRASE_MATCH + templateFuzziness
-        : TEMPLATE_VALUES.QUERY + templateFuzziness
     }
   },
   watch: {
@@ -418,7 +410,7 @@ export default {
     createQueryBody() {
       const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
       tagFilter.values = this.tags
-      const { query } = this.$core.api.elasticsearch.rootSearch([tagFilter], this.queryString).build()
+      const { query } = this.$core.api.elasticsearch.rootSearch([tagFilter], TEMPLATE_VALUE.QUERY).build()
       return JSON.stringify(query)
     },
     selectFileType(fileType = null) {
