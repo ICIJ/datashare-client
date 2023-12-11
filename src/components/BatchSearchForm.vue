@@ -220,22 +220,22 @@
 
 <script>
 import {
+  clamp,
   compact,
   concat,
   each,
-  find,
   filter,
+  find,
   flatten,
   get,
   has,
-  iteratee,
   includes,
   isEmpty,
+  iteratee,
   map,
   range,
   startCase,
-  uniq,
-  clamp
+  uniq
 } from 'lodash'
 // In order to be mocked in the test class
 import throttle from 'lodash/throttle'
@@ -385,13 +385,9 @@ export default {
       const queryTemplateValue = TEMPLATE_VALUES.QUERY
       const phraseMatchTemplateValue = TEMPLATE_VALUES.PHRASE_MATCH
       const fuzzinessMatchTemplateValue = TEMPLATE_VALUES.FUZZINESS.replace('%d', this.fuzziness)
-      let queryString
-      if (this.phraseMatch) {
-        queryString = queryTemplateValue + phraseMatchTemplateValue + fuzzinessMatchTemplateValue
-      } else {
-        queryString = queryTemplateValue + fuzzinessMatchTemplateValue
-      }
-      return queryString
+      return this.phraseMatch
+        ? queryTemplateValue + phraseMatchTemplateValue + fuzzinessMatchTemplateValue
+        : queryTemplateValue + fuzzinessMatchTemplateValue
     }
   },
   watch: {
