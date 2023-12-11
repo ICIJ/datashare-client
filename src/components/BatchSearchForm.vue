@@ -254,6 +254,33 @@ const TEMPLATE_VALUES = Object.freeze({
   FUZZINESS: '<fuzziness_%d>'
 })
 
+const initDataProject = {
+  allFileTypes: [],
+  allTags: [],
+  fileType: '',
+  fileTypes: [],
+  tag: '',
+  tags: [],
+  paths: []
+}
+
+const initData = {
+  ...initDataProject,
+  csvFile: null,
+  description: '',
+  selectedFuzziness: 0,
+  name: '',
+  phraseMatch: true,
+  published: true,
+  selectedFileType: '',
+  selectedTag: '',
+  selectedPaths: [],
+  excludeTags: false,
+  showAdvancedFilters: false,
+  suggestionFileTypes: [],
+  suggestionTags: []
+}
+
 /**
  * A form to create a new batch search.
  */
@@ -283,28 +310,9 @@ export default {
   },
   data() {
     return {
-      allFileTypes: [],
-      allTags: [],
-      csvFile: null,
-      description: '',
-      fileType: '',
-      fileTypes: [],
-      tag: '',
-      tags: [],
-      selectedFuzziness: 0,
-      name: '',
-      path: this.$config.get('mountedDataDir') || this.$config.get('dataDir'),
-      paths: [],
-      phraseMatch: true,
-      published: true,
+      ...initData,
       selectedProjects: [],
-      selectedFileType: '',
-      selectedTag: '',
-      selectedPaths: [],
-      excludeTags: false,
-      showAdvancedFilters: false,
-      suggestionFileTypes: [],
-      suggestionTags: []
+      path: this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   },
   computed: {
@@ -337,10 +345,9 @@ export default {
         return this.selectedProjects.map(iteratee('name'))
       },
       set(projects) {
-        const selectedProjects = projects.map((name) => {
+        this.selectedProjects = projects.map((name) => {
           return find(this.projectOptions, { name })
         })
-        this.$set(this, 'selectedProjects', selectedProjects)
       }
     },
     phraseMatchDescription() {
@@ -382,26 +389,18 @@ export default {
       return new Fuse(this.allTags, options)
     },
     queryString() {
-      const queryTemplateValue = TEMPLATE_VALUES.QUERY
-      const phraseMatchTemplateValue = TEMPLATE_VALUES.PHRASE_MATCH
-      const fuzzinessMatchTemplateValue = TEMPLATE_VALUES.FUZZINESS.replace('%d', this.fuzziness)
+      const templateFuzziness = TEMPLATE_VALUES.FUZZINESS.replace('%d', this.fuzziness)
       return this.phraseMatch
-        ? queryTemplateValue + phraseMatchTemplateValue + fuzzinessMatchTemplateValue
-        : queryTemplateValue + fuzzinessMatchTemplateValue
+        ? TEMPLATE_VALUES.QUERY + TEMPLATE_VALUES.PHRASE_MATCH + templateFuzziness
+        : TEMPLATE_VALUES.QUERY + templateFuzziness
     }
   },
   watch: {
     phraseMatch() {
-      this.$set(this, 'fuzziness', 0)
+      this.selectedFuzziness = 0
     },
     projects() {
-      this.$set(this, 'fileType', '')
-      this.$set(this, 'fileTypes', [])
-      this.$set(this, 'tag', '')
-      this.$set(this, 'tags', [])
-      this.$set(this, 'paths', [])
-      this.$set(this, 'allFileTypes', [])
-      this.$set(this, 'allTags', [])
+      this.resetProjectData()
       this.hideSuggestionsFileTypes()
       this.hideSuggestionsTags()
       this.retrieveFileTypes()
@@ -410,128 +409,121 @@ export default {
     showAdvancedFilters() {
       this.retrieveFileTypes()
       this.retrieveTags()
-      this.retrieveTags()
     }
   },
   created() {
-    this.$set(this, 'selectedProjects', this.defaultSelectedProjects)
+    this.selectedProjects = this.defaultSelectedProjects
   },
   methods: {
     createQueryBody() {
       const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
-      this.$set(tagFilter, 'values', this.tags)
+      tagFilter.values = this.tags
       const { query } = this.$core.api.elasticsearch.rootSearch([tagFilter], this.queryString).build()
       return JSON.stringify(query)
     },
     selectFileType(fileType = null) {
-      this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
+      this.selectedFileType = fileType || this.selectedFileType
     },
     searchFileTypes: throttle(function () {
       const fileTypes = this.fuseFileTypes.search(this.fileType).map(({ item }) => item)
-      const fileTypesWithoutSelection = filter(fileTypes, (item) => {
+      this.suggestionFileTypes = filter(fileTypes, (item) => {
         return !includes(map(this.fileTypes, 'mime'), item.mime)
       })
-      this.$set(this, 'suggestionFileTypes', fileTypesWithoutSelection)
     }, 200),
     searchFileType() {
       if (this.selectedFileType) {
         this.fileTypes.push(this.selectedFileType)
         this.hideSuggestionsFileTypes()
-        this.$set(this, 'fileType', '')
+        this.fileType = initData.fileType
         if (this.$refs && this.$refs.fileType) this.$refs.fileType.focus()
       }
     },
     hideSuggestionsFileTypes() {
-      this.$set(this, 'suggestionFileTypes', [])
+      this.suggestionFileTypes = initData.suggestionFileTypes
     },
     deleteFileType(index) {
       this.fileTypes.splice(index, 1)
     },
-    async retrieveFileTypes() {
-      if (this.showAdvancedFilters && isEmpty(this.allFileTypes)) {
-        this.$wait.start('load all file types')
+    async aggregateFileTypes() {
+      const aggTypes = await this.aggregate('contentType', 'contentType')
+      each(aggTypes, (aggType) => {
+        const extensions = has(types, aggType) ? types[aggType].extensions : []
+        const label = has(types, aggType) ? types[aggType].label : aggType
+        this.allFileTypes.push({
+          extensions,
+          label,
+          mime: aggType
+        })
+      })
+    },
+    async loadAndRetrieve(callback, noSelection, waiter, failMessageKey) {
+      if (this.showAdvancedFilters && noSelection) {
+        this.$wait.start(waiter)
         try {
-          const aggTypes = await this.aggregate('contentType', 'contentType')
-          each(aggTypes, (aggType) => {
-            const extensions = has(types, aggType) ? types[aggType].extensions : []
-            const label = has(types, aggType) ? types[aggType].label : aggType
-            this.allFileTypes.push({
-              extensions,
-              label,
-              mime: aggType
-            })
-          })
+          await callback()
         } catch (e) {
-          this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveFileTypes', this.projects?.length), {
+          this.$root.$bvToast.toast(this.$tc(`batchSearch.${failMessageKey}`, this.projects?.length), {
             noCloseButton: true,
             variant: 'danger'
           })
         }
-        this.$wait.end('load all file types')
+        this.$wait.end(waiter)
       }
     },
+    retrieveFileTypes() {
+      return this.loadAndRetrieve(
+        this.aggregateFileTypes,
+        isEmpty(this.allFileTypes),
+        'load all file types',
+        'unableToRetrieveFileTypes'
+      )
+    },
     selectTag(tag = null) {
-      this.$set(this, 'selectedTag', tag || this.selectedTag)
+      this.selectedTag = tag || this.selectedTag
     },
     searchTags: throttle(function () {
       const tags = this.fuseTags.search(this.tag).map(({ item }) => item)
-      const tagsWithoutSelection = filter(tags, (item) => {
+      this.suggestionTags = filter(tags, (item) => {
         return !includes(this.tags, item)
       })
-      this.$set(this, 'suggestionTags', tagsWithoutSelection)
     }, 200),
     searchTag() {
       if (this.selectedTag) {
         this.tags.push(this.selectedTag)
         this.hideSuggestionsTags()
-        this.$set(this, 'tag', '')
+        this.tag = initData.tag
         if (this.$refs && this.$refs.tag) this.$refs.tag.focus()
       }
     },
     hideSuggestionsTags() {
-      this.$set(this, 'suggestionTags', [])
+      this.suggestionTags = initData.suggestionTags
+    },
+    async aggregateTags() {
+      const tags = await this.aggregate('tags', 'tags')
+      this.allTags.push(...tags)
     },
     async retrieveTags() {
-      if (this.showAdvancedFilters && isEmpty(this.allTags)) {
-        this.$wait.start('load all tags')
-        try {
-          const tags = await this.aggregate('tags', 'tags')
-          this.allTags.push(...tags)
-        } catch (e) {
-          this.$root.$bvToast.toast(this.$tc('batchSearch.unableToRetrieveTags', this.projects?.length), {
-            noCloseButton: true,
-            variant: 'danger'
-          })
-        }
-        this.$wait.end('load all tags')
-      }
+      return this.loadAndRetrieve(this.aggregateTags, isEmpty(this.allTags), 'load all tags', 'unableToRetrieveTags')
     },
     deleteTag(index) {
       this.tags.splice(index, 1)
     },
     setPaths() {
-      this.$set(this, 'paths', this.selectedPaths)
-      this.$set(this, 'path', this.$config.get('mountedDataDir') || this.$config.get('dataDir'))
+      this.paths = this.selectedPaths
     },
     deletePath(index) {
       this.paths.splice(index, 1)
     },
+    resetProjectData() {
+      Object.keys(initDataProject).forEach((key) => {
+        this[key] = initDataProject[key]
+      })
+    },
     resetForm() {
-      this.$set(this, 'csvFile', null)
-      this.$set(this, 'description', '')
-      this.$set(this, 'fileType', '')
-      this.$set(this, 'fileTypes', [])
-      this.$set(this, 'tag', '')
-      this.$set(this, 'tags', [])
-      this.$set(this, 'fuzziness', 0)
-      this.$set(this, 'name', '')
-      this.$set(this, 'paths', [])
-      this.$set(this, 'phraseMatch', true)
-      this.$set(this, 'selectedProjects', this.defaultSelectedProjects)
-      this.$set(this, 'selectedTags', [])
-      this.$set(this, 'excludeTags', false)
-      this.$set(this, 'published', true)
-      this.$set(this, 'showAdvancedFilters', false)
+      Object.keys(initData).forEach((key) => {
+        this[key] = initData[key]
+      })
+      this.selectedProjects = this.defaultSelectedProjects
     },
     async onSubmit() {
       try {
