@@ -427,7 +427,7 @@ export default {
         this.fileTypes.push(this.selectedFileType)
         this.hideSuggestionsFileTypes()
         this.fileType = initData.fileType
-        if (this.$refs && this.$refs.fileType) this.$refs.fileType.focus()
+        this.$refs?.fileType?.focus()
       }
     },
     hideSuggestionsFileTypes() {
