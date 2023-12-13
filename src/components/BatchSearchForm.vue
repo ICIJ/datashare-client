@@ -407,7 +407,7 @@ export default {
     this.selectedProjects = this.defaultSelectedProjects
   },
   methods: {
-    createQueryBody() {
+    createQueryTemplate() {
       const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
       tagFilter.values = this.tags
       const { query } = this.$core.api.elasticsearch.rootSearch([tagFilter], TEMPLATE_VALUE.QUERY).build()
@@ -529,7 +529,7 @@ export default {
           fileTypes: this.fileTypes,
           paths: this.paths,
           published: this.published,
-          queryBody: this.createQueryBody()
+          queryTemplate: this.createQueryTemplate()
         })
         this.resetForm()
         try {

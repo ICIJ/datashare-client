@@ -310,8 +310,8 @@ describe('BatchSearchForm.vue', () => {
 
   describe('Generate ES query body', () => {
     it('should build query body', async () => {
-      const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
+      const queryTemplate = wrapper.vm.createQueryTemplate()
+      expect(queryTemplate).toEqual(
         JSON.stringify({
           bool: {
             must: [
@@ -326,8 +326,8 @@ describe('BatchSearchForm.vue', () => {
 
     it('should build query with listed tags when they are selected', async () => {
       await wrapper.setData({ tags: ['tag_01', 'tag_02'] })
-      const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
+      const queryTemplate = wrapper.vm.createQueryTemplate()
+      expect(queryTemplate).toEqual(
         JSON.stringify({
           bool: {
             filter: { terms: { tags: ['tag_01', 'tag_02'] } },
@@ -343,8 +343,8 @@ describe('BatchSearchForm.vue', () => {
 
     it('should build query with excluded tags', async () => {
       await wrapper.setData({ tags: ['tag_01'], excludeTags: true })
-      const queryBody = wrapper.vm.createQueryBody()
-      expect(queryBody).toEqual(
+      const queryTemplate = wrapper.vm.createQueryTemplate()
+      expect(queryTemplate).toEqual(
         JSON.stringify({
           bool: {
             filter: { bool: { must_not: [{ terms: { tags: ['tag_01'] } }] } },
