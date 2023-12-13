@@ -484,7 +484,7 @@ export default {
         this.tags.push(this.selectedTag)
         this.hideSuggestionsTags()
         this.tag = initData.tag
-        if (this.$refs && this.$refs.tag) this.$refs.tag.focus()
+        this.$refs?.tag?.focus()
       }
     },
     hideSuggestionsTags() {
