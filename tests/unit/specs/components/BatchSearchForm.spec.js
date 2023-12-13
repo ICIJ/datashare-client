@@ -141,21 +141,21 @@ describe('BatchSearchForm.vue', () => {
     })
   })
 
-  it('should reset the form', () => {
-    wrapper.setData({ csvFile: new File(['File content'], 'test_file.csv', { type: 'text/csv' }) })
-    wrapper.setData({ description: 'This is a description' })
-    wrapper.setData({ fileType: 'PDF' })
-    wrapper.setData({ fileTypes: [{ label: 'PDF' }] })
-    wrapper.setData({ tag: 'foo' })
-    wrapper.setData({ tags: ['foo'] })
-    wrapper.setData({ fuzziness: 2 })
-    wrapper.setData({ name: 'Example' })
-    wrapper.setData({ paths: ['This', 'is', 'a', 'multiple', 'paths'] })
-    wrapper.setData({ phraseMatch: false })
-    wrapper.setData({ excludeTags: true })
-    wrapper.setData({ projects: ['project-example'] })
-    wrapper.setData({ published: false })
-    wrapper.setData({ showAdvancedFilters: true })
+  it('should reset the form', async () => {
+    await wrapper.setData({ csvFile: new File(['File content'], 'test_file.csv', { type: 'text/csv' }) })
+    await wrapper.setData({ description: 'This is a description' })
+    await wrapper.setData({ fileType: 'PDF' })
+    await wrapper.setData({ fileTypes: [{ label: 'PDF' }] })
+    await wrapper.setData({ tag: 'foo' })
+    await wrapper.setData({ tags: ['foo'] })
+    await wrapper.setData({ fuzziness: 2 })
+    await wrapper.setData({ name: 'Example' })
+    await wrapper.setData({ paths: ['This', 'is', 'a', 'multiple', 'paths'] })
+    await wrapper.setData({ phraseMatch: false })
+    await wrapper.setData({ excludeTags: true })
+    await wrapper.setData({ projects: ['project-example'] })
+    await wrapper.setData({ published: false })
+    await wrapper.setData({ showAdvancedFilters: true })
 
     wrapper.vm.resetForm()
 
@@ -201,16 +201,16 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.find('.batch-search-form__fileTypes__suggestions').exists()).toBe(true)
     })
 
-    it('should hide suggestions', () => {
-      wrapper.setData({ suggestionFileTypes: ['suggestion_01', 'suggestion_02', 'suggestion_03'] })
+    it('should hide suggestions', async () => {
+      await wrapper.setData({ suggestionFileTypes: ['suggestion_01', 'suggestion_02', 'suggestion_03'] })
 
       wrapper.vm.hideSuggestionsFileTypes()
 
       expect(wrapper.vm.suggestionFileTypes).toEqual([])
     })
 
-    it('should filter fileTypes according to the fileTypes input on mime file', () => {
-      wrapper.setData({
+    it('should filter fileTypes according to the fileTypes input on mime file', async () => {
+      await wrapper.setData({
         fileType: 'visi',
         allFileTypes: [
           { label: 'Visio document', mime: 'visio' },
@@ -226,8 +226,8 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.suggestionFileTypes[1].label).toBe('StarWriter 5 document')
     })
 
-    it('should filter according to the fileTypes input on label file', () => {
-      wrapper.setData({
+    it('should filter according to the fileTypes input on label file', async () => {
+      await wrapper.setData({
         fileType: 'PDF',
         allFileTypes: [
           { label: 'Label PDF', mime: 'PDF' },
@@ -241,19 +241,19 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Label PDF')
     })
 
-    it('should hide already selected file type from suggestions', () => {
-      wrapper.setData({ fileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }] })
-      wrapper.setData({ fileType: 'PDF' })
+    it('should hide already selected file type from suggestions', async () => {
+      await wrapper.setData({ fileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }] })
+      await wrapper.setData({ fileType: 'PDF' })
 
       wrapper.vm.searchFileTypes()
 
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(0)
     })
 
-    it('should set the clicked item in fileTypes', () => {
+    it('should set the clicked item in fileTypes', async () => {
       wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
-      wrapper.setData({ fileTypes: [{ label: 'Excel 2003 XML spreadsheet visio' }] })
-      wrapper.setData({ selectedFileType: { label: 'StarWriter 5 document' } })
+      await wrapper.setData({ fileTypes: [{ label: 'Excel 2003 XML spreadsheet visio' }] })
+      await wrapper.setData({ selectedFileType: { label: 'StarWriter 5 document' } })
       wrapper.vm.searchFileType()
 
       expect(wrapper.vm.fileTypes).toEqual([
@@ -268,16 +268,16 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.find('.batch-search-form__tags__suggestions').exists()).toBe(true)
     })
 
-    it('should hide suggestions', () => {
-      wrapper.setData({ suggestionTags: ['suggestion_01', 'suggestion_02', 'suggestion_03'] })
+    it('should hide suggestions', async () => {
+      await wrapper.setData({ suggestionTags: ['suggestion_01', 'suggestion_02', 'suggestion_03'] })
 
       wrapper.vm.hideSuggestionsTags()
 
       expect(wrapper.vm.suggestionTags).toEqual([])
     })
 
-    it('should filter tags', () => {
-      wrapper.setData({
+    it('should filter tags', async () => {
+      await wrapper.setData({
         tag: 'tag_0',
         allTags: ['tag_01', 'tag_02', 'another_03']
       })
@@ -289,19 +289,19 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.suggestionTags[1]).toBe('tag_02')
     })
 
-    it('should hide already selected tag from suggestions', () => {
-      wrapper.setData({ tags: ['tag_01'] })
-      wrapper.setData({ fileType: 'tag_0' })
+    it('should hide already selected tag from suggestions', async () => {
+      await wrapper.setData({ tags: ['tag_01'] })
+      await wrapper.setData({ fileType: 'tag_0' })
 
       wrapper.vm.searchTags()
 
       expect(wrapper.vm.suggestionTags).toHaveLength(0)
     })
 
-    it('should set the clicked item in tags', () => {
+    it('should set the clicked item in tags', async () => {
       wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
-      wrapper.setData({ tags: ['tag_01'] })
-      wrapper.setData({ selectedTag: 'tag_02' })
+      await wrapper.setData({ tags: ['tag_01'] })
+      await wrapper.setData({ selectedTag: 'tag_02' })
       wrapper.vm.searchTag()
 
       expect(wrapper.vm.tags).toEqual(['tag_01', 'tag_02'])
@@ -468,8 +468,8 @@ describe('BatchSearchForm.vue', () => {
   })
 
   describe('setPaths', () => {
-    it('should set paths from selected ones', () => {
-      wrapper.setData({ paths: ['path_01', 'path_02'], selectedPaths: ['path_02', 'path_03'] })
+    it('should set paths from selected ones', async () => {
+      await wrapper.setData({ paths: ['path_01', 'path_02'], selectedPaths: ['path_02', 'path_03'] })
 
       wrapper.vm.setPaths()
 
