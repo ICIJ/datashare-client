@@ -161,7 +161,7 @@ describe('Datashare backend client', () => {
     const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
     const paths = ['one', 'or', 'two', 'paths']
     const published = true
-    const queryBody = JSON.stringify({
+    const queryTemplate = JSON.stringify({
       query: {
         bool: {
           must: [
@@ -183,7 +183,7 @@ describe('Datashare backend client', () => {
       fileTypes,
       paths,
       published,
-      queryBody
+      queryTemplate
     )
 
     const data = new FormData()
@@ -199,7 +199,7 @@ describe('Datashare backend client', () => {
     data.append('paths', 'two')
     data.append('paths', 'paths')
     data.append('published', published)
-    data.append('query_body', queryBody)
+    data.append('query_body', queryTemplate)
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
