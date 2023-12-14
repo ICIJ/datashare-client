@@ -3,6 +3,7 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from 'tests/unit/tests_utils'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import { Core } from '@/core'
@@ -83,8 +84,7 @@ describe('BatchSearchForm.vue', () => {
 
     describe('On project change', () => {
       it('should reset fileType and tag', async () => {
-        await wrapper.setData({ fileType: 'fileTypeTest' })
-        await wrapper.setData({ tag: 'tagTest' })
+        await wrapper.setData({ fileType: 'fileTypeTest', tag: 'tagTest' })
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.fileType).toBe('')
@@ -92,9 +92,11 @@ describe('BatchSearchForm.vue', () => {
       })
 
       it('should reset fileTypes, tags and paths', async () => {
-        await wrapper.setData({ fileTypes: ['fileType_01', 'fileType_02'] })
-        await wrapper.setData({ tags: ['tag_01', 'tag_02'] })
-        await wrapper.setData({ paths: ['path_01', 'path_02'] })
+        await wrapper.setData({
+          fileTypes: ['fileType_01', 'fileType_02'],
+          tags: ['tag_01', 'tag_02'],
+          paths: ['path_01', 'path_02']
+        })
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.fileTypes).toEqual([])
@@ -142,20 +144,22 @@ describe('BatchSearchForm.vue', () => {
   })
 
   it('should reset the form', async () => {
-    await wrapper.setData({ csvFile: new File(['File content'], 'test_file.csv', { type: 'text/csv' }) })
-    await wrapper.setData({ description: 'This is a description' })
-    await wrapper.setData({ fileType: 'PDF' })
-    await wrapper.setData({ fileTypes: [{ label: 'PDF' }] })
-    await wrapper.setData({ tag: 'foo' })
-    await wrapper.setData({ tags: ['foo'] })
-    await wrapper.setData({ fuzziness: 2 })
-    await wrapper.setData({ name: 'Example' })
-    await wrapper.setData({ paths: ['This', 'is', 'a', 'multiple', 'paths'] })
-    await wrapper.setData({ phraseMatch: false })
-    await wrapper.setData({ excludeTags: true })
-    await wrapper.setData({ projects: ['project-example'] })
-    await wrapper.setData({ published: false })
-    await wrapper.setData({ showAdvancedFilters: true })
+    await wrapper.setData({
+      csvFile: new File(['File content'], 'test_file.csv', { type: 'text/csv' }),
+      description: 'This is a description',
+      fileType: 'PDF',
+      fileTypes: [{ label: 'PDF' }],
+      tag: 'foo',
+      tags: ['foo'],
+      fuzziness: 2,
+      name: 'Example',
+      paths: ['This', 'is', 'a', 'multiple', 'paths'],
+      phraseMatch: false,
+      excludeTags: true,
+      projects: ['project-example'],
+      published: false,
+      showAdvancedFilters: true
+    })
 
     wrapper.vm.resetForm()
 
@@ -242,8 +246,10 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should hide already selected file type from suggestions', async () => {
-      await wrapper.setData({ fileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }] })
-      await wrapper.setData({ fileType: 'PDF' })
+      await wrapper.setData({
+        fileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }],
+        fileType: 'PDF'
+      })
 
       wrapper.vm.searchFileTypes()
 
@@ -252,8 +258,11 @@ describe('BatchSearchForm.vue', () => {
 
     it('should set the clicked item in fileTypes', async () => {
       wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
-      await wrapper.setData({ fileTypes: [{ label: 'Excel 2003 XML spreadsheet visio' }] })
-      await wrapper.setData({ selectedFileType: { label: 'StarWriter 5 document' } })
+      await flushPromises()
+      await wrapper.setData({
+        fileTypes: [{ label: 'Excel 2003 XML spreadsheet visio' }],
+        selectedFileType: { label: 'StarWriter 5 document' }
+      })
       wrapper.vm.searchFileType()
 
       expect(wrapper.vm.fileTypes).toEqual([
@@ -290,8 +299,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should hide already selected tag from suggestions', async () => {
-      await wrapper.setData({ tags: ['tag_01'] })
-      await wrapper.setData({ fileType: 'tag_0' })
+      await wrapper.setData({ tags: ['tag_01'], fileType: 'tag_0' })
 
       wrapper.vm.searchTags()
 
@@ -300,8 +308,9 @@ describe('BatchSearchForm.vue', () => {
 
     it('should set the clicked item in tags', async () => {
       wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
-      await wrapper.setData({ tags: ['tag_01'] })
-      await wrapper.setData({ selectedTag: 'tag_02' })
+      await flushPromises()
+      await wrapper.setData({ tags: ['tag_01'], selectedTag: 'tag_02' })
+
       wrapper.vm.searchTag()
 
       expect(wrapper.vm.tags).toEqual(['tag_01', 'tag_02'])
@@ -387,8 +396,7 @@ describe('BatchSearchForm.vue', () => {
 
   describe('should load contentTypes from the current project', () => {
     beforeEach(async () => {
-      await wrapper.setData({ allFileTypes: [] })
-      await wrapper.setData({ showAdvancedFilters: true })
+      await wrapper.setData({ allFileTypes: [], showAdvancedFilters: true })
     })
 
     it('should call retrieveFileTypes on showAdvancedFilters change', async () => {
@@ -439,8 +447,7 @@ describe('BatchSearchForm.vue', () => {
 
   describe('should load tags from the current project', () => {
     beforeEach(async () => {
-      await wrapper.setData({ allTags: [] })
-      await wrapper.setData({ showAdvancedFilters: true })
+      await wrapper.setData({ allTags: [], showAdvancedFilters: true })
     })
 
     it('should call retrieveTags on showAdvancedFilters change', async () => {
