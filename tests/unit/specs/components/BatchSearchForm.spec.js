@@ -366,6 +366,28 @@ describe('BatchSearchForm.vue', () => {
         })
       )
     })
+
+    it('should build query with listed tags, paths and fileTypes when they are selected', async () => {
+      await wrapper.setData({ tags: ['tag_01', 'tag_02'], fileTypes: ['fileType_01'], paths: ['path_01', 'path_02'] })
+      const queryTemplate = wrapper.vm.createQueryTemplate()
+      expect(queryTemplate).toEqual(
+        JSON.stringify({
+          bool: {
+            filter: {
+              bool: {
+                must: [{ terms: { tags: ['tag_01', 'tag_02'] } }, { terms: { contentType: ['fileType_01'] } }]
+              }
+            },
+            must: [
+              { bool: { should: [{ term: { 'dirname.tree': 'path_01' } }, { term: { 'dirname.tree': 'path_02' } }] } },
+              { match_all: {} },
+              { bool: { should: [{ query_string: { query: '<query>' } }] } },
+              { match: { type: 'Document' } }
+            ]
+          }
+        })
+      )
+    })
   })
 
   describe('buildTreeFromPaths', () => {
