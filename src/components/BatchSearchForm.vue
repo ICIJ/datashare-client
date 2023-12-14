@@ -246,7 +246,7 @@ import Multiselect from 'vue-multiselect'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
-import { FilterText } from '@/store/filters'
+import { FilterPath, FilterText } from '@/store/filters'
 
 const TEMPLATE_VALUE = Object.freeze({
   QUERY: '<query>'
@@ -408,7 +408,13 @@ export default {
     createQueryTemplate() {
       const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
       tagFilter.values = this.tags
-      const { query } = this.$core.api.elasticsearch.rootSearch([tagFilter], TEMPLATE_VALUE.QUERY).build()
+      const fileTypeFilter = new FilterText({ name: 'contentType', key: 'contentType' })
+      fileTypeFilter.values = this.fileTypes
+      const pathFilter = new FilterPath({ name: 'path', key: 'byDirname' })
+      pathFilter.values = this.paths
+      const { query } = this.$core.api.elasticsearch
+        .rootSearch([tagFilter, fileTypeFilter, pathFilter], TEMPLATE_VALUE.QUERY)
+        .build()
       return JSON.stringify(query)
     },
     selectFileType(fileType = null) {
