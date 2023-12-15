@@ -61,7 +61,6 @@ export const getters = {
   instantiateFilter(state, getters, rootState) {
     return ({ type = 'FilterText', options } = {}) => {
       const Type = filterTypes[type]
-      console.log(filterTypes)
       const filter = new Type(options)
       // Bind current state to be able to retrieve its values
       filter.bindRootState(rootState)
