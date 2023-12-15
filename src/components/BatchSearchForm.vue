@@ -246,7 +246,7 @@ import Multiselect from 'vue-multiselect'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
-import { FilterPath, FilterText } from '@/store/filters'
+import * as filterTypes from '@/store/filters'
 
 const TEMPLATE_VALUE = Object.freeze({
   QUERY: '<query>'
@@ -385,6 +385,21 @@ export default {
         shouldSort: true
       }
       return new Fuse(this.allTags, options)
+    },
+    filters() {
+      return [
+        {
+          type: 'FilterText',
+          params: { name: 'tags', key: 'tags', forceExclude: this.excludeTags },
+          values: this.tags
+        },
+        {
+          type: 'FilterText',
+          params: { name: 'contentType', key: 'contentType', forceExclude: false },
+          values: this.fileTypes
+        },
+        { type: 'FilterPath', params: { name: 'path', key: 'byDirname', forceExclude: false }, values: this.paths }
+      ]
     }
   },
   watch: {
@@ -406,15 +421,14 @@ export default {
   },
   methods: {
     createQueryTemplate() {
-      const tagFilter = new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags })
-      tagFilter.values = this.tags
-      const fileTypeFilter = new FilterText({ name: 'contentType', key: 'contentType' })
-      fileTypeFilter.values = this.fileTypes
-      const pathFilter = new FilterPath({ name: 'path', key: 'byDirname' })
-      pathFilter.values = this.paths
-      const { query } = this.$core.api.elasticsearch
-        .rootSearch([tagFilter, fileTypeFilter, pathFilter], TEMPLATE_VALUE.QUERY)
-        .build()
+      const instantiatedFilters = this.filters.map((f) => {
+        const Type = filterTypes[f.type]
+        const instantiatedFilter = new Type(f.params)
+        instantiatedFilter.values = f.values
+        return instantiatedFilter
+      })
+
+      const { query } = this.$core.api.elasticsearch.rootSearch(instantiatedFilters, TEMPLATE_VALUE.QUERY).build()
       return JSON.stringify(query)
     },
     selectFileType(fileType = null) {
