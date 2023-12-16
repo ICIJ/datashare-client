@@ -31,17 +31,29 @@ export default class Auth {
   }
 
   async _getBasicAuthUserName() {
-    try {
-      const response = await this.api.getUser()
-      setTimeout(() => this.reset(), 43200 * 1000)
-      return response.uid
-    } catch (error) {
-      if (error && error.response && error.response.status !== 401) {
-        throw new Error(`${error.response.status} ${error.response.statusText}`)
+  try {
+    const response = await this.api.getUser();
+
+    if (response.status === 200) {
+      const authorizationHeader = response.headers['authorization'];
+      if (authorizationHeader && authorizationHeader.startsWith('Basic ')) {
+        const encodedCredentials = authorizationHeader.split(' ')[1];
+        const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString('utf8');
+        const [username, _] = decodedCredentials.split(':');
+        return username;
+      } else {
+        throw new Error('Invalid authorization header');
       }
-      return null
+    } else {
+      throw new Error(`${response.status} ${response.statusText}`);
     }
+  } catch (error) {
+    if (error && error.response && error.response.status !== 401) {
+      throw new Error(`${error.response.status} ${error.response.statusText}`);
+    }
+    return null;
   }
+}
 
   _getCookieUsername() {
     const cookie = getCookie(process.env.VUE_APP_DS_COOKIE_NAME, JSON.parse)
