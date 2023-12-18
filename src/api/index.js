@@ -142,7 +142,7 @@ export class Api {
     map(fileTypes, (fileType) => data.append('fileTypes', fileType.mime))
     map(paths, (path) => data.append('paths', path))
     data.append('published', published)
-    data.append('query_body', queryTemplate)
+    data.append('query_template', queryTemplate)
     return this.sendActionAsText(`/api/batch/search/${project}`, { method: Method.POST, data })
   }
   getBatchSearch(batchId) {

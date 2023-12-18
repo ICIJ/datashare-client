@@ -199,7 +199,7 @@ describe('Datashare backend client', () => {
     data.append('paths', 'two')
     data.append('paths', 'paths')
     data.append('published', published)
-    data.append('query_body', queryTemplate)
+    data.append('query_template', queryTemplate)
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
