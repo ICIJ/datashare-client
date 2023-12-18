@@ -319,8 +319,7 @@ describe('BatchSearchForm.vue', () => {
 
   describe('Generate ES query body', () => {
     it('should build query body', async () => {
-      const queryTemplate = wrapper.vm.createQueryTemplate()
-      expect(queryTemplate).toEqual(
+      expect(wrapper.vm.queryWithFilters).toEqual(
         JSON.stringify({
           bool: {
             must: [
@@ -335,8 +334,7 @@ describe('BatchSearchForm.vue', () => {
 
     it('should build query with listed tags when they are selected', async () => {
       await wrapper.setData({ tags: ['tag_01', 'tag_02'] })
-      const queryTemplate = wrapper.vm.createQueryTemplate()
-      expect(queryTemplate).toEqual(
+      expect(wrapper.vm.queryWithFilters).toEqual(
         JSON.stringify({
           bool: {
             filter: { terms: { tags: ['tag_01', 'tag_02'] } },
@@ -352,8 +350,7 @@ describe('BatchSearchForm.vue', () => {
 
     it('should build query with excluded tags', async () => {
       await wrapper.setData({ tags: ['tag_01'], excludeTags: true })
-      const queryTemplate = wrapper.vm.createQueryTemplate()
-      expect(queryTemplate).toEqual(
+      expect(wrapper.vm.queryWithFilters).toEqual(
         JSON.stringify({
           bool: {
             filter: { bool: { must_not: [{ terms: { tags: ['tag_01'] } }] } },
@@ -369,8 +366,7 @@ describe('BatchSearchForm.vue', () => {
 
     it('should build query with listed tags, paths and fileTypes when they are selected', async () => {
       await wrapper.setData({ tags: ['tag_01', 'tag_02'], fileTypes: ['fileType_01'], paths: ['path_01', 'path_02'] })
-      const queryTemplate = wrapper.vm.createQueryTemplate()
-      expect(queryTemplate).toEqual(
+      expect(wrapper.vm.queryWithFilters).toEqual(
         JSON.stringify({
           bool: {
             filter: {
