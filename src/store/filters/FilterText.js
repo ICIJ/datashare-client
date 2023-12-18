@@ -118,6 +118,11 @@ export default class FilterText {
     this[_VALUES] = values
   }
 
+  setValues(values) {
+    this.values = values
+    return this
+  }
+
   get reverse() {
     return get(this, ['state', 'reversedFilters'], []).indexOf(this.name) > -1
   }
