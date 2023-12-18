@@ -246,7 +246,7 @@ import Multiselect from 'vue-multiselect'
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
-import * as filterTypes from '@/store/filters'
+import { FilterText, FilterPath } from '@/store/filters'
 
 const TEMPLATE_VALUE = Object.freeze({
   QUERY: '<query>'
@@ -388,18 +388,15 @@ export default {
     },
     filters() {
       return [
-        {
-          type: 'FilterText',
-          params: { name: 'tags', key: 'tags', forceExclude: this.excludeTags },
-          values: this.tags
-        },
-        {
-          type: 'FilterText',
-          params: { name: 'contentType', key: 'contentType', forceExclude: false },
-          values: this.fileTypes
-        },
-        { type: 'FilterPath', params: { name: 'path', key: 'byDirname', forceExclude: false }, values: this.paths }
+        new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags }).setValues(this.tags),
+        new FilterText({ name: 'contentType', key: 'contentType', forceExclude: this.excludeTags }).setValues(
+          this.fileTypes
+        ),
+        new FilterPath({ name: 'path', key: 'byDirname', forceExclude: false }).setValues(this.paths)
       ]
+    },
+    queryWithFilters() {
+      return this.createQueryTemplate(this.filters)
     }
   },
   watch: {
@@ -420,15 +417,8 @@ export default {
     this.selectedProjects = this.defaultSelectedProjects
   },
   methods: {
-    createQueryTemplate() {
-      const instantiatedFilters = this.filters.map((f) => {
-        const Type = filterTypes[f.type]
-        const instantiatedFilter = new Type(f.params)
-        instantiatedFilter.values = f.values
-        return instantiatedFilter
-      })
-
-      const { query } = this.$core.api.elasticsearch.rootSearch(instantiatedFilters, TEMPLATE_VALUE.QUERY).build()
+    createQueryTemplate(filters) {
+      const { query } = this.$core.api.elasticsearch.rootSearch(filters, TEMPLATE_VALUE.QUERY).build()
       return JSON.stringify(query)
     },
     selectFileType(fileType = null) {
@@ -547,7 +537,7 @@ export default {
           fileTypes: this.fileTypes,
           paths: this.paths,
           published: this.published,
-          queryTemplate: this.createQueryTemplate()
+          queryTemplate: this.queryWithFilters
         })
         this.resetForm()
         try {
