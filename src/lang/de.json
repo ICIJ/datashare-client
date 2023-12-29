@@ -24,8 +24,8 @@
   "error": {
     "title": "Hier stimmt etwas nicht",
     "description": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut oder wenden Sie sich an Ihren Administrator, falls das Problem weiterhin besteht.",
-    "noProjects": "Your project list is empty. Please contact your administrator.",
-    "notFound": "Page not found."
+    "noProjects": "Sie haben noch keine Projekte. Bitte kontaktieren Sie Ihren Administrator.",
+    "notFound": "Seite wurde nicht gefunden."
   },
   "search": {
     "title": "Suche",
@@ -80,8 +80,8 @@
       "batchDownload": "Ergebnisse herunterladen",
       "batchDownloadSubmit": "Sie sind im Begriff, 1 Dokument herunterzuladen. | Sie sind dabei, %{total} Dokumente herunterzuladen.",
       "warningNumber": "Sie können nicht mehr als %{number} Dokumente herunterladen.",
-      "warningSize": "You cannot download more than %{size}B.",
-      "warningConfirm": "Do you still want to download the first documents of this search?",
+      "warningSize": "Sie können nicht mehr als %{size}B herunterladen.",
+      "warningConfirm": "Möchten Sie die ersten Dokumente dieser Suche trotzdem herunterladen?",
       "sort": {
         "sortLabel": "Sortieren",
         "sort": "Sortieren nach",
@@ -94,8 +94,8 @@
         "sizeSmallest": "Größe (aufsteigend)",
         "path": "Dateipfad (alphabetisch)",
         "pathReverse": "Dateipfad (alphabetisch umgekehrt)",
-        "titleNorm": "File name (A to Z)",
-        "titleNormReverse": "File name (Z to A)",
+        "titleNorm": "Dateiname (A bis Z)",
+        "titleNormReverse": "Dateiname (Z bis A)",
         "default": "Standard",
         "count": "Häufigkeit"
       }
@@ -140,7 +140,7 @@
     "viewTranslated": "Übersetzten Text anzeigen"
   },
   "documentContent": {
-    "noContent": "No content extracted for this document"
+    "noContent": "Kein Inhalt für dieses Dokument extrahiert"
   },
   "filter": {
     "none": "Keine Werte",
@@ -240,7 +240,7 @@
       "GEORGIAN": "Georgisch",
       "GERMAN": "Deutsch",
       "GREEK": "Griechisch",
-      "MODERN GREEK (1453-)": "Greek",
+      "MODERN GREEK (1453-)": "Griechisch",
       "GUARANI": "Guarani",
       "GUJARATI": "Gujarati",
       "HAITIAN": "Haitianisch",
@@ -391,15 +391,15 @@
     },
     "tags": "Tags",
     "dateRange": {
-      "from": "From {dateFormat}",
-      "to": "To {dateFormat}",
-      "startingDate": "Starting date",
-      "endingDate": "Ending date"
+      "from": "Von {dateFormat}",
+      "to": "Bis {dateFormat}",
+      "startingDate": "Anfangsdatum",
+      "endingDate": "Enddatum"
     },
     "selectDateRange": "Datumsbereich auswählen"
   },
   "document": {
-    "title": "Document",
+    "title": "Dokument",
     "document": "Dokument",
     "name": "Dokumentname",
     "path": "Dokumentpfad",
@@ -408,7 +408,7 @@
     "project": "Projekt",
     "creationDate": "Erstellungsdatum",
     "size": "Dateigröße",
-    "downloadMaxRootSizeAlert": "You cannot download this document because its parent is bigger than {humanMaxRootSize}.",
+    "downloadMaxRootSizeAlert": "Sie können dieses Dokument nicht herunterladen, da seine übergeordnete Datei größer als {humanMaxRootSize} ist.",
     "contentLanguage": "Sprache des Inhalts",
     "contentType": "Inhaltstyp",
     "contentEncoding": "Inhaltskodierung",
@@ -416,17 +416,17 @@
     "tabDetails": "Tags und Details",
     "namedEntities": "Named Entities",
     "namedEntityFilter": "Named Entities filtern",
-    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
+    "namedEntitiesOccurences": "0 Ergebnisse | Ein Ergebnis | {count} Ergebnisse",
     "extractedText": "Text",
     "translations": "Übersetzungen",
     "preview": "Vorschau",
     "downloadButton": "Download",
-    "downloadRootButton": "Parent file",
-    "downloadRootWithoutMetadataButton": "Parent file without metadata",
-    "downloadWithoutMetadata": "Without metadata",
-    "downloadExtractedText": "Extracted text",
+    "downloadRootButton": "Übergeordnete Datei",
+    "downloadRootWithoutMetadataButton": "Übergeordnete Datei ohne Metadaten",
+    "downloadWithoutMetadata": "Ohne Metadaten",
+    "downloadExtractedText": "Extrahierter Text",
     "externalWindow": "In neuem Fenster öffnen",
-    "copyLink": "Copy link",
+    "copyLink": "Link kopieren",
     "selectAll": "Alle auswählen",
     "unselectAll": "Alle abwählen",
     "starButton": "Zu Favoriten hinzufügen",
