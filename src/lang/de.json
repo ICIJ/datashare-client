@@ -485,13 +485,13 @@
       "thumbnail": "Vorschaubild der PDF-Seite"
     },
     "player": {
-      "autoplay": "Play automatically",
-      "loop": "Play in loop",
+      "autoplay": "Automatisch abspielen",
+      "loop": "In Wiedergabeschleife abspielen",
       "audio": {
-        "unknownFormat": "Unsupported audio format"
+        "unknownFormat": "Nicht unterstütztes Audioformat"
       },
       "video": {
-        "unknownFormat": "Unsupported video format"
+        "unknownFormat": "Nicht unterstütztes Videoformat"
       }
     },
     "attachments": {
@@ -518,29 +518,29 @@
     "sentLink": "Gesendete Emails"
   },
   "extractingLanguageFormControl": {
-    "failedToRetrieveLanguages": "Failed to retrieve languages",
+    "failedToRetrieveLanguages": "Fehler beim Abrufen der Sprachen",
     "nullOption": "Automatisch erkennen (Standard)"
   },
   "extractingFormOcrControl": {
-    "useDefault": "Default OCR language is used.",
-    "isMissing": " OCR for '{language}' is not installed.",
-    "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
-    "tesseractNotInstalled": "Tesseract OCR is not installed."
+    "useDefault": "Standard OCR Sprache wird verwendet.",
+    "isMissing": " OCR für '{language}' ist nicht installiert.",
+    "installOcrLanguage": "Wählen Sie die zu installierenden Sprachen unter {availableLanguages} aus.",
+    "tesseractNotInstalled": "Tesseract OCR ist nicht installiert."
   },
   "indexing": {
     "title": "Dokumente analysieren",
     "description": "Bitte <a href=\"%{howToLink}\" target=\"_blank\">lesen Sie die Dokumentation</a> zum Hinzufügen von Dokumenten.",
-    "go": "Launch",
+    "go": "Starten",
     "tasks": "Aufgaben",
-    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
+    "empty": "Sie haben noch keine Aufgaben gestartet. <a href=\"%{howToLink}\" target=\"_blank\">Lesen Sie mehr.</a>",
     "extractText": "Dokumente hinzufügen",
     "extractWithOcrLabel": "Möchten Sie Text auch aus Bildern und PDFs extrahieren?",
     "extractWithOcrHelp": "Wenn ja, führt Datashare OCR (Optische Zeichenerkennung) durch. Dies kann bis zu zehn Mal länger dauern.",
     "extractOnlyNewLabel": "Möchten Sie bereits indizierte Dateien überspringen?",
     "extractOnlyNewHelp": "Wenn ja, wird Datashare den Text nur aus Dateien extrahieren, die in Datashare noch nicht durchsuchbar sind.",
     "extractLanguage": "In welcher Sprache sind Ihre Dokumente?",
-    "findNamedEntities": "Find people, organizations, locations and emails",
-    "findNamedEntitiesProjectSelection": "In which project do you want to find named entities?",
+    "findNamedEntities": "Personen, Organisationen, Orte und E-Mail-Adressen finden",
+    "findNamedEntitiesProjectSelection": "In welchem Projekt möchten Sie benannte Entitäten (named entities) finden?",
     "findNamedEntitiesHeader": "Was möchten Sie tun?",
     "findNamedEntitiesSubheader": "Datashare verwendet Modelle zur Verarbeitung natürlicher Sprachen.",
     "findNamedEntitiesTooltip": "Die Texte müssen extrahiert werden, bevor Named Entities gefunden werden können",
@@ -548,26 +548,26 @@
     "pipelineOptions": {
       "email": "Finde E-Mails",
       "corenlp": "Leute, Organisationen und Standorte mit CoreNLP finden",
-      "opennlp": "Find people, organizations and locations with OpenNLP",
-      "mitie": "Find people, organizations and locations with MITIE",
-      "ixapipe": "Find people, organizations and locations with IXA Pipe",
-      "gatenlp": "Find people, organizations and locations with GateNLP"
+      "opennlp": "Personen, Organisationen und Orte mit CoreNLP finden",
+      "mitie": "Personen, Organisationen und Orte mit MITIE finden",
+      "ixapipe": "Personen, Organisationen und Orte mit IXA Pipe finden",
+      "gatenlp": "Personen, Organisationen und Orte mit GateNLP finden"
     },
-    "projectIndexationSelection": "In which project do you want to add documents?",
-    "folderSelection": "Which folder do you want to index?",
-    "folderSelectionDescription": "By default, the entire project folder is selected.",
+    "projectIndexationSelection": "In welchem Projekt möchten Sie Dokumente hinzufügen?",
+    "folderSelection": "Welcher Ordner soll indiziert werden?",
+    "folderSelectionDescription": "Standardmäßig wird der gesamte Projektordner ausgewählt.",
     "default": "Standardmäßig - Bietet die höchste Wahrscheinlichkeit in den meisten Dokumenten zu funktionieren",
-    "syncModelsLabel": "Do you want to work offline?",
-    "syncModels": "Check this box if you are working without internet connection.",
+    "syncModelsLabel": "Möchtest du offline arbeiten?",
+    "syncModels": "Aktivieren Sie dieses Kästchen, wenn Sie ohne Internetverbindung arbeiten.",
     "stopTask": "Diese Aufgabe beenden",
     "stopPendingTasks": "Alle ausstehenden Aufgaben beenden",
     "deleteDoneTasks": "Erledigte Aufgaben löschen",
     "deleteIndexLabel": "Alle Ihre Dokumente aus Datashare entfernen",
     "deleteIndexDescription": "Um wirklich sicher zu sein, entfernen Sie bitte Ihre Dokumente aus dem Datashare-Ordner auf Ihrem Computer. Vergessen Sie nicht, den Papierkorb zu leeren, damit die Datashare-Dokumente gelöscht werden! Vergewissern Sie sich zuvor, dass Sie eine Kopie davon an einem anderen sicheren Ort haben.",
     "deleteSuccess": "Ihre Dokumente wurden aus Datashare entfernt.",
-    "deleteFailure": "Something went wrong, unable to remove your documents.",
-    "deleteBatchSearchSuccess": "The batch searches are now removed from Datashare.",
-    "deleteBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
+    "deleteFailure": "Ein Problem ist aufgetreten. Die Dokumente konnten nicht entfernt werden.",
+    "deleteBatchSearchSuccess": "Die Batch-Suche wird nun aus Datashare entfernt.",
+    "deleteBatchSearchFailure": "Etwas ist schief gelaufen, die Batch-Suche konnte nicht entfernt werden."
   },
   "menu": {
     "help": "Hilfsanfrage",
@@ -582,13 +582,13 @@
     "searchShort": "Suche",
     "history": "Ihr Verlauf",
     "historyShort": "Verlauf",
-    "projects": "Projects",
-    "projectsShort": "Projects",
+    "projects": "Projekte",
+    "projectsShort": "Projekte",
     "settings": "Einstellungen",
     "settingsShort": "Einstellungen",
     "logout": "Abmelden",
     "logoutShort": "Abmelden",
-    "logoutModal": "This session will remain open until you close this browser or clear your browser's site data. Until then you won't be logged out.",
+    "logoutModal": "Diese Sitzung bleibt geöffnet, bis Sie diesen Browser schließen oder die Website-Daten Ihres Browsers löschen. Bis dahin werden Sie nicht ausgeloggt.",
     "addDocuments": "Wie fügt man Dokumente hinzu",
     "faq": "FAQ",
     "faqShort": "FAQ",
@@ -614,7 +614,7 @@
   },
   "userHistory": {
     "heading": "Ihr Verlauf",
-    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
+    "description": "Auf dieser Seite können Sie die geöffneten Dokumente und die gespeicherten Suchanfragen abrufen.",
     "empty": "Ihr Verlauf ist leer",
     "clear": "Verlauf löschen",
     "document": "Dokumente",
@@ -772,17 +772,17 @@
     "notify": {
       "succeed": "Add document task launched",
       "succeedBody": "Indexing task to add documents has been launched.",
-      "seeTasks": "See tasks",
-      "failed": "Add document task failed",
-      "failedBody": "An error occurred when launching indexing task to add documents."
+      "seeTasks": "Aufgaben anzeigen",
+      "failed": "Dokumentaufgabe hinzufügen fehlgeschlagen",
+      "failedBody": "Beim Starten der Indizierungsaufgabe zum Hinzufügen von Dokumenten ist ein Fehler aufgetreten."
     }
   },
   "projectViewFindNamedEntities": {
-    "title": "Find named entities",
+    "title": "Benannte Entitäten (named entities) finden",
     "notify": {
-      "succeed": "Find named entities task launched",
-      "succeedBody": "Finding named entities has been launched.",
-      "seeTasks": "See tasks",
+      "succeed": "Die Suche nach benannten Entitäten wurde gestartet",
+      "succeedBody": "Die Suche nach benannten Entitäten wurde gestartet.",
+      "seeTasks": "Aufgaben ansehen",
       "failed": "Find named entities task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
     }
