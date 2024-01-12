@@ -6,7 +6,7 @@ workflows:
     jobs:
       - build
       - lint:
-          requires: 
+          requires:
             - build
       - test:
           requires:
@@ -50,7 +50,7 @@ jobs:
           key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/datashare-client
-  
+
   # This job will run linters on the vue and js code
   lint:
     docker:
@@ -145,7 +145,7 @@ jobs:
       - run:
           name: Copy generated doc inside the Wiki with a flatten structure (no subdirectories)
           command: |
-            rsync --del -r ~/datashare-client/dist/docs/ ~/datashare-docs/developers/client
+            rsync --del -r ~/datashare-client/dist/docs/ ~/datashare-docs/developers/frontend
       - run:
            name: Append list of components to icij/datashare-docs SUMMARY.md
            environment:

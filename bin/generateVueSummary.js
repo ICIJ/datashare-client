@@ -39,11 +39,11 @@ function generateVueSummary() {
 function nestedDirectories(path) {
   const title = startCase(basename(path, '.md')).split(' ').join('')
   if (lstatSync(path).isDirectory()) {
-    const wikiPath = path.replace('dist/docs/', 'developers/client/') + 'README.md'
+    const wikiPath = path.replace('dist/docs/', 'developers/frontend/') + 'README.md'
     const children = getDirectories(path).map(nestedDirectories.bind(this))
     return { path, wikiPath, title, children }
   }
-  const wikiPath = path.replace('dist/docs/', 'developers/client/')
+  const wikiPath = path.replace('dist/docs/', 'developers/frontend/')
   return { path, wikiPath, title }
 }
 
@@ -80,7 +80,7 @@ function removeSublistFromSummary(summaryLines, vueComponentsItemIndex, nextItem
  * @returns {number} The index of the "Vue app" line.
  */
 function findVueComponentsItemIndex(summaryLines) {
-  const vueComponentsToken = '* [Vue app](developers/client/vue/README.md)'
+  const vueComponentsToken = '* [Vue app](developers/frontend/vue/README.md)'
   return findIndex(summaryLines, (line) => line.includes(vueComponentsToken))
 }
 
