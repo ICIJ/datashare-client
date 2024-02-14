@@ -143,6 +143,7 @@ import {
   includes,
   noop,
   round,
+  trim,
   trimEnd,
   uniq,
   uniqBy,
@@ -323,7 +324,7 @@ export default {
     wildcardQuery() {
       if (this.hasQuery) {
         // This ensure the query with one (and only one) wildcard
-        return '*' + trimEnd(this.query, '*') + '*'
+        return '*' + trim(this.query, '*') + '*'
       }
       return '*'
     },
