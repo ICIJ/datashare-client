@@ -13,8 +13,17 @@
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="path" :projects="[project]" count size searchable>
+      <tree-view v-model="path" :projects="[project]" :query="query" count size searchable>
         <template #above>
+          <div class="mx-3 mb-1">
+            <b-form-input
+              v-model="query"
+              autofocus
+              :placeholder="$t('widget.diskUsage.queryPlaceholder')"
+              type="search"
+              class="form-control widget__directory-filter"
+            />
+          </div>
           <b-collapse :visible="path === dataDir">
             <div class="my-2 mx-3 alert alert-warning p-2">
               {{ $t('widget.diskUsage.warning') }}
@@ -54,7 +63,8 @@ export default {
     return {
       onDisk: null,
       path: null,
-      total: null
+      total: null,
+      query: null
     }
   },
   computed: {
