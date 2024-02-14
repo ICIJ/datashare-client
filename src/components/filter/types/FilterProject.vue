@@ -10,12 +10,20 @@
       </h6>
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
-      <project-selector v-model="selectedProject" class="border-0" multiple @input="select" />
+      <search-form-control
+        v-model="query"
+        class="filter__items__search"
+        dark
+        :rounded="false"
+        :placeholder="$t('search.searchInProjects')"
+      />
+      <project-selector v-model="selectedProject" :query="query" class="border-0" multiple @input="select" />
     </slide-up-down>
   </div>
 </template>
 
 <script>
+import SearchFormControl from '@/components/SearchFormControl'
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 
@@ -25,12 +33,14 @@ import utils from '@/mixins/utils'
 export default {
   name: 'FilterProject',
   components: {
-    ProjectSelector
+    ProjectSelector,
+    SearchFormControl
   },
   mixins: [utils],
   data() {
     return {
-      collapseItems: false
+      collapseItems: false,
+      query: null
     }
   },
   computed: {
