@@ -937,6 +937,7 @@
     },
     "diskUsage": {
       "details": "crwdns2020:0crwdne2020:0",
+      "queryPlaceholder": "crwdns2962:0crwdne2962:0",
       "warning": "crwdns2426:0crwdne2426:0"
     },
     "creationDate": {
