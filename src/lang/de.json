@@ -937,6 +937,7 @@
     },
     "diskUsage": {
       "details": "Festplattenverbrauch ansehen",
+      "queryPlaceholder": "Filter directories...",
       "warning": "Die Anzahl der Dokumente zählt hier nur übergeordnete Dokumente (Dateien auf der Festplatte), nicht Anhänge (eingebettete Dokumente)."
     },
     "creationDate": {
