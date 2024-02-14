@@ -116,3 +116,48 @@ export function getConsonants(value = '') {
 
   return consonants
 }
+
+/**
+ * Turn a given wildcard token into a ReqExp pattern.
+ *
+ * @param {string} token - The token to turn, where "*" represents any sequence of characters.
+ * @returns {String} - Returns a RegExp pattern string
+ */
+export function wildcardRegExpPattern(token) {
+  // Transform the token into a regex pattern
+  return token.split('*').map(escapeRegExp).join('.*')
+}
+
+/**
+ * Turn a given wildcard token into a ReqExp object.
+ *
+ * @param {string} token - The token to turn, where "*" represents any sequence of characters.
+ * @returns {RegExp} - Returns a RegExp instance
+ */
+export function wildcardRegExp(token) {
+  // Create a RegExp object
+  return new RegExp(wildcardRegExpPattern(token))
+}
+
+/**
+ * Matches a string against a rule that can include wildcard characters.
+ *
+ * @param {string} str - The string to test against the rule.
+ * @param {string} token - The token to match, where "*" represents any sequence of characters.
+ * @returns {boolean} - Returns true if the string matches the token, otherwise false.
+ */
+export function wildcardMatch(str, token) {
+  // Test the string against the generated regex
+  return wildcardRegExp(token).test(str)
+}
+
+/**
+ * Case-insensitive matches a string against a token that can include wildcard characters.
+ *
+ * @param {string} str - The string to test against the token.
+ * @param {string} token - The token to match, where "*" represents any sequence of characters.
+ * @returns {boolean} - Returns true if the string matches the token, otherwise false.
+ */
+export function iwildcardMatch(str, token) {
+  return wildcardMatch(str.toLowerCase(), token.toLocaleLowerCase())
+}

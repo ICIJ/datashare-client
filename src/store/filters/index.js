@@ -113,6 +113,7 @@ export default [
       key: 'byDirname',
       icon: 'hdd',
       order: 100,
+      isSearchable: true,
       fromElasticSearch: false,
       preference: 'filter-path'
     }

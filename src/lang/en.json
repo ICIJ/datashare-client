@@ -937,6 +937,7 @@
     },
     "diskUsage": {
       "details": "See disk usage",
+      "queryPlaceholder": "Filter directories...",
       "warning": "The number of documents only counts parent documents here (files on disk), not attachments (embedded documents)."
     },
     "creationDate": {
