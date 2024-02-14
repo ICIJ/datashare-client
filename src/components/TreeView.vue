@@ -34,18 +34,18 @@
         </transition>
       </div>
     </b-collapse>
+    <!-- @slot Area to insert content above the tree view -->
+    <slot name="above"></slot>
     <v-wait for="loading tree view data" transition="fade">
       <div slot="waiting" class="tree-view__spinner text-center">
         <fa icon="circle-notch" spin size="2x"></fa>
       </div>
       <div>
-        <!-- @slot Area to insert content above the tree view -->
-        <slot name="above"></slot>
         <b-form-checkbox-group v-model="selected">
           <ul class="list-group list-group-flush tree-view__directories">
             <li
               v-if="hits && selectable"
-              class="list-group-item d-flex flex-row align-items-center text-muted tree-view__directories__item"
+              class="list-group-item d-flex flex-row align-items-center text-muted tree-view__directories__item tree-view__directories__item--hits"
             >
               <b-form-checkbox
                 :id="allDirectoriesInputId"
@@ -126,10 +126,10 @@
             <span slot="no-results"></span>
           </infinite-loading>
         </b-form-checkbox-group>
-        <!-- @slot Area to insert content bellow the tree view -->
-        <slot name="bellow"></slot>
       </div>
     </v-wait>
+    <!-- @slot Area to insert content bellow the tree view -->
+    <slot name="bellow"></slot>
   </div>
 </template>
 
@@ -156,6 +156,7 @@ import InfiniteLoading from 'vue-infinite-loading'
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 import humanNumber from '@/filters/humanNumber'
 import humanSize from '@/filters/humanSize'
+import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
 
 /**
  * A view listing directories from a specific path.
@@ -277,6 +278,12 @@ export default {
      */
     includeChildrenDocuments: {
       type: Boolean
+    },
+    /**
+     * Query to filter the directory by name.
+     */
+    query: {
+      type: String
     }
   },
   data() {
@@ -307,13 +314,42 @@ export default {
     order() {
       return { [this.sortBy]: this.sortByOrder }
     },
+    hasQuery() {
+      return this.query && this.query.trim()
+    },
+    wildcardPath() {
+      return [this.path, this.wildcardQuery].join(this.pathSeparator)
+    },
+    wildcardQuery() {
+      if (this.hasQuery) {
+        // This ensure the query with one (and only one) wildcard
+        return '*' + trimEnd(this.query, '*') + '*'
+      }
+      return '*'
+    },
     treeChildren() {
       return filter(get(this.tree, 'contents', []), { type: 'directory' })
     },
     treeAsPagesBuckets() {
-      return this.treeChildren
-        .filter((dir) => dir.type === 'directory')
-        .map((dir) => ({ key: dir.name, contentLength: 0, doc_count: 0 }))
+      return (
+        this.treeChildren
+          // Only keep directories
+          .filter(({ type }) => type === 'directory')
+          // Only keep the one matching with the query
+          .filter(({ name }) => {
+            if (this.hasQuery) {
+              // Compare only with the dirname
+              const dirname = name.split(this.pathSeparator).pop()
+              // And use case-insentive wildcard match
+              return iwildcardMatch(dirname, this.wildcardQuery)
+            }
+            return true
+          })
+          // Transform it to match with the ES aggregation format
+          .map(({ name: key }) => {
+            return { key, contentLength: 0, doc_count: 0 }
+          })
+      )
     },
     pagesBuckets() {
       return this.pages.map((p) => get(p, 'aggregations.byDirname.buckets', []))
@@ -331,12 +367,26 @@ export default {
       return get(this, 'lastPage.aggregations.totalContentLength.value', -1)
     },
     includeOption() {
-      const paths = this.suffixPathTokens(this.pathSeparator.concat('.*')).join('|')
-      return this.usesWindowsSeparator ? this.doubleWindowsSeparator(paths) : paths
+      return (
+        this.queryPathTokens
+          // Convert the path with a wildcard to regex
+          .map(wildcardRegExpPattern)
+          // Wrap each regex with
+          .map((pattern) => `(${pattern})`)
+          // Finally, concatenate refex
+          .join('|')
+      )
     },
     excludeOption() {
-      const paths = this.suffixPathTokens(this.pathSeparator.concat('.*', this.pathSeparator, '.*')).join('|')
-      return this.usesWindowsSeparator ? this.doubleWindowsSeparator(paths) : paths
+      return (
+        this.subPathTokens
+          // Ensure path are normalized for Windows users
+          .map(this.normalizePath)
+          // Wrap each regex with
+          .map((pattern) => `(${pattern})`)
+          // Finally, concatenate refex
+          .join('|')
+      )
     },
     aggregationOptions() {
       return {
@@ -360,6 +410,20 @@ export default {
        * are different).
        */
       return uniq([this.path, this.path.toLowerCase()])
+    },
+    queryPathTokens() {
+      /**
+       * @deprecated Since 9.4.2, the dirname field is tokenized using the
+       * "lowercase" filter. To ensure retro-compatibility, we apply lookup for
+       * the path in both lowercase and orignal value for this field (if they
+       * are different).
+       */
+      return uniq([this.wildcardPath, this.wildcardPath.toLowerCase()])
+    },
+    subPathTokens() {
+      return this.pathTokens.map((token) => {
+        return [token, '.*', '.*'].join(this.pathSeparator)
+      })
     },
     usesWindowsSeparator() {
       return this.pathSeparator === '\\'
@@ -388,6 +452,9 @@ export default {
     }
   },
   watch: {
+    query() {
+      return this.reloadDataWithSpinner()
+    },
     path() {
       return this.reloadDataWithSpinner()
     },
@@ -407,11 +474,11 @@ export default {
   methods: {
     humanSize,
     humanNumber,
-    suffixPathTokens(suffix = '') {
-      return this.pathTokens.map((token) => `${token}${suffix}`)
-    },
-    doubleWindowsSeparator(paths) {
-      return paths.split('\\').join('\\\\')
+    normalizePath(path) {
+      if (this.usesWindowsSeparator) {
+        return path.split('\\').join('\\\\')
+      }
+      return path
     },
     getBasename(value) {
       return last(value.split(this.pathSeparator))
