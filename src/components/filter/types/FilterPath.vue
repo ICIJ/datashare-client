@@ -1,10 +1,11 @@
 <template>
   <filter-boilerplate v-bind="$props" ref="filter" @aggregate="$refs.treeView.reloadDataWithSpinner()">
-    <template #items="{ sortBy, sortByOrder }">
+    <template #items="{ sortBy, sortByOrder, query }">
       <div class="filter__tree-view">
         <tree-view
           ref="treeView"
           v-model="path"
+          :query="query"
           :projects="projects"
           :selected-paths.sync="selectedPaths"
           :pre-body-build="preBodyBuild"
@@ -41,7 +42,8 @@ export default {
   data() {
     return {
       key: null,
-      path: null
+      path: null,
+      pathQueries: {}
     }
   },
   computed: {
@@ -79,6 +81,10 @@ export default {
         this.$set(this, 'path', this.dataDir)
         this.setFilterValue(this.filter, { key: [] })
       }
+    },
+    path(path, oldPath) {
+      this.pathQueries[oldPath] = this.root.query
+      this.$set(this.root, 'query', this.pathQueries[path] || null)
     }
   },
   created() {

@@ -383,6 +383,9 @@ export default {
       this.$set(this, 'query', this.modelQuery)
     },
     query() {
+      if (!this.fromElasticSearch) {
+        return
+      }
       this.$set(this, 'infiniteId', uniqueId())
       this.aggregateWithThrottle({ clearPages: true })
       // Emit an event to update the model value only if it changed
