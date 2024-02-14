@@ -33,7 +33,7 @@
           <search-form-control
             v-model="query"
             class="filter__items__search"
-            :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"
+            :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })"
             :rounded="false"
             :dark="dark"
             @submit.prevent="openFilterSearch"
