@@ -937,6 +937,7 @@
     },
     "diskUsage": {
       "details": "Ver el uso del disco",
+      "queryPlaceholder": "Filter directories...",
       "warning": "El número de documentos sólo cuenta documentos padre aquí (archivos en disco), no archivos adjuntos (documentos incrustados)."
     },
     "creationDate": {
