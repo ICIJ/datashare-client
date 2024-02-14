@@ -937,6 +937,7 @@
     },
     "diskUsage": {
       "details": "Voir l'utilisation du disque",
+      "queryPlaceholder": "Filter directories...",
       "warning": "Le nombre de documents ne compte que les documents parents (fichiers sur disque), et non les pièces jointes (documents attachés ou enfants)."
     },
     "creationDate": {
