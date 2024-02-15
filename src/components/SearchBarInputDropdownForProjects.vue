@@ -191,9 +191,17 @@ export default {
     },
     moveFocusUp() {
       this.focusIndex = Math.max(-1, this.focusIndex - 1)
+      this.moveFocusIntoView()
     },
     moveFocusDown() {
       this.focusIndex = Math.min(this.options.length - 1, this.focusIndex + 1)
+      this.moveFocusIntoView()
+    },
+    async moveFocusIntoView() {
+      await this.$nextTick()
+      const selector = '.search-bar-input-dropdown-for-projects__item--focus'
+      const options = { behavior: 'instant', block: 'end' }
+      this.$el.querySelector(selector)?.scrollIntoView(false, options)
     },
     selectFocusValue($event) {
       if (this.focusIndex > -1) {
