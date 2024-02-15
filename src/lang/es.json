@@ -57,7 +57,8 @@
     },
     "placeholder": "Buscar en documentos...",
     "buttonLabel": "Buscar",
-    "searchIn": "Buscar en",
+    "searchIn": "Filter %{plural}...",
+    "searchInProjects": "Filter projects...",
     "hideFilters": "Ocultar los filtros",
     "showFilters": "Mostrar los filtros",
     "contextualizeFiltersLabel": "Contextualizar filtros",
@@ -1053,7 +1054,11 @@
     "about": "About",
     "search": "Search"
   },
+  "projectSelector": {
+    "noMatches": "No matches"
+  },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects"
+    "projectsCount": "%{count} projects",
+    "noMatches": "No matches"
   }
 }
