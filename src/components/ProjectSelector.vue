@@ -5,7 +5,7 @@
       <b-form-select v-else v-model="selectedProject" :disabled="disabled" :options="projectOptions" :size="size" />
     </b-form-group>
     <div v-if="!hasMatches" class="p-2 text-center text-muted">
-      No matches
+      {{ $t('projectSelector.noMatches') }}
     </div>
   </div>
 </template>
