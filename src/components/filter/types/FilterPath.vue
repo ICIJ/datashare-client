@@ -11,6 +11,7 @@
           :pre-body-build="preBodyBuild"
           :sort-by="sortBy"
           :sort-by-order="sortByOrder"
+          :transition="null"
           compact
           count
           include-children-documents
