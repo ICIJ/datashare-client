@@ -107,6 +107,7 @@ export default {
         @keydown.down="$emit('down', $event)"
         @keydown.enter="$emit('enter', $event)"
         @input="$emit('input', $event)"
+        @blur="$emit('blur', $event)"
       ></b-form-input>
       <b-input-group-append class="search-form-control__addon search-form-control__addon--append">
         <b-button variant="light" class="search-form-control__addon__submit" type="submit">
