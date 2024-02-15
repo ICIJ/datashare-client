@@ -329,7 +329,6 @@ export default {
     box-shadow: 0 0 0 1px $secondary inset;
   }
 
-
   & &__suggestions.dropdown-menu {
     left: 0;
     position: absolute !important;
