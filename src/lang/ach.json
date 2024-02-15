@@ -57,7 +57,8 @@
     },
     "placeholder": "crwdns270:0crwdne270:0",
     "buttonLabel": "crwdns1152:0crwdne1152:0",
-    "searchIn": "crwdns1154:0crwdne1154:0",
+    "searchIn": "crwdns2964:0%{plural}crwdne2964:0",
+    "searchInProjects": "crwdns2966:0crwdne2966:0",
     "hideFilters": "crwdns276:0crwdne276:0",
     "showFilters": "crwdns278:0crwdne278:0",
     "contextualizeFiltersLabel": "crwdns1126:0crwdne1126:0",
@@ -1053,7 +1054,11 @@
     "about": "crwdns2885:0crwdne2885:0",
     "search": "crwdns2887:0crwdne2887:0"
   },
+  "projectSelector": {
+    "noMatches": "crwdns2968:0crwdne2968:0"
+  },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "crwdns2889:0%{count}crwdne2889:0"
+    "projectsCount": "crwdns2889:0%{count}crwdne2889:0",
+    "noMatches": "crwdns2970:0crwdne2970:0"
   }
 }
