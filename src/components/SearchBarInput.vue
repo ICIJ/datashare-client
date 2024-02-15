@@ -13,6 +13,7 @@
       <a
         v-if="!hideTips"
         v-b-tooltip.bottomleft
+        tabindex="-1"
         class="search-bar-input__tips-addon input-group-text px-2"
         target="_blank"
         :class="{ 'search-bar-input__tips-addon--active': showTips }"

@@ -320,8 +320,15 @@ export default {
     height: auto;
   }
 
-  &--focused{
+  &--focused:deep(.input-group-append .dropdown-toggle) {
+    border-top-color: $secondary;
+    border-bottom-color: $secondary;
   }
+
+  &:deep(.input-group-append .dropdown-toggle:focus) {
+    box-shadow: 0 0 0 1px $secondary inset;
+  }
+
 
   & &__suggestions.dropdown-menu {
     left: 0;
