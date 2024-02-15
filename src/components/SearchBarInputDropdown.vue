@@ -13,6 +13,8 @@
     right
     boundary="window"
     variant="outline-light"
+    @shown="shown"
+    @hidden="hidden"
   >
     <template #button-content>
       <slot name="button-content" :dropdown="dropdown">
@@ -44,7 +46,7 @@
 </template>
 
 <script>
-import { castArray, includes, without } from 'lodash'
+import { castArray, cloneDeep, includes, isEqual, without } from 'lodash'
 
 /**
  * The general search input dropdown.
@@ -106,7 +108,9 @@ export default {
     return {
       // A reactive property to hold the reference to the dropdown
       // after the component is mounted
-      dropdown: null
+      dropdown: null,
+      // Initial value when the dropdown is shown
+      initialValue: null
     }
   },
   computed: {
@@ -126,6 +130,9 @@ export default {
     },
     linkClass() {
       return { 'p-0': this.flushItems }
+    },
+    valueChanged() {
+      return !isEqual(this.initialValue, this.value)
     }
   },
   watch: {
@@ -174,6 +181,17 @@ export default {
     },
     hide() {
       return this.$refs.dropdown.hide()
+    },
+    hidden($event) {
+      this.$emit('hide', $event)
+      // When the value changed,
+      // the component emit a second event.
+      if (this.valueChanged) {
+        this.$emit('changed', $event)
+      }
+    },
+    shown() {
+      this.initialValue = cloneDeep(this.value)
     }
   }
 }

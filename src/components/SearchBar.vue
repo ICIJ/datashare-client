@@ -2,11 +2,12 @@
   <form
     :id="uniqueId"
     class="search-bar container-fluid"
-    :class="{ 'search-bar--focused': focused, 'search-bar--animated': animated }"
+    :class="{ 'search-bar--focused': focused }"
     @submit.prevent="submit"
   >
     <div class="d-flex align-items-center">
       <search-bar-input
+        ref="searchInput"
         v-model="query"
         class="search-bar__input"
         :placeholder="placeholder"
@@ -16,11 +17,17 @@
         @focus="onFocus"
       >
         <template #addons>
-          <search-bar-input-dropdown-for-field v-if="!hideFieldDropdown" v-model="field" />
+          <search-bar-input-dropdown-for-field
+            v-if="!hideFieldDropdown"
+            v-model="field"
+            :disabled="!!indices"
+            @changed="focusOnSearchInput"
+          />
           <search-bar-input-dropdown-for-projects
             v-model="selectedProjects"
             :disabled="!!indices"
             :no-caret="!!indices"
+            @changed="focusOnSearchInput"
           />
         </template>
         <template #suggestions>
@@ -105,12 +112,6 @@ export default {
     SearchBarInputDropdownForProjects
   },
   props: {
-    /**
-     * Animate the focus on the search input.
-     */
-    animated: {
-      type: Boolean
-    },
     /**
      * Placeholder in the search bar.
      */
@@ -304,6 +305,10 @@ export default {
     onFocus() {
       this.focused = true
       this.searchTerms()
+    },
+    async focusOnSearchInput() {
+      await this.$nextTick()
+      this.$refs.searchInput.focus()
     }
   }
 }
@@ -315,12 +320,7 @@ export default {
     height: auto;
   }
 
-  &--focused.search-bar--animated {
-    :deep(.input-group) {
-      filter: drop-shadow(0 0.3em 0.6em rgba(black, 0.2));
-      transition: transform 0.2s;
-      transform: translateY(-4px);
-    }
+  &--focused{
   }
 
   & &__suggestions.dropdown-menu {

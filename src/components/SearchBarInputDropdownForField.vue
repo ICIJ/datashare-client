@@ -6,6 +6,8 @@
     :no-caret="noCaret"
     :options="options"
     :options-path="optionsPath"
+    @hidden="$emit('hidden', $event)"
+    @changed="$emit('changed', $event)"
   />
 </template>
 
