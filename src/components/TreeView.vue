@@ -9,7 +9,7 @@
           datadir-label
           @input="$emit('input', $event)"
         ></tree-breadcrumb>
-        <transition name="fade">
+        <transition :name="transition">
           <div v-if="!$wait.waiting('loading tree view data')">
             <router-link
               v-if="searchable"
@@ -36,7 +36,7 @@
     </b-collapse>
     <!-- @slot Area to insert content above the tree view -->
     <slot name="above"></slot>
-    <v-wait for="loading tree view data" transition="fade">
+    <v-wait for="loading tree view data" :transition="transition">
       <div slot="waiting" class="tree-view__spinner text-center">
         <fa icon="circle-notch" spin size="2x"></fa>
       </div>
@@ -285,6 +285,13 @@ export default {
      */
     query: {
       type: String
+    },
+    /**
+     * Transition to apply
+     */
+    transition: {
+      type: String,
+      default: 'fade'
     }
   },
   data() {
