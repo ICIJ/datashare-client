@@ -57,7 +57,8 @@
     },
     "placeholder": "文書内の検索",
     "buttonLabel": "検索",
-    "searchIn": "検索",
+    "searchIn": "Filter %{plural}...",
+    "searchInProjects": "Filter projects...",
     "hideFilters": "フィルターを非表示",
     "showFilters": "フィルターを表示",
     "contextualizeFiltersLabel": "フィルターを連動させる",
@@ -1053,7 +1054,11 @@
     "about": "About",
     "search": "Search"
   },
+  "projectSelector": {
+    "noMatches": "No matches"
+  },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects"
+    "projectsCount": "%{count} projects",
+    "noMatches": "No matches"
   }
 }
