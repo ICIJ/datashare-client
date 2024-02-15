@@ -13,6 +13,8 @@
     :no-caret="noCaret"
     :options="options"
     @selected="reset"
+    @hidden="$emit('hidden', $event)"
+    @changed="$emit('changed', $event)"
   >
     <template #above="{ dropdown }">
       <li class="search-bar-input-dropdown-for-projects__query-input">

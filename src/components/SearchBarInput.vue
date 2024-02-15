@@ -1,6 +1,7 @@
 <template>
   <div class="search-bar-input input-group" :class="{ ['input-group-' + size]: true }">
     <input
+      ref="input"
       v-model="value"
       class="form-control search-bar-input__input"
       :placeholder="placeholder"
@@ -104,6 +105,9 @@ export default {
     },
     onFocus() {
       this.$emit('focus')
+    },
+    focus() {
+      this.$refs.input.focus()
     }
   }
 }
