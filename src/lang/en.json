@@ -1054,7 +1054,11 @@
     "about": "About",
     "search": "Search"
   },
+  "projectSelector": {
+    "noMatches": "No matches"
+  },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects"
+    "projectsCount": "%{count} projects",
+    "noMatches": "No matches"
   }
 }
