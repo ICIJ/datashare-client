@@ -14,6 +14,7 @@
         v-model="query"
         class="filter__items__search"
         dark
+        :autofocus="false"
         :rounded="false"
         :placeholder="$t('search.searchInProjects')"
       />
