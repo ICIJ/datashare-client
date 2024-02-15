@@ -70,6 +70,13 @@ export default {
     dark: {
       type: Boolean,
       default: false
+    },
+    /**
+     * Disable autocomplete by default.
+     */
+    autocomplete: {
+      type: String,
+      default: 'off'
     }
   },
   computed: {
@@ -91,10 +98,14 @@ export default {
   <b-form @submit.prevent="$emit('submit', value)">
     <b-input-group size="sm" class="search-form-control" :class="searchFormClassAttr">
       <b-form-input
+        :autocomplete="autocomplete"
         :autofocus="autofocus"
         class="search-form-control__input"
         :placeholder="placeholder"
         :value="value"
+        @keydown.up="$emit('up', $event)"
+        @keydown.down="$emit('down', $event)"
+        @keydown.enter="$emit('enter', $event)"
         @input="$emit('input', $event)"
       ></b-form-input>
       <b-input-group-append class="search-form-control__addon search-form-control__addon--append">
