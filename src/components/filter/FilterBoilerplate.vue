@@ -111,6 +111,7 @@
         @contextualize-filter="toggleContextualizeFilter"
         @open-filter-search="openFilterSearch"
         @toggle-filter="toggleFilter"
+        @sorted="applySort"
       />
     </b-collapse>
   </div>
@@ -545,6 +546,11 @@ export default {
     },
     toggleContextualizeFilter() {
       this.clearInfiniteScroll()
+    },
+    applySort() {
+      if (this.fromElasticSearch) {
+        return this.aggregateWithLoading({ clearPages: true })
+      }
     },
     watchedForUpdate() {
       const { search } = this.$store.state

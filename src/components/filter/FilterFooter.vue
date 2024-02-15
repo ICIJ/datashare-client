@@ -105,6 +105,7 @@ export default {
       set({ sortBy, sortByOrder }) {
         const name = this.filter.name
         this.$store.commit('search/sortFilter', { name, sortBy, sortByOrder })
+        this.$emit('sorted', { name, sortBy, sortByOrder })
       }
     },
     sortBy() {
