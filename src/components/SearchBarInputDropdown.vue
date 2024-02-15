@@ -1,5 +1,6 @@
 <template>
   <b-dropdown
+    ref="dropdown"
     :class="{
       'search-bar__field--selected': value !== 'all',
       'search-bar__field--disabled': disabled
@@ -14,25 +15,31 @@
     variant="outline-light"
   >
     <template #button-content>
-      <slot name="button-content">
+      <slot name="button-content" :dropdown="dropdown">
         <span v-for="v in values" :key="v">
           {{ $t(optionsPathValue + v) }}
         </span>
       </slot>
     </template>
+    <!-- @slot Area to insert content above the dropdown -->
+    <slot name="above" :dropdown="dropdown"></slot>
     <b-dropdown-item
-      v-for="(option, o) in options"
-      :key="o"
+      v-for="(option, index) in options"
+      :key="index"
       :active="hasValue(option)"
+      :link-class="linkClass"
       class="search-bar-input-dropdown__option"
-      link-class="p-0"
+      @click="toggleUniqueValue($event, option)"
     >
-      <slot name="dropdown-item" v-bind="{ option, toggleValue }">
-        <span class="px-3 py-2 d-block" @click="toggleValue($event, option)">
+      <slot name="dropdown-item" v-bind="{ option, index, values, hasValue, toggleValue, toggleUniqueValue }">
+        <span class="px-3 d-block" @click="toggleValue($event, option)">
           {{ $t(optionsPathValue + option) }}
         </span>
       </slot>
     </b-dropdown-item>
+
+    <!-- @slot Area to insert content bellow the dropdown -->
+    <slot name="bellow" :dropdown="dropdown"></slot>
   </b-dropdown>
 </template>
 
@@ -87,6 +94,19 @@ export default {
      */
     noCaret: {
       type: Boolean
+    },
+    /**
+     * Remove padding on items
+     */
+    flushItems: {
+      type: Boolean
+    }
+  },
+  data() {
+    return {
+      // A reactive property to hold the reference to the dropdown
+      // after the component is mounted
+      dropdown: null
     }
   },
   computed: {
@@ -103,7 +123,19 @@ export default {
       set(value) {
         this.$emit('update', value)
       }
+    },
+    linkClass() {
+      return { 'p-0': this.flushItems }
     }
+  },
+  watch: {
+    selectedValue() {
+      this.$emit('selected', this.selectedValue)
+    }
+  },
+  async mounted() {
+    await this.$nextTick()
+    this.dropdown = this.$refs.dropdown
   },
   methods: {
     selectValue(value) {
@@ -118,6 +150,19 @@ export default {
         this.selectedValue = without(this.values, value)
       }
     },
+    setValue(event, value) {
+      if (this.multiple) {
+        this.selectedValue = [value]
+      } else {
+        this.selectedValue = value
+      }
+    },
+    toggleUniqueValue(event, value) {
+      if (this.hasValue(value)) {
+        return this.unselectValue(value)
+      }
+      return this.setValue(event, value)
+    },
     toggleValue(event, value) {
       if (this.multiple) {
         event.stopPropagation()
@@ -125,7 +170,10 @@ export default {
       return this.hasValue(value) ? this.unselectValue(value) : this.selectValue(value)
     },
     hasValue(value) {
-      return this.multiple ? includes(this.values, value) : this.selectedValue === value
+      return includes(this.values, value)
+    },
+    hide() {
+      return this.$refs.dropdown.hide()
     }
   }
 }
@@ -178,7 +226,7 @@ export default {
   }
 
   &__menu {
-    max-height: 70vh;
+    max-height: 50vh;
     overflow: auto;
   }
 }
