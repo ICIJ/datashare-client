@@ -69,7 +69,7 @@ export default {
       >{{ $t('extractingFormOcrControl.isMissing', { language: languageName }) }}
       {{ $t('extractingFormOcrControl.useDefault') }}
 
-      <a href="https://icij.gitbook.io/datashare/all/analyze-documents-in-more-languages" target="_blank">
+      <a href="https://icij.gitbook.io/datashare/local-mode/add-more-languages" target="_blank">
         {{ $t('extractingFormOcrControl.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
       </a>
     </b-alert>
