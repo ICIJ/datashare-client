@@ -44,6 +44,18 @@ export default [
     }
   },
   {
+    type: 'FilterPath',
+    options: {
+      name: 'path',
+      key: 'byDirname',
+      icon: 'hdd',
+      order: 35,
+      isSearchable: true,
+      fromElasticSearch: false,
+      preference: 'filter-path'
+    }
+  },
+  {
     type: 'FilterContentType',
     options: {
       name: 'contentType',
@@ -104,18 +116,6 @@ export default [
       category: namedEntityCategoryTranslation.namedEntityLocation,
       order: 90,
       preference: 'filter-named-entity-location'
-    }
-  },
-  {
-    type: 'FilterPath',
-    options: {
-      name: 'path',
-      key: 'byDirname',
-      icon: 'hdd',
-      order: 100,
-      isSearchable: true,
-      fromElasticSearch: false,
-      preference: 'filter-path'
     }
   },
   {
