@@ -25,6 +25,7 @@ export default {
         this.notifyCreationFailed(error)
       } else {
         this.notifyCreationSucceed()
+        this.$router.push('.')
       }
     },
     notifyCreationSucceed() {
