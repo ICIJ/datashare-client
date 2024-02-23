@@ -227,10 +227,8 @@ $value in $theme-colors {
     }
 
     .toast {
-      border-color: currentColor;
       box-shadow: $box-shadow-sm;
     }
-
     .close {
       position: absolute;
       right: $spacer-xs;
@@ -241,6 +239,12 @@ $value in $theme-colors {
       border-left: 1px solid currentColor;
       font-weight: lighter;
       font-size: 1.5rem;
+    }
+
+    @each $color, $value in $theme-colors {
+      &.b-toast-#{$color} .close {
+        border-color: theme-color-level($color, $alert-border-level);
+      }
     }
   }
 }
