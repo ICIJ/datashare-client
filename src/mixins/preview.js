@@ -19,15 +19,6 @@ export default {
     }
   },
   methods: {
-    arrayBufferToBase64(buffer) {
-      let binary = ''
-      const bytes = [].slice.call(new Uint8Array(buffer))
-      bytes.forEach((b) => {
-        binary += String.fromCharCode(b)
-      })
-      // Create a base64 string from a string
-      return btoa(binary)
-    },
     getPreviewMetaUrl({ index, id, routing } = {}) {
       const host = this.$config.get('previewHost')
       return `${host}/api/v1/thumbnail/${index}/${id}.json?routing=${routing}`
