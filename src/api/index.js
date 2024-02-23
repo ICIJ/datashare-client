@@ -24,9 +24,7 @@ export class Api {
   }
   indexPath(path, { ocr = false, filter = true, language = null, defaultProject = null } = {}) {
     const ocrLanguage = get(settings, ['iso6392', 'tesseract', language], language)
-    const queueName = defaultProject ? `extract:queue:${defaultProject}` : null
-    const reportName = defaultProject ? `extract:report:${defaultProject}` : null
-    const options = omitBy({ ocr, filter, language, ocrLanguage, defaultProject, queueName, reportName }, isNull)
+    const options = omitBy({ ocr, filter, language, ocrLanguage, defaultProject }, isNull)
     const data = { options }
     const trimedPath = trim(path, '/')
     return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
