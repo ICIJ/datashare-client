@@ -308,6 +308,18 @@ export default class Document extends EsDoc {
     ]
     return spreadsheetTypes.indexOf(this.contentType) > -1
   }
+  get isSupportedImage() {
+    const imageTypes = [
+      'image/apng',
+      'image/avif',
+      'image/gif',
+      'image/jpeg',
+      'image/png',
+      'image/svg+xml',
+      'image/webp'
+    ]
+    return imageTypes.indexOf(this.contentType) > -1
+  }
   get isImage() {
     return this.contentType.indexOf('image/') === 0
   }

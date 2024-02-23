@@ -1,5 +1,8 @@
 import { getCookie } from 'tiny-cookie'
 import { kebabCase, startCase } from 'lodash'
+import axios from 'axios'
+
+import settings from '@/utils/settings'
 
 export default {
   computed: {
@@ -33,24 +36,27 @@ export default {
       const host = this.$config.get('previewHost')
       return `${host}/api/v1/thumbnail/${index}/${id}?routing=${routing}&page=${page}&size=${size}`
     },
+    canPreviewRaw({ extractionLevel = -1, contentLength = 0, isSupportedImage = false } = {}) {
+      return extractionLevel === 0 && isSupportedImage && contentLength < settings.previewRawMaxContentLength
+    },
     async fetchPreview(url) {
-      const request = new Request(url)
-      const response = await fetch(request, {
-        method: 'GET',
-        cache: 'default',
-        headers: {
-          [this.sessionIdHeaderName]: this.sessionIdHeaderValue
-        }
-      })
-      if (!response.ok) {
+      try {
+        return await axios.get(url, {
+          cache: 'default',
+          responseType: 'arraybuffer',
+          headers: {
+            [this.sessionIdHeaderName]: this.sessionIdHeaderValue
+          }
+        })
+      } catch (_) {
         throw Error('Unable to fetch the thumbnail')
       }
-      return response
     },
-    async fetchPreviewAsBase64(url) {
+    async fetchImageAsBase64(url) {
       const response = await this.fetchPreview(url)
-      const buffer = await response.arrayBuffer()
-      const imageStr = this.arrayBufferToBase64(buffer)
+      const buffer = Buffer.from(response.data, 'binary')
+      const imageStr = buffer.toString('base64')
+      console.log(imageStr)
       return `data:image/jpeg;base64,${imageStr}`
     }
   }

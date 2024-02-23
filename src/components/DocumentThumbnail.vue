@@ -91,7 +91,7 @@ export default {
       return `${this.document.basename} preview`
     },
     isActivated() {
-      return !!this.$config.get('previewHost')
+      return !!this.$config.get('previewHost') || this.canPreviewRaw(this.document)
     },
     lazyLoadable() {
       return window && 'IntersectionObserver' in window
@@ -107,7 +107,10 @@ export default {
   },
   methods: {
     async fetchAsBase64() {
-      return this.fetchPreviewAsBase64(this.thumbnailUrl)
+      if (this.canPreviewRaw(this.document)) {
+        return this.fetchImageAsBase64(this.document.inlineFullUrl)
+      }
+      return this.fetchImageAsBase64(this.thumbnailUrl)
     },
     async fetchAndLoad() {
       try {
@@ -205,9 +208,10 @@ export default {
   &__image {
     display: inline-block;
     margin: auto;
-    max-width: 100%;
     opacity: 0;
     transition: opacity 300ms;
+    max-height: 100%;
+    max-width: 100%;
   }
 
   &--crop &__image {
@@ -215,8 +219,13 @@ export default {
     min-height: 100%;
     min-width: 100%;
     position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   &__placeholder {
