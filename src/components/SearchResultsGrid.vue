@@ -17,7 +17,7 @@
             class="flex-grow-1 search-results-grid__items__item__thumbnail"
             :to="{ name: 'document', params: document.routerParams, query: { q: query } }"
           >
-            <document-thumbnail :document="document" size="md" />
+            <document-thumbnail :document="document" crop size="md" />
           </router-link>
           <router-link
             v-b-tooltip

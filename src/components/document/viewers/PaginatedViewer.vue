@@ -160,7 +160,7 @@ export default {
     },
     async fetchSize() {
       const url = this.getPreviewUrl(this.document, { size: 150 })
-      const base64 = await this.fetchPreviewAsBase64(url)
+      const base64 = await this.fetchImageAsBase64(url)
       return new Promise((resolve, reject) => {
         const image = new Image()
         image.onerror = reject

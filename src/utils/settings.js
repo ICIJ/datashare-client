@@ -66,6 +66,7 @@ export default {
   progressBar: {
     color: '#FA4070'
   },
+  previewRawMaxContentLength: 5e6,
   searchFields: [
     {
       key: 'all',
