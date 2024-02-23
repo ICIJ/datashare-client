@@ -49,7 +49,7 @@ export default {
       return this.disabled ? 'span' : 'router-link'
     },
     projectDisplay() {
-      return startCase(this.resolvedProject.name)
+      return this.resolvedProject.label || startCase(this.resolvedProject.name)
     },
     projectRoute() {
       const { name } = this.resolvedProject
