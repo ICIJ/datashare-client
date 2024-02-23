@@ -33,7 +33,6 @@ export default {
     async fetchPreview(url) {
       try {
         return await axios.get(url, {
-          cache: 'default',
           responseType: 'arraybuffer',
           headers: {
             [this.sessionIdHeaderName]: this.sessionIdHeaderValue
