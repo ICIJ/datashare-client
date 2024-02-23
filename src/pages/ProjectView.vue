@@ -1,4 +1,6 @@
 <script>
+import { startCase } from 'lodash'
+
 import utils from '@/mixins/utils'
 import PageHeader from '@/components/PageHeader'
 import ProjectThumbnail from '@/components/ProjectThumbnail'
@@ -29,6 +31,9 @@ export default {
   computed: {
     project() {
       return this.$core.findProject(this.name)
+    },
+    projectDisplay() {
+      return this.project.label || startCase(this.project.name)
     },
     tab: {
       get() {
@@ -61,12 +66,7 @@ export default {
 
 <template>
   <div class="project-view">
-    <page-header
-      v-model="tabIndex"
-      :title="project.label || project.name"
-      :description="project.description"
-      :tab.sync="tab"
-    >
+    <page-header v-model="tabIndex" :title="projectDisplay" :description="project.description" :tab.sync="tab">
       <template #preTitle>
         <project-thumbnail :project="project" width="4em" class="mr-3 rounded" />
       </template>
