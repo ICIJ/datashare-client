@@ -1,4 +1,6 @@
-import { isNull, join, map, omitBy, replace, toLower, trim } from 'lodash'
+import { get, isNull, join, map, omitBy, replace, toLower, trim } from 'lodash'
+
+import settings from '@/utils/settings'
 
 const Method = Object.freeze({
   POST: 'POST',
@@ -21,7 +23,7 @@ export class Api {
     return this.indexPath('file', options)
   }
   indexPath(path, { ocr = false, filter = true, language = null, defaultProject = null } = {}) {
-    const ocrLanguage = language
+    const ocrLanguage = get(settings, ['iso6392', 'tesseract', language], language)
     const queueName = defaultProject ? `extract:queue:${defaultProject}` : null
     const reportName = defaultProject ? `extract:report:${defaultProject}` : null
     const options = omitBy({ ocr, filter, language, ocrLanguage, defaultProject, queueName, reportName }, isNull)

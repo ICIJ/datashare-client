@@ -1,5 +1,7 @@
 <script>
-import { find } from 'lodash'
+import { some, get, find } from 'lodash'
+
+import settings from '@/utils/settings'
 
 /**
  * A form-control to select the extracting language.
@@ -39,7 +41,9 @@ export default {
       return 'default'
     },
     isLanguageAvailable() {
-      return !!find(this.ocrLanguages, (language) => language.iso6392 === this.isoLang)
+      return some(this.ocrLanguages, ({ name, iso6392 }) => {
+        return this.sameLanguage(name) || this.sameLanguage(iso6392)
+      })
     },
     isOcrLanguage() {
       return !this.isoLang || this.isLanguageAvailable
@@ -49,6 +53,14 @@ export default {
     },
     overlayVariant() {
       return this.dark ? 'dark' : 'light'
+    }
+  },
+  methods: {
+    toTesseractCode(name) {
+      return get(settings, ['iso6392', 'tesseract', name], name)
+    },
+    sameLanguage(nameOrIso6392) {
+      return this.toTesseractCode(nameOrIso6392) === this.toTesseractCode(this.isoLang)
     }
   }
 }

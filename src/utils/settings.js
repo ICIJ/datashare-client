@@ -67,6 +67,11 @@ export default {
     color: '#FA4070'
   },
   previewRawMaxContentLength: 5e6,
+  iso6392: {
+    tesseract: {
+      zho: 'chi_sim'
+    }
+  },
   searchFields: [
     {
       key: 'all',
