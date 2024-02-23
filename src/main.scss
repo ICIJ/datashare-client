@@ -100,7 +100,7 @@ body {
 }
 
 // Truncated element in a flexbox child must not fully collapse when the
-// flex container is resized down. 
+// flex container is resized down.
 // @see https://drafts.csswg.org/css-flexbox/#min-size-auto
 .flex-truncate,
 .flex-truncate.d-flex > *,
@@ -216,15 +216,31 @@ $value in $theme-colors {
   }
 
   .b-toast {
-    .toast {
+    .toast, .toast-header {
       font-size: 1rem;
+      padding-right: 2.5rem;
     }
 
-    &-danger .toast,
-    &-warning .toast,
-    &-info .toast,
-    &-success .toast {
-      border-left-width: 25px;
+    .toast-header {
+      background-color: transparent;
+      border: 0;
+    }
+
+    .toast {
+      border-color: currentColor;
+      box-shadow: $box-shadow-sm;
+    }
+
+    .close {
+      position: absolute;
+      right: $spacer-xs;
+      padding: 0 $spacer-xs;
+      top: $spacer-xs;
+      bottom: $spacer-xs;
+      color: inherit;
+      border-left: 1px solid currentColor;
+      font-weight: lighter;
+      font-size: 1.5rem;
     }
   }
 }
