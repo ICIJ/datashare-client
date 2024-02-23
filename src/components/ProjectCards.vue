@@ -11,7 +11,7 @@
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <h4 class="project-cards__item__heading mb-0">
                   <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
-                    {{ project.label || project.name }}
+                    {{ project.label || startCase(project.name) }}
                   </router-link>
                 </h4>
                 <fa icon="thumbtack" fixed-width class="mr-1 project-cards__item__thumbtack" />
