@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { startCase } from 'lodash'
+
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 
 /**
@@ -47,7 +49,7 @@ export default {
       return this.disabled ? 'span' : 'router-link'
     },
     projectDisplay() {
-      return this.resolvedProject.label || this.resolvedProject.name
+      return startCase(this.resolvedProject.name)
     },
     projectRoute() {
       const { name } = this.resolvedProject
