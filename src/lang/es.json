@@ -661,12 +661,13 @@
     "proximitySearches": "Búsquedas aproximadas",
     "proximitySearchesDescription": "Número máximo de operaciones sobre los términos (inserciones, eliminaciones, sustitución y transposición) necesario para hacer que una frase coincida con la otra.",
     "fileTypes": "Tipos de archivo",
+    "tags": "Tags",
     "path": "Ruta",
     "queries": "Consultas",
     "state": "Estado",
     "seeError": "Ver error",
     "date": "Fecha",
-    "nbResults": "Número de resultados",
+    "nbResults": "Results",
     "query": "no hay consultas | 1 consulta | {count} consultas",
     "clearFilters": "Clear filters",
     "delete": "Eliminar búsqueda masiva",
@@ -676,6 +677,7 @@
     "notPublished": "Not published",
     "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
     "phraseMatch": "Hacer la frase coincide exactamente",
+    "excludeTags": "Exclude Tags",
     "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
     "phraseMatchDescriptionOperators": "No inserte operadores en sus consultas",
     "learnMore": "Leer más",
@@ -914,10 +916,14 @@
   },
   "widget": {
     "noData": "No hay datos",
+    "noRecommendations": "No recommendations",
     "noFolders": "Sin carpetas",
     "noEntities": "No named entities",
     "languages": {
       "title": "Languages"
+    },
+    "recommendedBy": {
+      "title": "Latest recommended documents"
     },
     "contentTypes": {
       "title": "File types"
@@ -932,6 +938,7 @@
     },
     "diskUsage": {
       "details": "Ver el uso del disco",
+      "queryPlaceholder": "Filter directories...",
       "warning": "El número de documentos sólo cuenta documentos padre aquí (archivos en disco), no archivos adjuntos (documentos incrustados)."
     },
     "creationDate": {
@@ -1027,6 +1034,7 @@
     "docs": "archivo | archivos",
     "datadir": "Inicio",
     "all": "Todos",
+    "searchPath": "Search in this directory",
     "includingIndividualDocuments": "incluyendo documentos individuales"
   },
   "quickItemNav": {
@@ -1046,7 +1054,11 @@
     "about": "About",
     "search": "Search"
   },
+  "projectSelector": {
+    "noMatches": "No matches"
+  },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects"
+    "projectsCount": "%{count} projects",
+    "noMatches": "No matches"
   }
 }

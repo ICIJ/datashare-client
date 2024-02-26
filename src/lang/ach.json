@@ -57,7 +57,8 @@
     },
     "placeholder": "crwdns270:0crwdne270:0",
     "buttonLabel": "crwdns1152:0crwdne1152:0",
-    "searchIn": "crwdns1154:0crwdne1154:0",
+    "searchIn": "crwdns2964:0%{plural}crwdne2964:0",
+    "searchInProjects": "crwdns2966:0crwdne2966:0",
     "hideFilters": "crwdns276:0crwdne276:0",
     "showFilters": "crwdns278:0crwdne278:0",
     "contextualizeFiltersLabel": "crwdns1126:0crwdne1126:0",
@@ -660,12 +661,13 @@
     "proximitySearches": "crwdns1228:0crwdne1228:0",
     "proximitySearchesDescription": "crwdns1230:0crwdne1230:0",
     "fileTypes": "crwdns1202:0crwdne1202:0",
+    "tags": "crwdns2958:0crwdne2958:0",
     "path": "crwdns1190:0crwdne1190:0",
     "queries": "crwdns1036:0crwdne1036:0",
     "state": "crwdns1038:0crwdne1038:0",
     "seeError": "crwdns2276:0crwdne2276:0",
     "date": "crwdns1040:0crwdne1040:0",
-    "nbResults": "crwdns1042:0crwdne1042:0",
+    "nbResults": "crwdns2956:0crwdne2956:0",
     "query": "crwdns1044:0{count}crwdne1044:0",
     "clearFilters": "crwdns2592:0crwdne2592:0",
     "delete": "crwdns1112:0crwdne1112:0",
@@ -675,6 +677,7 @@
     "notPublished": "crwdns2594:0crwdne2594:0",
     "publishedDescription": "crwdns1204:0crwdne1204:0",
     "phraseMatch": "crwdns1172:0crwdne1172:0",
+    "excludeTags": "crwdns2960:0crwdne2960:0",
     "phraseMatchDescription": "crwdns1174:0crwdne1174:0",
     "phraseMatchDescriptionOperators": "crwdns1208:0crwdne1208:0",
     "learnMore": "crwdns1206:0crwdne1206:0",
@@ -913,10 +916,14 @@
   },
   "widget": {
     "noData": "crwdns2000:0crwdne2000:0",
+    "noRecommendations": "crwdns2950:0crwdne2950:0",
     "noFolders": "crwdns2054:0crwdne2054:0",
     "noEntities": "crwdns2787:0crwdne2787:0",
     "languages": {
       "title": "crwdns2944:0crwdne2944:0"
+    },
+    "recommendedBy": {
+      "title": "crwdns2952:0crwdne2952:0"
     },
     "contentTypes": {
       "title": "crwdns2946:0crwdne2946:0"
@@ -931,6 +938,7 @@
     },
     "diskUsage": {
       "details": "crwdns2020:0crwdne2020:0",
+      "queryPlaceholder": "crwdns2962:0crwdne2962:0",
       "warning": "crwdns2426:0crwdne2426:0"
     },
     "creationDate": {
@@ -1026,6 +1034,7 @@
     "docs": "crwdns2184:0crwdne2184:0",
     "datadir": "crwdns2258:0crwdne2258:0",
     "all": "crwdns2428:0crwdne2428:0",
+    "searchPath": "crwdns2954:0crwdne2954:0",
     "includingIndividualDocuments": "crwdns2430:0crwdne2430:0"
   },
   "quickItemNav": {
@@ -1045,7 +1054,11 @@
     "about": "crwdns2885:0crwdne2885:0",
     "search": "crwdns2887:0crwdne2887:0"
   },
+  "projectSelector": {
+    "noMatches": "crwdns2968:0crwdne2968:0"
+  },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "crwdns2889:0%{count}crwdne2889:0"
+    "projectsCount": "crwdns2889:0%{count}crwdne2889:0",
+    "noMatches": "crwdns2970:0crwdne2970:0"
   }
 }

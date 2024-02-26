@@ -661,6 +661,7 @@
     "proximitySearches": "Recherches approximatives",
     "proximitySearchesDescription": "Nombre maximum d'opérations sur les termes (insertions, suppressions, substitutions ou transpositions) nécessaire pour qu'une expression recherchée corresponde à une expression trouvée.",
     "fileTypes": "Types de fichiers",
+    "tags": "Tags",
     "path": "Chemin",
     "queries": "Recherches",
     "state": "Status",
@@ -676,6 +677,7 @@
     "notPublished": "Non publiée",
     "publishedDescription": "Donner accès aux autres membres du projet à cette recherche en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",
+    "excludeTags": "Exclude Tags",
     "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre.",
     "phraseMatchDescriptionOperators": "Ne pas insérer d'opérateurs dans vos recherches",
     "learnMore": "En savoir plus",
@@ -914,10 +916,14 @@
   },
   "widget": {
     "noData": "Pas de données",
+    "noRecommendations": "No recommendations",
     "noFolders": "Aucun dossier",
     "noEntities": "Aucune entités nommées",
     "languages": {
       "title": "Languages"
+    },
+    "recommendedBy": {
+      "title": "Latest recommended documents"
     },
     "contentTypes": {
       "title": "File types"
@@ -932,6 +938,7 @@
     },
     "diskUsage": {
       "details": "Voir l'utilisation du disque",
+      "queryPlaceholder": "Filter directories...",
       "warning": "Le nombre de documents ne compte que les documents parents (fichiers sur disque), et non les pièces jointes (documents attachés ou enfants)."
     },
     "creationDate": {
@@ -1027,6 +1034,7 @@
     "docs": "doc | docs",
     "datadir": "Accueil",
     "all": "Tout",
+    "searchPath": "Search in this directory",
     "includingIndividualDocuments": "y compris les documents hors sous-dossiers"
   },
   "quickItemNav": {
@@ -1046,7 +1054,11 @@
     "about": "A propos",
     "search": "Rechercher"
   },
+  "projectSelector": {
+    "noMatches": "No matches"
+  },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects"
+    "projectsCount": "%{count} projects",
+    "noMatches": "No matches"
   }
 }
