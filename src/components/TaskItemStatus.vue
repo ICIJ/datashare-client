@@ -9,8 +9,12 @@
         </slot>
         <div v-if="taskItem.errorMessage">
           <template v-if="errorMessageAsJson">
-            <json-formatter class="task-item-status__modal__error-message" :json="errorMessageAsJson" :open="4"
-              :config="{ theme: 'dark' }" />
+            <json-formatter
+              class="task-item-status__modal__error-message"
+              :json="errorMessageAsJson"
+              :open="4"
+              :config="{ theme: 'dark' }"
+            />
           </template>
           <template v-else>
             <pre class="task-item-status__modal__error-message mt-3 mb-0"><code>{{ errorMessage }}</code></pre>
