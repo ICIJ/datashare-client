@@ -9,17 +9,12 @@
         </slot>
         <div v-if="taskItem.errorMessage">
           <template v-if="errorMessageAsJson">
-            <json-formatter
-              class="task-item-status__modal__error-message"
-              :json="errorMessageAsJson"
-              :open="4"
-              :config="{ theme: 'dark' }"
-            />
+            <json-formatter class="task-item-status__modal__error-message" :json="errorMessageAsJson" :open="4"
+              :config="{ theme: 'dark' }" />
           </template>
           <template v-else>
-            <pre class="task-item-status__modal__error-message mt-3 mb-0"><code>{{ taskItem.errorMessage }}</code></pre>
+            <pre class="task-item-status__modal__error-message mt-3 mb-0"><code>{{ errorMessage }}</code></pre>
           </template>
-          <div class="mt-2" v-html="taskItem.errorText"></div>
         </div>
       </template>
     </ellipse-status>
@@ -67,10 +62,12 @@ export default {
     isFailed() {
       return this.statusName === 'failure' || this.statusName === 'error'
     },
+    errorMessage() {
+      return this.taskItem?.error?.message ?? ''
+    },
     errorMessageAsJson() {
       const re = /{"error":.+}/gm
-      const message = this.taskItem.errorMessage || ''
-      const match = message.match(re)
+      const match = this.errorMessage.match(re)
       try {
         return JSON.parse(match)
       } catch (_) {
