@@ -15,6 +15,7 @@
           <template v-else>
             <pre class="task-item-status__modal__error-message mt-3 mb-0"><code>{{ errorMessage }}</code></pre>
           </template>
+          <div class="mt-2" v-html="taskItem.errorText"></div>
         </div>
       </template>
     </ellipse-status>
@@ -63,7 +64,7 @@ export default {
       return this.statusName === 'failure' || this.statusName === 'error'
     },
     errorMessage() {
-      return this.taskItem?.error?.message ?? ''
+      return this.taskItem?.errorMessage?.message ?? ''
     },
     errorMessageAsJson() {
       const re = /{"error":.+}/gm
