@@ -238,19 +238,19 @@ class IndexBuilder {
       }
       const { _id } = await this.index.create(createRequest)
       this.committedDocumentIds.push(_id)
-      for (let i = 0; i < this.document.nerList.length; i++) {
-        const ner = this.document.nerList[i]
+
+      for (const { id, mention, offsets, category, isHidden } of this.document.nerList) {
         await this.index.create({
           index,
-          refresh: true,
-          id: ner.id,
+          id,
           routing: id,
+          refresh: true,
           body: {
-            mention: ner.mention,
-            mentionNorm: ner.mention,
-            offsets: ner.offsets,
-            category: ner.category,
-            isHidden: ner.isHidden,
+            offsets,
+            category,
+            isHidden,
+            mention,
+            mentionNorm: mention,
             type: 'NamedEntity',
             join: { name: 'NamedEntity', parent: id }
           }
