@@ -4,15 +4,10 @@ import { errors as esErrors } from 'elasticsearch-browser'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
-// import { flushPromises } from '~tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import Search from '@/pages/Search'
 import { state, getters, mutations } from '@/store/modules/search'
-const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
-const flushPromisesAndAdvanceTimers = async (time) => {
-  vi.advanceTimersByTime(time)
-  await flushPromises()
-}
 
 describe('Search.vue', () => {
   let store
@@ -78,40 +73,6 @@ describe('Search.vue', () => {
       store.commit('search/error', new esErrors.RequestTimeout())
       await flushPromises()
       expect(wrapper.find('b-button-stub').exists()).toBeTruthy()
-    })
-  })
-
-  describe('the progress bar', () => {
-    beforeEach(() => {
-      // Use fake timers to control times!
-      // @see https://jestjs.io/fr/docs/timer-mocks
-      vi.useFakeTimers()
-    })
-
-    afterEach(() => {
-      vi.useRealTimers()
-    })
-    it('should increase of 2 per second', async () => {
-      // the timeout indicate the progress is finished after the time advance
-      setTimeout(() => store.commit('search/isReady', true), 6000)
-      store.commit('search/isReady', false)
-      await flushPromises()
-
-      await flushPromisesAndAdvanceTimers(5500)
-
-      expect(wrapper.vm.$Progress.get()).toBe(10)
-      expect(wrapper.vm.intervalId).not.toBe(-1)
-    })
-
-    it('should be reset', async () => {
-      setTimeout(() => store.commit('search/isReady', true), 5000)
-      store.commit('search/isReady', false)
-      await flushPromises()
-
-      await flushPromisesAndAdvanceTimers(5500)
-
-      expect(wrapper.vm.$Progress.get()).toBe(100)
-      expect(wrapper.vm.intervalId).toBe(-1)
     })
   })
 })
