@@ -4,28 +4,19 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import { Core } from '@/core'
 import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 
-vi.mock('@/api/resources/Auth', () => {
-  return vi.fn().mockImplementation(() => {
-    return {
-      getUsername: vi.fn().mockImplementation(() => {
-        return Promise.resolve('user_01')
-      })
-    }
-  })
-})
-
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
 FilterRecommendedBy.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterRecommendedBy.vue', () => {
-  const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
+  const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0))
   let i18n, localVue, router, store, wait, wrapper, api
   const project = toLower('FilterRecommendedBy')
 
   beforeAll(() => {
     api = {
       getRecommendationsByProject: vi.fn(),
-      getDocumentsRecommendedBy: vi.fn()
+      getDocumentsRecommendedBy: vi.fn(),
+      getUser: vi.fn().mockResolvedValue({ uid: 'user_01' })
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -38,7 +29,6 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
-    vi.clearAllMocks()
     api.getRecommendationsByProject.mockResolvedValue({
       totalCount: 42,
       aggregates: [
@@ -63,8 +53,8 @@ describe('FilterRecommendedBy.vue', () => {
     await wrapper.vm.$nextTick()
   })
 
-  afterAll(() => {
-    vi.unmock('@/api/resources/Auth')
+  afterEach(() => {
+    vi.clearAllMocks()
   })
 
   it('should build a recommendedBy filter', () => {
