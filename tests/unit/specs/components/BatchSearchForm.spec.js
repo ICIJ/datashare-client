@@ -1,14 +1,21 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
+
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from '~tests/unit/tests_utils'
-
 import BatchSearchForm from '@/components/BatchSearchForm'
 import { Core } from '@/core'
+import { beforeAll, beforeEach } from 'vitest'
 
-vi.mock('lodash/throttle', () => vi.fn((fn) => fn))
+vi.mock('lodash', async (importOriginal) => {
+  const { default: actual } = await importOriginal()
+  return {
+    ...actual,
+    throttle: vi.fn((fn) => fn)
+  }
+})
 
 describe('BatchSearchForm.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
@@ -25,6 +32,7 @@ describe('BatchSearchForm.vue', () => {
       search: { namespaced: true, actions: { queryFilter: vi.fn() } }
     }
   })
+
   let wrapper = null
 
   beforeAll(() => {
@@ -36,11 +44,14 @@ describe('BatchSearchForm.vue', () => {
     Murmur.config.merge({ mode: 'LOCAL' })
     wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
   })
+
   afterEach(() => {
     actions.onSubmit.mockReset()
   })
 
-  afterAll(() => vi.unmock('lodash/throttle'))
+  afterAll(() => {
+    vi.unmock('lodash/throttle')
+  })
 
   it('should call the store action on form submit and reset the form', async () => {
     vi.spyOn(wrapper.vm, 'resetForm')
@@ -50,6 +61,7 @@ describe('BatchSearchForm.vue', () => {
     expect(actions.onSubmit).toBeCalled()
     expect(wrapper.vm.resetForm).toBeCalled()
   })
+
   describe('on LOCAL', () => {
     it('should display a form with 7 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes and paths on LOCAL', () => {
       expect(wrapper.find('.batch-search-form__name').exists()).toBe(true)

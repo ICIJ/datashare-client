@@ -235,10 +235,9 @@ import {
   map,
   range,
   startCase,
+  throttle,
   uniq
 } from 'lodash'
-// In order to be mocked in the test class
-import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
 import Multiselect from 'vue-multiselect'
