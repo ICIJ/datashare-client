@@ -27,7 +27,7 @@ export default {
     },
     registerPoll({ fn, timeout = 2000, immediate = false } = {}) {
       // Scheddule the poll first to get its id
-      const id = parseInt(this.schedulePoll({ fn, timeout, immediate }))
+      const id = this.schedulePoll({ fn, timeout, immediate })
       // And add it to the list to retrieve it later
       this.registeredPolls.push({ fn, id })
     },
@@ -39,22 +39,23 @@ export default {
     },
     schedulePoll({ fn, timeout, immediate = false }) {
       // Return the id of the setInterval
-      return setTimeout(async () => {
-        const poll = find(this.registeredPolls, { fn })
-        try {
-          // Call the poll's promise, shedule it again only if it returns true
-          if (await fn()) {
-            // Update the poll id with the next one
-            poll.id = this.schedulePoll({ fn, timeout })
-          } else {
+      return Number(
+        setTimeout(async () => {
+          const poll = find(this.registeredPolls, { fn })
+          try {
+            // Call the poll's promise, shedule it again only if it returns true
+            if (await fn()) {
+              // Update the poll id with the next one
+              poll.id = this.schedulePoll({ fn, timeout })
+            } else {
+              this.unregisteredPoll(poll)
+            }
+            // Reject promise triggers unregistering of the poll
+          } catch (_) {
             this.unregisteredPoll(poll)
           }
-          // Reject promise triggers unregistering of the poll
-        } catch (_) {
-          this.unregisteredPoll(poll)
-        }
-        // If immediate is true, the timeout is set to 0
-      }, !immediate * this.callOrGetTimeout(timeout))
+        }, !immediate * this.callOrGetTimeout(timeout))
+      )
     },
     callOrGetTimeout(timeout) {
       if (isFunction(timeout)) {
