@@ -1,7 +1,7 @@
 import { cloneDeep, find, omit } from 'lodash'
+
 import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
@@ -163,7 +163,7 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 
-  it('should exclude documents with a specific contentType and include them again', async () => {
+  it('should exclude documents with a specific named entity and include them again', async () => {
     await letData(es).have(new IndexedDocument('bar.txt', project).withContent('bar').withNer('name_01')).commit()
     await letData(es).have(new IndexedDocument('foo.txt', project).withContent('foo').withNer('name_01')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf', project).withContent('bar').withNer('name_01')).commit()
