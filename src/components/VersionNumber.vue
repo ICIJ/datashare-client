@@ -12,7 +12,7 @@
             {{ $t('footer.clientVersion') }}
           </div>
           <div class="m-1 text-monospace version-number__tooltip__client__value">
-            {{ clientHash }}
+            {{ shortClientHash }}
           </div>
         </div>
         <div class="d-flex text-left align-items-center version-number__tooltip__server">
@@ -66,7 +66,10 @@ export default {
   },
   computed: {
     clientHash() {
-      return import.meta.env.VITE_GIT_HASH.substring(0, 7)
+      return import.meta.env.VITE_GIT_HASH ?? ''
+    },
+    shortClientHash() {
+      return this.clientHash.substring(0, 7)
     }
   },
   mounted() {
