@@ -18,7 +18,7 @@ class IndexedNamedEntity {
     return this
   }
   get id() {
-    return this.path + this.mention + this.offsets
+    return this.path + this.mention + this.offsets.join('-')
   }
 }
 
@@ -239,10 +239,10 @@ class IndexBuilder {
       const { _id } = await this.index.create(createRequest)
       this.committedDocumentIds.push(_id)
 
-      for (const { id, mention, offsets, category, isHidden } of this.document.nerList) {
+      for (const { id: neId, mention, offsets, category, isHidden } of this.document.nerList) {
         await this.index.create({
           index,
-          id,
+          id: neId,
           routing: id,
           refresh: true,
           body: {
