@@ -34,7 +34,9 @@ describe('FilterSearch.vue', () => {
     })
   })
 
-  afterAll(() => vi.unmock('@/api'))
+  afterAll(() => {
+    vi.unmock('@/api')
+  })
 
   it('should have a filter component', async () => {
     await wrapper.vm.$nextTick()
