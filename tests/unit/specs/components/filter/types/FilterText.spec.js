@@ -5,7 +5,6 @@ import VueI18n from 'vue-i18n'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import FilterText from '@/components/filter/types/FilterText'
 import messagesFr from '@/lang/fr'
@@ -18,7 +17,9 @@ describe('FilterText.vue', () => {
   const name = 'contentType'
   let wrapper = null
 
-  beforeAll(() => setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+  beforeAll(() => {
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+  })
 
   beforeEach(() => {
     const filter = store.getters['search/getFilter']({ name })
