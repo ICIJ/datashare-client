@@ -22,8 +22,13 @@ describe('FilterNamedEntity.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    api = { fetchIndicesStarredDocuments: vi.fn(), elasticsearch: es }
+    api = {
+      fetchIndicesStarredDocuments: vi.fn(),
+      elasticsearch: es
+    }
+
     const core = Core.init(createLocalVue(), api).useAll()
+
     localVue = core.localVue
     i18n = core.i18n
     store = core.store
@@ -257,7 +262,7 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
     await wrapper.vm.$nextTick()
     await wrapper.vm.root.aggregate({ clearPages: true })
-    await wrapper.findAll('.filter__items__item input').at(0).trigger('click')
+    await wrapper.findAll('.filter__items__item input').at(0).setChecked(false)
     expect(wrapper.findAll('.filter__items__all input').at(0).element.checked).toBeTruthy()
   })
 
