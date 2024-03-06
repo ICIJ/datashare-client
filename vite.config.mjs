@@ -9,6 +9,7 @@ export default ({ mode }) => {
     plugins: [vue()],
     test: {
       globals: true,
+      silent: true,
       reporters: 'basic',
       environment: 'jsdom',
       setupFiles: [resolve(__dirname, 'tests/unit/setup.js')]
@@ -16,14 +17,14 @@ export default ({ mode }) => {
     resolve: {
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
-        'path': 'path-browserify',
-        'vue': 'vue/dist/vue.esm.js',
+        path: 'path-browserify',
+        vue: 'vue/dist/vue.esm.js',
         '@': resolve(__dirname, './src'),
         '~images': resolve(__dirname, './src/assets/images'),
         '~node_modules': resolve('node_modules'),
         '~mixins': resolve(__dirname, './src/mixins'),
         '~tests': resolve(__dirname, 'tests'),
-      },
+      }
     },
     css: {
       preprocessorOptions: {
