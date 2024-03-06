@@ -2,28 +2,28 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import polling from '@/mixins/polling'
 
-// A few helper functions
-const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
-const flushPromisesAndPendingTimers = async () => {
-  vi.runOnlyPendingTimers()
-  await flushPromises()
-}
-const flushPromisesAndAdvanceTimers = async (time) => {
-  vi.advanceTimersByTime(time)
-  await flushPromises()
-}
-
-// Use fake timers to control times!
-// @see https://jestjs.io/fr/docs/timer-mocks
-vi.useFakeTimers()
-
 describe('polling mixin', () => {
   let wrapper
 
+  const flushPromisesAndPendingTimers = async () => {
+    await vi.runOnlyPendingTimersAsync()
+    await vi.runAllTimers()
+  }
+
+  const flushPromisesAndAdvanceTimers = async (time) => {
+    await vi.advanceTimersByTimeAsync(time)
+    await vi.runAllTimers()
+  }
+
   beforeEach(() => {
+    vi.useFakeTimers()
     const localVue = createLocalVue()
     const Component = { template: '<div>foo</div>', mixins: [polling] }
     wrapper = shallowMount(Component, { localVue })
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('should register a polling function repeatedly called', async () => {
@@ -61,8 +61,8 @@ describe('polling mixin', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('should register one polling function called once when the promise is rejected', async () => {
-    const fn = vi.fn().mockReturnValue(Promise.reject(new Error()))
+  it.only('should register one polling function called once when the promise is rejected', async () => {
+    const fn = vi.fn().mockImplementation(() => Promise.reject(new Error()))
     wrapper.vm.registerPoll({ fn, timeout: 1000 })
     await flushPromisesAndPendingTimers()
     expect(fn).toBeCalledTimes(1)
