@@ -83,7 +83,7 @@ describe('FilterStarred.vue', () => {
     expect(filterBoilerplateWrapper.vm.selected).toEqual([false])
     expect(filterBoilerplateWrapper.vm.isAllSelected).toBeFalsy()
 
-    await wrapper.findAll('.filter__items__item .custom-control-input').at(1).trigger('click')
+    await wrapper.findAll('.filter__items__item .custom-control-input').at(1).setChecked(false)
     expect(filterBoilerplateWrapper.vm.selected).toEqual([])
     expect(filterBoilerplateWrapper.vm.isAllSelected).toBeTruthy()
   })
@@ -131,7 +131,7 @@ describe('FilterStarred.vue', () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
-    await wrapper.findAll('.filter__items__item').at(0).find('.custom-control-input').trigger('click')
+    await wrapper.findAll('.filter__items__item').at(0).find('.custom-control-input').setChecked()
     store.commit('search/addFilterValue', {
       name: 'starred',
       value: true
