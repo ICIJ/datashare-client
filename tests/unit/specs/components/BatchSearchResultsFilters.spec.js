@@ -1,8 +1,8 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
+
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import { Core } from '@/core'
 
@@ -235,6 +235,7 @@ describe('BatchSearchResultsFilters.vue', () => {
         query: { order: undefined, page: undefined, queries_sort: 'default', sort: undefined }
       })
     })
+
     it('adds exclude selected queries filter', async () => {
       wrapper = await mount(BatchSearchResultsFilters, {
         i18n,
@@ -245,11 +246,11 @@ describe('BatchSearchResultsFilters.vue', () => {
       })
       const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       spy.mockClear()
-      const excludeFilter = wrapper.find('.filter__footer__action input')
-      expect(excludeFilter.exists()).toBe(true)
-      await excludeFilter.trigger('click')
 
-      expect(wrapper.vm.$router.push).toBeCalled()
+      const excludeFilter = wrapper.find('.filter__footer__action--exclude input')
+      expect(excludeFilter.exists()).toBe(true)
+      await excludeFilter.setChecked(true)
+
       expect(wrapper.vm.$router.push).toBeCalledTimes(1)
       expect(wrapper.vm.$router.push).toBeCalledWith({
         name: 'task.batch-search.view.results',
