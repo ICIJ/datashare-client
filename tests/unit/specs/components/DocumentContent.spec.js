@@ -1,16 +1,17 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import { flushPromises } from '~tests/unit/tests_utils'
-
 import DocumentContent from '@/components/DocumentContent'
 import { Core } from '@/core'
 
 // Disable lodash throttle to avoid side-effets
-vi.mock('lodash', () => {
+vi.mock('lodash', async (importOriginal) => {
+  const { default: actual } = await importOriginal()
   return {
-    ...vi.requireActual('lodash'),
+    ...actual,
     throttle: (cb) => cb
   }
 })
