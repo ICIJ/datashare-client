@@ -68,7 +68,7 @@ class Core extends Behaviors {
     this._store = storeBuilder(api)
     this._auth = new Auth(mode, this._api)
     // Disable production tip when not in production
-    this.LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
+    this.LocalVue.config.productionTip = import.meta.env.MODE === 'development'
     // Setup deferred state
     this.defer()
   }

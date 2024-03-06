@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     signinUrl() {
-      return process.env.VUE_APP_DS_AUTH_SIGNIN
+      return import.meta.env.VITE_DS_AUTH_SIGNIN
     },
     matchedRouteNames() {
       return compact(this.$route.matched.map((r) => r.name))

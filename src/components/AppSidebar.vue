@@ -268,7 +268,7 @@ export default {
       return this.reduced ? '' : 'd-none'
     },
     logoutLink() {
-      return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
+      return Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
     },
     helpLink() {
       return this.$config.get('helpLink', settings.helpLink)

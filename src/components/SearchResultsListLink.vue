@@ -69,7 +69,7 @@ export default {
       return parts.join('/') + '/'
     },
     location() {
-      return '.' + this.folder.split(this.$config.get('dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
+      return '.' + this.folder.split(this.$config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
     },
     folderParams() {
       return { q: `path:${this.folder}*` }

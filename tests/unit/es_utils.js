@@ -210,7 +210,7 @@ class IndexBuilder {
   }
   async update(ner) {
     await this.index.update({
-      index: process.env.VUE_APP_ES_INDEX,
+      index: process.env.VITE_ES_INDEX,
       refresh: true,
       id: ner.id,
       body: {

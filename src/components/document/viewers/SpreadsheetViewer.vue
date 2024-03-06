@@ -130,10 +130,10 @@ export default {
       }
     },
     sessionIdHeaderValue() {
-      return getCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+      return getCookie(import.meta.env.VITE_DS_COOKIE_NAME)
     },
     sessionIdHeaderName() {
-      let dsCookieName = kebabCase(process.env.VUE_APP_DS_COOKIE_NAME)
+      let dsCookieName = kebabCase(import.meta.env.VITE_DS_COOKIE_NAME)
       dsCookieName = dsCookieName.split('-').map(startCase).join('-')
       return `x-${dsCookieName}`
     },

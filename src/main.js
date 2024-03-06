@@ -7,7 +7,8 @@ import '@/main.scss'
 // Register exported icons
 fortawesome.add(...Object.values(icons))
 
-if (process.env.NODE_ENV !== 'test' && window) {
+
+if (import.meta.env.MODE !== 'test' && window) {
   const datashare = createCore()
   // Mount the core when it's ready
   datashare.ready

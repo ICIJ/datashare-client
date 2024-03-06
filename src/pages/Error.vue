@@ -71,7 +71,7 @@ export default {
       return this.isServer && !!this.username
     },
     logoutLink() {
-      return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
+      return Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
     }
   },
   async mounted() {

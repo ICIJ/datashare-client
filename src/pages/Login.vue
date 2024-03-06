@@ -36,7 +36,7 @@ export default {
   name: 'Login',
   computed: {
     signinUrl() {
-      return process.env.VUE_APP_DS_AUTH_SIGNIN
+      return import.meta.env.VITE_DS_AUTH_SIGNIN
     },
     helpLink() {
       return this.$config.get('helpLink', settings.helpLink)

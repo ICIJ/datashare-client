@@ -10,11 +10,11 @@ export default {
       return this.getConfigFeatureValueFromEnv(name) || this.getConfigFeatureValueFromConfig(name)
     },
     getConfigFeatureValueFromEnv(name) {
-      const key = `VUE_APP_FEATURE_${name.toUpperCase()}`
+      const key = `VITE_FEATURE_${name.toUpperCase()}`
       return process.env[key] || null
     },
     getConfigFeatureValueFromConfig(name) {
-      const key = camelCase(`VUE_APP_FEATURE_${name.toUpperCase()}`)
+      const key = camelCase(`VITE_FEATURE_${name.toUpperCase()}`)
       return this.$config ? this.$config.get(key, null) : null
     }
   }

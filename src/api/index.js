@@ -212,7 +212,7 @@ export class Api {
     return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data: { published } } })
   }
   static getFullUrl(path) {
-    const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
+    const base = import.meta.env.VITE_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)
     return url.href
   }
