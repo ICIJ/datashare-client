@@ -91,8 +91,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
-
 .search-results-list {
   background: white;
   border-radius: $card-border-radius;

@@ -108,8 +108,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
-
 .widget--project {
   min-height: 100%;
 }

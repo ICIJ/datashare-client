@@ -20,8 +20,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
-
 .widget--empty {
   width: 100%;
 

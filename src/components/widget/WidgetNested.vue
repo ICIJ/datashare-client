@@ -44,8 +44,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
-
 .widget--nested {
   width: 100%;
 

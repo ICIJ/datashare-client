@@ -140,8 +140,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
-
 .filters-panel {
   $card-bg: darken($app-context-sidebar-bg, 5%);
   $panel-color: $app-sidebar-color;
