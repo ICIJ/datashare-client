@@ -20,19 +20,17 @@ function esConnectionHelper(indexOrIndices = [], ifWindows = false) {
   const indices = castArray(indexOrIndices)
 
   beforeAll(async () => {
-    await Promise.all(
-      map(indices, async (index) => {
-        if (!(await es.indices.exists({ index }))) {
-          await es.indices.create({
-            index,
-            body: { settings: ifWindows ? esSettingsWindows : esSettings, mappings: esMapping }
-          })
-        }
-      })
-    )
+    const settings = ifWindows ? esSettingsWindows : esSettings
+    const body = { settings, mappings: esMapping }
+    for (const index of indices) {
+      if (!(await es.indices.exists({ index }))) {
+        await es.indices.create({ index, body })
+      }
+    }
   })
 
-  beforeEach(async () => {
+  afterEach(async () => {
+    // Empty all documents from the indices
     await es.deleteByQuery({
       index: join(indices),
       conflicts: 'proceed',
@@ -40,7 +38,7 @@ function esConnectionHelper(indexOrIndices = [], ifWindows = false) {
       body: { query: { match_all: {} } }
     })
     // Easy Tiger! Elasticsearch can hardly follow
-    await setTimeout(noop, 5000)
+    setTimeout(noop, 1e3 * indices.length)
   })
 
   afterAll(async () => {
