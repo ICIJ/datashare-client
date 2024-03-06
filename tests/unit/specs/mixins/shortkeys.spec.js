@@ -3,8 +3,9 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import { Core } from '@/core'
 
-vi.mock('@/utils/shortkeys.json', () => {
+vi.mock('@/utils/shortkeys.json', async (importOriginal) => {
   return {
+    ...(await importOriginal()),
     SearchDocumentNavbar: {
       goToPreviousDocument: {
         keys: {
@@ -45,7 +46,7 @@ describe('shortkeys mixin', () => {
       keys: { mac: ['meta', 'arrowleft'], default: ['ctrl', 'arrowleft'] },
       action: 'goToPreviousDocument'
     }
-    expect(wrapper.vm.getShortkey('goToPreviousDocument')).toEqual(result)
+    expect(wrapper.vm.getShortkey('goToPreviousDocument')).toMatchObject(result)
   })
 
   it('should return "undefined" for getShortkey of an undefined action', () => {
