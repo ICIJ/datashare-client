@@ -25,9 +25,14 @@ export default {
     // Temporary import of the props from FilterBoilerplate
     ...FilterBoilerplate.props
   },
+  data() {
+    return {
+      mounted: false
+    }
+  },
   computed: {
     root() {
-      return get(this, '$refs.filter', {})
+      return this.mounted ? get(this, '$refs.filter', {}) : {}
     }
   },
   async mounted() {
