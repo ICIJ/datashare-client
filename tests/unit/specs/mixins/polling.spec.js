@@ -61,7 +61,7 @@ describe('polling mixin', () => {
     expect(fn).toBeCalledTimes(1)
   })
 
-  it.only('should register one polling function called once when the promise is rejected', async () => {
+  it('should register one polling function called once when the promise is rejected', async () => {
     const fn = vi.fn().mockImplementation(() => Promise.reject(new Error()))
     wrapper.vm.registerPoll({ fn, timeout: 1000 })
     await flushPromisesAndPendingTimers()
