@@ -8,31 +8,24 @@ const flushPromisesAndPendingTimers = async ({ vm }) => {
   await vi.runOnlyPendingTimersAsync()
 }
 
-vi.mock('@/api/elasticsearch', () => {
-  return {
-    count: () => {
-      return { count: 10 }
+describe('TaskAnalysisList.vue', () => {
+  let i18n, localVue, store, wait
+
+  const api = {
+    index: vi.fn(),
+    getTasks: vi.fn().mockResolvedValue([
+      { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' },
+      { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
+    ]),
+    deleteDoneTasks: vi.fn(),
+    stopPendingTasks: vi.fn(),
+    stopTask: vi.fn(),
+    elasticsearch: {
+      count: vi.fn().mockResolvedValue({ count: 10 })
     }
   }
-})
-
-describe('TaskAnalysisList.vue', () => {
-  let i18n, localVue, store, wait, api
-
-  const mockIndexedFiles = [
-    { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' },
-    { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
-  ]
 
   beforeAll(() => {
-    api = {
-      index: vi.fn(),
-      getTasks: vi.fn(),
-      deleteDoneTasks: vi.fn(),
-      stopPendingTasks: vi.fn(),
-      stopTask: vi.fn(),
-      elasticsearch: { count: vi.fn().mockResolvedValue({}) }
-    }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -41,15 +34,13 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   beforeEach(() => {
-    vi.clearAllMocks()
     vi.useFakeTimers()
-    api.getTasks.mockResolvedValue(mockIndexedFiles)
     store.commit('indexing/reset')
   })
 
   afterAll(() => {
     vi.useRealTimers()
-    vi.unmock('@/api/elasticsearch')
+    vi.clearAllMocks()
   })
 
   it('should display tasks list', async () => {
@@ -61,12 +52,12 @@ describe('TaskAnalysisList.vue', () => {
     expect(wrapper.findAll('.tasks-list__tasks__item__name').at(1).text()).toContain('bar')
   })
 
-  it.only('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
+  it('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
     const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [])
-    await flushPromisesAndPendingTimers(wrapper)
+    await wrapper.vm.$nextTick()
     expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
     expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).toBe('disabled')
   })
@@ -76,7 +67,7 @@ describe('TaskAnalysisList.vue', () => {
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
-    await flushPromisesAndPendingTimers(wrapper)
+    await wrapper.vm.$nextTick()
     expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).not.toBe('disabled')
   })
 
@@ -85,7 +76,7 @@ describe('TaskAnalysisList.vue', () => {
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
-    await flushPromisesAndPendingTimers(wrapper)
+    await wrapper.vm.$nextTick()
     expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
   })
 
@@ -94,7 +85,7 @@ describe('TaskAnalysisList.vue', () => {
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
-    await flushPromisesAndPendingTimers(wrapper)
+    await wrapper.vm.$nextTick()
     expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).not.toBe('disabled')
   })
 
@@ -103,7 +94,7 @@ describe('TaskAnalysisList.vue', () => {
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
-    await flushPromisesAndPendingTimers(wrapper)
+    await wrapper.vm.$nextTick()
 
     wrapper.find('.task-analysis-list__actions__stop-pending-tasks').trigger('click')
     await flushPromisesAndPendingTimers(wrapper)
@@ -116,7 +107,7 @@ describe('TaskAnalysisList.vue', () => {
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
-    await flushPromisesAndPendingTimers(wrapper)
+    await wrapper.vm.$nextTick()
 
     wrapper.find('.task-analysis-list__actions__delete-done-tasks').trigger('click')
     await flushPromisesAndPendingTimers(wrapper)
@@ -146,7 +137,7 @@ describe('TaskAnalysisList.vue', () => {
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
-    await flushPromisesAndPendingTimers(wrapper)
+    await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.task-analysis-list__actions__stop-pending-tasks')).toHaveLength(1)
     expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
   })
