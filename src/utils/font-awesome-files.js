@@ -1,18 +1,35 @@
-import { basename } from 'path'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import trim from 'lodash/trim'
-import { faFile as defaultIcon } from '@fortawesome/free-solid-svg-icons/faFile'
-
 import types from '@/utils/types.json'
 
-export { faFile as defaultIcon } from '@fortawesome/free-solid-svg-icons/faFile'
+import faFileArchive from '@fortawesome/free-solid-svg-icons/faFileArchive'
+import faFileAudio from '@fortawesome/free-solid-svg-icons/faFileAudio'
+import faFileCsv from '@fortawesome/free-solid-svg-icons/faFileCsv'
+import faFileExcel from '@fortawesome/free-solid-svg-icons/faFileExcel'
+import faFileImage from '@fortawesome/free-solid-svg-icons/faFileImage'
+import faFile from '@fortawesome/free-solid-svg-icons/faFile'
+import faFilePdf from '@fortawesome/free-solid-svg-icons/faFilePdf'
+import faFilePowerpoint from '@fortawesome/free-solid-svg-icons/faFilePowerpoint'
+import faFileText from '@fortawesome/free-solid-svg-icons/faFileText'
+import faFileVideo from '@fortawesome/free-solid-svg-icons/faFileVideo'
+import faFileWord from '@fortawesome/free-solid-svg-icons/faFileWord'
+import faFileZipper from '@fortawesome/free-solid-svg-icons/faFileZipper'
 
-// Import all file icon
-export const iconsContext = require.context('@fortawesome/free-solid-svg-icons', true, /faFile[A-Z]\w+\.js$/)
-export const icons = iconsContext.keys().map((key) => {
-  return iconsContext(key)[basename(key, '.js')]
-})
+export const icons = {
+  faFileArchive,
+  faFileAudio,
+  faFileCsv,
+  faFileExcel,
+  faFileImage,
+  faFile,
+  faFilePdf,
+  faFilePowerpoint,
+  faFileText,
+  faFileVideo,
+  faFileWord,
+  faFileZipper
+}
 
 export function findIcon(type) {
   // Remove leading .
@@ -27,5 +44,5 @@ export function findIcon(type) {
 export function findContentTypeIcon(contentType) {
   const extensions = get(types, [contentType, 'extensions'], [])
   const icon = get(types, [contentType, 'icon'], null)
-  return (icon ? findIcon(icon) : find(extensions.map(findIcon))) || defaultIcon
+  return (icon ? findIcon(icon) : find(extensions.map(findIcon))) || faFile
 }
