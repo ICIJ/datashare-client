@@ -149,7 +149,7 @@ export default {
         this.$set(this, 'intervalId', -1)
       } else {
         this.$Progress.set(0)
-        const intervalId = setInterval(() => this.$Progress.increase(2), 1000)
+        const intervalId = parseInt(setInterval(() => this.$Progress.increase(2), 1000))
         this.$set(this, 'intervalId', intervalId)
       }
       this.updateScrollBars()
