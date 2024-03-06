@@ -44,7 +44,7 @@ export default class Auth {
   }
 
   _getCookieUsername() {
-    const cookie = getCookie(process.env.VUE_APP_DS_COOKIE_NAME, JSON.parse)
+    const cookie = getCookie(import.meta.env.VITE_DS_COOKIE_NAME, JSON.parse)
     return get(cookie, 'login', null)
   }
 }

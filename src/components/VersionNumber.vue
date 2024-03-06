@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     clientHash() {
-      return process.env.VUE_APP_GIT_HASH.substring(0, 7)
+      return import.meta.env.VITE_GIT_HASH.substring(0, 7)
     }
   },
   mounted() {

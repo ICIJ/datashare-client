@@ -88,7 +88,7 @@ export default class Document extends EsDoc {
     return parts.join(pathSeparator) + pathSeparator
   }
   get location() {
-    return this.folder.split(Murmur.config.get('dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
+    return this.folder.split(Murmur.config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
   }
   get basename() {
     return last(this.path.split(Murmur.config.get('pathSeparator', _separator)))

@@ -190,7 +190,7 @@ export default {
       return find(this.documents, { id })
     },
     shortenPath(path) {
-      return '.' + path.split(this.$config.get('dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
+      return '.' + path.split(this.$config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
     }
   }
 }
