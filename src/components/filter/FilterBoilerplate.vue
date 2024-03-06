@@ -376,7 +376,7 @@ export default {
       }
     },
     excluded() {
-      return this.$store.getters['search/isFilterReversed'](this.filter.name)
+      return this.$store.getters['search/isFilterExcluded'](this.filter.name)
     }
   },
   watch: {

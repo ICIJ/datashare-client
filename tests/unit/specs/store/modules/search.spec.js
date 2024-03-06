@@ -218,9 +218,9 @@ describe('SearchStore', () => {
     it('should take into account the given filter and its invert', async () => {
       await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
       expect(store.getters['search/hasFilterValues']('contentType')).toBeTruthy()
-      expect(store.getters['search/isFilterReversed']('contentType')).toBeFalsy()
+      expect(store.getters['search/isFilterExcluded']('contentType')).toBeFalsy()
       await store.dispatch('search/toggleFilter', 'contentType')
-      expect(store.getters['search/isFilterReversed']('contentType')).toBeTruthy()
+      expect(store.getters['search/isFilterExcluded']('contentType')).toBeTruthy()
     })
   })
 
@@ -228,8 +228,8 @@ describe('SearchStore', () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
     await store.dispatch('search/addFilterValue', { name: 'language', value: 'fr' })
     await store.dispatch('search/toggleFilter', 'contentType')
-    expect(store.getters['search/isFilterReversed']('contentType')).toBeTruthy()
-    expect(store.getters['search/isFilterReversed']('language')).toBeFalsy()
+    expect(store.getters['search/isFilterExcluded']('contentType')).toBeTruthy()
+    expect(store.getters['search/isFilterExcluded']('language')).toBeFalsy()
   })
 
   it('should add filter with several values', async () => {

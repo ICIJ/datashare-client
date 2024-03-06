@@ -97,7 +97,7 @@ export const getters = {
       })
     }
   },
-  isFilterReversed(state, getters) {
+  isFilterExcluded(state, getters) {
     return (name) => {
       return !!find(getters.instantiatedFilters, (filter) => {
         return filter.name === name && filter.reverse

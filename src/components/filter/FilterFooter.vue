@@ -72,7 +72,7 @@ export default {
     },
     excluded: {
       get() {
-        return this.$store.getters['search/isFilterReversed'](this.filter.name)
+        return this.$store.getters['search/isFilterExcluded'](this.filter.name)
       },
       set(toggler) {
         // Change the store so it's reflected everywhere
