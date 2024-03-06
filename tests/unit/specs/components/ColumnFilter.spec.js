@@ -4,6 +4,7 @@ import ColumnFilter from '@/components/ColumnFilter'
 import { Core } from '@/core'
 
 describe('ColumnFilter.vue', () => {
+  let wrapper = null
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
 
   function createContainer() {
@@ -11,7 +12,7 @@ describe('ColumnFilter.vue', () => {
     document.body.appendChild(div)
     return div
   }
-  let wrapper = null
+
   it('display the name of the filter with a button and a badge', async () => {
     const propsData = { id: 'filter_id', name: 'filter_name', active: false }
     const attachTo = createContainer()
