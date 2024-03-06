@@ -33,7 +33,7 @@ export default class Auth {
   async _getBasicAuthUserName() {
     try {
       const response = await this.api.getUser()
-      setTimeout(() => this.reset(), 43200 * 1000)
+      setTimeout(this.reset.bind(this), 43200 * 1000)
       return response.uid
     } catch (error) {
       if (error && error.response && error.response.status !== 401) {
