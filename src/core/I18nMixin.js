@@ -51,7 +51,7 @@ const I18nMixin = (superclass) =>
      */
     async loadI18Locale(locale) {
       if (!this.hasI18Locale(locale)) {
-        const messages = await import(/* webpackChunkName: "[request]" */ '@/lang/' + locale + '.json')
+        const messages = await import(`../lang/${locale}.json`)
         this.i18n.setLocaleMessage(locale, messages.default)
         return this.setI18nLocale(locale)
       }
