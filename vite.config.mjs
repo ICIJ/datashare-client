@@ -9,7 +9,6 @@ export default ({ mode }) => {
     plugins: [vue()],
     test: {
       globals: true,
-      silent: true,
       reporters: 'basic',
       environment: 'jsdom',
       setupFiles: [resolve(__dirname, 'tests/unit/setup.js')]
@@ -23,7 +22,7 @@ export default ({ mode }) => {
         '~images': resolve(__dirname, './src/assets/images'),
         '~node_modules': resolve('node_modules'),
         '~mixins': resolve(__dirname, './src/mixins'),
-        '~tests': resolve(__dirname, 'tests'),
+        '~tests': resolve(__dirname, 'tests')
       }
     },
     css: {
