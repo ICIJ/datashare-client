@@ -1,5 +1,5 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
@@ -10,8 +10,8 @@ describe('ProjectViewEdit.vue', () => {
 
   beforeAll(() => {
     api = {
-      updateProject: jest.fn(),
-      deleteProject: jest.fn()
+      updateProject: vi.fn(),
+      deleteProject: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     config = core.config

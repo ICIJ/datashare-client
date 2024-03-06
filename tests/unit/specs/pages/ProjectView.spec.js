@@ -31,7 +31,7 @@ describe('ProjectView.vue', () => {
   })
 
   afterAll(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('contains an edit link in LOCAL mode', async () => {

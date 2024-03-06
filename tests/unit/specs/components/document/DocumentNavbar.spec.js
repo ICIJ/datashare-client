@@ -1,22 +1,23 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import DocumentNavbar from '@/components/document/DocumentNavbar'
 import { Core } from '@/core'
 
-jest.mock('@/utils/utils')
+vi.mock('@/utils/utils')
 
 describe('DocumentNavbar.vue', () => {
   let i18n, localVue, store, router, api
   const { index, es } = esConnectionHelper.build()
   let wrapper = null
+
   beforeAll(() => {
     api = {
-      setMarkAsRecommended: jest.fn(),
-      setUnmarkAsRecommended: jest.fn(),
-      getRecommendationsByProject: jest.fn(),
+      setMarkAsRecommended: vi.fn(),
+      setUnmarkAsRecommended: vi.fn(),
+      getRecommendationsByProject: vi.fn(),
       elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
@@ -25,18 +26,18 @@ describe('DocumentNavbar.vue', () => {
     store = core.store
     router = core.router
     store.commit('search/index', index)
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     const computed = { isServer: () => true }
     wrapper = shallowMount(DocumentNavbar, { i18n, localVue, store, router, computed })
   })
 
   afterAll(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    jest.unmock('@/utils/utils')
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
+    vi.unmock('@/utils/utils')
   })
 
   describe('Mark as recommended button', () => {

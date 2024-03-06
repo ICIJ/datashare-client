@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Core } from '@/core'
 import WidgetTreeMap from '@/components/widget/WidgetTreeMap'
 
-jest.mock('@/api/elasticsearch', () => {
+vi.mock('@/api/elasticsearch', () => {
   return {
     search: () => {
       return { aggregations: { byDirname: { buckets: [{ key: '/home/dev/data/folders', doc_count: 50 }] } } }
@@ -18,7 +18,7 @@ describe('WidgetTreeMap.vue', () => {
   beforeAll(() => {
     api = {
       elasticsearch: {
-        search: jest.fn().mockResolvedValue({
+        search: vi.fn().mockResolvedValue({
           aggregations: { byDirname: { buckets: [{ key: '/home/dev/data/folders', doc_count: 50 }] } }
         })
       }

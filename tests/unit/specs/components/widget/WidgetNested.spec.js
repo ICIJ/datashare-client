@@ -1,5 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import * as widgets from '@/store/widgets'
 import WidgetNested from '@/components/widget/WidgetNested'

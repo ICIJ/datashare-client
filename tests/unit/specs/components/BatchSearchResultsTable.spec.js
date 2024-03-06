@@ -2,8 +2,8 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
 import BatchSearchResultsTable from '@/components/BatchSearchResultsTable'
@@ -29,9 +29,9 @@ describe('BatchSearchResultsTable.vue', () => {
 
   beforeEach(async () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    const api = jest.fn()
-    api.getBatchSearchQueries = jest.fn()
-    api.getBatchSearchResults = jest.fn().mockResolvedValue({
+    const api = vi.fn()
+    api.getBatchSearchQueries = vi.fn()
+    api.getBatchSearchResults = vi.fn().mockResolvedValue({
       items: [
         {
           creationDate: '2011-10-11T04:12:49.000+0000',
@@ -66,7 +66,7 @@ describe('BatchSearchResultsTable.vue', () => {
       ],
       pagination: { total: 3 }
     })
-    api.getBatchSearch = jest.fn().mockResolvedValue({
+    api.getBatchSearch = vi.fn().mockResolvedValue({
       uuid: '12',
       projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
       name: 'BatchSearch Test',
@@ -88,7 +88,7 @@ describe('BatchSearchResultsTable.vue', () => {
         id: 'test'
       }
     })
-    api.copyBatchSearch = jest.fn()
+    api.copyBatchSearch = vi.fn()
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -103,7 +103,7 @@ describe('BatchSearchResultsTable.vue', () => {
 
   afterEach(() => {
     store.commit('batchSearch/reset')
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
 
   it('should display the list of the queries of this batch search', () => {
@@ -112,7 +112,7 @@ describe('BatchSearchResultsTable.vue', () => {
   })
 
   it('should redirect on contentType changed', () => {
-    jest.spyOn(router, 'push')
+    vi.spyOn(router, 'push')
 
     wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
 
@@ -125,7 +125,7 @@ describe('BatchSearchResultsTable.vue', () => {
   })
 
   it('should redirect on sort change but keep the selectedQueries selected', () => {
-    jest.spyOn(router, 'push')
+    vi.spyOn(router, 'push')
     router.push({ query: { queries: ['query_01', 'query_02'] } })
 
     wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
@@ -183,7 +183,7 @@ describe('BatchSearchResultsTable.vue', () => {
   })
 
   it('should cast array params like queries into string before updating route', async () => {
-    wrapper.vm.updateRoute = jest.fn()
+    wrapper.vm.updateRoute = vi.fn()
     const localThis = {
       updateRoute({ _, queries }) {
         return queries

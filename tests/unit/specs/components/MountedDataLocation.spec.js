@@ -9,10 +9,10 @@ describe('MountedDataLocation.vue', () => {
   Murmur.config.set('mountedDataDir', '/foo/bar')
   beforeAll(() => {
     api = {
-      deleteBatchSearches: jest.fn(),
-      deleteAll: jest.fn(),
-      getUser: jest.fn(),
-      createProject: jest.fn()
+      deleteBatchSearches: vi.fn(),
+      deleteAll: vi.fn(),
+      getUser: vi.fn(),
+      createProject: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -36,7 +36,7 @@ describe('MountedDataLocation.vue', () => {
   })
 
   it('should emit an index::delete::all event when calling the deleteAll method', async () => {
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     wrapper.vm.$root.$on('index::delete::all', mockCallback)
 
     await wrapper.vm.deleteAll()

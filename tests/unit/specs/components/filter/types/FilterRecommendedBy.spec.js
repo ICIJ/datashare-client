@@ -4,10 +4,10 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import { Core } from '@/core'
 import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 
-jest.mock('@/api/resources/Auth', () => {
-  return jest.fn().mockImplementation(() => {
+vi.mock('@/api/resources/Auth', () => {
+  return vi.fn().mockImplementation(() => {
     return {
-      getUsername: jest.fn().mockImplementation(() => {
+      getUsername: vi.fn().mockImplementation(() => {
         return Promise.resolve('user_01')
       })
     }
@@ -15,7 +15,7 @@ jest.mock('@/api/resources/Auth', () => {
 })
 
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
-FilterRecommendedBy.methods.refreshRouteAndSearch = jest.fn()
+FilterRecommendedBy.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterRecommendedBy.vue', () => {
   const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
@@ -24,8 +24,8 @@ describe('FilterRecommendedBy.vue', () => {
 
   beforeAll(() => {
     api = {
-      getRecommendationsByProject: jest.fn(),
-      getDocumentsRecommendedBy: jest.fn()
+      getRecommendationsByProject: vi.fn(),
+      getDocumentsRecommendedBy: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -38,7 +38,7 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     api.getRecommendationsByProject.mockResolvedValue({
       totalCount: 42,
       aggregates: [
@@ -64,7 +64,7 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   afterAll(() => {
-    jest.unmock('@/api/resources/Auth')
+    vi.unmock('@/api/resources/Auth')
   })
 
   it('should build a recommendedBy filter', () => {

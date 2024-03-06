@@ -1,8 +1,8 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import DocumentView from '@/pages/DocumentView'
@@ -15,10 +15,10 @@ describe('DocumentView.vue', () => {
   const propsData = { index: project, id, routing: parentId }
   beforeAll(() => {
     api = {
-      getUser: jest.fn(),
-      addUserHistoryEvent: jest.fn(),
-      getRecommendationsByDocuments: jest.fn(),
-      getTags: jest.fn(),
+      getUser: vi.fn(),
+      addUserHistoryEvent: vi.fn(),
+      getRecommendationsByDocuments: vi.fn(),
+      getTags: vi.fn(),
       elasticsearch: es
     }
     core = Core.init(createLocalVue(), api).useAll()
@@ -30,7 +30,7 @@ describe('DocumentView.vue', () => {
   })
 
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     await letData(es).have(new IndexedDocument(parentId, project)).commit()
     await letData(es).have(new IndexedDocument(id, project).withParent(parentId)).commit()
     store.commit('document/doc', { _id: id, _index: project, _source: { extractionLevel: 1 } })
@@ -52,7 +52,7 @@ describe('DocumentView.vue', () => {
 
   it('should call the elasticsearch to retrieve document parent', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
-    const spyElasticsearchGet = jest.spyOn(api.elasticsearch, 'get')
+    const spyElasticsearchGet = vi.spyOn(api.elasticsearch, 'get')
     await wrapper.vm.getDoc()
     const payload = { index: project, id: parentId, routing: null, _source_excludes: 'content,content_translated' }
     expect(spyElasticsearchGet).toBeCalledWith(expect.objectContaining(payload))

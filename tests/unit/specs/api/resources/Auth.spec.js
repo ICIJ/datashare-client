@@ -9,12 +9,12 @@ describe('auth backend client', () => {
   let api
 
   beforeAll(() => {
-    api = { getUser: jest.fn(), setSettings: jest.fn() }
+    api = { getUser: vi.fn(), setSettings: vi.fn() }
     const core = Core.init(createLocalVue(), api, getMode()).useAll()
     auth = core.auth
   })
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   afterEach(() => auth.reset())
@@ -44,19 +44,19 @@ describe('auth backend client', () => {
   })
 
   describe('getAuthenticatedUser', () => {
-    afterEach(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
+    afterEach(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
 
     it('should return null if user is not authenticated', async () => {
       expect(await auth.getUsername()).toBeNull()
     })
 
     it('should return null if cookie has no "login" field', async () => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, 'doe', JSON.stringify)
+      setCookie(process.env.VITE_DS_COOKIE_NAME, 'doe', JSON.stringify)
       expect(await auth.getUsername()).toBeNull()
     })
 
     it('should return user login if user is authenticated', async () => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
       expect(await auth.getUsername()).toBe('doe')
     })
   })

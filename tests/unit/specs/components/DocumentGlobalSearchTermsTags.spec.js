@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { IndexedDocument } from 'tests/unit/es_utils'
-import { flushPromises } from 'tests/unit/tests_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument } from '~tests/unit/es_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import { Core } from '@/core'
@@ -46,7 +46,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
 
   beforeAll(() => {
     api = {
-      searchDocument: jest.fn(),
+      searchDocument: vi.fn(),
       elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
@@ -63,7 +63,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     // Ensure all promise are flushed...
     await flushPromises()
     // Then clear all mocks
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     // Remove document
     store.commit('document/reset')
     store.commit('search/reset')

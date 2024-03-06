@@ -4,7 +4,7 @@ import { Api } from '@/api'
 describe('Datashare backend client', () => {
   let json = null
   let api
-  const mockAxios = { request: jest.fn() }
+  const mockAxios = { request: vi.fn() }
   beforeAll(() => {
     api = new Api(mockAxios, EventBus)
   })
@@ -97,7 +97,7 @@ describe('Datashare backend client', () => {
 
   it('should throw a 401 if getSettings return a error', async () => {
     mockAxios.request.mockRejectedValue({ response: { status: 401 } })
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     EventBus.$on('http::error', mockCallback)
     try {
       await api.getSettings()
@@ -405,7 +405,7 @@ describe('Datashare backend client', () => {
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     mockAxios.request.mockReturnValue(Promise.reject(error))
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     EventBus.$on('http::error', mockCallback)
 
     try {

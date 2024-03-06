@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import { Core } from '@/core'
 
-jest.mock('@/utils/shortkeys.json', () => {
+vi.mock('@/utils/shortkeys.json', () => {
   return {
     SearchDocumentNavbar: {
       goToPreviousDocument: {
@@ -57,7 +57,7 @@ describe('shortkeys mixin', () => {
   })
 
   it('should return the keys combination for "goToPreviousDocument" action for mac OS', () => {
-    const languageGetter = jest.spyOn(window.navigator, 'platform', 'get')
+    const languageGetter = vi.spyOn(window.navigator, 'platform', 'get')
     languageGetter.mockReturnValue('MacIntel')
 
     expect(wrapper.vm.getKeys('goToPreviousDocument')).toEqual(['meta', 'arrowleft'])
@@ -68,8 +68,8 @@ describe('shortkeys mixin', () => {
   })
 
   it('should execute the getAction of the matching method for "goToPreviousDocument"', () => {
-    wrapper.vm.goToPreviousDocument = jest.fn()
-    jest.spyOn(wrapper.vm, 'goToPreviousDocument')
+    wrapper.vm.goToPreviousDocument = vi.fn()
+    vi.spyOn(wrapper.vm, 'goToPreviousDocument')
 
     wrapper.vm.getAction('goToPreviousDocument')
 

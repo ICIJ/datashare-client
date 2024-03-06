@@ -4,13 +4,19 @@ import QuickItemNav from '@/components/QuickItemNav'
 import { Core } from '@/core'
 import { getShortkeyOS } from '@/utils/utils'
 
-jest.mock('@/utils/utils')
+vi.mock('@/utils/utils', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    // replace some exports
+    getShortkeyOS: vi.fn()
+  }
+})
 
 describe('QuickItemNav.vue', () => {
   const { i18n, localVue, store, router } = Core.init(createLocalVue()).useAll()
 
   afterAll(() => {
-    jest.unmock('@/utils/utils')
+    vi.restoreAllMocks()
   })
 
   it('should return the tooltip for mac', () => {

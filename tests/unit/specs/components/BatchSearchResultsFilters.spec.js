@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import { Core } from '@/core'
@@ -24,7 +24,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
 
     const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
@@ -40,7 +40,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   })
 
   afterAll(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
 
   it('should display simple list if there is only one query', async () => {
@@ -153,7 +153,7 @@ describe('BatchSearchResultsFilters.vue', () => {
         propsData: propsDataMultipleQueries
       })
       await wrapper.vm.$nextTick()
-      const spy = jest.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
+      const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
 
       expect(wrapper.vm.$router.push).toBeCalled()
@@ -223,7 +223,7 @@ describe('BatchSearchResultsFilters.vue', () => {
         },
         propsData: propsDataMultipleQueries
       })
-      const spy = jest.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
+      const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       spy.mockClear()
 
       await wrapper.vm.sort('default')
@@ -243,7 +243,7 @@ describe('BatchSearchResultsFilters.vue', () => {
         store,
         propsData: propsDataMultipleQueries
       })
-      const spy = jest.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
+      const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       spy.mockClear()
       const excludeFilter = wrapper.find('.filter__footer__action input')
       expect(excludeFilter.exists()).toBe(true)

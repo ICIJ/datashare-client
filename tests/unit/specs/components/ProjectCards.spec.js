@@ -14,7 +14,7 @@ describe('ProjectCards.vue', () => {
       { key: 'foo', doc_count: 10 }
     ])
     api = {
-      elasticsearch: { countByProject: jest.fn().mockResolvedValue(nbDocByProject) }
+      elasticsearch: { countByProject: vi.fn().mockResolvedValue(nbDocByProject) }
     }
     const core = Core.init(createLocalVue(), api).useAll()
     localVue = core.localVue

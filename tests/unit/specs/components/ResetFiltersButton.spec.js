@@ -1,5 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import { Core } from '@/core'
@@ -75,7 +75,7 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('should emit an event "bv::hide::popover" on filters reset', () => {
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     wrapper.vm.$root.$on('bv::hide::popover', mockCallback)
 
     wrapper.vm.resetFiltersAndQuery()
@@ -84,7 +84,7 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('should emit an event "filter::search::reset-filters" on filters reset', () => {
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     wrapper.vm.$root.$on('filter::search::reset-filters', mockCallback)
 
     wrapper.vm.resetFiltersAndQuery()
@@ -93,7 +93,7 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('should call router push on filters reset', () => {
-    jest.spyOn(router, 'push')
+    vi.spyOn(router, 'push')
 
     wrapper.vm.resetFiltersAndQuery()
 

@@ -1,14 +1,14 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import { Core } from '@/core'
 
-jest.mock('lodash/throttle', () => jest.fn((fn) => fn))
+vi.mock('lodash/throttle', () => vi.fn((fn) => fn))
 
 describe('BatchSearchForm.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
@@ -18,11 +18,11 @@ describe('BatchSearchForm.vue', () => {
   const { i18n, localVue, wait } = Core.init(createLocalVue(), api).useAll()
 
   const state = { batchSearches: [] }
-  const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
+  const actions = { onSubmit: vi.fn(), getBatchSearches: vi.fn() }
   const store = new Vuex.Store({
     modules: {
       batchSearch: { namespaced: true, state, actions },
-      search: { namespaced: true, actions: { queryFilter: jest.fn() } }
+      search: { namespaced: true, actions: { queryFilter: vi.fn() } }
     }
   })
   let wrapper = null
@@ -40,10 +40,10 @@ describe('BatchSearchForm.vue', () => {
     actions.onSubmit.mockReset()
   })
 
-  afterAll(() => jest.unmock('lodash/throttle'))
+  afterAll(() => vi.unmock('lodash/throttle'))
 
   it('should call the store action on form submit and reset the form', async () => {
-    jest.spyOn(wrapper.vm, 'resetForm')
+    vi.spyOn(wrapper.vm, 'resetForm')
 
     await wrapper.vm.onSubmit()
 
@@ -119,8 +119,8 @@ describe('BatchSearchForm.vue', () => {
       })
 
       it('should call hideSuggestionsFileTypes and hideSuggestionsTags', async () => {
-        jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
-        jest.spyOn(wrapper.vm, 'hideSuggestionsTags')
+        vi.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
+        vi.spyOn(wrapper.vm, 'hideSuggestionsTags')
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
@@ -128,14 +128,14 @@ describe('BatchSearchForm.vue', () => {
       })
 
       it('should call retrieveFileTypes', async () => {
-        jest.spyOn(wrapper.vm, 'retrieveFileTypes')
+        vi.spyOn(wrapper.vm, 'retrieveFileTypes')
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.retrieveFileTypes).toBeCalled()
       })
 
       it('should call retrieveTags', async () => {
-        jest.spyOn(wrapper.vm, 'retrieveTags')
+        vi.spyOn(wrapper.vm, 'retrieveTags')
         await wrapper.setData({ projects: [anotherProject] })
 
         expect(wrapper.vm.retrieveTags).toBeCalled()
@@ -418,7 +418,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should call retrieveFileTypes on showAdvancedFilters change', async () => {
-      jest.spyOn(wrapper.vm, 'retrieveFileTypes')
+      vi.spyOn(wrapper.vm, 'retrieveFileTypes')
       await wrapper.setData({ showAdvancedFilters: false })
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
@@ -469,7 +469,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should call retrieveTags on showAdvancedFilters change', async () => {
-      jest.spyOn(wrapper.vm, 'retrieveTags')
+      vi.spyOn(wrapper.vm, 'retrieveTags')
       await wrapper.setData({ showAdvancedFilters: false })
 
       expect(wrapper.vm.retrieveTags).toBeCalled()

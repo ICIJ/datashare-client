@@ -1,6 +1,6 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import VueRouter from 'vue-router'
 import find from 'lodash/find'
 
@@ -15,9 +15,9 @@ describe('FilterProject.vue', () => {
 
   beforeAll(() => {
     api = {
-      getStarredDocuments: jest.fn(),
-      isDownloadAllowed: jest.fn(),
-      getRecommendationsByProject: jest.fn(),
+      getStarredDocuments: vi.fn(),
+      isDownloadAllowed: vi.fn(),
+      getRecommendationsByProject: vi.fn(),
       elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
@@ -35,7 +35,7 @@ describe('FilterProject.vue', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     wrapper = shallowMount(FilterProject, {
       i18n,
       localVue,
@@ -108,7 +108,7 @@ describe('FilterProject.vue', () => {
     })
 
     it('should refresh the route', async () => {
-      const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
+      const spyRefreshRoute = vi.spyOn(wrapper.vm, 'refreshRoute')
       expect(spyRefreshRoute).not.toBeCalled()
 
       await wrapper.vm.select(anotherProject)

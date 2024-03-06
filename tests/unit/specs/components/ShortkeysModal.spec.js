@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import ShortkeysModal from '@/components/ShortkeysModal'
 import { Core } from '@/core'
 
-jest.mock('@/utils/shortkeys.json', () => {
+vi.mock('@/utils/shortkeys.json', () => {
   return {
     Component1: {
       actionToExecute1: {

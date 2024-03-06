@@ -1,17 +1,17 @@
 import { noop } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
 
 import { Core } from '@/core'
 import mixin from '@/mixins/filters'
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
 
-const { jsonResp } = require('tests/unit/tests_utils')
+import { jsonResp } from '~tests/unit/tests_utils'
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
-mixin.methods.refreshRouteAndSearch = jest.fn()
+mixin.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterNamedEntity.vue', () => {
   let localVue, i18n, store, wait, api
@@ -22,7 +22,7 @@ describe('FilterNamedEntity.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    api = { fetchIndicesStarredDocuments: jest.fn(), elasticsearch: es }
+    api = { fetchIndicesStarredDocuments: vi.fn(), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     localVue = core.localVue
     i18n = core.i18n

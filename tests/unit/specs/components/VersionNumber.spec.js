@@ -9,7 +9,7 @@ describe('VersionNumber.vue', () => {
 
   beforeAll(() => {
     const api = {
-      getVersion: jest.fn().mockResolvedValue({
+      getVersion: vi.fn().mockResolvedValue({
         'git.build.version': 'X.Y.Z',
         'git.commit.id.abbrev': 'sha1_abbrev'
       })

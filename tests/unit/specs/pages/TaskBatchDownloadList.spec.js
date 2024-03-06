@@ -1,4 +1,4 @@
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import TaskBatchDownloadList from '@/pages/TaskBatchDownloadList'
@@ -108,7 +108,7 @@ describe('TaskBatchDownloadList.vue', () => {
   ]
   beforeAll(() => {
     api = {
-      getTasks: jest.fn()
+      getTasks: vi.fn()
     }
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
@@ -118,7 +118,7 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     api.getTasks.mockResolvedValue(BatchDownloadList)
     wrapper = mount(TaskBatchDownloadList, { i18n, localVue, store, wait })
     await flushPromises()

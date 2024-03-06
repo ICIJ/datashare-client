@@ -10,7 +10,7 @@ describe('utils', () => {
   let languageGetter = null
 
   beforeEach(() => {
-    languageGetter = jest.spyOn(window.navigator, 'platform', 'get')
+    languageGetter = vi.spyOn(window.navigator, 'platform', 'get')
   })
 
   describe('getOS', () => {

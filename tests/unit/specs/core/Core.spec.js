@@ -12,16 +12,16 @@ describe('Core', () => {
 
   beforeAll(() => {
     api = {
-      createProject: jest.fn(),
-      isDownloadAllowed: jest.fn(),
-      getUser: jest.fn(),
-      getSettings: jest.fn(),
-      getProject: jest.fn()
+      createProject: vi.fn(),
+      isDownloadAllowed: vi.fn(),
+      getUser: vi.fn(),
+      getSettings: vi.fn(),
+      getProject: vi.fn()
     }
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     const localVue = createLocalVue()
     core = Core.init(localVue, api)
 
@@ -70,20 +70,22 @@ describe('Core', () => {
       expect(vm).toBeInstanceOf(Vue)
     })
 
-    it('should call a global event "datashare:ready" after the core is configured', (done) => {
-      api.getSettings.mockResolvedValueOnce({})
-      api.getProject.mockResolvedValueOnce({})
+    it('should call a global event "datashare:ready" after the core is configured', () => {
+      return new Promise((resolve) => {
+        api.getSettings.mockResolvedValueOnce({})
+        api.getProject.mockResolvedValueOnce({})
 
-      document.addEventListener(
-        'datashare:ready',
-        ({ detail }) => {
-          expect(Core.isInstanceOfCore(detail.core)).toBe(true)
-          done()
-        },
-        { once: true }
-      )
-      // Create and configure the core
-      return core.configure()
+        document.addEventListener(
+          'datashare:ready',
+          ({ detail }) => {
+            expect(Core.isInstanceOfCore(detail.core)).toBe(true)
+            resolve()
+          },
+          { once: true }
+        )
+        // Create and configure the core
+        return core.configure()
+      })
     })
 
     it('should resolve the `ready` promise after the core was configured', async () => {

@@ -1,8 +1,8 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { flushPromises } from 'tests/unit/tests_utils'
-import { letTextContent } from 'tests/unit/api_mock'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
+import { letTextContent } from '~tests/unit/api_mock'
 
 import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
@@ -42,7 +42,7 @@ describe('DocumentTranslatedContent.vue', () => {
     }
   }
   beforeAll(() => {
-    api = { getDocumentSlice: jest.fn(), elasticsearch: es }
+    api = { getDocumentSlice: vi.fn(), elasticsearch: es }
 
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n

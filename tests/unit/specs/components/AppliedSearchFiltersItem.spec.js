@@ -1,7 +1,7 @@
 import find from 'lodash/find'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
@@ -42,7 +42,7 @@ describe('AppliedSearchFiltersItem.vue', () => {
     it('should click on a badge to delete an applied filter', () => {
       const propsData = { filter: { name: 'contentType', value: 'term_01', negation: false } }
       wrapper = mount(AppliedSearchFiltersItem, { localVue, i18n, store, router, propsData })
-      const deleteQueryTermSpy = jest.spyOn(wrapper.vm, 'deleteQueryTerm')
+      const deleteQueryTermSpy = vi.spyOn(wrapper.vm, 'deleteQueryTerm')
 
       wrapper.find('.applied-search-filters-item').trigger('click')
 
@@ -62,7 +62,7 @@ describe('AppliedSearchFiltersItem.vue', () => {
     it('should emit an event filter::search::update once the applied filter is deleted from the store', async () => {
       const propsData = { filter: { name: 'contentType', value: 'term_01', negation: false } }
       wrapper = shallowMount(AppliedSearchFiltersItem, { localVue, i18n, store, router, propsData })
-      const mockCallback = jest.fn()
+      const mockCallback = vi.fn()
       wrapper.vm.$root.$on('filter::search::update', mockCallback)
 
       await wrapper.vm.deleteQueryTerm()
@@ -73,7 +73,7 @@ describe('AppliedSearchFiltersItem.vue', () => {
     it('should not emit an event filter::search::update if the filter is a query term', async () => {
       const propsData = { filter: { name: 'q', value: 'term_01', negation: false } }
       wrapper = shallowMount(AppliedSearchFiltersItem, { localVue, i18n, store, router, propsData })
-      const mockCallback = jest.fn()
+      const mockCallback = vi.fn()
       wrapper.vm.$root.$on('filter::search::update', mockCallback)
       await wrapper.vm.deleteQueryTerm()
       expect(mockCallback.mock.calls).toHaveLength(0)

@@ -5,7 +5,7 @@ import { Core } from '@/core'
 
 describe('FiltersPanel.vue', () => {
   let wrapper = null
-  const api = { tree: jest.fn() }
+  const api = { tree: vi.fn() }
   const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), api).useAll()
 
   beforeEach(() => {

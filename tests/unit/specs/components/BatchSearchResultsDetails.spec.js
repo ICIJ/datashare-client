@@ -2,7 +2,7 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import { removeCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import UserDisplay from '@/components/UserDisplay'
@@ -45,7 +45,7 @@ describe('BatchSearchResultsDetails.vue', () => {
 
   beforeEach(async () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    const api = jest.fn()
+    const api = vi.fn()
 
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -53,13 +53,13 @@ describe('BatchSearchResultsDetails.vue', () => {
     store = core.store
     wait = core.wait
     config = core.config
-    core.auth.getUsername = jest.fn().mockResolvedValue('test')
+    core.auth.getUsername = vi.fn().mockResolvedValue('test')
     auth = core.auth
     wrapper = shallowMount(BatchSearchResultsDetails, { i18n, localVue, propsData, router, store, wait })
   })
   afterEach(() => {
     store.commit('batchSearch/reset')
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
   it('should display the details of a batch search', () => {
     expect(wrapper.find('.batch-search-results-details').exists()).toBeTruthy()

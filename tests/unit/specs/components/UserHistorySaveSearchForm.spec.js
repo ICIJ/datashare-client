@@ -24,7 +24,7 @@ describe('UserHistorySaveSearchForm.vue', () => {
 
   it('should call "saveSearch" method on click on submit button', async () => {
     wrapper = shallowMount(UserHistorySaveSearchForm, { i18n, localVue, propsData, router, store, wait })
-    const saveSearchMock = jest.spyOn(wrapper.vm, 'saveSearch')
+    const saveSearchMock = vi.spyOn(wrapper.vm, 'saveSearch')
     wrapper.setData({ name: 'Test' })
     wrapper.find('.card-footer .d-flex b-btn-stub').trigger('submit')
     expect(saveSearchMock).toBeCalledTimes(1)

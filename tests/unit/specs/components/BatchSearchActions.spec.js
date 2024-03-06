@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import BatchSearchActions from '@/components/BatchSearchActions'
@@ -35,7 +35,7 @@ describe('BatchSearchActions.vue', () => {
   }
 
   beforeAll(() => {
-    api = { deleteBatchSearch: jest.fn() }
+    api = { deleteBatchSearch: vi.fn() }
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -62,12 +62,12 @@ describe('BatchSearchActions.vue', () => {
 
   afterEach(() => {
     store.commit('batchSearch/reset')
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
     wrapper.vm.$core.auth.reset()
   })
 
   it('should display a button to delete the batchSearch', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.$core.auth.getUsername()
     await flushPromises()
@@ -75,7 +75,7 @@ describe('BatchSearchActions.vue', () => {
   })
 
   it('should NOT display a button to delete the batchSearch if it is not mine', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     wrapper = mount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.$core.auth.getUsername()
     await flushPromises()
@@ -99,14 +99,14 @@ describe('BatchSearchActions.vue', () => {
   })
 
   it('should NOT display a button to relaunch the BS if it is not mine', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--relaunch').exists()).toBeFalsy()
   })
 
   it('should display a button to relaunch the BS', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await flushPromises()
     expect(wrapper.find('.batch-search-actions__item--relaunch').exists()).toBeTruthy()
@@ -141,7 +141,7 @@ describe('BatchSearchActions.vue', () => {
 
   it('should redirect on batchSearch deletion', async () => {
     api.deleteBatchSearch.mockResolvedValue(true)
-    jest.spyOn(router, 'push')
+    vi.spyOn(router, 'push')
     wrapper = shallowMount(BatchSearchActions, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.deleteBatchSearch()
     expect(router.push).toBeCalled()

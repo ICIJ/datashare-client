@@ -2,9 +2,9 @@ import Murmur from '@icij/murmur'
 import { map, sortBy } from 'lodash'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { flushPromises } from 'tests/unit/tests_utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
 
 import { Core } from '@/core'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
@@ -40,9 +40,9 @@ describe('DocumentTagsForm.vue', () => {
 
   beforeAll(() => {
     api = {
-      getTags: jest.fn(),
-      tagDocuments: jest.fn(),
-      untagDocuments: jest.fn(),
+      getTags: vi.fn(),
+      tagDocuments: vi.fn(),
+      untagDocuments: vi.fn(),
       elasticsearch: es
     }
     const core = Core.init(createLocalVue(), api).useAll()
@@ -53,14 +53,14 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    vi.clearAllMocks()
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   afterEach(() => store.commit('document/reset'))
 
   afterAll(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
 
   it('should display form to add new tag', async () => {
@@ -168,7 +168,7 @@ describe('DocumentTagsForm.vue', () => {
 
   it('should emit a filter::refresh event on adding a tag', async () => {
     wrapper = await createView({ es, project })
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     wrapper.vm.$root.$on('filter::refresh', mockCallback)
 
     wrapper.vm.tag = 'tag'
@@ -180,7 +180,7 @@ describe('DocumentTagsForm.vue', () => {
 
   it('should emit a filter::delete event on deleting a tag', async () => {
     wrapper = await createView({ es, project })
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     wrapper.vm.$root.$on('filter::delete', mockCallback)
 
     await wrapper.vm.deleteTag('tag')

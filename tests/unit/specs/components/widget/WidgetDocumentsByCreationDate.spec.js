@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
 import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
@@ -23,7 +23,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     })
 
     it('should rerun init on project change', async () => {
-      const init = jest.spyOn(wrapper.vm, 'init').mockImplementationOnce(jest.fn())
+      const init = vi.spyOn(wrapper.vm, 'init').mockImplementationOnce(vi.fn())
       store.commit('insights/project', anotherProject)
       await flushPromises()
       expect(init).toBeCalledTimes(1)

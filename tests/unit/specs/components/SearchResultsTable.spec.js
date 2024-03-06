@@ -1,7 +1,7 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
-import { IndexedDocuments, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocuments, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
 import SearchResultsTable from '@/components/SearchResultsTable'
@@ -14,9 +14,9 @@ describe('SearchResultsTable.vue', () => {
   beforeAll(() => {
     router = new VueRouter()
     api = {
-      starDocuments: jest.fn(),
+      starDocuments: vi.fn(),
       elasticsearch: es,
-      getMappingsByFields: jest.fn()
+      getMappingsByFields: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n

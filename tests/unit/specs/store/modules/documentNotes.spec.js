@@ -5,13 +5,13 @@ describe('DocumentNotesStore', () => {
   let store, api
   beforeAll(() => {
     api = {
-      retrieveNotes: jest.fn()
+      retrieveNotes: vi.fn()
     }
     store = storeBuilder(api)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   afterEach(() => {

@@ -7,15 +7,15 @@ import TaskAnalysisList from '@/pages/TaskAnalysisList'
 // which is not mocked by jest when using fake timers
 const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
 const flushPromisesAndPendingTimers = async () => {
-  jest.runOnlyPendingTimers()
+  vi.runOnlyPendingTimers()
   await flushPromises()
 }
 
 // Polling task list uses timers
 // @see https://jestjs.io/fr/docs/timer-mocks
-jest.useFakeTimers()
+vi.useFakeTimers()
 
-jest.mock('@/api/elasticsearch', () => {
+vi.mock('@/api/elasticsearch', () => {
   return {
     count: () => {
       return { count: 10 }
@@ -31,12 +31,12 @@ describe('TaskAnalysisList.vue', () => {
   ]
   beforeAll(() => {
     api = {
-      index: jest.fn(),
-      getTasks: jest.fn(),
-      deleteDoneTasks: jest.fn(),
-      stopPendingTasks: jest.fn(),
-      stopTask: jest.fn(),
-      elasticsearch: { count: jest.fn().mockResolvedValue({}) }
+      index: vi.fn(),
+      getTasks: vi.fn(),
+      deleteDoneTasks: vi.fn(),
+      stopPendingTasks: vi.fn(),
+      stopTask: vi.fn(),
+      elasticsearch: { count: vi.fn().mockResolvedValue({}) }
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -45,13 +45,13 @@ describe('TaskAnalysisList.vue', () => {
     wait = core.wait
   })
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     api.getTasks.mockResolvedValue(mockIndexedFiles)
     store.commit('indexing/reset')
   })
 
   afterAll(() => {
-    jest.unmock('@/api/elasticsearch')
+    vi.unmock('@/api/elasticsearch')
   })
 
   it('should display tasks list', async () => {

@@ -7,7 +7,7 @@ describe('FindNamedEntitiesForm.vue', () => {
   let wrapper, i18n, localVue, store, wait, api, config
 
   beforeAll(() => {
-    api = { getNerPipelines: jest.fn(), findNames: jest.fn() }
+    api = { getNerPipelines: vi.fn(), findNames: vi.fn() }
   })
 
   beforeEach(() => {

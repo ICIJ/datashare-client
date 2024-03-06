@@ -4,13 +4,13 @@ import { errors as esErrors } from 'elasticsearch-browser'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
-// import { flushPromises } from 'tests/unit/tests_utils'
+// import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import Search from '@/pages/Search'
 import { state, getters, mutations } from '@/store/modules/search'
 const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
 const flushPromisesAndAdvanceTimers = async (time) => {
-  jest.advanceTimersByTime(time)
+  vi.advanceTimersByTime(time)
   await flushPromises()
 }
 
@@ -18,7 +18,7 @@ describe('Search.vue', () => {
   let store
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const actionsStore = { query: jest.fn(), refresh: jest.fn(), updateFromRouteQuery: jest.fn() }
+  const actionsStore = { query: vi.fn(), refresh: vi.fn(), updateFromRouteQuery: vi.fn() }
   let wrapper = null
 
   beforeEach(() => {
@@ -85,11 +85,11 @@ describe('Search.vue', () => {
     beforeEach(() => {
       // Use fake timers to control times!
       // @see https://jestjs.io/fr/docs/timer-mocks
-      jest.useFakeTimers()
+      vi.useFakeTimers()
     })
 
     afterEach(() => {
-      jest.useRealTimers()
+      vi.useRealTimers()
     })
     it('should increase of 2 per second', async () => {
       // the timeout indicate the progress is finished after the time advance

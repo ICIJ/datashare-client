@@ -1,28 +1,28 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { letTextContent } from 'tests/unit/api_mock'
-import { flushPromises } from 'tests/unit/tests_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import { letTextContent } from '~tests/unit/api_mock'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import DocumentContent from '@/components/DocumentContent'
 import { Core } from '@/core'
 
 // Disable lodash throttle to avoid side-effets
-jest.mock('lodash', () => {
+vi.mock('lodash', () => {
   return {
-    ...jest.requireActual('lodash'),
+    ...vi.requireActual('lodash'),
     throttle: (cb) => cb
   }
 })
 
-jest.mock('@/utils/style', () => {
+vi.mock('@/utils/style', () => {
   return {
-    hasOverflow: jest.fn().mockReturnValue(false),
-    getTranslateValues: jest.fn().mockReturnValue({ y: 0, x: 0, z: 0 })
+    hasOverflow: vi.fn().mockReturnValue(false),
+    getTranslateValues: vi.fn().mockReturnValue({ y: 0, x: 0, z: 0 })
   }
 })
 
-window.HTMLElement.prototype.scrollIntoView = jest.fn()
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 describe('DocumentContent.vue', () => {
   let i18n, localVue, store, wait, api
@@ -30,7 +30,7 @@ describe('DocumentContent.vue', () => {
   const id = 'document'
 
   beforeAll(() => {
-    api = { getDocumentSlice: jest.fn(), searchDocument: jest.fn(), elasticsearch: es }
+    api = { getDocumentSlice: vi.fn(), searchDocument: vi.fn(), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -56,7 +56,7 @@ describe('DocumentContent.vue', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   afterEach(async () => {
@@ -66,7 +66,7 @@ describe('DocumentContent.vue', () => {
     store.commit('document/reset')
   })
   afterAll(() => {
-    jest.mock('@/utils/style')
+    vi.mock('@/utils/style')
   })
 
   describe('the extracted text content', () => {

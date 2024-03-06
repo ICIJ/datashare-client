@@ -1,4 +1,4 @@
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { storeBuilder } from '@/store/storeBuilder'
 
@@ -8,15 +8,15 @@ describe('RecommendedStore', () => {
   let api, store
   beforeAll(() => {
     api = {
-      getRecommendationsByProject: jest.fn(),
-      getDocumentsRecommendedBy: jest.fn()
+      getRecommendationsByProject: vi.fn(),
+      getDocumentsRecommendedBy: vi.fn()
     }
     store = storeBuilder(api)
     store.commit('search/index', index)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should define a store module', () => {

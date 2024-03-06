@@ -1,7 +1,7 @@
 import Murmur from '@icij/murmur'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
@@ -60,10 +60,10 @@ describe('BatchSearchTable.vue', () => {
   let wrapper, i18n, localVue, store, wait, api
 
   beforeAll(() => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
 
     api = {
-      getBatchSearches: jest.fn().mockResolvedValue(batchSearchMock)
+      getBatchSearches: vi.fn().mockResolvedValue(batchSearchMock)
     }
 
     const core = Core.init(createLocalVue(), api).useAll()
@@ -73,7 +73,7 @@ describe('BatchSearchTable.vue', () => {
     wait = core.wait
   })
 
-  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
+  afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
 
   describe('common functions', () => {
     beforeAll(async () => {
@@ -106,7 +106,7 @@ describe('BatchSearchTable.vue', () => {
       })
       it("should display a 'No result' message when no items", async () => {
         const state = { batchSearches: [] }
-        const actions = { getBatchSearches: jest.fn() }
+        const actions = { getBatchSearches: vi.fn() }
         const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
 
         wrapper = mount(BatchSearchTable, { i18n, localVue, store, wait })
@@ -121,7 +121,7 @@ describe('BatchSearchTable.vue', () => {
         const computed = { selectedStates: () => ['RUNNING', 'FAILURE'] }
         wrapper = shallowMount(BatchSearchTable, { i18n, localVue, router: routerFactory(), store, computed, wait })
         await flushPromises()
-        jest.spyOn(store, 'dispatch')
+        vi.spyOn(store, 'dispatch')
         // THEN
         await wrapper.vm.fetch()
         expect(store.dispatch).toBeCalled()
@@ -143,7 +143,7 @@ describe('BatchSearchTable.vue', () => {
         const computed = { selectedProjects: () => ['project_02'] }
         wrapper = shallowMount(BatchSearchTable, { i18n, localVue, router: routerFactory(), store, computed, wait })
         await flushPromises()
-        jest.spyOn(store, 'dispatch')
+        vi.spyOn(store, 'dispatch')
         // THEN
         await wrapper.vm.fetch()
 
@@ -166,7 +166,7 @@ describe('BatchSearchTable.vue', () => {
         wrapper = shallowMount(BatchSearchTable, { i18n, localVue, router: routerFactory(), store, computed, wait })
         await flushPromises()
         // THEN
-        jest.spyOn(store, 'dispatch')
+        vi.spyOn(store, 'dispatch')
         await wrapper.vm.fetch()
         expect(store.dispatch).toBeCalledWith('batchSearch/getBatchSearches', {
           from: 0,
@@ -192,7 +192,7 @@ describe('BatchSearchTable.vue', () => {
       })
       it('set selected sort', () => {
         expect(wrapper.vm.selectedSort).toEqual({ sort: 'batch_date', order: 'desc' })
-        jest.spyOn(router, 'push')
+        vi.spyOn(router, 'push')
         wrapper.vm.selectedSort = { sort: 'nbResults', order: 'asc' }
         expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith(routeFactory({ sort: 'nbResults', order: 'asc' }))
@@ -200,7 +200,7 @@ describe('BatchSearchTable.vue', () => {
 
       it('set selectedProjects', () => {
         expect(wrapper.vm.selectedProjects).toEqual([])
-        jest.spyOn(router, 'push')
+        vi.spyOn(router, 'push')
         wrapper.vm.selectedProjects = ['test', 'toto']
         expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith(routeFactory({ project: 'test,toto' }))
@@ -210,7 +210,7 @@ describe('BatchSearchTable.vue', () => {
 
       it('set selectedDate', () => {
         expect(wrapper.vm.selectedDateRange).toEqual(null)
-        jest.spyOn(router, 'push')
+        vi.spyOn(router, 'push')
         wrapper.vm.selectedDateRange = { start: 0, end: 1 }
         expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith(routeFactory({ dateStart: 0, dateEnd: 1 }))
@@ -220,7 +220,7 @@ describe('BatchSearchTable.vue', () => {
 
       it('set selectedState', () => {
         expect(wrapper.vm.selectedStates).toEqual([])
-        jest.spyOn(router, 'push')
+        vi.spyOn(router, 'push')
         wrapper.vm.selectedStates = ['QUEUED', 'RUNNING']
         expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith(routeFactory({ state: 'QUEUED,RUNNING' }))
@@ -230,7 +230,7 @@ describe('BatchSearchTable.vue', () => {
 
       it('set selectedStatus', () => {
         expect(wrapper.vm.selectedStatus).toEqual(null)
-        jest.spyOn(router, 'push')
+        vi.spyOn(router, 'push')
         wrapper.vm.selectedStatus = { label: 'published', value: '1' }
         expect(router.push).toBeCalledTimes(1)
         expect(router.push).toBeCalledWith(routeFactory({ publishState: '1' }))
@@ -336,7 +336,7 @@ describe('BatchSearchTable.vue', () => {
         wrapper = mount(BatchSearchTable, { i18n, localVue, router, store, wait })
         await flushPromises()
         expect(wrapper.vm.search).toBe('')
-        const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
+        const fetchSpy = vi.spyOn(wrapper.vm, 'fetch')
         expect(fetchSpy).not.toBeCalled()
         await router.push({
           name: 'task.batch-search.list',

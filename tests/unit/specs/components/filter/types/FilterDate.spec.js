@@ -1,15 +1,15 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import FilterDate from '@/components/filter/types/FilterDate'
 import { Core } from '@/core'
 import filters from '@/mixins/filters'
 
 // Mock all api calls
-jest.mock('@/api')
+vi.mock('@/api')
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
-filters.methods.refreshRouteAndSearch = jest.fn()
+filters.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterDate.vue', () => {
   const { index, es } = esConnectionHelper.build()

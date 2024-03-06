@@ -14,7 +14,7 @@ describe('ComponentsMixin', () => {
       default: { name: basename(name, '.vue'), template: `<div>${name}</div>` }
     })
     context.keys = () => ['./TreeView.vue', './PageIcon.vue', './Fa.js', './widget/WidgetDiskUsage.vue']
-    jest.spyOn(core, 'lazyComponents', 'get').mockReturnValue(context)
+    vi.spyOn(core, 'lazyComponents', 'get').mockReturnValue(context)
   })
 
   it('should find component by name with exact match', async () => {
