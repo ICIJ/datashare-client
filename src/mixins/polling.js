@@ -18,7 +18,7 @@ export default {
       // Clear all polls
       this.registeredPolls.forEach(this.unregisteredPoll)
     },
-    unregisteredPoll({ id }) {
+    unregisteredPoll({ id = null } = {}) {
       const index = findIndex(this.registeredPolls, { id })
       // Clear the timeout
       clearTimeout(id)
