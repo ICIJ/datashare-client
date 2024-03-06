@@ -25,7 +25,7 @@ describe('VersionNumber.vue', () => {
   })
 
   it('should display client git sha1', () => {
-    const sha1 = wrapper.vm.clientHash
+    const sha1 = wrapper.vm.shortClientHash
 
     expect(sha1.match(/[a-z0-9]*/)[0]).toBe(sha1)
     expect(sha1).toHaveLength(7)
