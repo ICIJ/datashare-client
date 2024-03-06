@@ -9,8 +9,8 @@ describe('ServerSettings.vue', () => {
   let wrapper, i18n, localVue, store, wait, api
   beforeAll(() => {
     api = {
-      getSettings: jest.fn(),
-      setSettings: jest.fn()
+      getSettings: vi.fn(),
+      setSettings: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -19,7 +19,7 @@ describe('ServerSettings.vue', () => {
     wait = core.wait
   })
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     wrapper = await shallowMount(ServerSettings, { i18n, localVue, store, wait })
   })
 

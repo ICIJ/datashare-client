@@ -1,5 +1,5 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import Extensions from '@/components/Extensions'
@@ -60,10 +60,10 @@ describe('Extensions.vue', () => {
   ]
   beforeAll(() => {
     api = {
-      getExtensions: jest.fn(),
-      installExtensionFromId: jest.fn(),
-      installExtensionFromUrl: jest.fn(),
-      uninstallExtension: jest.fn()
+      getExtensions: vi.fn(),
+      installExtensionFromId: vi.fn(),
+      installExtensionFromUrl: vi.fn(),
+      uninstallExtension: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -71,7 +71,7 @@ describe('Extensions.vue', () => {
   })
 
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     api.getExtensions.mockResolvedValue(mockedExtensions)
     wrapper = shallowMount(Extensions, {
       i18n,

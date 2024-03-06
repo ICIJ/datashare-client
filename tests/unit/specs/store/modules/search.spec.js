@@ -1,6 +1,6 @@
 import { cloneDeep, find, omit } from 'lodash'
-import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
@@ -397,9 +397,9 @@ describe('SearchStore', () => {
   describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the project of the store according to the url', async () => {
       store.commit('search/index', project)
-      store.dispatch('search/updateFromRouteQuery', { indices: process.env.VUE_APP_ES_ANOTHER_INDEX })
+      store.dispatch('search/updateFromRouteQuery', { indices: process.env.VITE_ES_ANOTHER_INDEX })
 
-      expect(store.state.search.index).toBe(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      expect(store.state.search.index).toBe(process.env.VITE_ES_ANOTHER_INDEX)
     })
 
     it('should set the query of the store according to the url', async () => {

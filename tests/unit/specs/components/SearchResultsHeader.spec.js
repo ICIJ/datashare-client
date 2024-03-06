@@ -1,6 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import { Core } from '@/core'
@@ -12,9 +12,9 @@ describe('SearchResultsHeader.vue', () => {
 
   beforeAll(() => {
     api = {
-      runBatchDownload: jest.fn(),
+      runBatchDownload: vi.fn(),
       elasticsearch: es,
-      getMappingsByFields: jest.fn()
+      getMappingsByFields: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n

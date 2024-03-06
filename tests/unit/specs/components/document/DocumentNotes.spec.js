@@ -6,7 +6,7 @@ import { Core } from '@/core'
 describe('DocumentNotes.vue', () => {
   let wrapper, i18n, localVue, store, api
   beforeAll(() => {
-    api = { retrieveNotes: jest.fn() }
+    api = { retrieveNotes: vi.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue

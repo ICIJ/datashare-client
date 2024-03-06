@@ -35,7 +35,7 @@ describe('BatchSearchCopyForm.vue', () => {
   beforeAll(() => {
     Murmur.config.merge({ mode: 'SERVER' })
     const api = {
-      copyBatchSearch: jest.fn()
+      copyBatchSearch: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -49,17 +49,17 @@ describe('BatchSearchCopyForm.vue', () => {
     wrapper = shallowMount(BatchSearchCopyForm, { i18n, localVue, propsData, router, store, wait })
   })
 
-  afterAll(() => jest.unmock('@/api'))
+  afterAll(() => vi.unmock('@/api'))
 
   it('should call "copyBatchSearch" method on click on submit button', async () => {
-    const copyBatchSearchMock = jest.spyOn(wrapper.vm, 'copyBatchSearch')
+    const copyBatchSearchMock = vi.spyOn(wrapper.vm, 'copyBatchSearch')
     wrapper.setData({ name: 'Test' })
     wrapper.find('.card-footer .d-flex b-btn-stub').trigger('submit')
     expect(copyBatchSearchMock).toBeCalledTimes(1)
   })
 
   it('should call the API to delete the BS on call of "copyBatchSearch" method', async () => {
-    const storeDispatchMock = jest.spyOn(store, 'dispatch')
+    const storeDispatchMock = vi.spyOn(store, 'dispatch')
     wrapper.setData({ name: 'Test' })
     wrapper.setData({ deleteAfterRelaunch: true })
     await wrapper.vm.copyBatchSearch()

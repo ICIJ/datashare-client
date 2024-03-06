@@ -1,7 +1,7 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
@@ -12,7 +12,7 @@ describe('FilterPath.vue', () => {
   let filter, i18n, localVue, router, store, wait, api
   let wrapper = null
   beforeAll(() => {
-    api = { tree: jest.fn(), elasticsearch: es }
+    api = { tree: vi.fn(), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -75,7 +75,7 @@ describe('FilterPath.vue', () => {
   })
 
   it('should trigger reload event when aggregate event is received', () => {
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     wrapper.vm.$refs.treeView.reloadDataWithSpinner = mockCallback
     wrapper.vm.$refs.filter.$emit('aggregate')
     expect(mockCallback).toBeCalled()

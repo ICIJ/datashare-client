@@ -1,5 +1,5 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from 'tests/unit/tests_utils'
+import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 
 import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
 import { Core } from '@/core'
@@ -7,7 +7,7 @@ import { Core } from '@/core'
 describe('LegacySpreadsheetViewer.vue', () => {
   let wrapper, api, i18n, localVue
   beforeAll(async () => {
-    api = { getSource: jest.fn(({ url }) => mockArrayBuffer(url, false)) }
+    api = { getSource: vi.fn(({ url }) => mockArrayBuffer(url, false)) }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue

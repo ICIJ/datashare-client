@@ -14,7 +14,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should call a function when a project is selected', async () => {
-    const withFn = jest.fn()
+    const withFn = vi.fn()
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch to the project
@@ -24,7 +24,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should call a function when a project is selected with another', async () => {
-    const withFn = jest.fn()
+    const withFn = vi.fn()
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch to the project
@@ -34,7 +34,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should call a function twice when a project is selected', async () => {
-    const withFn = jest.fn()
+    const withFn = vi.fn()
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch between projects
@@ -46,7 +46,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should call a function twice when a project is selected with another', async () => {
-    const withFn = jest.fn()
+    const withFn = vi.fn()
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch between projects
@@ -58,7 +58,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should call a function when a project is unselected', async () => {
-    const withoutFn = jest.fn()
+    const withoutFn = vi.fn()
     // Bind the function to the project
     core.toggleForProject({ project, withoutFn })
     // Switch to the project
@@ -68,7 +68,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should call a function twice when a project is unselected', async () => {
-    const withoutFn = jest.fn()
+    const withoutFn = vi.fn()
     // Bind the function to the project
     core.toggleForProject({ project, withoutFn })
     // Switch between projects
@@ -80,8 +80,8 @@ describe('ProjectsMixin', () => {
   })
 
   it('should call the function when a project is selected, then call the other when unselected', async () => {
-    const withFn = jest.fn()
-    const withoutFn = jest.fn()
+    const withFn = vi.fn()
+    const withoutFn = vi.fn()
     // Bind the function to the project
     core.toggleForProject({ project, withFn, withoutFn })
     // Switch between projects
@@ -97,7 +97,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should create the default project', async () => {
-    const api = { createProject: jest.fn() }
+    const api = { createProject: vi.fn() }
     core = Core.init(createLocalVue(), api).useAll()
     const name = 'default-project'
     core.config.set('defaultProject', name)

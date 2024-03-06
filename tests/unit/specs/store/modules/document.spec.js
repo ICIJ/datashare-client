@@ -1,6 +1,6 @@
 import { indexOf, orderBy, uniqueId } from 'lodash'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { storeBuilder } from '@/store/storeBuilder'
 import { initialState } from '@/store/modules/document'
@@ -13,19 +13,19 @@ describe('DocumentStore', () => {
 
   beforeAll(() => {
     api = {
-      getTags: jest.fn(),
-      tagDocuments: jest.fn(),
-      untagDocuments: jest.fn(),
-      setMarkAsRecommended: jest.fn(),
-      setUnmarkAsRecommended: jest.fn(),
-      getRecommendationsByDocuments: jest.fn(),
+      getTags: vi.fn(),
+      tagDocuments: vi.fn(),
+      untagDocuments: vi.fn(),
+      setMarkAsRecommended: vi.fn(),
+      setUnmarkAsRecommended: vi.fn(),
+      getRecommendationsByDocuments: vi.fn(),
       elasticsearch: es
     }
     store = storeBuilder(api)
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   afterEach(() => store.commit('document/reset'))

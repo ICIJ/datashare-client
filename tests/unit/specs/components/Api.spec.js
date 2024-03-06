@@ -1,7 +1,7 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import ApiPage from '@/components/Api'
 import { Core } from '@/core'
@@ -13,26 +13,26 @@ describe('Api.vue', () => {
 
   beforeAll(() => {
     api = {
-      createApiKey: jest.fn(),
-      getApiKey: jest.fn(),
-      deleteApiKey: jest.fn()
+      createApiKey: vi.fn(),
+      getApiKey: vi.fn(),
+      deleteApiKey: vi.fn()
     }
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
     localVue = core.localVue
     router = core.router
     store = storeBuilder(api)
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
     Murmur.config.merge({ mode: MODE_NAME.SERVER })
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     api.getApiKey.mockResolvedValue({ hashedKey: null })
   })
 
   afterAll(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
 
   it('should display a button to generate the API key by default', () => {

@@ -1,5 +1,5 @@
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { storeBuilder } from '@/store/storeBuilder'
 
@@ -8,9 +8,9 @@ describe('StarredStore', () => {
   let store, filter, api
   beforeAll(() => {
     api = {
-      getStarredDocuments: jest.fn(),
-      starDocuments: jest.fn(),
-      unstarDocuments: jest.fn()
+      getStarredDocuments: vi.fn(),
+      starDocuments: vi.fn(),
+      unstarDocuments: vi.fn()
     }
     store = storeBuilder(api)
     filter = store.getters['search/getFilter']({ name: 'starred' })

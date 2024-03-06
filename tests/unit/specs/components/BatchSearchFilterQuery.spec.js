@@ -85,7 +85,7 @@ describe('BatchSearchFilterQuery.vue', () => {
       })
       const wrapper = mount(BatchSearchFilterQuery, { i18n, localVue, router })
 
-      const searchSpy = jest.spyOn(wrapper.vm, 'filterByQuery')
+      const searchSpy = vi.spyOn(wrapper.vm, 'filterByQuery')
       expect(searchSpy).not.toBeCalled()
 
       await wrapper.find('.btn-dark').trigger('submit')

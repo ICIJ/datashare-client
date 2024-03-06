@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
-import { flushPromises } from 'tests/unit/tests_utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import WidgetDiskUsage from '@/components/widget/WidgetDiskUsage'
 import { Core } from '@/core'

@@ -42,7 +42,7 @@ describe('UserHistorySavedSearchList.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    api = { deleteUserHistoryEvent: jest.fn() }
+    api = { deleteUserHistoryEvent: vi.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue

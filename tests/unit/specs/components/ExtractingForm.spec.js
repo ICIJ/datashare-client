@@ -17,9 +17,9 @@ describe('ExtractingForm.vue', () => {
 
   beforeAll(() => {
     api = {
-      textLanguages: jest.fn(),
-      ocrLanguages: jest.fn(),
-      index: jest.fn()
+      textLanguages: vi.fn(),
+      ocrLanguages: vi.fn(),
+      index: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -31,7 +31,7 @@ describe('ExtractingForm.vue', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     config.set('defaultProject', 'local-datashare')
     config.set('projects', [{ name: 'local-datashare' }])
     wrapper = shallowMount(ExtractingForm, { i18n, localVue, propsData, router, store, wait })

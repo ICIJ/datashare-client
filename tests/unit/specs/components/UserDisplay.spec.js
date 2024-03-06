@@ -9,7 +9,7 @@ describe('UserDisplay.vue', () => {
   let api, i18n, localVue, store, wait
 
   beforeAll(() => {
-    api = { getUser: jest.fn().mockResolvedValue({ uid: 'local' }) }
+    api = { getUser: vi.fn().mockResolvedValue({ uid: 'local' }) }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue

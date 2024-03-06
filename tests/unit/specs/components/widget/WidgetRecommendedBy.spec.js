@@ -1,13 +1,13 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import * as widgets from '@/store/widgets'
 import WidgetRecommendedBy from '@/components/widget/WidgetRecommendedBy'
 import { Core } from '@/core'
 
 const { index, es: elasticsearch } = esConnectionHelper.build()
-const getDocumentUserRecommendations = jest.fn()
+const getDocumentUserRecommendations = vi.fn()
 const api = { elasticsearch, getDocumentUserRecommendations }
 const { localVue, router, store, wait, i18n } = Core.init(createLocalVue(), api).useAll()
 
@@ -25,7 +25,7 @@ describe('WidgetRecommendedBy.vue', () => {
       ]
     })
     // Mock all elasticsearch search calls using a mock
-    elasticsearch.search = jest.fn().mockImplementation(() => {
+    elasticsearch.search = vi.fn().mockImplementation(() => {
       return Promise.resolve({
         hits: {
           hits: [

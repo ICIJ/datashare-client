@@ -2,7 +2,7 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 import Vuex from 'vuex'
 
 import { Core } from '@/core'
@@ -38,14 +38,14 @@ describe('TaskBatchSearchList.vue', () => {
     pagination: { total: 2 }
   }
   beforeAll(async () => {
-    api = { getBatchSearches: jest.fn().mockResolvedValue(mockedBatchSearches) }
+    api = { getBatchSearches: vi.fn().mockResolvedValue(mockedBatchSearches) }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
     wait = core.wait
 
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
     Murmur.config.merge({ mode: 'SERVER' })
     await flushPromises()
   })
@@ -55,7 +55,7 @@ describe('TaskBatchSearchList.vue', () => {
   })
 
   afterAll(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
 
   it('should display a search bar', () => {
@@ -74,8 +74,8 @@ describe('TaskBatchSearchList.vue', () => {
 
   it("should display a 'No filtered result' message when no items and filter is on", async () => {
     const state = { batchSearches: [] }
-    const getters = { hasBatchSearch: jest.fn().mockReturnValue(false) }
-    const actions = { getBatchSearches: jest.fn() }
+    const getters = { hasBatchSearch: vi.fn().mockReturnValue(false) }
+    const actions = { getBatchSearches: vi.fn() }
     const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, getters, actions } } })
 
     wrapper = mount(TaskBatchSearchList, { i18n, localVue, router, store, wait })

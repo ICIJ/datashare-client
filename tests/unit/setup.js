@@ -1,8 +1,12 @@
 import 'whatwg-fetch'
+import Vue from 'vue'
 import { fas as fasIcons } from '@fortawesome/free-solid-svg-icons'
 import { far as farIcons } from '@fortawesome/free-regular-svg-icons'
 import { fab as fabIcons } from '@fortawesome/free-brands-svg-icons'
 import { library as fortawesome } from '@fortawesome/fontawesome-svg-core'
+
+Vue.config.productionTip = false
+Vue.config.devtools = false
 
 // Register all icons
 fortawesome.add(...Object.values(fasIcons))
@@ -10,21 +14,21 @@ fortawesome.add(...Object.values(farIcons))
 fortawesome.add(...Object.values(fabIcons))
 
 global.console = Object.assign(global.console, {
-  warn: jest.fn(),
-  info: jest.fn()
+  warn: vi.fn(),
+  info: vi.fn()
 })
 
 document.fonts = {}
 document.fonts.ready = Promise.resolve()
 
-window.matchMedia = jest.fn().mockImplementation((query) => {
+window.matchMedia = vi.fn().mockImplementation((query) => {
   return {
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
+    addListener: vi.fn(),
+    removeListener: vi.fn()
   }
 })
 
-window.scrollTo = jest.fn()
+window.scrollTo = vi.fn()

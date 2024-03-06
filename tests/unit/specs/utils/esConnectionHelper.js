@@ -16,7 +16,7 @@ function slugger(value) {
 }
 
 function esConnectionHelper(indexOrIndices = [], ifWindows = false) {
-  jest.setTimeout(1e4)
+  vi.setConfig({ testTimeout: 1e4 })
   const indices = castArray(indexOrIndices)
 
   beforeAll(async () => {
@@ -59,6 +59,6 @@ function build(prefix = 'spec', isWindows = false) {
 
 export default esConnectionHelper
 // The default Elasticsearch client, shared between tests
-const es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST, plugins: [datasharePlugin] })
+const es = new elasticsearch.Client({ host: process.env.VITE_ES_HOST, plugins: [datasharePlugin] })
 esConnectionHelper.es = es
 esConnectionHelper.build = build

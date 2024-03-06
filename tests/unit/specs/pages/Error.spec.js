@@ -25,7 +25,7 @@ describe('Error.vue local mode', () => {
 
   it('should display a header when user is logged in in server mode', async () => {
     // Mock the user session
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
     // Mock the isServer property
     const computed = { isServer: () => true }
     wrapper = shallowMount(Error, { i18n, localVue, computed })
@@ -47,7 +47,7 @@ describe('Error.vue server mode', () => {
   })
 
   it('should not display a header when user is logged out in server mode', async () => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
     // Mock the isServer property
     wrapper = shallowMount(Error, { i18n, localVue })
     // Flush promises

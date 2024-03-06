@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import UserHistory from '@/pages/UserHistory'
@@ -12,8 +12,8 @@ describe('UserHistory.vue', () => {
 
   beforeAll(() => {
     api = {
-      getUserHistory: jest.fn(),
-      deleteUserHistory: jest.fn()
+      getUserHistory: vi.fn(),
+      deleteUserHistory: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
@@ -23,7 +23,7 @@ describe('UserHistory.vue', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     router = new VueRouter({
       routes: [
         {

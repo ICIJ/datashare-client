@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import * as widgets from '@/store/widgets'
 import WidgetFieldFacets from '@/components/widget/WidgetFieldFacets'
@@ -15,7 +15,7 @@ describe('WidgetFieldFacets.vue', () => {
   beforeAll(() => {
     store.commit('insights/project', project)
     // Mock all elasticsearch search calls using a mock
-    elasticsearch.search = jest.fn().mockImplementation(() => {
+    elasticsearch.search = vi.fn().mockImplementation(() => {
       return Promise.resolve({
         aggregations: {
           facets: {

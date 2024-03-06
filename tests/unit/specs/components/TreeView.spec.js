@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocuments, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 
 import TreeView from '@/components/TreeView'
 import { Core } from '@/core'
@@ -36,7 +36,7 @@ const HOME_TREE_WIN = {
 describe('TreeView.vue', () => {
   describe('Posix', () => {
     const { index, es } = esConnectionHelper.build()
-    const api = { tree: jest.fn(), elasticsearch: es }
+    const api = { tree: vi.fn(), elasticsearch: es }
     const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
     const propsData = {
       projects: [index],
@@ -159,7 +159,7 @@ describe('TreeView.vue', () => {
     })
 
     it('should load the tree one time when sortBy and order are changed', async () => {
-      const spyLoadTree = jest.spyOn(wrapper.vm, 'reloadDataWithSpinner')
+      const spyLoadTree = vi.spyOn(wrapper.vm, 'reloadDataWithSpinner')
       await wrapper.setProps({ sortBy: '_key', sortByOrder: 'asc' })
 
       expect(spyLoadTree).toBeCalledTimes(1)
@@ -200,7 +200,7 @@ describe('TreeView.vue', () => {
   describe('Windows', () => {
     let wrapper = null
     const { index, es } = esConnectionHelper.build('spec', true)
-    const api = { tree: jest.fn(), elasticsearch: es }
+    const api = { tree: vi.fn(), elasticsearch: es }
 
     const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
 

@@ -1,5 +1,5 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import Plugins from '@/components/Plugins'
@@ -62,17 +62,17 @@ describe('Plugins.vue', () => {
 
   beforeAll(() => {
     api = {
-      getPlugins: jest.fn(),
-      installPluginFromId: jest.fn(),
-      installPluginFromUrl: jest.fn(),
-      uninstallPlugin: jest.fn()
+      getPlugins: vi.fn(),
+      installPluginFromId: vi.fn(),
+      installPluginFromUrl: vi.fn(),
+      uninstallPlugin: vi.fn()
     }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
   })
   beforeEach(async () => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     api.getPlugins.mockResolvedValue(pluginsMock)
     wrapper = shallowMount(Plugins, {
       i18n,

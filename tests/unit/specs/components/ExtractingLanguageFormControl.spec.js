@@ -1,5 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
@@ -16,7 +16,7 @@ describe('ExtractingLanguageFormControl.vue', () => {
   let wrapper
   let wait, store, i18n, api, localVue
   beforeAll(async () => {
-    api = { textLanguages: jest.fn() }
+    api = { textLanguages: vi.fn() }
     localVue = createLocalVue()
     const core = Core.init(localVue, api).useAll()
     wait = core.wait

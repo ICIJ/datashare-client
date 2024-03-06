@@ -2,8 +2,8 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { removeCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { Core } from '@/core'
 import TaskBatchSearchViewResults from '@/pages/TaskBatchSearchViewResults'
@@ -29,8 +29,8 @@ describe('TaskBatchSearchViewResults.vue', () => {
 
   beforeEach(async () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    const api = jest.fn()
-    api.getBatchSearch = jest.fn().mockResolvedValue({
+    const api = vi.fn()
+    api.getBatchSearch = vi.fn().mockResolvedValue({
       uuid: '12',
       projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
       name: 'BatchSearch Test',
@@ -52,7 +52,7 @@ describe('TaskBatchSearchViewResults.vue', () => {
         id: 'test'
       }
     })
-    api.copyBatchSearch = jest.fn()
+    api.copyBatchSearch = vi.fn()
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -67,7 +67,7 @@ describe('TaskBatchSearchViewResults.vue', () => {
 
   afterEach(() => {
     store.commit('batchSearch/reset')
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
 
   it('should display the batch search details', () => {
@@ -110,7 +110,7 @@ describe('TaskBatchSearchViewResults.vue', () => {
   })
 
   it('should change the batchSearch published state', () => {
-    jest.spyOn(store, 'dispatch')
+    vi.spyOn(store, 'dispatch')
 
     wrapper.vm.changePublished(false)
 

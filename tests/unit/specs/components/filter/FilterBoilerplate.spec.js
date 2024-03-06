@@ -5,11 +5,11 @@ import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
-filters.methods.refreshRouteAndSearch = jest.fn()
+filters.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterBoilerplate.vue', () => {
   const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), {
-    elasticsearch: { searchFilter: jest.fn().mockResolvedValue({}) }
+    elasticsearch: { searchFilter: vi.fn().mockResolvedValue({}) }
   }).useAll()
   const name = 'contentType'
   const filter = store.getters['search/getFilter']({ name })
@@ -23,13 +23,13 @@ describe('FilterBoilerplate.vue', () => {
     })
 
     it('should commit a setFilterValue and then refresh the route and the search', () => {
-      jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
+      vi.spyOn(wrapper.vm, 'refreshRouteAndSearch')
       wrapper.vm.setValue(['42'])
       expect(wrapper.vm.refreshRouteAndSearch).toBeCalled()
     })
 
     it('should refresh the route', () => {
-      jest.spyOn(router, 'push')
+      vi.spyOn(router, 'push')
       wrapper.vm.refreshRoute()
       expect(router.push).toBeCalled()
     })

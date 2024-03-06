@@ -1,14 +1,14 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import FilterStarred from '@/components/filter/types/FilterStarred'
 import { Core } from '@/core'
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
-FilterStarred.methods.refreshRouteAndSearch = jest.fn()
+FilterStarred.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterStarred.vue', () => {
   const { index, es } = esConnectionHelper.build()
@@ -16,7 +16,7 @@ describe('FilterStarred.vue', () => {
   let wrapper
 
   beforeAll(() => {
-    api = { getStarredDocuments: jest.fn().mockResolvedValue([]), elasticsearch: es }
+    api = { getStarredDocuments: vi.fn().mockResolvedValue([]), elasticsearch: es }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
@@ -25,7 +25,7 @@ describe('FilterStarred.vue', () => {
     wait = core.wait
     filter = store.getters['search/getFilter']({ name: 'starred' })
 
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe('FilterStarred.vue', () => {
     store.commit('search/index', index)
   })
 
-  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
+  afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
 
   it('should display "All" as the first item', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()

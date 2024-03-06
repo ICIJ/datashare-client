@@ -1,11 +1,11 @@
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import BatchDownloadActions from '@/components/BatchDownloadActions'
 import { Core } from '@/core'
 
 describe('BatchDownloadActions.vue', () => {
-  const api = { runBatchDownload: jest.fn(), deleteTask: jest.fn() }
+  const api = { runBatchDownload: vi.fn(), deleteTask: vi.fn() }
   const { i18n, localVue } = Core.init(createLocalVue(), api).useAll()
   const projects = [{ name: 'project' }]
 
@@ -33,7 +33,7 @@ describe('BatchDownloadActions.vue', () => {
 
   beforeEach(async () => {
     await flushPromises()
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('relaunchTask method', () => {

@@ -1,6 +1,6 @@
 import bodybuilder from 'bodybuilder'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import { elasticsearch } from '@/api/elasticsearch'
 import { FilterText, FilterNamedEntity } from '@/store/filters'
@@ -10,15 +10,15 @@ describe('elasticsearch', () => {
   const { index, es } = esConnectionHelper.build()
 
   it('should return backend response to a POST request for searchDocs', async () => {
-    const spy = jest.spyOn(elasticsearch, 'search').mockResolvedValue({ foo: 'bar' })
+    const spy = vi.spyOn(elasticsearch, 'search').mockResolvedValue({ foo: 'bar' })
     const response = await elasticsearch.searchDocs(index, '*')
     expect(response).toEqual({ foo: 'bar' })
     spy.mockRestore()
   })
 
   it('should emit an error if the backend response is an error', async () => {
-    const spy = jest.spyOn(elasticsearch, 'search').mockRejectedValue(new Error('this is an error'))
-    const mockCallback = jest.fn()
+    const spy = vi.spyOn(elasticsearch, 'search').mockRejectedValue(new Error('this is an error'))
+    const mockCallback = vi.fn()
     EventBus.$on('http::error', mockCallback)
 
     await expect(elasticsearch.searchDocs(index, '*')).rejects.toThrow('this is an error')

@@ -1,5 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from 'tests/unit/tests_utils'
+import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 
 import TiffViewer from '@/components/document/viewers/TiffViewer'
 import { Core } from '@/core'
@@ -8,7 +8,7 @@ import { getMode, MODE_NAME } from '@/mode'
 describe('TiffViewer.vue', () => {
   let i18n, localVue, api
   beforeAll(async () => {
-    api = { getSource: jest.fn() }
+    api = { getSource: vi.fn() }
     const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
     i18n = core.i18n
     localVue = core.localVue

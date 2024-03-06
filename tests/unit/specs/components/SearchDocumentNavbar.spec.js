@@ -5,11 +5,12 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 import { Core } from '@/core'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 
-jest.mock('@/utils/utils')
+vi.mock('@/utils/utils')
 
 describe('SearchDocumentNavbar.vue', () => {
   const project = toLower('SearchDocumentNavbar')
   let wrapper, i18n, localVue, store, router
+
   beforeAll(() => {
     const core = Core.init(createLocalVue()).useAll()
     i18n = core.i18n
@@ -17,7 +18,7 @@ describe('SearchDocumentNavbar.vue', () => {
     store = core.store
     router = core.router
     store.commit('search/index', project)
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
@@ -26,8 +27,8 @@ describe('SearchDocumentNavbar.vue', () => {
   })
 
   afterAll(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    jest.unmock('@/utils/utils')
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
+    vi.unmock('@/utils/utils')
   })
 
   it('should display a "Back to the search results" link', () => {

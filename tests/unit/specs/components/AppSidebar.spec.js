@@ -4,16 +4,16 @@ import AppSidebar from '@/components/AppSidebar'
 import { Core } from '@/core'
 import { getOS } from '@/utils/utils'
 
-jest.mock('@/utils/utils', () => {
+vi.mock('@/utils/utils', () => {
   return {
-    getOS: jest.fn(),
-    isAuthenticated: jest.fn()
+    getOS: vi.fn(),
+    isAuthenticated: vi.fn()
   }
 })
 
 describe('AppSidebar.vue', () => {
   const api = {
-    getVersion: jest.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } })
+    getVersion: vi.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } })
   }
 
   const { config, i18n, localVue, router, store } = Core.init(createLocalVue(), api).useAll()
@@ -34,7 +34,7 @@ describe('AppSidebar.vue', () => {
     wrapper = shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   })
 
-  afterAll(() => jest.unmock('@/utils/utils'))
+  afterAll(() => vi.unmock('@/utils/utils'))
 
   describe('the help link', () => {
     it('should be a gitbook link if NOT in SERVER mode', () => {
@@ -75,8 +75,8 @@ describe('AppSidebar.vue', () => {
           wrapper = setBasicAuthFilter()
         })
         it('should call showModal', async () => {
-          wrapper.vm.showModal = jest.fn()
-          jest.spyOn(wrapper.vm, 'showModal')
+          wrapper.vm.showModal = vi.fn()
+          vi.spyOn(wrapper.vm, 'showModal')
           expect(wrapper.vm.showModal).toHaveBeenCalledTimes(0)
           wrapper.find('.app-sidebar__container__menu__item__link--basic-auth').trigger('click')
           expect(wrapper.vm.showModal).toHaveBeenCalledTimes(1)

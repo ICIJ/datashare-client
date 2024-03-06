@@ -1,7 +1,7 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import toLower from 'lodash/toLower'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { Core } from '@/core'
 import Document from '@/api/resources/Document'

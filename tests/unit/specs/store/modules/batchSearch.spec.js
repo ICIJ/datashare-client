@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import { storeBuilder } from '@/store/storeBuilder'
 
@@ -11,17 +11,17 @@ describe('BatchSearchStore', () => {
   let store
   beforeAll(() => {
     api = {
-      getBatchSearchQueries: jest.fn(),
-      getBatchSearch: jest.fn(),
-      getBatchSearchResults: jest.fn(),
-      getBatchSearches: jest.fn(),
-      batchSearch: jest.fn(),
-      deleteBatchSearch: jest.fn(),
-      deleteBatchSearches: jest.fn()
+      getBatchSearchQueries: vi.fn(),
+      getBatchSearch: vi.fn(),
+      getBatchSearchResults: vi.fn(),
+      getBatchSearches: vi.fn(),
+      batchSearch: vi.fn(),
+      deleteBatchSearch: vi.fn(),
+      deleteBatchSearches: vi.fn()
     }
   })
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     store = storeBuilder(api)
   })
 
@@ -38,7 +38,7 @@ describe('BatchSearchStore', () => {
 
     it('should retrieve the queries of a batch search given its ID', async () => {
       const queries = { query1: 0, query2: 2, query3: 1 }
-      api.getBatchSearchQueries = jest.fn().mockImplementation((uuid) => {
+      api.getBatchSearchQueries = vi.fn().mockImplementation((uuid) => {
         if (uuid === '1') {
           return queries
         }
@@ -54,7 +54,7 @@ describe('BatchSearchStore', () => {
 
     it('should retrieve the queries in the form of a label/count array of objects', async () => {
       const queries = { query1: 0, query2: 2, query3: 1 }
-      api.getBatchSearchQueries = jest.fn().mockResolvedValue(queries)
+      api.getBatchSearchQueries = vi.fn().mockResolvedValue(queries)
       await store.dispatch('batchSearch/getBatchSearchQueries', '1')
       expect(store.getters['batchSearch/queryKeys']).toHaveLength(3)
       expect(store.getters['batchSearch/queryKeys']).toEqual([
@@ -192,9 +192,9 @@ describe('without using api', () => {
 
   beforeAll(() => {
     api = {
-      getBatchSearches: jest.fn(),
-      deleteBatchSearch: jest.fn(),
-      batchSearch: jest.fn()
+      getBatchSearches: vi.fn(),
+      deleteBatchSearch: vi.fn(),
+      batchSearch: vi.fn()
     }
 
     store = storeBuilder(api)

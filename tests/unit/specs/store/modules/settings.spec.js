@@ -3,7 +3,7 @@ import { storeBuilder } from '@/store/storeBuilder'
 describe('SettingsStore', () => {
   let api, store
   beforeAll(() => {
-    api = { getSettings: jest.fn(), setSettings: jest.fn() }
+    api = { getSettings: vi.fn(), setSettings: vi.fn() }
     store = storeBuilder(api)
   })
 

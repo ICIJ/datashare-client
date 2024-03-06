@@ -2,8 +2,8 @@ import find from 'lodash/find'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueI18n from 'vue-i18n'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
 
 import { Core } from '@/core'
 import FilterText from '@/components/filter/types/FilterText'
@@ -13,14 +13,15 @@ describe('FilterText.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const { index: anotherIndex } = esConnectionHelper.build()
   const api = { elasticsearch: es }
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), api).useAll()
   const name = 'contentType'
-  const filter = store.getters['search/getFilter']({ name })
   let wrapper = null
 
-  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+  beforeAll(() => setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(() => {
+    const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), api).useAll()
+    const filter = store.getters['search/getFilter']({ name })
+
     wrapper = mount(FilterText, {
       i18n,
       localVue,
@@ -32,13 +33,13 @@ describe('FilterText.vue', () => {
         infiniteScroll: false
       }
     })
-    store.commit('search/decontextualizeFilter', name)
-    store.commit('search/index', index)
+
+    wrapper.vm.$store.commit('search/decontextualizeFilter', name)
+    wrapper.vm.$store.commit('search/index', index)
+    wrapper.vm.$store.commit('search/reset')
   })
 
-  afterEach(() => store.commit('search/reset'))
-
-  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
+  afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
 
   it('should display no items for the contentType filter', async () => {
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
@@ -68,8 +69,8 @@ describe('FilterText.vue', () => {
       .have(new IndexedDocument('document_02', index).withContentType('type_02').withLanguage('FRENCH'))
       .commit()
 
-    store.commit('search/contextualizeFilter', name)
-    store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
+    wrapper.vm.$store.commit('search/contextualizeFilter', name)
+    wrapper.vm.$store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -96,7 +97,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
 
-    store.commit('search/sortFilter', { name, sortBy: '_key', sortByOrder: 'asc' })
+    wrapper.vm.$store.commit('search/sortFilter', { name, sortBy: '_key', sortByOrder: 'asc' })
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
@@ -127,17 +128,17 @@ describe('FilterText.vue', () => {
       .have(new IndexedDocument('document_06', index).withContent('LIST').withContentType('text/stylesheet'))
       .commit()
 
-    store.commit('search/query', 'SHOW')
-    store.commit('search/decontextualizeFilter', name)
+    wrapper.vm.$store.commit('search/query', 'SHOW')
+    wrapper.vm.$store.commit('search/decontextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findComponent({ ref: 'filter' }).vm.total).toBe(6)
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
 
-    store.commit('search/contextualizeFilter', name)
+    wrapper.vm.$store.commit('search/contextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
 
-    store.commit('search/query', 'INDEX')
+    wrapper.vm.$store.commit('search/query', 'INDEX')
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
   })
@@ -150,17 +151,17 @@ describe('FilterText.vue', () => {
       .have(new IndexedDocument('document_02', index).withContent('Ipsum').withContentType('text/html'))
       .commit()
 
-    store.commit('search/query', 'Lorem')
-    store.commit('search/decontextualizeFilter', name)
+    wrapper.vm.$store.commit('search/query', 'Lorem')
+    wrapper.vm.$store.commit('search/decontextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.findComponent({ ref: 'filter' }).vm.total).toBe(2)
 
-    store.commit('search/contextualizeFilter', name)
+    wrapper.vm.$store.commit('search/contextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
 
-    store.commit('search/decontextualizeFilter', name)
+    wrapper.vm.$store.commit('search/decontextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
   })
@@ -170,8 +171,8 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/javascript')).commit()
 
-    store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
-    store.commit('search/excludeFilter', 'contentType')
+    wrapper.vm.$store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
+    wrapper.vm.$store.commit('search/excludeFilter', 'contentType')
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
@@ -272,7 +273,7 @@ describe('FilterText.vue', () => {
 
   it('should fire 2 events on click on filter item', async () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
-    const spyRefreshRoute = jest.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
+    const spyRefreshRoute = vi.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
     await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
@@ -283,7 +284,7 @@ describe('FilterText.vue', () => {
   })
 
   it('should reset the from query on click on filter item', async () => {
-    store.commit('search/from', 25)
+    wrapper.vm.$store.commit('search/from', 25)
     await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
@@ -300,7 +301,7 @@ describe('FilterText.vue', () => {
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.findComponent({ ref: 'filter' }).vm.total).toBe(2)
 
-    store.commit('search/index', anotherIndex)
+    wrapper.vm.$store.commit('search/index', anotherIndex)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -322,7 +323,7 @@ describe('FilterText.vue', () => {
 
   it('should trigger a click on "All" item, fire an event, unselect others items and refresh the route', async () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
-    const spyRefreshRoute = jest.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
+    const spyRefreshRoute = vi.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
 
     await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('document_02', index).withContentType('type_02')).commit()
@@ -351,7 +352,7 @@ describe('FilterText.vue', () => {
       store,
       wait,
       propsData: {
-        filter: store.getters['search/getFilter']({ name: 'language' })
+        filter: wrapper.vm.$store.getters['search/getFilter']({ name: 'language' })
       }
     })
     await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
@@ -370,7 +371,7 @@ describe('FilterText.vue', () => {
       store,
       wait,
       propsData: {
-        filter: store.getters['search/getFilter']({ name: 'language' })
+        filter: wrapper.vm.$store.getters['search/getFilter']({ name: 'language' })
       }
     })
     await letData(es).have(new IndexedDocument('document_01', index).withLanguage('WELSH')).commit()
@@ -393,16 +394,9 @@ describe('FilterText.vue', () => {
 
   it('should display the extraction level filter with correct labels in French', async () => {
     const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
-    wrapper = mount(FilterText, {
-      i18n,
-      localVue,
-      router,
-      store,
-      wait,
-      propsData: {
-        filter: store.getters['search/getFilter']({ name: 'extractionLevel' })
-      }
-    })
+    const filter = wrapper.vm.$store.getters['search/getFilter']({ name: 'extractionLevel' })
+
+    wrapper = mount(FilterText, { i18n, propsData: { filter  }})
 
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
@@ -413,7 +407,7 @@ describe('FilterText.vue', () => {
   })
 
   it('should reload the filter on event "filter::refresh"', async () => {
-    const spyRefreshFilter = jest.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'aggregateWithLoading')
+    const spyRefreshFilter = vi.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'aggregateWithLoading')
     wrapper.findComponent({ ref: 'filter' }).vm.collapseItems = false
     await wrapper.vm.$root.$emit('filter::refresh', 'contentType')
 
@@ -421,7 +415,7 @@ describe('FilterText.vue', () => {
   })
 
   it('should remove "tag_01" from the tags filter on event "filter::delete"', async () => {
-    wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'tags' }) })
+    wrapper.setProps({ filter: find(wrapper.vm.$store.getters['search/instantiatedFilters'], { name: 'tags' }) })
 
     await letData(es)
       .have(new IndexedDocument('document_01', index).withTags(['tag_01']))

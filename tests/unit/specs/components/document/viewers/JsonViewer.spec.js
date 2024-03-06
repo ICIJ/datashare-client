@@ -1,16 +1,16 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
+import { flushPromises } from '~tests/unit/tests_utils'
 
 import JsonViewer from '@/components/document/viewers/JsonViewer'
 import JsonFormatter from '@/components/JsonFormatter'
 import { Core } from '@/core'
 
-const documentJson = require('tests/unit/resources/document.json')
+import documentJson from '~tests/unit/resources/document.json'
 
 describe('JsonViewer.vue', () => {
   let localVue, api, wrapper
   beforeAll(() => {
-    api = { getSource: jest.fn().mockResolvedValue({ data: documentJson }) }
+    api = { getSource: vi.fn().mockResolvedValue({ data: documentJson }) }
     const core = Core.init(createLocalVue(), api).useAll()
     localVue = core.localVue
   })

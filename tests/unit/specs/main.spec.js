@@ -11,9 +11,9 @@ describe('main', () => {
 
   beforeAll(() => {
     api = {
-      getUser: jest.fn(),
-      getSettings: jest.fn(),
-      getProject: jest.fn()
+      getUser: vi.fn(),
+      getSettings: vi.fn(),
+      getProject: vi.fn()
     }
     api.getSettings.mockResolvedValue({})
     api.getProject.mockResolvedValue({})

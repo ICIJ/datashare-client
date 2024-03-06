@@ -1,8 +1,8 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { flushPromises } from 'tests/unit/tests_utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { flushPromises } from '~tests/unit/tests_utils'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
 import DocumentActions from '@/components/DocumentActions'
 import { Core } from '@/core'
@@ -15,14 +15,14 @@ describe('DocumentActions.vue', () => {
   let api
 
   beforeAll(() => {
-    api = { starDocuments: jest.fn(), unstarDocuments: jest.fn() }
+    api = { starDocuments: vi.fn(), unstarDocuments: vi.fn() }
     const core = Core.init(createLocalVue(), api).useAll()
     i18n = core.i18n
     localVue = core.localVue
     store = core.store
 
     Murmur.config.merge({
-      projects: [process.env.VUE_APP_ES_INDEX],
+      projects: [process.env.VITE_ES_INDEX],
       embeddedDocumentDownloadMaxSize: '1G'
     })
   })
@@ -82,7 +82,7 @@ describe('DocumentActions.vue', () => {
   })
 
   it('should raise an "filter::starred::refresh" event when adding a star', async () => {
-    const mockCallback = jest.fn()
+    const mockCallback = vi.fn()
     wrapper.vm.$root.$on('filter::starred::refresh', mockCallback)
 
     await wrapper.vm.toggleStarDocument()
