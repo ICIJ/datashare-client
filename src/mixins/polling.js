@@ -18,7 +18,7 @@ export default {
       // Clear all polls
       this.registeredPolls.forEach(this.unregisteredPoll)
     },
-    unregisteredPoll({ id = null } = {}) {
+    unregisteredPoll({ id }) {
       const index = findIndex(this.registeredPolls, { id })
       // Clear the timeout
       clearTimeout(id)
@@ -27,7 +27,7 @@ export default {
     },
     registerPoll({ fn, timeout = 2000, immediate = false } = {}) {
       // Scheddule the poll first to get its id
-      const id = this.schedulePoll({ fn, timeout, immediate })
+      const id = parseInt(this.schedulePoll({ fn, timeout, immediate }))
       // And add it to the list to retrieve it later
       this.registeredPolls.push({ fn, id })
     },
