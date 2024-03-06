@@ -138,6 +138,6 @@ describe('FilterStarred.vue', () => {
     })
     wrapper.findComponent({ ref: 'filter' }).vm.collapseItems = false
 
-    expect(wrapper.findAll('.filter__footer__action--invert')).toHaveLength(0)
+    expect(wrapper.findAll('.filter__footer__action--exclude')).toHaveLength(0)
   })
 })

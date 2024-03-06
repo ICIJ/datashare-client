@@ -12,9 +12,9 @@
     <span class="mx-auto"></span>
     <b-form-checkbox
       v-if="!hideExclude"
-      v-model="isReversed"
+      v-model="excluded"
       size="sm"
-      class="filter__footer__action filter__footer__action--invert"
+      class="filter__footer__action filter__footer__action--exclude"
     >
       {{ $t('filter.invert') }}
     </b-form-checkbox>
@@ -70,7 +70,7 @@ export default {
     shouldDisplayShowMore() {
       return !this.hideShowMore
     },
-    isReversed: {
+    excluded: {
       get() {
         return this.$store.getters['search/isFilterReversed'](this.filter.name)
       },

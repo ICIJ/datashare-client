@@ -2,7 +2,7 @@
   <div
     class="filter card"
     :class="{
-      'filter--reversed': isReversed,
+      'filter--reversed': excluded,
       'filter--hide-show-more': hideShowMore,
       'filter--hide-search': hideSearch,
       'filter--hide-header': hideHeader,
@@ -375,7 +375,7 @@ export default {
         }
       }
     },
-    isReversed() {
+    excluded() {
       return this.$store.getters['search/isFilterReversed'](this.filter.name)
     }
   },

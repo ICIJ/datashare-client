@@ -53,7 +53,7 @@ describe('FilterBoilerplate.vue', () => {
 
       wrapper.vm.resetFilterValues()
 
-      expect(wrapper.vm.isReversed).toBeFalsy()
+      expect(wrapper.vm.excluded).toBeFalsy()
     })
 
     it('should emit an event "reset-filter-values"', () => {
