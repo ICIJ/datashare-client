@@ -1,34 +1,36 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
+
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import { Core } from '@/core'
 import SearchResultsTable from '@/components/SearchResultsTable'
 
 describe('SearchResultsTable.vue', () => {
-  let i18n, localVue, store, wait, router, wrapper, api
+  let index, i18n, localVue, store, wait, router, wrapper
+  const connectionHelper = esConnectionHelper.build()
+  const api = {
+    elasticsearch: connectionHelper.es,
+    starDocuments: vi.fn(),
+    getMappingsByFields: vi.fn()
+  }
 
-  const { index, es } = esConnectionHelper.build()
-
-  beforeAll(() => {
+  beforeAll(async () => {
+    index = connectionHelper.index
+    localVue = createLocalVue()
     router = new VueRouter()
-    api = {
-      starDocuments: vi.fn(),
-      elasticsearch: es,
-      getMappingsByFields: vi.fn()
-    }
-    const core = Core.init(createLocalVue(), api).useAll()
+
+    const core = Core.init(localVue, api).useAll()
+
     i18n = core.i18n
-    localVue = core.localVue
     store = core.store
     wait = core.wait
-
-    store.commit('search/index', index)
   })
 
   beforeEach(async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('document').withIndex(index).count(4)).commit()
+    store.commit('search/index', index)
+    const indexedDocuments = new IndexedDocuments().setBaseName('document').withIndex(index).count(4)
+    await letData(connectionHelper.es).have(indexedDocuments).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
     wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store, wait })
   })
