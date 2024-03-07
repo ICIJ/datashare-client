@@ -72,7 +72,7 @@ body {
       }
 
       &:after {
-        background: white url('~images/logo-color-symbol.svg') no-repeat center center;
+        background: white url('@/assets/images/logo-color-symbol.svg') no-repeat center center;
         background-size: 80% 80%;
         border-radius: inherit;
         content: "";
