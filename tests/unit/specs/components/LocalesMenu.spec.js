@@ -3,18 +3,22 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import LocalesMenu from '@/components/LocalesMenu'
 import { Core } from '@/core'
+import { beforeAll } from 'vitest'
 
 describe('LocalesMenu', () => {
   const core = Core.init(createLocalVue()).useAll()
   const { localVue, i18n } = core
   let wrapper = null
 
-  beforeEach(() => {
-    return core.loadI18Locale('en')
+  beforeAll(async () => {
+    await core.loadI18Locale('en')
+    await core.loadI18Locale('es')
+    await core.loadI18Locale('fr')
+    await core.loadI18Locale('ja')
   })
 
-  afterAll(() => {
-    return core.loadI18Locale('en')
+  beforeEach(() => {
+    return core.setI18nLocale('en')
   })
 
   describe('should change the interface language according to configuration', () => {
