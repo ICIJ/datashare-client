@@ -28,13 +28,16 @@ describe('AppSidebar.vue', () => {
     config.merge({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter', mode: 'SERVER' })
     return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   }
+
   beforeEach(() => {
     getOS.mockReset()
     config.merge({ mode: 'LOCAL' })
     wrapper = shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   })
 
-  afterAll(() => vi.unmock('@/utils/utils'))
+  afterAll(() => {
+    vi.unmock('@/utils/utils')
+  })
 
   describe('the help link', () => {
     it('should be a gitbook link if NOT in SERVER mode', () => {
