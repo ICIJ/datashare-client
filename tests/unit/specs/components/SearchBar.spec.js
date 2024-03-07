@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
+
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from '~tests/unit/tests_utils'
-
 import { Core } from '@/core'
 import SearchBar from '@/components/SearchBar'
 

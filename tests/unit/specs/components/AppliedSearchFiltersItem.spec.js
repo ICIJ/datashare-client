@@ -1,8 +1,8 @@
 import find from 'lodash/find'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { Core } from '@/core'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 

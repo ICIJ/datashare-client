@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
+
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from '~tests/unit/es_utils'
-
 import { Core } from '@/core'
 import SearchResultsList from '@/components/SearchResultsList'
 import settings from '@/utils/settings'

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { flushPromises } from '~tests/unit/tests_utils'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import { storeBuilder } from '@/store/storeBuilder'
 
 Vue.use(Vuex)
@@ -234,7 +234,7 @@ describe('without using api', () => {
     expect(store.getters['batchSearch/hasBatchSearch']).toBe(false)
   })
 
-  it('should update the nbBatchSearches when submitting the new batchSearch form ', async () => {
+  it('should update the nbBatchSearches when submitting the new batchSearch form', async () => {
     api.getBatchSearches.mockResolvedValueOnce({
       items: [{ uuid: 'name' }],
       pagination: { total: 1 }

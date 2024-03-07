@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import * as widgets from '@/store/widgets'
 import WidgetRecommendedBy from '@/components/widget/WidgetRecommendedBy'
 import { Core } from '@/core'

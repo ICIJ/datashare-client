@@ -1,6 +1,5 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import ExtractingForm from '@/components/ExtractingForm'
 

@@ -1,9 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { vi } from 'vitest'
 
 import AppSidebar from '@/components/AppSidebar'
 import { Core } from '@/core'
-import { getOS } from '@/utils/utils'
-import { vi } from 'vitest'
 
 vi.mock('@/utils/utils', () => {
   return {

@@ -2,9 +2,9 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
+
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import { Core } from '@/core'
 import BatchSearchResultsTable from '@/components/BatchSearchResultsTable'
 
@@ -151,7 +151,7 @@ describe('BatchSearchResultsTable.vue', () => {
   it('should return the document size as human readable', () => {
     expect(wrapper.vm.getDocumentSize(42)).toBe('42.00 B')
   })
-  it('should display a pagination navigation ', () => {
+  it('should display a pagination navigation', () => {
     const find = wrapper.find('custom-pagination-stub')
     expect(find.exists()).toBeTruthy()
     expect(find.attributes('totalrows')).toBe('3')

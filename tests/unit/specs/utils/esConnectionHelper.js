@@ -1,4 +1,4 @@
-import { castArray, join, map, noop, uniqueId } from 'lodash'
+import { castArray, join, noop, uniqueId } from 'lodash'
 import elasticsearch from 'elasticsearch-browser'
 
 import esMapping from './datashare_index_mappings.json'

@@ -1,9 +1,9 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import VueRouter from 'vue-router'
 import find from 'lodash/find'
 
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { Core } from '@/core'
 import FilterProject from '@/components/filter/types/FilterProject'
 

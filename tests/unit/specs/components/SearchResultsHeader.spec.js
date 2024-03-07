@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
+
 import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import { Core } from '@/core'
 
@@ -77,7 +77,7 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.find('.search-results-header__settings__size__dropdown').exists()).toBeTruthy()
   })
 
-  it('should display the dropdown to choose the number of results per page', () => {
+  it('should display the dropdown to choose the sort order', () => {
     expect(wrapper.find('.search-results-header__settings__sort__toggler').exists()).toBeTruthy()
     expect(wrapper.find('.search-results-header__settings__sort__dropdown').exists()).toBeTruthy()
   })

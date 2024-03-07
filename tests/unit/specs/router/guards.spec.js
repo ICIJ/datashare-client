@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
+import { expect } from 'vitest'
 
 import { Core } from '@/core'
 import { flushPromises } from '~tests/unit/tests_utils'
-import { expect } from 'vitest'
 
 describe('guards', () => {
   describe('checkUserAuthentication', () => {

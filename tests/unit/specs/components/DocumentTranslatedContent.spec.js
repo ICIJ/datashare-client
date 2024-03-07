@@ -1,9 +1,9 @@
 import { createLocalVue, mount } from '@vue/test-utils'
+
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import { letTextContent } from '~tests/unit/api_mock'
-
 import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 

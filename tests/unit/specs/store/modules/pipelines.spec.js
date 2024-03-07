@@ -31,7 +31,7 @@ describe('PipelinesStore', () => {
     expect(pipeline.apply('foo')).toBe('FOO')
   })
 
-  it('should register a pipeline with a function', () => {
+  it('should register a pipeline with a function to uppercase', () => {
     class Type {
       apply(value) {
         return value.toUpperCase()
@@ -119,7 +119,7 @@ describe('PipelinesStore', () => {
     expect(pipelines.reduce((res, fn) => fn(res), 'FOO bar')).toBe('FOO BAR')
   })
 
-  it('should have ordered pipelines', () => {
+  it('should have ordered pipelines with a property', () => {
     const category = 'test-category-ordered-case-with-property'
     store.commit('pipelines/register', { category, type: (s) => s.toLowerCase(), order: 10 })
     store.commit('pipelines/register', { category, type: (s) => s.toUpperCase(), order: 5 })

@@ -1,8 +1,8 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
+
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import WidgetDocumentsByCreationDateByPath from '@/components/widget/WidgetDocumentsByCreationDateByPath'
 import { Core } from '@/core'
 

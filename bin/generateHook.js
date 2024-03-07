@@ -1,8 +1,8 @@
 const Handlebars = require('handlebars')
 const { execSync } = require('child_process')
 const { readFileSync, writeFileSync } = require('fs')
-const { kebabCase, compact } = require('lodash')
-const { basename, join } = require('path')
+const { join } = require('path')
+const { compact } = require('lodash')
 
 const { repository } = require('../package.json')
 

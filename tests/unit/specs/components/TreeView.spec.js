@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
-
 import TreeView from '@/components/TreeView'
 import { Core } from '@/core'
 

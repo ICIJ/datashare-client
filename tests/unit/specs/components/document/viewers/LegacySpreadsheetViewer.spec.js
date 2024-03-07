@@ -1,6 +1,6 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 
+import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
 import { Core } from '@/core'
 

@@ -1,8 +1,8 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
+
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
 

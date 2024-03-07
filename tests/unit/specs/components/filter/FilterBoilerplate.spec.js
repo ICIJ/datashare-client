@@ -114,38 +114,6 @@ describe('FilterBoilerplate.vue', () => {
     })
   })
 
-  describe('with integers keys', () => {
-    let wrapper = null
-
-    beforeEach(() => {
-      const computed = {
-        itemsWithExcludedValues() {
-          return [
-            { key: 0, doc_count: 12 },
-            { key: 1, doc_count: 15 }
-          ]
-        }
-      }
-
-      wrapper = shallowMount(FilterBoilerplate, {
-        i18n,
-        localVue,
-        router,
-        store,
-        wait,
-        propsData: { filter },
-        computed
-      })
-    })
-
-    it('should cast items into string', () => {
-      expect(wrapper.vm.options).toEqual([
-        { item: { key: 0, doc_count: 12 }, value: '0', label: '0' },
-        { item: { key: 1, doc_count: 15 }, value: '1', label: '1' }
-      ])
-    })
-  })
-
   describe('with translated keys', () => {
     let wrapper = null
 

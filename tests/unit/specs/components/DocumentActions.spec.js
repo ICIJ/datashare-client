@@ -1,9 +1,9 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import { flushPromises } from '~tests/unit/tests_utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import DocumentActions from '@/components/DocumentActions'
 import { Core } from '@/core'
 
