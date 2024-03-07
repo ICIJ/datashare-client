@@ -46,7 +46,6 @@ export default {
       const response = await this.fetchPreview(url)
       const buffer = Buffer.from(response.data, 'binary')
       const imageStr = buffer.toString('base64')
-      console.log(imageStr)
       return `data:image/jpeg;base64,${imageStr}`
     }
   }
