@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { sortBy } from 'lodash'
+
 /**
  * A widget to include nested widget
  */
@@ -29,7 +31,7 @@ export default {
   },
   computed: {
     instantiatedWidgets() {
-      return this.widgets.map(this.instantiateWidget).toSorted((a, b) => a.order - b.order)
+      return sortBy(this.widgets.map(this.instantiateWidget), 'order')
     },
     widgets() {
       return this.widget.widgets ?? []
