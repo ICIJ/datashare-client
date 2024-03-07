@@ -19,7 +19,6 @@ export default ({ mode }) => {
         path: 'path-browserify',
         vue: 'vue/dist/vue.esm.js',
         '@': resolve(__dirname, './src'),
-        '~images': resolve(__dirname, './src/assets/images'),
         '~node_modules': resolve('node_modules'),
         '~mixins': resolve(__dirname, './src/mixins'),
         '~tests': resolve(__dirname, 'tests')
@@ -39,7 +38,11 @@ export default ({ mode }) => {
       port: 9009,
       host: '0.0.0.0',
       proxy: {
-        '/': process.env.VITE_DEV_PROXY
+        '^/(settings|me|api).?': {
+          target: process.env.VITE_DEV_PROXY,
+          changeOrigin: true,
+          secure: false
+        }
       }
     }
   })
