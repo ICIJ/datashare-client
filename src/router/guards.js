@@ -2,13 +2,14 @@ import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
 export default ({ router, auth, store, config, i18n, setPageTitle }) => {
-  async function checkUserAuthentication(to, _from, next) {
+  async function checkUserAuthentication(to, from, next) {
     try {
-      // This route skip auth
-      if (to.matched.some((r) => get(r, 'meta.skipsAuth', false))) {
+      const username = await auth.getUsername()
+      const skipsAuth = to.matched.some((r) => get(r, 'meta.skipsAuth', false))
+      if (skipsAuth) {
         next()
         // The user is authenticated
-      } else if (await auth.getUsername()) {
+      } else if (username) {
         const path = await store.dispatch('app/popRedirectAfterLogin')
         if (to.path !== path && path !== null) {
           next({ path })
@@ -16,9 +17,11 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
           next()
         }
         // The user isn't authenticated
-      } else {
+      } else if (from.name !== 'login' && to.name !== 'login') {
         store.commit('app/setRedirectAfterLogin', to.path)
         next({ name: 'login' })
+      } else {
+        next()
       }
     } catch (error) {
       next({ name: 'error', params: { error } })
