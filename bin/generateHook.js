@@ -28,19 +28,8 @@ function joinToDoc(pathSegment) {
 }
 
 /**
- * Converts the source file path to the documentation path.
- * @param {string} src - The source file path.
- * @returns {string} The documentation path.
- */
-function srcToDocumentationPath(src) {
-  const name = basename(src, '.vue')
-  const path = src.split('/').slice(0, -1).map(kebabCase).join('/')
-  return `vue/${path}/${name}.md`
-}
-
-/**
  * Collects hook occurrences using `git grep`.
- * @returns {Array} An array of hook objects containing component, source, line, path, and hook information.
+ * @returns {Array} An array of hook objects containing component, source, line, and hook information.
  */
 function collectHookOccurrences() {
   const occurrences = execSync('git grep --line --no-color --extended-regexp \'<hook name="(.*:\\w*)"\'').toString()
@@ -49,9 +38,8 @@ function collectHookOccurrences() {
     const line = occurrence.split(':')[1]
     const match = occurrence.split(':').slice(2).join(':')
     const hook = (match.match(/\"(.*:\w*)\"/) || [])[1]
-    const path = srcToDocumentationPath(component)
     const source = new URL(`blob/master/src/${component}#L${line}`, repository.url)
-    return { component, source, line, path, hook }
+    return { component, source, line, hook }
   })
 }
 
