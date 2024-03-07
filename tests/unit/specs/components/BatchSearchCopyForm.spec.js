@@ -49,7 +49,9 @@ describe('BatchSearchCopyForm.vue', () => {
     wrapper = shallowMount(BatchSearchCopyForm, { i18n, localVue, propsData, router, store, wait })
   })
 
-  afterAll(() => vi.unmock('@/api'))
+  afterAll(() => {
+    vi.unmock('@/api')
+  })
 
   it('should call "copyBatchSearch" method on click on submit button', async () => {
     const copyBatchSearchMock = vi.spyOn(wrapper.vm, 'copyBatchSearch')
