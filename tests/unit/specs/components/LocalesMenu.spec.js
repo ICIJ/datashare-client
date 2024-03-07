@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { beforeAll } from 'vitest'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import LocalesMenu from '@/components/LocalesMenu'
 import { Core } from '@/core'
-import { beforeAll } from 'vitest'
 
 describe('LocalesMenu', () => {
   const core = Core.init(createLocalVue()).useAll()
