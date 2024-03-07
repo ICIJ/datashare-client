@@ -17,7 +17,7 @@ release:
 		echo "If everything is OK, you can push with tags i.e. git push origin master --tags"
 
 unit:
-		yarn test:unit
+		yarn test
 
 doc:
 		yarn doc
