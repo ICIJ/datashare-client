@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     importPreviewComponent() {
-      return import('@/components/document/viewers/' + this.previewComponent + '.vue')
+      return import(`@/components/document/viewers/${this.previewComponent}.vue`)
     }
   }
 }
