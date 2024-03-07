@@ -140,10 +140,16 @@ export default {
       }
     },
     showProjectSelector() {
-      return (
-        !this.hideProjectSelector &&
-        (this.$core.projects.length > 1 || this.defaultProject !== this.$config.get('defaultProject'))
-      )
+      return !this.hideProjectSelector && (this.hasSeveralProjects || this.nonDefaultProjectSelected)
+    },
+    hasSeveralProjects: {
+      cache: false,
+      get() {
+        return this.$core.projects.length > 1
+      }
+    },
+    nonDefaultProjectSelected() {
+      return this.defaultProject !== this.$config.get('defaultProject')
     }
   },
   async mounted() {
