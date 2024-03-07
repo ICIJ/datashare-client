@@ -3,6 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AppSidebar from '@/components/AppSidebar'
 import { Core } from '@/core'
 import { getOS } from '@/utils/utils'
+import { vi } from 'vitest'
 
 vi.mock('@/utils/utils', () => {
   return {
@@ -30,7 +31,7 @@ describe('AppSidebar.vue', () => {
   }
 
   beforeEach(() => {
-    getOS.mockReset()
+    vi.clearAllMocks()
     config.merge({ mode: 'LOCAL' })
     wrapper = shallowMount(AppSidebar, { config, i18n, localVue, router, store })
   })
