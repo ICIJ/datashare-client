@@ -18,7 +18,7 @@
           :key="locale.key"
           href="#"
           class="dropdown-item"
-          :class="{ active: locale.key === currentLocale.key }"
+          :class="dropdownItemClass(locale)"
           @click.prevent="chooseLocale(locale.key)"
         >
           {{ locale.label }}
@@ -77,6 +77,12 @@ export default {
       await this.$core.loadI18Locale(locale)
       if (this.$refs.popover) {
         this.$refs.popover.$emit('close')
+      }
+    },
+    dropdownItemClass({ key }) {
+      return {
+        active: key === this.currentLocale.key,
+        [`dropdown-item--${key.toLowerCase()}`]: true
       }
     }
   }
