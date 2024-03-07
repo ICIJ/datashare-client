@@ -10,13 +10,13 @@ describe('BatchSearchFilterQuery.vue', () => {
   let wrapper = null
 
   it('display a search bar input', async () => {
-    wrapper = shallowMount(BatchSearchFilterQuery, { i18n })
+    wrapper = shallowMount(BatchSearchFilterQuery, { i18n, localVue })
     expect(wrapper.find('.batch-search-filter-query').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-filter-query__input').exists()).toBeTruthy()
   })
 
   it('search button is disabled if search is empty', async () => {
-    wrapper = shallowMount(BatchSearchFilterQuery, { i18n })
+    wrapper = shallowMount(BatchSearchFilterQuery, { i18n, localVue })
     expect(wrapper.vm.emptySearch).toBe(true)
     expect(wrapper.find('search-bar-input-stub[disablesubmit]').exists()).toBe(true)
     await wrapper.setData({ search: 'test' })
