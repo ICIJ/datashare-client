@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue2'
 
 export default ({ mode }) => {
-  process.env = Object.assign(process.env, loadEnv(mode, process.cwd(), ''));
+  process.env = Object.assign(process.env, loadEnv(mode, process.cwd(), ''))
 
   return defineConfig({
     plugins: [vue()],
@@ -39,8 +39,8 @@ export default ({ mode }) => {
       port: 9009,
       host: '0.0.0.0',
       proxy: {
-        '/': process.env.VITE_DEV_PROXY,
-      },
+        '/': process.env.VITE_DEV_PROXY
+      }
     }
   })
 }
