@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import { Core } from '@/core'
 import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
 

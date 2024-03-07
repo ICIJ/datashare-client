@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import { flushPromises } from '~tests/unit/tests_utils'
 import VueRouter from 'vue-router'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import ProjectViewEdit from '@/pages/ProjectViewEdit'
 

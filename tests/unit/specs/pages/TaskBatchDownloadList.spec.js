@@ -1,6 +1,6 @@
-import { flushPromises } from '~tests/unit/tests_utils'
 import { createLocalVue, mount } from '@vue/test-utils'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import TaskBatchDownloadList from '@/pages/TaskBatchDownloadList'
 import { Core } from '@/core'
 import { getMode, MODE_NAME } from '@/mode'

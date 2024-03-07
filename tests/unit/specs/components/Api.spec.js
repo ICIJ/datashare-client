@@ -1,8 +1,8 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import { flushPromises } from '~tests/unit/tests_utils'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import ApiPage from '@/components/Api'
 import { Core } from '@/core'
 import { storeBuilder } from '@/store/storeBuilder'

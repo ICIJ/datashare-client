@@ -41,7 +41,7 @@ describe('SearchBarInputDropdownForProjects.vue', function () {
     expect(wrapper.findAll('.dropdown-item.active').at(1).text().trim()).toBe('Default')
   })
 
-  it('should display a dropdown with "Default" as button content', () => {
+  it('should display a dropdown with 2 projects as button content', () => {
     const propsData = { value: [{ name: 'local-datashare' }, { name: 'foo' }] }
     const wrapper = mount(SearchBarInputDropdownForProjects, { propsData, i18n, localVue, router, store })
     expect(wrapper.find('.dropdown-toggle').text().trim()).toBe('2 projects')

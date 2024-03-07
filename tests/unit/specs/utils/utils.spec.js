@@ -74,7 +74,7 @@ describe('utils', () => {
       expect(getExtractionLevelTranslationKey('')).toBe('filter.level.')
     })
 
-    it('should retrieve the extraction level if no level (1/2)', () => {
+    it('should retrieve the extraction level if no level (2/2)', () => {
       expect(getExtractionLevelTranslationKey()).toBe('')
     })
 

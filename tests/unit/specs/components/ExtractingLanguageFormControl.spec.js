@@ -1,6 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import { flushPromises } from '~tests/unit/tests_utils'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
 
@@ -53,7 +53,7 @@ describe('ExtractingLanguageFormControl.vue', () => {
       expect(wrapper.findAll('option').at(3).text()).toBe('French')
     })
   })
-  describe('When a fetching error occurs ', () => {
+  describe('When a fetching error occurs', () => {
     it('should emit an ocr-error event on text languages reject', async () => {
       api.textLanguages.mockRejectedValue({})
       wrapper = mount(ExtractingLanguageFormControl, { wait, store, i18n, localVue })

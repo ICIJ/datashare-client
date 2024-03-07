@@ -1,8 +1,8 @@
 import VueRouter from 'vue-router'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import { flushPromises } from '~tests/unit/tests_utils'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import BatchSearchActions from '@/components/BatchSearchActions'
 import { getMode, MODE_NAME } from '@/mode'

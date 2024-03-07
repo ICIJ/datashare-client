@@ -1,9 +1,9 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
+
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
-
 import FilterStarred from '@/components/filter/types/FilterStarred'
 import { Core } from '@/core'
 

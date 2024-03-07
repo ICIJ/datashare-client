@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
+
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-
 import FilterDate from '@/components/filter/types/FilterDate'
 import { Core } from '@/core'
 import filters from '@/mixins/filters'

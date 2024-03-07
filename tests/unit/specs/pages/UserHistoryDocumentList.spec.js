@@ -64,7 +64,7 @@ describe('UserHistoryDocumentList.vue', () => {
     expect(time.exists()).toBe(true)
     expect(time.text()).toBe('23:09')
   })
-  it('display the first row second cell containing document thumbnail, name, link, and action buttons ', () => {
+  it('display the first row second cell containing document thumbnail, name, link, and action buttons', () => {
     wrapper = mount(UserHistoryDocumentList, { i18n, localVue, propsData, router, store })
     const firstRow = wrapper.find('.user-history-document-list__list__item')
     const link = firstRow.find('.user-history-document-list__list__item__link')

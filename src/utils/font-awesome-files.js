@@ -1,8 +1,6 @@
 import find from 'lodash/find'
 import get from 'lodash/get'
 import trim from 'lodash/trim'
-import types from '@/utils/types.json'
-
 import faFileArchive from '@fortawesome/free-solid-svg-icons/faFileArchive'
 import faFileAudio from '@fortawesome/free-solid-svg-icons/faFileAudio'
 import faFileCsv from '@fortawesome/free-solid-svg-icons/faFileCsv'
@@ -15,6 +13,8 @@ import faFileText from '@fortawesome/free-solid-svg-icons/faFileText'
 import faFileVideo from '@fortawesome/free-solid-svg-icons/faFileVideo'
 import faFileWord from '@fortawesome/free-solid-svg-icons/faFileWord'
 import faFileZipper from '@fortawesome/free-solid-svg-icons/faFileZipper'
+
+import types from '@/utils/types.json'
 
 export const icons = {
   faFileArchive,

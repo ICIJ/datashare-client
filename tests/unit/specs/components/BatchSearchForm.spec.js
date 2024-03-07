@@ -1,13 +1,13 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
+import { beforeAll, beforeEach } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from '~tests/unit/tests_utils'
 import BatchSearchForm from '@/components/BatchSearchForm'
 import { Core } from '@/core'
-import { beforeAll, beforeEach } from 'vitest'
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()

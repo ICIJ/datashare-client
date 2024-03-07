@@ -2,9 +2,9 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
-import { flushPromises } from '~tests/unit/tests_utils'
 import Vuex from 'vuex'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import TaskBatchSearchList from '@/pages/TaskBatchSearchList'
 
