@@ -1,5 +1,5 @@
 run:
-		yarn serve
+		yarn dev
 
 clean:
 		rm -Rf ./dist
