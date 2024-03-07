@@ -86,7 +86,7 @@ jobs:
           key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Run unit tests
-          command: yarn test:unit --silent --maxWorkers 2
+          command: yarn test:unit --silent --minThreads 1 --maxWorkers 2
       - run:
           name: Make distribution
           command: make dist
