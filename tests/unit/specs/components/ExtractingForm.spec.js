@@ -80,7 +80,7 @@ describe('ExtractingForm.vue', () => {
     expect(api.ocrLanguages).toBeCalledTimes(1)
   })
 
-  it.only('should show the project selector when there is several projects', async () => {
+  it('should show the project selector when there is several projects', async () => {
     await config.set('defaultProject', 'foo')
     await config.set('projects', [{ name: 'bar' }, { name: 'foo' }])
     await wrapper.setData({ defaultProject: 'foo' })
