@@ -3,10 +3,17 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Core } from '@/core'
 import WidgetTreeMap from '@/components/widget/WidgetTreeMap'
 
-vi.mock('@/api/elasticsearch', () => {
+vi.mock('@/api/elasticsearch', async (importOriginal) => {
   return {
+    ...(await importOriginal()),
     search: () => {
-      return { aggregations: { byDirname: { buckets: [{ key: '/home/dev/data/folders', doc_count: 50 }] } } }
+      return {
+        aggregations: {
+          byDirname: {
+            buckets: [{ key: '/home/dev/data/folders', doc_count: 50 }]
+          }
+        }
+      }
     }
   }
 })
