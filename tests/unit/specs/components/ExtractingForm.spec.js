@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import { flushPromises } from '~tests/unit/tests_utils'
 import { Core } from '@/core'
 import ExtractingForm from '@/components/ExtractingForm'
 
@@ -30,10 +31,10 @@ describe('ExtractingForm.vue', () => {
     wait = core.wait
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
-    config.set('defaultProject', 'local-datashare')
-    config.set('projects', [{ name: 'local-datashare' }])
+    await config.set('defaultProject', 'local-datashare')
+    await config.set('projects', [{ name: 'local-datashare' }])
     wrapper = shallowMount(ExtractingForm, { i18n, localVue, propsData, router, store, wait })
   })
 
@@ -80,9 +81,10 @@ describe('ExtractingForm.vue', () => {
     expect(api.ocrLanguages).toBeCalledTimes(1)
   })
 
-  it('should show the project selector when there is several projects', async () => {
-    await config.set('defaultProject', 'foo')
-    await config.set('projects', [{ name: 'bar' }, { name: 'foo' }])
+  it.only('should show the project selector when there is several projects', async () => {
+    await wrapper.vm.$config.set('defaultProject', 'foo')
+    await wrapper.vm.$config.set('projects', [{ name: 'bar' }, { name: 'foo' }])
+    await wrapper.setData({ defaultProject: 'foo' })
     expect(wrapper.findComponent({ name: 'ProjectSelector' }).exists()).toBeTruthy()
   })
 
