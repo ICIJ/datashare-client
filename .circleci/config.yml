@@ -30,7 +30,7 @@ jobs:
   # This job will build the client environment with the correct dependencies
   build:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
     working_directory: ~/datashare-client
     steps:
       - checkout
@@ -54,7 +54,7 @@ jobs:
   # This job will run linters on the vue and js code
   lint:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
@@ -68,7 +68,7 @@ jobs:
   test:
     resource_class: large
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
       - image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
         environment:
           - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
@@ -94,7 +94,7 @@ jobs:
   # This job will generate the API documentation
   generate_doc:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
@@ -112,7 +112,7 @@ jobs:
   # This job wll publish the doc to Datashare central Wiki
   publish_doc:
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.19
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
