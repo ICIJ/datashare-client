@@ -5,13 +5,12 @@ import compose from 'lodash/fp/compose'
 import Murmur from '@icij/murmur'
 import BootstrapVue from 'bootstrap-vue'
 import VCalendar from 'v-calendar/lib/v-calendar.umd'
-import VueI18n from 'vue-i18n'
-import VueProgressBar from 'vue-progressbar'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
-import { createApp, default as Vue } from 'vue'
+import { createApp } from 'vue'
+import { createI18n } from 'vue-i18n'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import { iteratee } from 'lodash'
 
@@ -61,14 +60,14 @@ class Core extends Behaviors {
    * @param api - Datashare api interface
    * @param mode - mode of authentication ('local' or 'server'
    */
-  constructor(LocalVue = Vue, api = null, mode = getMode(MODE_NAME.LOCAL)) {
-    super(LocalVue)
-    this.LocalVue = LocalVue
+  constructor(api = null, mode = getMode(MODE_NAME.LOCAL)) {
+    super()
+    // Render function returns a router-view component by default
+    const render = (h) => h('router-view')
+    this._vue = createApp({ render })
     this._api = api
     this._store = storeBuilder(api)
     this._auth = new Auth(mode, this._api)
-    // Disable production tip when not in production
-    this.LocalVue.config.productionTip = import.meta.env.MODE === 'development'
     // Setup deferred state
     this.defer()
   }
@@ -79,7 +78,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   use(Plugin, options) {
-    this.LocalVue.use(Plugin, options)
+    this.vue.use(Plugin, options)
     return this
   }
   /**
@@ -101,14 +100,17 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useI18n() {
-    this.use(VueI18n)
-    this.i18n = new VueI18n({
+    this._i18n = createI18n({
+      warnHtmlMessage: false,
+      globalInjection: true,
+      legacy: true,
       locale: settings.defaultLocale,
       fallbackLocale: settings.defaultLocale,
       messages: {
         [settings.defaultLocale]: messages
       }
     })
+    this.use(this._i18n)
     return this
   }
   /**
@@ -146,13 +148,12 @@ class Core extends Behaviors {
     return this
   }
   /**
-   * Configure most common Vue plugins (Murmur, VueProgressBar, VueShortkey, VueScrollTo and VueCalendar)
+   * Configure most common Vue plugins (Murmur, VueShortkey, VueScrollTo and VueCalendar)
    * @returns {Core} the current instance of Core
    */
   useCommons() {
     // Common plugins
     this.use(Murmur)
-    this.use(VueProgressBar, { color: settings.progressBar.color })
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
     this.use(VueScrollTo)
@@ -238,13 +239,9 @@ class Core extends Behaviors {
    * @returns {Vue} The instantiated Vue
    */
   mount(selector = '#app') {
-    // Render function returns a router-view component by default
-    const render = (h) => h('router-view')
-    // We do not necessarily use the default Vue so we can use this function
-    // from our unit tests
-    const vm = createApp({ render }).mount(selector)
-    // Return an instance of the Vue constructor we receive.
-    return vm
+    this.app.mount(selector)
+    // Return an instance of the int constructor we receive.
+    return this.app
   }
   /**
    * Build a promise to be resolved when the application is configured.
@@ -371,6 +368,13 @@ class Core extends Behaviors {
    */
   get api() {
     return this._api
+  }
+  /**
+   * The Vue app
+   * @type {Vue}
+   */
+  get vue() {
+    return this._vue
   }
   /**
    * Get current Datashare mode
