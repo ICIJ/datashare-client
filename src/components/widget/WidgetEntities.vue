@@ -12,7 +12,7 @@
             class="widget__content__count col-3"
             :class="{ 'widget__content__count--muted': !entities[category] }"
           >
-            <fa fixed-width :icon="category | namedEntityIcon" class="mr-1" />
+            <fa fixed-width :icon="namedEntityIcon(category)" class="mr-1" />
             <span v-html="$tc(`widget.entities.${category}`, entities[category], { count: humanEntities[category] })" />
           </div>
         </div>
@@ -36,9 +36,6 @@ import humanNumber from '@/filters/humanNumber'
  */
 export default {
   name: 'WidgetEntities',
-  filters: {
-    namedEntityIcon
-  },
   props: {
     /**
      * The widget definition object.
@@ -86,6 +83,7 @@ export default {
     return this.loadData()
   },
   methods: {
+    namedEntityIcon,
     async loadData() {
       this.$wait.start(this.loader)
       this.entities.emails = await this.countFor('EMAIL')

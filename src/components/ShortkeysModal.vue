@@ -24,7 +24,7 @@
           </div>
           <div class="col-sm-4 small">
             <kbd>
-              {{ shortkey.keys[getShortkeyOS] | shortkey }}
+              {{ formatShortkey(shortkey.keys[getShortkeyOS]) }}
             </kbd>
           </div>
         </b-link>
@@ -44,13 +44,11 @@ import { getShortkeyOS } from '@/utils/utils'
  */
 export default {
   name: 'ShortkeysModal',
-  filters: {
-    shortkey(values) {
-      return join(map(values, capitalize), '+')
-    }
-  },
   computed: {
     getShortkeyOS,
+    formatShortkey(values) {
+      return join(map(values, capitalize), '+')
+    },
     matchedRoutesNames() {
       return compact(this?.$route?.matched.map((match) => match.name))
     },
