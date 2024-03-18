@@ -17,7 +17,7 @@
       :key="directory"
       class="list-inline-item tree-breadcrumb__item"
     >
-      <a href @click.prevent="$emit('input', directory)">{{ directory | basename }}</a>
+      <a href @click.prevent="$emit('input', directory)">{{ getBasename(directory) }}</a>
     </li>
   </ul>
 </template>
@@ -31,9 +31,6 @@ import { basename } from 'path'
  */
 export default {
   name: 'TreeBreadcrumb',
-  filters: {
-    basename
-  },
   model: {
     prop: 'path',
     event: 'input'
@@ -106,6 +103,9 @@ export default {
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
+  },
+  methods: {
+    getBasename: basename
   }
 }
 </script>

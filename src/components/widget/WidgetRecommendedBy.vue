@@ -32,9 +32,9 @@
                   v-if="creationDate"
                   v-b-tooltip
                   class="widget__list__item__heading__meta__creation-date text-nowrap d-flex"
-                  :title="creationDate | humanLongDate($i18n.locale)"
+                  :title="humanLongDate(creationDate, $i18n.locale)"
                 >
-                  {{ creationDate | fromNow($i18n.locale, true) }}
+                  {{ fromNow(creationDate, $i18n.locale, true) }}
                 </span>
                 <user-display
                   :username="user.id"
@@ -85,10 +85,6 @@ export default {
     DocumentSlicedName,
     InfiniteLoading,
     UserDisplay
-  },
-  filters: {
-    fromNow,
-    humanLongDate
   },
   props: {
     /**
@@ -143,6 +139,8 @@ export default {
     return this.loadFirstPage()
   },
   methods: {
+    fromNow,
+    humanLongDate,
     clearPages() {
       this.pages.splice(0, this.pages.length)
       this.documents.splice(0, this.documents.length)
