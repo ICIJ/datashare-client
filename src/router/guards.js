@@ -32,7 +32,7 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     const projects = config.get('projects', [])
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
-      const title = i18n.t('error.noProjects')
+      const title = i18n.global.t('error.noProjects')
       next({ name: 'error', params: { title } })
     } else {
       next()
@@ -57,7 +57,7 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     if (allowedModes.length === 0 || allowedModes.includes(currentMode)) {
       next()
     } else {
-      const title = i18n.t('error.notFound')
+      const title = i18n.global.t('error.notFound')
       next({ name: 'error', params: { title } })
     }
   }
