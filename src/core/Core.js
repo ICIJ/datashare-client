@@ -10,7 +10,7 @@ import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
 import { createApp } from 'vue'
-import { createI18n } from 'vue-i18n'
+import { createI18n, useI18n } from 'vue-i18n'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import { iteratee } from 'lodash'
 
@@ -64,7 +64,12 @@ class Core extends Behaviors {
     super()
     // Render function returns a router-view component by default
     const render = (h) => h('router-view')
-    this._vue = createApp({ render })
+    this._vue = createApp({
+      setup() {
+        return useI18n()
+      },
+      render
+     })
     this._api = api
     this._store = storeBuilder(api)
     this._auth = new Auth(mode, this._api)
@@ -333,6 +338,13 @@ class Core extends Behaviors {
    */
   get core() {
     return this
+  }
+  /**
+   * The I18n instance
+   * @type {I18n}
+   */
+  get i18n() {
+    return this._i18n
   }
   /**
    * The Vue class to instantiate the application with
