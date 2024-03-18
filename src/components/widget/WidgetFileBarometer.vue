@@ -10,7 +10,7 @@
         <template v-if="onDisk != total">
           {{ $t('widget.barometer.amongWhich') }}
           <router-link :to="searchOnDiskRoute">
-            {{ onDisk | humanNumber($t('human.number')) }}
+            {{ humanNumber(onDisk, $t('human.number')) }}
             {{ $t('widget.barometer.onDisk') }}
           </router-link>
         </template>
@@ -29,7 +29,6 @@ import humanNumber from '@/filters/humanNumber'
  */
 export default {
   name: 'WidgetFileBarometer',
-  filters: { humanNumber },
   props: {
     /**
      * The widget definition object.
