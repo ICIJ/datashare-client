@@ -375,7 +375,7 @@ export const routes = [
   },
   {
     name: 'error',
-    path: '*',
+    path: '/:pathMatch(.*)*',
     component: () => import('@/pages/Error'),
     props: true,
     meta: {
