@@ -5,14 +5,14 @@ import compose from 'lodash/fp/compose'
 import Murmur from '@icij/murmur'
 import BootstrapVue from 'bootstrap-vue'
 import VCalendar from 'v-calendar/lib/v-calendar.umd'
-import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
-import VueRouter from 'vue-router'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
+import { createApp, default as Vue } from 'vue'
+import { createWebHashHistory, createRouter } from 'vue-router'
 import { iteratee } from 'lodash'
 
 import ComponentsMixin from './ComponentsMixin'
@@ -27,7 +27,7 @@ import { dispatch } from '@/utils/event-bus'
 import Auth from '@/api/resources/Auth'
 import messages from '@/lang/en'
 import { getMode, MODE_NAME } from '@/mode'
-import router from '@/router'
+import { routes } from '@/router'
 import guards from '@/router/guards'
 import { storeBuilder } from '@/store/storeBuilder'
 import settings from '@/utils/settings'
@@ -87,6 +87,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useAll() {
+    this.useVuex()
     this.useI18n()
     this.useBootstrapVue()
     this.useCommons()
@@ -130,9 +131,18 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useRouter() {
-    this.use(VueRouter)
-    this.router = new VueRouter(router)
+    const history = createWebHashHistory()
+    this.router = createRouter({ routes, history })
+    this.use(this.router)
     guards(this)
+    return this
+  }
+  /**
+   * Configure vuex plugin
+   * @returns {Core} the current instance of Core
+   */
+  useVuex() {
+    this.use(this.store)
     return this
   }
   /**
@@ -232,13 +242,7 @@ class Core extends Behaviors {
     const render = (h) => h('router-view')
     // We do not necessarily use the default Vue so we can use this function
     // from our unit tests
-    const vm = new this.LocalVue({
-      render,
-      wait: this.wait,
-      i18n: this.i18n,
-      router: this.router,
-      store: this.store
-    }).$mount(selector)
+    const vm = createApp({ render }).mount(selector)
     // Return an instance of the Vue constructor we receive.
     return vm
   }
