@@ -191,9 +191,7 @@ export default {
   methods: {
     async fetch() {
       this.$wait.start('load batchSearch results')
-      this.$Progress.start()
       await this.$store.dispatch('batchSearch/getBatchSearch', this.uuid)
-      this.$Progress.finish()
       this.$wait.end('load batchSearch results')
     },
     async setIsMyBatchSearch() {

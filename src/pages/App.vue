@@ -13,7 +13,6 @@
         <router-view></router-view>
       </div>
     </div>
-    <vue-progress-bar></vue-progress-bar>
     <b-toast id="logged-out-toast" variant="danger" no-close-button no-auto-hide>
       <p>
         {{ $t('login.logout') }}
