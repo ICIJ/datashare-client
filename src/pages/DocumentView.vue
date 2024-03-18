@@ -234,7 +234,6 @@ export default {
   methods: {
     async getDoc(params = { id: this.id, routing: this.routing, index: this.index }) {
       this.$wait.start('load document data')
-      this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getRoot')
@@ -252,7 +251,6 @@ export default {
         this.$root.$emit('document::content::changed')
       }
       this.$wait.end('load document data')
-      this.$Progress.finish()
     },
     async setTabs() {
       if (this.doc) {

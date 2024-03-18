@@ -74,16 +74,10 @@ export default {
   },
   async beforeRouteUpdate(to, from, next) {
     if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
-      try {
-        this.$store.dispatch('search/updateFromRouteQuery', to.query)
-        await this.search()
-        next()
-      } catch (_) {
-        this.wrongQuery()
-      }
-    } else {
-      next()
+      this.$store.dispatch('search/updateFromRouteQuery', to.query)
+      await this.search()
     }
+    next()
   },
   data() {
     return {
@@ -95,8 +89,7 @@ export default {
         RequestTimeout: 'search.errors.requestTimeout',
         ServiceUnavailable: 'search.errors.serviceUnavailable'
       },
-      isShrinked: false,
-      intervalId: -1
+      isShrinked: false
     }
   },
   computed: {
@@ -142,16 +135,7 @@ export default {
         this.isShrinked = false
       }
     },
-    isReady(isReady) {
-      if (isReady) {
-        this.$Progress.finish()
-        clearInterval(this.intervalId)
-        this.$set(this, 'intervalId', -1)
-      } else {
-        this.$Progress.set(0)
-        const intervalId = parseInt(setInterval(() => this.$Progress.increase(2), 1000))
-        this.$set(this, 'intervalId', intervalId)
-      }
+    isReady() {
       this.updateScrollBars()
     },
     $route() {
@@ -162,12 +146,8 @@ export default {
     }
   },
   async created() {
-    try {
-      this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
-      await this.search()
-    } catch (_) {
-      this.wrongQuery()
-    }
+    this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
+    await this.search()
   },
   mounted() {
     this.$root.$on('index::delete::all', this.search)
@@ -179,21 +159,10 @@ export default {
       this.$set(this, 'isShrinked', e.target.scrollTop > 40)
     },
     search(queryOrParams = null) {
-      try {
-        return this.$store.dispatch('search/query', queryOrParams)
-      } catch (_) {
-        this.wrongQuery()
-      }
+      return this.$store.dispatch('search/query', queryOrParams)
     },
     refresh() {
-      try {
-        return this.$store.dispatch('search/refresh', false)
-      } catch (_) {
-        this.wrongQuery()
-      }
-    },
-    wrongQuery() {
-      this.$Progress.finish()
+      return this.$store.dispatch('search/refresh', false)
     },
     clickOnShowFilters() {
       this.showFilters = !this.showFilters

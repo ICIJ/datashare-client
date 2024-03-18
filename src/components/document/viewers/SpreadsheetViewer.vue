@@ -188,12 +188,10 @@ export default {
   },
   async mounted() {
     this.$wait.start('load spreadsheet')
-    this.$Progress.start()
     const response = await fetch(this.contentUrl, this.contentOptions)
     const meta = await response.json()
     this.$set(this, 'meta', meta)
     this.$set(this, 'activeSheetIndex', 0)
-    this.$Progress.finish()
     this.$wait.end('load spreadsheet')
   },
   methods: {
