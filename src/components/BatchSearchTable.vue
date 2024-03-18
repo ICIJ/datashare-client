@@ -413,16 +413,12 @@ export default {
     },
     async fetchWithLoader() {
       this.$wait.start('load batchSearches')
-      this.$Progress.start()
       await this.fetch()
-      this.$Progress.finish()
       this.$wait.end('load batchSearches')
     },
     async fetchAndRegisterPollWithLoader() {
       this.$wait.start('load batchSearches')
-      this.$Progress.start()
       await this.fetchAndRegisterPoll()
-      this.$Progress.finish()
       this.$wait.end('load batchSearches')
     },
     async fetchForPoll() {
