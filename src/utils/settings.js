@@ -68,9 +68,6 @@ export default {
       label: '日本語'
     }
   ],
-  progressBar: {
-    color: '#FA4070'
-  },
   previewRawMaxContentLength: 5e6,
   iso6392: {
     tesseract: {

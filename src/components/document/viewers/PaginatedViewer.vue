@@ -151,10 +151,8 @@ export default {
     async waitFor(callback) {
       try {
         this.$wait.start(this.loader)
-        this.$Progress.start()
         await callback()
       } finally {
-        this.$Progress.finish()
         this.$wait.end(this.loader)
       }
     },
