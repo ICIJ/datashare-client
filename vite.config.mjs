@@ -1,12 +1,22 @@
 import { defineConfig, loadEnv } from 'vite'
 import { resolve } from 'path'
-import vue from '@vitejs/plugin-vue2'
+import vue from '@vitejs/plugin-vue'
 
 export default ({ mode }) => {
   process.env = Object.assign(process.env, loadEnv(mode, process.cwd(), ''))
 
   return defineConfig({
-    plugins: [vue()],
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        }
+      })
+    ],
     test: {
       globals: true,
       reporters: 'basic',
@@ -17,7 +27,7 @@ export default ({ mode }) => {
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
         path: 'path-browserify',
-        vue: 'vue/dist/vue.esm.js',
+        vue: '@vue/compat',
         '@': resolve(__dirname, './src'),
         '~node_modules': resolve('node_modules'),
         '~mixins': resolve(__dirname, './src/mixins'),
