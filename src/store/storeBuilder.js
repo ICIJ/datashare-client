@@ -1,7 +1,6 @@
 import some from 'lodash/some'
-import Vue from 'vue'
-import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
+import { createStore } from 'vuex'
 
 import { batchStoreBuilder } from './modules/batchSearch'
 import { documentNotesStoreBuilder } from './modules/documentNotes'
@@ -19,9 +18,8 @@ import pipelines from './modules/pipelines'
 import player from './modules/player'
 import treeView from './modules/treeView'
 
-Vue.use(Vuex)
 export function storeBuilder(api) {
-  return new Vuex.Store({
+  return createStore({
     modules: {
       app,
       batchSearch: batchStoreBuilder(api),
