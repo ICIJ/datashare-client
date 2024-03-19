@@ -32,9 +32,9 @@
                 </router-link>
               </p>
               <p class="mb-0">
-                <b-btn variant="outline-primary" :to="{ name: 'search', query: { indices: project.name } }">
+                <b-button variant="outline-primary" :to="{ name: 'search', query: { indices: project.name } }">
                   <fa icon="search" fixed-width class="mr-1" /> {{ $t('projectCards.search') }}
-                </b-btn>
+                </b-button>
               </p>
             </div>
           </div>

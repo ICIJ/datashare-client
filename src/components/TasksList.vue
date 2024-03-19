@@ -32,14 +32,14 @@
           </b-badge>
           <template v-if="item.state === 'RUNNING' && stoppable">
             <span class="px-1"> – </span>
-            <b-btn
+            <b-button
               variant="link"
               size="sm"
               class="tasks-list__tasks__item__stop text-danger p-0"
               @click="stopTask(item.id)"
             >
               {{ $t('tasksList.stop') }}
-            </b-btn>
+            </b-button>
           </template>
         </div>
         <div v-if="isBatchDownloadEncrypted(item)" class="font-italic tasks-list__tasks__item__encrypted">

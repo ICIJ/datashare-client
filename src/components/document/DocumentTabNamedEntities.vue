@@ -62,14 +62,14 @@
           <v-wait :for="`load_more_data_${category}`">
             <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-3" />
             <div v-if="categoryHasNextPage(category)" class="mt-3 text-center">
-              <b-btn
+              <b-button
                 class="document__named-entities__more"
                 size="sm"
                 variant="link"
                 @click.prevent="getNextPageInCategory(category)"
               >
                 {{ $t('document.namedEntitiesShowMore.showMore' + capitalize(category)) }}
-              </b-btn>
+              </b-button>
             </div>
           </v-wait>
         </div>

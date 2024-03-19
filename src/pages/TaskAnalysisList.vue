@@ -2,18 +2,18 @@
   <div class="task-analysis-list">
     <div class="mt-4 container">
       <div class="mb-3 d-flex">
-        <b-btn-group class="task-analysis-list__actions mr-2">
-          <b-btn
+        <b-button-group class="task-analysis-list__actions mr-2">
+          <b-button
             class="task-analysis-list__actions__stop-pending-tasks"
             variant="outline-primary"
-            type="b-btn"
+            type="b-button"
             :disabled="!hasPendingTasks"
             @click="stopPendingTasks"
           >
             <fa icon="hand-paper" class="mr-1" />
             {{ $t('indexing.stopPendingTasks') }}
-          </b-btn>
-          <b-btn
+          </b-button>
+          <b-button
             class="task-analysis-list__actions__delete-done-tasks"
             variant="outline-primary"
             :disabled="!hasDoneTasks"
@@ -21,15 +21,15 @@
           >
             <fa icon="trash-alt" class="mr-1" />
             {{ $t('indexing.deleteDoneTasks') }}
-          </b-btn>
-        </b-btn-group>
+          </b-button>
+        </b-button-group>
 
         <div class="ml-auto">
-          <b-btn v-b-modal:[extractingFormId] variant="primary" class="mr-2 task-analysis-list__actions__extract">
+          <b-button v-b-modal:[extractingFormId] variant="primary" class="mr-2 task-analysis-list__actions__extract">
             <fa icon="search-plus" class="mr-2" />
             {{ $t('indexing.extractText') }}
-          </b-btn>
-          <b-btn
+          </b-button>
+          <b-button
             v-b-tooltip
             v-b-modal:[findNamedEntitiesFormId]
             variant="primary"
@@ -38,7 +38,7 @@
           >
             <fa icon="user-tag" class="mr-2" />
             {{ $t('indexing.findNamedEntities') }}
-          </b-btn>
+          </b-button>
 
           <b-modal
             :id="extractingFormId"

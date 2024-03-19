@@ -3,10 +3,10 @@
     <div class="container pt-4">
       <div class="d-flex mb-2">
         <div class="extensions__add ml-2">
-          <b-btn variant="outline-primary" @click="$refs.installExtensionFromUrl.show()">
+          <b-button variant="outline-primary" @click="$refs.installExtensionFromUrl.show()">
             <fa icon="link" class="mr-1"></fa>
             {{ $t('extensions.installFromUrl') }}
-          </b-btn>
+          </b-button>
           <b-modal ref="installExtensionFromUrl" hide-footer lazy>
             <template #modal-title>
               {{ $t('extensions.installFromUrl') }}
@@ -24,14 +24,14 @@
                 <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
-                <b-btn
+                <b-button
                   variant="primary"
                   class="ml-auto text-nowrap"
                   :disabled="isFormValid !== true"
                   @click="installExtensionFromUrl"
                 >
                   {{ $t('extensions.install') }}
-                </b-btn>
+                </b-button>
               </div>
             </b-overlay>
           </b-modal>
@@ -63,7 +63,7 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
-                  <b-btn
+                  <b-button
                     v-if="extension.installed"
                     class="extensions__card__uninstall-button mb-2"
                     variant="danger"
@@ -71,8 +71,8 @@
                   >
                     <fa icon="trash-alt"></fa>
                     {{ $t('extensions.uninstall') }}
-                  </b-btn>
-                  <b-btn
+                  </b-button>
+                  <b-button
                     v-if="!extension.installed"
                     class="extensions__card__download-button mb-2"
                     variant="primary"
@@ -80,8 +80,8 @@
                   >
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('extensions.install') }}
-                  </b-btn>
-                  <b-btn
+                  </b-button>
+                  <b-button
                     v-if="
                       extension.installed &&
                       isExtensionFromRegistry(extension) &&
@@ -94,7 +94,7 @@
                   >
                     <fa icon="sync"></fa>
                     {{ $t('extensions.update') }}
-                  </b-btn>
+                  </b-button>
                   <div
                     v-if="extension.version && extension.installed"
                     class="extensions__card__version text-muted text-center"

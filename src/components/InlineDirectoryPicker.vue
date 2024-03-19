@@ -153,24 +153,24 @@ export default {
             class="inline-directory-picker__header__list__item"
             @click="selectAndBrowse(i)"
           >
-            <b-btn
+            <b-button
               v-b-tooltip="{ delay: { show: 1e3, hide: 0 }, customClass: 'tooltip-lg' }"
               class="p-0"
               variant="link"
               :title="directoryTitle(i)"
             >
               {{ basename(decodeURI(directory)) }}
-            </b-btn>
+            </b-button>
           </div>
         </active-text-truncate>
-        <b-btn
+        <b-button
           class="inline-directory-picker__header__browse py-0 ml-auto"
           size="sm"
           :variant="browseBtnVariant"
           @click="toggleBrowser()"
         >
           {{ browseBtnLabel }}
-        </b-btn>
+        </b-button>
       </div>
       <b-collapse :visible="browse">
         <ul v-if="browsingTreeDirectories.length" class="inline-directory-picker__browser list-unstyled m-0 border-top">

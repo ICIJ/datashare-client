@@ -10,7 +10,7 @@
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
             <span class="user-history-saved-search-list__list__item__name font-weight-bold mb-1">
               {{ event.name }}
-              <b-btn
+              <b-button
                 v-b-tooltip.hover.topright
                 :title="$t('userHistory.renameSavedSearch')"
                 class="user-history-saved-search-list__list__item__name--rename text-dark px-1 py-0 ml-1"
@@ -19,7 +19,7 @@
                 @click.prevent="showEvent({ ...event, idx: eventIdx })"
               >
                 <fa icon="pen" fixed-width size="1x" />
-              </b-btn>
+              </b-button>
             </span>
             <div class="user-history-saved-search-list__list__item__query">
               <applied-search-filters-item

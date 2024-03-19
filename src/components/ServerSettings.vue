@@ -18,9 +18,9 @@
                     {{ name | sentenceCase | capitalizeKnownAcronyms }}
                   </span>
                   <span>
-                    <b-btn v-if="fieldChanged(name)" variant="link text-muted" size="sm py-0" @click="restore(name)">
+                    <b-button v-if="fieldChanged(name)" variant="link text-muted" size="sm py-0" @click="restore(name)">
                       <fa icon="undo"></fa>
-                    </b-btn>
+                    </b-button>
                   </span>
                 </span>
               </template>

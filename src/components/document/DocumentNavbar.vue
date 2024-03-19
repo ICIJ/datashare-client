@@ -6,20 +6,20 @@
     <slot name="back" />
     <slot name="title">
       <transition name="slide-x">
-        <b-btn
+        <b-button
           v-if="isShrinked"
           class="document-navbar__title text-left font-weight-bold flex-grow-1 px-2 text-white py-0 text-truncate"
           variant="link"
           @click="scrollToTop"
         >
           {{ doc.title }}
-        </b-btn>
+        </b-button>
       </transition>
     </slot>
     <div v-if="doc" class="ml-auto d-flex align-items-center">
       <slot name="nav" />
       <project-link :project="doc.index" class="btn btn-sm btn-light p-0 pr-1 ml-1" />
-      <b-btn
+      <b-button
         class="mx-2 px-2 py-0 document-navbar__recommended-by"
         size="sm"
         :data-recommended-label="$t('search.nav.markAsRecommended')"
@@ -28,7 +28,7 @@
         @click="toggleAsRecommended"
       >
         {{ markAsRecommendedLabel }}
-      </b-btn>
+      </b-button>
       <template v-if="isServer">
         <b-badge
           id="popover-recommended-by"
@@ -49,14 +49,14 @@
           </ul>
         </b-popover>
       </template>
-      <b-btn
+      <b-button
         id="popover-document-share"
         variant="link"
         class="text-white py-0 px-2 px-2 py-0 document-navbar__share"
         size="sm"
       >
         <fa icon="share-alt"></fa>
-      </b-btn>
+      </b-button>
       <b-popover
         target="popover-document-share"
         triggers="click blur"

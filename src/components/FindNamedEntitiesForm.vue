@@ -55,9 +55,9 @@
       <div class="find-named-entities-form__footer mt-4 row no-gutters">
         <slot name="footer" :disabled="disabled">
           <div class="col text-right">
-            <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
+            <b-button variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
               {{ $t('indexing.go') }}
-            </b-btn>
+            </b-button>
           </div>
         </slot>
       </div>

@@ -54,7 +54,7 @@
       </search-bar-input>
       <div v-if="settings" class="px-0">
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
-        <b-btn
+        <b-button
           v-b-tooltip.hover.bottomleft
           :title="$t('userHistory.saveSearch')"
           class="text-dark"
@@ -76,7 +76,7 @@
               @submit="$refs['user-history-save-search-form'].hide()"
             />
           </b-modal>
-        </b-btn>
+        </b-button>
       </div>
     </div>
   </form>
