@@ -1,6 +1,6 @@
-import Vue from 'vue'
+import mitt from 'mitt'
 
-export const EventBus = new Vue()
+export const EventBus = mitt()
 
 export function dispatch(name, detail = {}) {
   const event = new CustomEvent(`datashare:${name}`, { detail })
