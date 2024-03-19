@@ -16,7 +16,7 @@
       </span>
     </confirm-button>
 
-    <b-btn
+    <b-button
       v-if="isMyBatchSearch && isEnded"
       class="batch-search-actions__item action batch-search-actions__item--relaunch ml-2"
       variant="light"
@@ -34,7 +34,7 @@
       >
         <batch-search-copy-form :batch-search="batchSearch" />
       </b-modal>
-    </b-btn>
+    </b-button>
 
     <b-dropdown
       v-b-tooltip.hover
@@ -55,7 +55,7 @@
       </b-dropdown-item>
     </b-dropdown>
 
-    <b-btn
+    <b-button
       v-if="isEnded"
       v-b-tooltip.hover
       class="batch-search-actions__item batch-search-actions__item--download-results ml-2"
@@ -65,7 +65,7 @@
     >
       <fa icon="download" class="mr-1" />
       {{ $t('batchSearchResults.downloadResults') }}
-    </b-btn>
+    </b-button>
   </div>
 </template>
 

@@ -134,9 +134,9 @@ export default {
 
 <template>
   <div class="batch-download-actions">
-    <b-btn :id="togglerId" variant="link" size="sm" class="p-1">
+    <b-button :id="togglerId" variant="link" size="sm" class="p-1">
       <fa icon="ellipsis" fixed-width class="mx-1" />
-    </b-btn>
+    </b-button>
     <b-popover
       boundary="viewport"
       custom-class="popover-body-p-0 popover-body-overflow-hidden dropdown-menu shadow popover-white"

@@ -64,9 +64,9 @@
       <slot name="footer" :disabled="isWaitingForSubmitExtract">
         <div class="col text-right">
           <b-overlay :show="isWaitingForSubmitExtract" opacity="0.6" rounded spinner-small class="d-inline-flex">
-            <b-btn variant="primary" class="ml-2" type="submit" :disabled="isWaitingForSubmitExtract">
+            <b-button variant="primary" class="ml-2" type="submit" :disabled="isWaitingForSubmitExtract">
               {{ $t('indexing.go') }}
-            </b-btn>
+            </b-button>
           </b-overlay>
         </div>
       </slot>

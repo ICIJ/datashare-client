@@ -3,10 +3,10 @@
     <div class="container pt-4">
       <div class="d-flex mb-2">
         <div class="plugins__add ml-2">
-          <b-btn variant="outline-primary" @click="$refs.installPluginFromUrl.show()">
+          <b-button variant="outline-primary" @click="$refs.installPluginFromUrl.show()">
             <fa icon="link" class="mr-1" />
             {{ $t('plugins.installFromUrl') }}
-          </b-btn>
+          </b-button>
           <b-modal ref="installPluginFromUrl" hide-footer lazy>
             <template #modal-title>
               {{ $t('plugins.installFromUrl') }}
@@ -24,14 +24,14 @@
                 <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
-                <b-btn
+                <b-button
                   variant="primary"
                   class="ml-auto text-nowrap"
                   :disabled="isFormValid !== true"
                   @click="installPluginFromUrl"
                 >
                   {{ $t('plugins.install') }}
-                </b-btn>
+                </b-button>
               </div>
             </b-overlay>
           </b-modal>
@@ -54,7 +54,7 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
-                  <b-btn
+                  <b-button
                     v-if="plugin.installed"
                     class="plugins__card__uninstall-button mb-2"
                     variant="danger"
@@ -62,8 +62,8 @@
                   >
                     <fa icon="trash-alt"></fa>
                     {{ $t('plugins.uninstall') }}
-                  </b-btn>
-                  <b-btn
+                  </b-button>
+                  <b-button
                     v-if="!plugin.installed"
                     class="plugins__card__download-button mb-2"
                     variant="primary"
@@ -71,8 +71,8 @@
                   >
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('plugins.install') }}
-                  </b-btn>
-                  <b-btn
+                  </b-button>
+                  <b-button
                     v-if="
                       plugin.installed &&
                       isPluginFromRegistry(plugin) &&
@@ -85,7 +85,7 @@
                   >
                     <fa icon="sync"></fa>
                     {{ $t('plugins.update') }}
-                  </b-btn>
+                  </b-button>
                   <div v-if="plugin.version && plugin.installed" class="plugins__card__version text-muted text-center">
                     {{ $t('plugins.version', { version: plugin.version }) }}
                   </div>

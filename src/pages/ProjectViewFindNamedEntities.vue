@@ -63,9 +63,9 @@ export default {
         >
           <template #footer="{ disabled }">
             <div class="col text-right">
-              <b-btn variant="primary" class="ml-2" type="submit" :disabled="disabled">
+              <b-button variant="primary" class="ml-2" type="submit" :disabled="disabled">
                 {{ $t('indexing.go') }}
-              </b-btn>
+              </b-button>
             </div>
           </template>
         </find-named-entities-form>

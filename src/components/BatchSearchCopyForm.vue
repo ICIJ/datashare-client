@@ -16,9 +16,9 @@
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
-          <b-btn type="submit" variant="primary">
+          <b-button type="submit" variant="primary">
             {{ $t('global.submit') }}
-          </b-btn>
+          </b-button>
         </div>
       </div>
     </div>

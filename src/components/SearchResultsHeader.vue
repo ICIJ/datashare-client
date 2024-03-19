@@ -4,7 +4,7 @@
     :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }"
   >
     <div class="search-results-header__settings d-flex align-items-center">
-      <b-btn-group v-if="!noProgress" class="flex-grow-1">
+      <b-button-group v-if="!noProgress" class="flex-grow-1">
         <b-dropdown
           class="search-results-header__settings__sort"
           menu-class="search-results-header__settings__sort__dropdown"
@@ -56,7 +56,7 @@
             </div>
           </b-dropdown-item>
         </b-dropdown>
-      </b-btn-group>
+      </b-button-group>
       <confirm-button
         v-if="response.total > 0"
         class="search-results-header__settings__btn-download btn btn-link text-nowrap"

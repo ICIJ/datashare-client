@@ -3,12 +3,12 @@
     <span class="column-filter__label">
       {{ name }}
     </span>
-    <b-btn :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline">
+    <b-button :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline">
       <fa icon="filter" />
       <slot name="badge" :active="active" :counter="counter">
         <column-filter-badge :active="active" :counter="counter" />
       </slot>
-    </b-btn>
+    </b-button>
     <b-popover :custom-class="popoverClassList" :target="btnId" triggers="click blur" lazy>
       <slot></slot>
     </b-popover>

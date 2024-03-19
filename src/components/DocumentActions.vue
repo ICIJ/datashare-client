@@ -1,5 +1,5 @@
 <template>
-  <component :is="noBtnGroup ? 'div' : 'b-btn-group'" :vertical="vertical" class="document-actions align-items-center">
+  <component :is="noBtnGroup ? 'div' : 'b-button-group'" :vertical="vertical" class="document-actions align-items-center">
     <a
       :id="starBtnId"
       class="document-actions__star btn"
@@ -17,9 +17,9 @@
     </b-tooltip>
 
     <template v-if="canIDownload">
-      <b-btn-group :class="downloadBtnGroupClass">
+      <b-button-group :class="downloadBtnGroupClass">
         <span :id="downloadBtnWrapperId">
-          <b-btn
+          <b-button
             :id="downloadBtnId"
             class="document-actions__download btn"
             :class="downloadBtnClass"
@@ -32,7 +32,7 @@
             <span class="ml-1" :class="{ 'sr-only': !downloadBtnLabel }">
               {{ $t('document.downloadButton') }}
             </span>
-          </b-btn>
+          </b-button>
         </span>
         <b-tooltip v-if="isRootTooBig" :target="downloadBtnWrapperId" triggers="hover">
           {{ $t('document.downloadMaxRootSizeAlert', { humanMaxRootSize }) }}
@@ -62,7 +62,7 @@
             </b-dropdown-item>
           </template>
         </b-dropdown>
-      </b-btn-group>
+      </b-button-group>
       <b-popover
         :placement="tooltipsPlacement"
         :target="downloadBtnId"

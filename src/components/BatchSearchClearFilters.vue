@@ -1,5 +1,5 @@
 <template>
-  <b-btn
+  <b-button
     :disabled="!hasActiveFilter"
     class="batch-search-clear-filters text-muted"
     variant="link"
@@ -7,7 +7,7 @@
   >
     <fa icon="filter-circle-xmark" />
     {{ $t('batchSearch.clearFilters') }}
-  </b-btn>
+  </b-button>
 </template>
 
 <script>
