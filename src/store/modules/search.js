@@ -224,71 +224,71 @@ export const mutations = {
     const s = initialState()
     Object.keys(s).forEach((key) => {
       if (excludedKeys.indexOf(key) === -1) {
-        Vue.set(state, key, s[key])
+        state[key] = s[key]
       }
     })
   },
   resetFilters(state) {
     const { filters } = initialState()
-    Vue.set(state, 'filters', filters)
+    state.filters = filters
   },
   resetFiltersAndValues(state) {
     const { filters } = initialState()
-    Vue.set(state, 'filters', filters)
-    Vue.set(state, 'values', {})
-    Vue.set(state, 'from', 0)
+    state.filters = filters
+    state.values = {}
+    state.from = 0
   },
   resetFilterValues(state) {
-    Vue.set(state, 'values', {})
-    Vue.set(state, 'from', 0)
+    state.values = {}
+    state.from = 0
   },
   resetQuery(state) {
-    Vue.set(state, 'query', '')
-    Vue.set(state, 'field', settings.defaultSearchField)
-    Vue.set(state, 'from', 0)
+    state.query = ''
+    state.field = settings.defaultSearchField
+    state.from = 0
   },
   query(state, query) {
-    Vue.set(state, 'query', query)
+    state.query = query
   },
   q(state, query) {
-    Vue.set(state, 'query', query)
+    state.query = query
   },
   from(state, from) {
-    Vue.set(state, 'from', Number(from))
+    state.from = Number(from)
   },
   size(state, size) {
-    Vue.set(state, 'size', Number(size))
+    state.size = Number(size)
   },
   sort(state, sort) {
-    Vue.set(state, 'sort', sort)
+    state.sort = sort
   },
   isReady(state, isReady = !state.isReady) {
-    Vue.set(state, 'isReady', isReady)
+    state.isReady = isReady
   },
   error(state, error = null) {
-    Vue.set(state, 'error', error)
+    state.error = error
   },
   index(state, index) {
-    Vue.set(state, 'index', index)
-    Vue.set(state, 'indices', [index])
+    state.index = index
+    state.indices = [index]
   },
   indices(state, indices) {
     // Clean indices list to ensure we received an array. This means
     // this mutation can also receive a string with a comma separated
     // list of indices.
     const cleaned = flatten(castArray(indices).map((str) => str.split(',')))
-    Vue.set(state, 'indices', cleaned)
-    Vue.set(state, 'index', cleaned[0])
+    state.indices = cleaned
+    state.index = cleaned[0]
   },
   layout(state, layout) {
-    Vue.set(state, 'layout', layout)
+    state.layout = layout
   },
   field(state, field) {
     const fields = settings.searchFields.map((field) => field.key)
-    Vue.set(state, 'field', fields.indexOf(field) > -1 ? field : settings.defaultSearchField)
+    state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
   buildResponse(state, raw) {
-    Vue.set(state, 'response', new EsDocList(raw))
+    state.response = new EsDocList(raw)
   },
   addFilterValue(state, filter) {
     // We cast the new filter values to allow several new values at the same time
@@ -296,25 +296,21 @@ export const mutations = {
     // Look for existing values for this name
     const existingValues = get(state, ['values', filter.name], [])
     const existingValuesAsString = map(existingValues, (value) => toString(value))
-    Vue.set(state.values, filter.name, uniq(existingValuesAsString.concat(values)))
+    state.values[filter.name] = uniq(existingValuesAsString.concat(values))
   },
   setFilterValue(state, filter) {
     const values = castArray(filter.value)
-    Vue.set(state.values, filter.name, values)
+    state.values[filter.name] = values
   },
   addFilterValues(state, { filter, values }) {
     const existingValues = get(state, ['values', filter.name], [])
-    Vue.set(state.values, filter.name, uniq(existingValues.concat(castArray(values))))
+    state.values[filter.name] = uniq(existingValues.concat(castArray(values)))
   },
   removeFilterValue(state, filter) {
     // Look for existing values for this name
     const existingValues = get(state, ['values', filter.name], [])
     // Filter the values for this name to remove the given value
-    Vue.set(
-      state.values,
-      filter.name,
-      filterCollection(existingValues, (value) => value !== filter.value)
-    )
+    state.values[filter.name] = filterCollection(existingValues, (value) => value !== filter.value)
   },
   removeFilter(state, name) {
     const i = findIndex(state.filters, ({ options }) => options.name === name)
@@ -333,7 +329,7 @@ export const mutations = {
     }
   },
   sortFilter(state, { name, sortBy = '_count', sortByOrder = 'desc' } = {}) {
-    Vue.set(state.sortedFilters, name, { sortBy, sortByOrder })
+    state.sortedFilters[name] = { sortBy, sortByOrder }
   },
   unsortFilter(state, name) {
     Vue.delete(state.sortedFilters, name)
@@ -371,10 +367,7 @@ export const mutations = {
     }
   },
   toggleFilters(state, toggler = !state.showFilters) {
-    Vue.set(state, 'showFilters', toggler)
-  },
-  updateTab(state, tab) {
-    state.tab = tab
+    state.showFilters = toggler
   }
 }
 

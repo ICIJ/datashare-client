@@ -394,8 +394,11 @@ export default {
         this.$emit('update:modelQuery', this.query)
       }
     },
-    collapseItems() {
-      this.initialize()
+    collapseItems: {
+      deep: true,
+      get () {
+        this.initialize()
+      }
     }
   },
   async mounted() {

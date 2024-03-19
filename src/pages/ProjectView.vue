@@ -58,7 +58,7 @@ export default {
   beforeMount() {
     if (!this.project) {
       const title = this.$t('error.notFound')
-      return this.$router.push({ name: 'error', params: { title } })
+      return this.$router.push({ name: 'error', state: { title } })
     }
   }
 }

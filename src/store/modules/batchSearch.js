@@ -56,13 +56,13 @@ export const mutations = {
     Object.assign(state, initialState())
   },
   [SINGLE_BATCH_SEARCH](state, batchSearch) {
-    Vue.set(state, 'batchSearch', batchSearch)
+    state.batchSearch = batchSearch
   },
   [SINGLE_BATCH_SEARCH_QUERIES](state, queries) {
-    Vue.set(state, 'queries', queries)
+    state.queries = queries
   },
   [BATCH_SEARCHES](state, batchSearches) {
-    Vue.set(state, 'batchSearches', batchSearches)
+    state.batchSearches = batchSearches
   },
   [REMOVE_BATCH_SEARCH](state, batchId) {
     const removed = remove(state.batchSearches, (batchSearch) => batchSearch.uuid === batchId)
@@ -76,20 +76,20 @@ export const mutations = {
     state.total = 0
   },
   [SELECTED_QUERIES](state, selectedQueries) {
-    Vue.set(state, 'selectedQueries', selectedQueries)
+    state.selectedQueries = selectedQueries
   },
   [CLEAR_BATCH_SEARCH_RESULTS](state) {
     // CD: help force update modal viewer (to improve )
-    Vue.set(state, 'results', [])
+    state.results = []
   },
   [RESULTS](state, results) {
-    Vue.set(state, 'results', [...results.items])
-    Vue.set(state, 'batchSearchResultsPagination', results.pagination)
+    state.results = [...results.items]
+    state.batchSearchResultsPagination = results.pagination
     const contentTypes = map(results.items, 'contentType')
     state.contentTypes = uniq(state.contentTypes.concat(contentTypes)).sort()
   },
   [SINGLE_BATCH_SEARCH_PUBLISHED](state, published) {
-    Vue.set(state, 'batchSearch', { ...state.batchSearch, published })
+    state.batchSearch = { ...state.batchSearch, published }
   },
   [TOTAL](state, total) {
     state.total = total

@@ -9,13 +9,13 @@ export const state = {
 
 export const mutations = {
   documents(state, documents) {
-    Vue.set(state, 'documents', documents)
+    state.documents = documents
   },
   byUsers(state, byUsers) {
-    Vue.set(state, 'byUsers', byUsers)
+    state.byUsers = byUsers
   },
   total(state, total) {
-    Vue.set(state, 'total', total)
+    state.total = total
   }
 }
 function actionsBuilder(api) {

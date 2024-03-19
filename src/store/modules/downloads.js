@@ -7,10 +7,10 @@ export const state = {
 
 export const mutations = {
   clear(state) {
-    Vue.set(state, 'allowedFor', {})
+    state.allowedFor = {}
   },
   allowedFor(state, { index, allowed }) {
-    Vue.set(state.allowedFor, index, allowed)
+    state.allowedFor[index] = allowed
   }
 }
 

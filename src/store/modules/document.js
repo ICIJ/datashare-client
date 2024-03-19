@@ -57,35 +57,35 @@ export const mutations = {
   },
   idAndRouting(state, idAndRouting) {
     mutations.reset(state)
-    Vue.set(state, 'idAndRouting', idAndRouting)
+    state.idAndRouting = idAndRouting
   },
   doc(state, raw) {
     if (raw !== null) {
-      Vue.set(state, 'doc', EsDocList.instantiate(raw))
-      Vue.set(state, 'isContentLoaded', state.doc.hasContent)
-      Vue.set(state, 'isTranslatedContentLoaded', state.doc.hasTranslatedContent)
-      Vue.set(state, 'useContentTextLazyLoading', state.doc.hasBigContentTextLength)
+      state.doc = EsDocList.instantiate(raw)
+      state.isContentLoaded = state.doc.hasContent
+      state.isTranslatedContentLoaded = state.doc.hasTranslatedContent
+      state.useContentTextLazyLoading = state.doc.hasBigContentTextLength
     } else {
-      Vue.set(state, 'doc', null)
+      state.doc = null
     }
   },
   content(state, content = null) {
     if (state.doc) {
-      Vue.set(state.doc, 'content', content)
-      Vue.set(state, 'isContentLoaded', true)
+      state.doc.content = content
+      state.isContentLoaded = true
     }
   },
   translations(state, translations = []) {
     if (state.doc) {
-      Vue.set(state.doc, 'translations', translations)
-      Vue.set(state, 'isTranslatedContentLoaded', true)
+      state.doc.translations = translations
+      state.isTranslatedContentLoaded = true
     }
   },
   tags(state, tags = []) {
-    Vue.set(state, 'tags', tags)
+    state.tags = tags
   },
   namedEntities(state, raw) {
-    Vue.set(state, 'namedEntities', new EsDocList(raw).hits)
+    state.namedEntities = new EsDocList(raw).hits
   },
   namedEntitiesPageInCategory(state, { category, page }) {
     if (state.namedEntitiesPaginatedByCategories[category]) {
@@ -97,39 +97,39 @@ export const mutations = {
   },
   parentDocument(state, raw) {
     if (raw !== null) {
-      Vue.set(state, 'parentDocument', EsDocList.instantiate(raw))
+      state.parentDocument = EsDocList.instantiate(raw)
       state.doc.parent = raw
     } else {
-      Vue.set(state, 'parentDocument', null)
+      state.parentDocument = null
     }
     return state.parentDocument
   },
   rootDocument(state, raw) {
     if (raw !== null) {
-      Vue.set(state, 'rootDocument', EsDocList.instantiate(raw))
+      state.rootDocument = EsDocList.instantiate(raw)
       state.doc.root = raw
     } else {
-      Vue.set(state, 'rootDocument', null)
+      state.rootDocument = null
     }
     return state.rootDocument
   },
   toggleShowTranslatedContent(state, toggle = null) {
-    Vue.set(state, 'showTranslatedContent', toggle !== null ? toggle : !state.showTranslatedContent)
+    state.showTranslatedContent = toggle !== null ? toggle : !state.showTranslatedContent
   },
   addTag(state, { tag, userId }) {
     const tags = map(compact(tag.split(' ')), (tag) => {
       return { label: tag, user: { id: userId }, creationDate: Date.now() }
     })
-    Vue.set(state, 'tags', uniqBy(concat(state.tags, tags), 'label'))
+    state.tags = uniqBy(concat(state.tags, tags), 'label')
   },
   deleteTag(state, tagToDelete) {
     state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
   },
   isRecommended(state, isRecommended) {
-    Vue.set(state, 'isRecommended', isRecommended)
+    state.isRecommended = isRecommended
   },
   recommendedBy(state, recommendedBy = []) {
-    Vue.set(state, 'recommendedBy', recommendedBy)
+    state.recommendedBy = recommendedBy
   },
   markAsRecommended(state, userId) {
     state.recommendedBy.push(userId)

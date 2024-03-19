@@ -210,9 +210,12 @@ export default {
         this.activateTab(query.tab)
       }
     },
-    visibleTabs(tabs) {
-      if (tabs.length) {
-        this.activateTab(this.$route.query.tab)
+    visibleTabs: {
+      deep: true,
+      get(tabs) {
+        if (tabs.length) {
+          this.activateTab(this.$route.query.tab ?? 'extracted-text')
+        }
       }
     },
     doc() {

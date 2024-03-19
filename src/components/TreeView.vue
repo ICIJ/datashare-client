@@ -469,11 +469,14 @@ export default {
     order() {
       return this.reloadDataWithSpinner()
     },
-    directories() {
-      /**
-       * Called when more directories are loaded
-       */
-      this.$emit('update:directories', this.directories)
+    directories: {
+      deep: true,
+      get() {
+        /**
+         * Called when more directories are loaded
+         */
+        this.$emit('update:directories', this.directories)
+      }
     }
   },
   async created() {

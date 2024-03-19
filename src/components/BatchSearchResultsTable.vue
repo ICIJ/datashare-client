@@ -290,11 +290,17 @@ export default {
     order() {
       return this.fetch()
     },
-    selectedContentTypes() {
-      return this.fetch()
+    selectedContentTypes: {
+      deep: true,
+      get() {
+        return this.fetch()
+      }
     },
-    selectedQueries() {
-      return this.fetch()
+    selectedQueries: {
+      deep: true,
+      get() {
+        return this.fetch()
+      }
     },
     queriesExcluded() {
       return this.fetch()
