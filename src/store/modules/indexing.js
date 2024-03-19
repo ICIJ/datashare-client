@@ -32,7 +32,7 @@ export const mutations = {
     remove(state.tasks, (item) => item.state === 'DONE')
   },
   updateTasks(state, tasks) {
-    Vue.set(state, 'tasks', tasks)
+    state.tasks = tasks
   },
   resetExtractForm(state) {
     state.form.ocr = initialState().form.ocr

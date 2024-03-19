@@ -48,8 +48,11 @@ export default {
     signinUrl() {
       return import.meta.env.VITE_DS_AUTH_SIGNIN
     },
-    matchedRouteNames() {
-      return compact(this.$route.matched.map((r) => r.name))
+    matchedRouteNames: {
+      deep: true,
+      get() {
+        return compact(this.$route.matched.map((r) => r.name))
+      }
     },
     isSearchRoute() {
       return this.matchedRouteNames.indexOf('search') > -1

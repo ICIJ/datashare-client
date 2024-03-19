@@ -77,10 +77,13 @@ export default {
     }
   },
   watch: {
-    projects(value, previousValue) {
-      if (!isEqual(value, previousValue)) {
-        this.$set(this, 'path', this.dataDir)
-        this.setFilterValue(this.filter, { key: [] })
+    projects: {
+      deep: true,
+      get (value, previousValue) {
+        if (!isEqual(value, previousValue)) {
+          this.$set(this, 'path', this.dataDir)
+          this.setFilterValue(this.filter, { key: [] })
+        }
       }
     },
     path(path, oldPath) {

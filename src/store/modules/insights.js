@@ -21,11 +21,13 @@ const state = initialState()
 const mutations = {
   reset(state) {
     const s = initialState()
-    Object.keys(s).forEach((key) => Vue.set(state, key, s[key]))
+    Object.keys(s).forEach((key) => {
+      state[key] = s[key]
+    })
   },
   removeWidget(state, name) {
     const index = findIndex(state.widgets, (options) => options.name === name)
-    Vue.delete(state.widgets, index)
+    delete state.widgets[index]
   },
   addWidget(state, options) {
     if (!options.name || !find(state.widgets, { name: options.name })) {
@@ -33,10 +35,10 @@ const mutations = {
     }
   },
   clearWidgets(state) {
-    Vue.set(state, 'widgets', [])
+    state.widgets = []
   },
   project(state, project) {
-    Vue.set(state, 'project', project)
+    state.project = project
   }
 }
 

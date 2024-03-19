@@ -398,14 +398,17 @@ export default {
     phraseMatch() {
       this.selectedFuzziness = 0
     },
-    async projects() {
-      this.resetProjectData()
-      this.hideSuggestionsFileTypes()
-      this.hideSuggestionsTags()
-      await Promise.all([this.retrieveFileTypes(), this.retrieveTags()])
+    projects: {
+      deep: true,
+      get () {
+        this.resetProjectData()
+        this.hideSuggestionsFileTypes()
+        this.hideSuggestionsTags()
+        return Promise.all([this.retrieveFileTypes(), this.retrieveTags()])
+      }
     },
-    async showAdvancedFilters() {
-      await Promise.all([this.retrieveFileTypes(), this.retrieveTags()])
+    showAdvancedFilters() {
+      return Promise.all([this.retrieveFileTypes(), this.retrieveTags()])
     }
   },
   created() {

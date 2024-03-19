@@ -155,6 +155,7 @@ export default {
   },
   watch: {
     filterQueries: {
+      deep: true,
       handler(values) {
         this.$emit('update:selected-queries', map(values, 'label'))
       }
