@@ -17,7 +17,7 @@
 
 <script>
 import moment from 'moment'
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+import { DatePicker } from 'v-calendar'
 
 import ColumnFilter from '@/components/ColumnFilter'
 export default {
