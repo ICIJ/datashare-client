@@ -118,8 +118,6 @@ class Core extends Behaviors {
   useBootstrapVue() {
     this.use(
       createBootstrap({
-        components: true,
-        directives: true,
         BPopover: {
           boundaryPadding: 14
         },
@@ -184,6 +182,7 @@ class Core extends Behaviors {
       class VueCore {
         static install(app) {
           app.config.globalProperties.$core = core
+          app.config.compilerOptions.whitespace = 'preserve'
         }
       }
     )
