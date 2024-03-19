@@ -56,7 +56,6 @@ const Behaviors = compose(
 class Core extends Behaviors {
   /**
    * Create an application
-   * @param {Object} LocalVue - The Vue class to instantiate the application with.
    * @param api - Datashare api interface
    * @param mode - mode of authentication ('local' or 'server'
    */
@@ -64,12 +63,7 @@ class Core extends Behaviors {
     super()
     // Render function returns a router-view component by default
     const render = (h) => h('router-view')
-    this._vue = createApp({
-      setup() {
-        return useI18n()
-      },
-      render
-     })
+    this._vue = createApp({ render })
     this._api = api
     this._store = storeBuilder(api)
     this._auth = new Auth(mode, this._api)
@@ -161,7 +155,6 @@ class Core extends Behaviors {
     this.use(Murmur)
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
-    this.use(VueScrollTo)
     this.use(VueEllipseProgress)
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
@@ -244,9 +237,9 @@ class Core extends Behaviors {
    * @returns {Vue} The instantiated Vue
    */
   mount(selector = '#app') {
-    this.app.mount(selector)
+    this.vue.mount(selector)
     // Return an instance of the int constructor we receive.
-    return this.app
+    return this.vue
   }
   /**
    * Build a promise to be resolved when the application is configured.
