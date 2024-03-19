@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+import { DatePicker } from 'v-calendar'
 import max from 'lodash/max'
 import min from 'lodash/min'
 
