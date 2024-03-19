@@ -10,7 +10,7 @@
       </div>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
         <component
-          :is="item | itemComponent"
+          :is="itemComponent(item)"
           v-for="(item, i) in items"
           :key="i"
           class="list-group-item list-group-item-action widget__list__item"
@@ -51,11 +51,6 @@ export default {
   name: 'WidgetListGroup',
   components: {
     InfiniteLoading
-  },
-  filters: {
-    itemComponent({ href = null } = {}) {
-      return href ? 'a' : 'div'
-    }
   },
   props: {
     /**
@@ -127,6 +122,9 @@ export default {
     return this.loadFirstPage()
   },
   methods: {
+    itemComponent({ href = null } = {}) {
+      return href ? 'a' : 'div'
+    },
     clearPages() {
       this.pages.splice(0, this.pages.length)
     },
