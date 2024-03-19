@@ -104,7 +104,7 @@
                 :items="suggestionFileTypes"
                 @deactivate="hideSuggestionsFileTypes"
                 @input="selectFileType"
-                @click.native="searchFileType"
+                @click="searchFileType"
               >
                 <template #item-label="{ item }">
                   <div :id="item.mime">
@@ -183,7 +183,7 @@
                 :items="suggestionTags"
                 @deactivate="hideSuggestionsTags"
                 @input="selectTag"
-                @click.native="searchTag"
+                @click="searchTag"
               />
               <b-badge
                 v-for="(oneTag, index) in tags"
