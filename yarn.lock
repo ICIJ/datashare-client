@@ -4687,10 +4687,10 @@ vue-class-component@^7.2.3:
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-7.2.6.tgz#8471e037b8e4762f5a464686e19e5afc708502e4"
   integrity sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==
 
-vue-ellipse-progress@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/vue-ellipse-progress/-/vue-ellipse-progress-1.3.1.tgz#07653fbd97e06312b1e319e97e5ea199a6968abb"
-  integrity sha512-w/6Dy/N2yupwXLWcM1fZCBVcFgupWIr95m/MfiIaGxCjDL4tQKFilI+2n5e0YNh/kQuuxVXitHBXaKGzDBaoWw==
+vue-ellipse-progress@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/vue-ellipse-progress/-/vue-ellipse-progress-2.1.2.tgz#f5356150ce64ce8679722a438b10a60a83ead945"
+  integrity sha512-CQl2DMx7uvWyD+1vFd8cNjLQ0l1d6ZD3pTVZaUgsPev1S/9Jo8LGKX7TXxeTyf18y7ckMmeFt/cQY4Rt4CoEsg==
 
 vue-eslint-parser@^9.0.1:
   version "9.1.0"
@@ -4775,14 +4775,6 @@ vue-scrollto@^2.20.0:
   dependencies:
     bezier-easing "2.1.0"
 
-vue-shortkey@^3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/vue-shortkey/-/vue-shortkey-3.1.7.tgz#31c09a99ed597331a6a49a45eeff894a78a19eef"
-  integrity sha512-Wm/vPXXS+4Wl/LoYpD+cZc0J0HIoVlY8Ep0JLIqqswmAya3XUBtsqKbhzEf9sXo+3rZ5p1YsUyZfXas8XD7YjQ==
-  dependencies:
-    custom-event-polyfill "^1.0.7"
-    element-matches "^0.1.2"
-
 vue-sticky-directive@^0.0.10:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/vue-sticky-directive/-/vue-sticky-directive-0.0.10.tgz#07cc87da8732d0c9fc25bc4a6bcbe8329b54efbc"
@@ -4797,10 +4789,18 @@ vue-virtual-scroller@^1.0.0-rc.2, vue-virtual-scroller@^1.0.10:
     vue-observe-visibility "^0.4.4"
     vue-resize "^0.4.5"
 
-vue-wait@^1.4.8:
+vue-wait@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/vue-wait/-/vue-wait-1.5.3.tgz#3d4c994a4a522485cbfae36c57a356139f6333d9"
   integrity sha512-R33p0wljvjOC1OoqZffPS7pjstn5dAOdML5TdhHky3PqlO98qntMcJceGaeHxKTOXcjh50XNFOBQfGVzqGixCA==
+
+vue3-shortkey@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/vue3-shortkey/-/vue3-shortkey-4.0.0.tgz#63ab7bfbe6f0f80158ae8a22b44c16e566b7bd83"
+  integrity sha512-pXb/K7aw3ViqzWL9jz/IL4wOk7M7FQ87ekYxk5J7uKTNEfOVBYtILGjvCBJD3/zEUipcLQJEg7TjE1xYnVYV/w==
+  dependencies:
+    custom-event-polyfill "^1.0.7"
+    element-matches "^0.1.2"
 
 vue@^3.4.19:
   version "3.4.21"

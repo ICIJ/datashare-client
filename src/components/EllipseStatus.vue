@@ -120,7 +120,7 @@ export default {
 
 <template>
   <span class="ellipse-status d-inline-flex align-items-center" :class="{ 'flex-column': !horizontal }">
-    <vue-ellipse-progress
+    <ve-progress
       class="ellipse-status__progress"
       :size="ellipseSize"
       :thickness="ellipseThickness"
@@ -145,7 +145,7 @@ export default {
           />
         </template>
       </slot>
-    </vue-ellipse-progress>
+    </ve-progress>
     <span
       v-if="!noBadge"
       class="ellipse-status__badge mx-2 d-inline-flex"
