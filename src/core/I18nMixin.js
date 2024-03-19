@@ -39,7 +39,7 @@ const I18nMixin = (superclass) =>
      * @returns {Boolean}
      */
     hasI18Locale(locale) {
-      return !isEmpty(this.i18n.getLocaleMessage(locale))
+      return !isEmpty(this.i18n.global.getLocaleMessage(locale))
     }
 
     /**
