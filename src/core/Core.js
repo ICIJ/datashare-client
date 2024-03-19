@@ -6,9 +6,9 @@ import Murmur from '@icij/murmur'
 import BootstrapVue from 'bootstrap-vue'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
-import VueShortkey from 'vue-shortkey'
-import VueWait from 'vue-wait'
+import VueShortkey from 'vue3-shortkey'
 import VueEllipseProgress from 'vue-ellipse-progress'
+import { createVueWait } from 'vue-wait'
 import { createApp, defineComponent } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createWebHashHistory, createRouter } from 'vue-router'
@@ -166,8 +166,8 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useWait() {
-    this.use(VueWait)
-    this.wait = new VueWait({ useVuex: true })
+    this.wait = createVueWait({ useVuex: true })
+    this.use(this.wait)
     return this
   }
   /**
