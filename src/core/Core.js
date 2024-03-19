@@ -9,8 +9,8 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue-shortkey'
 import VueWait from 'vue-wait'
 import VueEllipseProgress from 'vue-ellipse-progress'
-import { createApp } from 'vue'
-import { createI18n, useI18n } from 'vue-i18n'
+import { createApp, defineComponent } from 'vue'
+import { createI18n } from 'vue-i18n'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import { iteratee } from 'lodash'
 
@@ -61,9 +61,8 @@ class Core extends Behaviors {
    */
   constructor(api = null, mode = getMode(MODE_NAME.LOCAL)) {
     super()
-    // Render function returns a router-view component by default
-    const render = (h) => h('router-view')
-    this._vue = createApp({ render })
+    const Root = defineComponent({ template: '<router-view></router-view>' })
+    this._vue = createApp(Root)
     this._api = api
     this._store = storeBuilder(api)
     this._auth = new Auth(mode, this._api)

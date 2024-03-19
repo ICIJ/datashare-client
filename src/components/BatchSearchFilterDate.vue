@@ -3,12 +3,11 @@
     <keep-alive>
       <date-picker
         :key="`date-${id}`"
-        v-model="selectedDateRange"
-        is-range
+        v-model.number="selectedDateRange"
+        range
         color="gray"
         class="border-0"
         :max-date="new Date()"
-        :model-config="modelConfig"
         :locale="locale"
       >
       </date-picker>
@@ -47,11 +46,6 @@ export default {
   computed: {
     isActive() {
       return this.date !== null
-    },
-    modelConfig() {
-      return {
-        type: 'number'
-      }
     },
     locale() {
       return this.$i18n.locale
