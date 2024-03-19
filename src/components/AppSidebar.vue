@@ -236,7 +236,7 @@
 </template>
 
 <script>
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import VuePerfectScrollbar from 'vue3-perfect-scrollbar'
 
 import Hook from '@/components/Hook'
 import LocalesMenu from '@/components/LocalesMenu'

@@ -44,7 +44,7 @@
 
 <script>
 import { get, isString } from 'lodash'
-import { ActiveTextTruncate } from '@icij/murmur'
+import { ActiveTextTruncate } from '@icij/murmur-next'
 
 import types from '@/utils/types.json'
 

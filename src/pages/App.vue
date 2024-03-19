@@ -29,7 +29,7 @@
 
 <script>
 import { compact, get, some } from 'lodash'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import VuePerfectScrollbar from 'vue3-perfect-scrollbar'
 
 import AppSidebar from '@/components/AppSidebar'
 import Hook from '@/components/Hook'

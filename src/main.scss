@@ -3,11 +3,14 @@
 @import './utils/_multiselect.scss';
 @import './assets/fonts/Lato/stylesheet.css';
 @import './assets/fonts/Medel/stylesheet.css';
+
+@import '~node_modules/vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 @import '~node_modules/bootstrap/scss/bootstrap';
 // BootstrapVue and its default variables
-@import '~node_modules/bootstrap-vue/src/index';
+@import '~node_modules/bootstrap-vue-next/dist/bootstrap-vue-next.css';
 // @TODO bundle Murmur so the import is easier
-@import '~node_modules/@icij/murmur/dist/lib/murmur.css';
+@import '~node_modules/@icij/murmur-next/dist/lib/murmur.css';
+
 
 html {
   font-size: 14px;

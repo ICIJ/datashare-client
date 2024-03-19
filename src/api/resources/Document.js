@@ -1,5 +1,5 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import moment from 'moment'
 import { extname } from 'path'
 

@@ -55,7 +55,7 @@
 import compact from 'lodash/compact'
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import VuePerfectScrollbar from 'vue3-perfect-scrollbar'
 import { errors as esErrors } from 'elasticsearch-browser'
 import { mapState } from 'vuex'
 

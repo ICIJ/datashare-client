@@ -2,12 +2,12 @@
 import 'mutationobserver-shim'
 
 import compose from 'lodash/fp/compose'
-import Murmur from '@icij/murmur'
-import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import VueEllipseProgress from 'vue-ellipse-progress'
+import { createBootstrap } from 'bootstrap-vue-next'
 import { createVueWait } from 'vue-wait'
 import { createApp, defineComponent } from 'vue'
 import { createI18n } from 'vue-i18n'
@@ -116,14 +116,18 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useBootstrapVue() {
-    this.use(BootstrapVue, {
-      BPopover: {
-        boundaryPadding: 14
-      },
-      BTooltip: {
-        boundaryPadding: 0
-      }
-    })
+    this.use(
+      createBootstrap({
+        components: true,
+        directives: true,
+        BPopover: {
+          boundaryPadding: 14
+        },
+        BTooltip: {
+          boundaryPadding: 0
+        }
+      })
+    )
     return this
   }
   /**
@@ -178,8 +182,8 @@ class Core extends Behaviors {
     const core = this
     this.use(
       class VueCore {
-        static install(Vue) {
-          Vue.prototype.$core = core
+        static install(app) {
+          app.config.globalProperties.$core = core
         }
       }
     )
