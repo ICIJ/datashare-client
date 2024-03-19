@@ -23,7 +23,7 @@
           :hide="!suggestions.length"
           class="document-tags-form__add__suggestions"
           @input="tag = $event"
-          @click.native="addTag"
+          @click="addTag"
         ></selectable-dropdown>
       </b-form>
     </div>

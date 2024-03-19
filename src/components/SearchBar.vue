@@ -37,7 +37,7 @@
             :hide="!suggestions.length"
             :items="suggestions"
             @input="selectTerm"
-            @click.native="submit"
+            @click="submit"
           >
             <template #item-label="{ item }">
               <div class="d-flex">

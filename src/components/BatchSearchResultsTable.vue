@@ -64,7 +64,7 @@
               params: { index: item.project.name, id: item.documentId, routing: item.rootId },
               query: { q: item.query }
             }"
-            @click.native.prevent="openDocumentModal(index)"
+            @click.prevent="openDocumentModal(index)"
           >
             <active-text-truncate
               v-b-tooltip.hover
