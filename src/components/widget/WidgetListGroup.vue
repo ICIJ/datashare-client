@@ -5,13 +5,13 @@
     </div>
     <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
       <component
-        :is="item | itemComponent"
+        :is="itemComponent(item)"
         v-for="(item, i) in items"
         :key="i"
         class="list-group-item list-group-item-action widget__list__item"
         :href="item.href"
         :class="{ active: item.active }"
-        :target="item | itemTarget"
+        :target="itemTarget(item)"
       >
         <div class="widget__list__item__label">
           {{ item.label }}
@@ -52,6 +52,15 @@ export default {
   data() {
     return {
       items: []
+    }
+  },
+  methods: {
+    itemComponent({ href = null } = {}) {
+      return href ? 'a' : 'div'
+    },
+    itemTarget({ href = null } = {}) {
+      const origin = window.location.origin
+      return !href || href.indexOf(origin) === 0 ? null : '_blank'
     }
   },
   computed: {
