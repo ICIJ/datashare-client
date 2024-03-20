@@ -9,7 +9,7 @@ export default {
      * Input value
      * @model
      */
-    value: {
+    modelValue: {
       type: [String, Number]
     },
     /**
@@ -79,6 +79,7 @@ export default {
       default: 'off'
     }
   },
+  emits: ['submit', 'up', 'down', 'update:modelValue', 'enter', 'blur'],
   computed: {
     searchFormClassAttr() {
       return {
@@ -90,38 +91,41 @@ export default {
         'search-form-control--dark': this.dark
       }
     }
+  },
+  methods: {
+    input(value) {
+      this.$emit('update:modelValue', value)
+    }
   }
 }
 </script>
 
 <template>
-  <b-form @submit.prevent="$emit('submit', value)">
-    <b-input-group size="sm" class="search-form-control" :class="searchFormClassAttr">
+  <form @submit.prevent="$emit('submit', modelValue)">
+    <div class="input-group input-group-sm search-form-control" :class="searchFormClassAttr">
       <b-form-input
+        :model-value="modelValue"
         :autocomplete="autocomplete"
         :autofocus="autofocus"
         class="search-form-control__input"
         :placeholder="placeholder"
-        :value="value"
         @keydown.up="$emit('up', $event)"
         @keydown.down="$emit('down', $event)"
         @keydown.enter="$emit('enter', $event)"
-        @input="$emit('input', $event)"
+        @update:modelValue="input"
         @blur="$emit('blur', $event)"
-      ></b-form-input>
-      <b-input-group-append class="search-form-control__addon search-form-control__addon--append">
-        <b-button variant="light" class="search-form-control__addon__submit" type="submit">
-          <template v-if="!noIcon">
-            <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
-            <fa v-else icon="search" fixed-width></fa>
-          </template>
-          <span :class="{ 'sr-only': !showSubmitLabel }">
-            {{ submitLabel || $t('searchFormControl.submitLabel') }}
-          </span>
-        </b-button>
-      </b-input-group-append>
-    </b-input-group>
-  </b-form>
+      />
+      <button class="btn btn-primary btn-sm search-form-control__addon__submit" type="submit">
+        <template v-if="!noIcon">
+          <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
+          <fa v-else icon="search" fixed-width></fa>
+        </template>
+        <span :class="{ 'sr-only': !showSubmitLabel }">
+          {{ submitLabel || $t('searchFormControl.submitLabel') }}
+        </span>
+      </button>
+    </div>
+  </form>
 </template>
 
 <style lang="scss" scoped>
