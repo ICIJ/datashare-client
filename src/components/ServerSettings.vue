@@ -3,7 +3,9 @@
     <div v-if="!isServer">
       <div class="container my-4">
         <v-wait for="load server settings">
-          <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
+          <template #waiting>
+            <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
+          </template>
           <b-form @submit.prevent="onSubmit">
             <b-form-group
               v-for="(_, name) in settings"
