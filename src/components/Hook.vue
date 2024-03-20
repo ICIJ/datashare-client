@@ -27,37 +27,36 @@ export default {
       default: () => {}
     }
   },
-  render(createElement, context) {
-    function filterHookedComponentsByTarget(targetName) {
-      const { $store } = context.parent
-      return $store.getters['hooks/filterHookedComponentsByTarget'](targetName)
+  render(createElement) {
+    const filterHookedComponentsByTarget = (targetName) => {
+      return this.$store.getters['hooks/filterHookedComponentsByTarget'](targetName)
     }
 
-    function hookedComponents() {
-      return filterHookedComponentsByTarget(context.props.name)
+    const hookedComponents = () => {
+      return filterHookedComponentsByTarget(this.name)
     }
 
-    function renderedComponents() {
+    const renderedComponents = () => {
       return hookedComponents().map(({ component }) => {
-        return createElement(component, { props: context.props.bind })
+        return createElement(component, { props: this.bind })
       })
     }
 
-    function isDebug() {
-      return context.parent.$config.is('hooksDebug')
+    const isDebug = () => {
+      return this.$config.is('hooksDebug')
     }
 
-    function debugTag() {
-      return createElement(context.props.debugTag, {
+    const debugTag = () => {
+      return createElement(this.debugTag, {
         class: ['hook-debug'],
         attrs: {
-          'aria-hook': context.props.name,
+          'aria-hook': this.name,
           'aria-count': hookedComponents().length
         }
       })
     }
 
-    function renderedComponentsWithDebug() {
+    const renderedComponentsWithDebug = () => {
       return [debugTag(), ...renderedComponents()]
     }
 
