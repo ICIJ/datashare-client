@@ -28,7 +28,7 @@ const I18nMixin = (superclass) =>
      */
     setI18nLocale(locale = settings.defaultLocale) {
       localStorage.setItem('locale', locale)
-      this.i18n.locale = locale
+      this.i18n.global.locale = locale
       return locale
     }
 
