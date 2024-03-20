@@ -9,17 +9,7 @@ export default ({ mode }) => {
 
   return defineConfig({
     plugins: [
-      vue({
-        template: {
-          compilerOptions: {
-            compatConfig: {
-              MODE: 2,
-              COMPONENT_V_MODEL: false,
-              WATCH_ARRAY: false
-            }
-          }
-        }
-      }),
+      vue(),
       Components({
         resolvers: [BootstrapVueNextResolver()]
       })
@@ -34,7 +24,6 @@ export default ({ mode }) => {
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
         path: 'path-browserify',
-        vue: '@vue/compat',
         '@': resolve(__dirname, './src'),
         '~node_modules': resolve('node_modules'),
         '~mixins': resolve(__dirname, './src/mixins'),
