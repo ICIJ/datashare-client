@@ -183,6 +183,12 @@ class Core extends Behaviors {
         static install(app) {
           app.config.globalProperties.$core = core
           app.config.compilerOptions.whitespace = 'preserve'
+          // inject a globally available $bvToast object to facilitate migration
+          app.config.globalProperties.$bvToast = {
+            toast(body, options) {
+              console.warn('Toasters not implemented yet', { body, ...options })
+            }
+          }
         }
       }
     )
