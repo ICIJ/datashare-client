@@ -187,10 +187,10 @@ export default {
   mounted() {
     this.$store.subscribe((mutation) => {
       if (mutation.type === 'search/query') {
-        this.$set(this, 'query', mutation.payload)
+        this.query = mutation.payload
       }
       if (mutation.type === 'search/reset') {
-        this.$set(this, 'field', this.$store.state.search.field)
+        this.field = this.$store.state.search.field
       }
     })
   },
@@ -278,18 +278,18 @@ export default {
           if (this.focused) {
             // Is the query still valid
             const suggestionList = suggestions.length ? [this.currentQuery, ...suggestions] : suggestions
-            this.$set(this, 'suggestions', query === this.query ? suggestionList : [])
+            this.suggestions = query === this.query ? suggestionList : []
             this.$refs.suggestions.activeItems = []
           }
         } else {
-          this.$set(this, 'suggestions', [])
+          this.suggestions = []
         }
       } catch (_) {
         this.hideSuggestions()
       }
     }, 200),
     hideSuggestions() {
-      this.$set(this, 'suggestions', [])
+      this.suggestions = []
     },
     hideSuggestionsAfterDelay() {
       setTimeout(() => {
