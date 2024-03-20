@@ -4,7 +4,6 @@ import findIndex from 'lodash/findIndex'
 import isString from 'lodash/isString'
 import isFunction from 'lodash/isFunction'
 import sortBy from 'lodash/sortBy'
-import Vue from 'vue'
 
 import widgets from '@/store/widgets'
 import * as widgetTypes from '@/store/widgets'

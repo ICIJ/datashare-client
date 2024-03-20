@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { has } from 'lodash'
 
 export const state = {
