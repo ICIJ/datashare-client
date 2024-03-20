@@ -5,9 +5,9 @@
       <app-sidebar></app-sidebar>
     </div>
     <div class="app__main d-flex flex-grow-1" :class="{ 'app__main--has-context-sidebar': doesRouteHaveSidebar }">
-      <vue-perfect-scrollbar v-if="!isContextSidebarReduced" class="app__main__context-sidebar p-1">
+      <perfect-scrollbar v-if="!isContextSidebarReduced" class="app__main__context-sidebar p-1">
         <router-view name="sidebar"></router-view>
-      </vue-perfect-scrollbar>
+      </perfect-scrollbar>
       <div class="app__main__view flex-grow-1">
         <scroll-tracker></scroll-tracker>
         <router-view></router-view>
@@ -29,7 +29,7 @@
 
 <script>
 import { compact, get, some } from 'lodash'
-import VuePerfectScrollbar from 'vue3-perfect-scrollbar'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
 import AppSidebar from '@/components/AppSidebar'
 import Hook from '@/components/Hook'
@@ -42,7 +42,7 @@ export default {
     AppSidebar,
     Hook,
     ScrollTracker,
-    VuePerfectScrollbar
+    PerfectScrollbar
   },
   computed: {
     signinUrl() {

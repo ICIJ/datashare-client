@@ -55,7 +55,7 @@
 import compact from 'lodash/compact'
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
-import VuePerfectScrollbar from 'vue3-perfect-scrollbar'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { errors as esErrors } from 'elasticsearch-browser'
 import { mapState } from 'vuex'
 
@@ -127,7 +127,7 @@ export default {
       return this.$store.getters['search/activeFilters'].length
     },
     bodyWrapper() {
-      return this.layout === 'list' ? VuePerfectScrollbar : 'div'
+      return this.layout === 'list' ? PerfectScrollbar : 'div'
     }
   },
   watch: {

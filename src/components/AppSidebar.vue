@@ -1,7 +1,7 @@
 <template>
   <div class="app-sidebar d-flex flex-column" :class="{ 'app-sidebar--reduced': reduced }">
     <div class="app-sidebar__backdrop" @click="hideSidebar()"></div>
-    <vue-perfect-scrollbar class="app-sidebar__container flex-grow-1 d-flex flex-column">
+    <perfect-scrollbar class="app-sidebar__container flex-grow-1 d-flex flex-column">
       <div class="d-flex align-items-center justify-content-center">
         <router-link class="app-sidebar__container__brand align-items-center flex-grow-1" :to="{ name: 'landing' }">
           <img src="@/assets/images/logo-color.svg" alt="Datashare" class="app-sidebar__container__brand__logo" />
@@ -150,25 +150,25 @@
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
                 {{ $t(reduced ? 'menu.userGuidesShort' : 'menu.userGuides') }}
               </span>
-              <b-popover
-                target="app-menu-user-guide"
-                custom-class="popover-body-p-0"
-                triggers="click blur"
-                @show="$root.$emit('bv::hide::tooltip')"
-              >
-                <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
-                  <a
-                    v-for="(meta, i) in filteredRouteDocs"
-                    :key="i"
-                    class="dropdown-item"
-                    target="_blank"
-                    :href="meta.href"
-                  >
-                    {{ meta.title }}
-                  </a>
-                </div>
-              </b-popover>
             </b-button>
+            <b-popover
+              target="app-menu-user-guide"
+              custom-class="popover-body-p-0"
+              triggers="click blur"
+              @show="$root.$emit('bv::hide::tooltip')"
+            >
+              <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
+                <a
+                  v-for="(meta, i) in filteredRouteDocs"
+                  :key="i"
+                  class="dropdown-item"
+                  target="_blank"
+                  :href="meta.href"
+                >
+                  {{ meta.title }}
+                </a>
+              </div>
+            </b-popover>
           </li>
         </ul>
       </div>
@@ -220,7 +220,7 @@
         </li>
       </ul>
       <hook name="app-sidebar.locales:after"></hook>
-    </vue-perfect-scrollbar>
+    </perfect-scrollbar>
     <div class="app-sidebar__version">
       <version-number
         class="d-inline-block"
@@ -236,7 +236,7 @@
 </template>
 
 <script>
-import VuePerfectScrollbar from 'vue3-perfect-scrollbar'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
 import { EventBus } from '@/utils/event-bus'
 import Hook from '@/components/Hook'
@@ -258,7 +258,7 @@ export default {
     LocalesMenu,
     MountedDataLocation,
     VersionNumber,
-    VuePerfectScrollbar
+    PerfectScrollbar
   },
   mixins: [docs, utils],
   computed: {
