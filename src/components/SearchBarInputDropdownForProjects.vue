@@ -55,7 +55,7 @@
         </template>
       </span>
     </template>
-    <template #dropdown-item="{ option: project, index, values, hasValue, toggleUniqueValue, toggleValue }">
+    <template #dropdown-item="{ option: project, index, modelValues, hasValue, toggleUniqueValue, toggleValue }">
       <span
         class="search-bar-input-dropdown-for-projects__item d-flex align-items-center justify-self-center"
         :class="{ 'search-bar-input-dropdown-for-projects__item--focus': index === focusIndex }"
@@ -78,7 +78,7 @@
           @click="toggleValue($event, project)"
         >
           <fa v-if="!hasValue(project)" icon="plus" fixed-width />
-          <fa v-else-if="values.length > 1" icon="minus" fixed-width />
+          <fa v-else-if="modelValues.length > 1" icon="minus" fixed-width />
         </div>
       </span>
     </template>
@@ -104,7 +104,7 @@ export default {
     /**
      * List of selected projects
      */
-    value: {
+    modelValue: {
       type: Array,
       default: () => []
     },
@@ -150,16 +150,16 @@ export default {
       return '*'
     },
     valueNames() {
-      return this.value.map(iteratee('name'))
+      return this.modelValue.map(iteratee('name'))
     },
     selectedProjects: {
       get() {
-        return this.value.map(({ name }) => {
+        return this.modelValue.map(({ name }) => {
           return this.$core.findProject(name)
         })
       },
       set(value) {
-        this.$emit('input', value)
+        this.$emit('update:modelValue', value)
       }
     },
     slicedProjects() {
