@@ -19,7 +19,7 @@ describe('elasticsearch', () => {
   it('should emit an error if the backend response is an error', async () => {
     const spy = vi.spyOn(elasticsearch, 'search').mockRejectedValue(new Error('this is an error'))
     const mockCallback = vi.fn()
-    EventBus.$on('http::error', mockCallback)
+    EventBus.on('http::error', mockCallback)
 
     await expect(elasticsearch.searchDocs(index, '*')).rejects.toThrow('this is an error')
 

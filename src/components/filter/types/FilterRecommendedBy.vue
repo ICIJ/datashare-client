@@ -42,6 +42,7 @@
 import sortBy from 'lodash/sortBy'
 import { mapState } from 'vuex'
 
+import { EventBus } from '@/utils/event-bus'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import UserDisplay from '@/components/UserDisplay'
@@ -88,7 +89,7 @@ export default {
     async selectUsers(users = [], refresh = true) {
       this.setFilterValue(this.filter, { key: users })
       await this.$store.dispatch('recommended/getDocumentsRecommendedBy', users)
-      this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
+      EventBus.emit('filter::add-filter-values', this.filter, this.selected)
       if (refresh) {
         this.refreshRouteAndSearch()
       }

@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/utils/event-bus'
 import settings from '@/utils/settings'
 
 /**
@@ -83,11 +84,11 @@ export default {
     resetFiltersAndQuery() {
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
-      this.$root.$emit('bv::hide::popover')
+      EventBus.emit('bv::hide::popover')
       /**
        * Filters have been reset.
        */
-      this.$root.$emit('filter::search::reset-filters')
+      EventBus.emit('filter::search::reset-filters')
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }).catch(() => {})
     }
   }

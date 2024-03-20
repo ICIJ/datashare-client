@@ -98,7 +98,7 @@ describe('Datashare backend client', () => {
   it('should throw a 401 if getSettings return a error', async () => {
     mockAxios.request.mockRejectedValue({ response: { status: 401 } })
     const mockCallback = vi.fn()
-    EventBus.$on('http::error', mockCallback)
+    EventBus.on('http::error', mockCallback)
     try {
       await api.getSettings()
     } catch (error) {
@@ -406,7 +406,7 @@ describe('Datashare backend client', () => {
     const error = new Error('Forbidden')
     mockAxios.request.mockReturnValue(Promise.reject(error))
     const mockCallback = vi.fn()
-    EventBus.$on('http::error', mockCallback)
+    EventBus.on('http::error', mockCallback)
 
     try {
       await api.createIndex()

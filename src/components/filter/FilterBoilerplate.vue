@@ -136,6 +136,7 @@ import {
 } from 'lodash'
 import InfiniteLoading from 'vue-infinite-loading'
 
+import { EventBus } from '@/utils/event-bus'
 import FilterFooter from '@/components/filter/FilterFooter'
 import Hook from '@/components/Hook'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -403,9 +404,9 @@ export default {
   },
   async mounted() {
     // Listen for event to refresh the filter
-    this.$root.$on('filter::refresh', () => this.aggregateWithLoading())
+    EventBus.on('filter::refresh', () => this.aggregateWithLoading())
     // Listen for deletion of a filter value
-    this.$root.$on('filter::delete', (filterName, { label: key }) => this.deleteFilterKey({ filterName, key }))
+    EventBus.on('filter::delete', (filterName, { label: key }) => this.deleteFilterKey({ filterName, key }))
     // Initialize the filter for the first time
     this.initialize()
   },
@@ -452,7 +453,7 @@ export default {
       /**
        * Triggered at the root level when user starts to search in the filter values.
        */
-      this.$root.$emit('filter::async-search', this.filter, this.query)
+      EventBus.emit('filter::async-search', this.filter, this.query)
       /**
        * Triggered when user starts to search in the filter values.
        */
@@ -571,7 +572,7 @@ export default {
       this.$emit('reset-filter-values', this.filter, refresh)
     },
     changeSelectedValues($ev) {
-      this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
+      EventBus.emit('filter::add-filter-values', this.filter, this.selected)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()

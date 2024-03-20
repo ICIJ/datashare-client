@@ -39,6 +39,7 @@
 <script>
 import get from 'lodash/get'
 
+import { EventBus } from '@/utils/event-bus'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import utils from '@/mixins/utils'
@@ -81,7 +82,7 @@ export default {
         values = values.slice(1)
       }
       this.setFilterValue(this.filter, { key: values })
-      this.$root.$emit('filter::add-filter-values', this.filter, values)
+      EventBus.emit('filter::add-filter-values', this.filter, values)
       if (refresh) {
         this.refreshRouteAndSearch()
       }

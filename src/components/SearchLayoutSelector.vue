@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/utils/event-bus'
 /**
  * Change the search results layout (grid, list or table).
  */
@@ -51,7 +52,7 @@ export default {
         return this.$store.state.search.layout
       },
       set(layout) {
-        this.$root.$emit('bv::hide::tooltip')
+        EventBus.emit('bv::hide::tooltip')
         return this.$store.commit('search/layout', layout)
       }
     }

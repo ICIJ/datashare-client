@@ -3,6 +3,9 @@ import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
 import VueScrollTo from 'vue-scrollto'
 
+import { EventBus } from '@/utils/event-bus'
+
+
 /**
  * An contextual link to the "right" scroll position.
  */
@@ -29,7 +32,7 @@ export default {
   },
   mounted() {
     // Listen to scroll request from the root
-    this.$root.$on('scroll-tracker:request', this.request)
+    EventBus.on('scroll-tracker:request', this.request)
   },
   methods: {
     request(target, offset = 0, container = this.container) {
