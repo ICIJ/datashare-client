@@ -19,7 +19,7 @@
         {{ displayedFilterValue }}
       </span>
     </span>
-    <b-tooltip :target="appliedSearchFiltersItemId" triggers="hover" boundary="window">
+    <b-tooltip :target="appliedSearchFiltersItemId" triggers="hover" boundary="viewport">
       <dl class="m-0">
         <dt>
           {{ filterName }}
