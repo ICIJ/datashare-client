@@ -366,7 +366,10 @@ export const mutations = {
     }
   },
   toggleFilters(state, toggler = !state.showFilters) {
-    state.showFilters = toggler
+    Vue.set(state, 'showFilters', toggler)
+  },
+  updateTab(state, tab) {
+    state.tab = tab
   }
 }
 
