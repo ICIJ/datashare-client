@@ -12,7 +12,7 @@ export function datasharePlugin(Client) {
     try {
       return this.get({ index, id, routing, ...params })
     } catch (error) {
-      EventBus.$emit('http::error', error)
+      EventBus.emit('http::error', error)
       throw error
     }
   }
@@ -31,7 +31,7 @@ export function datasharePlugin(Client) {
     return this.search({ ...params }).then(
       (data) => data,
       (error) => {
-        EventBus.$emit('http::error', error)
+        EventBus.emit('http::error', error)
         throw error
       }
     )

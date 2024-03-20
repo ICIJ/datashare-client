@@ -49,6 +49,7 @@
 import { get, isArray } from 'lodash'
 import { mapState } from 'vuex'
 
+import { EventBus } from '@/utils/event-bus'
 import FilterDate from '@/components/filter/types/FilterDate'
 import FilterDateRange from '@/components/filter/types/FilterDateRange'
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
@@ -93,10 +94,10 @@ export default {
     }
   },
   mounted() {
-    this.$root.$on('filter::async-search', this.openFilterSearch)
-    this.$root.$on('filter::add-filter-values', this.setFilterValue)
-    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
-    this.$root.$on('index::delete::all', this.refreshEachFilter)
+    EventBus.on('filter::async-search', this.openFilterSearch)
+    EventBus.on('filter::add-filter-values', this.setFilterValue)
+    EventBus.on('filter::search::reset-filters', this.resetFilterValues)
+    EventBus.on('index::delete::all', this.refreshEachFilter)
   },
   methods: {
     openFilterSearch(expandedFilter, query) {

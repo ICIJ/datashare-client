@@ -85,6 +85,7 @@
 import { filter, findIndex } from 'lodash'
 import { mapState } from 'vuex'
 
+import { EventBus } from '@/utils/event-bus'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import Hook from '@/components/Hook'
@@ -250,8 +251,8 @@ export default {
           this.doc.route
         )
         const container = this.$el.closest('.ps-container')
-        this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
-        this.$root.$emit('document::content::changed')
+        EventBus.emit('scroll-tracker:request', this.$el, 0, container)
+        EventBus.emit('document::content::changed')
       }
       this.$wait.end('load document data')
     },
@@ -272,7 +273,7 @@ export default {
     activateTab(name = TAB_NAME.EXTRACTED_TEXT) {
       if (findIndex(this.visibleTabs, { name }) > -1) {
         this.$set(this, 'activeTab', name)
-        this.$root.$emit('document::content::changed')
+        EventBus.emit('document::content::changed')
         return name
       }
     },

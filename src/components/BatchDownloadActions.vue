@@ -1,5 +1,6 @@
 <script>
 import { uniqueId } from 'lodash'
+import { EventBus } from '@/utils/event-bus'
 
 export default {
   name: 'BatchDownloadActions',
@@ -51,7 +52,7 @@ export default {
   },
   methods: {
     closePopover() {
-      this.$root.$emit('bv::hide::popover', this.togglerId)
+      EventBus.emit('bv::hide::popover', this.togglerId)
     },
     async deleteTask() {
       try {

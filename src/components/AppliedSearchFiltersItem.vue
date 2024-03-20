@@ -35,6 +35,7 @@
 <script>
 import { uniqueId } from 'lodash'
 
+import { EventBus } from '@/utils/event-bus'
 import displayUser from '@/filters/displayUser'
 
 /**
@@ -113,7 +114,7 @@ export default {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       } else {
         await this.$store.dispatch('search/removeFilterValue', this.filter)
-        this.$root.$emit('filter::search::update', this.filter.name)
+        EventBus.emit('filter::search::update', this.filter.name)
       }
 
       const query = this.$store.getters['search/toRouteQuery']()

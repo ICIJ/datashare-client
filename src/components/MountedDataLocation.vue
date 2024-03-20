@@ -36,6 +36,7 @@
 <script>
 import { uniqueId } from 'lodash'
 
+import { EventBus } from '@/utils/event-bus'
 import TreeView from '@/components/TreeView'
 
 /**
@@ -89,7 +90,7 @@ export default {
       await this.$core.createDefaultProject()
       await this.$core.loadUser()
       this.$store.commit('search/index', this.$config.get('defaultProject'))
-      this.$root.$emit('index::delete::all')
+      EventBus.emit('index::delete::all')
     },
     showTreeView() {
       this.$set(this, 'path', this.dataDir)

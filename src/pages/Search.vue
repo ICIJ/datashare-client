@@ -59,6 +59,7 @@ import VuePerfectScrollbar from 'vue3-perfect-scrollbar'
 import { errors as esErrors } from 'elasticsearch-browser'
 import { mapState } from 'vuex'
 
+import { EventBus } from '@/utils/event-bus'
 import AppNav from '@/components/AppNav'
 import Hook from '@/components/Hook'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
@@ -150,9 +151,9 @@ export default {
     await this.search()
   },
   mounted() {
-    this.$root.$on('index::delete::all', this.search)
-    this.$root.$on('filter::starred::refresh', this.refresh)
-    this.$root.$on('document::content::changed', this.updateScrollBars)
+    EventBus.on('index::delete::all', this.search)
+    EventBus.on('filter::starred::refresh', this.refresh)
+    EventBus.on('document::content::changed', this.updateScrollBars)
   },
   methods: {
     handleScroll(e) {

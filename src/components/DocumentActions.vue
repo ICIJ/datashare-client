@@ -94,6 +94,7 @@ import { findIndex, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
+import { EventBus } from '@/utils/event-bus'
 import byteSize from '@/filters/byteSize'
 import humanSize from '@/filters/humanSize'
 import DocumentTypeCard from '@/components/DocumentTypeCard'
@@ -283,8 +284,8 @@ export default {
       } catch (_) {
         this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
       }
-      this.$root.$emit('bv::hide::tooltip')
-      this.$root.$emit('filter::starred::refresh')
+      EventBus.emit('bv::hide::tooltip')
+      EventBus.emit('filter::starred::refresh')
     }
   }
 }

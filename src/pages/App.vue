@@ -70,7 +70,7 @@ export default {
     }
   },
   created() {
-    EventBus.$on('http::error', this.handleHttpError)
+    EventBus.on('http::error', this.handleHttpError)
   },
   beforeDestroy() {
     EventBus.$off('http::error', this.handleHttpError)
