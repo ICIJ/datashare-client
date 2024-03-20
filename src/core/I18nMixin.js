@@ -16,7 +16,7 @@ const I18nMixin = (superclass) =>
      * @returns {Promise}
      */
     initializeI18n() {
-      const locale = localStorage.getItem('locale') ?? this.i18n.locale
+      const locale = localStorage.getItem('locale') ?? this.i18n.global.locale
       return this.loadI18Locale(locale)
     }
 
