@@ -151,24 +151,27 @@
                 {{ $t(reduced ? 'menu.userGuidesShort' : 'menu.userGuides') }}
               </span>
             </b-button>
-            <b-popover
-              target="app-menu-user-guide"
-              custom-class="popover-body-p-0"
-              triggers="click blur"
-              @show="$root.$emit('bv::hide::tooltip')"
-            >
-              <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
-                <a
-                  v-for="(meta, i) in filteredRouteDocs"
-                  :key="i"
-                  class="dropdown-item"
-                  target="_blank"
-                  :href="meta.href"
-                >
-                  {{ meta.title }}
-                </a>
-              </div>
-            </b-popover>
+            <teleport to="body">
+              <b-popover
+                placement="right"
+                target="app-menu-user-guide"
+                custom-class="popover-body-p-0"
+                triggers="click blur"
+                @show="$root.$emit('bv::hide::tooltip')"
+              >
+                <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
+                  <a
+                    v-for="(meta, i) in filteredRouteDocs"
+                    :key="i"
+                    class="dropdown-item"
+                    target="_blank"
+                    :href="meta.href"
+                  >
+                    {{ meta.title }}
+                  </a>
+                </div>
+              </b-popover>
+            </teleport>
           </li>
         </ul>
       </div>
