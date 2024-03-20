@@ -9,9 +9,9 @@
     <teleport to="body">
       <b-popover
         ref="popover"
+        click
         placement="right"
         :target="uniqueId"
-        triggers="click blur"
         custom-class="locales-menu__list popover-body-p-0"
       >
         <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
@@ -56,6 +56,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['close'],
   data() {
     return {
       locales: settings.locales
@@ -77,10 +78,10 @@ export default {
   },
   methods: {
     async chooseLocale(locale) {
-      await this.$core.loadI18Locale(locale)
       if (this.$refs.popover) {
-        this.$refs.popover.$emit('close')
+        this.$refs.popover.hide(new Event('click'))
       }
+      await this.$core.loadI18Locale(locale)
     },
     dropdownItemClass({ key }) {
       return {
