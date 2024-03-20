@@ -10,7 +10,7 @@
         ref="searchInput"
         v-model="query"
         class="search-bar__input"
-        :placeholder="placeholder"
+        :placeholder="localizedPlaceholder"
         :size="size"
         @blur="onBlur"
         @input="onInput"
@@ -117,9 +117,7 @@ export default {
      */
     placeholder: {
       type: String,
-      default: function () {
-        this.$t('search.placeholder')
-      }
+      default: ''
     },
     /**
      * Display the shortcuts button.
@@ -181,6 +179,9 @@ export default {
     },
     uri() {
       return window.location.hash.substr(2)
+    },
+    localizedPlaceholder() {
+      return this.placeholder ?? this.$t('search.placeholder')
     }
   },
   mounted() {

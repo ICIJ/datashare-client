@@ -4,7 +4,7 @@
       ref="input"
       v-model="value"
       class="form-control search-bar-input__input"
-      :placeholder="placeholder"
+      :placeholder="localizedPlaceholder"
       @blur="onBlur"
       @input="onInput"
       @focus="onFocus"
@@ -22,7 +22,7 @@
       >
         <fa icon="question-circle" fixed-width />
       </a>
-      <slot name="addons"> </slot>
+      <slot name="addons"></slot>
       <button type="submit" class="btn btn-dark search-bar-input__submit" :disabled="disableSubmit">
         {{ $t('search.buttonLabel') }}
       </button>
@@ -49,9 +49,7 @@ export default {
      */
     placeholder: {
       type: String,
-      default: function () {
-        this.$t('search.placeholder')
-      }
+      default: ''
     },
     /**
      * Search input query
@@ -95,6 +93,9 @@ export default {
     },
     showTips() {
       return !this.hideTips && this.query?.length
+    },
+    localizedPlaceholder() {
+      return this.placeholder ?? this.$t('search.placeholder')
     }
   },
   methods: {

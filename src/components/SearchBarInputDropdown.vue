@@ -2,7 +2,7 @@
   <b-dropdown
     ref="dropdown"
     :class="{
-      'search-bar__field--selected': value !== 'all',
+      'search-bar__field--selected': modelValue !== 'all',
       'search-bar__field--disabled': disabled
     }"
     :disabled="disabled"
@@ -18,7 +18,7 @@
   >
     <template #button-content>
       <slot name="button-content" :dropdown="dropdown">
-        <span v-for="v in values" :key="v">
+        <span v-for="v in modelValues" :key="v">
           {{ $t(optionsPathValue + v) }}
         </span>
       </slot>
@@ -33,7 +33,7 @@
       class="search-bar-input-dropdown__option"
       @click="toggleUniqueValue($event, option)"
     >
-      <slot name="dropdown-item" v-bind="{ option, index, values, hasValue, toggleValue, toggleUniqueValue }">
+      <slot name="dropdown-item" v-bind="{ option, index, modelValues, hasValue, toggleValue, toggleUniqueValue }">
         <span class="px-3 d-block" @click="toggleValue($event, option)">
           {{ $t(optionsPathValue + option) }}
         </span>
@@ -53,10 +53,6 @@ import { castArray, cloneDeep, includes, isEqual, without } from 'lodash'
  */
 export default {
   name: 'SearchBarInputDropdown',
-  model: {
-    prop: 'value',
-    event: 'update'
-  },
   props: {
     /**
      * Options list.
@@ -75,9 +71,10 @@ export default {
     /**
      * Selected value
      */
-    value: {
+    modelValue: {
       type: [String, Array],
-      default: 'all'
+      default: 'all',
+      required: true
     },
     /**
      * The select value can be a series values.
@@ -117,22 +114,22 @@ export default {
     optionsPathValue() {
       return `${this.optionsPath.join('.')}.`
     },
-    values() {
-      return castArray(this.value)
+    modelValues() {
+      return castArray(this.modelValue)
     },
     selectedValue: {
       get() {
-        return this.multiple ? this.values : this.value
+        return this.multiple ? this.modelValues : this.modelValue
       },
       set(value) {
-        this.$emit('update', value)
+        this.$emit('update:modelValue', value)
       }
     },
     linkClass() {
       return { 'p-0': this.flushItems }
     },
     valueChanged() {
-      return !isEqual(this.initialValue, this.value)
+      return !isEqual(this.initialValue, this.modelValue)
     }
   },
   watch: {
@@ -147,14 +144,14 @@ export default {
   methods: {
     selectValue(value) {
       if (this.multiple) {
-        this.selectedValue = [...this.values, value]
+        this.selectedValue = [...this.modelValues, value]
       } else {
         this.selectedValue = value
       }
     },
     unselectValue(value) {
       if (this.multiple && this.selectedValue.length > 1) {
-        this.selectedValue = without(this.values, value)
+        this.selectedValue = without(this.modelValues, value)
       }
     },
     setValue(event, value) {
@@ -177,7 +174,7 @@ export default {
       return this.hasValue(value) ? this.unselectValue(value) : this.selectValue(value)
     },
     hasValue(value) {
-      return includes(this.values, value)
+      return includes(this.modelValues, value)
     },
     hide() {
       return this.$refs.dropdown.hide()
@@ -191,7 +188,7 @@ export default {
       }
     },
     shown() {
-      this.initialValue = cloneDeep(this.value)
+      this.initialValue = cloneDeep(this.modelValue)
     }
   }
 }
