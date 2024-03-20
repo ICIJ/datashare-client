@@ -24,6 +24,7 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
         next()
       }
     } catch (error) {
+      console.error(error)
       next({ name: 'error', state: { error } })
     }
   }
@@ -33,7 +34,8 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
       const title = i18n.global.t('error.noProjects')
-      next({ name: 'error', state: { title } })
+      console.error(title)
+      next({ name: 'error', state: { foo: title } })
     } else {
       next()
     }
@@ -58,6 +60,7 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
       next()
     } else {
       const title = i18n.global.t('error.notFound')
+      console.error(title)
       next({ name: 'error', state: { title } })
     }
   }
