@@ -10,8 +10,8 @@
     class="search-bar-input-dropdown"
     menu-class="search-bar-input-dropdown__menu"
     toggle-class="d-inline-flex align-items-center"
-    right
-    boundary="window"
+    end
+    boundary="viewport"
     variant="outline-light"
     @shown="shown"
     @hidden="hidden"

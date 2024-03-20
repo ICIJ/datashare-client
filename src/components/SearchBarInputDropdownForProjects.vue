@@ -227,7 +227,7 @@ export default {
 .search-bar-input-dropdown-for-projects {
   .dropdown-menu {
     width: 100%;
-    max-width: 18rem;
+    max-width: 18rem !important; // We must use !important here to override the element style
   }
 
   &__query-input {
