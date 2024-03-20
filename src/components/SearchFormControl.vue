@@ -115,15 +115,17 @@ export default {
         @update:modelValue="input"
         @blur="$emit('blur', $event)"
       />
-      <button class="btn btn-primary btn-sm search-form-control__addon__submit" type="submit">
-        <template v-if="!noIcon">
-          <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
-          <fa v-else icon="search" fixed-width></fa>
-        </template>
-        <span :class="{ 'sr-only': !showSubmitLabel }">
-          {{ submitLabel || $t('searchFormControl.submitLabel') }}
-        </span>
-      </button>
+      <div class="search-form-control__addon">
+        <button class="btn btn-sm search-form-control__addon__submit" type="submit">
+          <template v-if="!noIcon">
+            <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
+            <fa v-else icon="search" fixed-width></fa>
+          </template>
+          <span :class="{ 'sr-only': !showSubmitLabel }">
+            {{ submitLabel || $t('searchFormControl.submitLabel') }}
+          </span>
+        </button>
+      </div>
     </div>
   </form>
 </template>
@@ -132,8 +134,11 @@ export default {
 .search-form-control {
   position: relative;
 
-  &__input:focus {
+  &__input {
     border-right: 0;
+  }
+
+  &__input:focus {
     box-shadow: none;
   }
 
