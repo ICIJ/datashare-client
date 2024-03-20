@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div ref="appFooterVersion" class="version-number d-inline-block">
+    <div :id="versionNumberId" class="version-number d-inline-block">
       <fa v-if="!noIcon" icon="bolt" class="mr-1"></fa>
       {{ label }} {{ serverVersion }}
     </div>
-    <b-tooltip :target="() => $refs.appFooterVersion" :placement="tooltipPlacement">
+    <b-tooltip :target="versionNumberId" :placement="tooltipPlacement">
       <div class="version-number__tooltip">
         <div class="d-flex text-left align-items-center version-number__tooltip__client">
           <div class="text-muted w-100">
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { uniqueId } from 'lodash'
+
 /**
  * Display Datashare's version number.
  */
@@ -70,6 +72,9 @@ export default {
     },
     shortClientHash() {
       return this.clientHash.substring(0, 7)
+    },
+    versionNumberId() {
+      return uniqueId('version-number-')
     }
   },
   mounted() {
@@ -81,8 +86,8 @@ export default {
     },
     async setVersion() {
       const version = await this.fetchVersion()
-      this.$set(this, 'serverHash', version['git.commit.id.abbrev'])
-      this.$set(this, 'serverVersion', version['git.build.version'])
+      this.serverHash = version['git.commit.id.abbrev']
+      this.serverVersion = version['git.build.version']
     }
   }
 }
