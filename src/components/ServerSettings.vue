@@ -10,6 +10,7 @@
             <b-form-group
               v-for="(_, name) in settings"
               :key="name"
+              class="mb-3"
               label-cols-xs="12"
               label-cols-sm="4"
               label-cols-lg="3"
