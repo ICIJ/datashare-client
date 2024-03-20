@@ -31,7 +31,7 @@ export const routes = [
         name: 'search',
         path: '',
         meta: {
-          title: ({ i18n }) => i18n.t('search.title'),
+          title: ({ i18n }) => i18n.global.t('search.title'),
           docs: [
             {
               title: 'Search documents',
@@ -63,7 +63,7 @@ export const routes = [
             component: () => import('@/pages/DocumentView'),
             props: true,
             meta: {
-              title: ({ i18n }) => i18n.t('document.title'),
+              title: ({ i18n }) => i18n.global.t('document.title'),
               docs: [
                 {
                   title: 'Star a document',
@@ -102,7 +102,7 @@ export const routes = [
           name: 'task.batch-search.list'
         },
         meta: {
-          title: ({ i18n }) => i18n.t('tasks.title')
+          title: ({ i18n }) => i18n.global.t('tasks.title')
         },
         children: [
           {
@@ -116,7 +116,7 @@ export const routes = [
             path: 'analysis',
             component: () => import('@/pages/TaskAnalysis'),
             meta: {
-              title: ({ i18n }) => i18n.t('indexing.title'),
+              title: ({ i18n }) => i18n.global.t('indexing.title'),
               allowedModes: ['LOCAL', 'EMBEDDED']
             },
             children: [
@@ -125,7 +125,7 @@ export const routes = [
                 path: '',
                 component: () => import('@/pages/TaskAnalysisList'),
                 meta: {
-                  title: ({ i18n }) => i18n.t('indexing.title'),
+                  title: ({ i18n }) => i18n.global.t('indexing.title'),
                   allowedModes: ['LOCAL', 'EMBEDDED'],
                   docs: [
                     {
@@ -151,7 +151,7 @@ export const routes = [
                 path: '',
                 component: () => import('@/pages/TaskBatchDownloadList'),
                 meta: {
-                  title: ({ i18n }) => i18n.t('batchDownload.title'),
+                  title: ({ i18n }) => i18n.global.t('batchDownload.title'),
                   docs: [
                     {
                       title: 'Add documents to Datashare',
@@ -181,7 +181,7 @@ export const routes = [
                   default: () => import('@/pages/TaskBatchSearchList')
                 },
                 meta: {
-                  title: ({ i18n }) => i18n.t('batchSearch.title'),
+                  title: ({ i18n }) => i18n.global.t('batchSearch.title'),
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -197,7 +197,7 @@ export const routes = [
                   default: () => import('@/pages/TaskBatchSearchNew')
                 },
                 meta: {
-                  title: ({ i18n }) => i18n.t('newBatchSearch.title'),
+                  title: ({ i18n }) => i18n.global.t('newBatchSearch.title'),
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -222,7 +222,7 @@ export const routes = [
                   }
                 ],
                 meta: {
-                  title: ({ i18n }) => i18n.t('batchSearchResults.title')
+                  title: ({ i18n }) => i18n.global.t('batchSearchResults.title')
                 }
               }
             ]
@@ -305,7 +305,7 @@ export const routes = [
           name: 'user-history.document.list'
         },
         meta: {
-          title: ({ i18n }) => i18n.t('userHistory.heading')
+          title: ({ i18n }) => i18n.global.t('userHistory.heading')
         },
         children: [
           {
@@ -313,7 +313,7 @@ export const routes = [
             path: 'document',
             component: () => import('@/pages/UserHistoryDocumentList'),
             meta: {
-              title: ({ i18n }) => i18n.t('userHistory.heading')
+              title: ({ i18n }) => i18n.global.t('userHistory.heading')
             }
           },
           {
@@ -327,7 +327,7 @@ export const routes = [
             path: 'saved-search',
             component: () => import('@/pages/UserHistorySavedSearchList'),
             meta: {
-              title: ({ i18n }) => i18n.t('userHistory.heading')
+              title: ({ i18n }) => i18n.global.t('userHistory.heading')
             }
           }
         ]
@@ -336,7 +336,7 @@ export const routes = [
         name: 'settings',
         path: '/settings',
         meta: {
-          title: ({ i18n }) => i18n.t('server.title')
+          title: ({ i18n }) => i18n.global.t('server.title')
         },
         component: () => import('@/pages/Settings')
       },
