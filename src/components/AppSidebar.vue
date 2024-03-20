@@ -156,7 +156,7 @@
                 placement="right"
                 target="app-menu-user-guide"
                 custom-class="popover-body-p-0"
-                triggers="click blur"
+                click
                 @show="$root.$emit('bv::hide::tooltip')"
               >
                 <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
