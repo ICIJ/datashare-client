@@ -47,7 +47,7 @@
               <div class="d-flex">
                 <div class="flex-grow-1">
                   <h4 class="plugins__card__name">
-                    {{ getPluginName(plugin) | camelCase | startCase }}
+                    {{ getFormattedPluginName(plugin) }}
                   </h4>
                   <div class="plugins__card__description">
                     {{ getPluginDescription(plugin) }}
@@ -130,10 +130,6 @@ export default {
   components: {
     SearchFormControl
   },
-  filters: {
-    camelCase,
-    startCase
-  },
   data() {
     return {
       plugins: [],
@@ -154,6 +150,9 @@ export default {
     isPluginFromRegistry(plugin) {
       return get(plugin, 'deliverableFromRegistry', false)
     },
+    getFormattedPluginName(plugin) {
+      return startCase(camelCase(this.getPluginName(plugin)))
+    },
     getPluginName(plugin) {
       return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.name : plugin.name
     },
@@ -165,7 +164,7 @@ export default {
       map(plugins, (plugin) => {
         plugin.show = false
       })
-      this.$set(this, 'plugins', plugins)
+      this.plugins = plugins
     },
     async installPluginFromId(pluginId) {
       const plugin = find(this.plugins, { id: pluginId })
@@ -180,7 +179,7 @@ export default {
       plugin.show = false
     },
     async installPluginFromUrl() {
-      this.$set(this, 'isInstallingFromUrl', true)
+      this.isInstallingFromUrl = true
       try {
         await this.$core.api.installPluginFromUrl(this.url)
         await this.search()
@@ -189,8 +188,8 @@ export default {
         this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$refs.installPluginFromUrl.hide()
-      this.$set(this, 'isInstallingFromUrl', false)
-      this.$set(this, 'url', '')
+      this.isInstallingFromUrl = false
+      this.url = ''
     },
     async uninstallPlugin(pluginId) {
       const plugin = find(this.plugins, { id: pluginId })

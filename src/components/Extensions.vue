@@ -56,7 +56,7 @@
               <div class="d-flex">
                 <div class="flex-grow-1">
                   <h4 class="extensions__card__name">
-                    {{ getExtensionName(extension) | camelCase | startCase }}
+                    {{ getFormattedExtensionName(extension) }}
                   </h4>
                   <div class="extensions__card__description">
                     {{ getExtensionDescription(extension) }}
@@ -142,10 +142,6 @@ export default {
   components: {
     SearchFormControl
   },
-  filters: {
-    camelCase,
-    startCase
-  },
   data() {
     return {
       extensions: [],
@@ -166,6 +162,9 @@ export default {
     isExtensionFromRegistry(extension) {
       return get(extension, 'deliverableFromRegistry', false)
     },
+    getFormattedExtensionName(extension) {
+      return startCase(camelCase(this.getExtensionName(extension)))
+    },
     getExtensionName(extension) {
       return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.name : extension.name
     },
@@ -179,7 +178,7 @@ export default {
       map(extensions, (extension) => {
         extension.show = false
       })
-      this.$set(this, 'extensions', extensions)
+      this.extensions = extensions
     },
     async installExtensionFromId(extensionId) {
       const extension = find(this.extensions, { id: extensionId })
@@ -194,7 +193,7 @@ export default {
       extension.show = false
     },
     async installExtensionFromUrl() {
-      this.$set(this, 'isInstallingFromUrl', true)
+      this.isInstallingFromUrl = true
       try {
         await this.$core.api.installExtensionFromUrl(this.url)
         await this.search()
@@ -203,8 +202,8 @@ export default {
         this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$refs.installExtensionFromUrl.hide()
-      this.$set(this, 'isInstallingFromUrl', false)
-      this.$set(this, 'url', '')
+      this.isInstallingFromUrl = false
+      this.url = ''
     },
     async uninstallExtension(extensionId) {
       const extension = find(this.extensions, { id: extensionId })

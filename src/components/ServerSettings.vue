@@ -15,7 +15,7 @@
               <template #label>
                 <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
                   <span class="flex-grow-1 pb-1" :title="name">
-                    {{ name | sentenceCase | capitalizeKnownAcronyms }}
+                    {{ formatSettingName(name) }}
                   </span>
                   <span>
                     <b-button v-if="fieldChanged(name)" variant="link text-muted" size="sm py-0" @click="restore(name)">
@@ -56,7 +56,21 @@ const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth'
  */
 export default {
   name: 'ServerSettings',
-  filters: {
+  mixins: [utils],
+  data() {
+    return {
+      master: {},
+      settings: {}
+    }
+  },
+  async mounted() {
+    this.$wait.start('load server settings')
+    const master = await this.$store.dispatch('settings/getSettings')
+    this.master = master
+    this.settings = cloneDeep(master)
+    this.$wait.end('load server settings')
+  },
+  methods: {
     sentenceCase(str) {
       const result = str.replace(/([A-Z])/g, ' $1')
       return result.charAt(0).toUpperCase() + result.slice(1)
@@ -73,37 +87,24 @@ export default {
           return word
         })
         .join(' ')
-    }
-  },
-  mixins: [utils],
-  data() {
-    return {
-      master: {},
-      settings: {}
-    }
-  },
-  async mounted() {
-    this.$wait.start('load server settings')
-    const master = await this.$store.dispatch('settings/getSettings')
-    this.$set(this, 'master', master)
-    this.$set(this, 'settings', cloneDeep(master))
-    this.$wait.end('load server settings')
-  },
-  methods: {
+    },
+    formatSettingName(name) {
+      return this.capitalizeKnownAcronyms(this.sentenceCase(name))
+    },
     fieldChanged(field) {
       return this.settings[field] !== this.master[field]
     },
     restore(field) {
-      this.$set(this.settings, field, this.master[field])
+      this.settings[field] = this.master[field]
     },
     async onSubmit() {
       try {
         await this.$store.dispatch('settings/onSubmit', this.settings)
         this.$config.merge(this.settings)
-        this.$set(this, 'master', cloneDeep(this.settings))
+        this.master = cloneDeep(this.settings)
         this.$bvToast.toast(this.$t('serverSettings.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
-        this.$set(this, 'settings', cloneDeep(this.master))
+        this.settings = cloneDeep(this.master)
         this.$bvToast.toast(this.$t('serverSettings.submitError'), { noCloseButton: true, variant: 'danger' })
       }
     }
