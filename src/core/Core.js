@@ -61,7 +61,7 @@ class Core extends Behaviors {
    */
   constructor(api = null, mode = getMode(MODE_NAME.LOCAL)) {
     super()
-    const Root = defineComponent({ template: '<router-view></router-view>' })
+    const Root = defineComponent({ name: 'Root', template: '<router-view></router-view>' })
     this._vue = createApp(Root)
     this._api = api
     this._store = storeBuilder(api)
@@ -88,7 +88,6 @@ class Core extends Behaviors {
     this.useI18n()
     this.useBootstrapVue()
     this.useCommons()
-    this.useRouter()
     this.useWait()
     this.useCore()
     return this
@@ -118,6 +117,7 @@ class Core extends Behaviors {
   useBootstrapVue() {
     this.use(
       createBootstrap({
+        components: true,
         BPopover: {
           boundaryPadding: 14
         },
@@ -168,7 +168,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useWait() {
-    this.wait = createVueWait({ useVuex: true })
+    this.wait = createVueWait({ registerComponent: false })
     this.use(this.wait)
     return this
   }
