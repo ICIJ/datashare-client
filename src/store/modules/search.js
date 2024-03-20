@@ -32,6 +32,13 @@ import * as filterTypes from '@/store/filters'
 import { isNarrowScreen } from '@/utils/screen'
 import settings from '@/utils/settings'
 
+export const TAB_NAME = {
+  EXTRACTED_TEXT: 'extracted-text',
+  PREVIEW: 'preview',
+  DETAILS: 'details',
+  NAMED_ENTITIES: 'named-entities'
+}
+
 export function initialState() {
   return cloneDeep({
     error: null,
@@ -51,7 +58,8 @@ export function initialState() {
     showFilters: true,
     size: 25,
     sort: settings.defaultSearchSort,
-    values: {}
+    values: {},
+    tab: TAB_NAME.EXTRACTED_TEXT
   })
 }
 
@@ -363,6 +371,9 @@ export const mutations = {
   },
   toggleFilters(state, toggler = !state.showFilters) {
     Vue.set(state, 'showFilters', toggler)
+  },
+  updateTab(state, tab) {
+    state.tab = tab
   }
 }
 
@@ -392,7 +403,7 @@ function actionsBuilder(api) {
       }
     },
     updateFromRouteQuery({ commit, getters }, query) {
-      const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout']
+      const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
       const updatedKeys = ['q', 'index', 'indices', 'from', 'size', 'sort', 'field']
       commit('reset', excludedKeys)
       // Add the query to the state with a mutation to avoid triggering a search
@@ -516,6 +527,11 @@ function actionsBuilder(api) {
         query,
         uri
       })
+    },
+    setTab({ state, commit }, tab) {
+      if (state.tab !== tab) {
+        commit('updateTab', tab)
+      }
     }
   }
 }

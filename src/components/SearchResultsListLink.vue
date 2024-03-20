@@ -1,7 +1,7 @@
 <template>
   <router-link
     class="search-results-list-link d-flex align-self-stretch flex-nowrap"
-    :to="{ name: 'document', params, query: { q: query } }"
+    :to="{ name: 'document', params, query: { q: query, tab: tab } }"
   >
     <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
     <div class="search-results-list-link__wrapper">
@@ -62,7 +62,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['indices', 'query']),
+    ...mapState('search', ['indices', 'query', 'tab']),
     folder() {
       const parts = this.document.get('_source.path', '').split('/')
       parts.splice(-1, 1)

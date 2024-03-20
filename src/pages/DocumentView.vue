@@ -89,6 +89,7 @@ import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import Hook from '@/components/Hook'
 import shortkeys from '@/mixins/shortkeys'
+import { TAB_NAME } from '@/store/modules/search'
 
 export default {
   name: 'DocumentView',
@@ -127,14 +128,17 @@ export default {
   },
   data() {
     return {
-      activeTab: 'extracted-text',
-      tabsThoughtPipeline: []
+      activeTab: TAB_NAME.EXTRACTED_TEXT,
+      tabsThroughtPipeline: []
     }
   },
   computed: {
-    ...mapState('document', ['doc', 'parentDocument', 'tags']),
+    ...mapState('document', ['doc', 'parentDocument', 'tab', 'tags']),
+    tabNames() {
+      return this.visibleTabs.map((t) => t.name)
+    },
     visibleTabs() {
-      return filter(this.tabsThoughtPipeline, (t) => !t.hidden)
+      return filter(this.tabsThroughtPipeline, (t) => !t.hidden)
     },
     tabsPipeline() {
       return this.$store.getters['pipelines/applyPipelineChainByCategory']('document-view-tabs')
@@ -144,7 +148,7 @@ export default {
         ? []
         : [
             {
-              name: 'extracted-text',
+              name: TAB_NAME.EXTRACTED_TEXT,
               label: 'document.extractedText',
               component: () => import('@/components/document/DocumentTabExtractedText'),
               icon: 'align-left',
@@ -154,7 +158,7 @@ export default {
               }
             },
             {
-              name: 'preview',
+              name: TAB_NAME.PREVIEW,
               label: 'document.preview',
               component: () => import('@/components/document/DocumentTabPreview'),
               icon: 'eye',
@@ -163,7 +167,7 @@ export default {
               }
             },
             {
-              name: 'details',
+              name: TAB_NAME.DETAILS,
               label: 'document.tabDetails',
               component: () => import('@/components/document/DocumentTabDetails'),
               icon: 'info-circle',
@@ -173,7 +177,7 @@ export default {
               }
             },
             {
-              name: 'named-entities',
+              name: TAB_NAME.NAMED_ENTITIES,
               label: 'document.namedEntities',
               hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
               component: () => import('@/components/document/DocumentTabNamedEntities'),
@@ -192,21 +196,32 @@ export default {
     },
     isModal() {
       return this.$route.name === 'document-modal'
+    },
+    shortkeysActions() {
+      return {
+        goToPreviousTab: this.goToPreviousTab,
+        goToNextTab: this.goToNextTab
+      }
     }
   },
   watch: {
     $route: {
       handler({ query }) {
-        this.activateTab(query.tab ?? 'extracted-text')
+        this.activateTab(query.tab)
       }
     },
     visibleTabs(tabs) {
       if (tabs.length) {
-        this.activateTab(this.$route.query.tab ?? 'extracted-text')
+        this.activateTab(this.$route.query.tab)
       }
     },
     doc() {
       return this.setTabs()
+    },
+    activeTab(tab) {
+      if (tab === '' || this.tabNames.indexOf(tab) > -1) {
+        this.$store.dispatch('search/setTab', tab)
+      }
     }
   },
   async mounted() {
@@ -242,9 +257,9 @@ export default {
     async setTabs() {
       if (this.doc) {
         // This apply the document-view-tabs pipeline everytime a document is loaded
-        this.tabsThoughtPipeline = await this.tabsPipeline(this.tabs, this.doc)
+        this.tabsThroughtPipeline = await this.tabsPipeline(this.tabs, this.doc)
       } else {
-        this.tabsThoughtPipeline = []
+        this.tabsThroughtPipeline = []
       }
     },
     getDownloadStatus() {
@@ -253,9 +268,9 @@ export default {
     isTabActive(name) {
       return this.activeTab === name
     },
-    activateTab(name) {
+    activateTab(name = TAB_NAME.EXTRACTED_TEXT) {
       if (findIndex(this.visibleTabs, { name }) > -1) {
-        this.$set(this, 'activeTab', name)
+        this.activeTab = name
         this.$root.$emit('document::content::changed')
         return name
       }
@@ -268,11 +283,11 @@ export default {
     },
     goToPreviousTab() {
       const indexPreviousActiveTab = this.indexActiveTab === 0 ? this.visibleTabs.length - 1 : this.indexActiveTab - 1
-      this.$set(this, 'activeTab', this.visibleTabs[indexPreviousActiveTab].name)
+      this.activeTab = this.visibleTabs[indexPreviousActiveTab].name
     },
     goToNextTab() {
       const indexNextActiveTab = this.indexActiveTab === this.visibleTabs.length - 1 ? 0 : this.indexActiveTab + 1
-      this.$set(this, 'activeTab', this.visibleTabs[indexNextActiveTab].name)
+      this.activeTab = this.visibleTabs[indexNextActiveTab].name
     },
     getComponentIfActive({ component, name }) {
       if (this.isTabActive(name)) {
@@ -285,6 +300,11 @@ export default {
         return props
       }
       return {}
+    },
+    shortKeyAction({ srcKey }) {
+      if (this.shortkeysActions[srcKey]) {
+        return this.shortkeysActions[srcKey]()
+      }
     }
   }
 }
