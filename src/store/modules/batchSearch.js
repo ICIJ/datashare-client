@@ -1,6 +1,5 @@
 import remove from 'lodash/remove'
 import map from 'lodash/map'
-import Vue from 'vue'
 import { uniq } from 'lodash'
 
 import {

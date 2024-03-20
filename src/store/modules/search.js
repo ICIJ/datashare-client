@@ -24,7 +24,6 @@ import {
   uniq
 } from 'lodash'
 import lucene from 'lucene'
-import Vue from 'vue'
 
 import EsDocList from '@/api/resources/EsDocList'
 import filters from '@/store/filters'
@@ -314,9 +313,9 @@ export const mutations = {
   },
   removeFilter(state, name) {
     const i = findIndex(state.filters, ({ options }) => options.name === name)
-    Vue.delete(state.filters, i)
+    delete state.filters[i]
     if (name in state.values) {
-      Vue.delete(state.values, name)
+      delete state.values[name]
     }
   },
   addFilter(state, { type = 'FilterText', options = {}, position = null } = {}) {
@@ -332,7 +331,7 @@ export const mutations = {
     state.sortedFilters[name] = { sortBy, sortByOrder }
   },
   unsortFilter(state, name) {
-    Vue.delete(state.sortedFilters, name)
+    delete state.sortedFilters[name]
   },
   contextualizeFilter(state, name) {
     if (state.contextualizedFilters.indexOf(name) === -1) {
@@ -340,14 +339,14 @@ export const mutations = {
     }
   },
   decontextualizeFilter(state, name) {
-    Vue.delete(state.contextualizedFilters, state.contextualizedFilters.indexOf(name))
+    delete state.contextualizedFilters[state.contextualizedFilters.indexOf(name)]
   },
   toggleContextualizedFilter(state, name) {
     const i = state.contextualizedFilters.indexOf(name)
     if (i === -1) {
       state.contextualizedFilters.push(name)
     } else {
-      Vue.delete(state.contextualizedFilters, i)
+      delete state.contextualizedFilters[i]
     }
   },
   excludeFilter(state, name) {
@@ -356,14 +355,14 @@ export const mutations = {
     }
   },
   includeFilter(state, name) {
-    Vue.delete(state.reversedFilters, state.reversedFilters.indexOf(name))
+    delete state.reversedFilters[state.reversedFilters.indexOf(name)]
   },
   toggleFilter(state, name) {
     const i = state.reversedFilters.indexOf(name)
     if (i === -1) {
       state.reversedFilters.push(name)
     } else if (i > -1) {
-      Vue.delete(state.reversedFilters, i)
+      delete state.reversedFilters[i]
     }
   },
   toggleFilters(state, toggler = !state.showFilters) {

@@ -1,5 +1,4 @@
 import { flatten, map, sumBy } from 'lodash'
-import Vue from 'vue'
 
 export const state = {
   byUsers: [],

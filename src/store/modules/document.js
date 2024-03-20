@@ -1,5 +1,4 @@
 import { compact, concat, findIndex, flattenDeep, get, keys, map, sortBy, sumBy, uniqBy, values } from 'lodash'
-import Vue from 'vue'
 
 import EsDocList from '@/api/resources/EsDocList'
 
@@ -137,7 +136,7 @@ export const mutations = {
   unmarkAsRecommended(state, userId) {
     const index = state.recommendedBy.indexOf(userId)
     if (index > -1) {
-      Vue.delete(state.recommendedBy, index)
+      delete state.recommendedBy[index]
     }
   }
 }

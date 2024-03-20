@@ -1,5 +1,4 @@
 import { remove } from 'lodash'
-import Vue from 'vue'
 
 export function initialState() {
   return {

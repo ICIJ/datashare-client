@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 export const state = () => ({
   redirectAfterLogin: null,
   sidebar: {
