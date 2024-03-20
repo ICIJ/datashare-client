@@ -6,25 +6,28 @@
         {{ currentLocale.label }}
       </slot>
     </span>
-    <b-popover
-      ref="popover"
-      :target="uniqueId"
-      triggers="click blur"
-      custom-class="locales-menu__list popover-body-p-0"
-    >
-      <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
-        <a
-          v-for="locale in locales"
-          :key="locale.key"
-          href="#"
-          class="dropdown-item"
-          :class="dropdownItemClass(locale)"
-          @click.prevent="chooseLocale(locale.key)"
-        >
-          {{ locale.label }}
-        </a>
-      </div>
-    </b-popover>
+    <teleport to="body">
+      <b-popover
+        ref="popover"
+        placement="right"
+        :target="uniqueId"
+        triggers="click blur"
+        custom-class="locales-menu__list popover-body-p-0"
+      >
+        <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
+          <a
+            v-for="locale in locales"
+            :key="locale.key"
+            href="#"
+            class="dropdown-item"
+            :class="dropdownItemClass(locale)"
+            @click.prevent="chooseLocale(locale.key)"
+          >
+            {{ locale.label }}
+          </a>
+        </div>
+      </b-popover>
+    </teleport>
   </b-button>
 </template>
 
