@@ -15,7 +15,7 @@
           />
           <router-link
             class="flex-grow-1 search-results-grid__items__item__thumbnail"
-            :to="{ name: 'document', params: document.routerParams, query: { q: query } }"
+            :to="{ name: 'document', params: document.routerParams, query: { q: query, tab } }"
           >
             <document-thumbnail :document="document" crop size="md" />
           </router-link>
@@ -68,7 +68,7 @@ export default {
     SearchResultsHeader
   },
   computed: {
-    ...mapState('search', ['query', 'response']),
+    ...mapState('search', ['query', 'response', 'tab']),
     hasResults() {
       return this.response.hits.length > 0
     },

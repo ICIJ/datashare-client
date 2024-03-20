@@ -63,7 +63,7 @@
         </template>
         <template #cell(path)="{ item }">
           <router-link
-            :to="{ name: 'document', params: item.routerParams, query: { q: query } }"
+            :to="{ name: 'document', params: item.routerParams, query: { q: query, tab: tab } }"
             class="search-results-table__items__row__title"
           >
             <document-sliced-name :document="item" active-text-truncate show-subject />
@@ -128,7 +128,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['indices', 'query', 'response']),
+    ...mapState('search', ['indices', 'query', 'response', 'tab']),
     isAllSelected() {
       return this.response.hits.length === this.selected.length
     },

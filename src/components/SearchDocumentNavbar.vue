@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import findIndex from 'lodash/findIndex'
 import first from 'lodash/first'
 import last from 'lodash/last'
@@ -58,6 +59,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('search', ['tab']),
     doc() {
       return this.$store.state.document.doc
     },
@@ -122,7 +124,7 @@ export default {
     goToDocument(document) {
       if (document) {
         const params = document.routerParams
-        const query = { q: this.$store.state.search.query }
+        const query = { q: this.$store.state.search.query, tab: this.tab }
         return this.$router.push({ name: 'document', params, query })
       }
     },
