@@ -168,7 +168,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useWait() {
-    this.wait = createVueWait({ registerComponent: false })
+    this.wait = createVueWait()
     this.use(this.wait)
     return this
   }
