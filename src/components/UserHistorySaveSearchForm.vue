@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="saveSearch()">
-    <div class="w-100 border-top">
+    <div class="w-100 card border-0 rounded-top-0 border-top">
       <div class="card-body pb-1">
         <b-form-group label-size="sm" :label="`${$t('userHistory.name')} *`">
           <b-form-input v-model="name" type="text" required />
@@ -40,6 +40,7 @@ export default {
       default: null
     }
   },
+  emits: ['submit', 'submit:rename'],
   data() {
     return {
       name: this.event?.name || '',
