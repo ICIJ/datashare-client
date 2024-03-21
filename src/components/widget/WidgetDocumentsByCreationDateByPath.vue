@@ -82,7 +82,7 @@ export default {
   },
   watch: {
     project() {
-      this.$set(this, 'treeViewPath', this.dataDir)
+      this.treeViewPath = this.dataDir
     }
   }
 }

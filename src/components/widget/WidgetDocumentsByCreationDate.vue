@@ -289,7 +289,7 @@ export default {
       const body = this.bodybuilderBase().build()
       const preference = 'widget-documents-by-creation-date'
       const res = await this.$core.api.elasticsearch.search({ index: this.project, size: 0, body, preference })
-      this.$set(this, 'data', get(res, 'aggregations.agg_by_creation_date.buckets', []))
+      this.data = get(res, 'aggregations.agg_by_creation_date.buckets', [])
       this.$wait.end(this.loader)
     },
     setSelectedPath(path) {

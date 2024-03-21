@@ -78,10 +78,8 @@ export default {
       return this.count(q)
     },
     loadData: waitFor('barometer counters', async function () {
-      const total = await this.countTotal()
-      this.$set(this, 'total', total)
-      const onDisk = await this.countOnDisk()
-      this.$set(this, 'onDisk', onDisk)
+      this.total = await this.countTotal()
+      this.onDisk = await this.countOnDisk()
     }),
     humanNumber
   }
