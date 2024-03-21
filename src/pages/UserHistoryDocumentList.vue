@@ -3,11 +3,11 @@
     <div class="my-4">
       <b-table
         v-if="events.length"
+        v-model:sort-by="sortBy"
+        v-model:sort-desc="sortDesc"
         :empty-text="$t('global.emptyTextTable')"
         :fields="fields"
         :items="events"
-        :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc"
         class="user-history-document-list__list card"
         hover
         responsive
@@ -212,6 +212,7 @@ export default {
         name: 'user-history.document.list',
         query
       }
+
       this.$router.push(params)
     },
     eventAsDocument({ uri }) {
