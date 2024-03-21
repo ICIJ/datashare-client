@@ -92,7 +92,7 @@ export default {
     loadData: waitFor('duplicate-counters', async function () {
       const documents = await this.countTotal()
       const duplicates = await this.countDuplicates()
-      this.$set(this, 'data', [{ documents, duplicates }])
+      this.data = [{ documents, duplicates }]
     }),
     humanNumber
   }

@@ -54,6 +54,14 @@ export default {
       items: []
     }
   },
+  computed: {
+    ...mapGetters('pipelines', {
+      applyPipelineChain: 'applyPipelineChainByCategory'
+    })
+  },
+  async mounted() {
+    this.items = await this.applyPipelineChain(this.widget.pipeline)(this.widget.items)
+  },
   methods: {
     itemComponent({ href = null } = {}) {
       return href ? 'a' : 'div'
@@ -62,15 +70,6 @@ export default {
       const origin = window.location.origin
       return !href || href.indexOf(origin) === 0 ? null : '_blank'
     }
-  },
-  computed: {
-    ...mapGetters('pipelines', {
-      applyPipelineChain: 'applyPipelineChainByCategory'
-    })
-  },
-  async mounted() {
-    const items = await this.applyPipelineChain(this.widget.pipeline)(this.widget.items)
-    this.$set(this, 'items', items)
   }
 }
 </script>

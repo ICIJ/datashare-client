@@ -133,7 +133,7 @@ export default {
       if (isNull(children) || children.length === 0) {
         const currentPath = isNull(children) ? null : path
         const message = isNull(children) ? 'Please select a correct data file' : 'No folders'
-        this.$set(this, 'currentPath', currentPath)
+        this.currentPath = currentPath
         select(`#${this.id} > svg`).remove()
         const span = document.createElement('span')
         span.setAttribute('class', 'error')
@@ -142,7 +142,7 @@ export default {
         document.getElementById(this.id).appendChild(span)
         // Still data to display
       } else {
-        this.$set(this, 'currentPath', path)
+        this.currentPath = path
         select(`#${this.id} > .error`).remove()
         if (select(`#${this.id} > svg`).size() === 0) {
           select(`#${this.id}`).append('svg').attr('width', '100%').attr('height', this.height)

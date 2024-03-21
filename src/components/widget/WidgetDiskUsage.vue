@@ -75,11 +75,11 @@ export default {
   },
   watch: {
     project() {
-      this.$set(this, 'path', this.dataDir)
+      this.path = this.dataDir
     }
   },
   async created() {
-    this.$set(this, 'path', this.dataDir)
+    this.path = this.dataDir
     await this.loadData()
   },
   mounted() {
@@ -104,8 +104,7 @@ export default {
       return res?.aggregations?.agg_sum_contentLength?.value || 0
     },
     loadData: waitFor('disk usage', async function () {
-      const total = await this.sumTotal()
-      this.$set(this, 'total', total)
+      this.total = await this.sumTotal()
     }),
     humanSize
   }
