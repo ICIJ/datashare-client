@@ -175,17 +175,17 @@ describe('DocumentView.vue', () => {
     })
 
     it('should add a tab using the `document-view-tabs` pipeline', () => {
-      const lastTab = wrapper.vm.tabsThroughtPipeline[wrapper.vm.tabsThroughtPipeline.length - 1]
+      const lastTab = wrapper.vm.tabsThroughPipeline[wrapper.vm.tabsThroughPipeline.length - 1]
       expect(lastTab.label).toBe('Temporary')
     })
 
     it('should add a tab with a `labelComponent` property', () => {
-      const lastTab = wrapper.vm.tabsThroughtPipeline[wrapper.vm.tabsThroughtPipeline.length - 1]
+      const lastTab = wrapper.vm.tabsThroughPipeline[wrapper.vm.tabsThroughPipeline.length - 1]
       expect(lastTab.labelComponent).toHaveProperty('template')
     })
 
     it('should add a tab with a `labelComponent` within the label in its template', () => {
-      const lastTab = wrapper.vm.tabsThroughtPipeline[wrapper.vm.tabsThroughtPipeline.length - 1]
+      const lastTab = wrapper.vm.tabsThroughPipeline[wrapper.vm.tabsThroughPipeline.length - 1]
       const lastTabWrapper = shallowMount(lastTab.labelComponent, { i18n, localVue })
       expect(lastTabWrapper.text()).toBe('Temporary')
     })

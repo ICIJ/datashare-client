@@ -129,7 +129,7 @@ export default {
   data() {
     return {
       activeTab: TAB_NAME.EXTRACTED_TEXT,
-      tabsThroughtPipeline: []
+      tabsThroughPipeline: []
     }
   },
   computed: {
@@ -138,7 +138,7 @@ export default {
       return this.visibleTabs.map((t) => t.name)
     },
     visibleTabs() {
-      return filter(this.tabsThroughtPipeline, (t) => !t.hidden)
+      return filter(this.tabsThroughPipeline, (t) => !t.hidden)
     },
     tabsPipeline() {
       return this.$store.getters['pipelines/applyPipelineChainByCategory']('document-view-tabs')
@@ -257,9 +257,9 @@ export default {
     async setTabs() {
       if (this.doc) {
         // This apply the document-view-tabs pipeline everytime a document is loaded
-        this.tabsThroughtPipeline = await this.tabsPipeline(this.tabs, this.doc)
+        this.tabsThroughPipeline = await this.tabsPipeline(this.tabs, this.doc)
       } else {
-        this.tabsThroughtPipeline = []
+        this.tabsThroughPipeline = []
       }
     },
     getDownloadStatus() {
