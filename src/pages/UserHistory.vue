@@ -2,9 +2,9 @@
   <div class="user-history">
     <page-header
       icon="clock"
+      v-model:tab="tab"
       :title="$t('userHistory.heading')"
       :description="$t('userHistory.description')"
-      :tab.sync="tab"
     >
       <template #tabs>
         <b-tab :active="defaultTab === 0">
