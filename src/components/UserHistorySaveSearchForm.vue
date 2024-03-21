@@ -1,5 +1,5 @@
 <template>
-  <b-form @submit.prevent="saveSearch">
+  <form @submit.prevent="saveSearch()">
     <div class="w-100 border-top">
       <div class="card-body pb-1">
         <b-form-group label-size="sm" :label="`${$t('userHistory.name')} *`">
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-  </b-form>
+  </form>
 </template>
 
 <script>
@@ -42,33 +42,31 @@ export default {
   },
   data() {
     return {
-      name: this.event?.name || ''
+      name: this.event?.name || '',
+      searchHistoryPath: null
     }
   },
-  computed: {
-    uriFromStore() {
-      const from = 0
-      const query = { ...this.$store.getters['search/toRouteQuery'](), from }
-      const {
-        route: { fullPath }
-      } = this.$router.resolve({ name: 'search', query })
-      return fullPath
-    },
-    searchHistoryPath() {
-      const {
-        route: { path }
-      } = this.$router.resolve({ name: 'user-history.saved-search.list' })
-      return `/#${path}`
-    }
+  async mounted() {
+    this.searchHistoryPath = await this.getSearchHistoryPath()
   },
   methods: {
+    async getUriFromStore() {
+      const from = 0
+      const query = { ...this.$store.getters['search/toRouteQuery'](), from }
+      const { fullPath } = await this.$router.resolve({ name: 'search', query })
+      return fullPath
+    },
+    async getSearchHistoryPath() {
+      const { href } = await this.$router.resolve({ name: 'user-history.saved-search.list' })
+      return href
+    },
     async saveSearch() {
       try {
         if (this.event) {
           await this.$core.api.renameSavedSearch(this.event.id, this.name)
           this.$emit('submit:rename', { event: { ...this.event, name: this.name } })
         } else {
-          await this.$core.api.addUserHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
+          await this.$core.api.addUserHistoryEvent(this.indices, 'SEARCH', this.name, await this.getUriFromStore())
         }
         const { href } = this.$router.resolve({ name: 'user-history.saved-search.list' })
         const toastParams = { href, noCloseButton: true, variant: 'success' }
