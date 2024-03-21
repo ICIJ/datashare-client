@@ -16,7 +16,7 @@
               label-cols-lg="3"
             >
               <template #label>
-                <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
+                <span :class="{ 'fw-bold': fieldChanged(name) }" class="d-flex align-items-top">
                   <span class="flex-grow-1 pb-1" :title="name">
                     {{ formatSettingName(name) }}
                   </span>

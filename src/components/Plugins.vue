@@ -73,11 +73,11 @@
               </b-card-text>
               <template v-if="isPluginFromRegistry(plugin)" #footer>
                 <div class="plugins__card__official-version text-truncate w-100">
-                  <span class="font-weight-bold"> {{ $t('plugins.officialVersion') }}: </span>
+                  <span class="fw-bold"> {{ $t('plugins.officialVersion') }}: </span>
                   {{ plugin.deliverableFromRegistry.version }}
                 </div>
                 <div class="text-truncate w-100">
-                  <span class="font-weight-bold"> {{ $t('plugins.homePage') }}: </span>
+                  <span class="fw-bold"> {{ $t('plugins.homePage') }}: </span>
                   <a v-if="plugin.deliverableFromRegistry.homepage" class="plugins__card__homepage"
                     :href="plugin.deliverableFromRegistry.homepage" target="_blank">
                     {{ plugin.deliverableFromRegistry.homepage }}

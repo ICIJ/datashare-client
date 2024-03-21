@@ -1,14 +1,14 @@
 <template>
-  <div class="user-history-document-list d-flex flex-column">
+  <div class="user-history-document-list">
     <div class="my-4">
       <b-table
         v-if="events.length"
         :empty-text="$t('global.emptyTextTable')"
-        :fields="displayedFields"
+        :fields="fields"
         :items="events"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
-        class="user-history-document-list__list card border-top-0"
+        class="user-history-document-list__list card"
         hover
         responsive
         striped
@@ -25,12 +25,12 @@
           />
         </template>
         <template #cell(modification_date)="{ item: { modificationDate } }">
-          <span class="user-history-document-list__list__item__date font-weight-bold me-2">{{
-            getDate(modificationDate)
-          }}</span>
-          <span class="user-history-document-list__list__item__time d-inline-block">{{
-            getTime(modificationDate)
-          }}</span>
+          <span class="user-history-document-list__list__item__date fw-bold me-2">
+            {{ getDate(modificationDate) }}
+          </span>
+          <span class="user-history-document-list__list__item__time d-inline-block">
+            {{ getTime(modificationDate) }}
+          </span>
         </template>
         <template #cell(name)="{ item: { name, uri } }">
           <div class="d-flex align-items-center justify-content-between">
@@ -40,7 +40,7 @@
             >
               <document-thumbnail
                 :document="eventAsDocument({ uri })"
-                class="user-history-document-list__list__item__preview d-none d-inline-flex me-3"
+                class="user-history-document-list__list__item__preview d-inline-flex me-3"
                 crop
                 lazy
                 size="30"
@@ -59,22 +59,11 @@
                 }
               }"
               class="user-history-document-list__list__item__actions d-flex"
-            ></document-actions>
+            />
           </div>
         </template>
         <template #cell(project)="{ item: { uri } }">
-          <router-link
-            :to="{
-              name: 'search',
-              query: {
-                q: '*',
-                indices: projectName(uri)
-              }
-            }"
-            class="user-history-document-list__list__item__project"
-          >
-            {{ projectName(uri) }}
-          </router-link>
+          <project-link :project="projectName(uri)" />
         </template>
       </b-table>
       <div v-else class="text-muted text-center">
@@ -92,6 +81,7 @@ import Document from '@/api/resources/Document'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import DocumentActions from '@/components/DocumentActions'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
+import ProjectLink from '@/components/ProjectLink'
 import utils from '@/mixins/utils'
 import { humanTime } from '@/filters/humanTime'
 import { humanDate } from '@/filters/humanDate'
@@ -114,7 +104,8 @@ export default {
   components: {
     DocumentThumbnail,
     DocumentActions,
-    ColumnFilterDropdown
+    ColumnFilterDropdown,
+    ProjectLink
   },
   mixins: [utils],
   props: {
@@ -143,7 +134,6 @@ export default {
           key: PROJECT,
           tdClass: 'align-middle',
           label: 'Project',
-          serverOnly: true,
           thStyle: 'min-width:10em;width: 12em;'
         }
       ]
@@ -189,9 +179,6 @@ export default {
         const projects = values?.length > 0 ? values?.join(',') : null
         return this.updateParams({ projects })
       }
-    },
-    displayedFields() {
-      return this.fields.filter((field) => (this.isServer ? true : !field.serverOnly))
     },
     documentPathRegexp() {
       const routes = this.$router.getRoutes()

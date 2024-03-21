@@ -9,7 +9,7 @@
       <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
         <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />
         <div class="ms-4 pl-3">
-          <p class="font-weight-bold">
+          <p class="fw-bold">
             {{ $t('indexing.findNamedEntitiesProjectSelection') }}
           </p>
           <project-selector v-model="defaultProject" />
@@ -18,7 +18,7 @@
       <div class="find-named-entities-form__group mb-4">
         <fa icon="tags" class="position-absolute mt-1 ms-1" size="lg" />
         <div class="ms-4 pl-3">
-          <p class="find-named-entities-form__header font-weight-bold mb-0">
+          <p class="find-named-entities-form__header fw-bold mb-0">
             {{ $t('indexing.findNamedEntitiesHeader') }}
           </p>
           <div class="find-named-entities-form__body form-group mb-4">
@@ -44,7 +44,7 @@
       </div>
       <div class="find-named-entities-form__offline form-group">
         <b-form-checkbox v-model="offline" switch>
-          <div class="font-weight-bold ms-1">
+          <div class="fw-bold ms-1">
             {{ $t('indexing.syncModelsLabel') }}
           </div>
           <div class="ms-1 small">
@@ -55,7 +55,7 @@
       <div class="find-named-entities-form__footer mt-4 row no-gutters">
         <slot name="footer" :disabled="disabled">
           <div class="col text-right">
-            <b-button variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
+            <b-button variant="primary" class="fw-bold" type="submit" :disabled="disabled">
               {{ $t('indexing.go') }}
             </b-button>
           </div>

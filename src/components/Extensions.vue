@@ -74,11 +74,11 @@
               </b-card-text>
               <template v-if="isExtensionFromRegistry(extension)" #footer>
                 <div class="extensions__card__official-version text-truncate w-100">
-                  <span class="font-weight-bold"> {{ $t('extensions.officialVersion') }}: </span>
+                  <span class="fw-bold"> {{ $t('extensions.officialVersion') }}: </span>
                   {{ extension.deliverableFromRegistry.version }}
                 </div>
                 <div class="text-truncate w-100">
-                  <span class="font-weight-bold"> {{ $t('extensions.homePage') }}: </span>
+                  <span class="fw-bold"> {{ $t('extensions.homePage') }}: </span>
                   <a v-if="extension.deliverableFromRegistry.homepage" class="extensions__card__homepage"
                     :href="extension.deliverableFromRegistry.homepage" target="_blank">
                     {{ extension.deliverableFromRegistry.homepage }}

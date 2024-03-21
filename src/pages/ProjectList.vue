@@ -14,12 +14,12 @@
           <col />
         </template>
         <template #cell(thumbnail)="{ item: project }">
-          <router-link :to="{ name: 'project.view', params: project }" class="font-weight-bold">
+          <router-link :to="{ name: 'project.view', params: project }" class="fw-bold">
             <project-thumbnail :project="project" class="rounded" width="3rem" />
           </router-link>
         </template>
         <template #cell(label)="{ item: project }">
-          <router-link :to="{ name: 'project.view', params: project }" class="font-weight-bold">
+          <router-link :to="{ name: 'project.view', params: project }" class="fw-bold">
             {{ project.label || project.name }}
           </router-link>
           <p class="text-muted m-0">{{ project.description }}</p>

@@ -17,7 +17,7 @@
           <div class="api__key d-flex align-items-center">
             <div class="text-center mx-3">
               <fa icon="key" size="2x" />
-              <span class="d-block font-weight-bold text-uppercase">
+              <span class="d-block fw-bold text-uppercase">
                 {{ $t('api.apiKey') }}
               </span>
             </div>
@@ -26,7 +26,7 @@
                 {{ $t('api.key.unavailable') }}
               </span>
               –
-              <a class="font-weight-bold text-link" href="#" @click.prevent="createApiKey">
+              <a class="fw-bold text-link" href="#" @click.prevent="createApiKey">
                 <fa icon="redo" />
                 {{ $t('api.key.regenerate') }}
               </a>

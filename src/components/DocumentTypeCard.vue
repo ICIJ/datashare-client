@@ -6,7 +6,7 @@
         {{ localizedDescription }}
         <strong
           v-if="!document.hasStandardExtension"
-          class="font-weight-bold"
+          class="fw-bold"
           v-html="$t('search.nav.document.extensionWarning', { extension: document.standardExtension })"
         ></strong>
       </p>

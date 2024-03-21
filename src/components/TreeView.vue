@@ -89,7 +89,7 @@
               </router-link>
               <div
                 v-if="size && directory.contentLength"
-                class="tree-view__directories__item__content-length font-weight-bold ms-2"
+                class="tree-view__directories__item__content-length fw-bold ms-2"
                 :title="$n(directory.contentLength.value)"
               >
                 {{ humanSize(directory.contentLength.value, false, $t('human.size')) }}

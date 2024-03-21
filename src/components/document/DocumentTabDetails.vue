@@ -39,7 +39,7 @@
       </p>
       <b-table :items="items" :fields="fields" :tbody-tr-class="itemRowClass" responsive striped borderless>
         <template #cell(label)="{ item: { name, label, value } }">
-          <div class="font-weight-bold d-flex justify-content-between">
+          <div class="fw-bold d-flex justify-content-between">
             <div class="text-truncate me-1 w-100" :title="name">
               <var>{{ document.shortMetaName(label || name) | startCase }}</var>
             </div>

@@ -1,7 +1,7 @@
 <template>
   <div v-if="filters.length" class="applied-search-filters d-flex flex-wrap pt-1">
     <applied-search-filters-item v-for="(filter, index) in filters" :key="index" :filter="filter" hide-filter-label />
-    <reset-filters-button variant="link" class="text-muted badge font-weight-normal" auto-hiding />
+    <reset-filters-button variant="link" class="text-muted badge fw-normal" auto-hiding />
   </div>
 </template>
 

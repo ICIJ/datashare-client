@@ -8,7 +8,7 @@
           class="user-history-saved-search-list__list__item d-inline-flex justify-content-between"
         >
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
-            <span class="user-history-saved-search-list__list__item__name font-weight-bold mb-1">
+            <span class="user-history-saved-search-list__list__item__name fw-bold mb-1">
               {{ event.name }}
               <b-button
                 v-b-tooltip.hover.topright
@@ -34,7 +34,7 @@
             class="d-flex justify-content-between align-items-end align-items-md-center d-flex flex-column flex-md-row m-3"
           >
             <span class="user-history-saved-search-list__list__item__date text-muted text-nowrap me-3"
-              ><span class="font-weight-bold me-2">{{ getDate(event.creationDate) }} </span
+              ><span class="fw-bold me-2">{{ getDate(event.creationDate) }} </span
               >{{ getTime(event.creationDate) }}</span
             >
             <div class="user-history-saved-search-list__list__item__delete mx-3">
