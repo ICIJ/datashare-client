@@ -105,7 +105,7 @@ export default {
     previousDocument() {
       return this.response.hits[this.documentIndex - 1]
     },
-    nextDocument() {$attrs
+    nextDocument() {
       return this.response.hits[this.documentIndex + 1]
     }
   },
@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     back() {
-      return this.$router.push({ name: 'search', query:this.query })
+      return this.$router.push({ name: 'search', query: this.query })
     },
     saveComponentHeight() {
       const height = `${this.$el.offsetHeight}px`

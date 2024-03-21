@@ -160,6 +160,7 @@ export const getters = {
       sort: state.sort,
       indices: state.indices.join(','),
       field: state.field,
+      tab: state.tab,
       ...getters.filterValuesAsRouteQuery()
     })
   },
