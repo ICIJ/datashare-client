@@ -127,7 +127,7 @@ export default {
       'document-local-search-input--pristine': !searchTermIsEmpty
     }"
   >
-    <div class="form-group py-2 mr-2">
+    <div class="form-group py-2 me-2">
       <label class="sr-only">
         {{ $t('document.search') }}
       </label>

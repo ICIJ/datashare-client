@@ -23,7 +23,7 @@ export default {
   <div class="container py-4">
     <div class="mx-1 mb-2 d-flex">
       <router-link :to="batchSearchRoute">
-        <fa icon="angle-left" class="mr-1" fixed-width />
+        <fa icon="angle-left" class="me-1" fixed-width />
         {{ $t('batchSearch.title') }}
       </router-link>
     </div>

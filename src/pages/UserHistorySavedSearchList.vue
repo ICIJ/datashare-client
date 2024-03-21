@@ -13,7 +13,7 @@
               <b-button
                 v-b-tooltip.hover.topright
                 :title="$t('userHistory.renameSavedSearch')"
-                class="user-history-saved-search-list__list__item__name--rename text-dark px-1 py-0 ml-1"
+                class="user-history-saved-search-list__list__item__name--rename text-dark px-1 py-0 ms-1"
                 size="md"
                 variant="transparent"
                 @click.prevent="showEvent({ ...event, idx: eventIdx })"
@@ -33,8 +33,8 @@
           <div
             class="d-flex justify-content-between align-items-end align-items-md-center d-flex flex-column flex-md-row m-3"
           >
-            <span class="user-history-saved-search-list__list__item__date text-muted text-nowrap mr-3"
-              ><span class="font-weight-bold mr-2">{{ getDate(event.creationDate) }} </span
+            <span class="user-history-saved-search-list__list__item__date text-muted text-nowrap me-3"
+              ><span class="font-weight-bold me-2">{{ getDate(event.creationDate) }} </span
               >{{ getTime(event.creationDate) }}</span
             >
             <div class="user-history-saved-search-list__list__item__delete mx-3">

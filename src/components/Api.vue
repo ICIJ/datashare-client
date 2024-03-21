@@ -7,7 +7,7 @@
         </div>
         <p class="lead" v-html="$t('api.key.why')"></p>
         <b-button variant="primary" @click="createApiKey">
-          <fa icon="plus" class="mr-1"></fa>
+          <fa icon="plus" class="me-1"></fa>
           {{ $t('api.newApiKey') }}
         </b-button>
       </div>

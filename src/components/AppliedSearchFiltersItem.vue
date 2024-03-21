@@ -2,7 +2,7 @@
   <b-badge
     :id="appliedSearchFiltersItemId"
     v-b-tooltip.html
-    class="applied-search-filters-item p-0 my-1 mr-2 mw-100 text-truncate"
+    class="applied-search-filters-item p-0 my-1 me-2 mw-100 text-truncate"
     variant="warning"
     :pill="hideFilterLabel"
     @click.prevent="deleteQueryTerm()"

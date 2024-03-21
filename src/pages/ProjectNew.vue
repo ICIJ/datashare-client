@@ -58,7 +58,7 @@ export default {
     <div class="container">
       <div class="mx-1 mb-2 mt-3">
         <router-link :to="projectRoute">
-          <fa icon="angle-left" class="mr-1" fixed-width />
+          <fa icon="angle-left" class="me-1" fixed-width />
           {{ $t('projectList.title') }}
         </router-link>
       </div>

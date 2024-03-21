@@ -235,22 +235,22 @@ export default {
       <confirm-button
         v-if="showDeleteButton"
         type="button"
-        class="project-form__action--delete btn btn-danger mr-3"
+        class="project-form__action--delete btn btn-danger me-3"
         :confirmed="emitDelete"
         :label="$t('projectForm.deleteConfirmation')"
       >
-        <fa icon="trash-alt" class="mr-1" />
+        <fa icon="trash-alt" class="me-1" />
         <slot name="delete-text">{{ $t('projectForm.delete') }}</slot>
       </confirm-button>
       <confirm-button
         type="button"
-        class="project-form__action--reset btn btn-outline-primary ml-auto"
+        class="project-form__action--reset btn btn-outline-primary ms-auto"
         :confirmed="reset"
         :label="$t('projectForm.resetConfirmation')"
       >
         <slot name="reset-text">{{ $t('projectForm.reset') }}</slot>
       </confirm-button>
-      <b-button type="submit" variant="primary" class="ml-2" :disabled="!valid">
+      <b-button type="submit" variant="primary" class="ms-2" :disabled="!valid">
         <slot name="submit-text">{{ $t('projectForm.submit') }}</slot>
       </b-button>
     </component>

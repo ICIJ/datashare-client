@@ -4,26 +4,26 @@
       <template #tabs>
         <b-tab :active="defaultTab === 0">
           <template #title>
-            <fa icon="layer-group" fixed-width class="mr-1" />
+            <fa icon="layer-group" fixed-width class="me-1" />
             {{ $t('batchSearch.title') }}
           </template>
         </b-tab>
         <b-tab :active="defaultTab === 1">
           <template #title>
-            <fa icon="download" fixed-width class="mr-1" />
+            <fa icon="download" fixed-width class="me-1" />
             {{ $t('batchDownload.title') }}
           </template>
         </b-tab>
         <b-tab v-if="!isServer" :active="defaultTab === 2">
           <template #title>
-            <fa icon="search-plus" fixed-width class="mr-1" />
+            <fa icon="search-plus" fixed-width class="me-1" />
             {{ $t('indexing.title') }}
           </template>
         </b-tab>
       </template>
       <div v-if="$route.name === 'task.batch-search.list'">
-        <b-button class="ml-auto my-1 text-nowrap" variant="primary" :to="{ name: 'task.batch-search.new' }">
-          <fa class="mr-1" icon="plus" />
+        <b-button class="ms-auto my-1 text-nowrap" variant="primary" :to="{ name: 'task.batch-search.new' }">
+          <fa class="me-1" icon="plus" />
           {{ $t('batchSearch.heading') }}
         </b-button>
       </div>

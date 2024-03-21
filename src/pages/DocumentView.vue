@@ -44,7 +44,7 @@
                   :to="{ query: { q: $route.query.q, tab: tab.name } }"
                 >
                   <hook :name="`document.header.nav.${tab.name}:before`"></hook>
-                  <fa v-if="tab.icon" :icon="tab.icon" class="mr-2"></fa>
+                  <fa v-if="tab.icon" :icon="tab.icon" class="me-2"></fa>
                   <component :is="tab.labelComponent" v-if="tab.labelComponent"></component>
                   <template v-else>{{ $t(tab.label) }}</template>
                   <hook :name="`document.header.nav.${tab.name}:after`"></hook>

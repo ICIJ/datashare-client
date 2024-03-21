@@ -102,7 +102,7 @@ export default {
 $scroll-tracker-size: 8rem;
 
 a.scroll-tracker {
-  background: rgba(theme-color('dark'), 0.9);
+  background: rgba($dark, 0.9);
   border-radius: $scroll-tracker-size * 0.1;
   bottom: 0;
   color: white;
@@ -121,7 +121,7 @@ a.scroll-tracker {
 
   &:hover,
   &:active {
-    background: theme-color('darker');
+    background: $darker;
     color: white;
   }
 

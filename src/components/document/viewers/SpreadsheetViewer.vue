@@ -8,7 +8,7 @@
     </div>
     <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
       <div class="spreadsheet-viewer__content__toolbox d-flex align-items-center p-2">
-        <b-form-checkbox v-model="fieldsInFirstItem" switch class="ml-3">
+        <b-form-checkbox v-model="fieldsInFirstItem" switch class="ms-3">
           {{ $t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
         <div

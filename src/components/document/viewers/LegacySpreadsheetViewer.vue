@@ -8,12 +8,12 @@
         <div
           v-for="page in Object.keys(doc.sheets).length"
           :key="page"
-          class="mr-2 my-2 d-flex legacy-spreadsheet-viewer__header__thumbnails"
+          class="me-2 my-2 d-flex legacy-spreadsheet-viewer__header__thumbnails"
           @click="doc.active = Object.keys(doc.sheets)[page - 1]"
         >
           <span class="d-flex align-items-center">{{ page }}</span>
           <div
-            class="small ml-1 img-thumbnail text-truncate"
+            class="small ms-1 img-thumbnail text-truncate"
             v-html="displaySheet(Object.keys(doc.sheets)[page - 1])"
           />
         </div>

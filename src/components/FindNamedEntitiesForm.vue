@@ -7,8 +7,8 @@
       @submit.prevent="submitFindNamedEntities"
     >
       <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
-        <fa icon="database" class="position-absolute mt-1 ml-1" size="lg" />
-        <div class="ml-4 pl-3">
+        <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />
+        <div class="ms-4 pl-3">
           <p class="font-weight-bold">
             {{ $t('indexing.findNamedEntitiesProjectSelection') }}
           </p>
@@ -16,8 +16,8 @@
         </div>
       </div>
       <div class="find-named-entities-form__group mb-4">
-        <fa icon="tags" class="position-absolute mt-1 ml-1" size="lg" />
-        <div class="ml-4 pl-3">
+        <fa icon="tags" class="position-absolute mt-1 ms-1" size="lg" />
+        <div class="ms-4 pl-3">
           <p class="find-named-entities-form__header font-weight-bold mb-0">
             {{ $t('indexing.findNamedEntitiesHeader') }}
           </p>
@@ -44,10 +44,10 @@
       </div>
       <div class="find-named-entities-form__offline form-group">
         <b-form-checkbox v-model="offline" switch>
-          <div class="font-weight-bold ml-1">
+          <div class="font-weight-bold ms-1">
             {{ $t('indexing.syncModelsLabel') }}
           </div>
-          <div class="ml-1 small">
+          <div class="ms-1 small">
             {{ $t('indexing.syncModels') }}
           </div>
         </b-form-checkbox>

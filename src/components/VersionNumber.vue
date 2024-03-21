@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :id="versionNumberId" class="version-number d-inline-block">
-      <fa v-if="!noIcon" icon="bolt" class="mr-1"></fa>
+      <fa v-if="!noIcon" icon="bolt" class="me-1"></fa>
       {{ label }} {{ serverVersion }}
     </div>
     <b-tooltip :target="versionNumberId" :placement="tooltipPlacement">

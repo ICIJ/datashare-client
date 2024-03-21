@@ -2,22 +2,17 @@
   <div class="extensions h-100">
     <div class="container pt-4">
       <div class="d-flex mb-2">
-        <div class="extensions__add ml-2">
+        <div class="extensions__add ms-2">
           <b-button variant="outline-primary" @click="$refs.installExtensionFromUrl.show()">
-            <fa icon="link" class="mr-1"></fa>
+            <fa icon="link" class="me-1"></fa>
             {{ $t('extensions.installFromUrl') }}
           </b-button>
-          <b-modal ref="installExtensionFromUrl" hide-footer lazy>
-            <template #modal-title>
-              {{ $t('extensions.installFromUrl') }}
-            </template>
+          <b-modal ref="installExtensionFromUrl" hide-footer lazy :title="$t('extensions.installFromUrl')">
             <b-overlay :show="isInstallingFromUrl">
               <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text bg-white">
-                    <fa icon="link"></fa>
-                  </span>
-                </div>
+                <span class="input-group-text bg-white">
+                  <fa icon="link"></fa>
+                </span>
                 <b-form-input v-model="url" :state="isFormValid" placeholder="URL" type="url" />
               </div>
               <div class="d-flex align-items-center">
@@ -26,16 +21,17 @@
                 </b-form-invalid-feedback>
                 <b-button
                   variant="primary"
-                  class="ml-auto text-nowrap"
+                  class="ms-auto text-nowrap"
                   :disabled="isFormValid !== true"
-                  @click="installExtensionFromUrl">
+                  @click="installExtensionFromUrl"
+                >
                   {{ $t('extensions.install') }}
                 </b-button>
               </div>
             </b-overlay>
           </b-modal>
         </div>
-        <div class="extensions__search ml-auto">
+        <div class="extensions__search ms-auto">
           <search-form-control v-model="searchTerm" :placeholder="$t('extensions.search')" @input="search" />
         </div>
       </div>
@@ -54,38 +50,23 @@
                     </div>
                   </div>
                   <div class="d-flex flex-column text-nowrap pl-2">
-                    <b-button
-                      v-if="extension.installed"
-                      class="extensions__card__uninstall-button mb-2"
-                      variant="danger"
-                      @click="uninstallExtension(extension.id)"
-                    >
+                    <b-button v-if="extension.installed" class="extensions__card__uninstall-button mb-2"
+                      variant="danger" @click="uninstallExtension(extension.id)">
                       <fa icon="trash-alt"></fa>
                       {{ $t('extensions.uninstall') }}
                     </b-button>
-                    <b-button
-                      v-if="!extension.installed"
-                      class="extensions__card__download-button mb-2"
-                      variant="primary"
-                      @click="installExtensionFromId(extension.id)"
-                    >
+                    <b-button v-if="!extension.installed" class="extensions__card__download-button mb-2"
+                      variant="primary" @click="installExtensionFromId(extension.id)">
                       <fa icon="cloud-download-alt"></fa>
                       {{ $t('extensions.install') }}
                     </b-button>
-                    <b-button
-                      v-if="hasAvailableUpdate(extension)"
-                      class="extensions__card__update-button mb-2"
-                      variant="primary"
-                      size="sm"
-                      @click="installExtensionFromId(extension.id)"
-                    >
+                    <b-button v-if="hasAvailableUpdate(extension)" class="extensions__card__update-button mb-2"
+                      variant="primary" size="sm" @click="installExtensionFromId(extension.id)">
                       <fa icon="sync"></fa>
                       {{ $t('extensions.update') }}
                     </b-button>
-                    <div
-                      v-if="extension.version && extension.installed"
-                      class="extensions__card__version text-muted text-center"
-                    >
+                    <div v-if="extension.version && extension.installed"
+                      class="extensions__card__version text-muted text-center">
                       {{ $t('extensions.version', { version: extension.version }) }}
                     </div>
                   </div>
@@ -98,12 +79,8 @@
                 </div>
                 <div class="text-truncate w-100">
                   <span class="font-weight-bold"> {{ $t('extensions.homePage') }}: </span>
-                  <a
-                    v-if="extension.deliverableFromRegistry.homepage"
-                    class="extensions__card__homepage"
-                    :href="extension.deliverableFromRegistry.homepage"
-                    target="_blank"
-                  >
+                  <a v-if="extension.deliverableFromRegistry.homepage" class="extensions__card__homepage"
+                    :href="extension.deliverableFromRegistry.homepage" target="_blank">
                     {{ extension.deliverableFromRegistry.homepage }}
                   </a>
                 </div>

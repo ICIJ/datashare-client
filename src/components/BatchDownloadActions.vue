@@ -146,24 +146,24 @@ export default {
       :target="popoverTarget"
     >
       <b-dropdown-item-button class="batch-download-actions__relaunch" @click="relaunchTask()">
-        <fa icon="redo" fixed-width class="mr-1" />
+        <fa icon="redo" fixed-width class="me-1" />
         {{ $t('batchDownloadActions.relaunch') }}
       </b-dropdown-item-button>
       <b-dropdown-item v-if="uri" :to="uri" class="batch-download-actions__search">
-        <fa icon="search" fixed-width class="mr-1" />
+        <fa icon="search" fixed-width class="me-1" />
         {{ $t('batchDownloadActions.search') }}
       </b-dropdown-item>
       <b-dropdown-item-button v-else disabled class="batch-download-actions__search">
-        <fa icon="search" fixed-width class="mr-1" />
+        <fa icon="search" fixed-width class="me-1" />
         {{ $t('batchDownloadActions.search') }}
       </b-dropdown-item-button>
       <b-dropdown-divider />
       <b-dropdown-item-button v-if="isTaskRunning" disabled button-class="batch-download-actions__delete">
-        <fa icon="trash-alt" fixed-width class="mr-1" />
+        <fa icon="trash-alt" fixed-width class="me-1" />
         {{ $t('batchDownloadActions.delete') }}
       </b-dropdown-item-button>
       <b-dropdown-item-button v-else button-class="batch-download-actions__delete text-danger" @click="deleteTask">
-        <fa icon="trash-alt" fixed-width class="mr-1" />
+        <fa icon="trash-alt" fixed-width class="me-1" />
         {{ $t('batchDownloadActions.delete') }}
       </b-dropdown-item-button>
     </b-popover>

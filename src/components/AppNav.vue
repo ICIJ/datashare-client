@@ -3,10 +3,10 @@
     <hook name="search.nav:before"></hook>
     <div class="app__nav__container">
       <div class="app__nav__container__main p-3 d-flex align-items-center">
-        <div class="app__nav__container__main__search-bar pr-3 py-0 flex-grow-1">
+        <div class="app__nav__container__main__search-bar pe-3 py-0 flex-grow-1">
           <search-bar class="p-0" settings></search-bar>
         </div>
-        <search-layout-selector class="ml-auto pl-3"></search-layout-selector>
+        <search-layout-selector class="ms-auto pl-3"></search-layout-selector>
       </div>
     </div>
     <hook name="search.nav:after"></hook>

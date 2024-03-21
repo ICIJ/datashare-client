@@ -3,7 +3,7 @@
     <confirm-button
       v-if="isMyBatchSearch"
       v-b-tooltip.hover
-      class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ml-2"
+      class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ms-2"
       :confirmed="deleteBatchSearch"
       :label="$t('batchSearch.delete')"
       :no="$t('global.no')"
@@ -18,12 +18,12 @@
 
     <b-button
       v-if="isMyBatchSearch && isEnded"
-      class="batch-search-actions__item action batch-search-actions__item--relaunch ml-2"
+      class="batch-search-actions__item action batch-search-actions__item--relaunch ms-2"
       variant="light"
       :disabled="isRelaunched"
       @click="$refs['batch-search-copy-form'].show()"
     >
-      <fa icon="redo" class="mr-1" />
+      <fa icon="redo" class="me-1" />
       {{ $t('batchSearchResults.relaunch') }}
       <b-modal
         ref="batch-search-copy-form"
@@ -40,17 +40,17 @@
       v-b-tooltip.hover
       split
       right
-      class="batch-search-actions__item batch-search-actions__item--download-queries ml-2"
+      class="batch-search-actions__item batch-search-actions__item--download-queries ms-2"
       variant="light"
       :split-href="downloadQueriesUrl"
       :title="$t('batchSearchResults.downloadQueriesTooltip')"
     >
       <template #button-content>
-        <fa icon="download" class="mr-1" />
+        <fa icon="download" class="me-1" />
         {{ $t('batchSearchResults.downloadQueries') }}
       </template>
       <b-dropdown-item :href="downloadQueriesWithoutResultsUrl">
-        <fa icon="download" class="mr-1" />
+        <fa icon="download" class="me-1" />
         {{ $t('batchSearchResults.downloadQueriesWithoutResults') }}
       </b-dropdown-item>
     </b-dropdown>
@@ -58,12 +58,12 @@
     <b-button
       v-if="isEnded"
       v-b-tooltip.hover
-      class="batch-search-actions__item batch-search-actions__item--download-results ml-2"
+      class="batch-search-actions__item batch-search-actions__item--download-results ms-2"
       variant="primary"
       :title="$t('batchSearchResults.downloadQueriesTooltip')"
       :href="downloadResultsUrl"
     >
-      <fa icon="download" class="mr-1" />
+      <fa icon="download" class="me-1" />
       {{ $t('batchSearchResults.downloadResults') }}
     </b-button>
   </div>

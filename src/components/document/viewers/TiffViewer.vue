@@ -4,7 +4,7 @@
       <div class="tiff-viewer__thumbnails bg-light p-3">
         <div class="text-center mb-4">{{ active }} / {{ pages.length }}</div>
         <div v-for="page in pages.length" :key="page" class="tiff-viewer__thumbnails__item mb-3" @click="active = page">
-          <img class="ml-1 img-responsive" :width="thumbWidth" :height="thumbWidth" :src="getPage(page)" />
+          <img class="ms-1 img-responsive" :width="thumbWidth" :height="thumbWidth" :src="getPage(page)" />
           <div class="tiff-viewer__thumbnails__item__page text-center small">
             <span class="badge badge-dark">{{ page }}</span>
           </div>

@@ -16,9 +16,9 @@
         </b-button>
       </transition>
     </slot>
-    <div v-if="doc" class="ml-auto d-flex align-items-center">
+    <div v-if="doc" class="ms-auto d-flex align-items-center">
       <slot name="nav" />
-      <project-link :project="doc.index" class="btn btn-sm btn-light p-0 pr-1 ml-1" />
+      <project-link :project="doc.index" class="btn btn-sm btn-light p-0 pe-1 ms-1" />
       <b-button
         class="mx-2 px-2 py-0 document-navbar__recommended-by"
         size="sm"
@@ -34,7 +34,7 @@
           id="popover-recommended-by"
           pill
           :variant="markAsRecommendedVariant"
-          class="mr-2 document-navbar__recommended-by-number"
+          class="me-2 document-navbar__recommended-by-number"
         >
           {{ recommendedBy.length }}
         </b-badge>
@@ -74,7 +74,7 @@
         :is-download-allowed="isDownloadAllowed(doc)"
         class="document-navbar__actions d-flex"
         download-btn-group-class="order-2"
-        download-btn-class="btn btn-secondary btn-sm py-0 ml-1"
+        download-btn-class="btn btn-secondary btn-sm py-0 ms-1"
         download-btn-label
         display-download-options
         no-btn-group

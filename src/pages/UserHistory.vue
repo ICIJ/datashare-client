@@ -9,13 +9,13 @@
       <template #tabs>
         <b-tab :active="defaultTab === 0">
           <template #title>
-            <fa icon="file" fixed-width class="mr-1" />
+            <fa icon="file" fixed-width class="me-1" />
             {{ $t('userHistory.document') }}
           </template>
         </b-tab>
         <b-tab :active="defaultTab === 1">
           <template #title>
-            <fa icon="search" fixed-width class="mr-1" />
+            <fa icon="search" fixed-width class="me-1" />
             {{ $t('userHistory.search') }}
           </template>
         </b-tab>
@@ -28,7 +28,7 @@
         :yes="$t('global.yes')"
         :no="$t('global.no')"
       >
-        <fa icon="trash-alt" class="mr-1"></fa>
+        <fa icon="trash-alt" class="me-1"></fa>
         {{ $t('userHistory.clear') }}
       </confirm-button>
     </page-header>

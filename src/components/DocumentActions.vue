@@ -8,7 +8,7 @@
       @click.prevent="toggleStarDocument()"
     >
       <fa :icon="[isStarred ? 'fa' : 'far', 'star']" fixed-width />
-      <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
+      <span class="ms-2" :class="{ 'sr-only': !starBtnLabel }">
         {{ $t('document.starButton') }}
       </span>
     </a>
@@ -29,7 +29,7 @@
             variant="transparent"
           >
             <fa icon="download" fixed-width />
-            <span class="ml-1" :class="{ 'sr-only': !downloadBtnLabel }">
+            <span class="ms-1" :class="{ 'sr-only': !downloadBtnLabel }">
               {{ $t('document.downloadButton') }}
             </span>
           </b-button>
@@ -39,17 +39,17 @@
         </b-tooltip>
         <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
           <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
-            <fa icon="download" class="mr-1 text-secondary" fixed-width />
+            <fa icon="download" class="me-1 text-secondary" fixed-width />
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
           <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
-            <fa icon="download" class="mr-1 text-secondary" fixed-width />
+            <fa icon="download" class="me-1 text-secondary" fixed-width />
             {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
           <template v-if="hasRoot">
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
-              <fa icon="download" class="mr-1 text-secondary" fixed-width />
+              <fa icon="download" class="me-1 text-secondary" fixed-width />
               {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
             <b-dropdown-item
@@ -57,7 +57,7 @@
               :href="rootDocumentFullUrlWithoutMetadata"
               class="document-actions__download--parent-without-metadata"
             >
-              <fa icon="download" class="mr-1 text-secondary" fixed-width />
+              <fa icon="download" class="me-1 text-secondary" fixed-width />
               {{ $t('document.downloadRootWithoutMetadataButton') }}
             </b-dropdown-item>
           </template>
@@ -79,7 +79,7 @@
       :to="{ name: 'document-modal', params: document.routerParams }"
     >
       <fa icon="external-link-alt" fixed-width />
-      <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
+      <span class="ms-2" :class="{ 'sr-only': !popupBtnLabel }">
         {{ $t('document.externalWindow') }}
       </span>
     </router-link-popup>

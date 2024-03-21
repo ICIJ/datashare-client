@@ -23,7 +23,7 @@
             ></fa>
             {{ $t('email.receivedLink') }}
           </router-link>
-          <router-link :to="{ name: 'search', query: { q: qSent, indices } }" class="btn btn-sm btn-primary ml-1">
+          <router-link :to="{ name: 'search', query: { q: qSent, indices } }" class="btn btn-sm btn-primary ms-1">
             <fa
               mask="square"
               icon="arrow-up"

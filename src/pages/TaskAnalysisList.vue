@@ -2,7 +2,7 @@
   <div class="task-analysis-list">
     <div class="mt-4 container">
       <div class="mb-3 d-flex">
-        <b-button-group class="task-analysis-list__actions mr-2">
+        <b-button-group class="task-analysis-list__actions me-2">
           <b-button
             class="task-analysis-list__actions__stop-pending-tasks"
             variant="outline-primary"
@@ -10,7 +10,7 @@
             :disabled="!hasPendingTasks"
             @click="stopPendingTasks"
           >
-            <fa icon="hand-paper" class="mr-1" />
+            <fa icon="hand-paper" class="me-1" />
             {{ $t('indexing.stopPendingTasks') }}
           </b-button>
           <b-button
@@ -19,24 +19,24 @@
             :disabled="!hasDoneTasks"
             @click="deleteDoneTasks"
           >
-            <fa icon="trash-alt" class="mr-1" />
+            <fa icon="trash-alt" class="me-1" />
             {{ $t('indexing.deleteDoneTasks') }}
           </b-button>
         </b-button-group>
 
-        <div class="ml-auto">
-          <b-button v-b-modal:[extractingFormId] variant="primary" class="mr-2 task-analysis-list__actions__extract">
-            <fa icon="search-plus" class="mr-2" />
+        <div class="ms-auto">
+          <b-button v-b-modal:[extractingFormId] variant="primary" class="me-2 task-analysis-list__actions__extract">
+            <fa icon="search-plus" class="me-2" />
             {{ $t('indexing.extractText') }}
           </b-button>
           <b-button
             v-b-tooltip
             v-b-modal:[findNamedEntitiesFormId]
             variant="primary"
-            class="task-analysis-list__actions__find-named-entites mr-2"
+            class="task-analysis-list__actions__find-named-entites me-2"
             :title="$t('indexing.findNamedEntitiesTooltip')"
           >
-            <fa icon="user-tag" class="mr-2" />
+            <fa icon="user-tag" class="me-2" />
             {{ $t('indexing.findNamedEntities') }}
           </b-button>
 
@@ -48,7 +48,7 @@
             size="md"
           >
             <template #modal-title>
-              <fa icon="search-plus" class="mr-1" />
+              <fa icon="search-plus" class="me-1" />
               {{ $t('indexing.extractText') }}
             </template>
             <extracting-form id="extracting-form" dark @submit="closeExtractingForm" />
@@ -61,7 +61,7 @@
             size="md"
           >
             <template #modal-title>
-              <fa icon="user-tag" class="mr-1" />
+              <fa icon="user-tag" class="me-1" />
               {{ $t('indexing.findNamedEntities') }}
             </template>
             <find-named-entities-form id="find-named-entities-form" dark @submit="closeFindNamedEntitiesForm" />

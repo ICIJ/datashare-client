@@ -29,7 +29,7 @@ body {
 
 .splashscreen {
   align-items: center;
-  background: theme-color('dark');
+  background: $dark;
   bottom: 0;
   color: white;
   display: flex;
@@ -246,7 +246,7 @@ $value in $theme-colors {
 
     @each $color, $value in $theme-colors {
       &.b-toast-#{$color} .close {
-        border-color: theme-color-level($color, $alert-border-level);
+        border-color: theme-color-level($color, 40%);
       }
     }
   }

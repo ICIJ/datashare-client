@@ -16,10 +16,10 @@
     <b-modal id="shortkeys" title="Keyboard Shortcuts" hide-footer>
       <div v-for="(shortkey, index) in flatShortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
         <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row no-gutters w-100 mb-1">
-          <div class="col-sm-1 pr-2">
+          <div class="col-sm-1 pe-2">
             <fa v-if="shortkey.icon" :icon="shortkey.icon" fixed-width></fa>
           </div>
-          <div class="col-sm-7 pr-2">
+          <div class="col-sm-7 pe-2">
             {{ getLabel(shortkey) }}
           </div>
           <div class="col-sm-4 small">

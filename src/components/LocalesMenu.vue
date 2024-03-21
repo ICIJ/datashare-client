@@ -2,7 +2,7 @@
   <b-button :id="uniqueId" class="locales-menu" href="#" variant="none">
     <span class="locales-menu__button">
       <slot v-bind="{ currentLocale, locales }">
-        <fa icon="globe" class="mr-1"></fa>
+        <fa icon="globe" class="me-1"></fa>
         {{ currentLocale.label }}
       </slot>
     </span>
