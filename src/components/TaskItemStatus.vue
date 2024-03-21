@@ -68,7 +68,7 @@ export default {
       return this.statusName === 'failure' || this.statusName === 'error'
     },
     errorMessage() {
-      return this.taskItem?.errorMessage?.message ?? ''
+      return this.taskItem?.errorMessage?.message ?? this.taskItem?.errorMessage ?? ''
     },
     errorMessageAsJson() {
       const re = /{"error":.+}/gm
