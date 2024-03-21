@@ -78,7 +78,7 @@
         <template #cell(actions)="{ item }">
           <document-actions
             :document="item"
-            class="float-right btn-group-sm"
+            class="float-end btn-group-sm"
             :is-download-allowed="isDownloadAllowed(item)"
             tooltips-placement="rightbottom"
           ></document-actions>

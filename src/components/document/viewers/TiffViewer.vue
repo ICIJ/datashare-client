@@ -14,10 +14,10 @@
         <div class="p-3">
           <div class="btn-group">
             <button class="btn btn-outline-primary" @click="rotateActivePage(active, -1)">
-              <fa icon="undo" class="float-right" />
+              <fa icon="undo" class="float-end" />
             </button>
             <button class="btn btn-outline-primary" @click="rotateActivePage(active, 1)">
-              <fa icon="redo" class="float-right" />
+              <fa icon="redo" class="float-end" />
             </button>
           </div>
         </div>

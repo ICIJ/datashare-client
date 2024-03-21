@@ -21,8 +21,8 @@
             {{ $t(`filter.${filter.name}`) }}
           </slot>
         </h6>
-        <fa v-if="isReady" :icon="headerIcon" class="float-right filter__header__icon"></fa>
-        <fa v-else icon="circle-notch" spin class="float-right"></fa>
+        <fa v-if="isReady" :icon="headerIcon" class="float-end filter__header__icon"></fa>
+        <fa v-else icon="circle-notch" spin class="float-end"></fa>
       </div>
     </slot>
     <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }"></hook>
@@ -56,7 +56,7 @@
                 <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
                   {{ labelToHuman('all') }}
                 </span>
-                <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
+                <span class="filter__items__item__count badge badge-pill badge-light float-end mt-1">
                   {{ $n(total) }}
                 </span>
               </span>
@@ -76,7 +76,7 @@
                       <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
                         {{ label }}
                       </span>
-                      <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
+                      <span class="filter__items__item__count badge badge-pill badge-light float-end mt-1">
                         {{ $n(item.doc_count) }}
                       </span>
                     </span>
