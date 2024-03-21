@@ -16,7 +16,7 @@
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
               {{ labelToHuman('filter.starred') }}
             </span>
-            <span class="filter__items__item__count badge badge-pill badge-light float-right my-1">
+            <span class="filter__items__item__count badge badge-pill badge-light float-end my-1">
               {{ $n(starredDocuments.length) }}
             </span>
           </span>
@@ -26,7 +26,7 @@
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
               {{ labelToHuman('filter.notStarred') }}
             </span>
-            <span class="filter__items__item__count badge badge-pill badge-light float-right my-1">
+            <span class="filter__items__item__count badge badge-pill badge-light float-end my-1">
               {{ $n(total) }}
             </span>
           </span>

@@ -2,7 +2,7 @@
   <div class="page-header">
     <div :class="classList">
       <div class="py-5">
-        <div class="float-right">
+        <div class="float-end">
           <slot></slot>
         </div>
         <div class="d-flex align-items-center">
