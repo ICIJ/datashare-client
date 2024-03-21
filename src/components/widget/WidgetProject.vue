@@ -8,7 +8,7 @@
         :class="`widget__fields__item--${key}`"
       >
         <div class="row">
-          <div class="col-4 font-weight-bold text-uppercase text-muted widget__fields__item__label">
+          <div class="col-4 fw-bold text-uppercase text-muted widget__fields__item__label">
             {{ label }}
           </div>
           <div class="col-8 widget__fields__item__value">

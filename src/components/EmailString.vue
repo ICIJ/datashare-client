@@ -11,7 +11,7 @@
       >
         <template #title>
           <div class="pt-2">{{ nameWithoutEmail }}</div>
-          <div class="text-muted small font-weight-normal py-2">{{ emailWithoutName || email }}</div>
+          <div class="text-muted small fw-normal py-2">{{ emailWithoutName || email }}</div>
         </template>
         <div class="text-right email-string__popover__content">
           <router-link :to="{ name: 'search', query: { q: qReceived, indices } }" class="btn btn-sm btn-primary">

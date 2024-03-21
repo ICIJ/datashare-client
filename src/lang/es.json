@@ -443,7 +443,7 @@
     "notAvailable": "La vista previa no está disponible para este archivo.",
     "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
-    "namedEntitiesNotSearched": "<p>Documento no analizado.</p><p class=\\\"text-muted small\\\">Para buscar entidades identificadas, vaya a <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> y comience una nueva tarea \\\"@:indexing.findNamedEntities\\\".</p>",
+    "namedEntitiesNotSearched": "<p>Documento no analizado.</p><p class=\\\"text-muted small\\\">Para buscar entidades identificadas, vaya a <a class=\\\"fw-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> y comience una nueva tarea \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Generando visualización previa...",
     "sheet": "Hoja",
     "searchDirectory": "Buscar dentro de este directorio",
@@ -876,7 +876,7 @@
     "warning": "This feature is currently being developed by the Datashare team.",
     "inProgress": "Ver todas las descargas pendientes",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
-    "errorTitle": "Batch download task <code class=\"font-weight-bold\">%{taskId}</code> is in error.",
+    "errorTitle": "Batch download task <code class=\"fw-bold\">%{taskId}</code> is in error.",
     "relaunch": {
       "succeed": "Your download is being prepared",
       "succeedBody": "The download should be available soon.",

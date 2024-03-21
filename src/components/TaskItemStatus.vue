@@ -3,7 +3,7 @@
     <ellipse-status :status="taskItem.state" :no-badge="noLabel" horizontal>
       <template v-if="isFailed" #error>
         <slot name="title">
-          <div class="task-item-status__modal__error-query mb-2 font-weight-bolder">
+          <div class="task-item-status__modal__error-query mb-2 fw-bolder">
             <span v-html="$t(`${taskItem.key}.errorTitle`, { taskId: taskItem.uuid })" />
           </div>
         </slot>

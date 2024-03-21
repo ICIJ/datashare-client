@@ -104,7 +104,8 @@ $font-size-sm: .9rem;
 $font-size-lg: 1.2rem;
 $line-height-sm: 1.7;
 
-$table-accent-bg: mix($body-bg, white);
+$table-accent-bg: $body-secondary-bg;
+$table-striped-bg: #f9f8f8;
 $table-hover-bg: mix($secondary, white, 5%);
 
 $nav-tabs-link-active-bg: white;

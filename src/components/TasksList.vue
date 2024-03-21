@@ -21,7 +21,7 @@
         </slot>
       </template>
       <template #cell(name)="{ item }">
-        <div class="tasks-list__tasks__item__name m-0 font-weight-bold">
+        <div class="tasks-list__tasks__item__name m-0 fw-bold">
           <slot v-bind="{ item }">
             {{ item.name }}
           </slot>
@@ -45,7 +45,7 @@
         <div v-if="isBatchDownloadEncrypted(item)" class="font-italic tasks-list__tasks__item__encrypted">
           {{ $t('tasksList.encrypted') }}
         </div>
-        <div v-if="hasZipSize(item)" class="tasks-list__tasks__item__size m-0 font-weight-bold">
+        <div v-if="hasZipSize(item)" class="tasks-list__tasks__item__size m-0 fw-bold">
           {{ humanSize(item.result.size, false, $t('human.size')) }}
         </div>
       </template>
