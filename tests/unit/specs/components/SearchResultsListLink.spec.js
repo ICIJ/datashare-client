@@ -77,7 +77,7 @@ describe('SearchResultsListLink.vue', () => {
 
     store.commit('search/query', 'other')
     await flushPromises()
-    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo\?q=other$/)
+    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo\?q=other&tab=extracted-text/)
   })
 
   it('should display the document sliced name', () => {
