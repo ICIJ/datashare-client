@@ -7,19 +7,9 @@
           :key="event.id"
           class="user-history-saved-search-list__list__item d-inline-flex justify-content-between"
         >
-          <router-link :to="{ path: event.uri }" class="p-3 d-block">
+          <router-link :to="{ path: event.uri }" class="p-3 flex-grow-1 d-block">
             <span class="user-history-saved-search-list__list__item__name fw-bold mb-1">
               {{ event.name }}
-              <b-button
-                v-b-tooltip.hover.topright
-                :title="$t('userHistory.renameSavedSearch')"
-                class="user-history-saved-search-list__list__item__name--rename text-dark px-1 py-0 ms-1"
-                size="md"
-                variant="transparent"
-                @click.prevent="showEvent({ ...event, idx: eventIdx })"
-              >
-                <fa icon="pen" fixed-width size="1x" />
-              </b-button>
             </span>
             <div class="user-history-saved-search-list__list__item__query">
               <applied-search-filters-item
@@ -37,10 +27,19 @@
               ><span class="fw-bold me-2">{{ getDate(event.creationDate) }} </span
               >{{ getTime(event.creationDate) }}</span
             >
-            <div class="user-history-saved-search-list__list__item__delete mx-3">
+            <div class="user-history-saved-search-list__list__item__actions mx-3">
+              <b-button
+                class="user-history-saved-search-list__list__item__actions__rename me-1"
+                size="md"
+                variant="outline-primary"
+                @click.prevent="openRenameModal({ ...event, idx: eventIdx })"
+              >
+                <fa icon="pen" fixed-width size="1x" />
+                {{ $t('userHistory.renameSavedSearchShort') }}
+              </b-button>
               <confirm-button
                 class="btn btn-outline-danger text-nowrap"
-                placement="leftbottom"
+                placement="top"
                 :confirmed="() => deleteUserEvent(event)"
                 :label="$t('userHistory.confirmDelete')"
                 :no="$t('global.no')"
@@ -60,14 +59,18 @@
     <keep-alive>
       <b-modal
         ref="user-history-save-search-form"
-        :visible="show"
+        v-model="showRenameModal"
         body-class="p-0"
         hide-footer
+        lazy
         size="md"
         :title="$t('userHistory.renameSavedSearch')"
-        @hide="show = false"
       >
-        <user-history-save-search-form :event="currentEvent" @submit:rename="updateEvent" @submit="show = false" />
+        <user-history-save-search-form
+          :event="currentEvent"
+          @submit:rename="updateEvent"
+          @submit="showRenameModal = false"
+        />
       </b-modal>
     </keep-alive>
   </div>
@@ -96,7 +99,7 @@ export default {
   },
   data() {
     return {
-      show: false,
+      showRenameModal: false,
       searches: this.events,
       currentEvent: null
     }
@@ -147,9 +150,9 @@ export default {
         this.$set(this, 'searches', searches)
       }
     },
-    showEvent(event) {
+    openRenameModal(event) {
       this.currentEvent = event
-      this.show = true
+      this.showRenameModal = true
     },
     updateEvent({ event }) {
       this.searches[this.currentEvent.idx] = { ...this.currentEvent, name: event.name }
