@@ -1,7 +1,7 @@
 <template>
   <div class="widget widget--recommended-by">
     <div class="widget__header d-flex align-items-center" :class="{ 'card-body': widget.card }">
-      <fa icon="users" fixed-width class="mr-2" />
+      <fa icon="users" fixed-width class="me-2" />
       <h3 class="m-0 p-0 h5">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
     <v-wait :for="loader" transition="fade">
@@ -16,7 +16,7 @@
           :href="href"
         >
           <div v-if="!widget.hideThumbnails && widget.cols >= 6" class="d-none d-md-block flex-shrink-0">
-            <document-thumbnail :document="document" crop lazy class="mt-1 mr-3" />
+            <document-thumbnail :document="document" crop lazy class="mt-1 me-3" />
           </div>
           <div class="flex-grow-1">
             <div class="widget__list__item__heading d-flex align-items-start">
@@ -26,7 +26,7 @@
                 class="widget__list__item__heading__name text-primary py-1"
               />
               <div
-                class="widget__list__item__heading__meta ml-auto py-1 pl-3 d-flex align-items-center text-muted flex-shrink-0"
+                class="widget__list__item__heading__meta ms-auto py-1 pl-3 d-flex align-items-center text-muted flex-shrink-0"
               >
                 <span
                   v-if="creationDate"
@@ -46,7 +46,7 @@
               </div>
             </div>
             <div class="widget__list__item__path text-muted text-truncate">
-              <fa icon="folder" class="mr-1" />
+              <fa icon="folder" class="me-1" />
               {{ shortenPath(document.path) }}
             </div>
           </div>

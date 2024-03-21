@@ -3,7 +3,7 @@
     <template v-if="hasTranslations">
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
-          <fa icon="globe" class="mr-2" />
+          <fa icon="globe" class="me-2" />
           <abbr
             v-if="translation.source_language === document.source.language"
             :title="$t(`filter.lang.${document.source.language}`)"
@@ -16,7 +16,7 @@
           <strong :title="`Translated with ${translation.translator}`">
             {{ $t(`filter.lang.${language}`) }}
           </strong>
-          <button class="btn btn-sm btn-link ml-3" @click="toggleTranslatedContent">
+          <button class="btn btn-sm btn-link ms-3" @click="toggleTranslatedContent">
             {{
               $t(
                 showTranslatedContent

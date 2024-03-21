@@ -1,3 +1,5 @@
+$prefix: bs-;
+
 $saddle-red: #FA4070;
 $primary: #193D87;
 $secondary: #FA4070;
@@ -9,11 +11,16 @@ $success: #00bb84;
 $info: #45C4FF;
 $light: #F0F0F0;
 $lighter: #F4F4F6;
+$dark: darken($primary, 10);
+$darker: darken($primary, 20);
+$darkest: darken($primary, 30);
 
 $link-color: $primary;
 $body-bg: #F2F0F0;
+$body-secondary-bg: #FFF;
 
-$card-cap-bg: mix($body-bg, white);
+$card-bg: var(--#{$prefix}white);
+$card-cap-bg: rgba(var(--#{$prefix}body-color-rgb), .03);
 $translation-bg: #fcf8e3;
 
 $theme-colors: (
@@ -27,9 +34,9 @@ $theme-colors: (
   danger: $danger,
   light: $light,
   lighter: $lighter,
-  dark: darken($primary, 10),
-  darker: darken($primary, 20),
-  darkest: darken($primary, 30),
+  dark: $dark,
+  darker: $darker,
+  darkest: $darkest,
   mark: #fff5bd,
   category-ban: $secondary,
   category-person: #ff6699,
@@ -51,6 +58,14 @@ $special-font-family: "Medel", $headings-font-family;
 
 $text-muted: #717171;
 
+$border-radius: .25rem;
+$border-radius-sm: .2rem;
+$border-radius-lg: .375rem;
+$border-radius-xl: 0.5rem;
+$border-radius-xxl: 1rem;
+$border-radius-pill: 50rem;
+
+$input-bg:  var(--#{$prefix}white);
 $input-focus-border-color: map-get($theme-colors, 'secondary');
 $custom-control-indicator-checked-bg: $tertiary;
 
@@ -112,9 +127,6 @@ $spacer-md: $spacer;
 $spacer-lg: $spacer * 1.5;
 $spacer-xl: $spacer * 2;
 $spacer-xxl: $spacer * 4;
-
-$app-bg: #31313a;
-$app-border-radius: 1rem;
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);

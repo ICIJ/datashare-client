@@ -141,10 +141,10 @@ export default {
   <div class="inline-directory-picker border rounded" :class="{ 'inline-directory-picker--dark': dark }">
     <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
       <div class="inline-directory-picker__header d-flex align-items-center p-2">
-        <fa v-if="!hideFolderIcon" class="inline-directory-picker__header__icon mr-3" icon="folder" fixed-width />
+        <fa v-if="!hideFolderIcon" class="inline-directory-picker__header__icon me-3" icon="folder" fixed-width />
         <active-text-truncate
           :key="directories.length"
-          class="inline-directory-picker__header__list mr-1"
+          class="inline-directory-picker__header__list me-1"
           direction="rtl"
         >
           <div
@@ -164,7 +164,7 @@ export default {
           </div>
         </active-text-truncate>
         <b-button
-          class="inline-directory-picker__header__browse py-0 ml-auto"
+          class="inline-directory-picker__header__browse py-0 ms-auto"
           size="sm"
           :variant="browseBtnVariant"
           @click="toggleBrowser()"
@@ -184,7 +184,7 @@ export default {
               href
               @click.prevent="selectAndBrowse(directory.name, true)"
             >
-              <fa icon="folder" fixed-width class="mr-3" />
+              <fa icon="folder" fixed-width class="me-3" />
               {{ basename(directory.name) }}
             </a>
           </li>

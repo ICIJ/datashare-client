@@ -3,7 +3,7 @@
     <project-thumbnail
       v-if="showThumbnail"
       :project="resolvedProject"
-      class="project-link__thumbnail mr-1 rounded"
+      class="project-link__thumbnail me-1 rounded"
       width="1.6em"
     />
     <span class="project-link__display">{{ projectDisplay }}</span>

@@ -12,14 +12,14 @@
               {{ $t('login.authenticationPlatform') }}
             </p>
             <a class="btn btn-dark btn-lg" :href="signinUrl">
-              <fa icon="user-shield" class="mr-2"></fa>
+              <fa icon="user-shield" class="me-2"></fa>
               {{ $t('login.account') }}
             </a>
           </li>
           <li class="list-group-item">
             <p>{{ $t('login.supportDesk') }}</p>
             <a class="btn btn-outline-secondary btn-lg" :href="helpLink" target="_blank" :title="$t('login.askHelp')">
-              <fa icon="ambulance" class="mr-2"></fa>
+              <fa icon="ambulance" class="me-2"></fa>
               {{ $t('login.askHelp') }}
             </a>
           </li>
@@ -52,7 +52,7 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  background: theme-color('dark');
+  background: $dark;
   min-height: 100vh;
   padding: 10vh;
 

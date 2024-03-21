@@ -152,12 +152,12 @@ export default {
   }
 
   &--rounded &__input {
-    border-bottom-left-radius: $rounded-pill;
-    border-top-left-radius: $rounded-pill;
+    border-bottom-left-radius: $border-radius-pill;
+    border-top-left-radius: $border-radius-pill;
   }
 
   &--rounded &__input:focus + &__addon:after {
-    border-radius: $rounded-pill;
+    border-radius: $border-radius-pill;
   }
 
   &__addon {
@@ -184,12 +184,12 @@ export default {
 
   &--rounded &__addon {
     &:after {
-      border-radius: $rounded-pill;
+      border-radius: $border-radius-pill;
     }
 
     &__submit:last-of-type {
-      border-bottom-right-radius: $rounded-pill;
-      border-top-right-radius: $rounded-pill;
+      border-bottom-right-radius: $border-radius-pill;
+      border-top-right-radius: $border-radius-pill;
     }
   }
 

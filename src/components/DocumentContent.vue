@@ -341,7 +341,7 @@ export default {
             size="sm"
             @input="scrollUp()"
           />
-          <div class="ml-auto d-flex">
+          <div class="ms-auto d-flex">
             <document-global-search-terms-tags
               :document="document"
               :target-language="targetLanguage"

@@ -15,15 +15,15 @@
         {{ $t('document.shortcuts') }}
       </h5>
       <ul class="list-inline">
-        <li class="document__content__shortcuts__children mr-4 list-inline-item mb-3">
+        <li class="document__content__shortcuts__children me-4 list-inline-item mb-3">
           <router-link :to="searchChildrenDocumentParams" class="btn btn-primary btn-sm">
-            <fa icon="paperclip" class="mr-2" />
+            <fa icon="paperclip" class="me-2" />
             {{ $t('document.searchChildrenDocument') }}
           </router-link>
         </li>
         <li class="document__content__shortcuts__folder list-inline-item mb-3">
           <router-link :to="searchDirnameDocumentParams" class="btn btn-primary btn-sm">
-            <fa icon="folder-open" class="mr-2" />
+            <fa icon="folder-open" class="me-2" />
             {{ $t('document.searchDirnameDocument') }}
           </router-link>
         </li>
@@ -40,10 +40,10 @@
       <b-table :items="items" :fields="fields" :tbody-tr-class="itemRowClass" responsive striped borderless>
         <template #cell(label)="{ item: { name, label, value } }">
           <div class="font-weight-bold d-flex justify-content-between">
-            <div class="text-truncate mr-1 w-100" :title="name">
+            <div class="text-truncate me-1 w-100" :title="name">
               <var>{{ document.shortMetaName(label || name) | startCase }}</var>
             </div>
-            <div class="ml-auto document__content__details__item__label__search">
+            <div class="ms-auto document__content__details__item__label__search">
               <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name, value), indices } }">
                 <fa icon="search" />
               </router-link>

@@ -13,7 +13,7 @@
             <div class="d-flex text-nowrap">
               <div class="w-100">
                 <email-string
-                  class="document-thread__list__email__from mr-3"
+                  class="document-thread__list__email__from me-3"
                   :email="email.messageFrom"
                   tag="strong"
                 ></email-string>
@@ -28,7 +28,7 @@
               </abbr>
             </div>
             <div class="d-flex">
-              <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-muted mr-3">
+              <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-muted me-3">
                 {{ $t('email.to') }}
                 <ul class="list-inline d-inline">
                   <email-string

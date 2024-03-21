@@ -29,10 +29,10 @@
             class="mb-2 d-flex align-items-center"
             :class="getCategoryClass(category, 'text-')"
           >
-            <fa :icon="getCategoryIcon(category)" class="mr-2" />
+            <fa :icon="getCategoryIcon(category)" class="me-2" />
             {{ $t('filter.namedEntity' + capitalize(category)) }}
             <i>({{ getCategoryTotal(category) }})</i>
-            <div class="ml-auto">
+            <div class="ms-auto">
               <haptic-copy class="btn-light btn-sm py-1" :label="$t('document.copyAsCsv')" :text="hitsAsCsv(hits)" />
             </div>
           </div>
@@ -52,7 +52,7 @@
               <template #title>
                 <div class="d-flex">
                   <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
-                  <div v-if="ne.offsets.length > 1" class="ml-auto pl-2">
+                  <div v-if="ne.offsets.length > 1" class="ms-auto pl-2">
                     {{ $tc('document.namedEntitiesOccurences', ne.offsets.length, { count: ne.offsets.length }) }}
                   </div>
                 </div>

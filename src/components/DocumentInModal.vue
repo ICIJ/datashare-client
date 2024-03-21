@@ -13,7 +13,7 @@
         <template #back>
           <a role="button" class="small text-white" @click="hideModal">
             <fa icon="chevron-circle-left"></fa>
-            <span class="ml-2">
+            <span class="ms-2">
               {{ $t('batchSearchResults.backToResults') }}
             </span>
           </a>

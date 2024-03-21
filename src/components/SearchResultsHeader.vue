@@ -28,7 +28,7 @@
           </b-dropdown-item>
         </b-dropdown>
         <b-dropdown
-          class="search-results-header__settings__size mr-2"
+          class="search-results-header__settings__size me-2"
           menu-class="search-results-header__settings__size__dropdown pt-0"
           size="sm"
           toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler"
@@ -66,7 +66,7 @@
         :no="$t('global.no')"
       >
         <fa icon="download"></fa>
-        <span v-if="!noLabels" class="ml-2 d-none d-md-inline">
+        <span v-if="!noLabels" class="ms-2 d-none d-md-inline">
           {{ $t('search.results.batchDownload') }}
         </span>
       </confirm-button>

@@ -96,7 +96,7 @@ export default {
     <div class="flex-grow-1 d-flex align-items-center justify-content-center">
       <div class="error__container container">
         <h1 class="mb-3 error__container__heading">
-          <span class="error__container__heading__code mr-3">
+          <span class="error__container__heading__code me-3">
             <font-awesome-layers class="fa-sm error__container__heading__code__icon">
               <fa icon="circle"></fa>
               <fa icon="sad-tear" class="text-secondary" transform="shrink-6"></fa>
@@ -113,19 +113,19 @@ export default {
         <ul class="error__container__links list-inline text-capitalize">
           <li class="list-inline-item error__container__links__item">
             <a :href="faqLink" target="_blank">
-              <fa icon="question" fixed-width class="error__container__links__item__icon mr-1"></fa>
+              <fa icon="question" fixed-width class="error__container__links__item__icon me-1"></fa>
               {{ $t('menu.faq') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="documentationLink" target="_blank">
-              <fa icon="book" fixed-width class="error__container__links__item__icon mr-1"></fa>
+              <fa icon="book" fixed-width class="error__container__links__item__icon me-1"></fa>
               {{ $t('menu.userGuides') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="helpLink" target="_blank">
-              <fa icon="ambulance" fixed-width class="error__container__links__item__icon mr-1"></fa>
+              <fa icon="ambulance" fixed-width class="error__container__links__item__icon me-1"></fa>
               {{ $t('menu.help') }}
             </a>
           </li>

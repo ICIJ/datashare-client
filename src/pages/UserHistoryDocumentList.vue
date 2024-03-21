@@ -25,7 +25,7 @@
           />
         </template>
         <template #cell(modification_date)="{ item: { modificationDate } }">
-          <span class="user-history-document-list__list__item__date font-weight-bold mr-2">{{
+          <span class="user-history-document-list__list__item__date font-weight-bold me-2">{{
             getDate(modificationDate)
           }}</span>
           <span class="user-history-document-list__list__item__time d-inline-block">{{
@@ -40,7 +40,7 @@
             >
               <document-thumbnail
                 :document="eventAsDocument({ uri })"
-                class="user-history-document-list__list__item__preview d-none d-inline-flex mr-3"
+                class="user-history-document-list__list__item__preview d-none d-inline-flex me-3"
                 crop
                 lazy
                 size="30"

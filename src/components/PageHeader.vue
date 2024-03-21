@@ -7,7 +7,7 @@
         </div>
         <div class="d-flex align-items-center">
           <slot name="preTitle">
-            <page-icon v-if="icon" :icon="icon" class="mr-3" />
+            <page-icon v-if="icon" :icon="icon" class="me-3" />
           </slot>
           <div class="">
             <h3 class="page-header__title d-flex align-items-center m-0">

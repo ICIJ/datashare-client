@@ -17,7 +17,7 @@
               :key="name"
               class="batch-search-results-details__info__projects__link"
             >
-              <project-link :project="name" class="btn btn-sm btn-light p-1 mr-1 mb-1" />
+              <project-link :project="name" class="btn btn-sm btn-light p-1 me-1 mb-1" />
             </span>
           </dd>
         </div>
@@ -57,7 +57,7 @@
           </dt>
           <dd>
             <ul class="list-unstyled list-group list-group-horizontal mt-1">
-              <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
+              <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="me-2">
                 <content-type-badge :value="fileType" />
               </li>
             </ul>
@@ -69,7 +69,7 @@
           </dt>
           <dd>
             <ul class="list-unstyled list-group list-group-horizontal">
-              <li v-for="path in batchSearch.paths" :key="path" class="mr-2">
+              <li v-for="path in batchSearch.paths" :key="path" class="me-2">
                 <b-badge variant="dark">
                   {{ path }}
                 </b-badge>

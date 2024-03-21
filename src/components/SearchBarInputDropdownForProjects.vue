@@ -65,7 +65,7 @@
           @click="toggleUniqueValue($event, project)"
         >
           <span
-            class="search-bar-input-dropdown-for-projects__toggle-unique-value__thumbnail mr-2 d-inline-flex align-items-center justify-self-center"
+            class="search-bar-input-dropdown-for-projects__toggle-unique-value__thumbnail me-2 d-inline-flex align-items-center justify-self-center"
           >
             <project-thumbnail :project="project" no-caption width="1.2em" class="rounded" />
           </span>
@@ -74,7 +74,7 @@
           </span>
         </div>
         <div
-          class="search-bar-input-dropdown-for-projects__toggle-value px-3 py-2 ml-auto"
+          class="search-bar-input-dropdown-for-projects__toggle-value px-3 py-2 ms-auto"
           @click="toggleValue($event, project)"
         >
           <fa v-if="!hasValue(project)" icon="plus" fixed-width />

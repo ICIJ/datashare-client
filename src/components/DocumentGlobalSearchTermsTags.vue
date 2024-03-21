@@ -102,7 +102,7 @@ export default {
 
 <template>
   <div v-if="document && terms.length" class="document-global-search-terms-tags d-flex align-items-center">
-    <div class="mr-2">
+    <div class="me-2">
       {{ $t('document.researchedTerms') }}
     </div>
     <ul class="list-inline m-0">
@@ -150,7 +150,7 @@ export default {
     cursor: pointer;
 
     &:hover {
-      box-shadow: 0 3px 0 0 darken(theme-color('mark'), 20%);
+      box-shadow: 0 3px 0 0 darken($mark-bg, 20%);
     }
 
     & &__count {

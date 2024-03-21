@@ -107,7 +107,7 @@ export default {
       @click="goToPreviousItem"
       @shortkey="getAction('goToPreviousItem')"
     >
-      <fa icon="angle-left" class="mr-1"></fa>
+      <fa icon="angle-left" class="me-1"></fa>
       <span class="d-sm-none d-md-inline">
         {{ $t('quickItemNav.previous.label') }}
       </span>
@@ -126,7 +126,7 @@ export default {
       <span class="d-sm-none d-md-inline">
         {{ $t('quickItemNav.next.label') }}
       </span>
-      <fa icon="angle-right" class="ml-1"></fa>
+      <fa icon="angle-right" class="ms-1"></fa>
     </button>
     <b-tooltip target="next-item-button" triggers="hover">
       <span v-html="nextTooltip"></span>

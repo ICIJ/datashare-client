@@ -68,30 +68,30 @@ export default {
   <div class="project-view">
     <page-header v-model="tabIndex" :title="projectDisplay" :description="project.description" :tab.sync="tab">
       <template #preTitle>
-        <project-thumbnail :project="project" width="4em" class="mr-3 rounded" />
+        <project-thumbnail :project="project" width="4em" class="me-3 rounded" />
       </template>
       <template #tabs>
         <b-tab title-item-class=" project-view__tab project-view__tab--insights">
           <template #title>
-            <fa icon="chart-bar" fixed-width class="mr-1" />
+            <fa icon="chart-bar" fixed-width class="me-1" />
             Insights
           </template>
         </b-tab>
         <b-tab v-if="!isServer" title-item-class=" project-view__tab project-view__tab--insights">
           <template #title>
-            <fa icon="file" fixed-width class="mr-1" />
+            <fa icon="file" fixed-width class="me-1" />
             Add documents
           </template>
         </b-tab>
         <b-tab v-if="!isServer" title-item-class=" project-view__tab project-view__tab--insights">
           <template #title>
-            <fa icon="user-tag" fixed-width class="mr-1" />
+            <fa icon="user-tag" fixed-width class="me-1" />
             Find named entities
           </template>
         </b-tab>
-        <b-tab v-if="!isServer" title-item-class="ml-auto project-view__tab project-view__tab--edit">
+        <b-tab v-if="!isServer" title-item-class="ms-auto project-view__tab project-view__tab--edit">
           <template #title>
-            <fa icon="pen" fixed-width class="mr-1" />
+            <fa icon="pen" fixed-width class="me-1" />
             Edit
           </template>
         </b-tab>

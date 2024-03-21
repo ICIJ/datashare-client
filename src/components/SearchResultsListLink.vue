@@ -10,11 +10,11 @@
       </span>
       <active-text-truncate class="search-results-list-link__location">
         <span class="d-inline-flex align-items-center">
-          <fa icon="folder" class="mr-1" />
+          <fa icon="folder" class="me-1" />
           <project-link
             v-if="showIndex"
             :project="document.index"
-            class="badge badge-light mr-2"
+            class="badge badge-light me-2"
             hide-thumbnail
             disabled
           />

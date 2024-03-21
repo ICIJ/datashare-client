@@ -40,7 +40,7 @@
             </span>
             <batch-download-actions
               :id="id"
-              class="ml-auto"
+              class="ms-auto"
               :name="name"
               :state="state"
               :value="properties.batchDownload"

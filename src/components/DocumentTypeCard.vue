@@ -1,6 +1,6 @@
 <template>
   <div class="document-type-card d-flex">
-    <document-thumbnail :document="document" class="mr-2 mb-2" crop></document-thumbnail>
+    <document-thumbnail :document="document" class="me-2 mb-2" crop></document-thumbnail>
     <div>
       <p class="m-0">
         {{ localizedDescription }}
@@ -11,7 +11,7 @@
         ></strong>
       </p>
       <p v-if="document.hasContentTypeWarning" class="bg-warning mb-0 mt-2 p-2 text-dark">
-        <fa icon="exclamation-triangle" class="mr-1"></fa>
+        <fa icon="exclamation-triangle" class="me-1"></fa>
         {{ localizedContentTypeWarning }}
       </p>
     </div>

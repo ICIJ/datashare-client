@@ -4,7 +4,7 @@
       <span
         v-if="selectedPath"
         v-b-modal.modal-widget-select-path
-        class="mr-3 py-1 px-2 border btn btn-link d-inline-flex"
+        class="me-3 py-1 px-2 border btn btn-link d-inline-flex"
       >
         <tree-breadcrumb
           datadir-icon="filter"

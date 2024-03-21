@@ -3,7 +3,7 @@
     <li class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
         <fa :icon="datadirIcon" fixed-width></fa>
-        <span v-if="datadirLabel" class="ml-1">{{ $t('treeView.datadir') }}</span>
+        <span v-if="datadirLabel" class="ms-1">{{ $t('treeView.datadir') }}</span>
       </a>
     </li>
     <li

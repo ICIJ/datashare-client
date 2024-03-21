@@ -9,24 +9,22 @@
       @input="onInput"
       @focus="onFocus"
     />
-    <div class="input-group-append">
-      <a
-        v-if="!hideTips"
-        v-b-tooltip.bottomleft
-        tabindex="-1"
-        class="search-bar-input__tips-addon input-group-text px-2"
-        target="_blank"
-        :class="{ 'search-bar-input__tips-addon--active': showTips }"
-        :href="operatorLink"
-        :title="$t('search.tips')"
-      >
-        <fa icon="question-circle" fixed-width />
-      </a>
-      <slot name="addons"></slot>
-      <button type="submit" class="btn btn-dark search-bar-input__submit" :disabled="disableSubmit">
-        {{ $t('search.buttonLabel') }}
-      </button>
-    </div>
+    <a
+      v-if="!hideTips"
+      v-b-tooltip.bottomleft
+      tabindex="-1"
+      class="search-bar-input__tips-addon input-group-text px-2"
+      target="_blank"
+      :class="{ 'search-bar-input__tips-addon--active': showTips }"
+      :href="operatorLink"
+      :title="$t('search.tips')"
+    >
+      <fa icon="question-circle" fixed-width />
+    </a>
+    <slot name="addons"></slot>
+    <button type="submit" class="btn btn-dark search-bar-input__submit" :disabled="disableSubmit">
+      {{ $t('search.buttonLabel') }}
+    </button>
     <slot name="suggestions"></slot>
   </div>
 </template>
@@ -131,8 +129,8 @@ export default {
   &__input.form-control {
     border-right: 0;
 
-    &:focus + .input-group-append .search-bar-input__field &:deep(.btn),
-    &:focus + .input-group-append .search-bar-input__tips-addon {
+    &:focus + .search-bar-input__field &:deep(.btn),
+    &:focus + .search-bar-input__tips-addon {
       border-bottom-color: $input-focus-border-color;
       border-top-color: $input-focus-border-color;
     }
@@ -165,7 +163,7 @@ export default {
     z-index: 100;
   }
 
-  &.input-group > .input-group-append > &__submit.btn {
+  &.input-group > &__submit.btn {
     border-bottom-right-radius: 1.5em;
     border-top-right-radius: 1.5em;
   }

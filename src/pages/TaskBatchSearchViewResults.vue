@@ -3,7 +3,7 @@
     <div class="my-4 container">
       <div class="mx-1 mb-2 d-flex">
         <router-link :to="generateTo">
-          <fa icon="angle-left" class="mr-1" fixed-width />
+          <fa icon="angle-left" class="me-1" fixed-width />
           {{ $t('batchSearch.title') }}
         </router-link>
       </div>

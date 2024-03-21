@@ -7,13 +7,13 @@
           :to="{ name: 'document', params: attachment.routerParams }"
           class="document-attachments__list__item__link d-flex-inline"
         >
-          <fa :icon="attachment.contentTypeIcon" fixed-width class="mr-1 mt-1" />
+          <fa :icon="attachment.contentTypeIcon" fixed-width class="me-1 mt-1" />
           <span>{{ attachment.slicedName.pop() }}</span>
         </router-link>
       </li>
     </ul>
     <a v-if="total && attachments.length < total" href="#" class="document-attachments__more" @click.prevent="loadMore">
-      <fa icon="plus" fixed-width class="mr-1" />
+      <fa icon="plus" fixed-width class="me-1" />
       {{ $t('document.attachments.more') }}
     </a>
   </div>

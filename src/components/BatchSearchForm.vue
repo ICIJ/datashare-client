@@ -116,7 +116,7 @@
               <b-badge
                 v-for="(oneFileType, index) in fileTypes"
                 :key="oneFileType.mime"
-                class="mt-2 mr-2 pl-1 batch-search-form__cursor"
+                class="mt-2 me-2 pl-1 batch-search-form__cursor"
                 pill
                 variant="warning"
                 @click.prevent="deleteFileType(index)"
@@ -126,7 +126,7 @@
               </b-badge>
             </b-form-group>
             <b-form-group :label="$t('batchSearch.path')" label-size="sm" class="batch-search-form__path">
-              <div v-b-modal.modal-select-path class="mr-3 py-1 px-2 border btn btn-link">
+              <div v-b-modal.modal-select-path class="me-3 py-1 px-2 border btn btn-link">
                 {{ $t('batchSearch.selectFolder') }}
               </div>
               <b-modal
@@ -155,7 +155,7 @@
                 <b-badge
                   v-for="(onePath, index) in paths"
                   :key="onePath"
-                  class="mt-2 mr-2 pl-1 batch-search-form__cursor"
+                  class="mt-2 me-2 pl-1 batch-search-form__cursor"
                   pill
                   variant="warning"
                   @click.prevent="deletePath(index)"
@@ -188,7 +188,7 @@
               <b-badge
                 v-for="(oneTag, index) in tags"
                 :key="oneTag.mime"
-                class="mt-2 mr-2 pl-1 batch-search-form__cursor"
+                class="mt-2 me-2 pl-1 batch-search-form__cursor"
                 pill
                 variant="warning"
                 @click.prevent="deleteTag(index)"

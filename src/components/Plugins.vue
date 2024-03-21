@@ -2,29 +2,27 @@
   <div class="plugins h-100">
     <div class="container pt-4">
       <div class="d-flex mb-2">
-        <div class="plugins__add ml-2">
+        <div class="plugins__add ms-2">
           <b-button variant="outline-primary" @click="$refs.installPluginFromUrl.show()">
-            <fa icon="link" class="mr-1" />
+            <fa icon="link" class="me-1" />
             {{ $t('plugins.installFromUrl') }}
           </b-button>
-          <b-modal ref="installPluginFromUrl" hide-footer lazy>
-            <template #modal-title>
-              {{ $t('plugins.installFromUrl') }}
-            </template>
+          <b-modal ref="installPluginFromUrl" hide-footer lazy :title="$t('plugins.installFromUrl')">
             <b-overlay :show="isInstallingFromUrl">
               <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">
-                    <fa icon="link" />
-                  </span>
-                </div>
+                <span class="input-group-text">
+                  <fa icon="link" />
+                </span>
                 <b-form-input v-model="url" :state="isFormValid" class="b-form-control" placeholder="URL" type="url" />
               </div>
               <div class="d-flex align-items-center">
                 <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
-                <b-button variant="primary" class="ml-auto text-nowrap" :disabled="isFormValid !== true"
+                <b-button
+                  variant="primary"
+                  class="ms-auto text-nowrap"
+                  :disabled="isFormValid !== true"
                   @click="installPluginFromUrl">
                   {{ $t('plugins.install') }}
                 </b-button>
@@ -32,7 +30,7 @@
             </b-overlay>
           </b-modal>
         </div>
-        <div class="plugins__search ml-auto">
+        <div class="plugins__search ms-auto">
           <search-form-control v-model="searchTerm" :placeholder="$t('plugins.search')" @input="search" />
         </div>
       </div>
@@ -51,35 +49,23 @@
                     </div>
                   </div>
                   <div class="d-flex flex-column text-nowrap pl-2">
-                    <b-button
-                      v-if="plugin.installed"
-                      class="plugins__card__uninstall-button mb-2"
-                      variant="danger"
+                    <b-button v-if="plugin.installed" class="plugins__card__uninstall-button mb-2" variant="danger"
                       @click="uninstallPlugin(plugin.id)">
                       <fa icon="trash-alt"></fa>
                       {{ $t('plugins.uninstall') }}
                     </b-button>
-                    <b-button
-                      v-if="!plugin.installed"
-                      class="plugins__card__download-button mb-2"
-                      variant="primary"
+                    <b-button v-if="!plugin.installed" class="plugins__card__download-button mb-2" variant="primary"
                       @click="installPluginFromId(plugin.id)">
                       <fa icon="cloud-download-alt"></fa>
                       {{ $t('plugins.install') }}
                     </b-button>
-                    <b-button
-                      v-if="hasAvailableUpdate(plugin)"
-                      class="plugins__card__update-button mb-2"
-                      variant="primary"
-                      size="sm"
-                      @click="installPluginFromId(plugin.id)">
+                    <b-button v-if="hasAvailableUpdate(plugin)" class="plugins__card__update-button mb-2"
+                      variant="primary" size="sm" @click="installPluginFromId(plugin.id)">
                       <fa icon="sync"></fa>
                       {{ $t('plugins.update') }}
                     </b-button>
-                    <div
-                      v-if="plugin.version && plugin.installed"
-                      class="plugins__card__version text-muted text-center"
-                    >
+                    <div v-if="plugin.version && plugin.installed"
+                      class="plugins__card__version text-muted text-center">
                       {{ $t('plugins.version', { version: plugin.version }) }}
                     </div>
                   </div>
@@ -92,12 +78,8 @@
                 </div>
                 <div class="text-truncate w-100">
                   <span class="font-weight-bold"> {{ $t('plugins.homePage') }}: </span>
-                  <a
-                    v-if="plugin.deliverableFromRegistry.homepage"
-                    class="plugins__card__homepage"
-                    :href="plugin.deliverableFromRegistry.homepage"
-                    target="_blank"
-                  >
+                  <a v-if="plugin.deliverableFromRegistry.homepage" class="plugins__card__homepage"
+                    :href="plugin.deliverableFromRegistry.homepage" target="_blank">
                     {{ plugin.deliverableFromRegistry.homepage }}
                   </a>
                 </div>

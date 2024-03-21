@@ -12,7 +12,7 @@
             class="widget__content__count col-3"
             :class="{ 'widget__content__count--muted': !entities[category] }"
           >
-            <fa fixed-width :icon="namedEntityIcon(category)" class="mr-1" />
+            <fa fixed-width :icon="namedEntityIcon(category)" class="me-1" />
             <span v-html="$tc(`widget.entities.${category}`, entities[category], { count: humanEntities[category] })" />
           </div>
         </div>

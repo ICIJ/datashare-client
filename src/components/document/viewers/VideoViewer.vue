@@ -11,15 +11,15 @@
     <template #footer>
       <div class="d-lg-flex">
         <div switches class="my-auto d-flex">
-          <b-form-checkbox v-model="autoplay" switch class="my-2 mr-3">
+          <b-form-checkbox v-model="autoplay" switch class="my-2 me-3">
             {{ $t('document.player.autoplay') }}
           </b-form-checkbox>
-          <b-form-checkbox v-model="loop" switch class="my-2 mr-3">
+          <b-form-checkbox v-model="loop" switch class="my-2 me-3">
             {{ $t('document.player.loop') }}
           </b-form-checkbox>
         </div>
-        <b-alert :show="cannotPlayVideoFormat" variant="warning" class="ml-auto mt-3 mb-0 my-lg-auto">
-          <fa icon="warning" class="mr-2" />
+        <b-alert :show="cannotPlayVideoFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
+          <fa icon="warning" class="me-2" />
           {{ $t('document.player.video.unknownFormat') }}
         </b-alert>
       </div>

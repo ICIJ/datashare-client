@@ -14,19 +14,19 @@
             <router-link
               v-if="searchable"
               :to="searchInPathRoute(path)"
-              class="tree-view__header__search ml-2 btn-primary btn btn-sm rounded-pill"
+              class="tree-view__header__search ms-2 btn-primary btn btn-sm rounded-pill"
             >
               <fa icon="search"></fa>
               {{ $t('treeView.searchPath') }}
             </router-link>
-            <span v-if="size" class="tree-view__header__size ml-3">
+            <span v-if="size" class="tree-view__header__size ms-3">
               <fa icon="weight"></fa>
               {{ humanSize(total, false, $t('human.size')) }}
             </span>
             <span
               v-if="count"
               :title="$tc('treeView.hits', hits, { hits })"
-              class="tree-view__header__hits ml-2 badge badge-light badge-pill"
+              class="tree-view__header__hits ms-2 badge badge-light badge-pill"
             >
               {{ humanNumber(hits, $t('human.number')) }} {{ $tc('treeView.docs', hits) }}
             </span>
@@ -55,7 +55,7 @@
               <label class="flex-grow-1 m-0 text-light" :for="allDirectoriesInputId">
                 {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
               </label>
-              <div class="ml-2 badge badge-light badge-pill" :title="$n(hits)">
+              <div class="ms-2 badge badge-light badge-pill" :title="$n(hits)">
                 <span v-if="compact">
                   {{ $n(hits) }}
                 </span>
@@ -82,14 +82,14 @@
               <router-link
                 v-if="searchable"
                 :to="searchInPathRoute(directory.key)"
-                class="tree-view__directories__item__search ml-2 btn-primary btn btn-sm rounded-pill"
+                class="tree-view__directories__item__search ms-2 btn-primary btn btn-sm rounded-pill"
               >
                 <fa icon="search"></fa>
                 <span>&nbsp;{{ $t('treeView.searchPath') }}</span>
               </router-link>
               <div
                 v-if="size && directory.contentLength"
-                class="tree-view__directories__item__content-length font-weight-bold ml-2"
+                class="tree-view__directories__item__content-length font-weight-bold ms-2"
                 :title="$n(directory.contentLength.value)"
               >
                 {{ humanSize(directory.contentLength.value, false, $t('human.size')) }}
@@ -97,7 +97,7 @@
               <span
                 v-if="count"
                 :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
-                class="tree-view__directories__item__count ml-2 badge badge-light badge-pill"
+                class="tree-view__directories__item__count ms-2 badge badge-light badge-pill"
               >
                 <span v-if="!directory.doc_count"> - </span>
                 <span v-else-if="compact">

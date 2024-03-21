@@ -5,7 +5,7 @@
       <button
         v-if="!showFilters"
         v-b-tooltip.right
-        class="search__show-filters align-self-center ml-3 btn btn-link px-0"
+        class="search__show-filters align-self-center ms-3 btn btn-link px-0"
         :title="$t('search.showFilters')"
         @click="clickOnShowFilters()"
       >
@@ -24,7 +24,7 @@
           {{ errorMessage }}
           <div v-if="isRequestTimeoutError" class="mt-2">
             <b-button @click="refresh">
-              <fa icon="redo" class="mr-1"></fa>
+              <fa icon="redo" class="me-1"></fa>
               {{ $t('search.errors.tryAgain') }}
             </b-button>
           </div>

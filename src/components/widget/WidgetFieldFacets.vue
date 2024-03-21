@@ -1,7 +1,7 @@
 <template>
   <div class="widget widget--field-facets">
     <div v-if="widget.title" class="widget__header d-flex align-items-center" :class="{ 'card-body': widget.card }">
-      <fa v-if="widget.icon" :icon="widget.icon" fixed-width class="mr-2" />
+      <fa v-if="widget.icon" :icon="widget.icon" fixed-width class="me-2" />
       <h3 class="m-0 p-0 h5" v-html="title"></h3>
     </div>
     <v-wait :for="loader" transition="fade">
@@ -21,7 +21,7 @@
             <div class="widget__list__item__label">
               {{ item.label }}
             </div>
-            <b-badge class="widget__list__item__count ml-auto" pill variant="dark">{{ $n(item.count) }}</b-badge>
+            <b-badge class="widget__list__item__count ms-auto" pill variant="dark">{{ $n(item.count) }}</b-badge>
           </div>
           <span class="widget__list__item__bar" :style="{ width: totalPercentage(item.count) }"></span>
         </component>

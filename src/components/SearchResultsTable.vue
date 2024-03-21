@@ -4,7 +4,7 @@
       <div class="d-flex mb-2">
         <div
           v-if="selected.length"
-          class="d-inline-flex search-results-table__actions mr-2 align-self-start align-items-center"
+          class="d-inline-flex search-results-table__actions me-2 align-self-start align-items-center"
         >
           <b-list-group horizontal>
             <b-list-group-item
@@ -187,7 +187,7 @@ export default {
           key: 'relevance',
           label: '#',
           headerTitle: 'relevance',
-          class: 'pr-1'
+          class: 'pe-1'
         },
         {
           key: 'index',
@@ -371,7 +371,7 @@ export default {
       }
 
       &:hover {
-        color: theme-color('dark');
+        color: $dark;
       }
     }
   }

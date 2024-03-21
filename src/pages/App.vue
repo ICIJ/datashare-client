@@ -18,7 +18,7 @@
         {{ $t('login.logout') }}
       </p>
       <div class="d-flex">
-        <b-button :href="signinUrl" variant="danger" class="ml-auto">
+        <b-button :href="signinUrl" variant="danger" class="ms-auto">
           {{ $t('login.login') }}
         </b-button>
       </div>

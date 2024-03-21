@@ -14,7 +14,7 @@
                     {{ project.label || startCase(project.name) }}
                   </router-link>
                 </h4>
-                <fa icon="thumbtack" fixed-width class="mr-1 project-cards__item__thumbtack" />
+                <fa icon="thumbtack" fixed-width class="me-1 project-cards__item__thumbtack" />
               </div>
               <p class="text-truncate text-truncate--2 d-flex flex-grow-1 mb-2">
                 {{ project.description }}
@@ -33,7 +33,7 @@
               </p>
               <p class="mb-0">
                 <b-button variant="outline-primary" :to="{ name: 'search', query: { indices: project.name } }">
-                  <fa icon="search" fixed-width class="mr-1" /> {{ $t('projectCards.search') }}
+                  <fa icon="search" fixed-width class="me-1" /> {{ $t('projectCards.search') }}
                 </b-button>
               </p>
             </div>

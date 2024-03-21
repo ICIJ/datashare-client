@@ -2,7 +2,7 @@
   <div v-if="showProjects" class="filter card">
     <div class="card-header px-2">
       <h6 class="pt-0" @click="toggleItems">
-        <span class="filter__items__item__icon pl-0 pr-1">
+        <span class="filter__items__item__icon pl-0 pe-1">
           <fa icon="book" fixed-width />
         </span>
         <fa :icon="headerIcon" class="float-right" />
