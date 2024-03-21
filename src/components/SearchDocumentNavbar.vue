@@ -105,7 +105,7 @@ export default {
     previousDocument() {
       return this.response.hits[this.documentIndex - 1]
     },
-    nextDocument() {
+    nextDocument() {$attrs
       return this.response.hits[this.documentIndex + 1]
     }
   },
@@ -116,6 +116,9 @@ export default {
     this.saveComponentHeight()
   },
   methods: {
+    back() {
+      return this.$router.push({ name: 'search', query:this.query })
+    },
     saveComponentHeight() {
       const height = `${this.$el.offsetHeight}px`
       // Save component height in a CSS variable after it's been update
