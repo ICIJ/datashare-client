@@ -7,7 +7,7 @@
             <div class="col-2">
               <project-thumbnail class="rounded" :project="project" />
             </div>
-            <div class="col pl-3 d-flex flex-column justify-content-between">
+            <div class="col ps-3 d-flex flex-column justify-content-between">
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <h4 class="project-cards__item__heading mb-0">
                   <router-link :to="{ name: 'project.view.insights', params: { name: project.name } }">
