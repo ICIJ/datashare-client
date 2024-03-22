@@ -101,6 +101,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['hide', 'changed', 'selected', 'update:modelValue'],
   data() {
     return {
       // A reactive property to hold the reference to the dropdown
