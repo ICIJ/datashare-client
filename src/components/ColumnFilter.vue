@@ -3,7 +3,7 @@
     <span class="column-filter__label">
       {{ name }}
     </span>
-    <b-button :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline">
+    <b-button :id="btnId" class="column-filter__toggle ms-1" :class="btnClassName" radius variant="outline">
       <fa icon="filter" />
       <slot name="badge" :active="active" :counter="counter">
         <column-filter-badge :active="active" :counter="counter" />
@@ -78,7 +78,7 @@ export default {
   &__toggle {
     position: relative;
     padding: 0 0.2em;
-    margin: 0 0 0 1em;
+    margin: 0;
     line-height: 1.3em;
   }
 }

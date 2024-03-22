@@ -24,6 +24,7 @@
             v-model="selectedContentTypes"
             :items="contentTypes"
             :name="field.label"
+            immediate
             multiple
           >
             <template #label="{ item }">
@@ -103,7 +104,7 @@
 </template>
 
 <script>
-import { compact, find, get, isEqual, uniq, isArray } from 'lodash'
+import { compact, find, get, isEqual, uniq, isArray, uniqueId } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
@@ -150,8 +151,11 @@ export default {
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results', 'contentTypes']),
     ...mapGetters('batchSearch', ['queryKeys', 'nbSelectedQueries', 'totalItems']),
+    loaderId() {
+      return uniqueId('batch-search-results-table-loader-')
+    },
     isBusy() {
-      return this.$wait.waiting('load batchSearch results table')
+      return this.$wait.is(this.loaderId)
     },
     selectedContentTypes: {
       get() {
@@ -195,13 +199,15 @@ export default {
           key: 'documentNumber',
           label: this.$t('batchSearchResults.rank'),
           sortable: false,
-          name: 'doc_nb'
+          name: 'doc_nb',
+          thStyle: { width: '5rem' }
         },
         {
           key: 'query',
           label: this.$t('batchSearchResults.query'),
           sortable: true,
-          name: 'query'
+          name: 'query',
+          thStyle: { width: '10rem' }
         },
         this.projectField,
         {
@@ -214,19 +220,22 @@ export default {
           key: 'creationDate',
           label: this.$t('batchSearchResults.creationDate'),
           sortable: true,
-          name: 'creation_date'
+          name: 'creation_date',
+          thStyle: { width: '10rem' }
         },
         {
           key: 'contentType',
           label: this.$t('batchSearchResults.contentType'),
           sortable: true,
-          name: 'content_type'
+          name: 'content_type',
+          thStyle: { width: '10rem' }
         },
         {
           key: 'contentLength',
           label: this.$t('batchSearchResults.size'),
           sortable: true,
-          name: 'content_length'
+          name: 'content_length',
+          thStyle: { width: '8rem' }
         }
       ])
     },
@@ -303,7 +312,7 @@ export default {
   methods: {
     fileExtension,
     async fetch() {
-      this.$wait.start('load batchSearch results table')
+      this.$wait.start(this.loaderId)
       const {
         order,
         sort,
@@ -314,8 +323,11 @@ export default {
         queriesExcluded
       } = this
       const params = { batchId: this.uuid, from, size, queries, sort, order, contentTypes, queriesExcluded }
-      await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
-      this.$wait.end('load batchSearch results table')
+      try {
+        await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
+      } finally {
+        this.$wait.end(this.loaderId)
+      }
     },
     async setIsMyBatchSearch() {
       const username = await this.$core.auth.getUsername()
