@@ -276,7 +276,7 @@ export default {
       default: 'fade'
     }
   },
-  emits: ['update:path', 'update:selectedPaths'],
+  emits: ['update:path', 'update:selectedPaths', 'update:directories'],
   data() {
     return {
       pages: [],
@@ -551,7 +551,7 @@ export default {
     },
     async reloadDataWithSpinner() {
       await this.loadDataWithSpinner({ clearPages: true })
-      this.$set(this, 'infiniteScrollId', uniqueId())
+      this.infiniteScrollId = uniqueId()
     },
     loadDataWithSpinner: waitFor('loading tree view data', function (...args) {
       return this.loadData(...args)
