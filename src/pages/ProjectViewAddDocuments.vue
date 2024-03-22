@@ -2,7 +2,6 @@
 import { get } from 'lodash'
 import { h } from 'vue'
 
-
 import ExtractingForm from '@/components/ExtractingForm'
 
 /**
