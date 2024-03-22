@@ -276,7 +276,7 @@ export default {
       default: 'fade'
     }
   },
-  emits: ['update:path', 'update:selectedPaths', 'update:directories'],
+  emits: ['update:path', 'update:selectedPaths', 'update:directories', 'checked'],
   data() {
     return {
       pages: [],
