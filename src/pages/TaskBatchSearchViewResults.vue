@@ -11,9 +11,7 @@
     </div>
 
     <div class="container">
-      <b-row
-        class="task-batch-search-view-results__applied-search-filters d-flex justify-content-end align-items-center"
-      >
+      <div class="task-batch-search-view-results__applied-search-filters d-flex justify-content-end align-items-center">
         <applied-search-filters-item
           v-if="selectedQueries.length"
           class="task-batch-search-view-results__applied-search-filters__queries"
@@ -21,7 +19,7 @@
           hide-filter-label
           :update-search-store="false"
           @delete="clearQueriesParams"
-        ></applied-search-filters-item>
+        />
         <applied-search-filters-item
           v-for="(cType, i) in selectedContentTypes"
           :key="`${cType}+${i}`"
@@ -30,13 +28,13 @@
           hide-filter-label
           :update-search-store="false"
           @delete="clearContentTypeParams"
-        ></applied-search-filters-item>
+        />
         <batch-search-clear-filters
           class="batch-search__clear-filter-btn m-1"
           route-name="task.batch-search.view.results"
           :local-search-params="params"
         />
-      </b-row>
+      </div>
       <batch-search-results-table :indices="indices" :uuid="uuid" @show-document-modal="openDocumentModal" />
       <document-in-modal v-model="documentInModalPageIndex" :page="page" @update:page="updatePage" />
     </div>
