@@ -34,7 +34,7 @@
           <search-form-control v-model="searchTerm" :placeholder="$t('plugins.search')" @input="search" />
         </div>
       </div>
-      <b-overlay :show="!plugins.length" class="plugins__card">
+      <b-overlay :show="isLoading" class="plugins__card">
         <div class="row my-4">
           <b-overlay v-for="plugin in plugins" :key="plugin.id" :show="plugin.loading" class="col-6 mb-3">
             <b-card footer-border-variant="white">
@@ -49,23 +49,36 @@
                     </div>
                   </div>
                   <div class="d-flex flex-column text-nowrap pl-2">
-                    <b-button v-if="plugin.installed" class="plugins__card__uninstall-button mb-2" variant="danger"
+                    <b-button
+                      v-if="plugin.installed"
+                      class="plugins__card__uninstall-button mb-2"
+                      variant="danger"
                       @click="uninstallPlugin(plugin.id)">
                       <fa icon="trash-alt"></fa>
                       {{ $t('plugins.uninstall') }}
                     </b-button>
-                    <b-button v-if="!plugin.installed" class="plugins__card__download-button mb-2" variant="primary"
+                    <b-button
+                      v-if="!plugin.installed"
+                      class="plugins__card__download-button mb-2"
+                      variant="primary"
                       @click="installPluginFromId(plugin.id)">
                       <fa icon="cloud-download-alt"></fa>
                       {{ $t('plugins.install') }}
                     </b-button>
-                    <b-button v-if="hasAvailableUpdate(plugin)" class="plugins__card__update-button mb-2"
-                      variant="primary" size="sm" @click="installPluginFromId(plugin.id)">
+                    <b-button
+                      v-if="hasAvailableUpdate(plugin)"
+                      class="plugins__card__update-button mb-2"
+                      variant="primary"
+                      size="sm"
+                      @click="installPluginFromId(plugin.id)"
+                    >
                       <fa icon="sync"></fa>
                       {{ $t('plugins.update') }}
                     </b-button>
-                    <div v-if="plugin.version && plugin.installed"
-                      class="plugins__card__version text-muted text-center">
+                    <div
+                      v-if="plugin.version && plugin.installed"
+                      class="plugins__card__version text-muted text-center"
+                    >
                       {{ $t('plugins.version', { version: plugin.version }) }}
                     </div>
                   </div>
@@ -78,8 +91,12 @@
                 </div>
                 <div class="text-truncate w-100">
                   <span class="fw-bold"> {{ $t('plugins.homePage') }}: </span>
-                  <a v-if="plugin.deliverableFromRegistry.homepage" class="plugins__card__homepage"
-                    :href="plugin.deliverableFromRegistry.homepage" target="_blank">
+                  <a
+                    v-if="plugin.deliverableFromRegistry.homepage"
+                    class="plugins__card__homepage"
+                    :href="plugin.deliverableFromRegistry.homepage"
+                    target="_blank"
+                  >
                     {{ plugin.deliverableFromRegistry.homepage }}
                   </a>
                 </div>
@@ -93,7 +110,7 @@
 </template>
 
 <script>
-import { camelCase, find, get, map, startCase } from 'lodash'
+import { camelCase, find, get, startCase, uniqueId } from 'lodash'
 
 import { isUrl } from '@/utils/strings'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -117,6 +134,12 @@ export default {
   computed: {
     isFormValid() {
       return this.url === '' ? null : isUrl(this.url)
+    },
+    loaderId() {
+      return uniqueId('plugins-loader-')
+    },
+    isLoading() {
+      return this.$wait.is(this.loaderId)
     }
   },
   mounted() {
@@ -143,11 +166,12 @@ export default {
       return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.description : plugin.description
     },
     async search() {
-      const plugins = await this.$core.api.getPlugins(this.searchTerm)
-      map(plugins, (plugin) => {
+      this.$wait.start(this.loaderId)
+      this.plugins = (await this.$core.api.getPlugins(this.searchTerm)).map((plugin) => {
         plugin.loading = false
+        return plugin
       })
-      this.plugins = plugins
+      this.$wait.end(this.loaderId)
     },
     async installPluginFromId(pluginId) {
       const plugin = find(this.plugins, { id: pluginId })
