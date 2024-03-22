@@ -51,9 +51,9 @@ export default {
 
 <style lang="scss">
 .content-type-badge {
-  padding: $badge-padding-y $badge-pill-padding-x;
+  padding: $badge-padding-y $badge-padding-x;
   border: currentColor 1px solid;
-  border-radius: $badge-pill-border-radius;
+  border-radius: $border-radius-pill;
   font-weight: $badge-font-weight;
   background: $light;
   color: $text-muted;
