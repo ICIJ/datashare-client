@@ -34,13 +34,9 @@
         <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
             <hook name="document.header.nav.items:before" tag="li"></hook>
-            <template v-for="tab in visibleTabs">
-              <hook
-                :key="`hook.${tab.name}:before`"
-                :name="`document.header.nav.items.${tab.name}:before`"
-                tag="li"
-              ></hook>
-              <li :key="tab.name" class="document__header__nav__item list-inline-item" :title="$t(tab.label)">
+            <template v-for="tab in visibleTabs" :key="tab.name">
+              <hook :name="`document.header.nav.items.${tab.name}:before`" tag="li" />
+              <li class="document__header__nav__item list-inline-item" :title="$t(tab.label)">
                 <router-link
                   :class="{ active: isTabActive(tab.name) }"
                   :to="{ query: { q: $route.query.q, tab: tab.name } }"
@@ -52,11 +48,7 @@
                   <hook :name="`document.header.nav.${tab.name}:after`"></hook>
                 </router-link>
               </li>
-              <hook
-                :key="`hook.${tab.name}:after`"
-                :name="`document.header.nav.items.${tab.name}:after`"
-                tag="li"
-              ></hook>
+              <hook :name="`document.header.nav.items.${tab.name}:after`" tag="li" />
             </template>
             <hook name="document.header.nav.items:after" tag="li"></hook>
           </ul>
