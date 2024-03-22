@@ -8,11 +8,6 @@ import { toVariant, toVariantIcon, toVariantColor } from '@/utils/utils'
  */
 export default {
   name: 'EllipseStatus',
-  filters: {
-    toVariant,
-    toVariantIcon,
-    toVariantColor
-  },
   props: {
     /**
      * Status of the badge.
@@ -114,6 +109,11 @@ export default {
     errorModalId() {
       return uniqueId('ellipse-status-error-modal-')
     }
+  },
+  methods: {
+    toVariant,
+    toVariantIcon,
+    toVariantColor
   }
 }
 </script>
@@ -127,7 +127,7 @@ export default {
       :empty-thickness="ellipseThickness"
       :font-size="ellipseSizeFontSize"
       :progress="statusProgress"
-      :color="status | toVariantColor"
+      :color="toVariantColor(status)"
       :empty-color="emptyColor"
       :animation="statusAnimation"
       :loading="loading"
@@ -140,8 +140,8 @@ export default {
           <fa
             class="ellipse-status__progress__icon"
             fixed-width
-            :class="status | toVariant('dark', 'text-')"
-            :icon="status | toVariantIcon"
+            :class="toVariant(status, 'dark', 'text-')"
+            :icon="toVariantIcon(status)"
           />
         </template>
       </slot>
@@ -157,7 +157,7 @@ export default {
         </span>
         <span
           class="ellipse-status__badge__toggler bg-white d-inline-block p-1"
-          :class="status | toVariant('dark', 'text-')"
+          :class="toVariant(status, 'dark', 'text-')"
         >
           <fa icon="external-link-alt" />
         </span>
