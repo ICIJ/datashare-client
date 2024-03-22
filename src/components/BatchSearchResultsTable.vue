@@ -27,7 +27,7 @@
             multiple
           >
             <template #label="{ item }">
-              {{ item | fileExtension }}
+              {{ fileExtension(item) }}
             </template>
           </column-filter-dropdown>
         </template>
@@ -110,7 +110,6 @@ import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import humanSize from '@/filters/humanSize'
-import humanNumber from '@/filters/humanNumber'
 import { fileExtension } from '@/filters/fileExtension'
 import { humanLongDate, humanShortDate, isDateValid } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
@@ -125,11 +124,6 @@ export default {
     ContentTypeBadge,
     ColumnFilterDropdown,
     BatchSearchResultsFilters
-  },
-  filters: {
-    humanSize,
-    humanNumber,
-    fileExtension
   },
   mixins: [utils],
   props: {
@@ -310,6 +304,7 @@ export default {
     await Promise.all([this.fetch(), this.setIsMyBatchSearch(), this.getQueries()])
   },
   methods: {
+    fileExtension,
     async fetch() {
       this.$wait.start('load batchSearch results table')
       const {
