@@ -35,7 +35,6 @@ export default {
         return this.tabRoutes.indexOf(this.$route.name)
       },
       set(tab) {
-        console.log(tab)
         const name = this.tabRoutes[tab]
         if (name && this.$route.name !== name) {
           return this.$router.push({ name })
