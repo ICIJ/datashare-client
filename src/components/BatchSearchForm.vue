@@ -142,7 +142,7 @@
                 @ok="setPaths()"
               >
                 <tree-view
-                  v-model="path"
+                  v-model:path="path"
                   :projects="projects"
                   :selected-paths="selectedPaths"
                   count

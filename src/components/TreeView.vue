@@ -3,7 +3,7 @@
     <b-collapse :visible="!noHeader">
       <div class="tree-view__header d-flex flex-row align-items-center text-nowrap">
         <tree-breadcrumb :path="path" :max-directories="compact ? 2 : 5" no-datadir datadir-label
-          @input="$emit('input', $event)"></tree-breadcrumb>
+          @input="$emit('update:path', $event)" />
         <transition :name="transition">
           <div v-if="!$wait.waiting('loading tree view data')">
             <router-link v-if="searchable" :to="searchInPathRoute(path)"
@@ -34,9 +34,12 @@
       <div>
         <b-form-checkbox-group v-model="selected">
           <ul class="list-group list-group-flush tree-view__directories">
-            <li v-if="hits && selectable"
+            <li
+              v-if="hits && selectable"
               class="list-group-item d-flex flex-row align-items-center text-muted tree-view__directories__item tree-view__directories__item--hits">
-              <b-form-checkbox :id="allDirectoriesInputId" :value="toDirectory(path)"
+              <b-form-checkbox
+                :id="allDirectoriesInputId"
+                :value="toDirectory(path)"
                 class="tree-view__directories__item__checkbox" />
               <label class="flex-grow-1 m-0 text-light" :for="allDirectoriesInputId">
                 {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
@@ -48,26 +51,40 @@
                 <span v-else> {{ humanNumber(hits) }} {{ $tc('treeView.docs', hits) }} </span>
               </div>
             </li>
-            <li v-for="directory in directories" :key="directory.key"
+            <li
+              v-for="directory in directories"
+              :key="directory.key"
               class="list-group-item d-flex flex-row align-items-center tree-view__directories__item">
-              <b-form-checkbox v-if="selectable" :value="toDirectory(directory.key)"
-                class="tree-view__directories__item__checkbox"></b-form-checkbox>
-              <a class="tree-view__directories__item__label flex-grow-1" href
-                @click.prevent="$emit('input', directory.key)">
+              <b-form-checkbox
+                v-if="selectable"
+                :value="toDirectory(directory.key)"
+                class="tree-view__directories__item__checkbox" />
+              <a
+                class="tree-view__directories__item__label flex-grow-1"
+                href
+                @click.prevent="$emit('update:path', directory.key)">
                 {{ getBasename(directory.key) }}
               </a>
-              <router-link v-if="searchable" :to="searchInPathRoute(directory.key)"
-                class="tree-view__directories__item__search ms-2 btn-primary btn btn-sm rounded-pill">
+              <router-link
+                v-if="searchable"
+                :to="searchInPathRoute(directory.key)"
+                class="tree-view__directories__item__search ms-2 btn-primary btn btn-sm rounded-pill"
+              >
                 <fa icon="search"></fa>
                 <span>&nbsp;{{ $t('treeView.searchPath') }}</span>
               </router-link>
-              <div v-if="size && directory.contentLength"
+              <div
+                v-if="size && directory.contentLength"
                 class="tree-view__directories__item__content-length fw-bold ms-2"
-                :title="$n(directory.contentLength.value)">
+                :title="$n(directory.contentLength.value)"
+              >
                 {{ humanSize(directory.contentLength.value, false, $t('human.size')) }}
               </div>
-              <span v-if="count" :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
-                class="tree-view__directories__item__count ms-2 badge badge-light badge-pill">
+              <span
+                v-if="count"
+                :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
+                class="tree-view__directories__item__count ms-2 badge badge-light badge-pill"
+              >
                 <span v-if="!directory.doc_count"> - </span>
                 <span v-else-if="compact">
                   {{ $n(directory.doc_count) }}
@@ -76,11 +93,16 @@
                   {{ humanNumber(directory.doc_count) }} {{ $tc('treeView.docs', directory.doc_count) }}
                 </span>
               </span>
-              <span v-if="!noBars" class="tree-view__directories__item__bar"
-                :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
+              <span
+                v-if="!noBars"
+                class="tree-view__directories__item__bar"
+                :style="{ width: totalPercentage(directory.contentLength.value) }"
+              ></span>
             </li>
-            <li v-if="!selectable && !directories.length"
-              class="list-group-item tree-view__directories__item tree-view__directories__item--no-folders text-muted text-center">
+            <li
+              v-if="!selectable && !directories.length"
+              class="list-group-item tree-view__directories__item tree-view__directories__item--no-folders text-muted text-center"
+            >
               {{ $t('widget.noFolders') }}
             </li>
           </ul>
@@ -131,10 +153,6 @@ export default {
   components: {
     InfiniteLoading,
     TreeBreadcrumb
-  },
-  model: {
-    prop: 'path',
-    event: 'input'
   },
   props: {
     /**
@@ -258,6 +276,7 @@ export default {
       default: 'fade'
     }
   },
+  emits: ['update:path', 'update:selectedPaths'],
   data() {
     return {
       pages: [],
