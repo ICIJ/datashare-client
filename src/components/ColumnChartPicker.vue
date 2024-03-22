@@ -150,16 +150,16 @@ export default {
       return this.end.getFullYear()
     },
     intervalTimesExtent() {
-      const start = this.toIntervalStart(this.datesExtent[0]).getTime()
-      const end = this.toIntervalEnd(this.datesExtent[1]).getTime()
+      const start = this.toIntervalStart(this.datesExtent[0] ?? new Date()).getTime()
+      const end = this.toIntervalEnd(this.datesExtent[1] ?? new Date()).getTime()
       return [start, end]
     },
     datesExtent() {
       return d3.extent(this.cleanData, iteratee('date'))
     },
     intervalDatesExtent() {
-      const start = this.toIntervalStart(this.datesExtent[0])
-      const end = this.toIntervalEnd(this.datesExtent[1])
+      const start = this.toIntervalStart(this.datesExtent[0] ?? new Date())
+      const end = this.toIntervalEnd(this.datesExtent[1] ?? new Date())
       return [start, end]
     },
     datesScale() {
