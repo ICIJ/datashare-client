@@ -136,7 +136,7 @@ $value in $theme-colors {
 .popover {
 
   .popover-body {
-    &>.dropdown-menu {
+    & >.dropdown-menu {
       background: inherit;
       color: inherit;
       float: none;
@@ -188,12 +188,6 @@ $value in $theme-colors {
       }
 
     }
-
-    &.bs-popover-bottom>.arrow::after,
-    &.bs-popover-auto[x-placement^="bottom"]>.arrow::after {
-      border-bottom-color: $popover-bg;
-    }
-
   }
 
   &.popover-body-overflow-hidden:not(.dropdown-menu) .popover-body {
@@ -201,8 +195,8 @@ $value in $theme-colors {
     overflow: hidden;
   }
 
-  &.bs-popover-bottom>.arrow::after,
-  &.bs-popover-auto[x-placement^="bottom"]>.arrow::after {
+  &.bs-popover-bottom > .popover-arrow::after,
+  &.bs-popover-auto[data-popper-placement^="bottom"] > .popover-arrow::after {
     border-bottom-color: $popover-header-bg;
   }
 }
