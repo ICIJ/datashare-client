@@ -125,7 +125,7 @@ export default {
     }
 
     & &__view {
-      background: $body-bg;
+      background: $body-secondary-bg;
       z-index: 20;
     }
   }

@@ -91,9 +91,7 @@ export default {
           </template>
         </b-tab>
       </template>
-      <template #body>
-        <router-view />
-      </template>
     </page-header>
+    <router-view />
   </div>
 </template>

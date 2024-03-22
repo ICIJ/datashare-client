@@ -21,20 +21,18 @@
         <fa icon="trash-alt" class="me-1"></fa>
         {{ $t('userHistory.clear') }}
       </confirm-button>
-      <template #body>
-        <v-wait class="user-history__loader container" :for="loader">
-          <template #waiting>
-            <div class="p-4 text-center">
-              <fa icon="circle-notch" spin size="2x"></fa>
-            </div>
-          </template>
-          <router-view :events="events" />
-          <div v-if="showPagination" class="user-history__pagination mb-3">
-            <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalEvents" />
-          </div>
-        </v-wait>
-      </template>
     </page-header>
+    <v-wait class="user-history__loader container" :for="loader">
+      <template #waiting>
+        <div class="p-4 text-center">
+          <fa icon="circle-notch" spin size="2x"></fa>
+        </div>
+      </template>
+      <router-view :events="events" />
+      <div v-if="showPagination" class="user-history__pagination mb-3">
+        <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalEvents" />
+      </div>
+    </v-wait>
   </div>
 </template>
 
@@ -197,7 +195,6 @@ export default {
 }
 
 .user-history {
-  background: $body-bg;
   color: $body-color;
   overflow: auto;
   position: relative;
