@@ -79,7 +79,7 @@ export default {
       default: 'off'
     }
   },
-  emits: ['submit', 'up', 'down', 'update:modelValue', 'enter', 'blur'],
+  emits: ['submit', 'up', 'down', 'input', 'update:modelValue', 'enter', 'blur'],
   computed: {
     searchFormClassAttr() {
       return {
@@ -95,6 +95,7 @@ export default {
   methods: {
     input(value) {
       this.$emit('update:modelValue', value)
+      this.$emit('input', value)
     }
   }
 }
