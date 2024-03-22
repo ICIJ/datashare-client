@@ -100,9 +100,6 @@ export default {
   overflow: hidden;
   position: relative;
   z-index: 10;
-  background-color: $body-secondary-bg;
-  padding-bottom: $spacer-xl;
-  min-height: 100vh;
 
   &__tabs {
     &__nav {
