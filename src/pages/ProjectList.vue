@@ -7,12 +7,7 @@
       </b-button>
     </page-header>
     <div class="container py-4">
-      <b-table striped :items="projects" :fields="fields" outlined class="bg-white">
-        <template #table-colgroup>
-          <col style="width: 2rem" />
-          <col style="width: 100%" />
-          <col />
-        </template>
+      <b-table striped :items="projects" :fields="fields" responsive class="bg-white card">
         <template #cell(thumbnail)="{ item: project }">
           <router-link :to="{ name: 'project.view', params: project }" class="fw-bold">
             <project-thumbnail :project="project" class="rounded" width="3rem" />
@@ -48,13 +43,15 @@ export default {
         {
           key: 'thumbnail',
           label: '',
-          class: 'align-middle'
+          class: 'align-middle',
+          thStyle: { width: '2rem' }
         },
         {
           key: 'label',
           label: this.$t('projectList.fields.label'),
           sortable: true,
-          class: 'align-middle'
+          class: 'align-middle',
+          thStyle: { width: '100%' }
         },
         {
           key: 'updateDate',
