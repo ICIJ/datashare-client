@@ -2,11 +2,17 @@
   <div class="tree-view" :class="{ 'tree-view--compact': compact }">
     <b-collapse :visible="!noHeader">
       <div class="tree-view__header d-flex flex-row align-items-center text-nowrap">
-        <tree-breadcrumb :path="path" :max-directories="compact ? 2 : 5" no-datadir datadir-label
+        <tree-breadcrumb
+          :path="path"
+          :max-directories="compact ? 2 : 5"
+          no-datadir
+          datadir-label
           @input="$emit('update:path', $event)" />
         <transition :name="transition">
           <div v-if="!$wait.waiting('loading tree view data')">
-            <router-link v-if="searchable" :to="searchInPathRoute(path)"
+            <router-link
+              v-if="searchable"
+              :to="searchInPathRoute(path)"
               class="tree-view__header__search ms-2 btn-primary btn btn-sm rounded-pill">
               <fa icon="search"></fa>
               {{ $t('treeView.searchPath') }}
@@ -15,7 +21,9 @@
               <fa icon="weight"></fa>
               {{ humanSize(total, false, $t('human.size')) }}
             </span>
-            <span v-if="count" :title="$tc('treeView.hits', hits, { hits })"
+            <span
+              v-if="count"
+              :title="$tc('treeView.hits', hits, { hits })"
               class="tree-view__header__hits ms-2 badge badge-light badge-pill">
               {{ humanNumber(hits, $t('human.number')) }} {{ $tc('treeView.docs', hits) }}
             </span>
