@@ -1,44 +1,34 @@
 <template>
-  <column-filter
-    :id="id"
-    class="column-filter-dropdown"
-    :name="name"
-    :active="isActive"
-    :counter="counter"
-    :popover-white="popoverWhite"
-  >
+  <column-filter :id="id" :name="name" :active="isActive" :counter="counter" :popover-white="popoverWhite"
+    @toggle="apply" class="column-filter-dropdown">
     <keep-alive>
       <slot name="dropdown">
-        <selectable-dropdown
-          v-model="selectedValues"
-          :items="items"
-          deactivate-keys
-          :multiple="multiple"
-          :eq="eq"
-          class="shadow-none border-0"
-        >
+        <selectable-dropdown v-model="selectedValues" :items="items" :eq="eq" :multiple="multiple"
+          :serializer="serializer" deactivate-keys class="shadow-none border-0">
           <template #item-label="{ item }">
-            <slot name="label" :item="item">{{ labelItem(item) }}</slot>
+            <slot name="label" :item="item">
+              {{ labelItem(item) }}
+            </slot>
           </template>
         </selectable-dropdown>
+        <div class="d-grid p-2" v-if="!immediate">
+          <button type="button" class="btn btn-primary btn-sm" @click="apply()">
+            Apply
+          </button>
+        </div>
       </slot>
     </keep-alive>
   </column-filter>
 </template>
 
 <script>
-import { isEqual } from 'lodash'
-import eq from 'lodash/eq'
+import { eq, identity } from 'lodash'
 
 import ColumnFilter from '@/components/ColumnFilter'
 
 export default {
   name: 'ColumnFilterDropdown',
   components: { ColumnFilter },
-  model: {
-    prop: 'values',
-    event: 'update'
-  },
   props: {
     id: {
       type: String,
@@ -52,7 +42,7 @@ export default {
       type: String,
       required: true
     },
-    values: {
+    modelValue: {
       type: [Array, Object],
       default: null
     },
@@ -70,26 +60,52 @@ export default {
     popoverWhite: {
       type: Boolean,
       default: true
+    },
+    serializer: {
+      type: Function,
+      default: identity
+    },
+    immediate: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emits: ['update:modelValue'],
+  data() {
+    return {
+      selectedValues: this.modelValue
     }
   },
   computed: {
     isActive() {
-      return this.values?.length > 0 || !!this.values?.value
+      return this.modelValue?.length > 0 || !!this.modelValue.value
+    }
+  },
+  watch: {
+    modelValue: {
+      handler(value) {
+        this.selectedValues = value
+      },
+      deep: true,
+      immediate: true
     },
     selectedValues: {
-      get() {
-        return this.values
-      },
-      set(values) {
-        if (!isEqual(values, this.values)) {
-          this.$emit('update', values)
+      handler(value) {
+        if (this.immediate) {
+          this.$emit('update:modelValue', value)
         }
-      }
+      },
+      deep: true
     }
   },
   methods: {
     labelItem(item) {
       return item && item.label ? item.label : item
+    },
+    apply(show = false) {
+      if (!show && !this.immediate) {
+        this.$emit('update:modelValue', this.selectedValues)
+      }
     }
   }
 }

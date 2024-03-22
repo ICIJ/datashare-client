@@ -13,15 +13,15 @@
         responsive
         striped
         tbody-tr-class="user-history-document-list__list__item"
-        thead-tr-class="user-history-document-list__list__head text-nowrap"
-      >
+        thead-tr-class="user-history-document-list__list__head text-nowrap">
         <template #head(project)="{ field }">
           <column-filter-dropdown
             id="projects"
             v-model="selectedProjects"
+            multiple
+            :eq="sameProject"
             :items="projects"
             :name="field.label"
-            multiple
           />
         </template>
         <template #cell(modification_date)="{ item: { modificationDate } }">
@@ -36,8 +36,7 @@
           <div class="d-flex align-items-center justify-content-between">
             <router-link
               :to="{ path: uri }"
-              class="user-history-document-list__list__item__link d-flex align-items-center"
-            >
+              class="user-history-document-list__list__item__link d-flex align-items-center">
               <document-thumbnail
                 :document="eventAsDocument({ uri })"
                 class="user-history-document-list__list__item__preview d-inline-flex me-3"
@@ -74,7 +73,7 @@
 </template>
 
 <script>
-import { find, trimStart } from 'lodash'
+import { castArray, compact, find, property, trimStart } from 'lodash'
 import { pathToRegexp } from 'path-to-regexp'
 
 import Document from '@/api/resources/Document'
@@ -116,6 +115,7 @@ export default {
   },
   data() {
     return {
+      foo: [],
       fields: [
         {
           key: MODIFICATION_DATE,
@@ -169,14 +169,11 @@ export default {
     selectedProjects: {
       get() {
         const param = this.$route?.query?.projects
-        let projects = param
-        if (typeof param === 'string') {
-          projects = param?.split(',') ?? []
-        }
-        return projects?.filter((p) => this.projects.includes(p)) ?? []
+        const projects = castArray(typeof param === 'string' ? param?.split(',') : [])
+        return compact(projects.map((name) => find(this.projects, { name })))
       },
       set(values) {
-        const projects = values?.length > 0 ? values?.join(',') : null
+        const projects = values?.length > 0 ? values?.map(property('name')).join(',') : null
         return this.updateParams({ projects })
       }
     },
@@ -199,6 +196,9 @@ export default {
     },
     getTime(time) {
       return humanTime(time, this.$i18n.locale)
+    },
+    sameProject(a, b) {
+      return a.name === b.name
     },
     updateParams(queryParams) {
       const query = {
