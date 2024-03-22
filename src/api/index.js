@@ -319,7 +319,7 @@ export class Api {
       const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })
       return r ? r.data : null
     } catch (error) {
-      this.eventBus?.$emit('http::error', error)
+      this.eventBus?.emit('http::error', error)
       throw error
     }
   }
