@@ -62,7 +62,7 @@ export default {
           @submit="submit"
         >
           <template #footer="{ disabled }">
-            <div class="col text-right">
+            <div class="col text-end">
               <b-button variant="primary" class="ms-2" type="submit" :disabled="disabled">
                 {{ $t('indexing.go') }}
               </b-button>

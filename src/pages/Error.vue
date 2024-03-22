@@ -82,7 +82,7 @@ export default {
 
 <template>
   <div class="error d-flex flex-column">
-    <div v-if="showHeader" class="error__header p-3 text-right">
+    <div v-if="showHeader" class="error__header p-3 text-end">
       <a
         v-b-tooltip.html
         class="btn btn-outline-light btn-sm"
