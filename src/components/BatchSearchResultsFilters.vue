@@ -192,7 +192,6 @@ export default {
 
   &__queries {
     &__search {
-      background-color: $card-cap-bg;
       padding: $card-spacer-y $card-spacer-x;
     }
 
@@ -200,13 +199,13 @@ export default {
       z-index: 1001;
 
       &:deep(.btn.dropdown-toggle) {
-        color: white;
         text-decoration: none;
       }
     }
 
     &__dropdown {
       border-radius: 0;
+      box-shadow: none;
       max-height: 280px;
       overflow: auto;
 
@@ -227,8 +226,11 @@ export default {
       }
     }
   }
+
   &__footer {
-    background-color: #000;
+    border-top: 1px solid $border-color;
+    color: $body-color;
+    background-color: $body-bg;
   }
 }
 </style>
