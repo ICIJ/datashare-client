@@ -1,11 +1,7 @@
 <template>
   <div class="user-history">
-    <page-header
-      icon="clock"
-      v-model:tab="tab"
-      :title="$t('userHistory.heading')"
-      :description="$t('userHistory.description')"
-    >
+    <page-header icon="clock" v-model:tab="tab" :title="$t('userHistory.heading')"
+      :description="$t('userHistory.description')">
       <template #tabs>
         <b-tab :active="defaultTab === 0">
           <template #title>
@@ -20,29 +16,25 @@
           </template>
         </b-tab>
       </template>
-      <confirm-button
-        class="btn btn-primary"
-        :disabled="!totalEvents || $wait.is(loader)"
-        :confirmed="deleteUserHistory"
-        :label="$t('global.confirmLabel')"
-        :yes="$t('global.yes')"
-        :no="$t('global.no')"
-      >
+      <confirm-button class="btn btn-primary" :disabled="!totalEvents || $wait.is(loader)"
+        :confirmed="deleteUserHistory" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
         <fa icon="trash-alt" class="me-1"></fa>
         {{ $t('userHistory.clear') }}
       </confirm-button>
-    </page-header>
-    <v-wait class="user-history__loader container" :for="loader">
-      <template #waiting>
-        <div class="p-4 text-center">
-          <fa icon="circle-notch" spin size="2x"></fa>
-        </div>
+      <template #body>
+        <v-wait class="user-history__loader container" :for="loader">
+          <template #waiting>
+            <div class="p-4 text-center">
+              <fa icon="circle-notch" spin size="2x"></fa>
+            </div>
+          </template>
+          <router-view :events="events" />
+          <div v-if="showPagination" class="user-history__pagination mb-3">
+            <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalEvents" />
+          </div>
+        </v-wait>
       </template>
-      <router-view :events="events" />
-      <div v-if="showPagination" class="user-history__pagination mb-3">
-        <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalEvents" />
-      </div>
-    </v-wait>
+    </page-header>
   </div>
 </template>
 

@@ -133,6 +133,11 @@ $value in $theme-colors {
   @include popover-variant($white, 1px, $dropdown-border-color);
 }
 
+.table.card > tbody > tr:last-of-type > td,
+.table-responsive.card > .table > tbody > tr:last-of-type > td {
+  border-bottom-width: 0;
+}
+
 .popover {
 
   .popover-body {

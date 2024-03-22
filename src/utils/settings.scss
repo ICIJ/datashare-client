@@ -18,10 +18,10 @@ $darkest: darken($primary, 30);
 $link-color: $primary;
 $link-decoration: none;
 
-$body-bg: #F2F0F0;
-$body-secondary-bg: #FFF;
+$body-bg: #fff;
+$body-secondary-bg: #F2F0F0;
 
-$card-bg: var(--#{$prefix}white);
+$card-bg: var(--#{$prefix}body-bg);
 $card-cap-bg: rgba(var(--#{$prefix}body-color-rgb), .03);
 $translation-bg: #fcf8e3;
 
@@ -67,7 +67,7 @@ $border-radius-xl: 0.5rem;
 $border-radius-xxl: 1rem;
 $border-radius-pill: 50rem;
 
-$input-bg:  var(--#{$prefix}white);
+$input-bg:  var(--#{$prefix}body-bg);
 $input-focus-border-color: map-get($theme-colors, 'secondary');
 $custom-control-indicator-checked-bg: $tertiary;
 
