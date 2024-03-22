@@ -72,6 +72,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['update:tab'],
   computed: {
     classList() {
       return this.containerFluid ? ['container-fluid'] : ['container']
