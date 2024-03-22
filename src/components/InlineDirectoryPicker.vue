@@ -3,10 +3,6 @@ import { compact, get, filter, trim, trimEnd, uniqueId } from 'lodash'
 
 export default {
   name: 'InlineDirectoryPicker',
-  model: {
-    prop: 'path',
-    event: 'input'
-  },
   props: {
     dark: {
       type: Boolean
@@ -22,6 +18,7 @@ export default {
       default: null
     }
   },
+  emits: ['update:path'],
   data() {
     return {
       browse: false,
@@ -109,7 +106,7 @@ export default {
     },
     selectPath(path) {
       this.browsingPath = trimEnd(path, this.pathSeparator)
-      this.$emit('input', this.browsingPath)
+      this.$emit('update:path', this.browsingPath)
       return path
     },
     async selectAndBrowse(pathOrIndex) {

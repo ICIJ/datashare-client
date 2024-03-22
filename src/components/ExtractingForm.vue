@@ -13,7 +13,8 @@
       <div class="ms-4 ps-3">
         <p class="fw-bold mb-0">{{ $t('indexing.folderSelection') }}</p>
         <p class="small mb-2">{{ $t('indexing.folderSelectionDescription') }}</p>
-        <inline-directory-picker v-model="path" :source-path="sourcePath" :dark="dark" hide-folder-icon />
+        {{ path }} :
+        <inline-directory-picker v-model:path="path" :source-path="sourcePath" :dark="dark" hide-folder-icon />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -164,7 +165,8 @@ export default {
     },
     sourcePath() {
       const project = this.$core.findProject(this.defaultProject)
-      return project?.sourcePath?.split('file://').pop() ?? this.$config.get('dataDir')
+      const sourcePath = project?.sourcePath?.split('file://').pop() ?? this.$config.get('dataDir')
+      return decodeURI(sourcePath)
     },
     isWaitingForSubmitExtract() {
       return this.$wait.is('submitExtract')
