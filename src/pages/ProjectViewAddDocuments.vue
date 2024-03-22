@@ -1,5 +1,7 @@
 <script>
 import { get } from 'lodash'
+import { h } from 'vue'
+
 
 import ExtractingForm from '@/components/ExtractingForm'
 
@@ -25,9 +27,9 @@ export default {
       const variant = 'success'
       const message = this.$t('projectViewAddDocuments.notify.succeedBody')
       const linkText = this.$t('projectViewAddDocuments.notify.seeTasks')
-      const body = this.$createElement('div', {}, [
-        this.$createElement('p', {}, message),
-        this.$createElement('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
+      const body = h('div', {}, [
+        h('p', {}, message),
+        h('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
       ])
       this.$root.$bvToast.toast(body, { variant, title })
     },
