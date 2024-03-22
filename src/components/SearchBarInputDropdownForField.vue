@@ -24,7 +24,7 @@ export default {
     /**
      * Selected field
      */
-    value: {
+    modelValue: {
       type: String,
       required: true
     },
@@ -57,13 +57,15 @@ export default {
       default: () => ['search', 'field']
     }
   },
+  emits: ['hidden', 'changed', 'update:modelValue'],
   computed: {
     selectedField: {
+      immediate: true,
       get() {
-        return this.value
+        return this.modelValue
       },
       set(value) {
-        this.$emit('input', value)
+        this.$emit('update:modelValue', value)
       }
     }
   }
