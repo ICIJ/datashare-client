@@ -29,7 +29,7 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--tasks">
           <router-link
-            v-b-tooltip.body.end="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.tasks')"
             :to="{ name: 'tasks' }"
