@@ -1,9 +1,11 @@
 <template>
   <div class="task-batch-download-list mt-4 container">
     <v-wait for="load download tasks">
-      <div slot="waiting" class="card py-2">
-        <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
-      </div>
+      <template #waiting>
+        <div class="card py-2">
+          <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
+        </div>
+      </template>
       <tasks-list :tasks="tasks">
         <template #status="{ item: { properties, state, error } }">
           <task-item-status

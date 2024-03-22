@@ -1,6 +1,8 @@
 <template>
   <v-wait for="load ner pipelines">
-    <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
+    <template #waiting>
+      <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
+    </template>
     <form
       class="find-named-entities-form position-relative"
       :class="{ 'find-named-entities-form--dark': dark }"

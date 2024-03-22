@@ -5,9 +5,11 @@
       <h3 class="m-0 p-0 h5">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
     <v-wait :for="loader" transition="fade">
-      <div slot="waiting" class="widget__spinner text-center p-4">
-        <fa icon="circle-notch" spin size="2x"></fa>
-      </div>
+      <template #waiting>
+        <div class="widget__spinner text-center p-4">
+          <fa icon="circle-notch" spin size="2x"></fa>
+        </div>
+      </template>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
         <a
           v-for="({ document, href, user, creationDate }, i) in items"

@@ -1,7 +1,9 @@
 <template>
   <div class="task-batch-search-list container h-100 pt-4">
     <v-wait class="task-batch-search-list__wait" for="load haveBatchSearch">
-      <fa slot="waiting" class="d-flex mx-auto mt-5" icon="circle-notch" size="2x" spin />
+      <template #waiting>
+        <fa class="d-flex mx-auto mt-5" icon="circle-notch" size="2x" spin />
+      </template>
       <template v-if="hasBatchSearch">
         <div class="d-flex flex-wrap align-items-center">
           <batch-search-filter-query class="task-batch-search-list__search-bar my-1" />

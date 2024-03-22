@@ -1,17 +1,15 @@
 <template>
   <div class="widget widget--entities">
     <v-wait :for="loader" transition="fade">
-      <div slot="waiting" class="widget__spinner">
-        <fa icon="circle-notch" spin size="2x" />
-      </div>
+      <template #waiting>
+        <div class="widget__spinner">
+          <fa icon="circle-notch" spin size="2x"></fa>
+        </div>
+      </template>
       <div class="widget__content text-center" :class="{ 'card-body': widget.card }">
         <div v-if="total > 0" class="row">
-          <div
-            v-for="category in categories"
-            :key="category"
-            class="widget__content__count col-3"
-            :class="{ 'widget__content__count--muted': !entities[category] }"
-          >
+          <div v-for="category in categories" :key="category" class="widget__content__count col-3"
+            :class="{ 'widget__content__count--muted': !entities[category] }">
             <fa fixed-width :icon="namedEntityIcon(category)" class="me-1" />
             <span v-html="$tc(`widget.entities.${category}`, entities[category], { count: humanEntities[category] })" />
           </div>

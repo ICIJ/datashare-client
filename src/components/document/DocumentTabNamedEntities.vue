@@ -1,6 +1,8 @@
 <template>
   <v-wait for="load first page of named entities">
-    <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
+    <template #waiting>
+      <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" />
+    </template>
     <div class="p-3">
       <div class="document__named-entities__toolbox">
         <search-form-control
@@ -60,7 +62,9 @@
             </b-popover>
           </span>
           <v-wait :for="`load_more_data_${category}`">
-            <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-3" />
+            <template #waiting>
+              <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-3" />
+            </template>
             <div v-if="categoryHasNextPage(category)" class="mt-3 text-center">
               <b-button
                 class="document__named-entities__more"

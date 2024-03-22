@@ -5,18 +5,15 @@
       <h3 class="m-0 p-0 h5" v-html="title"></h3>
     </div>
     <v-wait :for="loader" transition="fade">
-      <div slot="waiting" class="widget__spinner text-center p-4">
-        <fa icon="circle-notch" spin size="2x"></fa>
-      </div>
+      <template #waiting>
+        <div class="widget__spinner text-center p-4">
+          <fa icon="circle-notch" spin size="2x"></fa>
+        </div>
+      </template>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
-        <component
-          :is="itemComponent(item)"
-          v-for="(item, i) in items"
-          :key="i"
-          class="list-group-item list-group-item-action widget__list__item"
-          :href="item.href"
-          :class="{ active: item.active }"
-        >
+        <component :is="itemComponent(item)" v-for="(item, i) in items" :key="i"
+          class="list-group-item list-group-item-action widget__list__item" :href="item.href"
+          :class="{ active: item.active }">
           <div class="d-flex align-items-center">
             <div class="widget__list__item__label">
               {{ item.label }}

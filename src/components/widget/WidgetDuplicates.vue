@@ -5,7 +5,9 @@
     </div>
     <div class="p-4">
       <v-wait for="duplicate-counters" transition="fade">
-        <fa slot="waiting" icon="circle-notch" spin size="2x" class="m-auto d-block"></fa>
+        <template #waiting>
+          <fa icon="circle-notch" spin size="2x" class="m-auto d-block"></fa>
+        </template>
         <div>
           <template v-if="anyData">
             <stacked-bar-chart

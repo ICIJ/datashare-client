@@ -1,9 +1,11 @@
 <template>
   <div class="widget widget--names">
     <v-wait :for="loader" transition="fade">
-      <div slot="waiting" class="widget__spinner">
-        <fa icon="circle-notch" spin size="2x" />
-      </div>
+      <template #waiting>
+        <div class="widget__spinner">
+          <fa icon="circle-notch" spin size="2x"></fa>
+        </div>
+      </template>
       <div class="widget__content text-center" :class="{ 'card-body': widget.card }">
         <fa icon="address-card" class="widget__content__icon" size="2x" />
         <div class="widget__content__main-figure" :title="total">

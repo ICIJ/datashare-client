@@ -1,6 +1,8 @@
 <template>
   <v-wait for="load document data">
-    <content-placeholder slot="waiting" class="document py-2 px-3"></content-placeholder>
+    <template #waiting>
+      <content-placeholder class="document py-2 px-3"></content-placeholder>
+    </template>
     <div
       v-if="doc"
       v-shortkey="getKeys('tabNavigation')"
