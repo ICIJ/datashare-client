@@ -1,5 +1,6 @@
 <script>
 import { get } from 'lodash'
+import { h } from 'vue'
 
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 
@@ -33,9 +34,9 @@ export default {
       const variant = 'success'
       const message = this.$t('projectViewFindNamedEntities.notify.succeedBody')
       const linkText = this.$t('projectViewFindNamedEntities.notify.seeTasks')
-      const body = this.$createElement('div', {}, [
-        this.$createElement('p', {}, message),
-        this.$createElement('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
+      const body = h('div', {}, [
+        h('p', {}, message),
+        h('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
       ])
       this.$root.$bvToast.toast(body, { variant, title })
     },
@@ -53,7 +54,9 @@ export default {
   <div class="project-new">
     <div class="container p-4">
       <div class="card">
-        <h4 class="card-header">Find named entities (people, locations, organisations)</h4>
+        <h4 class="card-header" @click="notifyCreationSucceed">
+          Find named entities (people, locations, organisations)
+        </h4>
         <find-named-entities-form
           id="find-named-entities-form p-4"
           class="card-body"
