@@ -1,5 +1,5 @@
 <template>
-  <b-button :id="uniqueId" class="locales-menu" href="#" variant="none">
+  <b-button :id="uniqueId" class="locales-menu" href="#" variant="none" @click.prevent>
     <span class="locales-menu__button">
       <slot v-bind="{ currentLocale, locales }">
         <fa icon="globe" class="me-1"></fa>
