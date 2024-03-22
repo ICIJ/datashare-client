@@ -1,7 +1,5 @@
 <template>
-  <form
-    class="extracting-form position-relative"
-    :class="{ 'extracting-form--dark': dark }"
+  <form class="extracting-form position-relative" :class="{ 'extracting-form--dark': dark }"
     @submit.prevent="submitExtract">
     <div v-if="showProjectSelector" class="extracting-form__group mb-4">
       <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />

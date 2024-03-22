@@ -11,7 +11,7 @@ export default {
      * Input value
      * @model
      */
-    value: {
+    modelValue: {
       type: String
     },
     /**
@@ -21,6 +21,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       textLanguages: []
@@ -72,14 +73,15 @@ export default {
       show
       variant="danger"
       class="extracting_language_form_control--no-language mt-3"
-      >{{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}</b-alert
     >
+      {{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}
+    </b-alert>
     <b-form-select
       v-else
-      :value="value"
+      :model-value="modelValue"
       :options="[nullOption, ...options]"
       class="extracting_language_form_control__ocr-options"
-      @input="(newValue) => $emit('input', newValue)"
+      @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
     />
   </b-overlay>
 </template>

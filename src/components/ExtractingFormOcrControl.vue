@@ -72,18 +72,19 @@ export default {
 <template>
   <b-overlay :show="!isReady" :variant="overlayVariant" class="extracting_language_form_control" rounded spinner-small>
     <b-alert
-      :show="!hasTesseract"
+      :model-value="!hasTesseract"
       variant="warning"
       class="extracting_language_form_control__tesseract_not_installed mt-3"
-      >{{ $t('extractingFormOcrControl.tesseractNotInstalled') }}
+    >
+      {{ $t('extractingFormOcrControl.tesseractNotInstalled') }}
     </b-alert>
     <b-alert
-      :show="shouldDisplayLanguageMessage"
+      :model-value="shouldDisplayLanguageMessage"
       variant="warning"
       class="extracting_language_form_control__install_ocr_language mt-3"
-      >{{ $t('extractingFormOcrControl.isMissing', { language: languageName }) }}
+    >
+      {{ $t('extractingFormOcrControl.isMissing', { language: languageName }) }}
       {{ $t('extractingFormOcrControl.useDefault') }}
-
       <a href="https://icij.gitbook.io/datashare/local-mode/add-more-languages" target="_blank">
         {{ $t('extractingFormOcrControl.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
       </a>
