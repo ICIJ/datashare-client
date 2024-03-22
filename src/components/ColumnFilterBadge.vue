@@ -35,10 +35,12 @@ export default {
   &--inactive {
     visibility: hidden;
   }
+
   &__icon {
     vertical-align: top;
     margin-left: 0.1em;
   }
+
   &__counter {
     margin: 0;
     position: absolute;

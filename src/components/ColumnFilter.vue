@@ -9,9 +9,11 @@
         <column-filter-badge :active="active" :counter="counter" />
       </slot>
     </b-button>
-    <b-popover :custom-class="popoverClassList" :target="btnId" triggers="click blur" lazy>
-      <slot></slot>
-    </b-popover>
+    <teleport to="body">
+      <b-popover v-model="showPopover" :custom-class="popoverClassList" :target="btnId" placement="bottom" click lazy>
+        <slot></slot>
+      </b-popover>
+    </teleport>
   </div>
 </template>
 
@@ -22,10 +24,6 @@ export default {
   name: 'ColumnFilter',
   components: {
     ColumnFilterBadge
-  },
-  model: {
-    prop: 'selectedValues',
-    event: 'update'
   },
   props: {
     id: {
@@ -49,6 +47,12 @@ export default {
       default: true
     }
   },
+  emits: ['show', 'hide', 'toggle'],
+  data() {
+    return {
+      showPopover: false
+    }
+  },
   computed: {
     btnClassName() {
       return `column-filter__toggle--${this.id}`
@@ -58,6 +62,12 @@ export default {
     },
     popoverClassList() {
       return `column-filter__popover popover-body-p-0 ${this.popoverWhite ? 'popover-white' : ''}`
+    }
+  },
+  watch: {
+    showPopover(toggle) {
+      this.$emit(toggle ? 'show' : 'hide')
+      this.$emit('toggle', toggle)
     }
   }
 }
