@@ -110,7 +110,7 @@
                   <div :id="item.mime">
                     {{ item.label }}
                   </div>
-                  <b-tooltip :target="item.mime" :title="item.label" placement="right"></b-tooltip>
+                  <b-tooltip :target="item.mime" :title="item.label" placement="end"></b-tooltip>
                 </template>
               </selectable-dropdown>
               <b-badge
