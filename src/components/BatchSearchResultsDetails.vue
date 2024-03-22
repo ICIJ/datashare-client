@@ -37,11 +37,11 @@
         </div>
         <div>
           <dt>{{ $t('batchSearch.nbResults') }}</dt>
-          <dd :title="batchSearch.nbResults">{{ batchSearch.nbResults | humanNumber }}</dd>
+          <dd :title="batchSearch.nbResults">{{ humanNumber(batchSearch.nbResults) }}</dd>
         </div>
         <div>
           <dt>{{ $t('batchSearch.queries') }}</dt>
-          <dd :title="batchSearch.nbQueries">{{ batchSearch.nbQueries | humanNumber }}</dd>
+          <dd :title="batchSearch.nbQueries">{{ humanNumber(batchSearch.nbQueries) }}</dd>
         </div>
         <div v-if="batchSearch.phraseMatches">
           <dt>{{ $t('batchSearch.phraseMatch') }}</dt>
@@ -115,9 +115,6 @@ export default {
     BatchSearchStatus,
     UserDisplay
   },
-  filters: {
-    humanNumber
-  },
   mixins: [utils],
   props: {
     batchSearch: {
@@ -174,6 +171,7 @@ export default {
     this.setIsMyBatchSearch()
   },
   methods: {
+    humanNumber,
     async setIsMyBatchSearch() {
       const username = await this.$core.auth.getUsername()
       this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')

@@ -81,7 +81,7 @@
           </span>
         </template>
         <template #cell(contentType)="{ item }">
-          <content-type-badge :value="item.contentType" :document-name="item.documentPath"></content-type-badge>
+          <content-type-badge :value="item.contentType" :document-name="item.documentPath" />
         </template>
         <template #cell(contentLength)="{ item }">
           <span class="text-nowrap">{{ getDocumentSize(item.contentLength) }}</span>
