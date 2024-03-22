@@ -1,14 +1,10 @@
 <template>
-  <b-badge v-if="counter" variant="secondary" class="column-filter-badge column-filter-badge__counter">
-    {{ counter | humanNumber }}
-  </b-badge>
-  <fa
-    v-else
-    class="column-filter-badge column-filter-badge__icon text-secondary"
-    :class="{ 'column-filter-badge--inactive': !active }"
-    icon="circle"
-    width="8px"
-  ></fa>
+  <span class="column-filter-badge column-filter-badge" :class="{ 'column-filter-badge--inactive': !active }">
+    <b-badge v-if="counter" variant="secondary" class="column-filter-badge column-filter-badge__counter">
+      {{ counter | humanNumber }}
+    </b-badge>
+    <fa v-else-if="active" class="column-filter-badge__icon text-secondary" size="2xs" icon="circle" />
+  </span>
 </template>
 
 <script>
@@ -32,10 +28,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .column-filter-badge {
-  &--inactive {
-    visibility: hidden;
-  }
-
   &__icon {
     vertical-align: top;
     margin-left: 0.1em;
