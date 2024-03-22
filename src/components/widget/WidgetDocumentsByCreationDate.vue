@@ -130,8 +130,8 @@ export default {
       return []
     },
     intervalDatesExtent() {
-      const start = this.toIntervalStart(this.datesExtent[0])
-      const end = this.toIntervalEnd(this.datesExtent[1])
+      const start = this.toIntervalStart(this.datesExtent[0] ?? new Date())
+      const end = this.toIntervalEnd(this.datesExtent[1] ?? new Date())
       return [start, end]
     },
     datesScale() {
@@ -312,6 +312,7 @@ export default {
       return this.datesHistogram.find(({ x0, x1 }) => date >= x0 && date < x1)
     },
     binToQueryValues({ x0, x1 }) {
+      console.log({ x0, x1 })
       return [x0.getTime(), x1.getTime()]
     },
     binToQuery(bin) {
