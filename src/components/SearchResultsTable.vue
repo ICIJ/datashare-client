@@ -63,7 +63,7 @@
         </template>
         <template #cell(path)="{ item }">
           <router-link
-            :to="{ name: 'document', params: item.routerParams, query: { q: query, tab: tab } }"
+            :to="{ name: 'document', params: item.routerParams, query: { q: query, tab } }"
             class="search-results-table__items__row__title"
           >
             <document-sliced-name :document="item" active-text-truncate show-subject />
