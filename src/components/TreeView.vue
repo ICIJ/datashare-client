@@ -454,7 +454,7 @@ export default {
     },
     directories: {
       deep: true,
-      get() {
+      handler() {
         /**
          * Called when more directories are loaded
          */
