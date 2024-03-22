@@ -23,11 +23,6 @@ export default {
       type: String
     }
   },
-  data() {
-    return {
-      tabIndex: null
-    }
-  },
   computed: {
     project() {
       return this.$core.findProject(this.name)
@@ -39,8 +34,9 @@ export default {
       get() {
         return this.tabRoutes.indexOf(this.$route.name)
       },
-      set(tabIndex) {
-        const name = this.tabRoutes[tabIndex]
+      set(tab) {
+        console.log(tab)
+        const name = this.tabRoutes[tab]
         if (name && this.$route.name !== name) {
           return this.$router.push({ name })
         }
@@ -66,7 +62,7 @@ export default {
 
 <template>
   <div class="project-view">
-    <page-header v-model="tabIndex" :title="projectDisplay" :description="project.description" :tab.sync="tab">
+    <page-header v-model:tab="tab" :title="projectDisplay" :description="project.description">
       <template #preTitle>
         <project-thumbnail :project="project" width="4em" class="me-3 rounded" />
       </template>
@@ -96,7 +92,9 @@ export default {
           </template>
         </b-tab>
       </template>
+      <template #body>
+        <router-view />
+      </template>
     </page-header>
-    <router-view />
   </div>
 </template>
