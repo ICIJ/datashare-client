@@ -62,7 +62,7 @@
                 class="btn btn-light document__content__details__item__input-group__copy"
                 hide-label
                 :text="String(field.value)"
-                tooltip-placement="left"
+                tooltip-placement="start"
               />
             </b-input-group-append>
           </b-input-group>
