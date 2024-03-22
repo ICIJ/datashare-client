@@ -145,6 +145,7 @@
               :data-badge="filteredRouteDocs.length"
               href="#"
               variant="none"
+              @click.prevent
             >
               <fa icon="book" fixed-width></fa>
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
