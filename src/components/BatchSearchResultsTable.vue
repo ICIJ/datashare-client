@@ -35,7 +35,7 @@
           <column-filter-dropdown
             v-if="queryKeys.length"
             :id="field.key"
-            :values="selectedQueries"
+            :model-value="selectedQueries"
             :items="queryKeys"
             :name="field.label"
             :counter="nbSelectedQueries"
@@ -145,9 +145,6 @@ export default {
   data() {
     return {
       documentInModalPageIndex: null
-      //  order: settings.batchSearchResults.order,
-      // page: 1
-      // sort: settings.batchSearchResults.sort
     }
   },
   computed: {
@@ -286,13 +283,13 @@ export default {
     },
     selectedContentTypes: {
       deep: true,
-      get() {
+      handler() {
         return this.fetch()
       }
     },
     selectedQueries: {
       deep: true,
-      get() {
+      handler() {
         return this.fetch()
       }
     },
