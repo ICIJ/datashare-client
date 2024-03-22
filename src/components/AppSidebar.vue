@@ -486,14 +486,14 @@ $item-tree-width: 2px;
             padding: $spacer-sm $spacer-xs $spacer-xs;
           }
 
-          &.router-link-active,
+          &.router-link-exact-active,
           &:hover,
           &:active {
             background: mix($app-sidebar-color, $app-sidebar-bg, 5%);
             color: $app-sidebar-color;
           }
 
-          &.router-link-active:before {
+          &.router-link-exact-active:before {
             background: $secondary;
             bottom: 0;
             box-shadow: 2px 0 $spacer 0 $secondary;
@@ -504,7 +504,7 @@ $item-tree-width: 2px;
             width: 2px;
           }
 
-          &.router-link-active .svg-inline--fa {
+          &.router-link-exact-active .svg-inline--fa {
             color: $secondary;
           }
 
