@@ -71,7 +71,7 @@
         </span>
       </confirm-button>
       <pagination
-        class="search-results-header__settings__pagination justify-content-end text-right"
+        class="search-results-header__settings__pagination justify-content-end text-end"
         :get-to-template="getToTemplate"
         :is-displayed="isDisplayed"
         :no-last-page-link="searchWindowTooLarge"

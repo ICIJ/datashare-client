@@ -1,16 +1,18 @@
 <template>
-  <form class="extracting-form position-relative" :class="{ 'extracting-form--dark': dark }"
+  <form
+    class="extracting-form position-relative"
+    :class="{ 'extracting-form--dark': dark }"
     @submit.prevent="submitExtract">
     <div v-if="showProjectSelector" class="extracting-form__group mb-4">
       <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />
-      <div class="ms-4 pl-3">
+      <div class="ms-4 ps-3">
         <p class="fw-bold">{{ $t('indexing.projectIndexationSelection') }}</p>
         <project-selector v-model="defaultProject" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
       <fa icon="folder-open" class="position-absolute mt-1 ms-1" size="lg" />
-      <div class="ms-4 pl-3">
+      <div class="ms-4 ps-3">
         <p class="fw-bold mb-0">{{ $t('indexing.folderSelection') }}</p>
         <p class="small mb-2">{{ $t('indexing.folderSelectionDescription') }}</p>
         <inline-directory-picker v-model="path" :source-path="sourcePath" :dark="dark" hide-folder-icon />
@@ -18,7 +20,7 @@
     </div>
     <div class="extracting-form__group mb-4">
       <fa icon="globe" class="position-absolute mt-1 ms-1" size="lg" />
-      <div class="ms-4 pl-3">
+      <div class="ms-4 ps-3">
         <p class="fw-bold">{{ $t('indexing.extractLanguage') }}</p>
         <extracting-language-form-control v-model="language" :dark="dark" />
       </div>
@@ -35,7 +37,7 @@
           </span>
         </div>
       </b-form-checkbox>
-      <div v-show="showOcrMessage" class="ms-4 pl-3">
+      <div v-show="showOcrMessage" class="ms-4 ps-3">
         <extracting-form-ocr-control :iso-lang="language" :text-languages="textLanguages" :ocr-languages="ocrLanguages"
           :has-tesseract="hasTesseract" :is-ready="isReady" />
       </div>
@@ -54,7 +56,7 @@
     </div>
     <div class="extracting-form__footer mt-4 row no-gutters">
       <slot name="footer" :disabled="isWaitingForSubmitExtract">
-        <div class="col text-right">
+        <div class="col text-end">
           <b-overlay :show="isWaitingForSubmitExtract" opacity="0.6" rounded spinner-small class="d-inline-flex">
             <b-button variant="primary" class="ms-2" type="submit" :disabled="isWaitingForSubmitExtract">
               {{ $t('indexing.go') }}

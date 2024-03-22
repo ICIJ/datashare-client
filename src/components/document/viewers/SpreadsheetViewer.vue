@@ -14,7 +14,7 @@
           {{ $t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
         <div
-          class="spreadsheet-viewer__content__toolbox__filter pl-3 text-right flex-grow-1"
+          class="spreadsheet-viewer__content__toolbox__filter pl-3 text-end flex-grow-1"
           :class="{ 'spreadsheet-viewer__content__toolbox__filter--filtered': filter }"
         >
           <div class="input-group justify-content-end">
