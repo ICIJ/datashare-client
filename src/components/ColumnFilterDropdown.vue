@@ -11,9 +11,9 @@
             </slot>
           </template>
         </selectable-dropdown>
-        <div class="d-grid p-2" v-if="!immediate">
+        <div v-if="!immediate" class="d-grid p-2">
           <button type="button" class="btn btn-primary btn-sm" @click="apply()">
-            Apply
+            {{ $t('columnFilterDropdown.apply') }}
           </button>
         </div>
       </slot>

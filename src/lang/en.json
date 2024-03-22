@@ -734,6 +734,9 @@
       "heading": "Filter by queries"
     }
   },
+  "columnFilterDropdown": {
+    "apply": "Apply"
+  },
   "projectList": {
     "title": "Projects",
     "newProject": "New project",
