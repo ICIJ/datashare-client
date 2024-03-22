@@ -6,7 +6,7 @@
       :items="displayBatchSearches"
       :sort-by="sortBy"
       :sort-desc="isDesc"
-      class="card border-top-0"
+      class="card"
       hover
       no-local-sorting
       no-sort-reset
@@ -102,13 +102,7 @@
         </span>
       </template>
     </b-table>
-    <b-pagination-nav
-      v-if="numberOfPages > 1"
-      :link-gen="linkGen"
-      :number-of-pages="numberOfPages"
-      class="mt-2 mx-auto"
-      use-router
-    />
+    <tiny-pagination v-if="numberOfPages > 1" v-model="page" :total-rows="numberOfPages" class="mt-2 mx-auto" />
   </div>
 </template>
 
@@ -172,7 +166,7 @@ export default {
       return this.$store.state.batchSearch.batchSearches.map((batchSearch) => {
         return {
           ...batchSearch,
-          queries: this.$n(batchSearch.queries),
+          queries: this.$n(batchSearch.nbQueries),
           dateTitle: humanLongDate(batchSearch.date, this.$i18n.locale),
           dateContent: fromNow(batchSearch.date, this.$i18n.locale),
           userId: batchSearch.user?.id,
@@ -300,9 +294,14 @@ export default {
     isDesc() {
       return this.selectedSort.order === SORT_ORDER.DESC
     },
-    page() {
-      const value = parseInt(this.$route?.query?.page)
-      return !isNaN(value) && value > 0 ? value : 1
+    page:{
+      set(page) {
+        console.log(page)
+      },
+      get() {
+        const value = parseInt(this.$route?.query?.page)
+        return !isNaN(value) && value > 0 ? value : 1
+      }
     },
     sort() {
       const sortNameFromQuery = this.$route?.query?.sort?.toLowerCase()
@@ -459,9 +458,6 @@ export default {
     },
     isSelected(item) {
       return item?.value === this.selectedStatus?.value
-    },
-    linkGen(page) {
-      return this.createBatchSearchRoute({ page })
     },
     serverField(field) {
       return this.isServer ? field : null
