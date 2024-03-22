@@ -161,10 +161,9 @@ $value in $theme-colors {
     }
 
     .card-header {
-      background-color: $popover-bg;
+      background-color: transparent;
 
       .nav-item .nav-link {
-        color: white;
 
         &:hover {
           border-color: transparent;
@@ -173,7 +172,6 @@ $value in $theme-colors {
       }
 
       .nav-item .nav-link.active {
-        background: $popover-header-bg;
         border-color: transparent;
         font-weight: bold;
       }

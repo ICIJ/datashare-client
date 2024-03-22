@@ -75,12 +75,12 @@ $btn-box-shadow: 0 0 0 0 transparent;
 
 $popover-max-width: 480px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
-$popover-bg: black;
+$popover-bg: #fff;
 $popover-border-width: 0.1px;
-$popover-border-color: $popover-bg;
-$popover-body-color: white;
-$popover-header-bg: #31313a;
-$popover-header-color: white;
+$popover-border-color: #fff;
+$popover-body-color: #fff;
+$popover-header-bg: #fff;
+$popover-header-color: #fff;
 
 $mark-bg: map-get($theme-colors, 'mark');
 
@@ -107,9 +107,9 @@ $line-height-sm: 1.7;
 
 $table-accent-bg: $body-secondary-bg;
 $table-striped-bg: #f9f8f8;
-$table-hover-bg: mix($secondary, white, 5%);
+$table-hover-bg: mix($secondary, #fff, 5%);
 
-$nav-tabs-link-active-bg: white;
+$nav-tabs-link-active-bg: #fff;
 
 $dropdown-padding-y: 0.25rem;
 $dropdown-item-padding-y: 0.5rem;
@@ -140,7 +140,7 @@ $app-sidebar-width: 290px;
 $app-sidebar-reduced-width: 90px;
 $app-sidebar-link-color: mix($app-sidebar-bg, $app-sidebar-color, 40%);
 
-$app-context-sidebar-bg: mix(white, $app-sidebar-bg, 5%);
+$app-context-sidebar-bg: mix(#fff, $app-sidebar-bg, 5%);
 $app-context-sidebar-color: #fff;
 $app-context-sidebar-width: 360px;
 
