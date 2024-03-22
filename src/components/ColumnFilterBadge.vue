@@ -1,7 +1,7 @@
 <template>
   <span class="column-filter-badge column-filter-badge" :class="{ 'column-filter-badge--inactive': !active }">
     <b-badge v-if="counter" variant="secondary" class="column-filter-badge column-filter-badge__counter">
-      {{ counter | humanNumber }}
+      {{ humanNumber(counter) }}
     </b-badge>
     <fa v-else-if="active" class="column-filter-badge__icon text-secondary" size="2xs" icon="circle" />
   </span>
@@ -11,9 +11,6 @@
 import humanNumber from '@/filters/humanNumber'
 export default {
   name: 'ColumnFilterBadge',
-  filters: {
-    humanNumber
-  },
   props: {
     active: {
       type: Boolean,
@@ -23,6 +20,9 @@ export default {
       type: Number,
       default: null
     }
+  },
+  methods: {
+    humanNumber
   }
 }
 </script>

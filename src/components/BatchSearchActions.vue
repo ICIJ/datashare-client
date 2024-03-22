@@ -74,7 +74,6 @@ import { get } from 'lodash'
 
 import { Api } from '@/api'
 import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
-import humanNumber from '@/filters/humanNumber'
 
 /**
  * A set of buttons to manage a batch search
@@ -83,9 +82,6 @@ export default {
   name: 'BatchSearchActions',
   components: {
     BatchSearchCopyForm
-  },
-  filters: {
-    humanNumber
   },
   props: {
     /**
