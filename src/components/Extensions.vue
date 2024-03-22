@@ -35,7 +35,7 @@
           <search-form-control v-model="searchTerm" :placeholder="$t('extensions.search')" @input="search" />
         </div>
       </div>
-      <b-overlay :show="!extensions.length" class="extensions__card">
+      <b-overlay :show="isLoading" class="extensions__card">
         <div class="row my-4">
           <b-overlay v-for="extension in extensions" :key="extension.id" :show="extension.loading" class="col-6 mb-3">
             <b-card footer-border-variant="white" class="m-0">
@@ -50,23 +50,38 @@
                     </div>
                   </div>
                   <div class="d-flex flex-column text-nowrap pl-2">
-                    <b-button v-if="extension.installed" class="extensions__card__uninstall-button mb-2"
-                      variant="danger" @click="uninstallExtension(extension.id)">
+                    <b-button
+                      v-if="extension.installed"
+                      class="extensions__card__uninstall-button mb-2"
+                      variant="danger"
+                      @click="uninstallExtension(extension.id)"
+                    >
                       <fa icon="trash-alt"></fa>
                       {{ $t('extensions.uninstall') }}
                     </b-button>
-                    <b-button v-if="!extension.installed" class="extensions__card__download-button mb-2"
-                      variant="primary" @click="installExtensionFromId(extension.id)">
+                    <b-button
+                      v-if="!extension.installed"
+                      class="extensions__card__download-button mb-2"
+                      variant="primary"
+                      @click="installExtensionFromId(extension.id)"
+                    >
                       <fa icon="cloud-download-alt"></fa>
                       {{ $t('extensions.install') }}
                     </b-button>
-                    <b-button v-if="hasAvailableUpdate(extension)" class="extensions__card__update-button mb-2"
-                      variant="primary" size="sm" @click="installExtensionFromId(extension.id)">
+                    <b-button
+                      v-if="hasAvailableUpdate(extension)"
+                      class="extensions__card__update-button mb-2"
+                      variant="primary"
+                      size="sm"
+                      @click="installExtensionFromId(extension.id)"
+                    >
                       <fa icon="sync"></fa>
                       {{ $t('extensions.update') }}
                     </b-button>
-                    <div v-if="extension.version && extension.installed"
-                      class="extensions__card__version text-muted text-center">
+                    <div
+                      v-if="extension.version && extension.installed"
+                      class="extensions__card__version text-muted text-center"
+                    >
                       {{ $t('extensions.version', { version: extension.version }) }}
                     </div>
                   </div>
@@ -79,8 +94,12 @@
                 </div>
                 <div class="text-truncate w-100">
                   <span class="fw-bold"> {{ $t('extensions.homePage') }}: </span>
-                  <a v-if="extension.deliverableFromRegistry.homepage" class="extensions__card__homepage"
-                    :href="extension.deliverableFromRegistry.homepage" target="_blank">
+                  <a
+                    v-if="extension.deliverableFromRegistry.homepage"
+                    class="extensions__card__homepage"
+                    :href="extension.deliverableFromRegistry.homepage"
+                    target="_blank"
+                  >
                     {{ extension.deliverableFromRegistry.homepage }}
                   </a>
                 </div>
@@ -94,7 +113,7 @@
 </template>
 
 <script>
-import { camelCase, find, get, map, startCase } from 'lodash'
+import { camelCase, find, get, startCase, uniqueId } from 'lodash'
 
 import SearchFormControl from '@/components/SearchFormControl'
 import { isUrl } from '@/utils/strings'
@@ -118,6 +137,12 @@ export default {
   computed: {
     isFormValid() {
       return this.url === '' ? null : isUrl(this.url)
+    },
+    loaderId() {
+      return uniqueId('extentions-loader-')
+    },
+    isLoading() {
+      return this.$wait.is(this.loaderId)
     }
   },
   mounted() {
@@ -146,11 +171,12 @@ export default {
         : extension.description
     },
     async search() {
-      const extensions = await this.$core.api.getExtensions(this.searchTerm)
-      map(extensions, (extension) => {
+      this.$wait.start(this.loaderId)
+      this.extensions = (await this.$core.api.getExtensions(this.searchTerm)).map((extension) => {
         extension.loading = false
+        return extension
       })
-      this.extensions = extensions
+      this.$wait.end(this.loaderId)
     },
     async installExtensionFromId(extensionId) {
       const extension = find(this.extensions, { id: extensionId })
