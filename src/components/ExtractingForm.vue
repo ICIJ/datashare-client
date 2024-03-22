@@ -38,8 +38,14 @@
         </div>
       </b-form-checkbox>
       <div v-show="showOcrMessage" class="ms-4 ps-3">
-        <extracting-form-ocr-control :iso-lang="language" :text-languages="textLanguages" :ocr-languages="ocrLanguages"
-          :has-tesseract="hasTesseract" :is-ready="isReady" />
+        <extracting-form-ocr-control
+          :iso-lang="language"
+          :text-languages="textLanguages"
+          :ocr-languages="ocrLanguages"
+          :has-tesseract="hasTesseract"
+          :is-ready="isReady"
+          :dark="dark"
+        />
       </div>
     </div>
     <div class="extracting-form__group mb-4">

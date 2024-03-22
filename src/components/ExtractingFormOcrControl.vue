@@ -30,6 +30,9 @@ export default {
     },
     isReady: {
       type: Boolean
+    },
+    dark: {
+      type: Boolean
     }
   },
   computed: {
