@@ -10,7 +10,7 @@
     >
       <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
         <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />
-        <div class="ms-4 pl-3">
+        <div class="ms-4 ps-3">
           <p class="fw-bold">
             {{ $t('indexing.findNamedEntitiesProjectSelection') }}
           </p>
@@ -19,7 +19,7 @@
       </div>
       <div class="find-named-entities-form__group mb-4">
         <fa icon="tags" class="position-absolute mt-1 ms-1" size="lg" />
-        <div class="ms-4 pl-3">
+        <div class="ms-4 ps-3">
           <p class="find-named-entities-form__header fw-bold mb-0">
             {{ $t('indexing.findNamedEntitiesHeader') }}
           </p>
@@ -160,7 +160,7 @@ export default {
     }
     this.$wait.start('load ner pipelines')
     const pipelines = await this.$store.dispatch('indexing/getNerPipelines')
-    this.$set(this, 'pipelines', this.handlePipelinesTranslation(values(pipelines).map(lowerCase)))
+    this.pipelines = this.handlePipelinesTranslation(values(pipelines).map(lowerCase))
     this.$wait.end('load ner pipelines')
   },
   methods: {
