@@ -151,7 +151,7 @@ export default {
             @click="selectAndBrowse(i)"
           >
             <b-button
-              v-b-tooltip="{ delay: { show: 1e3, hide: 0 }, customClass: 'tooltip-lg' }"
+              v-b-tooltip.body="{ delay: { show: 1e3, hide: 0 }, customClass: 'tooltip-lg' }"
               class="p-0"
               variant="link"
               :title="directoryTitle(i)"

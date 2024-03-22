@@ -2,7 +2,7 @@
   <document-navbar class="search-document-navbar" :is-shrinked="isShrinked">
     <template #back>
       <router-link
-        v-b-tooltip.right="{ customClass: isShrinked ? 'ms-3' : 'd-none' }"
+        v-b-tooltip.body.right="{ customClass: isShrinked ? 'ms-3' : 'd-none' }"
         v-shortkey="getKeys('backToSearchResults')"
         class="document-navbar__back pe-1"
         :class="{ 'flex-grow-1': !isShrinked }"

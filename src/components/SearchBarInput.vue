@@ -11,7 +11,7 @@
     />
     <a
       v-if="!hideTips"
-      v-b-tooltip.bottomleft
+      v-b-tooltip.body.bottomleft
       tabindex="-1"
       class="search-bar-input__tips-addon input-group-text px-2"
       target="_blank"

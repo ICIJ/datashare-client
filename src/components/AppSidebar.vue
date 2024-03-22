@@ -16,7 +16,7 @@
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <router-link
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.search')"
             :to="{ name: 'search', query }"
@@ -29,7 +29,7 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--tasks">
           <router-link
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.end="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.tasks')"
             :to="{ name: 'tasks' }"
@@ -42,7 +42,7 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--projects">
           <router-link
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.projects')"
             :to="{ name: 'project.list' }"
@@ -55,7 +55,7 @@
         </li>
         <li class="app-sidebar__container__menu__item">
           <router-link
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.history')"
             :to="{ name: 'user-history.document.list' }"
@@ -69,7 +69,7 @@
         </li>
         <li class="app-sidebar__container__menu__item">
           <router-link
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.settings')"
             :to="{ name: 'settings' }"
@@ -86,7 +86,7 @@
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <a
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :href="faqLink"
             target="_blank"
@@ -100,7 +100,7 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
           <a
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :href="helpLink"
             target="_blank"
@@ -190,7 +190,7 @@
         <li v-if="isServer" class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout">
           <a
             v-if="isBasicAuth"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--basic-auth"
             :title="$t('menu.logout')"
             @click.prevent="showModal"
@@ -211,7 +211,7 @@
           </a>
           <a
             v-else
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
+            v-b-tooltip.body.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }"
             class="app-sidebar__container__menu__item__link"
             :href="logoutLink"
             :title="$t('menu.logout')"
