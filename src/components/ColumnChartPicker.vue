@@ -230,7 +230,7 @@ export default {
 <template>
   <div class="column-chart-picker overflow-visible">
     <range-picker
-      v-model="range"
+      v-model:range="range"
       class="column-chart-picker__range my-1"
       rounded
       :variant="variant"

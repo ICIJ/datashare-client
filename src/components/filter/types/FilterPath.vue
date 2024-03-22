@@ -4,7 +4,7 @@
       <div class="filter__tree-view">
         <tree-view
           ref="treeView"
-          v-model="path"
+          v-model:path="path"
           :query="query"
           :projects="projects"
           :selected-paths.sync="selectedPaths"

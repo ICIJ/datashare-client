@@ -33,7 +33,7 @@
           :projects="projects"
           count
           size
-          @input="treeViewPath = $event"
+          @update:path="treeViewPath = $event"
         ></tree-view>
       </b-modal>
     </template>
