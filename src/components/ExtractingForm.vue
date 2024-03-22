@@ -13,7 +13,6 @@
       <div class="ms-4 ps-3">
         <p class="fw-bold mb-0">{{ $t('indexing.folderSelection') }}</p>
         <p class="small mb-2">{{ $t('indexing.folderSelectionDescription') }}</p>
-        {{ path }} :
         <inline-directory-picker v-model:path="path" :source-path="sourcePath" :dark="dark" hide-folder-icon />
       </div>
     </div>
