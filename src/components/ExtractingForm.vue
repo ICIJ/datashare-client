@@ -1,9 +1,6 @@
 <template>
-  <form
-    class="extracting-form position-relative"
-    :class="{ 'extracting-form--dark': dark }"
-    @submit.prevent="submitExtract"
-  >
+  <form class="extracting-form position-relative" :class="{ 'extracting-form--dark': dark }"
+    @submit.prevent="submitExtract">
     <div v-if="showProjectSelector" class="extracting-form__group mb-4">
       <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />
       <div class="ms-4 pl-3">
@@ -16,14 +13,14 @@
       <div class="ms-4 pl-3">
         <p class="fw-bold mb-0">{{ $t('indexing.folderSelection') }}</p>
         <p class="small mb-2">{{ $t('indexing.folderSelectionDescription') }}</p>
-        <inline-directory-picker v-model="path" :source-path="sourcePath" hide-folder-icon dark />
+        <inline-directory-picker v-model="path" :source-path="sourcePath" :dark="dark" hide-folder-icon />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
       <fa icon="globe" class="position-absolute mt-1 ms-1" size="lg" />
       <div class="ms-4 pl-3">
         <p class="fw-bold">{{ $t('indexing.extractLanguage') }}</p>
-        <extracting-language-form-control v-model="language" dark />
+        <extracting-language-form-control v-model="language" :dark="dark" />
       </div>
     </div>
 
@@ -39,13 +36,8 @@
         </div>
       </b-form-checkbox>
       <div v-show="showOcrMessage" class="ms-4 pl-3">
-        <extracting-form-ocr-control
-          :iso-lang="language"
-          :text-languages="textLanguages"
-          :ocr-languages="ocrLanguages"
-          :has-tesseract="hasTesseract"
-          :is-ready="isReady"
-        />
+        <extracting-form-ocr-control :iso-lang="language" :text-languages="textLanguages" :ocr-languages="ocrLanguages"
+          :has-tesseract="hasTesseract" :is-ready="isReady" />
       </div>
     </div>
     <div class="extracting-form__group mb-4">

@@ -238,7 +238,7 @@ export default {
 
       .inline-directory-picker--dark &__link:hover,
       .inline-directory-picker--dark &--active &__link {
-        background: $table-dark-hover-bg;
+        background: $dark;
       }
 
       &__link:hover + &__browse {
