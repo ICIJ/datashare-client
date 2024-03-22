@@ -1,7 +1,9 @@
 <template>
   <div class="widget widget--disk-usage d-flex align-items-center text-center">
     <v-wait for="disk usage" class="flex-grow-1" transition="fade">
-      <fa slot="waiting" icon="circle-notch" spin size="2x" class="m-3" />
+      <template #waiting>
+        <fa icon="circle-notch" spin size="2x" class="m-3" />
+      </template>
       <p :class="{ 'card-body': widget.card }">
         <fa icon="weight" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">

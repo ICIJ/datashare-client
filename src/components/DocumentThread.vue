@@ -1,6 +1,8 @@
 <template>
   <v-wait for="load thread">
-    <fa slot="waiting" icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5"></fa>
+    <template #waiting>
+      <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" />
+    </template>
     <div v-if="document" class="document-thread p-0">
       <ul class="list-unstyled document-thread__list m-0">
         <li

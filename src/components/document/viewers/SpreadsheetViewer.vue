@@ -1,8 +1,10 @@
 <template>
   <v-wait for="load spreadsheet" class="w-100">
-    <div slot="waiting" class="p-3 text-muted">
-      {{ $t('document.fetching') }}
-    </div>
+    <template #waiting>
+      <div class="p-3 text-muted">
+        {{ $t('document.fetching') }}
+      </div>
+    </template>
     <div v-if="!isPreviewable" class="p-3">
       {{ $t('document.notAvailable') }}
     </div>

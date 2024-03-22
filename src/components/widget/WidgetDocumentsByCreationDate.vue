@@ -5,13 +5,9 @@
       <div class="widget__header__selectors d-flex align-items-center">
         <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath"></slot>
         <div class="btn-group">
-          <span
-            v-for="(_, interval) in intervals"
-            :key="interval"
-            :class="{ active: selectedInterval === interval }"
+          <span v-for="(_, interval) in intervals" :key="interval" :class="{ active: selectedInterval === interval }"
             class="btn btn-link border py-1 px-2 widget__header__selectors__selector"
-            @click="setSelectedInterval(interval)"
-          >
+            @click="setSelectedInterval(interval)">
             {{ $t('widget.creationDate.intervals.' + interval) }}
           </span>
         </div>
@@ -19,33 +15,21 @@
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
       <v-wait :for="loader">
-        <div slot="waiting" class="widget__content__spinner">
-          <fa icon="circle-notch" spin size="2x"></fa>
-        </div>
+        <template #waiting>
+          <div class="widget__content_spinner">
+            <fa icon="circle-notch" spin size="2x"></fa>
+          </div>
+        </template>
         <div v-if="data.length > 0" class="widget__content__chart align-items-center">
-          <column-chart
-            hover
-            :chart-height-ratio="0.4"
-            :data="aggregatedDataSlice"
-            :max-value="maxValue"
-            :x-axis-tick-format="xAxisTickFormat"
-            @select="searchInterval"
-          >
+          <column-chart hover :chart-height-ratio="0.4" :data="aggregatedDataSlice" :max-value="maxValue"
+            :x-axis-tick-format="xAxisTickFormat" @select="searchInterval">
             <template #tooltip="{ datum: { date, value: total } }">
               <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
               <p class="m-0 text-nowrap">{{ $tc('widget.creationDate.document', total, { total }) }}</p>
             </template>
           </column-chart>
-          <column-chart-picker
-            v-if="hasRangePicker"
-            v-model="sliceRange"
-            column-snap
-            :throttle="0"
-            :interval="selectedInterval"
-            :data="cleanData"
-            :column-margin="2"
-            :column-height-ratio="0.1"
-          />
+          <column-chart-picker v-if="hasRangePicker" v-model="sliceRange" column-snap :throttle="0"
+            :interval="selectedInterval" :data="cleanData" :column-margin="2" :column-height-ratio="0.1" />
         </div>
         <div v-else class="text-muted text-center">
           {{ $t('widget.noData') }}
