@@ -2,7 +2,7 @@
   <div v-if="isDisplayedComputed" :id="id" class="pagination">
     <router-link
       v-show="!noFirstPageLink"
-      v-b-tooltip="{ id, placement, trigger: 'hover' }"
+      v-b-tooltip.body="{ id, placement, trigger: 'hover' }"
       :to="firstPageLinkParameters()"
       :class="{ disabled: isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__first-page px-2"
@@ -11,7 +11,7 @@
       <fa icon="angle-double-left"></fa>
     </router-link>
     <router-link
-      v-b-tooltip="{ id, placement, trigger: 'hover' }"
+      v-b-tooltip.body="{ id, placement, trigger: 'hover' }"
       :to="previousPageLinkParameters()"
       :class="{ disabled: isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__previous-page px-2"
@@ -20,7 +20,7 @@
       <fa icon="angle-left"></fa>
     </router-link>
     <router-link
-      v-b-tooltip="{ id, placement, trigger: 'hover' }"
+      v-b-tooltip.body="{ id, placement, trigger: 'hover' }"
       :to="nextPageLinkParameters()"
       :class="{ disabled: isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__next-page px-2"
@@ -30,7 +30,7 @@
     </router-link>
     <router-link
       v-show="!noLastPageLink"
-      v-b-tooltip="{ id, placement, trigger: 'hover' }"
+      v-b-tooltip.body="{ id, placement, trigger: 'hover' }"
       :to="lastPageLinkParameters()"
       :class="{ disabled: isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__last-page px-2"

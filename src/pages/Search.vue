@@ -4,7 +4,7 @@
     <div class="d-flex">
       <button
         v-if="!showFilters"
-        v-b-tooltip.right
+        v-b-tooltip.body.right
         class="search__show-filters align-self-center ms-3 btn btn-link px-0"
         :title="$t('search.showFilters')"
         @click="clickOnShowFilters()"
