@@ -5,22 +5,24 @@
         <fa class="me-1" icon="plus" />
         {{ $t('projectList.newProject') }}
       </b-button>
+      <template #body>
+        <div class="container py-4">
+          <b-table striped :items="projects" :fields="fields" responsive class="card">
+            <template #cell(thumbnail)="{ item: project }">
+              <router-link :to="{ name: 'project.view.insights', params: project }" class="fw-bold">
+                <project-thumbnail :project="project" class="rounded" width="3rem" />
+              </router-link>
+            </template>
+            <template #cell(label)="{ item: project }">
+              <router-link :to="{ name: 'project.view.insights', params: project }" class="fw-bold">
+                {{ project.label || project.name }}
+              </router-link>
+              <p class="text-muted m-0">{{ project.description }}</p>
+            </template>
+          </b-table>
+        </div>
+      </template>
     </page-header>
-    <div class="container py-4">
-      <b-table striped :items="projects" :fields="fields" responsive class="bg-white card">
-        <template #cell(thumbnail)="{ item: project }">
-          <router-link :to="{ name: 'project.view.insights', params: project }" class="fw-bold">
-            <project-thumbnail :project="project" class="rounded" width="3rem" />
-          </router-link>
-        </template>
-        <template #cell(label)="{ item: project }">
-          <router-link :to="{ name: 'project.view.insights', params: project }" class="fw-bold">
-            {{ project.label || project.name }}
-          </router-link>
-          <p class="text-muted m-0">{{ project.description }}</p>
-        </template>
-      </b-table>
-    </div>
   </div>
 </template>
 

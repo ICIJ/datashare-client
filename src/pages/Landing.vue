@@ -10,9 +10,9 @@
       <search-bar class="landing__form__search-bar py-3 container" hide-field-dropdown size="md"></search-bar>
     </div>
     <hook name="landing.form:after"></hook>
-    <div class="mt-5 text-white container">
-      <hook name="landing.form.project:before"></hook>
-      <div class="landing__projects">
+    <hook name="landing.form.project:before"></hook>
+    <div class="landing__projects">
+      <div class="text-white container">
         <project-cards class="mt-3"></project-cards>
         <hook name="landing.form.project:after"></hook>
       </div>
@@ -38,6 +38,8 @@ export default {
 <style lang="scss" scoped>
 .landing {
   position: relative;
+  background-color: $body-secondary-bg;
+  min-height: 100vh;
 
   &__form {
     @include gradient-directional($primary, $secondary);
@@ -60,6 +62,10 @@ export default {
       width: 600px;
       z-index: 100;
     }
+  }
+
+  &__projects {
+    padding: $spacer-xl;
   }
 }
 </style>

@@ -20,6 +20,7 @@
       <b-tabs v-model="tabIndex" class="page-header__tabs px-0" nav-wrapper-class="page-header__tabs__nav">
         <slot name="tabs" :tab-index="tabIndex" />
       </b-tabs>
+      <slot name="body"></slot>
     </div>
   </div>
 </template>
@@ -98,6 +99,9 @@ export default {
   overflow: hidden;
   position: relative;
   z-index: 10;
+  background-color: $body-secondary-bg;
+  padding-bottom: $spacer-xl;
+  min-height: 100vh;
 
   &__tabs {
     &__nav {
@@ -133,11 +137,11 @@ export default {
         }
 
         .nav-link.active {
-          background: $body-bg;
+          background: $body-secondary-bg;
           color: $dark;
           position: relative;
           overflow: hidden;
-          text-shadow: 0 -2px 2px $body-bg;
+          text-shadow: 0 -2px 2px $body-secondary-bg;
 
           &:after {
             content: '';
