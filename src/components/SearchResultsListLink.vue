@@ -1,7 +1,7 @@
 <template>
   <router-link
     class="search-results-list-link d-flex align-self-stretch flex-nowrap"
-    :to="{ name: 'document', params, query: { q: query, tab: tab } }"
+    :to="{ name: 'document', params, query: { q: query, tab } }"
   >
     <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
     <div class="search-results-list-link__wrapper">
