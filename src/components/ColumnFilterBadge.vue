@@ -33,13 +33,15 @@ export default {
     margin-left: 0.1em;
   }
 
+  &__icon,
   &__counter {
     margin: 0;
     position: absolute;
     right: 0;
-    top: 0;
+    top: 0.2rem;
     transform: translate(50%, -50%);
     z-index: 100;
+    padding: $spacer-xxs;
   }
 }
 </style>
