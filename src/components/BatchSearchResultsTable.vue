@@ -44,7 +44,7 @@
           >
             <template #dropdown>
               <batch-search-results-filters
-                v-model="selectedQueries"
+                v-model:selectedQueries="selectedQueries"
                 :query-keys="queryKeys"
                 :indices="indices"
                 hide-border

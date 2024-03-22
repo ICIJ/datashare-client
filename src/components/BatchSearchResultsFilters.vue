@@ -89,10 +89,6 @@ export default {
     SearchFormControl,
     FilterFooter
   },
-  model: {
-    prop: 'selectedQueries',
-    event: 'update:selected-queries'
-  },
   props: {
     /**
      * The batch search query keys
@@ -112,6 +108,7 @@ export default {
       default: () => []
     }
   },
+  emits: ['update:selected-queries'],
   data() {
     return {
       queriesFilter: null,
