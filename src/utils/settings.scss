@@ -71,7 +71,7 @@ $input-bg:  var(--#{$prefix}white);
 $input-focus-border-color: map-get($theme-colors, 'secondary');
 $custom-control-indicator-checked-bg: $tertiary;
 
-$btn-box-shadow: none;
+$btn-box-shadow: 0 0 0 0 transparent;
 
 $popover-max-width: 480px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
@@ -99,7 +99,7 @@ $kbd-bg: rgba(#222, .7);
 $tooltip-max-width: 260px;
 $tooltip-opacity: 1;
 
-$input-box-shadow: none;
+$input-box-shadow: 0 0 0 0 transparent;
 $b-toast-background-opacity: $tooltip-opacity;
 
 $font-size-sm: .9rem;
