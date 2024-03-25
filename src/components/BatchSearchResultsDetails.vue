@@ -28,12 +28,7 @@
         <div>
           <dt>{{ $t('batchSearch.state') }}</dt>
           <dd>
-            <task-item-status
-              :task-item="{
-                ...batchSearch,
-                errorText: $t('batchSearch.errorMessage')
-              }"
-            />
+            <batch-search-status :batch-search="batchSearch" />
           </dd>
         </div>
         <div>
@@ -99,7 +94,7 @@
 import { get } from 'lodash'
 
 import BatchSearchActions from '@/components/BatchSearchActions'
-import TaskItemStatus from '@/components/TaskItemStatus'
+import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import UserDisplay from '@/components/UserDisplay'
 import ProjectLink from '@/components/ProjectLink'
@@ -117,7 +112,7 @@ export default {
     BatchSearchActions,
     ContentTypeBadge,
     ProjectLink,
-    TaskItemStatus,
+    BatchSearchStatus,
     UserDisplay
   },
   filters: {

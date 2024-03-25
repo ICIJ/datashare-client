@@ -4,7 +4,7 @@
       <template v-if="isFailed" #error>
         <slot name="title">
           <div class="task-item-status__modal__error-query mb-2 font-weight-bolder">
-            <span v-html="$t('batchDownload.errorTitle', { taskId: taskItem.uuid })" />
+            <span v-html="$t(`${taskItem.key}.errorTitle`, { taskId: taskItem.uuid })" />
           </div>
         </slot>
         <div v-if="taskItem.errorMessage">
@@ -19,7 +19,7 @@
           <template v-else>
             <pre class="task-item-status__modal__error-message mt-3 mb-0"><code>{{ errorMessage }}</code></pre>
           </template>
-          <div class="mt-2" v-html="taskItem.errorText"></div>
+          <div class="mt-2" v-html="$t(`${taskItem.key}.errorMessage`)"></div>
         </div>
       </template>
     </ellipse-status>

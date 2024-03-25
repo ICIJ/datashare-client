@@ -11,7 +11,7 @@
               ...properties.batchDownload,
               state,
               errorMessage: error,
-              errorText: $t('batchDownload.errorMessage')
+              key: 'batchDownload'
             }"
           />
         </template>
