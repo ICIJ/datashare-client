@@ -685,10 +685,11 @@
     "author": "Autor·a",
     "advancedFilters": "Filtros avanzados",
     "selectFolder": "Seleccionar directorio",
-    "errorTitle": "Error en la consulta",
+    "errorTitle": "Batch search task <code class=\"font-weight-bold\">%{taskId}</code> is in error.",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
     "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
+    "unableToRetrieveTags": "Unable to retrieve tags from selected project | Failed to retrieve tags from selected projects",
     "placeholder": "Buscar en las búsquedas masivas...",
     "status": {
       "failure": "failure",
