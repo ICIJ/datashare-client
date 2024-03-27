@@ -36,7 +36,7 @@
               variant="link"
               size="sm"
               class="tasks-list__tasks__item__stop text-danger p-0"
-              @click="stopTask(item.name)"
+              @click="stopTask(item.id)"
             >
               {{ $t('tasksList.stop') }}
             </b-btn>
