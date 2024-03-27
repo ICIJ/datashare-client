@@ -14,8 +14,8 @@ describe('TaskAnalysisList.vue', () => {
   const api = {
     index: vi.fn(),
     getTasks: vi.fn().mockResolvedValue([
-      { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' },
-      { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
+      { id: 'IndexTask@456', name: 'org.icij.datashare.tasks.IndexTask', progress: 0.2, state: 'RUNNING' },
+      { id: 'ScanTask@123', name: 'org.icij.datashare.tasks.ScanTask', progress: 0.5, state: 'DONE' }
     ]),
     deleteDoneTasks: vi.fn(),
     stopPendingTasks: vi.fn(),
@@ -48,8 +48,8 @@ describe('TaskAnalysisList.vue', () => {
     await flushPromisesAndPendingTimers(wrapper)
 
     expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(2)
-    expect(wrapper.findAll('.tasks-list__tasks__item__name').at(0).text()).toContain('baz')
-    expect(wrapper.findAll('.tasks-list__tasks__item__name').at(1).text()).toContain('bar')
+    expect(wrapper.findAll('.tasks-list__tasks__item__name').at(0).text()).toContain('Index')
+    expect(wrapper.findAll('.tasks-list__tasks__item__name').at(1).text()).toContain('Scan')
   })
 
   it('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
@@ -129,7 +129,7 @@ describe('TaskAnalysisList.vue', () => {
     wrapper.find('.tasks-list__tasks__item__stop').trigger('click')
     await flushPromisesAndPendingTimers(wrapper)
     expect(api.stopTask).toBeCalledTimes(1)
-    expect(api.stopTask).toBeCalledWith('foo.baz@456')
+    expect(api.stopTask).toBeCalledWith('IndexTask@456')
   })
 
   it('should display 1 disabled "Stop task" button if 1 task is done', async () => {
