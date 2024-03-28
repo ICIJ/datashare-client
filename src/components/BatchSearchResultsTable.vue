@@ -1,98 +1,102 @@
 <template>
   <div class="batch-search-results-table">
     <div class="card">
-      <b-table
-        :busy="isBusy"
-        :empty-text="$t('global.emptyTextTable')"
-        :fields="fields"
-        :items="results"
-        :per-page="perPage"
-        :sort-by="sortBy"
-        :sort-desc="orderBy"
-        hover
-        no-local-sorting
-        no-sort-reset
-        responsive
-        show-empty
-        striped
-        tbody-tr-class="batch-search-results-table__queries__query "
-        @sort-changed="sortChanged"
-      >
-        <template #head(contentType)="{ field }">
-          <column-filter-dropdown
-            :id="field.key"
-            v-model="selectedContentTypes"
-            :items="contentTypes"
-            :name="field.label"
-            immediate
-            multiple
-          >
-            <template #label="{ item }">
-              {{ fileExtension(item) }}
-            </template>
-          </column-filter-dropdown>
-        </template>
-        <template #head(query)="{ field }">
-          <column-filter-dropdown
-            v-if="queryKeys.length"
-            :id="field.key"
-            :model-value="selectedQueries"
-            :items="queryKeys"
-            :name="field.label"
-            :counter="nbSelectedQueries"
-            :popover-white="false"
-            multiple
-          >
-            <template #dropdown>
-              <batch-search-results-filters
-                v-model:selectedQueries="selectedQueries"
-                :query-keys="queryKeys"
-                :indices="indices"
-                hide-border
-              />
-            </template>
-          </column-filter-dropdown>
-        </template>
-        <template #cell(documentNumber)="{ item }">
-          {{ item.documentNumber + 1 }}
-        </template>
-        <template #cell(documentPath)="{ item, index }">
-          <router-link
-            class="batch-search-results-table__queries__query__link"
-            target="_blank"
-            :to="{
-              name: 'document-standalone',
-              params: { index: item.project.name, id: item.documentId, routing: item.rootId },
-              query: { q: item.query }
-            }"
-            @click.prevent="openDocumentModal(index)"
-          >
-            <active-text-truncate
-              v-b-tooltip.hover
-              class="batch-search-results-table__query__link__path"
-              :title="item.documentPath"
+      <b-overlay :show="isBusy" rounded>
+        <b-table
+          :sort-by="sortBy"
+          :sort-desc="sortDesc"
+          :empty-text="$t('global.emptyTextTable')"
+          :fields="fields"
+          :items="results"
+          :per-page="perPage"
+          hover
+          no-local-sorting
+          no-sort-reset
+          responsive
+          show-empty
+          striped
+          tbody-tr-class="batch-search-results-table__queries__query "
+          @sorted="sortChanged"
+        >
+          <template #head(contentType)="{ field }">
+            <column-filter-dropdown
+              :id="field.key"
+              v-model="selectedContentTypes"
+              :items="contentTypes"
+              :name="field.label"
+              immediate
+              multiple
             >
-              {{ item.documentPath }}
-            </active-text-truncate>
-          </router-link>
-        </template>
-        <template #cell(creationDate)="{ item }">
-          <span :title="localeLongDate(item.creationDate)">
-            {{ localeShortDate(item.creationDate) }}
-          </span>
-        </template>
-        <template #cell(contentType)="{ item }">
-          <content-type-badge :value="item.contentType" :document-name="item.documentPath" />
-        </template>
-        <template #cell(contentLength)="{ item }">
-          <span class="text-nowrap">{{ getDocumentSize(item.contentLength) }}</span>
-        </template>
-        <template #cell(empty)>
-          <div class="text-center">
-            {{ $t('batchSearchResults.empty') }}
-          </div>
-        </template>
-      </b-table>
+              <template #label="{ item }">
+                {{ fileExtension(item) }}
+              </template>
+            </column-filter-dropdown>
+          </template>
+          <template #head(query)="{ field }">
+            <column-filter-dropdown
+              v-if="queryKeys.length"
+              :id="field.key"
+              :model-value="selectedQueries"
+              :items="queryKeys"
+              :name="field.label"
+              :counter="nbSelectedQueries"
+              :popover-white="false"
+              multiple
+            >
+              <template #dropdown>
+                <batch-search-results-filters
+                  v-model:selectedQueries="selectedQueries"
+                  :query-keys="queryKeys"
+                  :indices="indices"
+                  hide-border
+                />
+              </template>
+            </column-filter-dropdown>
+          </template>
+          <template #cell(documentNumber)="{ item }">
+            {{ item.documentNumber + 1 }}
+          </template>
+          <template #cell(project.name)="{ item: { project } }">
+            <project-link :project="project" hide-thumbnail />
+          </template>
+          <template #cell(documentPath)="{ item, index }">
+            <router-link
+              class="batch-search-results-table__queries__query__link"
+              target="_blank"
+              :to="{
+                name: 'document-standalone',
+                params: { index: item.project.name, id: item.documentId, routing: item.rootId },
+                query: { q: item.query }
+              }"
+              @click.prevent="openDocumentModal(index)"
+            >
+              <active-text-truncate
+                v-b-tooltip.hover
+                class="batch-search-results-table__query__link__path"
+                :title="item.documentPath"
+              >
+                {{ item.documentPath }}
+              </active-text-truncate>
+            </router-link>
+          </template>
+          <template #cell(creationDate)="{ item }">
+            <span :title="localeLongDate(item.creationDate)">
+              {{ localeShortDate(item.creationDate) }}
+            </span>
+          </template>
+          <template #cell(contentType)="{ item }">
+            <content-type-badge :value="item.contentType" :document-name="item.documentPath" />
+          </template>
+          <template #cell(contentLength)="{ item }">
+            <span class="text-nowrap">{{ getDocumentSize(item.contentLength) }}</span>
+          </template>
+          <template #cell(empty)>
+            <div class="text-center">
+              {{ $t('batchSearchResults.empty') }}
+            </div>
+          </template>
+        </b-table>
+      </b-overlay>
     </div>
     <custom-pagination
       v-model="page"
@@ -165,7 +169,7 @@ export default {
         }
         return uniq(contentTypes)
       },
-      set(values) {
+      set(values, oldValues) {
         const contentTypes = values?.length > 0 ? values?.join(',') : null
         return this.updateRoute({ page: 1, contentTypes })
       }
@@ -189,7 +193,8 @@ export default {
             key: 'project.name',
             label: this.$t('batchSearchResults.project'),
             sortable: true,
-            name: 'prj_id'
+            name: 'prj_id',
+            thStyle: { width: '10rem' }
           }
         : null
     },
@@ -255,18 +260,18 @@ export default {
       return (this.page - 1) * this.perPage
     },
     sortBy() {
-      return find(this.fields, (item) => item.name === this.sort).key
+      return find(this.fields, ({ name }) => name === this.sortQueryParam)?.name
+    },
+    sortDesc() {
+      return this.orderQueryParam.toLowerCase() === 'desc'
     },
     queriesExcluded() {
       return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
     },
-    orderBy() {
-      return this.order.toLowerCase() === 'desc'
-    },
-    order() {
+    orderQueryParam() {
       return this.$route.query?.order ?? settings.batchSearchResults.order
     },
-    sort() {
+    sortQueryParam() {
       return this.$route.query?.sort ?? settings.batchSearchResults.sort
     },
     isFirstDocument() {
@@ -284,22 +289,22 @@ export default {
     page() {
       return this.fetch()
     },
-    sort() {
+    sortQueryParam() {
       return this.fetch()
     },
-    order() {
+    orderQueryParam() {
       return this.fetch()
     },
     selectedContentTypes: {
       deep: true,
-      handler() {
-        return this.fetch()
+      handler(values, oldValues) {
+        return isEqual(values, oldValues) ? null : this.fetch()
       }
     },
     selectedQueries: {
       deep: true,
-      handler() {
-        return this.fetch()
+      handler(values, oldValues) {
+        return isEqual(values, oldValues) ? null : this.fetch()
       }
     },
     queriesExcluded() {
@@ -314,8 +319,8 @@ export default {
     async fetch() {
       this.$wait.start(this.loaderId)
       const {
-        order,
-        sort,
+        orderQueryParam: order,
+        sortQueryParam: sort,
         selectedQueries: queries,
         perPage: size,
         pageOffset: from,
@@ -336,28 +341,23 @@ export default {
     getQueries() {
       return this.$store.dispatch('batchSearch/getBatchSearchQueries', this.uuid)
     },
-    async sortChanged(ctx) {
-      const sort = find(this.fields, (item) => item.key === ctx.sortBy).name
-      const order = ctx.sortDesc ? 'desc' : 'asc'
+    async sortChanged(sortBy, sortDesc) {
+      const sort = find(this.fields, (item) => item.key === sortBy)?.name
+      const order = sortDesc ? 'asc' : 'desc'
       return this.updateRoute({ page: this.page, sort, order })
     },
     filter() {
       return this.updateRoute({ page: 1 })
     },
-    linkGen(page) {
-      return this.generateRoute({ page })
-    },
     updateRoute(query) {
       const to = this.generateRoute(query)
-      if (!isEqual(to.query, this.$route.query)) {
-        return this.$router.push(to)
-      }
+      return isEqual(to.query, this.$route.query) ? null : this.$router.push(to)
     },
     generateRoute({
       page = this.page,
       contentTypes = this.selectedContentTypes,
-      sort = this.sort,
-      order = this.order,
+      sort = this.sortQueryParam,
+      order = this.orderQueryParam,
       queries = this.selectedQueries
     }) {
       if (isArray(queries)) {
@@ -366,7 +366,7 @@ export default {
       if (isArray(contentTypes)) {
         contentTypes = contentTypes.join(',')
       }
-      contentTypes = isEqual(this.contentTypes, contentTypes) ? undefined : contentTypes
+      contentTypes = contentTypes ?? null
 
       const queryParams = {
         page: page.toString(),

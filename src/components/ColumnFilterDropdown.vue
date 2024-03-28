@@ -1,10 +1,24 @@
 <template>
-  <column-filter :id="id" :name="name" :active="isActive" :counter="counter" :popover-white="popoverWhite"
-    @toggle="apply" class="column-filter-dropdown">
+  <column-filter
+    :id="id"
+    :name="name"
+    :active="isActive"
+    :counter="counter"
+    :popover-white="popoverWhite"
+    class="column-filter-dropdown"
+    @toggle="apply"
+  >
     <keep-alive>
       <slot name="dropdown">
-        <selectable-dropdown v-model="selectedValues" :items="items" :eq="eq" :multiple="multiple"
-          :serializer="serializer" deactivate-keys class="shadow-none border-0">
+        <selectable-dropdown
+          v-model="selectedValues"
+          :items="items"
+          :eq="eq"
+          :multiple="multiple"
+          :serializer="serializer"
+          deactivate-keys
+          class="shadow-none border-0"
+        >
           <template #item-label="{ item }">
             <slot name="label" :item="item">
               {{ labelItem(item) }}
