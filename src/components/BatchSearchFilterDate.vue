@@ -3,8 +3,7 @@
     <keep-alive>
       <date-picker
         :key="`date-${id}`"
-        v-model.number="selectedDateRange"
-        range
+        v-model.range.number="selectedDateRange"
         color="gray"
         class="border-0"
         :max-date="new Date()"
@@ -26,10 +25,6 @@ export default {
     ColumnFilter,
     DatePicker
   },
-  model: {
-    prop: 'selectedDateRange',
-    event: 'update'
-  },
   props: {
     id: {
       type: String,
@@ -39,10 +34,11 @@ export default {
       type: String,
       required: true
     },
-    date: {
+    modelValue: {
       type: Object
     }
   },
+  emits: ['update:modelValue'],
   computed: {
     isActive() {
       return this.date !== null
@@ -52,15 +48,13 @@ export default {
     },
     selectedDateRange: {
       get() {
-        if (this.date?.start && this.date?.end) {
-          const start = this.startTimeAdjust(this.date?.start)
-          const end = this.endTimeAdjust(this.date?.end)
-          return { start, end }
-        }
-        return this.date
+        const start = this.startTimeAdjust(this.modelValue?.start)
+        const end = this.endTimeAdjust(this.modelValue?.end)
+        return { start, end }
       },
       set(values) {
-        this.$emit('update', values)
+        console.log(values)
+        this.$emit('update:modelValue', values)
       }
     }
   },
