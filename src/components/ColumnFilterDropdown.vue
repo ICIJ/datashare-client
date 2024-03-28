@@ -4,7 +4,6 @@
     :name="name"
     :active="isActive"
     :counter="counter"
-    :popover-white="popoverWhite"
     class="column-filter-dropdown"
     @toggle="apply"
   >
@@ -70,10 +69,6 @@ export default {
     counter: {
       type: Number,
       default: null
-    },
-    popoverWhite: {
-      type: Boolean,
-      default: true
     },
     serializer: {
       type: Function,

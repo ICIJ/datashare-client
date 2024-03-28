@@ -40,7 +40,6 @@
               :items="queryKeys"
               :name="field.label"
               :counter="nbSelectedQueries"
-              :popover-white="false"
               multiple
             >
               <template #dropdown>
