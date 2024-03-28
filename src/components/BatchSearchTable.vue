@@ -41,6 +41,7 @@
           :items="status"
           :eq="isSelected"
           :name="field.label"
+          immediate
         >
           <template #label="{ item }">
             {{ $t(`batchSearch.${item.label}`) }}
@@ -53,6 +54,7 @@
           v-model="selectedProjects"
           :items="projects"
           :name="field.label"
+          immediate
           multiple
         />
       </template>
