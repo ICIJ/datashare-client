@@ -37,10 +37,6 @@ import settings from '@/utils/settings'
  */
 export default {
   name: 'SearchBarInput',
-  model: {
-    prop: 'query',
-    event: 'update'
-  },
   props: {
     /**
      * Placeholder in the search bar.
@@ -52,7 +48,7 @@ export default {
     /**
      * Search input query
      */
-    query: {
+    modelValue: {
       type: String
     },
     /**
@@ -77,20 +73,21 @@ export default {
       type: Boolean
     }
   },
+  emits: ['blur', 'input', 'focus', 'update:modelValue'],
   computed: {
     operatorLink() {
       return settings.documentationLinks.operators.default
     },
     value: {
       get() {
-        return this.query
+        return this.modelValue
       },
       set(value) {
-        this.$emit('update', value)
+        this.$emit('update:modelValue', value)
       }
     },
     showTips() {
-      return !this.hideTips && this.query?.length
+      return !this.hideTips && this.modelValue?.length
     },
     localizedPlaceholder() {
       return this.placeholder ?? this.$t('search.placeholder')
