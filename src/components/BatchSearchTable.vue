@@ -24,7 +24,7 @@
         <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage" />
       </template>
       <!-- Filterable Headers -->
-      <template #head(state)="{ field, ...rest }">
+      <template #head(state)="{ field }">
         <column-filter-dropdown :id="field.key" v-model="selectedStates" :items="states" :name="field.label" multiple>
           <template #label="{ item }">
             {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
