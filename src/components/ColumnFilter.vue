@@ -3,14 +3,14 @@
     <span class="column-filter__label">
       {{ name }}
     </span>
-    <b-button :id="btnId" class="column-filter__toggle ms-1" :class="btnClassName" radius variant="outline">
+    <b-button :id="btnId" class="column-filter__toggle ms-1" :class="btnClassName" radius variant="outline" @click.stop>
       <fa icon="filter" />
       <slot name="badge" :active="active" :counter="counter">
         <column-filter-badge :active="active" :counter="counter" />
       </slot>
     </b-button>
     <teleport to="body">
-      <b-popover v-model="showPopover" :custom-class="popoverClassList" :target="btnId" placement="bottom" click lazy>
+      <b-popover v-model="showPopover" :target="btnId" placement="bottom" click lazy>
         <slot></slot>
       </b-popover>
     </teleport>
@@ -41,10 +41,6 @@ export default {
     counter: {
       type: Number,
       default: null
-    },
-    popoverWhite: {
-      type: Boolean,
-      default: true
     }
   },
   emits: ['show', 'hide', 'toggle'],
@@ -59,9 +55,6 @@ export default {
     },
     btnId() {
       return `${this.btnClassName}-id`
-    },
-    popoverClassList() {
-      return `column-filter__popover popover-body-p-0 ${this.popoverWhite ? 'popover-white' : ''}`
     }
   },
   watch: {

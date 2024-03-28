@@ -140,7 +140,7 @@ export default {
     </b-button>
     <b-popover
       boundary="viewport"
-      custom-class="popover-body-p-0 popover-body-overflow-hidden dropdown-menu shadow popover-white"
+      custom-class="popover-body-p-0 popover-body-overflow-hidden dropdown-menu shadow"
       placement="start"
       triggers="focus"
       :target="popoverTarget"
