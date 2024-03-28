@@ -5,21 +5,23 @@
         <span class="flex-grow-1 my-auto">
           {{ $t('batchSearchResultsFilters.queries.heading') }}
         </span>
-        <span v-if="hasMultipleQueries" class="me-2">
-          {{ $t('search.results.sort.sort') }}
-        </span>
-        <b-dropdown
-          v-if="hasMultipleQueries"
-          class="batch-search-results-filters__queries__sort"
-          toggle-class="p-0"
-          right
-          :text="$t(`search.results.sort.${sortField}`)"
-          variant="link"
-        >
-          <b-dropdown-item v-for="key in sortFields" :key="key" :active="key === sortField" @click="sort(key)">
-            {{ $t(`search.results.sort.${key}`) }}
-          </b-dropdown-item>
-        </b-dropdown>
+        <template v-if="hasMultipleQueries">
+          <span class="me-2">
+            {{ $t('search.results.sort.sort') }}
+          </span>
+          <b-dropdown
+            v-if="hasMultipleQueries"
+            class="batch-search-results-filters__queries__sort"
+            toggle-class="p-0"
+            right
+            :text="$t(`search.results.sort.${sortField}`)"
+            variant="link"
+          >
+            <b-dropdown-item v-for="key in sortFields" :key="key" :active="key === sortField" @click="sort(key)">
+              {{ $t(`search.results.sort.${key}`) }}
+            </b-dropdown-item>
+          </b-dropdown>
+        </template>
       </h6>
       <div class="batch-search-results-filters__queries__search text-dark">
         <search-form-control
@@ -60,25 +62,23 @@
           </selectable-dropdown>
         </template>
         <div v-else class="text-center text-dark">Loading queries ...</div>
-        <filter-footer
-          class="batch-search-results-filters__footer p-2"
-          :filter="{ name: 'queries', key: 'queries' }"
-          hide-sort
-          hide-contextualize
-          hide-show-more
-          @toggle-filter="excludeSelectedQueries"
-        />
+        <div class="batch-search-results-filters__footer d-flex p-2">
+          <div class="ms-auto">
+            <b-form-checkbox size="sm" v-model="queriesExcluded">
+              {{ $t('filter.invert') }}
+            </b-form-checkbox>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { compact, isEqual, map, orderBy } from 'lodash'
+import { compact, isEqual, map, orderBy, set } from 'lodash'
 import Fuse from 'fuse.js'
 
 import SearchFormControl from '@/components/SearchFormControl'
-import FilterFooter from '@/components/filter/FilterFooter'
 
 /**
  * Form to filter a batch search results by query
@@ -86,8 +86,7 @@ import FilterFooter from '@/components/filter/FilterFooter'
 export default {
   name: 'BatchSearchResultsFilters',
   components: {
-    SearchFormControl,
-    FilterFooter
+    SearchFormControl
   },
   props: {
     /**
@@ -129,9 +128,6 @@ export default {
         return this.queryKeys
       }
     },
-    queriesExcluded() {
-      return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
-    },
     filteredQueries() {
       return this.queriesFilter ? this.fuse.search(this.queriesFilter).map((result) => result.item) : this.queries
     },
@@ -143,10 +139,19 @@ export default {
     },
     sortField: {
       get() {
-        return this.$route?.query?.queries_sort === 'default' ? 'default' : 'count'
+        return this.$route?.query?.queriesSort === 'default' ? 'default' : 'count'
       },
       set(sortField) {
-        return this.$router.push({ query: { queries_sort: sortField } })
+        return this.$router.push({ query: { queriesSort: sortField } })
+      }
+    },
+    queriesExcluded: {
+      get() {
+        return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
+      },
+      set(queriesExcluded) {
+        const query = { ...this.routeQuery, queriesExcluded }
+        this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
       }
     }
   },
@@ -173,12 +178,8 @@ export default {
       const query = { queries, q, indices }
       return this.$router.push({ name: 'search', query })
     },
-    excludeSelectedQueries() {
-      const query = { ...this.routeQuery, queriesExcluded: !this.queriesExcluded }
-      this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
-    },
     sort(queriesSort) {
-      const query = { ...this.routeQuery, queries_sort: queriesSort }
+      const query = { ...this.routeQuery, queriesSort }
       this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
     }
   }
