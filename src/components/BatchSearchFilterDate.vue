@@ -1,5 +1,6 @@
 <template>
   <column-filter :id="id" :name="name" :active="isActive">
+    {{  date }}
     <keep-alive>
       <date-picker
         :key="`date-${id}`"
@@ -41,7 +42,7 @@ export default {
   emits: ['update:modelValue'],
   computed: {
     isActive() {
-      return this.date !== null
+      return this.modelValue?.start && this.modelValue?.end
     },
     locale() {
       return this.$i18n.locale
