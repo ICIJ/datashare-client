@@ -2,17 +2,17 @@
   <form class="batch-search-filter-query col-md-6 px-0" @submit.prevent="filterByQuery">
     <search-bar-input
       v-model="search"
+      :disable-submit="emptySearch"
       :placeholder="$t('batchSearch.placeholder')"
       class="batch-search-filter-query__input"
       hide-tips
-      :disable-submit="emptySearch"
     >
       <template #addons>
         <search-bar-input-dropdown
           v-model="field"
           :options="fieldOptions"
           :options-path="fieldOptionsPath"
-          class="batch-search-filter-query__field"
+          class="batch-search-filter-query__field search-bar-input__field"
         />
       </template>
     </search-bar-input>
