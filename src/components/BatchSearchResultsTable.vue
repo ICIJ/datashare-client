@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { compact, find, get, isEqual, uniq, isArray, uniqueId } from 'lodash'
+import { compact, find, get, isEqual, uniq, isArray, pickBy, uniqueId } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
@@ -264,14 +264,17 @@ export default {
     sortDesc() {
       return this.orderQueryParam.toLowerCase() === 'desc'
     },
-    queriesExcluded() {
+    queriesSortQueryParam() {
+      return this.$route?.query?.queriesSort
+    },
+    queriesExcludedQueryParam() {
       return this.$route?.query?.queriesExcluded === 'true' || this.$route?.query?.queriesExcluded === true
     },
     orderQueryParam() {
-      return this.$route.query?.order ?? settings.batchSearchResults.order
+      return this.$route?.query?.order ?? settings.batchSearchResults.order
     },
     sortQueryParam() {
-      return this.$route.query?.sort ?? settings.batchSearchResults.sort
+      return this.$route?.query?.sort ?? settings.batchSearchResults.sort
     },
     isFirstDocument() {
       return this.documentInModalPageIndex === 0
@@ -294,6 +297,9 @@ export default {
     orderQueryParam() {
       return this.fetch()
     },
+    queriesExcludedQueryParam() {
+      return this.fetch()
+    },
     selectedContentTypes: {
       deep: true,
       handler(values, oldValues) {
@@ -305,9 +311,6 @@ export default {
       handler(values, oldValues) {
         return isEqual(values, oldValues) ? null : this.fetch()
       }
-    },
-    queriesExcluded() {
-      return this.fetch()
     }
   },
   async created() {
@@ -317,18 +320,17 @@ export default {
     fileExtension,
     async fetch() {
       this.$wait.start(this.loaderId)
-      const {
-        orderQueryParam: order,
-        sortQueryParam: sort,
-        selectedQueries: queries,
-        perPage: size,
-        pageOffset: from,
-        selectedContentTypes: contentTypes,
-        queriesExcluded
-      } = this
-      const params = { batchId: this.uuid, from, size, queries, sort, order, contentTypes, queriesExcluded }
       try {
-        await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
+        await this.$store.dispatch('batchSearch/getBatchSearchResults', {
+          batchId: this.uuid,
+          from: this.pageOffset,
+          size: this.perPage,
+          queries: this.selectedQueries,
+          queriesExcluded: this.queriesExcludedQueryParam,
+          sort: this.sortQueryParam,
+          order: this.orderQueryParam,
+          contentTypes: this.selectedContentTypes,
+        })
       } finally {
         this.$wait.end(this.loaderId)
       }
@@ -357,7 +359,9 @@ export default {
       contentTypes = this.selectedContentTypes,
       sort = this.sortQueryParam,
       order = this.orderQueryParam,
-      queries = this.selectedQueries
+      queries = this.selectedQueries,
+      queriesSort = this.queriesSortQueryParam,
+      queriesExcluded = this.queriesExcludedQueryParam
     }) {
       if (isArray(queries)) {
         queries = queries.join(',')
@@ -367,29 +371,28 @@ export default {
       }
       contentTypes = contentTypes ?? null
 
-      const queryParams = {
-        page: page.toString(),
-        queries,
-        contentTypes,
-        sort,
-        order,
-        queries_sort: this.$route.query.queries_sort || undefined
-      }
-      this.removeEmptySearchParams(queryParams)
 
       return {
         name: 'task.batch-search.view.results',
+        query: this.removeEmptySearchParams({
+          page: page.toString(),
+          queries,
+          contentTypes,
+          sort,
+          order,
+          queriesSort,
+          queriesExcluded
+        }),
         params: {
           indices: this.indices,
           uuid: this.uuid
-        },
-        query: queryParams
+        }
       }
     },
     removeEmptySearchParams(query) {
-      if (!query?.contentTypes || !query?.contentTypes?.length) delete query?.contentTypes
-      if (!query?.queries || !query?.queries?.length) delete query?.queries
-      if (!query?.queries_sort) delete query?.queries_sort
+      return pickBy(query, (value) => {
+        return value && (!isArray(value) || value.length)
+      })
     },
     getDocumentSize(value) {
       const size = humanSize(value)
