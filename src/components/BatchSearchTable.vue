@@ -15,11 +15,8 @@
       striped
       tbody-tr-class="batch-search-table__item"
       thead-tr-class="batch-search-table__head text-nowrap"
-      @sort-changed="sortChanged"
+      @sorted="sortChanged"
     >
-      <template #table-colgroup="scope">
-        <col v-for="field in scope.fields" :key="field.key" :style="fieldStyle(field.key)" />
-      </template>
       <template #table-busy>
         <content-placeholder v-for="index in 3" :key="index" class="p-3" :rows="placeholderRows" />
       </template>
@@ -27,7 +24,7 @@
         <p class="batch-search-table__item__no-item text-center m-0" v-html="noItemMessage" />
       </template>
       <!-- Filterable Headers -->
-      <template #head(state)="{ field }">
+      <template #head(state)="{ field, ...rest }">
         <column-filter-dropdown :id="field.key" v-model="selectedStates" :items="states" :name="field.label" multiple>
           <template #label="{ item }">
             {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
@@ -220,13 +217,15 @@ export default {
           key: 'date',
           label: this.$t('batchSearch.date'),
           sortable: true,
-          name: 'batch_date'
+          name: 'batch_date',
+          thStyle: { width: '10rem' }
         },
         this.withProjectsField({
           key: 'projects',
           label: this.$t('batchSearch.projects'),
           sortable: false,
-          name: 'projects'
+          name: 'projects',
+          thStyle: { width: '20rem' }
         })
       ])
     },
@@ -465,18 +464,11 @@ export default {
     withProjectsField(field) {
       return this.isServer || this.projects.length > 1 ? field : null
     },
-    async sortChanged(ctx) {
+    async sortChanged(sortBy, sortDesc) {
       this.selectedSort = {
-        sort: this.fieldNameByKey(ctx.sortBy),
-        order: ctx.sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
+        sort: this.fieldNameByKey(sortBy),
+        order: sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
       }
-    },
-    fieldStyle(fieldKey) {
-      const styles = {
-        name: { width: 'auto', wordWrap: 'break-word' },
-        projects: { width: '200px' }
-      }
-      return styles[fieldKey] ?? {}
     },
     fieldNameByKey(fieldKey) {
       return find(this.fields, (item) => item.key === fieldKey)?.name
