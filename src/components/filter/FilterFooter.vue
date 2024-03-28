@@ -63,6 +63,7 @@ export default {
       default: () => settings.filter.sortByOptions
     }
   },
+  emits: ['toggle-filter', 'open-filter-search', 'contextualize-filter', 'sorted'],
   computed: {
     hideFooter() {
       return this.hideExclude && this.hideSort && this.hideContextualize && !this.shouldDisplayShowMore
