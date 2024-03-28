@@ -232,7 +232,7 @@ describe('BatchSearchResultsFilters.vue', () => {
       expect(wrapper.vm.$router.push).toBeCalledTimes(1)
       expect(wrapper.vm.$router.push).toBeCalledWith({
         name: 'task.batch-search.view.results',
-        query: { order: undefined, page: undefined, queries_sort: 'default', sort: undefined }
+        query: { order: undefined, page: undefined, queriesSort: 'default', sort: undefined }
       })
     })
 
