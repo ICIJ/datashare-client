@@ -126,8 +126,9 @@ export default {
   &__input.form-control {
     border-right: 0;
 
-    &:focus + .search-bar-input__field &:deep(.btn),
-    &:focus + .search-bar-input__tips-addon {
+    &:focus + .search-bar-input__tips-addon,
+    &:focus + .search-bar-input__field:deep(.btn),
+    &:focus + :deep(.search-bar-input__field .btn) {
       border-bottom-color: $input-focus-border-color;
       border-top-color: $input-focus-border-color;
     }
