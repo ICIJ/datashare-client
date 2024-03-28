@@ -10,7 +10,14 @@
       </slot>
     </b-button>
     <teleport to="body">
-      <b-popover v-model="showPopover" :target="btnId" placement="bottom" click lazy>
+      <b-popover
+        v-model="showPopover"
+        custom-class="column-filter__popover popover-body-p-0"
+        :target="btnId"
+        placement="bottom"
+        click
+        lazy
+      >
         <slot></slot>
       </b-popover>
     </teleport>
@@ -73,6 +80,10 @@ export default {
     padding: 0 0.2em;
     margin: 0;
     line-height: 1.3em;
+  }
+
+  &__popover {
+    color: $body-color;
   }
 }
 </style>
