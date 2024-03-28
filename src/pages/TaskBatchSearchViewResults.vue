@@ -216,7 +216,7 @@ export default {
           queries: compact(queries.map((query) => query.label)),
           sort,
           order,
-          queries_sort: this.$route.query?.queries_sort || undefined
+          queriesSort: this.$route.query?.queriesSort || undefined
         }
       }
     },
