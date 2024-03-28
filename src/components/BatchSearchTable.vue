@@ -32,12 +32,7 @@
         </column-filter-dropdown>
       </template>
       <template #head(date)="{ field }">
-        <batch-search-filter-date
-          :id="field.key"
-          v-model="selectedDateRange"
-          :date="selectedDateRange"
-          :name="field.label"
-        />
+        <batch-search-filter-date :id="field.key" v-model="selectedDateRange" :name="field.label" />
       </template>
       <template #head(published)="{ field }">
         <column-filter-dropdown
