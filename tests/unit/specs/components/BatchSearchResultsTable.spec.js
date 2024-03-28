@@ -139,7 +139,7 @@ describe('BatchSearchResultsTable.vue', () => {
         queries: 'query_01,query_02',
         sort: 'content_type',
         order: 'desc',
-        queries_sort: undefined
+        queriesSort: undefined
       }
     })
   })
