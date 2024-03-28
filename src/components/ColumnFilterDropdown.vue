@@ -7,9 +7,9 @@
     class="column-filter-dropdown"
     @toggle="apply"
   >
-    <keep-alive>
-      <slot name="dropdown">
-        <selectable-dropdown
+  <keep-alive>
+    <slot name="dropdown">
+      <selectable-dropdown
           v-model="selectedValues"
           :items="items"
           :eq="eq"

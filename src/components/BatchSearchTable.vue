@@ -25,7 +25,14 @@
       </template>
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
-        <column-filter-dropdown :id="field.key" v-model="selectedStates" :items="states" :name="field.label" multiple>
+        <column-filter-dropdown
+          :id="field.key"
+          v-model="selectedStates"
+          immediate
+          :items="states"
+          :name="field.label"
+          multiple
+        >
           <template #label="{ item }">
             {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
           </template>
