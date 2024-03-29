@@ -1,4 +1,5 @@
 import isFunction from 'lodash/isFunction'
+import get from 'lodash/get'
 
 import shortkeys from '@/utils/shortkeys.json'
 import { getShortkeyOS } from '@/utils/utils'
@@ -11,14 +12,13 @@ export default {
      */
     shortkeyScope: {
       type: String,
-      default() {
-        return this.$options.name
-      }
+      default: null
     }
   },
   methods: {
     getShortkey(name) {
-      return shortkeys[this.shortkeyScope][name]
+      const scope = this.shortkeyScope ?? this.$options.name
+      return get(shortkeys, [scope, name])
     },
     getKeys(name) {
       const shortkey = this.getShortkey(name)
