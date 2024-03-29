@@ -70,7 +70,7 @@ export default {
       },
       set(value) {
         const name = this.tabRoutes[value]
-        const resolvedPath = this.$router.resolve({ name })?.route?.path
+        const resolvedPath = this.$router.resolve({ name })?.path
         // Must be the current route or one of its children
         const isMatchedRoute = this.$route.matched.some((m) => m.path.startsWith(resolvedPath))
         // Change tab only if the route changed
