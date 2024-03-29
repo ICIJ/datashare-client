@@ -309,6 +309,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['submit'],
   data() {
     return {
       ...initData,
