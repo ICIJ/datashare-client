@@ -297,9 +297,9 @@ export default {
     isDesc() {
       return this.selectedSort.order === SORT_ORDER.DESC
     },
-    page:{
+    page: {
       set(page) {
-        console.log(page)
+        return this.updateRoute({ page })
       },
       get() {
         const value = parseInt(this.$route?.query?.page)

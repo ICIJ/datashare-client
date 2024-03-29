@@ -312,7 +312,6 @@ export default {
       return this.datesHistogram.find(({ x0, x1 }) => date >= x0 && date < x1)
     },
     binToQueryValues({ x0, x1 }) {
-      console.log({ x0, x1 })
       return [x0.getTime(), x1.getTime()]
     },
     binToQuery(bin) {

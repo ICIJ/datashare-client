@@ -54,7 +54,6 @@ export default {
         return { start, end }
       },
       set(values) {
-        console.log(values)
         this.$emit('update:modelValue', values)
       }
     }
