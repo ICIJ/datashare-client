@@ -39,8 +39,8 @@
             <fa icon="user-tag" class="me-2" />
             {{ $t('indexing.findNamedEntities') }}
           </b-button>
-
           <b-modal
+            v-model="showExtractingForm"
             :id="extractingFormId"
             body-bg-variant="darker"
             hide-footer
@@ -54,6 +54,7 @@
             <extracting-form id="extracting-form" dark @submit="closeExtractingForm" />
           </b-modal>
           <b-modal
+            v-model="showFindNamedEntitiesForm"
             :id="findNamedEntitiesFormId"
             body-bg-variant="darker"
             hide-footer
@@ -100,7 +101,9 @@ export default {
   mixins: [polling],
   data() {
     return {
-      count: 0
+      count: 0,
+      showExtractingForm: false,
+      showFindNamedEntitiesForm: false
     }
   },
   computed: {
@@ -141,9 +144,7 @@ export default {
     this.$wait.start('load task-analysis-list tasks')
     this.count = await this.countAny()
     await this.startPollingTasks()
-    if (this.count === 0 && this.tasks.length === 0) {
-      this.$bvModal.show(this.extractingFormId)
-    }
+    this.showExtractingForm = !this.count && !this.tasks.length
     this.$wait.end('load task-analysis-list tasks')
   },
   methods: {
@@ -154,11 +155,11 @@ export default {
       return count
     },
     closeExtractingForm() {
-      this.$bvModal.hide(this.extractingFormId)
+      this.showExtractingForm = false
       return this.startPollingTasks()
     },
     closeFindNamedEntitiesForm() {
-      this.$bvModal.hide(this.findNamedEntitiesFormId)
+      this.showFindNamedEntitiesForm = false
       return this.startPollingTasks()
     },
     async stopPendingTasks() {

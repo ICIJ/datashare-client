@@ -8,7 +8,7 @@
       show-empty
       thead-tr-class="text-nowrap"
       tbody-tr-class="tasks-list__tasks__item"
-      class="card border-top-0 tasks-list__tasks"
+      class="card tasks-list__tasks"
     >
       <template #empty>
         <slot name="empty">
