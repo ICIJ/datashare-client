@@ -31,7 +31,7 @@
               <div
                 v-for="(translationReference, pip) in pipelines"
                 :key="pip"
-                class="list-group-item bg-transparent border-light"
+                class="list-group-item bg-transparent border-light find-named-entities-form__body__pipeline"
               >
                 <b-form-radio v-model="pipeline" name="pipeline" :value="pip.toUpperCase()">
                   {{ $t(`${translationReference}`) }}
@@ -201,6 +201,12 @@ export default {
 
   &__subheader {
     font-style: italic;
+  }
+
+  &__body {
+    &__pipeline {
+      color: inherit;
+    }
   }
 }
 </style>
