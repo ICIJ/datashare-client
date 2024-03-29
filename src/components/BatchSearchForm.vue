@@ -6,12 +6,12 @@
           {{ $t('batchSearch.heading') }}
         </h5>
         <div class="card-body pb-1">
-          <b-form-group :label="`${$t('batchSearch.name')} *`" class="batch-search-form__name" label-size="sm">
+          <b-form-group :label="`${$t('batchSearch.name')} *`" class="batch-search-form__name mb-3" label-size="sm">
             <b-form-input v-model="name" required type="text" trim></b-form-input>
           </b-form-group>
           <b-form-group
             :label="`${$t('batchSearch.fileLabel')} *`"
-            class="batch-search-form__fileLabel mb-0"
+            class="batch-search-form__fileLabel"
             label-size="sm"
           >
             <template slot="description">
@@ -27,21 +27,25 @@
               required
             ></b-form-file>
           </b-form-group>
-          <p class="help small">
+          <p class="help small mb-3">
             <a class="text-muted" :href="$t('settings.documentationLinks.batchSearch.spreadsheet')" target="_blank">
               {{ $t('batchSearch.learnMore') }}
             </a>
           </p>
-          <b-form-group :label="$t('batchSearch.description')" label-size="sm" class="batch-search-form__description">
+          <b-form-group
+            :label="$t('batchSearch.description')"
+            label-size="sm"
+            class="batch-search-form__description mb-3"
+          >
             <b-form-textarea v-model="description" max-rows="6" rows="2" trim></b-form-textarea>
           </b-form-group>
           <b-form-group
             v-if="showProjectsInput"
             :label="`${$t('batchSearch.projects')} *`"
-            class="batch-search-form__projects"
+            class="batch-search-form__projects mb-3"
             label-size="sm"
           >
-            <multiselect
+            <vue-multiselect
               v-model="selectedProjects"
               :allow-empty="false"
               :close-on-select="false"
@@ -68,7 +72,11 @@
             </span>
           </div>
           <b-collapse id="advanced-filters" v-model="showAdvancedFilters" class="pt-2">
-            <b-form-group :description="phraseMatchDescription" class="batch-search-form__phraseMatch" label-size="sm">
+            <b-form-group
+              :description="phraseMatchDescription"
+              class="batch-search-form__phraseMatch mb-3"
+              label-size="sm"
+            >
               <b-form-checkbox v-model="phraseMatch" switch>
                 {{ $t('batchSearch.phraseMatch') }}
               </b-form-checkbox>
@@ -236,7 +244,7 @@ import {
 } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
-import Multiselect from 'vue-multiselect'
+import VueMultiselect from 'vue-multiselect'
 
 import TreeView from '@/components/TreeView'
 import utils from '@/mixins/utils'
@@ -281,7 +289,7 @@ export default {
   name: 'BatchSearchForm',
   components: {
     TreeView,
-    Multiselect
+    VueMultiselect
   },
   filters: {
     startCase
