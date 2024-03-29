@@ -1,13 +1,5 @@
 <template>
-  <b-modal
-    id="document-modal"
-    :show="documentInModalIndex !== null"
-    size="xl"
-    lazy
-    hide-header
-    hide-footer
-    body-class="p-0"
-  >
+  <b-modal id="document-modal" v-model="showModal" size="xl" lazy hide-header hide-footer body-class="p-0">
     <div v-if="documentInModal" :key="documentInModalIndex">
       <document-navbar :id="documentInModal.id" :index="documentInModal.index" :routing="documentInModal.routing">
         <template #back>
@@ -47,39 +39,44 @@ export default {
     DocumentView,
     QuickItemNav
   },
-  model: {
-    prop: 'documentInModalPageIndex',
-    event: 'change'
-  },
   props: {
-    documentInModalPageIndex: {
+    pageIndex: {
       type: Number,
       default: null
     },
     page: {
       type: Number,
       default: 1
+    },
+    show: {
+      type: Boolean
+    }
+  },
+  emits: ['update:pageIndex', 'update:page', 'update:show'],
+  data() {
+    return {
+      showModal: this.show
     }
   },
   computed: {
     ...mapState('batchSearch', ['results']),
     ...mapGetters('batchSearch', ['totalItems']),
     hasDocumentInModal() {
-      const pageIndex = this.documentInModalPageIndex
+      const pageIndex = this.pageIndex
       return pageIndex !== null && this.results[pageIndex]
     },
     documentInModal() {
       if (!this.hasDocumentInModal) {
         return null
       }
-      const document = this.results[this.documentInModalPageIndex]
+      const document = this.results[this.pageIndex]
       const { documentId: id, rootId: routing, query: q, project } = document
       const index = project.name
       return { index, id, routing, q }
     },
     documentInModalIndex: {
       get() {
-        return this.pageOffset + this.documentInModalPageIndex
+        return this.pageOffset + this.pageIndex
       },
       set(index) {
         const docIndex = index % this.perPage
@@ -88,7 +85,7 @@ export default {
         } else if (index < this.pageOffset) {
           this.$emit('update:page', { page: this.page - 1, docIndex })
         } else {
-          this.$emit('change', Math.max(index - this.pageOffset, 0))
+          this.$emit('update:pageIndex', Math.max(index - this.pageOffset, 0))
         }
       }
     },
@@ -99,16 +96,31 @@ export default {
       return (this.page - 1) * this.perPage
     },
     isFirstDocument() {
-      return this.documentInModalPageIndex === 0
+      return this.pageIndex === 0
     },
     isLastDocument() {
       const totalResultsIndices = this.results.length - 1
-      return this.documentInModalPageIndex === totalResultsIndices
+      return this.pageIndex === totalResultsIndices
+    }
+  },
+  watch: {
+    show(value) {
+      this.showModal = value
+    },
+    pageIndex(value) {
+      this.showModal = this.show && !!value
+      this.$emit('update:show', this.showModal)
+    },
+    showModal(value) {
+      if (value !== this.show) {
+        this.$emit('update:show', value)
+      }
     }
   },
   methods: {
     hideModal() {
-      this.$bvModal.hide('document-modal')
+      this.showModal = false
+      this.$emit('update:show', false)
     }
   }
 }
