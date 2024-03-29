@@ -146,6 +146,7 @@ export default {
       required: true
     }
   },
+  emits: ['show-document-modal'],
   data() {
     return {
       documentInModalPageIndex: null
