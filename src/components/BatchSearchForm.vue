@@ -409,7 +409,7 @@ export default {
     },
     projects: {
       deep: true,
-      get () {
+      handler() {
         this.resetProjectData()
         this.hideSuggestionsFileTypes()
         this.hideSuggestionsTags()
