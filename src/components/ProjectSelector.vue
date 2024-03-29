@@ -25,7 +25,7 @@ export default {
      * The selected project value.
      * @model
      */
-    value: {
+    modelValue: {
       type: [String, Array],
       required: true
     },
@@ -85,10 +85,10 @@ export default {
     },
     selectedProject: {
       get() {
-        return this.multiple ? castArray(this.value) : this.value
+        return this.multiple ? castArray(this.modelValue) : this.modelValue
       },
-      set(value) {
-        this.$emit('input', value)
+      set(modelValue) {
+        this.$emit('update:modelValue', modelValue)
       }
     }
   }
