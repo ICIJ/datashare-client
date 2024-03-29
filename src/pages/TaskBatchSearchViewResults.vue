@@ -36,7 +36,10 @@
         />
       </div>
       <batch-search-results-table :indices="indices" :uuid="uuid" @show-document-modal="openDocumentModal" />
-      <document-in-modal v-model="documentInModalPageIndex" :page="page" @update:page="updatePage" />
+      <document-in-modal
+        v-model:pageIndex="documentInModalPageIndex"
+        v-model:page="page"
+        v-model:show="showDocumentModal" />
     </div>
   </div>
 </template>
@@ -104,7 +107,8 @@ export default {
       order: settings.batchSearchResults.order,
       published: false,
       sort: settings.batchSearchResults.sort,
-      request: { page: 1, sort: 'asc', order: 'query' }
+      request: { page: 1, sort: 'asc', order: 'query' },
+      showDocumentModal: false
     }
   },
   computed: {
@@ -138,8 +142,9 @@ export default {
         const page = this.$route.query?.page ?? 1
         return parseInt(page) ?? 1
       },
-      set(newPage) {
-        return this.$router.push(this.generateLinkToBatchSearchResults(newPage))
+      async set(newPage) {
+        await this.$store.dispatch(`batchSearch/clearBatchSearchResults`)
+        await this.$router.push(this.generateLinkToBatchSearchResults(newPage))
       }
     },
     pageOffset() {
@@ -229,15 +234,7 @@ export default {
     },
     openDocumentModal(docIndex) {
       this.documentInModalPageIndex = docIndex
-      this.$bvModal.show('document-modal')
-    },
-    async updatePage(event) {
-      await this.$store.dispatch(`batchSearch/clearBatchSearchResults`)
-
-      await this.$router.push(this.generateLinkToBatchSearchResults(event.page))
-      await this.$nextTick()
-
-      this.documentInModalPageIndex = event.docIndex
+      this.showDocumentModal = true
     },
     clearQueriesParams() {
       const query = { ...this.$route.query }
