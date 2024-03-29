@@ -108,9 +108,6 @@ export default {
   },
   computed: {
     ...mapState('indexing', ['tasks']),
-    hasIndexedDocuments() {
-      return this.count > 0
-    },
     hasPendingTasks() {
       return this.pendingTasks.length !== 0
     },
@@ -142,10 +139,13 @@ export default {
   },
   async mounted() {
     this.$wait.start('load task-analysis-list tasks')
-    this.count = await this.countAny()
-    await this.startPollingTasks()
-    this.showExtractingForm = !this.count && !this.tasks.length
-    this.$wait.end('load task-analysis-list tasks')
+    try {
+      await this.startPollingTasks()
+      const count = await this.countAny()
+      this.showExtractingForm = !count && !this.tasks.length
+    } finally {
+      this.$wait.end('load task-analysis-list tasks')
+    }
   },
   methods: {
     async countAny() {
