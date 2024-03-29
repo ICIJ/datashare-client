@@ -11,7 +11,7 @@
           </b-form-group>
           <b-form-group
             :label="`${$t('batchSearch.fileLabel')} *`"
-            class="batch-search-form__fileLabel"
+            class="batch-search-form__fileLabel mb-1"
             label-size="sm"
           >
             <template slot="description">
@@ -81,20 +81,20 @@
                 {{ $t('batchSearch.phraseMatch') }}
               </b-form-checkbox>
             </b-form-group>
-            <b-form-group
-              :description="fuzzinessDescription"
-              :label="fuzzinessLabel"
-              class="batch-search-form__fuzziness mb-0"
-              label-size="sm"
-            >
+            <b-form-group :label="fuzzinessLabel" class="batch-search-form__fuzziness mb-3" label-size="sm">
               <b-form-input v-model="fuzziness" :max="maxFuzziness" min="0" type="number"></b-form-input>
+              <template #description>
+                <span v-html="fuzzinessDescription"></span>&nbsp;
+                <a :href="fuzzinessLearnMore" target="_blank">
+                  {{ $t('batchSearch.learnMore') }}
+                </a>
+              </template>
             </b-form-group>
-            <p class="help small">
-              <a :href="fuzzinessLearnMore" class="text-muted" target="_blank">
-                {{ $t('batchSearch.learnMore') }}
-              </a>
-            </p>
-            <b-form-group :label="$t('batchSearch.fileTypes')" label-size="sm" class="batch-search-form__fileTypes">
+            <b-form-group
+              :label="$t('batchSearch.fileTypes')"
+              label-size="sm"
+              class="batch-search-form__fileTypes mb-3"
+            >
               <b-overlay :show="$wait.is('load all file types')" opacity="0.6" rounded spinner-small>
                 <b-form-input
                   ref="fileType"
@@ -133,7 +133,7 @@
                 {{ oneFileType.label }}
               </b-badge>
             </b-form-group>
-            <b-form-group :label="$t('batchSearch.path')" label-size="sm" class="batch-search-form__path">
+            <b-form-group :label="$t('batchSearch.path')" label-size="sm" class="batch-search-form__path mb-3">
               <div v-b-modal.modal-select-path class="me-3 py-1 px-2 border btn btn-link">
                 {{ $t('batchSearch.selectFolder') }}
               </div>
@@ -173,7 +173,7 @@
                 </b-badge>
               </div>
             </b-form-group>
-            <b-form-group :label="$t('batchSearch.tags')" label-size="sm" class="batch-search-form__tags">
+            <b-form-group :label="$t('batchSearch.tags')" label-size="sm" class="batch-search-form__tags mb-3">
               <b-overlay :show="$wait.is('load all tags')" opacity="0.6" rounded spinner-small>
                 <b-form-input
                   ref="tag"
