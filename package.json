@@ -56,7 +56,7 @@
     "vue-ellipse-progress": "^2.1.2",
     "vue-i18n": "^9",
     "vue-infinite-loading": "^2.4.4",
-    "vue-multiselect": "^2.1.6",
+    "vue-multiselect": "next",
     "vue-router": "^4",
     "vue-scrollto": "^2.20.0",
     "vue-sticky-directive": "^0.0.10",
