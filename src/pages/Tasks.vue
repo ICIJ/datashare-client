@@ -1,6 +1,6 @@
 <template>
   <div class="task">
-    <page-header icon="rocket" :title="$t('tasks.title')" :description="$t('tasks.description')" :tab.sync="tab">
+    <page-header v-model.tab="tab" icon="rocket" :title="$t('tasks.title')" :description="$t('tasks.description')">
       <template #tabs>
         <b-tab :active="defaultTab === 0">
           <template #title>
