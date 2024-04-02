@@ -54,7 +54,7 @@
               <template #title>
                 <div class="d-flex">
                   <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
-                  <div v-if="ne.offsets.length > 1" class="ms-auto pl-2">
+                  <div v-if="ne.offsets.length > 1" class="ms-auto ps-2">
                     {{ $tc('document.namedEntitiesOccurences', ne.offsets.length, { count: ne.offsets.length }) }}
                   </div>
                 </div>

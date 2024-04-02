@@ -47,7 +47,7 @@
             :no="$t('global.no')"
             :yes="$t('global.yes')"
           >
-            <fa icon="times" class="fa-fw pl-2"></fa>
+            <fa icon="times" class="fa-fw ps-2"></fa>
           </confirm-button>
         </li>
       </ul>

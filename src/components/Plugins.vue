@@ -48,7 +48,7 @@
                       {{ getPluginDescription(plugin) }}
                     </div>
                   </div>
-                  <div class="d-flex flex-column text-nowrap pl-2">
+                  <div class="d-flex flex-column text-nowrap ps-2">
                     <b-button
                       v-if="plugin.installed"
                       class="plugins__card__uninstall-button mb-2"
