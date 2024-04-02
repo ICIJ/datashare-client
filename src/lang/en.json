@@ -686,7 +686,7 @@
     "author": "Author",
     "advancedFilters": "Advanced filters",
     "selectFolder": "Select folder",
-    "errorTitle": "Batch search task <code class=\"font-weight-bold\">%{taskId}</code> is in error.",
+    "errorTitle": "Batch search task <code class=\"fw-bold\">%{taskId}</code> is in error.",
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
