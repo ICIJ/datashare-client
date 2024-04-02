@@ -14,7 +14,7 @@
     <slot v-if="!hideHeader" name="header">
       <div class="card-header px-2 d-flex filter__header" @click="toggleItems">
         <h6 class="flex-fill flex-shrink-1 text-truncate pt-0">
-          <span v-if="filter.icon" class="filter__items__item__icon pl-0 pe-1">
+          <span v-if="filter.icon" class="filter__items__item__icon ps-0 pe-1">
             <fa :icon="filter.icon" fixed-width></fa>
           </span>
           <slot name="title">

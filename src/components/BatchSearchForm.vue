@@ -124,7 +124,7 @@
               <b-badge
                 v-for="(oneFileType, index) in fileTypes"
                 :key="oneFileType.mime"
-                class="mt-2 me-2 pl-1 batch-search-form__cursor"
+                class="mt-2 me-2 ps-1 batch-search-form__cursor"
                 pill
                 variant="warning"
                 @click.prevent="deleteFileType(index)"
@@ -163,7 +163,7 @@
                 <b-badge
                   v-for="(onePath, index) in paths"
                   :key="onePath"
-                  class="mt-2 me-2 pl-1 batch-search-form__cursor"
+                  class="mt-2 me-2 ps-1 batch-search-form__cursor"
                   pill
                   variant="warning"
                   @click.prevent="deletePath(index)"
@@ -196,7 +196,7 @@
               <b-badge
                 v-for="(oneTag, index) in tags"
                 :key="oneTag.mime"
-                class="mt-2 me-2 pl-1 batch-search-form__cursor"
+                class="mt-2 me-2 ps-1 batch-search-form__cursor"
                 pill
                 variant="warning"
                 @click.prevent="deleteTag(index)"

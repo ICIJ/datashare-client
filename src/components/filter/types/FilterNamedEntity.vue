@@ -1,7 +1,7 @@
 <template>
   <filter-boilerplate v-bind="$props" ref="filter" class="filter--named-entity" no-item-translation>
     <template #title>
-      <span class="col-2 filter__items__item__icon pl-0 pe-1" :class="getCategoryClass(filter.category, 'text-')">
+      <span class="col-2 filter__items__item__icon ps-0 pe-1" :class="getCategoryClass(filter.category, 'text-')">
         <fa :icon="getCategoryIcon(filter.category)" fixed-width></fa>
       </span>
       {{ $t(`filter.${filter.name}`) }}

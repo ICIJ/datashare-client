@@ -203,7 +203,7 @@ export default {
             (this.$store.getters['search/sortBy'].field === 'path'
               ? ` (${this.$t('search.results.sortedByPath')})`
               : ''),
-          class: 'pl-0'
+          class: 'ps-0'
         },
         {
           key: 'highlight',
