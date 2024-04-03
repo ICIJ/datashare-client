@@ -47,7 +47,7 @@
             modal-class="task-analysis-list__form-modal extracting__form"
             size="md"
           >
-            <template #modal-title>
+            <template #header>
               <fa icon="search-plus" class="me-1" />
               {{ $t('indexing.extractText') }}
             </template>
@@ -61,7 +61,7 @@
             modal-class="task-analysis-list__form-modal find-named-entities__form"
             size="md"
           >
-            <template #modal-title>
+            <template #header>
               <fa icon="user-tag" class="me-1" />
               {{ $t('indexing.findNamedEntities') }}
             </template>
