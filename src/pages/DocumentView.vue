@@ -279,11 +279,11 @@ export default {
     },
     goToPreviousTab() {
       const indexPreviousActiveTab = this.indexActiveTab === 0 ? this.visibleTabs.length - 1 : this.indexActiveTab - 1
-      this.$set(this, 'activeTab', this.visibleTabs[indexPreviousActiveTab].name)
+      this.activeTab = this.visibleTabs[indexPreviousActiveTab].name
     },
     goToNextTab() {
       const indexNextActiveTab = this.indexActiveTab === this.visibleTabs.length - 1 ? 0 : this.indexActiveTab + 1
-      this.$set(this, 'activeTab', this.visibleTabs[indexNextActiveTab].name)
+      this.activeTab = this.visibleTabs[indexNextActiveTab].name
     },
     getComponentIfActive({ component, name }) {
       if (this.isTabActive(name)) {

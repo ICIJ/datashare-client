@@ -93,7 +93,7 @@ export default {
       EventBus.emit('index::delete::all')
     },
     showTreeView() {
-      this.$set(this, 'path', this.dataDir)
+      this.path = this.dataDir
       this.$bvModal.show('mounting-data-location-tree-view')
     }
   }

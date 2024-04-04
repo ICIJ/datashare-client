@@ -117,8 +117,8 @@ export default {
     if (this.hasPreviewHost) {
       await this.waitFor(async () => {
         try {
-          this.$set(this, 'meta', await this.fetchMeta())
-          this.$set(this, 'size', await this.fetchSize())
+          this.meta = await this.fetchMeta()
+          this.size = await this.fetchSize()
         } catch (e) {
           throw Error('Unable to fetch the thumbnail informations')
         }

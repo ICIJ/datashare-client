@@ -382,13 +382,13 @@ export default {
   },
   watch: {
     modelQuery() {
-      this.$set(this, 'query', this.modelQuery)
+      this.query = this.modelQuery
     },
     query() {
       if (!this.fromElasticSearch) {
         return
       }
-      this.$set(this, 'infiniteId', uniqueId())
+      this.infiniteId = uniqueId()
       this.aggregateWithThrottle({ clearPages: true })
       // Emit an event to update the model value only if it changed
       if (this.query !== this.modelQuery) {
@@ -436,7 +436,7 @@ export default {
           },
           { deep: true }
         )
-        this.$set(this, 'unwatch', unwatch)
+        this.unwatch = unwatch
       }
     },
     hasValues() {
@@ -446,7 +446,7 @@ export default {
       return this.collapsedIfNoValues && !this.hasValues()
     },
     clearInfiniteScroll() {
-      this.$set(this, 'infiniteId', uniqueId())
+      this.infiniteId = uniqueId()
       this.aggregateWithThrottle({ clearPages: true })
     },
     openFilterSearch() {

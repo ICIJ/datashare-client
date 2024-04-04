@@ -147,7 +147,7 @@ export default {
         this.$root.$bvToast.toast(this.$t('userHistory.deleteError'), { noCloseButton: true, variant: 'danger' })
       } finally {
         const searches = this.searches.filter((e) => !(e === event))
-        this.$set(this, 'searches', searches)
+        this.searches = searches
       }
     },
     openRenameModal(event) {

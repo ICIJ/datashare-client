@@ -128,10 +128,10 @@ export default {
       const body = bodybuilder().size(0).agg('terms', 'tags', { include }).build()
       const response = await this.$core.api.elasticsearch.search({ index, body })
       const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
-      this.$set(this, 'suggestions', map(buckets, 'key'))
+      this.suggestions = map(buckets, 'key')
     }, 200),
     async addTag() {
-      this.$set(this, 'isReady', false)
+      this.isReady = false
       await this.$store.dispatch('document/tag', {
         documents: this.documents,
         tag: this.tag,
@@ -139,7 +139,7 @@ export default {
       })
       this.$set(this, 'tag', '')
       this.$set(this, 'suggestions', [])
-      this.$set(this, 'isReady', true)
+      this.isReady = true
       delay((filterName) => EventBus.emit('filter::refresh', filterName), settings.elasticsearch.waitForAnswer, 'tags')
       if (!this.displayTags)
         this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
@@ -151,10 +151,10 @@ export default {
       }
     },
     async deleteTag(tag) {
-      this.$set(this, 'isReady', false)
+      this.isReady = false
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
       EventBus.emit('filter::delete', 'tags', tag)
-      this.$set(this, 'isReady', true)
+      this.isReady = true
     },
     generateTagTooltip(tag) {
       return `${this.$t('document.createdBy')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(

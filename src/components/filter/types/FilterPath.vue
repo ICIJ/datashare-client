@@ -81,7 +81,7 @@ export default {
       deep: true,
       get (value, previousValue) {
         if (!isEqual(value, previousValue)) {
-          this.$set(this, 'path', this.dataDir)
+          this.path = this.dataDir
           this.setFilterValue(this.filter, { key: [] })
         }
       }
@@ -92,7 +92,7 @@ export default {
     }
   },
   created() {
-    this.$set(this, 'path', this.dataDir)
+    this.path = this.dataDir
   },
   methods: {
     preBodyBuild(body) {

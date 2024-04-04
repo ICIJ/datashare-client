@@ -93,7 +93,7 @@ export default {
     }
   },
   mounted() {
-    this.$set(this, 'mounted', true)
+    this.mounted = true
   }
 }
 </script>
