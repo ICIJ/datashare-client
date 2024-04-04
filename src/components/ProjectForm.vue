@@ -115,7 +115,7 @@ export default {
       }
     },
     reset() {
-      this.$set(this, 'form', this.initialFormValues())
+      this.form = this.initialFormValues()
     },
     emitDelete() {
       this.$emit('delete', this.values.name)

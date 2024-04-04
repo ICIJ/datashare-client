@@ -95,7 +95,7 @@ export default {
        * User set focus on the search input
        */
       this.$emit('update:activated', true)
-      this.$set(this, 'isActive', true)
+      this.isActive = true
       this.$nextTick(() => {
         if (this.$refs.search) {
           this.$refs.search.focus()
@@ -107,7 +107,7 @@ export default {
        * User lost focus on the search input
        */
       this.$emit('update:activated', false)
-      this.$set(this, 'isActive', false)
+      this.isActive = false
       this.$emit('input', '')
     },
     shortkeyAction({ srcKey }) {

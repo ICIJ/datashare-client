@@ -36,7 +36,7 @@ export default {
   methods: {
     async retrieveNotes(project, path) {
       const notes = await this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
-      this.$set(this, 'notes', notes)
+      this.notes = notes
     }
   }
 }

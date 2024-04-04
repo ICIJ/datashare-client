@@ -157,7 +157,7 @@ export default {
   },
   methods: {
     handleScroll(e) {
-      this.$set(this, 'isShrinked', e.target.scrollTop > 40)
+      this.isShrinked = e.target.scrollTop > 40
     },
     search(queryOrParams = null) {
       return this.$store.dispatch('search/query', queryOrParams)

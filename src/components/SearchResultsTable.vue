@@ -236,7 +236,7 @@ export default {
   },
   methods: {
     onRowSelected(items) {
-      this.$set(this, 'selected', items)
+      this.selected = items
     },
     async onClick(actionId) {
       this.$wait.start('load results table')

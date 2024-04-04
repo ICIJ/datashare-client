@@ -192,13 +192,13 @@ export default {
     this.$wait.start('load spreadsheet')
     const response = await fetch(this.contentUrl, this.contentOptions)
     const meta = await response.json()
-    this.$set(this, 'meta', meta)
-    this.$set(this, 'activeSheetIndex', 0)
+    this.meta = meta
+    this.activeSheetIndex = 0
     this.$wait.end('load spreadsheet')
   },
   methods: {
     debounceFilterInput: debounce(function ({ target: { value } }) {
-      this.$set(this, 'filter', value)
+      this.filter = value
     }, 500)
   }
 }

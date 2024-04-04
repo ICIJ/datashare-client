@@ -106,7 +106,7 @@ export default {
       ])
       const { index, id, routing } = this.document
       const data = await this.$core.api.elasticsearch.getSource({ index, id, routing, _source })
-      this.$set(this, 'translations', data.content_translated)
+      this.translations = data.content_translated
     }
   }
 }

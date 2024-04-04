@@ -115,8 +115,8 @@ export default {
     async fetchAndLoad() {
       try {
         if (!this.loaded && !this.errored) {
-          this.$set(this, 'thumbnailSrc', await this.fetchAsBase64())
-          this.$set(this, 'loaded', true)
+          this.thumbnailSrc = await this.fetchAsBase64()
+          this.loaded = true
           /**
            * The thumbnail is loaded
            *
@@ -125,7 +125,7 @@ export default {
           this.$emit('loaded')
         }
       } catch (_) {
-        this.$set(this, 'errored', true)
+        this.errored = true
         /**
          * The thumbnail could not be loaded
          *

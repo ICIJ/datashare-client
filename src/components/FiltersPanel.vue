@@ -102,8 +102,8 @@ export default {
   methods: {
     openFilterSearch(expandedFilter, query) {
       if (this.$refs.openFilterSearch) {
-        this.$set(this, 'expandedFilter', expandedFilter)
-        this.$set(this, 'query', query)
+        this.expandedFilter = expandedFilter
+        this.query = query
         this.$refs.openFilterSearch.show()
       }
     },
