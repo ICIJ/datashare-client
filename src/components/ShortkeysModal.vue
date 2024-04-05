@@ -46,9 +46,7 @@ export default {
   name: 'ShortkeysModal',
   computed: {
     getShortkeyOS,
-    formatShortkey(values) {
-      return join(map(values, capitalize), '+')
-    },
+
     matchedRoutesNames() {
       return compact(this?.$route?.matched.map((match) => match.name))
     },
@@ -84,6 +82,9 @@ export default {
     }
   },
   methods: {
+    formatShortkey(values) {
+      return join(map(values, capitalize), '+')
+    },
     getLabel(shortkey) {
       const label = get(shortkey, 'label', get(shortkey, 'action', ''))
       return this.$te(label) ? this.$t(label) : label
