@@ -1,7 +1,7 @@
 <template>
   <div class="project-selector">
     <b-form-group class="mb-0">
-      <b-form-checkbox-group v-if="multiple" v-model="selectedProject" :disabled="disabled" :options="projectOptions" />
+      <b-form-checkbox-group stacked v-if="multiple" v-model="selectedProject" :disabled="disabled" :options="projectOptions" />
       <b-form-select v-else v-model="selectedProject" :disabled="disabled" :options="projectOptions" :size="size" />
     </b-form-group>
     <div v-if="!hasMatches" class="p-2 text-center text-muted">
