@@ -197,7 +197,7 @@ export default {
       transition: 500ms;
     }
 
-    &.slide-x-enter {
+    &.slide-x-enter-from {
       opacity: 0;
       transform: translateY(100%);
     }
