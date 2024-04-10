@@ -130,7 +130,7 @@ a.scroll-tracker {
     transition: 0.3s;
   }
 
-  &.fade-enter,
+  &.fade-enter-from,
   &.fade-leave-to {
     opacity: 0;
   }

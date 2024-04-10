@@ -107,7 +107,7 @@ export default {
       transition: 0.3s;
     }
 
-    &.slide-up-enter,
+    &.slide-up-enter-from,
     &.slide-up-leave-to {
       // Works with only one row
       margin-top: calc(#{-1em * $line-height-base} - #{$spacer * 1});
