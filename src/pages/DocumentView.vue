@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import {defineAsyncComponent} from 'vue'
 import { filter, findIndex } from 'lodash'
 import { mapState } from 'vuex'
 
@@ -145,7 +146,7 @@ export default {
             {
               name: TAB_NAME.EXTRACTED_TEXT,
               label: 'document.extractedText',
-              component: () => import('@/components/document/DocumentTabExtractedText'),
+              component: defineAsyncComponent(() => import('@/components/document/DocumentTabExtractedText')),
               icon: 'align-left',
               props: {
                 document: this.doc,
@@ -155,7 +156,7 @@ export default {
             {
               name: TAB_NAME.PREVIEW,
               label: 'document.preview',
-              component: () => import('@/components/document/DocumentTabPreview'),
+              component: defineAsyncComponent(() => import('@/components/document/DocumentTabPreview')),
               icon: 'eye',
               props: {
                 document: this.doc
@@ -164,7 +165,7 @@ export default {
             {
               name: TAB_NAME.DETAILS,
               label: 'document.tabDetails',
-              component: () => import('@/components/document/DocumentTabDetails'),
+              component: defineAsyncComponent(() => import('@/components/document/DocumentTabDetails')),
               icon: 'info-circle',
               props: {
                 document: this.doc,
@@ -175,7 +176,7 @@ export default {
               name: TAB_NAME.NAMED_ENTITIES,
               label: 'document.namedEntities',
               hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
-              component: () => import('@/components/document/DocumentTabNamedEntities'),
+              component: defineAsyncComponent(() => import('@/components/document/DocumentTabNamedEntities')),
               icon: 'database',
               props: {
                 document: this.doc
