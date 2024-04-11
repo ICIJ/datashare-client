@@ -372,7 +372,7 @@ export default {
       },
       set(checked) {
         if (checked) {
-          this.$set(this, 'selected', [])
+          this.selected = []
         }
       }
     },
@@ -395,11 +395,8 @@ export default {
         this.$emit('update:modelQuery', this.query)
       }
     },
-    collapseItems: {
-      deep: true,
-      get () {
-        this.initialize()
-      }
+    collapseItems () {
+      this.initialize()
     }
   },
   async mounted() {
@@ -567,7 +564,7 @@ export default {
       }
     },
     resetFilterValues(refresh = true) {
-      this.$set(this, 'selected', [])
+      this.selected = []
       this.$store.commit('search/includeFilter', this.filter.name)
       this.$emit('reset-filter-values', this.filter, refresh)
     },

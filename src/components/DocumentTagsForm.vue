@@ -137,8 +137,8 @@ export default {
         tag: this.tag,
         userId: await this.$core.auth.getUsername()
       })
-      this.$set(this, 'tag', '')
-      this.$set(this, 'suggestions', [])
+      this.tag = ''
+      this.suggestions = []
       this.isReady = true
       delay((filterName) => EventBus.emit('filter::refresh', filterName), settings.elasticsearch.waitForAnswer, 'tags')
       if (!this.displayTags)
