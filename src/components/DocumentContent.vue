@@ -155,7 +155,7 @@ export default {
       const key = targetLanguage ?? 'original'
       // Ensure we load the map offset only once
       const offset = await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
-      this.$set(this.maxOffsetTranslations, key, offset)
+      this.maxOffsetTranslations[key] = offset
       this.$wait.end('loaderMaxOffset')
       return offset
     },
@@ -182,8 +182,8 @@ export default {
       // Ensure offsets are in bounds
       offset = clamp(offset, 0, this.maxOffset)
       // Reactivly set the nested values of contentSlices
-      this.$set(obj, offset, obj[offset] || {})
-      this.$set(obj[offset], targetLanguageKey, { ...rest, content, cookedContent })
+      obj[offset]= obj[offset] || {}
+      obj[offset][targetLanguageKey] = { ...rest, content, cookedContent }
       return { ...rest, content, cookedContent }
     },
     async cookContentSlice({ offset = 0, targetLanguage = this.targetLanguage, content = '' } = {}) {
