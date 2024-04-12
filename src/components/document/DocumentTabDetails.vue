@@ -41,7 +41,7 @@
         <template #cell(label)="{ item: { name, label, value } }">
           <div class="fw-bold d-flex justify-content-between">
             <div class="text-truncate me-1 w-100" :title="name">
-              <var>{{ document.shortMetaName(label || name) | startCase }}</var>
+              <var>{{ startCase(document.shortMetaName(label || name))  }}</var>
             </div>
             <div class="ms-auto document__content__details__item__label__search">
               <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name, value), indices } }">
@@ -55,17 +55,19 @@
           <span v-else-if="field.value === 'unknown'" class="text-muted">
             {{ $t('document.unknown') }}
           </span>
-          <b-input-group v-else size="sm" class="document__content__details__item__input-group">
-            <b-input :value="field.value" readonly class="document__content__details__item__input-group__input" />
-            <b-input-group-append>
-              <haptic-copy
-                class="btn btn-light document__content__details__item__input-group__copy"
-                hide-label
-                :text="String(field.value)"
-                tooltip-placement="start"
-              />
-            </b-input-group-append>
-          </b-input-group>
+          <div v-else class="input-group input-group-sm document__content__details__item__input-group">
+            <input
+              :value="field.value"
+              readonly
+              class="form-control document__content__details__item__input-group__input"
+            />
+            <haptic-copy
+              class="btn btn-light document__content__details__item__input-group__copy"
+              hide-label
+              :text="String(field.value)"
+              tooltip-placement="start"
+            />
+          </div>
         </template>
       </b-table>
     </div>
@@ -88,9 +90,6 @@ export default {
   components: {
     DocumentTagsForm,
     ProjectLink
-  },
-  filters: {
-    startCase
   },
   props: {
     /**
@@ -299,7 +298,8 @@ export default {
     getExtractionLevelTranslationKey,
     itemRowClass(item) {
       return ['document__content__details__item', item.trClass]
-    }
+    },
+    startCase
   }
 }
 </script>
