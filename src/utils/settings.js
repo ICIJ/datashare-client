@@ -35,13 +35,13 @@ export default {
   documentationUrl: 'https://icij.gitbook.io/datashare',
   documentationLinks: {
     indexing: {
-      mac: 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare',
-      windows: 'https://icij.gitbook.io/datashare/windows/how-to-add-documents-to-datashare',
-      linux: 'https://icij.gitbook.io/datashare/linux/how-to-add-documents-to-datashare',
-      default: 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare'
+      mac: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-mac/add-documents-to-datashare-on-mac',
+      windows: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-windows/add-documents-to-datashare-on-windows',
+      linux: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-linux/add-documents-to-datashare-on-linux',
+      default: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-mac/add-documents-to-datashare-on-mac'
     },
     operators: {
-      default: 'https://icij.gitbook.io/datashare/all/search-with-operators'
+      default: 'https://icij.gitbook.io/datashare/usage/search-with-operators'
     }
   },
   hotKeyPrevented: ['.search-bar__input'],

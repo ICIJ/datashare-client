@@ -36,19 +36,19 @@ export const router = {
             docs: [
               {
                 title: 'Search documents',
-                path: 'all/search-documents'
+                path: 'usage/search-documents'
               },
               {
                 title: 'Filter a documents',
-                path: 'all/filter-documents'
+                path: 'usage/filter-documents'
               },
               {
                 title: 'Search with operators',
-                path: 'all/search-with-operators'
+                path: 'usage/search-with-operators'
               },
               {
                 title: 'Star a document',
-                path: 'all/star-documents'
+                path: 'usage/star-documents'
               }
             ]
           },
@@ -68,15 +68,15 @@ export const router = {
                 docs: [
                   {
                     title: 'Star a document',
-                    path: 'all/star-documents'
+                    path: 'usage/star-documents'
                   },
                   {
                     title: 'Tag a document',
-                    path: 'all/tag-documents'
+                    path: 'usage/tag-documents'
                   },
                   {
                     title: 'Use keyboard shortcuts',
-                    path: 'all/use-keyboard-shortcuts'
+                    path: 'usage/use-keyboard-shortcuts'
                   }
                 ]
               }
