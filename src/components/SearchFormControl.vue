@@ -95,7 +95,6 @@ export default {
   methods: {
     input(value) {
       this.$emit('update:modelValue', value)
-      this.$emit('input', value)
     }
   }
 }
