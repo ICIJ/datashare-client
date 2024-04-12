@@ -59,7 +59,7 @@
           ></fa>
         </template>
         <template #cell(index)="{ item }">
-          <b-badge variant="light">{{ item.index | startCase }}</b-badge>
+          <b-badge variant="light">{{ startCase(item.index) }}</b-badge>
         </template>
         <template #cell(path)="{ item }">
           <router-link
@@ -118,9 +118,6 @@ export default {
     DocumentSlicedName,
     DocumentTagsForm,
     SearchResultsHeader
-  },
-  filters: {
-    startCase
   },
   data() {
     return {
@@ -238,6 +235,7 @@ export default {
     onRowSelected(items) {
       this.selected = items
     },
+    startCase,
     async onClick(actionId) {
       this.$wait.start('load results table')
       switch (actionId) {
