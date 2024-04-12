@@ -17,7 +17,7 @@
       </span>
     </template>
     <template #items-group>
-      <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0" @change="selectUsers">
+      <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0">
         <b-form-checkbox
           v-for="{ user, count } in recommendedByUsersSorted"
           :key="user"
