@@ -77,19 +77,19 @@ export default {
     }
   },
   watch: {
-    projects: {
-      deep: true,
-      get (value, previousValue) {
-        if (!isEqual(value, previousValue)) {
-          this.path = this.dataDir
-          this.setFilterValue(this.filter, { key: [] })
-        }
+    projects (value, previousValue) {
+      if (!isEqual(value, previousValue)) {
+        this.path = this.dataDir
+        this.setFilterValue(this.filter, { key: [] })
       }
     },
     path(path, oldPath) {
-      this.pathQueries[oldPath] = this.root.query
-      this.$set(this.root, 'query', this.pathQueries[path] || null)
+      if(oldPath){
+        this.pathQueries[oldPath] = this.root.query
+      }
+      this.root.query = this.pathQueries[path] || null
     }
+    
   },
   created() {
     this.path = this.dataDir
