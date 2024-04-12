@@ -1,6 +1,6 @@
 <template>
   <div v-if="!hideFooter" class="filter__footer d-flex align-items-center text-nowrap p-1">
-    <filter-sort-by-dropdown v-if="!hideSort" v-model="sort" :sort-by-options="sortByOptions" />
+    <filter-sort-by-dropdown v-if="!hideSort" v-model:sort="sort" :sort-by-options="sortByOptions" />
     <button
       v-if="shouldDisplayShowMore"
       class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm"

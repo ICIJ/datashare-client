@@ -26,10 +26,7 @@ import settings from '@/utils/settings'
 
 export default {
   name: 'FilterSortByDropdown',
-  model: {
-    prop: 'sort',
-    event: 'update:sort'
-  },
+  emits:["update:sort"],
   props: {
     sort: {
       type: Object,
