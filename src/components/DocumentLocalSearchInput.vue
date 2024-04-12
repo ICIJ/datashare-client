@@ -121,7 +121,7 @@ export default {
 
 <template>
   <div
-    class="document-local-search-input form-inline px-3"
+    class="document-local-search-input px-3"
     :class="{
       'document-local-search-input--active': isActive,
       'document-local-search-input--pristine': !searchTermIsEmpty
@@ -143,20 +143,19 @@ export default {
           @input="$emit('input', $event.target.value)"
           @shortkey="getAction('findInDocument')"
         />
-        <div v-if="!searchTermIsEmpty" class="document-local-search-input__count input-group-append">
-          <span v-if="loading" class="input-group-text w-100 text-center d-inline-block">
+        <span
+          v-if="!searchTermIsEmpty"
+          class="document-local-search-input__count input-group-text text-center d-inline-block"
+        >
+          <span v-if="loading">
             <fa icon="circle-notch" spin></fa>
           </span>
-          <span
-            v-else
-            class="input-group-text w-100 text-center d-inline-block px-2 text-truncate"
-            :title="searchLabel"
-          >
+          <span v-else class="px-2 text-truncate" :title="searchLabel">
             <span>
               {{ searchLabel }}
             </span>
           </span>
-        </div>
+        </span>
       </div>
     </div>
     <div class="form-group">
@@ -180,33 +179,32 @@ export default {
 
 <style lang="scss" scoped>
 .document-local-search-input {
+  display: inline-flex;
   justify-content: flex-end;
+  align-items: center;
   white-space: nowrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+
+  .input-group {
+    width: 200px;
+
+    .input-group-text {
+      background: $input-bg;
+      border-left: 0;
+    }
+  }
 
   &--pristine.form-inline .input-group &__term {
     border-radius: 1.5em 0 0 1.5em;
   }
 
-  &.form-inline &__term {
+  &__term {
     border-radius: 1.5em;
   }
 
-  &__count .input-group-text {
+  &__count {
     border-radius: 0 1.5em 1.5em 0;
-  }
-
-  &.form-inline {
-    flex-wrap: nowrap;
-    white-space: nowrap;
-
-    .input-group {
-      width: 200px;
-
-      .input-group-text {
-        background: $input-bg;
-        border-left: 0;
-      }
-    }
   }
 }
 </style>
