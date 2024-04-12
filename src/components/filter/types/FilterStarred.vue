@@ -10,7 +10,7 @@
     @reset-filter-values="resetFilterValues"
   >
     <template #items-group>
-      <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0" @change="changeYesNoValue">
+      <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0">
         <b-form-checkbox :value="true" class="filter__items__item">
           <span>
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
