@@ -264,6 +264,9 @@ export default {
       return humanSize(this.maxRootSize)
     }
   },
+  async mounted() {
+    await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+  },
   methods: {
     async documentOriginalExtractedText() {
       if (!this.document.content) {
