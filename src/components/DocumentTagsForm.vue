@@ -121,9 +121,10 @@ export default {
     }
   },
   methods: {
-    searchTags: throttle(async function (value = '') {
+    searchTags: throttle(async function (event = {}) {
+      const value = event?.target?.value ?? ''
       if (value.length < 1) return
-      const index = get(this.documents, '0.index', null)
+      const index = this?.document?.index
       const include = `.*${value.toLowerCase()}.*`
       const body = bodybuilder().size(0).agg('terms', 'tags', { include }).build()
       const response = await this.$core.api.elasticsearch.search({ index, body })
@@ -132,11 +133,10 @@ export default {
     }, 200),
     async addTag() {
       this.isReady = false
-      await this.$store.dispatch('document/tag', {
-        documents: this.documents,
-        tag: this.tag,
-        userId: await this.$core.auth.getUsername()
-      })
+      const documents = this.documents
+      const tag = this.tag
+      const userId = await this.$core.auth.getUsername()
+      await this.$store.dispatch('document/tag', { documents, tag, userId })
       this.tag = ''
       this.suggestions = []
       this.isReady = true
@@ -183,6 +183,8 @@ export default {
   }
 
   &__tags__tag {
+    color: inherit;
+
     span {
       vertical-align: middle;
     }
@@ -199,7 +201,7 @@ export default {
       }
 
       &.light {
-        color: $text-muted;
+        color: $body-color;
       }
 
       > svg:hover {
