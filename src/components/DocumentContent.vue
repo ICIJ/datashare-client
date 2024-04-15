@@ -350,7 +350,7 @@ export default {
             />
             <document-local-search-input
               v-model="localSearchTerm"
-              :activated.sync="hasStickyToolbox"
+              v-model:activated="hasStickyToolbox"
               :disabled="!hasExtractedContent"
               :search-index="localSearchIndex"
               :search-occurrences="localSearchOccurrences"
