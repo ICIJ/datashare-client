@@ -8,16 +8,12 @@ import utils from '@/mixins/utils'
 export default {
   name: 'DocumentLocalSearchInput',
   mixins: [shortkeys, utils],
-  model: {
-    prop: 'searchTerm',
-    event: 'input'
-  },
   props: {
     /**
      * An object containing a property `label` to use as search term
      * @model
      */
-    searchTerm: {
+    modelValue: {
       type: String
     },
     /**
@@ -49,6 +45,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['update:modelValue', 'update:activated', 'previous', 'next'],
   data() {
     return {
       isActive: false
@@ -69,7 +66,10 @@ export default {
       return `${this.searchIndex} ${this.$t('document.of')} ${this.searchOccurrences}`
     },
     searchTermIsEmpty() {
-      return this.searchTerm?.length === 0
+      return !this.modelValue || this.modelValue?.length === 0
+    },
+    searchTermIsPresent() {
+      return !this.searchTermIsEmpty
     }
   },
   watch: {
@@ -82,13 +82,13 @@ export default {
       /**
        * User selected the previous occurrence of the term
        */
-      this.$emit('previous', this.searchTerm)
+      this.$emit('previous', this.modelValue)
     },
     next() {
       /**
        * User selected the next occurrence of the term
        */
-      this.$emit('next', this.searchTerm)
+      this.$emit('next', this.modelValue)
     },
     activateSearchBar() {
       /**
@@ -108,7 +108,7 @@ export default {
        */
       this.$emit('update:activated', false)
       this.isActive = false
-      this.$emit('input', '')
+      this.$emit('update:modelValue', '')
     },
     shortkeyAction({ srcKey }) {
       if (this.shortkeysActions[srcKey]) {
@@ -124,7 +124,7 @@ export default {
     class="document-local-search-input px-3"
     :class="{
       'document-local-search-input--active': isActive,
-      'document-local-search-input--pristine': !searchTermIsEmpty
+      'document-local-search-input--pristine': searchTermIsPresent
     }"
   >
     <div class="form-group py-2 me-2">
@@ -136,15 +136,15 @@ export default {
           ref="search"
           v-shortkey="getKeys('findInDocument')"
           type="search"
-          :value="searchTerm"
+          :value="modelValue"
           :disabled="disabled"
           :placeholder="$t('document.find')"
           class="form-control document-local-search-input__term"
-          @input="$emit('input', $event.target.value)"
+          @input="$emit('update:modelValue', $event.target.value)"
           @shortkey="getAction('findInDocument')"
         />
         <span
-          v-if="!searchTermIsEmpty"
+          v-if="searchTermIsPresent"
           class="document-local-search-input__count input-group-text text-center d-inline-block"
         >
           <span v-if="loading">
