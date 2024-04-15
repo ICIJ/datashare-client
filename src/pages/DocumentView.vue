@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import {defineAsyncComponent} from 'vue'
+import { defineAsyncComponent } from 'vue'
 import { filter, findIndex } from 'lodash'
 import { mapState } from 'vuex'
 
@@ -134,55 +134,53 @@ export default {
       return this.visibleTabs.map((t) => t.name)
     },
     visibleTabs() {
-      return filter(this.tabsThroughPipeline, (t) => !t.hidden)
+      return !this.doc ? [] : filter(this.tabsThroughPipeline, (t) => !t.hidden)
     },
     tabsPipeline() {
       return this.$store.getters['pipelines/applyPipelineChainByCategory']('document-view-tabs')
     },
     tabs() {
-      return !this.doc
-        ? []
-        : [
-            {
-              name: TAB_NAME.EXTRACTED_TEXT,
-              label: 'document.extractedText',
-              component: defineAsyncComponent(() => import('@/components/document/DocumentTabExtractedText')),
-              icon: 'align-left',
-              props: {
-                document: this.doc,
-                q: this.q
-              }
-            },
-            {
-              name: TAB_NAME.PREVIEW,
-              label: 'document.preview',
-              component: defineAsyncComponent(() => import('@/components/document/DocumentTabPreview')),
-              icon: 'eye',
-              props: {
-                document: this.doc
-              }
-            },
-            {
-              name: TAB_NAME.DETAILS,
-              label: 'document.tabDetails',
-              component: defineAsyncComponent(() => import('@/components/document/DocumentTabDetails')),
-              icon: 'info-circle',
-              props: {
-                document: this.doc,
-                parentDocument: this.parentDocument
-              }
-            },
-            {
-              name: TAB_NAME.NAMED_ENTITIES,
-              label: 'document.namedEntities',
-              hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
-              component: defineAsyncComponent(() => import('@/components/document/DocumentTabNamedEntities')),
-              icon: 'database',
-              props: {
-                document: this.doc
-              }
-            }
-          ]
+      return [
+        {
+          name: TAB_NAME.EXTRACTED_TEXT,
+          label: 'document.extractedText',
+          component: defineAsyncComponent(() => import('@/components/document/DocumentTabExtractedText')),
+          icon: 'align-left',
+          props: {
+            document: this.doc,
+            q: this.q
+          }
+        },
+        {
+          name: TAB_NAME.PREVIEW,
+          label: 'document.preview',
+          component: defineAsyncComponent(() => import('@/components/document/DocumentTabPreview')),
+          icon: 'eye',
+          props: {
+            document: this.doc
+          }
+        },
+        {
+          name: TAB_NAME.DETAILS,
+          label: 'document.tabDetails',
+          component: defineAsyncComponent(() => import('@/components/document/DocumentTabDetails')),
+          icon: 'info-circle',
+          props: {
+            document: this.doc,
+            parentDocument: this.parentDocument
+          }
+        },
+        {
+          name: TAB_NAME.NAMED_ENTITIES,
+          label: 'document.namedEntities',
+          hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
+          component: defineAsyncComponent(() => import('@/components/document/DocumentTabNamedEntities')),
+          icon: 'database',
+          props: {
+            document: this.doc
+          }
+        }
+      ]
     },
     indexActiveTab() {
       return findIndex(this.visibleTabs, (tab) => tab.name === this.activeTab)
@@ -208,7 +206,7 @@ export default {
     },
     visibleTabs: {
       deep: true,
-      get(tabs) {
+      handler(tabs) {
         if (tabs.length) {
           this.activateTab(this.$route.query.tab ?? 'extracted-text')
         }
@@ -322,7 +320,7 @@ export default {
   }
 
   &__header {
-    @include gradient-directional($primary, theme-color(dark));
+    background: $primary;
     color: white;
     display: inline-block;
     padding: $spacer * 2 0 0 0;
