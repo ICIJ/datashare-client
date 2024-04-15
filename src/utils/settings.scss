@@ -18,6 +18,7 @@ $darkest: darken($primary, 30);
 $link-color: $primary;
 $link-decoration: none;
 
+$body-color: #000;
 $body-bg: #fff;
 $body-secondary-bg: #F2F0F0;
 
@@ -78,9 +79,7 @@ $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
 $popover-bg: #fff;
 $popover-border-width: 0.1px;
 $popover-border-color: #fff;
-$popover-body-color: #000;
-$popover-header-bg: #fff;
-$popover-header-color: #fff;
+$popover-header-color: $body-color;
 
 $mark-bg: map-get($theme-colors, 'mark');
 
