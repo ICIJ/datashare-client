@@ -17,8 +17,8 @@
     </b-tooltip>
 
     <template v-if="canIDownload">
-      <b-button-group :class="downloadBtnGroupClass">
-        <span :id="downloadBtnWrapperId">
+      <span :id="downloadBtnWrapperId">
+        <b-button-group :class="downloadBtnGroupClass">
           <b-button
             :id="downloadBtnId"
             class="document-actions__download btn"
@@ -33,36 +33,36 @@
               {{ $t('document.downloadButton') }}
             </span>
           </b-button>
-        </span>
-        <b-tooltip v-if="isRootTooBig" :target="downloadBtnWrapperId" triggers="hover">
-          {{ $t('document.downloadMaxRootSizeAlert', { humanMaxRootSize }) }}
-        </b-tooltip>
-        <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
-          <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
-            <fa icon="download" class="me-1 text-secondary" fixed-width />
-            {{ $t('document.downloadWithoutMetadata') }}
-          </b-dropdown-item>
-          <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
-            <fa icon="download" class="me-1 text-secondary" fixed-width />
-            {{ $t('document.downloadExtractedText') }}
-          </b-dropdown-item>
-          <template v-if="hasRoot">
-            <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
+          <b-tooltip v-if="isRootTooBig" :target="downloadBtnWrapperId" triggers="hover">
+            {{ $t('document.downloadMaxRootSizeAlert', { humanMaxRootSize }) }}
+          </b-tooltip>
+          <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
+            <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
               <fa icon="download" class="me-1 text-secondary" fixed-width />
-              {{ $t('document.downloadRootButton') }}
+              {{ $t('document.downloadWithoutMetadata') }}
             </b-dropdown-item>
-            <b-dropdown-item
-              v-if="hasRootCleanableContentType"
-              :href="rootDocumentFullUrlWithoutMetadata"
-              class="document-actions__download--parent-without-metadata"
-            >
+            <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
               <fa icon="download" class="me-1 text-secondary" fixed-width />
-              {{ $t('document.downloadRootWithoutMetadataButton') }}
+              {{ $t('document.downloadExtractedText') }}
             </b-dropdown-item>
-          </template>
-        </b-dropdown>
-      </b-button-group>
+            <template v-if="hasRoot">
+              <b-dropdown-divider></b-dropdown-divider>
+              <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
+                <fa icon="download" class="me-1 text-secondary" fixed-width />
+                {{ $t('document.downloadRootButton') }}
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-if="hasRootCleanableContentType"
+                :href="rootDocumentFullUrlWithoutMetadata"
+                class="document-actions__download--parent-without-metadata"
+              >
+                <fa icon="download" class="me-1 text-secondary" fixed-width />
+                {{ $t('document.downloadRootWithoutMetadataButton') }}
+              </b-dropdown-item>
+            </template>
+          </b-dropdown>
+        </b-button-group>
+      </span>
       <b-popover
         :placement="tooltipsPlacement"
         :target="downloadBtnId"
