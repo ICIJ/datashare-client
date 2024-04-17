@@ -36,8 +36,10 @@ export default {
   documentationLinks: {
     indexing: {
       mac: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-mac/add-documents-to-datashare-on-mac',
-      windows: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-windows/add-documents-to-datashare-on-windows',
-      linux: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-linux/add-documents-to-datashare-on-linux',
+      windows:
+        'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-windows/add-documents-to-datashare-on-windows',
+      linux:
+        'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-linux/add-documents-to-datashare-on-linux',
       default: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-mac/add-documents-to-datashare-on-mac'
     },
     operators: {
