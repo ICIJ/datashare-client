@@ -1,3 +1,4 @@
+import compact from 'lodash/compact'
 import get from 'lodash/get'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
@@ -111,7 +112,7 @@ export default class FilterText {
   }
 
   get values() {
-    return this[_VALUES] || get(this, ['state', 'values', this.name], [])
+    return compact(this[_VALUES] || get(this, ['state', 'values', this.name], []))
   }
 
   set values(values) {
