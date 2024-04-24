@@ -33,7 +33,7 @@ export default {
     async fetchPreview(url) {
       try {
         return await axios.get(url, {
-          responseType: 'arraybuffer',
+          responseType: 'blob',
           headers: {
             [this.sessionIdHeaderName]: this.sessionIdHeaderValue
           }
@@ -44,9 +44,15 @@ export default {
     },
     async fetchImageAsBase64(url) {
       const response = await this.fetchPreview(url)
-      const buffer = Buffer.from(response.data, 'binary')
-      const imageStr = buffer.toString('base64')
-      return `data:image/jpeg;base64,${imageStr}`
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          const base64data = reader.result.replace(/^data:.+;base64,/, '')
+          resolve(`data:image/jpeg;base64,${base64data}`)
+        }
+        reader.onerror = reject
+        reader.readAsDataURL(response.data)
+      })
     }
   }
 }
