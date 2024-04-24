@@ -569,9 +569,10 @@ export default {
       this.$emit('reset-filter-values', this.filter, refresh)
     },
     changeSelectedValues($ev) {
-      EventBus.emit('filter::add-filter-values', this.filter, this.selected)
+      const payload = { filter: this.filter, selected: this.selected }
+      EventBus.emit('filter::add-filter-values', payload)
       this.$store.commit('search/from', 0)
-      this.$emit('add-filter-values', this.filter, this.selected)
+      this.$emit('add-filter-values', payload)
       this.refreshRouteAndSearch()
     },
     itemTranslation(item) {

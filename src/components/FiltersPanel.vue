@@ -107,7 +107,8 @@ export default {
         this.$refs.openFilterSearch.show()
       }
     },
-    setFilterValue({ name }, value) {
+    setFilterValue({ filter, selected: value }) {
+      const { name } = filter
       this.$store.commit('search/setFilterValue', { name, value })
     },
     hideFilters() {
