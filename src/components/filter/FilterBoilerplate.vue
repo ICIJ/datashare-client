@@ -27,7 +27,7 @@
     </slot>
     <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }"></hook>
     <b-collapse :visible="showResults">
-      <div class="list-group list-group-flush filter__items">
+      <div class="filter__items">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
           <search-form-control
@@ -50,37 +50,36 @@
           :sort-by-order="sortByOrder"
           :total-count="totalCount"
         >
-          <b-form-checkbox v-model="isAllSelected" class="filter__items__all mb-0" :disabled="isAllSelected">
-            <slot name="all" v-bind="{ total }">
-              <span class="d-flex">
-                <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+          <div class="px-2">
+            <b-form-checkbox v-model="isAllSelected" class="filter__items__all" :disabled="isAllSelected">
+              <slot name="all" v-bind="{ total }">
+                <span class="filter__items__item__label px-1 text-truncate">
                   {{ labelToHuman('all') }}
                 </span>
-                <span class="filter__items__item__count badge badge-pill badge-light float-end mt-1">
+                <span class="filter__items__item__count badge badge-pill badge-light">
                   {{ $n(total) }}
                 </span>
-              </span>
-            </slot>
-          </b-form-checkbox>
+              </slot>
+            </b-form-checkbox>            
+          </div>
           <slot name="items-group" :items="items" :options="options" :selected="selected">
             <b-form-checkbox-group
               v-model="selected"
-              class="list-group-item p-0 border-0"
               stacked
               @input="changeSelectedValues"
             >
               <template v-for="{ value, item, label } of options">
                 <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
-                  <b-form-checkbox :value="value" class="filter__items__item">
-                    <span class="d-flex">
-                      <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+                  <div class="form_check_wrapper px-2">
+                    <b-form-checkbox :value="value" class="filter__items__item">
+                      <span class="filter__items__item__label px-1 text-truncate">
                         {{ label }}
                       </span>
-                      <span class="filter__items__item__count badge badge-pill badge-light float-end mt-1">
+                      <span class="filter__items__item__count badge badge-pill badge-light">
                         {{ $n(item.doc_count) }}
                       </span>
-                    </span>
-                  </b-form-checkbox>
+                    </b-form-checkbox>
+                  </div>
                 </slot>
               </template>
             </b-form-checkbox-group>
@@ -622,6 +621,22 @@ export default {
     }
   }
 
+  .form_check_wrapper .form-check {
+    display:flex;
+    min-width: 0;
+  }  
+
+  .form_check_wrapper .form-check-label {
+    flex-grow: 1;
+    display:inline-flex;
+    min-width: 0;
+    
+    .filter__items__item__label {
+      width: 100%;
+      display: inline-block;
+    }
+  }
+
   &.filter--has-values {
     box-shadow: 0 0 0 2px $tertiary, 0 0 10px 0 rgba($tertiary, 0.2);
   }
@@ -630,19 +645,6 @@ export default {
     font-size: 0.8rem;
     max-height: 300px;
     overflow: auto;
-
-    .list-group-item {
-      background: inherit;
-      color: inherit;
-    }
-
-    &__all + .list-group-item:empty {
-      margin-bottom: $spacer * 0.5;
-    }
-
-    &__item .custom-checkbox {
-      margin-bottom: 0;
-    }
 
     &__search {
       margin: 0 0.5rem;
