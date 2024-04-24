@@ -1,6 +1,7 @@
 import {
   castArray,
   concat,
+  compact,
   cloneDeep,
   each,
   endsWith,
@@ -143,7 +144,7 @@ export const getters = {
           // defined in the `aggregation` store.
           if (filter && filter.values.length > 0) {
             const key = filter.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
-            memo[key] = filter.values
+            memo[key] = compact(filter.values)
           }
           return memo
         },
@@ -154,8 +155,8 @@ export const getters = {
   toRouteQuery(state, getters) {
     return () => ({
       q: state.query,
-      from: state.from,
-      size: state.size,
+      from: `${state.from}`,
+      size: `${state.size}`,
       sort: state.sort,
       indices: state.indices.join(','),
       field: state.field,
