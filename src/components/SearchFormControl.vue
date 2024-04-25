@@ -115,17 +115,15 @@ export default {
         @update:modelValue="input"
         @blur="$emit('blur', $event)"
       />
-      <div class="search-form-control__addon">
-        <button class="btn btn-sm search-form-control__addon__submit" type="submit">
-          <template v-if="!noIcon">
-            <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
-            <fa v-else icon="search" fixed-width></fa>
-          </template>
-          <span :class="{ 'sr-only': !showSubmitLabel }">
-            {{ submitLabel || $t('searchFormControl.submitLabel') }}
-          </span>
-        </button>
-      </div>
+      <button class="btn btn-sm search-form-control__submit" type="submit">
+        <template v-if="!noIcon">
+          <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
+          <fa v-else icon="search" fixed-width></fa>
+        </template>
+        <span :class="{ 'sr-only': !showSubmitLabel }">
+          {{ submitLabel || $t('searchFormControl.submitLabel') }}
+        </span>
+      </button>
     </div>
   </form>
 </template>
@@ -142,50 +140,25 @@ export default {
     box-shadow: none;
   }
 
-  &__input:focus + &__addon &__addon__submit {
-    border-color: $input-focus-border-color;
+  &__input:focus + &__submit:last-of-type {
+    box-shadow: none;
+    border: 1px solid $input-focus-border-color;
   }
 
-  &__input:focus + &__addon:after {
-    box-shadow: $input-focus-box-shadow;
-    border-radius: $input-border-radius;
-  }
 
   &--rounded &__input {
     border-bottom-left-radius: $border-radius-pill;
     border-top-left-radius: $border-radius-pill;
   }
 
-  &--rounded &__input:focus + &__addon:after {
-    border-radius: $border-radius-pill;
+  &__submit {
+    background: $input-bg;
+    border-color: $input-border-color;
+    border-left: 0;
+    transition: $input-transition;
   }
 
-  &__addon {
-    &:after {
-      bottom: 0;
-      box-shadow: 0 0 0 $input-btn-focus-width transparent;
-      content: '';
-      left: 0;
-      pointer-events: none;
-      position: absolute;
-      right: 0;
-      top: 0;
-      transition: $input-transition;
-      z-index: 0;
-    }
-
-    & &__submit:last-of-type {
-      background: $input-bg;
-      border-color: $input-border-color;
-      border-left: 0;
-      transition: $input-transition;
-    }
-  }
-
-  &--rounded &__addon {
-    &:after {
-      border-radius: $border-radius-pill;
-    }
+  &--rounded &__submit {
 
     &__submit:last-of-type {
       border-bottom-right-radius: $border-radius-pill;
@@ -193,7 +166,7 @@ export default {
     }
   }
 
-  &--fill-submit &__addon__submit.btn {
+  &--fill-submit &__submit.btn {
     @include gradient-bg($primary);
     border-color: $primary;
     color: color-yiq($primary);
@@ -202,14 +175,18 @@ export default {
   &--dark {
     color: $light;
 
+    .search-form-control__input::placeholder {
+      color: $text-muted;
+    }
+
     .search-form-control__input,
-    .search-form-control__addon__submit:last-of-type {
+    .search-form-control__submit:last-of-type {
       background: #000;
       color: inherit;
     }
 
     .search-form-control__input:not(:focus),
-    .search-form-control__addon__submit:last-of-type {
+    .search-form-control__submit:last-of-type {
       border-color: #000;
     }
   }

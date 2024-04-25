@@ -5,7 +5,7 @@
       <div class="filters-panel__sticky__toolbar">
         <hook name="filters-panel.toolbar:before"></hook>
         <div class="d-flex align-items-center">
-          <h5 class="flex-grow-1 my-0 h6 text-uppercase text-muted">
+          <h5 class="flex-grow-1 my-0 h6 text-uppercase text-light">
             {{ $t('search.filtersTitle') }}
           </h5>
           <button
