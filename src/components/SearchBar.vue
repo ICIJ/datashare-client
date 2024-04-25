@@ -52,7 +52,7 @@
           </selectable-dropdown>
         </template>
       </search-bar-input>
-      <div v-if="settings" class="px-0">
+      <div v-if="settings" class="ps-2">
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
         <b-button
           v-b-tooltip.hover.bottomleft
