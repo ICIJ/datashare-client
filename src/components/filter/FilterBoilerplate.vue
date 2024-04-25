@@ -29,7 +29,7 @@
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
           <search-form-control v-model="query" class="filter__items__search"
             :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })" :rounded="false"
-            :dark="dark" @submit.prevent="openFilterSearch"></search-form-control>
+            :dark="dark" @submit.prevent="openFilterSearch" />
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
         <slot :items="items" name="items" :options="options" :query="query" :selected="selected" :sort-by="sortBy"
