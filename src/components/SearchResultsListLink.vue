@@ -14,7 +14,7 @@
           <project-link
             v-if="showIndex"
             :project="document.index"
-            class="badge badge-light me-2"
+            class="badge text-bg-light me-2"
             hide-thumbnail
             disabled
           />

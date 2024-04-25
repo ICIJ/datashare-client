@@ -1,38 +1,25 @@
 <template>
-  <filter-boilerplate
-    ref="filter"
-    v-bind="propsWithout('hide-show-more')"
-    hide-show-more
-    hide-exclude
-    hide-sort
-    hide-contextualize
-    no-infinite-scroll
-    @reset-filter-values="resetFilterValues"
-  >
+  <filter-boilerplate ref="filter" v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude hide-sort
+    hide-contextualize no-infinite-scroll @reset-filter-values="resetFilterValues">
     <template #all>
-      <span class="d-flex">
-        <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
-          {{ labelToHuman('all') }}
-        </span>
+      <span class="filter__items__item__label px-1 text-truncate">
+        {{ labelToHuman('all') }}
       </span>
     </template>
     <template #items-group>
-      <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0">
-        <b-form-checkbox
-          v-for="{ user, count } in recommendedByUsersSorted"
-          :key="user"
-          :value="user"
-          class="filter__items__item"
-        >
-          <span class="d-flex">
-            <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
-              <user-display :username="user" hide-avatar hide-link />
-            </span>
-            <span class="filter__items__item__count badge badge-pill badge-light float-end mt-1">
-              {{ $n(count) }}
-            </span>
-          </span>
-        </b-form-checkbox>
+      <b-form-checkbox-group v-model="selected" stacked>
+        <template v-for="{ user, count } in recommendedByUsersSorted" :key="user">
+          <div class="filter__items__item__wrapper px-2 my-1">
+            <b-form-checkbox :value="user" class="filter__items__item">
+              <span class="filter__items__item__label px-1 text-truncate">
+                <user-display :username="user" hide-avatar hide-link />
+              </span>
+              <span class="filter__items__item__count badge rounded-pill text-bg-light align-self-center">
+                {{ $n(count) }}
+              </span>
+            </b-form-checkbox>
+          </div>
+        </template>
       </b-form-checkbox-group>
     </template>
   </filter-boilerplate>

@@ -315,7 +315,7 @@ export default {
     min-height: 100vh;
   }
 
-  .badge-pill {
+  .rounded-pill {
     overflow: hidden;
   }
 

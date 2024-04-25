@@ -24,7 +24,7 @@
             <span
               v-if="count"
               :title="$tc('treeView.hits', hits, { hits })"
-              class="tree-view__header__hits ms-2 badge badge-light badge-pill">
+              class="tree-view__header__hits ms-2 badge text-bg-light rounded-pill">
               {{ humanNumber(hits, $t('human.number')) }} {{ $tc('treeView.docs', hits) }}
             </span>
           </div>
@@ -52,7 +52,7 @@
               <label class="flex-grow-1 m-0 text-light" :for="allDirectoriesInputId">
                 {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
               </label>
-              <div class="ms-2 badge badge-light badge-pill" :title="$n(hits)">
+              <div class="ms-2 badge text-bg-light rounded-pill" :title="$n(hits)">
                 <span v-if="compact">
                   {{ $n(hits) }}
                 </span>
@@ -91,7 +91,7 @@
               <span
                 v-if="count"
                 :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
-                class="tree-view__directories__item__count ms-2 badge badge-light badge-pill"
+                class="tree-view__directories__item__count ms-2 badge text-bg-light rounded-pill"
               >
                 <span v-if="!directory.doc_count"> - </span>
                 <span v-else-if="compact">
