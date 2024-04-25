@@ -184,7 +184,7 @@ export default {
     }
   },
   mounted() {
-    // No need to request starred docs once the state has already filled
+    // No need to request starred docs once the state has already been filled
     const starredDocs = this.$store?.state?.starred?.documents
     if (starredDocs && !starredDocs.length) {
       return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
