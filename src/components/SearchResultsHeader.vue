@@ -36,9 +36,9 @@
         >
           <template #button-content>
             <span class="search-results-header__settings__size__toggler__slot">
-              {{ firstDocument }} – {{ lastDocument }}
+              {{ firstDocument }} - {{ lastDocument }}
             </span>
-            <span class="search-results-header__settings__size__toggler__hits text-muted" :title="nbDocuments">
+            <span class="search-results-header__settings__size__toggler__hits text-muted" :title="firstLastDocument+' '+nbDocuments">
               {{ nbDocuments }}
             </span>
           </template>
@@ -209,6 +209,9 @@ export default {
         total: this.$n(this.response.total)
       })}`
     },
+    firstLastDocument(){
+      return `${this.firstDocument} - ${this.lastDocument}`
+    },
     projectIds() {
       return this.$core.projectIds.join(',')
     },
@@ -315,17 +318,25 @@ export default {
     }
 
     &__size {
-      &:deep(&__toggler) {
+
+
+      &:deep(.search-results-header__settings__size__toggler) {
         display: flex;
         align-items: center;
         gap: 0.5em;
-        width: 172px;
       }
 
-      &:deep(&__toggler__hits) {
+      &:deep(.search-results-header__settings__size__toggler__slot) {
+        max-width: 167px;        
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      &:deep(.search-results-header__settings__size__toggler__hits) {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        max-width: 145px;
       }
     }
   }
