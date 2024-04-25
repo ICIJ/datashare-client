@@ -1,15 +1,12 @@
 <template>
-  <div
-    class="filter card"
-    :class="{
+  <div class="filter card" :class="{
       'filter--reversed': excluded,
       'filter--hide-show-more': hideShowMore,
       'filter--hide-search': hideSearch,
       'filter--hide-header': hideHeader,
       'filter--dark': dark,
       'filter--has-values': hasValues()
-    }"
-  >
+    }">
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
     <slot v-if="!hideHeader" name="header">
       <div class="card-header px-2 d-flex filter__header" @click="toggleItems">
@@ -30,57 +27,40 @@
       <div class="filter__items">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
-          <search-form-control
-            v-model="query"
-            class="filter__items__search"
-            :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })"
-            :rounded="false"
-            :dark="dark"
-            @submit.prevent="openFilterSearch"
-          ></search-form-control>
+          <search-form-control v-model="query" class="filter__items__search"
+            :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })" :rounded="false"
+            :dark="dark" @submit.prevent="openFilterSearch"></search-form-control>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
-        <slot
-          :items="items"
-          name="items"
-          :options="options"
-          :query="query"
-          :selected="selected"
-          :sort-by="sortBy"
-          :sort-by-order="sortByOrder"
-          :total-count="totalCount"
-        >
-          <div class="px-2">
+        <slot :items="items" name="items" :options="options" :query="query" :selected="selected" :sort-by="sortBy"
+          :sort-by-order="sortByOrder" :total-count="totalCount">
+          <div class="filter__items__item__wrapper px-2 mt-2">
             <b-form-checkbox v-model="isAllSelected" class="filter__items__all" :disabled="isAllSelected">
               <slot name="all" v-bind="{ total }">
                 <span class="filter__items__item__label px-1 text-truncate">
                   {{ labelToHuman('all') }}
                 </span>
-                <span class="filter__items__item__count badge badge-pill badge-light">
+                <span class="filter__items__item__count badge rounded-pill text-bg-light align-self-center">
                   {{ $n(total) }}
                 </span>
               </slot>
-            </b-form-checkbox>            
+            </b-form-checkbox>
           </div>
           <slot name="items-group" :items="items" :options="options" :selected="selected">
-            <b-form-checkbox-group
-              v-model="selected"
-              stacked
-              @input="changeSelectedValues"
-            >
+            <b-form-checkbox-group v-model="selected" stacked @input="changeSelectedValues">
               <template v-for="{ value, item, label } of options">
-                <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
-                  <div class="form_check_wrapper px-2">
+                <div class="filter__items__item__wrapper px-2 my-1">
+                  <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
                     <b-form-checkbox :value="value" class="filter__items__item">
                       <span class="filter__items__item__label px-1 text-truncate">
                         {{ label }}
                       </span>
-                      <span class="filter__items__item__count badge badge-pill badge-light">
+                      <span class="filter__items__item__count badge rounded-pill text-bg-light align-self-center">
                         {{ $n(item.doc_count) }}
                       </span>
                     </b-form-checkbox>
-                  </div>
-                </slot>
+                  </slot>
+                </div>
               </template>
             </b-form-checkbox-group>
           </slot>
@@ -99,19 +79,10 @@
           <span slot="no-results"></span>
         </infinite-loading>
       </div>
-      <filter-footer
-        v-if="!hideFooter"
-        :filter="filter"
-        :hide-contextualize="hideContextualize"
-        :hide-exclude="hideExclude"
-        :hide-show-more="hideShowMore"
-        :hide-sort="hideSort"
-        :sort-by-options.sync="sortByOptions"
-        @contextualize-filter="toggleContextualizeFilter"
-        @open-filter-search="openFilterSearch"
-        @toggle-filter="toggleFilter"
-        @sorted="applySort"
-      />
+      <filter-footer v-if="!hideFooter" :filter="filter" :hide-contextualize="hideContextualize"
+        :hide-exclude="hideExclude" :hide-show-more="hideShowMore" :hide-sort="hideSort"
+        :sort-by-options.sync="sortByOptions" @contextualize-filter="toggleContextualizeFilter"
+        @open-filter-search="openFilterSearch" @toggle-filter="toggleFilter" @sorted="applySort" />
     </b-collapse>
   </div>
 </template>
@@ -621,19 +592,21 @@ export default {
     }
   }
 
-  .form_check_wrapper .form-check {
-    display:flex;
-    min-width: 0;
-  }  
+  & .filter__items__item__wrapper {
+    & .form-check {
+      display:flex;
+      min-width: 0;
+    }
 
-  .form_check_wrapper .form-check-label {
-    flex-grow: 1;
-    display:inline-flex;
-    min-width: 0;
-    
-    .filter__items__item__label {
-      width: 100%;
-      display: inline-block;
+    & .form-check-label {
+      flex-grow: 1;
+      display:inline-flex;
+      min-width: 0;
+
+      & .filter__items__item__label {
+        width: 100%;
+        display: inline-block;
+      }
     }
   }
 

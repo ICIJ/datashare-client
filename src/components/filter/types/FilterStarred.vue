@@ -1,36 +1,28 @@
 <template>
-  <filter-boilerplate
-    ref="filter"
-    v-bind="propsWithout('hide-show-more')"
-    hide-show-more
-    hide-exclude
-    hide-contextualize
-    hide-sort
-    no-infinite-scroll
-    @reset-filter-values="resetFilterValues"
-  >
+  <filter-boilerplate ref="filter" v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude
+    hide-contextualize hide-sort no-infinite-scroll @reset-filter-values="resetFilterValues">
     <template #items-group>
       <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0">
-        <b-form-checkbox :value="true" class="filter__items__item">
-          <span>
-            <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+        <div class="filter__items__item__wrapper px-2 mt-2">
+          <b-form-checkbox :value="true" class="filter__items__item">
+            <span class="filter__items__item__label px-1 text-truncate">
               {{ labelToHuman('filter.starred') }}
             </span>
-            <span class="filter__items__item__count badge badge-pill badge-light float-end my-1">
+            <span class="filter__items__item__count badge rounded-pill text-bg-light">
               {{ $n(starredDocuments.length) }}
             </span>
-          </span>
-        </b-form-checkbox>
-        <b-form-checkbox :value="false" class="filter__items__item">
-          <span>
-            <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+          </b-form-checkbox>
+        </div>
+        <div class="filter__items__item__wrapper px-2 mt-2">
+          <b-form-checkbox :value="false" class="filter__items__item">
+            <span class="filter__items__item__label px-1 text-truncate">
               {{ labelToHuman('filter.notStarred') }}
             </span>
-            <span class="filter__items__item__count badge badge-pill badge-light float-end my-1">
+            <span class="filter__items__item__count badge rounded-pill text-bg-light align-self-center">
               {{ $n(total) }}
             </span>
-          </span>
-        </b-form-checkbox>
+          </b-form-checkbox>
+        </div>
       </b-form-checkbox-group>
     </template>
   </filter-boilerplate>

@@ -32,8 +32,8 @@
         <li
           v-for="oneTag in tags"
           :key="oneTag.label"
-          class="document-tags-form__tags__tag badge badge-pill me-2 mb-1"
-          :class="[mode === 'light' ? 'border badge-light' : 'badge-dark']"
+          class="document-tags-form__tags__tag badge rounded-pill me-2 mb-1"
+          :class="[mode === 'light' ? 'border text-bg-light' : 'text-bg-dark']"
         >
           <span v-b-tooltip :title="generateTagTooltip(oneTag)">
             {{ oneTag.label }}

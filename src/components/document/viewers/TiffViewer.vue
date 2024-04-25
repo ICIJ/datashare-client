@@ -6,7 +6,7 @@
         <div v-for="page in pages.length" :key="page" class="tiff-viewer__thumbnails__item mb-3" @click="active = page">
           <img class="ms-1 img-responsive" :width="thumbWidth" :height="thumbWidth" :src="getPage(page)" />
           <div class="tiff-viewer__thumbnails__item__page text-center small">
-            <span class="badge badge-dark">{{ page }}</span>
+            <span class="badge text-bg-dark">{{ page }}</span>
           </div>
         </div>
       </div>
