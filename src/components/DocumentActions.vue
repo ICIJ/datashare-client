@@ -265,7 +265,11 @@ export default {
     }
   },
   async mounted() {
-    await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+    // No need to request starred docs once the state has already been filled
+    const starredDocs = this.$store?.state?.starred?.documents
+    if (starredDocs?.length === 0) {
+      return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+    }
   },
   methods: {
     async documentOriginalExtractedText() {
