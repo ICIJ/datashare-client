@@ -22,8 +22,8 @@
       <fa icon="question-circle" fixed-width />
     </a>
     <slot name="addons"></slot>
-    <button type="submit" class="btn btn-dark search-bar-input__submit" :disabled="disableSubmit">
-      {{ $t('search.buttonLabel') }}
+    <button type="submit" class="btn btn-dark search-bar-input__submit" :disabled="disableSubmit"> 
+      <fa icon="search" class="d-inline d-md-none" :title="$t('search.buttonLabel')"/><span class="d-none d-md-inline">{{ $t('search.buttonLabel') }}</span>
     </button>
     <slot name="suggestions"></slot>
   </div>

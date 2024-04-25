@@ -2,11 +2,11 @@
   <header class="app__nav">
     <hook name="search.nav:before"></hook>
     <div class="app__nav__container">
-      <div class="app__nav__container__main p-3 d-flex align-items-center">
-        <div class="app__nav__container__main__search-bar pe-3 py-0 flex-grow-1">
+      <div class="app__nav__container__main p-3 d-flex align-items-center justify-content-between">
+        <div class="app__nav__container__main__search-bar flex-grow-1">
           <search-bar class="p-0" settings></search-bar>
         </div>
-        <search-layout-selector class="ms-auto ps-3"></search-layout-selector>
+        <search-layout-selector class="d-none d-md-block"></search-layout-selector>
       </div>
     </div>
     <hook name="search.nav:after"></hook>
@@ -57,7 +57,6 @@ export default {
       position: relative;
       white-space: nowrap;
       z-index: $zindex-fixed + 30;
-
       &__search-bar {
         max-width: 880px;
         padding: 0;
