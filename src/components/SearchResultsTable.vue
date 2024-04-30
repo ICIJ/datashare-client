@@ -42,8 +42,8 @@
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row"
         thead-tr-class="text-nowrap"
-        :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc"
+        v-model:sort-by="sortBy"
+        v-model:sort-desc="sortDesc"
         @row-selected="onRowSelected"
       >
         <template #cell(relevance)="{ item, rowSelected }">

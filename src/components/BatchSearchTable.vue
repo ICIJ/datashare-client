@@ -4,8 +4,7 @@
       :busy="isBusy"
       :fields="fields"
       :items="displayBatchSearches"
-      :sort-by="sortBy"
-      :sort-desc="isDesc"
+      v-model:sort-by="sortBy"
       class="card"
       hover
       no-local-sorting
@@ -25,45 +24,48 @@
       </template>
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
-        <column-filter-dropdown
-          :id="field.key"
-          v-model="selectedStates"
-          immediate
-          :items="states"
-          :name="field.label"
-          multiple
-        >
-          <template #label="{ item }">
-            {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
-          </template>
-        </column-filter-dropdown>
+        <div class="d-flex justify-content-between">
+          <column-filter-dropdown
+            v-model="selectedStates"
+            :id="field.key"
+            :items="states"
+            :name="field.label"
+            immediate
+            multiple
+          >
+            <template #label="{ item }">
+              {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
+            </template>
+          </column-filter-dropdown>
+          <sorting-arrow :sortBy="sortBy[0]" :fieldKey="field.key"/>
+        </div>
       </template>
       <template #head(date)="{ field }">
         <batch-search-filter-date :id="field.key" v-model="selectedDateRange" :name="field.label" />
       </template>
       <template #head(published)="{ field }">
-        <column-filter-dropdown
-          :id="field.key"
-          v-model="selectedStatus"
-          :items="status"
-          :eq="isSelected"
-          :name="field.label"
-          immediate
-        >
-          <template #label="{ item }">
-            {{ $t(`batchSearch.${item.label}`) }}
-          </template>
-        </column-filter-dropdown>
+          <column-filter-dropdown
+            :id="field.key"
+            v-model="selectedStatus"
+            :items="status"
+            :eq="isSelected"
+            :name="field.label"
+            immediate
+          >
+            <template #label="{ item }">
+              {{ $t(`batchSearch.${item.label}`) }}
+            </template>
+          </column-filter-dropdown>
       </template>
       <template #head(projects)="{ field }">
-        <column-filter-dropdown
-          :id="field.key"
-          v-model="selectedProjects"
-          :items="projects"
-          :name="field.label"
-          immediate
-          multiple
-        />
+          <column-filter-dropdown
+            :id="field.key"
+            v-model="selectedProjects"
+            :items="projects"
+            :name="field.label"
+            immediate
+            multiple
+          />
       </template>
       <!-- Cells -->
       <template #cell(name)="{ item }">
@@ -113,6 +115,7 @@ import { mapState } from 'vuex'
 
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
+import SortingArrow from '@/components/SortingArrow'
 import ProjectLink from '@/components/ProjectLink'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import UserDisplay from '@/components/UserDisplay'
@@ -144,7 +147,13 @@ const SORT_ORDER = Object.freeze({
 
 export default {
   name: 'BatchSearchTable',
-  components: { ProjectLink, UserDisplay, BatchSearchStatus, BatchSearchFilterDate, ColumnFilterDropdown },
+  components: { ProjectLink, 
+    UserDisplay, 
+    BatchSearchStatus, 
+    BatchSearchFilterDate, 
+    ColumnFilterDropdown,
+    SortingArrow 
+  },
   mixins: [polling, utils],
   data() {
     return {
@@ -349,7 +358,7 @@ export default {
       }
     },
     sortBy() {
-      return this.fieldKeyByName(this.selectedSort.sort)
+      return [{key:this.fieldKeyByName(this.selectedSort.sort),order:this.selectedSort.order}]
     },
     states() {
       return Object.values(settings.batchSearch.status)
@@ -468,10 +477,10 @@ export default {
     withProjectsField(field) {
       return this.isServer || this.projects.length > 1 ? field : null
     },
-    async sortChanged(sortBy, sortDesc) {
+    async sortChanged({key, order}) {
       this.selectedSort = {
-        sort: this.fieldNameByKey(sortBy),
-        order: sortDesc ? SORT_ORDER.DESC : SORT_ORDER.ASC
+        sort: this.fieldNameByKey(key),
+        order: order ? SORT_ORDER.DESC : SORT_ORDER.ASC
       }
     },
     fieldNameByKey(fieldKey) {
