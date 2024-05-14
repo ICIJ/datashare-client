@@ -30,7 +30,7 @@
           <p class="help small">
             <a
               class="text-muted"
-              href="https://icij.gitbook.io/datashare/usage/batch-search-documents#write-your-queries-in-a-spreadsheet"
+              :href="$t('settings.documentationLinks.batchSearch.spreadsheet')"
               target="_blank"
             >
               {{ $t('batchSearch.learnMore') }}
