@@ -42,6 +42,9 @@ export default {
         'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-linux/add-documents-to-datashare-on-linux',
       default: 'https://icij.gitbook.io/datashare/local-mode/install-datashare-on-mac/add-documents-to-datashare-on-mac'
     },
+    batchSearch: {
+      spreadsheet: 'https://icij.gitbook.io/datashare/usage/batch-search-documents#write-your-queries-in-a-spreadsheet'
+    },
     operators: {
       default: 'https://icij.gitbook.io/datashare/usage/search-with-operators'
     }

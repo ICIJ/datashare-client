@@ -28,11 +28,7 @@
             ></b-form-file>
           </b-form-group>
           <p class="help small">
-            <a
-              class="text-muted"
-              href="https://icij.gitbook.io/datashare/usage/batch-search-documents#write-your-queries-in-a-spreadsheet"
-              target="_blank"
-            >
+            <a class="text-muted" :href="$t('settings.documentationLinks.batchSearch.spreadsheet')" target="_blank">
               {{ $t('batchSearch.learnMore') }}
             </a>
           </p>
