@@ -68,8 +68,8 @@ import features from '@/mixins/features'
 import polling from '@/mixins/polling'
 
 function extractDateFromTask(task) {
-  const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/
-  return task?.properties?.batchDownload?.filename?.match(dateRegExp)?.[0] ?? null
+  const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d_[0-5]\d_[0-5]\d.\d+Z/
+  return task?.properties?.batchDownload?.filename?.match(dateRegExp)?.[0].replaceAll('_', ':') ?? null
 }
 export default {
   name: 'TaskBatchDownloadList',

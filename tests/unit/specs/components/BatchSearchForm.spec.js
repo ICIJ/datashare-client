@@ -377,13 +377,19 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should build query with listed tags, paths and fileTypes when they are selected', async () => {
-      await wrapper.setData({ tags: ['tag_01', 'tag_02'], fileTypes: ['fileType_01'], paths: ['path_01', 'path_02'] })
+      const fileType = {
+        extensions: ['fileType_01_extension'],
+        label: 'fileType_01_label',
+        mime: 'fileType_01_mime',
+        recycle_id_scroller: 'fileType_01_id'
+      }
+      await wrapper.setData({ tags: ['tag_01', 'tag_02'], fileTypes: [fileType], paths: ['path_01', 'path_02'] })
       expect(wrapper.vm.queryWithFilters).toEqual(
         JSON.stringify({
           bool: {
             filter: {
               bool: {
-                must: [{ terms: { tags: ['tag_01', 'tag_02'] } }, { terms: { contentType: ['fileType_01'] } }]
+                must: [{ terms: { tags: ['tag_01', 'tag_02'] } }, { terms: { contentType: ['fileType_01_mime'] } }]
               }
             },
             must: [

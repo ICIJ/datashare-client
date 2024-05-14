@@ -389,7 +389,7 @@ export default {
       return [
         new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags }).setValues(this.tags),
         new FilterText({ name: 'contentType', key: 'contentType', forceExclude: this.excludeTags }).setValues(
-          this.fileTypes
+          this.fileTypes.map((filetype) => filetype.mime)
         ),
         new FilterPath({ name: 'path', key: 'byDirname', forceExclude: false }).setValues(this.paths)
       ]

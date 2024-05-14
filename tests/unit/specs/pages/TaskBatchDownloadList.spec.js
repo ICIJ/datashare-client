@@ -28,7 +28,7 @@ describe('TaskBatchDownloadList.vue', () => {
         batchDownload: {
           uuid: 'uuid_01',
           encrypted: false,
-          filename: 'filename_01_2021-01-01T12:45:25',
+          filename: 'filename_01_2021-01-01T12_45_25.137Z',
           query: 'query_01',
           exists: true,
           project: {
@@ -60,7 +60,7 @@ describe('TaskBatchDownloadList.vue', () => {
           uuid: 'uuid_02',
           encrypted: true,
           exists: false,
-          filename: 'filename_02_2020-01-01T19:50:00',
+          filename: 'filename_02_2020-01-01T19_50_00.831Z',
           query: 'query_02',
           project: {
             name: 'project',
@@ -90,8 +90,38 @@ describe('TaskBatchDownloadList.vue', () => {
         batchDownload: {
           uuid: 'uuid_03',
           encrypted: false,
-          filename: 'filename_03_2020-12-07T17:35:20',
+          filename: 'filename_03_2020-12-07T17_35_20.314Z',
           query: 'query_03',
+          project: {
+            name: 'project',
+            sourcePath: 'source'
+          },
+          user: {
+            id: 'test',
+            provider: 'test',
+            email: null,
+            name: null
+          }
+        }
+      }
+    },
+    {
+      id: 'BatchDownloadTask_04_id',
+      name: 'BatchDownloadTask_04_name',
+      progress: 1,
+      state: 'DONE',
+      user: {
+        id: 'test',
+        provider: 'test',
+        email: null,
+        name: null
+      },
+      properties: {
+        batchDownload: {
+          uuid: 'uuid_04',
+          encrypted: false,
+          filename: 'filename_03_2024-05-02T18_13_45.61Z',
+          query: 'query_04',
           project: {
             name: 'project',
             sourcePath: 'source'
@@ -132,24 +162,25 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('should display a list of batch download tasks', async () => {
-    expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(3)
+    expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(4)
   })
 
   it('should a message when zip is encrypted', async () => {
     expect(
-      wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__encrypted').exists()
+      wrapper.find('.tasks-list__tasks__item:nth-child(4) .tasks-list__tasks__item__encrypted').exists()
     ).toBeTruthy()
   })
 
   it('should sort the list with pending tasks first then sort by datetime descending', async () => {
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(1)').text()).toContain('BatchDownloadTask_03_id')
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(2)').text()).toContain('BatchDownloadTask_01_id')
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3)').text()).toContain('BatchDownloadTask_02_id')
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(2)').text()).toContain('BatchDownloadTask_04_id')
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3)').text()).toContain('BatchDownloadTask_01_id')
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(4)').text()).toContain('BatchDownloadTask_02_id')
   })
 
   it('should display the zip size if there is any', async () => {
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(2) .tasks-list__tasks__item__size').exists()).toBeTruthy()
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__size').exists()).toBeFalsy()
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__size').exists()).toBeTruthy()
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(4) .tasks-list__tasks__item__size').exists()).toBeFalsy()
   })
 
   it('should disable the download when the file doesnt exist anymore', async () => {
