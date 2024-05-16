@@ -36,7 +36,8 @@ export default {
       required: true
     },
     modelValue: {
-      type: Object
+      type: Object,
+      default:()=>({})
     }
   },
   emits: ['update:modelValue'],
