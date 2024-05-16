@@ -24,7 +24,6 @@
       </template>
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
-        <div class="d-flex justify-content-between">
           <column-filter-dropdown
             v-model="selectedStates"
             :id="field.key"
@@ -37,11 +36,9 @@
               {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
             </template>
           </column-filter-dropdown>
-          <sorting-arrow :sortBy="sortBy[0]" :fieldKey="field.key"/>
-        </div>
       </template>
       <template #head(date)="{ field }">
-        <batch-search-filter-date :id="field.key" v-model="selectedDateRange" :name="field.label" />
+          <batch-search-filter-date :id="field.key" v-model="selectedDateRange" :name="field.label" />
       </template>
       <template #head(published)="{ field }">
           <column-filter-dropdown
@@ -115,7 +112,6 @@ import { mapState } from 'vuex'
 
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
-import SortingArrow from '@/components/SortingArrow'
 import ProjectLink from '@/components/ProjectLink'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import UserDisplay from '@/components/UserDisplay'
@@ -123,6 +119,7 @@ import settings from '@/utils/settings'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import { humanLongDate, fromNow } from '@/filters/humanDate'
+import {computed} from 'vue'
 
 const BATCHSEARCH_STATUS_VALUE = Object.freeze({
   PUBLISHED: '1',
@@ -152,7 +149,11 @@ export default {
     BatchSearchStatus, 
     BatchSearchFilterDate, 
     ColumnFilterDropdown,
-    SortingArrow 
+  },
+  provide() {
+    return {
+      sortBy: computed(() => this.sortBy[0]),
+    }
   },
   mixins: [polling, utils],
   data() {

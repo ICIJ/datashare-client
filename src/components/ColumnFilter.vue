@@ -1,10 +1,11 @@
 <template>
   <div class="column-filter d-flex align-items-baseline">
-    <span class="column-filter__label">
+    <span class="column-filter__label ms-1">
       {{ name }}
     </span>
-    <b-button :id="btnId" class="column-filter__toggle ms-1" :class="btnClassName" radius variant="outline" @click.stop>
-      <fa icon="filter" />
+    <sorting-arrow v-if="sortBy" :sortBy="sortBy" :fieldKey="id" class="ms-1"/>
+    <b-button :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline" @click.stop>
+      <fa fixed-width size="1x" icon="filter" />
       <slot name="badge" :active="active" :counter="counter">
         <column-filter-badge :active="active" :counter="counter" />
       </slot>
@@ -26,11 +27,13 @@
 
 <script>
 import ColumnFilterBadge from '@/components/ColumnFilterBadge'
+import SortingArrow from '@/components/SortingArrow'
 
 export default {
   name: 'ColumnFilter',
   components: {
-    ColumnFilterBadge
+    ColumnFilterBadge,
+    SortingArrow 
   },
   props: {
     id: {
@@ -50,6 +53,7 @@ export default {
       default: null
     }
   },
+  inject: ['sortBy'],
   emits: ['show', 'hide', 'toggle'],
   data() {
     return {
