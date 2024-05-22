@@ -1,11 +1,9 @@
 <template>
-  <div class="column-filter d-flex align-items-baseline">
-    <span class="column-filter__label ms-1">
+  <div class="column-filter d-flex align-items-middle">
       {{ name }}
-    </span>
-    <sorting-arrow v-if="sortBy" :sortBy="sortBy" :fieldKey="id" class="ms-1"/>
+    <sorting-arrow v-if="sortBy" :sortBy="sortBy" :fieldKey="id"/>
     <b-button :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline" @click.stop>
-      <fa fixed-width size="1x" icon="filter" />
+      <fa style="padding-bottom: 1px;" fixed-width icon="filter" />
       <slot name="badge" :active="active" :counter="counter">
         <column-filter-badge :active="active" :counter="counter" />
       </slot>

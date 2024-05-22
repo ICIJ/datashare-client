@@ -69,6 +69,11 @@ function toVariantColor(string = '', defaultVariant = 'darker') {
   return style.getPropertyValue(`--${variant}`) || '#eee'
 }
 
+const SORT_ORDER = Object.freeze({
+  ASC: 'asc',
+  DESC: 'desc'
+})
+
 export {
   getDocumentTypeLabel,
   getExtractionLevelTranslationKey,
@@ -77,5 +82,7 @@ export {
   objectIncludes,
   toVariant,
   toVariantIcon,
-  toVariantColor
+  toVariantColor,
+  SORT_ORDER
 }
+
