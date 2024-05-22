@@ -4,7 +4,7 @@
       :busy="isBusy"
       :fields="fields"
       :items="displayBatchSearches"
-      v-model:sort-by="sortBy"
+      :sort-by="sortByOption"
       class="card"
       hover
       no-local-sorting
@@ -120,7 +120,7 @@ import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import { humanLongDate, fromNow } from '@/filters/humanDate'
 import {computed} from 'vue'
-
+import {SORT_ORDER} from '@/utils/utils'
 const BATCHSEARCH_STATUS_VALUE = Object.freeze({
   PUBLISHED: '1',
   NOT_PUBLISHED: '0'
@@ -137,10 +137,6 @@ const BATCHSEARCH_STATUS = Object.freeze({
   }
 })
 
-const SORT_ORDER = Object.freeze({
-  ASC: 'asc',
-  DESC: 'desc'
-})
 
 export default {
   name: 'BatchSearchTable',
@@ -152,7 +148,7 @@ export default {
   },
   provide() {
     return {
-      sortBy: computed(() => this.sortBy[0]),
+      sortBy: computed(() => this.sortByOption[0]),
     }
   },
   mixins: [polling, utils],
@@ -287,7 +283,7 @@ export default {
         return areNumber ? { start, end } : null
       },
       set(batchDate) {
-        return this.$router.push(this.createBatchSearchRoute({ batchDate }))
+        return this.$router.push(this.generateRoute({ batchDate }))
       }
     },
     selectedProjects: {
@@ -301,11 +297,8 @@ export default {
       },
       set(values) {
         const project = values?.length > 0 ? values?.join(',') : null
-        return this.$router.push(this.createBatchSearchRoute({ project }))
+        return this.$router.push(this.generateRoute({ project }))
       }
-    },
-    isDesc() {
-      return this.selectedSort.order === SORT_ORDER.DESC
     },
     page: {
       set(page) {
@@ -343,7 +336,7 @@ export default {
       },
       set(values) {
         const state = values?.length > 0 ? values?.join(',') : null
-        return this.$router.push(this.createBatchSearchRoute({ state }))
+        return this.$router.push(this.generateRoute({ state }))
       }
     },
     publicationStatus() {
@@ -355,10 +348,10 @@ export default {
       },
       set(status) {
         const publishState = status?.value ?? null
-        return this.$router.push(this.createBatchSearchRoute({ publishState }))
+        return this.$router.push(this.generateRoute({ publishState }))
       }
     },
-    sortBy() {
+    sortByOption() {
       return [{key:this.fieldKeyByName(this.selectedSort.sort),order:this.selectedSort.order}]
     },
     states() {
@@ -377,7 +370,7 @@ export default {
     this.fetchAndRegisterPollWithLoader()
   },
   methods: {
-    createBatchSearchRoute({
+    generateRoute({
       page = this.page,
       sort = this.selectedSort.sort,
       order = this.selectedSort.order,
@@ -491,7 +484,7 @@ export default {
       return find(this.fields, (item) => item.name === fieldName)?.key
     },
     updateRoute(params) {
-      return this.$router.push(this.createBatchSearchRoute(params))
+      return this.$router.push(this.generateRoute(params))
     }
   }
 }

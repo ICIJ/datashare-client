@@ -1,6 +1,6 @@
 <template>
-  <span>
-      <fa :icon="icon" fixed-width :class="{'disabled-arrow':disabled}" />
+  <span style="vertical-align: middle; display:inline-block;height: 23px; width: 24px;text-align: center;">
+      <fa :icon="icon" fixed-width  :class="{'disabled-arrow':disabled}" />
   </span>
 </template>
 <script setup>
