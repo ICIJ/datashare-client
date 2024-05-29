@@ -153,7 +153,7 @@ export default {
     async deleteTag(tag) {
       this.isReady = false
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
-      EventBus.emit('filter::delete', { filter: 'tags', value: tag })
+      EventBus.emit('filter::delete', { name: 'tags', value: tag })
       this.isReady = true
     },
     generateTagTooltip(tag) {
