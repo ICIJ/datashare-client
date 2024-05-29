@@ -373,7 +373,7 @@ export default {
     // Listen for event to refresh the filter
     EventBus.on('filter::refresh', () => this.aggregateWithLoading())
     // Listen for deletion of a filter value
-    EventBus.on('filter::delete', (filterName, { label: key }) => this.deleteFilterKey({ filterName, key }))
+    EventBus.on('filter::delete', ({ name, value: { label: key } }) => this.deleteFilterKey({ name, key }))
     // Initialize the filter for the first time
     this.initialize()
   },
@@ -420,7 +420,7 @@ export default {
       /**
        * Triggered at the root level when user starts to search in the filter values.
        */
-      EventBus.emit('filter::async-search', this.filter, this.query)
+      EventBus.emit('filter::async-search', { filter: this.filter, query: this.query })
       /**
        * Triggered when user starts to search in the filter values.
        */
@@ -539,7 +539,7 @@ export default {
       this.$emit('reset-filter-values', this.filter, refresh)
     },
     changeSelectedValues($ev) {
-      const payload = { filter: this.filter, selected: this.selected }
+      const payload = { filter: this.filter, values: this.selected }
       EventBus.emit('filter::add-filter-values', payload)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', payload)

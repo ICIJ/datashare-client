@@ -433,7 +433,7 @@ describe('FilterText.vue', () => {
     expect(wrapper.findComponent({ ref: 'filter' }).vm.items).toHaveLength(3)
     wrapper.findComponent({ ref: 'filter' }).vm.collapseItems = false
     await wrapper.vm.$nextTick()
-    await wrapper.vm.$root.$emit('filter::delete', 'tags', { label: 'tag_01' })
+    await wrapper.vm.$root.$emit('filter::delete', { filter: 'tags', value: { label: 'tag_01' } })
     expect(wrapper.findComponent({ ref: 'filter' }).vm.items).toHaveLength(2)
   })
 })

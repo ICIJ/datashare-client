@@ -244,7 +244,7 @@ export default {
           this.doc.route
         )
         const container = this.$el.closest('.ps-container')
-        EventBus.emit('scroll-tracker:request', this.$el, 0, container)
+        EventBus.emit('scroll-tracker:request', { element: this.$el, offset: 0, container })
         EventBus.emit('document::content::changed')
       }
       this.$wait.end('load document data')

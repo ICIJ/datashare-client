@@ -100,15 +100,14 @@ export default {
     EventBus.on('index::delete::all', this.refreshEachFilter)
   },
   methods: {
-    openFilterSearch(expandedFilter, query) {
+    openFilterSearch({ filter, query }) {
       if (this.$refs.openFilterSearch) {
-        this.expandedFilter = expandedFilter
+        this.expandedFilter = filter
         this.query = query
         this.$refs.openFilterSearch.show()
       }
     },
-    setFilterValue({ filter, selected: value }) {
-      const { name } = filter
+    setFilterValue({ filter: { name }, values: value }) {
       this.$store.commit('search/setFilterValue', { name, value })
     },
     hideFilters() {
@@ -117,7 +116,7 @@ export default {
     isFilterComponent(component) {
       return isArray(component) && !!get(component, '0.root', false)
     },
-    resetFilterValues(refresh = true) {
+    resetFilterValues({ refresh = true } = {}) {
       Object.values(this.$refs).forEach((component) => {
         if (this.isFilterComponent(component)) {
           const filter = component[0]
