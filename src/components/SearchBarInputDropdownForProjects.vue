@@ -48,7 +48,7 @@
           class="search-bar-input-dropdown-for-projects__button-content__project__thumbnail rounded"
         />
         <template v-if="hasOneProject">
-          {{ project.label || project.name }}
+          {{ project?.label || project?.name }}
         </template>
         <template v-else-if="isLastProjectSlice(p)">
           {{ $tc('searchBarInputDropdownForProjects.projectsCount', selectedProjects.length) }}
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { iteratee, trim } from 'lodash'
+import { compact, iteratee, trim } from 'lodash'
 
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
@@ -154,9 +154,9 @@ export default {
     },
     selectedProjects: {
       get() {
-        return this.modelValue.map(({ name }) => {
+        return compact(this.modelValue.map(({ name }) => {
           return this.$core.findProject(name)
-        })
+        }))
       },
       set(value) {
         this.$emit('update:modelValue', value)

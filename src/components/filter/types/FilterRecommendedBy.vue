@@ -76,8 +76,7 @@ export default {
     async selectUsers(users = [], refresh = true) {
       this.setFilterValue(this.filter, { key: users })
       await this.$store.dispatch('recommended/getDocumentsRecommendedBy', users)
-      const payload = { filter: this.filter, selected: this.selected }
-      EventBus.emit('filter::add-filter-values', payload)
+      EventBus.emit('filter::add-filter-values', { filter: this.filter, values: this.selected })
       if (refresh) {
         this.refreshRouteAndSearch()
       }

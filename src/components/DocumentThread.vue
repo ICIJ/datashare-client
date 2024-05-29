@@ -181,8 +181,8 @@ export default {
       // Get the offset from the navbar height (which is sticky)
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Use the scroll-tracker component
-      const $container = this.$el.closest('.overflow-auto')
-      EventBus.emit('scroll-tracker:request', element, offset, $container)
+      const container = this.$el.closest('.overflow-auto')
+      EventBus.emit('scroll-tracker:request', { element, offset, container })
     },
     async init() {
       this.$wait.start('load thread')

@@ -140,7 +140,7 @@ export default {
       this.tag = ''
       this.suggestions = []
       this.isReady = true
-      delay((filterName) => EventBus.emit('filter::refresh', filterName), settings.elasticsearch.waitForAnswer, 'tags')
+      delay((name) => EventBus.emit('filter::refresh', { name }), settings.elasticsearch.waitForAnswer, 'tags')
       if (!this.displayTags)
         this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
       // Focus on the tag input
@@ -153,7 +153,7 @@ export default {
     async deleteTag(tag) {
       this.isReady = false
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
-      EventBus.emit('filter::delete', 'tags', tag)
+      EventBus.emit('filter::delete', { filter: 'tags', value: tag })
       this.isReady = true
     },
     generateTagTooltip(tag) {

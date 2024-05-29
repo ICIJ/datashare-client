@@ -35,8 +35,8 @@ export default {
     EventBus.on('scroll-tracker:request', this.request)
   },
   methods: {
-    request(target, offset = 0, container = this.container) {
-      this.target = target
+    request({ element, offset = 0, container = this.container } = {}) {
+      this.target = element
       this.offset = offset
       this.container = container
       this.toggle(this.shouldBeVisible())

@@ -75,8 +75,8 @@ export default {
   },
   async beforeRouteUpdate(to, from, next) {
     if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
-      this.$store.dispatch('search/updateFromRouteQuery', to.query)
-      await this.search()
+      // this.$store.dispatch('search/updateFromRouteQuery', to.query)
+      // await this.search()
     }
     next()
   },

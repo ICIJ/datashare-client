@@ -159,7 +159,8 @@ export default {
   computed: {
     selectedProjects: {
       get() {
-        return (this.indices ?? this.$store.state.search.indices).map((name) => ({ name }))
+        const indices = this.indices ?? this.$store.state.search.indices
+        return indices.filter((index) => !!this.$core.findProject(index)).map((name) => ({ name }))
       },
       set(projects) {
         const indices = projects.map(iteratee('name'))

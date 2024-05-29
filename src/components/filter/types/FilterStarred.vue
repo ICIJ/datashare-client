@@ -69,12 +69,12 @@ export default {
     resetFilterValues(_, refresh) {
       return this.changeYesNoValue([], refresh)
     },
-    changeYesNoValue(selected = [], refresh = true) {
-      if (selected.length === 2) {
-        selected = selected.slice(1)
+    changeYesNoValue(values = [], refresh = true) {
+      if (values.length === 2) {
+        values = values.slice(1)
       }
-      this.setFilterValue(this.filter, { key: selected })
-      EventBus.emit('filter::add-filter-values', { filter: this.filter, selected })
+      this.setFilterValue(this.filter, { key: values })
+      EventBus.emit('filter::add-filter-values', { filter: this.filter, values })
       if (refresh) {
         this.refreshRouteAndSearch()
       }
