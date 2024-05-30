@@ -1,6 +1,6 @@
 <template>
   <div v-if="showProjects" class="filter card">
-    <div class="card-header px-2">
+    <div class="card-header px-2 py-3">
       <h6 class="pt-0" @click="toggleItems">
         <span class="filter__items__item__icon ps-0 pe-1">
           <fa icon="book" fixed-width />
@@ -12,7 +12,7 @@
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
       <search-form-control
         v-model="query"
-        class="filter__items__search"
+        class="filter__items__search mb-2"
         dark
         :autofocus="false"
         :rounded="false"

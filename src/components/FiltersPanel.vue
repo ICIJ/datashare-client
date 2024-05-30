@@ -5,7 +5,7 @@
       <div class="filters-panel__sticky__toolbar">
         <hook name="filters-panel.toolbar:before"></hook>
         <div class="d-flex align-items-center">
-          <h5 class="flex-grow-1 my-0 h6 text-uppercase text-light">
+          <h5 class="flex-grow-1 my-0 h6 text-uppercase">
             {{ $t('search.filtersTitle') }}
           </h5>
           <button
@@ -185,17 +185,14 @@ export default {
           background: transparent;
           color: rgba($panel-color, 0.6);
           cursor: pointer;
-          font-size: 0.9rem;
           font-weight: bolder;
           margin-bottom: 0;
-          padding-top: $spacer * 0.25;
         }
       }
 
       & > .list-group,
       & > .card-body {
         color: $panel-color;
-        font-size: 0.8rem;
         padding: 0;
       }
     }

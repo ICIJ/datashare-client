@@ -3,23 +3,31 @@
     hide-contextualize hide-sort no-infinite-scroll @reset-filter-values="resetFilterValues">
     <template #items-group>
       <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0">
-        <div class="filter__items__item__wrapper px-2 mt-2">
-          <b-form-checkbox :value="true" class="filter__items__item">
-            <span class="filter__items__item__label px-1 text-truncate">
-              {{ labelToHuman('filter.starred') }}
-            </span>
-            <span class="filter__items__item__count badge rounded-pill text-bg-light">
-              {{ $n(starredDocuments.length) }}
+        <div class="filter__items__item">
+          <b-form-checkbox :value="true">
+            <span class="d-flex align-items-center">
+              <span class="filter__items__item__label pe-1 text-truncate d-inline-block">
+                {{ labelToHuman('filter.starred') }}
+              </span>
+              <span class="filter__items__item__count my-auto ms-auto">
+                <span class="badge rounded-pill text-bg-light">
+                  {{ $n(starredDocuments.length) }}
+                </span>
+              </span>
             </span>
           </b-form-checkbox>
         </div>
-        <div class="filter__items__item__wrapper px-2 mt-2">
-          <b-form-checkbox :value="false" class="filter__items__item">
-            <span class="filter__items__item__label px-1 text-truncate">
-              {{ labelToHuman('filter.notStarred') }}
-            </span>
-            <span class="filter__items__item__count badge rounded-pill text-bg-light align-self-center">
-              {{ $n(total) }}
+        <div class="filter__items__item">
+          <b-form-checkbox :value="false">
+            <span class="d-flex align-items-center">
+              <span class="filter__items__item__label pe-1 text-truncate d-inline-block">
+                {{ labelToHuman('filter.notStarred') }}
+              </span>
+              <span class="filter__items__item__count my-auto ms-auto">
+                <span class="badge rounded-pill text-bg-light">
+                  {{ $n(total) }}
+                </span>
+              </span>
             </span>
           </b-form-checkbox>
         </div>

@@ -155,7 +155,7 @@ export default {
       padding: 0.2em;
     }
 
-    .filter__footer > &.custom-checkbox {
+    .filter__footer > & {
       margin: 0 0.2em;
 
       label {

@@ -1,10 +1,16 @@
 <template>
   <div class="project-selector">
     <b-form-group class="mb-0">
-      <b-form-checkbox-group stacked v-if="multiple" v-model="selectedProject" :disabled="disabled" :options="projectOptions" />
+      <b-form-checkbox-group v-if="multiple" v-model="selectedProject" stacked :disabled="disabled">
+        <div v-for="{ text, value } in projectOptions" :key="text" class="project-selector__item">
+          <b-form-checkbox :value="value">
+            {{ text }}
+          </b-form-checkbox>
+        </div>
+      </b-form-checkbox-group>
       <b-form-select v-else v-model="selectedProject" :disabled="disabled" :options="projectOptions" :size="size" />
     </b-form-group>
-    <div v-if="!hasMatches" class="p-2 text-center text-muted">
+    <div v-if="!hasMatches" class="p-2 text-center">
       {{ $t('projectSelector.noMatches') }}
     </div>
   </div>
@@ -94,3 +100,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.project-selector {
+  &__item {
+    padding: 0.25rem 0.75rem;
+  }
+}
+</style>
