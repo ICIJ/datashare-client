@@ -44,13 +44,14 @@
           <ul class="list-group list-group-flush tree-view__directories">
             <li
               v-if="hits && selectable"
-              class="list-group-item d-flex flex-row align-items-center text-muted tree-view__directories__item tree-view__directories__item--hits">
+              class="list-group-item d-flex flex-row align-items-center tree-view__directories__item tree-view__directories__item--hits">
               <b-form-checkbox
                 :id="allDirectoriesInputId"
                 :value="toDirectory(path)"
-                class="tree-view__directories__item__checkbox" />
-              <label class="flex-grow-1 m-0 text-light" :for="allDirectoriesInputId">
-                {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
+                class="tree-view__directories__item__checkbox"
+              />
+              <label class="flex-grow-1 m-0" :for="allDirectoriesInputId">
+                {{ $t('treeView.all') }} <em>({{ $t('treeView.includingIndividualDocuments') }})</em>
               </label>
               <div class="ms-2 badge text-bg-light rounded-pill" :title="$n(hits)">
                 <span v-if="compact">
@@ -66,11 +67,13 @@
               <b-form-checkbox
                 v-if="selectable"
                 :value="toDirectory(directory.key)"
-                class="tree-view__directories__item__checkbox" />
+                class="tree-view__directories__item__checkbox"
+              />
               <a
                 class="tree-view__directories__item__label flex-grow-1"
                 href
-                @click.prevent="$emit('update:path', directory.key)">
+                @click.prevent="$emit('update:path', directory.key)"
+              >
                 {{ getBasename(directory.key) }}
               </a>
               <router-link
@@ -109,7 +112,7 @@
             </li>
             <li
               v-if="!selectable && !directories.length"
-              class="list-group-item tree-view__directories__item tree-view__directories__item--no-folders text-muted text-center"
+              class="list-group-item tree-view__directories__item tree-view__directories__item--no-folders text-center"
             >
               {{ $t('widget.noFolders') }}
             </li>
@@ -648,18 +651,12 @@ export default {
     &__item {
       position: relative;
 
-      .tree-view & &__checkbox {
-        margin: 0;
-        margin-right: $spacer * 0.5;
-      }
-
-      .tree-view--compact & &__checkbox {
-        margin: 0;
-        margin-right: $spacer * 0.25;
+      .form-check-inline {
+        margin-right: 0;
       }
 
       .tree-view--compact & {
-        padding: $spacer * 0.25 $spacer * 0.5;
+        padding: 0.25rem 0.75rem;
 
         &--no-folders {
           padding: 0.5rem;
