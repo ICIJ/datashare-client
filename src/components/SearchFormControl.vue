@@ -72,6 +72,13 @@ export default {
       default: false
     },
     /**
+     * Use sm sizing
+     */
+    small: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * Disable autocomplete by default.
      */
     autocomplete: {
@@ -88,7 +95,8 @@ export default {
         'search-form-control--no-icon': this.noIcon,
         'search-form-control--rounded': this.rounded,
         'search-form-control--loading': this.loading,
-        'search-form-control--dark': this.dark
+        'search-form-control--dark': this.dark,
+        'input-group-sm': this.small
       }
     }
   },
@@ -102,7 +110,7 @@ export default {
 
 <template>
   <form @submit.prevent="$emit('submit', modelValue)">
-    <div class="input-group input-group-sm search-form-control" :class="searchFormClassAttr">
+    <div class="input-group search-form-control" :class="searchFormClassAttr">
       <b-form-input
         :model-value="modelValue"
         :autocomplete="autocomplete"
@@ -115,15 +123,17 @@ export default {
         @update:modelValue="input"
         @blur="$emit('blur', $event)"
       />
-      <button class="btn btn-sm search-form-control__submit" type="submit">
-        <template v-if="!noIcon">
-          <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
-          <fa v-else icon="search" fixed-width></fa>
-        </template>
-        <span :class="{ 'sr-only': !showSubmitLabel }">
-          {{ submitLabel || $t('searchFormControl.submitLabel') }}
-        </span>
-      </button>
+      <div class="search-form-control__addon">
+        <button class="btn search-form-control__addon__submit" type="submit">
+          <template v-if="!noIcon">
+            <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
+            <fa v-else icon="search" fixed-width></fa>
+          </template>
+          <span :class="{ 'sr-only': !showSubmitLabel }">
+            {{ submitLabel || $t('searchFormControl.submitLabel') }}
+          </span>
+        </button>
+      </div>
     </div>
   </form>
 </template>
@@ -158,7 +168,38 @@ export default {
     transition: $input-transition;
   }
 
-  &--rounded &__submit {
+  &__addon {
+    &:after {
+      bottom: 0;
+      box-shadow: 0 0 0 $input-btn-focus-width transparent;
+      content: '';
+      left: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: $input-transition;
+      z-index: 0;
+    }
+
+    & &__submit:last-of-type {
+      background: $input-bg;
+      border-color: $input-border-color;
+      border-left: 0;
+      transition: $input-transition;
+    }
+
+    &__submit:last-of-type {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
+  }
+
+
+  &--rounded &__addon {
+    &:after {
+      border-radius: $border-radius-pill;
+    }
 
     &__submit:last-of-type {
       border-bottom-right-radius: $border-radius-pill;
