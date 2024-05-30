@@ -161,6 +161,12 @@ export default {
     flex: 0 1 100%;
     input {
       width: 45%;
+      background: #000;
+      color: inherit;
+
+      &:not(:focus) {
+        border-color: #000;
+      }
     }
   }
 }
