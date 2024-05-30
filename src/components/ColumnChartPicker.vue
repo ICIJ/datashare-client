@@ -7,16 +7,13 @@ import * as d3 from 'd3'
  */
 export default {
   name: 'ColumnChartPicker',
-  model: {
-    prop: 'value',
-    event: 'update'
-  },
   props: {
     /**
      * Initial values of the range bounds. Should contain two timestamps.
      * indicating the start and end of the range.
+     * @model
      */
-    value: {
+    modelValue: {
       type: Object,
       default: null
     },
@@ -89,6 +86,7 @@ export default {
       }
     }
   },
+  emits: ['update:modelValue'],
   computed: {
     range: {
       get() {
@@ -110,17 +108,17 @@ export default {
          * @event update
          * @param Object New range value
          */
-        this.$emit('update', { start, end })
+        this.$emit('update:modelValue', { start, end })
       }, this.throttle)
     },
     rangeScale() {
       return d3.scaleLinear(this.intervalTimesExtent, [0, 1])
     },
     rangeStart() {
-      return this.value?.start ? this.rangeScale(this.value.start) : null
+      return this.modelValue?.start ? this.rangeScale(this.modelValue.start) : null
     },
     rangeEnd() {
-      return this.value?.end ? this.rangeScale(this.value.end) : null
+      return this.modelValue?.end ? this.rangeScale(this.modelValue.end) : null
     },
     chartWidth() {
       return this.$el?.querySelector('.column-chart-picker__chart')?.offsetWidth ?? 0
@@ -213,7 +211,7 @@ export default {
        * @event update
        * @param Object New range value
        */
-      this.$emit('update', { start, end })
+      this.$emit('update:modelValue', { start, end })
     },
     toIntervalStart(date) {
       const startMonth = this.interval === 'year' ? 0 : date.getMonth()
