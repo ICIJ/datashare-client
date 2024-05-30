@@ -89,7 +89,7 @@ export default {
       }
       this.root.query = this.pathQueries[path] || null
     }
-    
+
   },
   created() {
     this.path = this.dataDir
@@ -111,11 +111,14 @@ export default {
 <style lang="scss" scoped>
 .filter {
   &__tree-view :deep(.tree-view) {
+    a {
+      color: currentColor;
+    }
+
     .tree-view__header {
-      background: $light;
-      border-radius: $border-radius-sm;
-      color: $body-color;
-      margin: 0.5rem;
+      padding: 0 0 $spacer-xs;
+      margin: 0 $spacer-sm $spacer-sm;
+      border-bottom: solid 1px $border-color;
 
       &__hits,
       &__size {
@@ -124,11 +127,13 @@ export default {
     }
   }
 
-  &--dark &__tree-view :deep(.tree-view) .list-group-item {
-    border-bottom: 0;
+  &--dark &__tree-view:deep(.tree-view) {
+    .tree-view__header {
+      border-color: $app-context-sidebar-bg;
+    }
 
-    a {
-      color: $light;
+    .list-group-item {
+      border-bottom: 0;
     }
   }
 }

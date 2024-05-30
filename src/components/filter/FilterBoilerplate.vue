@@ -9,8 +9,8 @@
     }">
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
     <slot v-if="!hideHeader" name="header">
-      <div class="card-header px-2 d-flex filter__header" @click="toggleItems">
-        <h6 class="flex-fill flex-shrink-1 text-truncate pt-0">
+      <div class="card-header px-2 py-3 d-flex filter__header" @click="toggleItems">
+        <h6 class="flex-fill flex-shrink-1 text-truncate">
           <span v-if="filter.icon" class="filter__items__item__icon ps-0 pe-1">
             <fa :icon="filter.icon" fixed-width></fa>
           </span>
@@ -27,49 +27,73 @@
       <div class="filter__items">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
-          <search-form-control v-model="query" class="filter__items__search"
-            :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })" :rounded="false"
-            :dark="dark" @submit.prevent="openFilterSearch" />
+          <search-form-control
+            v-model="query"
+            class="filter__items__search mb-2"
+            :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })"
+            :rounded="false"
+            :dark="dark"
+            @submit.prevent="openFilterSearch"
+          ></search-form-control>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
-        <slot :items="items" name="items" :options="options" :query="query" :selected="selected" :sort-by="sortBy"
-          :sort-by-order="sortByOrder" :total-count="totalCount">
-          <div class="filter__items__item__wrapper px-2 mt-2">
-            <b-form-checkbox v-model="isAllSelected" class="filter__items__all" :disabled="isAllSelected">
+        <slot
+          :items="items"
+          name="items"
+          :options="options"
+          :query="query"
+          :selected="selected"
+          :sort-by="sortBy"
+          :sort-by-order="sortByOrder"
+          :total-count="totalCount"
+        >
+          <div class="filter__items__all">
+            <b-form-checkbox v-model="isAllSelected" :disabled="isAllSelected">
               <slot name="all" v-bind="{ total }">
-                <span class="filter__items__item__label px-1 text-truncate">
-                  {{ labelToHuman('all') }}
-                </span>
-                <span class="filter__items__item__count badge rounded-pill text-bg-light align-self-center">
-                  {{ $n(total) }}
+                <span class="d-flex">
+                  <span class="filter__items__item__label px-1 text-truncate d-inline-block">
+                    {{ labelToHuman('all') }}
+                  </span>
+                  <span class="filter__items__item__count my-auto ms-auto">
+                    <span class="badge rounded-pill text-bg-light">
+                      {{ $n(total) }}
+                    </span>
+                  </span>
                 </span>
               </slot>
             </b-form-checkbox>
           </div>
           <slot name="items-group" :items="items" :options="options" :selected="selected">
-            <b-form-checkbox-group v-model="selected" stacked @input="changeSelectedValues">
-              <template v-for="{ value, item, label } of options">
-                <div class="filter__items__item__wrapper px-2 my-1">
-                  <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
-                    <b-form-checkbox :value="value" class="filter__items__item">
-                      <span class="filter__items__item__label px-1 text-truncate">
+            <b-form-checkbox-group
+              v-model="selected"
+              class="list-group-item p-0 border-0"
+              stacked
+              @input="changeSelectedValues"
+            >
+              <div v-for="({ value, item, label }, i) of options" :key="i" class="filter__items__item">
+                <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
+                  <b-form-checkbox :value="value">
+                    <span class="d-flex align-items-center">
+                      <span class="filter__items__item__label pe-1 text-truncate d-inline-block">
                         {{ label }}
                       </span>
-                      <span class="filter__items__item__count badge rounded-pill text-bg-light align-self-center">
-                        {{ $n(item.doc_count) }}
+                      <span class="filter__items__item__count my-auto ms-auto">
+                        <span class="badge rounded-pill text-bg-light">
+                          {{ $n(item.doc_count) }}
+                        </span>
                       </span>
-                    </b-form-checkbox>
-                  </slot>
-                </div>
-              </template>
+                    </span>
+                  </b-form-checkbox>
+                </slot>
+              </div>
             </b-form-checkbox-group>
           </slot>
         </slot>
         <template v-if="fromElasticSearch">
-          <div v-if="noResults" class="p-2 text-center text-muted">
+          <div v-if="noResults" class="p-2 text-center">
             {{ $t('filter.none') }}
           </div>
-          <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
+          <div v-else-if="noMatches" class="p-2 text-center small bg-mark">
             <span v-html="$t('filter.noMatches')"></span>
           </div>
         </template>
@@ -567,25 +591,6 @@ export default {
     }
   }
 
-  .custom-checkbox {
-    display: block;
-    margin: 0.5rem;
-
-    label {
-      display: block;
-      padding-top: 0.2rem;
-
-      & > span {
-        display: flex;
-        flex-direction: row;
-      }
-    }
-
-    input:checked + label {
-      font-weight: bold;
-    }
-  }
-
   &.filter--reversed {
     .filter__items__item:not(.filter__items__all) input:checked + label {
       text-decoration: line-through;
@@ -615,21 +620,25 @@ export default {
   }
 
   &__items {
-    font-size: 0.8rem;
     max-height: 300px;
     overflow: auto;
 
-    &__search {
-      margin: 0 0.5rem;
+    .list-group-item {
+      background: inherit;
+      color: inherit;
     }
 
-    & &__display {
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: bolder;
-      margin: 0;
-      padding: 0 2.25rem 0.5rem;
-      text-align: center;
+    &__item,
+    &__all {
+      padding: $spacer-xxs $spacer-sm;
+
+      .form-check-label {
+        width: 100%;
+      }
+    }
+
+    &__search {
+      margin: 0 0.5rem;
     }
   }
 }

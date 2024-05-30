@@ -61,7 +61,7 @@ export default {
      */
     datadirIcon: {
       type: [String, Object, Array],
-      default: 'folder'
+      default: 'folder-open'
     },
     /**
      * Use a label next to the datadir icon
