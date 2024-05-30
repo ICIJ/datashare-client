@@ -18,7 +18,12 @@
         :rounded="false"
         :placeholder="$t('search.searchInProjects')"
       />
-      <project-selector v-model="selectedProject" :query="query" class="border-0" multiple @input="select" />
+      <project-selector
+        v-model="selectedProject"
+        :query="query"
+        class="border-0"
+        multiple
+        @input="select" />
     </slide-up-down>
   </div>
 </template>
@@ -49,12 +54,17 @@ export default {
       return this.isServer || this.$core.projects.length > 1
     },
     selectedProject: {
-      get: function () {
+      get() {
         return this.$store.state.search.indices
       },
-      set: function (indices) {
+      async set(indices) {
         if (indices.length) {
           this.$store.commit('search/indices', indices)
+          this.$store.commit('search/isReady', false)
+          await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+          await this.$store.dispatch('recommended/fetchIndicesRecommendations')
+          await this.$store.dispatch('downloads/fetchIndicesStatus')
+          this.refreshRouteAndSearch()
         }
       }
     },
