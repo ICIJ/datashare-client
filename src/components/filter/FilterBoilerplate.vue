@@ -98,9 +98,8 @@
           </div>
         </template>
         <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteId" :distance="200" @infinite="nextAggregate">
-          <span slot="spinner"></span>
-          <span slot="no-more"></span>
-          <span slot="no-results"></span>
+          <template #spinner><span></span></template>
+          <template #complete><span></span></template>
         </infinite-loading>
       </div>
       <filter-footer v-if="!hideFooter" :filter="filter" :hide-contextualize="hideContextualize"
@@ -128,7 +127,7 @@ import {
   toLower,
   uniqueId
 } from 'lodash'
-import InfiniteLoading from 'vue-infinite-loading'
+import InfiniteLoading from 'v3-infinite-loading'
 
 import { EventBus } from '@/utils/event-bus'
 import FilterFooter from '@/components/filter/FilterFooter'
@@ -306,7 +305,7 @@ export default {
       return this.isReady && this.items.length === 0
     },
     useInfiniteScroll() {
-      return !this.noInfiniteScroll && this.offset > 0 && this.items.length >= this.size
+      return !this.noInfiniteScroll && this.offset >= this.size
     },
     fromElasticSearch() {
       return get(this, 'filter.fromElasticSearch', false)
