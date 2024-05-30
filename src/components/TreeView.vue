@@ -118,9 +118,8 @@
             </li>
           </ul>
           <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteScrollId" @infinite="nextLoadData">
-            <span slot="spinner"></span>
-            <span slot="no-more"></span>
-            <span slot="no-results"></span>
+            <template #spinner><span></span></template>
+            <template #complete><span></span></template>
           </infinite-loading>
         </b-form-checkbox-group>
       </div>
@@ -149,7 +148,7 @@ import {
 } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
-import InfiniteLoading from 'vue-infinite-loading'
+import InfiniteLoading from 'v3-infinite-loading'
 
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 import humanNumber from '@/filters/humanNumber'

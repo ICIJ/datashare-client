@@ -54,8 +54,8 @@
           </div>
         </a>
         <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteScrollId" @infinite="loadNextPage">
-          <span slot="spinner"></span>
-          <span slot="no-results"></span>
+          <template #spinner><span></span></template>
+          <template #complete><span></span></template>
         </infinite-loading>
         <div v-if="reachedTheEnd" class="text-muted p-3 text-center">
           <span v-if="items.length">•</span>
@@ -69,7 +69,7 @@
 <script>
 import bodybuilder from 'bodybuilder'
 import { get, property, find, flatten, noop, uniqueId } from 'lodash'
-import InfiniteLoading from 'vue-infinite-loading'
+import InfiniteLoading from 'v3-infinite-loading'
 
 import { fromNow, humanLongDate } from '@/filters/humanDate'
 import EsDocList from '@/api/resources/EsDocList'
