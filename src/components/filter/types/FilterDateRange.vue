@@ -13,16 +13,16 @@
         <date-picker
           ref="calendar"
           :key="locale"
-          v-model="selectedDate"
-          class="date-picker d-flex flex-grow-1 mb-3"
-          :popover="{ visibility: 'focus' }"
-          is-range
+          v-model.range.number="selectedDate"
+          class="date-picker d-flex flex-grow-1"
+          :popover="{ visibility: 'click' }"
           is-dark
           color="yellow"
           :model-config="{ type: 'number' }"
           :attributes="attributes"
           :locale="locale"
           :update-on-input="false"
+          transition="fade"
           @dayclick="updateFocus"
         >
           <template #default="{ inputValue, inputEvents }">
@@ -52,7 +52,7 @@
         <column-chart-picker
           v-if="items.length > 1"
           v-model="selectedDate"
-          class="mx-1"
+          class="mx-1 mt-3"
           :data="items"
           :interval="filter.interval"
         />
@@ -91,14 +91,7 @@ export default {
       return [
         {
           key: 'today',
-          dates: new Date(),
-          highlight: {
-            style: {
-              backgroundColor: 'var(--yellow-900)',
-              opacity: '0.3',
-              borderRadius: 'var(--rounded-full)'
-            }
-          }
+          dates: new Date()
         }
       ]
     },
@@ -157,8 +150,10 @@ export default {
 
 <style lang="scss">
 .filter.filter--date-range {
+
   .filter--date-range__inputs {
     flex: 0 1 100%;
+
     input {
       width: 45%;
       background: #000;

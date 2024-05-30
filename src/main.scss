@@ -245,32 +245,59 @@ $value in $theme-colors {
 
 .vc-popover-content-wrapper {
   z-index: $zindex-tooltip !important;
-  .vc-container {
-    --yellow-500: #{$tertiary};
-    --yellow-400: #{lighten($tertiary, 5)};
-    --yellow-300: #{lighten($tertiary, 10)};
-    --yellow-200: #{lighten($tertiary, 15)};
-    --yellow-100: #{lighten($tertiary, 20)};
-    --gray-900: #{$app-sidebar-bg};
 
-    font-size: 0.8rem;
-    color: inherit;
-    padding: 0;
-    margin: 0;
-    font-family: $font-family-base;
+  .vc-popover-content.direction-top {
+    filter: drop-shadow(0 0.25rem 0.5rem rgba(black, .4));
+  }
+  .vc-popover-content.direction-bottom {
+    filter: drop-shadow(0 -0.25rem 0.5rem rgba(black, .4));
+  }
+}
 
-    .vc-highlights {
-      .vc-day-layer {
-        .vc-highlight-base-start,
-        .vc-highlight-base-middle,
-        .vc-highlight-base-end {
-          background-color: rgba($tertiary, 0.4) !important;
-        }
+.vc-container, .vc-popover-content {
+
+  &.vc-yellow {
+    --vc-accent-500: #{$tertiary};
+    --vc-accent-400: #{lighten($tertiary, 5)};
+    --vc-accent-300: #{lighten($tertiary, 10)};
+    --vc-accent-200: #{lighten($tertiary, 15)};
+    --vc-accent-100: #{lighten($tertiary, 20)};
+  }
+
+  --vc-gray-900: #{darken($app-context-sidebar-bg, 5%)};
+  --vc-gray-800: #{$app-context-sidebar-bg};
+  --vc-border: #{$border-color};
+  --vc-popover-content-border: #{$border-color};
+
+  font-size: 0.8rem;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  font-family: $font-family-base;
+
+  &.vc-dark {
+    --vc-bg: var(--vc-gray-900);
+    --vc-border: var(--vc-gray-800);
+    --vc-popover-content-border: var(--vc-gray-800);
+    --vc-weekday-color: var(--vc-accent-500);
+
+    [type=button] {
+      background: transparent;
+    }
+  }
+
+  .vc-highlights {
+    .vc-day-layer {
+
+      .vc-highlight-base-start,
+      .vc-highlight-base-middle,
+      .vc-highlight-base-end {
+        background-color: rgba($tertiary, 0.4) !important;
       }
     }
+  }
 
-    .vc-day-content:hover {
-      background-color: rgba($tertiary, 0.1) !important;
-    }
+  .vc-day-content:hover {
+    background-color: rgba($tertiary, 0.1) !important;
   }
 }
