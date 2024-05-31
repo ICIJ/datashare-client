@@ -479,7 +479,7 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur-next@^4.0.4":
+"@icij/murmur-next@4.0.12":
   version "4.0.12"
   resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.12.tgz#8c6b3d349d729fe955793a8b0497cd8e8573e051"
   integrity sha512-+j7FfJqkRpNR4wd4lHEdo6xu8ZYZ8vdSKPZrcAdl8HMbrQynbvB2BOkMC+6dafGRi+8QZYIhrC2QR8iH3oB3Cg==
@@ -3453,11 +3453,6 @@ get-symbol-description@^1.0.2:
     call-bind "^1.0.5"
     es-errors "^1.3.0"
     get-intrinsic "^1.2.4"
-
-git-revision-webpack-plugin@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/git-revision-webpack-plugin/-/git-revision-webpack-plugin-5.0.0.tgz#0683a6a110ece618499880431cd89e1eb597b536"
-  integrity sha512-RptQN/4UKcEPkCBmRy8kLPo5i8MnF8+XfAgFYN9gbwmKLTLx4YHsQw726H+C5+sIGDixDkmGL3IxPA2gKo+u4w==
 
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
