@@ -55,6 +55,7 @@
 import compact from 'lodash/compact'
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
+import mapValues from 'lodash/mapValues'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { errors as esErrors } from 'elasticsearch-browser'
 import { mapState } from 'vuex'
@@ -75,8 +76,8 @@ export default {
   },
   async beforeRouteUpdate(to, from, next) {
     if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
-      // this.$store.dispatch('search/updateFromRouteQuery', to.query)
-      // await this.search()
+      this.$store.dispatch('search/updateFromRouteQuery', to.query)
+      await this.search()
     }
     next()
   },
@@ -169,7 +170,8 @@ export default {
       this.showFilters = !this.showFilters
     },
     isDifferentFromQuery(query) {
-      return !isEqual(query, this.$store.getters['search/toRouteQuery']())
+      const routeQuery = this.$store.getters['search/toRouteQuery']()
+      return !isEqual(mapValues(query, String), mapValues(routeQuery, String))
     },
     updateScrollBars() {
       compact([this.$refs.searchBodyScrollbar]).forEach((ref) => ref?.ps?.update())
