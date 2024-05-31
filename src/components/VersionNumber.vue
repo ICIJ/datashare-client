@@ -5,9 +5,9 @@
       {{ label }} {{ serverVersion }}
     </div>
     <b-tooltip :target="versionNumberId" :placement="tooltipPlacement">
-      <div class="version-number__tooltip">
-        <div class="d-flex text-left align-items-center version-number__tooltip__client">
-          <div class="text-muted w-100">
+      <div class="version-number__tooltip text-nowrap text-start">
+        <div class="d-flex justify-content-start align-items-center version-number__tooltip__client">
+          <div class="w-100">
             <fa icon="desktop"></fa>
             {{ $t('footer.clientVersion') }}
           </div>
@@ -15,8 +15,8 @@
             {{ shortClientHash }}
           </div>
         </div>
-        <div class="d-flex text-left align-items-center version-number__tooltip__server">
-          <div class="text-muted w-100">
+        <div class="d-flex justify-content-start align-items-center version-number__tooltip__server">
+          <div class="w-100">
             <fa icon="server"></fa>
             {{ $t('footer.serverVersion') }}
           </div>
@@ -44,7 +44,7 @@ export default {
      */
     tooltipPlacement: {
       type: String,
-      default: 'righttop'
+      default: 'top-end'
     },
     /**
      * Hide the version icon (a lighting bolt)

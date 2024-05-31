@@ -230,7 +230,7 @@
         class="d-inline-block"
         :label="reduced ? '' : 'Version'"
         :no-icon="reduced"
-        :tooltip-placement="reduced ? 'righttop' : 'top'"
+        :tooltip-placement="reduced ? 'top-end' : 'top'"
       ></version-number>
     </div>
     <div v-if="!isServer" v-show="!reduced" class="app-sidebar__data-location">
