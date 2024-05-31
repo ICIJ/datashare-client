@@ -152,8 +152,10 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useCommons() {
+    // Murmur is loaded with installing Vue i18n and Bootstrap Vue
+    // to avoid adding them twice to the Vue instance.
+    this.use(Murmur, { useI18n: false, useBootstrap: false })
     // Common plugins
-    this.use(Murmur)
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
     this.use(VueEllipseProgress)

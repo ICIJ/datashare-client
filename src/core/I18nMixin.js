@@ -1,4 +1,5 @@
-import { isEmpty } from 'lodash'
+import { isEmpty, iteratee } from 'lodash'
+import Murmur from '@icij/murmur-next'
 
 import settings from '@/utils/settings'
 
@@ -51,10 +52,11 @@ const I18nMixin = (superclass) =>
      */
     async loadI18Locale(locale) {
       if (!this.hasI18Locale(locale)) {
-        const messages = await import(`../lang/${locale}.json`)
-        this.i18n.global.setLocaleMessage(locale, messages.default)
-        return this.setI18nLocale(locale)
+        const messages = await import(`../lang/${locale}.json`).then((m) => m.default)
+        this.i18n.global.setLocaleMessage(locale, messages)
       }
+      const murmurMessages = Murmur.i18n.global.getLocaleMessage(locale)
+      this.i18n.global.mergeLocaleMessage(locale, murmurMessages)
       return this.setI18nLocale(locale)
     }
   }
