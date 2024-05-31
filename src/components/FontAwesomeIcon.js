@@ -1,4 +1,4 @@
-import { Fa } from '@icij/murmur'
+import { Fa } from '@icij/murmur-next'
 /**
  * @see https://github.com/FortAwesome/vue-fontawesome
  */
