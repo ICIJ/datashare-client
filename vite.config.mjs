@@ -44,7 +44,7 @@ export default ({ mode }) => {
       port: 9009,
       host: '0.0.0.0',
       proxy: {
-        '^/(settings|me|api).?': {
+        '^/(version|settings|me|api).?': {
           target: process.env.VITE_DEV_PROXY,
           changeOrigin: true,
           secure: false
