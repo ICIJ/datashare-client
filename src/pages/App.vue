@@ -1,6 +1,6 @@
 <template>
   <div class="app d-flex">
-    <hook name="app:before"></hook>
+    <hook name="app:before" />
     <div class="app__sidebar">
       <app-sidebar></app-sidebar>
     </div>
@@ -23,7 +23,7 @@
         </b-button>
       </div>
     </b-toast>
-    <hook name="app:after"></hook>
+    <hook name="app:after" />
   </div>
 </template>
 

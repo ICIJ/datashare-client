@@ -1,9 +1,9 @@
 <template>
   <div v-show="showFilters" class="filters-panel">
     <div class="filters-panel__sticky w-100">
-      <hook name="filters-panel:before"></hook>
+      <hook name="filters-panel:before" />
       <div class="filters-panel__sticky__toolbar">
-        <hook name="filters-panel.toolbar:before"></hook>
+        <hook name="filters-panel.toolbar:before" />
         <div class="d-flex align-items-center">
           <h5 class="flex-grow-1 my-0 h6 text-uppercase">
             {{ $t('search.filtersTitle') }}
@@ -20,9 +20,9 @@
             </span>
           </button>
         </div>
-        <hook name="filters-panel.toolbar:after"></hook>
+        <hook name="filters-panel.toolbar:after" />
       </div>
-      <hook name="filters-panel.filters:before"></hook>
+      <hook name="filters-panel.filters:before" />
       <filter-project></filter-project>
       <component
         :is="filter.component"
@@ -31,8 +31,8 @@
         :key="filter.name"
         v-bind="{ filter }"
       ></component>
-      <hook name="filters-panel.filters:after"></hook>
-      <hook name="filters-panel:after"></hook>
+      <hook name="filters-panel.filters:after" />
+      <hook name="filters-panel:after" />
     </div>
     <b-modal
       ref="openFilterSearch"

@@ -11,16 +11,16 @@
       @shortkey="getAction('tabNavigation')"
     >
       <div class="document__header">
-        <hook name="document.header:before"></hook>
+        <hook name="document.header:before" />
         <h3 class="document__header__name" :class="{ 'document__header__name--has-subject': doc.hasSubject }">
-          <hook name="document.header.name:before"></hook>
+          <hook name="document.header.name:before" />
           <document-sliced-name interactive-root :document="doc" />
           <div v-if="doc.hasSubject" class="document__header__name__subject">
             {{ doc.subject }}
           </div>
-          <hook name="document.header.name:after"></hook>
+          <hook name="document.header.name:after" />
         </h3>
-        <hook name="document.header.tags:before"></hook>
+        <hook name="document.header.tags:before" />
         <document-tags-form
           class="px-3 mx-0"
           :display-form="false"
@@ -29,32 +29,32 @@
           mode="dark"
           :tags="tags"
         ></document-tags-form>
-        <hook name="document.header.tags:after"></hook>
-        <hook name="document.header.nav:before"></hook>
+        <hook name="document.header.tags:after" />
+        <hook name="document.header.nav:before" />
         <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
-            <hook name="document.header.nav.items:before" tag="li"></hook>
+            <hook name="document.header.nav.items:before" :bind="{ tag: 'li' }" />
             <template v-for="tab in visibleTabs" :key="tab.name">
-              <hook :name="`document.header.nav.items.${tab.name}:before`" tag="li" />
+              <hook :name="`document.header.nav.items.${tab.name}:before`" :bind="{ tag: 'li' }" />
               <li class="document__header__nav__item list-inline-item" :title="$t(tab.label)">
                 <router-link
                   :class="{ active: isTabActive(tab.name) }"
                   :to="{ query: { q: $route.query.q, tab: tab.name } }"
                 >
-                  <hook :name="`document.header.nav.${tab.name}:before`"></hook>
+                  <hook :name="`document.header.nav.${tab.name}:before`" />
                   <fa v-if="tab.icon" :icon="tab.icon" class="me-2"></fa>
                   <component :is="tab.labelComponent" v-if="tab.labelComponent"></component>
                   <template v-else>{{ $t(tab.label) }}</template>
-                  <hook :name="`document.header.nav.${tab.name}:after`"></hook>
+                  <hook :name="`document.header.nav.${tab.name}:after`" />
                 </router-link>
               </li>
-              <hook :name="`document.header.nav.items.${tab.name}:after`" tag="li" />
+              <hook :name="`document.header.nav.items.${tab.name}:after`" :bind="{ tag: 'li' }" />
             </template>
-            <hook name="document.header.nav.items:after" tag="li"></hook>
+            <hook name="document.header.nav.items:after" :bind="{ tag: 'li' }" />
           </ul>
         </nav>
-        <hook name="document.header.nav:after"></hook>
-        <hook name="document.header:after"></hook>
+        <hook name="document.header.nav:after" />
+        <hook name="document.header:after" />
       </div>
       <div class="d-flex flex-grow-1 flex-column tab-content document__content">
         <component
@@ -64,8 +64,7 @@
           class="document__content__pane tab-pane flex-grow-1 w-100"
           :class="tabClass(tab.name)"
           v-bind="getPropsIfActive(tab)"
-        >
-        </component>
+        />
       </div>
     </div>
     <div v-else class="nodocument">
@@ -76,9 +75,14 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue'
+import { markRaw } from 'vue'
 import { filter, findIndex } from 'lodash'
 import { mapState } from 'vuex'
+
+import DocumentTabExtractedText from '@/components/document/DocumentTabExtractedText'
+import DocumentTabPreview from '@/components/document/DocumentTabPreview'
+import DocumentTabDetails from '@/components/document/DocumentTabDetails'
+import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
 
 import { EventBus } from '@/utils/event-bus'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
@@ -144,7 +148,7 @@ export default {
         {
           name: TAB_NAME.EXTRACTED_TEXT,
           label: 'document.extractedText',
-          component: defineAsyncComponent(() => import('@/components/document/DocumentTabExtractedText')),
+          component: markRaw(DocumentTabExtractedText),
           icon: 'align-left',
           props: {
             document: this.doc,
@@ -154,7 +158,7 @@ export default {
         {
           name: TAB_NAME.PREVIEW,
           label: 'document.preview',
-          component: defineAsyncComponent(() => import('@/components/document/DocumentTabPreview')),
+          component: markRaw(DocumentTabPreview),
           icon: 'eye',
           props: {
             document: this.doc
@@ -163,7 +167,7 @@ export default {
         {
           name: TAB_NAME.DETAILS,
           label: 'document.tabDetails',
-          component: defineAsyncComponent(() => import('@/components/document/DocumentTabDetails')),
+          component: markRaw(DocumentTabDetails),
           icon: 'info-circle',
           props: {
             document: this.doc,
@@ -174,7 +178,7 @@ export default {
           name: TAB_NAME.NAMED_ENTITIES,
           label: 'document.namedEntities',
           hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
-          component: defineAsyncComponent(() => import('@/components/document/DocumentTabNamedEntities')),
+          component: markRaw(DocumentTabNamedEntities),
           icon: 'database',
           props: {
             document: this.doc

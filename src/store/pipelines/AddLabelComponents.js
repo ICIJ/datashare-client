@@ -1,5 +1,6 @@
 import castArray from 'lodash/castArray'
 import isString from 'lodash/isString'
+import { markRaw } from 'vue'
 
 import IdentityPipeline from './IdentityPipeline'
 
@@ -13,7 +14,7 @@ class AddLabelComponents extends IdentityPipeline {
         const template = '<span>{{ $t(label) }}</span>'
         // Data object must come from a function with Vue components
         const data = () => ({ label })
-        const labelComponent = { template, data }
+        const labelComponent = markRaw({ template, data })
         // Order matters!
         // If the `obj` already contains a `labelComponent` property, it won't
         // be overridden by the component we just created with the label string.

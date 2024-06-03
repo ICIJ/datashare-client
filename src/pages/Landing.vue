@@ -1,20 +1,20 @@
 <template>
   <div class="landing">
-    <hook name="landing.form:before"></hook>
+    <hook name="landing.form:before" />
     <div class="landing__form py-5">
-      <hook name="landing.form.heading:before"></hook>
+      <hook name="landing.form.heading:before" />
       <h1 class="landing__form__heading text-special">
         <img src="@/assets/images/logo-color.svg" alt="Datashare" />
       </h1>
-      <hook name="landing.form.heading:after"></hook>
+      <hook name="landing.form.heading:after" />
       <search-bar class="landing__form__search-bar py-3 container" hide-field-dropdown size="md"></search-bar>
     </div>
-    <hook name="landing.form:after"></hook>
-    <hook name="landing.form.project:before"></hook>
+    <hook name="landing.form:after" />
+    <hook name="landing.form.project:before" />
     <div class="landing__projects">
       <div class="text-white container">
         <project-cards class="mt-3"></project-cards>
-        <hook name="landing.form.project:after"></hook>
+        <hook name="landing.form.project:after" />
       </div>
     </div>
   </div>
