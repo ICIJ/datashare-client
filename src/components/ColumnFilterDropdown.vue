@@ -7,12 +7,12 @@
     class="column-filter-dropdown"
     @toggle="apply"
   >
-  <keep-alive>
-    <slot name="dropdown">
-      <selectable-dropdown
+    <keep-alive>
+      <slot name="dropdown">
+        <selectable-dropdown
           v-model="selectedValues"
           :items="items"
-          :eq="eq"
+          :eq="equality"
           :multiple="multiple"
           :serializer="serializer"
           deactivate-keys
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { eq, identity } from 'lodash'
+import { eq, identity, isEqual } from 'lodash'
 
 import ColumnFilter from '@/components/ColumnFilter'
 
@@ -82,7 +82,7 @@ export default {
   emits: ['update:modelValue'],
   data() {
     return {
-      selectedValues: this.modelValue
+      selectedValues: []
     }
   },
   computed: {
@@ -93,11 +93,14 @@ export default {
   watch: {
     modelValue: {
       handler(value) {
-        this.selectedValues = value
+        if(!isEqual(this.selectedValues,value)){
+          this.selectedValues = value
+        }
       },
       deep: true,
       immediate: true
     },
+
     selectedValues: {
       handler(value) {
         if (this.immediate) {
@@ -108,6 +111,9 @@ export default {
     }
   },
   methods: {
+    equality(value1, value2) {
+      return isEqual(value1, value2)
+    },
     labelItem(item) {
       return item && item.label ? item.label : item
     },
