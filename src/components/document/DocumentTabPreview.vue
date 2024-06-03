@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-grow-1 document__preview">
     <template v-if="!disabled && previewComponent">
-      <component :is="importPreviewComponent" :document="document"></component>
+      <component :is="asyncPreviewComponent" :document="document" />
     </template>
     <template v-else>
       <div class="p-3">
@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue'
+
 import features from '@/mixins/features'
 
 /**
@@ -70,11 +72,11 @@ export default {
         default:
           return null
       }
-    }
-  },
-  methods: {
-    importPreviewComponent() {
-      return import(`@/components/document/viewers/${this.previewComponent}.vue`)
+    },
+    asyncPreviewComponent() {
+      return defineAsyncComponent(() => {
+        return import(`@/components/document/viewers/${this.previewComponent}.vue`)
+      })
     }
   }
 }
