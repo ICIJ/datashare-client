@@ -479,10 +479,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur-next@4.0.12":
-  version "4.0.12"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.12.tgz#8c6b3d349d729fe955793a8b0497cd8e8573e051"
-  integrity sha512-+j7FfJqkRpNR4wd4lHEdo6xu8ZYZ8vdSKPZrcAdl8HMbrQynbvB2BOkMC+6dafGRi+8QZYIhrC2QR8iH3oB3Cg==
+"@icij/murmur-next@4.0.13":
+  version "4.0.13"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.13.tgz#7a0bd9ddee3442b46eb17324d48e0e0dab5730a3"
+  integrity sha512-HIYcppErtY6cLKNa/g+sEcqTuRRmky7AyMhYNrXBIaUsiJJkXTmxm3fkogixdN1zgLECGHUnub1ty3wAsY9oSQ==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-svg-core" "^6.5.2"
@@ -1440,6 +1440,11 @@ ansi-escape-sequences@^4.0.0:
   integrity sha512-dzW9kHxH011uBsidTXd14JXgzye/YLb2LzeKZ4bsgl/Knwx8AtbSFkkGxagdNOoh0DlqHCmfiEjWKBaqjOanVw==
   dependencies:
     array-back "^3.0.1"
+
+ansi-regex@^4.1.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-4.1.1.tgz#164daac87ab2d6f6db3a29875e2d1766582dabed"
+  integrity sha512-ILlv4k/3f6vfQ4OoP2AGvirOktlQ98ZEL1k9FaQjxa3L1abBgbuTDAdPOpvbGncC0BTVQrl+OM8xZGK6tWXt7g==
 
 ansi-regex@^5.0.1:
   version "5.0.1"
@@ -5566,8 +5571,7 @@ string-to-color@^2.2.2:
     lodash.words "^4.2.0"
     rgb-hex "^3.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0", "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.3:
-  name string-width-cjs
+"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -5575,6 +5579,15 @@ string-to-color@^2.2.2:
     emoji-regex "^8.0.0"
     is-fullwidth-code-point "^3.0.0"
     strip-ansi "^6.0.1"
+
+"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.1.0.tgz#ba846d1daa97c3c596155308063e075ed1c99aff"
+  integrity sha512-NrX+1dVVh+6Y9dnQ19pR0pP4FiEIlUvdTGn8pw6CKTNq5sgib2nIhmUNT5TAmhWmvKr3WcxBcP3E8nWezuipuQ==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^5.2.0"
 
 string-width@^5.0.1, string-width@^5.1.2:
   version "5.1.2"
@@ -5626,6 +5639,13 @@ string_decoder@^1.1.1:
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
   dependencies:
     ansi-regex "^5.0.1"
+
+strip-ansi@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-5.2.0.tgz#8c9a536feb6afc962bdfa5b104a5091c1ad9c0ae"
+  integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
+  dependencies:
+    ansi-regex "^4.1.0"
 
 strip-ansi@^7.0.1:
   version "7.1.0"
