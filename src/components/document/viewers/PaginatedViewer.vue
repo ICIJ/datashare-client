@@ -6,13 +6,21 @@
       </div>
     </template>
     <div v-if="document.isPdf" class="paginated-viewer paginated-viewer--pdf p-3 flex-grow-1">
-      <iframe class="paginated-viewer__iframe border shadow" :src="document.inlineFullUrl" width="100%" height="100%"
-        frameborder="0" allowfullscreen></iframe>
+      <iframe
+        class="paginated-viewer__iframe border shadow"
+        :src="document.inlineFullUrl"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
     </div>
     <div v-else-if="isPreviewable" class="paginated-viewer paginated-viewer--previewable d-flex flex-grow-1">
       <div class="paginated-viewer__thumbnails">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
-          <select v-model.number="active" class="form-control form-control-sm"
+          <select
+            v-model.number="active"
+            class="form-control form-control-sm"
             @change="scrollToPageAndThumbnail(active)">
             <option v-for="page in pagesRange" :key="page" :value="page">
               {{ page + 1 }}
@@ -21,12 +29,13 @@
           <span class="w-100"> / {{ meta.pages }} </span>
         </div>
         <div class="paginated-viewer__thumbnails__items">
-          <div v-for="page in pagesRange" :key="`thumbnail-${page}`"
+          <div
+            v-for="page in pagesRange"
+            :key="`thumbnail-${page}`"
             class="paginated-viewer__thumbnails__items__item m-2"
             :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
             @click="setActiveAndScrollToPage(page)">
-            <document-thumbnail class="border-0" :document="document" :page="page" :ratio="ratio"
-              size="150"></document-thumbnail>
+            <document-thumbnail class="border-0" :document="document" :page="page" :ratio="ratio" size="150" />
             <span class="paginated-viewer__thumbnails__items__item__page">
               {{ page + 1 }}
             </span>
@@ -35,8 +44,15 @@
       </div>
       <div class="paginated-viewer__preview flex-grow-1 p-2">
         <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page m-3" :data-page="page + 1">
-          <document-thumbnail :document="document" lazy :page="page" :ratio="ratio" :size="1200"
-            @enter="setActiveAndScrollToThumbnail(page)" @errored.once="errored = true"></document-thumbnail>
+          <document-thumbnail
+            :document="document"
+            lazy
+            :page="page"
+            :ratio="ratio"
+            :size="1200"
+            @enter="setActiveAndScrollToThumbnail(page)"
+            @errored.once="errored = true"
+          />
         </div>
       </div>
     </div>
