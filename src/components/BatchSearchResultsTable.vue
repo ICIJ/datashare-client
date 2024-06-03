@@ -107,6 +107,7 @@
 <script>
 import { compact, find, get, isEqual, uniq, isArray, pickBy, uniqueId } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
+import { computed } from 'vue'
 
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
@@ -116,9 +117,7 @@ import { fileExtension } from '@/filters/fileExtension'
 import { humanLongDate, humanShortDate, isDateValid } from '@/filters/humanDate'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
-import {SORT_ORDER} from '@/utils/utils'
-import {computed} from 'vue'
-
+import { SORT_ORDER } from '@/utils/utils'
 
 /**
  * This page will list all the results of a batch search.
@@ -130,10 +129,10 @@ export default {
     ColumnFilterDropdown,
     BatchSearchResultsFilters
   },
-  mixins: [utils],  
+  mixins: [utils],
   provide() {
     return {
-      sortBy: computed(() => this.sortByOption[0]),
+      sortBy: computed(() => this.sortByOption[0])
     }
   },
   props: {
@@ -259,7 +258,7 @@ export default {
     isLastDocument() {
       const totalResultsIndices = this.results?.length - 1
       return this.documentInModalPageIndex === totalResultsIndices
-    }, 
+    },
     order() {
       return SORT_ORDER[this.$route?.query?.order?.toUpperCase()] ?? settings.batchSearchResults.order
     },
@@ -271,7 +270,7 @@ export default {
       set(pageNumber) {
         return this.updateRoute({ page: pageNumber })
       }
-    },   
+    },
     perPage() {
       return settings.batchSearchResults.size
     },
@@ -299,7 +298,7 @@ export default {
       return sortKeyExists ? sortNameFromQuery : settings.batchSearchResults.sort
     },
     sortByOption() {
-      return [{key:this.fieldKeyByName(this.selectedSort?.sort),order:this.selectedSort?.order}]
+      return [{ key: this.fieldKeyByName(this.selectedSort?.sort), order: this.selectedSort?.order }]
     }
   },
   watch: {
@@ -341,7 +340,7 @@ export default {
           queriesExcluded: this.queriesExcludedQueryParam,
           sort: this.selectedSort.sort,
           order: this.selectedSort.order,
-          contentTypes: this.selectedContentTypes,
+          contentTypes: this.selectedContentTypes
         })
       } finally {
         this.$wait.end(this.loaderId)
@@ -363,7 +362,7 @@ export default {
     filter() {
       return this.updateRoute({ page: 1 })
     },
-    sortChanged({key, order}) {
+    sortChanged({ key, order }) {
       this.selectedSort = {
         sort: this.fieldNameByKey(key),
         order: order ? SORT_ORDER.DESC : SORT_ORDER.ASC
@@ -389,8 +388,7 @@ export default {
         contentTypes = contentTypes.join(',')
       }
       contentTypes = contentTypes ?? null
-
-
+      
       return {
         name: 'task.batch-search.view.results',
         query: this.removeEmptySearchParams({
