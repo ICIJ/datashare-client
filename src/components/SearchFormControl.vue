@@ -153,10 +153,14 @@ export default {
     border: 1px solid $input-focus-border-color;
   }
 
-
   &--rounded &__input {
     border-bottom-left-radius: $border-radius-pill;
     border-top-left-radius: $border-radius-pill;
+  }
+
+  &--rounded &__submit {
+    border-bottom-right-radius: $border-radius-pill;
+    border-top-right-radius: $border-radius-pill;
   }
 
   &__submit {
