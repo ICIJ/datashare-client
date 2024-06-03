@@ -16,7 +16,7 @@
         </b-button>
       </transition>
     </slot>
-    <div v-if="doc" class="ms-auto d-flex align-items-center">
+    <div v-if="doc" class="ms-auto d-flex">
       <slot name="nav" />
       <project-link :project="doc.index" class="btn btn-sm btn-light p-0 pe-1 ms-1" />
       <b-button
@@ -64,7 +64,13 @@
         custom-class="popover-body-p-0 popover-body-overflow-hidden w-100"
         @show="$root.$emit('bv::hide::tooltip')"
       >
-        <advanced-link-form card no-fade :title="doc.slicedNameToString" :value="1" :link="documentLink" />
+        <advanced-link-form
+          class="document-navbar__share__form"
+          card
+          no-fade
+          :title="doc.slicedNameToString"
+          :value="1"
+          :link="documentLink" />
       </b-popover>
       <b-tooltip target="popover-document-share" triggers="hover">
         {{ $t('search.nav.share') }}
@@ -205,6 +211,25 @@ export default {
     &.slide-x-leave-to {
       opacity: 0;
       transform: translateY(-100%);
+    }
+  }
+
+  &__share {
+    &__form {
+      background-color: transparent;
+
+      .card-header {
+        padding: $spacer-xs $spacer 0;
+
+        .nav-link.active {
+          background: $light;
+        }
+      }
+
+      .tab-content {
+        padding: $spacer;
+        background: $light;
+      }
     }
   }
 
