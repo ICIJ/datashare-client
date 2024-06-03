@@ -1,6 +1,6 @@
 <template>
   <header class="app__nav">
-    <hook name="search.nav:before"></hook>
+    <hook name="search.nav:before" />
     <div class="app__nav__container">
       <div class="app__nav__container__main p-3 d-flex align-items-center justify-content-between">
         <div class="app__nav__container__main__search-bar flex-grow-1">
@@ -9,7 +9,7 @@
         <search-layout-selector class="d-none d-md-block"></search-layout-selector>
       </div>
     </div>
-    <hook name="search.nav:after"></hook>
+    <hook name="search.nav:after" />
   </header>
 </template>
 

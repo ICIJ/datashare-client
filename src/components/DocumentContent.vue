@@ -325,9 +325,9 @@ export default {
 
 <template>
   <div class="document-content" :class="{ 'document-content--paginated': isPaginated }">
-    <hook name="document.content:before"></hook>
+    <hook name="document.content:before" />
     <div class="document-content__toolbox mt-3 mx-3" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
-      <hook name="document.content.toolbox:before"></hook>
+      <hook name="document.content.toolbox:before" />
       <b-overlay :show="$wait.is('loader*')" opacity="0.6" rounded spinner-small class="">
         <div class="d-flex align-items-center">
           <tiny-pagination
@@ -358,25 +358,19 @@ export default {
               @previous="findPreviousLocalSearchTerm"
             />
           </div>
-          <hook name="document.content.toolbox:after"></hook>
+          <hook name="document.content.toolbox:after" />
         </div>
       </b-overlay>
     </div>
     <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3 m-0">
       <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
-      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-      <hook
-        name="document.content.togglers:before"
-        class="d-flex flex-row justify-content-end align-items-center"
-      ></hook>
-      <hook
-        name="document.content.togglers:after"
-        class="d-flex flex-row justify-content-end align-items-center"
-      ></hook>
-      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
+      <hook name="document.content.ner:before" x-class="d-flex flex-row justify-content-end align-items-center" />
+      <hook name="document.content.togglers:before" x-class="d-flex flex-row justify-content-end align-items-center" />
+      <hook name="document.content.togglers:after" x-class="d-flex flex-row justify-content-end align-items-center" />
+      <hook name="document.content.ner:after" x-class="d-flex flex-row justify-content-end align-items-center" />
     </div>
     <div class="document-content__wrapper">
-      <hook name="document.content.body:before"></hook>
+      <hook name="document.content.body:before" />
       <div
         v-if="hasExtractedContent"
         :class="{ 'document-content__body--rtl': isRightToLeft }"
@@ -386,10 +380,10 @@ export default {
       <p v-else-if="loadedOnce" class="document-content__body--no-content text-muted text-center pt-3">
         {{ $t('documentContent.noContent') }}
       </p>
-      <hook name="document.content.body:after"></hook>
+      <hook name="document.content.body:after" />
     </div>
-    <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
-    <hook name="document.content:after"></hook>
+    <document-attachments :document="document" class="mx-3 mb-3" />
+    <hook name="document.content:after" />
   </div>
 </template>
 

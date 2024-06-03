@@ -12,7 +12,7 @@
           </a>
         </div>
       </div>
-      <hook name="app-sidebar.menu:before"></hook>
+      <hook name="app-sidebar.menu:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <router-link
@@ -81,8 +81,8 @@
           </router-link>
         </li>
       </ul>
-      <hook name="app-sidebar.menu:after"></hook>
-      <hook name="app-sidebar.help:before"></hook>
+      <hook name="app-sidebar.menu:after" />
+      <hook name="app-sidebar.help:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <a
@@ -113,8 +113,8 @@
           </a>
         </li>
       </ul>
-      <hook name="app-sidebar.help:after"></hook>
-      <hook name="app-sidebar.guides:before"></hook>
+      <hook name="app-sidebar.help:after" />
+      <hook name="app-sidebar.guides:before" />
       <div v-if="filteredRouteDocs.length">
         <div v-if="!reduced">
           <h5 class="app-sidebar__container__heading">
@@ -176,8 +176,8 @@
           </li>
         </ul>
       </div>
-      <hook name="app-sidebar.guides:after"></hook>
-      <hook name="app-sidebar.locales:before"></hook>
+      <hook name="app-sidebar.guides:after" />
+      <hook name="app-sidebar.locales:before" />
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
           <locales-menu v-slot="{ currentLocale }" class="app-sidebar__container__menu__item__link text-wrap">
@@ -223,7 +223,7 @@
           </a>
         </li>
       </ul>
-      <hook name="app-sidebar.locales:after"></hook>
+      <hook name="app-sidebar.locales:after" />
     </perfect-scrollbar>
     <div class="app-sidebar__version">
       <version-number

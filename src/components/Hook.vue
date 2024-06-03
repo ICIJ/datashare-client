@@ -25,6 +25,12 @@ export default {
     bind: {
       type: Object,
       default: () => {}
+    },
+    /**
+     * Pass along the class to the rendered node.
+     */
+    xClass: {
+      type: String
     }
   },
   render(createElement) {
@@ -38,7 +44,7 @@ export default {
 
     const renderedComponents = () => {
       return hookedComponents().map(({ component }) => {
-        return createElement(component, { props: this.bind })
+        return createElement(component, { props: this.bind, class: this.xClass })
       })
     }
 

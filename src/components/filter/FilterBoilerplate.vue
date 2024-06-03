@@ -7,7 +7,7 @@
       'filter--dark': dark,
       'filter--has-values': hasValues()
     }">
-    <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
+    <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }" />
     <slot v-if="!hideHeader" name="header">
       <div class="card-header px-2 py-3 d-flex filter__header" @click="toggleItems">
         <h6 class="flex-fill flex-shrink-1 text-truncate">
@@ -22,10 +22,10 @@
         <fa v-else icon="circle-notch" spin class="float-end"></fa>
       </div>
     </slot>
-    <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }"></hook>
+    <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }" />
     <b-collapse :visible="showResults">
       <div class="filter__items">
-        <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
+        <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }" />
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
           <search-form-control
             v-model="query"
@@ -36,7 +36,7 @@
             @submit.prevent="openFilterSearch"
           ></search-form-control>
         </slot>
-        <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
+        <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }" />
         <slot
           :items="items"
           name="items"
