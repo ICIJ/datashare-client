@@ -152,7 +152,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useCommons() {
-    // Murmur is loaded with installing Vue i18n and Bootstrap Vue
+    // Murmur is loaded without installing Vue i18n and Bootstrap Vue
     // to avoid adding them twice to the Vue instance.
     this.use(Murmur, { useI18n: false, useBootstrap: false })
     // Common plugins
