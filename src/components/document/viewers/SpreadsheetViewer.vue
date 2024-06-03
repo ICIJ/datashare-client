@@ -117,10 +117,11 @@ export default {
         '--table-wrapper-width': Math.max(100, (5 + this.firstItem.length) * 10) + '%'
       }
     },
+    previewHost() {
+      return this.$config.get('previewHost')
+    },
     contentUrl() {
-      return `${this.$config.get('previewHost')}/api/v1/thumbnail/${this.document.index}/${
-        this.document.id
-      }.json?include-content=1&routing=${this.document.routing}`
+      return `${this.previewHost}/api/v1/thumbnail/${this.document.index}/${this.document.id}.json?include-content=1&routing=${this.document.routing}`
     },
     contentOptions() {
       return {
