@@ -1,7 +1,7 @@
 <template>
   <div class="search-results-list">
     <div v-if="hasResults">
-      <search-results-header position="top" no-labels bordered class="px-3"></search-results-header>
+      <search-results-header position="top" no-labels bordered class="px-3" />
       <div class="search-results-list__items">
         <div
           v-for="document in response.hits"
@@ -9,10 +9,7 @@
           :data-document-id="document.id"
           class="search-results-list__items__item mw-100"
         >
-          <search-results-list-link
-            class="search-results-list__items__item__link"
-            :document="document"
-          ></search-results-list-link>
+          <search-results-list-link class="search-results-list__items__item__link" :document="document" />
           <div>
             <document-actions
               class="search-results-list__items__item__actions"
@@ -20,14 +17,14 @@
               :is-download-allowed="isDownloadAllowed(document)"
               tooltips-placement="end"
               vertical
-            ></document-actions>
+            />
           </div>
         </div>
       </div>
-      <search-results-header position="bottom" no-labels bordered class="px-3"></search-results-header>
+      <search-results-header position="bottom" no-labels bordered class="px-3" />
     </div>
     <div v-else>
-      <search-results-header position="top" no-labels bordered class="px-3"></search-results-header>
+      <search-results-header position="top" no-labels bordered class="px-3" />
       <div class="search-results-list__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results-list__header__number-of-results">
           {{ $t('search.results.noResults') }}
