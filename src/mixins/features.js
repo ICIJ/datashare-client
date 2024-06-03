@@ -11,7 +11,7 @@ export default {
     },
     getConfigFeatureValueFromEnv(name) {
       const key = `VITE_FEATURE_${name.toUpperCase()}`
-      return process.env[key] || null
+      return import.meta.env[key] || null
     },
     getConfigFeatureValueFromConfig(name) {
       const key = camelCase(`VITE_FEATURE_${name.toUpperCase()}`)
