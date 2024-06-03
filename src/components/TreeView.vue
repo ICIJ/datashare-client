@@ -25,7 +25,7 @@
               v-if="count"
               :title="$tc('treeView.hits', hits, { hits })"
               class="tree-view__header__hits ms-2 badge text-bg-light rounded-pill">
-              {{ humanNumber(hits, $t('human.number')) }} {{ $tc('treeView.docs', hits) }}
+              {{ humanNumber(hits, $tm('human.number')) }} {{ $tc('treeView.docs', hits) }}
             </span>
           </div>
         </transition>

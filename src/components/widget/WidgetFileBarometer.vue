@@ -7,12 +7,12 @@
       <p :class="{ 'card-body': widget.card }">
         <fa icon="hdd" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
-          {{ $tc('widget.barometer.document', total, { total: humanNumber(total, $t('human.number')) }) }}
+          {{ $tc('widget.barometer.document', total, { total: humanNumber(total, $tm('human.number')) }) }}
         </strong>
         <template v-if="onDisk != total">
           {{ $t('widget.barometer.amongWhich') }}
           <router-link :to="searchOnDiskRoute">
-            {{ humanNumber(onDisk, $t('human.number')) }}
+            {{ humanNumber(onDisk, $tm('human.number')) }}
             {{ $t('widget.barometer.onDisk') }}
           </router-link>
         </template>
