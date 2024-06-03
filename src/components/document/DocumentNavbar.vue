@@ -8,7 +8,7 @@
       <transition name="slide-x">
         <b-button
           v-if="isShrinked"
-          class="document-navbar__title text-left fw-bold flex-grow-1 px-2 text-white py-0 text-truncate"
+          class="document-navbar__title text-start fw-bold flex-grow-1 px-2 text-white py-0 text-truncate"
           variant="link"
           @click="scrollToTop"
         >

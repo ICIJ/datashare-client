@@ -2,7 +2,6 @@
   <document-navbar class="search-document-navbar" :is-shrinked="isShrinked">
     <template #back>
       <router-link
-        v-b-tooltip.body.right="{ customClass: isShrinked ? 'ms-3' : 'd-none' }"
         v-shortkey="getKeys('backToSearchResults')"
         class="document-navbar__back pe-1"
         :class="{ 'flex-grow-1': !isShrinked }"
@@ -12,7 +11,7 @@
       >
         <fa icon="chevron-circle-left"></fa>
         <transition name="slide-x">
-          <span v-if="!isShrinked" class="document-navbar__back__label ms-2">
+          <span class="document-navbar__back__label ms-2" :class="{ 'sr-only': isShrinked }">
             {{ $t('search.back') }}
           </span>
         </transition>
