@@ -27,23 +27,21 @@
           :no-filters="!!selected.length"
         />
       </div>
-   
-     <b-table
+      <b-table
         ref="selectableTable"
+        v-model:sort-by="sortModel"
         :empty-text="$t('global.emptyTextTable')"
         striped
         hover
         selectable
         responsive
-        :items="itemsProvider()"
-        :fields="fields"
         :busy="$wait.waiting('load results table')"
+        :fields="fields"
+        :items="items"
         class="bg-white border-bottom m-0 small search-results-table__items"
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row"
         thead-tr-class="text-nowrap"
-        v-model:sort-by="sortBy"
-        v-model:sort-desc="sortDesc"
         @row-selected="onRowSelected"
       >
         <template #cell(relevance)="{ item, rowSelected }">
@@ -84,7 +82,7 @@
             tooltips-placement="rightbottom"
           ></document-actions>
         </template>
-      </b-table> 
+      </b-table>
       <search-results-header position="bottom" />
     </div>
     <div v-else>
@@ -122,7 +120,8 @@ export default {
   },
   data() {
     return {
-      selected: []
+      selected: [],
+      items: []
     }
   },
   computed: {
@@ -161,22 +160,20 @@ export default {
     defaultSortField() {
       return this.fields[0]
     },
-    sortBy: {
-      get() {
-        const { field } = this.$store.getters['search/sortBy']
-        const { key } = find(this.fields, { sortBy: field }) || this.defaultSortField
-        return key
-      },
-      set() {
-        return null
-      }
+    sortBy() {
+      const { field } = this.$store.getters['search/sortBy']
+      const { key } = find(this.fields, { sortBy: field }) || this.defaultSortField
+      return key
     },
-    sortDesc: {
+    sortDesc() {
+      return this.$store.getters['search/sortBy'].desc ? 'desc' : 'asc'
+    },
+    sortModel: {
       get() {
-        return this.$store.getters['search/sortBy'].desc
+        return [{ key: this.sortBy, order: this.sortDesc }]
       },
-      set() {
-        return null
+      async set(sortModel) {
+        this.items = await this.itemsProvider(sortModel[0])
       }
     },
     fields() {
@@ -232,6 +229,9 @@ export default {
       ]
     }
   },
+  async created() {
+    this.items = await this.itemsProvider(this.sortModel[0])
+  },
   methods: {
     onRowSelected(items) {
       this.selected = items
@@ -262,20 +262,18 @@ export default {
       }
       this.$wait.end('load results table')
     },
-    itemsProvider({ sortBy, sortDesc }) {
-      //   const sortBy="relevance"
-      //   const sortDesc=this.sortDesc
-      // // Refresh response only if sortBy or sortDesc are different from the state
-      // if (sortBy !== this.sortBy || sortDesc !== this.sortDesc) {
-      //   // Find the table field for the sorting key (or use the first by default)
-      //   const tableField = find(this.fields, { key: sortBy }) || this.defaultSortField
-      //   // Find the corresponding sort field in the settings
-      //   const sortField = find(settings.searchSortFields, { field: tableField.sortBy, desc: sortDesc })
-      //   // Update the sort value in the store
-      //   this.$store.commit('search/sort', sortField ? sortField.name : 'relevance')
-      //   // Refresh the store without changing the "isReady"
-      //   await this.$store.dispatch('search/refresh', false)
-      // }
+    async itemsProvider(sortModel) {
+      // Refresh response only if sortBy or sortDesc are different from the state
+      if (sortModel.key !== this.sortBy || sortModel.order !== this.sortDesc) {
+        // Find the table field for the sorting key (or use the first by default)
+        const tableField = find(this.fields, { key: sortModel.key }) || this.defaultSortField
+        // Find the corresponding sort field in the settings
+        const sortField = find(settings.searchSortFields, { field: tableField.sortBy, desc: sortModel.order === 'desc' })
+        // Update the sort value in the store
+        this.$store.commit('search/sort', sortField ? sortField.name : 'relevance')
+        // Refresh the store without changing the "isReady"
+        await this.$store.dispatch('search/refresh', false)
+      }
       return this.response.hits
     },
     humanSize(value) {
