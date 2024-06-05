@@ -26,7 +26,7 @@ const mutations = {
   },
   removeWidget(state, name) {
     const index = findIndex(state.widgets, (options) => options.name === name)
-    delete state.widgets[index]
+    state.widgets.splice(index, 1)
   },
   addWidget(state, options) {
     if (!options.name || !find(state.widgets, { name: options.name })) {

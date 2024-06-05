@@ -1,5 +1,3 @@
-import { createLocalVue } from '@vue/test-utils'
-
 import { Core } from '@/core'
 
 describe('I18nMixin', () => {
@@ -12,7 +10,7 @@ describe('I18nMixin', () => {
   describe('without language in local storage', () => {
     beforeEach(async () => {
       localStorage.removeItem('locale')
-      core = Core.init(createLocalVue()).useAll()
+      core = Core.init().useAll()
       await core.initializeI18n()
     })
 
@@ -21,7 +19,8 @@ describe('I18nMixin', () => {
     })
 
     it('should use "en" as default language', () => {
-      expect(core.i18n.locale).toBe('en')
+      expect(core.i18n.global.locale).toBe('en')
+      expect(core.i18n.global.fallbackLocale).toBe('en')
     })
 
     it('should have "en" messages', () => {
@@ -55,7 +54,7 @@ describe('I18nMixin', () => {
   describe('with german language in local storage', () => {
     beforeEach(async () => {
       localStorage.setItem('locale', 'de')
-      core = Core.init(createLocalVue()).useAll()
+      core = Core.init().useAll()
       await core.initializeI18n()
     })
 
@@ -64,7 +63,7 @@ describe('I18nMixin', () => {
     })
 
     it('should use "de" as default language', () => {
-      expect(core.i18n.locale).toBe('de')
+      expect(core.i18n.global.locale).toBe('de')
     })
 
     it('should have "de" messages', () => {
@@ -73,7 +72,7 @@ describe('I18nMixin', () => {
 
     it('should switch to Japanese (ja)', async () => {
       await core.loadI18Locale('ja')
-      expect(core.i18n.locale).toBe('ja')
+      expect(core.i18n.global.locale).toBe('ja')
     })
 
     it('should have "ja" messages', async () => {

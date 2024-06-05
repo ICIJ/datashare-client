@@ -1,8 +1,4 @@
 import Murmur from '@icij/murmur-next'
-import { createLocalVue } from '@vue/test-utils'
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
 import { Core } from '@/core'
@@ -22,8 +18,7 @@ describe('Core', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    const localVue = createLocalVue()
-    core = Core.init(localVue, api)
+    core = Core.init(api)
 
     const app = document.createElement('div')
     app.setAttribute('id', 'core')
@@ -34,27 +29,28 @@ describe('Core', () => {
     expect(Core.isInstanceOfCore(core)).toBe(true)
   })
   it('should not expose the router if it is not installed', () => {
-    expect(core.router).not.toBeInstanceOf(VueRouter)
+    expect(core.router).toBeUndefined()
   })
 
   it('should not expose the VueI18n if it is not installed', () => {
-    expect(core.i18n).not.toBeInstanceOf(VueI18n)
+    expect(core.i18n).toBeUndefined()
   })
 
   describe('Call useAll on Core', () => {
     beforeEach(() => {
       core.useAll()
+      core.useRouter()
       // empty config for projects to avoid side effects
       core.config.set('projects', undefined)
       core.config.set('defaultProject', undefined)
     })
 
     it('should expose the router', () => {
-      expect(core.router).toBeInstanceOf(VueRouter)
+      expect(core.router).toBeInstanceOf(Object)
     })
 
     it('should expose the VueI18n', () => {
-      expect(core.i18n).toBeInstanceOf(VueI18n)
+      expect(core.i18n).toBeInstanceOf(Object)
     })
 
     it('should expose the store', () => {
@@ -67,7 +63,7 @@ describe('Core', () => {
 
     it('should mount the app on a specific element', () => {
       const vm = core.mount('#core')
-      expect(vm).toBeInstanceOf(Vue)
+      expect(vm).toBeInstanceOf(Object)
     })
 
     it('should call a global event "datashare:ready" after the core is configured', () => {
@@ -114,7 +110,7 @@ describe('Core', () => {
     it('should install the internal `VueCore` plugin', () => {
       // Create and configure the core
       const vm = core.mount('#core')
-      expect(Core.isInstanceOfCore(vm.$core)).toBe(true)
+      expect(Core.isInstanceOfCore(vm.config.globalProperties.$core)).toBe(true)
     })
 
     it('should getDefaultProject when user has it', () => {
