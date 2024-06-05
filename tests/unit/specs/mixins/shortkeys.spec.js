@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import { Core } from '@/core'
@@ -32,13 +32,13 @@ vi.mock('@/utils/shortkeys.json', async (importOriginal) => {
   }
 })
 
-const { localVue, router, store } = Core.init(createLocalVue()).useAll()
+const { store, router } = Core.init().useAll().useRouter()
 
 describe('shortkeys mixin', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchDocumentNavbar, { localVue, store, router, mocks: { $t: (msg) => msg } })
+    wrapper = shallowMount(SearchDocumentNavbar, { store, router, mocks: { $t: (msg) => msg } })
   })
 
   it('should return the getShortkey object for "goToPreviousDocument" action', () => {
