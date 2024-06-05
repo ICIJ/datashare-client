@@ -1,4 +1,3 @@
-import { createLocalVue } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
@@ -10,7 +9,7 @@ describe('auth backend client', () => {
 
   beforeAll(() => {
     api = { getUser: vi.fn(), setSettings: vi.fn() }
-    const core = Core.init(createLocalVue(), api, getMode()).useAll()
+    const core = Core.init(api, getMode()).useAll()
     auth = core.auth
   })
   beforeEach(() => {
