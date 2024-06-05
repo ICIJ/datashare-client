@@ -1,5 +1,5 @@
 import { noop } from 'lodash'
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'

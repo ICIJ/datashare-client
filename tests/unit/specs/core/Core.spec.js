@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import { createLocalVue } from '@vue/test-utils'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'

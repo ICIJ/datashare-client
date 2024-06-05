@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import { map, sortBy } from 'lodash'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { createLocalVue, shallowMount } from '@vue/test-utils'

@@ -1,5 +1,5 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import toLower from 'lodash/toLower'
 
 import { flushPromises } from '~tests/unit/tests_utils'

@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'

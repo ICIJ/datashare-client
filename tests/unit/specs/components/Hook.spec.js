@@ -1,5 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 
 import { Core } from '@/core'
 import Hook from '@/components/Hook'

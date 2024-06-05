@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
 import { Core } from '@/core'
