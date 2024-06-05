@@ -1,4 +1,3 @@
-import { ComponentInstance } from 'vue'
 import { createCore } from '@/core'
 
 describe('main', () => {
@@ -23,14 +22,14 @@ describe('main', () => {
     document.body.appendChild(app)
     core = createCore(api)
     vm = await core.ready
-    vm = vm.mount()
+    vm = vm.useRouter().mount()
   })
 
   it('should instantiate Vue', () => {
     api.getUser.mockResolvedValue({})
-    expect(vm).toBeInstanceOf(ComponentInstance)
-    expect(vm.$router).toBeDefined()
-    expect(vm.$store).toBeDefined()
+    expect(core.vue).toBeInstanceOf(Object)
+    expect(vm.config.globalProperties.$router).toBeDefined()
+    expect(vm.config.globalProperties.$store).toBeDefined()
   })
 
   it('should set the config', async () => {
@@ -38,12 +37,12 @@ describe('main', () => {
     const app = document.createElement('div')
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
-    core = createCore(localVue, api)
+    core = createCore(api)
     vm = await core.ready
-    vm = await vm.mount()
-    expect(vm.$config).toBeDefined()
-    expect(vm.$config.get('userProjects')).toEqual(['first-index'])
-    expect(vm.$config.get('key')).toBe('value')
+    vm = await vm.useRouter().mount()
+    expect(vm.config.globalProperties.$config).toBeDefined()
+    expect(vm.config.globalProperties.$config.get('userProjects')).toEqual(['first-index'])
+    expect(vm.config.globalProperties.$config.get('key')).toBe('value')
   })
 
   it('should find several hooked components by their target name', () => {
