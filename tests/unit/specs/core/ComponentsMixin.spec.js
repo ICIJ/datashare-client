@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { basename } from 'path'
 
 import { Core } from '@/core'
@@ -7,8 +7,7 @@ describe('ComponentsMixin', () => {
   let core, localVue
 
   beforeEach(() => {
-    localVue = createLocalVue()
-    core = Core.init(localVue).useAll()
+    core = Core.init().useAll()
     // Mock the `lazyComponents` to ensure it returns an API similar to Webpack's
     const context = async (name = null) => ({
       default: { name: basename(name, '.vue'), template: `<div>${name}</div>` }

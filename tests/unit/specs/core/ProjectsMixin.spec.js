@@ -1,5 +1,4 @@
 import toLower from 'lodash/toLower'
-import { createLocalVue } from '@vue/test-utils'
 
 import { Core } from '@/core'
 
@@ -9,7 +8,7 @@ describe('ProjectsMixin', () => {
   let core
 
   beforeEach(() => {
-    core = Core.init(createLocalVue()).useAll()
+    core = Core.init().useAll()
     core.store.commit('search/indices', [anotherProject])
   })
 
@@ -98,7 +97,7 @@ describe('ProjectsMixin', () => {
 
   it('should create the default project', async () => {
     const api = { createProject: vi.fn() }
-    core = Core.init(createLocalVue(), api).useAll()
+    core = Core.init(api).useAll()
     const name = 'default-project'
     core.config.set('defaultProject', name)
     await core.createDefaultProject()

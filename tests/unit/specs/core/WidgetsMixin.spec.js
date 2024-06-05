@@ -1,5 +1,3 @@
-import { createLocalVue } from '@vue/test-utils'
-
 import WidgetEmpty from '@/store/widgets/WidgetEmpty'
 import { Core } from '@/core'
 
@@ -7,7 +5,7 @@ describe('WidgetsMixin', () => {
   let core
 
   beforeEach(async () => {
-    core = Core.init(createLocalVue()).useAll()
+    core = Core.init().useAll()
     core.clearWidgets()
     core.store.commit('insights/project', 'local-project')
   })
@@ -46,20 +44,26 @@ describe('WidgetsMixin', () => {
   })
 
   it('should find one widget on the current project', () => {
+    // GIVEN
     core.registerWidgetForProject('first-project', { name: 'biz' })
+    // GUARD ASSERT
     expect(core.store.state.insights.widgets).toHaveLength(0)
+    // WHEN
     core.store.commit('insights/project', 'first-project')
+    // THEN
     expect(core.store.state.insights.widgets).toHaveLength(1)
   })
 
   it('should find one unamed widget on the current project', () => {
+    // GIVEN
     core.registerWidgetForProject('a-uniq-project-a', { foo: 'bar' })
-    expect(core.store.state.insights.widgets).toHaveLength(0)
     core.store.commit('insights/project', 'a-uniq-project-a')
-    expect(core.store.state.insights.widgets).toHaveLength(1)
     core.store.commit('insights/project', 'a-uniq-project-b')
+    // GUARD ASSERT
     expect(core.store.state.insights.widgets).toHaveLength(0)
+    // WHEN
     core.store.commit('insights/project', 'a-uniq-project-a')
+    // THEN
     expect(core.store.state.insights.widgets).toHaveLength(1)
   })
 

@@ -1,12 +1,10 @@
-import { createLocalVue } from '@vue/test-utils'
-
 import { Core } from '@/core'
 
 describe('PipelinesMixin', () => {
   let core
 
   beforeEach(async () => {
-    core = Core.init(createLocalVue()).useAll()
+    core = Core.init().useAll()
   })
 
   it('should find several pipeline by their category', () => {

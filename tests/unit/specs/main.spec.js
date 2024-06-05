@@ -1,10 +1,7 @@
-import Vue from 'vue'
-import { createLocalVue } from '@vue/test-utils'
-
+import { ComponentInstance } from 'vue'
 import { createCore } from '@/core'
 
 describe('main', () => {
-  const { localVue } = createLocalVue()
   let core = null
   let vm = null
   let api = null
@@ -24,14 +21,14 @@ describe('main', () => {
     const app = document.createElement('div')
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
-    core = createCore(localVue, api)
+    core = createCore(api)
     vm = await core.ready
     vm = vm.mount()
   })
 
   it('should instantiate Vue', () => {
     api.getUser.mockResolvedValue({})
-    expect(vm).toBeInstanceOf(Vue)
+    expect(vm).toBeInstanceOf(ComponentInstance)
     expect(vm.$router).toBeDefined()
     expect(vm.$store).toBeDefined()
   })

@@ -70,7 +70,7 @@ class Core extends Behaviors {
     this.defer()
   }
   /**
-   * Add a Vue plugin to the instance's LocalVue
+   * Add a Vue plugin to the app
    * @param {Object} Plugin - The actual Vue plugin class
    * @param {Object} options - Option to pass to the plugin
    * @returns {Core} the current instance of Core
@@ -349,13 +349,13 @@ class Core extends Behaviors {
   get i18n() {
     return this._i18n
   }
-  /**
+  /*  /!**
    * The Vue class to instantiate the application with
    * @type {Vue}
-   */
+   *!/
   get localVue() {
     return this.LocalVue
-  }
+  } */
   /**
    * The Vuex instance
    * @type {Vuex.Store}
