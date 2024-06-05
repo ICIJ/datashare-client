@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { beforeAll, beforeEach } from 'vitest'

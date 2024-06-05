@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'

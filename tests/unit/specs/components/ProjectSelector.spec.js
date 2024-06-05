@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import Murmur from '@icij/murmur-next'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import ProjectSelector from '@/components/ProjectSelector'
