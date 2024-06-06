@@ -1,20 +1,18 @@
 import cloneDeep from 'lodash/cloneDeep'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import Pagination from '@/components/Pagination'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('Pagination.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   let wrapper = null
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
+    const { plugins } = CoreSetup.init().useAll()
     wrapper = shallowMount(Pagination, {
-      i18n,
-      localVue,
-      propsData: { total: 22, getToTemplate: () => cloneDeep(template) },
-      sync: false
+      global: { plugins },
+      propsData: { total: 22, getToTemplate: () => cloneDeep(template) }
     })
   })
 
