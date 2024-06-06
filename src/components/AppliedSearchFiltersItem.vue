@@ -114,6 +114,7 @@ export default {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       } else {
         await this.$store.dispatch('search/removeFilterValue', this.filter)
+        console.log("############################# HEY")
         EventBus.emit('filter::search::update', { name: this.filter.name })
       }
 
