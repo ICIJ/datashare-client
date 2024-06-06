@@ -409,7 +409,6 @@ class Core extends Behaviors {
    * @type {VueWait}
    */
   get wait() {
-    this._wait ||= createVueWait({ useVuex: true })
     return this._wait
   }
   /**
