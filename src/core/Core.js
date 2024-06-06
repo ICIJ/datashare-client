@@ -169,7 +169,6 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useWait() {
-    this._wait = createVueWait({ useVuex: true })
     this.use(this.wait)
     return this
   }
@@ -410,6 +409,7 @@ class Core extends Behaviors {
    * @type {VueWait}
    */
   get wait() {
+    this._wait ||= createVueWait({ useVuex: true })
     return this._wait
   }
   /**

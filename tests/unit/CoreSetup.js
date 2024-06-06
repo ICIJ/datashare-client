@@ -3,6 +3,7 @@ import VCalendar from 'v-calendar'
 import VueEllipseProgress from 'vue-ellipse-progress'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
+import { createVueWait } from 'vue-wait'
 import { Core } from '@/core/Core'
 
 class CoreSetup extends Core {
@@ -17,6 +18,7 @@ class CoreSetup extends Core {
       this.vueScrollTo,
       this.vueEllipseProgress,
       this.vCalendar,
+      this.wait,
       this.router
     ]
   }
@@ -35,7 +37,9 @@ class CoreSetup extends Core {
   get vCalendar() {
     return VCalendar
   }
-
+  get wait() {
+    return createVueWait({ useVuex: true })
+  }
   static init(...options) {
     return new CoreSetup(...options)
   }
