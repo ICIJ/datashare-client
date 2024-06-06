@@ -1,31 +1,28 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import UserDisplay from '@/components/UserDisplay'
-import { Core } from '@/core'
 
 describe('UserDisplay.vue', () => {
   const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
-  let wrapper = null
-  let api, i18n, localVue, store, wait
+  let wrapper, api, core
 
   beforeAll(() => {
     api = { getUser: vi.fn().mockResolvedValue({ uid: 'local' }) }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    wait = core.wait
+    core = CoreSetup.init(api).useAll().useRouter()
   })
+
   beforeEach(async () => {
-    const propsData = { username: 'foo' }
-    wrapper = mount(UserDisplay, { i18n, localVue, store, propsData, wait })
+    const props = { username: 'foo' }
+    const global = { plugins: core.plugins }
+    wrapper = mount(UserDisplay, { props, global })
     await flushPromises()
   })
 
   afterEach(() => {
-    store.commit('pipelines/unregister', 'username-to-uppercase')
-    store.commit('pipelines/unregister', 'avatar-from-username')
-    store.commit('pipelines/unregister', 'username-icij-link')
+    core.store.commit('pipelines/unregister', 'username-to-uppercase')
+    core.store.commit('pipelines/unregister', 'avatar-from-username')
+    core.store.commit('pipelines/unregister', 'username-icij-link')
   })
 
   it('should display "foo"', async () => {
@@ -45,7 +42,7 @@ describe('UserDisplay.vue', () => {
   })
 
   it('should display "foo" in uppercase with a pipeline', async () => {
-    store.commit('pipelines/register', {
+    core.store.commit('pipelines/register', {
       name: 'username-to-uppercase',
       category: wrapper.vm.usernamePipeline,
       type: (username) => username.toUpperCase()
@@ -59,7 +56,7 @@ describe('UserDisplay.vue', () => {
   })
 
   it('should display an avatar with an URL based on the username', async () => {
-    store.commit('pipelines/register', {
+    core.store.commit('pipelines/register', {
       name: 'avatar-from-username',
       category: wrapper.vm.avatarPipeline,
       type: (_, username) => `http://datashare.icij.org/${username}.png`
@@ -81,7 +78,7 @@ describe('UserDisplay.vue', () => {
   })
 
   it('should display a link to the user profile based on the username', async () => {
-    store.commit('pipelines/register', {
+    core.store.commit('pipelines/register', {
       name: 'username-icij-link',
       category: wrapper.vm.linkPipeline,
       type: (_, username) => `http://datashare.icij.org/${username}.html`
@@ -94,7 +91,7 @@ describe('UserDisplay.vue', () => {
 
   it('should not display a link if the `hideLink` property is set', async () => {
     wrapper.setProps({ hideLink: true })
-    store.commit('pipelines/register', {
+    core.store.commit('pipelines/register', {
       name: 'username-icij-link',
       category: wrapper.vm.linkPipeline,
       type: (_, username) => `http://datashare.icij.org/${username}.html`
