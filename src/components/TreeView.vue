@@ -651,7 +651,7 @@ export default {
       position: relative;
 
       .form-check-inline {
-        margin-right: 0;
+        margin-right: 0.5rem;
       }
 
       .tree-view--compact & {
