@@ -10,7 +10,7 @@ export default {
       registeredPolls: []
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.unregisteredPolls()
   },
   methods: {
