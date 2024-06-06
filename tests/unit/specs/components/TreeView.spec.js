@@ -1,9 +1,9 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import TreeView from '@/components/TreeView'
-import { Core } from '@/core'
 
 const HOME_TREE = {
   name: '/home/foo',
@@ -37,27 +37,29 @@ describe('TreeView.vue', () => {
   describe('Posix', () => {
     const { index, es } = esConnectionHelper.build()
     const api = { tree: vi.fn(), elasticsearch: es }
-    const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
-    const propsData = {
-      projects: [index],
-      path: '/home/foo',
-      selectedPaths: ['path_01', 'path_02'],
-      size: true,
-      count: true,
-      infiniteScroll: false
-    }
-
-    let wrapper = null
-
-    beforeAll(() => {
-      store.commit('search/index', index)
-      config.set('dataDir', '/home/foo')
-    })
+    let wrapper, core
 
     beforeEach(() => {
+      core = CoreSetup.init(api).useAll()
+      core.store.commit('search/index', index)
+      core.config.set('dataDir', '/home/foo')
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE)
-      wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
+
+      wrapper = shallowMount(TreeView, {
+        props: {
+          projects: [index],
+          path: '/home/foo',
+          selectedPaths: ['path_01', 'path_02'],
+          size: true,
+          count: true,
+          infiniteScroll: false
+        },
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        }
+      })
     })
 
     it('should be a Vue instance', () => {
@@ -111,9 +113,8 @@ describe('TreeView.vue', () => {
     })
 
     it('should display checkboxes if component is selectable', async () => {
-      wrapper.setProps({
-        selectable: true
-      })
+      wrapper.setProps({ selectable: true })
+
       await wrapper.setData({
         pages: [
           {
@@ -123,8 +124,8 @@ describe('TreeView.vue', () => {
             aggregations: {
               byDirname: {
                 buckets: [
-                  { key: 'bar', contentLength: { value: 1024 } },
-                  { key: 'baz', contentLength: { value: 1024 } }
+                  { key: 'bar', contentLength: { value: 1024 }, doc_count: 0 },
+                  { key: 'baz', contentLength: { value: 1024 }, doc_count: 0 }
                 ]
               },
               totalContentLength: {
@@ -134,6 +135,7 @@ describe('TreeView.vue', () => {
           }
         ]
       })
+
       expect(wrapper.findAll('b-form-checkbox-stub')).toHaveLength(2)
     })
 
@@ -147,8 +149,8 @@ describe('TreeView.vue', () => {
             aggregations: {
               byDirname: {
                 buckets: [
-                  { key: 'bar', contentLength: { value: 1024 } },
-                  { key: 'baz', contentLength: { value: 1024 } }
+                  { key: 'bar', contentLength: { value: 1024 }, doc_count: 0 },
+                  { key: 'baz', contentLength: { value: 1024 }, doc_count: 0 }
                 ]
               }
             }
@@ -185,8 +187,8 @@ describe('TreeView.vue', () => {
             aggregations: {
               byDirname: {
                 buckets: [
-                  { key: 'bar', contentLength: { value: 1024 } },
-                  { key: 'baz', contentLength: { value: 1024 } }
+                  { key: 'bar', contentLength: { value: 1024 }, doc_count: 0 },
+                  { key: 'baz', contentLength: { value: 1024 }, doc_count: 0 }
                 ]
               }
             }
@@ -198,30 +200,32 @@ describe('TreeView.vue', () => {
   })
 
   describe('Windows', () => {
-    let wrapper = null
     const { index, es } = esConnectionHelper.build('spec', true)
     const api = { tree: vi.fn(), elasticsearch: es }
-
-    const { config, i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
-
-    const propsData = {
-      projects: [index],
-      path: 'C:\\home\\foo',
-      size: true,
-      count: true,
-      infiniteScroll: false
-    }
-
-    beforeAll(() => {
-      store.commit('search/index', index)
-      config.set('dataDir', 'C:\\home\\foo')
-      config.set('pathSeparator', '\\')
-    })
+    let wrapper, core
 
     beforeEach(() => {
+      core = CoreSetup.init(api).useAll()
+      core.store.commit('search/index', index)
+      core.config.set('dataDir', 'C:\\home\\foo')
+      core.config.set('pathSeparator', '\\')
+
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE_WIN)
-      wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
+
+      wrapper = shallowMount(TreeView, {
+        props: {
+          projects: [index],
+          path: 'C:\\home\\foo',
+          size: true,
+          count: true,
+          infiniteScroll: false
+        },
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        }
+      })
     })
 
     it('should be a display a correct basename on windows', async () => {
