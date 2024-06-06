@@ -1,15 +1,13 @@
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import ApiPage from '@/components/Api'
-import { Core } from '@/core'
-import { storeBuilder } from '@/store/storeBuilder'
 import { getMode, MODE_NAME } from '@/mode'
+import CoreSetup from "~tests/unit/CoreSetup";
 
 describe('Api.vue', () => {
-  let i18n, localVue, router, wrapper, store, api
+  let config, plugins, api
 
   beforeAll(() => {
     api = {
@@ -17,16 +15,14 @@ describe('Api.vue', () => {
       getApiKey: vi.fn(),
       deleteApiKey: vi.fn()
     }
-    const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    router = core.router
-    store = storeBuilder(api)
+    const core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll()
+    config = core.config
+    plugins = core.plugins
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
-    Murmur.config.merge({ mode: MODE_NAME.SERVER })
+    config.merge({ mode: MODE_NAME.SERVER })
     vi.clearAllMocks()
     api.getApiKey.mockResolvedValue({ hashedKey: null })
   })
@@ -36,18 +32,18 @@ describe('Api.vue', () => {
   })
 
   it('should display a button to generate the API key by default', () => {
-    wrapper = shallowMount(ApiPage, { i18n, localVue, router, store })
+    const wrapper = shallowMount(ApiPage, { global: { plugins } })
     expect(wrapper.find('.api .api__create-key b-button-stub').exists()).toBeTruthy()
   })
 
   it('should display no rows by default', () => {
-    wrapper = shallowMount(ApiPage, { i18n, localVue, router, store })
+    const wrapper = shallowMount(ApiPage, { global: { plugins } })
 
     expect(wrapper.findAll('.api__key')).toHaveLength(0)
   })
 
   it('should request the creation of the API key', async () => {
-    wrapper = mount(ApiPage, { i18n, localVue, router, store }) // for b-button
+    const wrapper = mount(ApiPage, { global: { plugins } }) // for b-button
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     await wrapper.find('.api .api__create-key .btn').trigger('click')
@@ -63,7 +59,7 @@ describe('Api.vue', () => {
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.deleteApiKey.mockResolvedValue({})
-    wrapper = shallowMount(ApiPage, { i18n, localVue, router, store })
+    const wrapper = shallowMount(ApiPage, { global: { plugins } })
     expect(wrapper.findAll('.api__key')).toHaveLength(0)
 
     await wrapper.vm.createApiKey()
