@@ -282,7 +282,7 @@ class Core extends Behaviors {
     return this.api.getUser()
   }
   /**
-   * Get and update user definitionin place
+   * Get and update user definition in place
    * @async
    * @returns {Promise}
    */
