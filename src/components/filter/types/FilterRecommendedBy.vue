@@ -8,21 +8,20 @@
     </template>
     <template #items-group>
       <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0">
-        <b-form-checkbox
-          v-for="{ user, count } in recommendedByUsersSorted"
-          :key="user"
-          :value="user"
-          class="filter__items__item"
-        >
-          <span class="d-flex">
-            <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
-              <user-display :username="user" hide-avatar hide-link />
+        <div v-for="{ user, count } in recommendedByUsersSorted" :key="user" class="filter__items__item">
+          <b-form-checkbox :value="user">
+            <span class="d-flex">
+              <span class="filter__items__item__label pe-1 text-truncate d-inline-block">
+                <user-display :username="user" hide-avatar hide-link />
+              </span>
+              <span class="filter__items__item__count my-auto ms-auto">
+                <span class="badge rounded-pill text-bg-light">
+                  {{ $n(count) }}
+                </span>
+              </span>
             </span>
-            <span class="filter__items__item__count badge rounded-pill text-bg-light float-end mt-1">
-              {{ $n(count) }}
-            </span>
-          </span>
-        </b-form-checkbox>
+          </b-form-checkbox>
+        </div>
       </b-form-checkbox-group>
     </template>
   </filter-boilerplate>
