@@ -16,7 +16,8 @@ class CoreSetup extends Core {
       this.vueShortkey,
       this.vueScrollTo,
       this.vueEllipseProgress,
-      this.vCalendar
+      this.vCalendar,
+      this.router
     ]
   }
   get murmur() {
@@ -34,6 +35,7 @@ class CoreSetup extends Core {
   get vCalendar() {
     return VCalendar
   }
+
   static init(...options) {
     return new CoreSetup(...options)
   }
