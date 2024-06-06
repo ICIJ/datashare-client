@@ -4,6 +4,7 @@ import VueEllipseProgress from 'vue-ellipse-progress'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import { createVueWait } from 'vue-wait'
+
 import { Core } from '@/core/Core'
 
 class CoreSetup extends Core {
