@@ -3,13 +3,12 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Core } from '@/core'
 import Login from '@/pages/Login'
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-
 describe('Login.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(Login, { i18n, localVue, store })
+    const { plugins } = CoreSetup.init().useAll()
+    wrapper = shallowMount(Login, { global: { plugins } })
   })
 
   it('should display a login link', () => {
