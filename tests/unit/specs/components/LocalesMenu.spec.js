@@ -1,13 +1,12 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { beforeAll } from 'vitest'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import LocalesMenu from '@/components/LocalesMenu'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('LocalesMenu', () => {
-  const core = Core.init(createLocalVue()).useAll()
-  const { localVue, i18n } = core
+  const core = CoreSetup.init().useAll()
   let wrapper = null
 
   beforeAll(async () => {
@@ -23,21 +22,27 @@ describe('LocalesMenu', () => {
 
   describe('should change the interface language according to configuration', () => {
     it('should display the interfaces in English by default', async () => {
-      wrapper = shallowMount(LocalesMenu, { localVue, i18n })
+      wrapper = shallowMount(LocalesMenu, {
+        global: { plugins: [core.plugin, core.i18n], renderStubDefaultSlot: true }
+      })
       await flushPromises()
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
     })
 
     it('should display the interface in French if configuration says so', async () => {
       core.setI18nLocale('fr')
-      wrapper = shallowMount(LocalesMenu, { localVue, i18n })
+      wrapper = shallowMount(LocalesMenu, {
+        global: { plugins: [core.plugin, core.i18n], renderStubDefaultSlot: true }
+      })
       await flushPromises()
       expect(wrapper.find('.locales-menu__button').text()).toBe('Français')
     })
 
     it('should display the interface in Spanish if configuration says so', async () => {
       core.setI18nLocale('es')
-      wrapper = shallowMount(LocalesMenu, { localVue, i18n })
+      wrapper = shallowMount(LocalesMenu, {
+        global: { plugins: [core.plugin, core.i18n], renderStubDefaultSlot: true }
+      })
       await flushPromises()
       expect(wrapper.find('.locales-menu__button').text()).toBe('Español')
     })
@@ -45,7 +50,9 @@ describe('LocalesMenu', () => {
 
   describe('b-popover menu', () => {
     beforeEach(() => {
-      wrapper = shallowMount(LocalesMenu, { localVue, i18n })
+      wrapper = shallowMount(LocalesMenu, {
+        global: { plugins: [core.plugin, core.i18n], renderStubDefaultSlot: true }
+      })
     })
 
     it('should display a menu with 4 languages', () => {

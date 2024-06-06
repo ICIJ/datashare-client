@@ -78,8 +78,8 @@ export default {
   },
   methods: {
     async chooseLocale(locale) {
-      if (this.$refs.popover) {
-        this.$refs.popover.hide(new Event('click'))
+      if (this.$refs.popover?.hide) {
+        this.$refs.popover.hide(new Event('forceHide'))
       }
       await this.$core.loadI18Locale(locale)
     },
