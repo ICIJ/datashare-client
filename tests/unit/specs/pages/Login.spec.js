@@ -1,6 +1,6 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Login from '@/pages/Login'
 
 describe('Login.vue', () => {

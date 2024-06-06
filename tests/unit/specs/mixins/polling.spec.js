@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import polling from '@/mixins/polling'
 
@@ -17,9 +17,8 @@ describe('polling mixin', () => {
 
   beforeEach(() => {
     vi.useFakeTimers()
-    const localVue = createLocalVue()
     const Component = { template: '<div>foo</div>', mixins: [polling] }
-    wrapper = shallowMount(Component, { localVue })
+    wrapper = shallowMount(Component)
   })
 
   afterEach(() => {
@@ -82,21 +81,21 @@ describe('polling mixin', () => {
     expect(fn).toBeCalledTimes(2)
   })
 
-  it('should not call a polling function after the component is destroy', async () => {
+  it('should not call a polling function after the component is destroyed', async () => {
     const fn = vi.fn().mockReturnValue(Promise.resolve(true))
     wrapper.vm.registerPoll({ fn, timeout: 1000 })
     await flushPromisesAndPendingTimers(wrapper)
     expect(fn).toBeCalledTimes(1)
-    wrapper.destroy()
+    wrapper.unmount()
     await flushPromisesAndPendingTimers(wrapper)
     expect(fn).toBeCalledTimes(1)
   })
 
-  it('should unregister a polling function after the component is destroy', async () => {
+  it('should unregister a polling function after the component is destroyed', async () => {
     const fn = vi.fn().mockReturnValue(Promise.resolve(true))
     wrapper.vm.registerPoll({ fn, timeout: 1000 })
     expect(wrapper.vm.registeredPolls).toHaveLength(1)
-    wrapper.destroy()
+    wrapper.unmount()
     expect(wrapper.vm.registeredPolls).toHaveLength(0)
   })
 
