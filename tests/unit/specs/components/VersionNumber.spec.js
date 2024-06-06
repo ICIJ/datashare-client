@@ -5,7 +5,7 @@ import { Core } from '@/core'
 import { getMode, MODE_NAME } from '@/mode'
 
 describe('VersionNumber.vue', () => {
-  let i18n, localVue, store, wrapper
+  let core, wrapper
 
   beforeAll(() => {
     const api = {

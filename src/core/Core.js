@@ -115,17 +115,16 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useBootstrapVue() {
-    this.use(
-      createBootstrap({
-        components: true,
-        BPopover: {
-          boundaryPadding: 14
-        },
-        BTooltip: {
-          boundaryPadding: 0
-        }
-      })
-    )
+    this._bootstrapVue = createBootstrap({
+      components: true,
+      BPopover: {
+        boundaryPadding: 14
+      },
+      BTooltip: {
+        boundaryPadding: 0
+      }
+    })
+    this.use(this.bootstrapVue)
     return this
   }
   /**
@@ -170,7 +169,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useWait() {
-    this.wait = createVueWait({ useVuex: true })
+    this._wait = createVueWait({ useVuex: true })
     this.use(this.wait)
     return this
   }
@@ -179,22 +178,30 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useCore() {
+    this._plugin = this.buildCorePlugin()
+    this.use(this.plugin)
+    return this
+  }
+
+  /**
+   * Build a VueCore instance with the current Core instance
+   * as parameter of the global properties.
+   * @returns {{install(*): void, new(): VueCore, prototype: VueCore}}
+   */
+  buildCorePlugin() {
     const core = this
-    this.use(
-      class VueCore {
-        static install(app) {
-          app.config.globalProperties.$core = core
-          app.config.compilerOptions.whitespace = 'preserve'
-          // inject a globally available $bvToast object to facilitate migration
-          app.config.globalProperties.$bvToast = {
-            toast(body, options) {
-              console.warn('Toasters not implemented yet', { body, ...options })
-            }
+    return class VueCore {
+      static install(app) {
+        app.config.globalProperties.$core = core
+        app.config.compilerOptions.whitespace = 'preserve'
+        // inject a globally available $bvToast object to facilitate migration
+        app.config.globalProperties.$bvToast = {
+          toast(body, options) {
+            console.warn('Toasters not implemented yet', { body, ...options })
           }
         }
       }
-    )
-    return this
+    }
   }
   /**
    * Load settings from the server and instantiate most the application configuration.
@@ -343,25 +350,32 @@ class Core extends Behaviors {
     return this
   }
   /**
+   * The Bootstrap Vue plugin instance.
+   * @returns {Plugin}
+   */
+  get bootstrapVue() {
+    return this._bootstrapVue
+  }
+  /**
    * The I18n instance
    * @type {I18n}
    */
   get i18n() {
     return this._i18n
   }
-  /*  /!**
-   * The Vue class to instantiate the application with
-   * @type {Vue}
-   *!/
-  get localVue() {
-    return this.LocalVue
-  } */
   /**
    * The Vuex instance
    * @type {Vuex.Store}
    */
   get store() {
     return this._store
+  }
+  /**
+   * The CorePlugin instance
+   * @returns {*}
+   */
+  get plugin() {
+    return this._plugin
   }
   /**
    * The Auth module instance
@@ -392,6 +406,13 @@ class Core extends Behaviors {
     return this._vue
   }
   /**
+   * The VueWait
+   * @type {VueWait}
+   */
+  get wait() {
+    return this._wait
+  }
+  /**
    * Get current Datashare mode
    * @type {String}
    */
@@ -413,4 +434,6 @@ const coreInit = Object.freeze({
   isInstanceOfCore: (object) => object instanceof Core,
   init: Core.init
 })
+
+export { Core }
 export default coreInit
