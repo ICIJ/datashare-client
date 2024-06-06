@@ -1,25 +1,24 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
+import { mount, shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { Core } from '@/core'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
+import CoreSetup from "~tests/unit/CoreSetup";
 
-const router = new VueRouter()
 
 describe('AppliedSearchFilters.vue', () => {
   vi.setConfig({ testTimeout: 1e4 })
   const { index, es } = esConnectionHelper.build()
 
   const api = { elasticsearch: es }
-  const { i18n, localVue, store } = Core.init(createLocalVue(), api).useAll()
+  const { plugins, store } = CoreSetup.init(api).useAll().useRouter()
+
   let wrapper
 
   beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
-    wrapper = shallowMount(AppliedSearchFilters, { i18n, localVue, store })
+    wrapper = shallowMount(AppliedSearchFilters, { global: { plugins } })
   })
 
   afterEach(() => store.commit('search/reset'))
@@ -99,7 +98,10 @@ describe('AppliedSearchFilters.vue', () => {
 
   describe('deletes applied filters', () => {
     beforeEach(() => {
-      wrapper = mount(AppliedSearchFilters, { localVue, router, store, mocks: { $t: (msg) => msg } })
+      wrapper = mount(AppliedSearchFilters, {
+        global: { plugins },
+        renderStubDefaultSlot: true
+      })
     })
 
     it('should remove the "AND" on last applied filter deletion', async () => {
