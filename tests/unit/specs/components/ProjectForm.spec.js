@@ -1,16 +1,17 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectForm from '@/components/ProjectForm'
-import { Core } from '@/core'
 
-const { localVue, i18n, wait, store, config } = Core.init(createLocalVue()).useAll()
 
 describe('ProjectForm.vue', () => {
-  let wrapper
 
   describe('without an existing project', () => {
+    let wrapper, plugins
+
     beforeEach(() => {
-      wrapper = mount(ProjectForm, { localVue, i18n, wait, store, config })
+      plugins = CoreSetup.init().useAll().plugins
+      wrapper = mount(ProjectForm, { global: { plugins } })
     })
 
     it('should not use b-card-* components by default', () => {
@@ -70,48 +71,48 @@ describe('ProjectForm.vue', () => {
     })
 
     it('should not submit an invalid form without name', async () => {
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeFalsy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).not.toHaveProperty('submit')
     })
 
     it('should not submit an invalid form with a name but an invalid logoUrl', async () => {
       await wrapper.find('input[name=label]').setValue('foo')
       await wrapper.find('input[name=logoUrl]').setValue('sftp://foo.bar')
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeFalsy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).not.toHaveProperty('submit')
     })
 
     it('should not submit an invalid form with a name but an invalid sourceUrl', async () => {
       await wrapper.find('input[name=label]').setValue('foo')
       await wrapper.find('input[name=sourceUrl]').setValue('sftp://foo.bar')
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeFalsy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).not.toHaveProperty('submit')
     })
 
     it('should submit a valid form with a label', async () => {
       await wrapper.find('input[name=label]').setValue('foo')
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeTruthy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).toHaveProperty('submit')
     })
 
     it('should submit a valid form with a label and a sourceUrl', async () => {
       await wrapper.find('input[name=label]').setValue('foo')
       await wrapper.find('input[name=sourceUrl]').setValue('https://foo.bar')
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeTruthy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).toHaveProperty('submit')
     })
 
     it('should submit a valid form with a label and a logoUrl', async () => {
       await wrapper.find('input[name=label]').setValue('foo')
       await wrapper.find('input[name=logoUrl]').setValue('https://foo.bar')
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeTruthy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).toHaveProperty('submit')
     })
 
     it('should not submit the form with a reserved word as label', async () => {
       await wrapper.find('input[name=label]').setValue('new')
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeFalsy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).not.toHaveProperty('submit')
     })
 
     it('should not disabled any form group by default', () => {
@@ -128,8 +129,8 @@ describe('ProjectForm.vue', () => {
     it('should not be able to submit the form when `disabled` is set', async () => {
       await wrapper.setProps({ disabled: true })
       await wrapper.find('input[name=label]').setValue('foo')
-      await wrapper.trigger('submit')
-      expect(wrapper.emitted().submit).toBeFalsy()
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.emitted()).not.toHaveProperty('submit')
     })
 
     it('should not hide the sourcePath input', async () => {
@@ -139,10 +140,13 @@ describe('ProjectForm.vue', () => {
   })
 
   describe('with an existing project', () => {
+    let wrapper, plugins
+
     beforeEach(() => {
       const values = { name: 'foo', description: 'A description' }
-      const propsData = { values, edit: true }
-      wrapper = mount(ProjectForm, { localVue, i18n, wait, store, config, propsData })
+      const props = { values, edit: true }
+      plugins = CoreSetup.init().useAll().plugins
+      wrapper = mount(ProjectForm, { global: { plugins }, props })
     })
 
     it('should initialize the form with default project values', () => {

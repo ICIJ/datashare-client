@@ -45,6 +45,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['submit', 'delete'],
   data() {
     return {
       form: this.initialFormValues()
