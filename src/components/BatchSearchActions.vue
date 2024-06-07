@@ -132,6 +132,7 @@ export default {
         return this.$router.push({ name: 'task.batch-search.list' })
       } catch (e) {
         this.$root.$bvToast.toast(this.$t('batchSearch.deleteError'), { noCloseButton: true, variant: 'danger' })
+        return Promise.reject(e)
       }
     }
   }
