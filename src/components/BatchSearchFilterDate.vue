@@ -1,6 +1,6 @@
 <template>
   <column-filter :id="id" :name="name" :active="isActive">
-    {{  date }}
+    {{ date }}
     <keep-alive>
       <date-picker
         :key="`date-${id}`"
@@ -37,7 +37,7 @@ export default {
     },
     modelValue: {
       type: Object,
-      default:()=>({})
+      default: () => ({})
     }
   },
   emits: ['update:modelValue'],
