@@ -1,17 +1,21 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import PageHeader from '@/components/PageHeader'
-import { Core } from '@/core'
-
-const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('PageHeader.vue', () => {
+  const { plugins } = CoreSetup.init().useAll()
   let wrapper = null
 
   beforeEach(() => {
     wrapper = shallowMount(PageHeader, {
-      localVue,
-      propsData: { description: 'This is my description', title: 'This is my title' }
+      global: {
+        plugins
+      },
+      props: {
+        description: 'This is my description',
+        title: 'This is my title'
+      }
     })
   })
 
