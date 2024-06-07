@@ -59,7 +59,7 @@
       </b-button-group>
       <confirm-button
         v-if="response.total > 0"
-        class="search-results-header__settings__btn-download btn btn-link text-nowrap"
+        class="search-results-header__settings__btn-download btn btn-link text-nowrap ms-auto"
         :confirmed="batchDownload"
         :label="batchDownloadLabel"
         :yes="$t('global.yes')"
@@ -327,7 +327,7 @@ export default {
       }
 
       &:deep(.search-results-header__settings__size__toggler__slot) {
-        max-width: 167px;        
+        max-width: 167px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;

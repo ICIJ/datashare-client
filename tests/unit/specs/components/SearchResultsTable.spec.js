@@ -1,38 +1,32 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
+import { mount, shallowMount } from '@vue/test-utils'
+import { vi } from 'vitest'
 
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import SearchResultsTable from '@/components/SearchResultsTable'
 
 describe('SearchResultsTable.vue', () => {
-  let index, i18n, localVue, store, wait, router, wrapper
+  let index, core, wrapper
   const connectionHelper = esConnectionHelper.build()
   const api = {
     elasticsearch: connectionHelper.es,
     starDocuments: vi.fn(),
-    getMappingsByFields: vi.fn()
+    getMappingsByFields: vi.fn(),
+    getStarredDocuments: vi.fn()
   }
 
   beforeAll(async () => {
     index = connectionHelper.index
-    localVue = createLocalVue()
-    router = new VueRouter()
-
-    const core = Core.init(localVue, api).useAll()
-
-    i18n = core.i18n
-    store = core.store
-    wait = core.wait
+    core = CoreSetup.init(api).useAll().useRouter()
   })
 
   beforeEach(async () => {
-    store.commit('search/index', index)
+    core.store.commit('search/index', index)
     const indexedDocuments = new IndexedDocuments().setBaseName('document').withIndex(index).count(4)
     await letData(connectionHelper.es).have(indexedDocuments).commit()
-    await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
-    wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store, wait })
+    await core.store.dispatch('search/query', { query: '*', from: 0, size: 25 })
+    wrapper = shallowMount(SearchResultsTable, { global: { plugins: core.plugins, renderStubDefaultSlot: true } })
   })
 
   it('should display a b-table', () => {
@@ -52,7 +46,7 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should set each selected document as starred', async () => {
-    wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
+    wrapper = mount(SearchResultsTable, { global: { plugins: core.plugins } })
     await wrapper.setData({
       selected: [
         { id: 'document_01', index },
@@ -79,13 +73,11 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should select all documents', async () => {
-    wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
-    await wrapper.setData({ selected: [{ id: 'document_01' }] })
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.selected).toHaveLength(1)
+    wrapper = mount(SearchResultsTable, { global: { plugins: core.plugins } })
 
-    await wrapper.findAll('.list-group-item-action').at(0).trigger('click')
-
-    expect(wrapper.vm.selected).toHaveLength(4)
+    await wrapper.setData({ selected: [{ id: 'document_1' }] })
+    expect(wrapper.vm.selected).toHaveLength( 1)
+    await wrapper.findAll('.search-results-table__actions__action').at(0).trigger('click')
+    expect(wrapper.vm.selected).toHaveLength(wrapper.vm.items.length)
   })
 })
