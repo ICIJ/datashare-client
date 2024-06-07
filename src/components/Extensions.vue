@@ -35,9 +35,14 @@
           <search-form-control v-model="searchTerm" :placeholder="$t('extensions.search')" @input="search" />
         </div>
       </div>
-      <b-overlay :show="isLoading" class="extensions__card">
+      <b-overlay :show="isLoading">
         <div class="row my-4">
-          <b-overlay v-for="extension in extensions" :key="extension.id" :show="extension.loading" class="col-6 mb-3">
+          <b-overlay
+            v-for="extension in extensions"
+            :key="extension.id"
+            :show="extension.loading"
+            class="extensions__card col-6 mb-3"
+          >
             <b-card footer-border-variant="white" class="m-0">
               <b-card-text>
                 <div class="d-flex">
@@ -173,8 +178,7 @@ export default {
     async search() {
       this.$wait.start(this.loaderId)
       this.extensions = (await this.$core.api.getExtensions(this.searchTerm)).map((extension) => {
-        extension.loading = false
-        return extension
+        return { ...extension, loading: false }
       })
       this.$wait.end(this.loaderId)
     },
