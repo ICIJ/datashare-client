@@ -1,22 +1,22 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
+import CoreSetup from '~tests/unit/CoreSetup'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
-import { Core } from '@/core'
 
 describe('ResetFiltersButton.vue', function () {
-  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
+  const { plugins, router, store, on } = CoreSetup.init().useAll().useRouter()
   let wrapper = null
 
   beforeEach(() => {
     store.commit('search/resetFilterValues')
     store.commit('search/resetQuery')
-    wrapper = shallowMount(ResetFiltersButton, { i18n, localVue, router, store, sync: false })
+    wrapper = shallowMount(ResetFiltersButton, { global: { plugins } })
   })
 
   it('should display a disabled button by default', () => {
     expect(wrapper.find('.btn').exists()).toBeTruthy()
-    expect(wrapper.find('.btn').attributes('disabled')).toBe('disabled')
+    expect(wrapper.find('.btn').attributes('disabled')).toBeDefined()
   })
 
   it('should display a reset button if query is valuated', async () => {
@@ -76,7 +76,7 @@ describe('ResetFiltersButton.vue', function () {
 
   it('should emit an event "bv::hide::popover" on filters reset', () => {
     const mockCallback = vi.fn()
-    wrapper.vm.$root.$on('bv::hide::popover', mockCallback)
+    on('bv::hide::popover', mockCallback)
 
     wrapper.vm.resetFiltersAndQuery()
 
@@ -85,7 +85,7 @@ describe('ResetFiltersButton.vue', function () {
 
   it('should emit an event "filter::search::reset-filters" on filters reset', () => {
     const mockCallback = vi.fn()
-    wrapper.vm.$root.$on('filter::search::reset-filters', mockCallback)
+    on('filter::search::reset-filters', mockCallback)
 
     wrapper.vm.resetFiltersAndQuery()
 
