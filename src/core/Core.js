@@ -22,7 +22,7 @@ import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
 import WidgetsMixin from './WidgetsMixin'
 
-import { dispatch } from '@/utils/event-bus'
+import { dispatch, EventBus } from '@/utils/event-bus'
 import Auth from '@/api/resources/Auth'
 import messages from '@/lang/en'
 import { getMode, MODE_NAME } from '@/mode'
@@ -322,6 +322,33 @@ class Core extends Behaviors {
     if (document && document.title) {
       document.title = title ? `${title} - ${suffix}` : suffix
     }
+  }
+  /**
+   * Register a callback to an event using the EventBus singleton.
+   * @param {String} event
+   * @param {*} callback
+   * @returns
+   */
+  on(event, callback) {
+    return EventBus.on(event, callback)
+  }
+  /**
+   * Unregister a callback to an event using the EventBus singleton.
+   * @param {String} event
+   * @param {*} callback
+   * @returns
+   */
+  off(event, callback) {
+    return EventBus.off(event, callback)
+  }
+  /**
+   * Emit an event using the EventBus singleton.
+   * @param {String} event
+   * @param {*} payload
+   * @returns
+   */
+  emit(event, payload) {
+    return EventBus.emit(event, payload)
   }
   /**
    * Get a promise that is resolved when the application is ready
