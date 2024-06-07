@@ -1,26 +1,37 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
+import { shallowMount, mount } from '@vue/test-utils'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from '~tests/unit/tests_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBar from '@/components/SearchBar'
 
 describe('SearchBar.vue', function () {
-  const router = new VueRouter()
   const { index, es } = esConnectionHelper.build('search-bar')
   const { index: indexFoo } = esConnectionHelper.build('search-bar-foo')
-  const { i18n, localVue, store, config } = Core.init(createLocalVue(), { elasticsearch: es }).useAll()
+  const { plugins, config, store } = CoreSetup.init({ elasticsearch: es }).useAll().useRouter()
 
   let wrapper = null
 
-  const shallowMountFactory = (propsData = {}) => {
-    return shallowMount(SearchBar, { i18n, localVue, router, store, propsData })
+  const shallowMountFactory = (props = {}) => {
+    return shallowMount(SearchBar, {
+      props,
+      global: {
+        plugins,
+        renderStubDefaultSlot: true
+      }
+    })
   }
 
-  const mountFactory = (propsData = {}, data = () => ({ suggestions: [] })) => {
-    return mount(SearchBar, { i18n, localVue, router, store, propsData, data })
+  const mountFactory = (props = {}, data = () => ({ suggestions: [] })) => {
+    return mount(SearchBar, {
+      data,
+      props,
+      global: {
+        plugins,
+        renderStubDefaultSlot: true
+      }
+    })
   }
 
   beforeAll(() => {
@@ -53,9 +64,9 @@ describe('SearchBar.vue', function () {
 
   it('should display a suggestion dropdown when there are suggestions', async () => {
     wrapper = mountFactory()
-    expect(wrapper.find('.search-bar__suggestions').element).toBeFalsy()
+    expect(wrapper.find('.search-bar__suggestions').exists()).toBeFalsy()
     await wrapper.setData({ suggestions: ['suggestion1', 'suggestion2'] })
-    expect(wrapper.find('.search-bar__suggestions').element).toBeTruthy()
+    expect(wrapper.find('.search-bar__suggestions').exists()).toBeTruthy()
   })
 
   it('should display a the query typed by the user as first suggestion in the dropdown when there are suggestions', async () => {
@@ -83,22 +94,25 @@ describe('SearchBar.vue', function () {
     expect(wrapper.vm.query).toBe('bar')
   })
 
+  it('should not display the shortkeys-modal component', async () => {
+    const props = { settings: false }
+    wrapper = shallowMountFactory(props)
+    expect(wrapper.find('.search-bar shortkeys-modal-stub').exists()).toBeFalsy()
+  })
+
   it('should display the shortkeys-modal component', async () => {
-    const propsData = { settings: false }
-    wrapper = shallowMountFactory(propsData)
-    expect(wrapper.find('.search-bar shortkeys-modal-stub').element).toBeFalsy()
-    propsData.settings = true
-    wrapper = shallowMountFactory(propsData)
-    expect(wrapper.find('.search-bar shortkeys-modal-stub').element).toBeTruthy()
+    const props = { settings: true }
+    wrapper = shallowMountFactory(props)
+    expect(wrapper.find('.search-bar shortkeys-modal-stub').exists()).toBeTruthy()
   })
 
   it('should submit search', () => {
     wrapper = shallowMountFactory()
-    wrapper.vm.$set(wrapper.vm, 'query', 'foo')
+    wrapper.setData({ query: 'foo' })
     wrapper.vm.submit()
     expect(wrapper.vm.$store.state.search.query).toBe('foo')
 
-    wrapper.vm.$set(wrapper.vm, 'query', 'bar')
+    wrapper.setData({ query: 'bar' })
     wrapper.vm.submit()
     expect(wrapper.vm.$store.state.search.query).toBe('bar')
   })

@@ -1,16 +1,20 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
+import { shallowMount } from '@vue/test-utils'
 
 import SearchBarInput from '@/components/SearchBarInput'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('SearchBarInput.vue', function () {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-  const router = new VueRouter()
-
+  const { plugins } = CoreSetup.init().useAll()
   let wrapper = null
-  const shallowMountFactory = (propsData = {}) => {
-    return shallowMount(SearchBarInput, { i18n, localVue, router, store, propsData })
+
+  const shallowMountFactory = (props = {}) => {
+    return shallowMount(SearchBarInput, {
+      props,
+      global: {
+        plugins,
+        renderStubDefaultSlot: true
+      }
+    })
   }
 
   it('should display search bar input', () => {
@@ -27,8 +31,8 @@ describe('SearchBarInput.vue', function () {
 
   it('should show tips when there is a query', () => {
     wrapper = shallowMountFactory()
-    expect(wrapper.find('.search-bar-input__tips-addon--active').element).toBeFalsy()
-    wrapper = shallowMountFactory({ query: 'query' })
-    expect(wrapper.find('.search-bar-input__tips-addon--active').element).toBeTruthy()
+    expect(wrapper.find('.search-bar-input__tips-addon--active').exists()).toBeFalsy()
+    wrapper = shallowMountFactory({ modelValue: 'query' })
+    expect(wrapper.find('.search-bar-input__tips-addon--active').exists()).toBeTruthy()
   })
 })
