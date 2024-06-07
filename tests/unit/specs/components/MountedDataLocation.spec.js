@@ -1,30 +1,22 @@
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import MountedDataLocation from '@/components/MountedDataLocation'
 
 describe('MountedDataLocation.vue', () => {
-  let wrapper, i18n, localVue, store, api
-  Murmur.config.set('mountedDataDir', '/foo/bar')
-  beforeAll(() => {
-    api = {
-      deleteBatchSearches: vi.fn(),
-      deleteAll: vi.fn(),
-      getUser: vi.fn(),
-      createProject: vi.fn()
-    }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-  })
+  const api = {
+    deleteBatchSearches: vi.fn(),
+    deleteAll: vi.fn(),
+    getUser: vi.fn(),
+    createProject: vi.fn()
+  }
+
+  const { config, plugins, store, on } = CoreSetup.init(api).useAll()
+  let wrapper
+
   beforeEach(() => {
-    wrapper = shallowMount(MountedDataLocation, {
-      i18n,
-      localVue,
-      store
-    })
+    config.set('mountedDataDir', '/foo/bar')
+    wrapper = shallowMount(MountedDataLocation, { global: { plugins } })
   })
 
   it('should display the delete index button', () => {
@@ -37,7 +29,7 @@ describe('MountedDataLocation.vue', () => {
 
   it('should emit an index::delete::all event when calling the deleteAll method', async () => {
     const mockCallback = vi.fn()
-    wrapper.vm.$root.$on('index::delete::all', mockCallback)
+    on('index::delete::all', mockCallback)
 
     await wrapper.vm.deleteAll()
 
