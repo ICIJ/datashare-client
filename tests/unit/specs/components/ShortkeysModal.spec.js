@@ -1,7 +1,7 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import ShortkeysModal from '@/components/ShortkeysModal'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 vi.mock('@/utils/shortkeys.json', () => {
   return {
@@ -63,16 +63,16 @@ vi.mock('@/utils/shortkeys.json', () => {
 })
 
 describe('ShortkeysModal', () => {
-  const { localVue, i18n } = Core.init(createLocalVue()).useAll()
+  const { plugins } = CoreSetup.init().useAll()
   let label = null
   let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(ShortkeysModal, { i18n, localVue })
+    wrapper = shallowMount(ShortkeysModal, { global: { plugins, renderStubDefaultSlot: true } })
   })
 
   it('should display the shortkeys modal', () => {
-    expect(wrapper.findAll('.shortkeys-modal').exists()).toBeTruthy()
+    expect(wrapper.find('.shortkeys-modal').exists()).toBeTruthy()
   })
 
   it('should filter shortkeys that are not for the current page', () => {
@@ -140,11 +140,13 @@ describe('ShortkeysModal', () => {
 
   describe('Shortkey icon', () => {
     it('should display an icon if is set', () => {
-      expect(wrapper.findAll('b-modal-stub b-link-stub').at(0).find('fa-stub').attributes('icon')).toEqual('icon_01')
+      const icon = wrapper.findAll('b-modal-stub b-link-stub').at(0).find('font-awesome-icon-stub')
+      expect(icon.attributes('icon')).toEqual('icon_01')
     })
 
     it('should not display the icon if not set', () => {
-      expect(wrapper.findAll('b-modal-stub b-link-stub').at(1).find('fa-stub').exists()).toBeFalsy()
+      const icon = wrapper.findAll('b-modal-stub b-link-stub').at(1).find('font-awesome-icon-stub')
+      expect(icon.exists()).toBeFalsy()
     })
   })
 })
