@@ -1,22 +1,22 @@
 <template>
-  <b-form @submit.prevent="copyBatchSearch">
+  <b-form @submit.prevent="copyBatchSearch" class="batch-search-copy-form">
     <div class="card w-100">
       <div class="card-body pb-1">
         <b-form-group label-size="sm" :label="`${$t('batchSearch.name')} *`">
-          <b-form-input v-model="name" type="text" required />
+          <b-form-input v-model="name" type="text" required class="batch-search-copy-form__input__name"/>
         </b-form-group>
         <b-form-group label-size="sm" :label="$t('batchSearch.description')">
-          <b-form-textarea v-model="description" rows="2" max-rows="6" />
+          <b-form-textarea v-model="description" rows="2" max-rows="6" class="batch-search-copy-form__input__description"/>
         </b-form-group>
         <b-form-group label-size="sm">
-          <b-form-checkbox v-model="deleteAfterRelaunch" switch>
+          <b-form-checkbox v-model="deleteAfterRelaunch" switch class="batch-search-copy-form__input__delete">
             {{ $t('batchSearchResults.deleteAfterRelaunch') }}
           </b-form-checkbox>
         </b-form-group>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
-          <b-button type="submit" variant="primary">
+          <b-button type="submit" variant="primary" class="batch-search-copy-form__submit">
             {{ $t('global.submit') }}
           </b-button>
         </div>
@@ -30,7 +30,7 @@
  * A form to copy batch search
  */
 export default {
-  name: 'BatchSearchAction',
+  name: 'BatchSearchCopyForm',
   props: {
     /**
      * The batch search meta data
