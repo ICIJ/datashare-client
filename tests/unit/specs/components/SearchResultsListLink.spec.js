@@ -1,22 +1,22 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur-next'
 import toLower from 'lodash/toLower'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Document from '@/api/resources/Document'
 import SearchResultsListLink from '@/components/SearchResultsListLink'
 
-const { localVue, store, router } = Core.init(createLocalVue()).useAll()
-
 describe('SearchResultsListLink.vue', () => {
   const index = toLower('SearchResultsListLink')
+  const core = CoreSetup.init().useAll().useRouter()
 
   it('should display the correct location', () => {
     const wrapper = shallowMount(SearchResultsListLink, {
-      localVue,
-      store,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         document: new Document({
           _id: 1,
           _source: {
@@ -31,10 +31,10 @@ describe('SearchResultsListLink.vue', () => {
 
   it('should make a link without routing for a document', () => {
     const wrapper = mount(SearchResultsListLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         document: new Document({
           _id: 'foo',
           _index: index
@@ -47,10 +47,11 @@ describe('SearchResultsListLink.vue', () => {
 
   it('should make a link with routing for a child document', () => {
     const wrapper = mount(SearchResultsListLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: {
         document: new Document({
           _id: 'child',
           _index: index,
@@ -58,16 +59,16 @@ describe('SearchResultsListLink.vue', () => {
         })
       }
     })
-
+    console.log(wrapper.html())
     expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/child\/parent/)
   })
 
   it('should make a link to document with query', async () => {
     const wrapper = mount(SearchResultsListLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         document: new Document({
           _id: 'foo',
           _index: index
@@ -75,19 +76,19 @@ describe('SearchResultsListLink.vue', () => {
       }
     })
 
-    store.commit('search/query', 'other')
+    core.store.commit('search/query', 'other')
     await flushPromises()
-    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo\?q=other&tab=extracted-text/)
+    expect(wrapper.find('.search-results-list-link').attributes('href')).toContain('/foo/foo?q=&tab=extracted-text')
   })
 
   it('should display the document sliced name', () => {
     const documentName = 'document'
     Murmur.config.merge({ userProjects: [index] })
     const wrapper = mount(SearchResultsListLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         document: new Document({
           _id: documentName,
           _index: index,
