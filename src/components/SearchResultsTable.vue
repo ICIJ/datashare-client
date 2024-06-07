@@ -18,11 +18,11 @@
               {{ action.label }}
             </b-list-group-item>
           </b-list-group>
-          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" display-form />
+          <document-tags-form class="search-results-table__actions__action ms-1" :document="selected" display-form />
         </div>
         <search-results-header
           position="top"
-          class="flex-grow-1 align-self-center py-0"
+          class="flex-grow-1 align-self-center py-1 ms-auto"
           :no-progress="!!selected.length"
           :no-filters="!!selected.length"
         />
@@ -38,24 +38,24 @@
         :busy="$wait.waiting('load results table')"
         :fields="fields"
         :items="items"
-        class="bg-white border-bottom m-0 small search-results-table__items"
-        selected-variant="tertiary"
+        class="border-bottom m-0 small search-results-table__items"
         tbody-tr-class="search-results-table__items__row"
         thead-tr-class="text-nowrap"
         @row-selected="onRowSelected"
+        @row-unselected="onRowUnselected"
       >
-        <template #cell(relevance)="{ item, rowSelected }">
+        <template #cell(relevance)="{ item }">
           <fa
             v-if="item.contentTypeIcon"
             :icon="item.contentTypeIcon"
             fixed-width
             class="search-results-table__items__row__icon"
-          ></fa>
+          />
           <fa
-            :icon="['far', rowSelected ? 'check-square' : 'square']"
+            :icon="['far', isSelected(item) ? 'check-square' : 'square']"
             fixed-width
             class="search-results-table__items__row__checkbox"
-          ></fa>
+          />
         </template>
         <template #cell(index)="{ item }">
           <b-badge variant="light">{{ startCase(item.index) }}</b-badge>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { find, startCase } from 'lodash'
+import { castArray, find, iteratee, startCase, uniqBy } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
@@ -132,7 +132,7 @@ export default {
     actions() {
       return [
         {
-          id: 'selectAll',
+          id: this.isAllSelected ? 'unselectAll' : 'selectAll',
           label: this.isAllSelected ? this.$t('document.unselectAll') : this.$t('document.selectAll'),
           icon: ['far', this.isAllSelected ? 'check-square' : 'square']
         },
@@ -233,21 +233,26 @@ export default {
     this.items = await this.itemsProvider(this.sortModel[0])
   },
   methods: {
-    onRowSelected(items) {
-      this.selected = items
-    },
     startCase,
+    onRowSelected(items) {
+      this.selected = uniqBy([...this.selected, ...castArray(items)], iteratee('id'))
+    },
+    onRowUnselected(items) {
+      this.selected = this.selected.filter((item) => !castArray(items).includes(item))
+    },
+    isSelected(item) {
+      return this.selected.includes(item)
+    },
     async onClick(actionId) {
       this.$wait.start('load results table')
       switch (actionId) {
         case 'selectAll':
-          if (this.isAllSelected) {
-            this.$refs.selectableTable.clearSelected()
-            this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
-          } else {
-            this.$refs.selectableTable.selectAllRows()
-            this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
-          }
+          this.$refs.selectableTable.selectAllRows()
+          this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
+          break
+        case 'unselectAll':
+          this.$refs.selectableTable.clearSelected()
+          this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
           break
         case 'star':
           await this.$store.dispatch('starred/starDocuments', this.selected)
@@ -268,7 +273,8 @@ export default {
         // Find the table field for the sorting key (or use the first by default)
         const tableField = find(this.fields, { key: sortModel.key }) || this.defaultSortField
         // Find the corresponding sort field in the settings
-        const sortField = find(settings.searchSortFields, { field: tableField.sortBy, desc: sortModel.order === 'desc' })
+        const desc = sortModel.order === 'desc'
+        const sortField = find(settings.searchSortFields, { field: tableField.sortBy, desc })
         // Update the sort value in the store
         this.$store.commit('search/sort', sortField ? sortField.name : 'relevance')
         // Refresh the store without changing the "isReady"
@@ -292,9 +298,16 @@ export default {
   padding: 0 0 $spacer;
 
   &__items {
-    .table.b-table > thead > tr > th.fit {
-      background-position: right 0.1rem center;
-      padding-right: 0.85em;
+
+    & > .table.b-table > thead {
+      --bs-table-bg: white;
+      --bs-table-bg-state: white;
+
+      vertical-align: middle;
+
+      & > tr > th.fit {
+        padding-right: 0.85em;
+      }
     }
 
     tr td mark {
@@ -303,11 +316,20 @@ export default {
     }
 
     &__row {
+
+      &.selected {
+        --bs-table-accent-bg: #{rgba($warning, 0.2)};
+        --bs-table-active-bg: #{rgba($warning, 0.2)};
+        --bs-table-bg-state: #{rgba($warning, 0.2)};
+        --bs-table-bg: #{rgba($warning, 0.2)};
+        --bs-table-border-color: #{rgba($body-color, 0.1)};
+      }
+
       &__title {
         display: flex;
 
         &:visited:not(.router-link-active) {
-          color: mix(#609, white, 50%);
+          color: mix(#609, white, 80%);
         }
       }
 
@@ -319,8 +341,8 @@ export default {
         text-decoration: none;
       }
 
-      table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
-      table tbody tr.b-table-row-selected &__icon,
+      table tbody tr:not(.selected):not(:hover) &__checkbox,
+      table tbody tr.selected &__icon,
       table tbody tr:hover &__icon {
         display: none;
       }
@@ -347,7 +369,6 @@ export default {
   }
 
   &__actions {
-    background: $body-bg;
     font-size: $font-size-sm;
 
     &__action.document-tags-form {
@@ -361,7 +382,7 @@ export default {
       }
     }
 
-    &__action.list-group-item-action {
+    &__action {
       color: $primary;
       width: auto;
 
