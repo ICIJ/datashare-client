@@ -1,8 +1,8 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
+import CoreSetup from '~tests/unit/CoreSetup'
 import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
-import { Core } from '@/core'
 
 const HOME_TREE = {
   name: '/home/dev/Datashare',
@@ -58,21 +58,24 @@ const HOME_01FOO_TREE = {
 
 describe('InlineDirectoryPicker.vue', () => {
   let api
+
   beforeAll(() => {
     api = {
       tree: vi.fn()
     }
   })
+
   beforeEach(() => {
     api.tree.mockClear()
   })
+
   describe('without path', () => {
     let wrapper
 
     beforeEach(() => {
-      const { localVue, i18n, wait, store, config } = Core.init(createLocalVue(), api).useAll()
+      const { plugins, config } = CoreSetup.init(api).useAll()
       config.set('dataDir', '/home/dev/Datashare/')
-      wrapper = mount(InlineDirectoryPicker, { localVue, i18n, wait, store })
+      wrapper = mount(InlineDirectoryPicker, { global: { plugins } })
     })
 
     it('should render the directory list with only "Home"', () => {
@@ -142,9 +145,9 @@ describe('InlineDirectoryPicker.vue', () => {
       // Select the first directory
       wrapper.findAll('.inline-directory-picker__browser__item__link').at(0).trigger('click')
       await flushPromises()
-      expect(wrapper.emitted().input).toBeDefined()
-      expect(wrapper.emitted().input).toHaveLength(1)
-      expect(wrapper.emitted().input[0]).toEqual(['/home/dev/Datashare/01FOO'])
+      expect(wrapper.emitted()).toHaveProperty('update:path')
+      expect(wrapper.emitted('update:path')).toHaveLength(1)
+      expect(wrapper.emitted('update:path').pop()).toEqual(['/home/dev/Datashare/01FOO'])
     })
   })
 
@@ -153,11 +156,12 @@ describe('InlineDirectoryPicker.vue', () => {
 
     beforeEach(() => {
       const path = '/home/dev/Datashare/01FOO'
-      const propsData = { path }
-      const { localVue, i18n, wait, store, config } = Core.init(createLocalVue(), api).useAll()
+      const props = { path }
+      const { plugins, config } = CoreSetup.init(api).useAll()
       config.set('dataDir', '/home/dev/Datashare/')
-      wrapper = mount(InlineDirectoryPicker, { localVue, i18n, wait, store, propsData })
+      wrapper = mount(InlineDirectoryPicker, { global: { plugins }, props })
       api.tree.mockResolvedValue(HOME_01FOO_TREE)
+      config.set('dataDir', '/home/dev/Datashare/')
     })
 
     it('should render the directory list with "Home" and "01FOO"', () => {
@@ -177,9 +181,9 @@ describe('InlineDirectoryPicker.vue', () => {
     it('should emit an input event when clicking on "Home"', async () => {
       wrapper.findAll('.inline-directory-picker__header__list__item').at(0).trigger('click')
       await flushPromises()
-      expect(wrapper.emitted().input).toBeDefined()
-      expect(wrapper.emitted().input).toHaveLength(1)
-      expect(wrapper.emitted().input[0]).toEqual(['/home/dev/Datashare'])
+      expect(wrapper.emitted()).toHaveProperty('update:path')
+      expect(wrapper.emitted('update:path')).toHaveLength(1)
+      expect(wrapper.emitted('update:path').pop()).toEqual(['/home/dev/Datashare'])
     })
   })
 })
