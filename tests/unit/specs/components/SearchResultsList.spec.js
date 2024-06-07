@@ -1,9 +1,9 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur-next'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from '~tests/unit/es_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import SearchResultsList from '@/components/SearchResultsList'
 import settings from '@/utils/settings'
 
@@ -12,23 +12,24 @@ describe('SearchResultsList.vue', () => {
 
   const { index, es } = esConnectionHelper.build()
   const api = { elasticsearch: es }
-  const { localVue, i18n, store } = Core.init(createLocalVue(), api).useAll()
+  const core = CoreSetup.init(api).useAll()
+
   async function createView(query = '*', from = 0, size = 25, field = settings.defaultSearchField) {
-    await store.dispatch('search/query', { query, from, size, field })
+    await core.store.dispatch('search/query', { query, from, size, field })
     return shallowMount(SearchResultsList, {
-      localVue,
-      i18n,
-      store
+      global: {
+        plugins: core.plugins
+      }
     })
   }
 
   beforeAll(() => {
     Murmur.config.merge({ userProjects: [index] })
-    store.commit('search/index', index)
+    core.store.commit('search/index', index)
   })
 
   beforeEach(() => {
-    store.commit('search/reset')
+    core.store.commit('search/reset')
   })
 
   describe('filter the results', () => {
@@ -61,7 +62,7 @@ describe('SearchResultsList.vue', () => {
       await letData(es).have(new IndexedDocument('doc_02', index).withNer('paris')).commit()
       await letData(es).have(new IndexedDocument('doc_03', index).withNer('paris')).commit()
 
-      store.commit('search/addFilterValue', { name: 'namedEntityPerson', value: 'paris' })
+      core.store.commit('search/addFilterValue', { name: 'namedEntityPerson', value: 'paris' })
       wrapper = await createView()
 
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
@@ -72,7 +73,7 @@ describe('SearchResultsList.vue', () => {
       await letData(es).have(new IndexedDocument('doc_02', index).withCreationDate('2019-08-20T00:00:00.000Z')).commit()
       await letData(es).have(new IndexedDocument('doc_03', index).withCreationDate('2019-08-21T00:00:00.000Z')).commit()
 
-      store.commit('search/setFilterValue', {
+      core.store.commit('search/setFilterValue', {
         name: 'creationDate',
         value: [new Date('2019-08-20').getTime(), new Date('2019-08-21').getTime()]
       })
