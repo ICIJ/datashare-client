@@ -1,21 +1,27 @@
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectSelector from '@/components/ProjectSelector'
-import { Core } from '@/core'
-
-const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('ProjectSelector.vue', () => {
+  const { plugins, config } = CoreSetup.init().useAll()
+
   describe('single value selector', () => {
     let wrapper
 
     beforeEach(() => {
-      Murmur.config.merge({
-        defaultProject: 'first-index',
-        projects: [{ name: 'second-index' }, { name: 'third-index' }]
+      const projects = [{ name: 'second-index' }, { name: 'third-index' }]
+      config.merge({ defaultProject: 'first-index', projects })
+
+      wrapper = shallowMount(ProjectSelector, {
+        global: {
+          plugins,
+          renderStubDefaultSlot: true
+        },
+        props: {
+          value: 'first-index'
+        }
       })
-      wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: 'first-index' } })
     })
 
     it('should load projects list from config, not including the default project', () => {
@@ -38,13 +44,18 @@ describe('ProjectSelector.vue', () => {
     let wrapper
 
     beforeEach(() => {
-      Murmur.config.merge({
-        projects: [{ name: 'first-index' }, { name: 'second-index' }, { name: 'third-index' }]
-      })
+      const projects = [{ name: 'first-index' }, { name: 'second-index' }, { name: 'third-index' }]
+      config.merge({ projects, defaultProject: 'first-index' })
+
       wrapper = shallowMount(ProjectSelector, {
-        localVue,
-        store,
-        propsData: { value: ['first-index'], multiple: true }
+        global: {
+          plugins,
+          renderStubDefaultSlot: true
+        },
+        props: {
+          modelValue: ['first-index'],
+          multiple: true
+        }
       })
     })
 
@@ -67,7 +78,7 @@ describe('ProjectSelector.vue', () => {
     })
 
     it('should  have no disable option', async () => {
-      await wrapper.setProps({ value: ['first-index', 'second-index'] })
+      await wrapper.setProps({ modelValue: ['first-index', 'second-index'] })
       const { projectOptions } = wrapper.vm
       expect(projectOptions).toEqual(
         expect.arrayContaining([{ disabled: false, value: 'first-index', text: 'First Index' }])
