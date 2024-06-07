@@ -1,60 +1,61 @@
-import { createLocalVue, mount } from '@vue/test-utils'
-import Murmur from '@icij/murmur-next'
+import { h, defineComponent } from 'vue'
+import { mount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Hook from '@/components/Hook'
-
-const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 // Functional component (such as Hook) must be wrapped inside a non-functional
 // component to be tested with Vue Test Utils.
 //
 // @see https://stevenklambert.com/writing/unit-testing-vuejs-functional-component-multiple-root-nodes/
-const WrappedHook = {
+const WrappedHook = defineComponent({
   components: { Hook },
   template: `
     <div>
       <hook v-bind="$attrs" v-on="$listeners" ref="hook" />
     </div>
   `
-}
+})
 
 // Create a "hooked component" defintion with a render function.
 //
 // Because we use custom component, the runtime-build function must be defined
 // explicitely in the hooked component definition.
 function hookedComponentDefinition(content = '') {
-  return {
-    render(h) {
+  // eslint-disable-next-line vue/one-component-per-file
+  return defineComponent({
+    render() {
       return h('div', { class: 'hooked-component' }, content)
     }
-  }
+  })
 }
 
 describe('Hook.vue', () => {
+  const { config, plugins, store } = CoreSetup.init().useAll()
+
   beforeEach(() => {
-    Murmur.config.merge({ hooksDebug: false })
+    config.merge({ hooksDebug: false })
     store.commit('hooks/reset')
   })
 
   it('should be a Vue instance', () => {
-    const wrapper = mount(WrappedHook, { localVue, store })
+    const wrapper = mount(WrappedHook, { global: { plugins } })
     expect(wrapper).toBeTruthy()
   })
 
   it('should have one component', () => {
     const definition = hookedComponentDefinition()
     store.commit('hooks/register', { target: 'test-hook-one-component', definition })
-    const propsData = { name: 'test-hook-one-component' }
-    const wrapper = mount(WrappedHook, { localVue, store, propsData })
+    const props = { name: 'test-hook-one-component' }
+    const wrapper = mount(WrappedHook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(1)
   })
 
   it('should have two components', () => {
     store.commit('hooks/register', { target: 'test-hook-two-components', definition: hookedComponentDefinition('foo') })
     store.commit('hooks/register', { target: 'test-hook-two-components', definition: hookedComponentDefinition('bar') })
-    const propsData = { name: 'test-hook-two-components' }
-    const wrapper = mount(WrappedHook, { localVue, store, propsData })
+    const props = { name: 'test-hook-two-components' }
+    const wrapper = mount(WrappedHook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(2)
   })
 
@@ -63,16 +64,16 @@ describe('Hook.vue', () => {
     store.commit('hooks/register', { target: 'test-hook-one-component-only', definition })
     store.commit('hooks/register', { target: 'test-foo', definition })
     store.commit('hooks/register', { target: 'test-bar', definition })
-    const propsData = { name: 'test-hook-one-component-only' }
-    const wrapper = mount(WrappedHook, { localVue, store, propsData })
+    const props = { name: 'test-hook-one-component-only' }
+    const wrapper = mount(WrappedHook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(1)
   })
 
   it('should have two ordered components', () => {
     store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('0') })
     store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
-    const propsData = { name: 'test-ordered-components' }
-    const wrapper = mount(WrappedHook, { localVue, store, propsData })
+    const props = { name: 'test-ordered-components' }
+    const wrapper = mount(WrappedHook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component').at(0).text()).toBe('0')
     expect(wrapper.findAll('.hooked-component').at(1).text()).toBe('1')
   })
@@ -84,20 +85,20 @@ describe('Hook.vue', () => {
       order: 1
     })
     store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
-    const propsData = { name: 'test-ordered-components' }
-    const wrapper = mount(WrappedHook, { localVue, store, propsData })
+    const props = { name: 'test-ordered-components' }
+    const wrapper = mount(WrappedHook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component').at(0).text()).toBe('1')
     expect(wrapper.findAll('.hooked-component').at(1).text()).toBe('0')
   })
 
   it('should not be in debug mode', () => {
-    const wrapper = mount(WrappedHook, { localVue, store })
+    const wrapper = mount(WrappedHook, { global: { plugins } })
     expect(wrapper.findAll('.hook-debug')).toHaveLength(0)
   })
 
   it('should be in debug mode', () => {
-    Murmur.config.merge({ hooksDebug: true })
-    const wrapper = mount(WrappedHook, { localVue, store })
+    config.merge({ hooksDebug: true })
+    const wrapper = mount(WrappedHook, { global: { plugins } })
     expect(wrapper.findAll('.hook-debug')).toHaveLength(1)
   })
 })

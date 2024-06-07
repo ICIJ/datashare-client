@@ -1,4 +1,5 @@
 <script>
+import { h } from 'vue'
 /**
  * Create a Hook slot. Hooks are registered on-the-fly by plugins to insert arbitrary components.
  */
@@ -33,7 +34,7 @@ export default {
       type: String
     }
   },
-  render(createElement) {
+  render() {
     const filterHookedComponentsByTarget = (targetName) => {
       return this.$store.getters['hooks/filterHookedComponentsByTarget'](targetName)
     }
@@ -44,7 +45,7 @@ export default {
 
     const renderedComponents = () => {
       return hookedComponents().map(({ component }) => {
-        return createElement(component, { props: this.bind, class: this.xClass })
+        return h(component, { props: this.bind, class: this.xClass })
       })
     }
 
@@ -53,7 +54,7 @@ export default {
     }
 
     const debugTag = () => {
-      return createElement(this.debugTag, {
+      return h(this.debugTag, {
         class: ['hook-debug'],
         attrs: {
           'aria-hook': this.name,
