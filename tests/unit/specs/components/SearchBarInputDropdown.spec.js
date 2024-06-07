@@ -1,20 +1,24 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
+import { shallowMount } from '@vue/test-utils'
 
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('SearchBarInputDropdown.vue', function () {
-  const { i18n, localVue, store, config } = Core.init(createLocalVue()).useAll()
-  const router = new VueRouter()
+  const { plugins, config } = CoreSetup.init().useAll().useRouter()
   let wrapper
 
   beforeAll(() => {
     config.set('projects', [{ name: 'local-datashare', label: 'default' }])
     const options = ['all', 'relevance', 'creationDateNewest']
     const optionsPath = ['search', 'field']
-    const propsData = { options, optionsPath, value: 'all' }
-    wrapper = shallowMount(SearchBarInputDropdown, { propsData, i18n, localVue, router, store })
+    const props = { options, optionsPath, value: 'all' }
+    wrapper = shallowMount(SearchBarInputDropdown, {
+      props,
+      global: {
+        plugins,
+        renderStubDefaultSlot: true
+      }
+    })
   })
 
   it('should display a dropdown with 2 options fields', () => {

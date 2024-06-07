@@ -1,17 +1,17 @@
 import cloneDeep from 'lodash/cloneDeep'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { errors as esErrors } from 'elasticsearch-browser'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Search from '@/pages/Search'
 import { state, getters, mutations } from '@/store/modules/search'
 
 describe('Search.vue', () => {
   let store
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue } = CoreSetup.init().useAll()
   const router = new VueRouter()
   const actionsStore = { query: vi.fn(), refresh: vi.fn(), updateFromRouteQuery: vi.fn() }
   let wrapper = null

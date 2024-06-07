@@ -1,12 +1,10 @@
-import { createLocalVue, mount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
+import { mount } from '@vue/test-utils'
 
 import SearchBarInputDropdownForProjects from '@/components/SearchBarInputDropdownForProjects'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('SearchBarInputDropdownForProjects.vue', function () {
-  const { i18n, localVue, store, config } = Core.init(createLocalVue()).useAll()
-  const router = new VueRouter()
+  const { plugins, config } = CoreSetup.init().useAll().useRouter()
 
   beforeAll(() => {
     config.set('projects', [
@@ -17,33 +15,33 @@ describe('SearchBarInputDropdownForProjects.vue', function () {
   })
 
   it('should display a dropdown with 3 options for each project', () => {
-    const propsData = { value: [{ name: 'local-datashare' }] }
-    const wrapper = mount(SearchBarInputDropdownForProjects, { propsData, i18n, localVue, router, store })
+    const props = { modelValue: [{ name: 'local-datashare' }] }
+    const wrapper = mount(SearchBarInputDropdownForProjects, { props, global: { plugins } })
     expect(wrapper.findAll('.dropdown-item')).toHaveLength(3)
   })
 
   it('should display a dropdown with "Default" selected', () => {
-    const propsData = { value: [{ name: 'local-datashare' }] }
-    const wrapper = mount(SearchBarInputDropdownForProjects, { propsData, i18n, localVue, router, store })
+    const props = { modelValue: [{ name: 'local-datashare' }] }
+    const wrapper = mount(SearchBarInputDropdownForProjects, { props, global: { plugins } })
     expect(wrapper.find('.dropdown-item.active').text().trim()).toBe('Default')
   })
 
   it('should display a dropdown with "Default" as button content', () => {
-    const propsData = { value: [{ name: 'local-datashare' }] }
-    const wrapper = mount(SearchBarInputDropdownForProjects, { propsData, i18n, localVue, router, store })
+    const props = { modelValue: [{ name: 'local-datashare' }] }
+    const wrapper = mount(SearchBarInputDropdownForProjects, { props, global: { plugins } })
     expect(wrapper.find('.dropdown-toggle').text().trim()).toBe('Default')
   })
 
   it('should display a dropdown with "Default" and "Foo selected', () => {
-    const propsData = { value: [{ name: 'local-datashare' }, { name: 'foo' }] }
-    const wrapper = mount(SearchBarInputDropdownForProjects, { propsData, i18n, localVue, router, store })
+    const props = { modelValue: [{ name: 'local-datashare' }, { name: 'foo' }] }
+    const wrapper = mount(SearchBarInputDropdownForProjects, { props, global: { plugins } })
     expect(wrapper.findAll('.dropdown-item.active').at(0).text().trim()).toBe('Foo')
     expect(wrapper.findAll('.dropdown-item.active').at(1).text().trim()).toBe('Default')
   })
 
   it('should display a dropdown with 2 projects as button content', () => {
-    const propsData = { value: [{ name: 'local-datashare' }, { name: 'foo' }] }
-    const wrapper = mount(SearchBarInputDropdownForProjects, { propsData, i18n, localVue, router, store })
+    const props = { modelValue: [{ name: 'local-datashare' }, { name: 'foo' }] }
+    const wrapper = mount(SearchBarInputDropdownForProjects, { props, global: { plugins } })
     expect(wrapper.find('.dropdown-toggle').text().trim()).toBe('2 projects')
   })
 })
