@@ -218,9 +218,7 @@ export default {
     uriFromStore() {
       const from = 0
       const query = { ...this.$store.getters['search/toRouteQuery'](), from }
-      const {
-        route: { fullPath }
-      } = this.$router.resolve({ name: 'search', query })
+      const { fullPath } = this.$router.resolve({ name: 'search', query })
       return fullPath
     },
     visibleSorts() {
