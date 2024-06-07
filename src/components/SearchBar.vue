@@ -36,7 +36,7 @@
             class="search-bar__suggestions dropdown-menu"
             :hide="!suggestions.length"
             :items="suggestions"
-            @input="selectTerm"
+            @update:modelValue="selectTerm"
             @click="submit"
           >
             <template #item-label="{ item }">
