@@ -1,15 +1,15 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import TaskItemStatus from '@/components/TaskItemStatus'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('TaskItemStatus.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+  const { plugins } = CoreSetup.init().useAll()
   let wrapper = null
 
   beforeEach(() => {
     const taskItem = { uuid: '1', state: 'SUCCESS' }
-    wrapper = shallowMount(TaskItemStatus, { i18n, localVue, propsData: { taskItem } })
+    wrapper = shallowMount(TaskItemStatus, { global: { plugins }, props: { taskItem } })
   })
 
   describe('isFailed', () => {
