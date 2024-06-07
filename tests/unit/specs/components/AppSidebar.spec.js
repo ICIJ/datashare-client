@@ -1,8 +1,8 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { vi } from 'vitest'
 
 import AppSidebar from '@/components/AppSidebar'
-import { Core } from '@/core'
+import CoreSetup from "~tests/unit/CoreSetup";
 
 vi.mock('@/utils/utils', () => {
   return {
@@ -16,23 +16,25 @@ describe('AppSidebar.vue', () => {
     getVersion: vi.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } })
   }
 
-  const { config, i18n, localVue, router, store } = Core.init(createLocalVue(), api).useAll()
+  const { config, plugins, router } = CoreSetup.init(api).useAll().useRouter()
   let wrapper = null
-
+  const options = { global: { plugins, renderStubDefaultSlot: true, stubs: { LocalesMenu: false } }, router }
   function setServerMode() {
     config.merge({ mode: 'SERVER' })
-    return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
+    return shallowMount(AppSidebar, { ...options })
   }
-
+  function setLocalMode() {
+    config.merge({ mode: 'LOCAL' })
+    return shallowMount(AppSidebar, { ...options })
+  }
   function setBasicAuthFilter() {
     config.merge({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter', mode: 'SERVER' })
-    return shallowMount(AppSidebar, { config, i18n, localVue, router, store })
+    return shallowMount(AppSidebar, { ...options })
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
-    config.merge({ mode: 'LOCAL' })
-    wrapper = shallowMount(AppSidebar, { config, i18n, localVue, router, store })
+    wrapper = setLocalMode()
   })
 
   afterAll(() => {
@@ -56,12 +58,12 @@ describe('AppSidebar.vue', () => {
 
   describe('the logout link', () => {
     it('should NOT be displayed if NOT in SERVER mode', () => {
-      expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeFalsy()
+      expect(wrapper.find('.app-sidebar__container__menu__item--logout').exists()).toBeFalsy()
     })
 
     it('should be displayed if in SERVER mode', () => {
       wrapper = setServerMode()
-      expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeTruthy()
+      expect(wrapper.find('.app-sidebar__container__menu__item--logout').exists()).toBeTruthy()
     })
 
     describe('in basic auth', () => {
@@ -91,11 +93,11 @@ describe('AppSidebar.vue', () => {
   describe('the Mounted location component', () => {
     it('should NOT be displayed if in SERVER mode', () => {
       wrapper = setServerMode()
-      expect(wrapper.findAll('.app-sidebar__data-location').exists()).toBeFalsy()
+      expect(wrapper.find('.app-sidebar__data-location').exists()).toBeFalsy()
     })
 
     it('should be displayed if NOT in SERVER mode', () => {
-      expect(wrapper.findAll('.app-sidebar__data-location').exists()).toBeTruthy()
+      expect(wrapper.find('.app-sidebar__data-location').exists()).toBeTruthy()
     })
   })
 })
