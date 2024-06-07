@@ -34,9 +34,9 @@
           <search-form-control v-model="searchTerm" :placeholder="$t('plugins.search')" @input="search" />
         </div>
       </div>
-      <b-overlay :show="isLoading" class="plugins__card">
+      <b-overlay :show="isLoading">
         <div class="row my-4">
-          <b-overlay v-for="plugin in plugins" :key="plugin.id" :show="plugin.loading" class="col-6 mb-3">
+          <b-overlay v-for="plugin in plugins" :key="plugin.id" :show="plugin.loading" class="plugins__card col-6 mb-3">
             <b-card footer-border-variant="white">
               <b-card-text>
                 <div class="d-flex">
@@ -168,8 +168,7 @@ export default {
     async search() {
       this.$wait.start(this.loaderId)
       this.plugins = (await this.$core.api.getPlugins(this.searchTerm)).map((plugin) => {
-        plugin.loading = false
-        return plugin
+        return { ...plugin, loading: false }
       })
       this.$wait.end(this.loaderId)
     },
