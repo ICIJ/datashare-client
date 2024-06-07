@@ -1,5 +1,4 @@
 import Murmur from '@icij/murmur-next'
-import  {createRouter, createWebHashHistory} from 'vue-router'
 import { shallowMount } from '@vue/test-utils'
 
 import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
