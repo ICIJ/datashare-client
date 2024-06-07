@@ -23,7 +23,7 @@ export const routes = [
         beforeEnter: (to, from, next) => {
           if (to.query.index || to.query.indices) {
             next({ name: 'search', query: to.query })
-          }else{
+          } else {
             next()
           }
         }
