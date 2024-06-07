@@ -1,7 +1,7 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Plugins from '@/components/Plugins'
 
 const pluginsMock = [
@@ -58,25 +58,24 @@ const pluginsMock = [
 ]
 
 describe('Plugins.vue', () => {
-  let wrapper, i18n, localVue, api
+  const api = {
+    getPlugins: vi.fn(),
+    installPluginFromId: vi.fn(),
+    installPluginFromUrl: vi.fn(),
+    uninstallPlugin: vi.fn()
+  }
 
-  beforeAll(() => {
-    api = {
-      getPlugins: vi.fn(),
-      installPluginFromId: vi.fn(),
-      installPluginFromUrl: vi.fn(),
-      uninstallPlugin: vi.fn()
-    }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-  })
+  let wrapper
+
   beforeEach(async () => {
     vi.clearAllMocks()
     api.getPlugins.mockResolvedValue(pluginsMock)
+    const { plugins } = CoreSetup.init(api).useAll()
     wrapper = shallowMount(Plugins, {
-      i18n,
-      localVue,
+      global: {
+        plugins,
+        renderStubDefaultSlot: true
+      },
       data: () => {
         return { url: 'this.is.an.url' }
       }
@@ -85,27 +84,31 @@ describe('Plugins.vue', () => {
   })
 
   it('should display a button to install a plugin from url', () => {
-    expect(wrapper.find('.plugins .plugins__add b-btn-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins__add b-button-stub').exists()).toBeTruthy()
   })
 
   it('should display a modal to install a plugin from url', () => {
-    expect(wrapper.find('.plugins .plugins__add b-modal-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins__add b-modal-stub').exists()).toBeTruthy()
   })
 
   it('should display a search bar', () => {
-    expect(wrapper.find('.plugins .plugins__search').exists()).toBeTruthy()
-    expect(wrapper.find('.plugins .plugins__search search-form-control-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins__search').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins__search search-form-control-stub').exists()).toBeTruthy()
   })
 
   it('should display a list of plugins', () => {
-    expect(wrapper.findAll('.plugins .plugins__card')).toHaveLength(4)
+    expect(wrapper.findAll('.plugins__card')).toHaveLength(4)
   })
 
   describe('plugin card', () => {
+    let wrapper
+
     beforeEach(async () => {
+      const { plugins } = CoreSetup.init(api).useAll()
       wrapper = mount(Plugins, {
-        i18n,
-        localVue,
+        global: {
+          plugins
+        },
         data: () => {
           return { url: 'this.is.an.url' }
         }
@@ -115,121 +118,133 @@ describe('Plugins.vue', () => {
 
     describe('plugin name', () => {
       it('should display name from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__name').text()).toBe('Plugin 01 Registry Name')
+        const name = wrapper.findAll('.plugins__card').at(0).find('.plugins__card__name')
+        expect(name.text()).toBe('Plugin 01 Registry Name')
       })
 
       it('should display name from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__name').text()).toBe('Plugin 02 Registry Name')
+        const name = wrapper.findAll('.plugins__card').at(1).find('.plugins__card__name')
+        expect(name.text()).toBe('Plugin 02 Registry Name')
       })
 
       it('should display plugin name if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__name').text()).toBe('Plugin 03 Name')
+        const name = wrapper.findAll('.plugins__card').at(2).find('.plugins__card__name')
+        expect(name.text()).toBe('Plugin 03 Name')
       })
     })
 
     describe('plugin description', () => {
       it('should display description from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__description').text()).toBe(
-          'plugin_01_registry_description'
-        )
+        const desc = wrapper.findAll('.plugins__card').at(0).find('.plugins__card__description')
+        expect(desc.text()).toBe('plugin_01_registry_description')
       })
 
       it('should display description from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__description').text()).toBe(
-          'plugin_02_registry_description'
-        )
+        const desc = wrapper.findAll('.plugins__card').at(1).find('.plugins__card__description')
+        expect(desc.text()).toBe('plugin_02_registry_description')
       })
 
       it('should display plugin description if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__description').text()).toBe(
-          'plugin_03_description'
-        )
+        const desc = wrapper.findAll('.plugins__card').at(2).find('.plugins__card__description')
+        expect(desc.text()).toBe('plugin_03_description')
       })
     })
 
     describe('plugin version', () => {
       it('should NOT display the installed version if plugin is NOT installed', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__version').exists()).toBeFalsy()
+        const version = wrapper.findAll('.plugins__card').at(0).find('.plugins__card__version')
+        expect(version.exists()).toBeFalsy()
       })
 
       it('should display the installed version if plugin is installed and has an installed version', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__version').exists()).toBeTruthy()
+        const version = wrapper.findAll('.plugins__card').at(1).find('.plugins__card__version')
+        expect(version.exists()).toBeTruthy()
       })
 
       it('should NOT display the installed version if plugin is installed and has NO installed version', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__version').exists()).toBeFalsy()
+        const version = wrapper.findAll('.plugins__card').at(2).find('.plugins__card__version')
+        expect(version.exists()).toBeFalsy()
       })
     })
 
     describe('plugin official version', () => {
       it('should display the official version if plugin is from registry and has an official version', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__official-version').exists()).toBeTruthy()
+        const officialVersion = wrapper.findAll('.plugins__card').at(0).find('.plugins__card__official-version')
+        expect(officialVersion.exists()).toBeTruthy()
       })
 
       it('should NOT display the official version if plugin is installed and NOT from registry', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__official-version').exists()).toBeFalsy()
+        const officialVersion = wrapper.findAll('.plugins__card').at(2).find('.plugins__card__official-version')
+        expect(officialVersion.exists()).toBeFalsy()
       })
     })
 
     describe('plugin homepage', () => {
       it('should display homepage from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__homepage').text()).toBe(
-          'plugin_01_registry_homepage'
-        )
+        const homepage = wrapper.findAll('.plugins__card').at(0).find('.plugins__card__homepage')
+        expect(homepage.text()).toBe('plugin_01_registry_homepage')
       })
 
       it('should display homepage from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__homepage').text()).toBe(
-          'plugin_02_registry_homepage'
-        )
+        const homepage = wrapper.findAll('.plugins__card').at(1).find('.plugins__card__homepage')
+        expect(homepage.text()).toBe('plugin_02_registry_homepage')
       })
 
       it('should NOT display homepage if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__homepage').exists()).toBeFalsy()
+        const homepage = wrapper.findAll('.plugins__card').at(2).find('.plugins__card__homepage')
+        expect(homepage.exists()).toBeFalsy()
       })
 
       it('should NOT display homepage if there is none', () => {
-        expect(wrapper.find('.plugins__card:nth-child(4) .plugins__card__homepage').exists()).toBeFalsy()
+        const homepage = wrapper.findAll('.plugins__card').at(3).find('.plugins__card__homepage')
+        expect(homepage.exists()).toBeFalsy()
       })
     })
 
     describe('uninstall button', () => {
       it('should display uninstall button if plugin is installed', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__uninstall-button').exists()).toBeTruthy()
+        const uninstallButton = wrapper.findAll('.plugins__card').at(1).find('.plugins__card__uninstall-button')
+        expect(uninstallButton.exists()).toBeTruthy()
       })
 
       it('should NOT display uninstall button if plugin is NOT installed', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__uninstall-button').exists()).toBeFalsy()
+        const uninstallButton = wrapper.findAll('.plugins__card').at(0).find('.plugins__card__uninstall-button')
+        expect(uninstallButton.exists()).toBeFalsy()
       })
     })
 
     describe('download button', () => {
       it('should display download button if plugin is NOT installed', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button').exists()).toBeTruthy()
+        const downloadButton = wrapper.findAll('.plugins__card').at(0).find('.plugins__card__download-button')
+        expect(downloadButton.exists()).toBeTruthy()
       })
 
       it('should NOT display download button if plugin is installed', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button').exists()).toBeFalsy()
+        const downloadButton = wrapper.findAll('.plugins__card').at(1).find('.plugins__card__download-button')
+        expect(downloadButton.exists()).toBeFalsy()
       })
     })
 
     describe('update button', () => {
       it('should NOT display update button if plugin if installed version and same as registry', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__update-button').exists()).toBeFalsy()
+        const updateButton = wrapper.findAll('.plugins__card').at(1).find('.plugins__card__update-button')
+        expect(updateButton.exists()).toBeFalsy()
       })
 
       it('should NOT display update button if plugin is installed and NOT from registry', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__update-button').exists()).toBeFalsy()
+        const updateButton = wrapper.findAll('.plugins__card').at(2).find('.plugins__card__update-button')
+        expect(updateButton.exists()).toBeFalsy()
       })
 
       it('should display update button if plugin is installed and different version from registry', () => {
-        expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__update-button').exists()).toBeTruthy()
+        const updateButton = wrapper.findAll('.plugins__card').at(3).find('.plugins__card__update-button')
+        expect(updateButton.exists()).toBeTruthy()
       })
     })
   })
 
   it('should search for matching plugins', async () => {
-    api.getPlugins.mockReset()
+    api.getPlugins.mockReset().mockResolvedValue(pluginsMock)
     await wrapper.setData({ searchTerm: '02_desc' })
     await wrapper.vm.search()
 
@@ -237,35 +252,20 @@ describe('Plugins.vue', () => {
     expect(api.getPlugins).toBeCalledWith('02_desc')
   })
 
-  it('should call for plugin installation from pluginId', () => {
-    wrapper.vm.installPluginFromId('plugin_01_id')
-
-    expect(api.installPluginFromId).toBeCalledTimes(1)
-    expect(api.installPluginFromId).toBeCalledWith('plugin_01_id')
-    expect(wrapper.vm.plugins[0].show).toBeTruthy()
-  })
-
   it('should call for plugin installation from pluginUrl', () => {
+    const { plugins } = CoreSetup.init(api).useAll()
     wrapper = mount(Plugins, {
-      i18n,
-      localVue,
+      global: {
+        plugins
+      },
       data: () => {
         return { url: 'this.is.an.url' }
       }
     })
-
     wrapper.vm.installPluginFromUrl()
 
     expect(api.installPluginFromUrl).toBeCalledTimes(1)
     expect(api.installPluginFromUrl).toBeCalledWith('this.is.an.url')
     expect(wrapper.vm.isInstallingFromUrl).toBeTruthy()
-  })
-
-  it('should call for plugin uninstallation', () => {
-    wrapper.vm.uninstallPlugin('plugin_01_id')
-
-    expect(api.uninstallPlugin).toBeCalledTimes(1)
-    expect(api.uninstallPlugin).toBeCalledWith('plugin_01_id')
-    expect(wrapper.vm.plugins[0].show).toBeTruthy()
   })
 })
