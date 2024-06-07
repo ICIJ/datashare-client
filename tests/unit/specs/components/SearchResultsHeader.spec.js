@@ -1,14 +1,14 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
-import { Core } from '@/core'
 
 describe('SearchResultsHeader.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const { index: anotherIndex } = esConnectionHelper.build()
-  let wrapper, i18n, localVue, router, store, api
+  let wrapper, api, core
 
   beforeAll(() => {
     api = {
@@ -16,26 +16,26 @@ describe('SearchResultsHeader.vue', () => {
       elasticsearch: es,
       getMappingsByFields: vi.fn()
     }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    router = core.router
-    store = core.store
-    store.commit('search/index', index)
+    core = CoreSetup.init(api).useAll().useRouter()
+    core.store.commit('search/index', index)
   })
 
   beforeEach(() => {
-    wrapper = mount(SearchResultsHeader, { i18n, localVue, router, store })
-    store.commit('search/reset')
+    wrapper = mount(SearchResultsHeader, {
+      global: {
+        plugins: core.plugins
+      }
+    })
+    core.store.commit('search/reset')
   })
 
   describe('progress', () => {
     it('should display one document', async () => {
       await letData(es).have(new IndexedDocument('doc.txt', index).withContent('bar')).commit()
 
-      await store.dispatch('search/query', 'bar')
+      await core.store.dispatch('search/query', 'bar')
 
-      expect(wrapper.find('.search-results-header__settings__size__toggler__slot').text()).toBe('1 – 1')
+      expect(wrapper.find('.search-results-header__settings__size__toggler__slot').text()).toBe('1 - 1')
       expect(wrapper.find('.search-results-header__settings__size__toggler__hits').text()).toBe('on 1 document')
     })
 
@@ -43,9 +43,9 @@ describe('SearchResultsHeader.vue', () => {
       await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
       await letData(es).have(new IndexedDocument('doc_02.txt', index).withContent('bar')).commit()
 
-      await store.dispatch('search/query', 'bar')
+      await core.store.dispatch('search/query', 'bar')
 
-      expect(wrapper.find('.search-results-header__settings__size__toggler__slot').text()).toBe('1 – 2')
+      expect(wrapper.find('.search-results-header__settings__size__toggler__slot').text()).toBe('1 - 2')
       expect(wrapper.find('.search-results-header__settings__size__toggler__hits').text()).toBe('on 2 documents')
     })
   })
@@ -55,7 +55,7 @@ describe('SearchResultsHeader.vue', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(3))
       .commit()
 
-    await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
+    await core.store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     wrapper.setProps({ position: 'top' })
 
     expect(wrapper.findAll('.search-results-header__applied-search-filters')).toHaveLength(1)
@@ -66,7 +66,7 @@ describe('SearchResultsHeader.vue', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(3))
       .commit()
 
-    await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
+    await core.store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     await wrapper.setProps({ position: 'bottom' })
 
     expect(wrapper.findAll('.search-results-header__applied-search-filters')).toHaveLength(0)
@@ -95,28 +95,28 @@ describe('SearchResultsHeader.vue', () => {
 
   it('should show the download results button if results are less than the limit', async () => {
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
-    await store.dispatch('search/query', 'bar')
+    await core.store.dispatch('search/query', 'bar')
     expect(wrapper.find('.search-results-header__settings__btn-download').exists()).toBeTruthy()
   })
 
   it('should show labels by default', async () => {
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
-    await store.dispatch('search/query', 'bar')
+    await core.store.dispatch('search/query', 'bar')
     expect(wrapper.find('.search-results-header__settings__btn-download').text().trim()).toBe('Download results')
   })
 
   it('should not show labels when noLabels property is set', async () => {
     wrapper.setProps({ noLabels: true })
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
-    await store.dispatch('search/query', 'bar')
+    await core.store.dispatch('search/query', 'bar')
     expect(wrapper.find('.search-results-header__settings__btn-download').text().trim()).toHaveLength(0)
   })
 
   it('should send api request when batch download method is called', async () => {
     const query = 'bar'
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent(query)).commit()
-    store.commit('search/indices', [index, anotherIndex])
-    await store.dispatch('search/query', query)
+    core.store.commit('search/indices', [index, anotherIndex])
+    await core.store.dispatch('search/query', query)
     wrapper.vm.tag = 'tag_02'
 
     await wrapper.vm.batchDownload()
@@ -140,7 +140,7 @@ describe('SearchResultsHeader.vue', () => {
   describe('firstDocument', () => {
     it('should return 1', async () => {
       await letData(es).have(new IndexedDocument('doc.txt', index).withContent('bar')).commit()
-      await store.dispatch('search/query', 'bar')
+      await core.store.dispatch('search/query', 'bar')
 
       expect(wrapper.vm.firstDocument).toBe(1)
     })
