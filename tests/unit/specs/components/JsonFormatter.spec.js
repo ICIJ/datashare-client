@@ -1,16 +1,18 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import JsonFormatter from '@/components/JsonFormatter'
-import { Core } from '@/core'
 
 describe('JsonFormatter.vue', () => {
-  let wrapper, localVue
+  let wrapper, core
+
   beforeAll(() => {
-    const core = Core.init(createLocalVue()).useAll()
-    localVue = core.localVue
+    core = CoreSetup.init().useAll()
   })
+
   beforeEach(async () => {
-    wrapper = mount(JsonFormatter, { localVue, propsData: { json: ['foo', 'bar'] } })
+    const global = { plugins: core.plugins }
+    wrapper = mount(JsonFormatter, { global, props: { json: ['foo', 'bar'] } })
     await wrapper.vm.$nextTick()
   })
 
