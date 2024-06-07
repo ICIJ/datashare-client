@@ -1,29 +1,29 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import toLower from 'lodash/toLower'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 
 vi.mock('@/utils/utils')
 
 describe('SearchDocumentNavbar.vue', () => {
   const project = toLower('SearchDocumentNavbar')
-  let wrapper, i18n, localVue, store, router
+  let wrapper, core
 
   beforeAll(() => {
-    const core = Core.init(createLocalVue()).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    router = core.router
-    store.commit('search/index', project)
+    core = CoreSetup.init().useAll().useRouter()
+    core.store.commit('search/index', project)
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
-    const computed = { isServer: () => true }
-    wrapper = shallowMount(SearchDocumentNavbar, { i18n, localVue, store, router, computed })
+    wrapper = mount(SearchDocumentNavbar, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      }
+    })
   })
 
   afterAll(() => {
