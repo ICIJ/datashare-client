@@ -1,10 +1,10 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
-import { Core } from '@/core'
 
 describe('DocumentGlobalSearchTermsTags.vue', () => {
   function mockedDocumentSearchFactory() {
@@ -15,8 +15,9 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
         return this
       },
       commit() {
-        api.searchDocument.mockImplementation(async (index, id, term) => {
+        api.searchDocument = vi.fn().mockImplementation(async (index, id, term) => {
           if (term in this.terms) {
+            console.log(term, this.terms[term])
             return this.terms[term]
           }
           return { count: 0, offsets: [] }
@@ -33,30 +34,30 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       .withTags(tags)
       .commit(es)
     const { id } = indexedDocument.document
-    await store.dispatch('document/get', { id, index })
-    store.commit('search/query', query)
-    const propsData = { document: store.state.document.doc }
-    const wrapper = shallowMount(DocumentGlobalSearchTermsTags, { i18n, localVue, store, propsData })
+    await core.store.dispatch('document/get', { id, index })
+    core.store.commit('search/query', query)
+    const { plugins } = core
+    const props = { document: core.store.state.document.doc }
+    const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
+      global: {
+        plugins,
+        renderStubDefaultSlot: true
+      },
+      props
+    })
     await flushPromises()
     return wrapper
   }
 
   const { index, es } = esConnectionHelper.build()
-  let i18n, localVue, store, api
+  let core, api
 
-  beforeAll(() => {
+  beforeEach(() => {
     api = {
       searchDocument: vi.fn(),
       elasticsearch: es
     }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-  })
-
-  beforeEach(() => {
-    api.searchDocument.mockClear()
+    core = CoreSetup.init(api).useAll()
   })
 
   afterEach(async () => {
@@ -65,8 +66,8 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     // Then clear all mocks
     vi.clearAllMocks()
     // Remove document
-    store.commit('document/reset')
-    store.commit('search/reset')
+    core.store.commit('document/reset')
+    core.store.commit('search/reset')
   })
 
   describe('lists the query terms but the ones about specific field other than "content"', () => {

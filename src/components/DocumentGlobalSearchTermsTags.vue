@@ -90,10 +90,14 @@ export default {
     },
     async searchTerms() {
       for (const { label } of this.queryTermsWithoutNegation) {
-        const { offsets, count } = await this.searchTermInContent(label)
-        const { count: tags } = this.searchTermInTags(label)
-        const { count: metadata } = this.searchTermInMetadata(label)
-        this.terms.push({ label, count, offsets, metadata, tags })
+        try {
+          const { offsets, count } = await this.searchTermInContent(label)
+          const { count: tags } = this.searchTermInTags(label)
+          const { count: metadata } = this.searchTermInMetadata(label)
+          this.terms.push({ label, count, offsets, metadata, tags })
+        } catch {
+          this.terms.push({ label, count: 0, offsets: 0, metadata: 0, tags: 0 })
+        }
       }
     }
   }
