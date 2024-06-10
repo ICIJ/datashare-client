@@ -1,43 +1,36 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import FilterStarred from '@/components/filter/types/FilterStarred'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
 FilterStarred.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterStarred.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  let filter, store, i18n, localVue, router, wait, api
-  let wrapper
+  let api, core, wrapper
 
   beforeAll(() => {
     api = { getStarredDocuments: vi.fn().mockResolvedValue([]), elasticsearch: es }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    router = core.router
-    wait = core.wait
-    filter = store.getters['search/getFilter']({ name: 'starred' })
-
+    core = CoreSetup.init(api).useAll()
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
+    const filter = core.store.getters['search/getFilter']({ name: 'starred' })
+
     wrapper = mount(FilterStarred, {
-      i18n,
-      localVue,
-      router,
-      store,
-      wait,
-      propsData: { filter }
+      props: { filter },
+      global: {
+        plugins: core.plugins
+      }
     })
-    store.commit('search/index', index)
+
+    core.core.store.commit('search/index', index)
   })
 
   afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
@@ -58,13 +51,10 @@ describe('FilterStarred.vue', () => {
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
 
-    expect(wrapper.findAll('.filter__items__item .custom-control-label .filter__items__item__label')).toHaveLength(2)
-    expect(
-      wrapper.findAll('.filter__items__item').at(0).find('.custom-control-label .filter__items__item__label').text()
-    ).toBe('Starred')
-    expect(
-      wrapper.findAll('.filter__items__item').at(1).find('.custom-control-label .filter__items__item__label').text()
-    ).toBe('Not starred')
+    const labels = wrapper.findAll('.filter__items__item .form-check .filter__items__item__label')
+    expect(labels).toHaveLength(2)
+    expect(labels.at(0).text()).toBe('Starred')
+    expect(labels.at(1).text()).toBe('Not starred')
   })
 
   it('should change the selected value', async () => {
@@ -75,22 +65,22 @@ describe('FilterStarred.vue', () => {
     expect(filterBoilerplateWrapper.vm.selected).toEqual([])
     expect(filterBoilerplateWrapper.vm.isAllSelected).toBeTruthy()
 
-    await wrapper.findAll('.filter__items__item .custom-control-input').at(0).setChecked()
+    await wrapper.findAll('.filter__items__item .form-check-input').at(0).setChecked()
     expect(filterBoilerplateWrapper.vm.selected).toEqual([true])
     expect(filterBoilerplateWrapper.vm.isAllSelected).toBeFalsy()
 
-    await wrapper.findAll('.filter__items__item .custom-control-input').at(1).setChecked()
+    await wrapper.findAll('.filter__items__item .form-check-input').at(1).setChecked()
     expect(filterBoilerplateWrapper.vm.selected).toEqual([false])
     expect(filterBoilerplateWrapper.vm.isAllSelected).toBeFalsy()
 
-    await wrapper.findAll('.filter__items__item .custom-control-input').at(1).setChecked(false)
+    await wrapper.findAll('.filter__items__item .form-check-input').at(1).setChecked(false)
     expect(filterBoilerplateWrapper.vm.selected).toEqual([])
     expect(filterBoilerplateWrapper.vm.isAllSelected).toBeTruthy()
   })
 
   it('should fetch the starred documents', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
-    store.commit('starred/documents', [
+    core.store.commit('starred/documents', [
       {
         index,
         id: 'document'
@@ -109,7 +99,7 @@ describe('FilterStarred.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
     await letData(es).have(new IndexedDocument('document_03', index)).commit()
-    store.commit('starred/documents', [
+    core.store.commit('starred/documents', [
       {
         index,
         id: 'document_01'
@@ -131,8 +121,8 @@ describe('FilterStarred.vue', () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
-    await wrapper.findAll('.filter__items__item').at(0).find('.custom-control-input').setChecked()
-    store.commit('search/addFilterValue', {
+    await wrapper.findAll('.filter__items__item').at(0).find('.form-check-input').setChecked()
+    core.store.commit('search/addFilterValue', {
       name: 'starred',
       value: true
     })
