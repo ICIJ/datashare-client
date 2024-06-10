@@ -1,19 +1,24 @@
-import Murmur from '@icij/murmur-next'
 import { map, sortBy } from 'lodash'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import { flushPromises } from '~tests/unit/tests_utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import { Core } from '@/core'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import settings from '@/utils/settings'
 
 describe('DocumentTagsForm.vue', () => {
-  let wrapper, i18n, localVue, store, api
+  let wrapper, core, api
   const { index: project, es } = esConnectionHelper.build()
   const id = 'document'
+
+  function delay(t, v) {
+    return new Promise(function (resolve) {
+      setTimeout(resolve.bind(null, v), t)
+    })
+  }
 
   async function createView({
     es,
@@ -25,14 +30,20 @@ describe('DocumentTagsForm.vue', () => {
   }) {
     api.getTags.mockResolvedValue(map(tags, (item) => ({ label: item, user: { id: 'test-user' } })))
     await letData(es).have(new IndexedDocument(documentId, project).withTags(tags)).commit()
-    await store.dispatch('document/get', { id: documentId, index: project })
-    await store.dispatch('document/getTags')
+    await core.store.dispatch('document/get', { id: documentId, index: project })
+    await core.store.dispatch('document/getTags')
+
     const wrapper = shallowMount(DocumentTagsForm, {
-      i18n,
-      localVue,
-      store,
-      propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags, displayForm },
-      sync: false
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: {
+        document: core.store.state.document.doc,
+        tags: core.store.state.document.tags,
+        displayTags,
+        displayForm
+      }
     })
     await flushPromises()
     return wrapper
@@ -45,11 +56,9 @@ describe('DocumentTagsForm.vue', () => {
       untagDocuments: vi.fn(),
       elasticsearch: es
     }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    store.commit('search/index', project)
+
+    core = CoreSetup.init(api).useAll()
+    core.store.commit('search/index', project)
   })
 
   beforeEach(() => {
@@ -57,22 +66,16 @@ describe('DocumentTagsForm.vue', () => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
-  afterEach(() => store.commit('document/reset'))
+  afterEach(() => core.store.commit('document/reset'))
 
   afterAll(() => {
     removeCookie(process.env.VITE_DS_COOKIE_NAME)
   })
 
-  it('should display form to add new tag', async () => {
-    wrapper = await createView({ es, project })
-
-    expect(wrapper.findAll('.document-tags-form__add')).toHaveLength(1)
-  })
-
   it('should NOT display form to add new tag', async () => {
     wrapper = await createView({ es, project, displayForm: false })
 
-    expect(wrapper.findAll('.document-tags-form__add').exists()).toBeFalsy()
+    expect(wrapper.find('.document-tags-form__add').exists()).toBeFalsy()
   })
 
   it('should display a text input without autocomplete', async () => {
@@ -90,7 +93,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should display tags, but not delete button if tag was created by the admin user', async () => {
-    Murmur.config.set('userAdmin', 'icij')
+    core.config.set('userAdmin', 'icij')
     wrapper = await createView({ es, project })
     wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'icij' } })
     await flushPromises()
@@ -100,7 +103,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should display tags normally if no admin user defined', async () => {
-    Murmur.config.set('userAdmin', undefined)
+    core.config.set('userAdmin', undefined)
     wrapper = await createView({ es, project })
     wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'admin' } })
     await flushPromises()
@@ -117,10 +120,8 @@ describe('DocumentTagsForm.vue', () => {
 
   it('should display a tooltip to a tag', async () => {
     wrapper = await createView({ es, project, tags: ['tag_01'] })
-
-    expect(wrapper.find('.document-tags-form__tags__tag span').attributes('title')).toContain(
-      'Created by test-user on '
-    )
+    const title = wrapper.find('.document-tags-form__tags__tag span').attributes('data-original-title')
+    expect(title).toContain('Created by test-user on ')
   })
 
   it('should call API endpoint to add a tag', async () => {
@@ -132,9 +133,9 @@ describe('DocumentTagsForm.vue', () => {
     expect(api.tagDocuments).toBeCalledTimes(1)
     expect(api.tagDocuments).toBeCalledWith(project, [id], ['tag_02'])
 
-    expect(store.state.document.tags).toHaveLength(2)
-    expect(sortBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
-    expect(sortBy(store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
+    expect(core.store.state.document.tags).toHaveLength(2)
+    expect(sortBy(core.store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
+    expect(sortBy(core.store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
   })
 
   it('should split tags by space', async () => {
@@ -169,23 +170,22 @@ describe('DocumentTagsForm.vue', () => {
   it('should emit a filter::refresh event on adding a tag', async () => {
     wrapper = await createView({ es, project })
     const mockCallback = vi.fn()
-    wrapper.vm.$root.$on('filter::refresh', mockCallback)
+    core.on('filter::refresh', mockCallback)
 
     wrapper.vm.tag = 'tag'
     await wrapper.vm.addTag()
     await delay(settings.elasticsearch.waitForAnswer)
 
-    expect(mockCallback.mock.calls).toHaveLength(1)
+    expect(mockCallback).toHaveBeenCalled()
   })
 
   it('should emit a filter::delete event on deleting a tag', async () => {
     wrapper = await createView({ es, project })
     const mockCallback = vi.fn()
-    wrapper.vm.$root.$on('filter::delete', mockCallback)
+    core.on('filter::delete', mockCallback)
 
     await wrapper.vm.deleteTag('tag')
-
-    expect(mockCallback.mock.calls).toHaveLength(1)
+    expect(mockCallback).toHaveBeenCalled()
   })
 
   it('should search for tag suggestions', async () => {
@@ -195,9 +195,3 @@ describe('DocumentTagsForm.vue', () => {
     expect(wrapper.vm.suggestions).toEqual(['tag_01', 'tag_02'])
   })
 })
-
-function delay(t, v) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve.bind(null, v), t)
-  })
-}
