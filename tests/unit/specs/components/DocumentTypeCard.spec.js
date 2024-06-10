@@ -1,17 +1,18 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Document from '@/api/resources/Document'
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 
-const { localVue, i18n } = Core.init(createLocalVue()).useAll()
+const { plugins } = CoreSetup.init().useAll()
 
 describe('DocumentTypeCard.vue', () => {
   it('should display warning message', () => {
     const wrapper = shallowMount(DocumentTypeCard, {
-      localVue,
-      i18n,
-      propsData: {
+      global: {
+        plugins
+      },
+      props: {
         document: new Document({
           _id: 1,
           _source: {
