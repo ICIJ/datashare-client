@@ -1,17 +1,23 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentThread from '@/components/DocumentThread'
-import { Core } from '@/core'
 
 describe('DocumentThread.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  const api = { elasticsearch: es }
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
-  let wrapper = null
+
+  let core, store, wrapper
+
+  beforeEach(() => {
+    const api = { elasticsearch: es }
+    core = CoreSetup.init(api).useAll()
+    store = core.store
+  })
 
   describe('getThread', () => {
+
     it('should filter on contentType to retrieve emails only', async () => {
       await letData(es)
         .have(
@@ -45,15 +51,16 @@ describe('DocumentThread.vue', () => {
         )
         .commit()
       await store.dispatch('document/get', { id: 'document_01', index })
+
       wrapper = shallowMount(DocumentThread, {
-        i18n,
-        localVue,
-        store,
-        wait,
-        propsData: {
+        global: {
+          plugins: core.plugins
+        },
+        props: {
           document: store.state.document.doc
         }
       })
+
       const thread = await wrapper.vm.getThread()
 
       expect(thread.total).toBe(3)
@@ -100,14 +107,14 @@ describe('DocumentThread.vue', () => {
         .commit()
       await store.dispatch('document/get', { id: 'document_01', index })
       wrapper = shallowMount(DocumentThread, {
-        i18n,
-        localVue,
-        store,
-        wait,
-        propsData: {
+        global: {
+          plugins: core.plugins
+        },
+        props: {
           document: store.state.document.doc
         }
       })
+
       const thread = await wrapper.vm.getThread()
 
       expect(thread.total).toBe(2)
