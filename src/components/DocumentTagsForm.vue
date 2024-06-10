@@ -14,7 +14,7 @@
               :placeholder="$t('document.tagsNew')"
               autocomplete="off"
               autofocus
-              @input="searchTags"
+              @input="searchTags(tag)"
             ></b-form-input>
           </b-input-group>
         </b-overlay>
@@ -120,8 +120,7 @@ export default {
     }
   },
   methods: {
-    searchTags: throttle(async function (event = {}) {
-      const value = event?.target?.value ?? ''
+    searchTags: throttle(async function (value = '') {
       if (value.length < 1) return
       const index = this?.document?.index
       const include = `.*${value.toLowerCase()}.*`
