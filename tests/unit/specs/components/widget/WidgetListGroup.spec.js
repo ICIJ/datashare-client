@@ -1,42 +1,45 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import WidgetListGroup from '@/components/widget/WidgetListGroup'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('WidgetListGroup.vue', () => {
-  const { localVue, store } = Core.init(createLocalVue()).useAll()
+  let plugins, store
 
   beforeEach(() => {
+    const core = CoreSetup.init().useAll()
+    store = core.store
+    plugins = core.plugins
     store.commit('insights/reset')
   })
 
   it('should be a Vue instance', async () => {
-    const propsData = { widget: { content: '' } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { content: '' } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper).toBeTruthy()
   })
 
   it('should have a `widget--list-group` class', async () => {
-    const propsData = { widget: { content: '' } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { content: '' } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper.attributes('class')).toContain('widget--list-group')
   })
 
   it('should contain a title with a `card-body` class', async () => {
-    const propsData = { widget: { title: 'Hello world', card: true } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { title: 'Hello world', card: true } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper.find('.widget__header').attributes('class')).toContain('card-body')
   })
 
   it('should contain a title without `card-body` class', async () => {
-    const propsData = { widget: { title: 'Hello world', card: false } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { title: 'Hello world', card: false } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper.find('.widget__header').attributes('class')).not.toContain('card-body')
@@ -44,8 +47,8 @@ describe('WidgetListGroup.vue', () => {
 
   it('should contain a 3 items', async () => {
     const items = [{ label: 'foo' }, { label: 'bar' }, { label: 'buz', description: 'a short description' }]
-    const propsData = { widget: { title: 'Hello world', card: false, items } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { title: 'Hello world', card: false, items } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper.findAll('.widget__list__item')).toHaveLength(3)
@@ -57,8 +60,8 @@ describe('WidgetListGroup.vue', () => {
 
   it('should contain a link', async () => {
     const items = [{ label: 'foo', href: 'https://www.icij.org' }]
-    const propsData = { widget: { title: 'Hello world', card: false, items } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { title: 'Hello world', card: false, items } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper.findAll('.widget__list__item')).toHaveLength(1)
@@ -74,8 +77,8 @@ describe('WidgetListGroup.vue', () => {
       { label: 'foo', href: 'https://www.icij.org' },
       { label: 'bar', href: 'https://www.icij.org' }
     ]
-    const propsData = { widget: { title: 'Hello world', card: false, items, pipeline } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { title: 'Hello world', card: false, items, pipeline } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper.findAll('.widget__list__item').at(0).text()).toBe('bar')
@@ -88,8 +91,8 @@ describe('WidgetListGroup.vue', () => {
       category: pipeline,
       type: () => [{ label: 'foo' }, { label: 'bar' }]
     })
-    const propsData = { widget: { title: 'Hello world', card: false, pipeline } }
-    const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
+    const props = { widget: { title: 'Hello world', card: false, pipeline } }
+    const wrapper = shallowMount(WidgetListGroup, { global: { plugins }, props })
     await new Promise((resolve) => setImmediate(resolve))
 
     expect(wrapper.findAll('.widget__list__item').at(0).text()).toBe('foo')

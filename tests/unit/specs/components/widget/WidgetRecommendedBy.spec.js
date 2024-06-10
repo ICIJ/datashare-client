@@ -1,21 +1,19 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetRecommendedBy from '@/components/widget/WidgetRecommendedBy'
-import { Core } from '@/core'
 
 const { index, es: elasticsearch } = esConnectionHelper.build()
 const getDocumentUserRecommendations = vi.fn()
 const api = { elasticsearch, getDocumentUserRecommendations }
-const { localVue, router, store, wait, i18n } = Core.init(createLocalVue(), api).useAll()
 
 describe('WidgetRecommendedBy.vue', () => {
   let wrapper
 
   beforeAll(() => {
-    store.commit('insights/project', index)
     // Mock list of recommendation
     api.getDocumentUserRecommendations.mockImplementation(async () => {
       const user = { id: 'jdoe' }
@@ -38,13 +36,13 @@ describe('WidgetRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
+    const { store, plugins } = CoreSetup.init(api).useAll().useRouter()
+    store.commit('insights/project', index)
     wrapper = shallowMount(WidgetRecommendedBy, {
-      localVue,
-      router,
-      store,
-      wait,
-      i18n,
-      propsData: {
+      global: {
+        plugins
+      },
+      props: {
         widget: new widgets.WidgetRecommendedBy({ card: true })
       }
     })

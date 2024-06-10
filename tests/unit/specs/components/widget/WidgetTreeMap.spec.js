@@ -1,6 +1,6 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetTreeMap from '@/components/widget/WidgetTreeMap'
 
 vi.mock('@/api/elasticsearch', async (importOriginal) => {
@@ -20,7 +20,7 @@ vi.mock('@/api/elasticsearch', async (importOriginal) => {
 
 describe('WidgetTreeMap.vue', () => {
   let wrapper = null
-  let core, i18n, localVue, store, api
+  let core, store, api, plugins
 
   beforeAll(() => {
     api = {
@@ -30,20 +30,17 @@ describe('WidgetTreeMap.vue', () => {
         })
       }
     }
-    core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
+    core = CoreSetup.init(api).useAll()
     store = core.store
+    plugins = core.plugins
     document.body.innerHTML = '<div id="widget_tree_map"><svg></svg></div>'
   })
 
   beforeEach(() => {
     store.commit('insights/reset')
     wrapper = shallowMount(WidgetTreeMap, {
-      i18n,
-      localVue,
-      store,
-      propsData: { widget: {} },
+      global: { plugins },
+      props: { widget: {} },
       data() {
         return { id: 'widget_tree_map' }
       }
@@ -59,12 +56,10 @@ describe('WidgetTreeMap.vue', () => {
   })
 
   it('should contain a "hello world" title', () => {
-    const propsData = { widget: { title: 'Hello world' } }
+    const props = { widget: { title: 'Hello world' } }
     wrapper = shallowMount(WidgetTreeMap, {
-      i18n,
-      localVue,
-      store,
-      propsData,
+      global: { plugins },
+      props,
       data() {
         return { id: 'widget_tree_map' }
       }

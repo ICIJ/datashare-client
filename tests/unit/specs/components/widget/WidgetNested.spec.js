@@ -1,26 +1,24 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import * as widgets from '@/store/widgets'
 import WidgetNested from '@/components/widget/WidgetNested'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
-const { index: project, es: elasticsearch } = esConnectionHelper.build()
-const { localVue, router, store, wait, i18n } = Core.init(createLocalVue(), { elasticsearch }).useAll()
+const { index } = esConnectionHelper.build()
 
 describe('WidgetNested.vue', () => {
   let wrapper
 
   beforeAll(() => {
-    store.commit('insights/project', project)
+    const { store, plugins } = CoreSetup.init().useAll()
+    store.commit('insights/project', index)
 
     wrapper = mount(WidgetNested, {
-      localVue,
-      router,
-      store,
-      wait,
-      i18n,
-      propsData: {
+      global: {
+        plugins
+      },
+      props: {
         widget: new widgets.WidgetNested({
           card: true,
           widgets: [
