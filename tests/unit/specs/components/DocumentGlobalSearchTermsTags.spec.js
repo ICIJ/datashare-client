@@ -17,7 +17,6 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       commit() {
         api.searchDocument = vi.fn().mockImplementation(async (index, id, term) => {
           if (term in this.terms) {
-            console.log(term, this.terms[term])
             return this.terms[term]
           }
           return { count: 0, offsets: [] }
