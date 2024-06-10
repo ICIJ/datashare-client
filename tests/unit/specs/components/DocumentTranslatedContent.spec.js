@@ -1,14 +1,14 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import { letTextContent } from '~tests/unit/api_mock'
-import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 describe('DocumentTranslatedContent.vue', () => {
-  let i18n, localVue, store, wait, api
+  let core, api, plugins, store
   const { index, es } = esConnectionHelper.build()
 
   function mockedDocumentContentFactory(id, content = '') {
@@ -41,17 +41,12 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     }
   }
-  beforeAll(() => {
-    api = { getDocumentSlice: vi.fn(), elasticsearch: es }
 
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    wait = core.wait
-  })
   beforeEach(() => {
-    api.getDocumentSlice.mockClear()
+    api = { getDocumentSlice: vi.fn(), elasticsearch: es }
+    core = CoreSetup.init(api).useAll()
+    plugins = core.plugins
+    store = core.store
     store.commit('document/toggleShowTranslatedContent', true)
   })
 
@@ -66,7 +61,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const mocked = mockedDocumentContentFactory('document-without-translation', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withNoContentTranslated()
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, wait, propsData: { document } })
+    const wrapper = mount(DocumentTranslatedContent, { global: { plugins }, props: { document } })
     await wrapper.vm.loadAvailableTranslations()
     await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
@@ -79,7 +74,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-italian', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('Primo', 'FRENCH', 'ITALIAN')
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, wait, propsData: { document } })
+    const wrapper = mount(DocumentTranslatedContent, { global: { plugins }, props: { document } })
     await wrapper.vm.loadAvailableTranslations()
     await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
@@ -92,7 +87,7 @@ describe('DocumentTranslatedContent.vue', () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-english', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('First', 'FRENCH', 'ENGLISH')
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, wait, propsData: { document } })
+    const wrapper = mount(DocumentTranslatedContent, { global: { plugins }, props: { document } })
     await wrapper.vm.loadAvailableTranslations()
     await wrapper.vm.$refs.content.loadMaxOffset()
     await wrapper.vm.$refs.content.loadContentSlice()
