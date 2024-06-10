@@ -5,9 +5,9 @@
         <tree-view
           ref="treeView"
           v-model:path="path"
+          v-model:selected-paths="selectedPaths"
           :query="query"
           :projects="projects"
-          :selected-paths.sync="selectedPaths"
           :pre-body-build="preBodyBuild"
           :sort-by="sortBy"
           :sort-by-order="sortByOrder"
