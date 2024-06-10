@@ -37,7 +37,7 @@ describe('I18nMixin', () => {
 
     it('should switch to Spanish (es)', async () => {
       await core.loadI18Locale('es')
-      expect(core.i18n.locale).toBe('es')
+      expect(core.i18n.global.locale).toBe('es')
     })
 
     it('should have "es" message', async () => {
