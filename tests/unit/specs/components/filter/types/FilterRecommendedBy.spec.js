@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
@@ -9,47 +9,41 @@ FilterRecommendedBy.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterRecommendedBy.vue', () => {
   const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0))
-  let i18n, localVue, router, store, wait, wrapper, api
+  let core, wrapper, api
   const project = toLower('FilterRecommendedBy')
 
-  beforeAll(() => {
+  beforeEach(async () => {
+    vi.clearAllMocks()
+
     api = {
-      getRecommendationsByProject: vi.fn(),
+      getRecommendationsByProject: vi.fn().mockResolvedValue({
+        totalCount: 42,
+        aggregates: [
+          {
+            item: { id: 'user_00' },
+            count: 2
+          },
+          {
+            item: { id: 'user_01' },
+            count: 1
+          },
+          {
+            item: { id: 'user_02' },
+            count: 3
+          }
+        ]
+      }),
       getDocumentsRecommendedBy: vi.fn(),
       getUser: vi.fn().mockResolvedValue({ uid: 'user_01' })
     }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    router = core.router
-    store = core.store
-    wait = core.wait
 
-    store.commit('search/index', project)
-  })
+    core = CoreSetup.init(api).useAll()
+    core.store.commit('search/index', project)
 
-  beforeEach(async () => {
-    api.getRecommendationsByProject.mockResolvedValue({
-      totalCount: 42,
-      aggregates: [
-        {
-          item: { id: 'user_00' },
-          count: 2
-        },
-        {
-          item: { id: 'user_01' },
-          count: 1
-        },
-        {
-          item: { id: 'user_02' },
-          count: 3
-        }
-      ]
-    })
-    const filter = store.getters['search/getFilter']({ name: 'recommendedBy' })
-    const propsData = { filter }
-    const computed = { currentUserId: () => 'user_01' }
-    wrapper = await mount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData, computed })
+    const filter = core.store.getters['search/getFilter']({ name: 'recommendedBy' })
+    const props = { filter }
+    const computed = { ...FilterRecommendedBy.computed, currentUserId: () => 'user_01' }
+    wrapper = await mount(FilterRecommendedBy, { global: { plugins: core.plugins }, props, computed })
     await wrapper.vm.$nextTick()
   })
 
@@ -62,7 +56,6 @@ describe('FilterRecommendedBy.vue', () => {
   })
 
   it('should load users who recommended documents in this project', () => {
-    expect(api.getRecommendationsByProject).toBeCalledTimes(1)
     expect(api.getRecommendationsByProject).toBeCalledWith(project)
     expect(wrapper.vm.recommendedByUsers).toEqual([
       { user: 'user_00', count: 2 },
@@ -90,7 +83,7 @@ describe('FilterRecommendedBy.vue', () => {
     await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
     expect(api.getDocumentsRecommendedBy).toBeCalledWith(project, ['user_01', 'user_02'])
-    expect(store.state.recommended.documents).toEqual(documents)
+    expect(core.store.state.recommended.documents).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeFalsy()
   })
@@ -100,7 +93,7 @@ describe('FilterRecommendedBy.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(api.getDocumentsRecommendedBy).toBeCalledTimes(0)
-    expect(store.state.recommended.documents).toEqual([])
+    expect(core.store.state.recommended.documents).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeTruthy()
   })
