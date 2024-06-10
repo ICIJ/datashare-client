@@ -1,21 +1,27 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
   const { index: project, es: elasticsearch } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), { elasticsearch }).useAll()
-  const propsData = { widget: { title: 'Hello world' } }
-  let wrapper = null
+  const props = { widget: { title: 'Hello world' } }
+  let wrapper
 
   describe('with one valid creation date', () => {
     beforeEach(() => {
+      const { store, plugins } = CoreSetup.init({ elasticsearch }).useAll()
       store.commit('insights/project', project)
-      wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait })
+      wrapper = shallowMount(WidgetDocumentsByCreationDate, {
+        global: {
+          plugins,
+          renderStubDefaultSlot: true
+        },
+        props
+      })
     })
 
     it('should be a Vue instance', () => {
@@ -24,10 +30,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
     it('should rerun init on project change', async () => {
       const init = vi.spyOn(wrapper.vm, 'init').mockImplementationOnce(vi.fn())
-      store.commit('insights/project', anotherProject)
+      wrapper.vm.$store.commit('insights/project', anotherProject)
       await flushPromises()
       expect(init).toBeCalledTimes(1)
-      store.commit('insights/project', project)
+      wrapper.vm.$store.commit('insights/project', project)
       await flushPromises()
       expect(init).toBeCalledTimes(2)
     })
@@ -58,8 +64,15 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
   describe('with 3 valid creation date', () => {
     beforeEach(() => {
+      const { store, plugins } = CoreSetup.init({ elasticsearch }).useAll()
       store.commit('insights/project', anotherProject)
-      wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait })
+      wrapper = shallowMount(WidgetDocumentsByCreationDate, {
+        global: {
+          plugins,
+          renderStubDefaultSlot: true
+        },
+        props
+      })
     })
 
     it('should display 2 selectors', () => {

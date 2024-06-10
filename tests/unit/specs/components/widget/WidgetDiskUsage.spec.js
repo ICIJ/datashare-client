@@ -1,25 +1,24 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Murmur from '@icij/murmur-next'
+import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDiskUsage from '@/components/widget/WidgetDiskUsage'
-import { Core } from '@/core'
 
 describe('WidgetDiskUsage.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
-  const { index: anotherProject } = esConnectionHelper.build()
   const api = { elasticsearch: es }
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue(), api).useAll()
-  const propsData = { widget: { title: 'Hello world' } }
-  let wrapper = null
+  const { index: anotherProject } = esConnectionHelper.build()
+  const props = { widget: { title: 'Hello world' } }
+  let wrapper
 
   beforeEach(() => {
-    Murmur.config.merge({ dataDir: 'dataDir' })
+    const { store, plugins, config } = CoreSetup.init(api).useAll()
+    config.merge({ dataDir: 'dataDir' })
     store.commit('insights/reset')
     store.commit('insights/project', project)
-    wrapper = shallowMount(WidgetDiskUsage, { i18n, localVue, store, wait, propsData })
+    wrapper = shallowMount(WidgetDiskUsage, { global: { plugins, renderStubDefaultSlot: true }, props })
   })
 
   it('should be a Vue instance', () => {
@@ -36,7 +35,7 @@ describe('WidgetDiskUsage.vue', () => {
   it('should reset path on project change', async () => {
     await wrapper.setData({ path: 'path_01' })
     expect(wrapper.vm.path).toBe('path_01')
-    store.commit('insights/project', anotherProject)
+    wrapper.vm.$store.commit('insights/project', anotherProject)
     await flushPromises()
     expect(wrapper.vm.path).toBe('dataDir')
   })
