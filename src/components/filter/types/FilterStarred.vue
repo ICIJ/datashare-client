@@ -82,7 +82,7 @@ export default {
         values = values.slice(1)
       }
       this.setFilterValue(this.filter, { key: values })
-      EventBus.emit('filter::add-filter-values', { filter: this.filter, values })
+      this.$core.emit('filter::add-filter-values', { filter: this.filter, values })
       if (refresh) {
         this.refreshRouteAndSearch()
       }

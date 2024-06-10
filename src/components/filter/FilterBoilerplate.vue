@@ -68,7 +68,7 @@
               v-model="selected"
               class="list-group-item p-0 border-0"
               stacked
-              @input="changeSelectedValues"
+              @change="changeSelectedValues"
             >
               <div v-for="({ value, item, label }, i) of options" :key="i" class="filter__items__item">
                 <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
@@ -102,10 +102,19 @@
           <template #complete><span></span></template>
         </infinite-loading>
       </div>
-      <filter-footer v-if="!hideFooter" :filter="filter" :hide-contextualize="hideContextualize"
-        :hide-exclude="hideExclude" :hide-show-more="hideShowMore" :hide-sort="hideSort"
-        :sort-by-options.sync="sortByOptions" @contextualize-filter="toggleContextualizeFilter"
-        @open-filter-search="openFilterSearch" @toggle-filter="toggleFilter" @sorted="applySort" />
+      <filter-footer
+        v-if="!hideFooter"
+        :filter="filter"
+        :hide-contextualize="hideContextualize"
+        :hide-exclude="hideExclude"
+        :hide-show-more="hideShowMore"
+        :hide-sort="hideSort"
+        :sort-by-options.sync="sortByOptions"
+        @contextualize-filter="toggleContextualizeFilter"
+        @open-filter-search="openFilterSearch"
+        @toggle-filter="toggleFilter"
+        @sorted="applySort"
+      />
     </b-collapse>
   </div>
 </template>
@@ -129,7 +138,6 @@ import {
 } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 
-import { EventBus } from '@/utils/event-bus'
 import FilterFooter from '@/components/filter/FilterFooter'
 import Hook from '@/components/Hook'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -388,15 +396,15 @@ export default {
         this.$emit('update:modelQuery', this.query)
       }
     },
-    collapseItems () {
+    collapseItems() {
       this.initialize()
     }
   },
   async mounted() {
     // Listen for event to refresh the filter
-    EventBus.on('filter::refresh', () => this.aggregateWithLoading())
+    this.$core.on('filter::refresh', () => this.aggregateWithLoading())
     // Listen for deletion of a filter value
-    EventBus.on('filter::delete', ({ name, value: { label: key } }) => this.deleteFilterKey({ name, key }))
+    this.$core.on('filter::delete', ({ name, value: { label: key } }) => this.deleteFilterKey({ name, key }))
     // Initialize the filter for the first time
     this.initialize()
   },
@@ -443,16 +451,16 @@ export default {
       /**
        * Triggered at the root level when user starts to search in the filter values.
        */
-      EventBus.emit('filter::async-search', { filter: this.filter, query: this.query })
+      this.$core.emit('filter::async-search', { filter: this.filter, query: this.query })
       /**
        * Triggered when user starts to search in the filter values.
        */
       this.$emit('async-search', this.filter, this.query)
     },
-    deleteFilterKey({ filterName, key }) {
+    deleteFilterKey({ name, key }) {
       // No need to update this filter when it doesn't match
       // with the event's filter
-      if (this.filter.name !== filterName) {
+      if (this.filter.name !== name) {
         return
       }
       // Collects all indexes of the deleted item in the components loaded pages
@@ -561,9 +569,9 @@ export default {
       this.$store.commit('search/includeFilter', this.filter.name)
       this.$emit('reset-filter-values', this.filter, refresh)
     },
-    changeSelectedValues($ev) {
+    changeSelectedValues() {
       const payload = { filter: this.filter, values: this.selected }
-      EventBus.emit('filter::add-filter-values', payload)
+      this.$core.emit('filter::add-filter-values', payload)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', payload)
       this.refreshRouteAndSearch()
