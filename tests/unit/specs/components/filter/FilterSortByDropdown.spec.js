@@ -1,12 +1,10 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import FilterSortByDropdown from '@/components/filter/FilterSortByDropdown'
 
-const { localVue, i18n } = Core.init(createLocalVue()).useAll()
-
 describe('FilterSortByDropdown', () => {
-  const propsData = {
+  const props = {
     sort: { sortBy: '_count', sortByOrder: 'desc' },
     sortByOptions: [
       { sortBy: '_count', sortByOrder: 'asc' },
@@ -16,20 +14,24 @@ describe('FilterSortByDropdown', () => {
     ]
   }
 
+  let wrapper
+
+  beforeEach(() => {
+    const { plugins } = CoreSetup.init().useAll()
+    wrapper = mount(FilterSortByDropdown, { global: { plugins }, props })
+  })
+
   it('should display a list of 4 options', () => {
-    const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     expect(wrapper.findAll('.dropdown-item')).toHaveLength(4)
   })
 
   it('should use "_count" and "desc" order', () => {
-    const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     expect(wrapper.vm.sortBy).toBe('_count')
     expect(wrapper.vm.sortByOrder).toBe('desc')
     expect(wrapper.find('.dropdown-item.active').text()).toBe('Occurrences (decreasing)')
   })
 
   it('should switch "_count" and "asc" order', async () => {
-    const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     const sort = { sortBy: '_count', sortByOrder: 'asc' }
     wrapper.setProps({ sort })
     await wrapper.vm.$nextTick()
@@ -37,7 +39,6 @@ describe('FilterSortByDropdown', () => {
   })
 
   it('should emit update:sort when clicking on a new option', async () => {
-    const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     // Item 2 has a different sortBy and and different sortByOrder
     wrapper.findAll('.dropdown-item').at(2).trigger('click')
     await wrapper.vm.$nextTick()
