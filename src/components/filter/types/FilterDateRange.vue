@@ -29,9 +29,9 @@
             <div class="filter--date-range__inputs d-inline-flex justify-content-between align-items-center">
               <input
                 ref="dateStart"
-                :title="$t('filter.dateRange.from', { dateFormat: placeholderMask })"
+                :title="$t('filter.dateRange.from', { dateFormat: datePlaceholder })"
                 :alt="$t('filter.dateRange.startingDate')"
-                :placeholder="placeholderMask"
+                :placeholder="datePlaceholder"
                 :value="inputValue.start"
                 class="filter--date-range__inputs__start form-control form-control-sm"
                 v-on="inputEvents.start"
@@ -39,9 +39,9 @@
               <fa icon="arrow-right" fixed-width />
               <input
                 ref="dateEnd"
-                :title="$t('filter.dateRange.to', { dateFormat: placeholderMask })"
+                :title="$t('filter.dateRange.to', { dateFormat: datePlaceholder })"
                 :alt="$t('filter.dateRange.endingDate')"
-                :placeholder="placeholderMask"
+                :placeholder="datePlaceholder"
                 :value="inputValue.end"
                 class="filter--date-range__inputs__end form-control form-control-sm"
                 v-on="inputEvents.end"
@@ -83,7 +83,7 @@ export default {
   extends: FilterAbstract,
   data() {
     return {
-      placeholderMask: ''
+      datePlaceholder: ''
     }
   },
   computed: {
@@ -132,9 +132,7 @@ export default {
   },
   methods: {
     updatePlaceholder() {
-      if (this.$refs.calendar && this.placeholderMask !== this.$refs.calendar.$locale?.masks?.L) {
-        this.placeholderMask = this.$refs.calendar.$locale?.masks?.L
-      }
+      this.datePlaceholder = 'MM/DD/YYYY'
     },
     async updateFocus() {
       await this.$nextTick()
