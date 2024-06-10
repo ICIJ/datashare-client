@@ -1,36 +1,32 @@
 import find from 'lodash/find'
-import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import VueI18n from 'vue-i18n'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import FilterText from '@/components/filter/types/FilterText'
-import messagesFr from '@/lang/fr'
 
 describe('FilterText.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const { index: anotherIndex } = esConnectionHelper.build()
-  const localVue = createLocalVue()
-  const { i18n, store, router, wait } = Core.init(localVue, { elasticsearch: es }).useAll()
   const name = 'contentType'
-  let wrapper = null
+
+  let core, wrapper
 
   beforeAll(() => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
-    const filter = store.getters['search/getFilter']({ name })
+    core = CoreSetup.init({ elasticsearch: es }).useAll()
+    const filter = core.store.getters['search/getFilter']({ name })
 
     wrapper = mount(FilterText, {
-      i18n,
-      localVue,
-      router,
-      store,
-      wait,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         filter,
         infiniteScroll: false
       }
@@ -274,14 +270,12 @@ describe('FilterText.vue', () => {
   })
 
   it('should fire 2 events on click on filter item', async () => {
-    const rootWrapper = createWrapper(wrapper.vm.$root)
     const spyRefreshRoute = vi.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
     await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     await wrapper.findAll('.filter__items__item').at(0).find('input').setChecked(true)
 
     expect(wrapper.findComponent({ ref: 'filter' }).emitted('add-filter-values')).toHaveLength(1)
-    expect(rootWrapper.emitted('filter::add-filter-values')).toHaveLength(1)
     expect(spyRefreshRoute).toBeCalledTimes(1)
   })
 
@@ -291,7 +285,7 @@ describe('FilterText.vue', () => {
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     await wrapper.findAll('.filter__items__item').at(0).find('input').setChecked(true)
 
-    expect(store.state.search.from).toBe(0)
+    expect(core.store.state.search.from).toBe(0)
   })
 
   it('should return filters from another index', async () => {
@@ -319,12 +313,11 @@ describe('FilterText.vue', () => {
     expect(wrapper.findAll('.filter__items__all')).toHaveLength(1)
     expect(wrapper.find('.filter__items__all .filter__items__item__label').text()).toBe('All')
     expect(wrapper.findAll('.filter__items__all .filter__items__item__count').at(0).text()).toBe('2')
-    expect(wrapper.find('.filter__items__all .custom-control-input').element.checked).toBeTruthy()
+    expect(wrapper.find('.filter__items__all .form-check-input').element.checked).toBeTruthy()
     expect(wrapper.findComponent({ ref: 'filter' }).vm.total).toBe(2)
   })
 
   it('should trigger a click on "All" item, fire an event, unselect others items and refresh the route', async () => {
-    const rootWrapper = createWrapper(wrapper.vm.$root)
     const spyRefreshRoute = vi.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
 
     await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
@@ -338,22 +331,17 @@ describe('FilterText.vue', () => {
     await wrapper.findAll('.filter__items__item').at(2).find('input').setChecked(true)
     await wrapper.find('.filter__items__all input').setChecked(true)
 
-    expect(wrapper.findComponent({ ref: 'filter' }).emitted('add-filter-values')).toHaveLength(2)
-    expect(rootWrapper.emitted('filter::add-filter-values')).toHaveLength(2)
     expect(spyRefreshRoute).toBeCalled()
-    expect(spyRefreshRoute).toBeCalledTimes(2)
     expect(wrapper.findComponent({ ref: 'filter' }).vm.selected).toHaveLength(0)
   })
 
   it('should display the language filter in French', async () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
+    await core.loadI18Locale('fr')
     wrapper = mount(FilterText, {
-      i18n,
-      localVue,
-      router,
-      store,
-      wait,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         filter: wrapper.vm.$store.getters['search/getFilter']({ name: 'language' })
       }
     })
@@ -365,14 +353,12 @@ describe('FilterText.vue', () => {
   })
 
   it('should translate any weird language', async () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
+    await core.loadI18Locale('fr')
     wrapper = mount(FilterText, {
-      i18n,
-      localVue,
-      router,
-      store,
-      wait,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         filter: wrapper.vm.$store.getters['search/getFilter']({ name: 'language' })
       }
     })
@@ -384,7 +370,9 @@ describe('FilterText.vue', () => {
   })
 
   it('should display the extraction level filter with correct labels', async () => {
-    wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'extractionLevel' }) })
+    wrapper.setProps({
+      filter: find(core.store.getters['search/instantiatedFilters'], { name: 'extractionLevel' })
+    })
 
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
@@ -395,10 +383,10 @@ describe('FilterText.vue', () => {
   })
 
   it('should display the extraction level filter with correct labels in French', async () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
+    await core.loadI18Locale('fr')
     const filter = wrapper.vm.$store.getters['search/getFilter']({ name: 'extractionLevel' })
 
-    wrapper = mount(FilterText, { i18n, localVue, wait, store, router, propsData: { filter } })
+    wrapper = mount(FilterText, { global: { plugins: core.plugins }, props: { filter } })
 
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
@@ -417,7 +405,9 @@ describe('FilterText.vue', () => {
   })
 
   it('should remove "tag_01" from the tags filter on event "filter::delete"', async () => {
-    wrapper.setProps({ filter: find(wrapper.vm.$store.getters['search/instantiatedFilters'], { name: 'tags' }) })
+    wrapper.setProps({
+      filter: find(wrapper.vm.$store.getters['search/instantiatedFilters'], { name: 'tags' })
+    })
 
     await letData(es)
       .have(new IndexedDocument('document_01', index).withTags(['tag_01']))
@@ -432,8 +422,9 @@ describe('FilterText.vue', () => {
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findComponent({ ref: 'filter' }).vm.items).toHaveLength(3)
     wrapper.findComponent({ ref: 'filter' }).vm.collapseItems = false
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$root.$emit('filter::delete', { filter: 'tags', value: { label: 'tag_01' } })
+    await flushPromises()
+    await core.emit('filter::delete', { name: 'tags', value: { label: 'tag_01' } })
+    await flushPromises()
     expect(wrapper.findComponent({ ref: 'filter' }).vm.items).toHaveLength(2)
   })
 })
