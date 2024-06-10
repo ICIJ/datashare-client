@@ -1,20 +1,17 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentNotes from '@/components/document/DocumentNotes'
-import { Core } from '@/core'
 
 describe('DocumentNotes.vue', () => {
-  let wrapper, i18n, localVue, store, api
-  beforeAll(() => {
-    api = { retrieveNotes: vi.fn() }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-  })
+  let wrapper, core, api
+
   beforeEach(() => {
-    wrapper = shallowMount(DocumentNotes, { i18n, localVue, store })
+    api = { retrieveNotes: vi.fn() }
+    core = CoreSetup.init(api).useAll()
+    wrapper = shallowMount(DocumentNotes, { global: { plugins: core.plugins } })
   })
+
   it('should NOT display note on document', () => {
     expect(wrapper.find('b-alert-stub').exists()).toBeFalsy()
   })
