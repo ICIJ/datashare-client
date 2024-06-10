@@ -12,7 +12,7 @@
         <selectable-dropdown
           v-model="selectedValues"
           :items="items"
-          :eq="equality"
+          :eq="isEqual"
           :multiple="multiple"
           :serializer="serializer"
           deactivate-keys
@@ -87,13 +87,13 @@ export default {
   },
   computed: {
     isActive() {
-      return this.modelValue?.length > 0 || !!this.modelValue.value
+      return this.modelValue?.length > 0 || !!this.modelValue?.value
     }
   },
   watch: {
     modelValue: {
       handler(value) {
-        if(!isEqual(this.selectedValues,value)){
+        if (!isEqual(this.selectedValues, value)) {
           this.selectedValues = value
         }
       },
@@ -111,9 +111,7 @@ export default {
     }
   },
   methods: {
-    equality(value1, value2) {
-      return isEqual(value1, value2)
-    },
+    isEqual,
     labelItem(item) {
       return item && item.label ? item.label : item
     },
