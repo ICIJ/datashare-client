@@ -94,10 +94,10 @@ export default {
     }
   },
   mounted() {
-    EventBus.on('filter::async-search', this.openFilterSearch)
-    EventBus.on('filter::add-filter-values', this.setFilterValue)
-    EventBus.on('filter::search::reset-filters', this.resetFilterValues)
-    EventBus.on('index::delete::all', this.refreshEachFilter)
+    this.$core.on('filter::async-search', this.openFilterSearch)
+    this.$core.on('filter::add-filter-values', this.setFilterValue)
+    this.$core.on('filter::search::reset-filters', this.resetFilterValues)
+    this.$core.on('index::delete::all', this.refreshEachFilter)
   },
   methods: {
     openFilterSearch({ filter, query }) {

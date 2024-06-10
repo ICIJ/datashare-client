@@ -64,7 +64,6 @@ import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import moment from 'moment'
 
-import { EventBus } from '@/utils/event-bus'
 import displayUser from '@/filters/displayUser'
 import settings from '@/utils/settings'
 
@@ -140,9 +139,10 @@ export default {
       this.tag = ''
       this.suggestions = []
       this.isReady = true
-      delay((name) => EventBus.emit('filter::refresh', { name }), settings.elasticsearch.waitForAnswer, 'tags')
-      if (!this.displayTags)
+      delay((name) => this.$core.emit('filter::refresh', { name }), settings.elasticsearch.waitForAnswer, 'tags')
+      if (!this.displayTags) {
         this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
+      }
       // Focus on the tag input
       if (this.$refs && this.$refs.tag && this.$refs.tag.focus) {
         this.$nextTick(() => {
@@ -153,7 +153,7 @@ export default {
     async deleteTag(tag) {
       this.isReady = false
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
-      EventBus.emit('filter::delete', { name: 'tags', value: tag })
+      this.$core.emit('filter::delete', { name: 'tags', value: tag })
       this.isReady = true
     },
     generateTagTooltip(tag) {
