@@ -32,19 +32,21 @@ describe('BatchSearchResultsDetails.vue', () => {
 
   describe('shallow mounted', () => {
     let wrapper = null
-    let core
+    let plugins, store
 
     beforeEach(async () => {
       const api = vi.fn()
       const props = { batchSearch }
-      core = CoreSetup.init(api).useAll().useRouter()
+      const core = CoreSetup.init(api).useAll().useRouter()
       core.config.merge({ mode: 'SERVER' })
       core.auth.getUsername = vi.fn().mockResolvedValue('test')
-      wrapper = shallowMount(BatchSearchResultsDetails, { props, global: { plugins: core.plugins } })
+      plugins = core.plugins
+      store = core.store
+      wrapper = shallowMount(BatchSearchResultsDetails, { props, global: { plugins } })
     })
 
     afterEach(() => {
-      core.store.commit('batchSearch/reset')
+      store.commit('batchSearch/reset')
       removeCookie(process.env.VITE_DS_COOKIE_NAME)
     })
 
@@ -96,15 +98,16 @@ describe('BatchSearchResultsDetails.vue', () => {
 
   describe('mounted', () => {
     let wrapper = null
-    let core
+    let plugins
 
     beforeEach(async () => {
       const api = vi.fn()
       const props = { batchSearch }
-      core = CoreSetup.init(api).useAll().useRouter()
+      const core = CoreSetup.init(api).useAll().useRouter()
       core.config.merge({ mode: 'SERVER' })
       core.auth.getUsername = vi.fn().mockResolvedValue('test')
-      wrapper = mount(BatchSearchResultsDetails, { props, global: { plugins: core.plugins } })
+      plugins = core.plugins
+      wrapper = mount(BatchSearchResultsDetails, { props, global: { plugins } })
       await flushPromises()
     })
 
