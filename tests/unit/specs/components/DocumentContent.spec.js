@@ -1,11 +1,11 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import { flushPromises } from '~tests/unit/tests_utils'
+import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/DocumentContent'
-import { Core } from '@/core'
 
 // Disable lodash throttle to avoid side-effets
 vi.mock('lodash', async (importOriginal) => {
@@ -26,18 +26,16 @@ vi.mock('@/utils/style', () => {
 window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 describe('DocumentContent.vue', () => {
-  let i18n, localVue, store, wait, api
+  let core, api
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
 
-  beforeAll(() => {
+  beforeEach(() => {
+    vi.clearAllMocks()
     api = { getDocumentSlice: vi.fn(), searchDocument: vi.fn(), elasticsearch: es }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    wait = core.wait
+    core = CoreSetup.init(api).useAll()
   })
+
   async function mockDocumentContentSlice(content = '', { language = 'ENGLISH' } = {}) {
     const contentSlice = letTextContent().withContent(content).getResponse()
     // Index the document
@@ -49,23 +47,20 @@ describe('DocumentContent.vue', () => {
       return { ...contentSlice, content, offset, limit }
     })
     // Get the document from the store
-    await store.dispatch('document/get', { id, index })
-    const document = store.state.document.doc
+    await core.store.dispatch('document/get', { id, index })
+    const document = core.store.state.document.doc
     // Finally flush all promises and return all necessary values
     await flushPromises()
     return { content, contentSlice, document }
   }
 
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
   afterEach(async () => {
     // Ensure all promise are flushed...
     await flushPromises()
     // Remove document
-    store.commit('document/reset')
+    core.store.commit('document/reset')
   })
+
   afterAll(() => {
     vi.mock('@/utils/style')
   })
@@ -75,8 +70,9 @@ describe('DocumentContent.vue', () => {
       const content =
         'this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'
       const { document } = await mockDocumentContentSlice(content)
-      const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
+      const { plugins } = core
+      const props = { document }
+      const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       await wrapper.vm.cookAllContentSlices()
@@ -86,8 +82,9 @@ describe('DocumentContent.vue', () => {
     it('should not sanitize the <mark /> tags in the extracted text', async () => {
       const content = 'this is a <mark>document</mark>'
       const { document } = await mockDocumentContentSlice(content)
-      const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
+      const props = { document }
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       await wrapper.vm.cookAllContentSlices()
@@ -100,8 +97,9 @@ describe('DocumentContent.vue', () => {
       const { document } = await mockDocumentContentSlice(content, {
         language: 'ARABIC'
       })
-      const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
+      const props = { document }
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.find('.document-content__body--rtl').exists()).toBeTruthy()
@@ -109,14 +107,9 @@ describe('DocumentContent.vue', () => {
 
     it('should NOT display the text right to left for english', async () => {
       const { document } = await mockDocumentContentSlice('foo')
-      const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
+      const { plugins } = core
+      const props = { document }
+      const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.find('.document-content__body--rtl').exists()).toBeFalsy()
@@ -124,15 +117,16 @@ describe('DocumentContent.vue', () => {
 
     it('should display "No content extracted for this document" and disable the search input when the extracted text is empty', async () => {
       const { document } = await mockDocumentContentSlice('')
-      const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
+      const { plugins } = core
+      const props = { document }
+      const wrapper = shallowMount(DocumentContent, { props, global: { plugins, renderStubDefaultSlot: true } })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       const element = wrapper.find('.document-content__body--no-content')
-      expect(element.exists()).toBe(true)
+      expect(element.exists()).toBeTruthy()
       expect(element.text()).toBe('No content extracted for this document')
       const input = wrapper.find('document-local-search-input-stub')
-      expect(input.exists()).toBe(true)
+      expect(input.exists()).toBeTruthy()
       expect(input.attributes('disabled')).toBe('true')
     })
   })
@@ -147,8 +141,9 @@ describe('DocumentContent.vue', () => {
 
       it('should not sticky the toolbox by default', async () => {
         const { document } = await mockDocumentContentSlice('')
-        const propsData = { document }
-        const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData, wait })
+        const { plugins } = core
+        const props = { document }
+        const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
         await flushPromises()
         expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeFalsy()
       })
@@ -158,17 +153,15 @@ describe('DocumentContent.vue', () => {
       let wrapper
       let mockDocument
       beforeEach(async () => {
-        const content = 'this is a full full content'
-        mockDocument = await mockDocumentContentSlice(content)
-        api.searchDocument.mockImplementation(async () => {
-          return { count: 2, offsets: [10, 15] }
-        })
-        const propsData = { document: mockDocument.document }
-        wrapper = mount(DocumentContent, { i18n, localVue, store, propsData, wait })
+        api.searchDocument.mockImplementation(async () => ({ count: 2, offsets: [10, 15] }))
+        mockDocument = await mockDocumentContentSlice('this is a full full content')
+        const { plugins } = core
+        const props = { document: mockDocument.document }
+        wrapper = mount(DocumentContent, { props, global: { plugins } })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
         // Use vm.$set method to set nested value reactivly
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'full')
+        wrapper.setData({ localSearchTerm: 'full' })
         await flushPromises()
       })
 
@@ -185,12 +178,12 @@ describe('DocumentContent.vue', () => {
       })
 
       it('should clean marks when updating search term', async () => {
+        api.searchDocument.mockResolvedValue({ count: 1, offsets: [5] })
         const { innerHTML: firstSearch } = wrapper.find('.document-content__body').element
         expect(wrapper.vm.localSearchIndex).toEqual(1)
         expect(firstSearch).toEqual(
           '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
         )
-        api.searchDocument.mockResolvedValue({ count: 1, offsets: [5] })
 
         await wrapper.setProps({ q: 'is' })
         await wrapper.vm.activateContentSliceAround()
@@ -240,26 +233,19 @@ describe('DocumentContent.vue', () => {
       let wrapper
 
       beforeEach(async () => {
+        api.searchDocument.mockImplementation(async () => ({ count: 3, offsets: [10, 15, 28] }))
         const content = 'this is a full FulL content fuLL'
         const { document } = await mockDocumentContentSlice(content)
-        api.searchDocument.mockImplementation(async () => {
-          return { count: 3, offsets: [10, 15, 28] }
-        })
-        const propsData = { document }
-        wrapper = mount(DocumentContent, {
-          i18n,
-          localVue,
-          store,
-          propsData,
-          wait
-        })
+        const { plugins } = core
+        const props = { document }
+        wrapper = mount(DocumentContent, { global: { plugins }, props })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
       })
 
       it('should be case insensitive', async () => {
         // Use vm.$set method to set nested value reactivly
-        wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'full')
+        wrapper.setData({ localSearchTerm: 'full' })
         await flushPromises()
         expect(wrapper.vm.localSearchOccurrences).toEqual(3)
       })
@@ -271,14 +257,9 @@ describe('DocumentContent.vue', () => {
       // Create a document with a small content text length
       const content = 'this is a content'
       const { document } = await mockDocumentContentSlice(content)
-      const propsData = { document }
-      const wrapper = mount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
+      const { plugins } = core
+      const props = { document }
+      const wrapper = mount(DocumentContent, { global: { plugins }, props })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.vm.getContentSlice().content).toBe('this is a content')
@@ -288,15 +269,10 @@ describe('DocumentContent.vue', () => {
       // Create a document with a small content text length
       const content = 'this is a content from Elastic Search doc which looks huge'
       const { document } = await mockDocumentContentSlice(content)
+      const { plugins } = core
       const pageSize = 10
-      const propsData = { document, pageSize }
-      const wrapper = mount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData,
-        wait
-      })
+      const props = { document, pageSize }
+      const wrapper = mount(DocumentContent, { global: { plugins }, props })
       await flushPromises()
       // Load the first slice
       await wrapper.vm.loadContentSlice({ offset: 0 })
