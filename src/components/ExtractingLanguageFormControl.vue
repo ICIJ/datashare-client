@@ -67,20 +67,15 @@ export default {
 </script>
 
 <template>
-  <b-overlay :show="!isReady" :variant="overlayVariant" class="extracting_language_form_control" rounded spinner-small>
-    <b-alert
-      v-if="!textLanguages.length"
-      show
-      variant="danger"
-      class="extracting_language_form_control--no-language mt-3"
-    >
+  <b-overlay :show="!isReady" :variant="overlayVariant" class="extracting-language-form-control" rounded spinner-small>
+    <div v-if="!textLanguages.length" class="extracting-language-form-control--no-language mt-3 alert alert-danger">
       {{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}
-    </b-alert>
+    </div>
     <b-form-select
       v-else
       :model-value="modelValue"
       :options="[nullOption, ...options]"
-      class="extracting_language_form_control__ocr-options"
+      class="extracting-language-form-control__ocr-options"
       @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
     />
   </b-overlay>
