@@ -4,8 +4,11 @@ import VueEllipseProgress from 'vue-ellipse-progress'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import { createVueWait } from 'vue-wait'
+import { createMemoryHistory, createRouter, createWebHashHistory } from 'vue-router'
 
 import { Core } from '@/core/Core'
+import { routes } from '@/router'
+import guards from '@/router/guards'
 
 class CoreSetup extends Core {
   get plugins() {
@@ -41,6 +44,16 @@ class CoreSetup extends Core {
   get wait() {
     return createVueWait({ useVuex: true })
   }
+
+  useRouter(routes = null) {
+    if (routes) {
+      this.router = createRouter({ routes, history: createMemoryHistory() })
+      this.use(this.router)
+      return this
+    }
+    return super.useRouter()
+  }
+
   static init(...options) {
     return new CoreSetup(...options)
   }
