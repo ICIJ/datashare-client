@@ -1,9 +1,9 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FilterDate from '@/components/filter/types/FilterDate'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import filters from '@/mixins/filters'
 
 // Mock all api calls
@@ -14,18 +14,18 @@ filters.methods.refreshRouteAndSearch = vi.fn()
 describe('FilterDate.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const api = { elasticsearch: es }
-  const { i18n, localVue, store, wait, router } = Core.init(createLocalVue(), api).useAll()
-  const filter = store.getters['search/getFilter']({ name: 'indexingDate' })
-  const propsData = { filter }
 
   let wrapper = null
 
   beforeEach(() => {
+    const { store, plugins } = CoreSetup.init(api).useAll()
+    const filter = store.getters['search/getFilter']({ name: 'indexingDate' })
+    const props = { filter }
     store.commit('search/index', index)
-    wrapper = mount(FilterDate, { i18n, localVue, router, store, wait, propsData })
+    wrapper = mount(FilterDate, { global: { plugins, renderStubDefaultSlot: true }, props })
   })
 
-  afterEach(() => store.commit('search/reset'))
+  afterEach(() => wrapper.vm.$store.commit('search/reset'))
 
   it('should display a creation date filter with 2 months', async () => {
     await letData(es).have(new IndexedDocument('doc_01', index).withIndexingDate('2018-04-01T00:00:00.000Z')).commit()
@@ -33,8 +33,7 @@ describe('FilterDate.vue', () => {
     await letData(es).have(new IndexedDocument('doc_03', index).withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
 
     await wrapper.vm.root.aggregate()
-
-    const getItem = (idx) => wrapper.findAll('.filter__items__item').at(idx).find('.custom-checkbox')
+    const getItem = (idx) => wrapper.findAll('.filter__items__item').at(idx).find('.form-check')
     const getItemChild = (idx, selector) => getItem(idx).find(selector)
     const getItemChildText = (idx, selector) => getItemChild(idx, selector).text()
 
