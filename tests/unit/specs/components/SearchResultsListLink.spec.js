@@ -59,7 +59,6 @@ describe('SearchResultsListLink.vue', () => {
         })
       }
     })
-    console.log(wrapper.html())
     expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/child\/parent/)
   })
 
