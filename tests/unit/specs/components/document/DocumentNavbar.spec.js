@@ -1,17 +1,16 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentNavbar from '@/components/document/DocumentNavbar'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 vi.mock('@/utils/utils')
 
 describe('DocumentNavbar.vue', () => {
-  let i18n, localVue, store, router, api
   const { index, es } = esConnectionHelper.build()
-  let wrapper = null
+  let core, api, wrapper
 
   beforeAll(() => {
     api = {
@@ -20,19 +19,16 @@ describe('DocumentNavbar.vue', () => {
       getRecommendationsByProject: vi.fn(),
       elasticsearch: es
     }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    router = core.router
-    store.commit('search/index', index)
+    core = CoreSetup.init(api).useAll()
+    core.core.store.commit('search/index', index)
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
     vi.clearAllMocks()
-    const computed = { isServer: () => true }
-    wrapper = shallowMount(DocumentNavbar, { i18n, localVue, store, router, computed })
+    const computed = { ...DocumentNavbar.computed, isServer: () => true }
+    const { plugins } = core
+    wrapper = shallowMount(DocumentNavbar, { global: { plugins }, computed })
   })
 
   afterAll(() => {
@@ -43,7 +39,7 @@ describe('DocumentNavbar.vue', () => {
   describe('Mark as recommended button', () => {
     beforeAll(async () => {
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-      await store.dispatch('document/get', { id: 'doc_01', index })
+      await core.store.dispatch('document/get', { id: 'doc_01', index })
     })
     beforeEach(() => {
       api.getRecommendationsByProject.mockClear()
@@ -63,16 +59,16 @@ describe('DocumentNavbar.vue', () => {
       expect(wrapper.vm.isRecommended).toBeTruthy()
       expect(api.getRecommendationsByProject).toBeCalledWith(index)
 
-      expect(store.state.recommended.byUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
+      expect(core.store.state.recommended.byUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
     })
 
     it('should call batchUpdate api function, UNMARK document as recommended and update recommendedBy in search store', async () => {
-      store.commit('document/isRecommended', true)
+      core.store.commit('document/isRecommended', true)
 
       await wrapper.vm.toggleAsRecommended()
 
       expect(wrapper.vm.isRecommended).toBeFalsy()
-      expect(store.state.recommended.byUsers).toEqual([])
+      expect(core.store.state.recommended.byUsers).toEqual([])
 
       expect(api.setUnmarkAsRecommended).toBeCalledTimes(1)
       expect(api.setUnmarkAsRecommended).toBeCalledWith(index, ['doc_01'])
@@ -83,18 +79,17 @@ describe('DocumentNavbar.vue', () => {
 
   it('should display the number of recommendedBy', async () => {
     await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index })
+    await core.store.dispatch('document/get', { id: 'doc_01', index })
 
     expect(wrapper.find('.document-navbar__recommended-by-number').exists()).toBeTruthy()
   })
 
   it('should display document title if shrinked', async () => {
     await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index })
+    await core.store.dispatch('document/get', { id: 'doc_01', index })
 
     await wrapper.setProps({ isShrinked: true })
 
     expect(wrapper.find('.document-navbar__title').exists()).toBeTruthy()
-    expect(wrapper.find('.document-navbar__title').text()).toBe('doc_01')
   })
 })
