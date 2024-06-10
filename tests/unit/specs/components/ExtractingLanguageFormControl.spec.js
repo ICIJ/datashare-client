@@ -1,7 +1,7 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
 
 const TEXT_LANGUAGES = [
@@ -13,26 +13,22 @@ const TEXT_LANGUAGES = [
 ]
 
 describe('ExtractingLanguageFormControl.vue', () => {
-  let wrapper
-  let wait, store, i18n, api, localVue
-  beforeAll(async () => {
+  let api
+
+  beforeEach(async () => {
     api = { textLanguages: vi.fn() }
-    localVue = createLocalVue()
-    const core = Core.init(localVue, api).useAll()
-    wait = core.wait
-    store = core.store
-    i18n = core.i18n
   })
-  beforeEach(() => {
-    api.textLanguages.mockClear()
-  })
+
   describe('Has languages available', () => {
+    let wrapper
+
     beforeEach(async () => {
-      // Mock textLanguages method
       api.textLanguages.mockResolvedValue(TEXT_LANGUAGES)
-      wrapper = mount(ExtractingLanguageFormControl, { wait, store, i18n, localVue })
+      const { plugins } = CoreSetup.init(api).useAll()
+      wrapper = mount(ExtractingLanguageFormControl, { global: { plugins } })
       await flushPromises()
     })
+
     it('should list text languages and default', () => {
       expect(wrapper.findAll('option')).toHaveLength(6)
     })
@@ -53,13 +49,20 @@ describe('ExtractingLanguageFormControl.vue', () => {
       expect(wrapper.findAll('option').at(3).text()).toBe('French')
     })
   })
+
   describe('When a fetching error occurs', () => {
-    it('should emit an ocr-error event on text languages reject', async () => {
+    let wrapper
+
+    beforeEach(async () => {
       api.textLanguages.mockRejectedValue({})
-      wrapper = mount(ExtractingLanguageFormControl, { wait, store, i18n, localVue })
+      const { plugins } = CoreSetup.init(api).useAll()
+      wrapper = mount(ExtractingLanguageFormControl, { global: { plugins } })
       await flushPromises()
-      expect(wrapper.find('.extracting_language_form_control--no-language').exists()).toBe(true)
-      expect(wrapper.find('.extracting_language_form_control--no-language').text()).toBe('Failed to retrieve languages')
+    })
+
+    it('should emit an ocr-error event on text languages reject', () => {
+      expect(wrapper.find('.extracting-language-form-control--no-language').exists()).toBeTruthy()
+      expect(wrapper.find('.extracting-language-form-control--no-language').text()).toBe('Failed to retrieve languages')
     })
   })
 })
