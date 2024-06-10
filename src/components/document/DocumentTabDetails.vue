@@ -59,6 +59,7 @@
             <input
               :value="field.value"
               readonly
+              type="text"
               class="form-control document__content__details__item__input-group__input"
             />
             <haptic-copy
