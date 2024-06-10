@@ -1,25 +1,36 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
+import { beforeEach } from 'vitest'
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
 filters.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterBoilerplate.vue', () => {
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue(), {
-    elasticsearch: { searchFilter: vi.fn().mockResolvedValue({}) }
-  }).useAll()
-  const name = 'contentType'
-  const filter = store.getters['search/getFilter']({ name })
-  const propsData = { filter }
+  let core, props
+
+  beforeEach(() => {
+    const elasticsearch = { searchFilter: vi.fn().mockResolvedValue({}) }
+    core = CoreSetup.init({ elasticsearch }).useAll().useRouter()
+    props = {
+      filter: core.store.getters['search/getFilter']({
+        name: 'contentType'
+      })
+    }
+  })
 
   describe('setting a filter value', () => {
     let wrapper = null
 
     beforeEach(() => {
-      wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData })
+      wrapper = shallowMount(FilterBoilerplate, {
+        props,
+        global: {
+          plugins: core.plugins
+        }
+      })
     })
 
     it('should commit a setFilterValue and then refresh the route and the search', () => {
@@ -29,9 +40,9 @@ describe('FilterBoilerplate.vue', () => {
     })
 
     it('should refresh the route', () => {
-      vi.spyOn(router, 'push')
+      vi.spyOn(core.router, 'push')
       wrapper.vm.refreshRoute()
-      expect(router.push).toBeCalled()
+      expect(core.router.push).toBeCalled()
     })
   })
 
@@ -39,33 +50,38 @@ describe('FilterBoilerplate.vue', () => {
     let wrapper = null
 
     beforeEach(() => {
-      wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData })
+      wrapper = shallowMount(FilterBoilerplate, {
+        props,
+        global: {
+          plugins: core.plugins
+        }
+      })
     })
 
     it('should empty "selected" value', () => {
-      wrapper.vm.$set(wrapper.vm, 'selected', ['item'])
+      wrapper.setData({ selected: ['item'] })
       wrapper.vm.resetFilterValues()
       expect(wrapper.vm.selected).toHaveLength(0)
     })
 
     it('should reset the exclude value to "false"', () => {
-      wrapper.vm.$store.commit('search/toggleFilter', filter.name)
-
+      wrapper.vm.$store.commit('search/toggleFilter', 'contentType')
       wrapper.vm.resetFilterValues()
-
       expect(wrapper.vm.excluded).toBeFalsy()
     })
 
     it('should emit an event "reset-filter-values"', () => {
-      wrapper._emitted['reset-filter-values'] = []
-
       wrapper.vm.resetFilterValues()
-
       expect(wrapper.emitted('reset-filter-values')).toHaveLength(1)
     })
 
     it('should maintain the checkbox checked when clicking two times on "all"', () => {
-      wrapper = mount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+      const wrapper = mount(FilterBoilerplate, {
+        props,
+        global: {
+          plugins: core.plugins
+        }
+      })
       wrapper.find('.filter__items__all input').trigger('click')
       expect(wrapper.find('.filter__items__all input').element.checked).toBeTruthy()
       expect(wrapper.vm.isAllSelected).toBeTruthy()
@@ -75,7 +91,12 @@ describe('FilterBoilerplate.vue', () => {
     })
 
     it('should disable the checkbox to select "all" when already selected', () => {
-      wrapper = mount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+      const wrapper = mount(FilterBoilerplate, {
+        props,
+        global: {
+          plugins: core.plugins
+        }
+      })
       wrapper.vm.isAllSelected = true
       expect(wrapper.find('.filter__items__all input').element.checked).toBeTruthy()
       expect(wrapper.find('.filter__items__all input').element.disabled).toBeTruthy()
@@ -86,23 +107,17 @@ describe('FilterBoilerplate.vue', () => {
     let wrapper = null
 
     beforeEach(() => {
-      const computed = {
-        itemsWithExcludedValues() {
-          return [
-            { key: 0, doc_count: 12 },
-            { key: 1, doc_count: 15 }
-          ]
-        }
+      const itemsWithExcludedValues = () => {
+        return [
+          { key: 0, doc_count: 12 },
+          { key: 1, doc_count: 15 }
+        ]
       }
 
       wrapper = shallowMount(FilterBoilerplate, {
-        i18n,
-        localVue,
-        router,
-        store,
-        wait,
-        propsData: { filter },
-        computed
+        computed: { ...FilterBoilerplate.computed, itemsWithExcludedValues },
+        global: { plugins: core.plugins },
+        props
       })
     })
 
@@ -118,23 +133,17 @@ describe('FilterBoilerplate.vue', () => {
     let wrapper = null
 
     beforeEach(() => {
-      const computed = {
-        itemsWithExcludedValues() {
-          return [
-            { key: 'lang.CATALAN', doc_count: 12 },
-            { key: 'lang.FRENCH', doc_count: 15 }
-          ]
-        }
+      const itemsWithExcludedValues = () => {
+        return [
+          { key: 'lang.CATALAN', doc_count: 12 },
+          { key: 'lang.FRENCH', doc_count: 15 }
+        ]
       }
 
       wrapper = shallowMount(FilterBoilerplate, {
-        i18n,
-        localVue,
-        router,
-        store,
-        wait,
-        propsData: { filter },
-        computed
+        computed: { ...FilterBoilerplate.computed, itemsWithExcludedValues },
+        global: { plugins: core.plugins },
+        props
       })
     })
 
@@ -151,23 +160,17 @@ describe('FilterBoilerplate.vue', () => {
 
     beforeEach(() => {
       const noItemTranslation = true
-      const computed = {
-        itemsWithExcludedValues() {
-          return [
-            { key: 'lang.CATALAN', doc_count: 12 },
-            { key: 'lang.FRENCH', doc_count: 15 }
-          ]
-        }
+      const itemsWithExcludedValues = () => {
+        return [
+          { key: 'lang.CATALAN', doc_count: 12 },
+          { key: 'lang.FRENCH', doc_count: 15 }
+        ]
       }
 
       wrapper = shallowMount(FilterBoilerplate, {
-        i18n,
-        localVue,
-        router,
-        store,
-        wait,
-        propsData: { filter, noItemTranslation },
-        computed
+        computed: { ...FilterBoilerplate.computed, itemsWithExcludedValues },
+        global: { plugins: core.plugins },
+        props: { ...props, noItemTranslation }
       })
     })
 
