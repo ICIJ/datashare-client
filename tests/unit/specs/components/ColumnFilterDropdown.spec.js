@@ -1,32 +1,35 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 
 describe('ColumnFilterDropdown.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+  let plugins, wrapper
 
-  let wrapper = null
+  beforeEach(() => {
+    plugins = CoreSetup.init().useAll().plugins
+  })
+
   it('displays a column filter with a dropdown', () => {
-    const propsData = { id: 'filter_id', name: 'filter_name', values: null, items: ['projectA', 'projectB'] }
-    wrapper = shallowMount(ColumnFilterDropdown, { i18n, localVue, propsData })
-    expect(wrapper.find('.column-filter-dropdown').exists()).toBe(true)
-    expect(wrapper.find('selectable-dropdown-stub').exists()).toBe(true)
+    const props = { id: 'filter_id', name: 'filter_name', modelValue: null, items: ['projectA', 'projectB'] }
+    wrapper = shallowMount(ColumnFilterDropdown, { global: { plugins, renderStubDefaultSlot: true }, props })
+    expect(wrapper.find('.column-filter-dropdown').exists()).toBeTruthy()
+    expect(wrapper.find('selectable-dropdown-stub').exists()).toBeTruthy()
   })
 
   it('actives filters on single value', async () => {
-    const propsData = { id: 'filter_id', name: 'filter_name', values: null, items: ['projectA', 'projectB'] }
-    wrapper = shallowMount(ColumnFilterDropdown, { i18n, localVue, propsData })
-    expect(wrapper.vm.isActive).toBe(false)
-    await wrapper.setProps({ values: { value: 'projectA' } })
-    expect(wrapper.vm.isActive).toBe(true)
+    const props = { id: 'filter_id', name: 'filter_name', modelValue: null, items: ['projectA', 'projectB'] }
+    wrapper = shallowMount(ColumnFilterDropdown, { global: { plugins }, props })
+    expect(wrapper.vm.isActive).toBeFalsy()
+    await wrapper.setProps({ modelValue: { value: 'projectA' } })
+    expect(wrapper.vm.isActive).toBeTruthy()
   })
 
   it('actives filters on multiple values', async () => {
-    const propsData = { id: 'filter_id', name: 'filter_name', values: null, items: ['projectA', 'projectB'] }
-    wrapper = shallowMount(ColumnFilterDropdown, { i18n, localVue, propsData })
-    expect(wrapper.vm.isActive).toBe(false)
-    await wrapper.setProps({ values: ['projectA', 'projectB'] })
-    expect(wrapper.vm.isActive).toBe(true)
+    const props = { id: 'filter_id', name: 'filter_name', modelValue: null, items: ['projectA', 'projectB'] }
+    wrapper = shallowMount(ColumnFilterDropdown, { global: { plugins }, props })
+    expect(wrapper.vm.isActive).toBeFalsy()
+    await wrapper.setProps({ modelValue: ['projectA', 'projectB'] })
+    expect(wrapper.vm.isActive).toBeTruthy()
   })
 })
