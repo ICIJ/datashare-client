@@ -1,10 +1,9 @@
 import { noop } from 'lodash'
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import mixin from '@/mixins/filters'
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
 import { jsonResp } from '~tests/unit/tests_utils'
@@ -13,40 +12,28 @@ import { jsonResp } from '~tests/unit/tests_utils'
 mixin.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterNamedEntity.vue', () => {
-  let localVue, i18n, store, wait, api
   const { index, es } = esConnectionHelper.build()
-
   const id = 'document'
   const name = 'namedEntityPerson'
-  let wrapper = null
+  let api, wrapper, core
 
-  beforeAll(() => {
+  beforeEach(() => {
     api = {
-      fetchIndicesStarredDocuments: vi.fn(),
+      fetchIndicesStarredDocuments: vi.fn().mockReturnValue(jsonResp()),
       elasticsearch: es
     }
 
-    const core = Core.init(createLocalVue(), api).useAll()
-
-    localVue = core.localVue
-    i18n = core.i18n
-    store = core.store
-    wait = core.wait
-
-    Murmur.config.set('manageDocuments', true)
+    core = CoreSetup.init(api).useAll()
+    core.config.set('manageDocuments', true)
+    core.store.commit('search/index', index)
+    core.store.commit('search/reset')
+    core.store.commit('search/contextualizeFilter', name)
     mixin.methods.watchedForUpdate = noop
-    store.commit('search/index', index)
-  })
 
-  beforeEach(() => {
-    api.fetchIndicesStarredDocuments.mockReturnValue(jsonResp())
+    const filter = core.store.getters['search/getFilter']({ name })
+    const props = { filter, infiniteScroll: false }
 
-    const filter = store.getters['search/getFilter']({ name })
-    const propsData = { filter, infiniteScroll: false }
-
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData })
-    store.commit('search/reset')
-    store.commit('search/contextualizeFilter', name)
+    wrapper = mount(FilterNamedEntity, { global: { plugins: core.plugins }, props })
   })
 
   afterEach(() => {
@@ -61,7 +48,7 @@ describe('FilterNamedEntity.vue', () => {
       .have(new IndexedDocument('document_02', index).withContentType('type_02').withNer('person_02'))
       .commit()
 
-    store.commit('search/setFilterValue', { name: 'contentType', value: 'type_01' })
+    core.store.commit('search/setFilterValue', { name: 'contentType', value: 'type_01' })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -76,7 +63,7 @@ describe('FilterNamedEntity.vue', () => {
       .commit()
 
     const value = [new Date('2018-09-01T00:00:00.000Z').getTime().toString()]
-    store.commit('search/setFilterValue', { name: 'indexingDate', value })
+    core.store.commit('search/setFilterValue', { name: 'indexingDate', value })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -93,8 +80,8 @@ describe('FilterNamedEntity.vue', () => {
       .have(new IndexedDocument('document_03', index).withContentType('type_03').withNer('person_03'))
       .commit()
 
-    store.commit('search/setFilterValue', { name: 'contentType', value: ['type_01'] })
-    store.commit('search/toggleFilter', 'contentType')
+    core.store.commit('search/setFilterValue', { name: 'contentType', value: ['type_01'] })
+    core.store.commit('search/toggleFilter', 'contentType')
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
@@ -107,7 +94,7 @@ describe('FilterNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('document_02', index).withNer('person_02')).commit()
     await letData(es).have(new IndexedDocument('document_03', index).withNer('person_03')).commit()
 
-    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
+    core.store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -139,7 +126,7 @@ describe('FilterNamedEntity.vue', () => {
       )
       .commit()
 
-    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_02'] })
+    core.store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_02'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -171,7 +158,7 @@ describe('FilterNamedEntity.vue', () => {
       )
       .commit()
 
-    store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_03'] })
+    core.store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_03'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
@@ -184,9 +171,9 @@ describe('FilterNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index).withNer('anne')).commit()
     await letData(es).have(new IndexedDocument('document_02', index).withNer('bruno')).commit()
 
-    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['anne'] })
-    store.commit('search/toggleFilter', 'namedEntityPerson')
-    store.commit('search/decontextualizeFilter', 'namedEntityPerson')
+    core.store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['anne'] })
+    core.store.commit('search/toggleFilter', 'namedEntityPerson')
+    core.store.commit('search/decontextualizeFilter', 'namedEntityPerson')
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
@@ -207,8 +194,8 @@ describe('FilterNamedEntity.vue', () => {
       )
       .commit()
 
-    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
-    store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_01'] })
+    core.store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
+    core.store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_01'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -227,8 +214,8 @@ describe('FilterNamedEntity.vue', () => {
       )
       .commit()
 
-    store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_01'] })
-    store.commit('search/toggleFilter', 'namedEntityOrganization')
+    core.store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_01'] })
+    core.store.commit('search/toggleFilter', 'namedEntityOrganization')
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
@@ -238,16 +225,16 @@ describe('FilterNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument(id, index).withContent('person_01').withNer('person_01')).commit()
 
     await wrapper.vm.root.aggregate({ clearPages: true })
-    await store.dispatch('search/query', '*')
+    await core.store.dispatch('search/query', '*')
 
     expect(wrapper.findAll('.filter__items__all')).toHaveLength(1)
-    expect(wrapper.find('.filter__items__all .custom-control-input').element.checked).toBeTruthy()
+    expect(wrapper.find('.filter__items__all input').element.checked).toBeTruthy()
     expect(wrapper.findAll('.filter__items__all .filter__items__item__label').at(0).text()).toEqual('All')
   })
 
   it('should load and checked the filter values stored in store', async () => {
     await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
-    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
+    core.store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
     await wrapper.vm.$nextTick()
     await wrapper.vm.root.aggregate({ clearPages: true })
 
@@ -258,7 +245,7 @@ describe('FilterNamedEntity.vue', () => {
 
   it('should select the "All" item by default if nothing is selected', async () => {
     await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
-    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
+    core.store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
     await wrapper.vm.$nextTick()
     await wrapper.vm.root.aggregate({ clearPages: true })
     await wrapper.findAll('.filter__items__item input').at(0).setChecked(false)
@@ -329,7 +316,7 @@ describe('FilterNamedEntity.vue', () => {
         )
         .commit()
 
-      store.commit('search/sortFilter', { name, sortBy: '_key', sortByOrder: 'asc' })
+      core.store.commit('search/sortFilter', { name, sortBy: '_key', sortByOrder: 'asc' })
       await wrapper.vm.root.aggregate({ clearPages: true })
 
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
