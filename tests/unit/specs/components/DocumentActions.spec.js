@@ -1,56 +1,51 @@
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import { flushPromises } from '~tests/unit/tests_utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentActions from '@/components/DocumentActions'
-import { Core } from '@/core'
 
 describe('DocumentActions.vue', () => {
-  let i18n, localVue, store
   const { index: project, es } = esConnectionHelper.build()
-  let document = null
-  let wrapper = null
-  let api
+  let api, core, document, store, wrapper
 
   beforeAll(() => {
     api = { starDocuments: vi.fn(), unstarDocuments: vi.fn() }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
+    core = CoreSetup.init(api).useAll()
 
-    Murmur.config.merge({
+    core.config.merge({
       projects: [process.env.VITE_ES_INDEX],
       embeddedDocumentDownloadMaxSize: '1G'
     })
   })
 
   beforeEach(async () => {
-    store.commit('starred/documents', [])
+    core.store.commit('starred/documents', [])
     const indexedDocument = await letData(es).have(new IndexedDocument('document', project)).commit()
     document = indexedDocument.document
     wrapper = shallowMount(DocumentActions, {
-      i18n,
-      localVue,
-      store,
-      propsData: { document },
-      sync: false
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: {
+        document
+      }
     })
   })
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
-    store.commit('starred/documents', [document])
+    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('far,star')
+    core.store.commit('starred/documents', [document])
     await flushPromises()
 
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
+    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace an empty star by a filled one on click on it', async () => {
     expect(wrapper.vm.starredDocuments).toEqual([])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
+    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('far,star')
 
     await wrapper.vm.toggleStarDocument()
 
@@ -60,11 +55,11 @@ describe('DocumentActions.vue', () => {
         index: document.index
       }
     ])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
+    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
-    store.commit('starred/pushDocument', document)
+    core.store.commit('starred/pushDocument', document)
     await flushPromises()
 
     expect(wrapper.vm.starredDocuments).toEqual([
@@ -73,21 +68,21 @@ describe('DocumentActions.vue', () => {
         index: document.index
       }
     ])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
+    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('fa,star')
 
     await wrapper.vm.toggleStarDocument()
 
     expect(wrapper.vm.starredDocuments).toEqual([])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
+    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('far,star')
   })
 
   it('should raise an "filter::starred::refresh" event when adding a star', async () => {
     const mockCallback = vi.fn()
-    wrapper.vm.$root.$on('filter::starred::refresh', mockCallback)
+    core.on('filter::starred::refresh', mockCallback)
 
     await wrapper.vm.toggleStarDocument()
 
-    expect(mockCallback.mock.calls).toHaveLength(1)
+    expect(mockCallback).toHaveBeenCalled()
   })
 
   it('should not display "Download" button if download is not allowed', () => {
@@ -96,14 +91,14 @@ describe('DocumentActions.vue', () => {
 
   it('should display "Download" button if download is allowed', () => {
     wrapper = shallowMount(DocumentActions, {
-      i18n,
-      localVue,
-      store,
-      propsData: {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: {
         document,
         isDownloadAllowed: true
-      },
-      sync: false
+      }
     })
 
     expect(wrapper.find('.document-actions__download').exists()).toBeTruthy()
@@ -111,15 +106,14 @@ describe('DocumentActions.vue', () => {
 
   it('should not display "Download parent" button if document has no parent', () => {
     wrapper = shallowMount(DocumentActions, {
-      i18n,
-      localVue,
-      store,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         document,
         isDownloadAllowed: true,
         displayDownloadOptions: true
-      },
-      sync: false
+      }
     })
 
     expect(wrapper.vm.hasRoot).toBeFalsy()
@@ -132,15 +126,14 @@ describe('DocumentActions.vue', () => {
       .commit()
     document = indexedDocument.document
     wrapper = shallowMount(DocumentActions, {
-      i18n,
-      localVue,
-      store,
-      propsData: {
+      global: {
+        plugins: core.plugins
+      },
+      props: {
         document,
         isDownloadAllowed: true,
         displayDownloadOptions: true
-      },
-      sync: false
+      }
     })
 
     expect(wrapper.vm.hasRoot).toBeTruthy()
