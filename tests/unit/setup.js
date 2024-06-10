@@ -14,6 +14,12 @@ global.console = Object.assign(global.console, {
   info: vi.fn()
 })
 
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn()
+}))
+
 document.fonts = {}
 document.fonts.ready = Promise.resolve()
 
