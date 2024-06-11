@@ -71,10 +71,10 @@ export default {
         }
         const { href } = this.$router.resolve({ name: 'user-history.saved-search.list' })
         const toastParams = { href, noCloseButton: true, variant: 'success' }
-        this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
+        this.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
       } catch (_) {
         const toastParams = { noCloseButton: true, variant: 'danger' }
-        this.$root.$bvToast.toast(this.$t('userHistory.submitError'), toastParams)
+        this.$bvToast.toast(this.$t('userHistory.submitError'), toastParams)
       } finally {
         this.$emit('submit')
       }

@@ -283,7 +283,7 @@ export default {
       const to = { name: 'task.batch-download.list' }
       const variant = 'primary'
       const title = this.$t('batchDownload.created')
-      this.$root.$bvToast.toast(this.$t('batchDownload.inProgress'), { to, variant, title })
+      this.$bvToast.toast(this.$t('batchDownload.inProgress'), { to, variant, title })
     },
     byteSize
   }

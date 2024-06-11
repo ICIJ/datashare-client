@@ -469,7 +469,7 @@ export default {
         try {
           await callback()
         } catch (e) {
-          this.$root.$bvToast.toast(this.$tc(`batchSearch.${failMessageKey}`, this.projects?.length), {
+          this.$bvToast.toast(this.$tc(`batchSearch.${failMessageKey}`, this.projects?.length), {
             noCloseButton: true,
             variant: 'danger'
           })
@@ -548,7 +548,7 @@ export default {
         })
         this.resetForm()
         try {
-          this.$root.$bvToast.toast(this.$t('batchSearch.success'), {
+          this.$bvToast.toast(this.$t('batchSearch.success'), {
             noCloseButton: true,
             variant: 'success'
           })
@@ -598,17 +598,17 @@ export default {
     },
     manageError(errorCode, manageDocuments) {
       if (errorCode === 413) {
-        this.$root.$bvToast.toast(this.$t('batchSearch.submitQueryLimitError'), {
+        this.$bvToast.toast(this.$t('batchSearch.submitQueryLimitError'), {
           noCloseButton: true,
           variant: 'danger'
         })
       } else if (manageDocuments) {
-        this.$root.$bvToast.toast(this.$t('batchSearch.error'), {
+        this.$bvToast.toast(this.$t('batchSearch.error'), {
           noCloseButton: true,
           variant: 'danger'
         })
       } else {
-        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), {
+        this.$bvToast.toast(this.$t('batchSearch.submitError'), {
           noCloseButton: true,
           variant: 'danger'
         })
