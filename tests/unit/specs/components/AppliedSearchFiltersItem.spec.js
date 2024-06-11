@@ -62,9 +62,10 @@ describe('AppliedSearchFiltersItem.vue', () => {
       wrapper = shallowMount(AppliedSearchFiltersItem, { global: { plugins }, props })
       const mockCallback = vi.fn()
       EventBus.on('filter::search::update', mockCallback)
+      const calls = mockCallback.mock.calls.length
 
       await wrapper.vm.deleteQueryTerm()
-      expect(mockCallback.mock.calls).toHaveLength(1)
+      expect(mockCallback.mock.calls).toHaveLength(calls+1)
       mockCallback.mockClear()
     })
 
