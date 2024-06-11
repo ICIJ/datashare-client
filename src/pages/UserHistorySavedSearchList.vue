@@ -113,7 +113,6 @@ export default {
   },
   methods: {
     getDate(date) {
-      console.log(date)
       return humanDate(date, this.$i18n.locale)
     },
     getTime(time) {
