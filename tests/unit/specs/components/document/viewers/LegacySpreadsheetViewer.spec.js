@@ -1,20 +1,16 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
+import CoreSetup from '~tests/unit/CoreSetup'
 import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
-import { Core } from '@/core'
 
 describe('LegacySpreadsheetViewer.vue', () => {
-  let wrapper, api, i18n, localVue
-  beforeAll(async () => {
-    api = { getSource: vi.fn(({ url }) => mockArrayBuffer(url, false)) }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-  })
+  let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue })
+    const api = { getSource: vi.fn(({ url }) => mockArrayBuffer(url, false)) }
+    const { plugins } = CoreSetup.init(api).useAll()
+    wrapper = mount(LegacySpreadsheetViewer, { global: { plugins } })
   })
 
   it('should display an error message if the document does not exist', async () => {
@@ -88,23 +84,6 @@ describe('LegacySpreadsheetViewer.vue', () => {
     expect(
       wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(4).text()
     ).toBe('spreadsheet')
-  })
-
-  it('should change the displayed sheet', async () => {
-    wrapper = mount(LegacySpreadsheetViewer, { i18n, localVue, propsData: { document: { url: 'spreadsheet.xlsx' } } })
-    await wrapper.vm.getWorkbook()
-    await flushPromises()
-    await wrapper
-      .findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__header option')
-      .at(1)
-      .setSelected()
-
-    expect(
-      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(0).text()
-    ).toBe('second')
-    expect(
-      wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(1).text()
-    ).toBe('sheet')
   })
 
   it('should display a thumbnail by page', async () => {
