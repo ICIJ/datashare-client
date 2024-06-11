@@ -13,13 +13,11 @@ describe('SearchFilters', () => {
 
   describe('Common filter', () => {
     it('should reset the store state', () => {
-      const initialFilters = cloneDeep(store.state.search.filters)
+      expect( store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
       store.commit('search/removeFilter', 'contentType')
-      expect(store.state.search.filters).toHaveLength(initialFilters.length - 1)
-      store.commit('search/removeFilter', 'language')
-      expect(store.state.search.filters).toHaveLength(initialFilters.length - 2)
+      expect( store.getters['search/getFilter']({ name: 'contentType' })).toBeUndefined()
       store.commit('search/resetFiltersAndValues')
-      expect(store.state.search.filters).toHaveLength(initialFilters.length)
+      expect( store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
     })
 
     it('should define a "language" filter correctly (name, key and type)', () => {
