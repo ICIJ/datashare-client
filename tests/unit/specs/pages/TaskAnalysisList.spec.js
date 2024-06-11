@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskAnalysisList from '@/pages/TaskAnalysisList'
+import { vi } from 'vitest'
 
 const flushPromisesAndPendingTimers = async ({ vm }) => {
   await vm.$nextTick()
@@ -17,6 +18,9 @@ describe('TaskAnalysisList.vue', () => {
     ]),
     deleteDoneTasks: vi.fn(),
     stopPendingTasks: vi.fn(),
+    getNerPipelines: vi.fn(),
+    textLanguages: vi.fn().mockResolvedValue([]),
+    ocrLanguages: vi.fn().mockResolvedValue([]),
     stopTask: vi.fn(),
     elasticsearch: {
       count: vi.fn().mockResolvedValue({ count: 10 })
