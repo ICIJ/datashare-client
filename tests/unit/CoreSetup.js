@@ -43,7 +43,26 @@ class CoreSetup extends Core {
   get wait() {
     return createVueWait({ useVuex: true })
   }
-
+  useAll(store= null) {
+    if (store) {
+      this.useVuex(store)
+      this.useI18n()
+      this.useBootstrapVue()
+      this.useCommons()
+      this.useWait()
+      this.useCore()
+      return this
+    }
+    return super.useAll()
+  }
+  useVuex(store = null) {
+    if (store) {
+      this._store = store
+      this.use(this.store)
+      return this
+    }
+    return super.useVuex()
+  }
   useRouter(routes = null) {
     if (routes) {
       this._router = createRouter({ routes, history: createMemoryHistory() })
