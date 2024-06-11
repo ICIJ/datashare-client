@@ -146,10 +146,10 @@ export class Api {
     return this.sendActionAsText(`/api/batch/search/${project}`, { method: Method.POST, data })
   }
   getBatchSearch(batchId) {
-    return this.sendActionAsText(`/api/batch/search/${batchId}`)
+    return this.sendAction(`/api/batch/search/${batchId}`)
   }
   getBatchSearchQueries(batchId) {
-    return this.sendActionAsText(`/api/batch/search/${batchId}/queries`)
+    return this.sendAction(`/api/batch/search/${batchId}/queries`)
   }
   getBatchSearches(
     from = 0,
@@ -182,7 +182,7 @@ export class Api {
         searchParams.append(q, queryData[q])
       }
     }
-    return this.sendActionAsText('/api/batch/search?' + searchParams, { method: Method.GET })
+    return this.sendAction('/api/batch/search?' + searchParams, { method: Method.GET })
   }
 
   getBatchSearchResults(
@@ -196,7 +196,7 @@ export class Api {
     queriesExcluded = false
   ) {
     const data = { from, size, queries, sort, order, contentTypes, queriesExcluded }
-    return this.sendActionAsText(`/api/batch/search/result/${batchId}`, { method: Method.POST, data })
+    return this.sendAction(`/api/batch/search/result/${batchId}`, { method: Method.POST, data })
   }
   copyBatchSearch(batchId, name, description) {
     const data = { name, description }
