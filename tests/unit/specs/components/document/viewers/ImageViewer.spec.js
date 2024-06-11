@@ -1,17 +1,16 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Document from '@/api/resources/Document'
 import ImageViewer from '@/components/document/viewers/ImageViewer'
 
-const { localVue } = Core.init(createLocalVue()).useAll()
-
 describe('ImageViewer.vue', () => {
   let wrapper
-  const document = new Document({ _id: 'a-short-id', _rounting: 'a-short-id', _index: 'an-index-name' })
 
   beforeEach(() => {
-    wrapper = mount(ImageViewer, { localVue, propsData: { document } })
+    const document = new Document({ _id: 'a-short-id', _rounting: 'a-short-id', _index: 'an-index-name' })
+    const { plugins } = CoreSetup.init().useAll()
+    wrapper = mount(ImageViewer, { global: { plugins }, props: { document } })
   })
 
   it('should create an image tag', async () => {
