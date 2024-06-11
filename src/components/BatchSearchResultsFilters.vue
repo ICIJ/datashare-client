@@ -30,7 +30,7 @@
         ></search-form-control>
       </div>
       <div class="small">
-        <template v-if="filteredQueries.length">
+        <template v-if="filteredQueries?.length">
           <selectable-dropdown
             v-model="filterQueries"
             class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
@@ -64,7 +64,7 @@
         <div v-else class="text-center text-dark">Loading queries ...</div>
         <div class="batch-search-results-filters__footer d-flex p-2">
           <div class="ms-auto">
-            <b-form-checkbox size="sm" v-model="queriesExcluded">
+            <b-form-checkbox v-model="queriesExcluded" size="sm">
               {{ $t('filter.invert') }}
             </b-form-checkbox>
           </div>
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { compact, isEqual, map, orderBy, set } from 'lodash'
+import { compact, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
 import SearchFormControl from '@/components/SearchFormControl'
