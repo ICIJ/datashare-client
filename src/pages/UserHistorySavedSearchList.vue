@@ -142,9 +142,9 @@ export default {
     async deleteUserEvent(event) {
       try {
         await this.$core.api.deleteUserHistoryEvent(event.id)
-        this.$root.$bvToast.toast(this.$t('userHistory.deleted'), { noCloseButton: true, variant: 'success' })
+        this.$bvToast.toast(this.$t('userHistory.deleted'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
-        this.$root.$bvToast.toast(this.$t('userHistory.deleteError'), { noCloseButton: true, variant: 'danger' })
+        this.$bvToast.toast(this.$t('userHistory.deleteError'), { noCloseButton: true, variant: 'danger' })
       } finally {
         const searches = this.searches.filter((e) => !(e === event))
         this.searches = searches

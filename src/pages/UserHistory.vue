@@ -163,7 +163,7 @@ export default {
         this.events = events.items
         this.totalEvents = events.total
       } catch (e) {
-        this.$root.$bvToast.toast('Failed to fetch user history', { noCloseButton: true, variant: 'danger' })
+        this.$bvToast.toast('Failed to fetch user history', { noCloseButton: true, variant: 'danger' })
         this.events = []
         this.totalEvents = 0
       }

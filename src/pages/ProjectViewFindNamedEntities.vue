@@ -38,13 +38,13 @@ export default {
         h('p', {}, message),
         h('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
       ])
-      this.$root.$bvToast.toast(body, { variant, title })
+      this.$bvToast.toast(body, { variant, title })
     },
     notifyCreationFailed(error) {
       const title = this.$t('projectViewFindNamedEntities.notify.failed')
       const variant = 'danger'
       const body = get(error, 'response.data.error') ?? this.$t('projectViewFindNamedEntities.notify.failedBody')
-      this.$root.$bvToast.toast(body, { variant, title })
+      this.$bvToast.toast(body, { variant, title })
     }
   }
 }
