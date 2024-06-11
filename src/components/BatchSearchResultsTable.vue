@@ -388,7 +388,7 @@ export default {
         contentTypes = contentTypes.join(',')
       }
       contentTypes = contentTypes ?? null
-      
+
       return {
         name: 'task.batch-search.view.results',
         query: this.removeEmptySearchParams({
