@@ -63,7 +63,7 @@ export default {
     tab: {
       get() {
         const index = findIndex(this.tabRoutes, (name) => {
-          return this.$route.name.startsWith(name)
+          return this.$route?.name?.startsWith(name)
         })
         // Use the defaultTab value when the current route doesn't match with any tab
         return index > -1 ? index : this.defaultTab
