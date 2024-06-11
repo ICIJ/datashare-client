@@ -305,8 +305,11 @@ export default {
     page() {
       return this.fetch()
     },
-    selectedSort() {
-      return this.fetch()
+    selectedSort: {
+      deep: true,
+      handler() {
+        return this.fetch()
+      }
     },
     queriesExcludedQueryParam() {
       return this.fetch()
@@ -332,7 +335,7 @@ export default {
     async fetch() {
       this.$wait.start(this.loaderId)
       try {
-        await this.$store.dispatch('batchSearch/getBatchSearchResults', {
+        const payload = {
           batchId: this.uuid,
           from: this.pageOffset,
           size: this.perPage,
@@ -341,7 +344,8 @@ export default {
           sort: this.selectedSort.sort,
           order: this.selectedSort.order,
           contentTypes: this.selectedContentTypes
-        })
+        }
+        await this.$store.dispatch('batchSearch/getBatchSearchResults', payload)
       } finally {
         this.$wait.end(this.loaderId)
       }
