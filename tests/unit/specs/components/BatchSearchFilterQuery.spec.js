@@ -40,7 +40,7 @@ describe('BatchSearchFilterQuery.vue', () => {
       router = core.router
       plugins = core.plugins
     })
-    beforeEach(async ()=> {
+    beforeEach(async () => {
       await core.router.replace({ path: '/batch-search', query: {} })
     })
     it('search updated on filterByQuery', async () => {
