@@ -2,7 +2,6 @@ import { shallowMount, mount } from '@vue/test-utils'
 
 import BatchSearchFilterQuery from '@/components/BatchSearchFilterQuery'
 import CoreSetup from '~tests/unit/CoreSetup'
-import {createMemoryHistory} from "vue-router";
 
 describe('BatchSearchFilterQuery.vue', () => {
   let wrapper, plugins, core
