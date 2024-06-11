@@ -43,21 +43,18 @@ class CoreSetup extends Core {
   get wait() {
     return createVueWait({ useVuex: true })
   }
-  useAll(store= null) {
-    if (store) {
-      this.useVuex(store)
-      this.useI18n()
-      this.useBootstrapVue()
-      this.useCommons()
-      this.useWait()
-      this.useCore()
-      return this
-    }
-    return super.useAll()
+  useAll(store = null) {
+    this.useVuex(store)
+    this.useI18n()
+    this.useBootstrapVue()
+    this.useCommons()
+    this.useWait()
+    this.useCore()
+    return this
   }
-  useVuex(store = null) {
-    if (store) {
-      this._store = store
+  useVuex(options = null) {
+    if (options) {
+      this._store = createStore(options)
       this.use(this.store)
       return this
     }
