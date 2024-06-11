@@ -1,18 +1,16 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
+import CoreSetup from '~tests/unit/CoreSetup'
 import TiffViewer from '@/components/document/viewers/TiffViewer'
-import { Core } from '@/core'
 import { getMode, MODE_NAME } from '@/mode'
 
 describe('TiffViewer.vue', () => {
-  let i18n, localVue, api
+  let core, api
 
   beforeAll(async () => {
     api = { getSource: vi.fn() }
-    const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
+    core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll()
   })
 
   // This entire test unit is deactivated unly we can support
@@ -25,7 +23,10 @@ describe('TiffViewer.vue', () => {
       api.getSource.mockClear()
       api.getSource.mockImplementation(({ url }) => mockArrayBuffer(url))
 
-      wrapper = shallowMount(TiffViewer, { i18n, localVue, propsData: { document: { url: 'image.tiff' } } })
+      wrapper = shallowMount(TiffViewer, {
+        global: { plugins: core.plugins },
+        props: { document: { url: 'image.tiff' } }
+      })
       await flushPromises()
     })
 
@@ -47,7 +48,10 @@ describe('TiffViewer.vue', () => {
         throw new Error('File not found')
       }
       // when
-      const wrapper = shallowMount(TiffViewer, { i18n, localVue, propsData: { document: { url: 'missing.tiff' } } })
+      const wrapper = shallowMount(TiffViewer, {
+        global: { plugins: core.plugins },
+        props: { document: { url: 'missing.tiff' } }
+      })
       await flushPromises()
 
       expect(wrapper.find('.tiff-viewer__error').text()).toContain('File not found')
