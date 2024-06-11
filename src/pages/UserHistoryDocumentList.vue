@@ -4,7 +4,6 @@
       <b-table
         v-if="events.length"
         v-model:sort-by="sortBy"
-        v-model:sort-desc="sortDesc"
         :empty-text="$t('global.emptyTextTable')"
         :fields="fields"
         :items="events"
@@ -107,6 +106,11 @@ export default {
     ProjectLink
   },
   mixins: [utils],
+  provide() {
+    return {
+      sortBy: this.sortKey
+    }
+  },
   props: {
     events: {
       type: Array,
@@ -140,28 +144,26 @@ export default {
     }
   },
   computed: {
+    sortKey() {
+      const sortQuery = this.$route?.query?.sort
+      const useDefaultSort = typeof sortQuery === 'undefined' || !sortKey[sortQuery]
+      return useDefaultSort ? MODIFICATION_DATE : sortKey[sortQuery]
+    },
     sortBy: {
       get() {
-        const sortQuery = this.$route?.query?.sort
-        const useDefaultSort = typeof sortQuery === 'undefined' || !sortKey[sortQuery]
-        return useDefaultSort ? MODIFICATION_DATE : sortKey[sortQuery]
+        return [{ key: this.sortKey, order: this.order }]
       },
       set(sortBy) {
-        this.updateParams({ sort: sortKey[sortBy] })
+        const [{ key: sort, order }] = sortBy
+        if (order) {
+          return this.updateParams({ sort, order })
+        }
+        return this.updateParams({ sort, order: 'asc' })
       }
     },
-    sortDesc: {
-      get() {
-        const descQuery = this.$route?.query?.desc
-        const useDefault = typeof descQuery === 'undefined'
-        if (!useDefault) {
-          return typeof descQuery === 'string' ? descQuery === 'true' : descQuery
-        }
-        return useDefault
-      },
-      set(sortDesc) {
-        this.updateParams({ desc: sortDesc })
-      }
+    order() {
+      const orderQuery = this.$route?.query?.order
+      return typeof orderQuery === 'string' ? orderQuery : 'desc'
     },
     projects() {
       return this.$core.projects || []
@@ -203,8 +205,8 @@ export default {
     updateParams(queryParams) {
       const query = {
         ...this.$route.query,
-        sort: sortKey[this.sortBy],
-        desc: this.sortDesc,
+        sort: this.sortKey,
+        order: this.order,
         ...queryParams
       }
 
