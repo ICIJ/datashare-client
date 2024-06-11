@@ -133,7 +133,7 @@ class Core extends Behaviors {
    */
   useRouter() {
     const history = createWebHashHistory()
-    this.router = createRouter({ routes, history })
+    this._router = createRouter({ routes, history })
     this.use(this.router)
     guards(this)
     return this
@@ -389,6 +389,13 @@ class Core extends Behaviors {
    */
   get i18n() {
     return this._i18n
+  }
+  /**
+   * The VueRouter instance
+   * @type {VueRouter}
+   */
+  get router() {
+    return this._router
   }
   /**
    * The Vuex instance
