@@ -5,7 +5,7 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import { createVueWait } from 'vue-wait'
 import { createStore } from 'vuex'
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createWebHashHistory, createRouter } from 'vue-router'
 
 import { Core } from '@/core/Core'
 
@@ -62,7 +62,7 @@ class CoreSetup extends Core {
   }
   useRouter(routes = null) {
     if (routes) {
-      this._router = createRouter({ routes, history: createMemoryHistory() })
+      this._router = createRouter({ routes, history: createWebHashHistory() })
       this.use(this.router)
       return this
     }
