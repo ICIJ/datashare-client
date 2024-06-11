@@ -30,7 +30,7 @@ describe('BatchSearchForm.vue', () => {
       search: { namespaced: true, actions: { queryFilter: vi.fn() } }
     }
   })
-  beforeAll(()=> {
+  beforeAll(() => {
     core = CoreSetup.init(api).useAll(store)
     config = core.config
 
@@ -51,12 +51,12 @@ describe('BatchSearchForm.vue', () => {
   })
 
   it('should call the store action on form submit and reset the form', async () => {
-    vi.spyOn(wrapper.vm, 'resetForm')
+    const spyReset = vi.spyOn(wrapper.vm, 'resetForm')
 
     await wrapper.vm.onSubmit()
 
     expect(actions.onSubmit).toBeCalled()
-    expect(wrapper.vm.resetForm).toBeCalled()
+    expect(spyReset).toHaveBeenCalledTimes(1)
   })
 
   describe('on LOCAL', () => {
