@@ -71,14 +71,6 @@ class CoreSetup extends Core {
     }
     return super.useRouter()
   }
-  useVuex(options = null) {
-    if (options) {
-      this._store = createStore(options)
-      this.use(this.store)
-      return this
-    }
-    return super.useVuex()
-  }
 
   static init(...options) {
     return new CoreSetup(...options)
