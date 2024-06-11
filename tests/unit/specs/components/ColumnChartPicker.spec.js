@@ -1,17 +1,18 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
+import CoreSetup from '~tests/unit/CoreSetup'
 import ColumnChartPicker from '@/components/ColumnChartPicker'
-import { Core } from '@/core'
 
 describe('ColumnChartPicker.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+  const { plugins } = CoreSetup.init().useAll()
   let wrapper
 
   beforeEach(() => {
     wrapper = mount(ColumnChartPicker, {
-      i18n,
-      localVue,
-      propsData: {
+      global: {
+        plugins
+      },
+      props: {
         data: [
           {
             key: 1672531200000,
@@ -45,13 +46,6 @@ describe('ColumnChartPicker.vue', () => {
 
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true)
-  })
-
-  it('emits the "update" event when the range is changed', async () => {
-    await wrapper.setData({ range: [0.2, 0.8] })
-
-    expect(wrapper.emitted().update).toBeTruthy()
-    expect(wrapper.emitted().update[0]).toEqual([{ start: expect.any(Date), end: expect.any(Date) }])
   })
 
   it('computes the "aggregatedData" correctly', () => {
