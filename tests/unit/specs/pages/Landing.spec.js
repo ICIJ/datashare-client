@@ -1,16 +1,15 @@
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Landing from '@/pages/Landing'
 
 describe('Landing.vue', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-  let wrapper = null
+  const { config, plugins } = CoreSetup.init().useAll()
+  let wrapper
 
   beforeEach(() => {
-    Murmur.config.merge({ projects: [{ name: 'project' }] })
-    wrapper = shallowMount(Landing, { i18n, localVue, store })
+    config.merge({ projects: [{ name: 'project' }] })
+    wrapper = shallowMount(Landing, { global: { plugins } })
   })
 
   it('should display a search bar', () => {
