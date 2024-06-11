@@ -1,17 +1,11 @@
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
-import VueRouter from 'vue-router'
-import Vuex from 'vuex'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchSearchList from '@/pages/TaskBatchSearchList'
 
 describe('TaskBatchSearchList.vue', () => {
-  let i18n, localVue, store, wait, api
-  let wrapper = null
-  const router = new VueRouter()
   const mockedBatchSearches = {
     items: [
       {
@@ -37,20 +31,20 @@ describe('TaskBatchSearchList.vue', () => {
     ],
     pagination: { total: 2 }
   }
-  beforeAll(async () => {
-    api = { getBatchSearches: vi.fn().mockResolvedValue(mockedBatchSearches) }
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    wait = core.wait
 
-    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-    Murmur.config.merge({ mode: 'SERVER' })
-    await flushPromises()
-  })
+  let api, core, wrapper
+
   beforeEach(async () => {
-    wrapper = mount(TaskBatchSearchList, { i18n, localVue, router, store, wait })
+    api = { getBatchSearches: vi.fn().mockResolvedValue(mockedBatchSearches) }
+    core = CoreSetup.init(api).useAll().useRouter()
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    core.config.merge({ mode: 'SERVER' })
+    wrapper = mount(TaskBatchSearchList, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      }
+    })
     await flushPromises()
   })
 
@@ -69,18 +63,18 @@ describe('TaskBatchSearchList.vue', () => {
   it('should display a clear filters button', () => {
     const button = wrapper.find('.batch-search-clear-filters')
     expect(button.exists()).toBeTruthy()
-    expect(button.attributes().disabled).toBeTruthy()
+    expect(button.attributes('disabled')).toBeDefined()
   })
 
   it("should display a 'No filtered result' message when no items and filter is on", async () => {
     const state = { batchSearches: [] }
     const getters = { hasBatchSearch: vi.fn().mockReturnValue(false) }
     const actions = { getBatchSearches: vi.fn() }
-    const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, getters, actions } } })
+    const storeOptions = { modules: { batchSearch: { namespaced: true, state, getters, actions } } }
+    const { plugins } = CoreSetup.init(api).useVuex(storeOptions)
 
-    wrapper = mount(TaskBatchSearchList, { i18n, localVue, router, store, wait })
+    wrapper = mount(TaskBatchSearchList, { global: { plugins } })
     await flushPromises()
-
     expect(wrapper.find('.task-batch-search-list__none').exists()).toBeTruthy()
   })
 })
