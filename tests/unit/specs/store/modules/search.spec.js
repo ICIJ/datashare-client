@@ -308,8 +308,8 @@ describe('SearchStore', () => {
       field: 'all',
       indices: project,
       q: '',
-      size: 25,
-      from: 0
+      size: '25',
+      from: '0'
     })
   })
 
@@ -323,8 +323,8 @@ describe('SearchStore', () => {
     expect(store.getters['search/toRouteQuery']()).toMatchObject({
       indices: project,
       q: 'datashare',
-      from: 0,
-      size: 12,
+      from: '0',
+      size: '12',
       sort: 'randomOrder',
       'f[contentType]': ['TXT']
     })
