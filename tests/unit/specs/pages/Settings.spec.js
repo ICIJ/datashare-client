@@ -4,10 +4,10 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import Settings from '@/pages/Settings'
 
 describe('Settings.vue', () => {
-  const { i18n, localVue } = CoreSetup.init().useAll()
+  const { plugins } = CoreSetup.init().useAll()
 
   it('should load the settings page', async () => {
-    const wrapper = await shallowMount(Settings, { i18n, localVue })
+    const wrapper = await shallowMount(Settings, { global: { plugins } })
     expect(wrapper.find('page-header-stub').exists()).toBeTruthy()
   })
 })
