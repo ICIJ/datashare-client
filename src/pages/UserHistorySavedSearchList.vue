@@ -23,10 +23,12 @@
           <div
             class="d-flex justify-content-between align-items-end align-items-md-center d-flex flex-column flex-md-row m-3"
           >
-            <span class="user-history-saved-search-list__list__item__date text-muted text-nowrap me-3"
-              ><span class="fw-bold me-2">{{ getDate(event.creationDate) }} </span
-              >{{ getTime(event.creationDate) }}</span
-            >
+            <span class="user-history-saved-search-list__list__item__date text-muted text-nowrap me-3">
+              <span class="fw-bold me-2">
+                {{ getDate(event.creationDate) }}
+              </span>
+              {{ getTime(event.creationDate) }}
+            </span>
             <div class="user-history-saved-search-list__list__item__actions mx-3">
               <b-button
                 class="user-history-saved-search-list__list__item__actions__rename me-1"
@@ -104,8 +106,14 @@ export default {
       currentEvent: null
     }
   },
+  watch: {
+    events(events) {
+      this.searches = events
+    }
+  },
   methods: {
     getDate(date) {
+      console.log(date)
       return humanDate(date, this.$i18n.locale)
     },
     getTime(time) {
