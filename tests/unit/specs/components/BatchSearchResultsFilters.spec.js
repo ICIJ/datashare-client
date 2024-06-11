@@ -1,51 +1,49 @@
 import { mount } from '@vue/test-utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
-import CoreSetup from "~tests/unit/CoreSetup";
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('BatchSearchResultsFilters.vue', () => {
-  let wrapper, plugins, router, core
+  let wrapper, core
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
+  const indices = [project, anotherProject].join(',')
   const propsMultipleQueries = {
     queryKeys: [
       { label: 'query_01', count: 1 },
       { label: 'query_02', count: 3 },
       { label: 'query_03', count: 2 }
     ],
-    indices: [project, anotherProject].join(',')
+    indices
   }
   const propsSingleQuery = { queryKeys: [{ label: 'query_04', count: 12 }], indices: project }
 
-  beforeAll(() => {
-    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-    core = CoreSetup.init().useAll().useRouter()
-    core.config.set('projects', [project, anotherProject])
-    plugins = core.plugins
-    router = core.router
-  })
-
   beforeEach(async () => {
+    const routes = [
+      {
+        name: 'task.batch-search.view.results',
+        path: '/batch-search/:indices/:uuid'
+      },
+      {
+        name: 'document-standalone',
+        path: '/ds/:index/:id/:routing?'
+      }
+    ]
+    core = CoreSetup.init().useAll().useRouter(routes)
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
   })
 
-  afterAll(() => {
-    removeCookie(process.env.VITE_DS_COOKIE_NAME)
-  })
+
 
   it('should display simple list if there is only one query', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
-      global: { plugins, renderStubDefaultSlot: true },
-      computed: {
-        downloadLink() {
-          return 'mocked-download-link'
-        }
+      global: {
+        plugins: core.plugins
       },
       props: propsSingleQuery
     })
@@ -57,11 +55,8 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   it('should display a selectable dropdown if there are more than one query', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
-      global: { plugins },
-      computed: {
-        downloadLink() {
-          return 'mocked-download-link'
-        }
+      global: {
+        plugins: core.plugins
       },
       props: propsMultipleQueries
     })
@@ -74,11 +69,8 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   it('should add badge with query number of results on list', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
-      global: { plugins },
-      computed: {
-        downloadLink() {
-          return 'mocked-download-link'
-        }
+      global: {
+        plugins: core.plugins
       },
       props: propsSingleQuery
     })
@@ -90,11 +82,8 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   it('should add badge with query number of results on selectable dropdown', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
-      global: { plugins },
-      computed: {
-        downloadLink() {
-          return 'mocked-download-link'
-        }
+      global: {
+        plugins: core.plugins
       },
       props: propsMultipleQueries
     })
@@ -107,11 +96,8 @@ describe('BatchSearchResultsFilters.vue', () => {
   describe('search', () => {
     it('should display the "search" button', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins },
-        computed: {
-          downloadLink() {
-            return 'mocked-download-link'
-          }
+        global: {
+          plugins: core.plugins
         },
         props: propsMultipleQueries
       })
@@ -122,11 +108,8 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('should redirect to a search with project and query', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins },
-        computed: {
-          downloadLink() {
-            return 'mocked-download-link'
-          }
+        global: {
+          plugins: core.plugins
         },
         props: propsMultipleQueries
       })
@@ -146,12 +129,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   describe('sort queries', () => {
     it('should display a dropdown to sort', () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins },
-        computed: {
-          downloadLink() {
-            return 'mocked-download-link'
-          }
-        },
+        global: { plugins: core.plugins },
         props: propsMultipleQueries
       })
 
@@ -160,12 +138,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('should sort queries in default order ie. by count', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins },
-        computed: {
-          downloadLink() {
-            return 'mocked-download-link'
-          }
-        },
+        global: { plugins: core.plugins },
         props: propsMultipleQueries
       })
       await wrapper.vm.$nextTick()
@@ -184,12 +157,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('should sort queries by "default" order ie. as in database', async () => {
       wrapper = await mount(BatchSearchResultsFilters, {
-        global: { plugins },
-        computed: {
-          downloadLink() {
-            return 'mocked-download-link'
-          }
-        },
+        global: { plugins: core.plugins },
         props: propsMultipleQueries
       })
       const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
@@ -207,7 +175,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('adds exclude selected queries filter', async () => {
       wrapper = await mount(BatchSearchResultsFilters, {
-        global: { plugins },
+        global: { plugins: core.plugins },
         props: propsMultipleQueries
       })
       const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
@@ -228,12 +196,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   describe('filter queries', () => {
     it('should filter queries when search bar is filled', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins },
-        computed: {
-          downloadLink() {
-            return 'mocked-download-link'
-          }
-        },
+        global: { plugins: core.plugins },
         props: propsMultipleQueries
       })
       await wrapper.vm.$nextTick()
