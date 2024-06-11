@@ -82,7 +82,13 @@
               </b-form-checkbox>
             </b-form-group>
             <b-form-group :label="fuzzinessLabel" class="batch-search-form__fuzziness mb-3" label-size="sm">
-              <b-form-input v-model="fuzziness" :max="maxFuzziness" min="0" type="number"></b-form-input>
+              <b-form-input
+                v-model="fuzziness"
+                :max="maxFuzziness"
+                min="0"
+                type="number"
+                class="batch-search-form__fuzziness__input"
+              ></b-form-input>
               <template #description>
                 <span v-html="fuzzinessDescription"></span>&nbsp;
                 <a :href="fuzzinessLearnMore" target="_blank">
@@ -95,11 +101,11 @@
               label-size="sm"
               class="batch-search-form__fileTypes mb-3"
             >
-              <b-overlay :show="$wait.is('load all file types')" opacity="0.6" rounded spinner-small>
+              <b-overlay :show="isLoading('load all file types')" opacity="0.6" rounded spinner-small>
                 <b-form-input
                   ref="fileType"
                   v-model="fileType"
-                  :disabled="$wait.is('load all file types')"
+                  :disabled="isLoading('load all file types')"
                   autocomplete="off"
                   @input="searchFileTypes"
                   @keydown.enter.prevent="searchFileType"
@@ -174,11 +180,11 @@
               </div>
             </b-form-group>
             <b-form-group :label="$t('batchSearch.tags')" label-size="sm" class="batch-search-form__tags mb-3">
-              <b-overlay :show="$wait.is('load all tags')" opacity="0.6" rounded spinner-small>
+              <b-overlay :show="isLoading('load all tags')" opacity="0.6" rounded spinner-small>
                 <b-form-input
                   ref="tag"
                   v-model="tag"
-                  :disabled="$wait.is('load all tags')"
+                  :disabled="isLoading('load all tags')"
                   autocomplete="off"
                   @input="searchTags"
                   @keydown.enter.prevent="searchTags"
@@ -427,6 +433,9 @@ export default {
     createQueryTemplate(filters) {
       const { query } = this.$core.api.elasticsearch.rootSearch(filters, TEMPLATE_VALUE.QUERY).build()
       return JSON.stringify(query)
+    },
+    isLoading(loaderName) {
+      return this.$wait.is(loaderName)
     },
     selectFileType(fileType = null) {
       this.selectedFileType = fileType || this.selectedFileType
