@@ -1,14 +1,10 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
 import { flushPromises } from '~tests/unit/tests_utils'
 import { storeBuilder } from '@/store/storeBuilder'
-
-Vue.use(Vuex)
 
 describe('BatchSearchStore', () => {
   let api
   let store
+
   beforeAll(() => {
     api = {
       getBatchSearchQueries: vi.fn(),
@@ -20,6 +16,7 @@ describe('BatchSearchStore', () => {
       deleteBatchSearches: vi.fn()
     }
   })
+
   beforeEach(() => {
     vi.clearAllMocks()
     store = storeBuilder(api)
