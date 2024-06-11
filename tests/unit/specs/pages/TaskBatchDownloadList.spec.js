@@ -1,13 +1,12 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
+import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchDownloadList from '@/pages/TaskBatchDownloadList'
-import { Core } from '@/core'
 import { getMode, MODE_NAME } from '@/mode'
 import { storeBuilder } from '@/store/storeBuilder'
 
 describe('TaskBatchDownloadList.vue', () => {
-  let i18n, localVue, wrapper, store, wait, api
   const BatchDownloadList = [
     {
       id: 'BatchDownloadTask_01_id',
@@ -136,21 +135,15 @@ describe('TaskBatchDownloadList.vue', () => {
       }
     }
   ]
-  beforeAll(() => {
-    api = {
-      getTasks: vi.fn()
-    }
-    const core = Core.init(createLocalVue(), api, getMode(MODE_NAME.SERVER)).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    wait = core.wait
-    store = storeBuilder(api)
-  })
+
+  let api, core, wrapper
 
   beforeEach(async () => {
-    vi.clearAllMocks()
-    api.getTasks.mockResolvedValue(BatchDownloadList)
-    wrapper = mount(TaskBatchDownloadList, { i18n, localVue, store, wait })
+    api = {
+      getTasks: vi.fn().mockResolvedValue(BatchDownloadList)
+    }
+    core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll()
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins: core.plugins } })
     await flushPromises()
   })
 
@@ -188,6 +181,6 @@ describe('TaskBatchDownloadList.vue', () => {
       '#task-batch-download-list__item--uuid_02 .task-batch-download-list__item__link--disabled'
     )
     expect(span.exists()).toBeTruthy()
-    expect(span.element.title).toEqual('The archive has expired.')
+    expect(span.attributes('data-original-title')).toEqual('The archive has expired.')
   })
 })
