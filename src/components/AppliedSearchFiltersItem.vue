@@ -114,7 +114,6 @@ export default {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       } else {
         await this.$store.dispatch('search/removeFilterValue', this.filter)
-        EventBus.emit('filter::search::update', { name: this.filter.name })
       }
 
       const query = this.$store.getters['search/toRouteQuery']()

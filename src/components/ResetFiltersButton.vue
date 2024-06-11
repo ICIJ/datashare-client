@@ -84,11 +84,11 @@ export default {
     resetFiltersAndQuery() {
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
-      EventBus.emit('bv::hide::popover')
+      this.$core.emit('bv::hide::popover')
       /**
        * Filters have been reset.
        */
-      EventBus.emit('filter::search::reset-filters', { refresh: true })
+      this.$core.emit('filter::search::reset-filters', { refresh: true })
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }).catch(() => {})
     }
   }
