@@ -65,6 +65,7 @@ export default {
       default: 'warning'
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       intervals: {
@@ -86,7 +87,6 @@ export default {
       }
     }
   },
-  emits: ['update:modelValue'],
   computed: {
     range: {
       get() {
