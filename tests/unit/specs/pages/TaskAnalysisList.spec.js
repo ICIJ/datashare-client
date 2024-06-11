@@ -1,6 +1,6 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import TaskAnalysisList from '@/pages/TaskAnalysisList'
 
 const flushPromisesAndPendingTimers = async ({ vm }) => {
@@ -9,8 +9,6 @@ const flushPromisesAndPendingTimers = async ({ vm }) => {
 }
 
 describe('TaskAnalysisList.vue', () => {
-  let i18n, localVue, store, wait
-
   const api = {
     index: vi.fn(),
     getTasks: vi.fn().mockResolvedValue([
@@ -25,17 +23,12 @@ describe('TaskAnalysisList.vue', () => {
     }
   }
 
-  beforeAll(() => {
-    const core = Core.init(createLocalVue(), api).useAll()
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    wait = core.wait
-  })
+  let core
 
   beforeEach(() => {
     vi.useFakeTimers()
-    store.commit('indexing/reset')
+    core = CoreSetup.init(api).useAll()
+    core.store.commit('indexing/reset')
   })
 
   afterAll(() => {
@@ -44,7 +37,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should display tasks list', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
 
     expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(2)
@@ -53,47 +46,47 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
-    store.commit('indexing/updateTasks', [])
+    core.store.commit('indexing/updateTasks', [])
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
-    expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBeDefined()
+    expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).toBeDefined()
   })
 
   it('should not disable the "Stop pending tasks" button, if a task is running', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).not.toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBeUndefined()
   })
 
   it('should disable the "Stop pending tasks" if no tasks are running', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBeDefined()
   })
 
   it('should not disable the "Delete done tasks" if a task is done', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).not.toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__delete-done-tasks').attributes('disabled')).toBeUndefined()
   })
 
   it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await wrapper.vm.$nextTick()
 
     wrapper.find('.task-analysis-list__actions__stop-pending-tasks').trigger('click')
@@ -103,10 +96,10 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await wrapper.vm.$nextTick()
 
     wrapper.find('.task-analysis-list__actions__delete-done-tasks').trigger('click')
@@ -116,14 +109,14 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should display 1 available "Stop task" buttons if 1 tasks are running', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     expect(wrapper.findAll('.tasks-list__tasks__item__stop')).toHaveLength(1)
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     wrapper.find('.tasks-list__tasks__item__stop').trigger('click')
@@ -133,12 +126,12 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should display 1 disabled "Stop task" button if 1 task is done', async () => {
-    const wrapper = mount(TaskAnalysisList, { i18n, localVue, store, wait })
+    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.task-analysis-list__actions__stop-pending-tasks')).toHaveLength(1)
-    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
+    expect(wrapper.find('.task-analysis-list__actions__stop-pending-tasks').attributes('disabled')).toBeDefined()
   })
 })
