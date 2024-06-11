@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import { EventBus } from '@/utils/event-bus'
 import FilterDate from '@/components/filter/types/FilterDate'
 import FilterDateRange from '@/components/filter/types/FilterDateRange'
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
@@ -56,7 +55,7 @@ export default {
       /**
        * A value is selected for a specific component
        */
-      EventBus.emit('filter::search::add-filter-values', { filter: this.filter, component })
+      this.$core.emit('filter::search::add-filter-values', { filter: this.filter, component })
     }
   }
 }

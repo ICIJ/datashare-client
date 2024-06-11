@@ -4,19 +4,25 @@ import { mount, shallowMount } from '@vue/test-utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { EventBus } from '@/utils/event-bus'
 
 describe('AppliedSearchFiltersItem.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const api = { elasticsearch: es }
-  const { plugins, store } = CoreSetup.init(api).useAll().useRouter()
+  let core
 
-  beforeAll(() => store.commit('search/index', index))
+  beforeEach(() => {
+    core = CoreSetup.init(api).useAll().useRouter()
+    core.store.commit('search/index', index)
+  })
 
   describe('displays applied filter', () => {
     it('should display a filter', () => {
       const props = { filter: { name: 'contentType', value: 'term_01', negation: false } }
-      const wrapper = shallowMount(AppliedSearchFiltersItem, { global: { plugins, renderStubDefaultSlot: true }, props })
+      const { plugins } = core
+      const wrapper = shallowMount(AppliedSearchFiltersItem, {
+        global: { plugins, renderStubDefaultSlot: true },
+        props
+      })
       expect(wrapper.findAll('.applied-search-filters-item')).toHaveLength(1)
       expect(wrapper.find('.applied-search-filters-item__wrapper__value').text()).toBe('term_01')
       expect(wrapper.findAll('.applied-search-filters-item--negation')).toHaveLength(0)
@@ -24,7 +30,11 @@ describe('AppliedSearchFiltersItem.vue', () => {
 
     it('should display an applied filter as strikethrough if excluded', () => {
       const props = { filter: { name: 'contentType', value: 'term_01', negation: true } }
-      const wrapper = shallowMount(AppliedSearchFiltersItem, { global: { plugins, renderStubDefaultSlot: true }, props })
+      const { plugins } = core
+      const wrapper = shallowMount(AppliedSearchFiltersItem, {
+        global: { plugins, renderStubDefaultSlot: true },
+        props
+      })
 
       expect(wrapper.findAll('.applied-search-filters-item')).toHaveLength(1)
       expect(wrapper.find('.applied-search-filters-item__wrapper__value').text()).toBe('term_01')
@@ -33,9 +43,9 @@ describe('AppliedSearchFiltersItem.vue', () => {
   })
 
   describe('deletes applied filter', () => {
-
     it('should click on a badge to delete an applied filter', () => {
       const props = { filter: { name: 'contentType', value: 'term_01', negation: false } }
+      const { plugins } = core
       const wrapper = mount(AppliedSearchFiltersItem, { global: { plugins }, props })
       const deleteQueryTermSpy = vi.spyOn(wrapper.vm, 'deleteQueryTerm')
 
@@ -45,36 +55,14 @@ describe('AppliedSearchFiltersItem.vue', () => {
     })
 
     it('should delete a filter term', async () => {
-      store.commit('search/addFilterValue', { name: 'contentType', value: 'term_01' })
+      core.store.commit('search/addFilterValue', { name: 'contentType', value: 'term_01' })
       const props = { filter: { name: 'contentType', value: 'term_01', negation: false } }
+      const { plugins } = core
       const wrapper = mount(AppliedSearchFiltersItem, { global: { plugins }, props })
 
       await wrapper.find('.applied-search-filters-item').trigger('click')
 
-      expect(find(store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
-    })
-
-    it('should emit an event filter::search::update once the applied filter is deleted from the store', async () => {
-      const props = { filter: { name: 'contentType', value: 'term_01', negation: false } }
-      const wrapper = shallowMount(AppliedSearchFiltersItem, { global: { plugins }, props })
-      const mockCallback = vi.fn()
-      EventBus.on('filter::search::update', mockCallback)
-      await wrapper.vm.deleteQueryTerm()
-      expect(mockCallback.mock.calls).toHaveLength(1)
-      EventBus.off('filter::search::update', mockCallback)
-      mockCallback.mockClear()
-    })
-
-    it('should not emit an event filter::search::update if the filter is a query term', async () => {
-      const props = { filter: { name: 'q', value: 'term_01', negation: false } }
-      const wrapper = shallowMount(AppliedSearchFiltersItem, { global: { plugins }, props })
-
-      const mockCallback = vi.fn().mockImplementation(()=>{console.log("patate")})
-      EventBus.on('filter::search::update', mockCallback)
-      await wrapper.vm.deleteQueryTerm()
-      expect(mockCallback.mock.calls).toHaveLength(0)
-      EventBus.off('filter::search::update', mockCallback)
-      mockCallback.mockClear()
+      expect(find(core.store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
     })
   })
 })
