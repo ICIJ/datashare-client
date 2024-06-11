@@ -1,5 +1,4 @@
 import { mount, shallowMount } from '@vue/test-utils'
-import { createStore } from 'vuex'
 import {  beforeEach } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -24,14 +23,14 @@ describe('BatchSearchForm.vue', () => {
   const actions = { onSubmit: vi.fn(), getBatchSearches: vi.fn() }
   const state = { batchSearches: [] }
 
-  const store = createStore({
-    modules: {
-      batchSearch: { namespaced: true, state, actions },
-      search: { namespaced: true, actions: { queryFilter: vi.fn() } }
-    }
-  })
   beforeAll(() => {
-    core = CoreSetup.init(api).useAll(store)
+    const storeOptions = {
+      modules: {
+        batchSearch: { namespaced: true, state, actions },
+        search: { namespaced: true, actions: { queryFilter: vi.fn() } }
+      }
+    }
+    core = CoreSetup.init(api).useAll(storeOptions)
     config = core.config
 
     config.set('projects', [{ name: project }])
