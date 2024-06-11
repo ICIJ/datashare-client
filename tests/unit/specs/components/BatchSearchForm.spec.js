@@ -1,13 +1,12 @@
-import Murmur from '@icij/murmur-next'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import Vuex from 'vuex'
-import { beforeAll, beforeEach } from 'vitest'
+import { mount, shallowMount } from '@vue/test-utils'
+import { createStore } from 'vuex'
+import {  beforeEach } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from '~tests/unit/tests_utils'
 import BatchSearchForm from '@/components/BatchSearchForm'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
@@ -20,29 +19,27 @@ vi.mock('lodash', async (importOriginal) => {
 describe('BatchSearchForm.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
-
+  let core, config, wrapper
   const api = { elasticsearch: es }
-  const { i18n, localVue, wait } = Core.init(createLocalVue(), api).useAll()
-
-  const state = { batchSearches: [] }
   const actions = { onSubmit: vi.fn(), getBatchSearches: vi.fn() }
-  const store = new Vuex.Store({
+  const state = { batchSearches: [] }
+
+  const store = createStore({
     modules: {
       batchSearch: { namespaced: true, state, actions },
       search: { namespaced: true, actions: { queryFilter: vi.fn() } }
     }
   })
+  beforeAll(()=> {
+    core = CoreSetup.init(api).useAll(store)
+    config = core.config
 
-  let wrapper = null
-
-  beforeAll(() => {
-    Murmur.config.set('projects', [{ name: project }])
-    Murmur.config.set('dataDir', '/root/project')
+    config.set('projects', [{ name: project }])
+    config.set('dataDir', '/root/project')
   })
-
-  beforeEach(() => {
-    Murmur.config.merge({ mode: 'LOCAL' })
-    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
+  beforeEach(async () => {
+    config.merge({ mode: 'LOCAL' })
+    wrapper = shallowMount(BatchSearchForm, { global: { plugins: core.plugins, renderStubDefaultSlot: true } })
   })
 
   afterEach(() => {
@@ -83,8 +80,8 @@ describe('BatchSearchForm.vue', () => {
 
   describe('on SERVER', () => {
     beforeEach(() => {
-      Murmur.config.merge({ mode: 'SERVER' })
-      wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
+      config.merge({ mode: 'SERVER' })
+      wrapper = shallowMount(BatchSearchForm, { global: { plugins: core.plugins, renderStubDefaultSlot: true } })
     })
 
     it('should display "Published" button', () => {
@@ -97,8 +94,7 @@ describe('BatchSearchForm.vue', () => {
     describe('On project change', () => {
       it('should reset fileType and tag', async () => {
         await wrapper.setData({ fileType: 'fileTypeTest', tag: 'tagTest' })
-        await wrapper.setData({ projects: [anotherProject] })
-
+        await wrapper.setData({ selectedProjects: [anotherProject] })
         expect(wrapper.vm.fileType).toBe('')
         expect(wrapper.vm.tag).toBe('')
       })
@@ -109,7 +105,7 @@ describe('BatchSearchForm.vue', () => {
           tags: ['tag_01', 'tag_02'],
           paths: ['path_01', 'path_02']
         })
-        await wrapper.setData({ projects: [anotherProject] })
+        await wrapper.setData({ selectedProjects: [anotherProject] })
 
         expect(wrapper.vm.fileTypes).toEqual([])
         expect(wrapper.vm.paths).toEqual([])
@@ -118,14 +114,14 @@ describe('BatchSearchForm.vue', () => {
 
       it('should reset allFileTypes', async () => {
         await wrapper.setData({ allFileTypes: ['fileType_01', 'fileType_02'] })
-        await wrapper.setData({ projects: [anotherProject] })
+        await wrapper.setData({ selectedProjects: [anotherProject] })
 
         expect(wrapper.vm.allFileTypes).toEqual([])
       })
 
       it('should reset allTags', async () => {
         await wrapper.setData({ allTags: ['tag_01', 'tag_02'] })
-        await wrapper.setData({ projects: [anotherProject] })
+        await wrapper.setData({ selectedProjects: [anotherProject] })
 
         expect(wrapper.vm.allTags).toEqual([])
       })
@@ -133,7 +129,7 @@ describe('BatchSearchForm.vue', () => {
       it('should call hideSuggestionsFileTypes and hideSuggestionsTags', async () => {
         vi.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
         vi.spyOn(wrapper.vm, 'hideSuggestionsTags')
-        await wrapper.setData({ projects: [anotherProject] })
+        await wrapper.setData({ selectedProjects: [anotherProject] })
 
         expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
         expect(wrapper.vm.hideSuggestionsTags).toBeCalled()
@@ -141,14 +137,14 @@ describe('BatchSearchForm.vue', () => {
 
       it('should call retrieveFileTypes', async () => {
         vi.spyOn(wrapper.vm, 'retrieveFileTypes')
-        await wrapper.setData({ projects: [anotherProject] })
+        await wrapper.setData({ selectedProjects: [anotherProject] })
 
         expect(wrapper.vm.retrieveFileTypes).toBeCalled()
       })
 
       it('should call retrieveTags', async () => {
         vi.spyOn(wrapper.vm, 'retrieveTags')
-        await wrapper.setData({ projects: [anotherProject] })
+        await wrapper.setData({ selectedProjects: [anotherProject] })
 
         expect(wrapper.vm.retrieveTags).toBeCalled()
       })
@@ -163,12 +159,12 @@ describe('BatchSearchForm.vue', () => {
       fileTypes: [{ label: 'PDF' }],
       tag: 'foo',
       tags: ['foo'],
-      fuzziness: 2,
+      selectedFuzziness: 2,
       name: 'Example',
       paths: ['This', 'is', 'a', 'multiple', 'paths'],
       phraseMatch: false,
       excludeTags: true,
-      projects: ['project-example'],
+      selectedProjects: ['project-example'],
       published: false,
       showAdvancedFilters: true
     })
@@ -193,20 +189,18 @@ describe('BatchSearchForm.vue', () => {
 
   it('should set the fuzziness (without phraseMatch) to 0 when the input is below than 0', async () => {
     await wrapper.setData({ phraseMatch: false })
-    await wrapper.setData({ fuzziness: -7 })
-
+    wrapper.vm.fuzziness = -7
     expect(wrapper.vm.fuzziness).toBe(0)
   })
 
   it('should set the fuzziness (without phraseMatch) to 2 when the input is higher than maxFuzziness', async () => {
     await wrapper.setData({ phraseMatch: false })
-    await wrapper.setData({ fuzziness: 12 })
-
+    wrapper.vm.fuzziness = 12
     expect(wrapper.vm.fuzziness).toBe(2)
   })
 
   it('should reset the fuzziness to 0 on phraseMatch change', async () => {
-    await wrapper.setData({ fuzziness: 12 })
+    wrapper.vm.fuzziness = 2
     await wrapper.setData({ phraseMatch: false })
 
     expect(wrapper.vm.fuzziness).toBe(0)
@@ -269,7 +263,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in fileTypes', async () => {
-      wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
+      wrapper = mount(BatchSearchForm, { global: { plugins:core.plugins, renderStubDefaultSlot: true } })
       await flushPromises()
       await wrapper.setData({
         fileTypes: [{ label: 'Excel 2003 XML spreadsheet visio' }],
@@ -319,7 +313,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in tags', async () => {
-      wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
+      wrapper = mount(BatchSearchForm, { global: { plugins:core.plugins, renderStubDefaultSlot: true } })
       await flushPromises()
       await wrapper.setData({ tags: ['tag_01'], selectedTag: 'tag_02' })
 
