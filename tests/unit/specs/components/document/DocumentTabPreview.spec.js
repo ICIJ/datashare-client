@@ -1,15 +1,19 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
-import { Core } from '@/core'
 
 describe('DocumentTabPreview.vue', () => {
-  const { localVue } = Core.init(createLocalVue()).useAll()
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
   const disabled = true
+  let core
+
+  beforeEach(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   it('should call the LegacySpreadsheetViewer component for XLSX document', async () => {
     const document = await letData(es)
@@ -21,9 +25,11 @@ describe('DocumentTabPreview.vue', () => {
       .commitAndGetLastDocument()
 
     const wrapper = shallowMount(DocumentTabPreview, {
-      localVue,
-      propsData: { document, disabled },
-      mocks: { $t: (msg) => msg }
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('LegacySpreadsheetViewer')
   })
@@ -34,9 +40,11 @@ describe('DocumentTabPreview.vue', () => {
       .commitAndGetLastDocument()
 
     const wrapper = shallowMount(DocumentTabPreview, {
-      localVue,
-      propsData: { document, disabled },
-      mocks: { $t: (msg) => msg }
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('LegacySpreadsheetViewer')
   })
@@ -47,9 +55,11 @@ describe('DocumentTabPreview.vue', () => {
       .commitAndGetLastDocument()
 
     const wrapper = shallowMount(DocumentTabPreview, {
-      localVue,
-      propsData: { document, disabled },
-      mocks: { $t: (msg) => msg }
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('PaginatedViewer')
   })
@@ -60,9 +70,11 @@ describe('DocumentTabPreview.vue', () => {
       .commitAndGetLastDocument()
 
     const wrapper = shallowMount(DocumentTabPreview, {
-      localVue,
-      propsData: { document, disabled },
-      mocks: { $t: (msg) => msg }
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('TiffViewer')
   })
@@ -73,10 +85,13 @@ describe('DocumentTabPreview.vue', () => {
       .commitAndGetLastDocument()
 
     const wrapper = shallowMount(DocumentTabPreview, {
-      localVue,
-      propsData: { document, disabled },
-      mocks: { $t: (msg) => msg }
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
     })
+
     expect(wrapper.vm.previewComponent).toBe('AudioViewer')
   })
 
@@ -86,10 +101,13 @@ describe('DocumentTabPreview.vue', () => {
       .commitAndGetLastDocument()
 
     const wrapper = shallowMount(DocumentTabPreview, {
-      localVue,
-      propsData: { document, disabled },
-      mocks: { $t: (msg) => msg }
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
     })
+
     expect(wrapper.vm.previewComponent).toBe('VideoViewer')
   })
 })
