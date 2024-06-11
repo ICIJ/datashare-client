@@ -1,22 +1,22 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import JsonViewer from '@/components/document/viewers/JsonViewer'
 import JsonFormatter from '@/components/JsonFormatter'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import documentJson from '~tests/unit/resources/document.json'
 
 describe('JsonViewer.vue', () => {
-  let localVue, api, wrapper
-  beforeAll(() => {
+  let api, wrapper
+
+  beforeEach(async () => {
     api = { getSource: vi.fn().mockResolvedValue({ data: documentJson }) }
-    const core = Core.init(createLocalVue(), api).useAll()
-    localVue = core.localVue
+    const { plugins } = CoreSetup.init(api).useAll()
+    wrapper = shallowMount(JsonViewer, { global: { plugins }, props: { document: { url: 'document.json' } } })
+    await flushPromises()
   })
 
   it('should render the JSON in a JsonFormatter component', async () => {
-    wrapper = shallowMount(JsonViewer, { localVue, propsData: { document: { url: 'document.json' } } })
-    await flushPromises()
     expect(wrapper.findComponent(JsonFormatter).exists()).toBeTruthy()
   })
 })
