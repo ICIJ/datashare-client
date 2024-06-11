@@ -1,12 +1,11 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import { shallowMount, mount, flushPromises } from '@vue/test-utils'
 
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import Document from '@/api/resources/Document'
 import UserHistoryDocumentList from '@/pages/UserHistoryDocumentList'
 
 describe('UserHistoryDocumentList.vue', () => {
-  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
-  const propsData = {
+  const props = {
     events: [
       {
         id: 'id_02',
@@ -38,16 +37,22 @@ describe('UserHistoryDocumentList.vue', () => {
       }
     ]
   }
-  let wrapper
+
+  let core
+
+  beforeEach(() => {
+    core = CoreSetup.init().useAll().useRouter()
+    core.config.set('projects', [{ name: 'server-project1' }, { name: 'server-project2' }])
+  })
 
   it('should NOT display a list of documents', () => {
-    const propsData = { events: [] }
-    wrapper = shallowMount(UserHistoryDocumentList, { i18n, localVue, propsData, router })
+    const props = { events: [] }
+    const wrapper = shallowMount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
     expect(wrapper.findAll('.user-history-document-list__list__item')).toHaveLength(0)
   })
 
   it('should display a list of two documents', () => {
-    wrapper = mount(UserHistoryDocumentList, { i18n, localVue, propsData, router, store })
+    const wrapper = mount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
     const elements = wrapper.findAll('.user-history-document-list__list__item')
     expect(elements).toHaveLength(2)
     expect(elements.at(0).find('.user-history-document-list__list__item__time').text()).toBe('23:09')
@@ -55,7 +60,7 @@ describe('UserHistoryDocumentList.vue', () => {
   })
 
   it('display the first row first cell containing date and time', () => {
-    wrapper = mount(UserHistoryDocumentList, { i18n, localVue, propsData, router, store })
+    const wrapper = mount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
     const firstRow = wrapper.find('.user-history-document-list__list__item')
     const date = firstRow.find('.user-history-document-list__list__item__date')
     expect(date.exists()).toBe(true)
@@ -65,7 +70,7 @@ describe('UserHistoryDocumentList.vue', () => {
     expect(time.text()).toBe('23:09')
   })
   it('display the first row second cell containing document thumbnail, name, link, and action buttons', () => {
-    wrapper = mount(UserHistoryDocumentList, { i18n, localVue, propsData, router, store })
+    const wrapper = mount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
     const firstRow = wrapper.find('.user-history-document-list__list__item')
     const link = firstRow.find('.user-history-document-list__list__item__link')
     expect(link.exists()).toBe(true)
@@ -75,7 +80,7 @@ describe('UserHistoryDocumentList.vue', () => {
   })
 
   it('should convert an event uri to a Document instance', () => {
-    wrapper = shallowMount(UserHistoryDocumentList, { i18n, localVue, propsData, router })
+    const wrapper = shallowMount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
 
     const uri = '/ds/local-datashare/foo/bar'
     const document = wrapper.vm.eventAsDocument({ uri })
@@ -86,7 +91,7 @@ describe('UserHistoryDocumentList.vue', () => {
   })
 
   it('should convert an event uri to a Document instance, ignore query params', () => {
-    wrapper = shallowMount(UserHistoryDocumentList, { i18n, localVue, propsData, router })
+    const wrapper = shallowMount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
 
     const uri = '/ds/local-datashare/foo/bar?q=baz'
     const document = wrapper.vm.eventAsDocument({ uri })
@@ -96,26 +101,27 @@ describe('UserHistoryDocumentList.vue', () => {
     expect(document.routing).toBe('bar')
   })
   describe('Server mode', () => {
+    beforeEach(async () => {
+      core.config.set('mode', 'SERVER')
+      await flushPromises()
+    })
+
     it('should display a third column containing project name', () => {
-      wrapper = shallowMount(UserHistoryDocumentList, { i18n, localVue, propsData, router })
-      expect(wrapper.vm.displayedFields).toHaveLength(2)
-      const computed = { isServer: () => true }
-      wrapper = shallowMount(UserHistoryDocumentList, { i18n, localVue, propsData, store, computed })
-      expect(wrapper.vm.displayedFields).toHaveLength(3)
+      const wrapper = shallowMount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
+      expect(wrapper.vm.fields).toHaveLength(3)
     })
 
     it('should display the project name based on the uri', () => {
-      const computed = { isServer: () => true }
-      wrapper = mount(UserHistoryDocumentList, { i18n, localVue, propsData, router, store, computed })
+      const wrapper = mount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
       const projectLink = wrapper.find('.user-history-document-list__list__item__project')
-      expect(projectLink.text()).toEqual('server-project2')
+      const projectDisplay = projectLink.find('.project-link__display')
+      expect(projectDisplay.text()).toEqual('Server Project 2')
     })
 
     it('adds a link on the project name to create a search based on the project', () => {
-      const computed = { isServer: () => true }
-      wrapper = mount(UserHistoryDocumentList, { i18n, localVue, propsData, router, store, computed })
+      const wrapper = mount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
       const projectLink = wrapper.find('.user-history-document-list__list__item__project')
-      expect(projectLink.attributes().href).toEqual('#/?q=%2a&indices=server-project2')
+      expect(projectLink.attributes('href')).toEqual('#/project/server-project2')
     })
   })
 })

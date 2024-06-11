@@ -61,7 +61,7 @@
           </div>
         </template>
         <template #cell(project)="{ item: { uri } }">
-          <project-link :project="projectName(uri)" />
+          <project-link class="user-history-document-list__list__item__project" :project="projectName(uri)" />
         </template>
       </b-table>
       <div v-else class="text-muted text-center">
