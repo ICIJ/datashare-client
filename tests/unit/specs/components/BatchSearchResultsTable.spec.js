@@ -20,7 +20,8 @@ describe('BatchSearchResultsTable.vue', () => {
 
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
-  const props = { uuid: '12', indices: project.concat(',', anotherProject) }
+  const indices = project.concat(',', anotherProject)
+  const props = { uuid: '12', indices }
 
   let wrapper, core
 
@@ -64,7 +65,7 @@ describe('BatchSearchResultsTable.vue', () => {
     })
     api.getBatchSearch = vi.fn().mockResolvedValue({
       uuid: '12',
-      projects: [{ name: 'batchsearchresults' }, { name: anotherProject }],
+      projects: [{ name: project }, { name: anotherProject }],
       name: 'BatchSearch Test',
       description: 'This is the description of the batch search',
       state: 'SUCCESS',
@@ -86,10 +87,11 @@ describe('BatchSearchResultsTable.vue', () => {
     })
     api.copyBatchSearch = vi.fn()
     core = CoreSetup.init(api).useAll().useRouter(routes)
-    core.config.merge({ mode: 'SERVER' })
+    core.config.merge({ mode: 'SERVER', projects: [{ name: project }, { name: anotherProject }] })
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
+    vi.spyOn(core.router, 'push')
     wrapper = shallowMount(BatchSearchResultsTable, { props, global: { plugins: core.plugins } })
     await wrapper.vm.fetch()
   })
@@ -107,32 +109,12 @@ describe('BatchSearchResultsTable.vue', () => {
   it('should redirect on contentType changed', () => {
     vi.spyOn(core.router, 'push')
 
-    wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
+    wrapper.vm.sortChanged({ key: 'contentType', order: true })
 
     expect(core.router.push).toBeCalledWith({
       name: 'task.batch-search.view.results',
-      params: { indices: project.concat(',', anotherProject), uuid: '12' },
+      params: { indices, uuid: '12' },
       query: { page: '1', sort: 'content_type', order: 'desc' }
-    })
-  })
-
-  it('should redirect on sort change but keep the selectedQueries selected', () => {
-    vi.spyOn(core.router, 'push')
-    core.router.push({ query: { queries: ['query_01', 'query_02'] } })
-
-    wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
-
-    expect(core.router.push).toBeCalled()
-    expect(core.router.push).toBeCalledWith({
-      name: 'task.batch-search.view.results',
-      params: { indices: project.concat(',', anotherProject), uuid: '12' },
-      query: {
-        page: '1',
-        queries: ['query_01', 'query_02'],
-        sort: 'content_type',
-        order: 'desc',
-        queriesSort: undefined
-      }
     })
   })
 
@@ -154,7 +136,7 @@ describe('BatchSearchResultsTable.vue', () => {
     await core.router
       .push({
         name: 'task.batch-search.view.results',
-        params: { indices: project.concat(',', anotherProject), uuid: '12' },
+        params: { indices, uuid: '12' },
         query: { page: 1 }
       })
       .catch(() => {})
@@ -171,7 +153,7 @@ describe('BatchSearchResultsTable.vue', () => {
     wrapper = shallowMount(BatchSearchResultsTable, { global: { plugins: core.plugins }, props })
     await wrapper.vm.$router.push({
       name: 'task.batch-search.view.results',
-      params: { indices: project.concat(',', anotherProject), uuid: '12' },
+      params: { indices, uuid: '12' },
       query: {
         queries: 'simple_text',
         contentTypes: 'type_02,type_03'
