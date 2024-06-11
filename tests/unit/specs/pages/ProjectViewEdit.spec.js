@@ -1,47 +1,48 @@
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
+import { shallowMount, mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import { Core } from '@/core'
+import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectViewEdit from '@/pages/ProjectViewEdit'
 
 describe('ProjectViewEdit.vue', () => {
-  let config, i18n, localVue, store, wait, api
+  let api, core
 
-  beforeAll(() => {
-    api = {
-      updateProject: vi.fn(),
-      deleteProject: vi.fn()
-    }
-    const core = Core.init(createLocalVue(), api).useAll()
-    config = core.config
-    i18n = core.i18n
-    localVue = core.localVue
-    store = core.store
-    wait = core.wait
-  })
   beforeEach(() => {
+    api = { updateProject: vi.fn(), deleteProject: vi.fn() }
+    core = CoreSetup.init(api).useAll().useRouter()
     // Ensure the local-datashare project can be found
-    config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
+    core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
 
   it('contains a ProjectForm', () => {
-    const propsData = { name: 'local-datashare' }
-    const wrapper = shallowMount(ProjectViewEdit, { localVue, store, wait, i18n, propsData })
+    const props = { name: 'local-datashare' }
+    const wrapper = shallowMount(ProjectViewEdit, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props
+    })
     expect(wrapper.findComponent({ name: 'ProjectForm' }).exists()).toBeTruthy()
   })
 
   it('contains a ProjectForm in `edit` mode', async () => {
-    const propsData = { name: 'local-datashare' }
-    const wrapper = shallowMount(ProjectViewEdit, { localVue, store, wait, i18n, propsData })
+    const props = { name: 'local-datashare' }
+    const wrapper = shallowMount(ProjectViewEdit, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props
+    })
     const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
     expect(projectForm.vm.edit).toBeTruthy()
   })
 
   it('updates values of a project when the form is submitted', async () => {
     // Given
-    const propsData = { name: 'local-datashare' }
-    const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData })
+    const props = { name: 'local-datashare' }
+    const wrapper = mount(ProjectViewEdit, { global: { plugins: core.plugins }, props })
     expect(wrapper.vm.$core.projects[0].label).toBe('Default')
     const projectFormValues = {
       allowFromMask: '*.*.*.*',
@@ -65,16 +66,16 @@ describe('ProjectViewEdit.vue', () => {
   })
 
   it('deletes the project when the form emits a deleted event', async () => {
-    const propsData = { name: 'local-datashare' }
-    const router = new VueRouter({
-      routes: [
+    const props = { name: 'local-datashare' }
+    const core = CoreSetup.init(api)
+      .useAll()
+      .useRouter([
         {
           name: 'project.list',
-          path: 'project'
+          path: '/project'
         }
-      ]
-    })
-    const wrapper = mount(ProjectViewEdit, { localVue, store, wait, i18n, propsData, config, router })
+      ])
+    const wrapper = mount(ProjectViewEdit, { global: { plugins: core.plugins }, props })
     expect(wrapper.vm.$core.projects).toHaveLength(1)
 
     const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
