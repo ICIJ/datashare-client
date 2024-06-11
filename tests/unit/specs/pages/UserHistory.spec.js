@@ -1,5 +1,4 @@
 import { shallowMount, mount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
