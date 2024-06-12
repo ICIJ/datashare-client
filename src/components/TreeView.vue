@@ -21,7 +21,7 @@
             </router-link>
             <span v-if="size" class="tree-view__header__size ms-3">
               <fa icon="weight-scale"></fa>
-              {{ humanSize(total, false, $t('human.size')) }}
+              {{ humanSize(total, false, $tm('human.size')) }}
             </span>
             <span
               v-if="count"
@@ -94,7 +94,7 @@
                 class="tree-view__directories__item__content-length fw-bold ms-2"
                 :title="$n(directory.contentLength.value)"
               >
-                {{ humanSize(directory.contentLength.value, false, $t('human.size')) }}
+                {{ humanSize(directory.contentLength.value, false, $tm('human.size')) }}
               </div>
               <span
                 v-if="count"

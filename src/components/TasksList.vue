@@ -46,7 +46,7 @@
           {{ $t('tasksList.encrypted') }}
         </div>
         <div v-if="hasZipSize(item)" class="tasks-list__tasks__item__size m-0 fw-bold">
-          {{ humanSize(item.result.size, false, $t('human.size')) }}
+          {{ humanSize(item.result.size, false, $tm('human.size')) }}
         </div>
       </template>
       <template #table-colgroup="{ fields }">
