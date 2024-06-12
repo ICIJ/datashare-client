@@ -4,7 +4,7 @@ import BatchSearchClearFilters from '@/components/BatchSearchClearFilters'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('BatchSearchClearFilters.vue', () => {
-  const routeName = 'task.batch-search.list';
+  const routeName = 'task.batch-search.list'
   const routes = [
     {
       name: routeName,

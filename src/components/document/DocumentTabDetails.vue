@@ -41,7 +41,7 @@
         <template #cell(label)="{ item: { name, label, value } }">
           <div class="fw-bold d-flex justify-content-between">
             <div class="text-truncate me-1 w-100" :title="name">
-              <var>{{ startCase(document.shortMetaName(label || name))  }}</var>
+              <var>{{ startCase(document.shortMetaName(label || name)) }}</var>
             </div>
             <div class="ms-auto document__content__details__item__label__search">
               <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name, value), indices } }">

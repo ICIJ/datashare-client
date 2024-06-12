@@ -1,7 +1,11 @@
 <template>
   <div class="user-history">
-    <page-header icon="clock" v-model:tab="tab" :title="$t('userHistory.heading')"
-      :description="$t('userHistory.description')">
+    <page-header
+      v-model:tab="tab"
+      icon="clock"
+      :title="$t('userHistory.heading')"
+      :description="$t('userHistory.description')"
+    >
       <template #tabs>
         <b-tab :active="defaultTab === 0">
           <template #title>
@@ -16,8 +20,14 @@
           </template>
         </b-tab>
       </template>
-      <confirm-button class="btn btn-primary" :disabled="!totalEvents || $wait.is(loader)"
-        :confirmed="deleteUserHistory" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
+      <confirm-button
+        class="btn btn-primary"
+        :disabled="!totalEvents || $wait.is(loader)"
+        :confirmed="deleteUserHistory"
+        :label="$t('global.confirmLabel')"
+        :yes="$t('global.yes')"
+        :no="$t('global.no')"
+      >
         <fa icon="trash-alt" class="me-1"></fa>
         {{ $t('userHistory.clear') }}
       </confirm-button>

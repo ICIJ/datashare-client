@@ -76,7 +76,7 @@ describe('SearchResultsTable.vue', () => {
     wrapper = mount(SearchResultsTable, { global: { plugins: core.plugins } })
 
     await wrapper.setData({ selected: [{ id: 'document_1' }] })
-    expect(wrapper.vm.selected).toHaveLength( 1)
+    expect(wrapper.vm.selected).toHaveLength(1)
     await wrapper.findAll('.search-results-table__actions__action').at(0).trigger('click')
     expect(wrapper.vm.selected).toHaveLength(wrapper.vm.items.length)
   })

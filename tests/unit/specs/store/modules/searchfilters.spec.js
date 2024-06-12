@@ -1,5 +1,3 @@
-import { cloneDeep } from 'lodash'
-
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { storeBuilder } from '@/store/storeBuilder'
@@ -13,11 +11,11 @@ describe('SearchFilters', () => {
 
   describe('Common filter', () => {
     it('should reset the store state', () => {
-      expect( store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
+      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
       store.commit('search/removeFilter', 'contentType')
-      expect( store.getters['search/getFilter']({ name: 'contentType' })).toBeUndefined()
+      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeUndefined()
       store.commit('search/resetFiltersAndValues')
-      expect( store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
+      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
     })
 
     it('should define a "language" filter correctly (name, key and type)', () => {

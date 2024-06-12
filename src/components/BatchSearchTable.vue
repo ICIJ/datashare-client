@@ -25,8 +25,8 @@
       <!-- Filterable Headers -->
       <template #head(state)="{ field }">
         <column-filter-dropdown
-          v-model="selectedStates"
           :id="field.key"
+          v-model="selectedStates"
           :items="states"
           :name="field.label"
           immediate

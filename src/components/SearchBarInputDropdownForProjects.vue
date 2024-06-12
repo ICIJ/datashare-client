@@ -154,9 +154,11 @@ export default {
     },
     selectedProjects: {
       get() {
-        return compact(this.modelValue.map(({ name }) => {
-          return this.$core.findProject(name)
-        }))
+        return compact(
+          this.modelValue.map(({ name }) => {
+            return this.$core.findProject(name)
+          })
+        )
       },
       set(value) {
         this.$emit('update:modelValue', value)

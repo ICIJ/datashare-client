@@ -77,19 +77,18 @@ export default {
     }
   },
   watch: {
-    projects (value, previousValue) {
+    projects(value, previousValue) {
       if (!isEqual(value, previousValue)) {
         this.path = this.dataDir
         this.setFilterValue(this.filter, { key: [] })
       }
     },
     path(path, oldPath) {
-      if(oldPath){
+      if (oldPath) {
         this.pathQueries[oldPath] = this.root.query
       }
       this.root.query = this.pathQueries[path] || null
     }
-
   },
   created() {
     this.path = this.dataDir

@@ -4,7 +4,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import {defineAsyncComponent} from 'vue'
+import { defineAsyncComponent } from 'vue'
 /**
  * Display the search results (from the store) in the selected layout.
  */

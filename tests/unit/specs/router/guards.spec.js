@@ -9,13 +9,12 @@ describe('guards', () => {
   const { router, plugins, config } = CoreSetup.init().useAll().useRouter()
 
   describe('checkUserAuthentication', () => {
-    let wrapper
 
     beforeEach(async () => {
       config.set('mode', 'SERVER')
       config.set('projects', ['local-datashare'])
       router.addRoute({ path: '/pub', name: 'pub', meta: { skipsAuth: true } })
-      wrapper = shallowMount({ template: '<router-view />' }, { global: { plugins } })
+      shallowMount({ template: '<router-view />' }, { global: { plugins } })
       await flushPromises()
       await router.replace({ name: 'pub' }).catch(vi.fn())
     })

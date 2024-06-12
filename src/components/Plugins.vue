@@ -23,7 +23,8 @@
                   variant="primary"
                   class="ms-auto text-nowrap"
                   :disabled="isFormValid !== true"
-                  @click="installPluginFromUrl">
+                  @click="installPluginFromUrl"
+                >
                   {{ $t('plugins.install') }}
                 </b-button>
               </div>
@@ -53,7 +54,8 @@
                       v-if="plugin.installed"
                       class="plugins__card__uninstall-button mb-2"
                       variant="danger"
-                      @click="uninstallPlugin(plugin.id)">
+                      @click="uninstallPlugin(plugin.id)"
+                    >
                       <fa icon="trash-alt"></fa>
                       {{ $t('plugins.uninstall') }}
                     </b-button>
@@ -61,7 +63,8 @@
                       v-if="!plugin.installed"
                       class="plugins__card__download-button mb-2"
                       variant="primary"
-                      @click="installPluginFromId(plugin.id)">
+                      @click="installPluginFromId(plugin.id)"
+                    >
                       <fa icon="cloud-download-alt"></fa>
                       {{ $t('plugins.install') }}
                     </b-button>

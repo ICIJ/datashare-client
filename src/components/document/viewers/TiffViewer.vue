@@ -94,7 +94,7 @@ export default {
     },
     async rotateActivePage(page, direction = 1) {
       const canvas = await this.rotate(this.pages[page - 1], direction)
-      this.pages[page-1] = canvas
+      this.pages[page - 1] = canvas
     },
     rotate(canvas, direction = 1) {
       const ctx = canvas.getContext('2d')

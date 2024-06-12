@@ -1,10 +1,10 @@
 import { shallowMount } from '@vue/test-utils'
 import find from 'lodash/find'
+import { describe, vi } from 'vitest'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import FilterProject from '@/components/filter/types/FilterProject'
-import { describe, vi } from 'vitest'
 
 describe('FilterProject.vue', () => {
   let core, wrapper, api

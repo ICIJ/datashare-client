@@ -1,5 +1,5 @@
 import { mount, shallowMount } from '@vue/test-utils'
-import {  beforeEach } from 'vitest'
+import { beforeEach } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -262,7 +262,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in fileTypes', async () => {
-      wrapper = mount(BatchSearchForm, { global: { plugins:core.plugins, renderStubDefaultSlot: true } })
+      wrapper = mount(BatchSearchForm, { global: { plugins: core.plugins, renderStubDefaultSlot: true } })
       await flushPromises()
       await wrapper.setData({
         fileTypes: [{ label: 'Excel 2003 XML spreadsheet visio' }],
@@ -312,7 +312,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in tags', async () => {
-      wrapper = mount(BatchSearchForm, { global: { plugins:core.plugins, renderStubDefaultSlot: true } })
+      wrapper = mount(BatchSearchForm, { global: { plugins: core.plugins, renderStubDefaultSlot: true } })
       await flushPromises()
       await wrapper.setData({ tags: ['tag_01'], selectedTag: 'tag_02' })
 

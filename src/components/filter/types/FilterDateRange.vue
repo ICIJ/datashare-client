@@ -148,7 +148,6 @@ export default {
 
 <style lang="scss">
 .filter.filter--date-range {
-
   .filter--date-range__inputs {
     flex: 0 1 100%;
 

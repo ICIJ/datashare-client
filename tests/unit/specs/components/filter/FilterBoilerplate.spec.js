@@ -1,9 +1,9 @@
 import { mount, shallowMount } from '@vue/test-utils'
+import { beforeEach } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
-import { beforeEach } from 'vitest'
 
 // Mock the refreshRouteAndSearch method to avoid unnecessary route update
 filters.methods.refreshRouteAndSearch = vi.fn()

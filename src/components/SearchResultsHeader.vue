@@ -38,7 +38,10 @@
             <span class="search-results-header__settings__size__toggler__slot">
               {{ firstDocument }} - {{ lastDocument }}
             </span>
-            <span class="search-results-header__settings__size__toggler__hits text-muted" :title="firstLastDocument+' '+nbDocuments">
+            <span
+              class="search-results-header__settings__size__toggler__hits text-muted"
+              :title="firstLastDocument + ' ' + nbDocuments"
+            >
               {{ nbDocuments }}
             </span>
           </template>
@@ -209,7 +212,7 @@ export default {
         total: this.$n(this.response.total)
       })}`
     },
-    firstLastDocument(){
+    firstLastDocument() {
       return `${this.firstDocument} - ${this.lastDocument}`
     },
     projectIds() {
@@ -316,8 +319,6 @@ export default {
     }
 
     &__size {
-
-
       &:deep(.search-results-header__settings__size__toggler) {
         display: flex;
         align-items: center;

@@ -85,4 +85,3 @@ export {
   toVariantColor,
   SORT_ORDER
 }
-

@@ -70,7 +70,8 @@
           no-fade
           :title="doc.slicedNameToString"
           :value="1"
-          :link="documentLink" />
+          :link="documentLink"
+        />
       </b-popover>
       <b-tooltip target="popover-document-share" triggers="hover">
         {{ $t('search.nav.share') }}

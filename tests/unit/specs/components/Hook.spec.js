@@ -8,14 +8,14 @@ import Hook from '@/components/Hook'
 // component to be tested with Vue Test Utils.
 //
 // @see https://stevenklambert.com/writing/unit-testing-vuejs-functional-component-multiple-root-nodes/
-const WrappedHook = defineComponent({
+const WrappedHook = {
   components: { Hook },
   template: `
     <div>
       <hook v-bind="$attrs" v-on="$listeners" ref="hook" />
     </div>
   `
-})
+}
 
 // Create a "hooked component" defintion with a render function.
 //

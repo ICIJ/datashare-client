@@ -3,8 +3,7 @@ import { mount, shallowMount } from '@vue/test-utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
-import CoreSetup from "~tests/unit/CoreSetup";
-
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('AppliedSearchFilters.vue', () => {
   vi.setConfig({ testTimeout: 1e4 })

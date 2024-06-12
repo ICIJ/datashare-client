@@ -35,7 +35,6 @@
 <script>
 import { uniqueId } from 'lodash'
 
-import { EventBus } from '@/utils/event-bus'
 import displayUser from '@/filters/displayUser'
 
 /**

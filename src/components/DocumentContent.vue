@@ -182,7 +182,7 @@ export default {
       // Ensure offsets are in bounds
       offset = clamp(offset, 0, this.maxOffset)
       // Reactivly set the nested values of contentSlices
-      obj[offset]= obj[offset] || {}
+      obj[offset] = obj[offset] || {}
       obj[offset][targetLanguageKey] = { ...rest, content, cookedContent }
       return { ...rest, content, cookedContent }
     },

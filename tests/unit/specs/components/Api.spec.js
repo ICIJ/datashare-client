@@ -4,7 +4,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 import { flushPromises } from '~tests/unit/tests_utils'
 import ApiPage from '@/components/Api'
 import { getMode, MODE_NAME } from '@/mode'
-import CoreSetup from "~tests/unit/CoreSetup";
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('Api.vue', () => {
   let config, plugins, api
