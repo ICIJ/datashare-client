@@ -46,11 +46,13 @@ export default {
   mixins: [utils],
   beforeRouteEnter(to, from, next) {
     return next((vm) => {
-      const defaultTab = vm.tabRoutes.indexOf(to.name)
-      if (defaultTab > -1) {
-        vm.defaultTab = defaultTab
-      } else if (!vm.$route.name.includes('batch-search')) {
-        vm.$router.push({ name: 'task.batch-search.list' })
+      if (vm.$options.name === 'Task') {
+        const defaultTab = vm.tabRoutes.indexOf(to.name)
+        if (defaultTab > -1) {
+          vm.defaultTab = defaultTab
+        } else if (!vm.$route.name.includes('batch-search')) {
+          vm.$router.push({ name: 'task.batch-search.list' })
+        }
       }
     })
   },
