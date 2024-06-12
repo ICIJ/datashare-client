@@ -1,7 +1,7 @@
 <template>
   <div class="column-filter d-flex align-items-middle">
     {{ name }}
-    <sorting-arrow v-if="sortBy" :sort-by="sortBy" :field-key="id" />
+    <sorting-arrow v-if="sortable && sortBy" :sort-by="sortBy" :field-key="id" />
     <b-button :id="btnId" class="column-filter__toggle" :class="btnClassName" radius variant="outline" @click.stop>
       <fa style="padding-bottom: 1px" fixed-width icon="filter" />
       <slot name="badge" :active="active" :counter="counter">
@@ -50,6 +50,10 @@ export default {
     counter: {
       type: Number,
       default: null
+    },
+    sortable: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['show', 'hide', 'toggle'],
