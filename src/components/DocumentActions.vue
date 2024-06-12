@@ -83,6 +83,7 @@
       </b-button>
     </template>
     <b-popover
+      v-if="canIDownload"
       :placement="tooltipsPlacement"
       :target="downloadBtnId"
       :title="document.contentTypeLabel"
