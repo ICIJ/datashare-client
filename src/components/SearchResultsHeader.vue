@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { cloneDeep, every, find, get, min } from 'lodash'
+import { cloneDeep, compact, every, find, isEmpty, get, min } from 'lodash'
 import { mapState } from 'vuex'
 
 import settings from '@/utils/settings'
@@ -190,12 +190,12 @@ export default {
       return totalLength
     },
     batchDownloadLabel() {
-      const warningLabel = [this.generateMaxFilesWarningLabel, this.generateMaxSizeWarningLabel].join(' ')
+      const warningLabel = compact([this.generateMaxFilesWarningLabel, this.generateMaxSizeWarningLabel]).join(' ')
 
-      if (warningLabel === '') {
+      if (isEmpty(warningLabel)) {
         return this.generateDownloadLabel
       } else {
-        return warningLabel + this.$t('search.results.warningConfirm')
+        return warningLabel + ' ' + this.$t('search.results.warningConfirm')
       }
     },
     isMaxFilesExceeded() {
