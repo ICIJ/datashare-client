@@ -1,9 +1,5 @@
 <template>
-  <form
-    class="extracting-form position-relative"
-    :class="{ 'extracting-form--dark': dark }"
-    @submit.prevent="submitExtract"
-  >
+  <form class="extracting-form position-relative" @submit.prevent="submitExtract">
     <div v-if="showProjectSelector" class="extracting-form__group mb-4">
       <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />
       <div class="ms-4 ps-3">
@@ -16,14 +12,14 @@
       <div class="ms-4 ps-3">
         <p class="fw-bold mb-0">{{ $t('indexing.folderSelection') }}</p>
         <p class="small mb-2">{{ $t('indexing.folderSelectionDescription') }}</p>
-        <inline-directory-picker v-model:path="path" :source-path="sourcePath" :dark="dark" hide-folder-icon />
+        <inline-directory-picker v-model:path="path" :source-path="sourcePath" hide-folder-icon />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
       <fa icon="globe" class="position-absolute mt-1 ms-1" size="lg" />
       <div class="ms-4 ps-3">
         <p class="fw-bold">{{ $t('indexing.extractLanguage') }}</p>
-        <extracting-language-form-control v-model="language" :dark="dark" />
+        <extracting-language-form-control v-model="language" />
       </div>
     </div>
 
@@ -45,7 +41,6 @@
           :ocr-languages="ocrLanguages"
           :has-tesseract="hasTesseract"
           :is-ready="isReady"
-          :dark="dark"
         />
       </div>
     </div>
@@ -96,12 +91,6 @@ export default {
     ProjectSelector
   },
   props: {
-    /**
-     * Dark mode option
-     */
-    dark: {
-      type: Boolean
-    },
     /**
      * Force hiding the project selector input
      */
@@ -242,10 +231,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.extracting-form--dark {
-  background: darken($primary, 20);
-  color: white;
-}
-</style>

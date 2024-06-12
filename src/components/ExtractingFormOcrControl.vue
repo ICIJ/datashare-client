@@ -30,9 +30,6 @@ export default {
     },
     isReady: {
       type: Boolean
-    },
-    dark: {
-      type: Boolean
     }
   },
   computed: {
@@ -53,9 +50,6 @@ export default {
     },
     shouldDisplayLanguageMessage() {
       return this.hasTesseract && !this.isOcrLanguage
-    },
-    overlayVariant() {
-      return this.dark ? 'dark' : 'light'
     }
   },
   methods: {
@@ -70,7 +64,7 @@ export default {
 </script>
 
 <template>
-  <b-overlay :show="!isReady" :variant="overlayVariant" class="extracting_language_form_control" rounded spinner-small>
+  <b-overlay :show="!isReady" class="extracting_language_form_control" rounded spinner-small>
     <b-alert
       :model-value="!hasTesseract"
       variant="warning"
