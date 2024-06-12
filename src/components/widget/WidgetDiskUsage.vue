@@ -43,7 +43,7 @@ import { waitFor } from 'vue-wait'
 import { mapState } from 'vuex'
 
 import TreeView from '@/components/TreeView'
-import humanSize from '@/filters/humanSize'
+import humanSize from '@/utils/humanSize'
 
 /**
  * Widget to display the disk space occupied by indexed files on the insights page.

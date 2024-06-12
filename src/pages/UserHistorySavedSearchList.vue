@@ -81,8 +81,8 @@
 <script>
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
-import { humanTime } from '@/filters/humanTime'
-import { humanDate } from '@/filters/humanDate'
+import { humanTime } from '@/utils/humanTime'
+import { humanDate } from '@/utils/humanDate'
 
 export default {
   name: 'UserHistorySavedSearchList',

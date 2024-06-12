@@ -60,7 +60,7 @@
 import { sortBy } from 'lodash'
 
 import EllipseStatus from '@/components/EllipseStatus'
-import humanSize from '@/filters/humanSize'
+import humanSize from '@/utils/humanSize'
 
 export default {
   name: 'TasksList',

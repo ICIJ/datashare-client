@@ -5,7 +5,7 @@ import { extname } from 'path'
 
 import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
-import humanSize from '@/filters/humanSize'
+import humanSize from '@/utils/humanSize'
 import { findContentTypeIcon } from '@/utils/font-awesome-files'
 import types from '@/utils/types.json'
 

@@ -120,7 +120,7 @@ import UserDisplay from '@/components/UserDisplay'
 import settings from '@/utils/settings'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
-import { humanLongDate, fromNow } from '@/filters/humanDate'
+import { humanLongDate, fromNow } from '@/utils/humanDate'
 import { SORT_ORDER } from '@/utils/utils'
 const BATCHSEARCH_STATUS_VALUE = Object.freeze({
   PUBLISHED: '1',

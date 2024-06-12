@@ -37,7 +37,7 @@
 import { get, sum } from 'lodash'
 import { waitFor } from 'vue-wait'
 
-import humanNumber from '@/filters/humanNumber'
+import humanNumber from '@/utils/humanNumber'
 
 /**
  * A widget for the insights page indicating the proportion of duplicates in the data.

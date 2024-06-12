@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { humanShortDate } from '@/filters/humanDate'
+import { humanShortDate } from '@/utils/humanDate'
 import PageHeader from '@/components/PageHeader'
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 import utils from '@/mixins/utils'

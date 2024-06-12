@@ -98,9 +98,9 @@ import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import UserDisplay from '@/components/UserDisplay'
 import ProjectLink from '@/components/ProjectLink'
-import humanSize from '@/filters/humanSize'
-import humanNumber from '@/filters/humanNumber'
-import { humanLongDate } from '@/filters/humanDate'
+import humanSize from '@/utils/humanSize'
+import humanNumber from '@/utils/humanNumber'
+import { humanLongDate } from '@/utils/humanDate'
 import utils from '@/mixins/utils'
 
 /**

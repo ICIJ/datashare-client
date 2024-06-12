@@ -114,8 +114,8 @@ import { findIndex, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
-import byteSize from '@/filters/byteSize'
-import humanSize from '@/filters/humanSize'
+import byteSize from '@/utils/byteSize'
+import humanSize from '@/utils/humanSize'
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
 
