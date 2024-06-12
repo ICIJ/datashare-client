@@ -16,7 +16,7 @@ describe('FilterStarred.vue', () => {
 
   beforeAll(() => {
     api = { getStarredDocuments: vi.fn().mockResolvedValue([]), elasticsearch: es }
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init(api).useAll().useRouter()
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 

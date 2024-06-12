@@ -37,7 +37,7 @@ describe('FilterRecommendedBy.vue', () => {
       getUser: vi.fn().mockResolvedValue({ uid: 'user_01' })
     }
 
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init(api).useAll().useRouter()
     core.store.commit('search/index', project)
 
     const filter = core.store.getters['search/getFilter']({ name: 'recommendedBy' })
