@@ -31,14 +31,12 @@
           id="popover-recommended-by"
           pill
           :variant="markAsRecommendedVariant"
-          class="me-2 document-navbar__recommended-by-number"
+          class="me-2 document-navbar__recommended-by-number align-self-center"
         >
           {{ recommendedBy.length }}
         </b-badge>
         <b-popover target="popover-recommended-by" triggers="hover" placement="bottom">
-          <div>
-            {{ $tc('search.nav.markAsRecommendedBy', recommendedBy.length, { count: recommendedBy.length }) }}
-          </div>
+          <p>{{ $tc('search.nav.markAsRecommendedBy', recommendedBy.length, { count: recommendedBy.length }) }}</p>
           <ul class="mb-0 mt-2 list-unstyled">
             <li v-for="user in recommendedBy" :key="user">
               <user-display :username="user" />
@@ -176,7 +174,6 @@ export default {
   &__back:hover {
     color: inherit;
     display: inline;
-    font-size: $font-size-sm;
   }
 
   &__back .svg-inline--fa {
