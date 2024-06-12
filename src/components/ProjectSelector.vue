@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { castArray, isEqual, filter, startCase, trim } from 'lodash'
+import { castArray, isEqual, filter, startCase, trim, isEmpty } from 'lodash'
 
 import { iwildcardMatch } from '../utils/strings'
 
@@ -94,7 +94,11 @@ export default {
         return this.multiple ? castArray(this.modelValue) : this.modelValue
       },
       set(modelValue) {
-        this.$emit('update:modelValue', modelValue)
+        if (this.multiple && isEmpty(modelValue)) {
+          this.$emit('update:modelValue', this.modelValue)
+        } else {
+          this.$emit('update:modelValue', modelValue)
+        }
       }
     }
   }
