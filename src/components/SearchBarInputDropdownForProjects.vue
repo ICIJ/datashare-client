@@ -74,7 +74,7 @@
           </span>
         </div>
         <div
-          class="search-bar-input-dropdown-for-projects__toggle-value px-3 py-2 ms-auto"
+          class="search-bar-input-dropdown-for-projects__toggle-value ms-auto me-2"
           @click="toggleValue($event, project)"
         >
           <fa v-if="!hasValue(project)" icon="plus" fixed-width />
@@ -305,25 +305,27 @@ export default {
   }
 
   &__toggle-value {
+    $size: 1.5rem;
+
     position: relative;
     visibility: hidden;
+    line-height: $size;
+    height: $size;
+    width: $size;
+    border-radius: $size;
 
     &:empty {
       display: none;
     }
 
     &:before {
-      $size: 1.5rem;
-
       content: '';
       z-index: 0;
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: block;
-      height: $size;
-      width: $size;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
       border-radius: $size;
       background: transparent;
       opacity: 0.25;
@@ -334,8 +336,11 @@ export default {
     }
 
     .svg-inline--fa {
-      position: relative;
+      position: absolute;
       z-index: 10;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 
