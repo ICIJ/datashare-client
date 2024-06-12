@@ -313,3 +313,23 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.document-actions {
+  .btn-group {
+    .btn:not(:first-of-type) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .dropdown:last-of-type {
+      display: inline-flex;
+
+      &:deep(.btn) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+}
+</style>
