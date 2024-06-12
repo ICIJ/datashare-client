@@ -159,11 +159,6 @@ export default {
       font-size: $font-size-sm;
       line-height: $line-height-base * 1 - math.div(85 - 95, 95);
       padding: $spacer 0 0 $spacer;
-
-      .custom-control-input:checked ~ .custom-control-label::before {
-        background-color: $tertiary;
-        border-color: $tertiary;
-      }
     }
 
     &:deep(.card) {

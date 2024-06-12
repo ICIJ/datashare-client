@@ -102,17 +102,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.filter {
-  & :deep.custom-control-label span {
-    padding: 0 $spacer-xxs;
-  }
-
-  & :deep.custom-control-input[disabled]:checked ~ .custom-control-label,
-  & :deep.custom-control-input:disabled:checked ~ .custom-control-label {
-    color: inherit;
-    font-weight: bold;
-  }
-}
-</style>

@@ -163,12 +163,6 @@ export default {
         display: inline-block;
         margin-bottom: 0;
       }
-
-      .filter--has-values & .custom-control-input:checked ~ .custom-control-label::before {
-        background: #000;
-        border-color: #000;
-        color: #fff;
-      }
     }
 
     &:hover,
