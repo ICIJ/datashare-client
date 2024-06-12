@@ -19,7 +19,7 @@ describe('FilterText.vue', () => {
   })
 
   beforeEach(() => {
-    core = CoreSetup.init({ elasticsearch: es }).useAll()
+    core = CoreSetup.init({ elasticsearch: es }).useAll().useRouter()
     const filter = core.store.getters['search/getFilter']({ name })
 
     wrapper = mount(FilterText, {

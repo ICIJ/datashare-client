@@ -23,7 +23,7 @@ describe('FilterNamedEntity.vue', () => {
       elasticsearch: es
     }
 
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init(api).useAll().useRouter()
     core.config.set('manageDocuments', true)
     core.store.commit('search/index', index)
     core.store.commit('search/reset')

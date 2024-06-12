@@ -18,7 +18,7 @@ describe('FilterDate.vue', () => {
   let wrapper = null
 
   beforeEach(() => {
-    const { store, plugins } = CoreSetup.init(api).useAll()
+    const { store, plugins } = CoreSetup.init(api).useAll().useRouter()
     const filter = store.getters['search/getFilter']({ name: 'indexingDate' })
     const props = { filter }
     store.commit('search/index', index)

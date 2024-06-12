@@ -13,7 +13,7 @@ describe('FilterPath.vue', () => {
 
   beforeEach(() => {
     api = { tree: vi.fn(), elasticsearch: es }
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init(api).useAll().useRouter()
     const filter = core.store.getters['search/getFilter']({ name: 'path' })
 
     core.store.commit('search/index', index)
