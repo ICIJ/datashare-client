@@ -57,7 +57,7 @@
     },
     "placeholder": "Search in documents...",
     "buttonLabel": "Search",
-    "searchIn": "Filter %{plural}...",
+    "searchIn": "Filter {plural}...",
     "searchInProjects": "Filter projects...",
     "hideFilters": "Hide filters",
     "showFilters": "Show filters",
@@ -72,16 +72,16 @@
     "results": {
       "match": "match in doc",
       "entities": "nb entities",
-      "results": "1 document | %{total} documents",
+      "results": "1 document | {total} documents",
       "noResults": "No documents found",
       "on": "on",
       "perPage": "per page",
       "sortedByPath": "sorted by path",
       "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",
       "batchDownload": "Download results",
-      "batchDownloadSubmit": "You are about to download 1 document. | You are about to download %{total} documents.",
-      "warningNumber": "You cannot download more than %{number} documents.",
-      "warningSize": "You cannot download more than %{size}B.",
+      "batchDownloadSubmit": "You are about to download 1 document. | You are about to download {total} documents.",
+      "warningNumber": "You cannot download more than {number} documents.",
+      "warningSize": "You cannot download more than {size}B.",
       "warningConfirm": "Do you still want to download the first documents of this search?",
       "sort": {
         "sortLabel": "Sort",
@@ -119,7 +119,7 @@
         "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
       },
       "document": {
-        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
+        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>{extension}</code> before you can open it."
       },
       "markAsRecommended": "Mark as recommended",
       "unmarkAsRecommended": "Unmark as recommended",
@@ -444,7 +444,7 @@
     "notAvailable": "Preview is not available for this document.",
     "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No named entities found",
-    "namedEntitiesNotSearched": "<p>Document not analyzed.</p><p class=\"text-muted small\">To search named entities, go to <a class=\"fw-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> and start a new task \"@:indexing.findNamedEntities\".</p>",
+    "namedEntitiesNotSearched": "<p>Document not analyzed.</p><p class=\"text-muted small\">To search named entities, go to <a class=\"fw-bold\" href=\"{indexing_link}\">@:menu.analyse</a> and start a new task \"@:indexing.findNamedEntities\".</p>",
     "generatingPreview": "Generating preview...",
     "sheet": "Sheet",
     "searchDirectory": "Search within this directory",
@@ -509,7 +509,7 @@
     "unknown": "Unknown"
   },
   "namedEntityInContext": {
-    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
+    "title": "Extracted using <code>{extractor}</code> in <code>{extractorLanguage}</code>",
     "meta": "This was extracted from metadata.",
     "none": "Entities preview not available, the document is too big."
   },
@@ -531,10 +531,10 @@
   },
   "indexing": {
     "title": "Analyze your documents",
-    "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
+    "description": "Please <a href=\"{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
     "go": "Launch",
     "tasks": "Tasks",
-    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
+    "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "Add documents",
     "extractWithOcrLabel": "Do you want to extract text also from images and PDFs?",
     "extractWithOcrHelp": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
@@ -643,7 +643,7 @@
   "batchSearch": {
     "lead": "Search multiple terms and documents at once.",
     "title": "Batch searches",
-    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
+    "empty": "You have not yet started a batch search. <a href=\"{howToLink}\">Read more.</a>",
     "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "New batch search",
     "fileLabel": "CSV file",
@@ -686,8 +686,8 @@
     "author": "Author",
     "advancedFilters": "Advanced filters",
     "selectFolder": "Select folder",
-    "errorTitle": "Batch search task <code class=\"fw-bold\">%{taskId}</code> is in error.",
-    "errorQuery": "You have an error on your query <code>%{query}</code>.",
+    "errorTitle": "Batch search task <code class=\"fw-bold\">{taskId}</code> is in error.",
+    "errorQuery": "You have an error on your query <code>{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "unableToRetrieveTags": "Unable to retrieve tags from selected project | Failed to retrieve tags from selected projects",
@@ -726,7 +726,7 @@
     "deleteAfterRelaunch" : "Delete current batch search after relaunch",
     "backToResults" : "Back to results",
     "empty": "No results",
-    "queriesFilter": "1 query | %{n} queries"
+    "queriesFilter": "1 query | {n} queries"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Filter queries...",
@@ -882,7 +882,7 @@
     "warning": "This feature is currently being developed by the Datashare team.",
     "inProgress": "See all pending downloads",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
-    "errorTitle": "Batch download task <code class=\"fw-bold\">%{taskId}</code> is in error.",
+    "errorTitle": "Batch download task <code class=\"fw-bold\">{taskId}</code> is in error.",
     "relaunch": {
       "succeed": "Your download is being prepared",
       "succeedBody": "The download should be available soon.",
@@ -893,7 +893,7 @@
       "failed": "Unable to delete",
       "failedBody": "Something happened when trying to delete this batch download."
     },
-    "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
+    "limitations": "Batch downloads are limited to {maxNbFiles} files and {maxSize}B."
   },
   "batchDownloadActions": {
     "relaunch": "Relaunch",
@@ -938,7 +938,7 @@
       "title": "Authors"
     },
     "barometer": {
-      "document": "no documents | 1 document | %{total} documents",
+      "document": "no documents | 1 document | {total} documents",
       "amongWhich": "among which",
       "onDisk": "on disk"
     },
@@ -955,8 +955,8 @@
         "month": "Month",
         "day": "Day"
       },
-      "document": "no documents | 1 document | %{total} documents",
-      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| %{total} documents have no or wrong creation date.",
+      "document": "no documents | 1 document | {total} documents",
+      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| {total} documents have no or wrong creation date.",
       "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
     },
     "duplicates": {
@@ -1036,7 +1036,7 @@
     "installFromUrl": "Install extension from URL"
   },
   "treeView": {
-    "hits": "no documents | 1 document | %{hits} documents",
+    "hits": "no documents | 1 document | {hits} documents",
     "docs": "doc | docs",
     "datadir": "Home",
     "all": "All",
@@ -1056,7 +1056,7 @@
     }
   },
   "projectCards": {
-    "documentsCount": "No documents | 1 document | %{count} documents",
+    "documentsCount": "No documents | 1 document | {count} documents",
     "about": "About",
     "search": "Search"
   },
@@ -1064,7 +1064,7 @@
     "noMatches": "No matches"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects",
+    "projectsCount": "{count} projects",
     "noMatches": "No matches"
   }
 }
