@@ -22,7 +22,7 @@
           :items="suggestions"
           :hide="!suggestions.length"
           class="document-tags-form__add__suggestions"
-          @input="tag = $event"
+          @update:modelValue="tag = $event"
           @click="addTag"
         ></selectable-dropdown>
       </b-form>
