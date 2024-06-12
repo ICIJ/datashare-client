@@ -4,6 +4,7 @@
     :name="name"
     :active="isActive"
     :counter="counter"
+    :sortable="sortable"
     class="column-filter-dropdown"
     @toggle="apply"
   >
@@ -75,6 +76,10 @@ export default {
       default: identity
     },
     immediate: {
+      type: Boolean,
+      default: false
+    },
+    sortable: {
       type: Boolean,
       default: false
     }

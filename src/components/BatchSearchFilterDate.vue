@@ -1,5 +1,5 @@
 <template>
-  <column-filter :id="id" :name="name" :active="isActive">
+  <column-filter :id="id" :name="name" :active="isActive" sortable>
     {{ date }}
     <keep-alive>
       <date-picker

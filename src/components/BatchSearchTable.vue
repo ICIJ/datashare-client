@@ -31,6 +31,7 @@
           :name="field.label"
           immediate
           multiple
+          sortable
         >
           <template #label="{ item }">
             {{ $t(`batchSearch.status.${item.toLowerCase()}`).toUpperCase() }}
