@@ -13,6 +13,7 @@ describe('Search.vue', () => {
   beforeEach(() => {
     actionsStore = { query: vi.fn(), refresh: vi.fn(), updateFromRouteQuery: vi.fn() }
     core = CoreSetup.init()
+      .useCore()
       .useRouter()
       .useVuex({
         modules: {
