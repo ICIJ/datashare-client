@@ -8,7 +8,7 @@
     :disabled="!hasFiltersOrQuery"
     @click="resetFiltersAndQuery"
   >
-    <fa v-if="!noIcon" :icon="icon"></fa>
+    <fa v-if="!noIcon" :icon="icon"></fa>&nbsp;
     <slot>
       {{ $t('search.clearFilters') }}
     </slot>
