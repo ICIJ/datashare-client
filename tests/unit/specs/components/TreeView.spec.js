@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -170,6 +170,7 @@ describe('TreeView.vue', () => {
     it('should show a search button in the header', async () => {
       await wrapper.setProps({ searchable: true })
       await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
       expect(wrapper.find('.tree-view__header__search').exists()).toBeTruthy()
     })
 
