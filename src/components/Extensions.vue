@@ -61,7 +61,7 @@
                       variant="danger"
                       @click="uninstallExtension(extension.id)"
                     >
-                      <fa icon="trash-alt"></fa>
+                      <fa icon="trash-can"></fa>
                       {{ $t('extensions.uninstall') }}
                     </b-button>
                     <b-button
@@ -70,7 +70,7 @@
                       variant="primary"
                       @click="installExtensionFromId(extension.id)"
                     >
-                      <fa icon="cloud-download-alt"></fa>
+                      <fa icon="cloud-arrow-down"></fa>
                       {{ $t('extensions.install') }}
                     </b-button>
                     <b-button
@@ -80,7 +80,7 @@
                       size="sm"
                       @click="installExtensionFromId(extension.id)"
                     >
-                      <fa icon="sync"></fa>
+                      <fa icon="arrows-rotate"></fa>
                       {{ $t('extensions.update') }}
                     </b-button>
                     <div

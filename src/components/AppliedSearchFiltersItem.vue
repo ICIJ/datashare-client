@@ -15,7 +15,7 @@
         {{ filterName }}
       </span>
       <span class="applied-search-filters-item__wrapper__value p-1">
-        <fa v-if="!readOnly" icon="times-circle" />
+        <fa v-if="!readOnly" icon="circle-xmark" />
         {{ displayedFilterValue }}
       </span>
     </span>

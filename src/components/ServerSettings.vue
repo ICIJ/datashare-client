@@ -22,7 +22,7 @@
                   </span>
                   <span>
                     <b-button v-if="fieldChanged(name)" variant="link text-muted" size="sm py-0" @click="restore(name)">
-                      <fa icon="undo"></fa>
+                      <fa icon="arrow-rotate-left"></fa>
                     </b-button>
                   </span>
                 </span>

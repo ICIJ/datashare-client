@@ -19,7 +19,7 @@
           </b-form-checkbox>
         </div>
         <b-alert :show="cannotPlayVideoFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
-          <fa icon="warning" class="me-2" />
+          <fa icon="triangle-exclamation" class="me-2" />
           {{ $t('document.player.video.unknownFormat') }}
         </b-alert>
       </div>

@@ -8,7 +8,7 @@
       class="pagination__link pagination__first-page px-2"
       :title="$t('pagination.firstPage')"
     >
-      <fa icon="angle-double-left"></fa>
+      <fa icon="angles-left"></fa>
     </router-link>
     <router-link
       v-b-tooltip.body="{ id, placement, trigger: 'hover' }"
@@ -36,7 +36,7 @@
       class="pagination__link pagination__last-page px-2"
       :title="$t('pagination.lastPage')"
     >
-      <fa icon="angle-double-right"></fa>
+      <fa icon="angles-right"></fa>
     </router-link>
   </div>
 </template>

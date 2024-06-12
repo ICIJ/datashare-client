@@ -62,7 +62,7 @@
           variant="transparent"
           @click="$refs['user-history-save-search-form'].show()"
         >
-          <fa icon="save" />
+          <fa icon="floppy-disk" />
           <b-modal
             ref="user-history-save-search-form"
             body-class="p-0"

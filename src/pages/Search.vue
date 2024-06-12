@@ -24,7 +24,7 @@
           {{ errorMessage }}
           <div v-if="isRequestTimeoutError" class="mt-2">
             <b-button @click="refresh">
-              <fa icon="redo" class="me-1"></fa>
+              <fa icon="arrow-rotate-right" class="me-1"></fa>
               {{ $t('search.errors.tryAgain') }}
             </b-button>
           </div>

@@ -15,7 +15,7 @@
         </b-tab>
         <b-tab :active="defaultTab === 1">
           <template #title>
-            <fa icon="search" fixed-width class="me-1" />
+            <fa icon="magnifying-glass" fixed-width class="me-1" />
             {{ $t('userHistory.search') }}
           </template>
         </b-tab>
@@ -28,7 +28,7 @@
         :yes="$t('global.yes')"
         :no="$t('global.no')"
       >
-        <fa icon="trash-alt" class="me-1"></fa>
+        <fa icon="trash-can" class="me-1"></fa>
         {{ $t('userHistory.clear') }}
       </confirm-button>
     </page-header>

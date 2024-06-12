@@ -33,7 +33,7 @@
       </div>
     </template>
     <div v-else class="alert">
-      <fa icon="cog" spin />
+      <fa icon="gear" spin />
       {{ message }}
     </div>
   </div>

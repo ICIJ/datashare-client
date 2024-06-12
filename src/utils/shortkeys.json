@@ -50,7 +50,7 @@
         "default": ["esc"]
       },
       "action": "back",
-      "icon": "chevron-circle-left",
+      "icon": "circle-chevron-left",
       "label": "shortkeys.backToSearchResults",
       "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#go-back-to-search-results",
       "page": "search"

@@ -11,7 +11,7 @@
         ></strong>
       </p>
       <p v-if="document.hasContentTypeWarning" class="bg-warning mb-0 mt-2 p-2 text-dark">
-        <fa icon="exclamation-triangle" class="me-1"></fa>
+        <fa icon="triangle-exclamation" class="me-1"></fa>
         {{ localizedContentTypeWarning }}
       </p>
     </div>

@@ -9,7 +9,7 @@
         :title="$t('search.back')"
         @shortkey.native="getAction('backToSearchResults')"
       >
-        <fa icon="chevron-circle-left"></fa>
+        <fa icon="circle-chevron-left"></fa>
         <transition name="slide-x">
           <span class="document-navbar__back__label ms-2" :class="{ 'sr-only': isShrinked }">
             {{ $t('search.back') }}

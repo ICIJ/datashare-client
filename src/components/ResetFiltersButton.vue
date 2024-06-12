@@ -59,7 +59,7 @@ export default {
      */
     icon: {
       type: String,
-      default: 'times-circle'
+      default: 'circle-xmark'
     }
   },
   computed: {

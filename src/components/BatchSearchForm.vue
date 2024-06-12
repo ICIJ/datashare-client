@@ -135,7 +135,7 @@
                 variant="warning"
                 @click.prevent="deleteFileType(index)"
               >
-                <fa icon="times-circle"></fa>
+                <fa icon="circle-xmark"></fa>
                 {{ oneFileType.label }}
               </b-badge>
             </b-form-group>
@@ -174,7 +174,7 @@
                   variant="warning"
                   @click.prevent="deletePath(index)"
                 >
-                  <fa icon="times-circle"></fa>
+                  <fa icon="circle-xmark"></fa>
                   {{ onePath }}
                 </b-badge>
               </div>
@@ -207,7 +207,7 @@
                 variant="warning"
                 @click.prevent="deleteTag(index)"
               >
-                <fa icon="times-circle"></fa>
+                <fa icon="circle-xmark"></fa>
                 {{ oneTag }}
               </b-badge>
               <b-form-checkbox v-model="excludeTags" size="sm" switch>

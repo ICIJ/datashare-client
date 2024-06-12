@@ -159,7 +159,7 @@ export default {
           class="ellipse-status__badge__toggler bg-white d-inline-block p-1"
           :class="toVariant(status, 'dark', 'text-')"
         >
-          <fa icon="external-link-alt" />
+          <fa icon="up-right-from-square" />
         </span>
       </b-badge>
       <b-badge v-else :variant="statusAsVariant" class="p-1">

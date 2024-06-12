@@ -5,7 +5,7 @@
         <fa icon="circle-notch" spin size="2x" class="m-3" />
       </template>
       <p :class="{ 'card-body': widget.card }">
-        <fa icon="weight" class="widget__icon" size="2x" />
+        <fa icon="weight-scale" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
           {{ humanSize(total, false, $t('human.size')) }}
         </strong>
