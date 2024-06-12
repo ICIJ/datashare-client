@@ -117,7 +117,7 @@
                 :hide="!suggestionFileTypes.length"
                 :items="suggestionFileTypes"
                 @deactivate="hideSuggestionsFileTypes"
-                @input="selectFileType"
+                @update:modelValue="selectFileType"
                 @click="searchFileType"
               >
                 <template #item-label="{ item }">
@@ -196,7 +196,7 @@
                 :hide="!suggestionTags.length"
                 :items="suggestionTags"
                 @deactivate="hideSuggestionsTags"
-                @input="selectTag"
+                @update:modelValue="selectTag"
                 @click="searchTag"
               />
               <b-badge
