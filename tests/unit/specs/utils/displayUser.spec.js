@@ -1,4 +1,4 @@
-import displayUser from '@/filters/displayUser'
+import displayUser from '@/utils/displayUser'
 
 describe('displayUser filter', () => {
   it('should "you" if user id is "local"', () => {

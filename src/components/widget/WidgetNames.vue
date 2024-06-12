@@ -20,7 +20,7 @@
 import { sum, uniqueId, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
-import humanNumber from '@/filters/humanNumber'
+import humanNumber from '@/utils/humanNumber'
 
 /**
  * Widget to display a summary of names

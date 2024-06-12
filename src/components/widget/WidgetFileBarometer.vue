@@ -24,7 +24,7 @@
 <script>
 import { waitFor } from 'vue-wait'
 
-import humanNumber from '@/filters/humanNumber'
+import humanNumber from '@/utils/humanNumber'
 
 /**
  * Widget to display the number of indexed files on the insights page.

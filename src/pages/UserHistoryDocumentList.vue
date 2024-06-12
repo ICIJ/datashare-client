@@ -83,8 +83,8 @@ import DocumentActions from '@/components/DocumentActions'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import ProjectLink from '@/components/ProjectLink'
 import utils from '@/mixins/utils'
-import { humanTime } from '@/filters/humanTime'
-import { humanDate } from '@/filters/humanDate'
+import { humanTime } from '@/utils/humanTime'
+import { humanDate } from '@/utils/humanDate'
 
 /**
  * List user's visited documents history

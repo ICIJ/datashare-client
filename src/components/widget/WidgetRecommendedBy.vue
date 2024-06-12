@@ -71,7 +71,7 @@ import bodybuilder from 'bodybuilder'
 import { get, property, find, flatten, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 
-import { fromNow, humanLongDate } from '@/filters/humanDate'
+import { fromNow, humanLongDate } from '@/utils/humanDate'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import DocumentSlicedName from '@/components/DocumentSlicedName'

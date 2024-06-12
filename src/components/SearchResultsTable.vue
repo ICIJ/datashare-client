@@ -104,7 +104,7 @@ import DocumentActions from '@/components/DocumentActions'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
-import humanSize from '@/filters/humanSize'
+import humanSize from '@/utils/humanSize'
 import settings from '@/utils/settings'
 
 /**

@@ -47,7 +47,7 @@
 <script>
 import { startCase } from 'lodash'
 
-import humanNumber from '../filters/humanNumber'
+import humanNumber from '@/utils/humanNumber'
 
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 

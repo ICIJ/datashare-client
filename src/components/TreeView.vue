@@ -156,8 +156,8 @@ import { waitFor } from 'vue-wait'
 import InfiniteLoading from 'v3-infinite-loading'
 
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
-import humanNumber from '@/filters/humanNumber'
-import humanSize from '@/filters/humanSize'
+import humanNumber from '@/utils/humanNumber'
+import humanSize from '@/utils/humanSize'
 import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
 
 /**

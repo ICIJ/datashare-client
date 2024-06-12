@@ -3,7 +3,7 @@ import { get } from 'lodash'
 
 import types from '@/utils/types'
 import { findContentTypeIcon } from '@/utils/font-awesome-files'
-import { fileExtension } from '@/filters/fileExtension'
+import { fileExtension } from '@/utils/fileExtension'
 
 /**
  * A small badge to display content type nicely.

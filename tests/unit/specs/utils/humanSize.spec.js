@@ -1,4 +1,4 @@
-import humanSize from '@/filters/humanSize'
+import humanSize from '@/utils/humanSize'
 
 describe('humanSize filter', () => {
   it('should return "unknown" if size equals -1', () => {

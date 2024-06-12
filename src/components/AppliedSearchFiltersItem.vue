@@ -35,7 +35,7 @@
 <script>
 import { uniqueId } from 'lodash'
 
-import displayUser from '@/filters/displayUser'
+import displayUser from '@/utils/displayUser'
 
 /**
  * The filter applied to the search.

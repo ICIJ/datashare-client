@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import humanNumber from '@/filters/humanNumber'
+import humanNumber from '@/utils/humanNumber'
 export default {
   name: 'ColumnFilterBadge',
   props: {

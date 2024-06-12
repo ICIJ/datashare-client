@@ -96,7 +96,7 @@ import settings from '@/utils/settings'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 import Pagination from '@/components/Pagination'
 import features from '@/mixins/features'
-import byteSize from '@/filters/byteSize'
+import byteSize from '@/utils/byteSize'
 
 /**
  * Search results header displaying sorting and page length options.

@@ -64,7 +64,7 @@ import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import moment from 'moment'
 
-import displayUser from '@/filters/displayUser'
+import displayUser from '@/utils/displayUser'
 import settings from '@/utils/settings'
 
 /**
