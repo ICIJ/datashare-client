@@ -171,13 +171,15 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('adds exclude selected queries filter', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins: core.plugins },
+        global: {
+          plugins: core.plugins
+        },
         props: propsMultipleQueries
       })
       const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
       spy.mockClear()
 
-      const excludeFilter = wrapper.find('.filter__footer__action--exclude input')
+      const excludeFilter = wrapper.find('.batch-search-results-filters__footer .form-check-input')
       expect(excludeFilter.exists()).toBeTruthy()
       await excludeFilter.setChecked(true)
 
