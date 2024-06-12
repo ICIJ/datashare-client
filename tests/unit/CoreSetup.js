@@ -8,6 +8,7 @@ import { createStore } from 'vuex'
 import { createWebHashHistory, createRouter } from 'vue-router'
 
 import { Core } from '@/core/Core'
+import { routes } from '@/router'
 
 class CoreSetup extends Core {
   get plugins() {
@@ -62,13 +63,19 @@ class CoreSetup extends Core {
   }
   useRouter(routes = null) {
     if (routes) {
-      this._router = createRouter({ routes, history: createWebHashHistory() })
+      const history = createWebHashHistory()
+      this._router = createRouter({ routes, history })
       this.use(this.router)
       return this
     }
     return super.useRouter()
   }
-
+  useRouterWithoutGuards() {
+    const history = createWebHashHistory()
+    this._router = createRouter({ routes, history })
+    this.use(this.router)
+    return this
+  }
   static init(...options) {
     return new CoreSetup(...options)
   }
