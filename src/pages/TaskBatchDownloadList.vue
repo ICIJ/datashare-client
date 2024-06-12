@@ -29,7 +29,7 @@
               target="_blank"
             >
               <fa icon="download" fixed-width />
-              {{ properties.batchDownload.filename | basename }}
+              {{ basename(properties.batchDownload.filename) }}
             </a>
             <span
               v-else
@@ -38,7 +38,7 @@
               :title="$t('batchDownload.noFile')"
             >
               <fa icon="xmark" fixed-width />
-              {{ properties.batchDownload.filename | basename }}
+              {{ basename(properties.batchDownload.filename) }}
             </span>
             <batch-download-actions
               :id="id"
@@ -80,11 +80,6 @@ export default {
     TaskItemStatus,
     TasksList
   },
-  filters: {
-    basename(str) {
-      return str.split('/').pop()
-    }
-  },
   mixins: [features, polling],
   data() {
     return {
@@ -109,6 +104,9 @@ export default {
     this.$wait.end('load download tasks')
   },
   methods: {
+    basename(str) {
+      return str.split('/').pop()
+    },
     startPollingDownloadTasks() {
       const fn = this.getDownloadTasks
       const timeout = () => random(1000, 4000)
