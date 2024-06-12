@@ -53,19 +53,22 @@ import PageHeader from '@/components/PageHeader'
 import settings from '@/utils/settings'
 
 export default {
+  name: 'UserHistory',
   components: {
     PageHeader
   },
   beforeRouteEnter(to, from, next) {
     return next((vm) => {
-      const defaultTab = vm.tabRoutes.indexOf(to.name)
-      if (!isEqual(from.path, to.path)) {
-        vm.page = 1
-      }
-      if (defaultTab > -1) {
-        vm.defaultTab = defaultTab
-      } else if (vm.$route.name !== 'user-history.document.list') {
-        vm.$router.push({ name: 'user-history.document.list' })
+      if (vm.$options.name === 'UserHistory') {
+        const defaultTab = vm.tabRoutes.indexOf(to.name)
+        if (!isEqual(from.path, to.path)) {
+          vm.page = 1
+        }
+        if (defaultTab > -1) {
+          vm.defaultTab = defaultTab
+        } else if (vm.$route.name !== 'user-history.document.list') {
+          vm.$router.push({ name: 'user-history.document.list' })
+        }
       }
     })
   },
