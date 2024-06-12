@@ -9,7 +9,11 @@ import SearchResultsListLink from '@/components/SearchResultsListLink'
 
 describe('SearchResultsListLink.vue', () => {
   const index = toLower('SearchResultsListLink')
-  const core = CoreSetup.init().useAll().useRouter()
+  let core
+
+  beforeEach(() => {
+    core = CoreSetup.init().useAll().useRouter()
+  })
 
   it('should display the correct location', () => {
     const wrapper = shallowMount(SearchResultsListLink, {
@@ -77,7 +81,8 @@ describe('SearchResultsListLink.vue', () => {
 
     core.store.commit('search/query', 'other')
     await flushPromises()
-    expect(wrapper.find('.search-results-list-link').attributes('href')).toContain('/foo/foo?q=&tab=extracted-text')
+    const href = wrapper.find('.search-results-list-link').attributes('href')
+    expect(href).toContain('#/d/searchresultslistlink/foo/foo?q=other&tab=extracted-text')
   })
 
   it('should display the document sliced name', () => {
