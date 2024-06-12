@@ -34,7 +34,6 @@ import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import AppSidebar from '@/components/AppSidebar'
 import Hook from '@/components/Hook'
 import ScrollTracker from '@/components/ScrollTracker'
-import { EventBus } from '@/utils/event-bus'
 
 export default {
   name: 'App',
@@ -70,10 +69,10 @@ export default {
     }
   },
   created() {
-    EventBus.on('http::error', this.handleHttpError)
+    this.$core.on('http::error', this.handleHttpError)
   },
   beforeDestroy() {
-    EventBus.$off('http::error', this.handleHttpError)
+    this.$core.off('http::error', this.handleHttpError)
   },
   methods: {
     handleHttpError(err) {
