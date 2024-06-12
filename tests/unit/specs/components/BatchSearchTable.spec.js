@@ -44,7 +44,7 @@ describe('BatchSearchTable.vue', () => {
   beforeAll(() => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
     api = { getBatchSearches: vi.fn().mockResolvedValue(batchSearchMock) }
-    core = CoreSetup.init(api).useAll().useRouter()
+    core = CoreSetup.init(api).useAll().useRouterWithoutGuards()
     core.config.set('projects', [{ name: 'project_01' }, { name: 'project_02' }])
   })
 
@@ -96,7 +96,7 @@ describe('BatchSearchTable.vue', () => {
           const storeOptions = { modules: { batchSearch: { namespaced: true, state, actions } } }
 
           api = { getBatchSearches: vi.fn().mockResolvedValue(batchSearchMock) }
-          const { plugins } = CoreSetup.init(api).useAll().useVuex(storeOptions).useRouter()
+          const { plugins } = CoreSetup.init(api).useAll().useVuex(storeOptions).useRouterWithoutGuards()
 
           wrapper = mount(BatchSearchTable, { global: { plugins } })
           await flushPromises()
@@ -113,7 +113,7 @@ describe('BatchSearchTable.vue', () => {
       let core
 
       beforeAll(() => {
-        core = CoreSetup.init(api).useAll().useRouter()
+        core = CoreSetup.init(api).useAll().useRouterWithoutGuards()
       })
 
       it('should fetch the batch search page with the state filtered', async () => {
@@ -186,7 +186,7 @@ describe('BatchSearchTable.vue', () => {
       let wrapper, core
 
       beforeEach(async () => {
-        core = CoreSetup.init(api).useAll().useRouter()
+        core = CoreSetup.init(api).useAll().useRouterWithoutGuards()
         core.config.set('projects', [])
         wrapper = mount(BatchSearchTable, { global: { plugins: core.plugins } })
         await flushPromises()
@@ -245,7 +245,7 @@ describe('BatchSearchTable.vue', () => {
       let core
 
       beforeEach(async () => {
-        core = CoreSetup.init(api).useAll().useRouter()
+        core = CoreSetup.init(api).useAll().useRouterWithoutGuards()
         core.config.set('projects', [{ name: 'projectA' }, { name: 'projectB' }])
         await flushPromises()
       })
