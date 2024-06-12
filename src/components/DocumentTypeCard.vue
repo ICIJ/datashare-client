@@ -1,6 +1,6 @@
 <template>
   <div class="document-type-card d-flex">
-    <document-thumbnail :document="document" class="me-2 mb-2" crop></document-thumbnail>
+    <document-thumbnail :document="document" class="me-2 mb-2 border" crop></document-thumbnail>
     <div>
       <p class="m-0">
         {{ localizedDescription }}
