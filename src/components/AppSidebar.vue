@@ -405,7 +405,7 @@ $item-tree-width: 2px;
       padding: $spacer * 1.5 ($spacer * 1.75) 0;
       position: relative;
       display: flex;
-      font-size: $font-size-sm;
+      font-size: $font-size-base;
       font-weight: bold;
 
       .app-sidebar--reduced & {
@@ -439,7 +439,7 @@ $item-tree-width: 2px;
 
       &__label {
         .app-sidebar--reduced & {
-          font-size: 0.7rem;
+          font-size: $font-size-base;
         }
       }
     }
@@ -478,13 +478,13 @@ $item-tree-width: 2px;
           color: $app-sidebar-link-color;
           display: flex;
           border-radius: $border-radius;
-          font-size: $font-size-sm;
+          font-size: $font-size-base;
           font-weight: bold;
 
           .app-sidebar--reduced & {
             flex-direction: column;
             text-align: center;
-            margin: $spacer-xs;
+            margin: $spacer $spacer-xs;
             padding: $spacer-sm $spacer-xs $spacer-xs;
           }
 
@@ -579,7 +579,7 @@ $item-tree-width: 2px;
 
           &__label {
             .app-sidebar--reduced & {
-              font-size: 0.7rem;
+              font-size: $font-size-base;
             }
           }
         }
@@ -612,7 +612,7 @@ $item-tree-width: 2px;
   &__data-location {
     color: $app-sidebar-link-color;
     padding: 0 $spacer * 1.7 $spacer $spacer * 1.5;
-    font-size: $font-size-sm;
+    font-size: $font-size-base;
   }
 }
 </style>
