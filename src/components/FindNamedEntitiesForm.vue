@@ -3,11 +3,7 @@
     <template #waiting>
       <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
     </template>
-    <form
-      class="find-named-entities-form position-relative"
-      :class="{ 'find-named-entities-form--dark': dark }"
-      @submit.prevent="submitFindNamedEntities"
-    >
+    <form class="find-named-entities-form position-relative" @submit.prevent="submitFindNamedEntities">
       <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
         <fa icon="database" class="position-absolute mt-1 ms-1" size="lg" />
         <div class="ms-4 ps-3">
@@ -87,12 +83,6 @@ export default {
   },
   mixins: [utils],
   props: {
-    /**
-     * Dark mode background option
-     */
-    dark: {
-      type: Boolean
-    },
     /**
      * Project name to select in the input instead of default project
      */
@@ -189,11 +179,6 @@ export default {
 
 <style lang="scss" scoped>
 .find-named-entities-form {
-  &--dark {
-    background: darken($primary, 20);
-    color: white;
-  }
-
   &__header h4 {
     font-size: 1.2em;
     font-weight: bolder;

@@ -13,12 +13,6 @@ export default {
      */
     modelValue: {
       type: String
-    },
-    /**
-     * Enable dark mode for this component
-     */
-    dark: {
-      type: Boolean
     }
   },
   emits: ['update:modelValue'],
@@ -41,9 +35,6 @@ export default {
     },
     isReady() {
       return !this.$wait.is(this.waitIdentifier)
-    },
-    overlayVariant() {
-      return this.dark ? 'dark' : 'light'
     }
   },
   async mounted() {
@@ -67,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <b-overlay :show="!isReady" :variant="overlayVariant" class="extracting-language-form-control" rounded spinner-small>
+  <b-overlay :show="!isReady" class="extracting-language-form-control" rounded spinner-small>
     <div v-if="!textLanguages.length" class="extracting-language-form-control--no-language mt-3 alert alert-danger">
       {{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}
     </div>
