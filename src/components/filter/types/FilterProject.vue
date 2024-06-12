@@ -18,7 +18,7 @@
         :rounded="false"
         :placeholder="$t('search.searchInProjects')"
       />
-      <project-selector v-model="selectedProject" :query="query" class="border-0" multiple @input="select" />
+      <project-selector v-model="selectedProject" :query="query" class="border-0" multiple />
     </slide-up-down>
   </div>
 </template>
