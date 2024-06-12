@@ -271,10 +271,10 @@ export class Api {
     return this.sendAction('/api/ner/pipelines')
   }
   getApiKey(userId) {
-    return this.sendActionAsText(`/api/key/${userId}`, { method: Method.GET })
+    return this.sendAction(`/api/key/${userId}`, { method: Method.GET })
   }
   createApiKey(userId) {
-    return this.sendActionAsText(`/api/key/${userId}`, { method: Method.PUT })
+    return this.sendAction(`/api/key/${userId}`, { method: Method.PUT })
   }
   deleteApiKey(userId) {
     return this.sendActionAsText(`/api/key/${userId}`, { method: Method.DELETE })

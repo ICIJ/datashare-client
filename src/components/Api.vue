@@ -53,23 +53,16 @@
     <b-modal
       size="md"
       :title="$t('api.key.created')"
-      :visible="hasApiKey"
+      :model-value="showModal"
       lazy
       ok-only
-      body-class="p-0"
-      footer-class="card-footer"
+      footer-class="bg-light rounded-bottom"
       @hidden="apiKey = null"
     >
-      <div class="card-body border-top border-bottom">
-        <p>
-          {{ $t('api.key.warning') }}
-        </p>
-        <div class="input-group input-group-sm">
-          <input class="form-control text-monospace" :value="apiKey" />
-          <div class="input-group-append">
-            <haptic-copy :text="apiKey" class="btn-outline-primary" label="Copy" />
-          </div>
-        </div>
+      <p>{{ $t('api.key.warning') }}</p>
+      <div class="input-group input-group-sm">
+        <input class="form-control text-monospace" readonly :value="apiKey" />
+        <haptic-copy :text="apiKey" class="btn-outline-primary" label="Copy" />
       </div>
     </b-modal>
   </div>
@@ -94,7 +87,7 @@ export default {
     hasHashedKey() {
       return !!this.hashedKey
     },
-    hasApiKey() {
+    showModal() {
       return !!this.apiKey
     }
   },
@@ -109,7 +102,7 @@ export default {
     },
     async createApiKey() {
       const username = await this.$core.auth.getUsername()
-      const { apiKey } = await this.$core.api.createApiKey(username) // why hash is not returned at the same time?
+      const { apiKey } = await this.$core.api.createApiKey(username)
       this.apiKey = apiKey
       await this.getHashedApiKey()
     },
