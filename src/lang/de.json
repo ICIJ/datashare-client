@@ -72,9 +72,8 @@
     "results": {
       "match": "Treffer in Dokument",
       "entities": "Anzahl Entitäten",
-      "results": "1 Dokument | {total} Dokumente",
+      "results": "von 1 Dokument | von {total} Dokumente",
       "noResults": "Keine Dokumente gefunden",
-      "on": "von ",
       "perPage": "pro Seite",
       "sortedByPath": "nach Pfad sortiert",
       "batchDownloadNotAllowed": "Batch-Downloads sind bei mehreren Projekten nicht möglich.",

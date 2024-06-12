@@ -146,7 +146,7 @@ export default {
   },
   data() {
     return {
-      batchDownloadMaxNbFiles: this.$config.get('batchDownloadMaxNbFiles'),
+      batchDownloadMaxNbFiles: parseInt(this.$config.get('batchDownloadMaxNbFiles')),
       batchDownloadMaxSize: this.$config.get('batchDownloadMaxSize'),
       mappings: {},
       sizes: [10, 25, 50, 100],
@@ -190,27 +190,44 @@ export default {
       return totalLength
     },
     batchDownloadLabel() {
-      let label = ''
-      if (this.batchDownloadMaxNbFiles !== undefined && this.response.total > this.batchDownloadMaxNbFiles) {
-        label += `${this.$tc('search.results.warningNumber', this.batchDownloadMaxNbFiles, {
-          number: this.$n(this.batchDownloadMaxNbFiles)
-        })} `
+      const warningLabel = [this.generateMaxFilesWarningLabel, this.generateMaxSizeWarningLabel].join(' ')
+
+      if (warningLabel === '') {
+        return this.generateDownloadLabel
+      } else {
+        return warningLabel + this.$t('search.results.warningConfirm')
       }
-      if (this.batchDownloadMaxSize !== undefined && this.sumContentLength > byteSize(this.batchDownloadMaxSize)) {
-        label += `${this.$tc('search.results.warningSize', this.batchDownloadMaxSize, {
-          size: this.batchDownloadMaxSize
-        })} `
+    },
+    isMaxFilesExceeded() {
+      return this.batchDownloadMaxNbFiles !== undefined && this.response.total > this.batchDownloadMaxNbFiles
+    },
+    isMaxSizeExceeded() {
+      return this.batchDownloadMaxSize !== undefined && this.sumContentLength > byteSize(this.batchDownloadMaxSize)
+    },
+    generateMaxFilesWarningLabel() {
+      if (!this.isMaxFilesExceeded) {
+        return
       }
-      return label === ''
-        ? `${this.$tc('search.results.batchDownloadSubmit', this.response.total, {
-            total: this.$n(this.response.total)
-          })} ${this.$t('global.confirmLabel')}`
-        : `${label} ${this.$t('search.results.warningConfirm')}`
+      const number = this.$n(this.batchDownloadMaxNbFiles)
+      return this.$tc('search.results.warningNumber', this.batchDownloadMaxNbFiles, { number })
+    },
+    generateMaxSizeWarningLabel() {
+      if (!this.isMaxSizeExceeded) {
+        return
+      }
+      const size = this.batchDownloadMaxSize
+      return this.$tc('search.results.warningSize', this.batchDownloadMaxSize, { size })
+    },
+    generateDownloadLabel() {
+      const total = this.$n(this.response.total)
+      return [
+        this.$tc('search.results.batchDownloadSubmit', this.response.total, { total }),
+        this.$t('global.confirmLabel')
+      ].join(' ')
     },
     nbDocuments() {
-      return `${this.$t('search.results.on')} ${this.$tc('search.results.results', this.response.total, {
-        total: this.$n(this.response.total)
-      })}`
+      const total = this.$n(this.response.total)
+      return this.$tc('search.results.results', this.response.total, { total })
     },
     firstLastDocument() {
       return `${this.firstDocument} - ${this.lastDocument}`

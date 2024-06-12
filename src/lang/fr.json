@@ -72,9 +72,8 @@
     "results": {
       "match": "dans le doc",
       "entities": "nb entités",
-      "results": "1 document | {total} documents",
+      "results": "sur 1 document | sur {total} documents",
       "noResults": "Aucun document",
-      "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
       "batchDownloadNotAllowed": "Les téléchargements en lots ne sont pas autorisés sur plusieurs projets.",
