@@ -146,7 +146,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .filter.filter--date-range {
   .filter--date-range__inputs {
     flex: 0 1 100%;
@@ -160,6 +160,11 @@ export default {
         border-color: #000;
       }
     }
+  }
+
+  &:deep(.range-picker__bounds__end.btn:hover),
+  &:deep(.range-picker__bounds__start.btn:hover) {
+    background: var(--bg);
   }
 }
 </style>
