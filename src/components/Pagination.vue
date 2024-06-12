@@ -125,7 +125,7 @@ export default {
       return uniqueId('pagination')
     },
     placement() {
-      return this.position === 'top' ? 'bottomleft' : 'topleft'
+      return 'top-end'
     }
   },
   methods: {
