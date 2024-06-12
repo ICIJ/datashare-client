@@ -83,7 +83,6 @@ import DocumentTabExtractedText from '@/components/document/DocumentTabExtracted
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
-import { EventBus } from '@/utils/event-bus'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import Hook from '@/components/Hook'
@@ -247,8 +246,8 @@ export default {
           this.doc.route
         )
         const container = this.$el.closest('.ps-container')
-        EventBus.emit('scroll-tracker:request', { element: this.$el, offset: 0, container })
-        EventBus.emit('document::content::changed')
+        this.$core.emit('scroll-tracker:request', { element: this.$el, offset: 0, container })
+        this.$core.emit('document::content::changed')
       }
       this.$wait.end('load document data')
     },
@@ -269,7 +268,7 @@ export default {
     activateTab(name = TAB_NAME.EXTRACTED_TEXT) {
       if (findIndex(this.visibleTabs, { name }) > -1) {
         this.activeTab = name
-        EventBus.emit('document::content::changed')
+        this.$core.emit('document::content::changed')
         return name
       }
     },

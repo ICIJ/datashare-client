@@ -243,7 +243,6 @@
 <script>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
-import { EventBus } from '@/utils/event-bus'
 import Hook from '@/components/Hook'
 import LocalesMenu from '@/components/LocalesMenu'
 import MountedDataLocation from '@/components/MountedDataLocation'
@@ -296,7 +295,7 @@ export default {
   },
   watch: {
     $route() {
-      EventBus.emit('bv::hide::tooltip', 'app-sidebar-link-label')
+      this.$core.emit('bv::hide::tooltip', 'app-sidebar-link-label')
     }
   },
   mounted() {

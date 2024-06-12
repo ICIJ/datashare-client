@@ -64,7 +64,6 @@
 import { findIndex, reduce } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
-import { EventBus } from '@/utils/event-bus'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 import EmailString from '@/components/EmailString'
@@ -182,7 +181,7 @@ export default {
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Use the scroll-tracker component
       const container = this.$el.closest('.overflow-auto')
-      EventBus.emit('scroll-tracker:request', { element, offset, container })
+      this.$core.emit('scroll-tracker:request', { element, offset, container })
     },
     async init() {
       this.$wait.start('load thread')
