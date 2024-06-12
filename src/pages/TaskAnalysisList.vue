@@ -42,30 +42,32 @@
           <b-modal
             :id="extractingFormId"
             v-model="showExtractingForm"
-            body-bg-variant="darker"
             hide-footer
             modal-class="task-analysis-list__form-modal extracting__form"
             size="md"
           >
             <template #header>
-              <fa icon="magnifying-glass-plus" class="me-1" />
-              {{ $t('indexing.extractText') }}
+              <h5 class="modal-title">
+                <fa icon="magnifying-glass-plus" class="me-1" />
+                {{ $t('indexing.extractText') }}
+              </h5>
             </template>
-            <extracting-form id="extracting-form" dark @submit="closeExtractingForm" />
+            <extracting-form id="extracting-form" @submit="closeExtractingForm" />
           </b-modal>
           <b-modal
             :id="findNamedEntitiesFormId"
             v-model="showFindNamedEntitiesForm"
-            body-bg-variant="darker"
             hide-footer
             modal-class="task-analysis-list__form-modal find-named-entities__form"
             size="md"
           >
             <template #header>
-              <fa icon="user-tag" class="me-1" />
-              {{ $t('indexing.findNamedEntities') }}
+              <h5 class="modal-title">
+                <fa icon="user-tag" class="me-1" />
+                {{ $t('indexing.findNamedEntities') }}
+              </h5>
             </template>
-            <find-named-entities-form id="find-named-entities-form" dark @submit="closeFindNamedEntitiesForm" />
+            <find-named-entities-form id="find-named-entities-form" @submit="closeFindNamedEntitiesForm" />
           </b-modal>
         </div>
       </div>

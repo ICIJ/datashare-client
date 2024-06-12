@@ -56,7 +56,7 @@
       :model-value="showModal"
       lazy
       ok-only
-      footer-class="bg-light rounded-bottom"
+      footer-class="bg-light rounded-bottom border-top py-2 px-3"
       @hidden="apiKey = null"
     >
       <p>{{ $t('api.key.warning') }}</p>
