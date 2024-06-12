@@ -536,18 +536,18 @@ export default {
     },
     removeValue(item) {
       this.$store.commit('search/removeFilterValue', this.filter.itemParam(item))
-      this.refreshRouteAndSearch()
+      return this.refreshRouteAndSearch()
     },
     addValue(item) {
       this.$store.commit('search/addFilterValue', this.filter.itemParam(item))
-      this.refreshRouteAndSearch()
+      return this.refreshRouteAndSearch()
     },
     setValue(item) {
       this.setFilterValue(this.filter, item)
-      this.refreshRouteAndSearch()
+      return this.refreshRouteAndSearch()
     },
     toggleFilter() {
-      this.refreshRouteAndSearch()
+      return this.refreshRouteAndSearch()
     },
     toggleContextualizeFilter() {
       this.clearInfiniteScroll()
@@ -577,7 +577,7 @@ export default {
       this.$core.emit('filter::add-filter-values', payload)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', payload)
-      this.refreshRouteAndSearch()
+      return this.refreshRouteAndSearch()
     },
     itemTranslation(item) {
       if (this.noItemTranslation) {

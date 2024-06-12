@@ -91,7 +91,7 @@ export default {
       this.setFilterValue(this.filter, { key: values })
       this.$core.emit('filter::add-filter-values', { filter: this.filter, values })
       if (refresh) {
-        this.refreshRouteAndSearch()
+        return this.refreshRouteAndSearch()
       }
     }
   }

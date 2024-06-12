@@ -87,7 +87,7 @@ export default {
       await this.$store.dispatch('recommended/getDocumentsRecommendedBy', users)
       this.$core.emit('filter::add-filter-values', { filter: this.filter, values: this.selected })
       if (refresh) {
-        this.refreshRouteAndSearch()
+        await this.refreshRouteAndSearch()
       }
     }
   }

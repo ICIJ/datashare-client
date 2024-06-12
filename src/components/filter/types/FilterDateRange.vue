@@ -117,7 +117,7 @@ export default {
         start = start - start.getTimezoneOffset() * 60 * 1000
         end = end - end.getTimezoneOffset() * 60 * 1000 + 24 * 60
         this.setFilterValue(this.filter, { key: [start, end] })
-        this.refreshRouteAndSearch()
+        return this.refreshRouteAndSearch()
       }
     }
   },

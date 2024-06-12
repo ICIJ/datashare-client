@@ -59,7 +59,7 @@ export default {
           await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
           await this.$store.dispatch('recommended/fetchIndicesRecommendations')
           await this.$store.dispatch('downloads/fetchIndicesStatus')
-          this.refreshRouteAndSearch()
+          await this.refreshRouteAndSearch()
         }
       }
     },
@@ -82,22 +82,22 @@ export default {
       this.$store.commit('search/indices', projects)
       this.$store.commit('search/isReady', false)
       await this.retrieveIndicesInfos()
-      this.refreshRouteAndSearch()
+      await this.refreshRouteAndSearch()
     },
     toggleItems() {
       this.collapseItems = !this.collapseItems
     },
-    refreshRouteAndSearch() {
-      this.refreshRoute()
-      this.refreshSearch()
+    async refreshRouteAndSearch() {
+      await this.refreshRoute()
+      await this.refreshSearch()
     },
     refreshRoute() {
       const name = 'search'
       const query = this.$store.getters['search/toRouteQuery']()
-      this.$router.push({ name, query }).catch(() => {})
+      return this.$router.push({ name, query }).catch(() => {})
     },
     refreshSearch() {
-      this.$store.dispatch('search/query')
+      return this.$store.dispatch('search/query')
     }
   }
 }
