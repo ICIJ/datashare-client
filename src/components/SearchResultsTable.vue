@@ -79,7 +79,7 @@
             :document="item"
             class="float-end btn-group-sm"
             :is-download-allowed="isDownloadAllowed(item)"
-            tooltips-placement="rightbottom"
+            tooltips-placement="left"
           ></document-actions>
         </template>
       </b-table>

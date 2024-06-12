@@ -15,7 +15,7 @@
               class="search-results-list__items__item__actions"
               :document="document"
               :is-download-allowed="isDownloadAllowed(document)"
-              tooltips-placement="end"
+              tooltips-placement="right"
               vertical
             />
           </div>
