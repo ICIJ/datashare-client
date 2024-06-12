@@ -98,7 +98,8 @@ class Core extends Behaviors {
    */
   useI18n() {
     this._i18n = createI18n({
-      warnHtmlMessage: false,
+      warnHtmlInMessage: 'off',
+      warnHtmlMessage: 'off',
       globalInjection: true,
       legacy: true,
       locale: settings.defaultLocale,
