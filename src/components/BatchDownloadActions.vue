@@ -1,5 +1,6 @@
 <script>
 import { uniqueId } from 'lodash'
+
 import { EventBus } from '@/utils/event-bus'
 
 export default {

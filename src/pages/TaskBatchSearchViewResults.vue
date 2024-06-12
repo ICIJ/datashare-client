@@ -39,7 +39,8 @@
       <document-in-modal
         v-model:pageIndex="documentInModalPageIndex"
         v-model:page="page"
-        v-model:show="showDocumentModal" />
+        v-model:show="showDocumentModal"
+      />
     </div>
   </div>
 </template>

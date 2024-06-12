@@ -17,7 +17,6 @@ describe('DocumentThread.vue', () => {
   })
 
   describe('getThread', () => {
-
     it('should filter on contentType to retrieve emails only', async () => {
       await letData(es)
         .have(

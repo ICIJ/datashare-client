@@ -1,8 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import { shallowMount } from '@vue/test-utils'
 import { errors as esErrors } from 'elasticsearch-browser'
-import VueRouter from 'vue-router'
-import Vuex from 'vuex'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -10,7 +8,7 @@ import Search from '@/pages/Search'
 import { state, getters, mutations } from '@/store/modules/search'
 
 describe('Search.vue', () => {
-  let actionsStore, core, store, wrapper
+  let actionsStore, core, wrapper
 
   beforeEach(() => {
     actionsStore = { query: vi.fn(), refresh: vi.fn(), updateFromRouteQuery: vi.fn() }

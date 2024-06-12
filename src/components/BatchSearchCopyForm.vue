@@ -1,12 +1,17 @@
 <template>
-  <b-form @submit.prevent="copyBatchSearch" class="batch-search-copy-form">
+  <b-form class="batch-search-copy-form" @submit.prevent="copyBatchSearch">
     <div class="card w-100">
       <div class="card-body pb-1">
         <b-form-group label-size="sm" :label="`${$t('batchSearch.name')} *`">
-          <b-form-input v-model="name" type="text" required class="batch-search-copy-form__input__name"/>
+          <b-form-input v-model="name" type="text" required class="batch-search-copy-form__input__name" />
         </b-form-group>
         <b-form-group label-size="sm" :label="$t('batchSearch.description')">
-          <b-form-textarea v-model="description" rows="2" max-rows="6" class="batch-search-copy-form__input__description"/>
+          <b-form-textarea
+            v-model="description"
+            rows="2"
+            max-rows="6"
+            class="batch-search-copy-form__input__description"
+          />
         </b-form-group>
         <b-form-group label-size="sm">
           <b-form-checkbox v-model="deleteAfterRelaunch" switch class="batch-search-copy-form__input__delete">

@@ -1,6 +1,6 @@
 <template>
   <task-item-status
-    :no-label='noLabel'
+    :no-label="noLabel"
     :task-item="{
       ...batchSearch,
       key: 'batchSearch'

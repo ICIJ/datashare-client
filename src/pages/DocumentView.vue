@@ -32,11 +32,11 @@
         <hook name="document.header.tags:after" />
         <hook name="document.header.nav:before" />
         <nav class="document__header__nav text-nowrap overflow-auto">
-          <ul class="list-inline m-0">
-            <hook name="document.header.nav.items:before" :bind="{ tag: 'li' }" />
-            <template v-for="tab in visibleTabs" :key="tab.name">
+          <hook name="document.header.nav.items:before" :bind="{ tag: 'li' }" />
+          <template v-for="tab in visibleTabs" :key="tab.name">
+            <div>
               <hook :name="`document.header.nav.items.${tab.name}:before`" :bind="{ tag: 'li' }" />
-              <li class="document__header__nav__item list-inline-item" :title="$t(tab.label)">
+              <div class="document__header__nav__item d-inline-block" :title="$t(tab.label)">
                 <router-link
                   :class="{ active: isTabActive(tab.name) }"
                   :to="{ query: { q: $route.query.q, tab: tab.name } }"
@@ -47,11 +47,11 @@
                   <template v-else>{{ $t(tab.label) }}</template>
                   <hook :name="`document.header.nav.${tab.name}:after`" />
                 </router-link>
-              </li>
+              </div>
               <hook :name="`document.header.nav.items.${tab.name}:after`" :bind="{ tag: 'li' }" />
-            </template>
-            <hook name="document.header.nav.items:after" :bind="{ tag: 'li' }" />
-          </ul>
+            </div>
+          </template>
+          <hook name="document.header.nav.items:after" :bind="{ tag: 'li' }" />
         </nav>
         <hook name="document.header.nav:after" />
         <hook name="document.header:after" />
@@ -83,7 +83,6 @@ import DocumentTabExtractedText from '@/components/document/DocumentTabExtracted
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
-
 import { EventBus } from '@/utils/event-bus'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTagsForm from '@/components/DocumentTagsForm'

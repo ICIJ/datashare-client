@@ -18,12 +18,7 @@
         :rounded="false"
         :placeholder="$t('search.searchInProjects')"
       />
-      <project-selector
-        v-model="selectedProject"
-        :query="query"
-        class="border-0"
-        multiple
-        @input="select" />
+      <project-selector v-model="selectedProject" :query="query" class="border-0" multiple @input="select" />
     </slide-up-down>
   </div>
 </template>
@@ -76,7 +71,7 @@ export default {
     await this.retrieveIndicesInfos()
   },
   methods: {
-    retrieveIndicesInfos(){
+    retrieveIndicesInfos() {
       return Promise.all([
         this.$store.dispatch('starred/fetchIndicesStarredDocuments'),
         this.$store.dispatch('recommended/fetchIndicesRecommendations'),

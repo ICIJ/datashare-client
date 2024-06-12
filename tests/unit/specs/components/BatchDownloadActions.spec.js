@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import BatchDownloadActions from '@/components/BatchDownloadActions'
-import CoreSetup from "~tests/unit/CoreSetup";
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('BatchDownloadActions.vue', () => {
   const api = { runBatchDownload: vi.fn(), deleteTask: vi.fn() }
@@ -31,8 +31,7 @@ describe('BatchDownloadActions.vue', () => {
   }
   beforeAll(() => {
     const core = CoreSetup.init(api).useAll()
-    plugins = [core.plugin, core.i18n ]
-
+    plugins = [core.plugin, core.i18n]
   })
   beforeEach(async () => {
     await flushPromises()

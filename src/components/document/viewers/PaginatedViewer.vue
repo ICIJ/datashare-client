@@ -21,7 +21,8 @@
           <select
             v-model.number="active"
             class="form-control form-control-sm"
-            @change="scrollToPageAndThumbnail(active)">
+            @change="scrollToPageAndThumbnail(active)"
+          >
             <option v-for="page in pagesRange" :key="page" :value="page">
               {{ page + 1 }}
             </option>
@@ -34,7 +35,8 @@
             :key="`thumbnail-${page}`"
             class="paginated-viewer__thumbnails__items__item m-2"
             :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
-            @click="setActiveAndScrollToPage(page)">
+            @click="setActiveAndScrollToPage(page)"
+          >
             <document-thumbnail class="border-0" :document="document" :page="page" :ratio="ratio" size="150" />
             <span class="paginated-viewer__thumbnails__items__item__page">
               {{ page + 1 }}

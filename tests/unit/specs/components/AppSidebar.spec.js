@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import { vi } from 'vitest'
 
 import AppSidebar from '@/components/AppSidebar'
-import CoreSetup from "~tests/unit/CoreSetup";
+import CoreSetup from '~tests/unit/CoreSetup'
 
 vi.mock('@/utils/utils', () => {
   return {

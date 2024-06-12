@@ -298,7 +298,6 @@ export default {
   padding: 0 0 $spacer;
 
   &__items {
-
     & > .table.b-table > thead {
       --bs-table-bg: white;
       --bs-table-bg-state: white;
@@ -316,7 +315,6 @@ export default {
     }
 
     &__row {
-
       &.selected {
         --bs-table-accent-bg: #{rgba($warning, 0.2)};
         --bs-table-active-bg: #{rgba($warning, 0.2)};

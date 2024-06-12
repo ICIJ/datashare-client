@@ -12,7 +12,8 @@
         responsive
         striped
         tbody-tr-class="user-history-document-list__list__item"
-        thead-tr-class="user-history-document-list__list__head text-nowrap">
+        thead-tr-class="user-history-document-list__list__head text-nowrap"
+      >
         <template #head(project)="{ field }">
           <column-filter-dropdown
             id="projects"
@@ -35,7 +36,8 @@
           <div class="d-flex align-items-center justify-content-between">
             <router-link
               :to="{ path: uri }"
-              class="user-history-document-list__list__item__link d-flex align-items-center">
+              class="user-history-document-list__list__item__link d-flex align-items-center"
+            >
               <document-thumbnail
                 :document="eventAsDocument({ uri })"
                 class="user-history-document-list__list__item__preview d-inline-flex me-3"

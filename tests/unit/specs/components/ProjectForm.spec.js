@@ -3,9 +3,7 @@ import { mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectForm from '@/components/ProjectForm'
 
-
 describe('ProjectForm.vue', () => {
-
   describe('without an existing project', () => {
     let wrapper, plugins
 

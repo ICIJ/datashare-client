@@ -197,7 +197,6 @@ export default {
     }
   }
 
-
   &--rounded &__addon {
     &:after {
       border-radius: $border-radius-pill;

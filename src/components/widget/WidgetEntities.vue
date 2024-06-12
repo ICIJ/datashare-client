@@ -8,8 +8,12 @@
       </template>
       <div class="widget__content text-center" :class="{ 'card-body': widget.card }">
         <div v-if="total > 0" class="row">
-          <div v-for="category in categories" :key="category" class="widget__content__count col-3"
-            :class="{ 'widget__content__count--muted': !entities[category] }">
+          <div
+            v-for="category in categories"
+            :key="category"
+            class="widget__content__count col-3"
+            :class="{ 'widget__content__count--muted': !entities[category] }"
+          >
             <fa fixed-width :icon="namedEntityIcon(category)" class="me-1" />
             <span v-html="$tc(`widget.entities.${category}`, entities[category], { count: humanEntities[category] })" />
           </div>

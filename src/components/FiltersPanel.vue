@@ -49,7 +49,6 @@
 import { get, isArray } from 'lodash'
 import { mapState } from 'vuex'
 
-import { EventBus } from '@/utils/event-bus'
 import FilterDate from '@/components/filter/types/FilterDate'
 import FilterDateRange from '@/components/filter/types/FilterDateRange'
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'

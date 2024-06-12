@@ -7,13 +7,15 @@
           :max-directories="compact ? 2 : 5"
           no-datadir
           datadir-label
-          @input="$emit('update:path', $event)" />
+          @input="$emit('update:path', $event)"
+        />
         <transition :name="transition">
           <div v-if="!$wait.waiting('loading tree view data')">
             <router-link
               v-if="searchable"
               :to="searchInPathRoute(path)"
-              class="tree-view__header__search ms-2 btn-primary btn btn-sm rounded-pill">
+              class="tree-view__header__search ms-2 btn-primary btn btn-sm rounded-pill"
+            >
               <fa icon="search"></fa>
               {{ $t('treeView.searchPath') }}
             </router-link>
@@ -24,7 +26,8 @@
             <span
               v-if="count"
               :title="$tc('treeView.hits', hits, { hits })"
-              class="tree-view__header__hits ms-2 badge text-bg-light rounded-pill">
+              class="tree-view__header__hits ms-2 badge text-bg-light rounded-pill"
+            >
               {{ humanNumber(hits, $tm('human.number')) }} {{ $tc('treeView.docs', hits) }}
             </span>
           </div>
@@ -44,7 +47,8 @@
           <ul class="list-group list-group-flush tree-view__directories">
             <li
               v-if="hits && selectable"
-              class="list-group-item d-flex flex-row align-items-center tree-view__directories__item tree-view__directories__item--hits">
+              class="list-group-item d-flex flex-row align-items-center tree-view__directories__item tree-view__directories__item--hits"
+            >
               <b-form-checkbox
                 :id="allDirectoriesInputId"
                 :value="toDirectory(path)"
@@ -63,7 +67,8 @@
             <li
               v-for="directory in directories"
               :key="directory.key"
-              class="list-group-item d-flex flex-row align-items-center tree-view__directories__item">
+              class="list-group-item d-flex flex-row align-items-center tree-view__directories__item"
+            >
               <b-form-checkbox
                 v-if="selectable"
                 :value="toDirectory(directory.key)"

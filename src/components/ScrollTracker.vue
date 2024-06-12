@@ -5,7 +5,6 @@ import VueScrollTo from 'vue-scrollto'
 
 import { EventBus } from '@/utils/event-bus'
 
-
 /**
  * An contextual link to the "right" scroll position.
  */

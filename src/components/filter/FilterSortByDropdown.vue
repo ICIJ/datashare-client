@@ -26,7 +26,6 @@ import settings from '@/utils/settings'
 
 export default {
   name: 'FilterSortByDropdown',
-  emits:["update:sort"],
   props: {
     sort: {
       type: Object,
@@ -37,6 +36,7 @@ export default {
       default: () => settings.filter.sortByOptions
     }
   },
+  emits: ['update:sort'],
   computed: {
     sortBy() {
       return this.sort.sortBy

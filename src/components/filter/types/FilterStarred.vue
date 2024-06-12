@@ -1,6 +1,14 @@
 <template>
-  <filter-boilerplate ref="filter" v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude
-    hide-contextualize hide-sort no-infinite-scroll @reset-filter-values="resetFilterValues">
+  <filter-boilerplate
+    ref="filter"
+    v-bind="propsWithout('hide-show-more')"
+    hide-show-more
+    hide-exclude
+    hide-contextualize
+    hide-sort
+    no-infinite-scroll
+    @reset-filter-values="resetFilterValues"
+  >
     <template #items-group>
       <b-form-checkbox-group v-model="selected" stacked class="list-group-item p-0 border-0">
         <div class="filter__items__item">
@@ -39,7 +47,6 @@
 <script>
 import get from 'lodash/get'
 
-import { EventBus } from '@/utils/event-bus'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import utils from '@/mixins/utils'

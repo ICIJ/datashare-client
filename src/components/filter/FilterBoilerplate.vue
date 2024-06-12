@@ -1,12 +1,15 @@
 <template>
-  <div class="filter card" :class="{
+  <div
+    class="filter card"
+    :class="{
       'filter--reversed': excluded,
       'filter--hide-show-more': hideShowMore,
       'filter--hide-search': hideSearch,
       'filter--hide-header': hideHeader,
       'filter--dark': dark,
       'filter--has-values': hasValues()
-    }">
+    }"
+  >
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }" />
     <slot v-if="!hideHeader" name="header">
       <div class="card-header px-2 py-3 d-flex filter__header" @click="toggleItems">
@@ -606,13 +609,13 @@ export default {
 
   & .filter__items__item__wrapper {
     & .form-check {
-      display:flex;
+      display: flex;
       min-width: 0;
     }
 
     & .form-check-label {
       flex-grow: 1;
-      display:inline-flex;
+      display: inline-flex;
       min-width: 0;
 
       & .filter__items__item__label {

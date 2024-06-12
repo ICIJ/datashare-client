@@ -1,6 +1,14 @@
 <template>
-  <filter-boilerplate ref="filter" v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude hide-sort
-    hide-contextualize no-infinite-scroll @reset-filter-values="resetFilterValues">
+  <filter-boilerplate
+    ref="filter"
+    v-bind="propsWithout('hide-show-more')"
+    hide-show-more
+    hide-exclude
+    hide-sort
+    hide-contextualize
+    no-infinite-scroll
+    @reset-filter-values="resetFilterValues"
+  >
     <template #all>
       <span class="filter__items__item__label px-1 text-truncate">
         {{ labelToHuman('all') }}

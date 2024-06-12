@@ -40,8 +40,8 @@
             {{ $t('indexing.findNamedEntities') }}
           </b-button>
           <b-modal
-            v-model="showExtractingForm"
             :id="extractingFormId"
+            v-model="showExtractingForm"
             body-bg-variant="darker"
             hide-footer
             modal-class="task-analysis-list__form-modal extracting__form"
@@ -54,8 +54,8 @@
             <extracting-form id="extracting-form" dark @submit="closeExtractingForm" />
           </b-modal>
           <b-modal
-            v-model="showFindNamedEntitiesForm"
             :id="findNamedEntitiesFormId"
+            v-model="showFindNamedEntitiesForm"
             body-bg-variant="darker"
             hide-footer
             modal-class="task-analysis-list__form-modal find-named-entities__form"

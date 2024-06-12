@@ -1,5 +1,9 @@
 <template>
-  <component :is="noBtnGroup ? 'div' : 'b-button-group'" :vertical="vertical" class="document-actions align-items-center">
+  <component
+    :is="noBtnGroup ? 'div' : 'b-button-group'"
+    :vertical="vertical"
+    class="document-actions align-items-center"
+  >
     <a
       :id="starBtnId"
       class="document-actions__star btn"

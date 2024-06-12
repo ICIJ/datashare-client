@@ -8,7 +8,7 @@ import DocumentActions from '@/components/DocumentActions'
 
 describe('DocumentActions.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
-  let api, core, document, store, wrapper
+  let api, core, document, wrapper
 
   beforeAll(() => {
     api = { starDocuments: vi.fn(), unstarDocuments: vi.fn() }
