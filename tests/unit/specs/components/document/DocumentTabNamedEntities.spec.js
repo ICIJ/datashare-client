@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
+import { uniqueId } from 'lodash'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -7,7 +8,7 @@ import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEnti
 
 describe('DocumentTabNamedEntities.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  const id = 'document'
+  const id = uniqueId('document-')
   let core
 
   beforeEach(() => {
