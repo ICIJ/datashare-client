@@ -30,7 +30,7 @@ body {
 
 .splashscreen {
   align-items: center;
-  background: $dark;
+  background: darken($primary, 10%);
   bottom: 0;
   color: white;
   display: flex;
