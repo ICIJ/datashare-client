@@ -7,7 +7,7 @@
       <p :class="{ 'card-body': widget.card }">
         <fa icon="weight-scale" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
-          {{ humanSize(total, false, $t('human.size')) }}
+          {{ humanSize(total, false, $tm('human.size')) }}
         </strong>
         <a v-b-modal.modal-disk-usage-details class="widget__details">
           {{ $t('widget.diskUsage.details') }}
