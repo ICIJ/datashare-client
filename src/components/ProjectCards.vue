@@ -48,7 +48,6 @@
 import { startCase } from 'lodash'
 
 import humanNumber from '@/utils/humanNumber'
-
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 
 /**
