@@ -34,7 +34,7 @@
         <nav class="document__header__nav text-nowrap overflow-auto">
           <hook name="document.header.nav.items:before" :bind="{ tag: 'li' }" />
           <template v-for="tab in visibleTabs" :key="tab.name">
-            <div>
+            <div class="d-inline-block">
               <hook :name="`document.header.nav.items.${tab.name}:before`" :bind="{ tag: 'li' }" />
               <div class="document__header__nav__item d-inline-block" :title="$t(tab.label)">
                 <router-link
