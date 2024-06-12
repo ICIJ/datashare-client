@@ -112,6 +112,12 @@
       "plugin:vitest/recommended",
       "plugin:vitest-globals/recommended",
       "@icij/eslint-config-icij"
-    ]
+    ],
+    "rules": {
+      "vue/no-v-model-argument": "off",
+      "vue/no-v-for-template-key": "off",
+      "vue/no-custom-modifiers-on-v-model": "off",
+      "vue/valid-v-slot": "off"
+    }
   }
 }
