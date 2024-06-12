@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="saveSearch()">
-    <div class="w-100 card border-0 rounded-top-0 border-top">
-      <div class="card-body pb-1">
+    <div class="w-100 card border-0 rounded-top-0">
+      <div class="card-body pb-1 px-4">
         <b-form-group label-size="sm" :label="`${$t('userHistory.name')} *`">
           <b-form-input v-model="name" type="text" required />
         </b-form-group>

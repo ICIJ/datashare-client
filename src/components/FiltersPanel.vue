@@ -38,6 +38,7 @@
       ref="openFilterSearch"
       hide-footer
       lazy
+      body-class="p-0"
       :title="expandedFilter ? $t('filter.' + expandedFilter.name) : null"
     >
       <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query"></filter-search>
