@@ -27,7 +27,7 @@
         {{ dataDir }}
       </div>
     </b-popover>
-    <b-modal id="mounting-data-location-tree-view" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
+    <b-modal ref="mounting-data-location-tree-view" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
       <tree-view v-model:path="path" :projects="projects" size count searchable></tree-view>
     </b-modal>
   </div>
@@ -36,7 +36,6 @@
 <script>
 import { uniqueId } from 'lodash'
 
-import { EventBus } from '@/utils/event-bus'
 import TreeView from '@/components/TreeView'
 
 /**
@@ -90,11 +89,11 @@ export default {
       await this.$core.createDefaultProject()
       await this.$core.loadUser()
       this.$store.commit('search/index', this.$config.get('defaultProject'))
-      EventBus.emit('index::delete::all')
+      this.$core.emit('index::delete::all')
     },
     showTreeView() {
       this.path = this.dataDir
-      this.$bvModal.show('mounting-data-location-tree-view')
+      this.$refs['mounting-data-location-tree-view'].show()
     }
   }
 }
