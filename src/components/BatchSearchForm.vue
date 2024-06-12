@@ -233,6 +233,7 @@ import {
   clamp,
   compact,
   concat,
+  cloneDeep,
   each,
   filter,
   find,
@@ -318,7 +319,7 @@ export default {
   emits: ['submit'],
   data() {
     return {
-      ...initData,
+      ...cloneDeep(initData),
       selectedProjects: [],
       path: this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
@@ -450,12 +451,12 @@ export default {
       if (this.selectedFileType) {
         this.fileTypes.push(this.selectedFileType)
         this.hideSuggestionsFileTypes()
-        this.fileType = initData.fileType
+        this.fileType = cloneDeep(initData).fileType
         this.$refs?.fileType?.focus()
       }
     },
     hideSuggestionsFileTypes() {
-      this.suggestionFileTypes = initData.suggestionFileTypes
+      this.suggestionFileTypes = cloneDeep(initData).suggestionFileTypes
     },
     deleteFileType(index) {
       this.fileTypes.splice(index, 1)
@@ -507,12 +508,12 @@ export default {
       if (this.selectedTag) {
         this.tags.push(this.selectedTag)
         this.hideSuggestionsTags()
-        this.tag = initData.tag
+        this.tag = cloneDeep(initData).tag
         this.$refs?.tag?.focus()
       }
     },
     hideSuggestionsTags() {
-      this.suggestionTags = initData.suggestionTags
+      this.suggestionTags = cloneDeep(initData).suggestionTags
     },
     async aggregateTags() {
       const tags = await this.aggregate('tags', 'tags')
@@ -537,7 +538,7 @@ export default {
     },
     resetForm() {
       Object.keys(initData).forEach((key) => {
-        this[key] = initData[key]
+        this[key] = cloneDeep(initData[key])
       })
       this.selectedProjects = this.defaultSelectedProjects
     },
