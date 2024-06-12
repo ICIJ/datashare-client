@@ -89,7 +89,7 @@ export default {
       events: [],
       totalEvents: 0,
       page: 1,
-      defaultTab: null,
+      defaultTab: 0,
       defaultType: 'document'
     }
   },
@@ -174,7 +174,7 @@ export default {
           this.projectsFilter
         )
         this.events = events.items
-        this.totalEvents = events.total
+        this.totalEvents = events.pagination?.total ?? 0
       } catch (e) {
         this.$bvToast.toast('Failed to fetch user history', { noCloseButton: true, variant: 'danger' })
         this.events = []
