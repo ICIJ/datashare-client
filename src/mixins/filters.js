@@ -31,9 +31,9 @@ export default {
     removeFilterValue({ name }) {
       this.$store.commit('search/removeFilter', name)
     },
-    refreshRouteAndSearch() {
-      this.refreshRoute()
-      this.refreshSearch()
+    async refreshRouteAndSearch() {
+      await this.refreshRoute()
+      await this.refreshSearch()
     },
     refreshRoute() {
       const name = 'search'

@@ -62,7 +62,7 @@ export default {
         if (!isEqual(key, this.filterValues)) {
           this.setFilterValue(this.filter, { key })
           this.$store.commit('search/from', 0)
-          this.refreshRouteAndSearch()
+          return this.refreshRouteAndSearch()
         }
       }
     },
