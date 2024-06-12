@@ -10,7 +10,7 @@
       <b-popover
         ref="popover"
         click
-        placement="end"
+        placement="right"
         :target="uniqueId"
         custom-class="locales-menu__list popover-body-p-0"
       >
