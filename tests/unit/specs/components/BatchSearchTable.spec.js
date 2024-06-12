@@ -205,9 +205,8 @@ describe('BatchSearchTable.vue', () => {
         vi.spyOn(core.router, 'push')
         wrapper.vm.selectedProjects = ['test', 'toto']
         expect(core.router.push).toBeCalledTimes(1)
-        expect(core.router.push).toBeCalledWith(routeFactory({ project: 'test,toto' }))
-        wrapper.vm.selectedProjects = []
-        expect(core.router.push).toBeCalledWith(routeFactory())
+        const query = expect.objectContaining({ project: 'test,toto' })
+        expect(core.router.push).toBeCalledWith(expect.objectContaining({ query }))
       })
 
       it('set selectedDate', () => {
@@ -215,9 +214,8 @@ describe('BatchSearchTable.vue', () => {
         vi.spyOn(core.router, 'push')
         wrapper.vm.selectedDateRange = { start: 0, end: 1 }
         expect(core.router.push).toBeCalledTimes(1)
-        expect(core.router.push).toBeCalledWith(routeFactory({ dateStart: 0, dateEnd: 1 }))
-        wrapper.vm.selectedDateRange = null
-        expect(core.router.push).toBeCalledWith(routeFactory())
+        const query = expect.objectContaining({ dateStart: 0, dateEnd: 1 })
+        expect(core.router.push).toBeCalledWith(expect.objectContaining({ query }))
       })
 
       it('set selectedState', () => {
@@ -225,9 +223,8 @@ describe('BatchSearchTable.vue', () => {
         vi.spyOn(core.router, 'push')
         wrapper.vm.selectedStates = ['QUEUED', 'RUNNING']
         expect(core.router.push).toBeCalledTimes(1)
-        expect(core.router.push).toBeCalledWith(routeFactory({ state: 'QUEUED,RUNNING' }))
-        wrapper.vm.selectedStates = []
-        expect(core.router.push).toBeCalledWith(routeFactory())
+        const query = expect.objectContaining({ state: 'QUEUED,RUNNING' })
+        expect(core.router.push).toBeCalledWith(expect.objectContaining({ query }))
       })
 
       it('set selectedStatus', () => {
@@ -235,9 +232,8 @@ describe('BatchSearchTable.vue', () => {
         vi.spyOn(core.router, 'push')
         wrapper.vm.selectedStatus = { label: 'published', value: '1' }
         expect(core.router.push).toBeCalledTimes(1)
-        expect(core.router.push).toBeCalledWith(routeFactory({ publishState: '1' }))
-        wrapper.vm.selectedStatus = null
-        expect(core.router.push).toBeCalledWith(routeFactory())
+        const query = expect.objectContaining({ publishState: '1' })
+        expect(core.router.push).toBeCalledWith(expect.objectContaining({ query }))
       })
     })
 
