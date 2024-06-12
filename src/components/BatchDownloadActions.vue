@@ -1,8 +1,6 @@
 <script>
 import { uniqueId } from 'lodash'
 
-import { EventBus } from '@/utils/event-bus'
-
 export default {
   name: 'BatchDownloadActions',
   props: {
@@ -53,7 +51,7 @@ export default {
   },
   methods: {
     closePopover() {
-      EventBus.emit('bv::hide::popover', this.togglerId)
+      this.$core.emit('bv::hide::popover', this.togglerId)
     },
     async deleteTask() {
       try {
@@ -142,8 +140,9 @@ export default {
     <b-popover
       boundary="viewport"
       custom-class="popover-body-p-0 popover-body-overflow-hidden dropdown-menu shadow"
-      placement="start"
+      placement="left"
       triggers="focus"
+      teleport-to="body"
       :target="popoverTarget"
     >
       <b-dropdown-item-button class="batch-download-actions__relaunch" @click="relaunchTask()">
