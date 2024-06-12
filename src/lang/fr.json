@@ -57,7 +57,7 @@
     },
     "placeholder": "Rechercher dans les documents...",
     "buttonLabel": "Rechercher",
-    "searchIn": "Filtrer les %{plural}...",
+    "searchIn": "Filtrer les {plural}...",
     "searchInProjects": "Filtrer les projets...",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
@@ -72,16 +72,16 @@
     "results": {
       "match": "dans le doc",
       "entities": "nb entités",
-      "results": "1 document | %{total} documents",
+      "results": "1 document | {total} documents",
       "noResults": "Aucun document",
       "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
       "batchDownloadNotAllowed": "Les téléchargements en lots ne sont pas autorisés sur plusieurs projets.",
       "batchDownload": "Télécharger les résultats",
-      "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger %{total} documents.",
-      "warningNumber": "Vous ne pouvez pas télécharger plus de %{number} documents.",
-      "warningSize": "Vous ne pouvez pas télécharger plus de %{size}B.",
+      "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger {total} documents.",
+      "warningNumber": "Vous ne pouvez pas télécharger plus de {number} documents.",
+      "warningSize": "Vous ne pouvez pas télécharger plus de {size}B.",
       "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?",
       "sort": {
         "sortLabel": "Trier",
@@ -119,7 +119,7 @@
         "tooltipOthers": "Document suivant (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
       },
       "document": {
-        "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être à ajouter l'extension <code>%{extension}</code> avant de l'ouvrir."
+        "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être à ajouter l'extension <code>{extension}</code> avant de l'ouvrir."
       },
       "markAsRecommended": "Marquer comme recommandé",
       "unmarkAsRecommended": "Ne plus marquer comme recommandé",
@@ -443,7 +443,7 @@
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
     "copyAsCsv": "Copier en format CSV",
     "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
-    "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"fw-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
+    "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"fw-bold\\\" href=\\\"{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Génération d'une prévisualisation...",
     "sheet": "Feuille",
     "searchDirectory": "Chercher dans ce dossier",
@@ -508,7 +508,7 @@
     "unknown": "Inconnu"
   },
   "namedEntityInContext": {
-    "title": "Extrait en utilisant <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
+    "title": "Extrait en utilisant <code>{extractor}</code> en <code>{extractorLanguage}</code>",
     "meta": "Extrait des métadonnées.",
     "none": "Aperçu des entités non disponible, le document est trop grand."
   },
@@ -530,10 +530,10 @@
   },
   "indexing": {
     "title": "Analyser vos documents",
-    "description": "<a href=\"%{howToLink}\" target=\"_blank\">Lire la documentation</a> sur comment ajouter des documents.",
+    "description": "<a href=\"{howToLink}\" target=\"_blank\">Lire la documentation</a> sur comment ajouter des documents.",
     "go": "Launch",
     "tasks": "Tâches",
-    "empty": "Vous n'avez pas encore commencé de tâches. <a href=\"%{howToLink}\" target=\"_blank\">En savoir plus.</a>",
+    "empty": "Vous n'avez pas encore commencé de tâches. <a href=\"{howToLink}\" target=\"_blank\">En savoir plus.</a>",
     "extractText": "Ajouter des documents",
     "extractWithOcrLabel": "Voulez-vous aussi extraire le texte des images et des PDFs ?",
     "extractWithOcrHelp": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
@@ -641,7 +641,7 @@
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
     "title": "Recherches en lot",
-    "empty": "Vous n'avez pas encore commencé de recherche en lot. <a href=\"%{howToLink}\">En savoir plus.</a>",
+    "empty": "Vous n'avez pas encore commencé de recherche en lot. <a href=\"{howToLink}\">En savoir plus.</a>",
     "emptyWithFilter": "La recherche filtrée n'a pas de résultats",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
@@ -685,7 +685,7 @@
     "advancedFilters": "Filtres avancés",
     "selectFolder": "Sélectionner un dossier",
     "errorTitle": "Erreur dans la requête",
-    "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
+    "errorQuery": "Vous avez une erreur sur votre requête <code>{query}</code>.",
     "errorMessage": "Le système a rencontré une erreur. Il peut s'agir d'une erreur de syntaxe que vous avez écrite dans votre CSV ou d'une autre erreur. Veuillez vous référer à <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">cette page d'aide</a> où les erreurs les plus courantes sont expliquées.",
     "unableToRetrieveFileTypes": "Impossible de récupérer les types de fichiers dans le projet sélectionné | Impossible de récupérer les types de fichiers dans les projets sélectionnés",
     "placeholder": "Rechercher dans les recherches en lot...",
@@ -723,7 +723,7 @@
     "deleteAfterRelaunch": "Supprimer et remplacer la recherche existante",
     "backToResults": "Retour aux résultats",
     "empty": "Pas de résultat",
-    "queriesFilter": "1 requête | %{n} requêtes"
+    "queriesFilter": "1 requête | {n} requêtes"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Filtrer par requêtes...",
@@ -876,7 +876,7 @@
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "inProgress": "Voir tous les téléchargements en attente",
     "errorMessage": "Le système a rencontré un problème. Veuillez vous référer à ces informations lorsque vous contactez le support.",
-    "errorTitle": "La tâche de téléchargement de lots <code class=\"fw-bold\">%{taskId}</code> est en erreur.",
+    "errorTitle": "La tâche de téléchargement de lots <code class=\"fw-bold\">{taskId}</code> est en erreur.",
     "relaunch": {
       "succeed": "Votre téléchargement est en cours de préparation",
       "succeedBody": "Le téléchargement sera bientôt disponible.",
@@ -887,7 +887,7 @@
       "failed": "Impossible de supprimer",
       "failedBody": "Une erreur est survenue lorsquela recherche en lot a été supprimée."
     },
-    "limitations": "Les téléchargements en lots sont limités à %{maxNbFiles} fichiers et %{maxSize}B."
+    "limitations": "Les téléchargements en lots sont limités à {maxNbFiles} fichiers et {maxSize}B."
   },
   "batchDownloadActions": {
     "relaunch": "Relancer",
@@ -932,7 +932,7 @@
       "title": "Authors"
     },
     "barometer": {
-      "document": "aucun document | 1 document | %{total} documents",
+      "document": "aucun document | 1 document | {total} documents",
       "amongWhich": "dont",
       "onDisk": "sur disque"
     },
@@ -949,8 +949,8 @@
         "month": "Mois",
         "day": "Jour"
       },
-      "document": "aucun document | 1 document | %{total} documents",
-      "missing": "Aucun document n'a de date de création manquante ou erronée | 1 document a une date de création manquante ou erronée | %{total} documents ont une date de création manquante ou erronée.",
+      "document": "aucun document | 1 document | {total} documents",
+      "missing": "Aucun document n'a de date de création manquante ou erronée | 1 document a une date de création manquante ou erronée | {total} documents ont une date de création manquante ou erronée.",
       "missingTooltip": "Il y a plusieurs raisons pour lesquelles un document n'apparaît pas dans le diagramme:\n    - Le document n'a pas de date de création\n    - La date de création du document est antérieure au 1er janvier 1970\n    - La date de création du document est postérieure à la date d'aujourd'hui"
     },
     "duplicates": {
@@ -1030,7 +1030,7 @@
     "installFromUrl": "Installer une extension depuis une URL"
   },
   "treeView": {
-    "hits": "aucun document | 1 document | %{hits} documents",
+    "hits": "aucun document | 1 document | {hits} documents",
     "docs": "doc | docs",
     "datadir": "Accueil",
     "all": "Tout",
@@ -1050,7 +1050,7 @@
     }
   },
   "projectCards": {
-    "documentsCount": "Aucun document | 1 document | %{count} documents",
+    "documentsCount": "Aucun document | 1 document | {count} documents",
     "about": "A propos",
     "search": "Rechercher"
   },
@@ -1058,7 +1058,7 @@
     "noMatches": "No matches"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects",
+    "projectsCount": "{count} projects",
     "noMatches": "No matches"
   }
 }

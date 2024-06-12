@@ -57,7 +57,7 @@
     },
     "placeholder": "Dokumente durchsuchen...",
     "buttonLabel": "Suche",
-    "searchIn": "Suche in %{plural}...",
+    "searchIn": "Suche in {plural}...",
     "searchInProjects": "Suche in projekte...",
     "hideFilters": "Filter ausblenden",
     "showFilters": "Filter anzeigen",
@@ -72,16 +72,16 @@
     "results": {
       "match": "Treffer in Dokument",
       "entities": "Anzahl Entitäten",
-      "results": "1 Dokument | %{total} Dokumente",
+      "results": "1 Dokument | {total} Dokumente",
       "noResults": "Keine Dokumente gefunden",
       "on": "von ",
       "perPage": "pro Seite",
       "sortedByPath": "nach Pfad sortiert",
       "batchDownloadNotAllowed": "Batch-Downloads sind bei mehreren Projekten nicht möglich.",
       "batchDownload": "Ergebnisse herunterladen",
-      "batchDownloadSubmit": "Sie sind im Begriff, 1 Dokument herunterzuladen. | Sie sind dabei, %{total} Dokumente herunterzuladen.",
-      "warningNumber": "Sie können nicht mehr als %{number} Dokumente herunterladen.",
-      "warningSize": "Sie können nicht mehr als %{size}B herunterladen.",
+      "batchDownloadSubmit": "Sie sind im Begriff, 1 Dokument herunterzuladen. | Sie sind dabei, {total} Dokumente herunterzuladen.",
+      "warningNumber": "Sie können nicht mehr als {number} Dokumente herunterladen.",
+      "warningSize": "Sie können nicht mehr als {size}B herunterladen.",
       "warningConfirm": "Möchten Sie die ersten Dokumente dieser Suche trotzdem herunterladen?",
       "sort": {
         "sortLabel": "Sortieren",
@@ -119,7 +119,7 @@
         "tooltipOthers": "Nächstes Dokument (<kbd>Strg</kbd> + <kbd>←</kbd>)"
       },
       "document": {
-        "extensionWarning": "Dieses Dokument hat die falsche Dateierweiterung für seinen Typ. Möglicherweise müssen Sie die Erweiterung <code>%{extension}</code> hinzufügen, bevor Sie es öffnen können."
+        "extensionWarning": "Dieses Dokument hat die falsche Dateierweiterung für seinen Typ. Möglicherweise müssen Sie die Erweiterung <code>{extension}</code> hinzufügen, bevor Sie es öffnen können."
       },
       "markAsRecommended": "Als \"empfohlen\" markieren",
       "unmarkAsRecommended": "Nicht als \"empfohlen\" markieren",
@@ -443,7 +443,7 @@
     "notAvailable": "Für dieses Dokument ist keine Vorschau verfügbar.",
     "copyAsCsv": "Als CSV kopieren",
     "namedEntitiesNotFound": "Keine Named Entities gefunden",
-    "namedEntitiesNotSearched": "<p>Dokument nicht analysiert.</p><p class=\"text-muted small\">Um Named Entities zu durchsuchen, gehen Sie zu <a class=\"fw-bold\" href=\"%{indexing_link}\">@:menu.analysieren</a> und starten Sie eine neue Aufgabe \"@:indexing.findNamedEnties\".</p>",
+    "namedEntitiesNotSearched": "<p>Dokument nicht analysiert.</p><p class=\"text-muted small\">Um Named Entities zu durchsuchen, gehen Sie zu <a class=\"fw-bold\" href=\"{indexing_link}\">@:menu.analysieren</a> und starten Sie eine neue Aufgabe \"@:indexing.findNamedEnties\".</p>",
     "generatingPreview": "Vorschau wird erstellt...",
     "sheet": "Blatt",
     "searchDirectory": "In diesem Verzeichnis suchen",
@@ -508,7 +508,7 @@
     "unknown": "Unbekannt"
   },
   "namedEntityInContext": {
-    "title": "Extrahiert mit <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
+    "title": "Extrahiert mit <code>{extractor}</code> in <code>{extractorLanguage}</code>",
     "meta": "Dies wurde aus Metadaten extrahiert.",
     "none": "Entitätenvorschau nicht verfügbar, das Dokument ist zu groß."
   },
@@ -530,10 +530,10 @@
   },
   "indexing": {
     "title": "Dokumente analysieren",
-    "description": "Bitte <a href=\"%{howToLink}\" target=\"_blank\">lesen Sie die Dokumentation</a> zum Hinzufügen von Dokumenten.",
+    "description": "Bitte <a href=\"{howToLink}\" target=\"_blank\">lesen Sie die Dokumentation</a> zum Hinzufügen von Dokumenten.",
     "go": "Starten",
     "tasks": "Aufgaben",
-    "empty": "Sie haben noch keine Aufgaben gestartet. <a href=\"%{howToLink}\" target=\"_blank\">Lesen Sie mehr.</a>",
+    "empty": "Sie haben noch keine Aufgaben gestartet. <a href=\"{howToLink}\" target=\"_blank\">Lesen Sie mehr.</a>",
     "extractText": "Dokumente hinzufügen",
     "extractWithOcrLabel": "Möchten Sie Text auch aus Bildern und PDFs extrahieren?",
     "extractWithOcrHelp": "Wenn ja, führt Datashare OCR (Optische Zeichenerkennung) durch. Dies kann bis zu zehn Mal länger dauern.",
@@ -641,7 +641,7 @@
   "batchSearch": {
     "lead": "Mehrere Begriffe und Dokumente auf einmal suchen.",
     "title": "Batch-Suche",
-    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
+    "empty": "You have not yet started a batch search. <a href=\"{howToLink}\">Read more.</a>",
     "emptyWithFilter": "The filtered search doesn't have results",
     "heading": "Neue Batch-Suche",
     "fileLabel": "CSV-Datei",
@@ -685,7 +685,7 @@
     "advancedFilters": "Erweiterte Filter",
     "selectFolder": "Ordner auswählen",
     "errorTitle": "Fehler in der Abfrage",
-    "errorQuery": "Sie haben einen Fehler auf Ihrer Abfrage <code>%{query}</code>.",
+    "errorQuery": "Sie haben einen Fehler auf Ihrer Abfrage <code>{query}</code>.",
     "errorMessage": "Das System ist auf ein Problem gestoßen. Es kann ein Syntaxfehler in der CSV-Datei sein oder ein anderer Fehler. Bitte lesen Sie <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">auf dieser Hilfeseite</a>, auf der die häufigsten Fehler beschrieben werden.",
     "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
     "placeholder": "Suche in Batch-Suchen...",
@@ -723,7 +723,7 @@
     "deleteAfterRelaunch": "Aktuelle Batch-Suche nach Neustart löschen",
     "backToResults": "Back to results",
     "empty": "Keine Ergebnisse",
-    "queriesFilter": "1 query | %{n} queries"
+    "queriesFilter": "1 query | {n} queries"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Abfragen filtern...",
@@ -876,7 +876,7 @@
     "warning": "This feature is currently being developed by the Datashare team.",
     "inProgress": "See all pending downloads",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
-    "errorTitle": "Batch download task <code class=\"fw-bold\">%{taskId}</code> is in error.",
+    "errorTitle": "Batch download task <code class=\"fw-bold\">{taskId}</code> is in error.",
     "relaunch": {
       "succeed": "Your download is being prepared",
       "succeedBody": "The download should be available soon.",
@@ -887,7 +887,7 @@
       "failed": "Unable to delete",
       "failedBody": "Something happened when trying to delete this batch download."
     },
-    "limitations": "Batch downloads are limited to %{maxNbFiles} files and %{maxSize}B."
+    "limitations": "Batch downloads are limited to {maxNbFiles} files and {maxSize}B."
   },
   "batchDownloadActions": {
     "relaunch": "Relaunch",
@@ -932,7 +932,7 @@
       "title": "Authors"
     },
     "barometer": {
-      "document": "keine Dokumente | 1 Dokument | %{total} Dokumente",
+      "document": "keine Dokumente | 1 Dokument | {total} Dokumente",
       "amongWhich": "davon sind",
       "onDisk": "auf der Festplatte"
     },
@@ -949,8 +949,8 @@
         "month": "Monat",
         "day": "Tag"
       },
-      "document": "keine Dokumente | 1 Dokument | %{total} Dokumente",
-      "missing": "Keine Dokumente haben kein oder ein falsches Erstellungsdatum.| 1 Dokument hat kein oder ein falsches Erstellungsdatum.| %{total} Dokumente haben kein oder ein falsches Erstellungsdatum.",
+      "document": "keine Dokumente | 1 Dokument | {total} Dokumente",
+      "missing": "Keine Dokumente haben kein oder ein falsches Erstellungsdatum.| 1 Dokument hat kein oder ein falsches Erstellungsdatum.| {total} Dokumente haben kein oder ein falsches Erstellungsdatum.",
       "missingTooltip": "Es gibt mehrere Gründe, warum ein Dokument nicht im Balkendiagramm vorhanden ist:\n    - Das Dokument hat kein Erstellungsdatum\n    - Das Erstellungsdatum des Dokuments liegt vor dem 1. Januar 1970\n    - Das Erstellungsdatum des Dokuments liegt nach dem aktuellen Datum"
     },
     "duplicates": {
@@ -1030,7 +1030,7 @@
     "installFromUrl": "Erweiterung über URL installieren"
   },
   "treeView": {
-    "hits": "keine Dokumente | 1 Dokument | %{hits} Dokumente",
+    "hits": "keine Dokumente | 1 Dokument | {hits} Dokumente",
     "docs": "Dok | Doks",
     "datadir": "Startseite",
     "all": "Alle",
@@ -1050,7 +1050,7 @@
     }
   },
   "projectCards": {
-    "documentsCount": "No documents | 1 document | %{count} documents",
+    "documentsCount": "No documents | 1 document | {count} documents",
     "about": "About",
     "search": "Search"
   },
@@ -1058,7 +1058,7 @@
     "noMatches": "No matches"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "%{count} projects",
+    "projectsCount": "{count} projects",
     "noMatches": "No matches"
   }
 }

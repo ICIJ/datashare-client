@@ -57,7 +57,7 @@
     },
     "placeholder": "crwdns270:0crwdne270:0",
     "buttonLabel": "crwdns1152:0crwdne1152:0",
-    "searchIn": "crwdns2964:0%{plural}crwdne2964:0",
+    "searchIn": "crwdns2964:0{plural}crwdne2964:0",
     "searchInProjects": "crwdns2966:0crwdne2966:0",
     "hideFilters": "crwdns276:0crwdne276:0",
     "showFilters": "crwdns278:0crwdne278:0",
@@ -72,16 +72,16 @@
     "results": {
       "match": "crwdns294:0crwdne294:0",
       "entities": "crwdns296:0crwdne296:0",
-      "results": "crwdns2052:0%{total}crwdne2052:0",
+      "results": "crwdns2052:0{total}crwdne2052:0",
       "noResults": "crwdns1160:0crwdne1160:0",
       "on": "crwdns302:0crwdne302:0",
       "perPage": "crwdns304:0crwdne304:0",
       "sortedByPath": "crwdns1347:0crwdne1347:0",
       "batchDownloadNotAllowed": "crwdns2556:0crwdne2556:0",
       "batchDownload": "crwdns2502:0crwdne2502:0",
-      "batchDownloadSubmit": "crwdns2545:0%{total}crwdne2545:0",
-      "warningNumber": "crwdns2547:0%{number}crwdne2547:0",
-      "warningSize": "crwdns2549:0%{size}crwdne2549:0",
+      "batchDownloadSubmit": "crwdns2545:0{total}crwdne2545:0",
+      "warningNumber": "crwdns2547:0{number}crwdne2547:0",
+      "warningSize": "crwdns2549:0{size}crwdne2549:0",
       "warningConfirm": "crwdns2551:0crwdne2551:0",
       "sort": {
         "sortLabel": "crwdns2158:0crwdne2158:0",
@@ -119,7 +119,7 @@
         "tooltipOthers": "crwdns342:0crwdne342:0"
       },
       "document": {
-        "extensionWarning": "crwdns344:0%{extension}crwdne344:0"
+        "extensionWarning": "crwdns344:0{extension}crwdne344:0"
       },
       "markAsRecommended": "crwdns1842:0crwdne1842:0",
       "unmarkAsRecommended": "crwdns1844:0crwdne1844:0",
@@ -443,7 +443,7 @@
     "notAvailable": "crwdns2434:0crwdne2434:0",
     "copyAsCsv": "crwdns2606:0crwdne2606:0",
     "namedEntitiesNotFound": "crwdns1948:0crwdne1948:0",
-    "namedEntitiesNotSearched": "crwdns1950:0%{indexing_link}crwdne1950:0",
+    "namedEntitiesNotSearched": "crwdns1950:0{indexing_link}crwdne1950:0",
     "generatingPreview": "crwdns1952:0crwdne1952:0",
     "sheet": "crwdns858:0crwdne858:0",
     "searchDirectory": "crwdns1954:0crwdne1954:0",
@@ -508,7 +508,7 @@
     "unknown": "crwdns1820:0crwdne1820:0"
   },
   "namedEntityInContext": {
-    "title": "crwdns1220:0%{extractor}crwdnd1220:0%{extractorLanguage}crwdne1220:0",
+    "title": "crwdns1220:0{extractor}crwdnd1220:0{extractorLanguage}crwdne1220:0",
     "meta": "crwdns1222:0crwdne1222:0",
     "none": "crwdns2318:0crwdne2318:0"
   },
@@ -530,10 +530,10 @@
   },
   "indexing": {
     "title": "crwdns910:0crwdne910:0",
-    "description": "crwdns912:0%{howToLink}crwdne912:0",
+    "description": "crwdns912:0{howToLink}crwdne912:0",
     "go": "crwdns2893:0crwdne2893:0",
     "tasks": "crwdns920:0crwdne920:0",
-    "empty": "crwdns2522:0%{howToLink}crwdne2522:0",
+    "empty": "crwdns2522:0{howToLink}crwdne2522:0",
     "extractText": "crwdns2618:0crwdne2618:0",
     "extractWithOcrLabel": "crwdns1882:0crwdne1882:0",
     "extractWithOcrHelp": "crwdns1884:0crwdne1884:0",
@@ -641,7 +641,7 @@
   "batchSearch": {
     "lead": "crwdns1006:0crwdne1006:0",
     "title": "crwdns1008:0crwdne1008:0",
-    "empty": "crwdns2524:0%{howToLink}crwdne2524:0",
+    "empty": "crwdns2524:0{howToLink}crwdne2524:0",
     "emptyWithFilter": "crwdns2572:0crwdne2572:0",
     "heading": "crwdns1234:0crwdne1234:0",
     "fileLabel": "crwdns1236:0crwdne1236:0",
@@ -685,7 +685,7 @@
     "advancedFilters": "crwdns1250:0crwdne1250:0",
     "selectFolder": "crwdns2060:0crwdne2060:0",
     "errorTitle": "crwdns2278:0crwdne2278:0",
-    "errorQuery": "crwdns2284:0%{query}crwdne2284:0",
+    "errorQuery": "crwdns2284:0{query}crwdne2284:0",
     "errorMessage": "crwdns2432:0crwdne2432:0",
     "unableToRetrieveFileTypes": "crwdns2677:0crwdne2677:0",
     "placeholder": "crwdns2336:0crwdne2336:0",
@@ -723,7 +723,7 @@
     "deleteAfterRelaunch": "crwdns2360:0crwdne2360:0",
     "backToResults": "crwdns2791:0crwdne2791:0",
     "empty": "crwdns1088:0crwdne1088:0",
-    "queriesFilter": "crwdns2793:0%{n}crwdne2793:0"
+    "queriesFilter": "crwdns2793:0{n}crwdne2793:0"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "crwdns2064:0crwdne2064:0",
@@ -876,7 +876,7 @@
     "warning": "crwdns2707:0crwdne2707:0",
     "inProgress": "crwdns2518:0crwdne2518:0",
     "errorMessage": "crwdns2709:0crwdne2709:0",
-    "errorTitle": "crwdns2717:0%{taskId}crwdne2717:0",
+    "errorTitle": "crwdns2717:0{taskId}crwdne2717:0",
     "relaunch": {
       "succeed": "crwdns2574:0crwdne2574:0",
       "succeedBody": "crwdns2576:0crwdne2576:0",
@@ -887,7 +887,7 @@
       "failed": "crwdns2586:0crwdne2586:0",
       "failedBody": "crwdns2715:0crwdne2715:0"
     },
-    "limitations": "crwdns2608:0%{maxNbFiles}crwdnd2608:0%{maxSize}crwdne2608:0"
+    "limitations": "crwdns2608:0{maxNbFiles}crwdnd2608:0{maxSize}crwdne2608:0"
   },
   "batchDownloadActions": {
     "relaunch": "crwdns2582:0crwdne2582:0",
@@ -932,7 +932,7 @@
       "title": "crwdns2948:0crwdne2948:0"
     },
     "barometer": {
-      "document": "crwdns2014:0%{total}crwdne2014:0",
+      "document": "crwdns2014:0{total}crwdne2014:0",
       "amongWhich": "crwdns2016:0crwdne2016:0",
       "onDisk": "crwdns2018:0crwdne2018:0"
     },
@@ -949,8 +949,8 @@
         "month": "crwdns2040:0crwdne2040:0",
         "day": "crwdns2042:0crwdne2042:0"
       },
-      "document": "crwdns2044:0%{total}crwdne2044:0",
-      "missing": "crwdns2174:0%{total}crwdne2174:0",
+      "document": "crwdns2044:0{total}crwdne2044:0",
+      "missing": "crwdns2174:0{total}crwdne2174:0",
       "missingTooltip": "crwdns2172:0crwdne2172:0"
     },
     "duplicates": {
@@ -1030,7 +1030,7 @@
     "installFromUrl": "crwdns2178:0crwdne2178:0"
   },
   "treeView": {
-    "hits": "crwdns2182:0%{hits}crwdne2182:0",
+    "hits": "crwdns2182:0{hits}crwdne2182:0",
     "docs": "crwdns2184:0crwdne2184:0",
     "datadir": "crwdns2258:0crwdne2258:0",
     "all": "crwdns2428:0crwdne2428:0",
@@ -1050,7 +1050,7 @@
     }
   },
   "projectCards": {
-    "documentsCount": "crwdns2883:0%{count}crwdne2883:0",
+    "documentsCount": "crwdns2883:0{count}crwdne2883:0",
     "about": "crwdns2885:0crwdne2885:0",
     "search": "crwdns2887:0crwdne2887:0"
   },
@@ -1058,7 +1058,7 @@
     "noMatches": "crwdns2968:0crwdne2968:0"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "crwdns2889:0%{count}crwdne2889:0",
+    "projectsCount": "crwdns2889:0{count}crwdne2889:0",
     "noMatches": "crwdns2970:0crwdne2970:0"
   }
 }
