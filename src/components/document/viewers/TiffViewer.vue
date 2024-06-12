@@ -14,10 +14,10 @@
         <div class="p-3">
           <div class="btn-group">
             <button class="btn btn-outline-primary" @click="rotateActivePage(active, -1)">
-              <fa icon="undo" class="float-end" />
+              <fa icon="arrow-rotate-left" class="float-end" />
             </button>
             <button class="btn btn-outline-primary" @click="rotateActivePage(active, 1)">
-              <fa icon="redo" class="float-end" />
+              <fa icon="arrow-rotate-right" class="float-end" />
             </button>
           </div>
         </div>
@@ -28,7 +28,7 @@
       {{ error }}
     </div>
     <div v-else class="tiff-viewer__loader alert">
-      <fa icon="cog" spin />
+      <fa icon="gear" spin />
       {{ $t('document.generatingPreview') }}
     </div>
   </div>

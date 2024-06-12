@@ -27,7 +27,7 @@
               </span>
               –
               <a class="fw-bold text-link" href="#" @click.prevent="createApiKey">
-                <fa icon="redo" />
+                <fa icon="arrow-rotate-right" />
                 {{ $t('api.key.regenerate') }}
               </a>
             </div>
@@ -37,7 +37,7 @@
                 :confirmed="deleteApiKey"
                 :description="$t('api.key.delete.description')"
               >
-                <fa icon="trash-alt" />
+                <fa icon="trash-can" />
                 {{ $t('api.key.delete.button') }}
               </confirm-button>
             </div>

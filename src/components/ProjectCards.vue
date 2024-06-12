@@ -33,7 +33,7 @@
               </p>
               <p class="mb-0">
                 <b-button variant="outline-primary" :to="{ name: 'search', query: { indices: project.name } }">
-                  <fa icon="search" fixed-width class="me-1" /> {{ $t('projectCards.search') }}
+                  <fa icon="magnifying-glass" fixed-width class="me-1" /> {{ $t('projectCards.search') }}
                 </b-button>
               </p>
             </div>

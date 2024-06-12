@@ -6,7 +6,7 @@
       class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm"
       @click="openFilterSearch"
     >
-      <fa icon="expand-alt" fixed-width />
+      <fa icon="up-right-and-down-left-from-center" fixed-width />
       {{ $t('filter.showMore') }}
     </button>
     <span class="mx-auto"></span>

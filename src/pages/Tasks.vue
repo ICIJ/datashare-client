@@ -16,7 +16,7 @@
         </b-tab>
         <b-tab v-if="!isServer" :active="defaultTab === 2">
           <template #title>
-            <fa icon="search-plus" fixed-width class="me-1" />
+            <fa icon="magnifying-glass-plus" fixed-width class="me-1" />
             {{ $t('indexing.title') }}
           </template>
         </b-tab>

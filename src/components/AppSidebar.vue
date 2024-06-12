@@ -21,7 +21,7 @@
             :title="$t('menu.search')"
             :to="{ name: 'search', query }"
           >
-            <fa icon="search" fixed-width></fa>
+            <fa icon="magnifying-glass" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.searchShort' : 'menu.search') }}
             </span>
@@ -74,7 +74,7 @@
             :title="$t('menu.settings')"
             :to="{ name: 'settings' }"
           >
-            <fa icon="cog" fixed-width></fa>
+            <fa icon="gear" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.settingsShort' : 'menu.settings') }}
             </span>
@@ -106,7 +106,7 @@
             target="_blank"
             :title="$t('menu.help')"
           >
-            <fa icon="ambulance" fixed-width></fa>
+            <fa icon="truck-medical" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.helpShort' : 'menu.help') }}
             </span>
@@ -195,7 +195,7 @@
             :title="$t('menu.logout')"
             @click.prevent="showModal"
           >
-            <fa icon="sign-out-alt" fixed-width></fa>
+            <fa icon="right-from-bracket" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.logoutShort') }}
             </span>
@@ -216,7 +216,7 @@
             :href="logoutLink"
             :title="$t('menu.logout')"
           >
-            <fa icon="sign-out-alt" fixed-width></fa>
+            <fa icon="right-from-bracket" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.logoutShort') }}
             </span>

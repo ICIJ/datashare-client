@@ -55,7 +55,7 @@
                   class="batch-search-results-filters__queries__dropdown__item__search"
                   @click.stop.prevent="searchQuery(item.label)"
                 >
-                  <fa icon="search" class="text-tertiary"></fa>
+                  <fa icon="magnifying-glass" class="text-tertiary"></fa>
                 </span>
               </div>
             </template>

@@ -10,7 +10,7 @@
             :disabled="!hasPendingTasks"
             @click="stopPendingTasks"
           >
-            <fa icon="hand-paper" class="me-1" />
+            <fa icon="hand" class="me-1" />
             {{ $t('indexing.stopPendingTasks') }}
           </b-button>
           <b-button
@@ -19,14 +19,14 @@
             :disabled="!hasDoneTasks"
             @click="deleteDoneTasks"
           >
-            <fa icon="trash-alt" class="me-1" />
+            <fa icon="trash-can" class="me-1" />
             {{ $t('indexing.deleteDoneTasks') }}
           </b-button>
         </b-button-group>
 
         <div class="ms-auto">
           <b-button v-b-modal:[extractingFormId] variant="primary" class="me-2 task-analysis-list__actions__extract">
-            <fa icon="search-plus" class="me-2" />
+            <fa icon="magnifying-glass-plus" class="me-2" />
             {{ $t('indexing.extractText') }}
           </b-button>
           <b-button
@@ -48,7 +48,7 @@
             size="md"
           >
             <template #header>
-              <fa icon="search-plus" class="me-1" />
+              <fa icon="magnifying-glass-plus" class="me-1" />
               {{ $t('indexing.extractText') }}
             </template>
             <extracting-form id="extracting-form" dark @submit="closeExtractingForm" />

@@ -126,7 +126,7 @@ export default {
       <button class="btn search-form-control__submit" type="submit">
         <template v-if="!noIcon">
           <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
-          <fa v-else icon="search" fixed-width></fa>
+          <fa v-else icon="magnifying-glass" fixed-width></fa>
         </template>
         <span :class="{ 'sr-only': !showSubmitLabel }">
           {{ submitLabel || $t('searchFormControl.submitLabel') }}

@@ -7,7 +7,7 @@
       :title="$t('search.layout.list')"
       @click="layout = 'list'"
     >
-      <fa icon="th-list" fa-fw></fa>
+      <fa icon="table-list" fa-fw></fa>
       <span class="sr-only">
         {{ $t('search.layout.list') }}
       </span>
@@ -19,7 +19,7 @@
       :title="$t('search.layout.grid')"
       @click="layout = 'grid'"
     >
-      <fa icon="th" fa-fw></fa>
+      <fa icon="table-cells" fa-fw></fa>
       <span class="sr-only">
         {{ $t('search.layout.grid') }}
       </span>

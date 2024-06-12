@@ -10,7 +10,7 @@
       :yes="$t('global.yes')"
       :title="$t('batchSearch.delete')"
     >
-      <fa icon="trash-alt" />
+      <fa icon="trash-can" />
       <span class="sr-only">
         {{ $t('batchSearch.delete') }}
       </span>
@@ -23,7 +23,7 @@
       :disabled="isRelaunched"
       @click="$refs['batch-search-copy-form'].show()"
     >
-      <fa icon="redo" class="me-1" />
+      <fa icon="arrow-rotate-right" class="me-1" />
       {{ $t('batchSearchResults.relaunch') }}
       <b-modal
         ref="batch-search-copy-form"

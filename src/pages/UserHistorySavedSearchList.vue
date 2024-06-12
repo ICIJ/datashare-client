@@ -47,7 +47,7 @@
                 :no="$t('global.no')"
                 :yes="$t('global.yes')"
               >
-                <fa icon="trash-alt" />
+                <fa icon="trash-can" />
                 {{ $t('userHistory.delete') }}
               </confirm-button>
             </div>

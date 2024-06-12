@@ -37,7 +37,7 @@
               class="task-batch-download-list__item__link task-batch-download-list__item__link--disabled"
               :title="$t('batchDownload.noFile')"
             >
-              <fa icon="times" fixed-width />
+              <fa icon="xmark" fixed-width />
               {{ properties.batchDownload.filename | basename }}
             </span>
             <batch-download-actions

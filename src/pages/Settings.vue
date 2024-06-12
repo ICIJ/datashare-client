@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-header icon="cog" :title="$t('server.title')" :description="$t('server.description')">
+    <page-header icon="gear" :title="$t('server.title')" :description="$t('server.description')">
       <template #tabs>
         <b-tab v-if="!isServer" :title="$t('serverSettings.title')" active>
           <server-settings class="card container mt-4" />

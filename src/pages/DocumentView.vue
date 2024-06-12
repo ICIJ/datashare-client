@@ -68,7 +68,7 @@
       </div>
     </div>
     <div v-else class="nodocument">
-      <fa icon="exclamation-triangle"></fa>
+      <fa icon="triangle-exclamation"></fa>
       <span>{{ $t('document.notFound') }}</span>
     </div>
   </v-wait>

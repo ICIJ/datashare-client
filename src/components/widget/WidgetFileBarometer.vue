@@ -5,7 +5,7 @@
         <fa icon="circle-notch" spin size="2x" class="m-3" />
       </template>
       <p :class="{ 'card-body': widget.card }">
-        <fa icon="hdd" class="widget__icon" size="2x" />
+        <fa icon="hard-drive" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
           {{ $tc('widget.barometer.document', total, { total: humanNumber(total, $tm('human.number')) }) }}
         </strong>

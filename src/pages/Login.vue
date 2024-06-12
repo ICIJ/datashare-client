@@ -19,7 +19,7 @@
           <li class="list-group-item">
             <p>{{ $t('login.supportDesk') }}</p>
             <a class="btn btn-outline-secondary btn-lg" :href="helpLink" target="_blank" :title="$t('login.askHelp')">
-              <fa icon="ambulance" class="me-2"></fa>
+              <fa icon="truck-medical" class="me-2"></fa>
               {{ $t('login.askHelp') }}
             </a>
           </li>

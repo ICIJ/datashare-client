@@ -55,7 +55,7 @@
         class="text-white py-0 px-2 px-2 py-0 document-navbar__share"
         size="sm"
       >
-        <fa icon="share-alt"></fa>
+        <fa icon="share-nodes"></fa>
       </b-button>
       <b-popover
         target="popover-document-share"

@@ -16,11 +16,11 @@
               :to="searchInPathRoute(path)"
               class="tree-view__header__search ms-2 btn-primary btn btn-sm rounded-pill"
             >
-              <fa icon="search"></fa>
+              <fa icon="magnifying-glass"></fa>
               {{ $t('treeView.searchPath') }}
             </router-link>
             <span v-if="size" class="tree-view__header__size ms-3">
-              <fa icon="weight"></fa>
+              <fa icon="weight-scale"></fa>
               {{ humanSize(total, false, $t('human.size')) }}
             </span>
             <span
@@ -86,7 +86,7 @@
                 :to="searchInPathRoute(directory.key)"
                 class="tree-view__directories__item__search ms-2 btn-primary btn btn-sm rounded-pill"
               >
-                <fa icon="search"></fa>
+                <fa icon="magnifying-glass"></fa>
                 <span>&nbsp;{{ $t('treeView.searchPath') }}</span>
               </router-link>
               <div

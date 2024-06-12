@@ -4,7 +4,7 @@
       <document-navbar :id="documentInModal.id" :index="documentInModal.index" :routing="documentInModal.routing">
         <template #back>
           <a role="button" class="small text-white" @click="hideModal">
-            <fa icon="chevron-circle-left"></fa>
+            <fa icon="circle-chevron-left"></fa>
             <span class="ms-2">
               {{ $t('batchSearchResults.backToResults') }}
             </span>

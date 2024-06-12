@@ -45,7 +45,7 @@
             </div>
             <div class="ms-auto document__content__details__item__label__search">
               <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name, value), indices } }">
-                <fa icon="search" />
+                <fa icon="magnifying-glass" />
               </router-link>
             </div>
           </div>
