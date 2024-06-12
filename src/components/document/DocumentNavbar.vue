@@ -73,9 +73,6 @@
           :link="documentLink"
         />
       </b-popover>
-      <b-tooltip target="popover-document-share" triggers="hover">
-        {{ $t('search.nav.share') }}
-      </b-tooltip>
       <document-actions
         :document="doc"
         :is-download-allowed="isDownloadAllowed(doc)"

@@ -16,66 +16,81 @@
         {{ $t('document.starButton') }}
       </span>
     </a>
-    <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
+    <b-tooltip :target="starBtnId" :placement="tooltipsPlacement" teleport-to="body">
       {{ $t('document.starFile') }}
     </b-tooltip>
 
-    <template v-if="canIDownload">
-      <span :id="downloadBtnWrapperId">
-        <b-button-group :class="downloadBtnGroupClass">
-          <b-button
-            :id="downloadBtnId"
-            class="document-actions__download btn"
-            :class="downloadBtnClass"
-            :disabled="isRootTooBig"
-            :href="document.fullUrl"
-            target="_blank"
-            variant="transparent"
-          >
-            <fa icon="download" fixed-width />
-            <span class="ms-1" :class="{ 'sr-only': !downloadBtnLabel }">
-              {{ $t('document.downloadButton') }}
-            </span>
-          </b-button>
-          <b-tooltip v-if="isRootTooBig" :target="downloadBtnWrapperId" triggers="hover">
-            {{ $t('document.downloadMaxRootSizeAlert', { humanMaxRootSize }) }}
-          </b-tooltip>
-          <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
-            <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
+    <template v-if="canIDownload && displayDownloadOptions">
+      <b-button-group>
+        <b-button
+          :id="downloadBtnId"
+          class="document-actions__download btn"
+          :class="downloadBtnClass"
+          :disabled="isRootTooBig"
+          :href="document.fullUrl"
+          target="_blank"
+          variant="transparent"
+        >
+          <fa icon="download" fixed-width />
+          <span class="ms-1" :class="{ 'sr-only': !downloadBtnLabel }">
+            {{ $t('document.downloadButton') }}
+          </span>
+        </b-button>
+        <b-tooltip v-if="isRootTooBig" :target="downloadBtnId" triggers="hover">
+          {{ $t('document.downloadMaxRootSizeAlert', { humanMaxRootSize }) }}
+        </b-tooltip>
+        <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
+          <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
+            <fa icon="download" class="me-1 text-secondary" fixed-width />
+            {{ $t('document.downloadWithoutMetadata') }}
+          </b-dropdown-item>
+          <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
+            <fa icon="download" class="me-1 text-secondary" fixed-width />
+            {{ $t('document.downloadExtractedText') }}
+          </b-dropdown-item>
+          <template v-if="hasRoot">
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
               <fa icon="download" class="me-1 text-secondary" fixed-width />
-              {{ $t('document.downloadWithoutMetadata') }}
+              {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
-            <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
+            <b-dropdown-item
+              v-if="hasRootCleanableContentType"
+              :href="rootDocumentFullUrlWithoutMetadata"
+              class="document-actions__download--parent-without-metadata"
+            >
               <fa icon="download" class="me-1 text-secondary" fixed-width />
-              {{ $t('document.downloadExtractedText') }}
+              {{ $t('document.downloadRootWithoutMetadataButton') }}
             </b-dropdown-item>
-            <template v-if="hasRoot">
-              <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
-                <fa icon="download" class="me-1 text-secondary" fixed-width />
-                {{ $t('document.downloadRootButton') }}
-              </b-dropdown-item>
-              <b-dropdown-item
-                v-if="hasRootCleanableContentType"
-                :href="rootDocumentFullUrlWithoutMetadata"
-                class="document-actions__download--parent-without-metadata"
-              >
-                <fa icon="download" class="me-1 text-secondary" fixed-width />
-                {{ $t('document.downloadRootWithoutMetadataButton') }}
-              </b-dropdown-item>
-            </template>
-          </b-dropdown>
-        </b-button-group>
-      </span>
-      <b-popover
-        :placement="tooltipsPlacement"
-        :target="downloadBtnId"
-        :title="document.contentTypeLabel"
-        triggers="hover focus"
-      >
-        <document-type-card :document="document" />
-      </b-popover>
+          </template>
+        </b-dropdown>
+      </b-button-group>
     </template>
+    <template v-else-if="canIDownload">
+      <b-button
+        :id="downloadBtnId"
+        class="document-actions__download btn"
+        :class="downloadBtnClass"
+        :disabled="isRootTooBig"
+        :href="document.fullUrl"
+        target="_blank"
+        variant="transparent"
+      >
+        <fa icon="download" fixed-width />
+        <span class="ms-1" :class="{ 'sr-only': !downloadBtnLabel }">
+          {{ $t('document.downloadButton') }}
+        </span>
+      </b-button>
+    </template>
+    <b-popover
+      :placement="tooltipsPlacement"
+      :target="downloadBtnId"
+      :title="document.contentTypeLabel"
+      triggers="hover focus"
+      teleport-to="body"
+    >
+      <document-type-card :document="document" />
+    </b-popover>
     <router-link-popup
       :id="popupBtnId"
       class="document-actions__popup btn"
@@ -86,10 +101,10 @@
       <span class="ms-2" :class="{ 'sr-only': !popupBtnLabel }">
         {{ $t('document.externalWindow') }}
       </span>
+      <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement" teleport-to="body">
+        {{ $t('document.externalWindow') }}
+      </b-tooltip>
     </router-link-popup>
-    <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">
-      {{ $t('document.externalWindow') }}
-    </b-tooltip>
   </component>
 </template>
 
@@ -98,7 +113,6 @@ import { findIndex, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
-import { EventBus } from '@/utils/event-bus'
 import byteSize from '@/filters/byteSize'
 import humanSize from '@/filters/humanSize'
 import DocumentTypeCard from '@/components/DocumentTypeCard'
@@ -128,8 +142,8 @@ export default {
       type: Boolean
     },
     /**
-     * Tooltip's placement on each action
-     * @values auto, top, bottom, left, right, topleft, topright, bottomleft, bottomright, lefttop, leftbottom, righttop, rightbottom
+     * Tooltip's placement on each action using Floating UI: https://floating-ui.com/docs/tutorial#placements
+     * @values 'auto', 'auto-start', 'auto-end', 'top', 'right', 'bottom', 'left', 'top-start', 'right-start', 'bottom-start', 'left-start', 'top-end', 'right-end', 'bottom-end', 'left-end'
      */
     tooltipsPlacement: {
       type: String,
@@ -231,9 +245,6 @@ export default {
     downloadBtnId() {
       return uniqueId('document-actions-download-button-')
     },
-    downloadBtnWrapperId() {
-      return uniqueId('document-actions-download-button-wrapper-')
-    },
     popupBtnId() {
       return uniqueId('document-actions-popup-button-')
     },
@@ -295,8 +306,8 @@ export default {
       } catch (_) {
         this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
       }
-      EventBus.emit('bv::hide::tooltip')
-      EventBus.emit('filter::starred::refresh')
+      this.$core.emit('bv::hide::tooltip')
+      this.$core.emit('filter::starred::refresh')
     }
   }
 }
