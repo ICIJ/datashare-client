@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="document-navbar px-3 py-2 bg-dark text-white text-nowrap"
-    :class="{ 'document-navbar--shrinked': isShrinked }"
-  >
+  <div class="document-navbar px-3 py-2 text-nowrap" :class="{ 'document-navbar--shrinked': isShrinked }">
     <slot name="back" />
     <slot name="title">
       <transition name="slide-x">
@@ -167,6 +164,8 @@ export default {
   align-items: center;
   display: flex;
   margin: 0;
+  color: #fff;
+  background: darken($primary, 10%);
 
   @media (max-width: $document-float-breakpoint-width) {
     border-radius: 0;
