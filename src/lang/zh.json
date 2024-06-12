@@ -72,9 +72,8 @@
     "results": {
       "match": "match in doc",
       "entities": "nb entities",
-      "results": "1 document | {total} documents",
+      "results": "on 1 document | on {total} documents",
       "noResults": "No documents found",
-      "on": "on",
       "perPage": "per page",
       "sortedByPath": "sorted by path",
       "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",

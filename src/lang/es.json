@@ -72,9 +72,8 @@
     "results": {
       "match": "coincidir en doc",
       "entities": "nb entidades",
-      "results": "1 archivo | {total} archivos",
+      "results": "sobre 1 archivo | sobre {total} archivos",
       "noResults": "No se han encontrado documentos",
-      "on": "sobre",
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
       "batchDownloadNotAllowed": "No se pueden hacer búsquedas masivas en múltiples proyectos.",

@@ -72,9 +72,8 @@
     "results": {
       "match": "文書内での一致",
       "entities": "固有表現の数",
-      "results": "1 document | {total} documents",
+      "results": "を表示。総数は 1 document |を表示。総数は {total} documents",
       "noResults": "文書が見つかりません",
-      "on": "を表示。総数は",
       "perPage": "ページごと",
       "sortedByPath": "sorted by path",
       "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",
