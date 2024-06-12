@@ -108,9 +108,8 @@
       "browser": true,
       "es2022": true
     },
+    "plugins": ["vitest", "vitest-globals"],
     "extends": [
-      "plugin:vitest/recommended",
-      "plugin:vitest-globals/recommended",
       "@icij/eslint-config-icij"
     ],
     "rules": {
