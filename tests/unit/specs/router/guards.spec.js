@@ -9,7 +9,6 @@ describe('guards', () => {
   const { router, plugins, config } = CoreSetup.init().useAll().useRouter()
 
   describe('checkUserAuthentication', () => {
-
     beforeEach(async () => {
       config.set('mode', 'SERVER')
       config.set('projects', ['local-datashare'])

@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { EventBus } from '@/utils/event-bus'
 import settings from '@/utils/settings'
 
 /**

@@ -39,7 +39,6 @@
 import sortBy from 'lodash/sortBy'
 import { mapState } from 'vuex'
 
-import { EventBus } from '@/utils/event-bus'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import UserDisplay from '@/components/UserDisplay'
