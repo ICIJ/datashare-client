@@ -1,9 +1,8 @@
-import { mount, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount, shallowMount } from '@vue/test-utils'
 import { beforeEach } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { flushPromises } from '~tests/unit/tests_utils'
 import BatchSearchForm from '@/components/BatchSearchForm'
 import CoreSetup from '~tests/unit/CoreSetup'
 
@@ -245,6 +244,7 @@ describe('BatchSearchForm.vue', () => {
       })
 
       wrapper.vm.searchFileTypes()
+      await flushPromises()
 
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(1)
       expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Label PDF')
@@ -253,10 +253,11 @@ describe('BatchSearchForm.vue', () => {
     it('should hide already selected file type from suggestions', async () => {
       await wrapper.setData({
         fileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }],
-        fileType: 'PDF'
+        fileType: 'application/pdf'
       })
 
       wrapper.vm.searchFileTypes()
+      await flushPromises()
 
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(0)
     })
