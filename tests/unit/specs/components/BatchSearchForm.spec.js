@@ -1,18 +1,9 @@
 import { flushPromises, mount, shallowMount } from '@vue/test-utils'
-import { beforeEach } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import BatchSearchForm from '@/components/BatchSearchForm'
 import CoreSetup from '~tests/unit/CoreSetup'
-
-vi.mock('lodash', async (importOriginal) => {
-  const { default: actual } = await importOriginal()
-  return {
-    ...actual,
-    throttle: vi.fn((fn) => fn)
-  }
-})
 
 describe('BatchSearchForm.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
