@@ -1,6 +1,5 @@
 <script>
 import { get } from 'lodash'
-import { h } from 'vue'
 
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 
@@ -30,14 +29,10 @@ export default {
       }
     },
     notifyCreationSucceed() {
-      const title = this.$t('projectViewFindNamedEntities.notify.succeed')
-      const message = this.$t('projectViewFindNamedEntities.notify.succeedBody')
-      const linkText = this.$t('projectViewFindNamedEntities.notify.seeTasks')
-      const body = h('div', {}, [
-        h('p', {}, message),
-        h('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
-      ])
-      this.$toast.success(body, { title })
+      const body = this.$t('projectViewFindNamedEntities.notify.succeed')
+      const linkLabel = this.$t('projectViewFindNamedEntities.notify.seeTasks')
+      const { href } = this.$router.resolve({ name: 'task.analysis.list' })
+      this.$toast.success(body, { href, linkLabel })
     },
     notifyCreationFailed(error) {
       const title = this.$t('projectViewFindNamedEntities.notify.failed')

@@ -22,14 +22,10 @@ export default {
   },
   methods: {
     notifyCreationSucceed() {
-      const title = this.$t('projectViewAddDocuments.notify.succeed')
-      const message = this.$t('projectViewAddDocuments.notify.succeedBody')
-      const linkText = this.$t('projectViewAddDocuments.notify.seeTasks')
-      const body = h('div', {}, [
-        h('p', {}, message),
-        h('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
-      ])
-      this.$toast.success(body, { title })
+      const body = this.$t('projectViewAddDocuments.notify.succeed')
+      const linkLabel = this.$t('projectViewAddDocuments.notify.seeTasks')
+      const { href } = this.$router.resolve({ name: 'task.analysis.list' })
+      this.$toast.success(body, { href, linkLabel })
     },
     notifyCreationFailed(error) {
       const title = this.$t('projectViewAddDocuments.notify.failed')
