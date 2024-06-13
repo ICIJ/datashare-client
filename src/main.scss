@@ -1,12 +1,14 @@
 @import './utils/settings.scss';
 @import './utils/animations.scss';
-@import './utils/_multiselect.scss';
+@import './utils/multiselect.scss';
+@import './utils/toastify.scss';
 @import './assets/fonts/Lato/stylesheet.css';
 @import './assets/fonts/Medel/stylesheet.css';
 
 @import '~node_modules/vue3-perfect-scrollbar/dist/style.css';
 @import '~node_modules/v-calendar/dist/style.css';
 @import '~node_modules/bootstrap/scss/bootstrap';
+@import '~node_modules/vue3-toastify/dist/index.css';
 // BootstrapVue and its default variables
 @import '~node_modules/bootstrap-vue-next/dist/bootstrap-vue-next.css';
 // @TODO bundle Murmur so the import is easier
