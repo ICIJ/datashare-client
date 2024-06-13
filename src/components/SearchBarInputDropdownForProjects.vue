@@ -16,11 +16,10 @@
     @hidden="$emit('hidden', $event)"
     @changed="$emit('changed', $event)"
   >
-    <template #above="{ dropdown }">
-      <li class="search-bar-input-dropdown-for-projects__query-input">
+    <template #above="{ visible }">
+      <li class="search-bar-input-dropdown-for-projects__query-input" v-if="visible">
         <div class="b-dropdown-form px-2 pt-1 pb-2">
           <search-form-control
-            v-if="dropdown && dropdown.visible"
             v-model="query"
             placeholder="Filter projects..."
             :rounded="false"

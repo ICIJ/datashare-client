@@ -1,6 +1,7 @@
 <template>
   <b-dropdown
     ref="dropdown"
+    v-model="visible"
     :class="{
       'search-bar__field--selected': modelValue !== 'all',
       'search-bar__field--disabled': disabled
@@ -24,7 +25,7 @@
       </slot>
     </template>
     <!-- @slot Area to insert content above the dropdown -->
-    <slot name="above" :dropdown="dropdown"></slot>
+    <slot name="above" :dropdown="dropdown" :visible="visible"></slot>
     <b-dropdown-item
       v-for="(option, index) in options"
       :key="index"
@@ -41,7 +42,7 @@
     </b-dropdown-item>
 
     <!-- @slot Area to insert content bellow the dropdown -->
-    <slot name="bellow" :dropdown="dropdown"></slot>
+    <slot name="bellow" :dropdown="dropdown" :visible="visible"></slot>
   </b-dropdown>
 </template>
 
@@ -104,6 +105,7 @@ export default {
   emits: ['hide', 'changed', 'selected', 'update:modelValue'],
   data() {
     return {
+      visible: false,
       // A reactive property to hold the reference to the dropdown
       // after the component is mounted
       dropdown: null,
