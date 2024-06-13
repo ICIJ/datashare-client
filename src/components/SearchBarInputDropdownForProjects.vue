@@ -17,7 +17,7 @@
     @changed="$emit('changed', $event)"
   >
     <template #above="{ visible }">
-      <li class="search-bar-input-dropdown-for-projects__query-input" v-if="visible">
+      <li v-if="visible" class="search-bar-input-dropdown-for-projects__query-input">
         <div class="b-dropdown-form px-2 pt-1 pb-2">
           <search-form-control
             v-model="query"
