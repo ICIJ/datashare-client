@@ -7,7 +7,7 @@ import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import VueEllipseProgress from 'vue-ellipse-progress'
-import { createBootstrap } from 'bootstrap-vue-next'
+import { createBootstrap, useToast } from 'bootstrap-vue-next'
 import { createVueWait } from 'vue-wait'
 import { createApp, defineComponent } from 'vue'
 import { createI18n } from 'vue-i18n'
@@ -116,15 +116,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useBootstrapVue() {
-    this._bootstrapVue = createBootstrap({
-      components: true,
-      BPopover: {
-        boundaryPadding: 14
-      },
-      BTooltip: {
-        boundaryPadding: 0
-      }
-    })
+    this._bootstrapVue = createBootstrap({ components: true, directives: true })
     this.use(this.bootstrapVue)
     return this
   }
