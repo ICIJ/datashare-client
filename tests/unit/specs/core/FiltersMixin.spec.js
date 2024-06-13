@@ -1,6 +1,6 @@
 import { Core } from '@/core'
 
-describe('HooksMixin', () => {
+describe('FiltersMixin', () => {
   let api, core
 
   beforeEach(() => {
