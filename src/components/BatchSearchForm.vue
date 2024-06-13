@@ -121,10 +121,7 @@
                 @click="searchFileType"
               >
                 <template #item-label="{ item }">
-                  <div :id="item.mime">
-                    {{ item.label }}
-                  </div>
-                  <b-tooltip :target="item.mime" :title="item.label" placement="end"></b-tooltip>
+                  {{ item.label }}
                 </template>
               </selectable-dropdown>
               <b-badge
@@ -234,7 +231,6 @@ import {
   compact,
   concat,
   cloneDeep,
-  each,
   filter,
   find,
   flatten,
@@ -395,12 +391,14 @@ export default {
       }
       return new Fuse(this.allTags, options)
     },
+    mimeTypes() {
+      return this.fileTypes.map((filetype) => filetype.mime)
+    },
     filters() {
+      const forceExclude = this.excludeTags
       return [
-        new FilterText({ name: 'tags', key: 'tags', forceExclude: this.excludeTags }).setValues(this.tags),
-        new FilterText({ name: 'contentType', key: 'contentType', forceExclude: this.excludeTags }).setValues(
-          this.fileTypes.map((filetype) => filetype.mime)
-        ),
+        new FilterText({ name: 'tags', key: 'tags', forceExclude }).setValues(this.tags),
+        new FilterText({ name: 'contentType', key: 'contentType', forceExclude }).setValues(this.mimeTypes),
         new FilterPath({ name: 'path', key: 'byDirname', forceExclude: false }).setValues(this.paths)
       ]
     },
@@ -463,14 +461,10 @@ export default {
     },
     async aggregateFileTypes() {
       const aggTypes = await this.aggregate('contentType', 'contentType')
-      each(aggTypes, (aggType) => {
-        const extensions = has(types, aggType) ? types[aggType].extensions : []
-        const label = has(types, aggType) ? types[aggType].label : aggType
-        this.allFileTypes.push({
-          extensions,
-          label,
-          mime: aggType
-        })
+      aggTypes.forEach((mime) => {
+        const extensions = has(types, mime) ? types[mime].extensions : []
+        const label = has(types, mime) ? types[mime].label : mime
+        this.allFileTypes.push({ extensions, label, mime })
       })
     },
     async loadAndRetrieve(callback, noSelection, waiter, failMessageKey) {
