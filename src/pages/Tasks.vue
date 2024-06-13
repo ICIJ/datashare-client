@@ -58,7 +58,7 @@ export default {
   },
   data() {
     return {
-      defaultTab: 0
+      defaultTab: -1
     }
   },
   computed: {

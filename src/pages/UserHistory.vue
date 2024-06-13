@@ -89,7 +89,7 @@ export default {
       events: [],
       totalEvents: 0,
       page: 1,
-      defaultTab: 0,
+      defaultTab: -1,
       defaultType: 'document'
     }
   },
