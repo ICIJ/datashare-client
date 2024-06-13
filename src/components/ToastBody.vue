@@ -49,7 +49,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
       <p class="toast-body__content__body m-0">{{ body }}</p>
     </div>
     <div v-if="hasLink" class="toast-body__link pe-3">
-      <a :href="href" class="btn btn-sm" :class="linkClassList" @click.passive="closeToast">
+      <a :href="href" class="btn btn-sm text-nowrap" :class="linkClassList" @click.passive="closeToast">
         {{ linkLabelDisplay }}
       </a>
     </div>
