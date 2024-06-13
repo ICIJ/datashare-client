@@ -186,7 +186,7 @@
                   v-model="tag"
                   :disabled="isLoading('load all tags')"
                   autocomplete="off"
-                  @input="searchTags"
+                  @update:modelValue="searchTags"
                   @keydown.enter.prevent="searchTags"
                 ></b-form-input>
               </b-overlay>
@@ -240,13 +240,11 @@ import {
   flatten,
   get,
   has,
-  includes,
   isEmpty,
   iteratee,
   map,
   range,
   startCase,
-  throttle,
   uniq
 } from 'lodash'
 import bodybuilder from 'bodybuilder'
@@ -441,12 +439,14 @@ export default {
     selectFileType(fileType = null) {
       this.selectedFileType = fileType || this.selectedFileType
     },
-    searchFileTypes: throttle(function () {
-      const fileTypes = this.fuseFileTypes.search(this.fileType).map(({ item }) => item)
-      this.suggestionFileTypes = filter(fileTypes, (item) => {
-        return !includes(map(this.fileTypes, 'mime'), item.mime)
-      })
-    }, 200),
+    searchFileTypes() {
+      // Search for file types based on the current fileType using Fuse.js
+      const searchResults = this.fuseFileTypes.search(this.fileType).map(({ item }) => item)
+      // Create a Set for efficient lookups to check if a mime type is already in this.fileTypes
+      const existingMimeTypes = new Set(this.fileTypes.map((file) => file.mime))
+      // Filter the search results to get only those items whose mime type is not already in existingMimeTypes
+      this.suggestionFileTypes = searchResults.filter(({ mime }) => !existingMimeTypes.has(mime))
+    },
     searchFileType() {
       if (this.selectedFileType) {
         this.fileTypes.push(this.selectedFileType)
@@ -496,12 +496,14 @@ export default {
     selectTag(tag = null) {
       this.selectedTag = tag || this.selectedTag
     },
-    searchTags: throttle(function () {
-      const tags = this.fuseTags.search(this.tag).map(({ item }) => item)
-      this.suggestionTags = filter(tags, (item) => {
-        return !includes(this.tags, item)
-      })
-    }, 200),
+    searchTags() {
+      // Search for tags based on the current tag using Fuse.js and extract the items
+      const searchResults = this.fuseTags.search(this.tag).map(({ item }) => item)
+      // Convert this.tags array into a Set for faster lookups
+      const existingTagsSet = new Set(this.tags)
+      // Filter search results to include only those tags not already present in the existingTagsSet
+      this.suggestionTags = searchResults.filter((tag) => !existingTagsSet.has(tag))
+    },
     searchTag() {
       if (this.selectedTag) {
         this.tags.push(this.selectedTag)
