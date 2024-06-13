@@ -76,9 +76,8 @@ export default {
     },
     notifyRelaunchSucceed() {
       const title = this.$t('batchDownload.relaunch.succeed')
-      const variant = 'success'
       const body = this.$t('batchDownload.relaunch.succeedBody')
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.success(body, { title })
       /**
        * The batch download was relaunched successfully
        *
@@ -88,9 +87,8 @@ export default {
     },
     notifyRelaunchFailed(error) {
       const title = this.$t('batchDownload.relaunch.failed')
-      const variant = 'danger'
       const body = this.$t('batchDownload.relaunch.failedBody')
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.error(body, { title })
       /**
        * The batch download couldn't be relaunched
        *
@@ -108,9 +106,8 @@ export default {
     },
     notifyDeleteFailed(error) {
       const title = this.$t('batchDownload.delete.failed')
-      const variant = 'danger'
       const body = this.$t('batchDownload.delete.failedBody')
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.error(body, { title })
       /**
        * The batch download couldn't be deleted
        *

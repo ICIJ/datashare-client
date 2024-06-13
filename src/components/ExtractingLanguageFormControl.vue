@@ -46,10 +46,7 @@ export default {
       try {
         this.textLanguages = await this.$core.api.textLanguages()
       } catch (e) {
-        this.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
-          noCloseButton: true,
-          variant: 'danger'
-        })
+        this.$toast.error(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'))
       }
       this.$wait.end(this.waitIdentifier)
     }

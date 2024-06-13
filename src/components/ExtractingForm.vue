@@ -210,10 +210,7 @@ export default {
         this.hasTesseract = e.response.status !== 503
 
         if (this.hasTesseract) {
-          this.$bvToast.toast(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'), {
-            noCloseButton: true,
-            variant: 'danger'
-          })
+          this.$toast.error(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'))
         }
       }
       this.$wait.end(this.waitOcrIdentifier)

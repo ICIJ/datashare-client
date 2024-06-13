@@ -305,7 +305,7 @@ export default {
       try {
         await this.$store.dispatch('starred/toggleStarDocument', this.document)
       } catch (_) {
-        this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('document.starringError'))
       }
       this.$core.emit('bv::hide::tooltip')
       this.$core.emit('filter::starred::refresh')

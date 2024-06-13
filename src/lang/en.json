@@ -611,7 +611,7 @@
     "supportDesk": "If you need any help, please visit our support desk:",
     "askHelp": "Ask for help",
     "logout": "You have been logged out from Datashare.",
-    "login": "Login to continue"
+    "login": "Login"
   },
   "userHistory": {
     "heading": "Your history",
@@ -879,7 +879,7 @@
     "noFile": "The archive has expired.",
     "created": "Your download is being prepared",
     "warning": "This feature is currently being developed by the Datashare team.",
-    "inProgress": "See all pending downloads",
+    "seeAll": "See all",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
     "errorTitle": "Batch download task <code class=\"fw-bold\">{taskId}</code> is in error.",
     "relaunch": {

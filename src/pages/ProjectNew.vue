@@ -34,15 +34,13 @@ export default {
     },
     notifyCreationSucceed() {
       const title = this.$t('projectNew.notify.succeed')
-      const variant = 'success'
       const body = this.$t('projectNew.notify.succeedBody')
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.success(body, { title })
     },
     notifyCreationFailed(error) {
       const title = this.$t('projectNew.notify.failed')
-      const variant = 'danger'
       const body = get(error, 'response.data.error') ?? this.$t('projectNew.notify.failedBody')
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.danger(body, { title })
     },
     redirectToProject({ name }) {
       const params = { name }

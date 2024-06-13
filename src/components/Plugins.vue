@@ -181,9 +181,9 @@ export default {
       try {
         await this.$core.api.installPluginFromId(pluginId)
         plugin.installed = true
-        this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('plugins.submitSuccess'))
       } catch (_) {
-        this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('plugins.submitError'))
       }
       plugin.loading = false
     },
@@ -192,9 +192,9 @@ export default {
       try {
         await this.$core.api.installPluginFromUrl(this.url)
         await this.search()
-        this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('plugins.submitSuccess'))
       } catch (_) {
-        this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('plugins.submitError'))
       }
       this.$refs.installPluginFromUrl.hide()
       this.isInstallingFromUrl = false
@@ -206,9 +206,9 @@ export default {
       try {
         await this.$core.api.uninstallPlugin(pluginId)
         plugin.installed = false
-        this.$bvToast.toast(this.$t('plugins.deleteSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('plugins.deleteSuccess'))
       } catch (_) {
-        this.$bvToast.toast(this.$t('plugins.deleteError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('plugins.deleteError'))
       }
       plugin.loading = false
     }

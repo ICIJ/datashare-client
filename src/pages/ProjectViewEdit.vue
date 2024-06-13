@@ -67,16 +67,12 @@ export default {
       }
     },
     notifySucceed(operation) {
-      const title = this.$t(`projectViewEdit.notify.${operation}.succeed`)
-      const variant = 'success'
       const body = this.$t(`projectViewEdit.notify.${operation}.succeedBody`)
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.success(body)
     },
     notifyFailed(error, operation) {
-      const title = this.$t(`projectViewEdit.notify.${operation}.failed`)
-      const variant = 'danger'
       const body = get(error, 'response.data.error') ?? this.$t(`projectViewEdit.notify.${operation}.failedBody`)
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.error(body)
     },
     redirectToProject({ name }) {
       const params = { name }
