@@ -155,7 +155,7 @@
             </b-button>
             <teleport to="body">
               <b-popover
-                placement="end"
+                placement="right"
                 target="app-menu-user-guide"
                 custom-class="popover-body-p-0"
                 click
