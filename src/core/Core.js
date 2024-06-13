@@ -181,7 +181,7 @@ class Core extends Behaviors {
   /**
    * Build a VueCore instance with the current Core instance
    * as parameter of the global properties.
-   * @returns {{install(*): void, new(): VueCore, prototype: VueCore}}
+   * @returns {VueCore}
    */
   buildCorePlugin() {
     const core = this
@@ -340,28 +340,25 @@ class Core extends Behaviors {
    * Register a callback to an event using the EventBus singleton.
    * @param {String} event
    * @param {*} callback
-   * @returns
    */
   on(event, callback) {
-    return EventBus.on(event, callback)
+    EventBus.on(event, callback)
   }
   /**
    * Unregister a callback to an event using the EventBus singleton.
    * @param {String} event
    * @param {*} callback
-   * @returns
    */
   off(event, callback) {
-    return EventBus.off(event, callback)
+    EventBus.off(event, callback)
   }
   /**
    * Emit an event using the EventBus singleton.
    * @param {String} event
    * @param {*} payload
-   * @returns
    */
   emit(event, payload) {
-    return EventBus.emit(event, payload)
+    EventBus.emit(event, payload)
   }
   /**
    * Get a promise that is resolved when the application is ready
