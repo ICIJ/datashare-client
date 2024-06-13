@@ -1,0 +1,75 @@
+:root {
+  --toastify-color-light: #fff;
+  --toastify-color-dark: #212529;
+  --toastify-color-info:  var(--#{$prefix}info);
+  --toastify-color-success:  var(--#{$prefix}success);
+  --toastify-color-warning:  var(--#{$prefix}warning);
+  --toastify-color-error: var(--#{$prefix}danger);
+  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+
+  --toastify-icon-color-info: var(--toastify-color-info);
+  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-warning: var(--toastify-color-warning);
+  --toastify-icon-color-error: var(--toastify-color-error);
+
+  --toastify-toast-width: 400px;
+  --toastify-toast-background: #fff;
+  --toastify-toast-min-height: 1.5rem;
+  --toastify-toast-max-height: 800px;
+  --toastify-font-family: inherit;
+  --toastify-z-index: #{$zindex-toast};
+
+  --toastify-text-color-light: var(--toastify-color-dark);
+  --toastify-text-color-dark: var(--toastify-color-dark);
+
+  //Used only for colored theme
+  --toastify-text-color-info: #fff;
+  --toastify-text-color-success: #fff;
+  --toastify-text-color-warning: #fff;
+  --toastify-text-color-error: #fff;
+
+  --toastify-spinner-color: #616161;
+  --toastify-spinner-color-empty-area: #e0e0e0;
+
+  // Used when no type is provided
+  // toast("**hello**")
+  --toastify-color-progress-light: var(--#{$prefix}secondary);
+  // Used when no type is provided
+  --toastify-color-progress-dark: var(--toastify-color-progress-light);
+  --toastify-color-progress-info: var(--toastify-color-info);
+  --toastify-color-progress-success: var(--toastify-color-success);
+  --toastify-color-progress-warning: var(--toastify-color-warning);
+  --toastify-color-progress-error: var(--toastify-color-error);
+
+  .Toastify {
+    &__toast {
+      padding: $spacer-xs $spacer;
+      border-radius: var(--#{$prefix}border-radius-lg);
+      box-shadow: var(--#{$prefix}box-shadow);
+      cursor: auto;
+
+      &--info {
+        background: var(--#{$prefix}info-bg-subtle);
+      }
+
+      &--success {
+        background: var(--#{$prefix}success-bg-subtle);
+      }
+
+      &--error {
+        background: var(--#{$prefix}danger-bg-subtle);
+      }
+
+      &--warning {
+        background: var(--#{$prefix}warning-bg-subtle);
+      }
+    }
+
+    &__close-button {
+      line-height: 1;
+      align-self: center;
+      color: #6F6F6F;
+      opacity: 1;
+    }
+  }
+}
