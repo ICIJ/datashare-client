@@ -70,11 +70,10 @@ export default {
           await this.$core.api.addUserHistoryEvent(this.indices, 'SEARCH', this.name, await this.getUriFromStore())
         }
         const { href } = this.$router.resolve({ name: 'user-history.saved-search.list' })
-        const toastParams = { href, noCloseButton: true, variant: 'success' }
-        this.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
+        const toastParams = { href }
+        this.$toast.success(this.$t('userHistory.submitSuccess'), toastParams)
       } catch (_) {
-        const toastParams = { noCloseButton: true, variant: 'danger' }
-        this.$bvToast.toast(this.$t('userHistory.submitError'), toastParams)
+        this.$toast.error(this.$t('userHistory.submitError'))
       } finally {
         this.$emit('submit')
       }

@@ -57,13 +57,13 @@ export default {
       try {
         const { uuid: batchId } = this.batchSearch
         await this.$core.api.copyBatchSearch(batchId, this.name, this.description)
-        this.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('batchSearch.submitSuccess'))
         if (this.deleteAfterRelaunch) {
           await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
         }
         this.$router.push({ name: 'task.batch-search.list' })
       } catch (_) {
-        this.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('batchSearch.submitError'))
       }
     }
   }

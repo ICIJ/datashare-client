@@ -13,16 +13,6 @@
         <router-view></router-view>
       </div>
     </div>
-    <b-toast id="logged-out-toast" variant="danger" no-close-button no-auto-hide>
-      <p>
-        {{ $t('login.logout') }}
-      </p>
-      <div class="d-flex">
-        <b-button :href="signinUrl" variant="danger" class="ms-auto">
-          {{ $t('login.login') }}
-        </b-button>
-      </div>
-    </b-toast>
     <hook name="app:after" />
   </div>
 </template>
@@ -78,7 +68,10 @@ export default {
     handleHttpError(err) {
       const code = get(err, 'request.response.status') || get(err, 'response.status')
       if (code === 401) {
-        this.$bvToast.show('logged-out-toast')
+        const body = this.$t('login.logout')
+        const linkLabel = this.$t('login.login')
+        const href = this.signinUrl
+        this.$toast.error(body, { href, linkLabel, autoClose: false })
       }
     }
   }

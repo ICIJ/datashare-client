@@ -248,19 +248,19 @@ export default {
       switch (actionId) {
         case 'selectAll':
           this.$refs.selectableTable.selectAllRows()
-          this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
+          this.$toast.success(this.$t('document.selected'))
           break
         case 'unselectAll':
           this.$refs.selectableTable.clearSelected()
-          this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
+          this.$toast.success(this.$t('document.unselected'))
           break
         case 'star':
           await this.$store.dispatch('starred/starDocuments', this.selected)
-          this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
+          this.$toast.success(this.$t('document.starred'))
           break
         case 'unstar':
           await this.$store.dispatch('starred/unstarDocuments', this.selected)
-          this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
+          this.$toast.success(this.$t('document.unstarred'))
           break
         default:
           break

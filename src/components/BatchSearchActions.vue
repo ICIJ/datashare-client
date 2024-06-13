@@ -128,10 +128,10 @@ export default {
       const batchId = this.uuid
       try {
         await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId })
-        this.$bvToast.toast(this.$t('batchSearch.deleted'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('batchSearch.deleted'))
         return this.$router.push({ name: 'task.batch-search.list' })
       } catch (e) {
-        this.$bvToast.toast(this.$t('batchSearch.deleteError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('batchSearch.deleteError'))
         return Promise.reject(e)
       }
     }

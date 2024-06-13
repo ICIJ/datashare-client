@@ -188,9 +188,9 @@ export default {
       try {
         await this.$core.api.installExtensionFromId(extensionId)
         extension.installed = true
-        this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('extensions.submitSuccess'))
       } catch (_) {
-        this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('extensions.submitError'))
       }
       extension.loading = false
     },
@@ -199,9 +199,9 @@ export default {
       try {
         await this.$core.api.installExtensionFromUrl(this.url)
         await this.search()
-        this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('extensions.submitSuccess'))
       } catch (_) {
-        this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('extensions.submitError'))
       }
       this.$refs.installExtensionFromUrl.hide()
       this.isInstallingFromUrl = false
@@ -213,9 +213,9 @@ export default {
       try {
         await this.$core.api.uninstallExtension(extensionId)
         extension.installed = false
-        this.$bvToast.toast(this.$t('extensions.deleteSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('extensions.deleteSuccess'))
       } catch (_) {
-        this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('extensions.deleteError'))
       }
       extension.loading = false
     }

@@ -66,20 +66,20 @@ export default {
     async deleteAllProjects() {
       try {
         await this.$store.dispatch('indexing/deleteAll')
-        this.$bvToast.toast(this.$t('indexing.deleteSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('indexing.deleteSuccess'))
       } catch (error) {
         if (error && error.response && error.response.status !== 404) {
-          this.$bvToast.toast(this.$t('indexing.deleteFailure'), { noCloseButton: true, variant: 'danger' })
+          this.$toast.error(this.$t('indexing.deleteFailure'))
         }
       }
     },
     async deleteAllBatchSearches() {
       try {
         await this.$store.dispatch('batchSearch/deleteBatchSearches')
-        this.$bvToast.toast(this.$t('indexing.deleteBatchSearchSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('indexing.deleteBatchSearchSuccess'))
       } catch (error) {
         if (error && error.response && error.response.status !== 404) {
-          this.$bvToast.toast(this.$t('indexing.deleteBatchSearchFailure'), { noCloseButton: true, variant: 'danger' })
+          this.$toast.error(this.$t('indexing.deleteBatchSearchFailure'))
         }
       }
     },

@@ -25,7 +25,7 @@ describe('DocumentNotes.vue', () => {
     await wrapper.setData({
       notes: [
         { note: 'This is a note', variant: 'warning' },
-        { note: 'Another note', variant: 'danger' }
+        { note: 'Another note', variant: 'error' }
       ]
     })
     expect(wrapper.findAll('b-alert-stub')).toHaveLength(2)

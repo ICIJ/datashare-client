@@ -31,20 +31,18 @@ export default {
     },
     notifyCreationSucceed() {
       const title = this.$t('projectViewFindNamedEntities.notify.succeed')
-      const variant = 'success'
       const message = this.$t('projectViewFindNamedEntities.notify.succeedBody')
       const linkText = this.$t('projectViewFindNamedEntities.notify.seeTasks')
       const body = h('div', {}, [
         h('p', {}, message),
         h('router-link', { props: { to: { name: 'task.analysis.list' } } }, linkText)
       ])
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.success(body, { title })
     },
     notifyCreationFailed(error) {
       const title = this.$t('projectViewFindNamedEntities.notify.failed')
-      const variant = 'danger'
       const body = get(error, 'response.data.error') ?? this.$t('projectViewFindNamedEntities.notify.failedBody')
-      this.$bvToast.toast(body, { variant, title })
+      this.$toast.error(body, { title })
     }
   }
 }

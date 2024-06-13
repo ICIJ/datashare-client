@@ -105,10 +105,10 @@ export default {
         await this.$store.dispatch('settings/onSubmit', this.settings)
         this.$config.merge(this.settings)
         this.master = cloneDeep(this.settings)
-        this.$bvToast.toast(this.$t('serverSettings.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('serverSettings.submitSuccess'))
       } catch (_) {
         this.settings = cloneDeep(this.master)
-        this.$bvToast.toast(this.$t('serverSettings.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$toast.error(this.$t('serverSettings.submitError'))
       }
     }
   }

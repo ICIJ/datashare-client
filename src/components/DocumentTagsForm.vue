@@ -140,7 +140,7 @@ export default {
       this.isReady = true
       delay((name) => this.$core.emit('filter::refresh', { name }), settings.elasticsearch.waitForAnswer, 'tags')
       if (!this.displayTags) {
-        this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
+        this.$toast.success(this.$t('document.tagged'))
       }
       // Focus on the tag input
       if (this.$refs && this.$refs.tag && this.$refs.tag.focus) {

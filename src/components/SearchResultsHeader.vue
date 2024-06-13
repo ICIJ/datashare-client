@@ -298,12 +298,11 @@ export default {
       return this.$store.dispatch('search/query')
     },
     batchDownload() {
-      const uri = this.uriFromStore
-      this.$store.dispatch('search/runBatchDownload', uri)
-      const to = { name: 'task.batch-download.list' }
-      const variant = 'primary'
-      const title = this.$t('batchDownload.created')
-      this.$bvToast.toast(this.$t('batchDownload.inProgress'), { to, variant, title })
+      this.$store.dispatch('search/runBatchDownload', this.uriFromStore)
+      const { href } = this.$router.resolve({ name: 'task.batch-download.list' })
+      const body = this.$t('batchDownload.created')
+      const linkLabel = this.$t('batchDownload.seeAll')
+      this.$toast.info(body, { href, linkLabel })
     },
     byteSize
   }
