@@ -28,10 +28,10 @@ describe('Tasks.vue', () => {
     core = CoreSetup.init().useRouter(routes)
   })
 
-  it('should select the "batch-search" tab by default', async () => {
+  it('should select the no tab by default', async () => {
     await replaceRouteby({ name: 'tasks' })
     const wrapper = shallowMount(Tasks, { global: { plugins: core.plugins } })
-    expect(wrapper.vm.tab).toBe(0)
+    expect(wrapper.vm.tab).toBe(-1)
   })
 
   it('should select the "batch-download" tab when the route is active', async () => {
