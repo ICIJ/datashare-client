@@ -7,9 +7,10 @@ import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import VueEllipseProgress from 'vue-ellipse-progress'
-import { createBootstrap, useToast } from 'bootstrap-vue-next'
+import Vue3Toastify, { toast } from 'vue3-toastify'
+import { createBootstrap } from 'bootstrap-vue-next'
 import { createVueWait } from 'vue-wait'
-import { createApp, defineComponent } from 'vue'
+import { createApp, defineComponent, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import { iteratee } from 'lodash'
@@ -23,12 +24,13 @@ import ProjectsMixin from './ProjectsMixin'
 import WidgetsMixin from './WidgetsMixin'
 
 import { dispatch, EventBus } from '@/utils/event-bus'
-import Auth from '@/api/resources/Auth'
-import messages from '@/lang/en'
 import { getMode, MODE_NAME } from '@/mode'
 import { routes } from '@/router'
-import guards from '@/router/guards'
 import { storeBuilder } from '@/store/storeBuilder'
+import Auth from '@/api/resources/Auth'
+import ToastBody from '@/components/ToastBody'
+import guards from '@/router/guards'
+import messages from '@/lang/en'
 import settings from '@/utils/settings'
 
 class Base {}
@@ -148,6 +150,7 @@ class Core extends Behaviors {
     // to avoid adding them twice to the Vue instance.
     this.use(Murmur, { useI18n: false, useBootstrap: false })
     // Common plugins
+    this.use(Vue3Toastify, { clearOnUrlChange: false, hideProgressBar: false, autoClose: 5000 })
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
     this.use(VueEllipseProgress)
@@ -175,7 +178,6 @@ class Core extends Behaviors {
     this.use(this.plugin)
     return this
   }
-
   /**
    * Build a VueCore instance with the current Core instance
    * as parameter of the global properties.
@@ -187,10 +189,28 @@ class Core extends Behaviors {
       static install(app) {
         app.config.globalProperties.$core = core
         app.config.compilerOptions.whitespace = 'preserve'
-        // inject a globally available $bvToast object to facilitate migration
-        app.config.globalProperties.$bvToast = {
-          toast(body, options) {
-            console.warn('Toasters not implemented yet', { body, ...options })
+        // inject a globally available $toast object
+        app.config.globalProperties.$toast = {
+          toast(body, { title = null, variant: type = 'default', href = null, linkLabel = null, ...options } = {}) {
+            const closeOnClick = options.closeOnClick ?? !href
+            const props = { title, body, href, linkLabel }
+            const toastProps = { type, closeOnClick, ...options }
+            toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...props }), toastProps)
+          },
+          error(body, options) {
+            this.toast(body, { ...options, variant: 'error' })
+          },
+          danger(body, options) {
+            this.toast(body, { ...options, variant: 'error' })
+          },
+          warning(body, options) {
+            this.toast(body, { ...options, variant: 'warning' })
+          },
+          info(body, options) {
+            this.toast(body, { ...options, variant: 'info' })
+          },
+          success(body, options) {
+            this.toast(body, { ...options, variant: 'success' })
           }
         }
       }
