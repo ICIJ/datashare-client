@@ -51,6 +51,8 @@ export const RESET_KEYS = [
   'response',
   'showFilters',
   'reversedFilters',
+  'sortedFilters',
+  'contextualizedFilters',
   'size',
   'sort',
   'tab',
