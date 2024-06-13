@@ -191,26 +191,26 @@ class Core extends Behaviors {
         app.config.compilerOptions.whitespace = 'preserve'
         // inject a globally available $toast object
         app.config.globalProperties.$toast = {
-          toast(body, { title = null, variant: type = 'default', href = null, linkLabel = null, ...options } = {}) {
+          toast(body, { title = null, href = null, linkLabel = null, ...options } = {}) {
             const closeOnClick = options.closeOnClick ?? !href
             const props = { title, body, href, linkLabel }
-            const toastProps = { type, closeOnClick, ...options }
+            const toastProps = { closeOnClick, ...options }
             toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...props }), toastProps)
           },
           error(body, options) {
-            this.toast(body, { ...options, variant: 'error' })
+            this.toast(body, { ...options, type: 'error' })
           },
           danger(body, options) {
-            this.toast(body, { ...options, variant: 'error' })
+            this.toast(body, { ...options, type: 'error' })
           },
           warning(body, options) {
-            this.toast(body, { ...options, variant: 'warning' })
+            this.toast(body, { ...options, type: 'warning' })
           },
           info(body, options) {
-            this.toast(body, { ...options, variant: 'info' })
+            this.toast(body, { ...options, type: 'info' })
           },
           success(body, options) {
-            this.toast(body, { ...options, variant: 'success' })
+            this.toast(body, { ...options, type: 'success' })
           }
         }
       }
