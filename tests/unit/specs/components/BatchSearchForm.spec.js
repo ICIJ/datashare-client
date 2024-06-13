@@ -136,7 +136,7 @@ describe('BatchSearchForm.vue', () => {
     })
   })
 
-  describe.only('on all modes', () => {
+  describe('on all modes', () => {
     beforeEach(async () => {
       wrapper = shallowMount(BatchSearchForm, { global: { plugins: core.plugins, renderStubDefaultSlot: true } })
     })
@@ -260,7 +260,7 @@ describe('BatchSearchForm.vue', () => {
       it('should hide already selected file type from suggestions', async () => {
         await wrapper.setData({
           selectedFileType: [{ label: 'Portable Document Format (PDF)' }],
-          allFileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }],
+          allFileTypes: [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }]
         })
 
         wrapper.vm.searchFileTypes()
