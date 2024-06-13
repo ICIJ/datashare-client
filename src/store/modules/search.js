@@ -39,6 +39,24 @@ export const TAB_NAME = {
   NAMED_ENTITIES: 'named-entities'
 }
 
+export const RESET_KEYS = [
+  'error',
+  'field',
+  'from',
+  'index',
+  'indices',
+  'isReady',
+  'layout',
+  'query',
+  'response',
+  'showFilters',
+  'reversedFilters',
+  'size',
+  'sort',
+  'tab',
+  'values'
+]
+
 export function initialState() {
   return cloneDeep({
     error: null,
@@ -222,7 +240,7 @@ export const getters = {
 export const mutations = {
   reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout', 'size', 'sort']) {
     const s = initialState()
-    Object.keys(s).forEach((key) => {
+    RESET_KEYS.forEach((key) => {
       if (excludedKeys.indexOf(key) === -1) {
         state[key] = s[key]
       }
