@@ -390,7 +390,7 @@ export default {
 <style lang="scss" scoped>
 .document-content {
   &__toolbox {
-    background: $lighter;
+    background: $light;
     box-shadow: 0 -1 * $spacer 0 0 white;
     left: 0;
     position: static;
