@@ -1,5 +1,4 @@
 import { shallowMount } from '@vue/test-utils'
-import { basename } from 'path'
 
 import { Core } from '@/core'
 
