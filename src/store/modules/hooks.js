@@ -2,6 +2,7 @@ import filter from 'lodash/filter'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 import orderBy from 'lodash/orderBy'
+import { markRaw } from 'vue'
 
 import { HookedComponent } from '@/store/hooks'
 
@@ -28,7 +29,12 @@ export const mutations = {
   register(state, { target, order, name, definition }) {
     const index = name ? findIndex(state.registered, { name }) : -1
     if (index === -1) {
-      state.registered.push({ target, order, name, definition })
+      state.registered.push({
+        target,
+        order,
+        name,
+        definition: markRaw(definition)
+      })
     }
   },
   unregister(state, name) {
