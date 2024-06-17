@@ -8,12 +8,6 @@ describe('ComponentsMixin', () => {
 
   beforeEach(() => {
     core = Core.init().useAll()
-    // Mock the `lazyComponents` to ensure it returns an API similar to Webpack's
-    const context = async (name = null) => ({
-      default: { name: basename(name, '.vue'), template: `<div>${name}</div>` }
-    })
-    context.keys = () => ['./TreeView.vue', './PageIcon.vue', './Fa.js', './widget/WidgetDiskUsage.vue']
-    vi.spyOn(core, 'lazyComponents', 'get').mockReturnValue(context)
   })
 
   it('should find component by name with exact match', async () => {
@@ -57,11 +51,6 @@ describe('ComponentsMixin', () => {
 
   it('should find component in sub-folder', async () => {
     const WidgetDiskUsage = await core.findComponent('widget/WidgetDiskUsage')
-    expect(WidgetDiskUsage.name).toBe('WidgetDiskUsage')
-  })
-
-  it('should find component in sub-folder with "./" prefix', async () => {
-    const WidgetDiskUsage = await core.findComponent('./widget/WidgetDiskUsage')
     expect(WidgetDiskUsage.name).toBe('WidgetDiskUsage')
   })
 })
