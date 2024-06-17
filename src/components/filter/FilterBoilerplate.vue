@@ -1,13 +1,16 @@
 <template>
   <div
     class="filter card"
+    :data-filter-name="filter.name"
     :class="{
       'filter--reversed': excluded,
       'filter--hide-show-more': hideShowMore,
       'filter--hide-search': hideSearch,
       'filter--hide-header': hideHeader,
       'filter--dark': dark,
-      'filter--has-values': hasValues()
+      'filter--has-values': hasValues(),
+      'filter--show': showResults,
+      'filter--contextualized': filter.contextualized
     }"
   >
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }" />
