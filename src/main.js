@@ -1,8 +1,9 @@
 import { library as fortawesome } from '@fortawesome/fontawesome-svg-core'
 
-import * as icons from '@/utils/font-awesome'
-import { createCore } from '@/core'
 import '@/main.scss'
+import '@/utils/shared'
+import { createCore } from '@/core'
+import * as icons from '@/utils/font-awesome'
 
 // Register exported icons
 fortawesome.add(...Object.values(icons))
