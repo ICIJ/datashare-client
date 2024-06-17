@@ -21,6 +21,7 @@ export default ({ mode }) => {
       setupFiles: [resolve(__dirname, 'tests/unit/setup.js')]
     },
     resolve: {
+      dedupe: ['vue'],
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
         path: 'path-browserify',
