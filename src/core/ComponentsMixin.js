@@ -1,4 +1,4 @@
-import { find, kebabCase, iteratee, uniq } from 'lodash'
+import { compact, find, keys, kebabCase, iteratee, uniq } from 'lodash'
 
 import { slugger } from '@/utils/strings'
 
@@ -29,10 +29,10 @@ const ComponentMixin = (superclass) =>
      */
     async getComponent(name) {
       // Find the component name key in lazyComponents object that matches the given name when slugified.
-      const key = find(this.lazyComponents.keys(), (key) => this.sameComponentNames(name, key))
+      const key = find(keys(this.lazyComponents), (key) => this.sameComponentNames(name, key))
       // If a matching key is found, return the component object from the lazyComponents object.
       if (key) {
-        return this.lazyComponents(key).then(iteratee('default'))
+        return this.lazyComponents[key]?.().then(iteratee('default'))
       }
       // Otherwise, return an Error indicating that the component cannot be found.
       throw new Error(`Cannot find component '${name}'`)
@@ -57,8 +57,8 @@ const ComponentMixin = (superclass) =>
      * @returns {string} - The slugified component name.
      */
     componentNameSlug(name) {
-      // Remove the leading './' from the name and split it by '/' to extract the path.
-      const path = name.replace(/^\.\//, '').split('/').slice(0, -1).join('/') || ''
+      // Remove the leading '/components/' from the name and split it by '/' to extract the path.
+      const path = name.split('/components/').pop().split('/').slice(0, -1).join('/') || ''
       // Split the name by '/' and get the last element (the file name) from the array.
       const filname = name.split('/').pop()
       // Remove the file extension from the file name (e.g., '.vue' or '.js') using regex.
@@ -66,7 +66,7 @@ const ComponentMixin = (superclass) =>
       // Convert the component name to kebab case and then to lowercase using the slugger utility function.
       const componentSlug = slugger(kebabCase(component)).toLowerCase()
       // Return the final slug by concatenating the path and the slugified component name.
-      return `${path}/${componentSlug}`
+      return compact([path, componentSlug]).join('/')
     }
 
     /**
@@ -75,7 +75,7 @@ const ComponentMixin = (superclass) =>
      * @returns {Object} - The lazyComponents object generated using require.context.
      */
     get lazyComponents() {
-      return require.context('@/components/', true, /\.(vue|js)$/, 'lazy')
+      return import.meta.glob('@/components/**/*.(vue|js)')
     }
   }
 
