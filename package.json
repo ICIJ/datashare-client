@@ -68,7 +68,6 @@
     "vue3-toastify": "^0.2.1",
     "vuex": "^4",
     "vuex-persistedstate": "^4.0.0-beta.1",
-    "xlsx": "^0.18.5",
     "xss": "^1.0.13"
   },
   "devDependencies": {
