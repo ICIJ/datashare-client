@@ -44,7 +44,7 @@ To run the backend you must:
 
 1. Get and install Datashare from [datashare.icij.org](https://datashare.icij.org/) ;
 1. Refer to the [User Guide](https://icij.gitbook.io/datashare/) if you need help installing Datashare ;
-1. Run Datashare on port `8080` with CORS: `datashare --cors "*" --tcpListenPort 8080`.
+2. Run Datashare on port `8080` with CORS: `datashare --tcpListenPort 8080`.
 
 
 ## Build Setup
