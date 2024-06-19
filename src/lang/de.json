@@ -442,7 +442,7 @@
     "notAvailable": "Für dieses Dokument ist keine Vorschau verfügbar.",
     "copyAsCsv": "Als CSV kopieren",
     "namedEntitiesNotFound": "Keine Named Entities gefunden",
-    "namedEntitiesNotSearched": "<p>Dokument nicht analysiert.</p><p class=\"text-muted small\">Um Named Entities zu durchsuchen, gehen Sie zu <a class=\"fw-bold\" href=\"{indexing_link}\">@:menu.analysieren</a> und starten Sie eine neue Aufgabe \"@:indexing.findNamedEnties\".</p>",
+    "namedEntitiesNotSearched": "<p>Dokument nicht analysiert. Um Named Entities zu durchsuchen, gehen Sie zu <a class=\"fw-bold\" href=\"{indexing_link}\">@:{'menu.analyse'}</a> und starten Sie eine neue Aufgabe \"@:{'indexing.findNamedEnties'}\".</p>",
     "generatingPreview": "Vorschau wird erstellt...",
     "sheet": "Blatt",
     "searchDirectory": "In diesem Verzeichnis suchen",
