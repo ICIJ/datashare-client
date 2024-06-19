@@ -16,7 +16,7 @@
         v-if="$config.is('manageDocuments') && !document.hasNerTags"
         class="document__named-entities document__named-entities--not--searched"
       >
-        <div v-html="$t('document.namedEntitiesNotSearched', { indexing_link: '#/indexing' })"></div>
+        <div v-html="$t('document.namedEntitiesNotSearched', { indexingLink })"></div>
       </div>
       <div
         v-else-if="!hasNamedEntities && !isLoadingNamedEntities"
@@ -130,6 +130,10 @@ export default {
     },
     getFirstPageInAllCategoriesWithThrottle() {
       return throttle(this.getFirstPageInAllCategories, 1000)
+    },
+    indexingLink() {
+      const { href } = this.$router.resolve({ name: 'task.analysis.list' })
+      return href
     }
   },
   watch: {
