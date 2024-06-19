@@ -484,7 +484,7 @@ $item-tree-width: 2px;
             flex-direction: column;
             text-align: center;
             margin: $spacer $spacer-xs;
-            padding: $spacer-sm $spacer-xs $spacer-xs;
+            padding: $spacer-xs;
           }
 
           &.router-link-exact-active,
