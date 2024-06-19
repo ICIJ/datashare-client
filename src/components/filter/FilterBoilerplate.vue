@@ -10,6 +10,7 @@
       'filter--dark': dark,
       'filter--has-values': hasValues(),
       'filter--show': showResults,
+      'filter--sticky-search': stickySearch,
       'filter--contextualized': filter.contextualized
     }"
   >
@@ -35,7 +36,7 @@
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
           <search-form-control
             v-model="query"
-            class="filter__items__search mb-2"
+            class="filter__items__search p-2 m-0 mb-2"
             :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })"
             :rounded="false"
             :dark="dark"
@@ -232,6 +233,10 @@ export default {
      * Disable the attempt to translate an item value
      */
     noItemTranslation: {
+      type: Boolean,
+      default: false
+    },
+    stickySearch: {
       type: Boolean,
       default: false
     }
@@ -608,6 +613,13 @@ export default {
     .filter__items__item:not(.filter__items__all) input:checked + label {
       text-decoration: line-through;
     }
+  }
+
+  &.filter--sticky-search .filter__items__search {
+    position: sticky;
+    top: 0;
+    background: $light;
+    z-index: $zindex-sticky;
   }
 
   & .filter__items__item__wrapper {
