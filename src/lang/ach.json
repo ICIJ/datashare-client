@@ -442,7 +442,7 @@
     "notAvailable": "crwdns2434:0crwdne2434:0",
     "copyAsCsv": "crwdns2606:0crwdne2606:0",
     "namedEntitiesNotFound": "crwdns1948:0crwdne1948:0",
-    "namedEntitiesNotSearched": "crwdns1950:0{indexing_link}crwdne1950:0",
+    "namedEntitiesNotSearched": "crwdns1950:0{indexingLink}crwdne1950:0",
     "generatingPreview": "crwdns1952:0crwdne1952:0",
     "sheet": "crwdns858:0crwdne858:0",
     "searchDirectory": "crwdns1954:0crwdne1954:0",

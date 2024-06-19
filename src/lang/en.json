@@ -443,7 +443,7 @@
     "notAvailable": "Preview is not available for this document.",
     "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No named entities found",
-    "namedEntitiesNotSearched": "<p>Document not analyzed. To search named entities, go to <a class=\"fw-bold\" href=\"{indexing_link}\">@:{'menu.analyse'}</a> and start a new task \"@:{'indexing.findNamedEntities'}\".</p>",
+    "namedEntitiesNotSearched": "<p>Document not analyzed. To search named entities, go to <a class=\"fw-bold\" href=\"{indexingLink}\">@:{'menu.analyse'}</a> and start a new task \"@:{'indexing.findNamedEntities'}\".</p>",
     "generatingPreview": "Generating preview...",
     "sheet": "Sheet",
     "searchDirectory": "Search within this directory",
