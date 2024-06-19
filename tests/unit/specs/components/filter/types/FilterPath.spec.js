@@ -62,7 +62,7 @@ describe('FilterPath.vue', () => {
 
   it('should trigger reload event when aggregate event is received', () => {
     const mockCallback = vi.fn()
-    wrapper.vm.$refs.treeView.reloadDataWithSpinner = mockCallback
+    wrapper.vm.$refs.treeView.loadData = mockCallback
     wrapper.vm.$refs.filter.$emit('aggregate')
     expect(mockCallback).toBeCalled()
   })
