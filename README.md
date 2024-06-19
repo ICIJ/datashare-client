@@ -62,10 +62,7 @@ yarn build
 # lint and fix files
 yarn lint --fix
 
-# run unit tests serially with jest
-make unit
-
-# run all tests
+# run unit tests
 yarn test
 
 # generate documentation
