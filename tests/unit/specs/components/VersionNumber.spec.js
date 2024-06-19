@@ -10,7 +10,7 @@ describe('VersionNumber.vue', () => {
   beforeAll(() => {
     const api = {
       getVersion: vi.fn().mockResolvedValue({
-        'git.build.version': 'X.Y.Z',
+        'git.tag': 'X.Y.Z',
         'git.commit.id.abbrev': 'sha1_abbrev'
       })
     }

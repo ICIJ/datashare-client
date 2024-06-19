@@ -12,7 +12,7 @@ describe('Login.vue', () => {
   })
 
   it('should display a login link', () => {
-    expect(wrapper.findAll('.login__card__body .btn').at(0).text()).toBe('Login with Account')
+    expect(wrapper.findAll('.login__card__body .btn').at(0).text()).toBe('Login')
   })
 
   it('should display a help link', () => {
