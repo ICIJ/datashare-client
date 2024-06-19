@@ -12,7 +12,7 @@ describe('DocumentTabNamedEntities.vue', () => {
   let core
 
   beforeEach(() => {
-    core = CoreSetup.init({ elasticsearch: es }).useAll()
+    core = CoreSetup.init({ elasticsearch: es }).useAll().useRouter()
     core.config.set('manageDocuments', true)
     core.store.commit('document/reset')
   })
