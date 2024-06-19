@@ -623,7 +623,7 @@ export default {
     position: sticky;
     top: 0;
     background: $light;
-    z-index: $zindex-sticky;
+    z-index: $zindex-dropdown;
   }
 
   & .filter__items__item__wrapper {
