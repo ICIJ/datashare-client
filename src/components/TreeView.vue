@@ -55,7 +55,7 @@
                 class="tree-view__directories__item__checkbox"
               />
               <label class="flex-grow-1 m-0" :for="allDirectoriesInputId">
-                {{ $t('treeView.all') }} <em>({{ $t('treeView.includingIndividualDocuments') }})</em>
+                {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
               </label>
               <div class="ms-2 badge text-bg-light rounded-pill" :title="$n(hits)">
                 <span v-if="compact">
