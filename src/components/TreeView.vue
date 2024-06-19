@@ -489,6 +489,9 @@ export default {
       }
       return path
     },
+    sameDirectory(a, b) {
+      return this.toDirectory(a) === this.toDirectory(b)
+    },
     getBasename(value) {
       return last(value.split(this.pathSeparator))
     },
@@ -517,12 +520,12 @@ export default {
     },
     pathsWihtoutSiblings(paths) {
       return filter(paths, (path) => {
-        return path === this.path || !path.startsWith(this.path)
+        return this.sameDirectory(path, this.path) || !path.startsWith(this.path)
       })
     },
     pathsWithoutCurrent(paths) {
       return filter(paths, (path) => {
-        return path && path !== this.path
+        return path && !this.sameDirectory(path, this.path)
       })
     },
     totalPercentage(value) {
