@@ -1,31 +1,25 @@
 <template>
-  <div v-if="!hideFooter" class="filter__footer d-flex align-items-center text-nowrap p-1">
+  <div v-if="!hideFooter" class="filter__footer d-flex align-items-center text-nowrap p-2">
     <filter-sort-by-dropdown v-if="!hideSort" v-model:sort="sort" :sort-by-options="sortByOptions" />
     <button
       v-if="shouldDisplayShowMore"
-      class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm"
+      class="filter__footer__action filter__footer__action--expand btn btn-link"
       @click="openFilterSearch"
     >
       <fa icon="up-right-and-down-left-from-center" fixed-width />
       {{ $t('filter.showMore') }}
     </button>
     <span class="mx-auto"></span>
-    <b-form-checkbox
-      v-if="!hideExclude"
-      v-model="excluded"
-      size="sm"
-      class="filter__footer__action filter__footer__action--exclude"
-    >
-      {{ $t('filter.invert') }}
-    </b-form-checkbox>
-    <b-form-checkbox
-      v-if="!hideContextualize"
-      v-model="isContextualized"
-      size="sm"
-      class="filter__footer__action filter__footer__action--contextualize"
-    >
-      {{ $t('filter.contextualize') }}
-    </b-form-checkbox>
+    <div v-if="!hideExclude" class="filter__footer__action filter__footer__action--exclude">
+      <b-form-checkbox v-model="excluded">
+        {{ $t('filter.invert') }}
+      </b-form-checkbox>
+    </div>
+    <div v-if="!hideContextualize" class="filter__footer__action filter__footer__action--contextualize">
+      <b-form-checkbox v-model="isContextualized">
+        {{ $t('filter.contextualize') }}
+      </b-form-checkbox>
+    </div>
   </div>
 </template>
 
@@ -152,11 +146,11 @@ export default {
     color: inherit;
 
     &.btn {
-      padding: 0.2em;
+      padding: $spacer-xxs;
     }
 
     .filter__footer > & {
-      margin: 0 0.2em;
+      margin: 0 $spacer-xxs;
 
       label {
         padding-top: 0;
