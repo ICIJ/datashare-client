@@ -1,46 +1,26 @@
 <template>
-  <div class="legacy-spreadsheet-viewer d-flex flex-grow-1 my-2">
-    <template v-if="doc.active">
-      <div class="legacy-spreadsheet-viewer__header">
-        <div class="text-center mb-4">
-          {{ Object.keys(doc.sheets).indexOf(doc.active) + 1 }} / {{ Object.keys(doc.sheets).length }}
-        </div>
-        <div
-          v-for="page in Object.keys(doc.sheets).length"
-          :key="page"
-          class="me-2 my-2 d-flex legacy-spreadsheet-viewer__header__thumbnails"
-          @click="doc.active = Object.keys(doc.sheets)[page - 1]"
-        >
-          <span class="d-flex align-items-center">{{ page }}</span>
-          <div
-            class="small ms-1 img-thumbnail text-truncate"
-            v-html="displaySheet(Object.keys(doc.sheets)[page - 1])"
-          />
-        </div>
+  <div class="legacy-spreadsheet-viewer w-100">
+    <b-overlay :show="$wait.is(loaderId)" opacity="0.6" spinner-small class="position-sticky sticky-top">
+      <div class="legacy-spreadsheet-viewer__header bg-light px-3 py-2">
+        <b-form-select
+          v-model="activeSheetName"
+          class="input-sm"
+          :disabled="activeSheetName === null"
+          :options="sheetNames"
+        />
       </div>
-      <div class="legacy-spreadsheet-viewer__preview">
-        <div v-if="doc.active" class="legacy-spreadsheet-viewer__preview__header">
-          <b-form-select
-            v-model="doc.active"
-            class="input-sm"
-            :options="Object.keys(doc.sheets)"
-            @change="displaySheet"
-          />
-        </div>
-        <div class="legacy-spreadsheet-viewer__preview__content">
-          <div v-html="displaySheet(doc.active)" />
-        </div>
+    </b-overlay>
+    <template v-if="activeSheetName">
+      <div class="legacy-spreadsheet-viewer__content mt-3">
+        <div class="table-responsive" v-html="activeSheetHTML" />
       </div>
     </template>
-    <div v-else class="alert">
-      <fa icon="gear" spin />
-      {{ message }}
-    </div>
   </div>
 </template>
 
 <script>
 import { read, utils } from 'xlsx'
+import { uniqueId } from 'lodash'
 
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
@@ -61,45 +41,49 @@ export default {
   },
   data() {
     return {
-      message: this.$t('document.generatingPreview'),
-      doc: {
-        active: 0,
-        sheets: {}
-      }
+      workbook: null,
+      activeSheetName: null
     }
   },
-  mounted() {
-    this.getWorkbook()
+  computed: {
+    sheetNames() {
+      return this.workbook?.SheetNames ?? []
+    },
+    sheets() {
+      return this.workbook?.Sheets ?? []
+    },
+    activeSheet() {
+      return this.sheets[this.activeSheetName] ?? null
+    },
+    activeSheetHTML() {
+      if (this.activeSheet) {
+        return utils
+          .sheet_to_html(this.activeSheet, { header: '', footer: '' })
+          .replace('<table>', '<table class="table">')
+      }
+      return null
+    },
+    loaderId() {
+      return uniqueId('legacy-spreadsheet-viewer-')
+    }
+  },
+  async mounted() {
+    await this.generateWorkbookWithLoader()
   },
   methods: {
-    getWorkbook() {
-      return this.xlsx()
-        .then((workbook) => {
-          this.doc.sheets = workbook
-          this.doc.active = Object.keys(workbook)[0]
-        })
-        .catch((err) => {
-          this.message = err.message
-        })
+    async generateWorkbook() {
+      try {
+        const data = await this.getSource(this.document, { responseType: 'arraybuffer' })
+        this.workbook = await read(data, { type: 'array' })
+        this.activeSheetName = this.sheetNames[0]
+      } catch ({ message }) {
+        this.$toast.error(message)
+      }
     },
-    xlsx() {
-      return this.getSource(this.document, { responseType: 'arraybuffer' }).then((arrayBuffer) => {
-        let arr = ''
-        const data = new Uint8Array(arrayBuffer)
-        for (let i = 0; i !== data.length; ++i) {
-          arr += String.fromCharCode(data[i])
-        }
-        const workbook = read(arr, { type: 'binary' })
-        const result = {}
-        workbook.SheetNames.forEach(function (sheetname) {
-          const roa = utils.sheet_to_html(workbook.Sheets[sheetname])
-          if (roa.length > 0) result[sheetname] = roa
-        })
-        return result
-      })
-    },
-    displaySheet(value) {
-      return this.doc.sheets[value]
+    async generateWorkbookWithLoader() {
+      this.$wait.start(this.loaderId)
+      await this.generateWorkbook()
+      this.$wait.end(this.loaderId)
     }
   }
 }
@@ -107,23 +91,6 @@ export default {
 
 <style lang="scss">
 .legacy-spreadsheet-viewer {
-  position: relative;
-
-  .legacy-spreadsheet-viewer__header {
-    flex: 0 0 15%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    max-width: 15%;
-  }
-
-  .legacy-spreadsheet-viewer__preview {
-    flex: 0 0 85%;
-    margin-left: 15%;
-    padding-left: 1em;
-  }
+  padding: $spacer;
 }
 </style>
