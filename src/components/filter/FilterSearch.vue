@@ -10,6 +10,7 @@
       :model-query="modelQuery"
       hide-header
       hide-show-more
+      sticky-search
       v-bind="{ filter }"
       @add-filter-values="onAddedFilterValues"
     />
