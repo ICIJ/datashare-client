@@ -233,6 +233,7 @@ export default {
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
+    font-size: 200%;
   }
 }
 </style>
