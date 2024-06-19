@@ -58,7 +58,7 @@
             <b-form-checkbox v-model="isAllSelected" :disabled="isAllSelected">
               <slot name="all" v-bind="{ total }">
                 <span class="d-flex">
-                  <span class="filter__items__item__label px-1 text-truncate d-inline-block">
+                  <span class="filter__items__item__label pe-1 text-truncate d-inline-block">
                     {{ labelToHuman('all') }}
                   </span>
                   <span class="filter__items__item__count my-auto ms-auto">
