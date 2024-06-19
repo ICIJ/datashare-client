@@ -289,6 +289,13 @@ export default {
     transition: {
       type: String,
       default: 'fade'
+    },
+    /**
+     * Hide empty directories
+     */
+    hideEmpty: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['update:path', 'update:selectedPaths', 'update:directories', 'checked'],
@@ -363,8 +370,14 @@ export default {
     flattenPagesBuckets() {
       return flatten(this.pagesBuckets)
     },
-    directories() {
+    uniqueDirectories() {
       return uniqBy([...this.flattenPagesBuckets, ...this.treeAsPagesBuckets], (dir) => dir.key)
+    },
+    directories() {
+      if (this.hideEmpty) {
+        return this.uniqueDirectories.filter((dir) => dir.doc_count > 0)
+      }
+      return this.uniqueDirectories
     },
     hits() {
       return get(this, 'lastPage.hits.total.value', 0)
