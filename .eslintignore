@@ -1,6 +1,6 @@
 /dist
 *.config.js
 config.yml
-/docs
+/public
 *.hbs
 /README.md
