@@ -31,7 +31,7 @@
     </slot>
     <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }" />
     <b-collapse :visible="showResults">
-      <div class="filter__items">
+      <div class="filter__items pb-2">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }" />
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
           <search-form-control
