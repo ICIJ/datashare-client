@@ -26,6 +26,12 @@
         </ul>
       </div>
     </div>
+    <div class="login__footer d-flex">
+      <locales-menu v-slot="{ currentLocale }" class="ms-auto" popover-placement="bottom">
+        <fa icon="globe" fixed-width />
+        {{ currentLocale.label }}
+      </locales-menu>
+    </div>
   </div>
 </template>
 
@@ -63,6 +69,12 @@ export default {
     &__heading h2 {
       font-size: 2.5rem;
     }
+  }
+
+  &__footer {
+    margin: 0 auto;
+    color: #fff;
+    max-width: 660px;
   }
 }
 </style>
