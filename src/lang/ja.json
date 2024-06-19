@@ -442,7 +442,7 @@
     "notAvailable": "Preview is not available for this document.",
     "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "固有表現が見つかりません",
-    "namedEntitiesNotSearched": "<p>文書は解析されていません。</p><p class=\\\"text-muted small\\\">固有表現を検索するには、 <a class=\\\"fw-bold\\\" href=\\\"{indexing_link}\\\">@:menu.analyse</a> に行き、新たなタスクを開始してください \\\"@:indexing.findNamedEntities\\\".</p>",
+    "namedEntitiesNotSearched": "<p>文書は解析されていません。固有表現を検索するには、 <a class=\\\"fw-bold\\\" href=\\\"{indexing_link}\\\">@:{'menu.analyse'}</a> に行き、新たなタスクを開始してください \\\"@:{'indexing.findNamedEntities'}\\\".</p>",
     "generatingPreview": "プレビューを生成しています…",
     "sheet": "シート",
     "searchDirectory": "このディレクトリー内を検索",
