@@ -442,7 +442,7 @@
     "notAvailable": "La vista previa no está disponible para este archivo.",
     "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
-    "namedEntitiesNotSearched": "<p>Documento no analizado.</p><p class=\\\"text-muted small\\\">Para buscar entidades identificadas, vaya a <a class=\\\"fw-bold\\\" href=\\\"{indexing_link}\\\">@:menu.analyse</a> y comience una nueva tarea \\\"@:indexing.findNamedEntities\\\".</p>",
+    "namedEntitiesNotSearched": "<p>Documento no analizado. Para buscar entidades identificadas, vaya a <a class=\\\"fw-bold\\\" href=\\\"{indexing_link}\\\">@:{'menu.analyse'}</a> y comience una nueva tarea \\\"@:{'indexing.findNamedEntities'}\\\".</p>",
     "generatingPreview": "Generando visualización previa...",
     "sheet": "Hoja",
     "searchDirectory": "Buscar dentro de este directorio",

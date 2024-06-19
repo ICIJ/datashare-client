@@ -442,7 +442,7 @@
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
     "copyAsCsv": "Copier en format CSV",
     "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
-    "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"fw-bold\\\" href=\\\"{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
+    "namedEntitiesNotSearched": "<p>Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"fw-bold\\\" href=\\\"{indexing_link}\\\">@:{'menu.analyse'}</a> et lancez une nouvelle tâche \\\"@:{'indexing.findNamedEntities'}\\\".</p>",
     "generatingPreview": "Génération d'une prévisualisation...",
     "sheet": "Feuille",
     "searchDirectory": "Chercher dans ce dossier",
