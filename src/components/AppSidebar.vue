@@ -483,8 +483,8 @@ $item-tree-width: 2px;
           .app-sidebar--reduced & {
             flex-direction: column;
             text-align: center;
-            margin: $spacer $spacer-xs;
-            padding: $spacer-xs;
+            margin: $spacer-xs $spacer-xs;
+            padding: $spacer $spacer-xs $spacer-xs;
           }
 
           &.router-link-exact-active,
