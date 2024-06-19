@@ -615,6 +615,10 @@ export default {
     }
   }
 
+  &.filter--dark .text-muted {
+    color: rgba($light, 0.6) !important;
+  }
+
   &.filter--sticky-search .filter__items__search {
     position: sticky;
     top: 0;
