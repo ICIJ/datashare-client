@@ -1,20 +1,18 @@
 <template>
   <div class="filter-search">
-    <div class="card">
-      <component
-        :is="filter.component"
-        ref="filterComponent"
-        :key="filter.name"
-        class="border-0"
-        :collapsed-if-no-values="false"
-        :dark="false"
-        :model-query="modelQuery"
-        hide-header
-        hide-show-more
-        v-bind="{ filter }"
-        @add-filter-values="onAddedFilterValues"
-      ></component>
-    </div>
+    <component
+      :is="filter.component"
+      ref="filterComponent"
+      :key="filter.name"
+      class="bg-light"
+      :collapsed-if-no-values="false"
+      :dark="false"
+      :model-query="modelQuery"
+      hide-header
+      hide-show-more
+      v-bind="{ filter }"
+      @add-filter-values="onAddedFilterValues"
+    />
   </div>
 </template>
 
