@@ -604,9 +604,9 @@
   },
   "login": {
     "welcome": "Bienvenido a Datashare",
-    "sumUp": "<a href=\"https://icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
-    "authenticationPlatform": "Para iniciar sesión, utilice la plataforma de autenticación segura de ICIJ:",
-    "account": "Ingresar con Account",
+    "sumUp": "<a href=\"https://www.icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
+    "authenticationPlatform": "Inicie sesión con su cuenta para comenzar a explorar documentos:",
+    "account": "Ingresar",
     "supportDesk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
     "askHelp": "Pedir ayuda",
     "logout": "Se ha cerrado su sesión de Datashare.",

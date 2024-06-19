@@ -603,11 +603,11 @@
     "serverVersion": "Serveur"
   },
   "login": {
-    "welcome": "Bienvenue dans Datashare",
-    "sumUp": "La plateforme de recherche et de découverte de l'<a href=\\\"https://icij.org\\\">ICIJ</a>.",
-    "authenticationPlatform": "Pour se connecter, utiliser la plateforme sécurisée d'authentification de l'ICIJ :",
-    "account": "Se connecter avec Account",
-    "supportDesk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
+    "welcome": "Bienvenue sur Datashare",
+    "sumUp": "La plateforme de recherche et d'exploration de l'<a href=\\\"https://www.icij.org\\\">ICIJ</a>.",
+    "authenticationPlatform": "Pour se connecter, merci de vous connecter :",
+    "account": "Se connecter",
+    "supportDesk": "Si vous avez besoin d'aide, veuillez contacter notre centre d'aide :",
     "askHelp": "Aide",
     "logout": "Vous avez été déconnecté•e de Datashare.",
     "login": "Identifiez-vous pour continuer"
