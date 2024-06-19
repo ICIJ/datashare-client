@@ -79,6 +79,10 @@ export default {
     async page() {
       const offset = this.activeContentSliceOffset
       await this.activateContentSlice({ offset })
+    },
+    async contentPipeline() {
+      await this.cookAllContentSlices()
+      this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset }).cookedContent
     }
   },
   async mounted() {
@@ -93,9 +97,6 @@ export default {
   },
   // eslint-disable-next-line vue/order-in-components
   computed: {
-    ...mapGetters('pipelines', {
-      getPipelineChain: 'applyPipelineChainByCategory'
-    }),
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms'
     }),
@@ -150,6 +151,9 @@ export default {
     }
   },
   methods: {
+    getPipelineChain(category, ...pipelines) {
+      return this.$store.getters['pipelines/applyPipelineChainByCategory'](category, ...pipelines)
+    },
     async loadMaxOffset(targetLanguage = this.targetLanguage) {
       this.$wait.start('loaderMaxOffset')
       const key = targetLanguage ?? 'original'
