@@ -1,5 +1,5 @@
 <template>
-  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="$refs.treeView.reloadDataWithSpinner()">
+  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="$refs.treeView.loadData()">
     <template #items="{ sortBy, sortByOrder, query }">
       <div class="filter__tree-view">
         <tree-view
