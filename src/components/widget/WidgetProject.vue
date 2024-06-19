@@ -48,7 +48,7 @@ export default {
       fields: [
         {
           key: 'name',
-          classList: 'border text-monospace px-1 bg-light rounded'
+          classList: 'border font-monospace. px-1 bg-light rounded'
         },
         {
           key: 'sourcePath',

@@ -2,7 +2,7 @@
   <div class="mounted-data-location d-flex align-items-center px-1">
     <div class="d-flex align-items-center flex-grow-1 mw-100" @click="showTreeView()">
       <fa icon="folder" class="ms-1 me-2 mounted-data-location__icon"></fa>
-      <div :id="valueId" class="flex-grow-1 text-monospace px-0 py-1 text-truncate mounted-data-location__value">
+      <div :id="valueId" class="flex-grow-1 font-monospace. px-0 py-1 text-truncate mounted-data-location__value">
         {{ dataDir }}
       </div>
     </div>
@@ -23,7 +23,7 @@
       <template #title>
         {{ $t('footer.homedir') }}
       </template>
-      <div class="text-monospace">
+      <div class="font-monospace.">
         {{ dataDir }}
       </div>
     </b-popover>

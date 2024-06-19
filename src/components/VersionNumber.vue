@@ -7,20 +7,20 @@
     <b-tooltip :target="versionNumberId" :placement="tooltipPlacement">
       <div class="version-number__tooltip text-nowrap text-start">
         <div class="d-flex justify-content-start align-items-center version-number__tooltip__client">
-          <div class="w-100 pe-5">
+          <div class="fw-bold w-100 pe-5">
             <fa icon="desktop"></fa>
             {{ $t('footer.clientVersion') }}
           </div>
-          <div class="m-2 text-monospace version-number__tooltip__client__value">
+          <div class="m-2 font-monospace version-number__tooltip__client__value">
             {{ shortClientHash }}
           </div>
         </div>
         <div class="d-flex justify-content-start align-items-center version-number__tooltip__server">
-          <div class="w-100 pe-5">
+          <div class="fw-bold w-100 pe-5">
             <fa icon="server"></fa>
             {{ $t('footer.serverVersion') }}
           </div>
-          <div class="m-2 text-monospace version-number__tooltip__server__value">
+          <div class="m-2 font-monospace version-number__tooltip__server__value">
             {{ serverHash }}
           </div>
         </div>

@@ -61,7 +61,7 @@
     >
       <p>{{ $t('api.key.warning') }}</p>
       <div class="input-group input-group-sm">
-        <input class="form-control text-monospace" readonly :value="apiKey" />
+        <input class="form-control font-monospace." readonly :value="apiKey" />
         <haptic-copy :text="apiKey" class="btn-outline-primary" label="Copy" />
       </div>
     </b-modal>
