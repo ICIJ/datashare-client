@@ -23,25 +23,26 @@
         <hook name="filters-panel.toolbar:after" />
       </div>
       <hook name="filters-panel.filters:before" />
-      <filter-project></filter-project>
+      <filter-project />
       <component
         :is="filter.component"
         v-for="filter in filters"
         :ref="filter.name"
         :key="filter.name"
         v-bind="{ filter }"
-      ></component>
+      />
       <hook name="filters-panel.filters:after" />
       <hook name="filters-panel:after" />
     </div>
     <b-modal
       ref="openFilterSearch"
+      size="lg"
       hide-footer
       lazy
-      body-class="p-0"
+      body-class="pt-0"
       :title="expandedFilter ? $t('filter.' + expandedFilter.name) : null"
     >
-      <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query"></filter-search>
+      <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query" />
     </b-modal>
   </div>
 </template>
