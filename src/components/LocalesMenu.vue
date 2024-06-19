@@ -10,7 +10,7 @@
       <b-popover
         ref="popover"
         click
-        placement="right"
+        :placement="popoverPlacement"
         :target="uniqueId"
         custom-class="locales-menu__list popover-body-p-0"
       >
@@ -54,6 +54,10 @@ export default {
      */
     noCaret: {
       type: Boolean
+    },
+    popoverPlacement: {
+      type: String,
+      default: 'right'
     }
   },
   emits: ['close'],
@@ -92,3 +96,9 @@ export default {
   }
 }
 </script>
+
+<style class="scss" scoped>
+.locales-menu {
+  color: inherit;
+}
+</style>
