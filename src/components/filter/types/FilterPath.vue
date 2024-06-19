@@ -1,5 +1,5 @@
 <template>
-  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="$refs.treeView.loadData()">
+  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="reloadTreeView">
     <template #items="{ sortBy, sortByOrder, query }">
       <div class="filter__tree-view">
         <tree-view
@@ -12,6 +12,7 @@
           :sort-by="sortBy"
           :sort-by-order="sortByOrder"
           :transition="null"
+          :hide-empty="isContextualized"
           compact
           count
           include-children-documents
@@ -102,6 +103,12 @@ export default {
         this.$core.api.elasticsearch.addQueryToFilter(this.$store.state.search.query || '*', body)
       }
       return body
+    },
+    reloadTreeView() {
+      if (this.isContextualized) {
+        return this.$refs.treeView.reloadDataWithSpinner()
+      }
+      return this.$refs.treeView.loadData()
     }
   }
 }
