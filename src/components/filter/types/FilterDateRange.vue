@@ -9,7 +9,7 @@
     no-infinite-scroll
   >
     <template #items="{ items }">
-      <div class="m-2">
+      <div class="mx-2">
         <date-picker
           ref="calendar"
           :key="locale"

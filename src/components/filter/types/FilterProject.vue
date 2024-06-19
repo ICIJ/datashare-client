@@ -9,7 +9,7 @@
         {{ $t('filter.projects') }}
       </h6>
     </div>
-    <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
+    <slide-up-down class="list-group list-group-flush filter__items pb-2" :active="!collapseItems">
       <search-form-control
         v-model="query"
         class="filter__items__search mb-2"
