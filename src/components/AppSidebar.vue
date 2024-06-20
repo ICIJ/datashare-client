@@ -520,9 +520,12 @@ $item-tree-width: 2px;
             background: $secondary;
             color: white;
             font-size: 0.75em;
+            height: 1.7em;
+            min-width: 1.7em;
+            line-height: 1.7em;
             font-weight: $badge-font-weight;
-            padding: $badge-padding-y $badge-padding-x;
-            border-radius: $badge-border-radius;
+            padding: 0 0.3em;
+            border-radius: 1.7em * 0.5;
           }
 
           &--disabled,
