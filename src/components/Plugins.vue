@@ -43,7 +43,7 @@
                 <div class="d-flex">
                   <div class="flex-grow-1">
                     <h4 class="plugins__card__name">
-                      {{ getFormattedPluginName(plugin) }}
+                      {{ getPluginName(plugin) }}
                     </h4>
                     <div class="plugins__card__description">
                       {{ getPluginDescription(plugin) }}
@@ -159,11 +159,11 @@ export default {
         plugin.deliverableFromRegistry.version !== plugin.version
       )
     },
-    getFormattedPluginName(plugin) {
-      return startCase(camelCase(this.getPluginName(plugin)))
-    },
     getPluginName(plugin) {
-      return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.name : plugin.name
+      if (this.isPluginFromRegistry(plugin)) {
+        return plugin.deliverableFromRegistry.name
+      }
+      return startCase(camelCase(plugin.name))
     },
     getPluginDescription(plugin) {
       return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.description : plugin.description

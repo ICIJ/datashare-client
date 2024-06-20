@@ -165,10 +165,10 @@ export default {
       )
     },
     getFormattedExtensionName(extension) {
-      return startCase(camelCase(this.getExtensionName(extension)))
-    },
-    getExtensionName(extension) {
-      return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.name : extension.name
+      if (this.isExtensionFromRegistry(extension)) {
+        return extension.deliverableFromRegistry.name
+      }
+      return startCase(camelCase(extension.name))
     },
     getExtensionDescription(extension) {
       return this.isExtensionFromRegistry(extension)
