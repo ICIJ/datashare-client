@@ -175,7 +175,7 @@ export default {
         :disabled="disabled"
         :validated="isPresent(form.sourcePath)"
       >
-        <inline-directory-picker v-model="form.sourcePath" />
+        <inline-directory-picker v-model:path="form.sourcePath" />
       </b-form-group>
       <b-form-group
         class="project-form__group project-form__group--logo-url"
