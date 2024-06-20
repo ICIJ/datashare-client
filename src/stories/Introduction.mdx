@@ -1,0 +1,105 @@
+# Create Stories for the datashare next components
+
+Datashare next stories a used to document and test the components. The stories are written in the `src/stories` folder and are used to generate the Storybook documentation.
+
+Figma of the new design is here : [https://www.figma.com/design/zuUb7ndAVzky62jhRP1edJ/Datashare?t=ac4qhKxDAtYFwxSi-0](https://www.figma.com/design/zuUb7ndAVzky62jhRP1edJ/Datashare?t=ac4qhKxDAtYFwxSi-0)
+
+## Phase One: Presentation Components
+
+During the first phase, we will build the basics of the design system, only presentation (simple or a combination of) components without dependencies (like router/store).
+
+### Storybook for Presentation Components
+- **Presentation Components**: Storybook works exceptionally well for presentation (also known as "dumb" or "pure") components. These components are responsible solely for displaying UI and do not contain business logic or state management. They receive data and callbacks through props and render accordingly.
+
+- **Isolation**: By isolating presentation components, Storybook helps avoid dependencies and side effects, providing a clear, visual way to test component displays. This isolation is beneficial for creating robust, reusable components.
+
+### Separation of Concerns
+
+To prevent components from becoming too complex, one practice is to create a component that is only responsible for the presentation and another one that is responsible for the behavior.
+
+- **Presentation Components**: These components handle the UI and are tested with stories in Storybook.
+- **Behavior Components**: These components manage the logic and state and are tested with unit tests.
+
+### Testing Strategies
+
+The presentation component can be tested with stories, and the behavior component can be tested with unit tests. This can simplify the visual testing of the components with accessibility properties and snapshot testing.
+
+### Complex Components
+
+Complex and behavioral components will be better tested using end-to-end (e2e) tests. Stories can integrate some actions, but retrieving many heavy dependencies can be a smell when doing it. 
+
+For more complex components that require a lot of logic, it might not be necessary to rely on stories.
+
+## Project structure
+
+```sh
+datashare-client/
+├── .storybook/
+│   ├── main.js
+│   └── preview.js
+├── src/
+│   ├── components/
+│   │   └── YourComponent.vue
+│   ├── stories/
+│   │   └── YourComponent.stories.js
+│   └── main.js
+└── package.json
+```
+
+## Story example 
+
+```vue
+// src/components/YourComponent.vue
+<template>
+  <div class="your-component">
+    <h1>{{ title }}</h1>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'YourComponent',
+  props: {
+    title: {
+      type: String,
+      default: 'Hello, Storybook!'
+    }
+  }
+}
+</script>
+
+<style scoped>
+.your-component {
+  font-family: Arial, sans-serif;
+}
+</style>
+```
+
+```js
+// src/stories/YourComponent.stories.js
+import YourComponent from '../components/YourComponent.vue';
+
+export default {
+  title: 'Datashare/YourComponent',
+  component: YourComponent,
+  argTypes: {
+    title: { control: 'text' },
+  },
+};
+
+const Template = (args, { argTypes }) => ({
+  props: Object.keys(argTypes),
+  components: { YourComponent },
+  template: '<your-component v-bind="$props" />',
+});
+
+export const Default = Template.bind({});
+Default.args = {
+  title: 'Hello, Storybook!',
+};
+
+export const CustomTitle = Template.bind({});
+CustomTitle.args = {
+  title: 'Custom Title',
+};
+```
