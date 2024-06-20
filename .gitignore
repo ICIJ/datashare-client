@@ -27,3 +27,4 @@ package-lock.json
 *.iml
 
 *storybook.log
+/src/stories/initial
