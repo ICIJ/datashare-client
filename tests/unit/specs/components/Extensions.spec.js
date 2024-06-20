@@ -21,7 +21,7 @@ describe('Extensions.vue', () => {
       installed: false,
       deliverableFromRegistry: {
         id: 'extension_01_id',
-        name: 'extension_01_registry_name',
+        name: 'Extension 01 Registry Name',
         version: 'extension_01_version',
         description: 'extension_01_registry_description',
         homepage: 'extension_01_registry_homepage'
@@ -35,7 +35,7 @@ describe('Extensions.vue', () => {
       installed: true,
       deliverableFromRegistry: {
         id: 'extension_02_id',
-        name: 'extension_02_registry_name',
+        name: 'Extension 02 Registry Name',
         version: 'extension_02_version',
         description: 'extension_02_registry_description',
         homepage: 'extension_02_registry_homepage'
@@ -57,7 +57,7 @@ describe('Extensions.vue', () => {
       installed: true,
       deliverableFromRegistry: {
         id: 'extension_04_id',
-        name: 'extension_04_registry_name',
+        name: 'Extension 04 Registry Name',
         version: 'extension_04_registry_version',
         description: 'extension_04_registry_description',
         homepage: null

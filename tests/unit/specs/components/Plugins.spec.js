@@ -4,60 +4,60 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Plugins from '@/components/Plugins'
 
-const pluginsMock = [
-  {
-    id: 'plugin_01_id',
-    name: 'plugin_01_name',
-    version: 'plugin_01_version',
-    description: 'plugin_01_description',
-    installed: false,
-    deliverableFromRegistry: {
-      id: 'plugin_01_id',
-      name: 'plugin_01_registry_name',
-      version: 'plugin_01_version',
-      description: 'plugin_01_registry_description',
-      homepage: 'plugin_01_registry_homepage'
-    }
-  },
-  {
-    id: 'plugin_02_id',
-    name: 'plugin_02_name',
-    version: 'plugin_02_version',
-    description: 'plugin_02_description',
-    installed: true,
-    deliverableFromRegistry: {
-      id: 'plugin_02_id',
-      name: 'plugin_02_registry_name',
-      version: 'plugin_02_version',
-      description: 'plugin_02_registry_description',
-      homepage: 'plugin_02_registry_homepage'
-    }
-  },
-  {
-    id: 'plugin_03_id',
-    name: 'plugin_03_name',
-    version: null,
-    description: 'plugin_03_description',
-    installed: true,
-    deliverableFromRegistry: null
-  },
-  {
-    id: 'plugin_04_id',
-    name: 'plugin_04_name',
-    version: 'plugin_04_version',
-    description: null,
-    installed: true,
-    deliverableFromRegistry: {
-      id: 'plugin_04_id',
-      name: 'plugin_04_registry_name',
-      version: 'plugin_04_registry_version',
-      description: 'plugin_04_registry_description',
-      homepage: null
-    }
-  }
-]
-
 describe('Plugins.vue', () => {
+  const pluginsMock = [
+    {
+      id: 'plugin_01_id',
+      name: 'plugin_01_name',
+      version: 'plugin_01_version',
+      description: 'plugin_01_description',
+      installed: false,
+      deliverableFromRegistry: {
+        id: 'plugin_01_id',
+        name: 'Plugin 01 Registry Name',
+        version: 'plugin_01_version',
+        description: 'plugin_01_registry_description',
+        homepage: 'plugin_01_registry_homepage'
+      }
+    },
+    {
+      id: 'plugin_02_id',
+      name: 'plugin_02_name',
+      version: 'plugin_02_version',
+      description: 'plugin_02_description',
+      installed: true,
+      deliverableFromRegistry: {
+        id: 'plugin_02_id',
+        name: 'Plugin 02 Registry Name',
+        version: 'plugin_02_version',
+        description: 'plugin_02_registry_description',
+        homepage: 'plugin_02_registry_homepage'
+      }
+    },
+    {
+      id: 'plugin_03_id',
+      name: 'plugin_03_name',
+      version: null,
+      description: 'plugin_03_description',
+      installed: true,
+      deliverableFromRegistry: null
+    },
+    {
+      id: 'plugin_04_id',
+      name: 'plugin_04_name',
+      version: 'plugin_04_version',
+      description: null,
+      installed: true,
+      deliverableFromRegistry: {
+        id: 'plugin_04_id',
+        name: 'Plugin 04 Registry Name',
+        version: 'plugin_04_registry_version',
+        description: 'plugin_04_registry_description',
+        homepage: null
+      }
+    }
+  ]
+
   const api = {
     getPlugins: vi.fn(),
     installPluginFromId: vi.fn(),
