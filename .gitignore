@@ -24,3 +24,5 @@ package-lock.json
 *.sln
 *.sw*
 *.iml
+
+*storybook.log

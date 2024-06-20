@@ -19,7 +19,9 @@
     "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.js --separators --no-gfm --template bin/dmd/api.hbs src/core/*.js > 'dist/docs/api.md'",
     "doc:hooks": "node bin/generateHook.js",
     "doc:widgets": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.js --separators --no-gfm --template bin/dmd/widgets.hbs src/store/widgets/*.js > 'dist/docs/widgets.md'",
-    "predoc": "yarn doc:dir"
+    "predoc": "yarn doc:dir",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",
@@ -71,12 +73,21 @@
     "xss": "^1.0.13"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.5.0",
     "@icij/eslint-config-icij": "^1.0.2",
+    "@storybook/addon-essentials": "^8.1.10",
+    "@storybook/addon-interactions": "^8.1.10",
+    "@storybook/addon-links": "^8.1.10",
+    "@storybook/blocks": "^8.1.10",
+    "@storybook/test": "^8.1.10",
+    "@storybook/vue3": "^8.1.10",
+    "@storybook/vue3-vite": "^8.1.10",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue2": "^2.3.1",
     "@vue/compiler-sfc": "^3.4.27",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.19",
+    "eslint-plugin-storybook": "^0.8.0",
     "eslint-plugin-vitest": "^0.5.4",
     "eslint-plugin-vitest-globals": "^1.5.0",
     "front-matter": "^4.0.2",
@@ -84,6 +95,7 @@
     "jsdoc-to-markdown": "^8.0.0",
     "jsdom": "^24.0.0",
     "sass": "^1.77.6",
+    "storybook": "^8.1.10",
     "unplugin-vue-components": "^0.27.0",
     "vite": "^5.3.1",
     "vitest": "^1.6.0",
@@ -114,7 +126,8 @@
       "vitest-globals"
     ],
     "extends": [
-      "@icij/eslint-config-icij"
+      "@icij/eslint-config-icij",
+      "plugin:storybook/recommended"
     ],
     "rules": {
       "vue/no-v-model-argument": "off",
