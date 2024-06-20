@@ -39,7 +39,7 @@
     <b-dropdown
       v-b-tooltip.hover
       split
-      right
+      end
       class="batch-search-actions__item batch-search-actions__item--download-queries ms-2"
       variant="light"
       :split-href="downloadQueriesUrl"

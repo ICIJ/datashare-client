@@ -39,7 +39,7 @@
         <b-tooltip v-if="isRootTooBig" :target="downloadBtnId" triggers="hover">
           {{ $t('document.downloadMaxRootSizeAlert', { humanMaxRootSize }) }}
         </b-tooltip>
-        <b-dropdown v-if="displayDownloadOptions" right toggle-class="py-0" size="sm">
+        <b-dropdown v-if="displayDownloadOptions" end toggle-class="py-0" size="sm">
           <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
             <fa icon="download" class="me-1 text-secondary" fixed-width />
             {{ $t('document.downloadWithoutMetadata') }}
