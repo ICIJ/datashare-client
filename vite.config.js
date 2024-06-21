@@ -16,12 +16,6 @@ export default ({ mode }) => {
         resolvers: [BootstrapVueNextResolver()]
       })
     ],
-    test: {
-      globals: true,
-      reporters: 'basic',
-      environment: 'jsdom',
-      setupFiles: [resolve(__dirname, 'tests/unit/setup.js')]
-    },
     resolve: {
       dedupe: ['vue'],
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
