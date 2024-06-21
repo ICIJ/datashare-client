@@ -66,7 +66,7 @@
               class="btn btn-light document__content__details__item__input-group__copy"
               hide-label
               :text="String(field.value)"
-              tooltip-placement="start"
+              tooltip-placement="left"
             />
           </div>
         </template>
