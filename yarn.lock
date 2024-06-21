@@ -601,10 +601,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur-next@4.0.15":
-  version "4.0.15"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.15.tgz#ff33853a8813f8e96d97fed0ebe5374ed0e09501"
-  integrity sha512-9ulaP1cF9sBCgkV9/DqAvcqa3gyE3S8ZIlDGHEkKRhKG/s1024GhhdkTfdrpk8qjwAPCqk416DZtbkS1siGLTA==
+"@icij/murmur-next@4.0.17":
+  version "4.0.17"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.17.tgz#5fea0299904f653fa6e700ce49539f9f73b7e739"
+  integrity sha512-znhheqhqZs4dtBBQcyzZMfXOOl4oo1BOKg6dMUwVxl21BqBLzlnIbkTu9SygXA4lLjV7Diwg/gObWC47qQC9DA==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-svg-core" "^6.5.2"
@@ -4181,10 +4181,10 @@ json-buffer@3.0.1:
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
   integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
 
-json-formatter-js@^2.5.12:
-  version "2.5.12"
-  resolved "https://registry.yarnpkg.com/json-formatter-js/-/json-formatter-js-2.5.12.tgz#1e84f905b2396ed307dbe2087b3aaf1d4a8f85ac"
-  integrity sha512-Kfx9oHsP4wjPFjcpjr/A9PYJpkZEMrQh74mQefiVKV83KBQzFBtuuKF0OfUKvTploYFqrI0pV3PAAylnoosoQA==
+json-formatter-js@^2.5.15:
+  version "2.5.15"
+  resolved "https://registry.yarnpkg.com/json-formatter-js/-/json-formatter-js-2.5.15.tgz#d9af9ac18bad481ac742ce4215105daa984889f5"
+  integrity sha512-PHDOzHKxtx9Ik5XQKOnnCx76aKPtlz+ym02MCv3NWimRS8qEgUx/7JDuhEDYY2jH67rb+fFBNJDTMz8JVZXzPg==
 
 json-schema-traverse@^0.4.1:
   version "0.4.1"
