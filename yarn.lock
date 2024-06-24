@@ -601,10 +601,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur-next@4.0.17":
-  version "4.0.17"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.17.tgz#5fea0299904f653fa6e700ce49539f9f73b7e739"
-  integrity sha512-znhheqhqZs4dtBBQcyzZMfXOOl4oo1BOKg6dMUwVxl21BqBLzlnIbkTu9SygXA4lLjV7Diwg/gObWC47qQC9DA==
+"@icij/murmur-next@4.0.18":
+  version "4.0.18"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.18.tgz#ef6473a583d0c1d084923f9e4ab09121854590c7"
+  integrity sha512-yPMqRDRTc7UJMh+zodPJLcqYwn3PnUyvvGuGQkTXYIVDN9tauTqpmOCxEU/bBStVMrIGd662cxoHgFQJ0CLqSw==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-svg-core" "^6.5.2"
