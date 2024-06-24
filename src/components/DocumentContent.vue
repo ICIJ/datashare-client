@@ -155,12 +155,12 @@ export default {
       return this.$store.getters['pipelines/applyPipelineChainByCategory'](category, ...pipelines)
     },
     async loadMaxOffset(targetLanguage = this.targetLanguage) {
-      this.$wait.start('loaderMaxOffset')
+      this.$wait.start('document-content-max-offset')
       const key = targetLanguage ?? 'original'
       // Ensure we load the map offset only once
       const offset = await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage })
       this.maxOffsetTranslations[key] = offset
-      this.$wait.end('loaderMaxOffset')
+      this.$wait.end('document-content-max-offset')
       return offset
     },
     findContentSliceIndexAround(desiredOffset) {
@@ -257,14 +257,14 @@ export default {
       return this.activateContentSlice({ offset })
     },
     async activateContentSlice({ offset = 0 } = {}) {
-      this.$wait.start('loaderContentSlice')
+      this.$wait.start('document-content-slice')
       // This load the current page
       await this.loadContentSliceOnce({ offset })
       // Cook all available content slices
       await this.cookAllContentSlices()
       this.activeContentSliceOffset = offset
       this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset }).cookedContent
-      this.$wait.end('loaderContentSlice')
+      this.$wait.end('document-content-slice')
     },
     addLocalSearchMarks(content, { offset: delta = 0 } = {}) {
       if (!this.hasLocalSearchTerms) {
@@ -332,7 +332,7 @@ export default {
     <hook name="document.content:before" />
     <div class="document-content__toolbox mt-3 mx-3" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
       <hook name="document.content.toolbox:before" />
-      <b-overlay :show="$wait.is('loader*')" opacity="0.6" rounded spinner-small class="">
+      <b-overlay :show="$wait.is('document-content-*')" opacity="0.6" rounded spinner-small class="">
         <div class="d-flex align-items-center">
           <tiny-pagination
             v-if="isPaginated && loadedOnce"
@@ -342,7 +342,6 @@ export default {
             :total-rows="nbPages"
             class="p-2"
             compact
-            size="sm"
             @input="scrollUp()"
           />
           <div class="ms-auto d-flex">
