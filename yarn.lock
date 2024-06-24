@@ -1650,17 +1650,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-<<<<<<< HEAD
-"@icij/murmur-next@4.0.17":
-  version "4.0.17"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.17.tgz#5fea0299904f653fa6e700ce49539f9f73b7e739"
-  integrity sha512-znhheqhqZs4dtBBQcyzZMfXOOl4oo1BOKg6dMUwVxl21BqBLzlnIbkTu9SygXA4lLjV7Diwg/gObWC47qQC9DA==
-=======
 "@icij/murmur-next@4.0.18":
   version "4.0.18"
   resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.0.18.tgz#ef6473a583d0c1d084923f9e4ab09121854590c7"
   integrity sha512-yPMqRDRTc7UJMh+zodPJLcqYwn3PnUyvvGuGQkTXYIVDN9tauTqpmOCxEU/bBStVMrIGd662cxoHgFQJ0CLqSw==
->>>>>>> 552f09bc (feat: add first Storybook basic component example)
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-svg-core" "^6.5.2"
@@ -2062,12 +2055,6 @@
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
   integrity sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==
 
-<<<<<<< HEAD
-"@storybook/channels@8.1.5":
-  version "8.1.5"
-  resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-8.1.5.tgz#d00d033d318cf202ece1de728e55e85f82242e74"
-  integrity sha512-R+puP4tWYzQUbpIp8sX6U5oI+ZUevVOaFxXGaAN3PRXjIRC38oKTVWzj/G6GdziVFzN6rDn+JsYPmiRMYo1sYg==
-=======
 "@sindresorhus/merge-streams@^2.1.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/merge-streams/-/merge-streams-2.3.0.tgz#719df7fb41766bc143369eaa0dd56d8dc87c9958"
@@ -2290,7 +2277,6 @@
   version "8.1.10"
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-8.1.10.tgz#c6fd14e0a4ff922c448a1411bee898093eab576c"
   integrity sha512-CxZE4XrQoe+F+S2mo8Z9HTvFZKfKHIIiwYfoXKCryVp2U/z7ZKrely2PbfxWsrQvF3H0+oegfYYhYRHRiM21Zw==
->>>>>>> 552f09bc (feat: add first Storybook basic component example)
   dependencies:
     "@storybook/client-logger" "8.1.10"
     "@storybook/core-events" "8.1.10"
@@ -2298,19 +2284,6 @@
     telejson "^7.2.0"
     tiny-invariant "^1.3.1"
 
-<<<<<<< HEAD
-"@storybook/client-logger@8.1.5":
-  version "8.1.5"
-  resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-8.1.5.tgz#aa4a6ce4ca46fdfe12539e571f9059a479c8ae43"
-  integrity sha512-zd+aENXnOHsxBATppELmhw/UywLzCxQjz/8i/xkUjeTRB4Ggp0hJlOUdJUEdIJz631ydyytfvM70ktBj9gMl1w==
-  dependencies:
-    "@storybook/global" "^5.0.0"
-
-"@storybook/core-events@8.1.5":
-  version "8.1.5"
-  resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-8.1.5.tgz#d921984e12b27aaaa623499a7ac0c3eea5e96264"
-  integrity sha512-fgwbrHoLtSX6kfmamTGJqD+KfuEgun8cc4mWKZK094ByaqbSjhnOyeYO1sfVk8qst7QTFlOfhLAUe4cz1z149A==
-=======
 "@storybook/cli@8.1.10":
   version "8.1.10"
   resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-8.1.10.tgz#44460540692add5f1a8d7edefb7cd68c79f6b533"
@@ -2436,7 +2409,6 @@
   version "8.1.10"
   resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-8.1.10.tgz#88fb58bc43a3e58c498985a2a18687c59efc7631"
   integrity sha512-aS4zsBVyJds74+rAW0IfTEjULDCQwXecVpQfv11B8/89/07s3bOPssGGoTtCTaN4pHbduywE6MxbmFvTmXOFCA==
->>>>>>> 552f09bc (feat: add first Storybook basic component example)
   dependencies:
     "@storybook/csf" "^0.1.7"
     ts-dedent "^2.0.0"
@@ -2553,10 +2525,15 @@
   resolved "https://registry.yarnpkg.com/@storybook/global/-/global-5.0.0.tgz#b793d34b94f572c1d7d9e0f44fac4e0dbc9572ed"
   integrity sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==
 
-"@storybook/instrumenter@8.1.5":
-  version "8.1.5"
-  resolved "https://registry.yarnpkg.com/@storybook/instrumenter/-/instrumenter-8.1.5.tgz#7e2f4d28486b226ec483f89da206e418643315ee"
-  integrity sha512-pyOg0YeL06bIFw8J3y0E1xyaJEVX5dtyvFZ31xi7jcElhsO/uPTbrJzSfMFtv3kDXU3hKDpeI2pbxpkFUVSvsQ==
+"@storybook/icons@^1.2.5":
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/@storybook/icons/-/icons-1.2.9.tgz#bb4a51a79e186b62e2dd0e04928b8617ac573838"
+  integrity sha512-cOmylsz25SYXaJL/gvTk/dl3pyk7yBFRfeXTsHvTA3dfhoU/LWSq0NKL9nM7WBasJyn6XPSGnLS4RtKXLw5EUg==
+
+"@storybook/instrumenter@8.1.10":
+  version "8.1.10"
+  resolved "https://registry.yarnpkg.com/@storybook/instrumenter/-/instrumenter-8.1.10.tgz#ada19b7de1c5a1eaf96a6df65abe6fc5850dcec5"
+  integrity sha512-/TZ3JpTCorbhThCfaR5k4Vs0Svp6xz6t+FVaim/v7N9VErEfmtn+d76CqYLfvmo68DzkEzvArOFBdh2MXtscsw==
   dependencies:
     "@storybook/channels" "8.1.10"
     "@storybook/client-logger" "8.1.10"
@@ -2602,10 +2579,10 @@
   resolved "https://registry.yarnpkg.com/@storybook/preset-scss/-/preset-scss-1.0.3.tgz#8ac834545c642dada0f64f510ef08dfb882e9737"
   integrity sha512-o9Iz6wxPeNENrQa2mKlsDKynBfqU2uWaRP80HeWp4TkGgf7/x3DVF2O7yi9N0x/PI1qzzTTpxlQ90D62XmpiTw==
 
-"@storybook/preview-api@8.1.5":
-  version "8.1.5"
-  resolved "https://registry.yarnpkg.com/@storybook/preview-api/-/preview-api-8.1.5.tgz#2577f95022922dd3e9a75445756d21591e58de5f"
-  integrity sha512-pv0aT5WbnSYR7KWQgy3jLfuBM0ocYG6GTcmZLREW5554oiBPHhzNFv+ZrBI47RzbrbFxq1h5dj4v8lkEcKIrbA==
+"@storybook/preview-api@8.1.10":
+  version "8.1.10"
+  resolved "https://registry.yarnpkg.com/@storybook/preview-api/-/preview-api-8.1.10.tgz#87680df22ffd805418baa0b07daeadb98aaefdba"
+  integrity sha512-0Gl8WHDtp/srrA5uBYXl7YbC8kFQA7IxVmwWN7dIS7HAXu63JZ6JfxaFcfy+kCBfZSBD7spFG4J0f5JXRDYbpg==
   dependencies:
     "@storybook/channels" "8.1.10"
     "@storybook/client-logger" "8.1.10"
@@ -2622,12 +2599,6 @@
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
-<<<<<<< HEAD
-"@storybook/test@^8.1.4":
-  version "8.1.5"
-  resolved "https://registry.yarnpkg.com/@storybook/test/-/test-8.1.5.tgz#264b9c9e14fb4b97eeea20156689020795c56e67"
-  integrity sha512-BuxzWWS7BIJrOTuwH5WTj3nGQ+xNCvinJBQsV+MRAdH+kltgPYbntd/NBceuHmYeUrX0t8id5VUapNaG4SHw1A==
-=======
 "@storybook/preview@8.1.10":
   version "8.1.10"
   resolved "https://registry.yarnpkg.com/@storybook/preview/-/preview-8.1.10.tgz#1730558fb5327741317f8a63b5218b0036168b2a"
@@ -2665,7 +2636,6 @@
   version "8.1.10"
   resolved "https://registry.yarnpkg.com/@storybook/test/-/test-8.1.10.tgz#ed05aaeaf96d00cc82947ac596b0456e21583a30"
   integrity sha512-uskw/xb/GkGLRTEKPao/5xUKxjP1X3DnDpE52xDF46ZmTvM+gPQbkex97qdG6Mfv37/0lhVhufAsV3g5+CrYKQ==
->>>>>>> 552f09bc (feat: add first Storybook basic component example)
   dependencies:
     "@storybook/client-logger" "8.1.10"
     "@storybook/core-events" "8.1.10"
@@ -2678,12 +2648,6 @@
     "@vitest/spy" "^1.3.1"
     util "^0.12.4"
 
-<<<<<<< HEAD
-"@storybook/types@8.1.5":
-  version "8.1.5"
-  resolved "https://registry.yarnpkg.com/@storybook/types/-/types-8.1.5.tgz#627cac55e8034deed4b763327ff938c84c541a05"
-  integrity sha512-/PfAZh1xtXN2MvAZZKpiL/nPkC3bZj8BQ7P7z5a/aQarP+y7qdXuoitYQ6oOH3rkaiYywmkWzA/y4iW70KXLKg==
-=======
 "@storybook/theming@8.1.10":
   version "8.1.10"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-8.1.10.tgz#544e413e99fc957c5937dae0ed89578a74d736e7"
@@ -2698,7 +2662,6 @@
   version "8.1.10"
   resolved "https://registry.yarnpkg.com/@storybook/types/-/types-8.1.10.tgz#944b1aa811de585830547a346bf5b53521f3b20e"
   integrity sha512-UJ97iqI+0Mk13I6ayd3TaBfSFBkWnEauwTnFMQe1dN/L3wTh8laOBaLa0Vr3utRSnt2b5hpcw/nq7azB/Gx4Yw==
->>>>>>> 552f09bc (feat: add first Storybook basic component example)
   dependencies:
     "@storybook/channels" "8.1.10"
     "@types/express" "^4.7.0"
@@ -4000,21 +3963,6 @@ boolbase@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
-
-<<<<<<< HEAD
-bootstrap-vue-next@^0.22.1:
-  version "0.22.1"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.22.1.tgz#a173a845751d576c547fa7d28f8fa632d90ccbcc"
-  integrity sha512-rzwnKyAvA3ceBXX+AEhhmLUV9GSqyRr68itLg3WF2PeGG3eMsiSYF6BTn6G9XYXqWtVWt7BwYAg17CCVNhLyHQ==
-=======
-bootstrap-vue-next@^0.21.2:
-  version "0.21.2"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.21.2.tgz#dac86c1c6c99968ecb54817cbcc68d889c5a17eb"
-  integrity sha512-2VMlrTETlT2d57T+rG7SKCGPD2CdcPjNHil6I3H/rW5+zXcSvx7luEKIBgnNRN+vDJaDomo7iOHqIGphJTlrdw==
->>>>>>> 552f09bc (feat: add first Storybook basic component example)
-  dependencies:
-    "@floating-ui/vue" "^1.0.6"
-    "@vueuse/core" "^10.10.0"
 
 bootstrap-vue-next@^0.22.1:
   version "0.22.1"
@@ -9454,12 +9402,8 @@ string-to-color@^2.2.2:
     lodash.words "^4.2.0"
     rgb-hex "^3.0.0"
 
-<<<<<<< HEAD
-"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.2.3:
-=======
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.2.0, string-width@^4.2.3:
   name string-width-cjs
->>>>>>> 552f09bc (feat: add first Storybook basic component example)
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
