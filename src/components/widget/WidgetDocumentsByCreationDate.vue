@@ -9,7 +9,7 @@
             v-for="(_, interval) in intervals"
             :key="interval"
             :class="{ active: selectedInterval === interval }"
-            class="btn btn-link border py-1 px-2 widget__header__selectors__selector"
+            class="btn btn-outline-light py-1 px-2 widget__header__selectors__selector"
             @click="setSelectedInterval(interval)"
           >
             {{ $t('widget.creationDate.intervals.' + interval) }}
@@ -29,7 +29,6 @@
             hover
             :chart-height-ratio="0.4"
             :data="aggregatedDataSlice"
-            :max-value="maxValue"
             :x-axis-tick-format="xAxisTickFormat"
             @select="searchInterval"
           >
@@ -345,6 +344,19 @@ export default {
 <style lang="scss" scoped>
 .widget {
   min-height: 100%;
+
+  &__header {
+    &__selectors {
+      &__selector {
+        color: inherit;
+        border-color: var(--bs-border-color);
+
+        &.active {
+          font-weight: bold;
+        }
+      }
+    }
+  }
 
   &__content {
     &__spinner {
