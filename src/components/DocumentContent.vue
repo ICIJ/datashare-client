@@ -64,38 +64,6 @@ export default {
       maxOffsetTranslations: {}
     }
   },
-  watch: {
-    q(value) {
-      this.localSearchTerm = value
-    },
-    localSearchTerm: throttle(async function (value) {
-      this.hasStickyToolbox = true
-      await this.updateContent(true)
-    }, 300),
-    async targetLanguage(value) {
-      await this.loadMaxOffset(value)
-      await this.activateContentSlice({ offset: 0 })
-    },
-    async page() {
-      const offset = this.activeContentSliceOffset
-      await this.activateContentSlice({ offset })
-    },
-    async contentPipeline() {
-      await this.cookAllContentSlices()
-      this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset }).cookedContent
-    }
-  },
-  async mounted() {
-    await this.loadMaxOffset()
-    // Initial local query, we need to jump to the result
-    if (this.q) {
-      this.hasStickyToolbox = true
-      await this.updateContent(true)
-    } else {
-      await this.activateContentSlice({ offset: 0 })
-    }
-  },
-  // eslint-disable-next-line vue/order-in-components
   computed: {
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms'
@@ -148,6 +116,37 @@ export default {
     },
     loadedOnce() {
       return !isEmpty(this.maxOffsetTranslations) && !isEmpty(this.contentSlices)
+    }
+  },
+  watch: {
+    q(value) {
+      this.localSearchTerm = value
+    },
+    localSearchTerm: throttle(async function (value) {
+      this.hasStickyToolbox = true
+      await this.updateContent(true)
+    }, 300),
+    async targetLanguage(value) {
+      await this.loadMaxOffset(value)
+      await this.activateContentSlice({ offset: 0 })
+    },
+    async page() {
+      const offset = this.activeContentSliceOffset
+      await this.activateContentSlice({ offset })
+    },
+    async contentPipeline() {
+      await this.cookAllContentSlices()
+      this.currentContentPage = this.getContentSlice({ offset: this.activeContentSliceOffset }).cookedContent
+    }
+  },
+  async mounted() {
+    await this.loadMaxOffset()
+    // Initial local query, we need to jump to the result
+    if (this.q) {
+      this.hasStickyToolbox = true
+      await this.updateContent(true)
+    } else {
+      await this.activateContentSlice({ offset: 0 })
     }
   },
   methods: {
