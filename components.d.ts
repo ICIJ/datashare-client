@@ -25,6 +25,19 @@ declare module 'vue' {
     BatchSearchResultsTable: typeof import('./src/components/BatchSearchResultsTable.vue')['default']
     BatchSearchStatus: typeof import('./src/components/BatchSearchStatus.vue')['default']
     BatchSearchTable: typeof import('./src/components/BatchSearchTable.vue')['default']
+    BBadge: typeof import('bootstrap-vue-next')['BBadge']
+    BButton: typeof import('bootstrap-vue-next')['BButton']
+    BCol: typeof import('bootstrap-vue-next')['BCol']
+    BCollapse: typeof import('bootstrap-vue-next')['BCollapse']
+    BDropdown: typeof import('bootstrap-vue-next')['BDropdown']
+    BDropdownItem: typeof import('bootstrap-vue-next')['BDropdownItem']
+    BFormCheckbox: typeof import('bootstrap-vue-next')['BFormCheckbox']
+    BFormCheckboxGroup: typeof import('bootstrap-vue-next')['BFormCheckboxGroup']
+    BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
+    BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
+    BLink: typeof import('bootstrap-vue-next')['BLink']
+    BModal: typeof import('bootstrap-vue-next')['BModal']
+    BRow: typeof import('bootstrap-vue-next')['BRow']
     ColumnChartPicker: typeof import('./src/components/ColumnChartPicker.vue')['default']
     ColumnFilter: typeof import('./src/components/ColumnFilter.vue')['default']
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
@@ -141,5 +154,9 @@ declare module 'vue' {
     WidgetSearchBar: typeof import('./src/components/widget/WidgetSearchBar.vue')['default']
     WidgetText: typeof import('./src/components/widget/WidgetText.vue')['default']
     WidgetTreeMap: typeof import('./src/components/widget/WidgetTreeMap.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vBModal: typeof import('bootstrap-vue-next')['vBModal']
+    vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
