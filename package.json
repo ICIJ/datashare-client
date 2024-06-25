@@ -74,6 +74,7 @@
     "xss": "^1.0.13"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.24.7",
     "@chromatic-com/storybook": "^1.5.0",
     "@icij/eslint-config-icij": "^1.0.2",
     "@storybook/addon-essentials": "^8.1.10",
