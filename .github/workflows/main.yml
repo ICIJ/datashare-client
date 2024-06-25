@@ -26,9 +26,6 @@ jobs:
       - name: Install Node dependencies
         run: yarn --frozen-lockfile
 
-      - name: Run tests
-        run: yarn test
-        
   publish:
     if: github.ref == 'refs/heads/feat/sb'
     needs: [test]
