@@ -371,13 +371,5 @@ export default {
     fill: $primary;
     cursor: pointer;
   }
-
-  &:deep(.column-chart__tooltips__item__wrapper) {
-    background: rgba(#000, $tooltip-opacity);
-
-    &:after {
-      border-top-color: rgba(#000, $tooltip-opacity);
-    }
-  }
 }
 </style>
