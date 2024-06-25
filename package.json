@@ -21,7 +21,7 @@
     "doc:widgets": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.js --separators --no-gfm --template bin/dmd/widgets.hbs src/store/widgets/*.js > 'dist/docs/widgets.md'",
     "predoc": "yarn doc:dir",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build:storybook": "storybook build"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",
