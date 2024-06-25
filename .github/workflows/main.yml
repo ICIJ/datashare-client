@@ -27,7 +27,7 @@ jobs:
         run: yarn --frozen-lockfile
 
   publish:
-    if: github.ref == 'refs/heads/feat/sb'
+    if: github.ref == 'refs/heads/feat/new-design'
     needs: [test]
     runs-on: ubuntu-latest
     steps:
