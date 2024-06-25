@@ -155,10 +155,10 @@ export default {
       return d3.scaleUtc().domain(this.intervalDatesExtent)
     },
     widthScale() {
-      return this.datesScale.rangeRound([0, this.chartWidth])
+      return this.datesScale.copy().rangeRound([0, this.chartWidth])
     },
     ticksScale() {
-      return this.datesScale.rangeRound([0, this.datesHistogram.length]).interpolate(d3.interpolateRound)
+      return this.datesScale.copy().rangeRound([0, this.datesHistogram.length])
     },
     datesHistogram() {
       const minTime = this.selectedIntervalTime.offset(this.datesExtent[0], -1)
@@ -169,7 +169,7 @@ export default {
         .histogram()
         .value((d) => d.date)
         .domain(this.widthScale.domain())
-        .thresholds(this.widthScale.ticks(bins.length))
+        .thresholds(this.widthScale.copy().ticks(bins.length))
       return histogram(this.cleanData)
     },
     datesHistogramSlice() {
@@ -229,6 +229,7 @@ export default {
       this.init()
     },
     sliceRange(value, previousValue) {
+      this.dataKey++
       // Safe access to the slice range values
       const { start, end } = value ?? { start: 0, end: 1 }
       const { start: prevStart = 0, end: prevEnd = 1 } = previousValue ?? { start: 0, end: 1 }
