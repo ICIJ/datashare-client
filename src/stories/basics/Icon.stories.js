@@ -1,4 +1,4 @@
-import Icon from '@/components/Icon.vue'
+import Icon from '@/components/Icon'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 
