@@ -5,10 +5,9 @@ import { BButton, BCloseButton } from 'bootstrap-vue-next'
 export default {
   title: 'Basics/Button',
   component: BButton,
-  tags: ['autodocs'],
   argTypes: {
     size: { control: { type: 'select' }, options: ['sm', 'md', 'lg'] },
-   variant: { control: { type: 'select' }, options: ['primary', 'secondary', 'tertiary', 'light'] }
+    variant: { control: { type: 'select' }, options: ['primary', 'secondary', 'tertiary', 'light'] }
   },
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
