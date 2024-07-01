@@ -1,0 +1,28 @@
+@import '../src/main.scss';
+
+.bg-striped {
+  background: repeating-linear-gradient(
+    45deg,
+    #dfdddd,
+    #dfdddd 10px,
+    #cfcccc 10px,
+    #cfcccc 20px
+  );
+  width: 500px;
+}
+
+@include color-mode(dark) {
+  .bg-striped {
+    background: repeating-linear-gradient(
+      45deg,
+      #222,
+      #333 10px,
+      #444 10px,
+      #444 20px
+    );
+  }
+}
+
+pre {
+  color: #000;
+}
