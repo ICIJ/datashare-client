@@ -9,16 +9,16 @@ export default {
       }
     },
     template: `
-      <div style="background: var(--bs-primary); width: 50px; height: 50px">
-        <span class=""></span>Test
-      </div>
-      <div style="background: var(--bs-secondary); width: 50px; height: 50px">
+      <div class="bg-primary" style="width: 50px; height: 50px; border: solid 1px black">
         Test
       </div>
-      <div style="background: var(--bs-tertiary); width: 50px; height: 50px">
+      <div  class="bg-secondary" style="width: 50px; height: 50px; border: solid 1px black">
         Test
       </div>
-      <div style="background: var(--bs-body-color); width: 50px; height: 50px">
+      <div class="bg-tertiary" style="width: 50px; height: 50px; border: solid 1px black">
+        Test
+      </div>
+      <div class="bg-body" style="width: 50px; height: 50px; border: solid 1px black">
         Test
       </div>
     `
