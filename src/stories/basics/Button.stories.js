@@ -3,7 +3,7 @@ import { BButton, BCloseButton } from 'bootstrap-vue-next'
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 
 export default {
-  title: 'Components/Button',
+  title: 'Basics/Button',
   component: BButton,
   tags: ['autodocs'],
   argTypes: {
@@ -26,11 +26,13 @@ export default {
     template: `
     <table>
     <thead>
-    <th>State</th>
-    <th>Base</th>
-    <th>Primary</th>
-    <th>Secondary</th>
-    <th>Tertiary</th>
+    <tr>
+      <th>State</th>
+      <th>Base</th>
+      <th>Primary</th>
+      <th>Secondary</th>
+      <th>Tertiary</th>
+    </tr>
     </thead>
     <tr>
       <td>Default </td>
