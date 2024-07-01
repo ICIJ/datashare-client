@@ -2,8 +2,8 @@
 @import './utils/animations.scss';
 @import './utils/multiselect.scss';
 @import './utils/toastify.scss';
-@import './assets/fonts/Lato/stylesheet.css';
-@import './assets/fonts/Medel/stylesheet.css';
+@import '@/assets/fonts/Lato/stylesheet.css';
+@import '@/assets/fonts/Medel/stylesheet.css';
 
 @import '~node_modules/vue3-perfect-scrollbar/dist/style.css';
 @import '~node_modules/v-calendar/dist/style.css';
