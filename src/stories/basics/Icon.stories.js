@@ -1,5 +1,3 @@
-import { fn } from '@storybook/test'
-
 import Icon from '@/components/Icon.vue'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories

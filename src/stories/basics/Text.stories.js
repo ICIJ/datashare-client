@@ -1,9 +1,5 @@
 export default {
   title: 'Basics/Text',
-  argTypes: {
-    size: { control: { type: 'select' }, options: ['sm', 'md', 'lg'] },
-    variant: { control: { type: 'select' }, options: ['primary', 'secondary', 'tertiary', 'light'] }
-  },
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
     components: {},
@@ -25,10 +21,4 @@ export default {
 }
 
 // // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Default = {
-  args: {
-    variant: '',
-    size: 'sm',
-    label: 'Button'
-  }
-}
+export const Default = {}
