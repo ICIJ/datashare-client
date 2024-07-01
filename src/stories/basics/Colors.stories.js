@@ -1,7 +1,3 @@
-import { BButton, BCloseButton } from 'bootstrap-vue-next'
-
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
-
 export default {
   title: 'Basics/Colors',
   render: (args) => ({
@@ -30,5 +26,4 @@ export default {
 }
 
 // // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Default = {
-}
+export const Default = {}
