@@ -10,6 +10,7 @@ const config = {
     "@chromatic-com/storybook",
     "@storybook/addon-interactions",
     '@storybook/addon-themes',
+    "storybook-addon-pseudo-states"
   ],
   framework: {
     name: "@storybook/vue3-vite",
