@@ -20,7 +20,7 @@
     "doc:hooks": "node bin/generateHook.js",
     "doc:widgets": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.js --separators --no-gfm --template bin/dmd/widgets.hbs src/store/widgets/*.js > 'dist/docs/widgets.md'",
     "predoc": "yarn doc:dir",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006 --ci",
     "build:storybook": "storybook build"
   },
   "dependencies": {
@@ -30,6 +30,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
     "@icij/murmur-next": "4.0.18",
+    "@phosphor-icons/vue": "^2.2.1",
     "@popperjs/core": "^2.11.8",
     "@vue/compat": "^3.4.30",
     "axios": "^1.7.2",
@@ -99,6 +100,7 @@
     "jsdom": "^24.0.0",
     "sass": "^1.77.6",
     "storybook": "^8.1.10",
+    "storybook-addon-pseudo-states": "^3.1.1",
     "unplugin-vue-components": "^0.27.0",
     "vite": "^5.3.1",
     "vitest": "^1.6.0",
