@@ -4,7 +4,6 @@ import Icon from '@/components/Icon'
 
 export default {
   title: 'Basics/Icons',
-  tags: ['autodocs'],
   component: Icon,
   argTypes: {
     variant: {
