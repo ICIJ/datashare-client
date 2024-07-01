@@ -1,6 +1,4 @@
-import { addons } from '@storybook/manager-api';
-import datashareTheme from './datashareTheme';
+import { addons } from '@storybook/manager-api'
+import theme from './theme'
 
-addons.setConfig({
-    theme: datashareTheme,
-  });
+addons.setConfig({ navSize: 300, theme })
