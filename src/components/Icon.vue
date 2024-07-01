@@ -5,7 +5,8 @@
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
 import camelCase from 'lodash/camelCase'
-import startCase from 'lodash/startCase'
+import upperFirst from 'lodash/upperFirst'
+
 const props = defineProps({
   icon: {
     type: String,
@@ -18,8 +19,7 @@ const props = defineProps({
   },
   variant: {
     type: String,
-    required: false,
-    default: 'body-color'
+    required: false
   },
   fill: {
     type: Boolean,
@@ -43,7 +43,7 @@ const weights = {
 }
 
 function relativePathForIcon(name) {
-  const filename = `Ph${startCase(camelCase(name))}`
+  const filename = `Ph${upperFirst(camelCase(name))}`
   return defineAsyncComponent(() => import(`../../node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`))
 }
 const component = relativePathForIcon(props.icon)
@@ -54,6 +54,6 @@ const weight = computed(() => {
 })
 
 const color = computed(() => {
-  return `var(--bs-${props.variant}, var(--bs-body-color))`
+  return `var(--bs-${props.variant}, currentColor)`
 })
 </script>
