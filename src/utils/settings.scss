@@ -1,7 +1,6 @@
 $prefix: bs-;
 
-$saddle-red: #FA4070;
-$primary: #193D87;
+$primary: #112A5C;
 $secondary: #FA4070;
 $tertiary: #FFBF57;
 $danger: #dc3545;
@@ -9,9 +8,9 @@ $danger: #dc3545;
 $warning: #FFBF57;
 $success: #00bb84;
 $info: #45C4FF;
-$light: #F0F0F0;
-$lighter: #F4F4F6;
-$dark: #292930;
+$light: #C7C7C7;
+$lighter: #F3F3F3;
+$dark: #212529;
 $darker: darken($dark, 20);
 $darkest: darken($dark, 30);
 
@@ -27,7 +26,7 @@ $card-cap-bg: rgba(var(--#{$prefix}body-color-rgb), .03);
 $translation-bg: #fcf8e3;
 
 $theme-colors: (
-  icij: #852308,
+  icij: #F00,
   primary: $primary,
   secondary: $secondary,
   tertiary: $tertiary,
@@ -43,7 +42,7 @@ $theme-colors: (
   mark: #fff5bd,
   category-ban: $secondary,
   category-person: #ff6699,
-  category-organization: darken($warning, 5),
+  category-organization: #FFB53E,
   category-location: #4cd9aa,
   category-email: #33beff
 );
