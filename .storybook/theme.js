@@ -36,10 +36,10 @@ export default create({
   barBg: '#e9e9e9',
 
   // Form colors
-  buttonBg: '#222425',
+  buttonBg: '#193D87',
   buttonBorder: 'rgba(0,0,0,.1)',
-  booleanBg: '#222425',
-  booleanSelectedBg: '#2E3438',
+  booleanBg: '#fff',
+  booleanSelectedBg: '#FA4070',
   inputBg: '#fff',
   inputBorder: 'rgba(0,0,0,.1)',
   inputTextColor: '#000',
