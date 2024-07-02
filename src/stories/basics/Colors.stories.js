@@ -17,11 +17,11 @@ export default {
         <phosphor-icon name="Lego Smiley" />
         .bg-primary-subtle
       </div>
-      <div class="p-3 mb-2 bg-secondary text-bg-secondary border border-dark fw-bold">
+      <div class="p-3 mb-2 bg-secondary text-bg-secondary border border-secondary fw-bold">
         <phosphor-icon name="Lego Smiley" />
         .bg-secondary
       </div>
-      <div class="p-3 mb-2 bg-secondary-subtle text-secondary-emphasis border border-dark fw-bold">
+      <div class="p-3 mb-2 bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle fw-bold">
         <phosphor-icon name="Lego Smiley" />
         .bg-secondary-subtle
       </div>
