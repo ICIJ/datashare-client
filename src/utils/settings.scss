@@ -47,6 +47,13 @@ $theme-colors: (
   category-email: #33beff
 );
 
+$primary-bg-subtle: tint-color($primary, 80%);
+$secondary-bg-subtle: #FFECF1;
+$success-bg-subtle: #E5F8F3;
+$info-bg-subtle: #ECF9FF;
+$warning-bg-subtle: #FFF9EE;
+$danger-bg-subtle:#FBEBEC;
+
 $enable-shadows: true;
 $enable-rounded: true;
 
