@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineProps, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import ToastBody from '@/components/ToastBody'
 
@@ -21,7 +21,8 @@ const props = defineProps({
     default: "Don't show this again"
   },
   icon: {
-    type: String
+    type: String,
+    default: null
   },
   noIcon: {
     type: Boolean

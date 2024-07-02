@@ -1,7 +1,7 @@
 import { uniqueId } from 'lodash'
 
 import DismissableAlert from '@/components/DismissableAlert'
-import Icon from '@/components/Icon'
+import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
   title: 'Components/DismissableAlert',
@@ -39,7 +39,8 @@ export default {
 
 export const Default = {
   args: {
-    persist: false
+    persist: false,
+    name: 'a-unique-name'
   }
 }
 
@@ -51,7 +52,7 @@ export const CustomSlots = {
   render: (args) => ({
     components: {
       DismissableAlert,
-      Icon
+      PhosphorIcon
     },
     setup: () => ({ args }),
     template: `
@@ -60,10 +61,10 @@ export const CustomSlots = {
         <template #button="{ linkClassList, linkLabel }">
           <a href="/" target="_parent" class="btn d-inline-flex"  :class="linkClassList">
             Read the doc
-            <icon icon="arrow-square-out" size="16px" class="ms-2" />
+            <phosphor-icon name="arrow-square-out" size="16px" class="ms-2" />
           </a>
           <a class="btn btn-link d-inline-flex" :title="linkLabel" v-b-tooltip>
-            <icon icon="x" size="20px" />
+            <phosphor-icon name="x" size="20px" />
           </a>
         </template>
       </dismissable-alert>
