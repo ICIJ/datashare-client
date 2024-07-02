@@ -8,18 +8,19 @@ import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
 
 const props = defineProps({
-  icon: {
+  name: {
     type: String,
     required: true
   },
   size: {
     type: String,
     required: false,
-    default: '24'
+    default: '20'
   },
   variant: {
     type: String,
-    required: false
+    required: false,
+    default: null
   },
   fill: {
     type: Boolean,
@@ -46,7 +47,7 @@ function relativePathForIcon(name) {
   const filename = `Ph${upperFirst(camelCase(name))}`
   return defineAsyncComponent(() => import(`../../node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`))
 }
-const component = relativePathForIcon(props.icon)
+const component = relativePathForIcon(props.name)
 const weight = computed(() => {
   if (props.fill) return weights.fill
   if (weights[props.weight]) return props.weight

@@ -1,10 +1,8 @@
-import Icon from '@/components/Icon'
-
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
+import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
-  title: 'Basics/Icons',
-  component: Icon,
+  title: 'Basics/PhosphorIcon',
+  component: PhosphorIcon,
   argTypes: {
     variant: {
       control: { type: 'select' },
@@ -14,7 +12,7 @@ export default {
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
     components: {
-      Icon
+      PhosphorIcon
     },
     // The story's `args` need to be mapped into the template through the `setup()` method
     setup() {
@@ -26,32 +24,32 @@ export default {
     template: `
     Regular
     <br/>
-    <Icon v-bind="args"/>
-    <Icon v-bind="args" variant="primary"/>
-    <Icon v-bind="args" variant="secondary"/>
-    <Icon v-bind="args" variant="tertiary"/>
+    <phosphor-icon v-bind="args"/>
+    <phosphor-icon v-bind="args" variant="primary"/>
+    <phosphor-icon v-bind="args" variant="secondary"/>
+    <phosphor-icon v-bind="args" variant="tertiary"/>
 
     <br/>
     Bold
     <br/>
-    <Icon v-bind="args" weight="bold"/>
-    <Icon v-bind="args" variant="primary" weight="bold"/>
-    <Icon v-bind="args" variant="secondary" weight="bold"/>
-    <Icon v-bind="args" variant="tertiary" weight="bold"/>
+    <phosphor-icon v-bind="args" weight="bold"/>
+    <phosphor-icon v-bind="args" variant="primary" weight="bold"/>
+    <phosphor-icon v-bind="args" variant="secondary" weight="bold"/>
+    <phosphor-icon v-bind="args" variant="tertiary" weight="bold"/>
     <br/>
     Fill
     <br/>
-    <Icon v-bind="args" weight="fill"/>
-    <Icon v-bind="args" variant="primary" weight="fill"/>
-    <Icon v-bind="args" variant="secondary" weight="fill"/>
-    <Icon v-bind="args" variant="tertiary" weight="fill"/>
+    <phosphor-icon v-bind="args" weight="fill"/>
+    <phosphor-icon v-bind="args" variant="primary" weight="fill"/>
+    <phosphor-icon v-bind="args" variant="secondary" weight="fill"/>
+    <phosphor-icon v-bind="args" variant="tertiary" weight="fill"/>
     <br/>
     Duotone
     <br/>
-    <Icon v-bind="args" weight="duotone"/>
-    <Icon v-bind="args" variant="primary" weight="duotone"/>
-    <Icon v-bind="args" variant="secondary" weight="duotone"/>
-    <Icon v-bind="args" variant="tertiary" weight="duotone"/>
+    <phosphor-icon v-bind="args" weight="duotone"/>
+    <phosphor-icon v-bind="args" variant="primary" weight="duotone"/>
+    <phosphor-icon v-bind="args" variant="secondary" weight="duotone"/>
+    <phosphor-icon v-bind="args" variant="tertiary" weight="duotone"/>
     `
   })
 }
@@ -59,14 +57,14 @@ export default {
 // // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default = {
   args: {
-    icon: 'User',
+    name: 'User',
     size: '24'
   }
 }
 
 export const Larger = {
   args: {
-    icon: 'User',
+    name: 'User',
     size: '32'
   }
 }
