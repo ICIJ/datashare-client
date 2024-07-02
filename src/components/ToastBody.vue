@@ -63,7 +63,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
 <template>
   <div class="toast-body d-flex align-items-center" :class="classList">
     <div v-if="!noIcon" class="toast-body__icon pe-3">
-      <phosphor-icon :name="icon" :variant="variant" />
+      <phosphor-icon :name="icon" :variant="variant" weight="bold" />
     </div>
     <div class="toast-body__content flex-grow-1">
       <h5 v-if="title" class="toast-body__content__title">{{ title }}</h5>
