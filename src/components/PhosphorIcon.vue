@@ -15,7 +15,7 @@ const props = defineProps({
   size: {
     type: String,
     required: false,
-    default: '20'
+    default: '1.4em'
   },
   variant: {
     type: String,
@@ -44,7 +44,7 @@ const weights = {
 }
 
 function relativePathForIcon(name) {
-  const filename = `Ph${upperFirst(camelCase(name))}`
+  const filename = name ? `Ph${upperFirst(camelCase(name))}` : 'PhCircleDashed'
   return defineAsyncComponent(() => import(`../../node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`))
 }
 const component = relativePathForIcon(props.name)
