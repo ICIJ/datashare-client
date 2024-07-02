@@ -48,7 +48,7 @@ watch(dissmissed, (value) => props.persist && props.name && localStorage.setItem
         <slot name="button" v-bind="{ linkClassList, linkLabel, noButton, dissmiss }">
           <button
             v-if="!noButton"
-            class="btn text-nowrap dismissable-alert__body__link"
+            class="btn text-nowrap dismissable-alert__body__button"
             type="button"
             :class="linkClassList"
             @click="dissmiss"
@@ -64,8 +64,9 @@ watch(dissmissed, (value) => props.persist && props.name && localStorage.setItem
 <style lang="scss" scoped>
 .dismissable-alert {
   &__body {
-    &__link:deep(.btn) {
-      background: #fff;
+    &__button {
+      background: var(--bs-body-bg);
+      color: var(--bs-body-color);
     }
   }
 }
