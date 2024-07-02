@@ -4,12 +4,14 @@ import { useArgs } from '@storybook/preview-api'
 import { styled } from '@storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { createBootstrap } from 'bootstrap-vue-next'
+import Vue3Toastify from 'vue3-toastify'
 
 import './preview.scss'
 
 setup((app) => {
   const bootstrap = createBootstrap({ components: true, directives: true })
   app.use(bootstrap)
+  app.use(Vue3Toastify)
 })
 
 

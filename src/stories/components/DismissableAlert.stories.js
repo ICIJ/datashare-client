@@ -61,10 +61,10 @@ export const CustomSlots = {
         <template #button="{ linkClassList, linkLabel }">
           <a href="/" target="_parent" class="btn d-inline-flex"  :class="linkClassList">
             Read the doc
-            <phosphor-icon name="arrow-square-out" size="16px" class="ms-2" />
+            <phosphor-icon name="arrow-square-out" weight="bold" class="ms-2" />
           </a>
           <a class="btn btn-link d-inline-flex" :title="linkLabel" v-b-tooltip>
-            <phosphor-icon name="x" size="20px" />
+            <phosphor-icon name="x" size="20px" weight="bold" />
           </a>
         </template>
       </dismissable-alert>
