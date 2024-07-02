@@ -194,7 +194,7 @@ class Core extends Behaviors {
         app.config.globalProperties.$toast = {
           toast(body, { title = null, href = null, linkLabel = null, ...options } = {}) {
             const closeOnClick = options.closeOnClick ?? !href
-            const closeButton = () => h(PhX, { class: 'align-self-center', weight: 'bold'  })
+            const closeButton = () => h(PhX, { class: 'align-self-center', weight: 'bold' })
             const props = { title, body, href, linkLabel }
             const toastProps = { closeOnClick, closeButton, ...options, icon: false }
             toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...props }), toastProps)
