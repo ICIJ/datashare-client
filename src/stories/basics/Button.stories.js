@@ -9,7 +9,7 @@ export default {
     size: { control: { type: 'select' }, options: ['sm', 'md', 'lg'] },
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'outline-secondary', 'tertiary', 'light']
+      options: ['primary', 'secondary', 'outline-secondary', 'outline-tertiary', 'light']
     }
   },
   render: (args) => ({
@@ -42,56 +42,56 @@ export default {
         <td><b-button v-bind="args" >{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="primary" >{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="outline-secondary" >{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="tertiary" >{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" >{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>Hover </td>
         <td><b-button v-bind="args" id="hover" >{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="primary" id="hover">{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="outline-secondary" id="hover">{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="tertiary" id="hover">{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" id="hover">{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>Focus </td>
         <td><b-button v-bind="args" id="focus">{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="primary" id="focus">{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="outline-secondary" id="focus">{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="tertiary" id="focus">{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" id="focus">{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>Active </td>
         <td><b-button v-bind="args" id="active">{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="primary" id="active">{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="outline-secondary" id="active">{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="tertiary" id="active">{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" id="active">{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>Pressed </td>
         <td><b-button v-bind="args" pressed>{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="primary" pressed>{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="outline-secondary" pressed>{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="tertiary" pressed>{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" pressed>{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>Disabled </td>
         <td><b-button v-bind="args" disabled>{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="primary" disabled>{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="outline-secondary" disabled>{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="tertiary" disabled>{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" disabled>{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>Loading </td>
         <td><b-button v-bind="args" loading>{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="primary" loading>{{args.label}}</b-button></td>
         <td><b-button v-bind="args" variant="outline-secondary" loading>{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="tertiary" loading>{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" loading>{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>BCloseButton </td>
         <td><BCloseButton v-bind="args">{{args.label}}</BCloseButton></td>
         <td><BCloseButton v-bind="args" variant="primary">{{args.label}}</BCloseButton></td>
         <td><BCloseButton v-bind="args" variant="outline-secondary">{{args.label}}</BCloseButton></td>
-        <td><BCloseButton v-bind="args" variant="tertiary">{{args.label}}</BCloseButton></td>
+        <td><BCloseButton v-bind="args" variant="outline-tertiary">{{args.label}}</BCloseButton></td>
       </tr>
     </tbody>
     </table>
