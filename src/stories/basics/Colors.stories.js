@@ -17,7 +17,7 @@ export default {
         <phosphor-icon name="Lego Smiley" />
         .bg-primary-subtle
       </div>
-      <div class="p-3 mb-2 bg-secondary text-white border border-dark fw-bold">
+      <div class="p-3 mb-2 bg-secondary text-bg-secondary border border-dark fw-bold">
         <phosphor-icon name="Lego Smiley" />
         .bg-secondary
       </div>
@@ -25,7 +25,7 @@ export default {
         <phosphor-icon name="Lego Smiley" />
         .bg-secondary-subtle
       </div>
-      <div class="p-3 mb-2 bg-success text-white border border-dark fw-bold">
+      <div class="p-3 mb-2 bg-success text-bg-success border border-dark fw-bold">
         <phosphor-icon name="Lego Smiley" />
         .bg-success
       </div>
@@ -33,7 +33,7 @@ export default {
         <phosphor-icon name="Lego Smiley" />
         .bg-success-subtle
       </div>
-      <div class="p-3 mb-2 bg-danger text-white border border-dark fw-bold">
+      <div class="p-3 mb-2 bg-danger text-bg-danger border border-dark fw-bold">
         <phosphor-icon name="Lego Smiley" />
         .bg-danger
       </div>
@@ -41,7 +41,7 @@ export default {
         <phosphor-icon name="Lego Smiley" />
         .bg-danger-subtle
       </div>
-      <div class="p-3 mb-2 bg-warning text-dark border border-dark fw-bold">
+      <div class="p-3 mb-2 bg-warning text-bg-warning border border-dark fw-bold">
         <phosphor-icon name="Lego Smiley" />
         .bg-warning
       </div>
@@ -49,7 +49,7 @@ export default {
         <phosphor-icon name="Lego Smiley" />
         .bg-warning-subtle
       </div>
-      <div class="p-3 mb-2 bg-info text-dark border border-dark fw-bold">
+      <div class="p-3 mb-2 bg-info text-bg-info border border-dark fw-bold">
         <phosphor-icon name="Lego Smiley" />
         .bg-info
       </div>
