@@ -1,6 +1,6 @@
 import { BTooltip } from 'bootstrap-vue-next'
 
-import Icon from '@/components/Icon'
+import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
   title: 'Basics/Tooltip',
@@ -8,7 +8,7 @@ export default {
   render: (args) => ({
     components: {
       BTooltip,
-      Icon
+      PhosphorIcon
     },
     setup() {
       return {
@@ -17,7 +17,7 @@ export default {
     },
     template: `
       <span id="tooltip-target" class="p-5 mx-auto my-5 d-block bg-dark-subtle border border-dark text-center rounded" style="max-width: 300px">
-        <Icon icon="crosshair" />
+        <PhosphorIcon name="crosshair" />
       </span>
       <BTooltip model-value manual target="#tooltip-target" placement="right">
         right
@@ -59,4 +59,4 @@ export default {
   })
 }
 
-export const Default = { }
+export const Default = {}
