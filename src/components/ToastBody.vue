@@ -54,7 +54,7 @@ const classList = computed(() => {
 })
 
 const variant = computed(() => VARIANTS[props.toastProps?.type ?? 'default'] ?? props.toastProps?.type)
-const icon = computed(() => ICONS[props.toastProps?.type ?? 'default'] ?? 'info')
+const icon = computed(() => props.icon ?? ICONS[props.toastProps?.type ?? 'default'] ?? 'info')
 const hasLink = computed(() => !!props.href || !!slots.link)
 const linkLabelDisplay = computed(() => props.linkLabel ?? 'See more')
 const linkClassList = computed(() => [`btn-outline-${variant.value}`])
@@ -98,8 +98,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
     }
   }
 
-  &__link .btn:not(:hover),
-  &__link:deep(.btn:not(:hover)) {
+  &__link .btn:not(:hover) {
     background: #fff;
   }
 }
