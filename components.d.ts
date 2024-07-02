@@ -114,6 +114,7 @@ declare module 'vue' {
     PageIcon: typeof import('./src/components/PageIcon.vue')['default']
     PaginatedViewer: typeof import('./src/components/document/viewers/PaginatedViewer.vue')['default']
     Pagination: typeof import('./src/components/Pagination.vue')['default']
+    PhosphorIcon: typeof import('./src/components/PhosphorIcon.vue')['default']
     Plugins: typeof import('./src/components/Plugins.vue')['default']
     ProjectCards: typeof import('./src/components/ProjectCards.vue')['default']
     ProjectForm: typeof import('./src/components/ProjectForm.vue')['default']
