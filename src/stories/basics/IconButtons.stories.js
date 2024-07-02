@@ -26,7 +26,7 @@ export default {
       }
     },
     template: `
-      <b-button v-bind="args" ><phosphor-icon name="CirclesThreePlus" />{{args.label}}</b-button></td>
+      <b-button v-bind="args" ><phosphor-icon name="CirclesThreePlus" />{{args.label}}</b-button>
     `
   }),
   parameters: {
