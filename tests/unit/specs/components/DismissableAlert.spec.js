@@ -109,12 +109,12 @@ describe('DismissableAlert', () => {
       props: {
         name: 'test-alert',
         persist: false,
-        icon: 'info-icon',
+        icon: 'info',
         noIcon: false
       }
     })
     expect(wrapper.findComponent(PhosphorIcon).exists()).toBeTruthy()
-    expect(wrapper.findComponent(ToastBody).props('icon')).toBe('info-icon')
+    expect(wrapper.findComponent(ToastBody).props('icon')).toBe('info')
   })
 
   it('does not render the icon if noIcon is true', () => {
