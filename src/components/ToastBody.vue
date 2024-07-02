@@ -99,7 +99,8 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
   }
 
   &__link .btn:not(:hover) {
-    background: #fff;
+    background: var(--bs-body-bg);
+    color: var(--bs-body-color);
   }
 }
 </style>
