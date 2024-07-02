@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import DismissableAlert from '@/components/DismissableAlert'
-import Icon from '@/components/Icon'
+import PhosphorIcon from '@/components/PhosphorIcon'
 import ToastBody from '@/components/ToastBody'
 
 describe('DismissableAlert', () => {
@@ -113,7 +113,7 @@ describe('DismissableAlert', () => {
         noIcon: false
       }
     })
-    expect(wrapper.findComponent(Icon).exists()).toBeTruthy()
+    expect(wrapper.findComponent(PhosphorIcon).exists()).toBeTruthy()
     expect(wrapper.findComponent(ToastBody).props('icon')).toBe('info-icon')
   })
 
@@ -125,6 +125,6 @@ describe('DismissableAlert', () => {
         noIcon: true
       }
     })
-    expect(wrapper.findComponent(Icon).exists()).toBeFalsy()
+    expect(wrapper.findComponent(PhosphorIcon).exists()).toBeFalsy()
   })
 })
