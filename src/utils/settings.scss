@@ -67,6 +67,8 @@ $border-radius-xl: 0.5rem;
 $border-radius-xxl: 1rem;
 $border-radius-pill: 50rem;
 
+$alert-border-width: 0;
+
 $input-bg:  var(--#{$prefix}body-bg);
 $input-focus-border-color: map-get($theme-colors, 'secondary');
 $custom-control-indicator-checked-bg: $tertiary;
