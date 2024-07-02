@@ -1,10 +1,17 @@
 /** @type { import('@storybook/vue3').Preview } */
-
-import './preview.scss'
-
+import { setup } from '@storybook/vue3'
 import { useArgs } from '@storybook/preview-api'
 import { styled } from '@storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
+import { createBootstrap } from 'bootstrap-vue-next'
+
+import './preview.scss'
+
+setup((app) => {
+  const bootstrap = createBootstrap({ components: true, directives: true })
+  app.use(bootstrap)
+})
+
 
 const decorators = [
   withThemeByDataAttribute({
