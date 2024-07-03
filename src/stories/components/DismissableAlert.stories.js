@@ -5,6 +5,7 @@ import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
   title: 'Components/DismissableAlert',
+  tags: ['autodocs'],
   argTypes: {
     variant: {
       control: { type: 'select' },
