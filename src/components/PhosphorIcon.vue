@@ -16,12 +16,12 @@ const WEIGHT_FILL = 'fill'
 const WEIGHT_DUOTONE = 'duotone'
 
 const WEIGHTS = Object.freeze({
-  thin: WEIGHT_THIN,
-  light: WEIGHT_LIGHT,
-  regular: WEIGHT_REGULAR,
-  bold: WEIGHT_BOLD,
-  fill: WEIGHT_FILL,
-  duotone: WEIGHT_DUOTONE
+  [WEIGHT_THIN]: WEIGHT_THIN,
+  [WEIGHT_LIGHT]: WEIGHT_LIGHT,
+  [WEIGHT_REGULAR]: WEIGHT_REGULAR,
+  [WEIGHT_BOLD]: WEIGHT_BOLD,
+  [WEIGHT_FILL]: WEIGHT_FILL,
+  [WEIGHT_DUOTONE]: WEIGHT_DUOTONE
 })
 
 const hover = ref(false)
