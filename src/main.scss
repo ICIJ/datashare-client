@@ -13,18 +13,40 @@
 @import '~node_modules/bootstrap-vue-next/dist/bootstrap-vue-next.css';
 // @TODO bundle Murmur so the import is easier
 @import '~node_modules/@icij/murmur-next/dist/lib/murmur.css';
-.btn-outline-secondary {
-  --#{$prefix}btn-color:  var(--bs-body-color);
-  --#{$prefix}btn-hover-bg: #{tint-color($secondary, 90%)};
-  --#{$prefix}btn-hover-color: var(--bs-body-color);
-  --#{$prefix}btn-active-bg: #{tint-color($secondary, 90%)};
+@include color-mode(light) {
+
+  .btn-outline-secondary {
+    --#{$prefix}btn-color: var(--bs-body-color);
+    --#{$prefix}btn-hover-bg: #{tint-color($secondary, 90%)};
+    --#{$prefix}btn-active-bg: #{tint-color($secondary, 90%)};
+    --#{$prefix}btn-active-shadow: 1px 1px 8px 5px #{tint-color($tertiary, 70%)};
+  }
+  .btn-outline-tertiary {
+    --#{$prefix}btn-color:  var(--bs-body-color);
+    --#{$prefix}btn-hover-bg: #{tint-color($tertiary, 60%)};
+    --#{$prefix}btn-active-bg: #{tint-color($tertiary, 60%)};
+    --#{$prefix}btn-active-shadow: 1px 1px 8px 5px #{tint-color($tertiary, 70%)};
+
+  }
 }
-.btn-outline-tertiary {
-  --#{$prefix}btn-color:  var(--bs-body-color);
-  --#{$prefix}btn-hover-bg: #{tint-color($tertiary, 60%)};
-  --#{$prefix}btn-hover-color: var(--bs-body-color);
-  --#{$prefix}btn-active-bg: #{tint-color($tertiary, 60%)};
+@include color-mode(dark) {
+  .btn-outline-secondary {
+    --#{$prefix}btn-color:  var(--bs-body-color);
+    --#{$prefix}btn-hover-color: var(--bs-body-color);
+    --#{$prefix}btn-hover-bg:  #{shade-color($secondary, 95%)};
+    --#{$prefix}btn-active-bg: var(--bs-body-bg-color);
+    --#{$prefix}btn-active-color: var(--bs-body-color);
+    --#{$prefix}btn-active-shadow: 1px 1px 8px 5px #{shade-color($tertiary, 70%)};
+  }
+  .btn-outline-tertiary {
+       --#{$prefix}btn-color:  var(--bs-body-color);
+       --#{$prefix}btn-hover-bg: #{shade-color($tertiary, 60%)};
+       --#{$prefix}btn-active-bg: #{shade-color($tertiary, 60%)};
+       box-shadow: 1px 1px 8px 5px #{shade-color($tertiary, 70%)};
+     }
 }
+
+
 
 
 html {
