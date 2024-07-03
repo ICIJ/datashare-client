@@ -53,10 +53,10 @@ export default {
       </tr>
       <tr>
         <td>Focus </td>
-        <td><b-button v-bind="args" id="focus">{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="primary" id="focus">{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="outline-secondary" id="focus">{{args.label}}</b-button></td>
-        <td><b-button v-bind="args" variant="outline-tertiary" id="focus">{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" class="focus">{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="primary" class="focus">{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-secondary" class="focus">{{args.label}}</b-button></td>
+        <td><b-button v-bind="args" variant="outline-tertiary" class="focus">{{args.label}}</b-button></td>
       </tr>
       <tr>
         <td>Active </td>
@@ -100,7 +100,7 @@ export default {
   parameters: {
     pseudo: {
       hover: ['#hover'],
-      focus: ['#focus'],
+      focus: ['.focus'],
       active: ['#active']
     }
   }
