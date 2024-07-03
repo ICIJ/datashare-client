@@ -26,7 +26,7 @@ export default {
     methods: {
       toast() {
         const closeButton = () => h(PhX, { class: 'align-self-center', weight: 'bold' })
-        const toastProps = { type: args.variant, icon: false, closeButton }
+        const toastProps = { type: args.variant, icon: false, closeButton, autoClose: false }
         toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...args }), toastProps)
       }
     },
