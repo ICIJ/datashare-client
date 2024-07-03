@@ -6,6 +6,15 @@ import PhosphorIcon from '@/components/PhosphorIcon'
 const props = defineProps({
   compact: {
     type: Boolean
+  },
+  noHelp: {
+    type: Boolean
+  },
+  noRemoveAll: {
+    type: Boolean
+  },
+  noSignOut: {
+    type: Boolean
   }
 })
 
@@ -26,16 +35,20 @@ const classList = computed(() => {
     </div>
     <div class="app-sidebar-footer__links">
       <router-link v-b-tooltip.body :to="{ name: 'settings' }" title="Settings" class="app-sidebar-footer__links__item">
-        <phosphor-icon name="gear" hover-weight="bold" />
+        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="gear" hover-weight="bold" />
         <span class="visually-hidden">Settings</span>
       </router-link>
-      <a v-b-tooltip.body title="Help" class="app-sidebar-footer__links__item">
-        <phosphor-icon name="question" hover-weight="bold" />
+      <a v-if="!noHelp" v-b-tooltip.body title="Help" class="app-sidebar-footer__links__item">
+        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="question" hover-weight="bold" />
         <span class="visually-hidden">Help</span>
       </a>
-      <a v-b-tooltip.body title="Remove all" class="app-sidebar-footer__links__item">
-        <phosphor-icon name="trash" hover-weight="bold" />
+      <a v-if="!noRemoveAll" v-b-tooltip.body title="Remove all" class="app-sidebar-footer__links__item">
+        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="trash" hover-weight="bold" />
         <span class="visually-hidden">Remove all</span>
+      </a>
+      <a v-if="!noSignOut" v-b-tooltip.body title="Sign out" class="app-sidebar-footer__links__item">
+        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="sign-out" hover-weight="bold" />
+        <span class="visually-hidden">Sign out</span>
       </a>
     </div>
   </footer>
@@ -50,6 +63,27 @@ const classList = computed(() => {
 
   [data-bs-theme='dark'] & {
     background-color: #070707;
+  }
+
+  &--compact {
+    flex-direction: column;
+
+    .app-sidebar-footer__links__item,
+    .app-sidebar-footer__content,
+    .app-sidebar-footer__logo {
+      margin: 0;
+    }
+
+
+    .app-sidebar-footer__links {
+      order: -1;
+      flex-direction: column;
+      margin-bottom: $spacer;
+
+      &__item {
+        margin-bottom: $spacer-xs;
+      }
+    }
   }
 
   &__logo {
@@ -76,9 +110,13 @@ const classList = computed(() => {
 
     &__item {
       text-align: center;
-      padding: $spacer-xxs;
       color: inherit;
       cursor: pointer;
+      margin: $spacer-xxs;
+
+      &__icon:hover {
+        color: var(--bs-primary);
+      }
     }
   }
 }
