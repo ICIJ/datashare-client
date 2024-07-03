@@ -1,11 +1,30 @@
 <template>
-  <component :is="component" :size="size" :color="color" :weight="weight" />
+<component @mouseenter="hover = true" @mouseleave="hover = false" :is="component" :size="size" :color="color"
+  :weight="weight" />
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent } from 'vue'
+import { computed, ref, defineAsyncComponent } from 'vue'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
+
+const WEIGHT_THIN = 'thin'
+const WEIGHT_LIGHT = 'light'
+const WEIGHT_REGULAR = 'regular'
+const WEIGHT_BOLD = 'bold'
+const WEIGHT_FILL = 'fill'
+const WEIGHT_DUOTONE = 'duotone'
+
+const WEIGHTS = Object.freeze({
+  thin: WEIGHT_THIN,
+  light: WEIGHT_LIGHT,
+  regular: WEIGHT_REGULAR,
+  bold: WEIGHT_BOLD,
+  fill: WEIGHT_FILL,
+  duotone: WEIGHT_DUOTONE
+})
+
+const hover = ref(false)
 
 const props = defineProps({
   name: {
@@ -31,27 +50,41 @@ const props = defineProps({
     type: String,
     required: false,
     default: 'regular'
+  },
+  hoverWeight: {
+    type: String,
+    required: false,
+    default: null
   }
 })
 
-const weights = {
-  thin: 'thin',
-  light: 'light',
-  regular: 'regular',
-  bold: 'bold',
-  fill: 'fill',
-  duotone: 'duotone'
+function findComponentByName(name) {
+  const filename = `Ph${upperFirst(camelCase(name))}`
+  return defineAsyncComponent(async () => {
+    try {
+      return await import(`~node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`)
+    } catch {
+      return import('~node_modules/@phosphor-icons/vue/dist/icons/PhSelection.vue.mjs')
+    }
+  })
 }
 
-function relativePathForIcon(name) {
-  const filename = `Ph${upperFirst(camelCase(name))}`
-  return defineAsyncComponent(() => import(`../../node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`))
-}
-const component = relativePathForIcon(props.name)
+const component = findComponentByName(props.name)
+
 const weight = computed(() => {
-  if (props.fill) return weights.fill
-  if (weights[props.weight]) return props.weight
-  return weights.regular
+  if (hover.value && props.hoverWeight) {
+    return WEIGHTS[props.hoverWeight]
+  }
+
+  if (props.fill) {
+    return WEIGHT_FILL
+  }
+
+  if (WEIGHTS[props.weight]) {
+    return WEIGHTS[props.weight]
+  }
+
+  return WEIGHT_REGULAR
 })
 
 const color = computed(() => {
