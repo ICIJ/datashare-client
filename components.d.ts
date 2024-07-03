@@ -108,6 +108,7 @@ declare module 'vue' {
     FindNamedEntitiesForm: typeof import('./src/components/FindNamedEntitiesForm.vue')['default']
     Hook: typeof import('./src/components/Hook.vue')['default']
     Icon: typeof import('./src/components/Icon.vue')['default']
+    IconButton: typeof import('./src/components/IconButton.vue')['default']
     ImageViewer: typeof import('./src/components/document/viewers/ImageViewer.vue')['default']
     InlineDirectoryPicker: typeof import('./src/components/InlineDirectoryPicker.vue')['default']
     JsonFormatter: typeof import('./src/components/JsonFormatter.vue')['default']

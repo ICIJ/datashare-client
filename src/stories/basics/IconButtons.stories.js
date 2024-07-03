@@ -1,12 +1,9 @@
-import { BButton } from 'bootstrap-vue-next'
-
-import PhosphorIcon from '@/components/PhosphorIcon'
-
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
+import IconButton from '@/components/IconButton.vue'
 
 export default {
+  components: { IconButton },
   title: 'Components/Button/IconButtons',
-  component: PhosphorIcon,
+  component: IconButton,
   tags: ['autodocs'],
   argTypes: {
     size: { control: { type: 'select' }, options: ['sm', 'md', 'lg'] },
@@ -15,8 +12,7 @@ export default {
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
     components: {
-      BButton,
-      PhosphorIcon
+      IconButton
     },
     // The story's `args` need to be mapped into the template through the `setup()` method
     setup() {
@@ -26,7 +22,7 @@ export default {
       }
     },
     template: `
-      <b-button v-bind="args" ><phosphor-icon name="CirclesThreePlus" />{{args.label}}</b-button>
+      <IconButton v-bind="args" >{{args.label}}</IconButton>
     `
   }),
   parameters: {
@@ -43,6 +39,33 @@ export const IconLeft = {
   args: {
     variant: 'primary',
     size: 'md',
-    label: 'Button'
+    label: 'Button',
+    iconLeft: 'CirclesThreePlus'
+  }
+}
+export const IconBothSide = {
+  args: {
+    variant: 'primary',
+    size: 'md',
+    label: 'Save search',
+    iconLeft: 'CirclesThreePlus',
+    iconRight: 'users'
+  }
+}
+export const IconRight = {
+  args: {
+    variant: 'primary',
+    size: 'md',
+    label: 'Button',
+    iconRight: 'users'
+  }
+}
+export const NoLabel = {
+  args: {
+    variant: 'primary',
+    size: 'md',
+    label: 'Button',
+    hideLabel: true,
+    iconRight: 'users'
   }
 }
