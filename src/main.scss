@@ -242,8 +242,8 @@ html[data-bs-theme] body .Toastify__toast {
 
   @each $state in map-keys($theme-colors) {
     &--#{$state} {
-      background: var(--bs-#{$state}-text-emphasis);
-      color: var(--bs-#{$state}-bg-subtle);
+      background: var(--bs-#{$state}-bg-subtle);
+      color: var(--bs-#{$state}-text-emphasis);
     }
   }
 }
