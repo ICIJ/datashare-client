@@ -12,6 +12,7 @@ declare module 'vue' {
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
     AppNav: typeof import('./src/components/AppNav.vue')['default']
     AppSidebar: typeof import('./src/components/AppSidebar.vue')['default']
+    AppSidebarFooter: typeof import('./src/components/AppSidebarFooter.vue')['default']
     AudioViewer: typeof import('./src/components/document/viewers/AudioViewer.vue')['default']
     BAlert: typeof import('bootstrap-vue-next')['BAlert']
     BatchDownloadActions: typeof import('./src/components/BatchDownloadActions.vue')['default']
