@@ -8,16 +8,55 @@ export default {
   decorators: [vueRouter(routes)],
   title: 'Components/AppSidebar/Footer',
   tags: ['autodocs'],
+  argTypes: {
+    compact: {
+      control: {
+        type: 'boolean'
+      }
+    },
+    noHelp: {
+      control: {
+        type: 'boolean'
+      }
+    },
+    noRemoveAll: {
+      control: {
+        type: 'boolean'
+      }
+    },
+    noSignOut: {
+      control: {
+        type: 'boolean'
+      }
+    }
+  },
   render: (args) => ({
     components: {
       AppSidebarFooter
     },
+    setup: () => ({ args }),
     template: `
-      <app-sidebar-footer>
+      <app-sidebar-footer v-bind="args">
         v17.1.0
       </app-sidebar-footer>
     `
   })
 }
 
-export const Default = {}
+export const Default = {
+  args: {
+    compact: false,
+    noHelp: false,
+    noRemoveAll: false,
+    noSignOut: true
+  }
+}
+
+export const Compact = {
+  args: {
+    compact: true,
+    noHelp: true,
+    noRemoveAll: true,
+    noSignOut: true
+  }
+}
