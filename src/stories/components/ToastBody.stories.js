@@ -6,6 +6,7 @@ import ToastBody from '@/components/ToastBody'
 
 export default {
   title: 'Components/ToastBody',
+  tags: ['autodocs'],
   argTypes: {
     variant: {
       control: { type: 'select' },
@@ -16,24 +17,44 @@ export default {
     },
     title: {
       control: { type: 'text' }
+    },
+    autoClose: {
+      control: { type: 'boolean' }
     }
   },
   args: {
     variant: 'info',
-    body: 'A simple toast message'
+    body: 'A simple toast message',
+    title: null,
+    autoClose: false
   },
   render: (args) => ({
     methods: {
       toast() {
+        toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...args }), this.toastProps)
+      }
+    },
+    computed: {
+      type() {
+        return args.variant
+      },
+      autoClose() {
+        return args.autoClose === false ? false : 5000
+      },
+      body() {
+        return args.body
+      },
+      toastProps() {
         const closeButton = () => h(PhX, { class: 'align-self-center', weight: 'bold' })
-        const toastProps = { type: args.variant, icon: false, closeButton, autoClose: false }
-        toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...args }), toastProps)
+        return { type: this.type, autoClose: this.autoClose, icon: false, closeButton }
       }
     },
     template: `
-      <button class="btn btn-primary" @click="toast()">
-        Show toast
-      </button>
+      <div class="card card-body d-block">
+        <button class="btn btn-primary" @click="toast()">
+          Show toast
+        </button>
+      </div>
     `
   })
 }
