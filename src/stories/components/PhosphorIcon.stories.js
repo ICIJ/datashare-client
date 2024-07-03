@@ -1,7 +1,7 @@
 import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
-  title: 'Basics/PhosphorIcon',
+  title: 'Components/PhosphorIcon',
   component: PhosphorIcon,
   argTypes: {
     variant: {

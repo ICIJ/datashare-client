@@ -1,5 +1,5 @@
 export default {
-  title: 'Basics/Colors',
+  title: 'Layout/Colors',
   render: (args) => ({
     // The story's `args` need to be mapped into the template through the `setup()` method
     setup() {

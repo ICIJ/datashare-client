@@ -3,7 +3,7 @@ import { BButton, BCloseButton } from 'bootstrap-vue-next'
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 
 export default {
-  title: 'Basics/Button',
+  title: 'Layout/Button',
   component: BButton,
   argTypes: {
     size: { control: { type: 'select' }, options: ['sm', 'md', 'lg'] },

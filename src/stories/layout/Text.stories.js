@@ -1,5 +1,5 @@
 export default {
-  title: 'Basics/Text',
+  title: 'Layout/Text',
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
     components: {},

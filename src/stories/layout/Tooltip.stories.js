@@ -3,7 +3,7 @@ import { BTooltip } from 'bootstrap-vue-next'
 import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
-  title: 'Basics/Tooltip',
+  title: 'Layout/Tooltip',
   component: BTooltip,
   render: (args) => ({
     components: {
