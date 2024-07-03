@@ -6,8 +6,22 @@ export default {
   component: IconButton,
   tags: ['autodocs'],
   argTypes: {
-    size: { control: { type: 'select' }, options: ['sm', 'md', 'lg'] },
-    variant: { control: { type: 'select' }, options: ['primary', 'secondary', 'tertiary', 'light'] }
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg']
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['primary', 'secondary', 'tertiary', 'light']
+    },
+    pill: {
+      control: { type: 'boolean' }
+    }
+  },
+  args: {
+    variant: 'primary',
+    size: 'md',
+    pill: false
   },
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
@@ -34,7 +48,6 @@ export default {
   }
 }
 
-// // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const IconLeft = {
   args: {
     variant: 'primary',
@@ -43,6 +56,7 @@ export const IconLeft = {
     iconLeft: 'CirclesThreePlus'
   }
 }
+
 export const IconBothSide = {
   args: {
     variant: 'primary',
@@ -52,6 +66,7 @@ export const IconBothSide = {
     iconRight: 'users'
   }
 }
+
 export const IconRight = {
   args: {
     variant: 'primary',
@@ -60,12 +75,25 @@ export const IconRight = {
     iconRight: 'users'
   }
 }
-export const NoLabel = {
+
+export const HideLabel = {
   args: {
     variant: 'primary',
     size: 'md',
     label: 'Button',
     hideLabel: true,
     iconRight: 'users'
+  }
+}
+
+export const SquarePill = {
+  args: {
+    variant: 'primary',
+    size: 'md',
+    label: 'Close',
+    hideLabel: true,
+    pill: true,
+    square: true,
+    iconRight: 'x'
   }
 }
