@@ -43,7 +43,6 @@ const classList = computed(() => ({
 
 <style lang="scss" scoped>
 .icon-button {
-
   &--square {
     padding: 0;
     align-items: center;
