@@ -1,4 +1,4 @@
-import IconButton from '@/components/IconButton.vue'
+import IconButton from '@/components/IconButton'
 
 export default {
   components: { IconButton },
