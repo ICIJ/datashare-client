@@ -234,47 +234,16 @@ $value in $theme-colors {
   }
 }
 
-#b-toaster-top-right.b-toaster .b-toaster-slot,
-#b-toaster-top-left.b-toaster .b-toaster-slot,
-#b-toaster-bottom-right.b-toaster .b-toaster-slot,
-#b-toaster-bottom-left.b-toaster .b-toaster-slot {
-
-  &,
-  .b-toast,
-  .b-toast .toast {
-    max-width: 460px;
+html[data-bs-theme] body .Toastify__toast {
+  &--danger, &--error {
+    background: var(--bs-danger-text-emphasis);
+    color: var(--bs-danger-bg-subtle);
   }
 
-  .b-toast {
-    .toast, .toast-header {
-      font-size: 1rem;
-      padding-right: 2.5rem;
-    }
-
-    .toast-header {
-      background-color: transparent;
-      border: 0;
-    }
-
-    .toast {
-      box-shadow: $box-shadow-sm;
-    }
-    .close {
-      position: absolute;
-      right: $spacer-xs;
-      padding: 0 $spacer-xs;
-      top: $spacer-xs;
-      bottom: $spacer-xs;
-      color: inherit;
-      border-left: 1px solid currentColor;
-      font-weight: lighter;
-      font-size: 1.5rem;
-    }
-
-    @each $color, $value in $theme-colors {
-      &.b-toast-#{$color} .close {
-        border-color: theme-color-level($color, 40%);
-      }
+  @each $state in map-keys($theme-colors) {
+    &--#{$state} {
+      background: var(--bs-#{$state}-text-emphasis);
+      color: var(--bs-#{$state}-bg-subtle);
     }
   }
 }
