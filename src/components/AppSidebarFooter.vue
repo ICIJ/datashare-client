@@ -25,8 +25,8 @@ const classList = computed(() => {
       <slot />
     </div>
     <div class="app-sidebar-footer__links">
-      <router-link :to="{ name: 'settings' }" v-b-tooltip.body title="Settings" class="app-sidebar-footer__links__item">
-        <phosphor-icon name="geadr" hover-weight="bold" />
+      <router-link v-b-tooltip.body :to="{ name: 'settings' }" title="Settings" class="app-sidebar-footer__links__item">
+        <phosphor-icon name="gear" hover-weight="bold" />
         <span class="visually-hidden">Settings</span>
       </router-link>
       <a v-b-tooltip.body title="Help" class="app-sidebar-footer__links__item">
