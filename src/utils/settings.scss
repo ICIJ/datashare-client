@@ -67,10 +67,10 @@ $special-font-family: "Medel", $headings-font-family;
 
 $text-muted: #717171;
 
-$border-radius: .4rem;
-$border-radius-sm: .3rem;
-$border-radius-lg: .5rem;
-$border-radius-xl: 0.7rem;
+$border-radius: 6px;
+$border-radius-sm: .2rem;
+$border-radius-lg: .375rem;
+$border-radius-xl: 0.5rem;
 $border-radius-xxl: 1rem;
 $border-radius-pill: 50rem;
 
@@ -81,7 +81,7 @@ $input-focus-border-color: map-get($theme-colors, 'secondary');
 $custom-control-indicator-checked-bg: $tertiary;
 
 $btn-box-shadow: 0 0 0 0 transparent;
-$input-btn-padding-y:0.75em;
+$input-btn-padding-y:0.5em;
 $input-btn-padding-x:0.75em;
 $popover-max-width: 480px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
