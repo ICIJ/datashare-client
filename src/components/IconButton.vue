@@ -1,5 +1,5 @@
 <template>
-  <b-button v-bind="$attrs" class="d-flex align-items-center">
+  <b-button v-bind="$attrs" class="d-flex align-items-center px-2">
     <PhosphorIcon v-if="iconLeft" :name="iconLeft" />
     <v-slot
       ><span v-if="!hideLabel" :class="{ 'ps-1': iconLeft, 'pe-1': iconRight }">{{ label }}</span></v-slot
@@ -27,6 +27,10 @@ defineProps({
   label: {
     type: String,
     default: null
+  },
+  square: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
