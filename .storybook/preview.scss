@@ -38,11 +38,7 @@ h6 {
   font-weight: var(--bs-body-font-weight);
 }
 
-pre {
-  color: #000;
-
-  &.prismjs {
-    padding: 0.75rem;
-    font-size: 1rem;
-  }
+pre.prismjs {
+  padding: 0.75rem;
+  font-size: 1rem;
 }
