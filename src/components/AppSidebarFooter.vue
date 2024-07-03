@@ -74,7 +74,6 @@ const classList = computed(() => {
       margin: 0;
     }
 
-
     .app-sidebar-footer__links {
       order: -1;
       flex-direction: column;

@@ -1,6 +1,12 @@
 <template>
-<component @mouseenter="hover = true" @mouseleave="hover = false" :is="component" :size="size" :color="color"
-  :weight="weight" />
+  <component
+    :is="component"
+    :size="size"
+    :color="color"
+    :weight="weight"
+    @mouseenter="hover = true"
+    @mouseleave="hover = false"
+  />
 </template>
 
 <script setup>
