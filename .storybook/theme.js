@@ -21,7 +21,7 @@ export default create({
   appBorderRadius: 4,
 
   // Fonts
-  fontBase: '-apple-system, BlinkMacSystemFont, "Lato", "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontBase: '-apple-system, BlinkMacSystemFont, "Inter", "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   fontCode: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
 
   // Text colors
