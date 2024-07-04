@@ -87,7 +87,8 @@ const classList = computed(() => {
 
 <style scoped lang="scss">
 .app-sidebar-footer {
-  background: var(--bs-gray-100);
+  color: var(--bs-sidebar-color);
+  background: var(--bs-sidebar-bg);
   display: flex;
   align-items: center;
   padding: $spacer;

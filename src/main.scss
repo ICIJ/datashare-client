@@ -14,6 +14,15 @@
 // @TODO bundle Murmur so the import is easier
 @import '~node_modules/@icij/murmur-next/dist/lib/murmur.css';
 
+:root {
+  --#{$prefix}sidebar-color: var(--bs-body-color);
+  --#{$prefix}sidebar-bg: var(--bs-gray-100);
+
+  @include color-mode(dark) {
+    --#{$prefix}sidebar-bg: #0F0F10;
+  }
+}
+
 @include color-mode(light) {
   .btn-outline-secondary {
     --#{$prefix}btn-color: var(--bs-body-color);
