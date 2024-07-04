@@ -40,7 +40,7 @@ const props = defineProps({
   size: {
     type: String,
     required: false,
-    default: '1.25rem'
+    default: '1.25em'
   },
   variant: {
     type: String,
