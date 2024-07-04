@@ -43,7 +43,7 @@ export default {
       }
     },
     template: `
-      <div class="bg-lighter p-3" :style="style">
+      <div :style="style">
         <app-sidebar-section v-bind="args" :to="{ name: 'home' }">
           <app-sidebar-section-entry icon="dots-nine" :action-to="{ name: 'home' }" action-title="Add project">
             All projects
