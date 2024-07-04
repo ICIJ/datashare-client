@@ -75,7 +75,7 @@ export default {
                 </td>
               </tr>
               <tr>
-                <td class="ps-0">
+                <td>
                   <strong>Emphasis —</strong> For higher contrast text. Not applicable for backgrounds.
                 </td>
                 <td class="ps-0">
@@ -86,7 +86,7 @@ export default {
                 </td>
               </tr>
               <tr>
-                <td class="ps-0">
+                <td>
                   <strong>Border —</strong> For component borders, dividers, and rules. Use <code>--bs-border-color-translucent</code> to blend with backgrounds with an <code>rgba()</code> value.
                 </td>
                 <td class="ps-0">
