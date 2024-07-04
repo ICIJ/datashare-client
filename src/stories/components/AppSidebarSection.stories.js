@@ -39,7 +39,9 @@ export default {
     },
     computed: {
       style() {
-        return { maxWidth: args.compact ? '90px' : '300px' }
+        return {
+          maxWidth: args.compact ? '90px' : '300px'
+        }
       }
     },
     template: `
