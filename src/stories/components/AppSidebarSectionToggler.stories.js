@@ -32,7 +32,7 @@ export default {
       return { args }
     },
     template: `
-      <div class="bg-lighter p-3" style="max-width: 90px">
+      <div style="max-width: 90px">
         <app-sidebar-section-toggler v-bind="args" />
       </div>
     `
