@@ -1,5 +1,5 @@
 <template>
-  <b-button v-bind="$attrs" class="icon-button d-inline-flex align-items-center px-2" :class="classList">
+  <b-button :to="to" v-bind="$attrs" class="icon-button d-inline-flex align-items-center px-2" :class="classList">
     <PhosphorIcon v-if="iconLeft" :name="iconLeft" />
     <v-slot
       ><span v-if="!hideLabel" :class="{ 'ps-1': iconLeft, 'pe-1': iconRight }">{{ label }}</span></v-slot
@@ -33,6 +33,9 @@ const props = defineProps({
   square: {
     type: Boolean,
     default: false
+  },
+  to: {
+    type: Object
   }
 })
 
