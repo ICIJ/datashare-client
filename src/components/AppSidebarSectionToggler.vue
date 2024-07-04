@@ -1,0 +1,58 @@
+<script setup>
+import { computed } from 'vue'
+
+import IconButton from '@/components/IconButton'
+
+const props = defineProps({
+  active: {
+    type: Boolean
+  },
+  title: {
+    type: String
+  },
+  icon: {
+    type: String
+  },
+  to: {
+    type: Object
+  }
+})
+
+const classList = computed(() => {
+  return {
+    'app-sidebar-section-toggler--active': props.active
+  }
+})
+</script>
+
+<template>
+  <icon-button
+    v-b-tooltip.right
+    :icon-left="icon"
+    square
+    hide-label
+    variant="outline-primary"
+    class="app-sidebar-section-toggler"
+    :title="title"
+    :class="classList"
+  >
+    {{ title }}
+  </icon-button>
+</template>
+
+<style lang="scss" scoped>
+.app-sidebar-section-toggler {
+  border-color: transparent;
+  width: calc(#{$btn-line-height * $btn-font-size} + #{$spacer * 2} + #{$btn-border-width} * 2);
+  height: calc(#{$btn-line-height * $btn-font-size} + #{$spacer * 2} + #{$btn-border-width} * 2);
+
+  &:not(:hover) {
+    color: var(--bs-body-color, inherit);
+    background: var(--bs-body-bg);
+  }
+
+  &--active {
+    border-color: var(--bs-secondary);
+  }
+}
+</style>
