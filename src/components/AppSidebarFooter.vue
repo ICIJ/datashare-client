@@ -7,6 +7,12 @@ const props = defineProps({
   compact: {
     type: Boolean
   },
+  helpLink: {
+    type: String
+  },
+  signOutLink: {
+    type: String
+  },
   noHelp: {
     type: Boolean
   },
@@ -17,6 +23,12 @@ const props = defineProps({
     type: Boolean
   }
 })
+
+const emit = defineEmits(['removeAll'])
+
+const emitRemoveAll = () => {
+  emit('remove-all')
+}
 
 const classList = computed(() => {
   return {
@@ -38,15 +50,34 @@ const classList = computed(() => {
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="gear" hover-weight="bold" />
         <span class="visually-hidden">Settings</span>
       </router-link>
-      <a v-if="!noHelp" v-b-tooltip.body title="Help" class="app-sidebar-footer__links__item">
+      <a
+        v-if="!noHelp"
+        v-b-tooltip.body
+        :href="helpLink"
+        target="_blank"
+        title="Help"
+        class="app-sidebar-footer__links__item"
+      >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="question" hover-weight="bold" />
         <span class="visually-hidden">Help</span>
       </a>
-      <a v-if="!noRemoveAll" v-b-tooltip.body title="Remove all" class="app-sidebar-footer__links__item">
+      <a
+        v-if="!noRemoveAll"
+        v-b-tooltip.body
+        title="Remove all"
+        class="app-sidebar-footer__links__item"
+        @click="emitRemoveAll"
+      >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="trash" hover-weight="bold" />
         <span class="visually-hidden">Remove all</span>
       </a>
-      <a v-if="!noSignOut" v-b-tooltip.body title="Sign out" class="app-sidebar-footer__links__item">
+      <a
+        v-if="!noSignOut"
+        v-b-tooltip.body
+        :href="signOutLink"
+        title="Sign out"
+        class="app-sidebar-footer__links__item"
+      >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="sign-out" hover-weight="bold" />
         <span class="visually-hidden">Sign out</span>
       </a>
