@@ -145,7 +145,7 @@ const classList = computed(() => {
       margin: $spacer-xxs;
 
       &__icon:hover {
-        color: var(--bs-primary);
+        color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
       }
     }
   }
