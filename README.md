@@ -37,6 +37,12 @@ yarn
 yarn serve
 ```
 
+* Serve the design system built with Storybook
+
+```
+yarn storybook
+```
+The design system is accessible here: https://icij.github.io/datashare-client/
 ## Datashare **backend**
 
 Datashare backend allows to index, find names and provide file preview or download. It must be run alongside the client for manual testing with the benefits of hot reloading with `yarn serve`.
