@@ -110,10 +110,10 @@ export default {
       return this.isDisplayed === noop ? this.total > this.size : this.isDisplayed()
     },
     size() {
-      return get(this.getToTemplate(), ['query', this.sizeAttr], 0)
+      return parseInt(get(this.getToTemplate(), ['query', this.sizeAttr], 0))
     },
     from() {
-      return get(this.getToTemplate(), ['query', this.fromAttr], 0)
+      return parseInt(get(this.getToTemplate(), ['query', this.fromAttr], 0))
     },
     nextFrom() {
       return this.from + this.size
