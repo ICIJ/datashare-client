@@ -2,6 +2,7 @@ import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
   title: 'Components/PhosphorIcon',
+  tags: ['autodocs'],
   component: PhosphorIcon,
   argTypes: {
     variant: {
@@ -72,5 +73,21 @@ export const Spinning = {
     name: 'circle-notch',
     size: '32px',
     spin: true
+  }
+}
+
+export const VariantPrimary = {
+  args: {
+    name: 'rocket',
+    variant: 'primary',
+    size: '32px'
+  }
+}
+
+export const VariantSecondary = {
+  args: {
+    name: 'rocket',
+    variant: 'secondary',
+    size: '32px'
   }
 }
