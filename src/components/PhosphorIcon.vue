@@ -135,7 +135,7 @@ const style = computed(() => {
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .phosphor-icon {
   display: inline-block;
   height: var(--phosphor-icon-size, 1em);
