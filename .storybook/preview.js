@@ -3,6 +3,7 @@ import { setup } from '@storybook/vue3'
 import { useArgs } from '@storybook/preview-api'
 import { styled } from '@storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { createI18n } from 'vue-i18n'
 import Vue3Toastify from 'vue3-toastify'
@@ -13,6 +14,7 @@ import settings from '@/utils/settings'
 import './preview.scss'
 
 setup((app) => {
+  const router = createRouter({ routes: [], history: createWebHashHistory() })
   const bootstrap = createBootstrap({ components: true, directives: true })
   const i18n = createI18n({
     warnHtmlInMessage: 'off',
@@ -25,6 +27,7 @@ setup((app) => {
       [settings.defaultLocale]: messages
     }
   })
+  app.use(router)
   app.use(bootstrap)
   app.use(i18n)
   app.use(Vue3Toastify)
