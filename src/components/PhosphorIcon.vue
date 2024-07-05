@@ -4,9 +4,21 @@
     :size="size"
     :color="color"
     :weight="weight"
+    spin
     @mouseenter="hover = true"
     @mouseleave="hover = false"
-  />
+  >
+    <animateTransform
+      v-if="spin"
+      attributeName="transform"
+      attributeType="XML"
+      type="rotate"
+      :dur="spinDuration"
+      from="0 0 0"
+      to="360 0 0"
+      repeatCount="indefinite"
+    />
+  </component>
 </template>
 
 <script setup>
@@ -61,6 +73,13 @@ const props = defineProps({
     type: String,
     required: false,
     default: null
+  },
+  spin: {
+    type: Boolean
+  },
+  spinDuration: {
+    type: String,
+    default: '1s'
   }
 })
 
