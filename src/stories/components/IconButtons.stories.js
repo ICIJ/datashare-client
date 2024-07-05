@@ -16,12 +16,16 @@ export default {
     },
     pill: {
       control: { type: 'boolean' }
+    },
+    loading: {
+      control: { type: 'boolean' }
     }
   },
   args: {
     variant: 'primary',
     size: 'md',
-    pill: false
+    pill: false,
+    loading: false
   },
   render: (args) => ({
     components: {
