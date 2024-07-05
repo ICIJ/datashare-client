@@ -12,7 +12,7 @@
     "test": "yarn test:unit",
     "test:unit": "vitest --run",
     "test:unit:watch": "vitest",
-    "lint": "eslint --ext .js,.mjs,.vue .",
+    "lint": "eslint --ext .js,.mjs,.vue --ignore-pattern storybook-static .",
     "lint:fix": "yarn lint --fix",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets",
     "doc:dir": "mkdir -p dist/docs",
