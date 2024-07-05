@@ -1,235 +1,217 @@
-<script>
+<script setup>
+import { computed, ref, watch } from 'vue'
+import { useColorMode } from 'bootstrap-vue-next'
+
+import PhosphorIcon from '@/components/PhosphorIcon'
+import IconButton from '@/components/IconButton'
 /**
  * A search input with pill layout.
  */
-export default {
-  name: 'SearchFormControl',
-  props: {
-    /**
-     * Input value
-     * @model
-     */
-    modelValue: {
-      type: [String, Number]
-    },
-    /**
-     * Optional placeholder text
-     */
-    placeholder: {
-      type: String
-    },
-    /**
-     * Text to use in the submit button
-     * @default $t('searchFormControl.submitLabel')
-     */
-    submitLabel: {
-      type: String
-    },
-    /**
-     * Fill the submit button with primary color
-     */
-    fillSubmit: {
-      type: Boolean
-    },
-    /**
-     * Show the text in the submit button (only visible for screen-readers by default)
-     */
-    showSubmitLabel: {
-      type: Boolean
-    },
-    /**
-     * Hide the magnifying glass icon
-     */
-    noIcon: {
-      type: Boolean
-    },
-    /**
-     * Set the autofocus on the search bar on load
-     */
-    autofocus: {
-      type: Boolean,
-      default: true
-    },
-    /**
-     * Round the border of the input
-     */
-    rounded: {
-      type: Boolean,
-      default: true
-    },
-    /**
-     * Change the state of the input to "loading" (with a spinner)
-     */
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Display the input and button on a dark background
-     */
-    dark: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Use sm sizing
-     */
-    small: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Disable autocomplete by default.
-     */
-    autocomplete: {
-      type: String,
-      default: 'off'
-    }
+defineOptions({
+  name: 'SearchFormControl'
+})
+const props = defineProps({
+  /**
+   * Input value
+   * @model
+   */
+  modelValue: {
+    type: [String, Number]
   },
-  emits: ['submit', 'up', 'down', 'input', 'update:modelValue', 'enter', 'blur'],
-  computed: {
-    searchFormClassAttr() {
-      return {
-        'search-form-control--fill-submit': this.fillSubmit,
-        'search-form-control--show-submit-label': this.showSubmitLabel,
-        'search-form-control--no-icon': this.noIcon,
-        'search-form-control--rounded': this.rounded,
-        'search-form-control--loading': this.loading,
-        'search-form-control--dark': this.dark,
-        'input-group-sm': this.small
-      }
-    }
+  /**
+   * Optional placeholder text
+   */
+  placeholder: {
+    type: String
   },
-  methods: {
-    input(value) {
-      this.$emit('update:modelValue', value)
-    }
+  /**
+   * Hide the magnifying glass icon
+   */
+  noIcon: {
+    type: Boolean
+  },
+  /**
+   * Set the autofocus on the search bar on load
+   */
+  autofocus: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * Round the border of the input
+   */
+  rounded: {
+    type: Boolean,
+    default: true
+  },
+  /**
+   * Change the state of the input to "loading" (with a spinner)
+   */
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Display the input and button on a dark background
+   */
+  dark: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Use sm sizing
+   */
+  small: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Disable autocomplete by default.
+   */
+  autocomplete: {
+    type: String,
+    default: 'off'
   }
+})
+const emit = defineEmits(['submit', 'up', 'down', 'input', 'update:modelValue', 'enter', 'blur'])
+const showClearText = computed(() => {
+  return props.modelValue?.length > 0
+})
+function input(value) {
+  emit('update:modelValue', value)
 }
+function clearText() {
+  document.querySelector('.search-form-control__input').focus()
+  input('')
+}
+
+const target = ref(null)
+
+const mode = useColorMode({
+  selector: target
+})
+
+watch(
+  () => props.dark,
+  (dark) => {
+    mode.value = dark ? 'dark' : 'light'
+  },
+  { immediate: true }
+)
+
+const size = computed(() => (props.small ? 'sm' : 'md'))
 </script>
 
 <template>
-  <form @submit.prevent="$emit('submit', modelValue)">
-    <div class="input-group search-form-control" :class="searchFormClassAttr">
+  <form ref="target" class="search-form-control" @submit.prevent="$emit('submit', modelValue)">
+    <div class="search-form-control__input-group input-group mb-3">
+      <template v-if="!noIcon">
+        <span
+          class="search-form-control__icon input-group-text"
+          :class="{ 'search-form-control__icon--rounded': rounded }"
+        >
+          <phosphor-icon :name="loading ? 'circle-notch' : 'magnifying-glass'" square :spin="loading"></phosphor-icon>
+        </span>
+      </template>
       <b-form-input
         :model-value="modelValue"
         :autocomplete="autocomplete"
         :autofocus="autofocus"
         class="search-form-control__input"
+        :class="{ 'search-form-control__input--no-icon': noIcon, 'search-form-control__input--rounded': rounded }"
         :placeholder="placeholder"
         @keydown.up="$emit('up', $event)"
         @keydown.down="$emit('down', $event)"
         @keydown.enter="$emit('enter', $event)"
+        @keydown.esc="$event.target.blur()"
         @update:modelValue="input"
         @blur="$emit('blur', $event)"
       />
-      <button class="btn search-form-control__submit" type="submit">
-        <template v-if="!noIcon">
-          <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
-          <fa v-else icon="magnifying-glass" fixed-width></fa>
-        </template>
-        <span :class="{ 'sr-only': !showSubmitLabel }">
-          {{ submitLabel || $t('searchFormControl.submitLabel') }}
-        </span>
-      </button>
+
+      <span
+        class="search-form-control__clear input-group-text"
+        :class="{ 'search-form-control__clear--rounded': rounded }"
+      >
+        <icon-button
+          icon-left="backspace"
+          square
+          :size="size"
+          class="search-form-control__clear__icon"
+          :class="{
+            'search-form-control__clear__icon--hide': !showClearText
+          }"
+          @click="clearText()"
+        />
+      </span>
     </div>
   </form>
 </template>
 
 <style lang="scss" scoped>
 .search-form-control {
-  position: relative;
-
-  &__input {
+  &__icon,
+  &__clear {
+    background-color: var(--bs-body-bg);
+    color: $tertiary;
+  }
+  &__icon {
     border-right: 0;
+    &--rounded {
+      border-bottom-left-radius: $border-radius-pill;
+      border-top-left-radius: $border-radius-pill;
+    }
   }
-
-  &__input:focus {
-    box-shadow: none;
-  }
-
-  &__input:focus + &__submit:last-of-type {
-    box-shadow: none;
-    border: 1px solid $input-focus-border-color;
-  }
-
-  &--rounded &__input {
-    border-bottom-left-radius: $border-radius-pill;
-    border-top-left-radius: $border-radius-pill;
-  }
-
-  &--rounded &__submit {
-    border-bottom-right-radius: $border-radius-pill;
-    border-top-right-radius: $border-radius-pill;
-  }
-
-  &__submit {
-    background: $input-bg;
-    border-color: $input-border-color;
+  &__clear {
     border-left: 0;
-    transition: $input-transition;
-  }
-
-  &__addon {
-    &:after {
-      bottom: 0;
-      box-shadow: 0 0 0 $input-btn-focus-width transparent;
-      content: '';
-      left: 0;
-      pointer-events: none;
-      position: absolute;
-      right: 0;
-      top: 0;
-      transition: $input-transition;
-      z-index: 0;
-    }
-
-    & &__submit:last-of-type {
-      background: $input-bg;
-      border-color: $input-border-color;
-      border-left: 0;
-      transition: $input-transition;
-    }
-
-    &__submit:last-of-type {
-      border-bottom-left-radius: 0;
-      border-top-left-radius: 0;
+    &--rounded {
+      border-bottom-left-radius: $border-radius-pill;
+      border-top-left-radius: $border-radius-pill;
     }
   }
-
-  &--rounded &__addon {
-    &:after {
-      border-radius: $border-radius-pill;
+  &__input {
+    border-left: 0;
+    border-right: 0;
+    &--no-icon {
+      border-left: 1px solid $input-border-color;
     }
-
-    &__submit:last-of-type {
+    &--rounded {
+      border-bottom-left-radius: $border-radius-pill;
+      border-top-left-radius: $border-radius-pill;
+    }
+  }
+  &__input:focus {
+    border: 0;
+    box-shadow: none;
+  }
+  &__clear {
+    &--rounded {
       border-bottom-right-radius: $border-radius-pill;
       border-top-right-radius: $border-radius-pill;
     }
   }
-
-  &--fill-submit &__submit.btn {
-    @include gradient-bg($primary);
-    border-color: $primary;
-    color: color-yiq($primary);
+  &__input-group:has(&__input:focus) {
+    box-shadow: none;
+    .search-form-control__icon {
+      border-left: 1px solid $input-focus-border-color;
+      border-top: 1px solid $input-focus-border-color;
+      border-bottom: 1px solid $input-focus-border-color;
+    }
+    .search-form-control__input {
+      &--no-icon {
+        border-left: 1px solid $input-focus-border-color;
+      }
+      border-top: 1px solid $input-focus-border-color;
+      border-bottom: 1px solid $input-focus-border-color;
+    }
+    .search-form-control__clear {
+      border-right: 1px solid $input-focus-border-color;
+      border-top: 1px solid $input-focus-border-color;
+      border-bottom: 1px solid $input-focus-border-color;
+    }
   }
-
-  &--dark {
-    color: $light;
-
-    .search-form-control__input::placeholder {
-      color: $text-muted;
-    }
-
-    .search-form-control__input,
-    .search-form-control__submit:last-of-type {
-      background: #000;
-      color: inherit;
-    }
-
-    .search-form-control__input:not(:focus),
-    .search-form-control__submit:last-of-type {
-      border-color: #000;
+  &__clear__icon {
+    &--hide {
+      visibility: hidden;
     }
   }
 }
