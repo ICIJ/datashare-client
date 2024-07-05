@@ -38,6 +38,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
+    copy: typeof import('./src/components/NavigationBreadcrumbEntry copy.vue')['default']
     DismissableAlert: typeof import('./src/components/DismissableAlert.vue')['default']
     DocumentActions: typeof import('./src/components/DocumentActions.vue')['default']
     DocumentAttachments: typeof import('./src/components/DocumentAttachments.vue')['default']
@@ -91,6 +92,10 @@ declare module 'vue' {
     LocalesMenu: typeof import('./src/components/LocalesMenu.vue')['default']
     MountedDataLocation: typeof import('./src/components/MountedDataLocation.vue')['default']
     NamedEntityInContext: typeof import('./src/components/NamedEntityInContext.vue')['default']
+    NavigationBreadcrumb: typeof import('./src/components/NavigationBreadcrumb.vue')['default']
+    NavigationBreadcrumbEntry: typeof import('./src/components/NavigationBreadcrumbEntry.vue')['default']
+    NavigationBreadcrumbLink: typeof import('./src/components/NavigationBreadcrumbLink.vue')['default']
+    NavigationBreadcrump: typeof import('./src/components/NavigationBreadcrump.vue')['default']
     PageHeader: typeof import('./src/components/PageHeader.vue')['default']
     PageIcon: typeof import('./src/components/PageIcon.vue')['default']
     PaginatedViewer: typeof import('./src/components/document/viewers/PaginatedViewer.vue')['default']
@@ -155,5 +160,6 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
+    'vBTooltip[tooltipPlacement]': typeof import('bootstrap-vue-next')['vBTooltip[tooltipPlacement]']
   }
 }
