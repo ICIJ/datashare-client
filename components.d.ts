@@ -33,6 +33,7 @@ declare module 'vue' {
     BatchSearchStatus: typeof import('./src/components/BatchSearchStatus.vue')['default']
     BatchSearchTable: typeof import('./src/components/BatchSearchTable.vue')['default']
     BButton: typeof import('bootstrap-vue-next')['BButton']
+    BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     ColumnChartPicker: typeof import('./src/components/ColumnChartPicker.vue')['default']
     ColumnFilter: typeof import('./src/components/ColumnFilter.vue')['default']
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
