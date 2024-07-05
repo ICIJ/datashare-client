@@ -2,7 +2,7 @@ import IconButton from '@/components/IconButton'
 
 export default {
   components: { IconButton },
-  title: 'Components/Button/IconButtons',
+  title: 'Components/Button/IconButton',
   component: IconButton,
   tags: ['autodocs'],
   argTypes: {
@@ -37,7 +37,7 @@ export default {
       }
     },
     template: `
-      <IconButton v-bind="args" />
+      <icon-button v-bind="args" />
     `
   }),
   parameters: {
