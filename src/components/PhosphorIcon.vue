@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed, ref, defineAsyncComponent, watch } from 'vue'
+import { computed, ref, shallowRef, defineAsyncComponent, watch } from 'vue'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
 
@@ -97,7 +97,7 @@ function findComponentByName(name) {
   })
 }
 
-const component = ref(findComponentByName(props.name))
+const component = shallowRef(findComponentByName(props.name))
 
 watch(
   () => props.name,
