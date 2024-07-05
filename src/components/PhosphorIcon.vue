@@ -1,28 +1,30 @@
 <template>
-  <component
-    :is="component"
-    :size="size"
-    :color="color"
-    :weight="weight"
-    spin
-    @mouseenter="hover = true"
-    @mouseleave="hover = false"
-  >
-    <animateTransform
-      v-if="spin"
-      attributeName="transform"
-      attributeType="XML"
-      type="rotate"
-      :dur="spinDuration"
-      from="0 0 0"
-      to="360 0 0"
-      repeatCount="indefinite"
-    />
-  </component>
+  <span class="phosphor-icon" :style="style">
+    <component
+      :is="component"
+      :size="size"
+      :color="color"
+      :weight="weight"
+      :spin="spin"
+      @mouseenter="hover = true"
+      @mouseleave="hover = false"
+    >
+      <animateTransform
+        v-if="spin"
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        :dur="spinDuration"
+        from="0 0 0"
+        to="360 0 0"
+        repeatCount="indefinite"
+      />
+    </component>
+  </span>
 </template>
 
 <script setup>
-import { computed, ref, defineAsyncComponent } from 'vue'
+import { computed, ref, defineAsyncComponent, watch } from 'vue'
 import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
 
@@ -89,12 +91,20 @@ function findComponentByName(name) {
     try {
       return await import(`~node_modules/@phosphor-icons/vue/dist/icons/${filename}.vue.mjs`)
     } catch {
+      // eslint-disable-next-line import/extensions
       return import('~node_modules/@phosphor-icons/vue/dist/icons/PhSelection.vue.mjs')
     }
   })
 }
 
-const component = findComponentByName(props.name)
+const component = ref(findComponentByName(props.name))
+
+watch(
+  () => props.name,
+  () => {
+    component.value = findComponentByName(props.name)
+  }
+)
 
 const weight = computed(() => {
   if (hover.value && props.hoverWeight) {
@@ -115,4 +125,21 @@ const weight = computed(() => {
 const color = computed(() => {
   return `var(--bs-${props.variant}, currentColor)`
 })
+
+const style = computed(() => {
+  return {
+    '--phosphor-icon-color': color.value,
+    '--phosphor-icon-weight': weight.value,
+    '--phosphor-icon-size': props.size
+  }
+})
 </script>
+
+<style scoped>
+.phosphor-icon {
+  display: inline-block;
+  height: var(--phosphor-icon-size, 1em);
+  line-height: var(--phosphor-icon-size, 1em);
+  width: var(--phosphor-icon-size, 1em);
+}
+</style>
