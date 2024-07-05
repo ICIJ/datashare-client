@@ -37,7 +37,7 @@ export default {
       }
     },
     template: `
-      <IconButton v-bind="args" >{{args.label}}</IconButton>
+      <IconButton v-bind="args" />
     `
   }),
   parameters: {
@@ -97,4 +97,57 @@ export const SquarePill = {
     square: true,
     iconRight: 'x'
   }
+}
+
+export const Loading = {
+  args: {
+    variant: 'primary',
+    size: 'md',
+    label: 'Save',
+    pill: true,
+    loading: true,
+    iconLeft: 'floppy-disk'
+  },
+  render: (args) => ({
+    components: {
+      IconButton
+    },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+      <p class="text-muted">Click to toggle loading state.</p>
+      <icon-button v-bind="args" @click="args.loading = !args.loading" />
+    `
+  })
+}
+
+export const LoadingSpinner = {
+  args: {
+    variant: 'secondary',
+    size: 'md',
+    label: 'Refresh',
+    pill: true,
+    loading: true,
+    loadingDuration: '500ms',
+    loadingText: 'Refreshing...',
+    iconLeft: 'arrow-clockwise',
+    iconSpinner: 'arrow-clockwise'
+  },
+  render: (args) => ({
+    components: {
+      IconButton
+    },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+      <p class="text-muted">Click to toggle loading state.</p>
+      <icon-button v-bind="args" @click="args.loading = !args.loading" />
+    `
+  })
 }
