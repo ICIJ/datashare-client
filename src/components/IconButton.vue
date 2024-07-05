@@ -1,5 +1,11 @@
 <template>
-  <b-button :to="to" v-bind="buttonProps" class="icon-button d-inline-flex align-items-center" :class="classList">
+  <b-button
+    v-b-tooltip="{ title: label, placement: tooltipPlacement }"
+    :to="to"
+    v-bind="buttonProps"
+    class="icon-button d-inline-flex align-items-center"
+    :class="classList"
+  >
     <phosphor-icon
       v-if="iconLeft"
       :name="iconLeftOrSpinner"
@@ -87,6 +93,10 @@ const props = defineProps({
   },
   loadingText: {
     type: String
+  },
+  tooltipPlacement: {
+    type: String,
+    default: 'top'
   }
 })
 
