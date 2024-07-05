@@ -61,7 +61,7 @@ const props = defineProps({
   },
   variant: {
     type: String,
-    default: 'secondary'
+    default: ''
   },
   size: {
     type: String,
@@ -166,7 +166,7 @@ const buttonProps = {
       height: $line-height-base * $btn-font-size-sm;
     }
 
-    .btn-sm & {
+    .btn-lg & {
       height: $line-height-base * $btn-font-size-lg;
     }
   }
