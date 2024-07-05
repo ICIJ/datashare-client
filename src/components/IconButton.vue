@@ -1,10 +1,22 @@
 <template>
   <b-button :to="to" v-bind="buttonProps" class="icon-button d-inline-flex align-items-center" :class="classList">
-    <phosphor-icon v-if="iconLeft" :name="iconLeftOrLoading" :spin="loading" class="icon-button__icon-left" />
+    <phosphor-icon
+      v-if="iconLeft"
+      :name="iconLeftOrSpinner"
+      :spin="loading"
+      :spin-duration="loadingDuration"
+      class="icon-button__icon-left"
+    />
     <span v-if="!hideLabel" class="icon-button__label">
-      <slot>{{ label }}</slot>
+      <slot v-bind="{ labelOrLoadingText }">{{ labelOrLoadingText }}</slot>
     </span>
-    <phosphor-icon v-if="iconRight" :name="iconRightOrLoading" :spin="loading" class="icon-button__icon-right" />
+    <phosphor-icon
+      v-if="iconRight"
+      :name="iconRightOrSpinner"
+      :spin="loading"
+      :spin-duration="loadingDuration"
+      class="icon-button__icon-right"
+    />
   </b-button>
 </template>
 
@@ -21,6 +33,10 @@ const props = defineProps({
   iconRight: {
     type: String,
     default: null
+  },
+  iconSpinner: {
+    type: String,
+    default: 'circle-notch'
   },
   hideLabel: {
     type: Boolean,
@@ -64,6 +80,13 @@ const props = defineProps({
   },
   loading: {
     type: Boolean
+  },
+  loadingDuration: {
+    type: String,
+    default: '1s'
+  },
+  loadingText: {
+    type: String
   }
 })
 
@@ -74,12 +97,16 @@ const classList = computed(() => {
   }
 })
 
-const iconLeftOrLoading = computed(() => {
-  return props.loading ? 'circle-notch' : props.iconLeft
+const iconLeftOrSpinner = computed(() => {
+  return props.loading ? props.iconSpinner : props.iconLeft
 })
 
-const iconRightOrLoading = computed(() => {
-  return props.loading ? 'circle-notch' : props.iconRight
+const iconRightOrSpinner = computed(() => {
+  return props.loading ? props.iconSpinner : props.iconRight
+})
+
+const labelOrLoadingText = computed(() => {
+  return props.loading && props.loadingText ? props.loadingText : props.label
 })
 
 const buttonProps = {
