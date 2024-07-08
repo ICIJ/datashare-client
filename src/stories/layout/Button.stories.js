@@ -51,11 +51,11 @@ export default {
           <tr>
             <th>Variant</th>
             <th>Normal</th>
+            <th>Loading</th>
             <th>Hover</th>
-            <th>Active/Pressed</th>
             <th>Focus</th>
             <th>Disabled</th>
-            <th>Loading</th>
+            <th>Active/Pressed</th>
           </tr>
         </thead>
         <tbody>
@@ -66,10 +66,10 @@ export default {
               </td>
               <td><b-button v-bind="args" :variant="variant">{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" class="hover">{{args.label}}</b-button></td>
-              <td><b-button v-bind="args" :variant="variant" pressed>{{args.label}}</b-button></td>
+              <td><icon-button v-bind="args" :variant="variant" loading>{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" class="focus">{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" disabled>{{args.label}}</b-button></td>
-              <td><icon-button v-bind="args" :variant="variant" loading>{{args.label}}</b-button></td>
+              <td><b-button v-bind="args" :variant="variant" pressed>{{args.label}}</b-button></td>
             </tr>
           </template>
         </tbody>
