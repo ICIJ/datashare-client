@@ -119,7 +119,7 @@ const labelOrLoadingText = computed(() => {
   return props.loading && props.loadingText ? props.loadingText : props.label
 })
 
-const buttonProps = {
+const buttonProps = computed(() => ({
   block: props.block,
   pill: props.pill,
   pressed: props.pressed,
@@ -127,7 +127,7 @@ const buttonProps = {
   tag: props.tag,
   type: props.type,
   variant: props.variant
-}
+}))
 </script>
 
 <style lang="scss" scoped>
