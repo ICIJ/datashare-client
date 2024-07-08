@@ -24,6 +24,7 @@ export default {
     computed: {
       variants() {
         return [
+          'link',
           'primary',
           'secondary',
           'tertiary',
@@ -62,7 +63,7 @@ export default {
           <template v-for="variant in variants">
             <tr :key="variant">
               <td>
-                <code>--bs-{{ variant }}</code>
+                <code>.btn-{{ variant }}</code>
               </td>
               <td><b-button v-bind="args" :variant="variant">{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" class="hover">{{args.label}}</b-button></td>
