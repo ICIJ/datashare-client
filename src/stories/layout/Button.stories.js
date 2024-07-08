@@ -1,4 +1,5 @@
 import { BButton } from 'bootstrap-vue-next'
+
 import IconButton from '@/components/IconButton'
 
 export default {
@@ -51,8 +52,8 @@ export default {
           <tr>
             <th>Variant</th>
             <th>Normal</th>
-            <th>Loading</th>
             <th>Hover</th>
+            <th>Loading</th>
             <th>Focus</th>
             <th>Disabled</th>
             <th>Active/Pressed</th>
