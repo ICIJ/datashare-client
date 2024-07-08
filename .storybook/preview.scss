@@ -46,3 +46,20 @@ pre.prismjs {
 .docs-story {
   background: var(--bs-body-bg)
 }
+
+.btn.pseudo-focus {
+  box-shadow: var(--bs-btn-active-shadow), var(--bs-btn-focus-box-shadow);
+}
+
+.btn.pseudo-hover {
+  color: var(--bs-btn-hover-color);
+  background-color: var(--bs-btn-hover-bg);
+  border-color: var(--bs-btn-hover-border-color);
+}
+
+.btn.pseudo-active {
+  color: var(--bs-btn-active-color);
+  background-color: var(--bs-btn-active-bg);
+  border-color: var(--bs-btn-active-border-color);
+  box-shadow: var(--bs-btn-active-shadow);
+}
