@@ -7,7 +7,7 @@
     :class="classList"
   >
     <phosphor-icon
-      v-if="iconLeft"
+      v-if="iconLeft || (!iconLeft && !iconRight && loading)"
       :name="iconLeftOrSpinner"
       :spin="loading"
       :spin-duration="loadingDuration"
