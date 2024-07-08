@@ -1,14 +1,13 @@
-import { BButton, BCloseButton } from 'bootstrap-vue-next'
+import { BButton } from 'bootstrap-vue-next'
 import IconButton from '@/components/IconButton'
 
 export default {
   title: 'Layout/Button',
   component: BButton,
   argTypes: {
-    size: { control: { type: 'select' }, options: ['sm', 'md', 'lg'] },
-    variant: {
+    size: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'outline-secondary', 'outline-tertiary', 'light']
+      options: ['sm', 'md', 'lg']
     }
   },
   render: (args) => ({
@@ -87,7 +86,6 @@ export default {
 
 export const Default = {
   args: {
-    variant: '',
     size: 'md',
     label: 'Button'
   }
