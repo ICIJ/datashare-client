@@ -29,11 +29,6 @@ export default {
         type: 'boolean'
       }
     },
-    dark: {
-      control: {
-        type: 'boolean'
-      }
-    },
     small: {
       control: {
         type: 'boolean'
@@ -63,17 +58,8 @@ export const NoIcon = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: 'test',
-    noIcon: true
-    /*    placeholder: 'placeholder',
-    submitLabel: 'submitLabel',
-    fillSubmit: true,
-    showSubmitLabel: true,
-    autofocus: true,
-    rounded: true,
-    loading: true,
-    dark: true,
-    small: true,
-    autocomplete: 'off' */
+    noIcon: true,
+    false: true
   }
 }
 
@@ -85,11 +71,11 @@ export const Small = {
   }
 }
 
-export const Dark = {
+export const clearTextIcon = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    dark: true
+    clearTextIcon: true
   }
 }
 
