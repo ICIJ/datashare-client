@@ -1,9 +1,7 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
-import { useColorMode } from 'bootstrap-vue-next'
+import { computed, ref } from 'vue'
 
 import PhosphorIcon from '@/components/PhosphorIcon'
-import IconButton from '@/components/IconButton'
 /**
  * A search input with pill layout.
  */
@@ -31,6 +29,12 @@ const props = defineProps({
     type: Boolean
   },
   /**
+   * Add clear text icon
+   */
+  clearTextIcon: {
+    type: Boolean
+  },
+  /**
    * Set the autofocus on the search bar on load
    */
   autofocus: {
@@ -48,13 +52,6 @@ const props = defineProps({
    * Change the state of the input to "loading" (with a spinner)
    */
   loading: {
-    type: Boolean,
-    default: false
-  },
-  /**
-   * Display the input and button on a dark background
-   */
-  dark: {
     type: Boolean,
     default: false
   },
@@ -80,24 +77,12 @@ const showClearText = computed(() => {
 function input(value) {
   emit('update:modelValue', value)
 }
-function clearText() {
-  document.querySelector('.search-form-control__input').focus()
-  input('')
-}
-
 const target = ref(null)
 
-const mode = useColorMode({
-  selector: target
-})
-
-watch(
-  () => props.dark,
-  (dark) => {
-    mode.value = dark ? 'dark' : 'light'
-  },
-  { immediate: true }
-)
+function clearText() {
+  target.value?.querySelector('.search-form-control__input').focus()
+  input('')
+}
 
 const size = computed(() => (props.small ? 'sm' : 'md'))
 </script>
@@ -107,18 +92,26 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
     <div class="search-form-control__input-group input-group mb-3">
       <template v-if="!noIcon">
         <span
-          class="search-form-control__icon input-group-text"
-          :class="{ 'search-form-control__icon--rounded': rounded }"
+          class="search-form-control__icon input-group-text border-end-0"
+          :class="{ 'search-form-control--rounded--left': rounded }"
         >
           <phosphor-icon :name="loading ? 'circle-notch' : 'magnifying-glass'" square :spin="loading"></phosphor-icon>
         </span>
       </template>
       <b-form-input
+        :size="size"
         :model-value="modelValue"
         :autocomplete="autocomplete"
         :autofocus="autofocus"
         class="search-form-control__input"
-        :class="{ 'search-form-control__input--no-icon': noIcon, 'search-form-control__input--rounded': rounded }"
+        :class="{
+          'search-form-control__input--no-icon': noIcon,
+          'search-form-control__input--no-clear-text': noIcon,
+          'border-start-0': !noIcon,
+          'border-end-0': clearTextIcon,
+          'search-form-control--rounded--left': rounded && noIcon,
+          'search-form-control--rounded--right': rounded && !clearTextIcon
+        }"
         :placeholder="placeholder"
         @keydown.up="$emit('up', $event)"
         @keydown.down="$emit('down', $event)"
@@ -129,13 +122,13 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
       />
 
       <span
-        class="search-form-control__clear input-group-text"
-        :class="{ 'search-form-control__clear--rounded': rounded }"
+        v-if="clearTextIcon"
+        class="search-form-control__clear input-group-text border-start-0"
+        :class="{ 'search-form-control--rounded--right': rounded }"
       >
-        <icon-button
-          icon-left="backspace"
+        <phosphor-icon
+          name="x-circle"
           square
-          :size="size"
           class="search-form-control__clear__icon"
           :class="{
             'search-form-control__clear__icon--hide': !showClearText
@@ -154,40 +147,24 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
     background-color: var(--bs-body-bg);
     color: $tertiary;
   }
-  &__icon {
-    border-right: 0;
-    &--rounded {
+  &--rounded {
+    &--left {
       border-bottom-left-radius: $border-radius-pill;
       border-top-left-radius: $border-radius-pill;
     }
-  }
-  &__clear {
-    border-left: 0;
-    &--rounded {
-      border-bottom-left-radius: $border-radius-pill;
-      border-top-left-radius: $border-radius-pill;
+    &--right {
+      border-bottom-right-radius: $border-radius-pill;
+      border-top-right-radius: $border-radius-pill;
     }
   }
   &__input {
-    border-left: 0;
-    border-right: 0;
     &--no-icon {
       border-left: 1px solid $input-border-color;
-    }
-    &--rounded {
-      border-bottom-left-radius: $border-radius-pill;
-      border-top-left-radius: $border-radius-pill;
     }
   }
   &__input:focus {
     border: 0;
     box-shadow: none;
-  }
-  &__clear {
-    &--rounded {
-      border-bottom-right-radius: $border-radius-pill;
-      border-top-right-radius: $border-radius-pill;
-    }
   }
   &__input-group:has(&__input:focus) {
     box-shadow: none;
@@ -199,6 +176,9 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
     .search-form-control__input {
       &--no-icon {
         border-left: 1px solid $input-focus-border-color;
+      }
+      &--no-clear-text {
+        border-right: 1px solid $input-focus-border-color;
       }
       border-top: 1px solid $input-focus-border-color;
       border-bottom: 1px solid $input-focus-border-color;
