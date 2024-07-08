@@ -66,7 +66,7 @@ export default {
               </td>
               <td><b-button v-bind="args" :variant="variant">{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" class="hover">{{args.label}}</b-button></td>
-              <td><icon-button v-bind="args" :variant="variant" loading>{{args.label}}</b-button></td>
+              <td><icon-button v-bind="args" :variant="variant" loading>{{args.label}}</icon-button></td>
               <td><b-button v-bind="args" :variant="variant" class="focus">{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" disabled>{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" pressed>{{args.label}}</b-button></td>
