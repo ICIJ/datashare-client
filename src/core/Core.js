@@ -30,6 +30,7 @@ import { routes } from '@/router'
 import { storeBuilder } from '@/store/storeBuilder'
 import Auth from '@/api/resources/Auth'
 import ToastBody from '@/components/ToastBody'
+import Fa from '@/components/Fa'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
@@ -155,6 +156,7 @@ class Core extends Behaviors {
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
     this.use(VueEllipseProgress)
+    this.vue.component('Fa', Fa)
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
