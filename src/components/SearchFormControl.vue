@@ -195,5 +195,9 @@ function clearInputText() {
       visibility: hidden;
     }
   }
+
+  .form-control-lg {
+    padding: 1em;
+  }
 }
 </style>
