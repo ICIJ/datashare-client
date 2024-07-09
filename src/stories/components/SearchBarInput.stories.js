@@ -15,11 +15,15 @@ export default {
       }
     },
     size: {
-      control: {
-        type: 'string'
-      }
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg']
     },
     disableSubmit: {
+      control: {
+        type: 'boolean'
+      }
+    },
+    showSubmit: {
       control: {
         type: 'boolean'
       }
@@ -46,8 +50,31 @@ export const Default = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
+    size: 'lg',
+    disableSubmit: false,
+    hideTips: true,
+    showSubmit: false
+  }
+}
+
+export const ShowTips = {
+  args: {
+    placeholder: 'Type queries, use operators or type regex...',
+    modelValue: '',
     size: 'md',
     disableSubmit: false,
-    hideTips: false
+    hideTips: true,
+    showSubmit: false
+  }
+}
+
+export const ShowSubmit = {
+  args: {
+    placeholder: 'Type queries, use operators or type regex...',
+    modelValue: '',
+    size: 'md',
+    disableSubmit: false,
+    hideTips: true,
+    showSubmit: true
   }
 }

@@ -56,7 +56,7 @@ export const Default = {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
     size: 'md',
-    clearTextIcon: true,
+    clearText: true,
     rounded: false
   }
 }
@@ -65,7 +65,7 @@ export const Large = {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
     size: 'lg',
-    clearTextIcon: true,
+    clearText: true,
     rounded: false
   }
 }
@@ -75,7 +75,7 @@ export const Small = {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
     size: 'sm',
-    clearTextIcon: true,
+    clearText: true,
     rounded: false
   }
 }
@@ -100,7 +100,7 @@ export const NoClearTextIcon = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    clearTextIcon: false
+    clearText: false
   }
 }
 
