@@ -4,6 +4,7 @@
     class="search-bar-input"
     :placeholder="localizedPlaceholder"
     :size="size"
+    :clear-text="true"
     @blur="onBlur"
     @input="onInput"
     @focus="onFocus"
@@ -22,7 +23,7 @@
         <phosphor-icon name="question" />
       </a>
       <slot name="addons"></slot>
-      <icon-button icon-left="magnifying-glass" variant="primary" :disabled="disableSubmit">
+      <icon-button v-if="showSubmit" icon-left="magnifying-glass" variant="primary" :disabled="disableSubmit">
         {{ $t('search.buttonLabel') }}</icon-button
       >
 
@@ -76,6 +77,13 @@ export default {
      */
     hideTips: {
       type: Boolean
+    },
+    /**
+     * Hide the submit button icon in the input bar
+     */
+    showSubmit: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['blur', 'input', 'focus', 'update:modelValue'],

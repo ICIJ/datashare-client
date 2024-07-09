@@ -36,9 +36,9 @@ const props = defineProps({
     default: 'magnifying-glass'
   },
   /**
-   * Add clear text icon
+   * Add clear text option
    */
-  clearTextIcon: {
+  clearText: {
     type: Boolean
   },
   /**
@@ -89,7 +89,7 @@ function input(value) {
 }
 const target = ref(null)
 
-function clearText() {
+function clearInputText() {
   target.value?.querySelector('.search-form-control__input').focus()
   input('')
 }
@@ -121,7 +121,7 @@ function clearText() {
           'search-form-control__input--no-icon': noIcon,
           'search-form-control__input--no-clear-text': noIcon,
           'search-form-control--rounded--start': rounded && noIcon,
-          'search-form-control--rounded--end': rounded && !clearTextIcon
+          'search-form-control--rounded--end': rounded && !clearText
         }"
         :placeholder="placeholder"
         @keydown.up="$emit('up', $event)"
@@ -136,18 +136,17 @@ function clearText() {
         class="search-form-control__end input-group-text border-start-0"
         :class="{ 'search-form-control--rounded--end': rounded }"
       >
-        <slot name="input-end" v-bind="{ loading, clearTextIcon }">
-          <phosphor-icon
-            v-if="clearTextIcon"
-            name="x-circle"
-            square
-            class="search-form-control__clear__icon"
-            :class="{
-              'search-form-control__clear__icon--hide': !showClearText
-            }"
-            @click="clearText()"
-          />
-        </slot>
+        <phosphor-icon
+          v-if="clearText"
+          name="x-circle"
+          square
+          class="search-form-control__clear__icon"
+          :class="{
+            'search-form-control__clear__icon--hide': !showClearText
+          }"
+          @click="clearInputText()"
+        />
+        <slot name="input-end" v-bind="{ loading, clearText }"> </slot>
       </span>
     </div>
   </form>
@@ -191,7 +190,7 @@ function clearText() {
       border-bottom: 1px solid $input-focus-border-color;
     }
   }
-  &__end__icon {
+  &__clear__icon {
     &--hide {
       visibility: hidden;
     }
