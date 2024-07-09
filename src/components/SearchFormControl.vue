@@ -29,6 +29,13 @@ const props = defineProps({
     type: Boolean
   },
   /**
+   * Icon name in the start slot
+   */
+  iconName: {
+    type: String,
+    default: 'magnifying-glass'
+  },
+  /**
    * Add clear text icon
    */
   clearTextIcon: {
@@ -46,7 +53,7 @@ const props = defineProps({
    */
   rounded: {
     type: Boolean,
-    default: true
+    default: false
   },
   /**
    * Change the state of the input to "loading" (with a spinner)
@@ -56,11 +63,14 @@ const props = defineProps({
     default: false
   },
   /**
-   * Use sm sizing
+   * Search input size (sm, md, lg)
    */
-  small: {
-    type: Boolean,
-    default: false
+  size: {
+    type: String,
+    default: 'md',
+    validator: function (value) {
+      return ['sm', 'md', 'lg'].includes(value)
+    }
   },
   /**
    * Disable autocomplete by default.
@@ -83,34 +93,35 @@ function clearText() {
   target.value?.querySelector('.search-form-control__input').focus()
   input('')
 }
-
-const size = computed(() => (props.small ? 'sm' : 'md'))
 </script>
 
 <template>
   <form ref="target" class="search-form-control" @submit.prevent="$emit('submit', modelValue)">
-    <div class="search-form-control__input-group input-group mb-3">
-      <template v-if="!noIcon">
-        <span
-          class="search-form-control__icon input-group-text border-end-0"
-          :class="{ 'search-form-control--rounded--left': rounded }"
-        >
-          <phosphor-icon :name="loading ? 'circle-notch' : 'magnifying-glass'" square :spin="loading"></phosphor-icon>
-        </span>
-      </template>
+    <div class="search-form-control__input-group input-group">
+      <span
+        class="search-form-control__start input-group-text border-end-0"
+        :class="{ 'search-form-control--rounded--start': rounded }"
+      >
+        <slot name="input-start" v-bind="{ loading, noIcon }">
+          <phosphor-icon
+            v-if="!noIcon"
+            :name="loading ? 'circle-notch' : iconName"
+            square
+            :spin="loading"
+          ></phosphor-icon>
+        </slot>
+      </span>
       <b-form-input
         :size="size"
         :model-value="modelValue"
         :autocomplete="autocomplete"
         :autofocus="autofocus"
-        class="search-form-control__input"
+        class="search-form-control__input border-start-0 border-end-0"
         :class="{
           'search-form-control__input--no-icon': noIcon,
           'search-form-control__input--no-clear-text': noIcon,
-          'border-start-0': !noIcon,
-          'border-end-0': clearTextIcon,
-          'search-form-control--rounded--left': rounded && noIcon,
-          'search-form-control--rounded--right': rounded && !clearTextIcon
+          'search-form-control--rounded--start': rounded && noIcon,
+          'search-form-control--rounded--end': rounded && !clearTextIcon
         }"
         :placeholder="placeholder"
         @keydown.up="$emit('up', $event)"
@@ -122,19 +133,21 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
       />
 
       <span
-        v-if="clearTextIcon"
-        class="search-form-control__clear input-group-text border-start-0"
-        :class="{ 'search-form-control--rounded--right': rounded }"
+        class="search-form-control__end input-group-text border-start-0"
+        :class="{ 'search-form-control--rounded--end': rounded }"
       >
-        <phosphor-icon
-          name="x-circle"
-          square
-          class="search-form-control__clear__icon"
-          :class="{
-            'search-form-control__clear__icon--hide': !showClearText
-          }"
-          @click="clearText()"
-        />
+        <slot name="input-end" v-bind="{ loading, clearTextIcon }">
+          <phosphor-icon
+            v-if="clearTextIcon"
+            name="x-circle"
+            square
+            class="search-form-control__clear__icon"
+            :class="{
+              'search-form-control__clear__icon--hide': !showClearText
+            }"
+            @click="clearText()"
+          />
+        </slot>
       </span>
     </div>
   </form>
@@ -142,24 +155,19 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
 
 <style lang="scss" scoped>
 .search-form-control {
-  &__icon,
-  &__clear {
+  &__start,
+  &__end {
     background-color: var(--bs-body-bg);
     color: $tertiary;
   }
   &--rounded {
-    &--left {
+    &--start {
       border-bottom-left-radius: $border-radius-pill;
       border-top-left-radius: $border-radius-pill;
     }
-    &--right {
+    &--end {
       border-bottom-right-radius: $border-radius-pill;
       border-top-right-radius: $border-radius-pill;
-    }
-  }
-  &__input {
-    &--no-icon {
-      border-left: 1px solid $input-border-color;
     }
   }
   &__input:focus {
@@ -168,28 +176,22 @@ const size = computed(() => (props.small ? 'sm' : 'md'))
   }
   &__input-group:has(&__input:focus) {
     box-shadow: none;
-    .search-form-control__icon {
+    .search-form-control__start {
       border-left: 1px solid $input-focus-border-color;
       border-top: 1px solid $input-focus-border-color;
       border-bottom: 1px solid $input-focus-border-color;
     }
     .search-form-control__input {
-      &--no-icon {
-        border-left: 1px solid $input-focus-border-color;
-      }
-      &--no-clear-text {
-        border-right: 1px solid $input-focus-border-color;
-      }
       border-top: 1px solid $input-focus-border-color;
       border-bottom: 1px solid $input-focus-border-color;
     }
-    .search-form-control__clear {
+    .search-form-control__end {
       border-right: 1px solid $input-focus-border-color;
       border-top: 1px solid $input-focus-border-color;
       border-bottom: 1px solid $input-focus-border-color;
     }
   }
-  &__clear__icon {
+  &__end__icon {
     &--hide {
       visibility: hidden;
     }

@@ -1,7 +1,7 @@
 import SearchFormControl from '@/components/SearchFormControl'
 
 export default {
-  title: 'Components/SearchBar/SearchFormControl',
+  title: 'Layout/SearchFormControl',
   tags: ['autodocs'],
   argTypes: {
     placeholder: {
@@ -9,9 +9,18 @@ export default {
         type: 'string'
       }
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg']
+    },
     noIcon: {
       control: {
         type: 'boolean'
+      }
+    },
+    iconName: {
+      control: {
+        type: 'string'
       }
     },
     autofocus: {
@@ -25,11 +34,6 @@ export default {
       }
     },
     loading: {
-      control: {
-        type: 'boolean'
-      }
-    },
-    small: {
       control: {
         type: 'boolean'
       }
@@ -51,15 +55,18 @@ export const Default = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    small: false
+    size: 'md',
+    clearTextIcon: true,
+    rounded: false
   }
 }
-export const NoIcon = {
+export const Large = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
-    modelValue: 'test',
-    noIcon: true,
-    false: true
+    modelValue: '',
+    size: 'lg',
+    clearTextIcon: true,
+    rounded: false
   }
 }
 
@@ -67,15 +74,33 @@ export const Small = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    small: true
+    size: 'sm',
+    clearTextIcon: true,
+    rounded: false
   }
 }
 
-export const clearTextIcon = {
+export const FilterIcon = {
+  args: {
+    placeholder: 'Type queries, use operators or type regex...',
+    modelValue: 'test',
+    noIcon: false,
+    iconName: 'funnel'
+  }
+}
+export const NoIcon = {
+  args: {
+    placeholder: 'Type queries, use operators or type regex...',
+    modelValue: 'test',
+    noIcon: true
+  }
+}
+
+export const NoClearTextIcon = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    clearTextIcon: true
+    clearTextIcon: false
   }
 }
 
