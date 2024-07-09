@@ -1063,5 +1063,15 @@
   "searchBarInputDropdownForProjects": {
     "projectsCount": "{count} projects",
     "noMatches": "No matches"
+  },
+  "tiny-pagination": {
+    "page": "Page",
+    "aria": "Jump to page",
+    "ariaRow": "Jump to document",
+    "total": "of {numberOfPages}",
+    "rowRange": "to {lastRangeRow} of 0 documents | to {lastRangeRow} of 1 document | to {lastRangeRow} of {totalRows} documents",
+    "compactRowRange": "to {lastRangeRow}",
+    "previous": "Previous page",
+    "next": "Next page"
   }
 }
