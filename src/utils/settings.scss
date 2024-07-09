@@ -81,6 +81,12 @@ $input-focus-border-color: map-get($theme-colors, 'secondary');
 $custom-control-indicator-checked-bg: $tertiary;
 
 $btn-box-shadow: 0 0 0 0 transparent;
+$btn-hover-bg-shade-amount: 25%;
+$btn-hover-bg-tint-amount: 25%;
+$btn-disabled-opacity: 0.75;
+
+// $btn-link-color: $body-tertiary-color;
+
 $input-btn-padding-y:0.5em;
 $input-btn-padding-x:0.75em;
 $popover-max-width: 480px;
