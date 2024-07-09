@@ -1,45 +1,47 @@
 <template>
-  <div class="search-bar-input input-group" :class="{ ['input-group-' + size]: true }">
-    <input
-      ref="input"
-      v-model="value"
-      class="form-control search-bar-input__input"
-      :placeholder="localizedPlaceholder"
-      @blur="onBlur"
-      @input="onInput"
-      @focus="onFocus"
-    />
-    <a
-      v-if="!hideTips"
-      v-b-tooltip.body.bottomleft
-      tabindex="-1"
-      class="search-bar-input__tips-addon input-group-text px-2"
-      target="_blank"
-      :class="{ 'search-bar-input__tips-addon--active': showTips }"
-      :href="operatorLink"
-      :title="$t('search.tips')"
-    >
-      <fa icon="circle-question" fixed-width />
-    </a>
-    <slot name="addons"></slot>
-    <button type="submit" class="btn btn-primary search-bar-input__submit" :disabled="disableSubmit">
-      <fa icon="magnifying-glass" class="d-inline d-md-none" :title="$t('search.buttonLabel')" /><span
-        class="d-none d-md-inline"
-        >{{ $t('search.buttonLabel') }}</span
+  <search-form-control
+    v-model="value"
+    class="search-bar-input"
+    :placeholder="localizedPlaceholder"
+    :size="size"
+    @blur="onBlur"
+    @input="onInput"
+    @focus="onFocus"
+  >
+    <template #input-end>
+      <a
+        v-if="!hideTips"
+        v-b-tooltip.body.bottomleft
+        tabindex="-1"
+        class="search-bar-input__tips-addon input-group-text px-2 mx-2"
+        target="_blank"
+        :class="{ 'search-bar-input__tips-addon--active': showTips }"
+        :href="operatorLink"
+        :title="$t('search.tips')"
       >
-    </button>
-    <slot name="suggestions"></slot>
-  </div>
-</template>
+        <phosphor-icon name="question" />
+      </a>
+      <slot name="addons"></slot>
+      <icon-button icon-left="magnifying-glass" variant="primary" :disabled="disableSubmit">
+        {{ $t('search.buttonLabel') }}</icon-button
+      >
 
+      <slot name="suggestions"></slot
+    ></template>
+  </search-form-control>
+</template>
+s
 <script>
 import settings from '@/utils/settings'
+import SearchFormControl from '@/components/SearchFormControl'
+import IconButton from '@/components/IconButton.vue'
 
 /**
  * The general search input group with field options.
  */
 export default {
   name: 'SearchBarInput',
+  components: [SearchFormControl, IconButton],
   props: {
     /**
      * Placeholder in the search bar.
@@ -115,7 +117,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-bar-input {
-  .input-group {
+  /*  .input-group {
     filter: drop-shadow(0 0.3em 0.6em rgba(black, 0));
     flex-wrap: nowrap;
     white-space: nowrap;
@@ -167,6 +169,6 @@ export default {
   &.input-group > &__submit.btn {
     border-bottom-right-radius: 1.5em;
     border-top-right-radius: 1.5em;
-  }
+  }*/
 }
 </style>
