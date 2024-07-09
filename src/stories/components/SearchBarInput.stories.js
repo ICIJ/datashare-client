@@ -63,7 +63,7 @@ export const ShowTips = {
     modelValue: '',
     size: 'md',
     disableSubmit: false,
-    hideTips: true,
+    hideTips: false,
     showSubmit: false
   }
 }
@@ -74,7 +74,7 @@ export const ShowSubmit = {
     modelValue: '',
     size: 'md',
     disableSubmit: false,
-    hideTips: true,
+    hideTips: false,
     showSubmit: true
   }
 }
