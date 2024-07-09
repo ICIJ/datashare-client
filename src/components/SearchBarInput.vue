@@ -14,7 +14,7 @@
         v-if="!hideTips"
         v-b-tooltip.body.bottomleft
         tabindex="-1"
-        class="search-bar-input__tips-addon input-group-text px-2 mx-2"
+        class="search-bar-input__tips-addon ms-2"
         target="_blank"
         :class="{ 'search-bar-input__tips-addon--active': showTips }"
         :href="operatorLink"
@@ -23,7 +23,13 @@
         <phosphor-icon name="question" />
       </a>
       <slot name="addons"></slot>
-      <icon-button v-if="showSubmit" icon-left="magnifying-glass" variant="primary" :disabled="disableSubmit">
+      <icon-button
+        v-if="showSubmit"
+        icon-left="magnifying-glass"
+        variant="primary"
+        class="ms-2"
+        :disabled="disableSubmit"
+      >
         {{ $t('search.buttonLabel') }}</icon-button
       >
 
@@ -31,11 +37,11 @@
     ></template>
   </search-form-control>
 </template>
-s
+
 <script>
 import settings from '@/utils/settings'
 import SearchFormControl from '@/components/SearchFormControl'
-import IconButton from '@/components/IconButton.vue'
+import IconButton from '@/components/IconButton'
 
 /**
  * The general search input group with field options.
