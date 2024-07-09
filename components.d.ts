@@ -35,6 +35,8 @@ declare module 'vue' {
     BBadge: typeof import('bootstrap-vue-next')['BBadge']
     BButton: typeof import('bootstrap-vue-next')['BButton']
     BButtonGroup: typeof import('bootstrap-vue-next')['BButtonGroup']
+    BCard: typeof import('bootstrap-vue-next')['BCard']
+    BCardText: typeof import('bootstrap-vue-next')['BCardText']
     BCol: typeof import('bootstrap-vue-next')['BCol']
     BCollapse: typeof import('bootstrap-vue-next')['BCollapse']
     BDropdown: typeof import('bootstrap-vue-next')['BDropdown']
@@ -44,10 +46,14 @@ declare module 'vue' {
     BForm: typeof import('bootstrap-vue-next')['BForm']
     BFormCheckbox: typeof import('bootstrap-vue-next')['BFormCheckbox']
     BFormCheckboxGroup: typeof import('bootstrap-vue-next')['BFormCheckboxGroup']
+    BFormFile: typeof import('bootstrap-vue-next')['BFormFile']
     BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
+    BFormInvalidFeedback: typeof import('bootstrap-vue-next')['BFormInvalidFeedback']
     BFormRadio: typeof import('bootstrap-vue-next')['BFormRadio']
+    BFormRow: typeof import('bootstrap-vue-next')['BFormRow']
     BFormSelect: typeof import('bootstrap-vue-next')['BFormSelect']
+    BFormTextarea: typeof import('bootstrap-vue-next')['BFormTextarea']
     BInputGroup: typeof import('bootstrap-vue-next')['BInputGroup']
     BInputGroupText: typeof import('bootstrap-vue-next')['BInputGroupText']
     BLink: typeof import('bootstrap-vue-next')['BLink']
@@ -184,6 +190,7 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     vBModal: typeof import('bootstrap-vue-next')['vBModal']
+    vBToggle: typeof import('bootstrap-vue-next')['vBToggle']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
