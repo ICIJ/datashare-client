@@ -1,7 +1,7 @@
 import SearchBarInput from '@/components/SearchBarInput'
 
 export default {
-  title: 'Components/SearchBar/SearchBarInput',
+  title: 'Components/SearchBar/SearchBarHeader',
   tags: ['autodocs'],
   argTypes: {
     placeholder: {
@@ -69,29 +69,6 @@ export const ShowTips = {
 }
 
 export const ShowSubmit = {
-  args: {
-    placeholder: 'Type queries, use operators or type regex...',
-    modelValue: '',
-    size: 'md',
-    disableSubmit: false,
-    hideTips: false,
-    showSubmit: true
-  }
-}
-export const AddonSlot = {
-  render: (args) => ({
-    components: {
-      SearchBarInput
-    },
-    setup: () => ({ args }),
-    template: `
-      <search-bar-input v-bind="args">
-        <template #addons>
-          <span class="ms-2">Addon goes here</span>
-        </template>
-      </search-bar-input>
-    `
-  }),
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
