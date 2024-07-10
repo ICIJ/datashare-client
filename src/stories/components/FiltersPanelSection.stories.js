@@ -10,7 +10,8 @@ export default {
   },
   argTypes: {},
   args: {
-    modelValue: ''
+    title: 'Documents info',
+    collapse: false
   },
   render: (args) => ({
     components: {
@@ -21,8 +22,8 @@ export default {
     setup: () => ({ args }),
     template: `
       <div class="p-5" style="background-color: var(--bs-light-bg-subtle);">
-        <filters-panel-section title="Documents info">
-          <filters-panel-section-filter title="Tags" icon="tag" :collapse="args.collapseFilters">
+        <filters-panel-section :title="args.title">
+          <filters-panel-section-filter title="Tags" icon="tag" :collapse="args.collapse" @toggle="args.collapse = $event">
             <filters-panel-section-filter-entry label="russia" model-value :count="1233" />
             <filters-panel-section-filter-entry label="france" model-value :count="437" />
             <filters-panel-section-filter-entry label="china" model-value :count="211" />
