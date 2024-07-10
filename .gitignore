@@ -2,6 +2,7 @@
 node_modules
 /dist
 selenium-debug.log
+storybook-static
 
 # local env files
 .env.local
