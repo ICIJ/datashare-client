@@ -1,12 +1,25 @@
+import FiltersPanelSearch from '@/components/FiltersPanelSearch.vue'
+
 export default {
   title: 'Components/FiltersPanel/Search',
   tags: ['autodocs'],
+  component: {
+    FiltersPanelSearch
+  },
   argTypes: {},
-  args: {},
+  args: {
+    modelValue: ''
+  },
   render: (args) => ({
-    components: { },
+    components: {
+      FiltersPanelSearch
+    },
     setup: () => ({ args }),
-    template: ``
+    template: `
+      <div class="p-5" style="background-color: var(--bs-light-bg-subtle);">
+        <filters-panel-search v-model="args.modelValue" />
+      </div>
+    `
   })
 }
 

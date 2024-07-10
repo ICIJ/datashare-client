@@ -15,5 +15,7 @@ defineProps({
 <style lang="scss" scoped>
 .filters-panel-section-title {
   font-size: 1em;
+  padding: 0 0 $spacer-xs;
+  margin: 0;
 }
 </style>
