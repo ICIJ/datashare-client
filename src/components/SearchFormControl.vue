@@ -45,7 +45,7 @@ const props = defineProps({
    */
   autofocus: {
     type: Boolean,
-    default: true
+    default: false
   },
   /**
    * Round the border of the input
