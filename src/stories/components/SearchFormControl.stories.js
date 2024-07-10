@@ -1,7 +1,7 @@
 import SearchFormControl from '@/components/SearchFormControl'
 
 export default {
-  title: 'Layout/SearchFormControl',
+  title: 'Components/SearchBar/SearchFormControl',
   tags: ['autodocs'],
   argTypes: {
     placeholder: {

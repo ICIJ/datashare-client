@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-
-import PhosphorIcon from '@/components/PhosphorIcon'
+import { PhosphorIcon } from '@icij/murmur-next'
 /**
  * A search input with pill layout.
  */
