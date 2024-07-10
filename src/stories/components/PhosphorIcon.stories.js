@@ -15,11 +15,23 @@ export default {
     },
     spin: {
       control: { type: 'boolean' }
+    },
+    spinReverse: {
+      control: { type: 'boolean' }
+    },
+    beat: {
+      control: { type: 'boolean' }
+    },
+    fade: {
+      control: { type: 'boolean' }
     }
   },
   args: {
     weight: 'regular',
     spin: false,
+    spinReverse: false,
+    beat: false,
+    fade: false,
     spinDuration: '1s'
   },
   render: (args) => ({
@@ -73,6 +85,26 @@ export const Spinning = {
     name: 'circle-notch',
     size: '32px',
     spin: true
+  }
+}
+
+export const Beating = {
+  args: {
+    name: 'heart',
+    size: '32px',
+    fill: true,
+    beat: true,
+    variant: 'danger'
+  }
+}
+
+export const Fading = {
+  args: {
+    name: 'alien',
+    size: '32px',
+    fill: true,
+    fade: true,
+    variant: 'success'
   }
 }
 
