@@ -67,6 +67,7 @@ declare module 'vue' {
     BTab: typeof import('bootstrap-vue-next')['BTab']
     BTable: typeof import('bootstrap-vue-next')['BTable']
     BTabs: typeof import('bootstrap-vue-next')['BTabs']
+    BTh: typeof import('bootstrap-vue-next')['BTh']
     BTooltip: typeof import('bootstrap-vue-next')['BTooltip']
     ColumnChartPicker: typeof import('./src/components/ColumnChartPicker.vue')['default']
     ColumnFilter: typeof import('./src/components/ColumnFilter.vue')['default']
