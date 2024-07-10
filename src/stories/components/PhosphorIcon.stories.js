@@ -104,6 +104,7 @@ export const Fading = {
     size: '32px',
     weight: 'duotone',
     fade: true,
+    fadeDuration: '3s',
     variant: 'success'
   }
 }
