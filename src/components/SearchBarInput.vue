@@ -27,7 +27,8 @@
         v-if="showSubmit"
         icon-left="magnifying-glass"
         variant="primary"
-        class="ms-2"
+        class="search-bar-input__submit ms-2"
+        type="submit"
         :disabled="disableSubmit"
       >
         {{ $t('search.buttonLabel') }}</icon-button
@@ -128,61 +129,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.search-bar-input {
-  /*  .input-group {
-    filter: drop-shadow(0 0.3em 0.6em rgba(black, 0));
-    flex-wrap: nowrap;
-    white-space: nowrap;
-  }
-
-  .input-group-md &__input.form-control,
-  .input-group-lg &__input.form-control {
-    border-radius: 1.5em 0 0 1.5em;
-  }
-
-  &__input.form-control {
-    border-right: 0;
-
-    &:focus + .search-bar-input__tips-addon,
-    &:focus + .search-bar-input__field:deep(.btn),
-    &:focus + :deep(.search-bar-input__field .btn) {
-      border-bottom-color: $input-focus-border-color;
-      border-top-color: $input-focus-border-color;
-    }
-
-    &:focus {
-      box-shadow: none;
-    }
-  }
-
-  &__tips-addon.input-group-text {
-    background: white;
-    border-left: 0;
-    border-right: 0;
-    box-shadow: $input-box-shadow;
-    color: transparent;
-    pointer-events: none;
-    transition: $input-transition, color 0.15s ease-in-out;
-  }
-
-  &__tips-addon--active.input-group-text {
-    color: $link-color;
-    pointer-events: all;
-  }
-
-  &__tips {
-    border-radius: 0 0 $input-border-radius $input-border-radius;
-    display: block;
-    font-size: 0.9rem;
-    padding: $spacer * 0.5 0 0;
-    z-index: 100;
-  }
-
-  &.input-group > &__submit.btn {
-    border-bottom-right-radius: 1.5em;
-    border-top-right-radius: 1.5em;
-  }*/
-}
-</style>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 import PhosphorIcon from '@/components/PhosphorIcon'
 /**
@@ -114,7 +114,7 @@ function clearInputText() {
         :model-value="modelValue"
         :autocomplete="autocomplete"
         :autofocus="autofocus"
-        class="search-form-control__input border-start-0 border-end-0"
+        class="search-form-control__input border-start-0 border-end-0 mx-0 px-0"
         :class="{
           'search-form-control__input--no-icon': noIcon,
           'search-form-control__input--no-clear-text': noIcon,
