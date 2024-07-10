@@ -45,6 +45,11 @@
 }
 
 @include color-mode(dark) {
+  .btn-primary {
+    --#{$prefix}btn-bg: var(--bs-body-color);
+    --#{$prefix}btn-color: var(--bs-body-bg);
+  }
+
   .btn-outline-secondary {
     --#{$prefix}btn-hover-color: var(--bs-body-color);
     --#{$prefix}btn-hover-bg:  #{shade-color($secondary, 95%)};
