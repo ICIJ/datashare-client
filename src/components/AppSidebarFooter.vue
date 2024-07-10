@@ -87,15 +87,11 @@ const classList = computed(() => {
 
 <style scoped lang="scss">
 .app-sidebar-footer {
-  color: var(--bs-sidebar-color);
-  background: var(--bs-sidebar-bg);
+  color: var(--bs-light-color-subtle);
+  background: var(--bs-light-bg-subtle);
   display: flex;
   align-items: center;
   padding: $spacer;
-
-  [data-bs-theme='dark'] & {
-    background-color: #070707;
-  }
 
   &--compact {
     flex-direction: column;
