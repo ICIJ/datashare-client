@@ -102,7 +102,7 @@ export const Fading = {
   args: {
     name: 'alien',
     size: '32px',
-    fill: true,
+    weight: 'duotone',
     fade: true,
     variant: 'success'
   }
