@@ -11,7 +11,8 @@ defineProps({
 <template>
   <div class="filters-panel-section">
     <filters-panel-section-title :title="title">
-      <slot name="title"></slot>
+      <slot name="title" />
     </filters-panel-section-title>
+    <slot />
   </div>
 </template>
