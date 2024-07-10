@@ -1,0 +1,24 @@
+<script setup>
+import SearchFormControl from '@/components/SearchFormControl.vue'
+
+defineProps({
+  modelValue: {
+    type: String
+  },
+  placeholder: {
+    type: String,
+    default: 'Search in filters'
+  }
+})
+
+const emit = defineEmits(['update:modelValue'])
+</script>
+
+<template>
+  <search-form-control
+    :model-value="modelValue"
+    :placeholder="placeholder"
+    class="filters-panel-search"
+    @update:modelValue="emit('update:modelValue', $event)"
+  />
+</template>
