@@ -11,8 +11,7 @@ $info: #45C4FF;
 $light: #C7C7C7;
 $lighter: #F3F3F3;
 $dark: #212529;
-$darker: darken($dark, 20);
-$darkest: darken($dark, 30);
+$darker: #0F0F10;;
 
 $link-color: $primary;
 $link-decoration: none;
@@ -40,7 +39,6 @@ $theme-colors: (
   lighter: $lighter,
   dark: $dark,
   darker: $darker,
-  darkest: $darkest,
   mark: #fff5bd,
   category-ban: $secondary,
   category-person: #ff6699,
@@ -55,6 +53,12 @@ $success-bg-subtle: #E5F8F3;
 $info-bg-subtle: #ECF9FF;
 $warning-bg-subtle: #FFF9EE;
 $danger-bg-subtle:#FBEBEC;
+
+$light-bg-subtle: $lighter;
+$light-bg-subtle-dark: $darker;
+
+$dark-bg-subtle: $darker;
+$dark-bg-subtle-dark: $lighter;
 
 $enable-shadows: true;
 $enable-rounded: true;
