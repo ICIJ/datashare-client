@@ -37,6 +37,11 @@ export default {
       control: {
         type: 'boolean'
       }
+    },
+    shadow: {
+      control: {
+        type: 'boolean'
+      }
     }
   },
   render: (args) => ({
@@ -66,17 +71,28 @@ export const Large = {
     modelValue: '',
     size: 'lg',
     clearText: true,
-    rounded: false
+    rounded: false,
+    shadow: false
   }
 }
-
+export const LargeShadow = {
+  args: {
+    placeholder: 'Type queries, use operators or type regex...',
+    modelValue: '',
+    size: 'lg',
+    clearText: true,
+    rounded: false,
+    shadow: true
+  }
+}
 export const Small = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
     size: 'sm',
     clearText: true,
-    rounded: false
+    rounded: false,
+    shadow: false
   }
 }
 
@@ -85,14 +101,16 @@ export const FilterIcon = {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: 'test',
     noIcon: false,
-    iconName: 'funnel'
+    iconName: 'funnel',
+    shadow: false
   }
 }
 export const NoIcon = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: 'test',
-    noIcon: true
+    noIcon: true,
+    shadow: false
   }
 }
 
@@ -100,7 +118,8 @@ export const NoClearTextIcon = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    clearText: false
+    clearText: false,
+    shadow: false
   }
 }
 
@@ -109,6 +128,7 @@ export const Rounded = {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
     small: false,
-    rounded: true
+    rounded: true,
+    shadow: false
   }
 }
