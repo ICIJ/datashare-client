@@ -4,7 +4,7 @@ import DismissableAlert from '@/components/DismissableAlert'
 import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
-  title: 'Components/DismissableAlert',
+  title: 'Components/Dismissable/Alert',
   tags: ['autodocs'],
   argTypes: {
     variant: {

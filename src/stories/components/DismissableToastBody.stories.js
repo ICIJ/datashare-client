@@ -5,7 +5,7 @@ import { toast } from 'vue3-toastify'
 import ToastBody from '@/components/ToastBody'
 
 export default {
-  title: 'Components/ToastBody',
+  title: 'Components/Dismissable/ToastBody',
   tags: ['autodocs'],
   argTypes: {
     variant: {
