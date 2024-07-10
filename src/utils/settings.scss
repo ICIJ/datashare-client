@@ -2,7 +2,7 @@ $prefix: bs-;
 
 $primary: #112A5C;
 $secondary: #FA4070;
-$tertiary: #C7C7C7;
+$tertiary: #6F6F6F;
 $danger: #dc3545;
 
 $warning: #FFBF57;
@@ -18,7 +18,7 @@ $darker: #0F0F10;;
 $link-color: $primary;
 $link-decoration: none;
 
-$body-color: #000;
+$body-color: #212529;
 $body-bg: #fff;
 $body-color-dark: #C7C9CD;
 $body-bg-dark: #151518;
@@ -102,10 +102,13 @@ $btn-hover-bg-shade-amount: 25%;
 $btn-hover-bg-tint-amount: 25%;
 $btn-disabled-opacity: 0.75;
 
-// $btn-link-color: $body-tertiary-color;
-
 $input-btn-padding-y:0.5em;
 $input-btn-padding-x:0.75em;
+
+$form-check-input-border: var(--#{$prefix}border-width) solid $tertiary;
+$form-check-input-border-radius: 2px;
+$form-check-input-checked-border-color: var(--#{$prefix}primary-text-emphasis);
+
 $popover-max-width: 480px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
 $popover-bg: #fff;
