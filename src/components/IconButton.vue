@@ -9,6 +9,7 @@
     <phosphor-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
       :name="iconLeftOrSpinner"
+      :weight="iconLeftWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
       class="icon-button__icon-left"
@@ -19,6 +20,7 @@
     <phosphor-icon
       v-if="iconRight"
       :name="iconRightOrSpinner"
+      :weight="iconRightWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
       class="icon-button__icon-right"
@@ -36,7 +38,15 @@ const props = defineProps({
     type: String,
     default: null
   },
+  iconLeftWeight: {
+    type: String,
+    default: null
+  },
   iconRight: {
+    type: String,
+    default: null
+  },
+  iconRightWeight: {
     type: String,
     default: null
   },
