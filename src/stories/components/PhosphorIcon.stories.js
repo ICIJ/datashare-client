@@ -1,7 +1,7 @@
-import PhosphorIcon from '@/components/PhosphorIcon'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 export default {
-  title: 'Components/PhosphorIcon',
+  title: 'Components/Phosphor/Icon',
   tags: ['autodocs'],
   component: PhosphorIcon,
   argTypes: {
