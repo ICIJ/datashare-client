@@ -78,6 +78,13 @@ const props = defineProps({
   autocomplete: {
     type: String,
     default: 'off'
+  },
+  /**
+   * Add light shadow around the form input
+   */
+  shadow: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits(['submit', 'up', 'down', 'input', 'update:modelValue', 'enter', 'blur'])
@@ -94,7 +101,11 @@ function clearInputText() {
 </script>
 
 <template>
-  <form ref="target" class="search-form-control" @submit.prevent="$emit('submit', modelValue)">
+  <form
+    class="search-form-control"
+    :class="{ 'search-form-control--shadow': shadow }"
+    @submit.prevent="$emit('submit', modelValue)"
+  >
     <div class="search-form-control__input-group input-group">
       <span
         class="search-form-control__start input-group-text border-end-0"
@@ -149,6 +160,7 @@ function clearInputText() {
 
 <style lang="scss" scoped>
 .search-form-control {
+  border-radius: 6px;
   &__start,
   &__end {
     background-color: var(--bs-body-bg);
@@ -193,6 +205,10 @@ function clearInputText() {
 
   .form-control-lg {
     padding: 1em;
+  }
+
+  &--shadow {
+    box-shadow: 0.05em 0.05em 0.5em 0.3em $lighter;
   }
 }
 </style>

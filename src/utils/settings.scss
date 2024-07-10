@@ -163,3 +163,10 @@ $search-results-list-width: 600px;
 
 $document-max-width: 980px;
 $document-float-breakpoint-width:  1700px;
+$color-mode-type: data;
+
+@include color-mode(dark) {
+  .search-form-control--shadow {
+    box-shadow: none;
+  }
+}
