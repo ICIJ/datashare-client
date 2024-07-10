@@ -5,6 +5,7 @@
     :placeholder="localizedPlaceholder"
     :size="size"
     :clear-text="true"
+    shadow
     @blur="onBlur"
     @input="onInput"
     @focus="onFocus"
