@@ -1,6 +1,6 @@
 <template>
   <b-button
-    v-b-tooltip="{ title: label, placement: tooltipPlacement }"
+    v-b-tooltip="{ title: tooltipTitle, placement: tooltipPlacement }"
     :to="to"
     v-bind="buttonProps"
     class="icon-button d-inline-flex align-items-center"
@@ -117,6 +117,10 @@ const iconRightOrSpinner = computed(() => {
 
 const labelOrLoadingText = computed(() => {
   return props.loading && props.loadingText ? props.loadingText : props.label
+})
+
+const tooltipTitle = computed(() => {
+  return props.hideLabel ? props.label : null
 })
 
 const buttonProps = computed(() => ({
