@@ -26,13 +26,13 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <h3 class="filters-panel-section-filter-title" :class="classList">
+  <h3 class="filters-panel-section-filter-title" :class="classList" @click="emit('toggle', !collapse)">
     <slot>
       <phosphor-icon :name="icon" class="me-2" />
       <span v-ellipsis-tooltip="{ title, placement: 'right' }" class="text-truncate">
         {{ title }}
       </span>
-      <filters-panel-section-filter-toggler class="ms-auto" :collapse="collapse" @toggle="emit('toggle', $event)" />
+      <filters-panel-section-filter-toggler class="ms-auto" :collapse="collapse" />
     </slot>
   </h3>
 </template>
