@@ -7,7 +7,7 @@
           :key="event.id"
           class="user-history-saved-search-list__list__item d-inline-flex justify-content-between"
         >
-          <router-link :to="{ path: event.uri }" class="p-3 flex-grow-1 d-block">
+          <router-link :to="{ name: 'search', query: getSearchParamsQuery(event.uri) }" class="p-3 flex-grow-1 d-block">
             <span class="user-history-saved-search-list__list__item__name fw-bold mb-1">
               {{ event.name }}
             </span>
@@ -90,10 +90,6 @@ export default {
     AppliedSearchFiltersItem,
     UserHistorySaveSearchForm
   },
-  filters: {
-    humanDate,
-    humanTime
-  },
   props: {
     events: {
       type: Array
@@ -125,8 +121,14 @@ export default {
       const ignored = ['from', 'size', 'sort', 'field']
       return ignored.includes(name) || (name === 'q' && ['', '*'].includes(value))
     },
+    getSearchParamsFromURI(uri) {
+      return new URLSearchParams(uri.split('?').slice(1).pop())
+    },
+    getSearchParamsQuery(uri) {
+      return Object.fromEntries(this.getSearchParamsFromURI(uri))
+    },
     createFiltersFromURI(uri) {
-      const urlSearchParams = new URLSearchParams(uri.split('?').slice(1).pop())
+      const urlSearchParams = this.getSearchParamsFromURI(uri)
       const filters = []
       for (let [name, value] of urlSearchParams.entries()) {
         if (this.isIgnoredFilter({ name, value })) {
