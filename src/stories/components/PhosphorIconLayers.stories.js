@@ -5,14 +5,11 @@ export default {
   tags: ['autodocs'],
   components: PhosphorIconLayers,
   argTypes: {
-    weight: {
-      control: { type: 'select' },
-      options: ['thin', 'light', 'regular', 'bold', 'fill', 'duotone']
+    size: {
+      control: { type: 'string' }
     }
   },
   args: {
-    weight: 'regular',
-    spin: false,
     size: '44px'
   },
   render: (args) => ({
