@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 /**
  * A search input with pill layout.
@@ -87,7 +87,9 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['submit', 'up', 'down', 'input', 'update:modelValue', 'enter', 'blur'])
-
+const showClearText = computed(() => {
+  return props.modelValue?.length > 0
+})
 function input(value) {
   emit('update:modelValue', value)
 }
@@ -149,6 +151,9 @@ function clearInputText() {
           name="x-circle"
           square
           class="search-form-control__clear__icon"
+          :class="{
+            'search-form-control__clear__icon--hide': !showClearText
+          }"
           @click="clearInputText()"
         />
         <slot name="input-end" v-bind="{ loading, clearText }"> </slot>
