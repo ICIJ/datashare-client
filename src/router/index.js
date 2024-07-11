@@ -54,7 +54,7 @@ export const routes = [
         },
         components: {
           default: () => import('@/pages/Search'),
-          sidebar: () => import('@/components/FiltersPanel')
+          sidebar: () => import('@/components/FiltersPanel/FiltersPanel')
         },
         children: [
           {
