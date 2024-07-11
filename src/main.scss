@@ -70,6 +70,11 @@
   }
 }
 
+.form-check .form-check-input:checked + .form-check-label {
+  font-weight: 400;
+  color: var(--bs-primary-text-emphasis);
+}
+
 html {
   font-size: 1rem;
 }

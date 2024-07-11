@@ -73,11 +73,6 @@ const classList = computed(() => {
     .filters-panel-section-filter-entry__count {
       background: var(--bs-primary-text-emphasis);
     }
-
-    &:deep(.form-check-label) {
-      font-weight: 400;
-      color: var(--bs-primary-text-emphasis);
-    }
   }
 }
 </style>
