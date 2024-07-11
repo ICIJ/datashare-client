@@ -40,6 +40,7 @@ declare module 'vue' {
     BCol: typeof import('bootstrap-vue-next')['BCol']
     BCollapse: typeof import('bootstrap-vue-next')['BCollapse']
     BDropdown: typeof import('bootstrap-vue-next')['BDropdown']
+    BDropdownButton: typeof import('bootstrap-vue-next')['BDropdownButton']
     BDropdownDivider: typeof import('bootstrap-vue-next')['BDropdownDivider']
     BDropdownHeader: typeof import('bootstrap-vue-next')['BDropdownHeader']
     BDropdownItem: typeof import('bootstrap-vue-next')['BDropdownItem']
