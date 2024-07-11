@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 
-import AppSidebarSectionToggler from '@/components/AppSidebarSectionToggler'
-import AppSidebarSectionTitle from '@/components/AppSidebarSectionTitle'
+import AppSidebarSectionToggler from '@/components/AppSidebar/AppSidebarSectionToggler'
+import AppSidebarSectionTitle from '@/components/AppSidebar/AppSidebarSectionTitle'
 
 const props = defineProps({
   compact: {
