@@ -2,8 +2,7 @@
 import { computed } from 'vue'
 import { capitalize, isFunction } from 'lodash'
 import { useRouter } from 'vue-router'
-
-import PhosphorIcon from '@/components/PhosphorIcon'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 function castFunction(value) {
   if (isFunction(value)) {

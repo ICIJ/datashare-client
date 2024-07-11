@@ -1,7 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-
-import PhosphorIcon from '@/components/PhosphorIcon'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 const VARIANTS = {
   default: 'primary',

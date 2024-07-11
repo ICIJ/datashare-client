@@ -30,8 +30,7 @@
 
 <script setup>
 import { computed } from 'vue'
-
-import PhosphorIcon from '@/components/PhosphorIcon'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 const props = defineProps({
   iconLeft: {
