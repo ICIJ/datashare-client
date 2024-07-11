@@ -35,7 +35,7 @@ import findIndex from 'lodash/findIndex'
 import first from 'lodash/first'
 import last from 'lodash/last'
 
-import DocumentNavbar from '@/components/document/DocumentNavbar'
+import DocumentNavbar from '@/components/Document/DocumentNavbar'
 import QuickItemNav from '@/components/QuickItemNav'
 import shortkeys from '@/mixins/shortkeys'
 

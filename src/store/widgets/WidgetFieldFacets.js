@@ -1,7 +1,7 @@
 import { iteratee, isFunction } from 'lodash'
 
 import WidgetListGroup from '@/store/widgets/WidgetListGroup'
-import Component from '@/components/widget/WidgetFieldFacets'
+import Component from '@/components/Widget/WidgetFieldFacets'
 
 function castFunction(value) {
   if (isFunction(value)) {
