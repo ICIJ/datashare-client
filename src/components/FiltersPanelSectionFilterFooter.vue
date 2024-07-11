@@ -44,32 +44,20 @@ const classList = computed(() => {
 <template>
   <div class="filters-panel-section-filter-footer" :class="classList">
     <div class="row g-0">
-      <div
-        v-if="!hideExpand"
-        class="col filters-panel-section-filter-footer__option filters-panel-section-filter-footer__option--expand"
-      >
-        <icon-button icon-left="arrows-out-simple" label="Expand" />
+      <div v-if="!hideExpand" class="col">
+        <icon-button icon-left="arrows-out-simple" label="Expand" @click="emit('expand')" />
       </div>
-      <div
-        v-if="!hideSort"
-        class="col d-flex justify-content-end filters-panel-section-filter-footer__option filters-panel-section-filter-footer__option--sort"
-      >
+      <div v-if="!hideSort" class="col d-flex justify-content-end">
         <icon-button icon-left="caret-up-down" label="Sort" />
       </div>
     </div>
     <div class="row g-0">
-      <div
-        v-if="!hideContextualize"
-        class="col filters-panel-section-filter-footer__option filters-panel-section-filter-footer__option--contextualize"
-      >
+      <div v-if="!hideContextualize" class="col">
         <b-form-checkbox :model-value="contextualize" @update:modelValue="emit('update:contextualize', $event)">
           Contextualize
         </b-form-checkbox>
       </div>
-      <div
-        v-if="!hideExclude"
-        class="col d-flex justify-content-end filters-panel-section-filter-footer__option filters-panel-section-filter-footer__option--exclude"
-      >
+      <div v-if="!hideExclude" class="col d-flex justify-content-end">
         <b-form-checkbox :model-value="exclude" @update:modelValue="emit('update:exclude', $event)">
           Exclude
         </b-form-checkbox>
@@ -80,7 +68,8 @@ const classList = computed(() => {
 
 <style lang="scss" scoped>
 .filters-panel-section-filter-footer {
-  padding-bottom: $spacer-xxs;
+  padding: $spacer-xxs 0;
+  padding-left: $spacer-xs;
 
   &--empty {
     display: none;
@@ -88,9 +77,8 @@ const classList = computed(() => {
 
   &:deep(.icon-button),
   &:deep(.form-check) {
-    padding: 0;
+    padding: $spacer-xxs 0;
     border: 0;
-    margin-top: $spacer-xs;
     margin-bottom: 0;
   }
 

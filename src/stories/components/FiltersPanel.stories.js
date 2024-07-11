@@ -29,7 +29,7 @@ export default {
         <filters-panel-toggler class="mb-5" />
         <filters-panel-search class="mb-5" />
         <filters-panel-section title="Documents info">
-          <filters-panel-section-filter title="Project" icon="circles-three-plus" :collapse="args.collapseFilters">
+          <filters-panel-section-filter title="Project" :count="1" icon="circles-three-plus" :collapse="args.collapseFilters">
             <filters-panel-section-filter-entry label="Banana Papers" value="banana-papers" model-value :count="17000000" />
             <filters-panel-section-filter-entry label="Citrus Confidential" value="citrus-confidential" :count="10000000" />
             <filters-panel-section-filter-entry label="FigCEN Files" value="figcen-files" :count="300000" />
