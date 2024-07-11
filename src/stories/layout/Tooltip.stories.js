@@ -1,6 +1,5 @@
 import { BTooltip } from 'bootstrap-vue-next'
-
-import PhosphorIcon from '@/components/PhosphorIcon'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 export default {
   title: 'Layout/Tooltip',
