@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
-import PhosphorIcon from '@/components/PhosphorIcon'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
 
 describe('DismissableAlert', () => {

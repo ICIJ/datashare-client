@@ -1,7 +1,7 @@
 import { uniqueId } from 'lodash'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
-import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
   title: 'Components/Dismissable/DismissableAlert',
