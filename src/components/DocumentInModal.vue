@@ -27,7 +27,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 
-import DocumentNavbar from '@/components/document/DocumentNavbar'
+import DocumentNavbar from '@/components/Document/DocumentNavbar'
 import DocumentView from '@/pages/DocumentView'
 import QuickItemNav from '@/components/QuickItemNav'
 import settings from '@/utils/settings'

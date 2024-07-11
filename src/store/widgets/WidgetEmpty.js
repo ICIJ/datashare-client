@@ -1,6 +1,6 @@
 import uniqueId from 'lodash/uniqueId'
 
-import Component from '@/components/widget/WidgetEmpty'
+import Component from '@/components/Widget/WidgetEmpty'
 
 const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
 

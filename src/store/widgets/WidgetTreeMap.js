@@ -1,6 +1,6 @@
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/widget/WidgetTreeMap'
+import Component from '@/components/Widget/WidgetTreeMap'
 
 /**
  * Class representing the TreeMap widget

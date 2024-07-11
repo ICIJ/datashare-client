@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import DocumentNavbar from '@/components/document/DocumentNavbar'
+import DocumentNavbar from '@/components/Document/DocumentNavbar'
 import DocumentView from '@/pages/DocumentView'
 
 export default {
