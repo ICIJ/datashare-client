@@ -11,12 +11,20 @@ const props = defineProps({
   icon: {
     type: String
   },
+  count: {
+    type: Number,
+    default: 0
+  },
   collapse: {
     type: Boolean
   }
 })
 
 const emit = defineEmits(['toggle'])
+
+const showCount = computed(() => {
+  return props.count > 0 && props.collapse
+})
 
 const classList = computed(() => {
   return {
@@ -29,9 +37,12 @@ const classList = computed(() => {
   <h3 class="filters-panel-section-filter-title" :class="classList" @click="emit('toggle', !collapse)">
     <slot>
       <phosphor-icon :name="icon" class="me-2" />
-      <span v-ellipsis-tooltip="{ title, placement: 'right' }" class="text-truncate">
+      <span v-ellipsis-tooltip="{ title, placement: 'right' }" class="text-truncate flex-grow-1">
         {{ title }}
       </span>
+      <b-badge v-if="showCount" class="filters-panel-section-filter-title__count mx-2" pill variant="primary-subtle">
+        {{ count }}
+      </b-badge>
       <filters-panel-section-filter-toggler class="ms-auto" :collapse="collapse" />
     </slot>
   </h3>
@@ -61,6 +72,11 @@ const classList = computed(() => {
         visibility: visible;
       }
     }
+  }
+
+  &__count {
+    color: var(--bs-body-bg);
+    background: var(--bs-primary-text-emphasis);
   }
 }
 </style>

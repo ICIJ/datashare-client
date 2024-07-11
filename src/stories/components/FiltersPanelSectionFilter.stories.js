@@ -28,9 +28,14 @@ export default {
         values: {}
       }
     },
+    computed: {
+      count() {
+        return Object.values(this.values).filter((v) => v).length
+      }
+    },
     template: `
       <div class="p-5" style="background-color: var(--bs-light-bg-subtle);">
-        <filters-panel-section-filter v-bind="args" @toggle="args.collapse = $event">
+        <filters-panel-section-filter v-bind="args" :count="count" @toggle="args.collapse = $event">
           <filters-panel-section-filter-entry label="colombia" v-model="values['colombia']" :count="89233" />
           <filters-panel-section-filter-entry label="mongolia" v-model="values['mongolia']" :count="9276" />
           <filters-panel-section-filter-entry label="japan" v-model="values['japan']" :count="8878" />
