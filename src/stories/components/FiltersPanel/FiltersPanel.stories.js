@@ -1,10 +1,10 @@
-import FiltersPanelToggler from "@/components/FiltersPanel/FiltersPanelToggler.vue"
-import FiltersPanelSearch from "@/components/FiltersPanel/FiltersPanelSearch.vue"
-import FiltersPanelSection from "@/components/FiltersPanel/FiltersPanelSection.vue"
-import FiltersPanelSectionTitle from "@/components/FiltersPanel/FiltersPanelSectionTitle.vue"
-import FiltersPanelSectionFilter from "@/components/FiltersPanel/FiltersPanelSectionFilter.vue"
-import FiltersPanelSectionFilterEntry from "@/components/FiltersPanel/FiltersPanelSectionFilterEntry.vue"
-import FiltersPanelSectionFilterFooter from "@/components/FiltersPanel/FiltersPanelSectionFilterFooter.vue"
+import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler.vue'
+import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch.vue'
+import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection.vue'
+import FiltersPanelSectionTitle from '@/components/FiltersPanel/FiltersPanelSectionTitle.vue'
+import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter.vue'
+import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry.vue'
+import FiltersPanelSectionFilterFooter from '@/components/FiltersPanel/FiltersPanelSectionFilterFooter.vue'
 
 export default {
   title: 'Components/FiltersPanel',
