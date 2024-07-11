@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import DocumentNotes from '@/components/Document/DocumentTab/DocumentNotes'
-import DocumentThread from '@/components/Document/DocumentTabThread'
-import DocumentTranslatedContent from '@/components/Document/DocumentTabTranslatedContent'
+import DocumentNotes from '@/components/Document/DocumentNotes'
+import DocumentThread from '@/components/DocumentThread'
+import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 /**
  * A panel displaying the extracted text of a document.
