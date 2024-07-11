@@ -10,8 +10,7 @@ export default {
   },
   argTypes: {},
   args: {
-    title: 'Documents info',
-    collapse: false
+    title: 'Documents info'
   },
   render: (args) => ({
     components: {
@@ -23,15 +22,14 @@ export default {
     template: `
       <div class="p-5" style="background-color: var(--bs-light-bg-subtle);">
         <filters-panel-section :title="args.title">
-          <filters-panel-section-filter title="Tags" icon="tag" :collapse="args.collapse" @toggle="args.collapse = $event">
-            <filters-panel-section-filter-entry label="russia" model-value :count="1233" />
-            <filters-panel-section-filter-entry label="france" model-value :count="437" />
-            <filters-panel-section-filter-entry label="china" model-value :count="211" />
-            <filters-panel-section-filter-entry label="usa" :count="210" />
-            <filters-panel-section-filter-entry label="germany" :count="148" />
-            <filters-panel-section-filter-entry label="sudan" :count="135" />
-            <filters-panel-section-filter-entry label="australia" :count="36" />
-          </filters-panel-section-filter>
+          <filters-panel-section-filter title="Project" icon="circles-three-plus" collapse />
+          <filters-panel-section-filter title="Path" icon="tree-structure" collapse />
+          <filters-panel-section-filter title="File type" icon="file-text" collapse />
+          <filters-panel-section-filter title="Creation date" icon="calendar-blank" collapse />
+          <filters-panel-section-filter title="Language" icon="globe-hemisphere-west" collapse />
+          <filters-panel-section-filter title="Indexing date" icon="calendar-plus" collapse />
+          <filters-panel-section-filter title="Extraction lebel" icon="paperclip" collapse />
+          <filters-panel-section-filter title="Has attachments" icon="paperclip" collapse />
         </filter-panel-section>
       </div>
     `

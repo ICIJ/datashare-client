@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import IconButton from '@/components/IconButton'
+import FiltersPanelSectionFilterFooterSort from '@/components/FiltersPanelSectionFilterFooterSort'
 
 const props = defineProps({
   hideContextualize: {
@@ -16,6 +17,9 @@ const props = defineProps({
   hideSort: {
     type: Boolean
   },
+  sort: {
+    type: Object
+  },
   contextualize: {
     type: Boolean
   },
@@ -24,7 +28,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:contextualize', 'update:exclude', 'expand', 'sort'])
+const emit = defineEmits(['update:contextualize', 'update:exclude', 'update:sort', 'expand'])
 
 const isEmpty = computed(() => {
   return props.hideContextualize && props.hideExclude && props.hideExpand && props.hideSort
@@ -48,7 +52,7 @@ const classList = computed(() => {
         <icon-button icon-left="arrows-out-simple" label="Expand" @click="emit('expand')" />
       </div>
       <div v-if="!hideSort" class="col d-flex justify-content-end">
-        <icon-button icon-left="caret-up-down" label="Sort" />
+        <filters-panel-section-filter-footer-sort @update:modelValue="emit('update:sort', $event)" />
       </div>
     </div>
     <div class="row g-0">
@@ -76,6 +80,7 @@ const classList = computed(() => {
   }
 
   &:deep(.icon-button),
+  &:deep(.dropdown-toggle),
   &:deep(.form-check) {
     padding: $spacer-xxs 0;
     border: 0;
