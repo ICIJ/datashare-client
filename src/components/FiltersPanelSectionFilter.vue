@@ -45,18 +45,19 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="filters-panel-section-filter py-1 mb-1 ps-2 pe-3" :class="classList">
+  <div class="filters-panel-section-filter py-1 mb-1 px-2" :class="classList">
     <filters-panel-section-filter-title
       :title="title"
       :icon="icon"
       :collapse="collapse"
       :count="count"
+      class="pe-2"
       @toggle="emit('toggle', $event)"
     >
       <slot name="title" />
     </filters-panel-section-filter-title>
     <b-collapse :model-value="!collapse">
-      <div class="filters-panel-section-filter__entries py-3 ps-3">
+      <div class="filters-panel-section-filter__entries py-3 ps-3 pe-2">
         <slot />
       </div>
       <slot name="footer">
