@@ -56,8 +56,8 @@ export default {
               <td style="font-weight: 500" class="text-special">Regular</td>
             </tr>
             <tr>
-              <td><code>800</code></td>
-              <td style="font-weight: 800" class="text-special">Regular</td>
+              <td><code>700</code></td>
+              <td style="font-weight: 700" class="text-special">Bold</td>
             </tr>
           </tbody>
         </table>
