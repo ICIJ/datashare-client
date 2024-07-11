@@ -42,7 +42,7 @@ export default {
           </tbody>
         </table>
         <h4>Medel</h4>
-        <p>This is the special font we use in Datashare's logo. It can be use through the <code>.text-special</code> class.</p>
+        <p>This is the special font we use in Datashare's logo. It can be used through the <code>.text-special</code> class.</p>
         <table class="table">
           <thead>
             <tr>
