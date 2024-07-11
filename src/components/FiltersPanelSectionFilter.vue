@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import FiltersPanelSectionFilterTitle from '@/components/FiltersPanelSectionFilterTitle'
+import FiltersPanelSectionFilterFooter from '@/components/FiltersPanelSectionFilterFooter'
 
 const props = defineProps({
   collapse: {
@@ -15,6 +16,18 @@ const props = defineProps({
   },
   icon: {
     type: String
+  },
+  hideContextualize: {
+    type: Boolean
+  },
+  hideExclude: {
+    type: Boolean
+  },
+  hideExpand: {
+    type: Boolean
+  },
+  hideSort: {
+    type: Boolean
   }
 })
 
@@ -38,21 +51,34 @@ const classList = computed(() => {
       <slot name="title" />
     </filters-panel-section-filter-title>
     <b-collapse :model-value="!collapse">
-      <div class="py-3 ps-3">
+      <div class="filters-panel-section-filter__entries py-3 ps-3">
         <slot />
       </div>
+      <slot name="footer">
+        <filters-panel-section-filter-footer
+          :hide-contextualize="hideContextualize"
+          :hide-exclude="hideExclude"
+          :hide-expand="hideExpand"
+          :hide-sort="hideSort"
+        />
+      </slot>
     </b-collapse>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .filters-panel-section-filter {
-  background: var(--bs-body-bg);
   border-radius: $border-radius;
   transition: $transition-base;
 
-  &--collapsed:not(:hover) {
-    background: transparent;
+  &:not(&--collapsed),
+  &:hover {
+    background: var(--bs-body-bg);
+  }
+
+  &__entries {
+    max-height: 240px;
+    overflow: auto;
   }
 }
 </style>
