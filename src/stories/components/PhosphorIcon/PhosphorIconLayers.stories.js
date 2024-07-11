@@ -1,7 +1,7 @@
 import { PhosphorIcon, PhosphorIconLayers } from '@icij/murmur-next'
 
 export default {
-  title: 'Components/Phosphor/IconLayers',
+  title: 'Components/PhosphorIcon/PhosphorIconLayers',
   tags: ['autodocs'],
   components: PhosphorIconLayers,
   argTypes: {
