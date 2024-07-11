@@ -21,7 +21,7 @@
 import { compact, get, some } from 'lodash'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
-import AppSidebar from '@/components/AppSidebar'
+import AppSidebar from '@/components/AppSidebar/AppSidebar'
 import Hook from '@/components/Hook'
 import ScrollTracker from '@/components/ScrollTracker'
 
