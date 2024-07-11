@@ -1,10 +1,10 @@
 import { uniqueId } from 'lodash'
 
-import DismissableAlert from '@/components/DismissableAlert'
+import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import PhosphorIcon from '@/components/PhosphorIcon'
 
 export default {
-  title: 'Components/Dismissable/Alert',
+  title: 'Components/Dismissable/DismissableAlert',
   tags: ['autodocs'],
   argTypes: {
     variant: {
