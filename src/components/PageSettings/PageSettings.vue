@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import PageSettingsTitle from "@/components/PageSettingsTitle.vue";
+import PageSettingsTitle from "@/components/PageSettings/PageSettingsTitle.vue";
 
 const props = defineProps({
   title: {

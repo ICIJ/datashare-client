@@ -1,5 +1,5 @@
-import PageSettings from '@/components/PageSettings'
-import PageSettingsSection from '@/components/PageSettingsSection'
+import PageSettings from '@/components/PageSettings/PageSettings.vue'
+import PageSettingsSection from '@/components/PageSettings/PageSettingsSection.vue'
 
 export default {
   title: 'Components/PageSettings',
