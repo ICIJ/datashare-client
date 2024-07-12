@@ -43,11 +43,13 @@ const classList = computed(() => {
 <template>
   <h3 class="filters-panel-section-filter-title" :class="classList">
     <slot>
-      <span @click="emit('toggle', !collapse)" class="flex-grow-1">
+      <span
+        v-ellipsis-tooltip="{ title, placement: 'right' }"
+        class="flex-grow-1 text-truncate"
+        @click="emit('toggle', !collapse)"
+      >
         <phosphor-icon :name="icon" class="me-2" />
-        <span v-ellipsis-tooltip="{ title, placement: 'right' }" class="text-truncate flex-grow-1">
-          {{ title }}
-        </span>
+        {{ title }}
       </span>
       <filters-panel-section-filter-title-sort
         v-if="!hideSort && !collapse"
