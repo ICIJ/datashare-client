@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    '(feat': add search breadcrumb components)
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -67,7 +66,6 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/SearchBreadcrumb/SearchBreadcrumb copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DocumentActions: typeof import('./src/components/DocumentActions.vue')['default']
