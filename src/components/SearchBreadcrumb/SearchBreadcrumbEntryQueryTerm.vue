@@ -23,16 +23,6 @@ const props = defineProps({
   },
   operator: {
     type: String
-  },
-  left: {
-    type: Boolean
-  },
-  right: {
-    type: Boolean
-  },
-  level: {
-    type: Number,
-    default: 0
   }
 })
 
@@ -49,13 +39,13 @@ const style = computed(() => {
 })
 
 const showOperator = computed(() => {
-  return props.operator === 'AND' && (props.right || props.level > 1)
+  return props.operator === 'AND'
 })
 </script>
 
 <template>
   <icon-button
-    variant="outline-primary"
+    variant="outline-danger"
     class="search-breadcrumb-entry-query-term me-2"
     :class="classList"
     :style="style"
