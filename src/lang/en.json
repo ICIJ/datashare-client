@@ -1064,6 +1064,25 @@
     "projectsCount": "{count} projects",
     "noMatches": "No matches"
   },
+  "searchBreadcrumb": {
+    "label": "Your search:"
+  },
+  "searchBreadcrumbEmpty": {
+    "label": "Your search has not started. Use the search bar or add filters."
+  },
+  "searchBreadcrumbEntryOccurences": {
+    "label": "0 documents | 1 document | {occurrences} documents"
+  },
+  "searchBreadcrumbFooter": {
+    "clearFilters": "Clear filters",
+    "clearQueries": "Clear queries",
+    "clearFiltersAndQueries": "Clear  filters and queries",
+    "saveSearch": "Save search",
+    "createAlert": "Create alert"
+  },
+  "searchBreadcrumbToggler": {
+    "close": "Close"
+  },
   "tiny-pagination": {
     "page": "Page",
     "aria": "Jump to page",
