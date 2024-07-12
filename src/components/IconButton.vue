@@ -163,12 +163,9 @@ const buttonProps = computed(() => ({
     height: calc(#{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2);
   }
 
-  &__icon-left ~ &__label {
-    margin-left: $spacer-xxs;
-  }
-
+  &__icon-left ~ &__label,
   &__label ~ &__icon-right {
-    margin-left: $spacer-xxs;
+    margin-left: $spacer-xs;
   }
 
   &__icon-left,
