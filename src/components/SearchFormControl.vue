@@ -165,11 +165,14 @@ function clearInputText() {
 <style lang="scss" scoped>
 .search-form-control {
   border-radius: 6px;
+
   &__start,
   &__end {
     background-color: var(--bs-body-bg);
     color: $tertiary;
+    transition: $input-transition;
   }
+
   &--rounded {
     &--start {
       border-bottom-left-radius: $border-radius-pill;
@@ -180,12 +183,15 @@ function clearInputText() {
       border-top-right-radius: $border-radius-pill;
     }
   }
+
   &__input:focus {
     border: 0;
     box-shadow: none;
   }
+
   &__input-group:has(&__input:focus) {
     box-shadow: none;
+
     .search-form-control__start {
       border-left: 1px solid $input-focus-border-color;
       border-top: 1px solid $input-focus-border-color;
@@ -201,6 +207,7 @@ function clearInputText() {
       border-bottom: 1px solid $input-focus-border-color;
     }
   }
+
   &__clear__icon {
     &--hide {
       visibility: hidden;
