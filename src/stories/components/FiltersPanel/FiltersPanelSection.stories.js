@@ -30,7 +30,7 @@ export default {
           <filters-panel-section-filter title="Indexing date" icon="calendar-plus" collapse />
           <filters-panel-section-filter title="Extraction lebel" icon="paperclip" collapse />
           <filters-panel-section-filter title="Has attachments" icon="paperclip" collapse />
-        </filter-panel-section>
+        </filters-panel-section>
       </div>
     `
   })
