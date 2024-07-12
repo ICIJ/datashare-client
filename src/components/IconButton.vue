@@ -1,6 +1,6 @@
 <template>
   <b-button
-    v-b-tooltip="{ title: tooltipTitle, placement: tooltipPlacement }"
+    v-b-tooltip.body="{ title: tooltipTitle, placement: tooltipPlacement }"
     :to="to"
     v-bind="buttonProps"
     class="icon-button"
