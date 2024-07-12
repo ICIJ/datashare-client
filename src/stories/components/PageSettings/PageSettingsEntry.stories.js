@@ -1,4 +1,4 @@
-import PageSettingsEntry from '@/components/PageSettingsEntry'
+import PageSettingsEntry from '@/components/PageSettings/PageSettingsEntry.vue'
 
 export default {
   title: 'Components/PageSettings/Entry',
