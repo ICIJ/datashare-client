@@ -27,16 +27,6 @@ const props = defineProps({
   },
   operator: {
     type: String
-  },
-  left: {
-    type: Boolean
-  },
-  right: {
-    type: Boolean
-  },
-  level: {
-    type: Number,
-    default: 0
   }
 })
 
@@ -69,12 +59,5 @@ const color = computed(() => {
 </script>
 
 <template>
-  <search-breadcrumb-entry-query-term
-    :term="term"
-    :operator="operator"
-    :prefix="prefix"
-    :icon="icon"
-    :color="color"
-    :left="left"
-    :right="right" />
+  <search-breadcrumb-entry-query-term :term="term" :operator="operator" :prefix="prefix" :icon="icon" :color="color" />
 </template>
