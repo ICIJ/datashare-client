@@ -12,11 +12,18 @@ const props = defineProps({
   ast: {
     type: Object
   },
+  operator: {
+    type: String
+  },
   left: {
     type: Boolean
   },
   right: {
     type: Boolean
+  },
+  level: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -28,9 +35,38 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
 
 <template>
   <span class="search-breadcrumb-entry-query-ast">
-    <search-breadcrumb-entry-query-ast v-if="isLeft" :ast="ast.left" left />
-    <search-breadcrumb-entry-query-term v-if="isTerm" :term="ast.term" :prefix="ast.prefix" />
-    <search-breadcrumb-entry-filter v-if="isFilter" :name="ast.field" :prefix="ast.prefix" :value="ast.term" />
-    <search-breadcrumb-entry-query-ast v-if="isRight" :ast="ast.right" right />
+    <search-breadcrumb-entry-query-ast
+      v-if="isLeft"
+      :level="level + 1"
+      :operator="ast.operator"
+      :ast="ast.left"
+      left
+    />
+    <search-breadcrumb-entry-query-term
+      v-if="isTerm"
+      :level="level"
+      :term="ast.term"
+      :operator="operator ?? ast.operator"
+      :prefix="ast.prefix"
+      :left="left"
+      :right="right"
+    />
+    <search-breadcrumb-entry-filter
+      v-if="isFilter"
+      :level="level"
+      :name="ast.field"
+      :operator="operator ?? ast.operator"
+      :prefix="ast.prefix"
+      :value="ast.term"
+      :left="left"
+      :right="right"
+    />
+    <search-breadcrumb-entry-query-ast
+      v-if="isRight"
+      :level="level + 1"
+      :operator="ast.operator"
+      :ast="ast.right"
+      right
+    />
   </span>
 </template>
