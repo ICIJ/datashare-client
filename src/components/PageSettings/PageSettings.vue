@@ -12,11 +12,7 @@ import PageSettingsTitle from "@/components/PageSettings/PageSettingsTitle.vue";
 const props = defineProps({
   title: {
     type: String,
-    default: 'Settings'
-  },
-  settings: {
-    type: Object,
-    required: true
+    required:true
   }
 })
 

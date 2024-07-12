@@ -4,6 +4,10 @@
 
 <script setup>
 import {PhosphorIcon} from "@icij/murmur-next";
+
+defineOptions({
+  name:"PageSettingsEntry"
+})
 const props = defineProps({
   icon: {
     type: String,

@@ -4,11 +4,11 @@
     <template #label>
       <div class="page-settings-group__label d-flex"
            aria-controls="page-settings-group-collapse"
-           :aria-expanded="open ? 'true' : 'false'"
+           :aria-expanded="modelValue ? 'true' : 'false'"
            @click="toggleSection"><phosphor-icon class="d-inline-flex me-2" :name="caretIcon" />{{label}}</div>
     </template>
-    <b-collapse id="page-settings-group-collapse" v-model="open" >
-      <slot v-bind="{open}"></slot>
+    <b-collapse id="page-settings-group-collapse" v-model="modelValue" >
+      <slot v-bind="{open:modelValue}"></slot>
     </b-collapse>
   </b-form-group>
 </template>
@@ -25,20 +25,16 @@ const props = defineProps({
     type: String,
     default: 'Settings'
   },
-  open:{
-    type:Boolean,
-    default:true
-  }
 })
-const open = defineModel({
+const modelValue = defineModel({
   type:Boolean,
   default:true
 })
 
-const caretIcon = computed(()=> open.value?'caret-up':'caret-down')
+const caretIcon = computed(()=> modelValue.value?'caret-up':'caret-down')
 
 function toggleSection(){
-  open.value = !open.value
+  modelValue.value = !modelValue.value
 }
 
 </script>
