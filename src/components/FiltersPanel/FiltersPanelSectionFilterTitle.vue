@@ -2,7 +2,8 @@
 import { PhosphorIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
 import { computed } from 'vue'
 
-import FiltersPanelSectionFilterToggler from '@/components/FiltersPanel/FiltersPanelSectionFilterToggler'
+import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
+import FiltersPanelSectionFilterTitleToggler from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleToggler'
 
 const props = defineProps({
   title: {
@@ -17,10 +18,16 @@ const props = defineProps({
   },
   collapse: {
     type: Boolean
+  },
+  sort: {
+    type: String
+  },
+  hideSort: {
+    type: Boolean
   }
 })
 
-const emit = defineEmits(['toggle'])
+const emit = defineEmits(['toggle', 'update:sort'])
 
 const showCount = computed(() => {
   return props.count > 0 && props.collapse
@@ -34,16 +41,25 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <h3 class="filters-panel-section-filter-title" :class="classList" @click="emit('toggle', !collapse)">
+  <h3 class="filters-panel-section-filter-title" :class="classList">
     <slot>
-      <phosphor-icon :name="icon" class="me-2" />
-      <span v-ellipsis-tooltip="{ title, placement: 'right' }" class="text-truncate flex-grow-1">
-        {{ title }}
+      <span @click="emit('toggle', !collapse)" class="flex-grow-1">
+        <phosphor-icon :name="icon" class="me-2" />
+        <span v-ellipsis-tooltip="{ title, placement: 'right' }" class="text-truncate flex-grow-1">
+          {{ title }}
+        </span>
       </span>
-      <b-badge v-if="showCount" class="filters-panel-section-filter-title__count mx-2" pill variant="primary-subtle">
-        {{ count }}
-      </b-badge>
-      <filters-panel-section-filter-toggler class="ms-auto" :collapse="collapse" />
+      <filters-panel-section-filter-title-sort
+        v-if="!hideSort && !collapse"
+        :model-value="sort"
+        @update:modelValue="emit('update:sort', $event)"
+      />
+      <span @click="emit('toggle', !collapse)">
+        <b-badge v-if="showCount" class="filters-panel-section-filter-title__count" pill variant="primary-subtle">
+          {{ count }}
+        </b-badge>
+        <filters-panel-section-filter-title-toggler class="ms-auto" :collapse="collapse" />
+      </span>
     </slot>
   </h3>
 </template>
@@ -51,25 +67,31 @@ const classList = computed(() => {
 <style lang="scss" scoped>
 .filters-panel-section-filter-title {
   font-size: 1em;
+  min-height: 1.5em;
   font-weight: 500;
   color: var(--bs-primary-text-emphasis);
   padding: 0;
   margin: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
 
   &--collapsed {
     font-weight: normal;
     color: var(--bs-body-color);
 
-    &:deep(.filters-panel-section-filter-toggler) {
-      visibility: hidden;
+    &:deep(.filters-panel-section-filter-title-toggler) {
+      display: none;
     }
 
     &:hover {
-      &:deep(.filters-panel-section-filter-toggler) {
-        visibility: visible;
+      &:deep(.filters-panel-section-filter-title__count) {
+        display: none;
+      }
+
+      &:deep(.filters-panel-section-filter-title-toggler) {
+        display: inline-flex;
       }
     }
   }

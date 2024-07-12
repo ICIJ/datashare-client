@@ -15,7 +15,7 @@ const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
 
 <template>
   <icon-button
-    class="filters-panel-section-filter-toggler p-0"
+    class="filters-panel-section-filter-title-toggler"
     variant="link"
     size="sm"
     :icon-left="icon"
@@ -28,3 +28,11 @@ const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
     <slot />
   </icon-button>
 </template>
+
+<style lang="scss" scoped>
+.filters-panel-section-filter-title-toggler {
+  line-height: 1;
+  display: inline-flex;
+  padding: 0;
+}
+</style>
