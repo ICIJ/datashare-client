@@ -129,7 +129,7 @@ describe('InlineDirectoryPicker.vue', () => {
       expect(subDirectories.at(2).text()).toBe('panama')
     })
 
-    it('should display the correct breadcrump when selecting "01FOO"', async () => {
+    it('should display the correct breadcrumb when selecting "01FOO"', async () => {
       await wrapper.setProps({ path: '/home/dev/Datashare/01FOO/' })
       const directories = wrapper.findAll('.inline-directory-picker__header__list__item')
       expect(directories).toHaveLength(2)
