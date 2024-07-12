@@ -48,7 +48,7 @@ export default [
     options: {
       name: 'path',
       key: 'byDirname',
-      icon: 'hdd',
+      icon: 'tree-structure',
       order: 35,
       isSearchable: true,
       fromElasticSearch: false,
@@ -71,7 +71,7 @@ export default [
     options: {
       name: 'creationDate',
       key: 'metadata.tika_metadata_dcterms_created',
-      icon: 'calendar-alt',
+      icon: 'calendar-blank',
       order: 50
     }
   },
@@ -90,6 +90,8 @@ export default [
     options: {
       name: 'namedEntityPerson',
       key: 'byMentions',
+      icon: 'user-square',
+      color: 'var(--bs-category-person)',
       isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityPerson,
       order: 70,
@@ -101,6 +103,8 @@ export default [
     options: {
       name: 'namedEntityOrganization',
       key: 'byMentions',
+      icon: 'buildings',
+      color: 'var(--bs-category-organization)',
       isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityOrganization,
       order: 80,
@@ -112,6 +116,8 @@ export default [
     options: {
       name: 'namedEntityLocation',
       key: 'byMentions',
+      icon: 'map-pin',
+      color: 'var(--bs-category-location)',
       isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityLocation,
       order: 90,
@@ -133,7 +139,7 @@ export default [
     options: {
       name: 'indexingDate',
       key: 'extractionDate',
-      icon: 'calendar-plus',
+      icon: 'calendar-blank',
       order: 120
     }
   }
