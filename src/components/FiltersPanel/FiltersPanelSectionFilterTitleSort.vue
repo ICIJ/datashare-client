@@ -39,15 +39,14 @@ const isOptionActive = ({ sortBy, sortByOrder }) => {
 <template>
   <b-dropdown
     v-model="showDropdown"
-    class="filters-panel-section-filter-footer-sort"
+    class="filters-panel-section-filter-title-sort"
     variant="link"
     end
-    dropup
     teleport-to="body"
     no-caret
   >
     <template #button-content>
-      <phosphor-icon name="caret-up-down" />
+      <phosphor-icon name="sort-ascending" height="1em" />
       Sort
     </template>
     <b-dropdown-item
@@ -62,9 +61,18 @@ const isOptionActive = ({ sortBy, sortByOrder }) => {
 </template>
 
 <style lang="scss" scoped>
-.filters-panel-section-filter-footer-sort {
+.filters-panel-section-filter-title-sort {
   &:deep(.dropdown-toggle) {
+    padding: 0 $spacer-xs;
+    margin-right: $spacer-xs;
     color: inherit;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+
+    .phosphor-icon {
+      margin-right: $spacer-xs;
+    }
   }
 }
 </style>

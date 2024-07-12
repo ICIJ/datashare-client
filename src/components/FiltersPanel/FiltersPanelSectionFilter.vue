@@ -51,6 +51,7 @@ const classList = computed(() => {
       :icon="icon"
       :collapse="collapse"
       :count="count"
+      :hide-sort="hideSort"
       class="pe-2"
       @toggle="emit('toggle', $event)"
     >
@@ -65,7 +66,6 @@ const classList = computed(() => {
           :hide-contextualize="hideContextualize"
           :hide-exclude="hideExclude"
           :hide-expand="hideExpand"
-          :hide-sort="hideSort"
         />
       </slot>
     </b-collapse>
