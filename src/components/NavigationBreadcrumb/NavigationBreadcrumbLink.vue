@@ -83,7 +83,14 @@ const classList = computed(() => {
     <span class="navigation-breadcrumb-link__label">
       <slot>{{ title }}</slot>
     </span>
-    <phosphor-icon v-if="!noCaret" class="navigation-breadcrumb-link__caret mx-2" size="1em" name="caret-right" />
+    <phosphor-icon
+      v-if="!noCaret"
+      role="separator"
+      aria-hidden="true"
+      class="navigation-breadcrumb-link__caret mx-2"
+      size="1em"
+      name="caret-right"
+    />
   </router-link>
 </template>
 
