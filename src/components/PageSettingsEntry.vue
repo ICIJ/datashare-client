@@ -1,5 +1,5 @@
 <template>
-  <span class="page-settings-entry"><phosphor-icon v-if="icon" :name="icon"/>{{ text }}</span>
+  <span class="page-settings-entry d-inline-flex"><phosphor-icon v-if="icon" :name="icon" class="me-2"/>{{ text }}</span>
 </template>
 
 <script setup>
@@ -21,7 +21,9 @@ const props = defineProps({
 </script>
 
 <style lang="scss">
-:checked + label {
-  font-weight: 700;
+.page-settings-entry{
+  :checked + label {
+    font-weight: bold
+  }
 }
 </style>
