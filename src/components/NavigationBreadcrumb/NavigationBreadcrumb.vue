@@ -48,6 +48,7 @@ const hasActiveSlot = computed(() => {
         :key="name"
         :route-name="name"
         :current-route-name="currentRouteName"
+        :no-caret="name === currentRouteName"
       >
         <template v-if="showActiveSlot(name)">
           <slot name="active" />
