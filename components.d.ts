@@ -105,6 +105,8 @@ declare module 'vue' {
     FiltersPanelSectionFilterFooter: typeof import('./src/components/FiltersPanel/FiltersPanelSectionFilterFooter.vue')['default']
     FiltersPanelSectionFilterFooterSort: typeof import('./src/components/FiltersPanel/FiltersPanelSectionFilterFooterSort.vue')['default']
     FiltersPanelSectionFilterTitle: typeof import('./src/components/FiltersPanel/FiltersPanelSectionFilterTitle.vue')['default']
+    FiltersPanelSectionFilterTitleSort: typeof import('./src/components/FiltersPanel/FiltersPanelSectionFilterTitleSort.vue')['default']
+    FiltersPanelSectionFilterTitleToggler: typeof import('./src/components/FiltersPanel/FiltersPanelSectionFilterTitleToggler.vue')['default']
     FiltersPanelSectionFilterToggler: typeof import('./src/components/FiltersPanel/FiltersPanelSectionFilterToggler.vue')['default']
     FiltersPanelSectionTitle: typeof import('./src/components/FiltersPanel/FiltersPanelSectionTitle.vue')['default']
     FiltersPanelToggler: typeof import('./src/components/FiltersPanel/FiltersPanelToggler.vue')['default']
