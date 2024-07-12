@@ -6,6 +6,7 @@
     class="icon-button d-inline-flex align-items-center"
     :class="classList"
   >
+    <slot name="start" />
     <phosphor-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
       :name="iconLeftOrSpinner"
@@ -25,6 +26,7 @@
       :spin-duration="loadingDuration"
       class="icon-button__icon-right"
     />
+    <slot name="end" />
   </b-button>
 </template>
 
