@@ -109,6 +109,9 @@ $form-check-input-border: var(--#{$prefix}border-width) solid $tertiary;
 $form-check-input-border-radius: 2px;
 $form-check-input-checked-border-color: var(--#{$prefix}primary-text-emphasis);
 
+$form-radio-input-border: var(--#{$prefix}border-width) solid $tertiary;
+$form-radio-input-checked-border-color: $form-check-input-checked-border-color;
+
 $popover-max-width: 480px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
 $popover-bg: #fff;
@@ -188,3 +191,5 @@ $color-mode-type: data;
     box-shadow: none;
   }
 }
+
+
