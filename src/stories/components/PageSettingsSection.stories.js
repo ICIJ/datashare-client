@@ -21,7 +21,7 @@ export default {
     },
     template: `
       <page-settings-section-label :title="args.label" v-slot="{open}">
-      <page-settings-section v-show="open" v-bind="args"></page-settings-section>
+        <page-settings-section v-show="open" v-bind="args"></page-settings-section>
       </page-settings-section-label>
 
       Selection {{args.modelValue}}
