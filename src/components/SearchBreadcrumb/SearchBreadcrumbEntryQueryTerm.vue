@@ -20,6 +20,19 @@ const props = defineProps({
   color: {
     type: String,
     default: null
+  },
+  operator: {
+    type: String
+  },
+  left: {
+    type: Boolean
+  },
+  right: {
+    type: Boolean
+  },
+  level: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -34,6 +47,10 @@ const style = computed(() => {
     '--color': props.color
   }
 })
+
+const showOperator = computed(() => {
+  return props.operator === 'AND' && (props.right || props.level > 1)
+})
 </script>
 
 <template>
@@ -45,7 +62,14 @@ const style = computed(() => {
     :icon-left="icon"
     icon-right="x"
   >
-    {{ term }}
+    <template #start v-if="showOperator">
+      <span class="search-breadcrumb-entry-query-term__operator">
+        {{ operator }}
+      </span>
+    </template>
+    <span class="search-breadcrumb-entry-query-term__value">
+      {{ term }}
+    </span>
   </icon-button>
 </template>
 
@@ -59,7 +83,15 @@ const style = computed(() => {
     background: var(--bs-body-bg);
   }
 
-  &--negative {
+  &__operator {
+    background: var(--bs-light-bg-subtle);
+    padding: 0 $spacer-xs;
+    margin-right: $spacer-xs;
+    border-radius: $border-radius;
+    text-transform: uppercase;
+  }
+
+  &--negative &__value {
     text-decoration: line-through;
   }
 
