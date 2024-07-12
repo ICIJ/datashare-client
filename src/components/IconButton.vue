@@ -3,13 +3,14 @@
     v-b-tooltip="{ title: tooltipTitle, placement: tooltipPlacement }"
     :to="to"
     v-bind="buttonProps"
-    class="icon-button d-inline-flex align-items-center"
+    class="icon-button"
     :class="classList"
   >
     <slot name="start" />
     <phosphor-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
       :name="iconLeftOrSpinner"
+      :size="iconLeftSize"
       :weight="iconLeftWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
@@ -21,6 +22,7 @@
     <phosphor-icon
       v-if="iconRight"
       :name="iconRightOrSpinner"
+      :size="iconRightSize"
       :weight="iconRightWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
@@ -43,6 +45,9 @@ const props = defineProps({
     type: String,
     default: null
   },
+  iconLeftSize: {
+    type: String
+  },
   iconRight: {
     type: String,
     default: null
@@ -50,6 +55,9 @@ const props = defineProps({
   iconRightWeight: {
     type: String,
     default: null
+  },
+  iconRightSize: {
+    type: String
   },
   iconSpinner: {
     type: String,
@@ -147,6 +155,9 @@ const buttonProps = computed(() => ({
 
 <style lang="scss" scoped>
 .icon-button {
+  display: inline-flex;
+  align-items: center;
+
   &--square {
     padding: 0;
     align-items: center;
@@ -172,14 +183,14 @@ const buttonProps = computed(() => ({
 
   &__icon-left,
   &__icon-right {
-    height: $line-height-base * $btn-font-size;
+    --phosphor-icon-size: #{$line-height-base * $btn-font-size};
 
     .btn-sm & {
-      height: $line-height-base * $btn-font-size-sm;
+      --phosphor-icon-size: #{$line-height-base * $btn-font-size-sm};
     }
 
     .btn-lg & {
-      height: $line-height-base * $btn-font-size-lg;
+      --phosphor-icon-size: #{$line-height-base * $btn-font-size-lg};
     }
   }
 }
