@@ -1,6 +1,5 @@
-import PageSettingsSectionLabel from '@/components/PageSettingsSectionLabel'
+import PageSettingsSectionGroup from '@/components/PageSettingsSectionGroup'
 import PageSettingsSection from '@/components/PageSettingsSection'
-import {ref} from "vue";
 
 export default {
   title: 'Components/PageSettings/Section',
@@ -13,24 +12,24 @@ export default {
   },
   render: (args) => ({
     components: {
-      PageSettingsSection,PageSettingsSectionLabel
+      PageSettingsSection,PageSettingsSectionGroup
     },
     setup: () => {
-      const selected = ref("")
-      return {selected,args}
+      return {args}
     },
     template: `
-      <page-settings-section-label :title="args.label" v-slot="{open}">
-        <page-settings-section v-show="open" v-bind="args"></page-settings-section>
-      </page-settings-section-label>
+        <page-settings-section  v-bind="args" v-model:open="args.open"></page-settings-section>
 
-      Selection {{args.modelValue}}
+        Selection: {{args.modelValue}}<br/>
+        Open: <b/>{{args.open}}
     `
   })
 }
-const props = {label: 'Show in document details',
+const props = {
+  label: 'Show in document details',
   name:'document-details',
   type:"checkbox",
+  open:true,
   options:[
     {
       value: "thumbnail",
