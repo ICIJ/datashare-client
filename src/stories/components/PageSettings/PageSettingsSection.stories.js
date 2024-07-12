@@ -1,5 +1,5 @@
-import PageSettingsSectionGroup from '@/components/PageSettingsSectionGroup'
-import PageSettingsSection from '@/components/PageSettingsSection'
+import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup.vue'
+import PageSettingsSection from '@/components/PageSettings/PageSettingsSection.vue'
 
 export default {
   title: 'Components/PageSettings/Section',

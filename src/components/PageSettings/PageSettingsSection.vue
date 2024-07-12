@@ -16,8 +16,8 @@
 
 <script setup>
 import {computed} from "vue"
-import PageSettingsEntry from "@/components/PageSettingsEntry.vue";
-import PageSettingsSectionGroup from "@/components/PageSettingsSectionGroup.vue";
+import PageSettingsEntry from "@/components/PageSettings/PageSettingsEntry.vue";
+import PageSettingsSectionGroup from "@/components/PageSettings/PageSettingsSectionGroup.vue";
 import {BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup} from "bootstrap-vue-next";
 defineOptions({
   name:"PageSettingsSection"
