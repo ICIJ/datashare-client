@@ -4,12 +4,6 @@ import PageSettingsSection from '@/components/PageSettings/PageSettingsSection.v
 export default {
   title: 'Components/PageSettings',
   tags: ['autodocs'],
-  argTypes: {
-    type: {
-      control: { type: 'radio' },
-      options: ['radio','checkbox']
-    },
-  },
   render: (args) => ({
     components: {
       PageSettings,PageSettingsSection
@@ -18,34 +12,52 @@ export default {
       return {args}
     },
     template: `
-      <page-settings :title="args.label" >
-        <page-settings-section v-bind="args.sections[0]"/>
-        <page-settings-section v-bind="args.sections[1]"/>
-        <page-settings-section v-bind="args.sections[2]"/>
-        <page-settings-section v-bind="args.sections[3]"/>
+      <page-settings title="Page settings">
+        <page-settings-section
+          v-model="args.example.modelValue"
+          v-model:open="args.example.open"
+          :type="args.example.type"
+          :options="args.example.options"
+          :label="args.example.label"
+          :name="args.example.name"
+        />
+        <page-settings-section
+          v-for="(section,index) in args.sections"
+          :key="index"
+          v-model="section.modelValue"
+          v-model:open="section.open"
+          :type="section.type"
+          :options="section.options"
+          :label="section.label"
+          :name="section.name"
+        />
       </page-settings>
-
-      Selection {{args.modelValue}}
+      <hr/>
+      <ul>
+      <li   v-for="(section) in [args.example,...args.sections]"
+      >"{{section.label}}": open:{{ section.open }}, modelValue: <b>{{section.modelValue}}</b></li>
+      </ul>
     `
   })
 }
-const props1 = {
+
+const example = {
   label: 'Show in document details',
   name:'document-details',
   type:"radio",
-  modelValue:'Most relevant',
+  modelValue:'less-relevant',
   open:false,
   options:[
-    {text:"Most relevant",value:'Most relevant'},
-    {text:"Less relevant",value:'Less relevant'},
-    {text:"Creation date (new)",value:'Creation date'},
-    {text:"Creation date (old)",value:'Creation date'},
-    {text:"Size (decreasing)",value:'Size'},
-    {text:"Size (increasing)",value:'Size'},
-    {text:"File path (A to Z)",value:'File path'},
-    {text:"File path (Z to A)",value:'File path'},
-    {text:"Indexing date (new)",value:'Indexing date'},
-    {text:"Indexing date (old)",value:'Indexing date'},
+    {text:"Most relevant",value:'most-relevant'},
+    {text:"Less relevant",value:'less-relevant'},
+    {text:"Creation date (new)",value:'creation-date-new'},
+    {text:"Creation date (old)",value:'creation-date-old'},
+    {text:"Size (decreasing)",value:'size-decreasing'},
+    {text:"Size (increasing)",value:'size-increasing'},
+    {text:"File path (A to Z)",value:'file-path'},
+    {text:"File path (Z to A)",value:'file-path'},
+    {text:"Indexing date (new)",value:'indexing-date-new'},
+    {text:"Indexing date (old)",value:'indexing-date-old'},
   ]}
 const props2 = {
   label: 'Documents per page',
@@ -119,13 +131,11 @@ const props4 = {
     }
   ]}
 
-
-
-
-const sections = [props1,props2, props3,props4]
+const sections = [props2, props3,props4]
 export const Default = {
   args: {
     title:"Page settings",
-    sections:sections,
+    example,
+    sections,
   }
 }
