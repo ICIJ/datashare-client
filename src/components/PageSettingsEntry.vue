@@ -1,5 +1,5 @@
 <template>
-      <span class="page-settings-entry"><phosphor-icon v-if="icon" :name="icon"/>{{ text }}</span>
+  <span class="page-settings-entry"><phosphor-icon v-if="icon" :name="icon"/>{{ text }}</span>
 </template>
 
 <script setup>
