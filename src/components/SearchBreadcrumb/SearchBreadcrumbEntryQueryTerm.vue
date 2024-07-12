@@ -52,7 +52,7 @@ const showOperator = computed(() => {
     :icon-left="icon"
     icon-right="x"
   >
-    <template #start v-if="showOperator">
+    <template v-if="showOperator" #start>
       <span class="search-breadcrumb-entry-query-term__operator">
         {{ operator }}
       </span>
