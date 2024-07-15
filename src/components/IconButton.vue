@@ -5,6 +5,8 @@
     v-bind="buttonProps"
     class="icon-button"
     :class="classList"
+    @mouseenter="currentHover = true"
+    @mouseleave="currentHover = false"
   >
     <slot name="start" />
     <phosphor-icon
@@ -13,6 +15,7 @@
       :size="iconLeftSize"
       :weight="iconLeftWeight"
       :hover-weight="iconLeftHoverWeight"
+      :hover="currentHover"
       :spin="loading"
       :spin-duration="loadingDuration"
       class="icon-button__icon-left"
@@ -26,6 +29,7 @@
       :size="iconRightSize"
       :weight="iconRightWeight"
       :hover-weight="iconRightHoverWeight"
+      :hover="currentHover"
       :spin="loading"
       :spin-duration="loadingDuration"
       class="icon-button__icon-right"
@@ -35,7 +39,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 const props = defineProps({
@@ -126,13 +130,19 @@ const props = defineProps({
   tooltipPlacement: {
     type: String,
     default: 'top'
+  },
+  hover: {
+    type: Boolean
   }
 })
+
+const currentHover = ref(false)
 
 const classList = computed(() => {
   return {
     'icon-button--square': props.square,
-    'icon-button--loading': props.loading
+    'icon-button--loading': props.loading,
+    'icon-button--hover': props.currentHover
   }
 })
 
