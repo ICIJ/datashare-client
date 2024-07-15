@@ -42,34 +42,36 @@ const classList = computed(() => {
 
 <template>
   <div class="filters-panel-section-filter-footer" :class="classList">
-    <div class="d-flex justify-content-end align-items-center">
-      <div v-if="!hideExpand" class="me-auto">
-        <icon-button
-          class="bg-primary-subtle text-primary-emphasis-subtle p-1"
-          tooltip-placement="right"
-          icon-left="arrows-out-simple"
-          hide-label
-          label="Expand"
-          @click="emit('expand')"
-        />
-      </div>
-      <div v-if="!hideContextualize" class="me-2">
-        <b-form-checkbox :model-value="contextualize" @update:modelValue="emit('update:contextualize', $event)">
-          Contextualize
-        </b-form-checkbox>
-      </div>
-      <div v-if="!hideExclude" class="d-flex justify-content-end">
-        <b-form-checkbox :model-value="exclude" @update:modelValue="emit('update:exclude', $event)">
-          Exclude
-        </b-form-checkbox>
-      </div>
-    </div>
+    <b-form-checkbox
+      v-if="!hideContextualize"
+      :model-value="contextualize"
+      @update:modelValue="emit('update:contextualize', $event)"
+    >
+      Contextualize
+    </b-form-checkbox>
+    <b-form-checkbox v-if="!hideExclude" :model-value="exclude" @update:modelValue="emit('update:exclude', $event)">
+      Exclude
+    </b-form-checkbox>
+    <icon-button
+      v-if="!hideExpand"
+      class="bg-primary-subtle text-primary-emphasis-subtle p-1 ms-auto"
+      tooltip-placement="right"
+      icon-left="arrows-out-simple"
+      hide-label
+      label="Expand"
+      @click="emit('expand')"
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .filters-panel-section-filter-footer {
   padding: $spacer-xxs 0 0;
+  display: flex;
+  align-items: center;
+  overflow: auto;
+  width: 100%;
+  flex: auto;
 
   &--empty {
     display: none;
@@ -84,8 +86,11 @@ const classList = computed(() => {
   }
 
   &:deep(.form-check) {
+    flex-basis: auto;
     display: flex;
     align-items: center;
+    min-width: 0;
+    margin-right: $spacer-xs;
   }
 
   &:deep(.form-check-input) {
@@ -95,6 +100,8 @@ const classList = computed(() => {
 
   &:deep(.form-check-label) {
     margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
 </style>
