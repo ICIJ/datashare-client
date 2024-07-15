@@ -79,6 +79,15 @@ const showOperator = computed(() => {
     }
   }
 
+  &:active &__operator {
+    background: rgba(var(--bs-body-bg-rgb), 0.2);
+  }
+
+  &:active:deep(.icon-button__icon-left),
+  &:active:deep(.icon-button__icon-right) {
+    color: inherit;
+  }
+
   &__operator {
     background: var(--bs-light-bg-subtle);
     padding: 0 $spacer-xs;
