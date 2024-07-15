@@ -64,9 +64,6 @@ export const CustomSlots = {
             Read the doc
             <phosphor-icon name="arrow-square-out" weight="bold" class="ms-2" />
           </a>
-          <a class="btn btn-link d-inline-flex" :title="linkLabel" v-b-tooltip>
-            <phosphor-icon name="x" size="20px" weight="bold" />
-          </a>
         </template>
       </dismissable-alert>
     `
