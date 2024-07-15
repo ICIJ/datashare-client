@@ -75,6 +75,12 @@
   color: var(--bs-primary-text-emphasis);
 }
 
+.form-control:hover,
+.form-control.pseudo-hover,
+.pseudo-hover-all .form-control {
+  border-color: $input-hover-border-color;
+}
+
 html {
   font-size: 1rem;
 }

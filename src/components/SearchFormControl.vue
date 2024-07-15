@@ -184,12 +184,14 @@ function clearInputText() {
     }
   }
 
-  &__input:focus {
+  &__input:focus,
+  &__input:hover {
     border: 0;
     box-shadow: none;
   }
 
-  &__input-group:has(&__input:focus) {
+  &__input-group:has(&__input:focus),
+  &__input-group:has(&__input:hover) {
     box-shadow: none;
 
     .search-form-control__start {
