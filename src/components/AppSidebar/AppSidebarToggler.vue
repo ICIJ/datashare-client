@@ -33,7 +33,7 @@ const title = computed(() => {
     square
     hide-label
     variant="secondary"
-    class="app-sidebar-toggler"
+    class="app-sidebar-toggler text-white"
     :title="title"
     :class="classList"
     @click="toggle"
