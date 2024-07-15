@@ -1,17 +1,20 @@
-import PageSettings from '@/components/PageSettings/PageSettings.vue'
-import PageSettingsSection from '@/components/PageSettings/PageSettingsSection.vue'
-import {BCloseButton} from 'bootstrap-vue-next'
-
+import { BCloseButton } from 'bootstrap-vue-next'
 import { fn } from '@storybook/test'
+
+import PageSettings from '@/components/PageSettings/PageSettings'
+import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
+
 export default {
   title: 'Components/PageSettings',
   tags: ['autodocs'],
   render: (args) => ({
     components: {
-      PageSettings,PageSettingsSection,BCloseButton
+      PageSettings,
+      PageSettingsSection,
+      BCloseButton
     },
     setup: () => {
-      return {args}
+      return { args }
     },
     template: `
       <page-settings title="Page settings">
@@ -48,98 +51,102 @@ export default {
 
 const example = {
   label: 'Show in document details',
-  name:'document-details',
-  type:"radio",
-  modelValue:'less-relevant',
-  open:false,
-  options:[
-    {text:"Most relevant",value:'most-relevant'},
-    {text:"Less relevant",value:'less-relevant'},
-    {text:"Creation date (new)",value:'creation-date-new'},
-    {text:"Creation date (old)",value:'creation-date-old'},
-    {text:"Size (decreasing)",value:'size-decreasing'},
-    {text:"Size (increasing)",value:'size-increasing'},
-    {text:"File path (A to Z)",value:'file-path'},
-    {text:"File path (Z to A)",value:'file-path'},
-    {text:"Indexing date (new)",value:'indexing-date-new'},
-    {text:"Indexing date (old)",value:'indexing-date-old'},
-  ]}
+  name: 'document-details',
+  type: 'radio',
+  modelValue: 'less-relevant',
+  open: false,
+  options: [
+    { text: 'Most relevant', value: 'most-relevant' },
+    { text: 'Less relevant', value: 'less-relevant' },
+    { text: 'Creation date (new)', value: 'creation-date-new' },
+    { text: 'Creation date (old)', value: 'creation-date-old' },
+    { text: 'Size (decreasing)', value: 'size-decreasing' },
+    { text: 'Size (increasing)', value: 'size-increasing' },
+    { text: 'File path (A to Z)', value: 'file-path' },
+    { text: 'File path (Z to A)', value: 'file-path' },
+    { text: 'Indexing date (new)', value: 'indexing-date-new' },
+    { text: 'Indexing date (old)', value: 'indexing-date-old' }
+  ]
+}
 const props2 = {
   label: 'Documents per page',
-  name:'test',
-  type:"radio",
-  modelValue:'30',
-  open:true,
-  options:[
+  name: 'test',
+  type: 'radio',
+  modelValue: '30',
+  open: true,
+  options: [
     {
-      value: "10",
-      text: "10",
+      value: '10',
+      text: '10'
     },
     {
-      value: "20",
-      text: "20",
+      value: '20',
+      text: '20'
     },
     {
-      value: "30",
-      text: "30",
-    },
-  ]}
+      value: '30',
+      text: '30'
+    }
+  ]
+}
 const props3 = {
   label: 'View',
-  name:'view',
-  type:"radio",
-  modelValue:'grid',
-  open:true,
-  options:[
+  name: 'view',
+  type: 'radio',
+  modelValue: 'grid',
+  open: true,
+  options: [
     {
-      value: "grid",
-      text: "Grid",
+      value: 'grid',
+      text: 'Grid',
       icon: 'image-square'
     },
     {
-      value: "list",
-      text: "List",
+      value: 'list',
+      text: 'List',
       icon: 'tree-structure'
     },
     {
-      value: "table",
-      text: "Table",
+      value: 'table',
+      text: 'Table',
       icon: 'calendar-blank'
     }
-  ]}
+  ]
+}
 const props4 = {
   label: 'Document details',
-  name:'document-details',
-  type:"checkbox",
-  modelValue:["thumbnail","creation-date"],
-  open:true,
-  options:[
+  name: 'document-details',
+  type: 'checkbox',
+  modelValue: ['thumbnail', 'creation-date'],
+  open: true,
+  options: [
     {
-      value: "thumbnail",
-      text: "Thumbnail",
+      value: 'thumbnail',
+      text: 'Thumbnail',
       icon: 'image-square'
     },
     {
-      value: "path",
-      text: "Path",
+      value: 'path',
+      text: 'Path',
       icon: 'tree-structure'
     },
     {
-      value: "creation-date",
-      text: "Creation date",
+      value: 'creation-date',
+      text: 'Creation date',
       icon: 'calendar-blank'
     },
     {
-      value: "highlight",
-      text: "Highlight",
+      value: 'highlight',
+      text: 'Highlight',
       icon: 'quotes'
     }
-  ]}
+  ]
+}
 
-const sections = [props2, props3,props4]
+const sections = [props2, props3, props4]
 export const Default = {
   args: {
-    title:"Page settings",
+    title: 'Page settings',
     example,
     sections,
     onCloseButtonClick: fn()

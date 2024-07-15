@@ -1,5 +1,5 @@
-import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup.vue'
-import PageSettingsSection from '@/components/PageSettings/PageSettingsSection.vue'
+import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup'
+import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 
 export default {
   title: 'Components/PageSettings/Section',
@@ -7,15 +7,16 @@ export default {
   argTypes: {
     type: {
       control: { type: 'radio' },
-      options: ['radio','checkbox']
-    },
+      options: ['radio', 'checkbox']
+    }
   },
   render: (args) => ({
     components: {
-      PageSettingsSection,PageSettingsSectionGroup
+      PageSettingsSection,
+      PageSettingsSectionGroup
     },
     setup: () => {
-      return {args}
+      return { args }
     },
     template: `
         <page-settings-section  v-bind="args" v-model:open="args.open"></page-settings-section>
@@ -27,38 +28,42 @@ export default {
 }
 const props = {
   label: 'Show in document details',
-  name:'document-details',
-  type:"checkbox",
-  open:true,
-  options:[
+  name: 'document-details',
+  type: 'checkbox',
+  open: true,
+  options: [
     {
-      value: "thumbnail",
-      text: "Thumbnail",
+      value: 'thumbnail',
+      text: 'Thumbnail',
       icon: 'image-square'
     },
     {
-      value: "path",
-      text: "Path",
+      value: 'path',
+      text: 'Path',
       icon: 'tree-structure'
     },
     {
-      value: "creation-date",
-      text: "Creation date",
+      value: 'creation-date',
+      text: 'Creation date',
       icon: 'calendar-blank'
     },
     {
-      value: "highlight",
-      text: "Highlight",
+      value: 'highlight',
+      text: 'Highlight',
       icon: 'quotes'
     }
-  ]}
+  ]
+}
 export const Default = {
   args: {
-    ...props,modelValue:[]
+    ...props,
+    modelValue: []
   }
 }
 export const Radio = {
   args: {
-    ...props,type:"radio",modelValue:''
+    ...props,
+    type: 'radio',
+    modelValue: ''
   }
 }

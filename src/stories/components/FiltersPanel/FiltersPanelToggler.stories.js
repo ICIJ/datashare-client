@@ -1,4 +1,4 @@
-import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler.vue'
+import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler'
 
 export default {
   title: 'Components/FiltersPanel/FiltersPanelToggler',
