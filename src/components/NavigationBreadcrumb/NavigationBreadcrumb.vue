@@ -63,6 +63,9 @@ const hasActiveSlot = computed(() => {
 .navigation-breadcrumb {
   display: flex;
   align-items: center;
+  min-height: 3rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 
   &:deep(.navigation-breadcrumb-link:last-of-type .navigation-breadcrumb-link__caret) {
     display: none;

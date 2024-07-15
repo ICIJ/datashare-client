@@ -79,8 +79,8 @@ const classList = computed(() => {
 
 <template>
   <router-link v-if="route" :to="routeLocation" class="navigation-breadcrumb-link" :class="classList">
-    <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__icon me-2" :name="icon" />
     <span class="navigation-breadcrumb-link__label">
+      <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <slot>{{ title }}</slot>
     </span>
     <phosphor-icon
@@ -99,11 +99,20 @@ const classList = computed(() => {
   display: inline-flex;
   align-items: center;
   color: var(--bs-secondary-color);
-  padding: $spacer-xxs 0;
+  padding: 0;
 
-  &--active {
+  &__label {
+    padding: $spacer-xxs 0;
+    border-bottom: 1px solid transparent;
+  }
+
+  &--active,
+  &:hover {
     color: var(--bs-body-color);
-    border-bottom: 1px solid var(--bs-secondary);
+
+    .navigation-breadcrumb-link__label {
+      border-bottom: 1px solid var(--bs-secondary);
+    }
   }
 }
 </style>
