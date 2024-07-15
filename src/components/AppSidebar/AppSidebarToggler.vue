@@ -28,7 +28,7 @@ const title = computed(() => {
 
 <template>
   <icon-button
-    v-b-tooltip.right
+    tooltip-placement="right"
     icon-left="sidebar-simple"
     square
     hide-label
