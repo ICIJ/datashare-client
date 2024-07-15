@@ -58,7 +58,7 @@ const classList = computed(() => {
       <slot name="title" />
     </filters-panel-section-filter-title>
     <b-collapse :model-value="!collapse">
-      <div class="filters-panel-section-filter__entries py-3 ps-4 pe-3">
+      <div class="filters-panel-section-filter__entries pt-3 ps-4 pe-3">
         <slot />
       </div>
       <slot name="footer">
