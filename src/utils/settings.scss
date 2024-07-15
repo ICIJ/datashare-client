@@ -98,6 +98,7 @@ $alert-border-width: 0;
 
 $input-bg:  var(--#{$prefix}body-bg);
 $input-focus-border-color: map-get($theme-colors, 'secondary');
+$input-hover-border-color: $input-focus-border-color;
 $custom-control-indicator-checked-bg: $tertiary;
 
 $btn-box-shadow: 0 0 0 0 transparent;
