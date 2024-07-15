@@ -61,16 +61,16 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
 
 <template>
   <div class="toast-body d-flex align-items-center" :class="classList">
-    <div v-if="!noIcon" class="toast-body__icon pe-3">
+    <div v-if="!noIcon" class="toast-body__icon">
       <phosphor-icon :name="icon" :variant="variant" weight="bold" />
     </div>
     <div class="toast-body__content flex-grow-1">
       <h5 v-if="title" class="toast-body__content__title">{{ title }}</h5>
       <p class="toast-body__content__body m-0">
-        <slot>{{ body }}</slot>
+        <slot v-bind="{ closeToast, linkClassList, linkLabelDisplay }">{{ body }}</slot>
       </p>
     </div>
-    <div v-if="hasLink" class="toast-body__link pe-3">
+    <div v-if="hasLink" class="toast-body__link">
       <slot name="link" v-bind="{ closeToast, linkClassList, linkLabelDisplay }">
         <a :href="href" class="btn btn-sm text-nowrap" :class="linkClassList" @click.passive="closeToast">
           {{ linkLabelDisplay }}
@@ -100,6 +100,11 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
   &__link .btn:not(:hover) {
     background: var(--bs-body-bg);
     color: var(--bs-body-color);
+  }
+
+  &__icon,
+  &__link {
+    padding-right: $spacer;
   }
 }
 </style>
