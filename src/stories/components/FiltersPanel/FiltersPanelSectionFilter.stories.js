@@ -1,5 +1,5 @@
-import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter.vue'
-import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry.vue'
+import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter'
+import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 
 export default {
   title: 'Components/FiltersPanel/FiltersPanelSectionFilter',
