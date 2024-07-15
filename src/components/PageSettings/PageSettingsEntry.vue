@@ -26,7 +26,7 @@ const props = defineProps({
 
 <style lang="scss">
 .page-settings-entry{
-  :checked + label {
+  :checked + label, &-checked {
     font-weight: bold
   }
 }
