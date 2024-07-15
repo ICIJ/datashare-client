@@ -45,6 +45,7 @@ const classList = computed(() => {
     <div class="d-flex justify-content-end align-items-center">
       <div v-if="!hideExpand" class="me-auto">
         <icon-button
+          class="bg-primary-subtle text-primary-emphasis-subtle p-1"
           tooltip-placement="right"
           icon-left="arrows-out-simple"
           hide-label

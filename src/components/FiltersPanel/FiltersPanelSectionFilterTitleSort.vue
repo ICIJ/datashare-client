@@ -43,11 +43,12 @@ const isOptionActive = ({ sortBy, sortByOrder }) => {
     variant="link"
     end
     teleport-to="body"
+    toggle-class="bg-primary-subtle text-primary-emphasis-subtle p-1"
     no-caret
   >
     <template #button-content>
       <phosphor-icon name="sort-ascending" height="1em" />
-      Sort
+      <span class="visually-hidden">Sort</span>
     </template>
     <b-dropdown-item
       v-for="(option, i) in sortByOptionsWithLabels"
@@ -69,10 +70,6 @@ const isOptionActive = ({ sortBy, sortByOrder }) => {
     line-height: 1;
     display: inline-flex;
     align-items: center;
-
-    .phosphor-icon {
-      margin-right: $spacer-xs;
-    }
   }
 }
 </style>
