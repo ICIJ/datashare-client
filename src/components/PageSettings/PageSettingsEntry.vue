@@ -1,16 +1,18 @@
 <template>
-  <span class="page-settings-entry d-inline-flex"><phosphor-icon v-if="icon" :name="icon" class="me-2"/>{{ text }}</span>
+  <span class="page-settings-entry d-inline-flex"
+    ><phosphor-icon v-if="icon" :name="icon" class="me-2" />{{ text }}</span
+  >
 </template>
 
 <script setup>
-import {PhosphorIcon} from "@icij/murmur-next";
+import { PhosphorIcon } from '@icij/murmur-next'
 
 defineOptions({
-  name:"PageSettingsEntry"
+  name: 'PageSettingsEntry'
 })
-const props = defineProps({
+defineProps({
   icon: {
-    type: String,
+    type: String
   },
   text: {
     type: String,
@@ -21,13 +23,13 @@ const props = defineProps({
     required: false
   }
 })
-
 </script>
 
 <style lang="scss">
-.page-settings-entry{
-  :checked + label, &-checked {
-    font-weight: bold
+.page-settings-entry {
+  :checked + label,
+  &-checked {
+    font-weight: bold;
   }
 }
 </style>

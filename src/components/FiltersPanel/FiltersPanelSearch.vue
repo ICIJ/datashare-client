@@ -1,5 +1,5 @@
 <script setup>
-import SearchFormControl from '@/components/SearchFormControl.vue'
+import SearchFormControl from '@/components/SearchFormControl'
 
 defineProps({
   modelValue: {
