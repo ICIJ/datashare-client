@@ -3,6 +3,7 @@ import { computed } from 'vue'
 
 import FiltersPanelSectionFilterTitle from '@/components/FiltersPanel/FiltersPanelSectionFilterTitle'
 import FiltersPanelSectionFilterFooter from '@/components/FiltersPanel/FiltersPanelSectionFilterFooter'
+import SearchFormControl from '@/components/SearchFormControl'
 
 const props = defineProps({
   collapse: {
@@ -13,6 +14,13 @@ const props = defineProps({
   },
   name: {
     type: String
+  },
+  search: {
+    type: String
+  },
+  searchPlaceholder: {
+    type: String,
+    default: 'Search...'
   },
   count: {
     type: Number,
@@ -30,12 +38,15 @@ const props = defineProps({
   hideExpand: {
     type: Boolean
   },
+  hideSearch: {
+    type: Boolean
+  },
   hideSort: {
     type: Boolean
   }
 })
 
-const emit = defineEmits(['toggle'])
+const emit = defineEmits(['toggle', 'update:search'])
 
 const classList = computed(() => {
   return {
@@ -58,15 +69,26 @@ const classList = computed(() => {
       <slot name="title" />
     </filters-panel-section-filter-title>
     <b-collapse :model-value="!collapse">
-      <div class="filters-panel-section-filter__entries pt-3 ps-4 pe-3">
-        <slot />
+      <div class="filters-panel-section-filter__content px-2 pt-3">
+        <search-form-control
+          v-if="!hideSearch"
+          :model-value="search"
+          :placeholder="searchPlaceholder"
+          shadow
+          size="sm"
+          class="filters-panel-section-filter__content__search mb-3"
+          @update:modelValue="emit('update:search', $event)"
+        />
+        <div class="ps-4">
+          <slot />
+        </div>
       </div>
       <slot name="footer">
         <filters-panel-section-filter-footer
           :hide-contextualize="hideContextualize"
           :hide-exclude="hideExclude"
           :hide-expand="hideExpand"
-          class="pe-3 ps-2"
+          class="ps-2 pe-2"
         />
       </slot>
     </b-collapse>
@@ -88,8 +110,8 @@ const classList = computed(() => {
     padding: $spacer-xs 0;
   }
 
-  &__entries {
-    max-height: 240px;
+  &__content {
+    max-height: 280px;
     overflow: auto;
   }
 }

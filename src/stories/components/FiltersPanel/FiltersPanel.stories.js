@@ -53,7 +53,7 @@ export default {
           <filters-panel-section-filter title="With note(s)" icon="note-blank" :count="1" collapse />
           <filters-panel-section-filter title="In your folder(s)" icon="folder-open" collapse />
           <filters-panel-section-filter title="Commmented by" icon="chats-teardrop" collapse />
-          <filters-panel-section-filter title="Tags" icon="tag" :count="count" :collapse="args.collapseTags" @toggle="args.collapseTags = $event">
+          <filters-panel-section-filter title="Tags" icon="tag" :count="count" :collapse="args.collapseTags" @toggle="args.collapseTags = $event" search-placeholder="Search in tags">
             <filters-panel-section-filter-entry label="All" v-model="values['all']" :count="1874589" />
             <filters-panel-section-filter-entry label="colombia" v-model="values['colombia']" :count="89233" />
             <filters-panel-section-filter-entry label="mongolia" v-model="values['mongolia']" :count="9276" />
