@@ -1,4 +1,4 @@
-import PageSettingsEntry from '@/components/PageSettings/PageSettingsEntry.vue'
+import PageSettingsEntry from '@/components/PageSettings/PageSettingsEntry'
 
 export default {
   title: 'Components/PageSettings/Entry',
@@ -15,16 +15,16 @@ export default {
 }
 export const Default = {
   args: {
-    text: "Path",
-    value: "path",
+    text: 'Path',
+    value: 'path',
     icon: 'tree-structure'
   }
 }
 export const Checked = {
   args: {
-    text: "Path",
-    value: "path",
+    text: 'Path',
+    value: 'path',
     icon: 'tree-structure',
-    class:"page-settings-entry-checked"
+    class: 'page-settings-entry-checked'
   }
 }

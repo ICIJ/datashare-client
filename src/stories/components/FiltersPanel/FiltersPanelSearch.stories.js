@@ -1,4 +1,4 @@
-import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch.vue'
+import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch'
 
 export default {
   title: 'Components/FiltersPanel/FiltersPanelSearch',
