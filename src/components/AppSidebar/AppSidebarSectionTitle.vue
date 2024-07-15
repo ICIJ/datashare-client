@@ -31,7 +31,7 @@ const classList = computed(() => {
 <style lang="scss" scoped>
 .app-sidebar-section-title {
   font-size: 1em;
-  font-weight: bold;
+  font-weight: 500;
   margin: 0;
 }
 </style>
