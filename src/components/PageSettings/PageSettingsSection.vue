@@ -1,13 +1,20 @@
 <template>
-  <page-settings-section-group :label="label" v-model="localOpen" class="page-settings-section">
-    <component :is="formGroup"
-               id="checkbox-group-1"
-               class="page-settings-section__input-group"
-               v-model="localValue"
-               :name="name"
-               stacked
+  <page-settings-section-group v-model="localOpen" :label="label" class="page-settings-section">
+    <component
+      :is="formGroup"
+      id="checkbox-group-1"
+      v-model="localValue"
+      class="page-settings-section__input-group"
+      :name="name"
+      stacked
     >
-      <component :is="formInput" v-for="(option,index) in options" :key="index" :value="option.value" class="page-settings-section__input-group__input">
+      <component
+        :is="formInput"
+        v-for="(option, index) in options"
+        :key="index"
+        :value="option.value"
+        class="page-settings-section__input-group__input"
+      >
         <page-settings-entry :text="option.text" :icon="option.icon" />
       </component>
     </component>
@@ -15,25 +22,25 @@
 </template>
 
 <script setup>
-import {computed} from "vue"
-import PageSettingsEntry from "@/components/PageSettings/PageSettingsEntry.vue";
-import PageSettingsSectionGroup from "@/components/PageSettings/PageSettingsSectionGroup.vue";
-import {BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup} from "bootstrap-vue-next";
+import { computed } from 'vue'
+import { BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup } from 'bootstrap-vue-next'
+
+import PageSettingsEntry from '@/components/PageSettings/PageSettingsEntry'
+import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup'
 defineOptions({
-  name:"PageSettingsSection"
+  name: 'PageSettingsSection'
 })
 
-const RADIO = "radio"
-const CHECKBOX = "checkbox"
+const RADIO = 'radio'
 const props = defineProps({
   label: {
     type: String,
-    required: true,
+    required: true
   },
   type: {
     type: String,
     required: true,
-    validator: (inputType) => [RADIO, CHECKBOX].includes(inputType)
+    validator: (inputType) => ['radio', 'checkbox'].includes(inputType)
   },
   name: {
     type: String,
@@ -43,15 +50,14 @@ const props = defineProps({
     type: Object,
     required: true
   }
-
 })
 const modelValue = defineModel({
   type: [String, Array],
-  default: () => [],
+  default: () => []
 })
-const open = defineModel('open',{
-  type:Boolean,
-  default: true,
+const open = defineModel('open', {
+  type: Boolean,
+  default: true
 })
 const formGroup = computed(() => {
   return props.type === RADIO ? BFormRadioGroup : BFormCheckboxGroup
@@ -68,21 +74,19 @@ const localValue = computed({
 const localOpen = computed({
   get: () => open.value,
   set: (newVal) => {
-    console.log("test",newVal)
+    console.log('test', newVal)
     open.value = newVal
   }
 })
 </script>
 
 <style lang="scss" scoped>
-.page-settings{
-  &-section{
-    &__input-group{
-
-    margin-left: 1em !important;
+.page-settings {
+  &-section {
+    &__input-group {
+      margin-left: 1em !important;
     }
     margin-bottom: 1em !important;
   }
 }
-
 </style>

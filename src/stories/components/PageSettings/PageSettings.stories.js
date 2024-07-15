@@ -1,18 +1,23 @@
 import PageSettings from '@/components/PageSettings/PageSettings.vue'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection.vue'
+import {BCloseButton} from 'bootstrap-vue-next'
 
+import { fn } from '@storybook/test'
 export default {
   title: 'Components/PageSettings',
   tags: ['autodocs'],
   render: (args) => ({
     components: {
-      PageSettings,PageSettingsSection
+      PageSettings,PageSettingsSection,BCloseButton
     },
     setup: () => {
       return {args}
     },
     template: `
       <page-settings title="Page settings">
+        <template #closeButton>
+          <b-close-button class="d-inline-flex" @click="args.onCloseButtonClick"/>
+        </template>
         <page-settings-section
           v-model="args.example.modelValue"
           v-model:open="args.example.open"
@@ -137,5 +142,6 @@ export const Default = {
     title:"Page settings",
     example,
     sections,
+    onCloseButtonClick: fn()
   }
 }

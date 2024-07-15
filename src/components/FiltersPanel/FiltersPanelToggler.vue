@@ -1,5 +1,5 @@
 <script setup>
-import IconButton from '@/components/IconButton.vue'
+import IconButton from '@/components/IconButton'
 
 const emit = defineEmits(['close'])
 </script>

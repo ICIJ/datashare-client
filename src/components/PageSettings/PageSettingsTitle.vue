@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps({
+defineProps({
   title: {
     type: String
   }
@@ -7,9 +7,9 @@ const props = defineProps({
 </script>
 
 <template>
-  <h2 class="page-settings-title">
+  <h3 class="page-settings-title">
     <slot>{{ title }}</slot>
-  </h2>
+  </h3>
 </template>
 
 <style lang="scss" scoped>

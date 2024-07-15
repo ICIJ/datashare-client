@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton.vue'
+import IconButton from '@/components/IconButton'
 
 const props = defineProps({
   collapse: {

@@ -1,5 +1,5 @@
 <script setup>
-import FiltersPanelSectionTitle from '@/components/FiltersPanel/FiltersPanelSectionTitle.vue'
+import FiltersPanelSectionTitle from '@/components/FiltersPanel/FiltersPanelSectionTitle'
 
 defineProps({
   title: {
