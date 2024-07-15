@@ -16,6 +16,7 @@ $dark: #212529;
 $darker: #0F0F10;;
 
 $link-color: $primary;
+$link-hover-color: mix($black, $secondary, 20%);
 $link-decoration: none;
 
 $body-color: #212529;
