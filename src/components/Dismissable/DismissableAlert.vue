@@ -1,6 +1,7 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 
+import IconButton from '@/components/IconButton'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
 
 const props = defineProps({
@@ -29,32 +30,57 @@ const props = defineProps({
   },
   noButton: {
     type: Boolean
+  },
+  noClose: {
+    type: Boolean
   }
 })
 
 const localStorageKey = `dismissed-alert-${props.name}`
 const dissmissed = ref(props.persist && localStorage.getItem(localStorageKey) === 'true')
 const show = computed(() => dissmissed.value === false)
-const dissmiss = () => (dissmissed.value = true)
-// Ensure that the state is persisted in local storage
-watch(dissmissed, (value) => props.persist && props.name && localStorage.setItem(localStorageKey, value))
+const dissmiss = (persit) => {
+  dissmissed.value = true
+  // Ensure that the state is persisted in local storage
+  if (persit && props.name) {
+    localStorage.setItem(localStorageKey, true)
+  }
+}
+
+const classList = {
+  'dismissable-alert--no-button': props.noButton,
+  'dismissable-alert--no-close': props.noClose
+}
 </script>
 
 <template>
-  <b-alert :variant="variant" :model-value="show" class="ps-3 pe-0 py-1 dismissable-alert">
+  <b-alert :variant="variant" :model-value="show" class="ps-3 pe-0 py-1 dismissable-alert" :class="classList">
     <toast-body :toast-props="{ type: variant }" :icon="icon" :no-icon="noIcon" class="dismissable-alert__body">
-      <slot></slot>
-      <template #link="{ linkClassList }">
+      <template #default="{ linkClassList }">
+        <slot></slot>
         <slot name="button" v-bind="{ linkClassList, linkLabel, noButton, dissmiss }">
           <button
             v-if="!noButton"
-            class="btn text-nowrap dismissable-alert__body__button"
+            class="btn text-nowrap dismissable-alert__body__button ms-1"
             type="button"
             :class="linkClassList"
-            @click="dissmiss"
+            @click="dissmiss(persit)"
           >
             {{ linkLabel }}
           </button>
+        </slot>
+      </template>
+      <template #link>
+        <slot name="close">
+          <icon-button
+            v-if="!noClose"
+            class="dismissable-alert__close"
+            variant="link"
+            label="Close"
+            hide-label
+            icon-left="x"
+            @click="dissmiss(false)"
+          />
         </slot>
       </template>
     </toast-body>
@@ -68,6 +94,14 @@ watch(dissmissed, (value) => props.persist && props.name && localStorage.setItem
       background: var(--bs-body-bg);
       color: var(--bs-body-color);
     }
+  }
+
+  &:not(&--no-close):deep(.toast-body__link) {
+    padding-right: 0;
+  }
+
+  &__close {
+    color: var(--bs-body-color);
   }
 }
 </style>
