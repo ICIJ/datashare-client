@@ -66,6 +66,7 @@ const hasActiveSlot = computed(() => {
   min-height: 3rem;
   flex-wrap: nowrap;
   white-space: nowrap;
+  overflow: auto;
 
   &:deep(.navigation-breadcrumb-link:last-of-type .navigation-breadcrumb-link__caret) {
     display: none;
