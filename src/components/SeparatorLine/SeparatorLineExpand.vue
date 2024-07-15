@@ -8,6 +8,7 @@ import IconButton from '@/components/IconButton'
     pill
     hide-label
     icon-left="arrow-line-right"
+    icon-left-hover-weight="bold"
     label="Expand"
     size="sm"
     variant="outline-dark"
