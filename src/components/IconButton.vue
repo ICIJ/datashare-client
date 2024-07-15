@@ -12,6 +12,7 @@
       :name="iconLeftOrSpinner"
       :size="iconLeftSize"
       :weight="iconLeftWeight"
+      :hover-weight="iconLeftHoverWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
       class="icon-button__icon-left"
@@ -24,6 +25,7 @@
       :name="iconRightOrSpinner"
       :size="iconRightSize"
       :weight="iconRightWeight"
+      :hover-weight="iconRightHoverWeight"
       :spin="loading"
       :spin-duration="loadingDuration"
       class="icon-button__icon-right"
@@ -45,6 +47,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  iconLeftHoverWeight: {
+    type: String,
+    default: null
+  },
   iconLeftSize: {
     type: String
   },
@@ -53,6 +59,10 @@ const props = defineProps({
     default: null
   },
   iconRightWeight: {
+    type: String,
+    default: null
+  },
+  iconRightHoverWeight: {
     type: String,
     default: null
   },
