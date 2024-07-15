@@ -51,6 +51,7 @@ const showOperator = computed(() => {
     :style="style"
     :icon-left="icon"
     icon-right="x"
+    icon-right-hover-weight="bold"
   >
     <template v-if="showOperator" #start>
       <span class="search-breadcrumb-entry-query-term__operator">
@@ -67,10 +68,15 @@ const showOperator = computed(() => {
 .search-breadcrumb-entry-query-term {
   border-style: dashed;
   border-color: var(--color, currentColor);
+  color: var(--bs-body-color);
+  background: var(--bs-body-bg);
 
-  &:not(:hover) {
-    color: var(--bs-body-color);
-    background: var(--bs-body-bg);
+  &:hover {
+    border-style: solid;
+
+    &:deep(.icon-button__icon-right) {
+      color: var(--bs-body-color);
+    }
   }
 
   &__operator {
