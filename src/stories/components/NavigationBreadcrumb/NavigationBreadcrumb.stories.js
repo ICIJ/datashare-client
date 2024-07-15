@@ -89,7 +89,7 @@ export const ButtonAddon = {
   })
 }
 
-export const MutltipleAddons = {
+export const MultipleAddons = {
   render: () => ({
     components: {
       IconButton,
