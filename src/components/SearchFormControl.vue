@@ -7,6 +7,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 defineOptions({
   name: 'SearchFormControl'
 })
+
 const props = defineProps({
   /**
    * Input value
@@ -90,23 +91,28 @@ const emit = defineEmits(['submit', 'up', 'down', 'input', 'update:modelValue', 
 const showClearText = computed(() => {
   return props.modelValue?.length > 0
 })
+
 function input(value) {
   emit('update:modelValue', value)
 }
+
 const target = ref(null)
 
 function clearInputText() {
   target.value?.querySelector('.search-form-control__input').focus()
   input('')
 }
+
+const classList = computed(() => {
+  return {
+    'search-form-control--shadow': props.shadow,
+    [`search-form-control--${props.size}`]: true
+  }
+})
 </script>
 
 <template>
-  <form
-    class="search-form-control"
-    :class="{ 'search-form-control--shadow': shadow }"
-    @submit.prevent="$emit('submit', modelValue)"
-  >
+  <form class="search-form-control" :class="classList" @submit.prevent="$emit('submit', modelValue)">
     <div class="search-form-control__input-group input-group">
       <span
         class="search-form-control__start input-group-text border-end-0"
@@ -222,6 +228,10 @@ function clearInputText() {
 
   &--shadow {
     box-shadow: 0.05em 0.05em 0.5em 0.3em $lighter;
+  }
+
+  &--shadow.search-form-control--sm {
+    box-shadow: 1px 1px 8px 5px $lighter;
   }
 }
 </style>
