@@ -42,7 +42,7 @@ const classList = computed(() => {
 
 <template>
   <div class="filters-panel-section-filter-footer" :class="classList">
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end align-items-center">
       <div v-if="!hideExpand" class="me-auto">
         <icon-button
           tooltip-placement="right"
@@ -68,7 +68,7 @@ const classList = computed(() => {
 
 <style lang="scss" scoped>
 .filters-panel-section-filter-footer {
-  padding: 0;
+  padding: $spacer-xxs 0 0;
 
   &--empty {
     display: none;

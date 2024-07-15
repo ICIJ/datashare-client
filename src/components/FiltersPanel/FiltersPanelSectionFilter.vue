@@ -45,20 +45,20 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="filters-panel-section-filter py-1 mb-1 px-2" :class="classList">
+  <div class="filters-panel-section-filter mb-1" :class="classList">
     <filters-panel-section-filter-title
       :title="title"
       :icon="icon"
       :collapse="collapse"
       :count="count"
       :hide-sort="hideSort"
-      class="pe-2"
+      class="pe-2 mx-2"
       @toggle="emit('toggle', $event)"
     >
       <slot name="title" />
     </filters-panel-section-filter-title>
     <b-collapse :model-value="!collapse">
-      <div class="filters-panel-section-filter__entries py-3 ps-3 pe-2">
+      <div class="filters-panel-section-filter__entries py-3 ps-4 pe-3">
         <slot />
       </div>
       <slot name="footer">
@@ -66,6 +66,7 @@ const classList = computed(() => {
           :hide-contextualize="hideContextualize"
           :hide-exclude="hideExclude"
           :hide-expand="hideExpand"
+          class="pe-3 ps-2"
         />
       </slot>
     </b-collapse>
@@ -76,10 +77,15 @@ const classList = computed(() => {
 .filters-panel-section-filter {
   border-radius: $border-radius;
   transition: $transition-base;
+  padding: $spacer-xxs 0;
 
   &:not(&--collapsed),
   &:hover {
     background: var(--bs-body-bg);
+  }
+
+  &:not(&--collapsed) {
+    padding: $spacer-xs 0;
   }
 
   &__entries {
