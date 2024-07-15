@@ -1071,7 +1071,8 @@
     "label": "Your search has not started. Use the search bar or add filters."
   },
   "searchBreadcrumbEntryOccurences": {
-    "label": "0 documents | 1 document | {occurrences} documents"
+    "label": "0 documents | 1 document | {occurrences} documents",
+    "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
   },
   "searchBreadcrumbFooter": {
     "clearFilters": "Clear filters",
