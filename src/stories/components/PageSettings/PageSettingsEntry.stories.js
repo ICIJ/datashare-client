@@ -20,3 +20,11 @@ export const Default = {
     icon: 'tree-structure'
   }
 }
+export const Checked = {
+  args: {
+    text: "Path",
+    value: "path",
+    icon: 'tree-structure',
+    class:"page-settings-entry-checked"
+  }
+}
