@@ -15,6 +15,7 @@ export default {
     hideContextualize: false,
     hideExclude: false,
     hideExpand: false,
+    hideSearch: true,
     hideSort: false
   },
   render: (args) => ({
@@ -35,7 +36,7 @@ export default {
     },
     template: `
       <div class="p-5" style="background-color: var(--bs-light-bg-subtle);">
-        <filters-panel-section-filter v-bind="args" :count="count" @toggle="args.collapse = $event">
+        <filters-panel-section-filter v-bind="args" :count="count" @toggle="args.collapse = $event" search-placeholder="Search in tags">
           <filters-panel-section-filter-entry label="All" v-model="values['all']" :count="1874589" />
           <filters-panel-section-filter-entry label="colombia" v-model="values['colombia']" :count="89233" />
           <filters-panel-section-filter-entry label="mongolia" v-model="values['mongolia']" :count="9276" />
