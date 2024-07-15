@@ -135,6 +135,8 @@ const classList = computed(() => {
     justify-content: space-between;
 
     &__item {
+      display: flex;
+      align-items: center;
       text-align: center;
       color: inherit;
       cursor: pointer;
