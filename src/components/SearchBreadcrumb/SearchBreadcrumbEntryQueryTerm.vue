@@ -46,7 +46,7 @@ const showOperator = computed(() => {
 <template>
   <icon-button
     variant="outline-danger"
-    class="search-breadcrumb-entry-query-term me-2"
+    class="search-breadcrumb-entry-query-term me-2 mb-2"
     :class="classList"
     :style="style"
     :icon-left="icon"

@@ -45,24 +45,25 @@ const entryAttributes = computed(() => {
 </script>
 
 <template>
-  <div class="search-breadcrumb-entry">
+  <div class="search-breadcrumb-entry d-md-inline-flex">
     <component :is="entryComponent" v-bind="entryAttributes" />
-    <search-breadcrumb-entry-occurrences v-bind="entryAttributes" :occurrences="occurrences" />
-    <phosphor-icon
-      v-if="!noCaret"
-      role="separator"
-      aria-hidden="true"
-      class="search-breadcrumb-entry__caret"
-      size="1em"
-      weight="fill"
-      name="caret-right"
-    />
+    <div class="text-nowrap">
+      <search-breadcrumb-entry-occurrences v-bind="entryAttributes" :occurrences="occurrences" />
+      <phosphor-icon
+        v-if="!noCaret"
+        role="separator"
+        aria-hidden="true"
+        class="search-breadcrumb-entry__caret mb-2"
+        size="1em"
+        weight="fill"
+        name="caret-right"
+      />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .search-breadcrumb-entry {
-  display: inline-flex;
   align-items: center;
   padding-right: $spacer-xs;
   color: var(--bs-tertiary);

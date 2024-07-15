@@ -24,7 +24,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
 </script>
 
 <template>
-  <span class="search-breadcrumb-entry-query-ast">
+  <span class="search-breadcrumb-entry-query-ast d-inline-block">
     <search-breadcrumb-entry-query-ast v-if="isLeft" :ast="ast.left" :operator="operator" />
     <search-breadcrumb-entry-query-term
       v-if="isTerm"
