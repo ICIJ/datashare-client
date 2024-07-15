@@ -151,6 +151,11 @@ const vDraggable = {
 
     &:deep(.icon-button) {
       border-color: var(--bs-primary-text-emphasis);
+
+      .phosphor-icon {
+        height: 100%;
+        width: 100%;
+      }
     }
 
     &:deep(.icon-button:hover) {
