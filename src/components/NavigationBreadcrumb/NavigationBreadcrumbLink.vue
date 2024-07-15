@@ -81,7 +81,9 @@ const classList = computed(() => {
   <router-link v-if="route" :to="routeLocation" class="navigation-breadcrumb-link" :class="classList">
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
-      <slot>{{ title }}</slot>
+      <span class="navigation-breadcrumb-link__label__content">
+        <slot>{{ title }}</slot>
+      </span>
     </span>
     <phosphor-icon
       v-if="!noCaret"
@@ -104,6 +106,12 @@ const classList = computed(() => {
   &__label {
     padding: $spacer-xxs 0;
     border-bottom: 1px solid transparent;
+
+    .navigation-breadcrumb-link:not(.navigation-breadcrumb-link--active) &__icon + &__content {
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+    }
   }
 
   &--active,
