@@ -61,7 +61,12 @@ const classList = computed(() => {
 .app-sidebar-section-entry {
   position: relative;
 
-  &--active:before {
+  &--active {
+    font-weight: 500;
+  }
+
+  &--active:before,
+  &:hover:before {
     content: '';
     position: absolute;
     left: -$spacer-xs;
@@ -82,10 +87,6 @@ const classList = computed(() => {
   &__action {
     cursor: pointer;
     color: inherit;
-
-    &:hover {
-      color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-    }
   }
 }
 </style>
