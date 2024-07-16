@@ -19,6 +19,7 @@ export default {
     crop: true,
     hover: false,
     clickable: true,
+    hidePlaceholder: false,
     fit: false,
     document: {
       extractionLevel: 0,
@@ -47,6 +48,7 @@ export const WithPlaceholder = {
     size: 'xs',
     crop: true,
     fit: false,
+    hidePlaceholder: false,
     document: {
       extractionLevel: 0,
       inlineFullUrl: null,
