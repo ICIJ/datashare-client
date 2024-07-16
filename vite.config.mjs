@@ -23,6 +23,7 @@ export default ({ mode }) => {
         path: 'path-browserify',
         vue: resolve(__dirname, 'node_modules/vue/dist/vue.esm-bundler.js'),
         '@': resolve(__dirname, './src'),
+        '~storybook': resolve('.storybook'),
         '~node_modules': resolve('node_modules'),
         '~mixins': resolve(__dirname, './src/mixins'),
         '~tests': resolve(__dirname, 'tests')
