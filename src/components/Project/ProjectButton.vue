@@ -27,7 +27,7 @@ defineProps({
 </script>
 
 <template>
-  <b-button class="project-button" variant="outline-light">
+  <b-button class="project-button" variant="outline-light" :disabled="disabled">
     <project-label :project="project" :hide-thumbnail="hideThumbnail">
       <slot />
     </project-label>
@@ -39,5 +39,11 @@ defineProps({
   display: inline-flex;
   border-color: transparent;
   box-shadow: 0px 0px 2px 0 #b1aeae;
+
+  &[disabled] {
+    opacity: 1;
+    color: var(--bs-body-color);
+    border-color: transparent;
+  }
 }
 </style>
