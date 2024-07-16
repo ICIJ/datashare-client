@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import DocumentThumbnail from '@/components/DocumentThumbnail'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 
 /**
  * A small card to display information about the content-type of a document.
