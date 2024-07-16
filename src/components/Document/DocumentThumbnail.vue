@@ -1,5 +1,5 @@
 <template>
-  <div class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle"  v-b-tooltip.right :title="title">
+  <div v-b-tooltip.right class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle" :title="title">
     <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
     <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
       <phosphor-icon :name="document.contentTypeIcon" :size="size" :scale="1.5" />
@@ -133,10 +133,10 @@ export default {
       return window && 'IntersectionObserver' in window
     },
     overlayIcon() {
-      return this.loaded ? 'eye' : 'eye-slash'
+      return this.errored ? 'eye-slash' : 'eye'
     },
     title() {
-      return this.loaded ? null : this.$t('documentThumbnail.noPreview')
+      return this.errored ? this.$t('documentThumbnail.noPreview') : ''
     }
   },
   async mounted() {
@@ -254,7 +254,7 @@ export default {
       cursor: pointer;
     }
 
-    .document-thumbnail__placeholder  + .document-thumbnail__overlay {
+    .document-thumbnail__placeholder + .document-thumbnail__overlay {
       cursor: auto;
     }
   }
