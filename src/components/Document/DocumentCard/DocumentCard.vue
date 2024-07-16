@@ -77,9 +77,7 @@ const showTitle = computed(() => {
       <router-link v-if="showTitle" class="document-card__properties__title" :to="to" :target="target">
         {{ document.title }}
       </router-link>
-      <document-card-properties :document="document" :properties="properties">
-        <slot />
-      </document-card-properties>
+      <document-card-properties :document="document" :properties="properties" />
     </div>
     <div class="document-card__actions"></div>
   </div>

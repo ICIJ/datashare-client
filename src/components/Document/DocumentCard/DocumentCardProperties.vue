@@ -46,14 +46,12 @@ const availableProperties = computed(() => {
 
 <template>
   <div class="document-card-properties">
-    <slot>
-      <component
-        :is="entryComponents[property]"
-        v-for="property in availableProperties"
-        :key="property"
-        :document="document"
-        :property="property"
-      />
-    </slot>
+    <component
+      :is="entryComponents[property]"
+      v-for="property in availableProperties"
+      :key="property"
+      :document="document"
+      :property="property"
+    />
   </div>
 </template>
