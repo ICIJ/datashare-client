@@ -88,7 +88,7 @@
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
-import ProjectLink from '@/components/ProjectLink'
+import ProjectLink from '@/components/Project/ProjectLink'
 import UserDisplay from '@/components/UserDisplay'
 import utils from '@/mixins/utils'
 

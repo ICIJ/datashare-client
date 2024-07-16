@@ -114,7 +114,7 @@ import { computed } from 'vue'
 
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
-import ProjectLink from '@/components/ProjectLink'
+import ProjectLink from '@/components/Project/ProjectLink'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import UserDisplay from '@/components/UserDisplay'
 import settings from '@/utils/settings'
