@@ -331,7 +331,7 @@ export default {
   &__overlay {
     position: absolute;
     z-index: $zindex-overlay;
-    left: 0;
+    left: 1px;
     top: 0;
     right: 0;
     bottom: 0;
@@ -341,6 +341,10 @@ export default {
     background: rgba(var(--bs-lighter-rgb), 0.5);
     color: var(--bs-tertiary);
     display: none;
+  }
+
+  &__placeholder + &__overlay {
+    background: var(--bs-light-bg-subtle);
   }
 }
 </style>
