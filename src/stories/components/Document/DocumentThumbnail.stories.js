@@ -35,9 +35,7 @@ export default {
     },
     setup: () => ({ args }),
     template: `
-      <div style="background-color: var(--bs-light-bg-subtle);" class="p-3">
-        <document-thumbnail v-bind="args" />
-      </div>
+      <document-thumbnail v-bind="args" />
     `
   })
 }

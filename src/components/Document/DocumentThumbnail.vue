@@ -1,5 +1,5 @@
 <template>
-  <div class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle">
+  <div class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle"  v-b-tooltip.right :title="title">
     <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
     <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
       <phosphor-icon :name="document.contentTypeIcon" :size="size" :scale="1.5" />
@@ -134,6 +134,9 @@ export default {
     },
     overlayIcon() {
       return this.loaded ? 'eye' : 'eye-slash'
+    },
+    title() {
+      return this.loaded ? null : this.$t('documentThumbnail.noPreview')
     }
   },
   async mounted() {
