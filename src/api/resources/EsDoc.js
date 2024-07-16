@@ -3,7 +3,7 @@ import { cloneDeep, extend, get, set } from 'lodash'
 const _raw = '_RAW'
 
 export default class EsDoc {
-  constructor(raw) {
+  constructor(raw = {}) {
     this[_raw] = cloneDeep(raw)
     this.map(raw)
   }
