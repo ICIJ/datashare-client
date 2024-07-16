@@ -74,8 +74,8 @@ import InfiniteLoading from 'v3-infinite-loading'
 import { fromNow, humanLongDate } from '@/utils/humanDate'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
-import DocumentSlicedName from '@/components/Document/DocumentSlicedName'
-import UserDisplay from '@/components/Document/UserDisplay'
+import DocumentSlicedName from '@/components/DocumentSlicedName'
+import UserDisplay from '@/components/UserDisplay'
 
 /**
  * Widget to display a list of facets on the insights page.

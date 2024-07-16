@@ -80,7 +80,7 @@ import { filter, get, map, startCase, uniq } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentTagsForm from '@/components/DocumentTagsForm'
-import ProjectLink from '@/components/ProjectLink'
+import ProjectLink from '@/components/Project/ProjectLink'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 /**

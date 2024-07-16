@@ -119,10 +119,6 @@ export default {
   }
 
   &:not(.project-thumbnail--checked).project-thumbnail--colorized {
-    &:before {
-      @include gradient-directional(rgba(#000, 0.15), rgba(#fff, 0.15));
-    }
-
     .project-thumbnail__caption {
       font-family: $font-family-monospace;
       position: absolute;
