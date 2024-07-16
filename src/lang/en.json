@@ -134,6 +134,9 @@
     "nextPage": "Go to next page",
     "lastPage": "Go to last page"
   },
+  "documentThumbnail": {
+    "noPreview": "No preview available"
+  },
   "documentTranslatedContent": {
     "detected": "Detected language",
     "viewOriginal": "View original text",
