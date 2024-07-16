@@ -34,9 +34,9 @@
 import { startCase } from 'lodash'
 import { mapState } from 'vuex'
 
-import DocumentSlicedName from '@/components/DocumentSlicedName'
-import DocumentThumbnail from '@/components/DocumentThumbnail'
-import ProjectLink from '@/components/ProjectLink'
+import DocumentSlicedName from '@/components/Document/DocumentSlicedName'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import ProjectLink from '@/components/Document/ProjectLink'
 import ner from '@/mixins/ner'
 
 /**

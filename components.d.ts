@@ -73,7 +73,7 @@ declare module 'vue' {
     DocumentTabPreview: typeof import('./src/components/Document/DocumentTab/DocumentTabPreview.vue')['default']
     DocumentTagsForm: typeof import('./src/components/DocumentTagsForm.vue')['default']
     DocumentThread: typeof import('./src/components/DocumentThread.vue')['default']
-    DocumentThumbnail: typeof import('./src/components/DocumentThumbnail.vue')['default']
+    DocumentThumbnail: typeof import('./src/components/Document/DocumentThumbnail.vue')['default']
     DocumentTranslatedContent: typeof import('./src/components/DocumentTranslatedContent.vue')['default']
     DocumentTypeCard: typeof import('./src/components/DocumentTypeCard.vue')['default']
     DocumentViewerAudio: typeof import('./src/components/Document/DocumentViewer/DocumentViewerAudio.vue')['default']
