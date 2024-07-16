@@ -1,13 +1,13 @@
 <template>
-  <component :is="is" :to="projectRoute" class="project-link d-inline-flex align-items-center text-nowrap">
+  <span class="project-label d-inline-flex align-items-center text-nowrap">
     <project-thumbnail
       v-if="showThumbnail"
       :project="resolvedProject"
-      class="project-link__thumbnail me-1 rounded"
+      class="project-link__thumbnail me-2 rounded"
       width="1.6em"
     />
     <span class="project-link__display">{{ projectDisplay }}</span>
-  </component>
+  </span>
 </template>
 
 <script>
@@ -16,10 +16,10 @@ import { startCase } from 'lodash'
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 
 /**
- * Generate a link to a project page
+ * Generate a project's label
  */
 export default {
-  name: 'ProjectLink',
+  name: 'ProjectLabel',
   components: { ProjectThumbnail },
   props: {
     /**
@@ -45,21 +45,14 @@ export default {
     }
   },
   computed: {
-    is() {
-      return this.disabled ? 'span' : 'router-link'
-    },
     projectDisplay() {
       return this.resolvedProject.label || startCase(this.resolvedProject.name)
-    },
-    projectRoute() {
-      const { name } = this.resolvedProject
-      return { name: 'project.view', params: { name } }
     },
     unknownProject() {
       return { name: 'unknown', label: 'Unknown' }
     },
     resolvedProject() {
-      return this.$core.findProject(this.project.name ?? this.project) ?? this.unknownProject
+      return this.$core?.findProject(this.project.name ?? this.project) ?? this.unknownProject
     },
     showThumbnail() {
       return !this.hideThumbnail
@@ -67,9 +60,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.project-link {
-  font-weight: bold;
-}
-</style>

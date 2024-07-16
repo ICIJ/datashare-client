@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import ProjectLink from '@/components/ProjectLink'
+import ProjectLink from '@/components/Project/ProjectLink'
 
 describe('ProjectLink.vue', () => {
   const { plugins, config } = CoreSetup.init().useAll().useRouter()
