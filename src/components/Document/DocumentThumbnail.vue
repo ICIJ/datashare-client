@@ -88,6 +88,12 @@ export default {
     ratio: {
       type: Number,
       default: null
+    },
+    /**
+     * Make sure the placeholder is never visible
+     */
+    hidePlaceholder: {
+      type: Boolean
     }
   },
   data() {
@@ -101,6 +107,7 @@ export default {
   computed: {
     thumbnailClass() {
       return {
+        'document-thumbnail--hide-placeholder': this.hidePlaceholder,
         'document-thumbnail--active': this.active,
         'document-thumbnail--crop': this.crop,
         'document-thumbnail--fit': this.fit,
@@ -329,6 +336,10 @@ export default {
     align-items: center;
     justify-content: center;
     background: var(--bs-light-bg-subtle);
+  }
+
+  &--hide-placeholder &__placeholder {
+    display: none;
   }
 
   &__overlay {
