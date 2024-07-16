@@ -50,14 +50,14 @@ $theme-colors: (
   category-email: #33beff
 );
 
+$primary-bg-subtle: #F3F5F8;
 $primary-color-subtle: $primary;
-$primary-color-subtle-dark: $white;
-$primary-border-subtle-dark: $dark;
 $primary-text-emphasis: $primary;
 
-$primary-bg-subtle: #F3F5F8;
 $primary-bg-subtle-dark: #232634;
+$primary-border-subtle-dark: $dark;
 $primary-border-subtle-dark: $white;
+$primary-color-subtle-dark: $white;
 $primary-text-emphasis-dark: $white;
 
 $secondary-bg-subtle: #FFECF1;
@@ -65,6 +65,17 @@ $success-bg-subtle: #E5F8F3;
 $info-bg-subtle: #ECF9FF;
 $warning-bg-subtle: #FFF9EE;
 $danger-bg-subtle:#FBEBEC;
+
+$tertiary-bg-subtle: $tertiary;
+$tertiary-color-subtle: $tertiary;
+$tertiary-border-subtle: $tertiary;
+$tertiary-text-emphasis: $tertiary;
+
+$tertiary-bg-subtle-dark: #232634;
+$tertiary-border-subtle-dark: $dark;
+$tertiary-border-subtle-dark: $white;
+$tertiary-color-subtle-dark: $white;
+$tertiary-text-emphasis-dark: $white;
 
 $light-bg-subtle: $lighter;
 $light-bg-subtle-dark: $darker;
@@ -163,6 +174,7 @@ $dropdown-item-padding-y: 0.5rem;
 // We also defines a few functions and mixins internally
 @import './functions.scss';
 @import './mixins.scss';
+@import './maps.scss';
 
 $spacer-xxs: $spacer * 0.25;
 $spacer-xs: $spacer * 0.5;

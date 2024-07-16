@@ -1,0 +1,59 @@
+$theme-colors-text: (
+  "primary": $primary-text-emphasis,
+  "secondary": $secondary-text-emphasis,
+  "tertiary": $tertiary-text-emphasis,
+  "success": $success-text-emphasis,
+  "info": $info-text-emphasis,
+  "warning": $warning-text-emphasis,
+  "danger": $danger-text-emphasis,
+  "light": $light-text-emphasis,
+  "dark": $dark-text-emphasis,
+);
+
+$theme-colors-bg-subtle: (
+  "primary": $primary-bg-subtle,
+  "secondary": $secondary-bg-subtle,
+  "tertiary": $tertiary-bg-subtle,
+  "success": $success-bg-subtle,
+  "info": $info-bg-subtle,
+  "warning": $warning-bg-subtle,
+  "danger": $danger-bg-subtle,
+  "light": $light-bg-subtle,
+  "dark": $dark-bg-subtle,
+) !default;
+
+$theme-colors-border-subtle: (
+  "primary": $primary-border-subtle,
+  "secondary": $secondary-border-subtle,
+  "tertiary": $tertiary-border-subtle,
+  "success": $success-border-subtle,
+  "info": $info-border-subtle,
+  "warning": $warning-border-subtle,
+  "danger": $danger-border-subtle,
+  "light": $light-border-subtle,
+  "dark": $dark-border-subtle,
+) !default;
+
+$theme-colors-text-dark: (
+  "primary": $primary-text-emphasis-dark,
+  "secondary": $secondary-text-emphasis-dark,
+  "tertiary": $tertiary-text-emphasis-dark,
+  "success": $success-text-emphasis-dark,
+  "info": $info-text-emphasis-dark,
+  "warning": $warning-text-emphasis-dark,
+  "danger": $danger-text-emphasis-dark,
+  "light": $light-text-emphasis-dark,
+  "dark": $dark-text-emphasis-dark,
+) !default;
+
+$utilities-text-emphasis-colors: (
+  "primary-emphasis": var(--#{$prefix}primary-text-emphasis),
+  "secondary-emphasis": var(--#{$prefix}secondary-text-emphasis),
+  "tertiary-emphasis": var(--#{$prefix}tertiary-text-emphasis),
+  "success-emphasis": var(--#{$prefix}success-text-emphasis),
+  "info-emphasis": var(--#{$prefix}info-text-emphasis),
+  "warning-emphasis": var(--#{$prefix}warning-text-emphasis),
+  "danger-emphasis": var(--#{$prefix}danger-text-emphasis),
+  "light-emphasis": var(--#{$prefix}light-text-emphasis),
+  "dark-emphasis": var(--#{$prefix}dark-text-emphasis)
+) !default;
