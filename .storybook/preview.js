@@ -30,7 +30,6 @@ setup((app) => {
   app.use(Vue3Toastify)
 })
 
-
 const decorators = [
   withThemeByDataAttribute({
     themes: {
