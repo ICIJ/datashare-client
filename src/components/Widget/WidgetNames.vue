@@ -9,7 +9,7 @@
       <div class="widget__content text-center" :class="{ 'card-body': widget.card }">
         <fa icon="address-card" class="widget__content__icon" size="2x" />
         <div class="widget__content__main-figure" :title="total">
-          <span v-html="$tc(`widget.names.total`, total, { humanTotal })" />
+          <span v-html="$t(`widget.names.total`, total, { humanTotal })" />
         </div>
       </div>
     </v-wait>
