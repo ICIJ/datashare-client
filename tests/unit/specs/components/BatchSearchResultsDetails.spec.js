@@ -3,7 +3,7 @@ import { removeCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { flushPromises } from '~tests/unit/tests_utils'
-import UserDisplay from '@/components/UserDisplay'
+import DisplayUser from '@/components/Display/DisplayUser'
 import BatchSearchResultsDetails from '@/components/BatchSearchResultsDetails'
 
 describe('BatchSearchResultsDetails.vue', () => {
@@ -73,7 +73,7 @@ describe('BatchSearchResultsDetails.vue', () => {
     })
 
     it('should display the author of the  (me)', async () => {
-      expect(wrapper.findComponent(UserDisplay).attributes('username')).toBe('test')
+      expect(wrapper.findComponent(DisplayUser).attributes('username')).toBe('test')
       expect(wrapper.vm.isMyBatchSearch).toBe(true)
     })
 

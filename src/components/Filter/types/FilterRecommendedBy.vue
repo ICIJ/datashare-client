@@ -20,7 +20,7 @@
           <b-form-checkbox :value="user">
             <span class="d-flex">
               <span class="filter__items__item__label pe-1 text-truncate d-inline-block">
-                <user-display :username="user" hide-avatar hide-link />
+                <display-user :username="user" hide-avatar hide-link />
               </span>
               <span class="filter__items__item__count my-auto ms-auto">
                 <span class="badge rounded-pill text-bg-light">
@@ -41,7 +41,7 @@ import { mapState } from 'vuex'
 
 import FilterBoilerplate from '@/components/Filter/FilterBoilerplate'
 import FilterAbstract from '@/components/Filter/types/FilterAbstract'
-import UserDisplay from '@/components/UserDisplay'
+import DisplayUser from '@/components/Display/DisplayUser'
 import utils from '@/mixins/utils'
 
 /**
@@ -51,7 +51,7 @@ export default {
   name: 'FilterRecommendedBy',
   components: {
     FilterBoilerplate,
-    UserDisplay
+    DisplayUser
   },
   extends: FilterAbstract,
   mixins: [utils],

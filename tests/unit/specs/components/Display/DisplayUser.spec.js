@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import UserDisplay from '@/components/UserDisplay'
+import DisplayUser from '@/components/Display/DisplayUser'
 
-describe('UserDisplay.vue', () => {
+describe('DisplayUser.vue', () => {
   const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
   let wrapper, api, core
 
@@ -15,7 +15,7 @@ describe('UserDisplay.vue', () => {
   beforeEach(async () => {
     const props = { username: 'foo' }
     const global = { plugins: core.plugins }
-    wrapper = mount(UserDisplay, { props, global })
+    wrapper = mount(DisplayUser, { props, global })
     await flushPromises()
   })
 
@@ -26,19 +26,19 @@ describe('UserDisplay.vue', () => {
   })
 
   it('should display "foo"', async () => {
-    expect(wrapper.find('.user-display__username').text()).toBe('foo')
+    expect(wrapper.find('.display-user__username').text()).toBe('foo')
   })
 
   it('should display "bar"', async () => {
     wrapper.setProps({ username: 'bar' })
     await flushPromises()
-    expect(wrapper.find('.user-display__username').text()).toBe('bar')
+    expect(wrapper.find('.display-user__username').text()).toBe('bar')
   })
 
   it('should display "you"', async () => {
     await wrapper.setProps({ username: 'local' })
     await flushPromises()
-    expect(wrapper.find('.user-display__username').text().toLowerCase()).toBe('you')
+    expect(wrapper.find('.display-user__username').text().toLowerCase()).toBe('you')
   })
 
   it('should display "foo" in uppercase with a pipeline', async () => {
@@ -48,11 +48,11 @@ describe('UserDisplay.vue', () => {
       type: (username) => username.toUpperCase()
     })
     await flushPromises()
-    expect(wrapper.find('.user-display__username').text()).toBe('FOO')
+    expect(wrapper.find('.display-user__username').text()).toBe('FOO')
   })
 
   it('should display an avatar', () => {
-    expect(wrapper.find('.user-display__avatar').exists()).toBeTruthy()
+    expect(wrapper.find('.display-user__avatar').exists()).toBeTruthy()
   })
 
   it('should display an avatar with an URL based on the username', async () => {
@@ -63,18 +63,18 @@ describe('UserDisplay.vue', () => {
     })
     await flushPromises()
     const src = 'http://datashare.icij.org/foo.png'
-    expect(wrapper.find('.user-display__avatar').attributes('src')).toBe(src)
+    expect(wrapper.find('.display-user__avatar').attributes('src')).toBe(src)
   })
 
   it('should not display an avatar', async () => {
     wrapper.setProps({ hideAvatar: true })
     await flushPromises()
-    expect(wrapper.find('.user-display__avatar').exists()).toBeFalsy()
+    expect(wrapper.find('.display-user__avatar').exists()).toBeFalsy()
   })
 
   it('should not display a link to the user profile', async () => {
     await flushPromises()
-    expect(wrapper.find('.user-display__username').element.tagName).toBe('SPAN')
+    expect(wrapper.find('.display-user__username').element.tagName).toBe('SPAN')
   })
 
   it('should display a link to the user profile based on the username', async () => {
@@ -85,8 +85,8 @@ describe('UserDisplay.vue', () => {
     })
     await flushPromises()
     const src = 'http://datashare.icij.org/foo.html'
-    expect(wrapper.find('.user-display__username').attributes('href')).toBe(src)
-    expect(wrapper.find('.user-display__username').element.tagName).toBe('A')
+    expect(wrapper.find('.display-user__username').attributes('href')).toBe(src)
+    expect(wrapper.find('.display-user__username').element.tagName).toBe('A')
   })
 
   it('should not display a link if the `hideLink` property is set', async () => {
@@ -97,6 +97,6 @@ describe('UserDisplay.vue', () => {
       type: (_, username) => `http://datashare.icij.org/${username}.html`
     })
     await flushPromises()
-    expect(wrapper.find('.user-display__username').element.tagName).toBe('SPAN')
+    expect(wrapper.find('.display-user__username').element.tagName).toBe('SPAN')
   })
 })
