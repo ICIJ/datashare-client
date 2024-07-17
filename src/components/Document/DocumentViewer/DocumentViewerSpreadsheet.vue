@@ -27,7 +27,7 @@
             />
             <div v-if="filter" class="input-group-append">
               <div class="input-group-text">
-                {{ $tc('document.spreadsheet.filtered.rows', filteredItems.length) }}
+                {{ $t('document.spreadsheet.filtered.rows', filteredItems.length) }}
               </div>
             </div>
           </div>

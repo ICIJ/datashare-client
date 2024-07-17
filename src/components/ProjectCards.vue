@@ -22,7 +22,7 @@
               <p class="mb-3">
                 <fa icon="file-lines" fixed-width />
                 {{
-                  $tc('projectCards.documentsCount', getDocumentsCountByProject(project), {
+                  $t('projectCards.documentsCount', getDocumentsCountByProject(project), {
                     count: humanNumber(getDocumentsCountByProject(project))
                   })
                 }}

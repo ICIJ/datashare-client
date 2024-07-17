@@ -25,10 +25,10 @@
             </span>
             <span
               v-if="count"
-              :title="$tc('treeView.hits', hits, { hits })"
+              :title="$t('treeView.hits', hits, { hits })"
               class="tree-view__header__hits ms-2 badge text-bg-light rounded-pill"
             >
-              {{ humanNumber(hits, $tm('human.number')) }} {{ $tc('treeView.docs', hits) }}
+              {{ humanNumber(hits, $tm('human.number')) }} {{ $t('treeView.docs', hits) }}
             </span>
           </div>
         </transition>
@@ -61,7 +61,7 @@
                 <span v-if="compact">
                   {{ $n(hits) }}
                 </span>
-                <span v-else> {{ humanNumber(hits) }} {{ $tc('treeView.docs', hits) }} </span>
+                <span v-else> {{ humanNumber(hits) }} {{ $t('treeView.docs', hits) }} </span>
               </div>
             </li>
             <li
@@ -98,7 +98,7 @@
               </div>
               <span
                 v-if="count"
-                :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
+                :title="$t('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
                 class="tree-view__directories__item__count ms-2 badge text-bg-light rounded-pill"
               >
                 <span v-if="!directory.doc_count"> - </span>
@@ -106,7 +106,7 @@
                   {{ $n(directory.doc_count) }}
                 </span>
                 <span v-else>
-                  {{ humanNumber(directory.doc_count) }} {{ $tc('treeView.docs', directory.doc_count) }}
+                  {{ humanNumber(directory.doc_count) }} {{ $t('treeView.docs', directory.doc_count) }}
                 </span>
               </span>
               <span

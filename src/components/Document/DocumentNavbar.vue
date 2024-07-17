@@ -36,7 +36,7 @@
           {{ recommendedBy.length }}
         </b-badge>
         <b-popover target="popover-recommended-by" triggers="hover" placement="bottom">
-          <p>{{ $tc('search.nav.markAsRecommendedBy', recommendedBy.length, { count: recommendedBy.length }) }}</p>
+          <p>{{ $t('search.nav.markAsRecommendedBy', recommendedBy.length, { count: recommendedBy.length }) }}</p>
           <ul class="mb-0 mt-2 list-unstyled">
             <li v-for="user in recommendedBy" :key="user">
               <user-display :username="user" />

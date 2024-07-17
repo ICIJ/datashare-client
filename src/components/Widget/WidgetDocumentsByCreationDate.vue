@@ -34,7 +34,7 @@
           >
             <template #tooltip="{ datum: { date, value: total } }">
               <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
-              <p class="m-0 text-nowrap">{{ $tc('widget.creationDate.document', total, { total }) }}</p>
+              <p class="m-0 text-nowrap">{{ $t('widget.creationDate.document', total, { total }) }}</p>
             </template>
           </column-chart>
           <column-chart-picker
@@ -53,7 +53,7 @@
         </div>
         <div v-if="missings" class="widget__content__missing small d-flex align-items-center mt-2">
           <p class="my-0 text-muted" :title="$t('widget.creationDate.missingTooltip')">
-            {{ $tc('widget.creationDate.missing', missings, { total: $n(missings) }) }}
+            {{ $t('widget.creationDate.missing', missings, { total: $n(missings) }) }}
           </p>
         </div>
       </v-wait>

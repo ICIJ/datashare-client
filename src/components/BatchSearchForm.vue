@@ -473,7 +473,7 @@ export default {
         try {
           await callback()
         } catch (e) {
-          const body = this.$tc(`batchSearch.${failMessageKey}`, this.projects?.length)
+          const body = this.$t(`batchSearch.${failMessageKey}`, this.projects?.length)
           this.$toast.error(body)
         }
         this.$wait.end(waiter)

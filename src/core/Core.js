@@ -105,7 +105,7 @@ class Core extends Behaviors {
       warnHtmlInMessage: 'off',
       warnHtmlMessage: 'off',
       globalInjection: true,
-      legacy: true,
+      legacy: false,
       locale: settings.defaultLocale,
       fallbackLocale: settings.defaultLocale,
       messages: {

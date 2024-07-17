@@ -209,25 +209,25 @@ export default {
         return
       }
       const number = this.$n(this.batchDownloadMaxNbFiles)
-      return this.$tc('search.results.warningNumber', this.batchDownloadMaxNbFiles, { number })
+      return this.$t('search.results.warningNumber', this.batchDownloadMaxNbFiles, { number })
     },
     generateMaxSizeWarningLabel() {
       if (!this.isMaxSizeExceeded) {
         return
       }
       const size = this.batchDownloadMaxSize
-      return this.$tc('search.results.warningSize', this.batchDownloadMaxSize, { size })
+      return this.$t('search.results.warningSize', this.batchDownloadMaxSize, { size })
     },
     generateDownloadLabel() {
       const total = this.$n(this.response.total)
       return [
-        this.$tc('search.results.batchDownloadSubmit', this.response.total, { total }),
+        this.$t('search.results.batchDownloadSubmit', this.response.total, { total }),
         this.$t('global.confirmLabel')
       ].join(' ')
     },
     nbDocuments() {
       const total = this.$n(this.response.total)
-      return this.$tc('search.results.results', this.response.total, { total })
+      return this.$t('search.results.results', this.response.total, { total })
     },
     firstLastDocument() {
       return `${this.firstDocument} - ${this.lastDocument}`

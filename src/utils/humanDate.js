@@ -1,5 +1,9 @@
 import moment from 'moment'
 
+export const FORMAT_SHORT = 'short'
+export const FORMAT_LONG = 'long'
+export const FORMAT_FROM_NOW = 'fromNow'
+
 /**
  * Formats a date to a human-readable form: Y/MM/DD.
  *
