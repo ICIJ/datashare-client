@@ -13,7 +13,7 @@
 <script>
 import { isObject, startCase } from 'lodash'
 
-import ProjectThumbnail from '@/components/ProjectThumbnail'
+import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 /**
  * Generate a project's label
