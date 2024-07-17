@@ -50,7 +50,7 @@
         </template>
         <template v-else-if="isLastProjectSlice(p)">
           <span class="ms-2">
-            {{ $tc('searchBarInputDropdownForProjects.projectsCount', selectedProjects.length) }}
+            {{ $t('searchBarInputDropdownForProjects.projectsCount', selectedProjects.length) }}
           </span>
         </template>
       </span>
