@@ -1,6 +1,6 @@
 <script setup>
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
-import humanSize from '@/utils/humanSize'
+import DisplayContentLength from '@/components/Display/DisplayContentLength'
 
 defineProps({
   document: {
@@ -14,6 +14,6 @@ defineProps({
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="file">
-    {{ humanSize(document.contentLength, false, $tm('human.size')) }}
+    <display-content-length :value="document[property]" />
   </document-card-properties-entry>
 </template>
