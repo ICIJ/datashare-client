@@ -166,6 +166,7 @@ declare module 'vue' {
     Plugins: typeof import('./src/components/Plugins.vue')['default']
     ProjectButton: typeof import('./src/components/Project/ProjectButton.vue')['default']
     ProjectCards: typeof import('./src/components/ProjectCards.vue')['default']
+    ProjectDropdownSelector: typeof import('./src/components/Project/ProjectDropdownSelector.vue')['default']
     ProjectForm: typeof import('./src/components/ProjectForm.vue')['default']
     ProjectLabel: typeof import('./src/components/Project/ProjectLabel.vue')['default']
     ProjectLink: typeof import('./src/components/Project/ProjectLink.vue')['default']
