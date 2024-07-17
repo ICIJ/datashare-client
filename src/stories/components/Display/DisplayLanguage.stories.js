@@ -4,11 +4,6 @@ export default {
   title: 'Components/Display/DisplayLanguage',
   tags: ['autodocs'],
   component: DisplayLanguage,
-  argTypes: {
-    value: {
-      control: 'string'
-    }
-  },
   args: {
     value: 'ENGLISH'
   }

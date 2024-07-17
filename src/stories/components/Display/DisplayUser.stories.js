@@ -23,11 +23,6 @@ export default {
   decorators: [storeDecorator],
   tags: ['autodocs'],
   component: DisplayUser,
-  argTypes: {
-    username: {
-      control: 'string'
-    }
-  },
   args: {
     username: 'batman'
   }
