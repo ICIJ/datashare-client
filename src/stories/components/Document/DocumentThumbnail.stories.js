@@ -7,6 +7,7 @@ import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 export default {
   title: 'Components/Document/DocumentThumbnail',
   decorators: [withMurmur({ previewHost: null })],
+  component: DocumentThumbnail,
   tags: ['autodocs'],
   argTypes: {
     size: {
@@ -29,16 +30,7 @@ export default {
       isSupportedImage: true,
       contentTypeIcon: markRaw(PhFilePdf)
     }
-  },
-  render: (args) => ({
-    components: {
-      DocumentThumbnail
-    },
-    setup: () => ({ args }),
-    template: `
-      <document-thumbnail v-bind="args" />
-    `
-  })
+  }
 }
 
 export const Default = {}
