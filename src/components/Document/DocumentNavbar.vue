@@ -39,7 +39,7 @@
           <p>{{ $t('search.nav.markAsRecommendedBy', recommendedBy.length, { count: recommendedBy.length }) }}</p>
           <ul class="mb-0 mt-2 list-unstyled">
             <li v-for="user in recommendedBy" :key="user">
-              <user-display :username="user" />
+              <display-user :username="user" />
             </li>
           </ul>
         </b-popover>
@@ -89,7 +89,7 @@ import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
 import ProjectLink from '@/components/Project/ProjectLink'
-import UserDisplay from '@/components/UserDisplay'
+import DisplayUser from '@/components/Display/DisplayUser'
 import utils from '@/mixins/utils'
 
 /**
@@ -100,7 +100,7 @@ export default {
   components: {
     DocumentActions,
     ProjectLink,
-    UserDisplay
+    DisplayUser
   },
   mixins: [utils],
   props: {

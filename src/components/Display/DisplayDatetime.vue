@@ -39,7 +39,7 @@ const display = computed(() => {
 </script>
 
 <template>
-  <span v-b-tooltip.body class="datetime-display" :title="title">
+  <span v-b-tooltip.body class="display-display" :title="title">
     <slot v-bind="{ display }">
       {{ display }}
     </slot>

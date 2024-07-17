@@ -38,7 +38,7 @@
                 >
                   {{ fromNow(creationDate, $i18n.locale, true) }}
                 </span>
-                <user-display
+                <display-user
                   :username="user.id"
                   avatar-height="1em"
                   flip
@@ -75,7 +75,7 @@ import { fromNow, humanLongDate } from '@/utils/humanDate'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
-import UserDisplay from '@/components/UserDisplay'
+import DisplayUser from '@/components/Display/DisplayUser'
 
 /**
  * Widget to display a list of facets on the insights page.
@@ -86,7 +86,7 @@ export default {
     DocumentThumbnail,
     DocumentSlicedName,
     InfiniteLoading,
-    UserDisplay
+    DisplayUser
   },
   props: {
     /**

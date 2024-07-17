@@ -1,11 +1,11 @@
-import DatetimeDisplay from '@/components/DatetimeDisplay/DatetimeDisplay'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
 import { FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
 
 export default {
-  title: 'Components/DatetimeDisplay',
+  title: 'Components/Display/DisplayDatetime',
   tags: ['autodocs'],
-  component: DatetimeDisplay,
+  component: DisplayDatetime,
   argTypes: {
     value: {
       control: 'date'
