@@ -1,6 +1,7 @@
-import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import { FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
+
 
 export default {
   title: 'Components/Display/DisplayDatetime',
