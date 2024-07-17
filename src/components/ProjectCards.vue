@@ -48,7 +48,7 @@
 import { startCase } from 'lodash'
 
 import humanNumber from '@/utils/humanNumber'
-import ProjectThumbnail from '@/components/ProjectThumbnail'
+import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 /**
  * List all the projects with cards linking to the search.

@@ -29,7 +29,7 @@
 <script>
 import { humanShortDate } from '@/utils/humanDate'
 import PageHeader from '@/components/PageHeader'
-import ProjectThumbnail from '@/components/ProjectThumbnail'
+import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import utils from '@/mixins/utils'
 
 export default {

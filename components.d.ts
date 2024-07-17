@@ -170,7 +170,7 @@ declare module 'vue' {
     ProjectLabel: typeof import('./src/components/Project/ProjectLabel.vue')['default']
     ProjectLink: typeof import('./src/components/Project/ProjectLink.vue')['default']
     ProjectSelector: typeof import('./src/components/ProjectSelector.vue')['default']
-    ProjectThumbnail: typeof import('./src/components/ProjectThumbnail.vue')['default']
+    ProjectThumbnail: typeof import('./src/components/Project/ProjectThumbnail.vue')['default']
     QuickItemNav: typeof import('./src/components/QuickItemNav.vue')['default']
     ResetFiltersButton: typeof import('./src/components/ResetFiltersButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
