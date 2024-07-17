@@ -7,7 +7,7 @@ import { mapGetters } from 'vuex'
  * A component to display usernames.
  */
 export default {
-  name: 'UserDisplay',
+  name: 'DisplayUser',
   props: {
     /**
      * Default height of the avatar
@@ -114,7 +114,7 @@ export default {
     },
     userDisplayClass() {
       return {
-        'user-display--flip': this.flip
+        'display-user--flip': this.flip
       }
     },
     usernameTag() {
@@ -167,18 +167,18 @@ export default {
 <template>
   <component
     :is="tag"
-    class="user-display d-inline-flex align-items-center"
+    class="display-user d-inline-flex align-items-center"
     :style="userDisplayStyle"
     :class="userDisplayClass"
   >
     <template v-if="showAvatar">
-      <img class="user-display__avatar rounded-circle" :src="avatarSrc" :alt="avatarAlt" loading="lazy" />
+      <img class="display-user__avatar rounded-circle" :src="avatarSrc" :alt="avatarAlt" loading="lazy" />
     </template>
     <component
       :is="usernameTag"
       :href="transformedLink"
-      class="user-display__username"
-      :class="{ 'user-display__username--loading': $wait.is(loader) }"
+      class="display-user__username"
+      :class="{ 'display-user__username--loading': $wait.is(loader) }"
     >
       <v-wait :for="loader" class="d-inline">
         <template #waiting>
@@ -193,7 +193,7 @@ export default {
 </template>
 
 <style lang="scss">
-.user-display {
+.display-user {
   --avatar-height: 1.75em;
 
   display: flex;

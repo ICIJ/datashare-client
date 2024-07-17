@@ -82,7 +82,7 @@
             {{ $t('batchSearch.author') }}
           </dt>
           <dd>
-            <user-display :username="batchSearch.user.id" />
+            <display-user :username="batchSearch.user.id" />
           </dd>
         </div>
       </dl>
@@ -96,7 +96,7 @@ import { get } from 'lodash'
 import BatchSearchActions from '@/components/BatchSearchActions'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
-import UserDisplay from '@/components/UserDisplay'
+import DisplayUser from '@/components/Display/DisplayUser'
 import ProjectLink from '@/components/Project/ProjectLink'
 import humanSize from '@/utils/humanSize'
 import humanNumber from '@/utils/humanNumber'
@@ -113,7 +113,7 @@ export default {
     ContentTypeBadge,
     ProjectLink,
     BatchSearchStatus,
-    UserDisplay
+    DisplayUser
   },
   mixins: [utils],
   props: {
