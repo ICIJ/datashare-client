@@ -9,6 +9,10 @@ const routes = [
   {
     path: '/',
     name: 'document'
+  },
+  {
+    path: '/project/:name',
+    name: 'project.view'
   }
 ]
 

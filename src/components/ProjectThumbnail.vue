@@ -106,16 +106,18 @@ export default {
 
 <style scoped lang="scss">
 .project-thumbnail {
-  display: inline-block;
+  display: inline-flex;
   width: 100%;
   position: relative;
   container-type: inline-size;
   overflow: hidden;
+  line-height: 0;
 
   &:before {
     content: '';
-    display: block;
+    display: inline-block;
     padding-top: 100%;
+    margin: 0;
   }
 
   &:not(.project-thumbnail--checked).project-thumbnail--colorized {

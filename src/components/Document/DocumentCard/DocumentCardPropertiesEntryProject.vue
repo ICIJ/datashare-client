@@ -14,6 +14,6 @@ defineProps({
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="circles-three-plus" hide-icon>
-    <project-button :project="document.project" disabled />
+    <project-button :project="document.project" no-link disabled />
   </document-card-properties-entry>
 </template>

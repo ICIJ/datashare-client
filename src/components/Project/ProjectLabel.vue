@@ -1,17 +1,17 @@
 <template>
-  <span class="project-label d-inline-flex align-items-center text-nowrap">
+  <span class="project-label">
     <project-thumbnail
       v-if="showThumbnail"
       :project="resolvedProject"
-      class="project-link__thumbnail me-2 rounded"
-      width="1.6em"
+      class="project-label__thumbnail me-2 rounded"
+      width="1.25em"
     />
-    <span class="project-link__display">{{ projectDisplay }}</span>
+    <span class="project-label__display">{{ projectDisplay }}</span>
   </span>
 </template>
 
 <script>
-import { startCase } from 'lodash'
+import { isObject, startCase } from 'lodash'
 
 import ProjectThumbnail from '@/components/ProjectThumbnail'
 
@@ -32,12 +32,6 @@ export default {
       required: true
     },
     /**
-     * Disable the link (make it not clickable)
-     */
-    disabled: {
-      type: Boolean
-    },
-    /**
      * Hide the project thumbail.
      */
     hideThumbnail: {
@@ -52,7 +46,10 @@ export default {
       return { name: 'unknown', label: 'Unknown' }
     },
     resolvedProject() {
-      return this.$core?.findProject(this.project.name ?? this.project) ?? this.unknownProject
+      if (isObject(this.project)) {
+        return this.$core?.findProject(this.project.name) || this.project
+      }
+      return this.$core?.findProject(this.project) ?? this.unknownProject
     },
     showThumbnail() {
       return !this.hideThumbnail
@@ -60,3 +57,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.project-label {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: top;
+}
+</style>
