@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import NamedEntityButtonOccurrences from './NamedEntityButtonOccurrences'
+import NamedEntityOccurrences from './NamedEntityOccurrences'
 
 import { getCategoryIcon, getCategoryColor } from '@/utils/namedEntity'
 
@@ -45,7 +45,7 @@ const occurrences = computed(() => {
 <template>
   <icon-button variant="outline-light" class="named-entity-button" :class="classList" :style="style" :icon-left="icon">
     {{ namedEntity.mention }}
-    <named-entity-button-occurrences class="ms-2" v-if="occurrences" :occurrences="occurrences" />
+    <named-entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
   </icon-button>
 </template>
 
