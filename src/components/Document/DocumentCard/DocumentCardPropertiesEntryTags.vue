@@ -1,9 +1,8 @@
 <script setup>
-import { computed } from 'vue'
-
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
+import DisplayTags from '@/components/Display/DisplayTags'
 
-const props = defineProps({
+defineProps({
   document: {
     type: Object
   },
@@ -11,15 +10,10 @@ const props = defineProps({
     type: String
   }
 })
-
-const tags = computed(() => {
-  const toHashtag = (tag) => `#${tag}`
-  return props.document.tags.map(toHashtag).join(' ')
-})
 </script>
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="tag">
-    {{ tags }}
+    <display-tags :value="document.tags" />
   </document-card-properties-entry>
 </template>

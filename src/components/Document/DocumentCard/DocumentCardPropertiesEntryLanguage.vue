@@ -1,9 +1,8 @@
 <script setup>
-import { computed } from 'vue'
-
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
+import DisplayLanguage from '@/components/Display/DisplayLanguage'
 
-const props = defineProps({
+defineProps({
   document: {
     type: Object
   },
@@ -11,14 +10,10 @@ const props = defineProps({
     type: String
   }
 })
-
-const translationKey = computed(() => {
-  return `filter.lang.${props.document.language}`
-})
 </script>
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="globe-hemisphere-west">
-    {{ $t(translationKey) }}
+    <display-language :value="document.language" />
   </document-card-properties-entry>
 </template>
