@@ -1,5 +1,5 @@
 <template>
-  <component :is="is" :to="projectRoute" class="project-link">
+  <component :is="is" :to="to" class="project-link">
     <project-label :project="project" :hide-thumbnail="hideThumbnail" />
   </component>
 </template>
@@ -24,12 +24,6 @@ export default {
       required: true
     },
     /**
-     * Disable the link (make it not clickable)
-     */
-    disabled: {
-      type: Boolean
-    },
-    /**
      * Hide the project thumbail.
      */
     hideThumbnail: {
@@ -40,10 +34,19 @@ export default {
     is() {
       return this.disabled ? 'span' : 'router-link'
     },
-    projectRoute() {
+    to() {
       const name = this.project.name ?? this.project
       return { name: 'project.view', params: { name } }
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.project-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: top;
+}
+</style>
