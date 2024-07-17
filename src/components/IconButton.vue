@@ -1,13 +1,5 @@
 <template>
-  <b-button
-    v-b-tooltip.body="{ title: tooltipTitle, placement: tooltipPlacement }"
-    :to="to"
-    v-bind="buttonProps"
-    class="icon-button"
-    :class="classList"
-    @mouseenter="currentHover = true"
-    @mouseleave="currentHover = false"
-  >
+  <b-button v-bind="buttonProps" ref="iconButton" :to="to" class="icon-button" :class="classList">
     <slot name="start" />
     <phosphor-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
@@ -35,12 +27,21 @@
       class="icon-button__icon-right"
     />
     <slot name="end" />
+    <b-tooltip
+      v-model="currentHover"
+      teleport-to="body"
+      :placement="tooltipPlacement"
+      :target="iconButton"
+      :title="tooltipTitle"
+    />
   </b-button>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+
+const iconButton = ref(null)
 
 const props = defineProps({
   iconLeft: {
