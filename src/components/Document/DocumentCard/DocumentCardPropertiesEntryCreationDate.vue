@@ -1,5 +1,6 @@
 <script setup>
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
 defineProps({
   document: {
@@ -13,6 +14,6 @@ defineProps({
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="calendar">
-    {{ document.creationDate }}
+    <display-datetime :value="document.creationDate" />
   </document-card-properties-entry>
 </template>
