@@ -160,6 +160,8 @@ declare module 'vue' {
     JsonFormatter: typeof import('./src/components/JsonFormatter.vue')['default']
     LocalesMenu: typeof import('./src/components/LocalesMenu.vue')['default']
     MountedDataLocation: typeof import('./src/components/MountedDataLocation.vue')['default']
+    NamedEntityButton: typeof import('./src/components/NamedEntity/NamedEntityButton.vue')['default']
+    NamedEntityButtonOccurrences: typeof import('./src/components/NamedEntity/NamedEntityButtonOccurrences.vue')['default']
     NamedEntityInContext: typeof import('./src/components/NamedEntityInContext.vue')['default']
     NavigationBreadcrumb: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumb.vue')['default']
     NavigationBreadcrumbEntry: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumbEntry.vue')['default']
