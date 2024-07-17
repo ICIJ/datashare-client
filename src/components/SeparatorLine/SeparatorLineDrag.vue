@@ -15,3 +15,9 @@ import IconButton from '@/components/IconButton'
     class="separator-line-drag"
   />
 </template>
+
+<style scoped>
+.separator-line-drag {
+  cursor: ew-resize;
+}
+</style>
