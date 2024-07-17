@@ -4,42 +4,34 @@
   </component>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
+
 import ProjectLabel from './ProjectLabel'
 
-/**
- * Generate a link to a project page
- */
-export default {
-  name: 'ProjectLink',
-  components: { ProjectLabel },
-  props: {
-    /**
-     * The project to use to generate the thumbnail. Can contain `name`, `label` and `logoUrl` which
-     * will be used to generate the thumbnail consistently. If passed as a string, the project will be
-     * retreived from the config.
-     */
-    project: {
-      type: [Object, String],
-      required: true
-    },
-    /**
-     * Hide the project thumbail.
-     */
-    hideThumbnail: {
-      type: Boolean
-    }
+const props = defineProps({
+  project: {
+    type: [Object, String],
+    required: true
   },
-  computed: {
-    is() {
-      return this.disabled ? 'span' : 'router-link'
-    },
-    to() {
-      const name = this.project.name ?? this.project
-      return { name: 'project.view', params: { name } }
-    }
+  hideThumbnail: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
-}
+})
+
+const is = computed(() => {
+  return props.disabled ? 'span' : 'router-link'
+})
+
+const to = computed(() => {
+  const name = props.project.name ?? props.project
+  return { name: 'project.view', params: { name } }
+})
 </script>
 
 <style lang="scss" scoped>
