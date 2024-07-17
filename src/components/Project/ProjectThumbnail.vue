@@ -1,6 +1,9 @@
 <template>
   <span class="project-thumbnail" :style="style" :class="classList" :data-caption="caption">
     <span class="project-thumbnail__caption">{{ caption }}</span>
+    <span v-if="checked" class="project-thumbnail__check">
+      <phosphor-icon name="check-fat" fill />
+    </span>
   </span>
 </template>
 
@@ -8,6 +11,7 @@
 import stringToColor from 'string-to-color'
 import { compact } from 'lodash'
 import { computed } from 'vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import { getConsonants } from '@/utils/strings'
 
@@ -31,7 +35,7 @@ const props = defineProps({
 })
 
 const captionBase = computed(() => {
-  return (props.project.label || props.project.name || '').toLowerCase()
+  return (props.project.label || props.project.name || props.project || '').toLowerCase()
 })
 
 const abbr = computed(() => {
@@ -119,7 +123,7 @@ const classList = computed(() => {
     margin: 0;
   }
 
-  &:not(.project-thumbnail--checked).project-thumbnail--colorized {
+  &--colorized {
     .project-thumbnail__caption {
       font-family: $font-family-monospace;
       position: absolute;
@@ -135,33 +139,19 @@ const classList = computed(() => {
     }
   }
 
-  &.project-thumbnail--checked {
-    &:before {
-      opacity: 0.5;
-      background: #fff;
-      border-radius: inherit;
-    }
-
-    &.project-thumbnail--dark-foreground:before {
-      background: #000;
-    }
-
-    .project-thumbnail__caption {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-transform: uppercase;
-      font-weight: bolder;
-      font-size: 80cqw;
-      line-height: 1;
-      border: 5cqw solid currentColor;
-      border-radius: inherit;
-    }
+  &__check {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40cqw;
+    color: var(--bs-white);
+    background: rgba(var(--bs-black-rgb), 0.4);
+    backdrop-filter: blur(5px);
   }
 }
 </style>
