@@ -19,6 +19,7 @@ const routes = [
 export default {
   title: 'Components/Document/DocumentCard',
   decorators: [withMurmur({ previewHost: null }), vueRouter(routes)],
+  component: DocumentCard,
   tags: ['autodocs'],
   argTypes: {
     properties: {
@@ -41,9 +42,9 @@ export default {
     }
   },
   args: {
-    active: true,
-    selected: true,
-    selectMode: true,
+    active: false,
+    selected: false,
+    selectMode: false,
     to: { name: 'document' },
     properties: [
       'title',
@@ -81,16 +82,7 @@ export default {
       ],
       contentTypeIcon: markRaw(PhFilePdf)
     }
-  },
-  render: (args) => ({
-    components: {
-      DocumentCard
-    },
-    setup: () => ({ args }),
-    template: `
-      <document-card v-bind="args" @update:selected="args.selected = $event" />
-    `
-  })
+  }
 }
 
 export const Default = {}
