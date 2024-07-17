@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils'
 
 import SearchBarInputDropdownForProjects from '@/components/SearchBarInputDropdownForProjects'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { Teleport } from 'vue'
 
 describe('SearchBarInputDropdownForProjects.vue', function () {
   const { plugins, config } = CoreSetup.init().useAll().useRouter()
