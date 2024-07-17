@@ -3,7 +3,7 @@ import { startCase } from 'lodash'
 
 import utils from '@/mixins/utils'
 import PageHeader from '@/components/PageHeader'
-import ProjectThumbnail from '@/components/ProjectThumbnail'
+import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 /**
  * Project view with insights
