@@ -163,6 +163,7 @@ declare module 'vue' {
     NamedEntityButton: typeof import('./src/components/NamedEntity/NamedEntityButton.vue')['default']
     NamedEntityButtonOccurrences: typeof import('./src/components/NamedEntity/NamedEntityButtonOccurrences.vue')['default']
     NamedEntityInContext: typeof import('./src/components/NamedEntityInContext.vue')['default']
+    NamedEntityOccurrences: typeof import('./src/components/NamedEntity/NamedEntityOccurrences.vue')['default']
     NavigationBreadcrumb: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumb.vue')['default']
     NavigationBreadcrumbEntry: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumbEntry.vue')['default']
     NavigationBreadcrumbLink: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumbLink.vue')['default']
