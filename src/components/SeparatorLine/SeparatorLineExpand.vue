@@ -15,3 +15,9 @@ import IconButton from '@/components/IconButton'
     class="separator-line-expand"
   />
 </template>
+
+<style scoped>
+.separator-line-expand {
+  cursor: e-resize;
+}
+</style>
