@@ -23,6 +23,10 @@ export default {
       {
         name: 'figcen-file',
         label: 'FigCEN Files'
+      },
+      {
+        name: 'lychee-secrets',
+        label: 'Lychee Secrets'
       }
     ]
   }
