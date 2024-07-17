@@ -1,10 +1,8 @@
 <script setup>
-import { computed } from 'vue'
-
-import { getExtractionLevelTranslationKey } from '@/utils/utils'
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
+import DisplayExtractionLevel from '@/components/Display/DisplayExtractionLevel'
 
-const props = defineProps({
+defineProps({
   document: {
     type: Object
   },
@@ -12,14 +10,10 @@ const props = defineProps({
     type: String
   }
 })
-
-const translationKey = computed(() => {
-  return getExtractionLevelTranslationKey(props.document.extractionLevel)
-})
 </script>
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="note-blank">
-    {{ $t(translationKey) }}
+    <display-extraction-level :value="document.extractionLevel" />
   </document-card-properties-entry>
 </template>
