@@ -40,16 +40,13 @@ export default {
   },
   computed: {
     projectDisplay() {
-      return this.resolvedProject.label || startCase(this.resolvedProject.name)
-    },
-    unknownProject() {
-      return { name: 'unknown', label: 'Unknown' }
+      return this.resolvedProject.label ?? startCase(this.resolvedProject.name)
     },
     resolvedProject() {
       if (isObject(this.project)) {
-        return this.$core?.findProject(this.project.name) || this.project
+        return this.$core?.findProject(this.project.name) ?? this.project
       }
-      return this.$core?.findProject(this.project) ?? this.unknownProject
+      return this.$core?.findProject(this.project) ?? { name: this.project }
     },
     showThumbnail() {
       return !this.hideThumbnail
