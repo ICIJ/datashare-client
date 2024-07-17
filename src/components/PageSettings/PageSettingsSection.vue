@@ -81,12 +81,11 @@ const localOpen = computed({
 </script>
 
 <style lang="scss" scoped>
-.page-settings {
-  &-section {
-    &__input-group {
-      margin-left: 1em !important;
-    }
-    margin-bottom: 1em !important;
+.page-settings-section {
+  margin-bottom: 1em !important;
+
+  &__input-group {
+    margin-left: 1em !important;
   }
 }
 </style>

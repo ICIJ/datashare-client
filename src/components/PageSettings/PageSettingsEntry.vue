@@ -1,7 +1,8 @@
 <template>
-  <span class="page-settings-entry d-inline-flex"
-    ><phosphor-icon v-if="icon" :name="icon" class="me-2" />{{ text }}</span
-  >
+  <span class="page-settings-entry d-inline-flex">
+    <phosphor-icon v-if="icon" :name="icon" class="me-2" />
+    {{ text }}
+  </span>
 </template>
 
 <script setup>
