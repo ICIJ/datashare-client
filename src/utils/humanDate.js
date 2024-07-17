@@ -34,7 +34,7 @@ export function humanLongDate(date, locale) {
  * @returns {string} The formatted date.
  */
 export function humanShortDate(date, locale) {
-  return moment(date).locale(locale).format('LL')
+  return moment(date).locale(locale).format('ll')
 }
 
 /**
