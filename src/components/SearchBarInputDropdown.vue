@@ -7,12 +7,13 @@
       'search-bar__field--disabled': disabled
     }"
     :disabled="disabled"
-    :no-caret="noCaret"
+    :end="end"
+    no-caret
     class="search-bar-input-dropdown"
     menu-class="search-bar-input-dropdown__menu"
     toggle-class="d-inline-flex align-items-center"
-    end
     boundary="viewport"
+    teleport-to="body"
     variant="outline-light"
     @shown="shown"
     @hidden="hidden"
@@ -23,6 +24,9 @@
           {{ $t(optionsPathValue + v) }}
         </span>
       </slot>
+      <template v-if="!noCaret">
+        <phosphor-icon name="caret-down" class="ms-2" />
+      </template>
     </template>
     <!-- @slot Area to insert content above the dropdown -->
     <slot name="above" :dropdown="dropdown" :visible="visible"></slot>
@@ -40,7 +44,6 @@
         </span>
       </slot>
     </b-dropdown-item>
-
     <!-- @slot Area to insert content bellow the dropdown -->
     <slot name="bellow" :dropdown="dropdown" :visible="visible"></slot>
   </b-dropdown>
@@ -48,12 +51,16 @@
 
 <script>
 import { castArray, cloneDeep, includes, isEqual, without } from 'lodash'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 /**
  * The general search input dropdown.
  */
 export default {
   name: 'SearchBarInputDropdown',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * Options list.
@@ -87,6 +94,12 @@ export default {
      * The dropdown toggler must be disabled.
      */
     disabled: {
+      type: Boolean
+    },
+    /**
+     * Align dropdown to the end
+     */
+    end: {
       type: Boolean
     },
     /**
@@ -202,10 +215,6 @@ export default {
   background: $input-bg;
   font-size: inherit;
 
-  &:first-of-type {
-    border-left: solid 1px $input-border-color;
-  }
-
   &--selected:after {
     bottom: 1px;
     border: 2px solid $tertiary;
@@ -217,10 +226,10 @@ export default {
   }
 
   .btn {
-    border: 1px solid $input-border-color;
-    border-left: 0;
-    box-shadow: $input-box-shadow;
-    color: $text-muted;
+    display: inline-flex;
+    justify-content: center;
+    white-space: nowrap;
+    flex-wrap: nowrap;
 
     .input-group-lg & {
       font-size: 1.25rem;
@@ -232,15 +241,6 @@ export default {
       background: $light !important;
       color: $text-muted;
     }
-  }
-
-  &.show .btn.dropdown-toggle,
-  & .btn.dropdown-toggle:hover,
-  & .btn.dropdown-toggle:active {
-    background: transparent;
-    border: 1px solid $input-border-color;
-    border-left: 0;
-    box-shadow: $input-box-shadow;
   }
 
   &__menu {
