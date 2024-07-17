@@ -4,104 +4,103 @@
   </span>
 </template>
 
-<script>
+<script setup>
 import stringToColor from 'string-to-color'
 import { compact } from 'lodash'
+import { computed } from 'vue'
 
 import { getConsonants } from '@/utils/strings'
 
-/**
- * Generates a thumbnail for a given project
- */
-export default {
-  name: 'ProjectThumbnail',
-  props: {
-    /**
-     * The project to use to generate the thumbnail. Can contain `name`, `label` and `logoUrl` which
-     * will be used to generate the thumbnail consistently.
-     */
-    project: {
-      type: Object,
-      required: true
-    },
-    /**
-     * Default width (and height) or the thumbnail which is always a square. Can be any valid CSS size.
-     */
-    width: {
-      type: String,
-      default: '100%'
-    },
-    /**
-     * When set to true, the thumbnail appearance will be "checked".
-     */
-    checked: {
-      type: Boolean
-    },
-    /**
-     * Disable the caption generation.
-     */
-    noCaption: {
-      type: Boolean
-    }
+const props = defineProps({
+  project: {
+    type: Object,
+    required: true
   },
-  computed: {
-    abbr() {
-      const name = this.captionBase
-      const start = name.slice(0, 1)
-      const end = name.slice(-1)
-      const middleConsonants = getConsonants(name.slice(1, -1))
-      const middle = middleConsonants[Math.floor(middleConsonants.length / 2)]
-      return compact([start, middle, end]).join('')
-    },
-    caption() {
-      if (this.noCaption || this.hasBackgroundWithLogo) {
-        return null
-      }
-      return this.abbr.length === 3 ? this.abbr : this.captionBase.slice(0, 3)
-    },
-    captionBase() {
-      return (this.project.label || this.project.name || '').toLowerCase()
-    },
-    background() {
-      return this.hasBackgroundWithLogo ? this.backgroundWithLogo : this.backgroundWithoutLogo
-    },
-    backgroundWithLogo() {
-      return `url("${this.project.logoUrl}") no-repeat center center #000`
-    },
-    backgroundWithoutLogo() {
-      return this.backgroundColor
-    },
-    backgroundColor() {
-      return this.hasBackgroundWithLogo ? '#000' : stringToColor(this.captionBase)
-    },
-    color() {
-      if (this.checked) {
-        return this.backgroundColor
-      }
-      return this.isForegroundDark ? '#000' : '#fff'
-    },
-    isForegroundDark() {
-      const red = parseInt(this.background.substring(1, 3), 16)
-      const green = parseInt(this.background.substring(3, 5), 16)
-      const blue = parseInt(this.background.substring(5, 7), 16)
-      const yiq = (red * 299 + green * 587 + blue * 114) / 1000
-      return yiq >= 128
-    },
-    hasBackgroundWithLogo() {
-      return !!this.project.logoUrl
-    },
-    style() {
-      return { background: this.background, backgroundSize: 'cover', color: this.color, width: this.width }
-    },
-    classList() {
-      return {
-        'project-thumbnail--colorized': !this.hasBackgroundWithLogo,
-        'project-thumbnail--checked': this.checked,
-        'project-thumbnail--dark-foreground': this.isForegroundDark
-      }
-    }
+  width: {
+    type: String,
+    default: '100%'
+  },
+  checked: {
+    type: Boolean,
+    default: false
+  },
+  noCaption: {
+    type: Boolean,
+    default: false
   }
-}
+})
+
+const captionBase = computed(() => {
+  return (props.project.label || props.project.name || '').toLowerCase()
+})
+
+const abbr = computed(() => {
+  const name = captionBase.value
+  const start = name.slice(0, 1)
+  const end = name.slice(-1)
+  const middleConsonants = getConsonants(name.slice(1, -1))
+  const middle = middleConsonants[Math.floor(middleConsonants.length / 2)]
+  return compact([start, middle, end]).join('')
+})
+
+const caption = computed(() => {
+  if (props.noCaption || hasBackgroundWithLogo.value) {
+    return null
+  }
+  return abbr.value.length === 3 ? abbr.value : captionBase.value.slice(0, 3)
+})
+
+const hasBackgroundWithLogo = computed(() => {
+  return !!props.project.logoUrl
+})
+
+const backgroundColor = computed(() => {
+  return hasBackgroundWithLogo.value ? '#000' : stringToColor(captionBase.value)
+})
+
+const backgroundWithLogo = computed(() => {
+  return `url("${props.project.logoUrl}") no-repeat center center #000`
+})
+
+const backgroundWithoutLogo = computed(() => {
+  return backgroundColor.value
+})
+
+const background = computed(() => {
+  return hasBackgroundWithLogo.value ? backgroundWithLogo.value : backgroundWithoutLogo.value
+})
+
+const isForegroundDark = computed(() => {
+  const red = parseInt(background.value.substring(1, 3), 16)
+  const green = parseInt(background.value.substring(3, 5), 16)
+  const blue = parseInt(background.value.substring(5, 7), 16)
+  const yiq = (red * 299 + green * 587 + blue * 114) / 1000
+  return yiq >= 128
+})
+
+const color = computed(() => {
+  if (props.checked) {
+    return backgroundColor.value
+  }
+  return isForegroundDark.value ? '#000' : '#fff'
+})
+
+const style = computed(() => {
+  return {
+    background: background.value,
+    backgroundSize: 'cover',
+    color: color.value,
+    width: props.width
+  }
+})
+
+const classList = computed(() => {
+  return {
+    'project-thumbnail--colorized': !hasBackgroundWithLogo.value,
+    'project-thumbnail--checked': props.checked,
+    'project-thumbnail--dark-foreground': isForegroundDark.value
+  }
+})
 </script>
 
 <style scoped lang="scss">
