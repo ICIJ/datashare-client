@@ -15,3 +15,9 @@ import IconButton from '@/components/IconButton'
     class="separator-line-reduce"
   />
 </template>
+
+<style scoped>
+.separator-line-reduce {
+  cursor: w-resize;
+}
+</style>
