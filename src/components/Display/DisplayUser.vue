@@ -1,20 +1,22 @@
 <script>
-import { icon as faIcon } from '@fortawesome/fontawesome-svg-core'
-import { faUserCircle } from '@fortawesome/free-solid-svg-icons/faUserCircle'
 import { mapGetters } from 'vuex'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 /**
  * A component to display usernames.
  */
 export default {
   name: 'DisplayUser',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * Default height of the avatar
      */
     avatarHeight: {
       type: String,
-      default: '1.75em'
+      default: '1.25em'
     },
     /**
      * Pipeline name to transform the avatar src
@@ -22,13 +24,6 @@ export default {
     avatarPipeline: {
       type: String,
       default: 'user-display-avatar'
-    },
-    /**
-     * Color of the fallback avatar
-     */
-    fallbackAvatarColor: {
-      type: String,
-      default: '#aaa'
     },
     /**
      * Fallback of the user link
@@ -101,11 +96,12 @@ export default {
     avatarSrc() {
       return this.transformedAvatar
     },
-    avatarFallback() {
-      const icon = faIcon(faUserCircle)
-      const svg = icon.html[0].split('currentColor').join(this.fallbackAvatarColor)
-      const base64 = window.btoa(svg)
-      return `data:image/svg+xml;base64,${base64}`
+    isAvatarSrcValid() {
+      try {
+        return Boolean(new URL(this.avatarSrc))
+      } catch (_) {
+        return false
+      }
     },
     userDisplayStyle() {
       return {
@@ -152,10 +148,10 @@ export default {
       this.transformedUsername = await this.applyUsernamePipeline()
     },
     applyAvatarPipeline() {
-      return this.applyPipelineChain(this.avatarPipeline)(this.avatarFallback, this.username)
+      return this.applyPipelineChain(this.avatarPipeline)(this.username)
     },
     applyUsernamePipeline() {
-      return this.applyPipelineChain(this.usernamePipeline)(this.username, this.$core.auth)
+      return this.applyPipelineChain(this.usernamePipeline)(this.username, this.$core?.auth)
     },
     applyLinkPipeline() {
       return this.applyPipelineChain(this.linkPipeline)(this.linkFallback, this.username)
@@ -172,7 +168,8 @@ export default {
     :class="userDisplayClass"
   >
     <template v-if="showAvatar">
-      <img class="display-user__avatar rounded-circle" :src="avatarSrc" :alt="avatarAlt" loading="lazy" />
+      <img v-if="isAvatarSrcValid" class="display-user__avatar rounded-circle" :src="avatarSrc" :alt="avatarAlt" />
+      <phosphor-icon v-else class="display-user__avatar" name="user" :size="avatarHeight" />
     </template>
     <component
       :is="usernameTag"
@@ -194,12 +191,13 @@ export default {
 
 <style lang="scss">
 .display-user {
-  --avatar-height: 1.75em;
+  --avatar-height: 1.25em;
 
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  color: var(--bs-primary-text-emphasis);
 
   &--flip {
     flex-direction: row-reverse;
