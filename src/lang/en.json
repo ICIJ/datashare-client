@@ -1088,6 +1088,10 @@
   "searchBreadcrumbToggler": {
     "close": "Close"
   },
+  "documentCarousel": {
+    "next": "Next document",
+    "previous": "Previous document"
+  },
   "tiny-pagination": {
     "page": "Page",
     "aria": "Jump to page",
