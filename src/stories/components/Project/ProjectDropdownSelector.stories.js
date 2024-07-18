@@ -1,4 +1,4 @@
-import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector'
+import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
 
 export default {
   title: 'Components/Project/ProjectDropdownSelector',
