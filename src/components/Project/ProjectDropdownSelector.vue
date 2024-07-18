@@ -23,7 +23,7 @@
             v-model="query"
             autofocus
             shadow
-            placeholder="Search projects..."
+            placeholder="Search projects"
             :rounded="false"
             @blur="resetFocus"
             @up="moveFocusUp"
