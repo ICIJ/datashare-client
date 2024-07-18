@@ -212,12 +212,14 @@ export default {
 
   $heights: (
     xs: 50px,
-    sm: 80px,
+    sm: 90px,
     md: 150px,
     lg: 310px,
     xl: 720px,
     xxl: 960px
   );
+
+  --height: var(--estimated-height, 0);
 
   @each $name, $value in $heights {
     &--#{$name} {
