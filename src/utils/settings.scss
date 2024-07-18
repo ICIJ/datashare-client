@@ -155,7 +155,8 @@ $tooltip-opacity: 1;
 $input-box-shadow: 0 0 0 0 transparent;
 $b-toast-background-opacity: $tooltip-opacity;
 
-$font-size-sm: .9rem;
+$font-size: 16px;
+$font-size-sm: math.div(14, 16) * 1rem;
 $font-size-lg: 1.2rem;
 $line-height-sm: 1.7;
 
