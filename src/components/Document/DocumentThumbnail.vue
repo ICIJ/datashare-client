@@ -322,7 +322,7 @@ export default {
     bottom: 0;
     height: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: center top;
   }
 
   &__placeholder {
