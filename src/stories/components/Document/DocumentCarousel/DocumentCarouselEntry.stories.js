@@ -3,18 +3,15 @@ import { sample } from 'lodash'
 import { PhFilePdf } from '@phosphor-icons/vue'
 
 import { withMurmur } from '~storybook/decorators/murmur'
-import DocumentCarousel from '@/components/Document/DocumentCarousel/DocumentCarousel'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
 
 export default {
-  title: 'Components/Document/DocumentCarousel/DocumentCarousel',
+  title: 'Components/Document/DocumentCarousel/DocumentCarouselEntry',
   decorators: [withMurmur({ previewHost: null })],
-  component: DocumentCarousel,
+  component: DocumentCarouselEntry,
   tags: ['autodocs'],
   args: {
-    page: 1,
-    perPage: 10,
-    totalRows: ~~(Math.random() * 2e4),
+    active: false,
     document: {
       get title() {
         return sample([
@@ -37,25 +34,6 @@ export default {
       isSupportedImage: true,
       contentType: 'image/jpeg',
       contentTypeIcon: markRaw(PhFilePdf)
-    }
-  },
-  render(args) {
-    return {
-      components: { DocumentCarousel, DocumentCarouselEntry },
-      setup() {
-        return { args }
-      },
-      template: `
-        <div style="height: 400px">
-          <document-carousel v-bind="args">
-            <document-carousel-entry :document="args.document" />
-            <document-carousel-entry :document="args.document" />
-            <document-carousel-entry :document="args.document" active />
-            <document-carousel-entry :document="args.document" />
-            <document-carousel-entry :document="args.document" />
-          </document-carousel>
-        </div>
-      `
     }
   }
 }
