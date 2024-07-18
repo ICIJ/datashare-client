@@ -160,7 +160,7 @@ const labelOrLoadingText = computed(() => {
 })
 
 const tooltipTitle = computed(() => {
-  return props.hideLabel ? props.label : null
+  return props.hideLabel ? props.label : ''
 })
 
 const buttonProps = computed(() => ({
