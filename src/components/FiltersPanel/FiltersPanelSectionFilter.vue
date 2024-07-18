@@ -107,7 +107,11 @@ const classList = computed(() => {
   }
 
   &:not(&--collapsed) {
-    padding: $spacer-xs 0;
+    padding: $spacer-xxs 0;
+
+    &:deep(.filters-panel-section-filter-title) {
+      margin-bottom: $spacer-xxs;
+    }
   }
 
   &__content {
