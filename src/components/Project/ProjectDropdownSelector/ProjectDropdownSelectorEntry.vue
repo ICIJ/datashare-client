@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 
+import ProjectDropdownSelectorCheckbox from './ProjectDropdownSelectorCheckbox'
+
 import ProjectLabel from '@/components/Project/ProjectLabel'
 
 const props = defineProps({
@@ -25,16 +27,17 @@ const emit = defineEmits(['toggleValue', 'toggleUniqueValue'])
 </script>
 
 <template>
-  <div class="project-dropdown-selector-entry d-flex align-items-center justify-self-center rounded" :class="classList">
-    <div class="py-2 ps-1 pe-3">
-      <b-form-checkbox :model-value="selected" @click="emit('toggleValue', $event)" />
-    </div>
+  <div class="project-dropdown-selector-entry rounded" :class="classList">
+    <project-dropdown-selector-checkbox :model-value="selected" @click="emit('toggleValue', $event)" />
     <project-label class="pe-1 py-2" no-caption :project="project" @click="emit('toggleUniqueValue', $event)" />
   </div>
 </template>
 
 <style lang="scss">
 .project-dropdown-selector-entry {
+  display: flex;
+  align-items: center;
+
   &--focus,
   .dropdown-item:focus-visible &,
   .dropdown-item:focus & {

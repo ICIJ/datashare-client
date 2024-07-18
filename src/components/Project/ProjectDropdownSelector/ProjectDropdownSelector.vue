@@ -25,6 +25,7 @@
         @down="moveFocusDown"
         @enter="selectFocusValue"
       />
+      <project-dropdown-selector-all v-model="selectAll" />
     </template>
     <template #button-content>
       <project-dropdown-selector-button-content :projects="slicedProjects" />
@@ -44,6 +45,7 @@
 <script>
 import { compact, find, iteratee, trim } from 'lodash'
 
+import ProjectDropdownSelectorAll from './ProjectDropdownSelectorAll'
 import ProjectDropdownSelectorButtonContent from './ProjectDropdownSelectorButtonContent'
 import ProjectDropdownSelectorEntry from './ProjectDropdownSelectorEntry'
 import ProjectDropdownSelectorSearch from './ProjectDropdownSelectorSearch'
@@ -54,6 +56,7 @@ import { iwildcardMatch } from '@/utils/strings'
 export default {
   name: 'SearchBarInputDropdownForProjects',
   components: {
+    ProjectDropdownSelectorAll,
     ProjectDropdownSelectorButtonContent,
     ProjectDropdownSelectorEntry,
     ProjectDropdownSelectorSearch,
@@ -143,6 +146,14 @@ export default {
     },
     hasSlicedProjects() {
       return this.selectedProjects.length > this.sliceSize
+    },
+    selectAll: {
+      get() {
+        return this.selectedProjects.length === this.projects.length
+      },
+      set(value) {
+        this.selectedProjects = value ? this.projects : []
+      }
     }
   },
   watch: {

@@ -1,7 +1,7 @@
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
 
 export default {
-  title: 'Components/Project/ProjectDropdownSelector',
+  title: 'Components/Project/ProjectDropdownSelector/ProjectDropdownSelector',
   tags: ['autodocs'],
   component: ProjectDropdownSelector,
   args: {
