@@ -69,8 +69,8 @@ const classList = computed(() => {
 <style lang="scss" scoped>
 .filters-panel-section-filter-title {
   font-size: 1em;
-  min-height: 1.5em;
   font-weight: 500;
+  min-height: 1.85em;
   color: var(--bs-primary-text-emphasis);
   padding: 0;
   margin: 0;

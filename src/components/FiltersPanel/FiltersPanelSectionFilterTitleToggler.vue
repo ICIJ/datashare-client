@@ -31,8 +31,6 @@ const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
 
 <style lang="scss" scoped>
 .filters-panel-section-filter-title-toggler {
-  line-height: 1;
   display: inline-flex;
-  padding: 0;
 }
 </style>
