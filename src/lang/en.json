@@ -1063,6 +1063,13 @@
   "projectSelector": {
     "noMatches": "No matches"
   },
+  "projectDropdownSelectorSearch": {
+    "placeholder": "Search projects",
+    "noMatches": "No matches"
+  },
+  "projectDropdownSelectorAll": {
+    "label": "All projects"
+  },
   "searchBarInputDropdownForProjects": {
     "projectsCount": "{count} projects",
     "noMatches": "No matches"

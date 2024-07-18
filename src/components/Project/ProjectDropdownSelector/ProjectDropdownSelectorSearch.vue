@@ -20,7 +20,7 @@ const emit = defineEmits(['update:model-value', 'blur', 'up', 'down', 'enter'])
         :model-value="query"
         autofocus
         shado
-        placeholder="Search projects"
+        :placeholder="$t('projectDropdownSelectorSearch.placeholder')"
         @update:model-value="emit('update:model-value', $event)"
         @blur="emit('blur', $event)"
         @up="emit('up', $event)"
@@ -29,7 +29,7 @@ const emit = defineEmits(['update:model-value', 'blur', 'up', 'down', 'enter'])
       />
     </div>
     <div v-if="!hasMatches" class="text-center small text-muted pb-2">
-      {{ $t('searchBarInputDropdownForProjects.noMatches') }}
+      {{ $t('projectDropdownSelectorSearch.noMatches') }}
     </div>
   </li>
 </template>

@@ -20,12 +20,13 @@
       <project-dropdown-selector-search
         v-if="visible"
         v-model="query"
+        :has-matches="hasMatches"
         @blur="resetFocus"
         @up="moveFocusUp"
         @down="moveFocusDown"
         @enter="selectFocusValue"
       />
-      <project-dropdown-selector-all v-model="selectAll" />
+      <project-dropdown-selector-all v-if="hasMatches" v-model="selectAll" />
     </template>
     <template #button-content>
       <project-dropdown-selector-button-content :projects="slicedProjects" />
