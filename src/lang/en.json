@@ -1093,6 +1093,7 @@
     "ariaRow": "Jump to document",
     "total": "of {numberOfPages}",
     "rowRange": "to {lastRangeRow} of 0 documents | to {lastRangeRow} of 1 document | to {lastRangeRow} of {totalRows} documents",
+    "uniqueRowRange": "of 0 documents | of 1 document | of {totalRows} documents",
     "compactRowRange": "to {lastRangeRow}",
     "previous": "Previous page",
     "next": "Next page"
