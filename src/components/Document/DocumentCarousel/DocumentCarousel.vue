@@ -28,11 +28,19 @@ const emit = defineEmits(['update:page'])
       @update:modelValue="emit('update:page', $event)"
     />
     <div class="document-carousel__content p-3">
-      <document-carousel-nav icon="caret-left" label="Previous document" @click="emit('update:page', page - 1)" />
+      <document-carousel-nav
+        icon="caret-left"
+        :label="$t('documentCarousel.previous')"
+        @click="emit('update:page', page - 1)"
+      />
       <div class="document-carousel__content__entries">
         <slot />
       </div>
-      <document-carousel-nav icon="caret-right" label="Next document" @click="emit('update:page', page + 1)" />
+      <document-carousel-nav
+        icon="caret-right"
+        :label="$t('documentCarousel.next')"
+        @click="emit('update:page', page + 1)"
+      />
     </div>
   </div>
 </template>
