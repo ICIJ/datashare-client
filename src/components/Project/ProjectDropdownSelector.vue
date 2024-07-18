@@ -17,55 +17,26 @@
     @changed="$emit('changed', $event)"
   >
     <template #above="{ visible }">
-      <li v-if="visible" class="project-dropdown-selector__query-input">
-        <div class="b-dropdown-form pt-1 mb-3">
-          <search-form-control
-            v-model="query"
-            autofocus
-            shadow
-            placeholder="Search projects"
-            :rounded="false"
-            @blur="resetFocus"
-            @up="moveFocusUp"
-            @down="moveFocusDown"
-            @enter="selectFocusValue"
-          />
-        </div>
-        <div v-if="!hasMatches" class="text-center small text-muted pb-2">
-          {{ $t('searchBarInputDropdownForProjects.noMatches') }}
-        </div>
-      </li>
+      <project-dropdown-selector-search
+        v-if="visible"
+        v-model="query"
+        @blur="resetFocus"
+        @up="moveFocusUp"
+        @down="moveFocusDown"
+        @enter="selectFocusValue"
+      />
     </template>
     <template #button-content>
-      <span v-for="(project, p) in slicedProjects" :key="p" class="project-dropdown-selector__button-content__project">
-        <project-thumbnail
-          :project="project"
-          no-caption
-          width="1.2em"
-          class="project-dropdown-selector__button-content__project__thumbnail rounded"
-        />
-        <template v-if="hasOneProject">
-          <span class="ms-2">
-            {{ project?.label || project?.name }}
-          </span>
-        </template>
-        <template v-else-if="isLastProjectSlice(p)">
-          <span class="ms-2">
-            {{ $t('searchBarInputDropdownForProjects.projectsCount', selectedProjects.length) }}
-          </span>
-        </template>
-      </span>
+      <project-dropdown-selector-button-content :projects="slicedProjects" />
     </template>
-    <template #dropdown-item="{ option: project, index, hasValue, toggleUniqueValue, toggleValue }">
-      <span
-        class="project-dropdown-selector__item d-flex align-items-center justify-self-center"
-        :class="{ 'project-dropdown-selector__item--focus': index === focusIndex }"
-      >
-        <div class="py-2 ps-1 pe-3">
-          <b-form-checkbox :model-value="hasValue(project)" @click="toggleValue($event, project)" />
-        </div>
-        <project-label class="pe-1 py-2" no-caption :project="project" @click="toggleUniqueValue($event, project)" />
-      </span>
+    <template #dropdown-item="{ option, index, hasValue, toggleUniqueValue, toggleValue }">
+      <project-dropdown-selector-entry
+        :project="option"
+        :focus="focusIndex === index"
+        :selected="hasValue(option)"
+        @toggleValue="toggleValue($event, option)"
+        @toggleUniqueValue="toggleUniqueValue($event, option)"
+      />
     </template>
   </search-bar-input-dropdown>
 </template>
@@ -73,17 +44,19 @@
 <script>
 import { compact, find, iteratee, trim } from 'lodash'
 
-import ProjectLabel from '@/components/Project/ProjectLabel'
-import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
-import SearchFormControl from '@/components/SearchFormControl'
 import { iwildcardMatch } from '@/utils/strings'
+import ProjectDropdownSelectorButtonContent from '@/components/Project/ProjectDropdownSelectorButtonContent'
+import ProjectDropdownSelectorEntry from '@/components/Project/ProjectDropdownSelectorEntry'
+import ProjectDropdownSelectorSearch from '@/components/Project/ProjectDropdownSelectorSearch'
+import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 
 export default {
   name: 'SearchBarInputDropdownForProjects',
   components: {
-    ProjectLabel,
-    SearchBarInputDropdown,
-    SearchFormControl
+    ProjectDropdownSelectorButtonContent,
+    ProjectDropdownSelectorEntry,
+    ProjectDropdownSelectorSearch,
+    SearchBarInputDropdown
   },
   props: {
     /**
@@ -164,9 +137,6 @@ export default {
         return iwildcardMatch(label, this.wildcardQuery) || iwildcardMatch(name, this.wildcardQuery)
       })
     },
-    hasOneProject() {
-      return this.selectedProjects.length === 1
-    },
     hasMultipleProjects() {
       return this.selectedProjects.length > 1
     },
@@ -180,9 +150,6 @@ export default {
     }
   },
   methods: {
-    isLastProjectSlice(p) {
-      return p === this.slicedProjects.length - 1
-    },
     moveFocusUp() {
       this.focusIndex = Math.max(-1, this.focusIndex - 1)
       this.moveFocusIntoView()
@@ -217,14 +184,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .project-dropdown-selector {
-  .dropdown-menu {
-    width: 100%;
-    max-width: 18rem !important; // We must use !important here to override the element style
-  }
-
-  .btn.dropdown-toggle {
+  &:deep(.btn.dropdown-toggle) {
     --bs-btn-color: var(--bs-body-color);
     --bs-btn-border-color: var(--bs-lighter);
     --bs-btn-bg: var(--bs-body-bg);
@@ -239,48 +201,8 @@ export default {
     --bs-btn-active-border-color: var(--bs-lighter);
   }
 
-  &__query-input {
-    position: sticky;
-    background: $dropdown-bg;
-    z-index: 20;
-    top: 0;
-    box-shadow: 0 -1 * $spacer-xxs 0 $spacer-xxs $dropdown-bg;
-  }
-
-  &__button-content__project {
-    display: inline-flex;
-    align-items: center;
-
-    &:not(:first-of-type) &__thumbnail {
-      box-shadow: -1px 0 0 0 #fff;
-      margin-left: -0.5em;
-    }
-
-    .project-dropdown-selector--sliced &:last-of-type &__thumbnail {
-      background: $text-muted !important;
-
-      &:after {
-        content: '+';
-        color: #fff;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-  }
-
-  &__item {
-    border-radius: $border-radius;
-  }
-
-  &__item--focus,
-  .dropdown-item:focus-visible &__item,
-  .dropdown-item:focus &__item {
+  .dropdown-item:focus-visible &:deep(.project-dropdown-selector-entry),
+  .dropdown-item:focus &:deep(.project-dropdown-selector-entry) {
     position: relative;
     color: $dropdown-link-hover-color;
     background: $dropdown-link-hover-bg;
@@ -292,58 +214,6 @@ export default {
   .dropdown-item:focus-visible,
   .dropdown-item:focus {
     outline: 0;
-  }
-
-  &__toggle-unique-value {
-    &__thumbnail {
-      width: 100%;
-      max-width: 1.2rem;
-    }
-  }
-
-  &__toggle-value {
-    $size: 1.5rem;
-
-    visibility: hidden;
-    position: relative;
-    line-height: $size;
-    height: $size;
-    width: $size;
-    border-radius: $size;
-
-    &:empty {
-      display: none;
-    }
-
-    &:before {
-      content: '';
-      z-index: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      border-radius: $size;
-      background: transparent;
-      opacity: 0.25;
-    }
-
-    &:hover:before {
-      background: currentColor;
-    }
-
-    .phosphor-icon {
-      position: absolute;
-      z-index: 10;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-
-  .dropdown-item:hover &__toggle-value,
-  .dropdown-item.active &__toggle-value {
-    visibility: visible;
   }
 }
 </style>
