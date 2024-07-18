@@ -174,7 +174,8 @@ $table-hover-bg: mix($secondary, #fff, 5%);
 
 $nav-tabs-link-active-bg: #fff;
 
-$bs-dropdown-border-color: var(--bs-light-border-subtle);
+$dropdown-box-shadow: none;
+$dropdown-border-color: var(--bs-light-border-subtle);
 $dropdown-padding-x: math.div(12, 16) * 1rem;
 $dropdown-padding-y: math.div(12, 16) * 1rem;
 $dropdown-item-padding-y: $spacer-xs;
