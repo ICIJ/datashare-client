@@ -71,10 +71,14 @@
 }
 
 .dropdown-item {
-  border-radius: $border-radius;
+  border-radius: var(--bs-border-radius);
 
   &.active {
     font-weight: 500;
+
+    &:hover {
+      background: var(--bs-dropdown-link-hover-bg);
+    }
   }
 }
 
