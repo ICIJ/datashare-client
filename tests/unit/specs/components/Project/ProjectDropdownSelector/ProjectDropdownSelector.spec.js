@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 
-import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector'
+import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('ProjectDropdownSelector.vue', function () {

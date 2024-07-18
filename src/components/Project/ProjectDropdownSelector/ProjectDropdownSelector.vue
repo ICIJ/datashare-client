@@ -44,11 +44,12 @@
 <script>
 import { compact, find, iteratee, trim } from 'lodash'
 
-import { iwildcardMatch } from '@/utils/strings'
-import ProjectDropdownSelectorButtonContent from '@/components/Project/ProjectDropdownSelectorButtonContent'
-import ProjectDropdownSelectorEntry from '@/components/Project/ProjectDropdownSelectorEntry'
-import ProjectDropdownSelectorSearch from '@/components/Project/ProjectDropdownSelectorSearch'
+import ProjectDropdownSelectorButtonContent from './ProjectDropdownSelectorButtonContent'
+import ProjectDropdownSelectorEntry from './ProjectDropdownSelectorEntry'
+import ProjectDropdownSelectorSearch from './ProjectDropdownSelectorSearch'
+
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import { iwildcardMatch } from '@/utils/strings'
 
 export default {
   name: 'SearchBarInputDropdownForProjects',
