@@ -18,11 +18,12 @@
   >
     <template #above="{ visible }">
       <li v-if="visible" class="project-dropdown-selector__query-input">
-        <div class="b-dropdown-form px-2 pt-1 pb-2">
+        <div class="b-dropdown-form pt-1 mb-3">
           <search-form-control
             v-model="query"
             autofocus
-            placeholder="Filter projects..."
+            shadow
+            placeholder="Search projects..."
             :rounded="false"
             @blur="resetFocus"
             @up="moveFocusUp"
@@ -55,28 +56,15 @@
         </template>
       </span>
     </template>
-    <template #dropdown-item="{ option: project, index, modelValues, hasValue, toggleUniqueValue, toggleValue }">
+    <template #dropdown-item="{ option: project, index, hasValue, toggleUniqueValue, toggleValue }">
       <span
         class="project-dropdown-selector__item d-flex align-items-center justify-self-center"
         :class="{ 'project-dropdown-selector__item--focus': index === focusIndex }"
       >
-        <div
-          class="project-dropdown-selector__toggle-unique-value flex-truncate d-flex align-items-center justify-self-center px-3 py-2 flex-grow-1"
-          @click="toggleUniqueValue($event, project)"
-        >
-          <span
-            class="project-dropdown-selector__toggle-unique-value__thumbnail me-2 d-inline-flex align-items-center justify-self-center"
-          >
-            <project-thumbnail :project="project" no-caption width="1.2em" class="rounded" />
-          </span>
-          <span class="text-truncate">
-            {{ project.label || project.name }}
-          </span>
+        <div class="py-2 ps-1 pe-3">
+          <b-form-checkbox :model-value="hasValue(project)" @click="toggleValue($event, project)" />
         </div>
-        <div class="project-dropdown-selector__toggle-value ms-auto me-2" @click="toggleValue($event, project)">
-          <phosphor-icon v-if="!hasValue(project)" name="plus" size="sm" weight="bold" />
-          <phosphor-icon v-else-if="modelValues.length > 1" name="minus" size="sm" weight="bold" />
-        </div>
+        <project-label class="pe-1 py-2" no-caption :project="project" @click="toggleUniqueValue($event, project)" />
       </span>
     </template>
   </search-bar-input-dropdown>
@@ -84,9 +72,8 @@
 
 <script>
 import { compact, find, iteratee, trim } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
 
-import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
+import ProjectLabel from '@/components/Project/ProjectLabel'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
 import SearchFormControl from '@/components/SearchFormControl'
 import { iwildcardMatch } from '@/utils/strings'
@@ -94,8 +81,7 @@ import { iwildcardMatch } from '@/utils/strings'
 export default {
   name: 'SearchBarInputDropdownForProjects',
   components: {
-    PhosphorIcon,
-    ProjectThumbnail,
+    ProjectLabel,
     SearchBarInputDropdown,
     SearchFormControl
   },
@@ -288,28 +274,24 @@ export default {
     }
   }
 
-  &__item--focus {
+  &__item {
+    border-radius: $border-radius;
+  }
+
+  &__item--focus,
+  .dropdown-item:focus-visible &__item,
+  .dropdown-item:focus &__item {
     position: relative;
     color: $dropdown-link-hover-color;
     background: $dropdown-link-hover-bg;
     text-decoration: none;
-
-    &:before {
-      pointer-events: none;
-      content: '';
-      position: absolute;
-      top: 3px;
-      bottom: 3px;
-      left: 5px;
-      right: 5px;
-      border: 2px solid $secondary;
-      border-radius: $border-radius;
-    }
+    box-shadow: $focus-ring-box-shadow;
+    outline: 0;
   }
 
-  .dropdown-item.active &__item--focus {
-    color: $dropdown-link-active-color;
-    background: $dropdown-link-active-bg;
+  .dropdown-item:focus-visible,
+  .dropdown-item:focus {
+    outline: 0;
   }
 
   &__toggle-unique-value {
