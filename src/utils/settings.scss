@@ -90,6 +90,15 @@ $dark-bg-subtle-dark: $lighter;
 $enable-shadows: true;
 $enable-rounded: true;
 
+$spacer: 1rem;
+$spacer-xxs: $spacer * 0.25;
+$spacer-xs: $spacer * 0.5;
+$spacer-sm: $spacer * 0.75;
+$spacer-md: $spacer;
+$spacer-lg: $spacer * 1.5;
+$spacer-xl: $spacer * 2;
+$spacer-xxl: $spacer * 4;
+
 $font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Lato", "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: "Merriweather", Georgia, "Times New Roman", Times, serif;
 
@@ -165,8 +174,16 @@ $table-hover-bg: mix($secondary, #fff, 5%);
 
 $nav-tabs-link-active-bg: #fff;
 
-$dropdown-padding-y: 0.25rem;
-$dropdown-item-padding-y: 0.5rem;
+$bs-dropdown-border-color: var(--bs-light-border-subtle);
+$dropdown-padding-x: math.div(12, 16) * 1rem;
+$dropdown-padding-y: math.div(12, 16) * 1rem;
+$dropdown-item-padding-y: $spacer-xs;
+$dropdown-item-padding-x: $spacer-xxs;
+$dropdown-link-hover-bg: var(--bs-primary-bg-subtle);
+$dropdown-link-hover-color: var(--bs-primary-text-emphasis);
+$dropdown-link-active-color: var(--bs-primary-text-emphasis);
+$dropdown-link-active-bg: var(--bs-dropdown-bg);
+
 
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';
@@ -176,14 +193,6 @@ $dropdown-item-padding-y: 0.5rem;
 @import './functions.scss';
 @import './mixins.scss';
 @import './maps.scss';
-
-$spacer-xxs: $spacer * 0.25;
-$spacer-xs: $spacer * 0.5;
-$spacer-sm: $spacer * 0.75;
-$spacer-md: $spacer;
-$spacer-lg: $spacer * 1.5;
-$spacer-xl: $spacer * 2;
-$spacer-xxl: $spacer * 4;
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);

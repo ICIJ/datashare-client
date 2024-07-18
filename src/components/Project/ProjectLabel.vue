@@ -3,8 +3,9 @@
     <project-thumbnail
       v-if="showThumbnail"
       :project="resolvedProject"
+      :no-caption="noCaption"
+      :width="thumbnailWidth"
       class="project-label__thumbnail me-2 rounded"
-      width="1.25em"
     />
     <span class="project-label__display">{{ projectDisplay }}</span>
   </span>
@@ -32,9 +33,22 @@ export default {
       required: true
     },
     /**
-     * Hide the project thumbail.
+     * Hide the project thumbnail.
      */
     hideThumbnail: {
+      type: Boolean
+    },
+    /**
+     * Size of the project thumbnail
+     */
+    thumbnailWidth: {
+      type: String,
+      default: '1.25em'
+    },
+    /**
+     * Remove the project caption on thumbnail.
+     */
+    noCaption: {
       type: Boolean
     }
   },
