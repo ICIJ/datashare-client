@@ -229,6 +229,7 @@ export default {
   color: var(--bs-tertiary-color);
   min-width: var(--height);
   max-width: var(--height);
+  min-height: var(--height);
   overflow: hidden;
   position: relative;
 
