@@ -77,12 +77,12 @@ const classList = computed(() => {
     display: none;
   }
 
-  &:deep(.icon-button),
   &:deep(.dropdown-toggle),
   &:deep(.form-check) {
     padding: $spacer-xxs 0;
     border: 0;
     margin-bottom: 0;
+    color: var(--bs-primary-text-emphasis);
   }
 
   &:deep(.form-check) {
