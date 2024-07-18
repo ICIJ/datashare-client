@@ -81,6 +81,15 @@ RowMode.args = {
   row: true
 }
 
+export const UniqueRowMode = Template.bind({})
+UniqueRowMode.args = {
+  modelValue: 1,
+  perPage: 1,
+  totalRows: 2e6,
+  compact: false,
+  row: true
+}
+
 export const CompactRowMode = Template.bind({})
 CompactRowMode.args = {
   modelValue: 1,
