@@ -1,5 +1,4 @@
 import AppModal from '@/components/AppModal/AppModal'
-import { ArgTypes } from '@storybook/blocks'
 
 export default {
   title: 'Components/AppModal/AppModal',

@@ -3,6 +3,7 @@ import SearchFormControl from '@/components/SearchFormControl'
 export default {
   title: 'Components/SearchBar/SearchFormControl',
   tags: ['autodocs'],
+  component: SearchFormControl,
   argTypes: {
     placeholder: {
       control: {
@@ -43,17 +44,7 @@ export default {
         type: 'boolean'
       }
     }
-  },
-  render: (args) => ({
-    components: {
-      SearchFormControl
-    },
-    setup: () => ({ args }),
-    template: `
-      <search-form-control v-bind="args">
-      </search-form-control>
-    `
-  })
+  }
 }
 
 export const Default = {
