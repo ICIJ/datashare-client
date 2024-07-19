@@ -9,7 +9,7 @@ const routes = [
   { path: '/document-processing', name: 'document-processing' },
   { path: '/batch-tasks', name: 'batch-tasks' },
   { path: '/plugins', name: 'plugins' },
-  { path: '/extensions', name: 'extensions' },
+  { path: '/extensions', name: 'extensions' }
 ]
 
 export default {
