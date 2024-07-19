@@ -1,0 +1,101 @@
+<script setup>
+import { PhosphorIcon } from '@icij/murmur-next'
+
+defineProps({
+  active: {
+    type: Boolean
+  },
+  icon: {
+    type: String
+  },
+  count: {
+    type: Number,
+    default: null
+  },
+  activeClass: {
+    type: String
+  },
+  disabled: {
+    type: Boolean
+  },
+  exactActiveClass: {
+    type: String
+  },
+  href: {
+    type: String
+  },
+  rel: {
+    type: String
+  },
+  target: {
+    type: String
+  },
+  to: {
+    type: Object
+  }
+})
+</script>
+
+<template>
+  <b-nav-item
+    class="navigation-tabs-entry"
+    :active="active"
+    :active-class="activeClass"
+    :disabled="disabled"
+    :exact-active-class="exactActiveClass"
+    :href="href"
+    :rel="rel"
+    :target="target"
+    :to="to"
+  >
+    <phosphor-icon v-if="icon" :name="icon" class="me-1" size="1.25em" />
+    <slot />
+    <b-badge v-if="count !== null" variant="transparent" pill class="ms-1">
+      {{ count }}
+    </b-badge>
+  </b-nav-item>
+</template>
+
+<style lang="scss" scoped>
+.navigation-tabs-entry {
+  &:deep(.nav-link) {
+    --color: var(--bs-tertiary-text-emphasis);
+
+    color: var(--color);
+    padding: 10px $spacer-xs;
+    display: flex;
+    align-items: center;
+
+    &.active,
+    &.router-link-active {
+      --color: var(--bs-emphasis-color);
+      border-bottom: 2px solid var(--bs-secondary);
+      font-weight: 500;
+
+      .nav-tabs.flex-column > & {
+        border-left: 2px solid var(--bs-secondary);
+      }
+    }
+
+    &:hover {
+      --color: var(--bs-emphasis-color);
+
+      .nav-tabs.flex-column > & {
+        border-left: 2px solid currentColor;
+      }
+    }
+
+    .nav-tabs.flex-column > & {
+      border-bottom: 0;
+      padding: 0 $spacer;
+      border-left: 2px solid transparent;
+    }
+  }
+
+  &:deep(.badge) {
+    background: var(--color);
+    color: var(--bs-body-bg);
+    transition: $transition-base;
+  }
+}
+</style>
