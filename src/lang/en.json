@@ -10,6 +10,9 @@
     "emptyTextTable": "There are no records to show",
     "you": "You"
   },
+  "appModalHeader": {
+    "close": "Close"
+  },
   "aggregations": {
     "more": "Explore more",
     "placeholder": "Search for people, organizations, locations...",

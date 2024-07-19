@@ -24,9 +24,10 @@ defineProps({
       <icon-button
         icon-left="x"
         hide-label
+        hide-tooltip
         tooltip-placement="right"
-        label="Close"
         class="app-modal-header__close ms-auto"
+        :label="$t('appModalHeader.close')"
         @click="$emit('close')"
       />
     </slot>
