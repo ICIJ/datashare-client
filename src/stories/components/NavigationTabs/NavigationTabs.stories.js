@@ -23,7 +23,8 @@ export default {
     justified: false,
     small: false,
     vertical: false,
-    nowrap: true
+    nowrap: true,
+    flush: false
   },
   render: (args) => ({
     components: {

@@ -23,12 +23,16 @@ const props = defineProps({
   },
   nowrap: {
     type: Boolean
+  },
+  flush: {
+    type: Boolean
   }
 })
 
 const classList = computed(() => {
   return {
-    'navigation-tabs--nowrap': props.nowrap
+    'navigation-tabs--nowrap': props.nowrap,
+    'navigation-tabs--flush': props.flush
   }
 })
 </script>
@@ -51,10 +55,22 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.navigation-tabs--nowrap:not(.flex-column) {
-  overflow: auto;
-  flex-wrap: nowrap;
-  padding-bottom: $spacer-xxs;
-  white-space: nowrap;
+.navigation-tabs {
+  &--nowrap:not(.flex-column) {
+    overflow: auto;
+    flex-wrap: nowrap;
+    padding-bottom: $spacer-xxs;
+    white-space: nowrap;
+  }
+
+  &--flush {
+    &:deep(.navigation-tabs-entry:first-of-type a) {
+      padding-left: 0;
+    }
+
+    &:deep(.navigation-tabs-entry:last-of-type a) {
+      padding-right: 0;
+    }
+  }
 }
 </style>
