@@ -8,7 +8,6 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import VueEllipseProgress from 'vue-ellipse-progress'
 import Vue3Toastify, { toast } from 'vue3-toastify'
-import { PhX } from '@phosphor-icons/vue'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { createVueWait } from 'vue-wait'
 import { createApp, defineComponent, h } from 'vue'
@@ -196,9 +195,8 @@ class Core extends Behaviors {
         app.config.globalProperties.$toast = {
           toast(body, { title = null, href = null, linkLabel = null, ...options } = {}) {
             const closeOnClick = options.closeOnClick ?? !href
-            const closeButton = () => h(PhX, { class: 'align-self-center', weight: 'bold' })
             const props = { title, body, href, linkLabel }
-            const toastProps = { closeOnClick, closeButton, ...options, icon: false }
+            const toastProps = { closeOnClick, ...options, icon: false, closeButton: false }
             toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...props }), toastProps)
           },
           error(body, options) {

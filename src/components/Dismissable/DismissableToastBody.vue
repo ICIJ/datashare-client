@@ -41,6 +41,9 @@ const props = defineProps({
   },
   noIcon: {
     type: Boolean
+  },
+  noClose: {
+    type: Boolean
   }
 })
 
@@ -61,22 +64,35 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
 
 <template>
   <div class="toast-body d-flex align-items-center" :class="classList">
-    <div v-if="!noIcon" class="toast-body__icon">
+    <div v-if="!noIcon" class="toast-body__icon d-none d-md-block">
       <phosphor-icon :name="icon" :variant="variant" weight="bold" />
     </div>
-    <div class="toast-body__content flex-grow-1">
-      <h5 v-if="title" class="toast-body__content__title">{{ title }}</h5>
-      <p class="toast-body__content__body m-0">
-        <slot v-bind="{ closeToast, linkClassList, linkLabelDisplay }">{{ body }}</slot>
-      </p>
+    <div class="flex-grow-1 d-flex align-items-center">
+      <div class="toast-body__content">
+        <h5 v-if="title" class="toast-body__content__title">{{ title }}</h5>
+        <p class="toast-body__content__body mb-0 d-inline">
+          <slot v-bind="{ closeToast, linkClassList, linkLabelDisplay }">{{ body }}</slot>
+        </p>
+      </div>
+      <span v-if="hasLink" class="toast-body__link ms-3">
+        <slot name="link" v-bind="{ closeToast, linkClassList, linkLabelDisplay }">
+          <a :href="href" class="btn text-nowrap" :class="linkClassList" @click.passive="closeToast">
+            {{ linkLabelDisplay }}
+          </a>
+        </slot>
+      </span>
     </div>
-    <div v-if="hasLink" class="toast-body__link">
-      <slot name="link" v-bind="{ closeToast, linkClassList, linkLabelDisplay }">
-        <a :href="href" class="btn btn-sm text-nowrap" :class="linkClassList" @click.passive="closeToast">
-          {{ linkLabelDisplay }}
-        </a>
-      </slot>
-    </div>
+    <slot name="close">
+      <icon-button
+        v-if="!noClose"
+        class="toast-body__close py-1"
+        variant="link"
+        label="Close"
+        hide-label
+        icon-left="x"
+        @click="closeToast"
+      />
+    </slot>
   </div>
 </template>
 

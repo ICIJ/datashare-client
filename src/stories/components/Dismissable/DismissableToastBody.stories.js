@@ -20,11 +20,15 @@ export default {
     },
     autoClose: {
       control: { type: 'boolean' }
+    },
+    href: {
+      control: { type: 'text' }
     }
   },
   args: {
     variant: 'info',
-    body: 'A simple toast message',
+    body: 'Indexing task to add documents launched.',
+    href: '#/tasks/',
     title: null,
     autoClose: false
   },
@@ -45,8 +49,7 @@ export default {
         return args.body
       },
       toastProps() {
-        const closeButton = () => h(PhX, { class: 'align-self-center', weight: 'bold' })
-        return { type: this.type, autoClose: this.autoClose, icon: false, closeButton }
+        return { type: this.type, autoClose: this.autoClose, icon: false, closeButton: false }
       }
     },
     template: `
