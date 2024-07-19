@@ -172,7 +172,17 @@ $line-height-sm: 1.7;
 $table-striped-bg: #f9f8f8;
 $table-hover-bg: mix($secondary, #fff, 5%);
 
-$nav-tabs-link-active-bg: #fff;
+$nav-tabs-border-color: transparent;
+$nav-tabs-border-width: 0;
+$nav-tabs-border-radius: 0;
+$nav-tabs-link-hover-border-color: transparent transparent currentColor transparent;
+$nav-tabs-link-active-color: var(--bs-body-color);
+$nav-tabs-link-active: transparent;
+$nav-tabs-link-active-border-color: transparent transparent var(--bs-secondary) transparent;
+
+$nav-underline-gap: $spacer;
+$nav-underline-border-width: 2px;
+$nav-underline-link-active-color:  var(--bs-body-color);
 
 $dropdown-box-shadow: none;
 $dropdown-border-color: var(--bs-light-border-subtle);

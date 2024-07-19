@@ -99,6 +99,7 @@
     "sass": "^1.77.6",
     "storybook": "^8.2.2",
     "storybook-addon-pseudo-states": "^3.1.1",
+    "storybook-addon-vue-slots": "^0.9.29",
     "storybook-vue3-router": "^5.0.0",
     "unplugin-vue-components": "^0.27.2",
     "vite": "^5.3.3",

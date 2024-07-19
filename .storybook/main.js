@@ -9,6 +9,7 @@ const config = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     '@storybook/addon-themes',
+    'storybook-addon-vue-slots',
     "storybook-addon-pseudo-states"
   ],
   framework: {
