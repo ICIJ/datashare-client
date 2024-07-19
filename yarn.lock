@@ -8265,6 +8265,11 @@ storybook-addon-pseudo-states@^3.1.1:
   resolved "https://registry.yarnpkg.com/storybook-addon-pseudo-states/-/storybook-addon-pseudo-states-3.1.1.tgz#4bbdb995ed636586ba744df37abab036158b2401"
   integrity sha512-08JNTfsiSfj0GgNV4q6+v6iU+Acp7ib/MdySPDb8p+C8N/e+kf6lnM7kIiE/GnTPXlg3dfV6FMaWgGYVfdTcLw==
 
+storybook-addon-vue-slots@^0.9.29:
+  version "0.9.29"
+  resolved "https://registry.yarnpkg.com/storybook-addon-vue-slots/-/storybook-addon-vue-slots-0.9.29.tgz#0f7af63d6fac7ccf45be4180642bd64dd97c42bf"
+  integrity sha512-7KdbUbYN8Lmblc9Rf06mYNQX10aYePNZBONpNMtFIS+VsZGxVXiaclkE95siou3/TPe/yRhv3hnE/VbFsnUlFw==
+
 storybook-vue3-router@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/storybook-vue3-router/-/storybook-vue3-router-5.0.0.tgz#7e2f52f7c5cbf78324cdbdeb98f909cea7a1a0dc"
