@@ -26,7 +26,6 @@ export const OnlyName = {
   }
 }
 
-
 export const WithAnImage = {
   args: {
     width: '100px',

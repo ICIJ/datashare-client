@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="named-entity-occurrences badge rounded-pill text-tertiary-emphasis  bg-transparent">
+  <div class="named-entity-occurrences badge rounded-pill text-tertiary-emphasis bg-transparent">
     {{ $n(occurrences) }}
   </div>
 </template>
