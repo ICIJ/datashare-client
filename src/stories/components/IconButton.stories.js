@@ -27,19 +27,6 @@ export default {
     pill: false,
     loading: false
   },
-  render: (args) => ({
-    components: {
-      IconButton
-    },
-    setup() {
-      return {
-        args
-      }
-    },
-    template: `
-      <icon-button v-bind="args" />
-    `
-  }),
   parameters: {
     pseudo: {
       hover: ['#hover'],
