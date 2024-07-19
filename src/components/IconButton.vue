@@ -1,5 +1,13 @@
 <template>
-  <b-button v-bind="buttonProps" ref="iconButton" :to="to" class="icon-button" :class="classList">
+  <b-button
+    v-bind="buttonProps"
+    ref="iconButton"
+    :to="to"
+    class="icon-button"
+    :class="classList"
+    @mouseenter="currentHover = true"
+    @mouseleave="currentHover = false"
+  >
     <slot name="start" />
     <phosphor-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
@@ -28,11 +36,12 @@
     />
     <slot name="end" />
     <b-tooltip
-      v-model="currentHover"
       teleport-to="body"
+      manual
+      :model-value="showTooltip"
       :placement="tooltipPlacement"
       :target="iconButton"
-      :title="tooltipTitle"
+      :title="label"
     />
   </b-button>
 </template>
@@ -79,6 +88,10 @@ const props = defineProps({
     default: 'circle-notch'
   },
   hideLabel: {
+    type: Boolean,
+    default: false
+  },
+  hideTooltip: {
     type: Boolean,
     default: false
   },
@@ -159,8 +172,8 @@ const labelOrLoadingText = computed(() => {
   return props.loading && props.loadingText ? props.loadingText : props.label
 })
 
-const tooltipTitle = computed(() => {
-  return props.hideLabel ? props.label : ''
+const showTooltip = computed(() => {
+  return currentHover.value && !props.hideTooltip && props.hideLabel && props.label
 })
 
 const buttonProps = computed(() => ({
