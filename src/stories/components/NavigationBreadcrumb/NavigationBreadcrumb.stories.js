@@ -41,6 +41,7 @@ export default {
   decorators: [vueRouter(routes)],
   title: 'Components/NavigationBreadcrumb',
   tags: ['autodocs'],
+  component: NavigationBreadcrumb,
   render: () => ({
     components: {
       NavigationBreadcrumb
