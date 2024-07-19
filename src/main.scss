@@ -278,16 +278,24 @@ $value in $theme-colors {
   }
 }
 
-html[data-bs-theme] body .Toastify__toast {
-  &--error {
-    background: var(--bs-danger-text-emphasis);
-    color: var(--bs-danger-bg-subtle);
-  }
+html[data-bs-theme] body .Toastify {
+  --toastify-toast-width: 470px;
 
-  @each $state in map-keys($theme-colors) {
-    &--#{$state} {
-      background: var(--bs-#{$state}-bg-subtle);
-      color: var(--bs-#{$state}-text-emphasis);
+  &__toast {
+    &-body {
+      padding: 0;
+    }
+
+    &--error {
+      background: var(--bs-danger-text-emphasis);
+      color: var(--bs-danger-bg-subtle);
+    }
+
+    @each $state in map-keys($theme-colors) {
+      &--#{$state} {
+        background: var(--bs-#{$state}-bg-subtle);
+        color: var(--bs-#{$state}-text-emphasis);
+      }
     }
   }
 }

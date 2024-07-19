@@ -60,7 +60,7 @@ export const CustomSlots = {
       <dismissable-alert v-bind="args">
         A simple <strong>{{ args.variant }}</strong> alert lorem ipsum dolor sit amet, consectetur adipiscing elit.
         <template #button="{ linkClassList, linkLabel }">
-          <a href="/" target="_parent" class="btn d-inline-flex"  :class="linkClassList">
+          <a href="/" target="_parent" class="btn d-inline-flex ms-md-3"  :class="linkClassList">
             Read the doc
             <phosphor-icon name="arrow-square-out" weight="bold" class="ms-2" />
           </a>

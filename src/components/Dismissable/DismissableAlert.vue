@@ -57,24 +57,26 @@ const classList = {
   <b-alert :variant="variant" :model-value="show" class="ps-3 pe-0 py-1 dismissable-alert" :class="classList">
     <toast-body :toast-props="{ type: variant }" :icon="icon" :no-icon="noIcon" class="dismissable-alert__body">
       <template #default="{ linkClassList }">
-        <slot></slot>
-        <slot name="button" v-bind="{ linkClassList, linkLabel, noButton, dissmiss }">
-          <button
-            v-if="!noButton"
-            class="btn text-nowrap dismissable-alert__body__button ms-1"
-            type="button"
-            :class="linkClassList"
-            @click="dissmiss(persit)"
-          >
-            {{ linkLabel }}
-          </button>
-        </slot>
+        <div class="d-md-flex align-items-center pb-2 pb-md-0">
+          <p class="m-md-0"><slot /></p>
+          <slot name="button" v-bind="{ linkClassList, linkLabel, noButton, dissmiss }">
+            <button
+              v-if="!noButton"
+              class="btn text-nowrap dismissable-alert__body__button ms-md-3"
+              type="button"
+              :class="linkClassList"
+              @click="dissmiss(persit)"
+            >
+              {{ linkLabel }}
+            </button>
+          </slot>
+        </div>
       </template>
-      <template #link>
+      <template #close>
         <slot name="close">
           <icon-button
             v-if="!noClose"
-            class="dismissable-alert__close"
+            class="dismissable-alert__close align-self-md-center align-self-start"
             variant="link"
             label="Close"
             hide-label
