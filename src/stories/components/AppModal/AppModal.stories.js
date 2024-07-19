@@ -33,7 +33,7 @@ export default {
       components: { AppModal },
       template: `
         <button class="btn btn-primary" @click="args.modelValue = !args.modelValue">
-          Toggle model
+          Toggle modal
         </button>
         <app-modal v-bind="args" @update:modelValue="args.modelValue = $event">
           {{ args.default }}
