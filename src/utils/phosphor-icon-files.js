@@ -2,7 +2,6 @@ import find from 'lodash/find'
 import get from 'lodash/get'
 import kebabCase from 'lodash/kebabCase'
 import trim from 'lodash/trim'
-
 import {
   PhFileArchive,
   PhFileAudio,
