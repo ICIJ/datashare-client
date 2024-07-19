@@ -9,6 +9,7 @@ import FiltersPanelSectionFilterFooter from '@/components/FiltersPanel/FiltersPa
 export default {
   title: 'Components/FiltersPanel',
   tags: ['autodocs'],
+  component: { name: 'FiltersPanel' },
   argTypes: {},
   args: {
     collapseTags: false

@@ -3,6 +3,7 @@ import SearchBarInput from '@/components/SearchBarInput'
 export default {
   title: 'Components/SearchBar/SearchBarInput',
   tags: ['autodocs'],
+  component: SearchBarInput,
   argTypes: {
     placeholder: {
       control: {
@@ -33,17 +34,7 @@ export default {
         type: 'boolean'
       }
     }
-  },
-  render: (args) => ({
-    components: {
-      SearchBarInput
-    },
-    setup: () => ({ args }),
-    template: `
-      <search-bar-input v-bind="args">
-      </search-bar-input>
-    `
-  })
+  }
 }
 
 export const Default = {

@@ -6,6 +6,7 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 export default {
   title: 'Components/Dismissable/DismissableAlert',
   tags: ['autodocs'],
+  component: DismissableAlert,
   argTypes: {
     variant: {
       control: { type: 'select' },
@@ -23,19 +24,14 @@ export default {
     name: uniqueId('a-unique-name-'),
     persist: false,
     noIcon: false,
-    noButton: false
+    noButton: false,
+    default: `A simple alert lorem ipsum dolor sit amet, consectetur adipiscing elit.`
   },
-  render: (args) => ({
-    components: {
-      DismissableAlert
-    },
-    setup: () => ({ args }),
-    template: `
-      <dismissable-alert v-bind="args">
-        A simple <strong>{{ args.variant }}</strong> alert lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </dismissable-alert>
-    `
-  })
+  parameters: {
+    slots: {
+      default: `Default slot content`
+    }
+  }
 }
 
 export const Default = {

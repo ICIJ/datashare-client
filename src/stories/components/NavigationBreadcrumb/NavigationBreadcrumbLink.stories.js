@@ -13,6 +13,7 @@ export default {
   decorators: [vueRouter(routes)],
   title: 'Components/NavigationBreadcrumb/Link',
   tags: ['autodocs'],
+  component: NavigationBreadcrumbLink,
   argTypes: {
     routeName: {
       control: { type: 'string' }

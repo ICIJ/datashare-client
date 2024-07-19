@@ -7,6 +7,7 @@ import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 export default {
   title: 'Components/PageSettings',
   tags: ['autodocs'],
+  component: PageSettings,
   render: (args) => ({
     components: {
       PageSettings,

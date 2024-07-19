@@ -6,6 +6,7 @@ import ToastBody from '@/components/Dismissable/DismissableToastBody'
 export default {
   title: 'Components/Dismissable/DismissableToastBody',
   tags: ['autodocs'],
+  component: ToastBody,
   argTypes: {
     variant: {
       control: { type: 'select' },
