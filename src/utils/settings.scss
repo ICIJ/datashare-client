@@ -25,8 +25,8 @@ $body-color-dark: #C7C9CD;
 $body-bg-dark: #151518;
 $body-secondary-bg: #F2F0F0;
 
-$card-bg: var(--#{$prefix}body-bg);
-$card-cap-bg: rgba(var(--#{$prefix}body-color-rgb), .03);
+$card-bg: var(--bs-body-bg);
+$card-cap-bg: rgba(var(--bs-body-color-rgb), .03);
 $translation-bg: #fcf8e3;
 
 $theme-colors: (
@@ -97,7 +97,7 @@ $spacer-sm: $spacer * 0.75;
 $spacer-md: $spacer;
 $spacer-lg: $spacer * 1.5;
 $spacer-xl: $spacer * 2;
-$spacer-xxl: $spacer * 4;
+$spacer-xxl: $spacer * 3;
 
 $font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Lato", "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: "Merriweather", Georgia, "Times New Roman", Times, serif;
@@ -118,7 +118,7 @@ $border-radius-pill: 50rem;
 
 $alert-border-width: 0;
 
-$input-bg:  var(--#{$prefix}body-bg);
+$input-bg:  var(--bs-body-bg);
 $input-focus-border-color: map-get($theme-colors, 'secondary');
 $input-hover-border-color: $input-focus-border-color;
 $custom-control-indicator-checked-bg: $tertiary;
@@ -131,11 +131,11 @@ $btn-disabled-opacity: 0.75;
 $input-btn-padding-y:0.5em;
 $input-btn-padding-x:0.75em;
 
-$form-check-input-border: var(--#{$prefix}border-width) solid $tertiary;
+$form-check-input-border: var(--bs-border-width) solid $tertiary;
 $form-check-input-border-radius: 2px;
-$form-check-input-checked-border-color: var(--#{$prefix}primary-text-emphasis);
+$form-check-input-checked-border-color: var(--bs-primary-text-emphasis);
 
-$form-radio-input-border: var(--#{$prefix}border-width) solid $tertiary;
+$form-radio-input-border: var(--bs-border-width) solid $tertiary;
 $form-radio-input-checked-border-color: $form-check-input-checked-border-color;
 
 $popover-max-width: 480px;
@@ -147,12 +147,32 @@ $popover-header-color: $body-color;
 
 $mark-bg: map-get($theme-colors, 'mark');
 
-$modal-content-border-width: 0;
-$modal-content-box-shadow-xs: 0 1px 3px 0 rgba(black, .15);
-$modal-content-box-shadow-sm-up: 0 2px 6px 0 rgba(black, .25);
-$modal-backdrop-bg: #292930;
+$modal-inner-padding: $spacer-xl;
+
+$modal-content-color: null;
+$modal-content-border-width: 1px;
+$modal-content-border-radius: var(--bs-border-radius);
+$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width);
+$modal-content-box-shadow-xs:  1px 1px 8px 5px rgba($black, 0.1);
+$modal-content-box-shadow-sm-up: 1px 1px 8px 5px rgba($black, 0.1);
+
+$modal-backdrop-bg: $black;
 $modal-backdrop-opacity: .5;
-$modal-inner-padding: 1.5rem;
+
+$modal-header-border-color: transparent;
+$modal-header-border-width: $modal-content-border-width;
+$modal-header-padding-y: $modal-inner-padding;
+$modal-header-padding-x: $modal-inner-padding;
+$modal-header-padding: $modal-header-padding-y $modal-header-padding-x 0;
+
+$modal-footer-bg: transparent;
+$modal-footer-border-color: $modal-header-border-color;
+$modal-footer-border-width: $modal-header-border-width;
+
+$modal-sm: 300px;
+$modal-md: 500px;
+$modal-lg: 800px;
+$modal-xl: 1140px;
 
 $kbd-padding-y: .2em;
 $kbd-padding-x: .4em;
