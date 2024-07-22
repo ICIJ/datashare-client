@@ -3,6 +3,7 @@ import AppSidebarToggler from '@/components/AppSidebar/AppSidebarToggler'
 export default {
   title: 'Components/AppSidebar/AppSidebarToggler',
   tags: ['autodocs'],
+  component: AppSidebarToggler,
   argTypes: {
     compact: {
       control: { type: 'boolean' }

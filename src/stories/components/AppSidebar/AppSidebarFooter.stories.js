@@ -8,6 +8,7 @@ export default {
   decorators: [vueRouter(routes)],
   title: 'Components/AppSidebar/AppSidebarFooter',
   tags: ['autodocs'],
+  component: AppSidebarFooter,
   argTypes: {
     compact: {
       control: {
