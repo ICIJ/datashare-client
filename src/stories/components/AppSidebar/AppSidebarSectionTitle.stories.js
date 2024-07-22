@@ -8,6 +8,7 @@ export default {
   decorators: [vueRouter(routes)],
   title: 'Components/AppSidebar/AppSidebarSectionTitle',
   tags: ['autodocs'],
+  component: AppSidebarSectionTitle,
   argTypes: {
     icon: {
       control: { type: 'text' }
