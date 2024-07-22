@@ -1,36 +1,34 @@
-# Create Stories for the datashare next components
+# Creating Stories for Datashare's Components
 
-Datashare next stories a used to document and test the components. The stories are written in the `src/stories` folder and are used to generate the Storybook documentation.
+Datashare's stories are used to document and test components effectively. These stories are located in the `src/stories` folder and are integral to generating the Storybook documentation.
 
-Figma of the new design is here : [https://www.figma.com/design/zuUb7ndAVzky62jhRP1edJ/Datashare?t=ac4qhKxDAtYFwxSi-0](https://www.figma.com/design/zuUb7ndAVzky62jhRP1edJ/Datashare?t=ac4qhKxDAtYFwxSi-0)
+You can view the new design on Figma: [Datashare Design](https://www.figma.com/design/zuUb7ndAVzky62jhRP1edJ/Datashare).
 
 ## Phase One: Presentation Components
 
-During the first phase, we will build the basics of the design system, only presentation (simple or a combination of) components without dependencies (like router/store).
+In the first phase, we will focus on building the core of the design system, specifically presentation components that are simple or composite and free of dependencies such as routing or state management.
 
 ### Storybook for Presentation Components
-- **Presentation Components**: Storybook works exceptionally well for presentation (also known as "dumb" or "pure") components. These components are responsible solely for displaying UI and do not contain business logic or state management. They receive data and callbacks through props and render accordingly.
 
-- **Isolation**: By isolating presentation components, Storybook helps avoid dependencies and side effects, providing a clear, visual way to test component displays. This isolation is beneficial for creating robust, reusable components.
+- **Presentation Components**: Storybook excels at documenting and testing presentation components (also known as "dumb" or "pure" components). These components are solely responsible for displaying UI elements and do not contain any business logic or state management. They receive data and callbacks through props and render accordingly.
+
+- **Isolation**: By isolating presentation components, Storybook helps avoid dependencies and side effects, providing a clear, visual way to test component displays. This isolation is beneficial for creating robust and reusable components.
 
 ### Separation of Concerns
 
-To prevent components from becoming too complex, one practice is to create a component that is only responsible for the presentation and another one that is responsible for the behavior.
+To prevent components from becoming too complex, it's best to separate concerns by creating distinct components for presentation and behavior.
 
-- **Presentation Components**: These components handle the UI and are tested with stories in Storybook.
-- **Behavior Components**: These components manage the logic and state and are tested with unit tests.
+- **Presentation Components**: Handle the UI and are tested with stories in Storybook.
+- **Behavior Components**: Manage logic and state, and are tested with unit tests.
 
 ### Testing Strategies
 
-The presentation component can be tested with stories, and the behavior component can be tested with unit tests. This can simplify the visual testing of the components with accessibility properties and snapshot testing.
+- **Presentation Components**: Test with stories in Storybook. This approach simplifies visual testing of components, including accessibility properties and snapshot testing.
+- **Behavior Components**: Test with unit tests. This ensures logic and state management are verified independently.
 
-### Complex Components
+## Project Structure
 
-Complex and behavioral components will be better tested using end-to-end (e2e) tests. Stories can integrate some actions, but retrieving many heavy dependencies can be a smell when doing it. 
-
-For more complex components that require a lot of logic, it might not be necessary to rely on stories.
-
-## Project structure
+The project follows this structure:
 
 ```sh
 datashare-client/
@@ -39,14 +37,24 @@ datashare-client/
 │   └── preview.js
 ├── src/
 │   ├── components/
-│   │   └── YourComponent.vue
+│   │   ├── YourComponent.vue
+│   │   └── YourOtherComponent
+│   │         ├── YourOtherComponent.vue
+│   │         ├── YourOtherComponentEntry.vue
+│   │         └── YourOtherComponentHeader.vue
 │   ├── stories/
-│   │   └── YourComponent.stories.js
+│   │   ├── YourComponent.stories.js
+│   │   └── YourOtherComponent
+│   │         ├── YourOtherComponent.stories.vue
+│   │         ├── YourOtherComponentEntry.stories.vue
+│   │         └── YourOtherComponentHeader.stories.vue
 │   └── main.js
 └── package.json
 ```
 
-## Story example 
+## Story Example
+
+### Component File
 
 ```vue
 // src/components/YourComponent.vue
@@ -62,18 +70,14 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Hello, Storybook!'
-    }
-  }
-}
+      default: 'Hello, Storybook!',
+    },
+  },
+};
 </script>
-
-<style scoped>
-.your-component {
-  font-family: Arial, sans-serif;
-}
-</style>
 ```
+
+### Story File
 
 ```js
 // src/stories/YourComponent.stories.js
@@ -103,3 +107,5 @@ CustomTitle.args = {
   title: 'Custom Title',
 };
 ```
+
+This structured approach ensures clarity and maintainability, facilitating a smooth development and testing process for the Datashare components.
