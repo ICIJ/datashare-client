@@ -1,5 +1,5 @@
 <script setup>
-import { provide } from 'vue'
+import { watch, provide } from 'vue'
 
 const props = defineProps({
   size: {
@@ -8,7 +8,7 @@ const props = defineProps({
   },
   variant: {
     type: String,
-    default: 'outline-lighter'
+    default: 'outline-tertiary'
   },
   tag: {
     type: String,
@@ -19,8 +19,16 @@ const props = defineProps({
   }
 })
 
-provide('size', props.size)
-provide('variant', props.variant)
+watch(
+  () => props.size,
+  () => provide('size', props.size),
+  { immediate: true }
+)
+watch(
+  () => props.variant,
+  () => provide('variant', props.variant),
+  { immediate: true }
+)
 </script>
 
 <template>
