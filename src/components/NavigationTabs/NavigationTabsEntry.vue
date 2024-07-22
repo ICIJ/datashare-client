@@ -48,7 +48,21 @@ defineProps({
     :target="target"
     :to="to"
   >
-    <phosphor-icon v-if="icon" :name="icon" class="me-1" size="1.25em" />
+    <template v-if="icon">
+      <phosphor-icon
+        :name="icon"
+        class="navigation-tabs-entry__icon navigation-tabs-entry__icon--inactive me-1"
+        size="1.25em"
+        aria-hidden="true"
+      />
+      <phosphor-icon
+        :name="icon"
+        class="navigation-tabs-entry__icon navigation-tabs-entry__icon--active me-1"
+        weight="bold"
+        size="1.25em"
+        aria-hidden="true"
+      />
+    </template>
     <slot />
     <b-badge v-if="count !== null" variant="transparent" pill class="ms-1">
       {{ count }}
@@ -66,6 +80,10 @@ defineProps({
     display: flex;
     align-items: center;
 
+    .navigation-tabs-entry__icon--active {
+      display: none;
+    }
+
     &.active,
     &.router-link-active {
       --color: var(--bs-emphasis-color);
@@ -74,6 +92,14 @@ defineProps({
 
       .nav-tabs.flex-column > & {
         border-left: 2px solid var(--bs-secondary);
+      }
+
+      .navigation-tabs-entry__icon--inactive {
+        display: none;
+      }
+
+      .navigation-tabs-entry__icon--active {
+        display: block;
       }
     }
 
