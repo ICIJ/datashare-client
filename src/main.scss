@@ -16,57 +16,61 @@
 
 @each $variant, $value in $theme-colors {
   .btn-outline-#{$variant} {
-    --#{$prefix}btn-color: var(--bs-body-color);
+    --bs-btn-color: var(--bs-body-color);
   }
 }
 
 .btn-outline-dark {
-  --#{$prefix}btn-color: var(--bs-link-color);
-  --#{$prefix}btn-hover-bg: var(--bs-primary);
-  --#{$prefix}btn-hover-border-color: var(--bs-primary);
-  --#{$prefix}btn-bg: var(--bs-body-bg);
+  --bs-btn-color: var(--bs-link-color);
+  --bs-btn-hover-bg: var(--bs-primary);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-bg: var(--bs-body-bg);
+}
+
+.btn-outline-lighter {
+  --bs-btn-color: var(--bs-tertiary-text-emphasis);
 }
 
 @include color-mode(light) {
 
   .btn-outline-secondary {
-    --#{$prefix}btn-hover-bg: #{tint-color($secondary, 90%)};
-    --#{$prefix}btn-active-bg: #{tint-color($secondary, 90%)};
-    --#{$prefix}btn-active-shadow: 1px 1px 8px 5px #{tint-color($tertiary, 70%)};
+    --bs-btn-hover-bg: #{tint-color($secondary, 90%)};
+    --bs-btn-active-bg: #{tint-color($secondary, 90%)};
+    --bs-btn-active-shadow: 1px 1px 8px 5px #{tint-color($tertiary, 70%)};
   }
 
   .btn-outline-tertiary {
-    --#{$prefix}btn-hover-bg: #{tint-color($tertiary, 60%)};
-    --#{$prefix}btn-active-bg: #{tint-color($tertiary, 60%)};
-    --#{$prefix}btn-active-shadow: 1px 1px 8px 5px #{tint-color($tertiary, 70%)};
+    --bs-btn-hover-bg: #{tint-color($tertiary, 60%)};
+    --bs-btn-active-bg: #{tint-color($tertiary, 60%)};
+    --bs-btn-active-shadow: 1px 1px 8px 5px #{tint-color($tertiary, 70%)};
   }
 }
 
 @include color-mode(dark) {
   .btn-primary {
-    --#{$prefix}btn-bg: var(--bs-body-color);
-    --#{$prefix}btn-color: var(--bs-body-bg);
+    --bs-btn-bg: var(--bs-body-color);
+    --bs-btn-color: var(--bs-body-bg);
   }
 
   .btn-outline-secondary {
-    --#{$prefix}btn-hover-color: var(--bs-body-color);
-    --#{$prefix}btn-hover-bg:  #{shade-color($secondary, 95%)};
-    --#{$prefix}btn-active-bg: var(--bs-body-bg-color);
-    --#{$prefix}btn-active-color: var(--bs-body-color);
-    --#{$prefix}btn-active-shadow: 1px 1px 8px 5px #{shade-color($tertiary, 70%)};
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg:  #{shade-color($secondary, 95%)};
+    --bs-btn-active-bg: var(--bs-body-bg-color);
+    --bs-btn-active-color: var(--bs-body-color);
+    --bs-btn-active-shadow: 1px 1px 8px 5px #{shade-color($tertiary, 70%)};
   }
 
   .btn-outline-tertiary {
-    --#{$prefix}btn-hover-bg: #{shade-color($tertiary, 60%)};
-    --#{$prefix}btn-active-bg: #{shade-color($tertiary, 60%)};
+    --bs-btn-hover-bg: #{shade-color($tertiary, 60%)};
+    --bs-btn-active-bg: #{shade-color($tertiary, 60%)};
     box-shadow: 1px 1px 8px 5px #{shade-color($tertiary, 70%)};
   }
 
   .btn-outline-dark {
-    --#{$prefix}btn-color: var(--bs-body-color);
-    --#{$prefix}btn-border-color: currentColor;
-    --#{$prefix}btn-hover-bg: rgba(var(--bs-body-color-rgb), #{$btn-hover-bg-tint-amount});
-    --#{$prefix}btn-hover-border-color: currentColor;
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-border-color: currentColor;
+    --bs-btn-hover-bg: rgba(var(--bs-body-color-rgb), #{$btn-hover-bg-tint-amount});
+    --bs-btn-hover-border-color: currentColor;
   }
 }
 
