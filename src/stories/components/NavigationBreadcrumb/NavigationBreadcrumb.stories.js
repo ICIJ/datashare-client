@@ -122,7 +122,6 @@ export const MultipleAddons = {
               square
               hide-label
               icon-left="sliders-horizontal"
-              class="text-primary-emphasis"
               label="Configure current view" />
           </navigation-breadcrumb-entry>
         </template>
