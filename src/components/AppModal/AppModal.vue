@@ -1,5 +1,6 @@
 <script setup>
 import AppModalHeader from './AppModalHeader'
+import AppModalFooter from './AppModalFooter'
 
 defineProps({
   title: {
@@ -35,8 +36,7 @@ defineProps({
     type: String
   },
   cancelVariant: {
-    type: String,
-    default: 'outline-lighter'
+    type: String
   },
   centered: {
     type: Boolean
@@ -187,6 +187,21 @@ defineProps({
             <slot name="header-close" />
           </template>
         </app-modal-header>
+      </slot>
+    </template>
+    <template #footer="{ cancel, close, hide, ok, visible }">
+      <slot name="footer" v-bind="{ cancel, close, hide, ok, visible }">
+        <app-modal-footer
+          :cancel-disabled="cancelDisabled"
+          :cancel-title="cancelTitle"
+          :cancel-variant="cancelVariant"
+          :ok-disabled="okDisabled"
+          :ok-only="okOnly"
+          :ok-title="okTitle"
+          :ok-variant="okVariant"
+          @cancel="cancel"
+          @ok="ok"
+        />
       </slot>
     </template>
     <slot />
