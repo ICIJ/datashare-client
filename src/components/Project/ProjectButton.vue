@@ -40,7 +40,7 @@ const to = computed(() => {
 </script>
 
 <template>
-  <b-button :to="to" class="project-button" variant="outline-lighter" :disabled="disabled">
+  <b-button :to="to" class="project-button" variant="outline-tertiary" :disabled="disabled">
     <project-label :project="project" :hide-thumbnail="hideThumbnail">
       <slot />
     </project-label>
