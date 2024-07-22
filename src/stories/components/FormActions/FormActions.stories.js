@@ -40,7 +40,7 @@ export default {
   },
   args: {
     size: 'md',
-    variant: 'outline-lighter'
+    variant: 'outline-tertiary'
   },
   render(args) {
     return {
