@@ -174,7 +174,7 @@ const labelOrLoadingText = computed(() => {
 })
 
 const showTooltip = computed(() => {
-  return currentHover.value && !props.hideTooltip && props.hideLabel && props.label
+  return currentHover.value && !props.hideTooltip && props.hideLabel && !!props.label
 })
 
 const buttonProps = computed(() => ({
