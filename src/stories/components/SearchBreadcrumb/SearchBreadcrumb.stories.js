@@ -5,6 +5,7 @@ export default {
   decorators: [],
   title: 'Components/SearchBreadcrumb',
   tags: ['autodocs'],
+  component: SearchBreadcrumb,
   render: () => ({
     components: {
       SearchBreadcrumb,
