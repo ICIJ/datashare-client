@@ -15,6 +15,7 @@ export default {
     default: 'Let’s explain here the consequences of the action if needed so users don’t make any mistake.',
     image: 'https://i.imgur.com/1eWgPCp.png',
     imageWidth: '60px',
+    bodyClass: 'text-tertiary-emphasis',
     modelValue: true,
     fullscreen: false,
     hideBackdrop: false,
