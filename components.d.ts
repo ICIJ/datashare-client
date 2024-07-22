@@ -11,6 +11,7 @@ declare module 'vue' {
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
     AppModal: typeof import('./src/components/AppModal/AppModal.vue')['default']
+    AppModalFooter: typeof import('./src/components/AppModal/AppModalFooter.vue')['default']
     AppModalHeader: typeof import('./src/components/AppModal/AppModalHeader.vue')['default']
     AppNav: typeof import('./src/components/AppNav.vue')['default']
     AppSidebar: typeof import('./src/components/AppSidebar/AppSidebar.vue')['default']
