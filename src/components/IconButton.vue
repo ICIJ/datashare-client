@@ -47,10 +47,13 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 const iconButton = ref(null)
+
+const injectedVariant = inject('variant', 'primary')
+const injectedSize = inject('size', 'md')
 
 const props = defineProps({
   iconLeft: {
@@ -107,12 +110,10 @@ const props = defineProps({
     type: Object
   },
   variant: {
-    type: String,
-    default: ''
+    type: String
   },
   size: {
-    type: String,
-    default: 'md'
+    type: String
   },
   block: {
     type: Boolean
@@ -180,10 +181,10 @@ const buttonProps = computed(() => ({
   block: props.block,
   pill: props.pill,
   pressed: props.pressed,
-  size: props.size,
+  size: props.size ?? injectedSize,
   tag: props.tag,
   type: props.type,
-  variant: props.variant
+  variant: props.variant ?? injectedVariant
 }))
 </script>
 
