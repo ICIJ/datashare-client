@@ -54,6 +54,7 @@ const classList = computed(() => {
     </b-form-checkbox>
     <icon-button
       v-if="!hideExpand"
+      variant="link"
       class="bg-primary-subtle text-primary-emphasis-subtle p-1 ms-auto"
       tooltip-placement="right"
       icon-left="arrows-out-simple"
