@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <b-button-group size="sm">
+  <b-button-group>
     <document-local-search-nav-item
       :disabled="disabledPrevious"
       icon="caret-up"
