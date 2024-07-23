@@ -22,7 +22,7 @@ const isEmpty = computed(() => !slots.default)
     <template v-else>
       <div class="d-flex mb-3">
         <search-breadcrumb-toggler class="order-1 align-self-start" @click="emit('close')" />
-        <div class="flex-grow-1 d-md-flex">
+        <div class="flex-grow-1">
           <div class="fw-medium text-primary-emphasis text-nowrap me-2 mb-2">
             <phosphor-icon name="path" />
             {{ $t('searchBreadcrumb.label') }}
