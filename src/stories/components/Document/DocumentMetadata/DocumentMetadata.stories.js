@@ -9,9 +9,11 @@ export default {
   component: DocumentMetadata,
   tags: ['autodocs'],
   args: {
+    pinned: false,
     label: 'Document directory',
     value: '/vault/luxleaks/v1/2001 and before',
-    icon: 'folder-open'
+    icon: 'folder-open',
+    description: 'The document directory is the path to the document in Datashare.'
   },
   render: (args) => ({
     components: {
@@ -19,7 +21,7 @@ export default {
     },
     setup: () => ({ args }),
     template: `
-      <document-metadata v-bind="args">
+      <document-metadata v-bind="args" @update:pinned="args.pinned = $event">
         {{ args.value }}
       </document-metadata>
     `
@@ -41,7 +43,7 @@ export const WithDatetime = {
     },
     setup: () => ({ args }),
     template: `
-      <document-metadata v-bind="args">
+      <document-metadata v-bind="args" @update:pinned="args.pinned = $event">
         <display-datetime :value="args.value" format="long" />
       </document-metadata>
     `
@@ -61,7 +63,7 @@ export const WithContentLength = {
     },
     setup: () => ({ args }),
     template: `
-      <document-metadata v-bind="args">
+      <document-metadata v-bind="args" @update:pinned="args.pinned = $event">
         <display-content-length :value="args.value" />
       </document-metadata>
     `
@@ -81,7 +83,7 @@ export const WithProjectButton = {
     },
     setup: () => ({ args }),
     template: `
-      <document-metadata v-bind="args">
+      <document-metadata v-bind="args" @update:pinned="args.pinned = $event">
         <project-button :project="args.value" size="sm" />
       </document-metadata>
     `
@@ -101,7 +103,7 @@ export const WithLanguage = {
     },
     setup: () => ({ args }),
     template: `
-      <document-metadata v-bind="args">
+      <document-metadata v-bind="args" @update:pinned="args.pinned = $event">
         <display-language :value="args.value" />
       </document-metadata>
     `
