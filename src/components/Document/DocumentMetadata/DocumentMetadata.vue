@@ -18,6 +18,9 @@ defineProps({
   },
   description: {
     type: String
+  },
+  pinned: {
+    type: Boolean
   }
 })
 </script>
@@ -33,7 +36,7 @@ defineProps({
         {{ value }}
       </slot>
     </div>
-    <document-metadata-actions class="document-metadata-entry__actions" />
+    <document-metadata-actions :pinned="pinned" @update:pinned="$emit('update:pinned', $event)" class="document-metadata-entry__actions" />
   </div>
 </template>
 
