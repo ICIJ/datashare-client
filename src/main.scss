@@ -35,6 +35,8 @@
   --bs-btn-active-color: var(--bs-body-color);
   --bs-btn-active-bg: var(--bs-body-bg);
   --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-lighter);
+  --bs-btn-disabled-color: var(--bs-light);
+  --bs-btn-disabled-border-color: var(--bs-lighter);
 }
 
 .btn-outline-dark {
