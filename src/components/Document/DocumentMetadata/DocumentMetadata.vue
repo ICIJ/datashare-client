@@ -45,7 +45,6 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-
 @include color-mode(dark) {
   .document-metadata:hover {
     box-shadow: 0 0 0 1px var(--bs-border-color);
