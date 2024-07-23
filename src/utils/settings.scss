@@ -128,8 +128,9 @@ $btn-hover-bg-shade-amount: 25%;
 $btn-hover-bg-tint-amount: 25%;
 $btn-disabled-opacity: 0.75;
 
-$input-btn-padding-y:0.5em;
-$input-btn-padding-x:0.75em;
+$input-btn-padding-y: 0.75em;
+$input-btn-padding-x: 1em;
+$input-btn-line-height: 1.25;
 
 $form-check-input-border: var(--bs-border-width) solid $tertiary;
 $form-check-input-border-radius: 2px;
@@ -195,7 +196,7 @@ $table-hover-bg: mix($secondary, #fff, 5%);
 $nav-tabs-border-color: transparent;
 $nav-tabs-border-width: 0;
 $nav-tabs-border-radius: 0;
-$nav-tabs-link-hover-border-color: transparent transparent currentColor transparent;
+$nav-tabs-link-hover-border-color: transparent transparent var(--bs-secondary) transparent;
 $nav-tabs-link-active-color: var(--bs-body-color);
 $nav-tabs-link-active: transparent;
 $nav-tabs-link-active-border-color: transparent transparent var(--bs-secondary) transparent;
