@@ -16,12 +16,12 @@ const props = defineProps({
   },
   occurrences: {
     type: Number,
-    default: null
+    default: 0
   }
 })
 
-const disabledPrevious = computed(() => props.activeIndex === 0)
-const disabledNext = computed(() => props.activeIndex === props.occurrences || props.occurrences === null)
+const disabledPrevious = computed(() => !props.modelValue || props.activeIndex === 0)
+const disabledNext = computed(() => !props.modelValue || props.activeIndex === props.occurrences)
 </script>
 
 <template>
