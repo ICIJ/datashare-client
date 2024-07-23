@@ -33,10 +33,20 @@ const show = computed(() => {
 const style = computed(() => {
   return { maxWidth: props.maxWidth }
 })
+
+const key = computed(() => {
+  return `${props.activeIndex}-${props.occurrences}`
+})
 </script>
 
 <template>
-  <div class="document-local-search-occurrences" v-if="show" :style="style" v-ellipsis-tooltip="{ title: label }">
+  <div
+    v-if="show"
+    :key="key"
+    v-ellipsis-tooltip="{ title: label }"
+    class="document-local-search-occurrences"
+    :style="style"
+  >
     {{ label }}
   </div>
 </template>
