@@ -148,6 +148,11 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "documentMetadataActions": {
+    "copy": "Copy this metadata value",
+    "search": "Search this metadata value",
+    "pin": "Pin this metadata"
+  },
   "documentThumbnail": {
     "noPreview": "No preview available"
   },

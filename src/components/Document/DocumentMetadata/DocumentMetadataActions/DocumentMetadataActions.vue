@@ -16,9 +16,18 @@ const pinIconHoverWeight = computed(() => (props.pinned ? 'fill' : 'bold'))
 <template>
   <div class="document-metdata-actions">
     <slot>
-      <document-metadata-actions-entry icon="magnifying-glass" @click="$emit('search')" />
-      <document-metadata-actions-entry icon="clipboard" @click="$emit('copy')" />
       <document-metadata-actions-entry
+        :label="$t('documentMetadataActions.search')"
+        icon="magnifying-glass"
+        @click="$emit('search')"
+      />
+      <document-metadata-actions-entry
+        :label="$t('documentMetadataActions.copy')"
+        icon="clipboard"
+        @click="$emit('copy')"
+      />
+      <document-metadata-actions-entry
+        :label="$t('documentMetadataActions.pin')"
         icon="push-pin"
         :icon-weight="pinIconWeight"
         :icon-hover-weight="pinIconHoverWeight"
