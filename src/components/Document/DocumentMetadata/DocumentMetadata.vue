@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
 
 import DocumentMetadataActions from './DocumentMetadataActions'
 
@@ -26,26 +26,38 @@ defineProps({
 </script>
 
 <template>
-  <div class="document-metadata-entry">
-    <phosphor-icon class="document-metadata-entry__icon" :name="icon" />
-    <div v-b-tooltip class="document-metadata-entry__label" :title="description">
+  <div class="document-metadata">
+    <phosphor-icon class="document-metadata__icon" :name="icon" />
+    <div v-b-tooltip class="document-metadata__label" :title="description">
       {{ label }}
     </div>
-    <div class="document-metadata-entry__value">
+    <div v-ellipsis-tooltip="{ title: value }" class="document-metadata__value">
       <slot v-bind="{ icon, label, value, description }">
         {{ value }}
       </slot>
     </div>
-    <document-metadata-actions :pinned="pinned" @update:pinned="$emit('update:pinned', $event)" class="document-metadata-entry__actions" />
+    <document-metadata-actions
+      :pinned="pinned"
+      class="document-metadata__actions"
+      @update:pinned="$emit('update:pinned', $event)"
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.document-metadata-entry {
+
+@include color-mode(dark) {
+  .document-metadata:hover {
+    box-shadow: 0 0 0 1px var(--bs-border-color);
+  }
+}
+
+.document-metadata {
   display: flex;
   align-items: center;
   gap: $spacer-sm;
   padding: $spacer-xs $spacer;
+  border-radius: var(--bs-border-radius);
 
   &:hover {
     box-shadow: 1px 1px 8px 5px var(--bs-lighter);
