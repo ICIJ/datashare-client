@@ -25,8 +25,12 @@ const disabledNext = computed(() => props.activeIndex === props.occurrences || p
 </script>
 
 <template>
-  <div class="document-local-search d-inline-flex">
-    <document-local-search-input :model-value="modelValue" @update:modelValue="$emit('update:modelValue', $event)" />
+  <div class="document-local-search d-flex">
+    <document-local-search-input
+      :model-value="modelValue"
+      class="flex-grow-1"
+      @update:modelValue="$emit('update:modelValue', $event)"
+    />
     <document-local-search-nav
       :disabled-previous="disabledPrevious"
       :disabled-next="disabledNext"
@@ -35,6 +39,7 @@ const disabledNext = computed(() => props.activeIndex === props.occurrences || p
       @next="$emit('update:activeIndex', activeIndex + 1)"
     />
     <document-local-search-occurrences
+      v-if="modelValue"
       :active-index="activeIndex"
       :occurrences="occurrences"
       class="ms-2 align-self-center"
