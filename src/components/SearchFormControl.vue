@@ -152,11 +152,13 @@ const classList = computed(() => {
         class="search-form-control__end input-group-text border-start-0"
         :class="{ 'search-form-control--rounded--end': rounded }"
       >
-        <phosphor-icon
+        <icon-button
           v-if="clearText"
-          name="x-circle"
-          square
-          class="search-form-control__clear__icon"
+          icon-left="x"
+          hide-label
+          variant="outline-tertiary"
+          :size="size"
+          class="search-form-control__clear__icon p-1 border-0"
           :class="{
             'search-form-control__clear__icon--hide': !showClearText
           }"
