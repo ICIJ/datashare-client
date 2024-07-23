@@ -141,6 +141,9 @@
     "nextPage": "Go to next page",
     "lastPage": "Go to last page"
   },
+  "documentLocalSearchOccurrences": {
+    "label": "{activeIndex} on {occurrences}"
+  },
   "documentThumbnail": {
     "noPreview": "No preview available"
   },
