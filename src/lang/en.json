@@ -144,6 +144,10 @@
   "documentLocalSearchOccurrences": {
     "label": "{activeIndex} on {occurrences}"
   },
+  "documentSearchNavItem": {
+    "previous": "Previous",
+    "next": "Next"
+  },
   "documentThumbnail": {
     "noPreview": "No preview available"
   },
