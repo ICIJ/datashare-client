@@ -103,11 +103,12 @@ defineProps({
       }
     }
 
-    &:hover {
+    &.nav-link:hover {
       --color: var(--bs-emphasis-color);
+      border-color: var(--bs-secondary);
 
       .nav-tabs.flex-column > & {
-        border-left: 2px solid currentColor;
+        border-left: 2px solid var(--bs-secondary);
       }
     }
 
