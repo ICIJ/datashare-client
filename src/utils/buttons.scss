@@ -1,0 +1,72 @@
+@each $variant, $value in $theme-colors {
+  .btn-outline-#{$variant} {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-disabled-color: var(--bs-tertiary);
+  }
+
+  .btn-#{$variant} {
+    --bs-btn-disabled-color: var(--bs-tertiary);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--bs-tertiary);
+    --bs-btn-disabled-opacity: 1;
+  }
+}
+
+.btn-outline-secondary {
+  --bs-btn-hover-bg: #{tint-color($secondary, 90%)};
+  --bs-btn-active-bg: #{tint-color($secondary, 90%)};
+  --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-lighter);
+  --bs-btn-disabled-color: var(--bs-tertiary);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--bs-tertiary);
+  --bs-btn-disabled-opacity: 1;
+}
+
+.btn-outline-tertiary {
+  --bs-btn-color: var(--bs-tertiary);
+  --bs-btn-border-color: var(--bs-lighter);
+  --bs-btn-hover-bg: var(--bs-lighter);
+  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--bs-body-color);
+  --bs-btn-active-bg: var(--bs-body-bg);
+  --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-lighter);
+  --bs-btn-disabled-color: var(--bs-light);
+  --bs-btn-disabled-border-color: var(--bs-lighter);
+}
+
+.btn-outline-dark {
+  --bs-btn-color: var(--bs-link-color);
+  --bs-btn-hover-bg: var(--bs-primary);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-bg: var(--bs-body-bg);
+}
+
+@include color-mode(dark) {
+  .btn-primary {
+    --bs-btn-bg: var(--bs-body-color);
+    --bs-btn-color: var(--bs-body-bg);
+  }
+
+  .btn-outline-secondary {
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: #{shade-color($secondary, 95%)};
+    --bs-btn-active-bg: var(--bs-body-bg-color);
+    --bs-btn-active-color: var(--bs-body-color);
+    --bs-btn-active-shadow: transparent;
+  }
+
+  .btn-outline-tertiary {
+    --bs-btn-hover-bg: #{shade-color($tertiary, 60%)};
+    --bs-btn-hover-border-color: currentColor;
+    --bs-btn-active-bg: #{shade-color($tertiary, 60%)};
+    --bs-btn-active-shadow: transparent;
+  }
+
+  .btn-outline-dark {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-border-color: currentColor;
+    --bs-btn-hover-bg: rgba(var(--bs-body-color-rgb), #{$btn-hover-bg-tint-amount});
+    --bs-btn-hover-border-color: currentColor;
+  }
+}
