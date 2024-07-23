@@ -1,7 +1,7 @@
-import DocumentMetadataActions from '@/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActions'
+import DocumentMetadataActions from '@/components/Document/DocumentMetadata/DocumentMetadataActions'
 
 export default {
-  title: 'Components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActions',
+  title: 'Components/Document/DocumentMetadata/DocumentMetadataActions',
   component: DocumentMetadataActions,
   tags: ['autodocs'],
   args: {
