@@ -18,6 +18,7 @@ const emit = defineEmits(['update:modelValue'])
   <search-form-control
     :model-value="modelValue"
     :placeholder="placeholder"
+    clear-text
     class="filters-panel-search"
     @update:modelValue="emit('update:modelValue', $event)"
   />
