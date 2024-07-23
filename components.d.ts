@@ -88,6 +88,7 @@ declare module 'vue' {
     DisplayLanguage: typeof import('./src/components/Display/DisplayLanguage.vue')['default']
     DisplayTags: typeof import('./src/components/Display/DisplayTags.vue')['default']
     DisplayUser: typeof import('./src/components/Display/DisplayUser.vue')['default']
+    DocumentActionButton: typeof import('./src/components/DocumentActionButton.vue')['default']
     DocumentActions: typeof import('./src/components/DocumentActions.vue')['default']
     DocumentAttachments: typeof import('./src/components/DocumentAttachments.vue')['default']
     DocumentCard: typeof import('./src/components/Document/DocumentCard/DocumentCard.vue')['default']
@@ -275,8 +276,6 @@ declare module 'vue' {
     WidgetTreeMap: typeof import('./src/components/Widget/WidgetTreeMap.vue')['default']
   }
   export interface ComponentCustomProperties {
-    vBModal: typeof import('bootstrap-vue-next')['vBModal']
-    vBToggle: typeof import('bootstrap-vue-next')['vBToggle']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
