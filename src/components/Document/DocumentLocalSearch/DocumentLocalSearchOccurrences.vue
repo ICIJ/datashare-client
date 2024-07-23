@@ -10,7 +10,10 @@ const props = defineProps({
   },
   occurrences: {
     type: Number,
-    default: null
+    default: 0
+  },
+  hidden: {
+    type: Boolean
   },
   maxWidth: {
     type: String,
@@ -26,10 +29,6 @@ const label = computed(() => {
   return t('documentLocalSearchOccurrences.label', { activeIndex, occurrences })
 })
 
-const show = computed(() => {
-  return props.occurrences !== null
-})
-
 const style = computed(() => {
   return { maxWidth: props.maxWidth }
 })
@@ -37,14 +36,20 @@ const style = computed(() => {
 const key = computed(() => {
   return `${props.activeIndex}-${props.occurrences}`
 })
+
+const classList = computed(() => {
+  return {
+    'document-local-search-occurrences--hidden': props.hidden
+  }
+})
 </script>
 
 <template>
   <div
-    v-if="show"
     :key="key"
     v-ellipsis-tooltip="{ title: label }"
     class="document-local-search-occurrences"
+    :class="classList"
     :style="style"
   >
     {{ label }}
@@ -56,5 +61,10 @@ const key = computed(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
+
+  &--hidden {
+    visibility: hidden;
+  }
 }
 </style>

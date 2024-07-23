@@ -39,7 +39,7 @@ const disabledNext = computed(() => props.activeIndex === props.occurrences || p
       @next="$emit('update:activeIndex', activeIndex + 1)"
     />
     <document-local-search-occurrences
-      v-if="modelValue"
+      :hidden="!modelValue"
       :active-index="activeIndex"
       :occurrences="occurrences"
       class="ms-2 align-self-center"
