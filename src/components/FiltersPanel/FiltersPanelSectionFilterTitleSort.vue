@@ -43,7 +43,7 @@ const isOptionActive = ({ sortBy, sortByOrder }) => {
     variant="link"
     end
     teleport-to="body"
-    toggle-class="bg-primary-subtle text-primary-emphasis-subtle p-1"
+    toggle-class="bg-primary-subtle p-1"
     no-caret
   >
     <template #button-content>
@@ -66,7 +66,6 @@ const isOptionActive = ({ sortBy, sortByOrder }) => {
   &:deep(.dropdown-toggle) {
     padding: 0 $spacer-xs;
     margin-right: $spacer-xs;
-    color: inherit;
     line-height: 1;
     display: inline-flex;
     align-items: center;
