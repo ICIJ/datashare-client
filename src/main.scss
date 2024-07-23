@@ -17,6 +17,14 @@
 @each $variant, $value in $theme-colors {
   .btn-outline-#{$variant} {
     --bs-btn-color: var(--bs-body-color);
+    --bs-btn-disabled-color: var(--bs-tertiary);
+  }
+
+  .btn-#{$variant} {
+    --bs-btn-disabled-color: var(--bs-tertiary);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--bs-tertiary);
+    --bs-btn-disabled-opacity: 1;
   }
 }
 
@@ -24,6 +32,10 @@
   --bs-btn-hover-bg: #{tint-color($secondary, 90%)};
   --bs-btn-active-bg: #{tint-color($secondary, 90%)};
   --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-lighter);
+  --bs-btn-disabled-color: var(--bs-tertiary);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--bs-tertiary);
+  --bs-btn-disabled-opacity: 1;
 }
 
 .btn-outline-tertiary {
