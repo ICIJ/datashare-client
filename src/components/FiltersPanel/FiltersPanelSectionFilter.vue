@@ -75,6 +75,7 @@ const classList = computed(() => {
           :model-value="search"
           :placeholder="searchPlaceholder"
           shadow
+          clear-text
           size="sm"
           class="filters-panel-section-filter__content__search mb-3"
           @update:modelValue="emit('update:search', $event)"
