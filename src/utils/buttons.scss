@@ -12,6 +12,17 @@
   }
 }
 
+.btn-primary {
+  --bs-btn-focus-box-shadow: 0 0 0 2px var(--bs-secondary);
+
+  &:focus,
+  &:focus-visible,
+  &.pseudo-focus {
+    --bs-btn-border-color: var(--bs-white);
+    --bs-btn-hover-border-color: var(--bs-white);
+  }
+}
+
 .btn-outline-secondary {
   --bs-btn-hover-bg: #{tint-color($secondary, 90%)};
   --bs-btn-active-bg: #{tint-color($secondary, 90%)};
@@ -20,6 +31,14 @@
   --bs-btn-disabled-bg: transparent;
   --bs-btn-disabled-border-color: var(--bs-tertiary);
   --bs-btn-disabled-opacity: 1;
+  --bs-btn-focus-box-shadow: 0 0 0 2px var(--bs-secondary) inset;
+
+  &:focus,
+  &:focus-visible,
+  &.pseudo-focus {
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-border-color: var(--bs-primary);
+  }
 }
 
 .btn-outline-tertiary {
@@ -33,6 +52,7 @@
   --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-lighter);
   --bs-btn-disabled-color: var(--bs-light);
   --bs-btn-disabled-border-color: var(--bs-lighter);
+  --bs-btn-focus-box-shadow: 0 0 0 #{$btn-focus-width} rgba(var(--bs-primary-rgb), 0.5), 0 0 0 1px var(--bs-secondary) inset;
 }
 
 .btn-outline-dark {
