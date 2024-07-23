@@ -7,7 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    2: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearch copy 2.vue')['default']
+    2: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActionsEntry copy 2.vue')['default']
     3: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearch copy 3.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
@@ -78,7 +78,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/Document/DocumentSearchNav/DocumentSearchNav copy.vue')['default']
+    copy: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActionsEntry copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayContentLength: typeof import('./src/components/Display/DisplayContentLength.vue')['default']
@@ -121,6 +121,9 @@ declare module 'vue' {
     DocumentLocalSearchNav: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearchNav.vue')['default']
     DocumentLocalSearchNavItem: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearchNavItem.vue')['default']
     DocumentLocalSearchOccurrences: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearchOccurrences.vue')['default']
+    DocumentMetadata: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadata/DocumentMetadata.vue')['default']
+    DocumentMetadataActions: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActions.vue')['default']
+    DocumentMetadataActionsEntry: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActionsEntry.vue')['default']
     DocumentNavbar: typeof import('./src/components/Document/DocumentNavbar.vue')['default']
     DocumentNotes: typeof import('./src/components/Document/DocumentNotes.vue')['default']
     DocumentSearchNav: typeof import('./src/components/Document/DocumentSearchNav/DocumentSearchNav.vue')['default']
