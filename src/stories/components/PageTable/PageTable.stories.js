@@ -1,10 +1,12 @@
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import DisplayStatus from '@/components/Display/DisplayStatus'
+import DisplayVisibility from '@/components/Display/DisplayVisibility'
+import IconButton from '@/components/IconButton'
 import PageTable from '@/components/PageTable/PageTable'
+import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import PageTableTr from '@/components/PageTable/PageTableTr'
 import ProjectLabel from '@/components/Project/ProjectLabel'
-import DisplayStatus from '@/components/Display/DisplayStatus'
-import DisplayVisibility from '@/components/Display/DisplayVisibility'
-import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
 export default {
   title: 'Components/PageTable/PageTable',
@@ -79,11 +81,13 @@ export default {
 export const Default = {}
 
 export const WithoutSelectMode = {
-  render: (args) => ({
+  render: () => ({
     components: {
+      IconButton,
       PageTable,
       PageTableTh,
       PageTableTr,
+      PageTableTdActions,
       ProjectLabel,
       DisplayStatus,
       DisplayVisibility,
@@ -100,6 +104,7 @@ export const WithoutSelectMode = {
           <page-table-th label="Project" icon="circles-three-plus" />
           <page-table-th label="Author" icon="user-circle" />
           <page-table-th label="Created" icon="calendar-blank" />
+          <page-table-th label="Actions" hide-label />
         </template>
         <page-table-tr>
           <td><display-status value="queued" /></td>
@@ -110,6 +115,11 @@ export const WithoutSelectMode = {
           <td><project-label project="Project 1" hide-thumbnail /></td>
           <td>John Doe</td>
           <td><display-datetime value="2021-09-01" /></td>
+          <page-table-td-actions>
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+          </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
           <td><display-status value="success" /></td>
@@ -120,6 +130,11 @@ export const WithoutSelectMode = {
           <td><project-label project="Project 2" hide-thumbnail /></td>
           <td>Jane Doe</td>
           <td><display-datetime value="2021-09-02" /></td>
+          <page-table-td-actions>
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+          </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
           <td><display-status value="failure" /></td>
@@ -130,6 +145,11 @@ export const WithoutSelectMode = {
           <td><project-label project="Project 3" hide-thumbnail /></td>
           <td>Jan Doe</td>
           <td><display-datetime value="2021-09-03" /></td>
+          <page-table-td-actions>
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+          </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
           <td><display-status value="draft" /></td>
@@ -140,6 +160,11 @@ export const WithoutSelectMode = {
           <td><project-label project="Project 4" hide-thumbnail /></td>
           <td>Jin Doe</td>
           <td><display-datetime value="2021-09-04" /></td>
+          <page-table-td-actions>
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <icon-button variant="outline-tertiary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+          </page-table-td-actions>
         </page-table-tr>
       </page-table>
     `
