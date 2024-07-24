@@ -34,7 +34,6 @@ const valueIcon = computed(() => {
   return toVariantPhosphorIcon(props.value)
 })
 
-
 const valueTitle = computed(() => {
   return t(`displayStatus.${props.value}`)
 })
