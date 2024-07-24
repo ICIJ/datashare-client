@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import PageTableThSort from './PageTableThSort'
+
 const props = defineProps({
   label: {
     type: String,
@@ -18,6 +20,16 @@ const props = defineProps({
   },
   compact: {
     type: Boolean
+  },
+  sortable: {
+    type: Boolean
+  },
+  sorted: {
+    type: Boolean
+  },
+  order: {
+    type: String,
+    default: 'desc'
   }
 })
 
@@ -38,14 +50,21 @@ const labelClassList = computed(() => {
 <template>
   <b-th class="page-table-th text-nowrap" :class="classList">
     <slot>
-      <phosphor-icon v-if="icon" :name="icon" class="me-1" />
-      <span :class="labelClassList">{{ label }}</span>
+      <span class="d-flex align-items-center">
+        <phosphor-icon v-if="icon" :name="icon" class="me-1 my-2" />
+        <span :class="labelClassList">{{ label }}</span>
+        <page-table-th-sort class="ms-1" v-if="sortable" :sorted="sorted" :order="order" />
+      </span>
     </slot>
   </b-th>
 </template>
 
 <style lang="scss" scoped>
-.page-table-th--compact {
-  width: 2rem;
+.page-table-th {
+  vertical-align: $table-cell-vertical-align;
+
+  &--compact {
+    width: 2rem;
+  }
 }
 </style>
