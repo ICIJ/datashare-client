@@ -23,7 +23,7 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <b-th class="page-table-th" :class="classList">
+  <b-th class="page-table-th text-nowrap" :class="classList">
     <slot>
       <phosphor-icon v-if="icon" :name="icon" class="me-1" />
       {{ label }}
