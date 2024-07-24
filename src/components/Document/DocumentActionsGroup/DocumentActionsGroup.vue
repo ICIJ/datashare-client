@@ -4,10 +4,10 @@
 
     </slot>
     <slot name="actions" v-bind="{document}">
-      <document-actions-entry icon-name="star" label="Star" @click="clickStar" :tooltipPlacement="tooltipPlacement" :isFilled="isStarred"/>
-      <document-actions-entry icon-name="share" label="Share" @click="clickShare" :tooltipPlacement="tooltipPlacement"/>
-      <document-actions-entry icon-name="download" :disabled="isDownloadAllowed" @click="clickDownload" :label="downloadLabel" :tooltipPlacement="tooltipPlacement" />
-      <document-actions-entry icon-name="arrows-out-simple"  label="Expand"  @click="clickExpand" :tooltipPlacement="tooltipPlacement"/>
+      <document-actions-group-entry icon-name="star" label="Star" @click="clickStar" :tooltipPlacement="tooltipPlacement" :isFilled="isStarred"/>
+      <document-actions-group-entry icon-name="share" label="Share" @click="clickShare" :tooltipPlacement="tooltipPlacement"/>
+      <document-actions-group-entry icon-name="download" :disabled="isDownloadAllowed" @click="clickDownload" :label="downloadLabel" :tooltipPlacement="tooltipPlacement" />
+      <document-actions-group-entry icon-name="arrows-out-simple"  label="Expand"  @click="clickExpand" :tooltipPlacement="tooltipPlacement"/>
   </slot>
    
   </b-button-group>
@@ -20,7 +20,7 @@ import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
-import DocumentActionsEntry from '@/components/DocumentActionsEntry'
+import DocumentActionsGroupEntry from '@/components/Document/DocumentActionsGroup/DocumentActionsGroupEntry'
 defineProps({
   /**
    * The selected document
