@@ -125,12 +125,12 @@ export const WithoutSelectMode = {
         <template #thead>
           <page-table-th label="Status" compact hide-label />
           <page-table-th label="Visibility" compact hide-label />
-          <page-table-th label="Name of the batch search" emphasis />
+          <page-table-th label="Name of the batch search" emphasis sortable sorted />
           <page-table-th label="Queries" icon="magnifying-glass" emphasis />
           <page-table-th label="Documents " icon="text-align-justify" emphasis />
           <page-table-th label="Project" icon="circles-three-plus" />
           <page-table-th label="Author" icon="user-circle" />
-          <page-table-th label="Created" icon="calendar-blank" />
+          <page-table-th label="Created" icon="calendar-blank" sortable />
           <page-table-th label="Actions" hide-label />
         </template>
         <page-table-tr>
