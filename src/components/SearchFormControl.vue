@@ -171,6 +171,12 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+@include color-mode(dark) {
+  .search-form-control--shadow {
+    box-shadow: none;
+  }
+}
+
 .search-form-control {
   border-radius: 6px;
 
