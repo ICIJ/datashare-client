@@ -59,7 +59,7 @@ const classList = computed(() => {
       }
 
       &:deep(.page-table-tr--active td:nth-of-type(#{$n})) a {
-        font-weight: 700;
+        font-weight: 500;
       }
     }
   }
