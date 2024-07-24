@@ -190,8 +190,17 @@ $font-size-sm: math.div(14, 16) * 1rem;
 $font-size-lg: 1.2rem;
 $line-height-sm: 1.7;
 
-$table-striped-bg: #f9f8f8;
-$table-hover-bg: mix($secondary, #fff, 5%);
+$table-cell-padding-y: $spacer;
+$table-cell-padding-x: $spacer;
+$table-cell-vertical-align: middle;
+
+$table-th-font-weight: normal;
+
+$table-color: var(--bs-tertiary-text-emphasis);
+$table-bg: var(--bs-body-bg);
+$table-accent-bg: transparent;
+
+$table-striped-bg: var(--bs-lighter);
 
 $nav-tabs-border-color: transparent;
 $nav-tabs-border-width: 0;
