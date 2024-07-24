@@ -84,12 +84,9 @@ const iconHoverWeight = computed(() => (props.isFilled ? 'fill' : 'bold'))
 <style lang="scss" scoped>
 
 .document-actions-entry  {
+  --bs-btn-hover-color : var(--bs-primary-text-emphasis) ;
   &--filled {
-    color: $primary;
+    --bs-btn-color: var(--bs-primary-text-emphasis) ;
   }
-  &:hover{
-    color : $primary;
-  }
-  // this will compile to: --pf-primary-color: #000000;
 }
 </style>
