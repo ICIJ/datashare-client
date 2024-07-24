@@ -6,11 +6,11 @@
     :icon-left-hover-weight="iconHoverWeight"
     :label="label"
     hide-label
-    :tooltipPlacement="tooltipPlacement"
+    :tooltip-placement="tooltipPlacement"
     square
     variant="outline-tertiary"
-    class="document-actions-entry border-0 "
-    :class="{'document-actions-entry--filled': isFilled}"
+    class="document-actions-entry border-0"
+    :class="{ 'document-actions-entry--fill': fill }"
     :disabled="disabled"
   />
 </template>
@@ -45,20 +45,20 @@ const props = defineProps({
     default: 'btn-sm'
   },
   /**
-   * Button is filled
+   * Button is fill
    */
-  isFilled: {
+  fill: {
     type: Boolean
   },
   /**
-   * Class to apply to the action button when document is filled
+   * Class to apply to the action button when document is fill
    */
   tooltipPlacement: {
     type: String,
     default: 'bottom'
   },
   /**
-   * Disable button 
+   * Disable button
    */
   disabled: {
     type: Boolean,
@@ -67,26 +67,16 @@ const props = defineProps({
 })
 
 const btnId = uniqueId('action-btn-')
-const btnClassDefinition = computed(() => {
-  return {
-    [props.btnClass]: props.isFilled,
-    ...classAttributeToObject(props.btnClass)
-  }
-})
-function classAttributeToObject(str) {
-  const list = str.split(' ')
-  return Object.assign({}, ...list.map((key) => ({ [key]: true })))
-}
-
-const iconWeight = computed(() => (props.isFilled ? 'fill' : 'regular'))
-const iconHoverWeight = computed(() => (props.isFilled ? 'fill' : 'bold'))
+const iconWeight = computed(() => (props.fill ? 'fill' : 'regular'))
+const iconHoverWeight = computed(() => (props.fill ? 'fill' : 'bold'))
 </script>
-<style lang="scss" scoped>
 
-.document-actions-entry  {
-  --bs-btn-hover-color : var(--bs-primary-text-emphasis) ;
-  &--filled {
-    --bs-btn-color: var(--bs-primary-text-emphasis) ;
+<style lang="scss" scoped>
+.document-actions-entry {
+  --bs-btn-hover-color: var(--bs-primary-text-emphasis);
+
+  &--fill {
+    --bs-btn-color: var(--bs-primary-text-emphasis);
   }
 }
 </style>
