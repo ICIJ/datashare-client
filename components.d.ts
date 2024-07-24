@@ -7,9 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    '(feat': addv document action entry and document actions)
-    2: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActionsEntry copy 2.vue')['default']
-    3: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearch copy 3.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
