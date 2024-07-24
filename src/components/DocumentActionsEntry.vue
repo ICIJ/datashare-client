@@ -3,11 +3,14 @@
     :id="btnId"
     :icon-left="iconName"
     :icon-left-weight="iconWeight"
-    class="btn"
-    :class="btnClassDefinition"
-    :tooltip-placement="tooltipPlacement"
+    :icon-left-hover-weight="iconHoverWeight"
     :label="label"
     hide-label
+    :tooltipPlacement="tooltipPlacement"
+    square
+    variant="outline-tertiary"
+    class="document-actions-entry border-0 "
+    :class="{'document-actions-entry--filled': isFilled}"
     :disabled="disabled"
   />
 </template>
@@ -18,7 +21,7 @@ import uniqueId from 'lodash/uniqueId'
 
 import IconButton from '@/components/IconButton'
 
-defineOptions({ name: 'DocumentActionsButton' })
+defineOptions({ name: 'DocumentActionsEntry' })
 const props = defineProps({
   /**
    * Icon name
@@ -39,7 +42,7 @@ const props = defineProps({
    */
   btnClass: {
     type: String,
-    default: 'btn-link btn-sm'
+    default: 'btn-sm'
   },
   /**
    * Button is filled
@@ -50,17 +53,13 @@ const props = defineProps({
   /**
    * Class to apply to the action button when document is filled
    */
-  filledBtnClass: {
-    type: String,
-    default: 'starred'
-  },
-  /**
-   * Class to apply to the action button when document is filled
-   */
   tooltipPlacement: {
     type: String,
-    default: 'top'
+    default: 'bottom'
   },
+  /**
+   * Disable button 
+   */
   disabled: {
     type: Boolean,
     default: false
@@ -80,4 +79,17 @@ function classAttributeToObject(str) {
 }
 
 const iconWeight = computed(() => (props.isFilled ? 'fill' : 'regular'))
+const iconHoverWeight = computed(() => (props.isFilled ? 'fill' : 'bold'))
 </script>
+<style lang="scss" scoped>
+
+.document-actions-entry  {
+  &--filled {
+    color: $primary;
+  }
+  &:hover{
+    color : $primary;
+  }
+  // this will compile to: --pf-primary-color: #000000;
+}
+</style>
