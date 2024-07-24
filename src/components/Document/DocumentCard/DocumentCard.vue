@@ -5,6 +5,7 @@ import DocumentCardProperties from './DocumentCardProperties'
 import DocumentCardCheckbox from './DocumentCardCheckbox'
 
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 
 const props = defineProps({
   document: {
@@ -79,7 +80,9 @@ const showTitle = computed(() => {
       </router-link>
       <document-card-properties :document="document" :properties="properties" />
     </div>
-    <div class="document-card__actions"></div>
+    <div class="document-card__actions">
+      <document-actions-group :document="document" vertical />
+    </div>
   </div>
 </template>
 
