@@ -1,4 +1,5 @@
 import IconButton from '@/components/IconButton'
+import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 
 export default {
   components: { DocumentActionsGroup },
