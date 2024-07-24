@@ -36,7 +36,7 @@
     "warning": "Warning",
     "info": "Information",
     "queued": "Queued",
-    "dfrat": "Draft"
+    "draft": "Draft"
   },
   "displayVisibility": {
     "private": "Private to you",
