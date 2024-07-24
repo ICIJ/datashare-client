@@ -1,9 +1,9 @@
-import DocumentActionsEntry from '@/components/DocumentActionsEntry'
+import DocumentActionsGroupEntry from '@/components/Document/DocumentActionsGroup/DocumentActionsGroupEntry'
 
 export default {
-  components: { DocumentActionsEntry },
-  title: 'Components/DocumentActionsGroup/Entry',
-  component: DocumentActionsEntry,
+  components: { DocumentActionsGroupEntry },
+  title: 'Components/Document/DocumentActionsGroup/Entry',
+  component: DocumentActionsGroupEntry,
   tags: ['autodocs']
 }
 
