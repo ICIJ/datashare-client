@@ -36,7 +36,9 @@ const props = defineProps({
 const classList = computed(() => {
   return {
     'page-table-th--emphasis': props.emphasis,
-    'page-table-th--compact': props.hideLabel
+    'page-table-th--compact': props.hideLabel,
+    'page-table-th--sortable': props.sortable,
+    'page-table-th--sorted': props.sorted
   }
 })
 
@@ -53,7 +55,13 @@ const labelClassList = computed(() => {
       <span class="d-flex align-items-center">
         <phosphor-icon v-if="icon" :name="icon" class="me-1 my-2" />
         <span :class="labelClassList">{{ label }}</span>
-        <page-table-th-sort class="ms-1" v-if="sortable" :sorted="sorted" :order="order" />
+        <page-table-th-sort
+          v-if="sortable"
+          class="ms-1"
+          :sorted="sorted"
+          :order="order"
+          @update:sorted="$emit('update:sorted', $event)"
+          @update:order="$emit('update:order', $event)" />
       </span>
     </slot>
   </b-th>
@@ -65,6 +73,10 @@ const labelClassList = computed(() => {
 
   &--compact {
     width: 2rem;
+  }
+
+  &--sorted.page-table-th--sortable {
+    color: var(--bs-primary-text-emphasis);
   }
 }
 </style>

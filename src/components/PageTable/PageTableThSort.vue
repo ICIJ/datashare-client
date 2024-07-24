@@ -3,6 +3,8 @@ import { computed } from 'vue'
 
 import IconButton from '@/components/IconButton'
 
+const emit = defineEmits(['update:sorted', 'update:order'])
+
 const props = defineProps({
   sorted: {
     type: Boolean
@@ -22,16 +24,26 @@ const classList = computed(() => {
 const icon = computed(() => {
   return props.order === 'desc' ? `sort-descending` : 'sort-ascending'
 })
+
+const toggleOrder = () => {
+  if (props.sorted) {
+    console.log(props.order === 'desc' ? 'asc' : 'desc')
+    emit('update:order', props.order === 'desc' ? 'asc' : 'desc')
+  } else {
+    emit('update:sorted', true)
+  }
+}
 </script>
 
 <template>
   <icon-button
-    variant="outline-light"
-    class="page-table-th-sort"
-    :class="classList"
     :icon-left="icon"
+    :class="classList"
+    class="page-table-th-sort"
+    variant="outline-light"
     icon-left-size="1em"
     hide-label
+    @click="toggleOrder"
   />
 </template>
 
@@ -42,8 +54,16 @@ const icon = computed(() => {
   --bs-btn-padding-y: #{$spacer-xxs};
   --bs-btn-color: var(--bs-light);
 
+  visibility: hidden;
+
   &--sorted {
-    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-color: var(--bs-primary-text-emphasis);
+    --bs-btn-bg: var(--bs-primary-bg-subtle);
+  }
+
+  &--sorted,
+  .page-table-th:hover & {
+    visibility: visible;
   }
 }
 </style>
