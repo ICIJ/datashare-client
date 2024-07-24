@@ -36,7 +36,7 @@ export default {
     template: `
       <page-table v-bind="args">
         <template #thead>
-          <page-table-th label="Name of the document" sortable emphasis sorted  />
+          <page-table-th label="Name of the document" sortable emphasis sorted order="asc" />
           <page-table-th label="Page(s)" icon="files" sortable emphasis />
           <page-table-th label="File type" icon="file" sortable emphasis />
           <page-table-th label="Project" icon="circles-three-plus" />
