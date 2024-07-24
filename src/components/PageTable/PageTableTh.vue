@@ -61,7 +61,8 @@ const labelClassList = computed(() => {
           :sorted="sorted"
           :order="order"
           @update:sorted="$emit('update:sorted', $event)"
-          @update:order="$emit('update:order', $event)" />
+          @update:order="$emit('update:order', $event)"
+        />
       </span>
     </slot>
   </b-th>
