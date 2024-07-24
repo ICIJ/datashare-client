@@ -1,12 +1,12 @@
 import IconButton from '@/components/IconButton'
 import { vueRouter } from 'storybook-vue3-router'
-import DocumentActionsGroup from '@/components/DocumentActionsGroup'
+import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 const routes = [{  name: 'document-modal',path: '/document-modal' }]
 
 export default {
   decorators: [vueRouter(routes)],
   components: { DocumentActionsGroup },
-  title: 'Components/DocumentActionsGroup',
+  title: 'Components/Document/DocumentActionsGroup',
   component: IconButton,
   tags: ['autodocs'],
   render: (args) => ({
@@ -19,7 +19,11 @@ export default {
       }
     },
     template: `
-      <document-actions-group v-bind="args" />
+      <document-actions-group v-bind="args" >
+      <template #selection>
+      <b-checkbox/>
+      </template>
+      </document-actions-group>
     `
   })
 }
