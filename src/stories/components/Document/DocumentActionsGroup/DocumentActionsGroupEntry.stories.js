@@ -2,14 +2,14 @@ import DocumentActionsGroupEntry from '@/components/Document/DocumentActionsGrou
 
 export default {
   components: { DocumentActionsGroupEntry },
-  title: 'Components/Document/DocumentActionsGroup/Entry',
+  title: 'Components/Document/DocumentActionsGroup/DocumentActionsGroupEntry',
   component: DocumentActionsGroupEntry,
   tags: ['autodocs']
 }
 
 export const Default = {
   args: {
-    iconName: 'star',
+    icon: 'star',
     label: 'Star',
     tooltipPlacement: 'right',
     tooltipLabel: 'Test',
@@ -19,7 +19,7 @@ export const Default = {
 }
 export const Filled = {
   args: {
-    iconName: 'star',
+    icon: 'star',
     label: 'Star',
     tooltipLabel: 'Test',
     tooltipPlacement: 'right',

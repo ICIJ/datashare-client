@@ -1,7 +1,7 @@
 <template>
   <icon-button
     :id="btnId"
-    :icon-left="iconName"
+    :icon-left="icon"
     :icon-left-weight="iconWeight"
     :icon-left-hover-weight="iconHoverWeight"
     :label="label"
@@ -26,7 +26,7 @@ const props = defineProps({
   /**
    * Icon name
    */
-  iconName: {
+  icon: {
     type: String,
     required: true
   },

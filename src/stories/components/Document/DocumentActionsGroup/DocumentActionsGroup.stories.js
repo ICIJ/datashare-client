@@ -1,6 +1,7 @@
 import IconButton from '@/components/IconButton'
 import { vueRouter } from 'storybook-vue3-router'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
+import {BFormCheckbox} from 'bootstrap-vue-next'
 const routes = [{  name: 'document-modal',path: '/document-modal' }]
 
 export default {
@@ -20,9 +21,6 @@ export default {
     },
     template: `
       <document-actions-group v-bind="args" >
-      <template #selection>
-      <b-checkbox/>
-      </template>
       </document-actions-group>
     `
   })
@@ -36,6 +34,8 @@ export const Default = {
     vertical: false,
     tooltipPlacement: 'top',
     isStarred: false,
-    isDownloadAllowed: false
+    isDownloadAllowed: false,
+    selectMode:true,
+    selected:false
   }
 }

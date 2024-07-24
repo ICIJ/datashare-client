@@ -1,25 +1,19 @@
 <template>
-  <b-button-group class="document-actions align-items-center" :vertical="vertical" size="sm">
-    <slot name="selection" v-bind="{document}">
-
-    </slot>
+  <div class="document-actions-group d-flex align-items-center" :class="{'flex-column': vertical}">
+    <b-form-checkbox class="m-2" v-if="selectMode" :model-value="selected" @update:modelValue="$emit('update:selected',$event)" name="checkbox"/>
     <slot name="actions" v-bind="{document}">
-      <document-actions-group-entry icon-name="star" label="Star" @click="clickStar" :tooltipPlacement="tooltipPlacement" :isFilled="isStarred"/>
-      <document-actions-group-entry icon-name="share" label="Share" @click="clickShare" :tooltipPlacement="tooltipPlacement"/>
-      <document-actions-group-entry icon-name="download" :disabled="isDownloadAllowed" @click="clickDownload" :label="downloadLabel" :tooltipPlacement="tooltipPlacement" />
-      <document-actions-group-entry icon-name="arrows-out-simple"  label="Expand"  @click="clickExpand" :tooltipPlacement="tooltipPlacement"/>
-  </slot>
+      <document-actions-group-entry icon="star" :label="$t('documentActionsGroup.star')" @click="clickStar" :tooltip-placement="tooltipPlacement" :is-filled="isStarred"/>
+      <document-actions-group-entry icon="share" :label="$t('documentActionsGroup.share')" @click="clickShare" :tooltip-placement="tooltipPlacement"/>
+      <document-actions-group-entry icon="download" :label="$t('documentActionsGroup.download')" :disabled="isDownloadAllowed" @click="clickDownload"  :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry icon="arrows-out-simple" :label="$t('documentActionsGroup.expand')" @click="clickExpand" :tooltipPlacement="tooltipPlacement"/>
+    </slot>
+  </div>
    
-  </b-button-group>
 </template>
 
 <script setup>
-import { findIndex, uniqueId } from 'lodash'
-import { mapState, useStore } from 'vuex'
-import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import RouterLinkPopup from '@/components/RouterLinkPopup'
 import DocumentActionsGroupEntry from '@/components/Document/DocumentActionsGroup/DocumentActionsGroupEntry'
 defineProps({
   /**
@@ -53,46 +47,37 @@ defineProps({
    */
    isStarred: {
     type: Boolean
+  },
+  /**
+   * True if selectMode is allowed
+   */
+   selectMode: {
+    type: Boolean
+  },
+  /**
+   * True if checkbox is selected
+   */
+   selected: {
+    type: Boolean
   }
 })
 
 const { t } = useI18n()
 
-const emit = defineEmits(['click-star','click-download','click-share','click-expand'])
+const emit = defineEmits(['click-star','click-download','click-share','click-expand','update:selected'])
 
-
-
-async function clickStar() {
+const clickStar = () => {
   emit("click-star", {id:document.id})
 }
-async function clickDownload() {
+const clickDownload = () => {
   emit("click-download", {id:document.id})
 }
-async function clickShare() {
+const clickShare = () => {
   emit("click-share", {id:document.id})
 }
-async function clickExpand() {
+const clickExpand = () => {
   emit("click-expand", {id:document.id})
 }
 
 </script>
 
-<style lang="scss" scoped>
-.document-actions {
-  .btn-group {
-    .btn:not(:first-of-type) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    .dropdown:last-of-type {
-      display: inline-flex;
-
-      &:deep(.btn) {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-      }
-    }
-  }
-}
-</style>
