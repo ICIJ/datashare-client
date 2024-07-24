@@ -23,6 +23,10 @@
   }
 }
 
+.btn-outline-primary {
+  --bs-btn-bg: var(--bs-body-bg);
+}
+
 .btn-outline-secondary {
   --bs-btn-hover-bg: #{tint-color($secondary, 90%)};
   --bs-btn-active-bg: #{tint-color($secondary, 90%)};
@@ -64,8 +68,23 @@
 
 @include color-mode(dark) {
   .btn-primary {
-    --bs-btn-bg: var(--bs-body-color);
+    --bs-btn-bg: var(--bs-white);
+    --bs-btn-border-color: var(--bs-white);
     --bs-btn-color: var(--bs-body-bg);
+
+    --bs-btn-hover-bg: var(--bs-body-color);
+    --bs-btn-hover-border-color: var(--bs-body-color);
+    --bs-btn-hover-color: var(--bs-body-bg);
+  }
+
+  .btn-outline-primary {
+    --bs-btn-bg: var(--bs-body-bg);
+    --bs-btn-border-color: var(--bs-body-color);
+    --bs-btn-color: var(--bs-body-color);
+
+    --bs-btn-hover-bg: var(--bs-body-bg);
+    --bs-btn-hover-border-color: var(--bs-white);
+    --bs-btn-hover-color: var(--bs-white);
   }
 
   .btn-outline-secondary {
