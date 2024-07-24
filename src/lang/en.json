@@ -155,6 +155,12 @@
     "nextPage": "Go to next page",
     "lastPage": "Go to last page"
   },
+  "documentActionsGroup": {
+    "star": "Star",
+    "download": "Download",
+    "share": "Share",
+    "expand": "Expand"
+  },
   "documentLocalSearchOccurrences": {
     "label": "{activeIndex} on {occurrences}"
   },
