@@ -35,46 +35,6 @@ export default {
                 </td>
               </tr>
               <tr>
-                <td rowspan="2">
-                  <strong>Secondary —</strong> Use the <code>color</code> option for lighter text. Use the <code>bg</code>
-                  option for dividers and to indicate disabled component states.
-                </td>
-                <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-secondary-color);">&nbsp;</div>
-                </td>
-                <td>
-                  <code>--bs-secondary-color</code>, <code>--bs-secondary-color-rgb</code>
-                </td>
-              </tr>
-              <tr>
-                <td class="ps-0">
-                  <div class="p-3 rounded-2 border" style="background-color: var(--bs-secondary-bg);">&nbsp;</div>
-                </td>
-                <td>
-                  <code>--bs-secondary-bg</code>, <code>--bs-secondary-bg-rgb</code>
-                </td>
-              </tr>
-              <tr>
-                <td rowspan="2">
-                  <strong>Tertiary —</strong> Use the <code>color</code> option for even lighter text. Use the <code>bg</code>
-                  option to style backgrounds for hover states, accents, and wells.
-                </td>
-                <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-tertiary-color);">&nbsp;</div>
-                </td>
-                <td>
-                  <code>--bs-tertiary-color</code>, <code>--bs-tertiary-color-rgb</code>
-                </td>
-              </tr>
-              <tr>
-                <td class="ps-0">
-                  <div class="p-3 rounded-2 border" style="background-color: var(--bs-tertiary-bg);">&nbsp;</div>
-                </td>
-                <td>
-                  <code>--bs-tertiary-bg</code>, <code>--bs-tertiary-bg-rgb</code>
-                </td>
-              </tr>
-              <tr>
                 <td>
                   <strong>Emphasis —</strong> For higher contrast text. Not applicable for backgrounds.
                 </td>
@@ -129,6 +89,78 @@ export default {
                 </td>
                 <td>
                   <code>--bs-primary-text-emphasis</code>
+                </td>
+              </tr>
+
+              <tr>
+                <td rowspan="4">
+                  <strong>Secondary —</strong> Second theme <code>color</code> option used for hovered hyperlinks and active styles.
+                </td>
+                 <td class="ps-0">
+                  <div class="p-3 rounded-2 bg-secondary">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-secondary</code>, <code>--bs-secondary-rgb</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-secondary-bg-subtle)">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-secondary-bg-subtle</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-secondary-border-subtle) solid">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-secondary-border-subtle</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-secondary-text-emphasis)">Text</div>
+                </td>
+                <td>
+                  <code>--bs-secondary-text-emphasis</code>
+                </td>
+              </tr>
+              <tr>
+                <td rowspan="4">
+                  <strong>Tertiary —</strong> Third theme <code>color</code> for lighter text. Use the <code>bg</code>
+                  option to style backgrounds for hover states, accents, and wells.
+                </td>
+                 <td class="ps-0">
+                  <div class="p-3 rounded-2 bg-tertiary">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-tertiary</code>, <code>--bs-tertiary-rgb</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-tertiary-bg-subtle)">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-tertiary-bg-subtle</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-tertiary-border-subtle) solid">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-tertiary-border-subtle</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-tertiary-text-emphasis)">Text</div>
+                </td>
+                <td>
+                  <code>--bs-tertiary-text-emphasis</code>
                 </td>
               </tr>
               <tr>
