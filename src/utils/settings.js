@@ -208,6 +208,7 @@ export default {
     info: 'info',
     pending: 'info',
     queued: 'info',
+    draft: 'warning',
     running: 'info',
     warning: 'warning',
     cancelled: 'warning',
