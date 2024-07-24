@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    '(feat': addv document action entry and document actions)
     2: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActionsEntry copy 2.vue')['default']
     3: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearch copy 3.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
@@ -87,7 +88,6 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/PageTable/PageTableTr copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayContentLength: typeof import('./src/components/Display/DisplayContentLength.vue')['default']
@@ -101,7 +101,13 @@ declare module 'vue' {
     DisplayUser: typeof import('./src/components/Display/DisplayUser.vue')['default']
     DisplayVisibility: typeof import('./src/components/Display/DisplayVisibility.vue')['default']
     DocumentActionButton: typeof import('./src/components/DocumentActionButton.vue')['default']
+    DocumentActionLink: typeof import('./src/components/DocumentActionLink.vue')['default']
     DocumentActions: typeof import('./src/components/DocumentActions.vue')['default']
+    DocumentActionsEntry: typeof import('./src/components/DocumentActionsEntry.vue')['default']
+    DocumentActionsEntryDownload: typeof import('./src/components/DocumentActionsEntryDownload.vue')['default']
+    DocumentActionsEntryDownloadDropdown: typeof import('./src/components/DocumentActionsEntryDownloadDropdown.vue')['default']
+    DocumentActionsEntryDownloadPopover: typeof import('./src/components/DocumentActionsEntryDownloadPopover.vue')['default']
+    DocumentActionsGroup: typeof import('./src/components/DocumentActionsGroup.vue')['default']
     DocumentAttachments: typeof import('./src/components/DocumentAttachments.vue')['default']
     DocumentCard: typeof import('./src/components/Document/DocumentCard/DocumentCard.vue')['default']
     DocumentCardCheckbox: typeof import('./src/components/Document/DocumentCard/DocumentCardCheckbox.vue')['default']
@@ -299,6 +305,7 @@ declare module 'vue' {
     WidgetTreeMap: typeof import('./src/components/Widget/WidgetTreeMap.vue')['default']
   }
   export interface ComponentCustomProperties {
+    vBModal: typeof import('bootstrap-vue-next')['vBModal']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
