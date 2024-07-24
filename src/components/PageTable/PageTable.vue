@@ -56,6 +56,7 @@ const classList = computed(() => {
       &:deep(td:nth-of-type(#{$n})) {
         font-size: $font-size-base;
         color: var(--bs-body-font-size);
+        min-width: 100px;
       }
 
       &:deep(.page-table-tr--active td:nth-of-type(#{$n})) a {
