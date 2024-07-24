@@ -58,7 +58,7 @@ $primary-bg-subtle-dark: #232634;
 $primary-border-subtle-dark: $dark;
 $primary-border-subtle-dark: $white;
 $primary-color-subtle-dark: $white;
-$primary-text-emphasis-dark: $white;
+$primary-text-emphasis-dark: mix($white, $primary, 55%);
 
 $secondary-bg-subtle: #FFECF1;
 $success-bg-subtle: #E5F8F3;
@@ -66,13 +66,12 @@ $info-bg-subtle: #ECF9FF;
 $warning-bg-subtle: #FFF9EE;
 $danger-bg-subtle:#FBEBEC;
 
-$tertiary-bg-subtle: $tertiary;
+$tertiary-bg-subtle: mix($white, $tertiary, 80%);
 $tertiary-color-subtle: $tertiary;
-$tertiary-border-subtle: $tertiary;
+$tertiary-border-subtle: mix($white, $tertiary, 60%);
 $tertiary-text-emphasis: $tertiary;
 
 $tertiary-bg-subtle-dark: #232634;
-$tertiary-border-subtle-dark: $dark;
 $tertiary-border-subtle-dark: $white;
 $tertiary-color-subtle-dark: $white;
 $tertiary-text-emphasis-dark: $white;
@@ -109,6 +108,11 @@ $special-font-family: "Medel", $headings-font-family;
 
 $text-muted: #717171;
 
+$font-size-base: 1rem;
+$font-size-sm: math.div(14, 16) * 1rem;
+$font-size-lg: 1.2rem;
+$line-height-sm: 1.7;
+
 $border-radius: 6px;
 $border-radius-sm: .2rem;
 $border-radius-lg: .375rem;
@@ -119,7 +123,7 @@ $border-radius-pill: 50rem;
 $alert-border-width: 0;
 
 $input-bg:  var(--bs-body-bg);
-$input-focus-border-color: map-get($theme-colors, 'secondary');
+$input-focus-border-color: var(--bs-secondary);
 $input-hover-border-color: $input-focus-border-color;
 $custom-control-indicator-checked-bg: $tertiary;
 
@@ -139,14 +143,18 @@ $form-check-input-checked-border-color: var(--bs-primary-text-emphasis);
 $form-radio-input-border: var(--bs-border-width) solid $tertiary;
 $form-radio-input-checked-border-color: $form-check-input-checked-border-color;
 
-$popover-max-width: 480px;
-$popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
-$popover-bg: #fff;
-$popover-border-width: 0.1px;
-$popover-border-color: #fff;
-$popover-header-color: $body-color;
+$popover-bg: var(--bs-primary-bg-subtle);
+$popover-box-shadow: var(--bs-box-shadow);
+$popover-font-size: $font-size-base;
+$popover-max-width: 375px;
+$popover-border-width: 1px;
+$popover-border-color: $popover-bg;
+$popover-body-padding-y: $spacer-xl;
+$popover-body-padding-x: $spacer-xl;
+$popover-arrow-width: $spacer-xl;
+$popover-arrow-height: $spacer;
 
-$mark-bg: map-get($theme-colors, 'mark');
+$mark-bg: var(--bs-mark);
 
 $modal-inner-padding: $spacer-xl;
 
@@ -185,14 +193,8 @@ $tooltip-opacity: 1;
 $input-box-shadow: 0 0 0 0 transparent;
 $b-toast-background-opacity: $tooltip-opacity;
 
-$font-size: 16px;
-$font-size-sm: math.div(14, 16) * 1rem;
-$font-size-lg: 1.2rem;
-$line-height-sm: 1.7;
-
 $table-cell-padding-y: $spacer;
 $table-cell-padding-x: $spacer;
-$table-cell-vertical-align: middle;
 
 $table-th-font-weight: normal;
 
@@ -254,11 +256,4 @@ $search-results-list-width: 600px;
 $document-max-width: 980px;
 $document-float-breakpoint-width:  1700px;
 $color-mode-type: data;
-
-@include color-mode(dark) {
-  .search-form-control--shadow {
-    box-shadow: none;
-  }
-}
-
 
