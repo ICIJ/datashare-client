@@ -20,7 +20,19 @@ $theme-colors-bg-subtle: (
   "danger": $danger-bg-subtle,
   "light": $light-bg-subtle,
   "dark": $dark-bg-subtle,
-) !default;
+);
+
+$theme-colors-bg-subtle-dark: (
+  "primary": $primary-bg-subtle-dark,
+  "secondary": $secondary-bg-subtle-dark,
+  "tertiary": $tertiary-bg-subtle-dark,
+  "success": $success-bg-subtle-dark,
+  "info": $info-bg-subtle-dark,
+  "warning": $warning-bg-subtle-dark,
+  "danger": $danger-bg-subtle-dark,
+  "light": $light-bg-subtle-dark,
+  "dark": $dark-bg-subtle-dark,
+);
 
 $theme-colors-border-subtle: (
   "primary": $primary-border-subtle,
@@ -32,7 +44,7 @@ $theme-colors-border-subtle: (
   "danger": $danger-border-subtle,
   "light": $light-border-subtle,
   "dark": $dark-border-subtle,
-) !default;
+);
 
 $theme-colors-text-dark: (
   "primary": $primary-text-emphasis-dark,
@@ -44,7 +56,7 @@ $theme-colors-text-dark: (
   "danger": $danger-text-emphasis-dark,
   "light": $light-text-emphasis-dark,
   "dark": $dark-text-emphasis-dark,
-) !default;
+);
 
 $utilities-text-emphasis-colors: (
   "primary-emphasis": var(--#{$prefix}primary-text-emphasis),
@@ -56,4 +68,4 @@ $utilities-text-emphasis-colors: (
   "danger-emphasis": var(--#{$prefix}danger-text-emphasis),
   "light-emphasis": var(--#{$prefix}light-text-emphasis),
   "dark-emphasis": var(--#{$prefix}dark-text-emphasis)
-) !default;
+);
