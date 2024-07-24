@@ -53,6 +53,18 @@ function toVariant(string = '', defaultVariant = 'darker', prefix = '') {
   return prefix + settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
 }
 
+function toVariantPhosphorIcon(string = '', defaultVariant = 'darker') {
+  const variant = toVariant(string, defaultVariant)
+  const icons = {
+    queued: 'clock-countdown',
+    success: 'check',
+    danger: 'x',
+    warning: 'warning',
+    draft: 'floppy-disk-back'
+  }
+  return icons[string] ?? icons[variant]
+}
+
 function toVariantIcon(string = '', defaultVariant = 'darker') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
@@ -83,5 +95,6 @@ export {
   toVariant,
   toVariantIcon,
   toVariantColor,
+  toVariantPhosphorIcon,
   SORT_ORDER
 }
