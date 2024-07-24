@@ -10,7 +10,7 @@ export default {
   },
   render: (args) => ({
     components: {
-      DocumentLocalSearch,
+      DocumentLocalSearch
     },
     setup: () => ({ args }),
     template: `

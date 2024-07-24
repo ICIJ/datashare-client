@@ -14,16 +14,16 @@ export const Default = {
     tooltipPlacement: 'right',
     tooltipLabel: 'Test',
     filledBtnClass: 'starred',
-    isFilled: false
+    fill: false
   }
 }
+
 export const Filled = {
   args: {
     icon: 'star',
     label: 'Star',
     tooltipLabel: 'Test',
     tooltipPlacement: 'right',
-    isFilled: true
+    fill: true
   }
 }
-

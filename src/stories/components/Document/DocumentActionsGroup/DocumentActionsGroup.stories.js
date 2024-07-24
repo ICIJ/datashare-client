@@ -12,7 +12,7 @@ export default {
     },
     setup() {
       return {
-        args 
+        args
       }
     },
     template: `
@@ -25,13 +25,13 @@ export default {
 export const Default = {
   args: {
     document: {
-      id:"test"
+      id: 'test'
     },
     vertical: false,
     tooltipPlacement: 'top',
     isStarred: false,
     isDownloadAllowed: false,
-    selectMode:true,
-    selected:false
+    selectMode: true,
+    selected: false
   }
 }
