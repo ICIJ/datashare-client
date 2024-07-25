@@ -25,6 +25,7 @@ export default {
     persist: false,
     noIcon: false,
     noButton: false,
+    bordered: false,
     default: `A simple alert lorem ipsum dolor sit amet, consectetur adipiscing elit.`
   },
   parameters: {
