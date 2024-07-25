@@ -151,7 +151,7 @@ $popover-box-shadow: none;
 $popover-font-size: $font-size-base;
 $popover-max-width: 375px;
 $popover-border-width: 1px;
-$popover-border-color: transparent;
+$popover-border-color: var(--bs-primary-border-subtle);
 $popover-body-padding-y: $spacer-xl;
 $popover-body-padding-x: $spacer-xl;
 $popover-arrow-width: $spacer-xl;
