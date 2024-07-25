@@ -58,7 +58,7 @@
           />
         </template>
         <template #cell(index)="{ item }">
-          <b-badge variant="light">{{ startCase(item.index) }}</b-badge>
+          <b-badge variant="tertiary">{{ startCase(item.index) }}</b-badge>
         </template>
         <template #cell(path)="{ item }">
           <router-link
@@ -381,7 +381,7 @@ export default {
     }
 
     &__action {
-      color: $primary;
+      color: $action;
       width: auto;
 
       svg {

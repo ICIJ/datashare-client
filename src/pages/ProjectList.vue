@@ -1,7 +1,7 @@
 <template>
   <div class="project-list">
     <page-header :title="$t('projectList.title')" icon="database">
-      <b-button v-if="!isServer" class="ms-auto my-1 text-nowrap" variant="primary" :to="{ name: 'project.new' }">
+      <b-button v-if="!isServer" class="ms-auto my-1 text-nowrap" variant="action" :to="{ name: 'project.new' }">
         <fa class="me-1" icon="plus" />
         {{ $t('projectList.newProject') }}
       </b-button>

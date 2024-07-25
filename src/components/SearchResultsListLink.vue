@@ -14,7 +14,7 @@
           <project-link
             v-if="showIndex"
             :project="document.index"
-            class="badge text-bg-light me-2"
+            class="badge text-bg-tertiary me-2"
             hide-thumbnail
             disabled
           />
@@ -104,9 +104,9 @@ export default {
     position: relative;
 
     &:before {
-      border-left: 2px solid $secondary;
+      border-left: 2px solid $primary;
       bottom: 0;
-      box-shadow: 0 0 10px 0 $secondary;
+      box-shadow: 0 0 10px 0 $primary;
       content: '';
       left: 0;
       position: absolute;

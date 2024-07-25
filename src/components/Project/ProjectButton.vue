@@ -40,7 +40,7 @@ const to = computed(() => {
 </script>
 
 <template>
-  <b-button :to="to" class="project-button" variant="outline-tertiary" :disabled="disabled">
+  <b-button :to="to" class="project-button" variant="outline-secondary" :disabled="disabled">
     <project-label :project="project" :hide-thumbnail="hideThumbnail">
       <slot />
     </project-label>
@@ -50,17 +50,17 @@ const to = computed(() => {
 <style lang="scss">
 .project-button {
   --bs-btn-color: var(--bs-body-color);
-  --bs-btn-border-color: var(--bs-lighter);
+  --bs-btn-border-color: var(--bs-light);
   --bs-btn-bg: var(--bs-body-bg);
   --bs-btn-hover-bg: var(--bs-btn-bg);
   --bs-btn-hover-color: var(--bs-btn-color);
-  --bs-btn-hover-border-color: var(--bs-secondary);
+  --bs-btn-hover-border-color: var(--bs-primary);
   --bs-btn-disabled-bg: var(--bs-btn-bg);
   --bs-btn-disabled-color: var(--bs-btn-color);
   --bs-btn-disabled-border-color: var(--bs-btn-border-color);
   --bs-btn-active-color: var(--bs-btn-color);
   --bs-btn-active-bg: rgba(var(--bs-body-color-rgb), 0.2);
-  --bs-btn-active-border-color: var(--bs-secondary);
+  --bs-btn-active-border-color: var(--bs-primary);
 
   display: inline-flex;
   justify-content: center;

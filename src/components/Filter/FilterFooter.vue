@@ -138,7 +138,7 @@ export default {
 <style lang="scss">
 .filter__footer {
   .filter--has-values & {
-    background: $tertiary;
+    background: $secondary;
     color: #000;
   }
 

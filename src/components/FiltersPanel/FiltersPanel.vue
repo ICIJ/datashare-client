@@ -14,7 +14,7 @@
             :title="$t('search.hideFilters')"
             @click="hideFilters"
           >
-            <fa icon="arrow-left" class="text-light"></fa>
+            <fa icon="arrow-left" class="text-tertiary"></fa>
             <span class="sr-only">
               {{ $t('search.hideFilters') }}
             </span>

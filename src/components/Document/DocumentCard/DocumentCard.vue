@@ -94,15 +94,15 @@ const showTitle = computed(() => {
 
   &:hover,
   &--hover {
-    background: var(--bs-light-bg-subtle);
+    background: var(--bs-tertiary-bg-subtle);
   }
 
   &--selected:not(&--active) {
-    box-shadow: 0 0 0 1px var(--bs-primary-text-emphasis) inset;
+    box-shadow: 0 0 0 1px var(--bs-action-text-emphasis) inset;
   }
 
   &--active {
-    box-shadow: 0 0 0 1px var(--bs-secondary) inset;
+    box-shadow: 0 0 0 1px var(--bs-primary) inset;
   }
 
   &--selected &__properties__title,

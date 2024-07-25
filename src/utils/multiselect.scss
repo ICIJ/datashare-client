@@ -79,7 +79,7 @@
   }
 
   & .multiselect__tag {
-    background: $primary;
+    background: $action;
     border-radius: $btn-border-radius;
     padding-top: $btn-padding-y;
     padding-bottom: $btn-padding-y;
@@ -87,7 +87,7 @@
     &-icon {
 
       &:hover {
-        background: darken($primary, 10%);
+        background: darken($action, 10%);
       }
 
       &:after {

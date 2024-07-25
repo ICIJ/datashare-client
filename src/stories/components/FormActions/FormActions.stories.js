@@ -26,21 +26,21 @@ export default {
         'darker',
         'outline-primary',
         'outline-secondary',
-        'outline-tertiary',
+        'outline-secondary',
         'outline-danger',
         'outline-info',
         'outline-success',
         'outline-warning',
-        'outline-light',
+        'outline-tertiary',
         'outline-dark',
-        'outline-lighter',
+        'outline-light',
         'outline-darker'
       ]
     }
   },
   args: {
     size: 'md',
-    variant: 'outline-tertiary'
+    variant: 'outline-secondary'
   },
   render(args) {
     return {
@@ -49,7 +49,7 @@ export default {
         <form-actions v-bind="args">
           <icon-button icon-left="x">Cancel</icon-button>
           <icon-button icon-left="arrow-counter-clockwise">Reset</icon-button>
-          <icon-button variant="primary" icon-right="caret-right">Proceed</icon-button>
+          <icon-button variant="action" icon-right="caret-right">Proceed</icon-button>
         </form-actions>
       `,
       data() {

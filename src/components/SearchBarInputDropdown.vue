@@ -14,7 +14,7 @@
     toggle-class="d-inline-flex align-items-center"
     boundary="viewport"
     teleport-to="body"
-    variant="outline-light"
+    variant="outline-tertiary"
     @shown="shown"
     @hidden="hidden"
   >
@@ -217,7 +217,7 @@ export default {
 
   &--selected:after {
     bottom: 1px;
-    border: 2px solid $tertiary;
+    border: 2px solid $secondary;
     content: '';
     left: 0;
     position: absolute;
@@ -238,7 +238,7 @@ export default {
     &.disabled,
     &.disabled:hover {
       opacity: 1;
-      background: $light !important;
+      background: $tertiary !important;
       color: $text-muted;
     }
   }

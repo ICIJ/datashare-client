@@ -25,7 +25,7 @@
               <document-sliced-name
                 wrap
                 :document="document"
-                class="widget__list__item__heading__name text-primary py-1"
+                class="widget__list__item__heading__name text-action py-1"
               />
               <div
                 class="widget__list__item__heading__meta ms-auto py-1 ps-3 d-flex align-items-center text-muted flex-shrink-0"

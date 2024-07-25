@@ -77,7 +77,7 @@ const labelClassList = computed(() => {
   }
 
   &--sorted.page-table-th--sortable {
-    color: var(--bs-primary-text-emphasis);
+    color: var(--bs-action-text-emphasis);
   }
 }
 </style>

@@ -201,7 +201,7 @@ export default {
     top: 0;
     display: flex;
     flex-direction: column;
-    background: $light;
+    background: $tertiary;
     max-height: calc(100vh - var(--search-document-navbar-height));
 
     .document-standalone & {
@@ -223,22 +223,22 @@ export default {
         }
 
         &:hover {
-          border-color: $primary;
-          box-shadow: 0 0 0 0.1em rgba($primary, 0.2);
+          border-color: $action;
+          box-shadow: 0 0 0 0.1em rgba($action, 0.2);
         }
 
         &--active,
         &--active:hover {
-          border-color: $secondary;
+          border-color: $primary;
         }
 
         &--active &__page {
-          background: $secondary;
+          background: $primary;
           color: white;
         }
 
         &__page {
-          background: $light;
+          background: $tertiary;
           border: 1px solid $border-color;
           border-bottom: 0;
           border-right: 0;
@@ -261,7 +261,7 @@ export default {
 
       &:after {
         content: attr(data-page);
-        background: $light;
+        background: $tertiary;
         border: 1px solid $border-color;
         bottom: 0;
         font-size: 0.8rem;

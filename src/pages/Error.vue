@@ -85,7 +85,7 @@ export default {
     <div v-if="showHeader" class="error__header p-3 text-end">
       <a
         v-b-tooltip.html
-        class="btn btn-outline-light btn-sm"
+        class="btn btn-outline-tertiary btn-sm"
         :href="logoutLink"
         :title="$t('menu.connectedAs', { username })"
       >
@@ -99,7 +99,7 @@ export default {
           <span class="error__container__heading__code me-3">
             <font-awesome-layers class="fa-sm error__container__heading__code__icon">
               <fa icon="circle"></fa>
-              <fa icon="face-sad-tear" class="text-secondary" transform="shrink-6"></fa>
+              <fa icon="face-sad-tear" class="text-primary" transform="shrink-6"></fa>
             </font-awesome-layers>
             <span class="px-2 error__container__heading__code__value">
               {{ code }}

@@ -43,7 +43,7 @@ const isOptionActive = ({ sortBy, sortByOrder }) => {
     variant="link"
     end
     teleport-to="body"
-    toggle-class="bg-primary-subtle p-1"
+    toggle-class="bg-action-subtle p-1"
     no-caret
   >
     <template #button-content>

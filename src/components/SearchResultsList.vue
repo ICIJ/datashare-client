@@ -93,7 +93,7 @@ export default {
   border-radius: $card-border-radius;
 
   &__toolbar {
-    background: $tertiary;
+    background: $secondary;
     color: white;
     font-size: 0.85rem;
     line-height: $line-height-base * (1 - math.div(85 - 95, 95));
@@ -112,7 +112,7 @@ export default {
     }
 
     .nav-link {
-      color: mix($tertiary, text-contrast($tertiary), 70%);
+      color: mix($secondary, text-contrast($secondary), 70%);
     }
   }
 
@@ -154,7 +154,7 @@ export default {
 
         &:deep(.btn) {
           background: white;
-          border-color: $primary;
+          border-color: $action;
         }
       }
 

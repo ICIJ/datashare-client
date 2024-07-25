@@ -89,7 +89,7 @@ const showOperator = computed(() => {
   }
 
   &__operator {
-    background: var(--bs-light-bg-subtle);
+    background: var(--bs-tertiary-bg-subtle);
     padding: 0 $spacer-xs;
     margin-right: $spacer-xs;
     border-radius: $border-radius;
@@ -105,7 +105,7 @@ const showOperator = computed(() => {
   }
 
   &:deep(.icon-button__icon-right) {
-    color: var(--bs-light);
+    color: var(--bs-tertiary);
   }
 }
 </style>

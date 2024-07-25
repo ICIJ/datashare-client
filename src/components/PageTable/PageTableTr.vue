@@ -55,14 +55,14 @@ const classList = computed(() => {
   &--active {
     // Due to CSS/HTML limitation, we draw the border of the active
     // row using box-shadow on the `td` elements.
-    --box-shadow-top: inset 0 1px 0 0 var(--bs-primary-text-emphasis);
-    --box-shadow-bottom: inset 0 -1px 0 0 var(--bs-primary-text-emphasis);
+    --box-shadow-top: inset 0 1px 0 0 var(--bs-action-text-emphasis);
+    --box-shadow-bottom: inset 0 -1px 0 0 var(--bs-action-text-emphasis);
     --box-shadow-y: var(--box-shadow-top), var(--box-shadow-bottom);
-    --box-shadow-end: inset -1px 0 0 0 var(--bs-primary-text-emphasis);
+    --box-shadow-end: inset -1px 0 0 0 var(--bs-action-text-emphasis);
     // The border on the left doesn't use boxèshadow so it's visible
     // regardless of the presence of the `td.page-table-tr__select`
     // element.
-    border-left: 1px solid var(--bs-primary-text-emphasis);
+    border-left: 1px solid var(--bs-action-text-emphasis);
 
     & > td {
       box-shadow: var(--box-shadow-y), var(--box-shadow);

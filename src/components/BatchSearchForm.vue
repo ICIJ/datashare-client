@@ -215,7 +215,7 @@
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end align-items-center">
-            <b-button type="submit" variant="primary">
+            <b-button type="submit" variant="action">
               {{ $t('batchSearch.submit') }}
             </b-button>
           </div>

@@ -55,7 +55,7 @@ const classList = computed(() => {
     <icon-button
       v-if="!hideExpand"
       variant="link"
-      class="bg-primary-subtle text-primary-emphasis-subtle p-1 ms-auto"
+      class="bg-action-subtle text-action-emphasis-subtle p-1 ms-auto"
       tooltip-placement="right"
       icon-left="arrows-out-simple"
       hide-label
@@ -83,7 +83,7 @@ const classList = computed(() => {
     padding: $spacer-xxs 0;
     border: 0;
     margin-bottom: 0;
-    color: var(--bs-primary-text-emphasis);
+    color: var(--bs-action-text-emphasis);
   }
 
   &:deep(.form-check) {

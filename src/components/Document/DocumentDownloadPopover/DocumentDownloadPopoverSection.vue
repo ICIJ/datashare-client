@@ -19,10 +19,10 @@ const hasValue = computed(() => {
 
 <template>
   <section class="document-download-popover-section">
-    <div v-if="title" class="document-download-popover-section__title pb-1 text-tertiary-emphasis fst-italic">
+    <div v-if="title" class="document-download-popover-section__title pb-1 text-secondary-emphasis fst-italic">
       {{ title }}
     </div>
-    <div v-if="hasValue" class="document-download-popover-section__value text-primary-emphasis">
+    <div v-if="hasValue" class="document-download-popover-section__value text-action-emphasis">
       <slot><span v-html="value"></span></slot>
     </div>
   </section>

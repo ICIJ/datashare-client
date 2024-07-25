@@ -120,13 +120,13 @@ const vDraggable = {
     left: 50%;
     width: 1px;
     transform: translateX(-50%);
-    background-color: var(--bs-light-border-subtle);
+    background-color: var(--bs-tertiary-border-subtle);
   }
 
   &:hover:before,
   &--active:before {
     width: 2px;
-    background-color: var(--bs-primary-text-emphasis);
+    background-color: var(--bs-action-text-emphasis);
   }
 
   &:hover &__buttons,
@@ -150,7 +150,7 @@ const vDraggable = {
     justify-content: space-between;
 
     &:deep(.icon-button) {
-      border-color: var(--bs-primary-text-emphasis);
+      border-color: var(--bs-action-text-emphasis);
 
       .phosphor-icon {
         height: 100%;
@@ -167,8 +167,8 @@ const vDraggable = {
     &:deep(.icon-button[disabled]) {
       opacity: 1;
       background: var(--bs-body-bg);
-      color: var(--bs-light-border-subtle);
-      border-color: var(--bs-light-border-subtle);
+      color: var(--bs-tertiary-border-subtle);
+      border-color: var(--bs-tertiary-border-subtle);
     }
   }
 }

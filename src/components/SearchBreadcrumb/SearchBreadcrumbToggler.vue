@@ -7,7 +7,7 @@ const emit = defineEmits(['close'])
 <template>
   <icon-button
     class="search-breadcrumb-toggler"
-    variant="primary"
+    variant="action"
     :label="$t('searchBreadcrumbToggler.close')"
     hide-label
     icon-left="x"

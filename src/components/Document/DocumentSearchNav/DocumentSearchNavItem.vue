@@ -17,7 +17,7 @@ defineProps({
 <template>
   <icon-button
     class="document-search-nav-item"
-    variant="outline-tertiary"
+    variant="outline-secondary"
     :icon-left="icon"
     icon-left-hover-weight="bold"
     :disabled="disabled"
@@ -29,12 +29,12 @@ defineProps({
 
 <style lang="scss" scoped>
 .document-search-nav-item {
-  --bs-btn-color: var(--bs-tertiary-text-emphasis);
+  --bs-btn-color: var(--bs-secondary-text-emphasis);
   --bs-btn-border-color: transparent;
-  --bs-btn-hover-bg: var(--bs-secondary);
+  --bs-btn-hover-bg: var(--bs-primary);
   --bs-btn-hover-color: var(--bs-white);
   --bs-btn-hover-border-color: transparent;
-  --bs-btn-active-bg: var(--bs-secondary);
+  --bs-btn-active-bg: var(--bs-primary);
   --bs-btn-active-color: var(--bs-white);
 }
 </style>

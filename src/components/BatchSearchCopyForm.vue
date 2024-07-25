@@ -21,7 +21,7 @@
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
-          <b-button type="submit" variant="primary" class="batch-search-copy-form__submit">
+          <b-button type="submit" variant="action" class="batch-search-copy-form__submit">
             {{ $t('global.submit') }}
           </b-button>
         </div>

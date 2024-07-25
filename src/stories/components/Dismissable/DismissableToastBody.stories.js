@@ -54,7 +54,7 @@ export default {
     },
     template: `
       <div class="card card-body d-block">
-        <button class="btn btn-primary" @click="toast()">
+        <button class="btn btn-action" @click="toast()">
           Show toast
         </button>
       </div>

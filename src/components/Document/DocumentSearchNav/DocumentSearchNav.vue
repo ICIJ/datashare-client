@@ -35,7 +35,7 @@ defineProps({
   display: inline-flex;
   padding: $spacer-xxs;
   border-radius: var(--bs-border-radius);
-  color: var(--bs-light-color-subtle);
-  background: var(--bs-light-bg-subtle);
+  color: var(--bs-tertiary-color-subtle);
+  background: var(--bs-tertiary-bg-subtle);
 }
 </style>

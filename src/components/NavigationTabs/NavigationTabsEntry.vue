@@ -73,7 +73,7 @@ defineProps({
 <style lang="scss" scoped>
 .navigation-tabs-entry {
   &:deep(.nav-link) {
-    --color: var(--bs-tertiary-text-emphasis);
+    --color: var(--bs-secondary-text-emphasis);
 
     color: var(--color);
     padding: 10px $spacer-xs;
@@ -87,11 +87,11 @@ defineProps({
     &.active,
     &.router-link-active {
       --color: var(--bs-emphasis-color);
-      border-bottom: 2px solid var(--bs-secondary);
+      border-bottom: 2px solid var(--bs-primary);
       font-weight: 500;
 
       .nav-tabs.flex-column > & {
-        border-left: 2px solid var(--bs-secondary);
+        border-left: 2px solid var(--bs-primary);
       }
 
       .navigation-tabs-entry__icon--inactive {
@@ -105,10 +105,10 @@ defineProps({
 
     &.nav-link:hover {
       --color: var(--bs-emphasis-color);
-      border-color: var(--bs-secondary);
+      border-color: var(--bs-primary);
 
       .nav-tabs.flex-column > & {
-        border-left: 2px solid var(--bs-secondary);
+        border-left: 2px solid var(--bs-primary);
       }
     }
 

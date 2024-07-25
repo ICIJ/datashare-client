@@ -49,7 +49,7 @@ const valueTitle = computed(() => {
 <style lang="scss" scoped>
 .display-status {
   --display-status-bg: var(--bs-body-bg);
-  --display-status-color: var(--bs-tertiary-text-emphasis);
+  --display-status-color: var(--bs-secondary-text-emphasis);
 
   display: inline-flex;
   align-items: center;

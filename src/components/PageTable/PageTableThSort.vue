@@ -40,7 +40,7 @@ const toggleOrder = () => {
     :icon-left="icon"
     :class="classList"
     class="page-table-th-sort"
-    variant="outline-light"
+    variant="outline-tertiary"
     icon-left-size="1em"
     hide-label
     @click="toggleOrder"
@@ -52,13 +52,13 @@ const toggleOrder = () => {
   --bs-border-width: 0;
   --bs-btn-padding-x: #{$spacer-xxs};
   --bs-btn-padding-y: #{$spacer-xxs};
-  --bs-btn-color: var(--bs-tertiary-text-emphasis);
+  --bs-btn-color: var(--bs-secondary-text-emphasis);
 
   visibility: hidden;
 
   &--sorted {
-    --bs-btn-color: var(--bs-primary-text-emphasis);
-    --bs-btn-bg: var(--bs-primary-bg-subtle);
+    --bs-btn-color: var(--bs-action-text-emphasis);
+    --bs-btn-bg: var(--bs-action-bg-subtle);
   }
 
   &--sorted,

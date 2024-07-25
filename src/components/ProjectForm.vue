@@ -245,13 +245,13 @@ export default {
       </confirm-button>
       <confirm-button
         type="button"
-        class="project-form__action--reset btn btn-outline-primary ms-auto"
+        class="project-form__action--reset btn btn-outline-action ms-auto"
         :confirmed="reset"
         :label="$t('projectForm.resetConfirmation')"
       >
         <slot name="reset-text">{{ $t('projectForm.reset') }}</slot>
       </confirm-button>
-      <b-button type="submit" variant="primary" class="ms-2" :disabled="!valid">
+      <b-button type="submit" variant="action" class="ms-2" :disabled="!valid">
         <slot name="submit-text">{{ $t('projectForm.submit') }}</slot>
       </b-button>
     </component>

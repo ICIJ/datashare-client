@@ -17,7 +17,7 @@ defineProps({
   <icon-button
     class="document-carousel-bar border-0"
     square
-    variant="outline-light"
+    variant="outline-tertiary"
     :icon-left="icon"
     hide-label
     :label="label"

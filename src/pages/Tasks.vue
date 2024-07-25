@@ -22,7 +22,7 @@
         </b-tab>
       </template>
       <div v-if="$route.name === 'task.batch-search.list'">
-        <b-button class="ms-auto my-1 text-nowrap" variant="primary" :to="{ name: 'task.batch-search.new' }">
+        <b-button class="ms-auto my-1 text-nowrap" variant="action" :to="{ name: 'task.batch-search.new' }">
           <fa class="me-1" icon="plus" />
           {{ $t('batchSearch.heading') }}
         </b-button>
