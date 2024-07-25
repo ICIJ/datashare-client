@@ -149,7 +149,7 @@ const classList = computed(() => {
       />
 
       <span
-        class="search-form-control__end input-group-text border-start-0"
+        class="search-form-control__end input-group-text py-0 border-start-0"
         :class="{ 'search-form-control--rounded--end': rounded }"
       >
         <icon-button
