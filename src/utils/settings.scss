@@ -57,7 +57,7 @@ $action-text-emphasis: $action;
 
 $action-bg-subtle-dark: #232634;
 $action-border-subtle: mix($white, $action, 60%);
-$action-border-subtle-dark: red;
+$action-border-subtle-dark: mix($white, $action, 80%);
 $action-color-subtle-dark: $white;
 $action-text-emphasis-dark: mix($white, $action, 55%);
 
@@ -85,8 +85,8 @@ $tertiary-text-emphasis: $tertiary;
 $tertiary-text-emphasis-dark: #3E3F3F;
 
 $dark-bg-subtle: $darker;
-$dark-text-emphasis: $white;
-$dark-text-emphasis-dark: $black;
+$dark-text-emphasis: $black;
+$dark-text-emphasis-dark: $white;
 $dark-bg-subtle-dark: $light;
 
 $enable-shadows: true;
@@ -235,18 +235,18 @@ $dropdown-link-hover-color: var(--bs-action-text-emphasis);
 $dropdown-link-active-color: var(--bs-action-text-emphasis);
 $dropdown-link-active-bg: var(--bs-dropdown-bg);
 
-
 // Bootstrap variables and mixins must be available everywhere
-@import '~node_modules/bootstrap/scss/_functions.scss';
-@import '~node_modules/bootstrap/scss/_variables.scss';
-@import '~node_modules/bootstrap/scss/_maps.scss';
-@import '~node_modules/bootstrap/scss/_mixins.scss';
-@import '~node_modules/bootstrap/scss/_utilities.scss';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+// Our custom map to add our theme colors to classes utilities and CSS variables
+@import './maps.scss';
 
 // We also defines a few functions and mixins internally
 @import './functions.scss';
 @import './mixins.scss';
-@import './maps.scss';
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
