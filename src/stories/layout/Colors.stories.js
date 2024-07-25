@@ -34,6 +34,7 @@ export default {
                   <code>--bs-body-bg</code>, <code>--bs-body-bg-rgb</code>
                 </td>
               </tr>
+
               <tr>
                 <td>
                   <strong>Emphasis —</strong> For higher contrast text. Not applicable for backgrounds.
@@ -56,12 +57,13 @@ export default {
                   <code>--bs-border-color</code>, <code>--bs-border-color-rgb</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
                   <strong>Primary —</strong> Main theme color, used for hyperlinks, focus styles, and component and form active states.
                 </td>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2 bg-action">&nbsp;</div>
+                  <div class="p-3 rounded-2 bg-primary">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-primary</code>, <code>--bs-primary-rgb</code>
@@ -69,7 +71,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-action-bg-subtle)">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-primary-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-primary-bg-subtle</code>
@@ -77,7 +79,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="border: 5px var(--bs-action-border-subtle) solid">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-primary-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-primary-border-subtle</code>
@@ -85,7 +87,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="py-3 fw-bold h5" style="color: var(--bs-action-text-emphasis)">Text</div>
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-primary-text-emphasis)">Text</div>
                 </td>
                 <td>
                   <code>--bs-primary-text-emphasis</code>
@@ -94,49 +96,50 @@ export default {
 
               <tr>
                 <td rowspan="4">
-                  <strong>Secondary —</strong> Second theme <code>color</code> option used for hovered hyperlinks and active styles.
+                  <strong>Action —</strong> Second theme <code>color</code> option used for action button and hyperlinks.
                 </td>
                  <td class="ps-0">
-                  <div class="p-3 rounded-2 bg-primary">&nbsp;</div>
+                  <div class="p-3 rounded-2 bg-action">&nbsp;</div>
                 </td>
                 <td>
-                  <code>--bs-secondary</code>, <code>--bs-secondary-rgb</code>
+                  <code>--bs-action</code>, <code>--bs-action-rgb</code>
                 </td>
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-primary-bg-subtle)">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-action-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
-                  <code>--bs-secondary-bg-subtle</code>
+                  <code>--bs-action-bg-subtle</code>
                 </td>
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="border: 5px var(--bs-primary-border-subtle) solid">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-action-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
-                  <code>--bs-secondary-border-subtle</code>
+                  <code>--bs-action-border-subtle</code>
                 </td>
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="py-3 fw-bold h5" style="color: var(--bs-primary-text-emphasis)">Text</div>
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-action-text-emphasis)">Text</div>
                 </td>
                 <td>
-                  <code>--bs-secondary-text-emphasis</code>
+                  <code>--bs-action-text-emphasis</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
-                  <strong>Tertiary —</strong> Third theme <code>color</code> for lighter text. Use the <code>bg</code>
-                  option to style backgrounds for hover states, accents, and wells.
+                  <strong>Secondary —</strong> Use the <code>color</code> option for lighter text. Use the <code>bg</code>
+                  option for dividers and to indicate disabled component states.
                 </td>
-                 <td class="ps-0">
-                  <div class="p-3 rounded-2 bg-secondary">&nbsp;</div>
+                <td class="ps-0">
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-secondary-color);">&nbsp;</div>
                 </td>
                 <td>
-                  <code>--bs-tertiary</code>, <code>--bs-tertiary-rgb</code>
+                  <code>--bs-secondary-color</code>, <code>--bs-secondary-color-rgb</code>
                 </td>
               </tr>
               <tr>
@@ -144,7 +147,7 @@ export default {
                   <div class="p-3 rounded-2" style="background-color: var(--bs-secondary-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
-                  <code>--bs-tertiary-bg-subtle</code>
+                  <code>--bs-secondary-bg-subtle</code>
                 </td>
               </tr>
               <tr>
@@ -152,7 +155,7 @@ export default {
                   <div class="p-3 rounded-2" style="border: 5px var(--bs-secondary-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
-                  <code>--bs-tertiary-border-subtle</code>
+                  <code>--bs-secondary-border-subtle</code>
                 </td>
               </tr>
               <tr>
@@ -160,9 +163,47 @@ export default {
                   <div class="py-3 fw-bold h5" style="color: var(--bs-secondary-text-emphasis)">Text</div>
                 </td>
                 <td>
+                  <code>--bs-secondary-text-emphasis</code>
+                </td>
+              </tr>
+
+              <tr>
+                <td rowspan="4">
+                  <strong>Tertiary —</strong> Third theme <code>color</code> for lighter text. Use the <code>bg</code>
+                  option to style backgrounds for hover states, accents, and wells.
+                </td>
+                 <td class="ps-0">
+                  <div class="p-3 rounded-2 bg-tertiary">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-tertiary</code>, <code>--bs-tertiary-rgb</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-tertiary-bg-subtle)">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-tertiary-bg-subtle</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-tertiary-border-subtle) solid">&nbsp;</div>
+                </td>
+                <td>
+                  <code>--bs-tertiary-border-subtle</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="ps-0">
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-tertiary-text-emphasis)">Text</div>
+                </td>
+                <td>
                   <code>--bs-tertiary-text-emphasis</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
                   <strong>Success —</strong> Theme color used for positive or successful actions and information.
@@ -198,6 +239,7 @@ export default {
                   <code>--bs-success-text-emphasis</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
                   <strong>Danger —</strong> Theme color used for errors and dangerous actions.
@@ -233,6 +275,7 @@ export default {
                   <code>--bs-danger-text-emphasis</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
                   <strong>Warning —</strong> Theme color used for non-destructive warning messages.
@@ -268,6 +311,7 @@ export default {
                   <code>--bs-warning-text-emphasis</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
                   <strong>Info —</strong> Theme color used for neutral and informative content.
@@ -303,6 +347,7 @@ export default {
                   <code>--bs-info-text-emphasis</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
                   <strong>Light —</strong> Additional theme option for less contrasting colors.
@@ -338,6 +383,7 @@ export default {
                   <code>--bs-light-text-emphasis</code>
                 </td>
               </tr>
+
               <tr>
                 <td rowspan="4">
                   <strong>Dark —</strong> Additional theme option for higher contrasting colors.
