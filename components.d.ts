@@ -7,6 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    '(feat': add page table th sort)
+    2: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActionsEntry copy 2.vue')['default']
+    3: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearch copy 3.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -21,7 +24,6 @@ declare module 'vue' {
     AppSidebarSectionTitle: typeof import('./src/components/AppSidebar/AppSidebarSectionTitle.vue')['default']
     AppSidebarSectionToggler: typeof import('./src/components/AppSidebar/AppSidebarSectionToggler.vue')['default']
     AppSidebarToggler: typeof import('./src/components/AppSidebar/AppSidebarToggler.vue')['default']
-    BAlert: typeof import('bootstrap-vue-next')['BAlert']
     BatchDownloadActions: typeof import('./src/components/BatchDownloadActions.vue')['default']
     BatchSearchActions: typeof import('./src/components/BatchSearchActions.vue')['default']
     BatchSearchClearFilters: typeof import('./src/components/BatchSearchClearFilters.vue')['default']
@@ -48,6 +50,8 @@ declare module 'vue' {
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     BLink: typeof import('bootstrap-vue-next')['BLink']
     BModal: typeof import('bootstrap-vue-next')['BModal']
+    BNav: typeof import('bootstrap-vue-next')['BNav']
+    BNavItem: typeof import('bootstrap-vue-next')['BNavItem']
     BPopover: typeof import('bootstrap-vue-next')['BPopover']
     BRow: typeof import('bootstrap-vue-next')['BRow']
     BTableSimple: typeof import('bootstrap-vue-next')['BTableSimple']
@@ -60,6 +64,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
+    copy: typeof import('./src/components/Document/DocumentDownloadPopover copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayContentLength: typeof import('./src/components/Display/DisplayContentLength.vue')['default']
@@ -71,8 +76,8 @@ declare module 'vue' {
     DisplayTags: typeof import('./src/components/Display/DisplayTags.vue')['default']
     DisplayUser: typeof import('./src/components/Display/DisplayUser.vue')['default']
     DisplayVisibility: typeof import('./src/components/Display/DisplayVisibility.vue')['default']
-    DocumentActionButton: typeof import('./src/components/DocumentActionButton.vue')['default']
     DocumentActions: typeof import('./src/components/DocumentActions.vue')['default']
+    DocumentActionsEntry: typeof import('./src/components/DocumentActionsEntry.vue')['default']
     DocumentActionsEntryDownloadPopover: typeof import('./src/components/DocumentActionsEntryDownloadPopover.vue')['default']
     DocumentActionsGroup: typeof import('./src/components/Document/DocumentActionsGroup/DocumentActionsGroup.vue')['default']
     DocumentActionsGroupEntry: typeof import('./src/components/Document/DocumentActionsGroup/DocumentActionsGroupEntry.vue')['default']
@@ -99,6 +104,8 @@ declare module 'vue' {
     DocumentContentSlice: typeof import('./src/components/DocumentContentSlice.vue')['default']
     DocumentContentSlicePlaceholder: typeof import('./src/components/DocumentContentSlicePlaceholder.vue')['default']
     DocumentContentSlices: typeof import('./src/components/DocumentContentSlices.vue')['default']
+    DocumentDownloadPopover: typeof import('./src/components/Document/DocumentDownloadPopover/DocumentDownloadPopover.vue')['default']
+    DocumentDownloadPopoverSection: typeof import('./src/components/Document/DocumentDownloadPopover/DocumentDownloadPopoverSection.vue')['default']
     DocumentGlobalSearchTermsTags: typeof import('./src/components/DocumentGlobalSearchTermsTags.vue')['default']
     DocumentInModal: typeof import('./src/components/DocumentInModal.vue')['default']
     DocumentLocalSearch: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearch.vue')['default']
