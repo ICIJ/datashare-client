@@ -18,6 +18,7 @@ $dark: #212529;
 $darker: #0F0F10;
 
 $link-color: $action;
+$link-color-dark: mix($white, $action, 40%);
 $link-hover-color: mix($black, $primary, 20%);
 $link-decoration: none;
 
@@ -142,7 +143,7 @@ $input-btn-padding-y: 0.75em;
 $input-btn-padding-x: 1em;
 $input-btn-line-height: 1.25;
 
-$form-check-input-border: var(--bs-border-width) solid $action;
+$form-check-input-border: var(--bs-border-width) solid var(--bs-action-text-emphasis);
 $form-check-input-border-radius: 2px;
 $form-check-input-checked-border-color: var(--bs-action-text-emphasis);
 $form-check-input-checked-bg-color: $action;
