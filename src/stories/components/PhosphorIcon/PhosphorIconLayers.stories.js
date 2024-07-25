@@ -25,7 +25,7 @@ export default {
     template: `
       <phosphor-icon-layers v-bind="args">
         <phosphor-icon name="arrow-counter-clockwise" spin-reverse v-bind="args" />
-        <phosphor-icon name="arrow-clockwise" size="1.1em" variant="secondary" spin weight="bold" />
+        <phosphor-icon name="arrow-clockwise" size="1.1em" variant="primary" spin weight="bold" />
       </phosphor-icon-layers>
     `
   })

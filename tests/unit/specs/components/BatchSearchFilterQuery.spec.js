@@ -94,7 +94,7 @@ describe('BatchSearchFilterQuery.vue', () => {
       const searchSpy = vi.spyOn(wrapper.vm, 'filterByQuery')
       expect(searchSpy).not.toBeCalled()
 
-      await wrapper.find('.btn-primary').trigger('submit')
+      await wrapper.find('.btn-action').trigger('submit')
 
       expect(searchSpy).toBeCalledTimes(1)
     })

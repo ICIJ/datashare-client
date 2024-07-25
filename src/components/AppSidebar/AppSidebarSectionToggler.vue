@@ -52,7 +52,7 @@ const classList = computed(() => {
   }
 
   &--active {
-    border-color: var(--bs-secondary);
+    border-color: var(--bs-primary);
   }
 }
 </style>

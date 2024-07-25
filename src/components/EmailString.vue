@@ -14,7 +14,7 @@
           <div class="text-muted small fw-normal py-2">{{ emailWithoutName || email }}</div>
         </template>
         <div class="text-end email-string__popover__content">
-          <router-link :to="{ name: 'search', query: { q: qReceived, indices } }" class="btn btn-sm btn-primary">
+          <router-link :to="{ name: 'search', query: { q: qReceived, indices } }" class="btn btn-sm btn-action">
             <fa
               mask="square"
               icon="arrow-down"
@@ -23,7 +23,7 @@
             ></fa>
             {{ $t('email.receivedLink') }}
           </router-link>
-          <router-link :to="{ name: 'search', query: { q: qSent, indices } }" class="btn btn-sm btn-primary ms-1">
+          <router-link :to="{ name: 'search', query: { q: qSent, indices } }" class="btn btn-sm btn-action ms-1">
             <fa
               mask="square"
               icon="arrow-up"

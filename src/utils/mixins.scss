@@ -6,7 +6,7 @@
   }
 }
 
-@mixin popover-magnified-variant($bg, $bg-darker: $primary) {
+@mixin popover-magnified-variant($bg, $bg-darker: $action) {
   color: text-contrast($bg);
   @include gradient-y(mix($bg, $bg-darker), $bg);
 

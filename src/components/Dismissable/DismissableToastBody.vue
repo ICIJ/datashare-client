@@ -3,7 +3,7 @@ import { computed, useSlots } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 const VARIANTS = {
-  default: 'primary',
+  default: 'action',
   error: 'danger'
 }
 

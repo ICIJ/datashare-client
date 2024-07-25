@@ -14,7 +14,7 @@
             <router-link
               v-if="searchable"
               :to="searchInPathRoute(path)"
-              class="tree-view__header__search ms-2 btn-primary btn btn-sm rounded-pill"
+              class="tree-view__header__search ms-2 btn-action btn btn-sm rounded-pill"
             >
               <fa icon="magnifying-glass"></fa>
               {{ $t('treeView.searchPath') }}
@@ -26,7 +26,7 @@
             <span
               v-if="count"
               :title="$t('treeView.hits', hits, { hits })"
-              class="tree-view__header__hits ms-2 badge text-bg-light rounded-pill"
+              class="tree-view__header__hits ms-2 badge text-bg-tertiary rounded-pill"
             >
               {{ humanNumber(hits, $tm('human.number')) }} {{ $t('treeView.docs', hits) }}
             </span>
@@ -57,7 +57,7 @@
               <label class="flex-grow-1 m-0" :for="allDirectoriesInputId">
                 {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
               </label>
-              <div class="ms-2 badge text-bg-light rounded-pill" :title="$n(hits)">
+              <div class="ms-2 badge text-bg-tertiary rounded-pill" :title="$n(hits)">
                 <span v-if="compact">
                   {{ $n(hits) }}
                 </span>
@@ -84,7 +84,7 @@
               <router-link
                 v-if="searchable"
                 :to="searchInPathRoute(directory.key)"
-                class="tree-view__directories__item__search ms-2 btn-primary btn btn-sm rounded-pill"
+                class="tree-view__directories__item__search ms-2 btn-action btn btn-sm rounded-pill"
               >
                 <fa icon="magnifying-glass"></fa>
                 <span>&nbsp;{{ $t('treeView.searchPath') }}</span>
@@ -99,7 +99,7 @@
               <span
                 v-if="count"
                 :title="$t('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })"
-                class="tree-view__directories__item__count ms-2 badge text-bg-light rounded-pill"
+                class="tree-view__directories__item__count ms-2 badge text-bg-tertiary rounded-pill"
               >
                 <span v-if="!directory.doc_count"> - </span>
                 <span v-else-if="compact">
@@ -715,7 +715,7 @@ export default {
 
       &__bar {
         animation: slidingBar 200ms forwards;
-        background: $primary;
+        background: $action;
         bottom: 0;
         height: 3px;
         left: 0;

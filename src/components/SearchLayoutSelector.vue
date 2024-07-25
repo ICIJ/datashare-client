@@ -66,7 +66,7 @@ export default {
   }
 
   &__button--active.btn {
-    background: $tertiary;
+    background: $secondary;
     color: $component-active-color;
   }
 }

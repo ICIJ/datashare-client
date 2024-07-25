@@ -1,22 +1,24 @@
 $prefix: bs-;
 
-$primary: #112A5C;
-$secondary: #FA4070;
-$tertiary: #6F6F6F;
-$danger: #dc3545;
+$action: #112A5C;
+$primary: #FA4070;
+$secondary: #6F6F6F;
+$tertiary: #C7C7C7;
 
+$danger: #dc3545;
 $warning: #FFBF57;
 $success: #00BB84;
 $info: #45C4FF;
 $white: #fff;
-$light: #C7C7C7;
-$lighter: #F3F3F3;
+
+$tertiary: #F3F3F3;
+$light: #F3F3F3;
 $black: #000;
 $dark: #212529;
-$darker: #0F0F10;;
+$darker: #0F0F10;
 
-$link-color: $primary;
-$link-hover-color: mix($black, $secondary, 20%);
+$link-color: $action;
+$link-hover-color: mix($black, $primary, 20%);
 $link-decoration: none;
 
 $body-color: #212529;
@@ -31,6 +33,7 @@ $translation-bg: #fcf8e3;
 
 $theme-colors: (
   icij: #F00,
+  action: $action,
   primary: $primary,
   secondary: $secondary,
   tertiary: $tertiary,
@@ -39,9 +42,7 @@ $theme-colors: (
   warning: $warning,
   danger: $danger,
   light: $light,
-  lighter: $lighter,
   dark: $dark,
-  darker: $darker,
   mark: #fff5bd,
   category-ban: $secondary,
   category-person: #ff6699,
@@ -50,41 +51,43 @@ $theme-colors: (
   category-email: #33beff
 );
 
-$primary-bg-subtle: #F3F5F8;
-$primary-color-subtle: $primary;
-$primary-text-emphasis: $primary;
+$action-bg-subtle: #F3F5F8;
+$action-color-subtle: $action;
+$action-text-emphasis: $action;
 
-$primary-bg-subtle-dark: #232634;
-$primary-border-subtle-dark: $dark;
-$primary-border-subtle-dark: $white;
-$primary-color-subtle-dark: $white;
-$primary-text-emphasis-dark: mix($white, $primary, 55%);
+$action-bg-subtle-dark: #232634;
+$action-border-subtle: mix($white, $action, 60%);
+$action-border-subtle-dark: red;
+$action-color-subtle-dark: $white;
+$action-text-emphasis-dark: mix($white, $action, 55%);
 
-$secondary-bg-subtle: #FFECF1;
+$primary-bg-subtle: #FFECF1;
 $success-bg-subtle: #E5F8F3;
 $info-bg-subtle: #ECF9FF;
 $warning-bg-subtle: #FFF9EE;
 $danger-bg-subtle:#FBEBEC;
 
-$tertiary-bg-subtle: mix($white, $tertiary, 80%);
-$tertiary-color-subtle: $tertiary;
-$tertiary-border-subtle: mix($white, $tertiary, 60%);
+$secondary-bg-subtle: mix($white, $secondary, 80%);
+$secondary-color-subtle: $secondary;
+$secondary-border-subtle: mix($white, $secondary, 60%);
+$secondary-text-emphasis: $secondary;
+
+$secondary-bg-subtle-dark: #232634;
+$secondary-border-subtle-dark: $white;
+$secondary-color-subtle-dark: $white;
+$secondary-text-emphasis-dark: $white;
+
+$tertiary-bg-subtle: $light;
+$tertiary-bg-subtle-dark: $darker;
+$tertiary-border-subtle: $tertiary;
+$tertiary-border-subtle-dark: #3E3F3F;
 $tertiary-text-emphasis: $tertiary;
-
-$tertiary-bg-subtle-dark: #232634;
-$tertiary-border-subtle-dark: $white;
-$tertiary-color-subtle-dark: $white;
-$tertiary-text-emphasis-dark: $white;
-
-$light-bg-subtle: $lighter;
-$light-bg-subtle-dark: $darker;
-$light-border-subtle: $light;
-$light-border-subtle-dark: #3E3F3F;
+$tertiary-text-emphasis-dark: #3E3F3F;
 
 $dark-bg-subtle: $darker;
 $dark-text-emphasis: $white;
 $dark-text-emphasis-dark: $black;
-$dark-bg-subtle-dark: $lighter;
+$dark-bg-subtle-dark: $light;
 
 $enable-shadows: true;
 $enable-rounded: true;
@@ -126,9 +129,9 @@ $alert-border-width: 0;
 $alert-border-scale: 100%;
 
 $input-bg:  var(--bs-body-bg);
-$input-focus-border-color: var(--bs-secondary);
+$input-focus-border-color: var(--bs-action);
 $input-hover-border-color: $input-focus-border-color;
-$custom-control-indicator-checked-bg: $tertiary;
+$custom-control-indicator-checked-bg: $action;
 
 $btn-box-shadow: 0 0 0 0 transparent;
 $btn-hover-bg-shade-amount: 25%;
@@ -139,19 +142,21 @@ $input-btn-padding-y: 0.75em;
 $input-btn-padding-x: 1em;
 $input-btn-line-height: 1.25;
 
-$form-check-input-border: var(--bs-border-width) solid $tertiary;
+$form-check-input-border: var(--bs-border-width) solid $action;
 $form-check-input-border-radius: 2px;
-$form-check-input-checked-border-color: var(--bs-primary-text-emphasis);
+$form-check-input-checked-border-color: var(--bs-action-text-emphasis);
+$form-check-input-checked-bg-color: $action;
 
-$form-radio-input-border: var(--bs-border-width) solid $tertiary;
+$form-radio-input-border: var(--bs-border-width) solid $action;
 $form-radio-input-checked-border-color: $form-check-input-checked-border-color;
+$form-radio-input-checked-bg-color: $action;
 
-$popover-bg: var(--bs-primary-bg-subtle);
+$popover-bg: var(--bs-action-bg-subtle);
 $popover-box-shadow: none;
 $popover-font-size: $font-size-base;
 $popover-max-width: 375px;
 $popover-border-width: 1px;
-$popover-border-color: var(--bs-primary-border-subtle);
+$popover-border-color: var(--bs-action-border-subtle);
 $popover-body-padding-y: $spacer-xl;
 $popover-body-padding-x: $spacer-xl;
 $popover-arrow-width: $spacer-xl;
@@ -201,40 +206,43 @@ $table-cell-padding-x: $spacer;
 
 $table-th-font-weight: normal;
 
-$table-color: var(--bs-tertiary-text-emphasis);
+$table-color: var(--bs-secondary-text-emphasis);
 $table-bg: var(--bs-body-bg);
 $table-accent-bg: transparent;
 
-$table-striped-bg: var(--bs-light-bg-subtle);
+$table-striped-bg: var(--bs-tertiary-bg-subtle);
 
 $nav-tabs-border-color: transparent;
 $nav-tabs-border-width: 0;
 $nav-tabs-border-radius: 0;
-$nav-tabs-link-hover-border-color: transparent transparent var(--bs-secondary) transparent;
+$nav-tabs-link-hover-border-color: transparent transparent var(--bs-primary) transparent;
 $nav-tabs-link-active-color: var(--bs-body-color);
 $nav-tabs-link-active: transparent;
-$nav-tabs-link-active-border-color: transparent transparent var(--bs-secondary) transparent;
+$nav-tabs-link-active-border-color: transparent transparent var(--bs-primary) transparent;
 
 $nav-underline-gap: $spacer;
 $nav-underline-border-width: 2px;
 $nav-underline-link-active-color:  var(--bs-body-color);
 
 $dropdown-box-shadow: none;
-$dropdown-border-color: var(--bs-light-border-subtle);
+$dropdown-border-color: var(--bs-tertiary-border-subtle);
 $dropdown-padding-x: math.div(12, 16) * 1rem;
 $dropdown-padding-y: math.div(12, 16) * 1rem;
 $dropdown-item-padding-y: $spacer-xs;
 $dropdown-item-padding-x: $spacer-xxs;
-$dropdown-link-hover-bg: var(--bs-primary-bg-subtle);
-$dropdown-link-hover-color: var(--bs-primary-text-emphasis);
-$dropdown-link-active-color: var(--bs-primary-text-emphasis);
+$dropdown-link-hover-bg: var(--bs-action-bg-subtle);
+$dropdown-link-hover-color: var(--bs-action-text-emphasis);
+$dropdown-link-active-color: var(--bs-action-text-emphasis);
 $dropdown-link-active-bg: var(--bs-dropdown-bg);
 
 
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';
 @import '~node_modules/bootstrap/scss/_variables.scss';
+@import '~node_modules/bootstrap/scss/_maps.scss';
 @import '~node_modules/bootstrap/scss/_mixins.scss';
+@import '~node_modules/bootstrap/scss/_utilities.scss';
+
 // We also defines a few functions and mixins internally
 @import './functions.scss';
 @import './mixins.scss';

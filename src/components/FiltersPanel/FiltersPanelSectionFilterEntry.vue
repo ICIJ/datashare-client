@@ -66,12 +66,12 @@ const classList = computed(() => {
   &__count {
     margin-left: auto;
     color: var(--bs-body-bg);
-    background: var(--bs-tertiary);
+    background: var(--bs-secondary);
   }
 
   &--checked {
     .filters-panel-section-filter-entry__count {
-      background: var(--bs-primary-text-emphasis);
+      background: var(--bs-action-text-emphasis);
     }
   }
 }

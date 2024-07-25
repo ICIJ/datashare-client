@@ -8,7 +8,7 @@ const props = defineProps({
   },
   variant: {
     type: String,
-    default: 'outline-tertiary'
+    default: 'outline-secondary'
   },
   tag: {
     type: String,

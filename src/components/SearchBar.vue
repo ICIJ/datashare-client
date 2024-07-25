@@ -323,12 +323,12 @@ export default {
   }
 
   &--focused:deep(.input-group-append .dropdown-toggle) {
-    border-top-color: $secondary;
-    border-bottom-color: $secondary;
+    border-top-color: $primary;
+    border-bottom-color: $primary;
   }
 
   &:deep(.input-group-append .dropdown-toggle:focus) {
-    box-shadow: 0 0 0 1px $secondary inset;
+    box-shadow: 0 0 0 1px $primary inset;
   }
 
   & &__suggestions.dropdown-menu {

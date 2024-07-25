@@ -228,7 +228,7 @@ export default {
   }
 
   background: var(--bs-body-bg);
-  color: var(--bs-tertiary-color);
+  color: var(--bs-secondary-color);
   min-width: var(--height);
   max-width: var(--height);
   min-height: var(--height);
@@ -250,7 +250,7 @@ export default {
   &--active:after,
   &--clickable:hover:after,
   &--hover:after {
-    background: $secondary;
+    background: $primary;
   }
 
   &--clickable:hover,
@@ -338,7 +338,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bs-light-bg-subtle);
+    background: var(--bs-tertiary-bg-subtle);
   }
 
   &--hide-placeholder &__placeholder {
@@ -355,13 +355,13 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(var(--bs-lighter-rgb), 0.5);
-    color: var(--bs-tertiary);
+    background: rgba(var(--bs-light-rgb), 0.5);
+    color: var(--bs-secondary);
     display: none;
   }
 
   &__placeholder + &__overlay {
-    background: var(--bs-light-bg-subtle);
+    background: var(--bs-tertiary-bg-subtle);
   }
 }
 </style>

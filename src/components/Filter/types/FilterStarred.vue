@@ -18,7 +18,7 @@
                 {{ labelToHuman('filter.starred') }}
               </span>
               <span class="filter__items__item__count my-auto ms-auto">
-                <span class="badge rounded-pill text-bg-light">
+                <span class="badge rounded-pill text-bg-tertiary">
                   {{ $n(starredDocuments.length) }}
                 </span>
               </span>
@@ -32,7 +32,7 @@
                 {{ labelToHuman('filter.notStarred') }}
               </span>
               <span class="filter__items__item__count my-auto ms-auto">
-                <span class="badge rounded-pill text-bg-light">
+                <span class="badge rounded-pill text-bg-tertiary">
                   {{ $n(total) }}
                 </span>
               </span>

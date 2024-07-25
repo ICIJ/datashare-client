@@ -61,7 +61,7 @@ export default {
                   <strong>Primary —</strong> Main theme color, used for hyperlinks, focus styles, and component and form active states.
                 </td>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2 bg-primary">&nbsp;</div>
+                  <div class="p-3 rounded-2 bg-action">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-primary</code>, <code>--bs-primary-rgb</code>
@@ -69,7 +69,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-primary-bg-subtle)">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-action-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-primary-bg-subtle</code>
@@ -77,7 +77,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="border: 5px var(--bs-primary-border-subtle) solid">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-action-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-primary-border-subtle</code>
@@ -85,7 +85,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="py-3 fw-bold h5" style="color: var(--bs-primary-text-emphasis)">Text</div>
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-action-text-emphasis)">Text</div>
                 </td>
                 <td>
                   <code>--bs-primary-text-emphasis</code>
@@ -97,7 +97,7 @@ export default {
                   <strong>Secondary —</strong> Second theme <code>color</code> option used for hovered hyperlinks and active styles.
                 </td>
                  <td class="ps-0">
-                  <div class="p-3 rounded-2 bg-secondary">&nbsp;</div>
+                  <div class="p-3 rounded-2 bg-primary">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-secondary</code>, <code>--bs-secondary-rgb</code>
@@ -105,7 +105,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-secondary-bg-subtle)">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-primary-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-secondary-bg-subtle</code>
@@ -113,7 +113,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="border: 5px var(--bs-secondary-border-subtle) solid">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-primary-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-secondary-border-subtle</code>
@@ -121,7 +121,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="py-3 fw-bold h5" style="color: var(--bs-secondary-text-emphasis)">Text</div>
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-primary-text-emphasis)">Text</div>
                 </td>
                 <td>
                   <code>--bs-secondary-text-emphasis</code>
@@ -133,7 +133,7 @@ export default {
                   option to style backgrounds for hover states, accents, and wells.
                 </td>
                  <td class="ps-0">
-                  <div class="p-3 rounded-2 bg-tertiary">&nbsp;</div>
+                  <div class="p-3 rounded-2 bg-secondary">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-tertiary</code>, <code>--bs-tertiary-rgb</code>
@@ -141,7 +141,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-tertiary-bg-subtle)">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-secondary-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-tertiary-bg-subtle</code>
@@ -149,7 +149,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="border: 5px var(--bs-tertiary-border-subtle) solid">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-secondary-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-tertiary-border-subtle</code>
@@ -157,7 +157,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="py-3 fw-bold h5" style="color: var(--bs-tertiary-text-emphasis)">Text</div>
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-secondary-text-emphasis)">Text</div>
                 </td>
                 <td>
                   <code>--bs-tertiary-text-emphasis</code>
@@ -308,7 +308,7 @@ export default {
                   <strong>Light —</strong> Additional theme option for less contrasting colors.
                 </td>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2 bg-light">&nbsp;</div>
+                  <div class="p-3 rounded-2 bg-tertiary">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-light</code>, <code>--bs-light-rgb</code>
@@ -316,7 +316,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-light-bg-subtle)">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-tertiary-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-light-bg-subtle</code>
@@ -324,7 +324,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="border: 5px var(--bs-light-border-subtle) solid">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-tertiary-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-light-border-subtle</code>
@@ -332,7 +332,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="py-3 fw-bold h5" style="color: var(--bs-light-text-emphasis)">Text</div>
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-tertiary-text-emphasis)">Text</div>
                 </td>
                 <td>
                   <code>--bs-light-text-emphasis</code>

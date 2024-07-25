@@ -41,17 +41,17 @@
         </b-tooltip>
         <b-dropdown v-if="displayDownloadOptions" end toggle-class="py-0" size="sm">
           <b-dropdown-item v-if="hasCleanableContentType" :href="documentFullUrlWithoutMetadata">
-            <fa icon="download" class="me-1 text-secondary" fixed-width />
+            <fa icon="download" class="me-1 text-primary" fixed-width />
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
           <b-dropdown-item class="document-actions__download--extracted-text" @click="documentOriginalExtractedText">
-            <fa icon="download" class="me-1 text-secondary" fixed-width />
+            <fa icon="download" class="me-1 text-primary" fixed-width />
             {{ $t('document.downloadExtractedText') }}
           </b-dropdown-item>
           <template v-if="hasRoot">
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item :href="document.fullRootUrl" class="document-actions__download--parent">
-              <fa icon="download" class="me-1 text-secondary" fixed-width />
+              <fa icon="download" class="me-1 text-primary" fixed-width />
               {{ $t('document.downloadRootButton') }}
             </b-dropdown-item>
             <b-dropdown-item
@@ -59,7 +59,7 @@
               :href="rootDocumentFullUrlWithoutMetadata"
               class="document-actions__download--parent-without-metadata"
             >
-              <fa icon="download" class="me-1 text-secondary" fixed-width />
+              <fa icon="download" class="me-1 text-primary" fixed-width />
               {{ $t('document.downloadRootWithoutMetadataButton') }}
             </b-dropdown-item>
           </template>

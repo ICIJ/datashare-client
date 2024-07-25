@@ -23,7 +23,7 @@ defineProps({
   },
   okVariant: {
     type: String,
-    default: 'primary'
+    default: 'action'
   }
 })
 </script>

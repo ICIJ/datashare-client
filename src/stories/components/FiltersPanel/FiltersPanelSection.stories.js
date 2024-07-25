@@ -20,7 +20,7 @@ export default {
     },
     setup: () => ({ args }),
     template: `
-      <div class="p-5" style="background-color: var(--bs-light-bg-subtle);">
+      <div class="p-5" style="background-color: var(--bs-tertiary-bg-subtle);">
         <filters-panel-section :title="args.title">
           <filters-panel-section-filter title="Project" icon="circles-three-plus" collapse />
           <filters-panel-section-filter title="Path" icon="tree-structure" collapse />

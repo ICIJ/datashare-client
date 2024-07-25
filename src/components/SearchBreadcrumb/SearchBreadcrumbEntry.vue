@@ -66,6 +66,6 @@ const entryAttributes = computed(() => {
 .search-breadcrumb-entry {
   align-items: center;
   padding-right: $spacer-xs;
-  color: var(--bs-tertiary);
+  color: var(--bs-secondary);
 }
 </style>

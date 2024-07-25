@@ -42,7 +42,7 @@ export default {
   min-height: 100vh;
 
   &__form {
-    @include gradient-directional($primary, $secondary);
+    @include gradient-directional($action, $primary);
 
     &__heading {
       text-align: center;

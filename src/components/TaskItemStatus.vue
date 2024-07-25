@@ -94,7 +94,7 @@ export default {
       font-size: $font-size-lg;
 
       &:deep(code) {
-        background-color: $light;
+        background-color: $tertiary;
         border: 1px gray solid;
         border-radius: 3px;
         margin-right: 0.2rem;

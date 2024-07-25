@@ -108,7 +108,7 @@ export const MultipleAddons = {
           <navigation-breadcrumb-entry class="ms-auto">
             <icon-button
               tooltip-placement="left"
-              variant="primary"
+              variant="action"
               pill
               square
               hide-label

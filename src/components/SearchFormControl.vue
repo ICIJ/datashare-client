@@ -156,7 +156,7 @@ const classList = computed(() => {
           v-if="clearText"
           icon-left="x"
           hide-label
-          variant="outline-tertiary"
+          variant="outline-secondary"
           :size="size"
           class="search-form-control__clear__icon p-1 border-0"
           :class="{
@@ -183,7 +183,7 @@ const classList = computed(() => {
   &__start,
   &__end {
     background-color: var(--bs-body-bg);
-    color: $tertiary;
+    color: $secondary;
     transition: $input-transition;
   }
 
@@ -235,11 +235,11 @@ const classList = computed(() => {
   }
 
   &--shadow {
-    box-shadow: 0.05em 0.05em 0.5em 0.3em $lighter;
+    box-shadow: 0.05em 0.05em 0.5em 0.3em $light;
   }
 
   &--shadow.search-form-control--sm {
-    box-shadow: 1px 1px 8px 5px $lighter;
+    box-shadow: 1px 1px 8px 5px $light;
   }
 }
 </style>

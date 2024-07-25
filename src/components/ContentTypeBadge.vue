@@ -55,7 +55,7 @@ export default {
   border: currentColor 1px solid;
   border-radius: $border-radius-pill;
   font-weight: $badge-font-weight;
-  background: $light;
+  background: $tertiary;
   color: $text-muted;
 
   &__icon {

@@ -12,7 +12,7 @@ export default {
     },
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'tertiary', 'light']
+      options: ['action', 'primary', 'secondary', 'tertiary', 'light']
     },
     pill: {
       control: { type: 'boolean' }
@@ -22,7 +22,7 @@ export default {
     }
   },
   args: {
-    variant: 'primary',
+    variant: 'action',
     size: 'md',
     pill: false,
     loading: false
@@ -38,7 +38,7 @@ export default {
 
 export const IconLeft = {
   args: {
-    variant: 'primary',
+    variant: 'action',
     size: 'md',
     label: 'Button',
     iconLeft: 'CirclesThreePlus'
@@ -47,7 +47,7 @@ export const IconLeft = {
 
 export const IconBothSide = {
   args: {
-    variant: 'primary',
+    variant: 'action',
     size: 'md',
     label: 'Save search',
     iconLeft: 'CirclesThreePlus',
@@ -57,7 +57,7 @@ export const IconBothSide = {
 
 export const IconRight = {
   args: {
-    variant: 'primary',
+    variant: 'action',
     size: 'md',
     label: 'Button',
     iconRight: 'users'
@@ -66,7 +66,7 @@ export const IconRight = {
 
 export const HideLabel = {
   args: {
-    variant: 'primary',
+    variant: 'action',
     size: 'md',
     label: 'Button',
     hideLabel: true,
@@ -76,7 +76,7 @@ export const HideLabel = {
 
 export const SquarePill = {
   args: {
-    variant: 'primary',
+    variant: 'action',
     size: 'md',
     label: 'Close',
     hideLabel: true,
@@ -88,7 +88,7 @@ export const SquarePill = {
 
 export const Loading = {
   args: {
-    variant: 'primary',
+    variant: 'action',
     size: 'md',
     label: 'Save',
     pill: true,

@@ -43,7 +43,7 @@ const occurrences = computed(() => {
 </script>
 
 <template>
-  <icon-button variant="outline-light" class="named-entity-button" :class="classList" :style="style" :icon-left="icon">
+  <icon-button variant="outline-tertiary" class="named-entity-button" :class="classList" :style="style" :icon-left="icon">
     {{ namedEntity.mention }}
     <named-entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
   </icon-button>

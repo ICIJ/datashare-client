@@ -23,7 +23,7 @@
                 <display-user :username="user" hide-avatar hide-link />
               </span>
               <span class="filter__items__item__count my-auto ms-auto">
-                <span class="badge rounded-pill text-bg-light">
+                <span class="badge rounded-pill text-bg-tertiary">
                   {{ $n(count) }}
                 </span>
               </span>

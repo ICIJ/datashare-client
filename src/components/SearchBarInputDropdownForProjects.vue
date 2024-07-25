@@ -286,7 +286,7 @@ export default {
       bottom: 3px;
       left: 5px;
       right: 5px;
-      border: 2px solid $secondary;
+      border: 2px solid $primary;
       border-radius: $border-radius;
     }
   }

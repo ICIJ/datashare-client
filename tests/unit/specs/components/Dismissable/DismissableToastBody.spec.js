@@ -75,7 +75,7 @@ describe('DismissableToastBody', () => {
         href: 'https://example.com'
       }
     })
-    expect(wrapper.find('a').classes()).toContain('btn-outline-primary')
+    expect(wrapper.find('a').classes()).toContain('btn-outline-action')
   })
 
   it('renders title if provided', () => {

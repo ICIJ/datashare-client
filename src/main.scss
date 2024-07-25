@@ -31,7 +31,7 @@
 
 .form-check .form-check-input:checked + .form-check-label {
   font-weight: 500;
-  color: var(--bs-primary-text-emphasis);
+  color: var(--bs-action-text-emphasis);
 }
 
 .form-control:hover,
@@ -57,7 +57,7 @@ body {
 
 .splashscreen {
   align-items: center;
-  background: darken($primary, 10%);
+  background: darken($action, 10%);
   bottom: 0;
   color: white;
   display: flex;
@@ -85,9 +85,9 @@ body {
       &:before {
         animation: rotateLogo 4s linear infinite;
         background-image: linear-gradient(#48C2FC, #48C2FC),
-          linear-gradient($secondary, $secondary),
+          linear-gradient($primary, $primary),
           linear-gradient(#48C2FC, #48C2FC),
-          linear-gradient($secondary, $secondary);
+          linear-gradient($primary, $primary);
         background-position: 0 0, 100% 0, 100% 100%, 0 100%;
         background-repeat: no-repeat;
         background-size: 50% 50%, 50% 50%;
@@ -256,11 +256,11 @@ html[data-bs-theme] body .Toastify {
 .vc-container, .vc-popover-content {
 
   &.vc-yellow {
-    --vc-accent-500: #{$tertiary};
-    --vc-accent-400: #{lighten($tertiary, 5)};
-    --vc-accent-300: #{lighten($tertiary, 10)};
-    --vc-accent-200: #{lighten($tertiary, 15)};
-    --vc-accent-100: #{lighten($tertiary, 20)};
+    --vc-accent-500: #{$secondary};
+    --vc-accent-400: #{lighten($secondary, 5)};
+    --vc-accent-300: #{lighten($secondary, 10)};
+    --vc-accent-200: #{lighten($secondary, 15)};
+    --vc-accent-100: #{lighten($secondary, 20)};
   }
 
   --vc-gray-900: #{darken($app-context-sidebar-bg, 5%)};
@@ -291,12 +291,12 @@ html[data-bs-theme] body .Toastify {
       .vc-highlight-base-start,
       .vc-highlight-base-middle,
       .vc-highlight-base-end {
-        background-color: rgba($tertiary, 0.4) !important;
+        background-color: rgba($secondary, 0.4) !important;
       }
     }
   }
 
   .vc-day-content:hover {
-    background-color: rgba($tertiary, 0.1) !important;
+    background-color: rgba($secondary, 0.1) !important;
   }
 }

@@ -59,12 +59,12 @@ defineProps({
   border-radius: var(--bs-border-radius);
 
   &:hover {
-    box-shadow: 1px 1px 8px 5px var(--bs-lighter);
+    box-shadow: 1px 1px 8px 5px var(--bs-light);
   }
 
   &__icon,
   &__label {
-    color: var(--bs-tertiary-text-emphasis);
+    color: var(--bs-secondary-text-emphasis);
   }
 
   &__label {

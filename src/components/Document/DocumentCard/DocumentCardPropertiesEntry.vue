@@ -21,7 +21,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="document-card-properties-entry d-flex px-1 mb-2 text-tertiary-emphasis">
+  <div class="document-card-properties-entry d-flex px-1 mb-2 text-secondary-emphasis">
     <div v-if="!hideIcon" class="document-card-properties-entry__icon pe-2">
       <phosphor-icon :name="icon ?? property" />
     </div>

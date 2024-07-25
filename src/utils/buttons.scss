@@ -1,19 +1,19 @@
 @each $variant, $value in $theme-colors {
   .btn-outline-#{$variant} {
     --bs-btn-color: var(--bs-body-color);
-    --bs-btn-disabled-color: var(--bs-tertiary);
+    --bs-btn-disabled-color: var(--bs-secondary);
   }
 
   .btn-#{$variant} {
-    --bs-btn-disabled-color: var(--bs-tertiary);
+    --bs-btn-disabled-color: var(--bs-secondary);
     --bs-btn-disabled-bg: transparent;
-    --bs-btn-disabled-border-color: var(--bs-tertiary);
+    --bs-btn-disabled-border-color: var(--bs-secondary);
     --bs-btn-disabled-opacity: 1;
   }
 }
 
-.btn-primary {
-  --bs-btn-focus-box-shadow: 0 0 0 2px var(--bs-secondary);
+.btn-action {
+  --bs-btn-focus-box-shadow: 0 0 0 2px var(--bs-primary);
 
   &:focus,
   &:focus-visible,
@@ -23,51 +23,51 @@
   }
 }
 
-.btn-outline-primary {
+.btn-outline-action {
   --bs-btn-bg: var(--bs-body-bg);
 }
 
-.btn-outline-secondary {
-  --bs-btn-hover-bg: #{tint-color($secondary, 90%)};
-  --bs-btn-active-bg: #{tint-color($secondary, 90%)};
-  --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-lighter);
-  --bs-btn-disabled-color: var(--bs-tertiary);
+.btn-outline-primary {
+  --bs-btn-hover-bg: #{tint-color($primary, 90%)};
+  --bs-btn-active-bg: #{tint-color($primary, 90%)};
+  --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-light);
+  --bs-btn-disabled-color: var(--bs-secondary);
   --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: var(--bs-tertiary);
+  --bs-btn-disabled-border-color: var(--bs-secondary);
   --bs-btn-disabled-opacity: 1;
-  --bs-btn-focus-box-shadow: 0 0 0 2px var(--bs-secondary) inset;
+  --bs-btn-focus-box-shadow: 0 0 0 2px var(--bs-primary) inset;
 
   &:focus,
   &:focus-visible,
   &.pseudo-focus {
-    --bs-btn-border-color: var(--bs-primary);
-    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-action);
+    --bs-btn-hover-border-color: var(--bs-action);
   }
 }
 
-.btn-outline-tertiary {
-  --bs-btn-color: var(--bs-tertiary);
-  --bs-btn-border-color: var(--bs-lighter);
-  --bs-btn-hover-bg: var(--bs-lighter);
+.btn-outline-secondary {
+  --bs-btn-color: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-light);
+  --bs-btn-hover-bg: var(--bs-light);
   --bs-btn-hover-color: var(--bs-body-color);
   --bs-btn-hover-border-color: transparent;
   --bs-btn-active-color: var(--bs-body-color);
   --bs-btn-active-bg: var(--bs-body-bg);
-  --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-lighter);
-  --bs-btn-disabled-color: var(--bs-light);
-  --bs-btn-disabled-border-color: var(--bs-lighter);
-  --bs-btn-focus-box-shadow: 0 0 0 #{$btn-focus-width} rgba(var(--bs-primary-rgb), 0.5), 0 0 0 1px var(--bs-secondary) inset;
+  --bs-btn-active-shadow: 1px 1px 8px 5px var(--bs-light);
+  --bs-btn-disabled-color: var(--bs-tertiary);
+  --bs-btn-disabled-border-color: var(--bs-light);
+  --bs-btn-focus-box-shadow: 0 0 0 #{$btn-focus-width} rgba(var(--bs-action-rgb), 0.5), 0 0 0 1px var(--bs-primary) inset;
 }
 
 .btn-outline-dark {
   --bs-btn-color: var(--bs-link-color);
-  --bs-btn-hover-bg: var(--bs-primary);
-  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: var(--bs-action);
+  --bs-btn-hover-border-color: var(--bs-action);
   --bs-btn-bg: var(--bs-body-bg);
 }
 
 @include color-mode(dark) {
-  .btn-primary {
+  .btn-action {
     --bs-btn-bg: var(--bs-white);
     --bs-btn-border-color: var(--bs-white);
     --bs-btn-color: var(--bs-body-bg);
@@ -77,7 +77,7 @@
     --bs-btn-hover-color: var(--bs-body-bg);
   }
 
-  .btn-outline-primary {
+  .btn-outline-action {
     --bs-btn-bg: var(--bs-body-bg);
     --bs-btn-border-color: var(--bs-body-color);
     --bs-btn-color: var(--bs-body-color);
@@ -87,18 +87,18 @@
     --bs-btn-hover-color: var(--bs-white);
   }
 
-  .btn-outline-secondary {
+  .btn-outline-primary {
     --bs-btn-hover-color: var(--bs-body-color);
-    --bs-btn-hover-bg: #{shade-color($secondary, 95%)};
+    --bs-btn-hover-bg: #{shade-color($primary, 95%)};
     --bs-btn-active-bg: var(--bs-body-bg-color);
     --bs-btn-active-color: var(--bs-body-color);
     --bs-btn-active-shadow: transparent;
   }
 
-  .btn-outline-tertiary {
-    --bs-btn-hover-bg: #{shade-color($tertiary, 60%)};
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #{shade-color($secondary, 60%)};
     --bs-btn-hover-border-color: currentColor;
-    --bs-btn-active-bg: #{shade-color($tertiary, 60%)};
+    --bs-btn-active-bg: #{shade-color($secondary, 60%)};
     --bs-btn-active-shadow: transparent;
     --bs-btn-border-color: var(--bs-border-color);
     --bs-btn-disabled-border-color: var(--bs-border-color);

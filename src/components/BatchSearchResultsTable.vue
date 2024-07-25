@@ -451,7 +451,7 @@ export default {
         white-space: nowrap;
 
         &[aria-sort]:hover {
-          background-color: $lighter;
+          background-color: $light;
         }
       }
     }

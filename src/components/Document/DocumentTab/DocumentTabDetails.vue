@@ -16,13 +16,13 @@
       </h5>
       <ul class="list-inline">
         <li class="document__content__shortcuts__children me-4 list-inline-item mb-3">
-          <router-link :to="searchChildrenDocumentParams" class="btn btn-primary btn-sm">
+          <router-link :to="searchChildrenDocumentParams" class="btn btn-action btn-sm">
             <fa icon="paperclip" class="me-2" />
             {{ $t('document.searchChildrenDocument') }}
           </router-link>
         </li>
         <li class="document__content__shortcuts__folder list-inline-item mb-3">
-          <router-link :to="searchDirnameDocumentParams" class="btn btn-primary btn-sm">
+          <router-link :to="searchDirnameDocumentParams" class="btn btn-action btn-sm">
             <fa icon="folder-open" class="me-2" />
             {{ $t('document.searchDirnameDocument') }}
           </router-link>
@@ -63,7 +63,7 @@
               class="form-control document__content__details__item__input-group__input"
             />
             <haptic-copy
-              class="btn btn-light document__content__details__item__input-group__copy"
+              class="btn btn-tertiary document__content__details__item__input-group__copy"
               hide-label
               :text="String(field.value)"
               tooltip-placement="left"

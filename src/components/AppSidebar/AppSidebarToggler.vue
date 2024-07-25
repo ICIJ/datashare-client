@@ -32,7 +32,7 @@ const title = computed(() => {
     icon-left="sidebar-simple"
     square
     hide-label
-    variant="secondary"
+    variant="primary"
     class="app-sidebar-toggler text-white"
     :title="title"
     :class="classList"

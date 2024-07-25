@@ -40,7 +40,7 @@ export default {
       }
     },
     template: `
-      <div style="position: relative; height: 400px; max-height: 80vh; background-color: var(--bs-light-bg-subtle); overflow: hidden; display: flex;">
+      <div style="position: relative; height: 400px; max-height: 80vh; background-color: var(--bs-tertiary-bg-subtle); overflow: hidden; display: flex;">
         <seprator-line
           :style="separatorLineStyle"
           @drag="left = $event"
@@ -48,10 +48,10 @@ export default {
           @expand="left = $event"
           v-bind="args" />
 
-        <div class="bg-primary-subtle d-flex align-items-center justify-content-center" :style="placeholderStyle">
+        <div class="bg-action-subtle d-flex align-items-center justify-content-center" :style="placeholderStyle">
           <code v-if="args.min < left">min-width: {{ args.min }}px</code>
         </div>
-        <div class="bg-secondary-subtle flex-grow-1"></div>
+        <div class="bg-primary-subtle flex-grow-1"></div>
       </div>
     `
   })

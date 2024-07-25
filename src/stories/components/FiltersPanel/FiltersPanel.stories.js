@@ -36,7 +36,7 @@ export default {
     },
     setup: () => ({ args }),
     template: `
-      <div style="max-width: 320px; background-color: var(--bs-light-bg-subtle);" class="p-3">
+      <div style="max-width: 320px; background-color: var(--bs-tertiary-bg-subtle);" class="p-3">
         <filters-panel-toggler class="mb-5" />
         <filters-panel-search class="mb-5" />
         <filters-panel-section title="Documents info">

@@ -4,7 +4,7 @@
       :is="filter.component"
       ref="filterComponent"
       :key="filter.name"
-      class="bg-light"
+      class="bg-tertiary"
       :collapsed-if-no-values="false"
       :dark="false"
       :model-query="modelQuery"

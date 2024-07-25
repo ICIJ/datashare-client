@@ -100,7 +100,7 @@ const classList = computed(() => {
 .navigation-breadcrumb-link {
   display: inline-flex;
   align-items: center;
-  color: var(--bs-secondary-color);
+  color: var(--bs-primary-color);
   padding: 0;
 
   &__label {
@@ -119,7 +119,7 @@ const classList = computed(() => {
     color: var(--bs-body-color);
 
     .navigation-breadcrumb-link__label {
-      border-bottom: 1px solid var(--bs-secondary);
+      border-bottom: 1px solid var(--bs-primary);
     }
   }
 }
