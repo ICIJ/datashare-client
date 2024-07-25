@@ -52,7 +52,7 @@ const toggleOrder = () => {
   --bs-border-width: 0;
   --bs-btn-padding-x: #{$spacer-xxs};
   --bs-btn-padding-y: #{$spacer-xxs};
-  --bs-btn-color: var(--bs-light);
+  --bs-btn-color: var(--bs-tertiary-text-emphasis);
 
   visibility: hidden;
 
