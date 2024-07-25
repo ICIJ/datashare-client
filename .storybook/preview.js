@@ -18,8 +18,12 @@ setup((app) => {
   const bootstrap = createBootstrap({
     directives: true,
     components: {
+      BPopover: {
+        offset: '16px'
+      },
       BTooltip: {
         noFade: true,
+        offset: '6px',
         delay: {
           show: 0,
           hide: 0
