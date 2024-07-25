@@ -44,6 +44,18 @@ const props = defineProps({
   },
   noClose: {
     type: Boolean
+  },
+  iconClass: {
+    type: [String, Object, Array],
+    default: ''
+  },
+  contentClass: {
+    type: [String, Object, Array],
+    default: ''
+  },
+  closeClass: {
+    type: [String, Object, Array],
+    default: ''
   }
 })
 
@@ -64,11 +76,11 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
 
 <template>
   <div class="toast-body d-flex align-items-center" :class="classList">
-    <div v-if="!noIcon" class="toast-body__icon d-none d-md-block">
+    <div v-if="!noIcon" class="toast-body__icon py-1 d-none d-md-block" :class="iconClass">
       <phosphor-icon :name="icon" :variant="variant" weight="bold" />
     </div>
     <div class="flex-grow-1 d-flex align-items-center">
-      <div class="toast-body__content">
+      <div class="toast-body__content" :class="contentClass">
         <h5 v-if="title" class="toast-body__content__title">{{ title }}</h5>
         <p class="toast-body__content__body mb-0 d-inline">
           <slot v-bind="{ closeToast, linkClassList, linkLabelDisplay }">{{ body }}</slot>
@@ -86,6 +98,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
       <icon-button
         v-if="!noClose"
         class="toast-body__close py-1"
+        :class="closeClass"
         variant="link"
         label="Close"
         hide-label
