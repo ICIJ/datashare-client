@@ -99,3 +99,23 @@ export const WithHugeRoot = {
     }
   }
 }
+
+export const WithEverything = {
+  args: {
+    document: {
+      id: 'bar',
+      title: 'installer.jpg',
+      contentType: 'application/x-msdownload',
+      standardExtension: 'exe',
+      hasStandardExtension: false,
+      contentTypeDescription: types['application/x-msdownload'].description,
+      contentTypeWarning: types['application/x-msdownload'].warning,
+      contentTypeIcon: markRaw(PhFile),
+      root: {
+        id: 'fiz',
+        title: 'email-with-subject.eml',
+        contentLength: 1e24
+      }
+    }
+  }
+}
