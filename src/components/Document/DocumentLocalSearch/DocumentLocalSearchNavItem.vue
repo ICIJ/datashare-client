@@ -23,7 +23,7 @@ const iconWeight = computed(() => {
 
 <template>
   <icon-button
-    variant="outline-tertiary"
+    variant="outline-secondary"
     class="document-local-search-nav-item"
     :icon-left="icon"
     :icon-left-weight="iconWeight"

@@ -112,14 +112,14 @@ export default {
     }
 
     &--active {
-      box-shadow: 0 0 0 2px $primary;
+      box-shadow: 0 0 0 2px $action;
 
       &:after {
         content: '';
         position: absolute;
         right: -1px;
         top: -1px;
-        border: 1rem solid $primary;
+        border: 1rem solid $action;
         border-left-color: transparent;
         border-bottom-color: transparent;
       }

@@ -24,7 +24,7 @@ const classList = computed(() => {
 .navigation-breadcrumb-entry {
   display: inline-flex;
   align-items: center;
-  color: var(--bs-secondary-color);
+  color: var(--bs-primary-color);
 
   &:not(&--flush) {
     padding: 0 $spacer;

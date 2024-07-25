@@ -17,7 +17,7 @@
               :key="name"
               class="batch-search-results-details__info__projects__link"
             >
-              <project-link :project="name" class="btn btn-sm btn-light p-1 me-1 mb-1" />
+              <project-link :project="name" class="btn btn-sm btn-tertiary p-1 me-1 mb-1" />
             </span>
           </dd>
         </div>
@@ -236,7 +236,7 @@ export default {
           white-space: nowrap;
 
           &[aria-sort]:hover {
-            background-color: $lighter;
+            background-color: $light;
           }
         }
       }

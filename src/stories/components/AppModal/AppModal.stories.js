@@ -15,7 +15,7 @@ export default {
     default: 'Let’s explain here the consequences of the action if needed so users don’t make any mistake.',
     image: 'https://i.imgur.com/1eWgPCp.png',
     imageWidth: '60px',
-    bodyClass: 'text-tertiary-emphasis',
+    bodyClass: 'text-secondary-emphasis',
     modelValue: true,
     fullscreen: false,
     hideBackdrop: false,
@@ -32,7 +32,7 @@ export default {
     return {
       components: { AppModal },
       template: `
-        <button class="btn btn-primary" @click="args.modelValue = !args.modelValue">
+        <button class="btn btn-action" @click="args.modelValue = !args.modelValue">
           Toggle modal
         </button>
         <app-modal v-bind="args" @update:modelValue="args.modelValue = $event">

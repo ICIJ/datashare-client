@@ -9,7 +9,7 @@
     :hide-tooltip="hideTooltip"
     :tooltip-placement="tooltipPlacement"
     square
-    variant="outline-tertiary"
+    variant="outline-secondary"
     class="document-actions-entry border-0"
     :class="{ 'document-actions-entry--fill': fill }"
     :disabled="disabled"
@@ -80,10 +80,10 @@ const iconHoverWeight = computed(() => (props.fill ? 'fill' : 'bold'))
 
 <style lang="scss" scoped>
 .document-actions-entry {
-  --bs-btn-hover-color: var(--bs-primary-text-emphasis);
+  --bs-btn-hover-color: var(--bs-action-text-emphasis);
 
   &--fill {
-    --bs-btn-color: var(--bs-primary-text-emphasis);
+    --bs-btn-color: var(--bs-action-text-emphasis);
   }
 }
 </style>

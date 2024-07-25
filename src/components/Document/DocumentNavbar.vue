@@ -15,7 +15,7 @@
     </slot>
     <div v-if="doc" class="ms-auto d-flex">
       <slot name="nav" />
-      <project-link :project="doc.index" class="btn btn-sm btn-light p-0 pe-1 ms-1" />
+      <project-link :project="doc.index" class="btn btn-sm btn-tertiary p-0 pe-1 ms-1" />
       <b-button
         class="mx-2 px-2 py-0 document-navbar__recommended-by"
         size="sm"
@@ -73,7 +73,7 @@
         :is-download-allowed="isDownloadAllowed(doc)"
         class="document-navbar__actions d-flex"
         download-btn-group-class="order-2"
-        download-btn-class="btn btn-secondary btn-sm py-0 ms-1"
+        download-btn-class="btn btn-primary btn-sm py-0 ms-1"
         download-btn-label
         display-download-options
         no-btn-group
@@ -163,7 +163,7 @@ export default {
   display: flex;
   margin: 0;
   color: #fff;
-  background: darken($primary, 10%);
+  background: darken($action, 10%);
 
   @media (max-width: $document-float-breakpoint-width) {
     border-radius: 0;
@@ -216,13 +216,13 @@ export default {
         padding: $spacer-xs $spacer 0;
 
         .nav-link.active {
-          background: $light;
+          background: $tertiary;
         }
       }
 
       .tab-content {
         padding: $spacer;
-        background: $light;
+        background: $tertiary;
       }
     }
   }

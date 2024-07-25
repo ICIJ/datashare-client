@@ -33,7 +33,7 @@
           v-for="oneTag in tags"
           :key="oneTag.label"
           class="document-tags-form__tags__tag badge rounded-pill me-2 mb-1"
-          :class="[mode === 'light' ? 'border text-bg-light' : 'text-bg-dark']"
+          :class="[mode === 'light' ? 'border text-bg-tertiary' : 'text-bg-dark']"
         >
           <span v-b-tooltip :title="generateTagTooltip(oneTag)">
             {{ oneTag.label }}

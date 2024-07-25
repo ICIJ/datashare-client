@@ -71,7 +71,7 @@ const classList = computed(() => {
   font-size: 1em;
   font-weight: 500;
   min-height: 1.85em;
-  color: var(--bs-primary-text-emphasis);
+  color: var(--bs-action-text-emphasis);
   padding: 0;
   margin: 0;
   display: flex;
@@ -100,7 +100,7 @@ const classList = computed(() => {
 
   &__count {
     color: var(--bs-body-bg);
-    background: var(--bs-primary-text-emphasis);
+    background: var(--bs-action-text-emphasis);
   }
 }
 </style>

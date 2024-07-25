@@ -94,12 +94,12 @@ export default {
         display: inline-block;
         padding: $spacer * 0.25 $spacer * 0.5;
         margin-bottom: $spacer * 0.25;
-        background: $secondary;
+        background: $primary;
         color: white;
 
         &:hover {
           text-decoration: none;
-          background: lighten($secondary, 5);
+          background: lighten($primary, 5);
           color: white;
         }
       }
@@ -110,7 +110,7 @@ export default {
     display: inline-block;
     padding: $spacer * 0.25 $spacer * 0.5;
     margin-bottom: $spacer * 0.25;
-    background: $light;
+    background: $tertiary;
 
     &:hover {
       text-decoration: white;

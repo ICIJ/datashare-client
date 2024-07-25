@@ -26,7 +26,7 @@ defineProps({
         hide-label
         hide-tooltip
         tooltip-placement="right"
-        variant="outline-tertiary"
+        variant="outline-secondary"
         class="app-modal-header__close ms-auto border-0"
         :label="$t('appModalHeader.close')"
         @click="$emit('close')"

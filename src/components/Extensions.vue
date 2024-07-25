@@ -16,11 +16,11 @@
                 <b-form-input v-model="url" :state="isFormValid" placeholder="URL" type="url" />
               </div>
               <div class="d-flex align-items-center">
-                <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
+                <b-form-invalid-feedback class="text-primary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
                 <b-button
-                  variant="primary"
+                  variant="action"
                   class="ms-auto text-nowrap"
                   :disabled="isFormValid !== true"
                   @click="installExtensionFromUrl"
@@ -67,7 +67,7 @@
                     <b-button
                       v-if="!extension.installed"
                       class="extensions__card__download-button mb-2"
-                      variant="primary"
+                      variant="action"
                       @click="installExtensionFromId(extension.id)"
                     >
                       <fa icon="cloud-arrow-down"></fa>
@@ -76,7 +76,7 @@
                     <b-button
                       v-if="hasAvailableUpdate(extension)"
                       class="extensions__card__update-button mb-2"
-                      variant="primary"
+                      variant="action"
                       size="sm"
                       @click="installExtensionFromId(extension.id)"
                     >

@@ -74,7 +74,7 @@ const classList = computed(() => {
     bottom: $spacer-xxs;
     width: 2px;
     border-radius: 1px;
-    background: var(--bs-secondary);
+    background: var(--bs-primary);
   }
 
   &__action-icon {

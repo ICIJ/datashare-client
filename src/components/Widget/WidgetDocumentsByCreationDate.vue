@@ -9,7 +9,7 @@
             v-for="(_, interval) in intervals"
             :key="interval"
             :class="{ active: selectedInterval === interval }"
-            class="btn btn-outline-light py-1 px-2 widget__header__selectors__selector"
+            class="btn btn-outline-tertiary py-1 px-2 widget__header__selectors__selector"
             @click="setSelectedInterval(interval)"
           >
             {{ $t('widget.creationDate.intervals.' + interval) }}
@@ -368,7 +368,7 @@ export default {
   }
 
   &:deep(.column-chart__columns__item) {
-    fill: $primary;
+    fill: $action;
     cursor: pointer;
   }
 }

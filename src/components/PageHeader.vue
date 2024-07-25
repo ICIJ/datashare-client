@@ -147,9 +147,9 @@ export default {
             top: 0;
             left: 0;
             right: 0;
-            background: $secondary;
+            background: $primary;
             height: 2px;
-            box-shadow: 0 0 10px 0 $secondary;
+            box-shadow: 0 0 10px 0 $primary;
             border-radius: $border-radius $border-radius 0 0;
           }
         }

@@ -137,14 +137,14 @@ const maxRootContentLength = computed(() => {
         icon-left="download-simple"
         :href="documentFullUrlWithoutMetadata"
         :label="$t('documentDownloadPopover.downloadWithoutMetadata')"
-        variant="outline-primary"
+        variant="outline-action"
         class="document-download-popover__body__button"
       />
       <icon-button
         icon-left="download-simple"
         :href="documentF"
         :label="$t('documentDownloadPopover.downloadExtractText')"
-        variant="outline-primary"
+        variant="outline-action"
         class="document-download-popover__body__button"
       />
       <icon-button
@@ -152,7 +152,7 @@ const maxRootContentLength = computed(() => {
         icon-left="download-simple"
         :href="rootDocumentFullUrl"
         :label="$t('documentDownloadPopover.downloadRoot')"
-        variant="outline-primary"
+        variant="outline-action"
         class="document-download-popover__body__button"
       />
       <div class="document-download-popover__body__sections">

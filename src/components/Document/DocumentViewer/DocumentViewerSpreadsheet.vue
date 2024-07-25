@@ -211,7 +211,7 @@ export default {
 .spreadsheet-viewer {
   &__content {
     &__toolbox {
-      background: $light;
+      background: $tertiary;
       box-shadow: 0 -1 * $spacer 0 0 white;
       margin: $spacer $grid-gutter-width * 0.5;
 
@@ -265,7 +265,7 @@ export default {
         }
 
         .vue-recycle-scroller__slot:first-child {
-          background: $light;
+          background: $tertiary;
           border-bottom: 1px solid $border-color;
           font-weight: bold;
           position: sticky;

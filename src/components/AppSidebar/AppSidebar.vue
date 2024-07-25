@@ -497,9 +497,9 @@ $item-tree-width: 2px;
 
           &.router-link-exact-active:before,
           &.router-link-active:before {
-            background: $secondary;
+            background: $primary;
             bottom: 0;
-            box-shadow: 2px 0 $spacer 0 $secondary;
+            box-shadow: 2px 0 $spacer 0 $primary;
             content: '';
             left: 0;
             position: absolute;
@@ -509,7 +509,7 @@ $item-tree-width: 2px;
 
           &.router-link-exact-active .svg-inline--fa,
           &.router-link-active .svg-inline--fa {
-            color: $secondary;
+            color: $primary;
           }
 
           &[data-badge]:after {
@@ -517,7 +517,7 @@ $item-tree-width: 2px;
             position: absolute;
             left: calc(50% + 0.5em);
             top: 0.25em;
-            background: $secondary;
+            background: $primary;
             color: white;
             font-size: 0.75em;
             height: 1.7em;

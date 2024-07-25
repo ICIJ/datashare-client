@@ -25,14 +25,14 @@
         </b-button-group>
 
         <div class="ms-auto">
-          <b-button v-b-modal:[extractingFormId] variant="primary" class="me-2 task-analysis-list__actions__extract">
+          <b-button v-b-modal:[extractingFormId] variant="action" class="me-2 task-analysis-list__actions__extract">
             <fa icon="magnifying-glass-plus" class="me-2" />
             {{ $t('indexing.extractText') }}
           </b-button>
           <b-button
             v-b-tooltip
             v-b-modal:[findNamedEntitiesFormId]
-            variant="primary"
+            variant="action"
             class="task-analysis-list__actions__find-named-entites me-2"
             :title="$t('indexing.findNamedEntitiesTooltip')"
           >

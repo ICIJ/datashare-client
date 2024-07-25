@@ -35,7 +35,7 @@ const classList = computed(() => {
 <style lang="scss" scoped>
 .display-visibility {
   --display-status-bg: transparent;
-  --display-status-color: var(--bs-tertiary-text-emphasis);
+  --display-status-color: var(--bs-secondary-text-emphasis);
 
   &--public {
     --display-status-color: var(--bs-body-color);

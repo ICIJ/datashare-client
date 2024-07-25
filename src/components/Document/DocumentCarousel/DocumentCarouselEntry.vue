@@ -51,7 +51,7 @@ const href = computed(() => {
   justify-content: center;
   flex-direction: column;
   width: 130px;
-  color: var(--bs-tertiary-text-emphasis);
+  color: var(--bs-secondary-text-emphasis);
   padding-top: 10px;
   cursor: pointer;
   border-radius: $border-radius;
@@ -62,7 +62,7 @@ const href = computed(() => {
     box-shadow: $focus-ring-box-shadow;
 
     &:deep(.document-thumbnail) {
-      border-color: var(--bs-secondary);
+      border-color: var(--bs-primary);
     }
   }
 
@@ -78,7 +78,7 @@ const href = computed(() => {
     padding-top: 0;
 
     &:deep(.document-thumbnail) {
-      border-color: var(--bs-secondary);
+      border-color: var(--bs-primary);
     }
   }
 

@@ -157,7 +157,7 @@ export default {
           left: 0;
           right: 0;
           bottom: 0;
-          border: 2px solid $secondary;
+          border: 2px solid $primary;
           border-bottom: 0;
         }
 
@@ -177,7 +177,7 @@ export default {
       }
 
       &__title.router-link-active {
-        background: $secondary;
+        background: $primary;
         color: white;
       }
 

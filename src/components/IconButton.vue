@@ -52,7 +52,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 const iconButton = ref(null)
 
-const injectedVariant = inject('variant', 'primary')
+const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
 
 const props = defineProps({

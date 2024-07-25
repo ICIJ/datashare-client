@@ -54,7 +54,7 @@ const emit = defineEmits(['update:page'])
   position: relative;
 
   &:hover {
-    background: var(--bs-light-bg-subtle);
+    background: var(--bs-tertiary-bg-subtle);
   }
 
   &:hover &__content {

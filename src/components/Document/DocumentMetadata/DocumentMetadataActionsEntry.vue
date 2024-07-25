@@ -25,7 +25,7 @@ defineProps({
   <icon-button
     class="border-0"
     hide-label
-    variant="outline-tertiary"
+    variant="outline-secondary"
     square
     :label="label"
     :icon-left="icon"

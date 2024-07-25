@@ -21,7 +21,7 @@
         </b-tab>
       </template>
       <confirm-button
-        class="btn btn-primary"
+        class="btn btn-action"
         :disabled="!totalEvents || $wait.is(loader)"
         :confirmed="deleteUserHistory"
         :label="$t('global.confirmLabel')"

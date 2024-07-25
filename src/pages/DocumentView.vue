@@ -322,7 +322,7 @@ export default {
   }
 
   &__header {
-    background: $primary;
+    background: $action;
     color: white;
     display: inline-block;
     padding: $spacer * 2 0 0 0;
@@ -372,9 +372,9 @@ export default {
 
             &:before {
               border-radius: $border-radius $border-radius 0 0;
-              background: $secondary;
+              background: $primary;
               height: 2px;
-              box-shadow: 0 0 10px 0 $secondary;
+              box-shadow: 0 0 10px 0 $primary;
               content: '';
               left: 0;
               position: absolute;

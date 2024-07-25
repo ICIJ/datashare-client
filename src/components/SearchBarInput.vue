@@ -27,7 +27,7 @@
       <icon-button
         v-if="showSubmit"
         icon-left="magnifying-glass"
-        variant="primary"
+        variant="action"
         class="search-bar-input__submit ms-2"
         type="submit"
         :disabled="disableSubmit"

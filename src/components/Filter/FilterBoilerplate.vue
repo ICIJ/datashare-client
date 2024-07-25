@@ -62,7 +62,7 @@
                     {{ labelToHuman('all') }}
                   </span>
                   <span class="filter__items__item__count my-auto ms-auto">
-                    <span class="badge rounded-pill text-bg-light">
+                    <span class="badge rounded-pill text-bg-tertiary">
                       {{ $n(total) }}
                     </span>
                   </span>
@@ -85,7 +85,7 @@
                         {{ label }}
                       </span>
                       <span class="filter__items__item__count my-auto ms-auto">
-                        <span class="badge rounded-pill text-bg-light">
+                        <span class="badge rounded-pill text-bg-tertiary">
                           {{ $n(item.doc_count) }}
                         </span>
                       </span>
@@ -616,13 +616,13 @@ export default {
   }
 
   &.filter--dark .text-muted {
-    color: rgba($light, 0.6) !important;
+    color: rgba($tertiary, 0.6) !important;
   }
 
   &.filter--sticky-search .filter__items__search {
     position: sticky;
     top: 0;
-    background: $light;
+    background: $tertiary;
     z-index: $zindex-dropdown;
   }
 
@@ -645,7 +645,7 @@ export default {
   }
 
   &.filter--has-values {
-    box-shadow: 0 0 0 2px $tertiary, 0 0 10px 0 rgba($tertiary, 0.2);
+    box-shadow: 0 0 0 2px $secondary, 0 0 10px 0 rgba($secondary, 0.2);
   }
 
   &__items {

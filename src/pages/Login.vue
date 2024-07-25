@@ -7,18 +7,18 @@
       </div>
       <div class="login__card__body">
         <ul class="list-group">
-          <li class="list-group-item bg-light py-3">
+          <li class="list-group-item bg-tertiary py-3">
             <p>
               {{ $t('login.authenticationPlatform') }}
             </p>
-            <a class="btn btn-primary btn-lg" :href="signinUrl">
+            <a class="btn btn-action btn-lg" :href="signinUrl">
               <fa icon="user-shield" class="me-2"></fa>
               {{ $t('login.account') }}
             </a>
           </li>
           <li class="list-group-item py-3">
             <p>{{ $t('login.supportDesk') }}</p>
-            <a class="btn btn-outline-secondary btn-lg" :href="helpLink" target="_blank" :title="$t('login.askHelp')">
+            <a class="btn btn-outline-primary btn-lg" :href="helpLink" target="_blank" :title="$t('login.askHelp')">
               <fa icon="truck-medical" class="me-2"></fa>
               {{ $t('login.askHelp') }}
             </a>
@@ -58,7 +58,7 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  background: darken($primary, 10%);
+  background: darken($action, 10%);
   min-height: 100vh;
   padding: 10vh;
 

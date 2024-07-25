@@ -6,7 +6,7 @@
           <fa icon="key" size="3x" />
         </div>
         <p class="lead" v-html="$t('api.key.why')"></p>
-        <b-button variant="primary" @click="createApiKey">
+        <b-button variant="action" @click="createApiKey">
           <fa icon="plus" class="me-1"></fa>
           {{ $t('api.newApiKey') }}
         </b-button>
@@ -56,13 +56,13 @@
       :model-value="showModal"
       lazy
       ok-only
-      footer-class="bg-light rounded-bottom border-top py-2 px-3"
+      footer-class="bg-tertiary rounded-bottom border-top py-2 px-3"
       @hidden="apiKey = null"
     >
       <p>{{ $t('api.key.warning') }}</p>
       <div class="input-group input-group-sm">
         <input class="form-control font-monospace." readonly :value="apiKey" />
-        <haptic-copy :text="apiKey" class="btn-outline-primary" label="Copy" />
+        <haptic-copy :text="apiKey" class="btn-outline-action" label="Copy" />
       </div>
     </b-modal>
   </div>

@@ -35,7 +35,7 @@
             {{ $t('filter.namedEntity' + capitalize(category)) }}
             <i>({{ getCategoryTotal(category) }})</i>
             <div class="ms-auto">
-              <haptic-copy class="btn-light btn-sm py-1" :label="$t('document.copyAsCsv')" :text="hitsAsCsv(hits)" />
+              <haptic-copy class="btn-tertiary btn-sm py-1" :label="$t('document.copyAsCsv')" :text="hitsAsCsv(hits)" />
             </div>
           </div>
           <span v-for="(ne, index) in hits" :key="index" class="d-inline-block">
@@ -43,7 +43,7 @@
               :id="`named-entity-${ne.id}`"
               class="p-1 text-uppercase text-black border"
               pill
-              variant="light"
+              variant="tertiary"
               :class="getCategoryClass(category, 'border-')"
             >
               {{ ne.source.mentionNorm }}
@@ -190,7 +190,7 @@ export default {
 <style lang="scss" scoped>
 .document__named-entities {
   &__toolbox {
-    background: $lighter;
+    background: $light;
     display: flex;
     margin: 0 0 $spacer;
     padding: $spacer-xs $spacer;

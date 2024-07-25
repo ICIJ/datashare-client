@@ -7,7 +7,7 @@
       </div>
     </div>
     <confirm-button
-      class="btn btn-sm text-secondary mounted-data-location__delete-index"
+      class="btn btn-sm text-primary mounted-data-location__delete-index"
       :confirmed="deleteAll"
       :description="$t('indexing.deleteIndexDescription')"
       :label="$t('indexing.deleteIndexLabel')"

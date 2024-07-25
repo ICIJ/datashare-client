@@ -34,7 +34,7 @@ export default {
     },
     template: `
       <div class="p-sm-5 p-3 text-center">
-        <button type="button" class="btn btn-outline-secondary" :id="trigger">
+        <button type="button" class="btn btn-outline-primary" :id="trigger">
           Download <var class="text-decoration-underline">{{ title }}</var>
         </button>
         <document-download-popover v-bind="args" :target="trigger" />

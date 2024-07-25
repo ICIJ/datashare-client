@@ -26,7 +26,7 @@
           </template>
         </selectable-dropdown>
         <div v-if="!immediate" class="d-grid p-2">
-          <button type="button" class="btn btn-primary btn-sm" @click="apply()">
+          <button type="button" class="btn btn-action btn-sm" @click="apply()">
             {{ $t('columnFilterDropdown.apply') }}
           </button>
         </div>

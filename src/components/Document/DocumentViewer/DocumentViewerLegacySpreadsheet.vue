@@ -1,7 +1,7 @@
 <template>
   <div class="legacy-spreadsheet-viewer w-100">
     <b-overlay :show="$wait.is(loaderId)" opacity="0.6" spinner-small class="position-sticky sticky-top">
-      <div class="legacy-spreadsheet-viewer__header bg-light px-3 py-2">
+      <div class="legacy-spreadsheet-viewer__header bg-tertiary px-3 py-2">
         <b-form-select
           v-model="activeSheetName"
           class="input-sm"

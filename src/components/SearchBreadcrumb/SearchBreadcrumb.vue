@@ -23,7 +23,7 @@ const isEmpty = computed(() => !slots.default)
       <div class="d-flex mb-3">
         <search-breadcrumb-toggler class="order-1 align-self-start" @click="emit('close')" />
         <div class="flex-grow-1">
-          <div class="fw-medium text-primary-emphasis text-nowrap me-2 mb-2">
+          <div class="fw-medium text-action-emphasis text-nowrap me-2 mb-2">
             <phosphor-icon name="path" />
             {{ $t('searchBreadcrumb.label') }}
           </div>
@@ -39,8 +39,8 @@ const isEmpty = computed(() => !slots.default)
 
 <style scoped lang="scss">
 .search-breadcrumb {
-  color: var(--bs-light-color-subtle);
-  background: var(--bs-light-bg-subtle);
+  color: var(--bs-tertiary-color-subtle);
+  background: var(--bs-tertiary-bg-subtle);
   border-radius: var(--bs-border-radius);
 
   &__entries:deep(.search-breadcrumb-entry:last-of-type .search-breadcrumb-entry__caret) {

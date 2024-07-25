@@ -16,7 +16,7 @@ export default {
     },
     setup: () => ({ args }),
     template: `
-      <div class="p-5" style="background-color: var(--bs-light-bg-subtle);">
+      <div class="p-5" style="background-color: var(--bs-tertiary-bg-subtle);">
         <filters-panel-search v-model="args.modelValue" />
       </div>
     `
