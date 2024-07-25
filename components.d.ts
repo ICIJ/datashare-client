@@ -24,6 +24,7 @@ declare module 'vue' {
     AppSidebarSectionTitle: typeof import('./src/components/AppSidebar/AppSidebarSectionTitle.vue')['default']
     AppSidebarSectionToggler: typeof import('./src/components/AppSidebar/AppSidebarSectionToggler.vue')['default']
     AppSidebarToggler: typeof import('./src/components/AppSidebar/AppSidebarToggler.vue')['default']
+    BAlert: typeof import('bootstrap-vue-next')['BAlert']
     BatchDownloadActions: typeof import('./src/components/BatchDownloadActions.vue')['default']
     BatchSearchActions: typeof import('./src/components/BatchSearchActions.vue')['default']
     BatchSearchClearFilters: typeof import('./src/components/BatchSearchClearFilters.vue')['default']
