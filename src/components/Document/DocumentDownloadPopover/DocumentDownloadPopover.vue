@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
 import DisplayContentType from '@/components/Display/DisplayContentType'
+import byteSize from '@/utils/byteSize'
 
 const props = defineProps({
   /**
@@ -43,6 +44,20 @@ const props = defineProps({
    */
   placement: {
     type: String
+  },
+  /**
+   * List of content type that can be cleaned
+   */
+  cleanableContentTypes: {
+    type: Array,
+    default: () => ['application/pdf', 'application/msword']
+  },
+  /**
+   * The maximum allowed size to download an embedded document
+   */
+  embeddedDocumentDownloadMaxSize: {
+    type: String,
+    default: '1G'
   }
 })
 
@@ -63,6 +78,38 @@ const executionWarning = computed(() => {
   const warnings = props.document.contentTypeWarning ?? {}
   return warnings[locale.value] || warnings.en
 })
+
+const documentFullUrl = computed(() => {
+  return props.document.fullUrl
+})
+
+const documentFullUrlWithoutMetadata = computed(() => {
+  return props.document.fullUrl + '&filter_metadata=true'
+})
+
+const rootDocumentFullUrl = computed(() => {
+  return props.document.fullRootUrl
+})
+
+const hasRoot = computed(() => {
+  return !!props.document.root
+})
+
+const hasCleanableContentType = computed(() => {
+  return props.cleanableContentTypes.includes(props.document.contentType)
+})
+
+const isRootTooBig = computed(() => {
+  return hasRoot.value && rootContentLength.value > maxRootContentLength.value
+})
+
+const rootContentLength = computed(() => {
+  return props.document?.root?.contentLength
+})
+
+const maxRootContentLength = computed(() => {
+  return byteSize(props.embeddedDocumentDownloadMaxSize)
+})
 </script>
 
 <template>
@@ -77,28 +124,48 @@ const executionWarning = computed(() => {
     @update:modelValue="$emit('update:modelValue')"
   >
     <div class="document-download-popover__body">
-      <icon-button icon-left="download-simple" label="Download" class="document-download-popover__body__button" />
       <icon-button
+        :disabled="isRootTooBig"
+        :href="documentFullUrl"
+        :label="$t('documentDownloadPopover.download')"
         icon-left="download-simple"
-        label="Download without metadata"
+        class="document-download-popover__body__button"
+      />
+      <icon-button
+        v-if="hasCleanableContentType"
+        icon-left="download-simple"
+        :href="documentFullUrlWithoutMetadata"
+        :label="$t('documentDownloadPopover.downloadWithoutMetadata')"
         variant="outline-primary"
         class="document-download-popover__body__button"
       />
       <icon-button
         icon-left="download-simple"
-        label="Download extract text"
+        :href="documentF"
+        :label="$t('documentDownloadPopover.downloadExtractText')"
+        variant="outline-primary"
+        class="document-download-popover__body__button"
+      />
+      <icon-button
+        v-if="hasRoot"
+        icon-left="download-simple"
+        :href="rootDocumentFullUrl"
+        :label="$t('documentDownloadPopover.downloadRoot')"
         variant="outline-primary"
         class="document-download-popover__body__button"
       />
       <div class="document-download-popover__body__sections pt-3">
-        <document-download-popover-section title="What's the document's title?" :value="document.title" />
-        <document-download-popover-section title="What's the document's type">
+        <document-download-popover-section
+          :title="$t('documentDownloadPopover.sectionTitle')"
+          :value="document.title"
+        />
+        <document-download-popover-section :title="$t('documentDownloadPopover.sectionContentType')">
           <phosphor-icon :name="document.contentTypeIcon" class="me-2" />
           <display-content-type :value="document.contentType" />
         </document-download-popover-section>
         <document-download-popover-section
           v-if="description"
-          title="Once downloaded, how do I open it ?"
+          :title="$t('documentDownloadPopover.sectionDescription')"
           :value="description"
         />
       </div>
