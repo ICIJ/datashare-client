@@ -25,6 +25,7 @@ export default {
       variants() {
         return [
           'link',
+          'action',
           'primary',
           'secondary',
           'tertiary',
@@ -38,7 +39,6 @@ export default {
           'outline-secondary',
           'outline-secondary',
           'outline-dark',
-          'outline-darker',
           'outline-tertiary',
           'outline-light',
           'outline-info',
