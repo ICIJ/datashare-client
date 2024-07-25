@@ -147,11 +147,11 @@ $form-radio-input-border: var(--bs-border-width) solid $tertiary;
 $form-radio-input-checked-border-color: $form-check-input-checked-border-color;
 
 $popover-bg: var(--bs-primary-bg-subtle);
-$popover-box-shadow: var(--bs-box-shadow);
+$popover-box-shadow: none;
 $popover-font-size: $font-size-base;
 $popover-max-width: 375px;
 $popover-border-width: 1px;
-$popover-border-color: $popover-bg;
+$popover-border-color: transparent;
 $popover-body-padding-y: $spacer-xl;
 $popover-body-padding-x: $spacer-xl;
 $popover-arrow-width: $spacer-xl;

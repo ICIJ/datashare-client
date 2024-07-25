@@ -155,7 +155,7 @@ const maxRootContentLength = computed(() => {
         variant="outline-primary"
         class="document-download-popover__body__button"
       />
-      <div class="document-download-popover__body__sections pt-3">
+      <div class="document-download-popover__body__sections">
         <document-download-popover-section
           :title="$t('documentDownloadPopover.sectionTitle')"
           :value="document.title"
@@ -165,7 +165,7 @@ const maxRootContentLength = computed(() => {
           <display-content-type :value="document.contentType" />
         </document-download-popover-section>
         <document-download-popover-section v-if="executionWarning">
-          <dismissable-alert no-close no-button bordered icon-class="align-self-start" variant="warning">
+          <dismissable-alert class="m-0" no-close no-button bordered icon-class="align-self-start" variant="warning">
             {{ executionWarning }}
           </dismissable-alert>
         </document-download-popover-section>
@@ -188,6 +188,10 @@ const maxRootContentLength = computed(() => {
     flex-direction: column;
     gap: $spacer-sm;
 
+    .bs-popover-top & {
+      flex-direction: column-reverse;
+    }
+
     &__button {
       white-space: nowrap;
       align-self: flex-start;
@@ -197,7 +201,12 @@ const maxRootContentLength = computed(() => {
       margin-top: $spacer;
       display: flex;
       flex-direction: column;
-      gap: $spacer-xl;
+      gap: $spacer;
+
+      .bs-popover-top & {
+        margin-top: 0;
+        margin-bottom: $spacer;
+      }
     }
   }
 }
