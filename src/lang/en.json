@@ -191,6 +191,9 @@
     "viewOriginal": "View original text",
     "viewTranslated": "View translated text"
   },
+  "linkedDocumentList": {
+    "searchAll": "Search all"
+  },
   "documentContent": {
     "noContent": "No content extracted for this document"
   },
