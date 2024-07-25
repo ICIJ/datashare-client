@@ -1,3 +1,16 @@
+$utilities-colors: map-merge($utilities-colors, $theme-colors-rgb);
+$utilities-text-colors: map-loop($utilities-colors, rgba-css-var, "$key", "text");
+$utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
+$utilities-bg-subtle: map-merge((
+  "action-subtle": var(--bs-action-bg-subtle),
+  "tertiary-subtle": var(--bs-tertiary-bg-subtle),
+), $utilities-bg-subtle);
+
+$utilities-border-subtle: map-merge((
+  "action-subtle": var(--bs-action-border-subtle),
+  "tertiary-subtle": var(--bs-tertiary-border-subtle),
+), $utilities-border-subtle);
+
 $theme-colors-text: map-merge((
   "action": $action-text-emphasis,
 ), $theme-colors-text);
