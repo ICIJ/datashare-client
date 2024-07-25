@@ -30,6 +30,9 @@ const props = defineProps({
   },
   selected: {
     type: Boolean
+  },
+  isDownloadAllowed: {
+    type: Boolean
   }
 })
 
@@ -81,7 +84,12 @@ const showTitle = computed(() => {
       <document-card-properties :document="document" :properties="properties" />
     </div>
     <div class="document-card__actions">
-      <document-actions-group :document="document" vertical />
+      <document-actions-group
+        tooltip-placement="right"
+        :document="document"
+        vertical
+        :is-download-allowed="isDownloadAllowed"
+      />
     </div>
   </div>
 </template>
