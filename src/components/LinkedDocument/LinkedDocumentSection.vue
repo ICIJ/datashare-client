@@ -1,21 +1,26 @@
 <template>
-  <section>
-    <h2>
-      <slot name="title">
-        {{ title }}
-      </slot>
-    </h2>
-    <p>
-      <slot name="description" />
+  <section class="linked-document-section">
+    <p class="linked-document-section__title d-inline-flex gap-1">
+      <phosphor-icon :name="icon" />
+      <slot name="title"> {{ documents.length }} {{ title }} </slot>
     </p>
-    <slot name="document-list" v-bind="{ documents }">
-      <linked-document-list height="" :documents="documents" />
-    </slot>
-    <icon-button :label="searchLabel" @click="emitSearch" />
+    <div class="ms-4">
+      <p>
+        <slot name="description">{{ description }}</slot>
+      </p>
+      <div>
+        <slot name="document-list" v-bind="{ documents }">
+          <linked-document-list :documents="documents" />
+        </slot>
+        <icon-button icon-right="magnifying-glass" :label="searchLabel" @click="emitSearch" />
+      </div>
+    </div>
   </section>
 </template>
+
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import IconButton from '@/components/IconButton'
 import LinkedDocumentList from '@/components/LinkedDocument/LinkedDocumentList'
@@ -24,6 +29,14 @@ defineOptions({
 })
 defineProps({
   title: {
+    type: String,
+    required: true
+  },
+  icon: {
+    type: String,
+    required: true
+  },
+  description: {
     type: String,
     required: true
   },
@@ -40,3 +53,10 @@ function emitSearch() {
   emit('search-all')
 }
 </script>
+<style lang="scss" scoped>
+.linked-document-section {
+  &__title {
+    font-weight: 500;
+  }
+}
+</style>

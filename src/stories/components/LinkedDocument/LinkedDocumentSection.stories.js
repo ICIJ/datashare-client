@@ -5,7 +5,9 @@ export default {
   tags: ['autodocs'],
   component: LinkedDocumentSection,
   args: {
-    title: '6 documents in the same folder',
+    title: 'documents in the same folder',
+    icon: 'files',
+    description: 'Same extraction level as this document',
     documents: [
       { contentType: 'application/pdf', name: 'This is my document', url: 'toto' },
       { contentType: 'text/html', name: 'This is my document', url: 'toto' },
