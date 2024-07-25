@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
 import DisplayContentType from '@/components/Display/DisplayContentType'
+import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import byteSize from '@/utils/byteSize'
 
 const props = defineProps({
@@ -71,7 +72,7 @@ const extensionWarning = computed(() => {
 const description = computed(() => {
   const descriptions = props.document.contentTypeDescription ?? {}
   const description = descriptions[locale.value] || descriptions.en
-  return props.document.hasStandardExtension ? description : `${description} <strong>${extensionWarning.value}</strong>`
+  return props.document.hasStandardExtension ? description : `${description} ${extensionWarning.value}`
 })
 
 const executionWarning = computed(() => {
@@ -162,6 +163,11 @@ const maxRootContentLength = computed(() => {
         <document-download-popover-section :title="$t('documentDownloadPopover.sectionContentType')">
           <phosphor-icon :name="document.contentTypeIcon" class="me-2" />
           <display-content-type :value="document.contentType" />
+        </document-download-popover-section>
+        <document-download-popover-section v-if="executionWarning">
+          <dismissable-alert no-close no-button bordered icon-class="align-self-start" variant="warning">
+            {{ executionWarning }}
+          </dismissable-alert>
         </document-download-popover-section>
         <document-download-popover-section
           v-if="description"
