@@ -1,9 +1,9 @@
 <template>
   <div
-    class="linked-document-card d-flex row bg-tertiary rounded align-items-start"
+    class="linked-document-card d-flex bg-tertiary rounded align-items-start"
     :class="{ 'linked-document-card--skrink': !modelValue }"
   >
-    <div class="d-flex col-11 row-gap-3 column-gap-3 justify-content-between">
+    <div class="d-flex flex-column flex-sm-row col-10 col-sm-11 justify-content-between">
       <linked-document-section
         title="documents in the same folder"
         icon="files"
@@ -19,8 +19,8 @@
         class="col-12 col-sm-6 p-4"
       />
     </div>
-    <span class="linked-document-card__toggle col-1 mt-2 btn btn-md" @click="toggle">
-      <phosphor-icon :name="caretIcon" />
+    <span class="linked-document-card__toggle col-1 mt-2 d-flex justify-content-center" @click="toggle">
+      <phosphor-icon :name="caretIcon" class="linked-document-card__toggle--btn btn btn-md border-0" />
     </span>
   </div>
 </template>
