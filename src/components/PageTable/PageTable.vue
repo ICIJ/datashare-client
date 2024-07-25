@@ -37,6 +37,7 @@ const classList = computed(() => {
 
 <style lang="scss" scoped>
 .page-table {
+  vertical-align: middle;
   font-size: math.div(14, 16) * 1rem;
 
   &__select {

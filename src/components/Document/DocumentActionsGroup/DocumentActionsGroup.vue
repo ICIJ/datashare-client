@@ -22,10 +22,11 @@
         @click="clickShare"
       />
       <document-actions-group-entry
+        ref="downloadButton"
         icon="download"
         :label="$t('documentActionsGroup.download')"
-        :disabled="isDownloadAllowed"
-        :tooltip-placement="tooltipPlacement"
+        :disabled="!isDownloadAllowed"
+        hide-tooltip
         @click="clickDownload"
       />
       <document-actions-group-entry
@@ -34,12 +35,19 @@
         :tooltip-placement="tooltipPlacement"
         @click="clickExpand"
       />
+      <document-download-popover :target="downloadButton" :document="document" :placement="tooltipPlacement" />
     </slot>
   </div>
 </template>
 
 <script setup>
-import DocumentActionsGroupEntry from '@/components/Document/DocumentActionsGroup/DocumentActionsGroupEntry'
+import { ref } from 'vue'
+
+import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
+
+import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
+
+const downloadButton = ref(null)
 
 defineProps({
   /**
