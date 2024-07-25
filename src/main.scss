@@ -218,11 +218,6 @@ $value in $theme-colors {
     border-radius: inherit;
     overflow: hidden;
   }
-
-  &.bs-popover-bottom > .popover-arrow::after,
-  &.bs-popover-auto[data-popper-placement^="bottom"] > .popover-arrow::after {
-    border-bottom-color: $popover-header-bg;
-  }
 }
 
 html[data-bs-theme] body .Toastify {

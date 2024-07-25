@@ -6,6 +6,7 @@
     :icon-left-hover-weight="iconHoverWeight"
     :label="label"
     hide-label
+    :hide-tooltip="hideTooltip"
     :tooltip-placement="tooltipPlacement"
     square
     variant="outline-tertiary"
@@ -48,6 +49,12 @@ const props = defineProps({
    * Button is fill
    */
   fill: {
+    type: Boolean
+  },
+  /**
+   * Hide the button tooltip
+   */
+  hideTooltip: {
     type: Boolean
   },
   /**

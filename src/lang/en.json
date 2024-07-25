@@ -42,6 +42,9 @@
     "private": "Private to you",
     "public": "Public to project members"
   },
+  "documentDownloadPopover": {
+    "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>{extension}</code> before you can open it."
+  },
   "error": {
     "title": "Something's wrong here",
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",

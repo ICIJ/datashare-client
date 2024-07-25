@@ -70,7 +70,7 @@ const labelClassList = computed(() => {
 
 <style lang="scss" scoped>
 .page-table-th {
-  vertical-align: $table-cell-vertical-align;
+  vertical-align: middle;
 
   &--compact {
     width: 2rem;
