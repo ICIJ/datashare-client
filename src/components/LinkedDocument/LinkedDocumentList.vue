@@ -13,7 +13,7 @@ defineOptions({
 })
 const props = defineProps({
   documents: { type: Array, required: true },
-  height: { type: String, default: '150px' }
+  height: { type: String, default: '120px' }
 })
 
 const style = {
