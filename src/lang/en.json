@@ -178,6 +178,13 @@
     "previous": "Previous",
     "next": "Next"
   },
+  "documentUserActions": {
+    "tags":"Tags",
+    "comments":"Comments",
+    "recommended":"Recommended by",
+    "folders":"Folders",
+    "notes":"Notes"
+  },
   "documentMetadataActions": {
     "copy": "Copy this metadata value",
     "search": "Search this metadata value",

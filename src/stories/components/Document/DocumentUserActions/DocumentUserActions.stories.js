@@ -21,6 +21,11 @@ export const Complete = {
     showComments: true,
     showRecommended: true,
     showFolders: true,
-    showNotes: true
+    showNotes: true,
+    tags: '3',
+    comments: '4',
+    recommended: '0',
+    folders: '5',
+    notes: '3'
   }
 }

@@ -1,28 +1,22 @@
 <template>
   <b-button-group class="document-user-actions">
-    <document-user-actions-entry v-if="showTags" :hide-label="hideLabels" icon="tag" label="Tags" value="3+" />
     <document-user-actions-entry
-      v-if="showComments"
+      v-for="action in actionsDisplayed"
+      :key="action.name"
       :hide-label="hideLabels"
-      icon="chats-teardrop"
-      label="Comments"
-      value="3+"
+      :icon="action.icon"
+      :label="action.label"
+      :value="action.value"
     />
-    <document-user-actions-entry
-      v-if="showRecommended"
-      :hide-label="hideLabels"
-      icon="user-gear"
-      label="Recommended by"
-      value="3+"
-    />
-    <document-user-actions-entry v-if="showFolders" :hide-label="hideLabels" icon="folder" label="Folder" value="3+" />
-    <document-user-actions-entry v-if="showNotes" :hide-label="hideLabels" icon="note-blank" label="Notes" value="3+" />
   </b-button-group>
 </template>
 <script setup>
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
+
 import DocumentUserActionsEntry from '@/components/Document/DocumentUserActions/DocumentUserActionsEntry'
 defineOptions({ name: 'DocumentUserActions' })
-defineProps({
+const props = defineProps({
   showTags: {
     type: Boolean,
     default: true
@@ -46,6 +40,67 @@ defineProps({
   hideLabels: {
     type: Boolean,
     default: false
+  },
+  tags: {
+    type: Number,
+    default: 0
+  },
+  comments: {
+    type: Number,
+    default: 0
+  },
+  recommended: {
+    type: Number,
+    default: 0
+  },
+  folders: {
+    type: Number,
+    default: 0
+  },
+  notes: {
+    type: Number,
+    default: 0
   }
+})
+const { t } = useI18n()
+const actions = [
+  {
+    name: 'tags',
+    show: props.showTags,
+    label: t('documentUserActions.tags'),
+    value: props.tags.toString(),
+    icon: 'tag'
+  },
+  {
+    name: 'comments',
+    show: props.showComments,
+    label: t('documentUserActions.comments'),
+    value: props.comments.toString(),
+    icon: 'chats-teardrop'
+  },
+  {
+    name: 'recommended',
+    show: props.showRecommended,
+    label: t('documentUserActions.recommended'),
+    value: props.recommended.toString(),
+    icon: 'user-gear'
+  },
+  {
+    name: 'folders',
+    show: props.showFolders,
+    label: t('documentUserActions.folders'),
+    value: props.folders.toString(),
+    icon: 'folder'
+  },
+  {
+    name: 'notes',
+    show: props.showNotes,
+    label: t('documentUserActions.notes'),
+    value: props.notes.toString(),
+    icon: 'note-blank'
+  }
+]
+const actionsDisplayed = computed(() => {
+  return actions.filter((action) => action.show === true)
 })
 </script>
