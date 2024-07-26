@@ -1,7 +1,7 @@
 <template>
   <div
-    class="linked-document-card d-flex bg-tertiary rounded align-items-start"
-    :class="{ 'linked-document-card--skrink': !modelValue }"
+    class="linked-document-card d-flex rounded align-items-start bg-tertiary-subtle text-body"
+    :class="{ 'linked-document-card--collapse': !modelValue }"
   >
     <div class="d-flex flex-column flex-sm-row col-10 col-sm-11 justify-content-between">
       <linked-document-section
@@ -58,7 +58,7 @@ function toggle() {
 </script>
 <style lang="scss" scoped>
 .linked-document-card {
-  &--skrink {
+  &--collapse {
     height: 70px;
     overflow: hidden;
   }
