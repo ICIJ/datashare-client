@@ -1,6 +1,9 @@
-import LinkedDocumentCard from '@/components/LinkedDocument/LinkedDocumentCard'
+import { vueRouter } from 'storybook-vue3-router'
 
+import LinkedDocumentCard from '@/components/LinkedDocument/LinkedDocumentCard'
+const routes = [{ path: '/' }]
 export default {
+  decorators: [vueRouter(routes)],
   title: 'Components/LinkedDocument/LinkedDocumentCard',
   tags: ['autodocs'],
   component: LinkedDocumentCard,
@@ -10,20 +13,20 @@ export default {
     description: 'Same extraction level as this document',
     modelValue: true,
     siblings: [
-      { contentType: 'application/pdf', name: 'This is my document', url: 'toto' },
-      { contentType: 'text/html', name: 'This is my document', url: 'toto' },
-      { contentType: 'image/png', name: 'This is my document', url: 'toto' },
-      { contentType: 'application/msword', name: 'This is my document', url: 'toto' },
-      { contentType: 'application/msword', name: 'This is my document', url: 'toto' },
-      { contentType: 'application/vnd.ms-excel', name: 'This is my document', url: 'toto' }
+      { contentType: 'application/pdf', name: 'This is my document', url: '/' },
+      { contentType: 'text/html', name: 'This is my document', url: '/' },
+      { contentType: 'image/png', name: 'This is my document', url: '/' },
+      { contentType: 'application/msword', name: 'This is my document', url: '/' },
+      { contentType: 'application/msword', name: 'This is my document', url: '/' },
+      { contentType: 'application/vnd.ms-excel', name: 'This is my document', url: '/' }
     ],
     children: [
-      { contentType: 'application/pdf', name: 'This is my document', url: 'toto' },
-      { contentType: 'text/html', name: 'This is my document', url: 'toto' },
-      { contentType: 'image/png', name: 'This is my document', url: 'toto' },
-      { contentType: 'application/msword', name: 'This is my document', url: 'toto' },
-      { contentType: 'application/msword', name: 'This is my document', url: 'toto' },
-      { contentType: 'application/vnd.ms-excel', name: 'This is my document', url: 'toto' }
+      { contentType: 'application/pdf', name: 'This is my document', url: '/' },
+      { contentType: 'text/html', name: 'This is my document', url: '/' },
+      { contentType: 'image/png', name: 'This is my document', url: '/' },
+      { contentType: 'application/msword', name: 'This is my document', url: '/' },
+      { contentType: 'application/msword', name: 'This is my document', url: '/' },
+      { contentType: 'application/vnd.ms-excel', name: 'This is my document', url: '/' }
     ]
   }
 }
