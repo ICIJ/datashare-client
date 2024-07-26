@@ -1,6 +1,5 @@
 import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
-
 import PathView from '@/components/PathView/PathView'
 import PathViewEntry from '@/components/PathView/PathViewEntry'
 import PathViewEntryMore from '@/components/PathView/PathViewEntryMore'
