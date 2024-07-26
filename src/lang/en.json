@@ -1132,6 +1132,9 @@
   "projectDropdownSelectorAll": {
     "label": "All projects"
   },
+  "pathViewEntryMore": {
+    "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
+  },
   "searchBarInputDropdownForProjects": {
     "projectsCount": "{count} projects",
     "noMatches": "No matches"
