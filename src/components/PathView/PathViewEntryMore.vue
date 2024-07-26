@@ -39,7 +39,7 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
     v-if="directoriesLeft > 0"
     icon-left="caret-down"
     icon-left-variant="primary"
-    class="shadow-sm"
+    class="shadow-sm text-nowrap"
     variant="outline-tertiary"
     :size="size"
   >
