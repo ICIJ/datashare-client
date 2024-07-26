@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    '(feat': add PathView components)
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -65,6 +66,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
+    copy: typeof import('./src/components/PathView/PathViewEntry copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayContentLength: typeof import('./src/components/Display/DisplayContentLength.vue')['default']
@@ -72,6 +74,7 @@ declare module 'vue' {
     DisplayDatetime: typeof import('./src/components/Display/DisplayDatetime.vue')['default']
     DisplayExtractionLevel: typeof import('./src/components/Display/DisplayExtractionLevel.vue')['default']
     DisplayLanguage: typeof import('./src/components/Display/DisplayLanguage.vue')['default']
+    DisplayNumber: typeof import('./src/components/Display/DisplayNumber.vue')['default']
     DisplayStatus: typeof import('./src/components/Display/DisplayStatus.vue')['default']
     DisplayTags: typeof import('./src/components/Display/DisplayTags.vue')['default']
     DisplayUser: typeof import('./src/components/Display/DisplayUser.vue')['default']
@@ -201,6 +204,18 @@ declare module 'vue' {
     PageTableThSort: typeof import('./src/components/PageTable/PageTableThSort.vue')['default']
     PageTableTr: typeof import('./src/components/PageTable/PageTableTr.vue')['default']
     Pagination: typeof import('./src/components/Pagination.vue')['default']
+    PathView: typeof import('./src/components/PathView/PathView.vue')['default']
+    PathViewEntry: typeof import('./src/components/PathView/PathViewEntry.vue')['default']
+    PathViewEntryMore: typeof import('./src/components/PathView/PathViewEntryMore.vue')['default']
+    PathViewEntryName: typeof import('./src/components/PathView/PathViewEntryName.vue')['default']
+    PathViewEntryNameCaret: typeof import('./src/components/PathView/PathViewEntryNameCaret.vue')['default']
+    PathViewEntryNameCheckbox: typeof import('./src/components/PathView/PathViewEntryNameCheckbox.vue')['default']
+    PathViewEntryStats: typeof import('./src/components/PathView/PathViewEntryStats.vue')['default']
+    PathViewEntryStatsDirectories: typeof import('./src/components/PathView/PathViewEntryStatsDirectories.vue')['default']
+    PathViewEntryStatsDocuments: typeof import('./src/components/PathView/PathViewEntryStatsDocuments.vue')['default']
+    PathViewEntryStatsSize: typeof import('./src/components/PathView/PathViewEntryStatsSize.vue')['default']
+    PathViewLabel: typeof import('./src/components/PathView/PathViewLabel.vue')['default']
+    PathViewSearch: typeof import('./src/components/PathView/PathViewSearch.vue')['default']
     Plugins: typeof import('./src/components/Plugins.vue')['default']
     ProjectButton: typeof import('./src/components/Project/ProjectButton.vue')['default']
     ProjectCards: typeof import('./src/components/ProjectCards.vue')['default']
