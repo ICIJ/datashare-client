@@ -9,6 +9,9 @@ const props = defineProps({
   collapse: {
     type: Boolean
   },
+  flush: {
+    type: Boolean
+  },
   title: {
     type: String
   },
@@ -80,7 +83,7 @@ const classList = computed(() => {
           class="filters-panel-section-filter__content__search mb-3"
           @update:modelValue="emit('update:search', $event)"
         />
-        <div>
+        <div :class="flush ? '' : 'ps-4'">
           <slot />
         </div>
       </div>
@@ -116,7 +119,7 @@ const classList = computed(() => {
   }
 
   &__content {
-    max-height: 280px;
+    max-height: 380px;
     overflow: auto;
   }
 }
