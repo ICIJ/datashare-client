@@ -194,6 +194,16 @@
   "linkedDocumentList": {
     "searchAll": "Search all"
   },
+  "linkedDocumentCard" : {
+    "siblings": {
+      "title": "documents in the same folder",
+      "description": "Same extraction level as this document"
+    },
+    "children": {
+      "title": "children documents",
+      "description": "One extraction level below this document"
+    }
+  },
   "documentContent": {
     "noContent": "No content extracted for this document"
   },
