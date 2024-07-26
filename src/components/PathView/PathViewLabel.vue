@@ -6,7 +6,8 @@ defineProps({
     type: String
   },
   icon: {
-    type: String
+    type: String,
+    default: 'tree-structure'
   }
 })
 </script>
@@ -15,7 +16,7 @@ defineProps({
   <div class="path-view-label d-flex gap-2 align-items-center">
     <phosphor-icon v-if="icon" :name="icon" />
     <div class="text-truncate">
-      {{ label }}
+      {{ label ?? $t('pathViewLabel.label') }}
     </div>
   </div>
 </template>

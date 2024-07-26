@@ -6,6 +6,7 @@ export default {
   component: PathViewEntry,
   args: {
     collapse: true,
+    compact: false,
     selected: false,
     indeterminate: false,
     name: 'Contracts',
