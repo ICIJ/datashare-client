@@ -79,7 +79,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :documents="documents"
         :directories="directories"
         :size="size"
-        :active="active"
+        :active="compactOrInjected ? selected : active"
       />
     </div>
     <b-collapse :model-value="!collapse" class="path-view-entry__subdirectories">
