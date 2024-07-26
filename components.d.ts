@@ -7,9 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    '(feat': add page table th sort)
-    2: typeof import('./src/components/Document/DocumentMetadata/DocumentMetadataActions/DocumentMetadataActionsEntry copy 2.vue')['default']
-    3: typeof import('./src/components/Document/DocumentLocalSearch/DocumentLocalSearch copy 3.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -68,7 +65,6 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/Document/DocumentDownloadPopover copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayContentLength: typeof import('./src/components/Display/DisplayContentLength.vue')['default']
