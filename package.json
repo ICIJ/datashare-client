@@ -84,7 +84,7 @@
     "@storybook/test": "^8.2.6",
     "@storybook/vue3": "^8.2.6",
     "@storybook/vue3-vite": "^8.2.6",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^5.1.0",
     "@vitejs/plugin-vue2": "^2.3.1",
     "@vue/compiler-sfc": "^3.4.31",
     "@vue/test-utils": "^2.4.6",
@@ -102,7 +102,7 @@
     "storybook-addon-vue-slots": "^0.9.29",
     "storybook-vue3-router": "^5.0.0",
     "unplugin-vue-components": "^0.27.2",
-    "vite": "^5.3.3",
+    "vite": "^5.3.5",
     "vitest": "^1.6.0",
     "whatwg-fetch": "^3.5.0"
   },
