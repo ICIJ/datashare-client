@@ -16,10 +16,11 @@ export default {
     title: 'Tags',
     icon: 'tag',
     collapse: false,
+    flush: false,
     hideContextualize: false,
     hideExclude: false,
     hideExpand: false,
-    hideSearch: true,
+    hideSearch: false,
     hideSort: false
   },
   render: (args) => ({
@@ -40,7 +41,7 @@ export default {
     },
     template: `
       <div class="p-5" style="background-color: var(--bs-tertiary-bg-subtle);">
-        <filters-panel-section-filter v-bind="args" :count="count" @toggle="args.collapse = $event" search-placeholder="Search in tags">
+        <filters-panel-section-filter v-bind="args" :count="count" @toggle="args.collapse = $event" search-placeholder="Search tags">
           <filters-panel-section-filter-entry label="All" v-model="values['all']" :count="1874589" />
           <filters-panel-section-filter-entry label="colombia" v-model="values['colombia']" :count="89233" />
           <filters-panel-section-filter-entry label="mongolia" v-model="values['mongolia']" :count="9276" />
@@ -68,6 +69,7 @@ export const ForPath = {
     title: 'Tags',
     icon: 'tag',
     collapse: false,
+    flush: true,
     hideContextualize: false,
     hideExclude: false,
     hideExpand: false,
