@@ -5,16 +5,16 @@
   >
     <div class="d-flex flex-column flex-sm-row col-10 col-sm-11 justify-content-between">
       <linked-document-section
-        title="documents in the same folder"
+        :title="t('linkedDocumentCard.siblings.title')"
         icon="files"
-        description="Same extraction level as this document"
+        :description="t('linkedDocumentCard.siblings.description')"
         :documents="siblings"
         class="col-12 col-sm-6 p-4"
       />
       <linked-document-section
-        title="children documents"
+        :title="t('linkedDocumentCard.children.title')"
         icon="paperclip"
-        description="One extraction level below this document"
+        :description="t('linkedDocumentCard.children.description')"
         :documents="children"
         class="col-12 col-sm-6 p-4"
       />
@@ -28,6 +28,7 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import LinkedDocumentSection from '@/components/LinkedDocument/LinkedDocumentSection'
 defineOptions({
@@ -47,6 +48,7 @@ defineProps({
     required: true
   }
 })
+const { t } = useI18n()
 const caretIcon = computed(() => {
   return modelValue.value ? 'caret-up' : 'caret-down'
 })
