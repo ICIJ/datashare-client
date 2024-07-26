@@ -361,7 +361,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="background-color: var(--bs-tertiary-bg-subtle)">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="background-color: var(--bs-light-bg-subtle)">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-light-bg-subtle</code>
@@ -369,7 +369,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="p-3 rounded-2" style="border: 5px var(--bs-tertiary-border-subtle) solid">&nbsp;</div>
+                  <div class="p-3 rounded-2" style="border: 5px var(--bs-light-border-subtle) solid">&nbsp;</div>
                 </td>
                 <td>
                   <code>--bs-light-border-subtle</code>
@@ -377,7 +377,7 @@ export default {
               </tr>
               <tr>
                 <td class="ps-0">
-                  <div class="py-3 fw-bold h5" style="color: var(--bs-tertiary-text-emphasis)">Text</div>
+                  <div class="py-3 fw-bold h5" style="color: var(--bs-light-text-emphasis)">Text</div>
                 </td>
                 <td>
                   <code>--bs-light-text-emphasis</code>
