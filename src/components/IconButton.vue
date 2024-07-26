@@ -18,6 +18,7 @@
       :hover="currentHover"
       :spin="loading"
       :spin-duration="loadingDuration"
+      :variant="iconLeftVariant"
       class="icon-button__icon-left"
     />
     <span v-if="!hideLabel" class="icon-button__label">
@@ -32,6 +33,7 @@
       :hover="currentHover"
       :spin="loading"
       :spin-duration="loadingDuration"
+      :variant="iconRightVariant"
       class="icon-button__icon-right"
     />
     <slot name="end" />
@@ -60,6 +62,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  iconLeftVariant: {
+    type: String,
+    default: null
+  },
   iconLeftWeight: {
     type: String,
     default: null
@@ -72,6 +78,10 @@ const props = defineProps({
     type: String
   },
   iconRight: {
+    type: String,
+    default: null
+  },
+  iconRightVariant: {
     type: String,
     default: null
   },
