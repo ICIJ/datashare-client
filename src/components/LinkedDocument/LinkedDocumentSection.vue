@@ -1,6 +1,6 @@
 <template>
   <section class="linked-document-section">
-    <p class="linked-document-section__title d-inline-flex gap-1">
+    <p class="linked-document-section__title d-inline-flex gap-1 text-body-emphasis">
       <phosphor-icon :name="icon" />
       <slot name="title"> {{ documents.length }} {{ title }} </slot>
     </p>
