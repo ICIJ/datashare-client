@@ -96,7 +96,7 @@ export const ForPath = {
     },
     template: `
       <div class="p-5" style="background-color: var(--bs-tertiary-bg-subtle);">
-        <filters-panel-section-filter v-bind="args" @toggle="args.collapse = $event" search-placeholder="Search paths">
+        <filters-panel-section-filter v-bind="args" @toggle="args.collapse = $event" search-placeholder="Search paths" :count="count">
           <path-view compact no-search no-label select-mode>
             <path-view-entry v-model:selected="values['Flowera']" name="Flowera" :documents="9104" :directories="3" :size="2110000000">
               <path-view-entry v-model:selected="values['Flowera/Contract']" name="Contract" :documents="2109" :directories="4" :size="1010000000">
