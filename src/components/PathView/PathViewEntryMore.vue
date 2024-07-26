@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 import IconButton from '@/components/IconButton'
 
@@ -15,6 +15,10 @@ const props = defineProps({
   total: {
     type: Number,
     default: 0
+  },
+  compact: {
+    type: Boolean,
+    default: null
   }
 })
 
@@ -25,6 +29,9 @@ const nextPageSize = computed(() => {
 const directoriesLeft = computed(() => {
   return Math.max(0, props.total - props.page * props.perPage)
 })
+
+const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
+const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
 </script>
 
 <template>
@@ -32,8 +39,9 @@ const directoriesLeft = computed(() => {
     v-if="directoriesLeft > 0"
     icon-left="caret-down"
     icon-left-variant="primary"
-    class="py-2 px-3 shadow-sm"
+    class="shadow-sm"
     variant="outline-tertiary"
+    :size="size"
   >
     <slot>
       {{ $t('pathViewEntryMore.label', { nextPageSize, directoriesLeft }, directoriesLeft) }}

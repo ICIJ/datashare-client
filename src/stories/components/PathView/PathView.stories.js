@@ -10,10 +10,11 @@ export default {
   tags: ['autodocs'],
   component: PathView,
   args: {
-    label: 'Path',
-    icon: 'tree-structure',
     query: '',
-    selectMode: false
+    compact: false,
+    selectMode: false,
+    noLabel: false,
+    noSearch: false
   },
   render: (args) => ({
     components: {
@@ -58,8 +59,26 @@ export default {
 
 export const Default = {}
 
-export const WithSelectMode = {
+export const SelectMode = {
   args: {
+    selectMode: true
+  }
+}
+
+export const Compact = {
+  args: {
+    compact: true,
+    noSearch: true,
+    noLabel: true,
+    selectMode: false
+  }
+}
+
+export const CompactSelectMode = {
+  args: {
+    compact: true,
+    noSearch: true,
+    noLabel: true,
     selectMode: true
   }
 }

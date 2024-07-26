@@ -80,7 +80,7 @@ const classList = computed(() => {
           class="filters-panel-section-filter__content__search mb-3"
           @update:modelValue="emit('update:search', $event)"
         />
-        <div class="ps-4">
+        <div>
           <slot />
         </div>
       </div>

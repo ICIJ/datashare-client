@@ -1135,6 +1135,12 @@
   "pathViewEntryMore": {
     "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
   },
+  "pathViewSearch": {
+    "placeholder": "Search paths"
+  },
+  "pathViewLabel": {
+    "label": "Paths"
+  },
   "searchBarInputDropdownForProjects": {
     "projectsCount": "{count} projects",
     "noMatches": "No matches"
