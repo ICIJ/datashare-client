@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
@@ -11,18 +11,25 @@ const props = defineProps({
   },
   active: {
     type: Boolean
+  },
+  compact: {
+    type: Boolean,
+    default: null
   }
 })
 
+const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
+
 const classList = computed(() => {
   return {
-    'path-view-entry-stats-documents--active': props.active
+    'path-view-entry-stats-documents--active': props.active,
+    'path-view-entry-stats-documents--compact': compactOrInjected.value
   }
 })
 </script>
 
 <template>
-  <a class="path-view-entry-stats-documents d-inline-flex align-items-center px-2 py-1" :class="classList">
+  <a class="path-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
     <phosphor-icon
       name="files"
       aria-hidden="true"
@@ -43,15 +50,33 @@ const classList = computed(() => {
   border-radius: var(--bs-border-radius);
   line-height: 1;
   color: inherit;
+  justify-content: space-between;
   cursor: pointer;
+  padding: $spacer-xxs $spacer-xs;
 
-  &--active,
-  &:hover {
-    background: var(--bs-action);
-    color: var(--bs-white);
+  &--compact {
+    border-radius: var(--bs-border-radius-pill);
+    background: var(--bs-secondary);
+    color: var(--bs-body-bg);
+    padding: $badge-padding-y $badge-padding-x;
+    font-size: $badge-font-size;
+    font-weight: $badge-font-weight;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
 
     .path-view-entry-stats-documents__icon {
-      color: var(--bs-white);
+      display: none;
+    }
+  }
+
+  &--active,
+  &:hover:not(&--compact) {
+    background: var(--bs-action-text-emphasis);
+    color: var(--bs-body-bg);
+
+    .path-view-entry-stats-documents__icon {
+      color: var(--bs-body-bg);
     }
   }
 
@@ -64,7 +89,7 @@ const classList = computed(() => {
     }
   }
 
-  &:hover {
+  &:hover:not(&--compact) {
     .path-view-entry-stats-documents__icon--default {
       display: none;
     }

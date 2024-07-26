@@ -12,7 +12,7 @@ defineProps({
   <div class="path-view-search">
     <search-form-control
       class="path-view-search__control"
-      placeholder="Search in path"
+      :placeholder="$t('pathViewSearch.placeholder')"
       clear-text
       shadow
       :model-value="modelValue"
