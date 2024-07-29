@@ -4,6 +4,7 @@
     variant="outline-action"
     :icon-left="icon"
     :label="value"
+    :tooltip-label="label"
     :aria-describedby="label"
   />
 </template>
