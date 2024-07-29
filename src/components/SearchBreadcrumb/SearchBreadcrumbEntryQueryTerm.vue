@@ -23,6 +23,9 @@ const props = defineProps({
   },
   operator: {
     type: String
+  },
+  noIcon: {
+    type: Boolean
   }
 })
 
@@ -46,10 +49,10 @@ const showOperator = computed(() => {
 <template>
   <icon-button
     variant="outline-danger"
-    class="search-breadcrumb-entry-query-term me-2 mb-2"
+    class="search-breadcrumb-entry-query-term"
     :class="classList"
     :style="style"
-    :icon-left="icon"
+    :icon-left="noIcon ? null : icon"
     icon-right="x"
     icon-right-hover-weight="bold"
   >
