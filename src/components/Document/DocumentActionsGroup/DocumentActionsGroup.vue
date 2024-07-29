@@ -9,47 +9,33 @@
     />
     <slot name="actions" v-bind="{ document }">
       <document-actions-group-entry
-        icon="star"
-        :label="$t('documentActionsGroup.star')"
+        v-for="entry in entries"
+        ref="entryButtons"
+        :key="entry.name"
         :tooltip-placement="tooltipPlacement"
-        :fill="isStarred"
-        @click="clickStar"
+        v-bind="entry"
       />
-      <document-actions-group-entry
-        icon="share"
-        :label="$t('documentActionsGroup.share')"
-        :tooltip-placement="tooltipPlacement"
-        @click="clickShare"
+      <document-download-popover
+        v-if="entryButtons !== null"
+        :target="entryButtons[2]"
+        :document="document"
+        :placement="tooltipPlacement"
       />
-      <document-actions-group-entry
-        ref="downloadButton"
-        icon="download"
-        :label="$t('documentActionsGroup.download')"
-        :disabled="!isDownloadAllowed"
-        hide-tooltip
-        @click="clickDownload"
-      />
-      <document-actions-group-entry
-        icon="arrows-out-simple"
-        :label="$t('documentActionsGroup.expand')"
-        :tooltip-placement="tooltipPlacement"
-        @click="clickExpand"
-      />
-      <document-download-popover :target="downloadButton" :document="document" :placement="tooltipPlacement" />
     </slot>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
 
-const downloadButton = ref(null)
+const entryButtons = ref(null)
 
-defineProps({
+const props = defineProps({
   /**
    * The selected document
    */
@@ -57,7 +43,7 @@ defineProps({
     type: Object
   },
   /**
-   * Use a vertical layoutk
+   * Use a vertical layout
    */
   vertical: {
     type: Boolean
@@ -110,4 +96,36 @@ const clickShare = () => {
 const clickExpand = () => {
   emit('click-expand', { id: document.id })
 }
+const { t } = useI18n()
+const entries = computed(() => {
+  return [
+    {
+      name: 'star',
+      icon: 'arrows-out-simple',
+      label: t('documentActionsGroup.star'),
+      fill: props.isStarred,
+      event: clickStar
+    },
+    {
+      name: 'share',
+      icon: 'share',
+      label: t('documentActionsGroup.share'),
+      event: clickShare
+    },
+    {
+      name: 'download',
+      icon: 'download-simple',
+      label: t('documentActionsGroup.download'),
+      disabled: !props.isDownloadAllowed,
+      hideTooltip: true,
+      event: clickDownload
+    },
+    {
+      name: 'expand',
+      icon: 'arrows-out-simple',
+      label: t('documentActionsGroup.expand'),
+      event: clickExpand
+    }
+  ]
+})
 </script>
