@@ -29,6 +29,7 @@ defineProps({
   --bs-btn-bg: var(--bs-action-bg-subtle);
   --bs-btn-color: var(--bs-body-color);
   --bs-btn-hover-bg: var(--bs-action-bg-subtle);
-  --bs-btn-hover-color: var(--bs-action-text-emphasis);
+  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-hover-border-color: var(--bs-secondary-border-subtle);
 }
 </style>
