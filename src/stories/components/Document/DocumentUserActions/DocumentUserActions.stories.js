@@ -14,7 +14,12 @@ export default {
   }
 }
 
-export const Default = {}
+export const Default = {
+  args: {
+    showTags: true,
+    tags: 3
+  }
+}
 export const Complete = {
   args: {
     showTags: true,
@@ -22,10 +27,10 @@ export const Complete = {
     showRecommended: true,
     showFolders: true,
     showNotes: true,
-    tags: '3',
-    comments: '4',
-    recommended: '0',
-    folders: '5',
-    notes: '3'
+    tags: 3,
+    comments: 4,
+    recommended: 0,
+    folders: 5,
+    notes: 3
   }
 }

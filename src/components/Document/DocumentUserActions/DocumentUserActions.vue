@@ -3,9 +3,9 @@
     <document-user-actions-entry
       v-for="action in actionsDisplayed"
       :key="action.name"
-      :hide-label="hideLabels"
+      :hide-tooltip-label="hideLabels"
       :icon="action.icon"
-      :label="action.label"
+      :label="action.tooltipLabel"
       :value="action.value"
     />
   </b-button-group>
@@ -13,6 +13,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
+import { capitalize } from 'lodash'
 
 import DocumentUserActionsEntry from '@/components/Document/DocumentUserActions/DocumentUserActionsEntry'
 defineOptions({ name: 'DocumentUserActions' })
@@ -63,43 +64,27 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
-const actions = [
-  {
-    name: 'tags',
-    show: props.showTags,
-    label: t('documentUserActions.tags'),
-    value: props.tags.toString(),
-    icon: 'tag'
-  },
-  {
-    name: 'comments',
-    show: props.showComments,
-    label: t('documentUserActions.comments'),
-    value: props.comments.toString(),
-    icon: 'chats-teardrop'
-  },
-  {
-    name: 'recommended',
-    show: props.showRecommended,
-    label: t('documentUserActions.recommended'),
-    value: props.recommended.toString(),
-    icon: 'user-gear'
-  },
-  {
-    name: 'folders',
-    show: props.showFolders,
-    label: t('documentUserActions.folders'),
-    value: props.folders.toString(),
-    icon: 'folder'
-  },
-  {
-    name: 'notes',
-    show: props.showNotes,
-    label: t('documentUserActions.notes'),
-    value: props.notes.toString(),
-    icon: 'note-blank'
-  }
-]
+const USER_ACTIONS = {
+  TAGS: 'tags',
+  COMMENTS: 'comments',
+  RECOMMENDED: 'recommended',
+  FOLDERS: 'folders',
+  NOTES: 'notes'
+}
+const icons = {
+  [USER_ACTIONS.TAGS]: 'tag',
+  [USER_ACTIONS.COMMENTS]: 'chats-teardrop',
+  [USER_ACTIONS.RECOMMENDED]: 'user-gear',
+  [USER_ACTIONS.FOLDERS]: 'folder',
+  [USER_ACTIONS.NOTES]: 'note-blank'
+}
+const actions = Object.values(USER_ACTIONS).map((action) => ({
+  name: action,
+  show: props[`show${capitalize(action)}`],
+  icon: icons[action],
+  tooltipLabel: t(`documentUserActions.${action}`, { [action]: props[action] }),
+  value: props[action].toString()
+}))
 const actionsDisplayed = computed(() => {
   return actions.filter((action) => action.show === true)
 })
