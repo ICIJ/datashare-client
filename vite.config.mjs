@@ -32,6 +32,7 @@ export default ({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
+          quietDeps: true,
           additionalData: `
             @use 'sass:math';
             @import "@/utils/settings.scss";
