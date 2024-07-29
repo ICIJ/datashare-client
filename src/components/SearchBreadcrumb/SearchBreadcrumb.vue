@@ -27,7 +27,7 @@ const isEmpty = computed(() => !slots.default)
             <phosphor-icon name="path" />
             {{ $t('searchBreadcrumb.label') }}
           </div>
-          <div class="search-breadcrumb__entries">
+          <div class="search-breadcrumb__entries d-flex flex-wrap row-gap-2 column-gap-1 align-items-baseline">
             <slot />
           </div>
         </div>
