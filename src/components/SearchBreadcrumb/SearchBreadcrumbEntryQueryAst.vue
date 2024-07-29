@@ -14,6 +14,9 @@ const props = defineProps({
   },
   operator: {
     type: String
+  },
+  noIcon: {
+    type: Boolean
   }
 })
 
@@ -24,16 +27,23 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
 </script>
 
 <template>
-  <span class="search-breadcrumb-entry-query-ast d-inline-block">
-    <search-breadcrumb-entry-query-ast v-if="isLeft" :ast="ast.left" :operator="operator" />
-    <search-breadcrumb-entry-query-term v-if="isTerm" :term="ast.term" :operator="operator" :prefix="ast.prefix" />
+  <span class="search-breadcrumb-entry-query-ast d-inline-flex flex-wrap flex-wrap column-gap-1 row-gap-2">
+    <search-breadcrumb-entry-query-ast v-if="isLeft" :ast="ast.left" :operator="operator" :no-icon="noIcon" />
+    <search-breadcrumb-entry-query-term
+      v-if="isTerm"
+      :term="ast.term"
+      :operator="operator"
+      :prefix="ast.prefix"
+      :no-icon="noIcon"
+    />
     <search-breadcrumb-entry-filter
       v-if="isFilter"
       :name="ast.field"
       :operator="operator"
       :prefix="ast.prefix"
       :value="ast.term"
+      :no-icon="noIcon"
     />
-    <search-breadcrumb-entry-query-ast v-if="isRight" :ast="ast.right" :operator="ast.operator" />
+    <search-breadcrumb-entry-query-ast v-if="isRight" :ast="ast.right" :operator="ast.operator" :no-icon="noIcon" />
   </span>
 </template>

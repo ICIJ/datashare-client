@@ -27,6 +27,9 @@ const props = defineProps({
   },
   operator: {
     type: String
+  },
+  noIcon: {
+    type: Boolean
   }
 })
 
@@ -59,5 +62,12 @@ const color = computed(() => {
 </script>
 
 <template>
-  <search-breadcrumb-entry-query-term :term="term" :operator="operator" :prefix="prefix" :icon="icon" :color="color" />
+  <search-breadcrumb-entry-query-term
+    :term="term"
+    :operator="operator"
+    :prefix="prefix"
+    :icon="icon"
+    :color="color"
+    :no-icon="noIcon"
+  />
 </template>

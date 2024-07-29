@@ -30,6 +30,12 @@ const props = defineProps({
   },
   noCaret: {
     type: Boolean
+  },
+  noOccurrences: {
+    type: Boolean
+  },
+  noIcon: {
+    type: Boolean
   }
 })
 
@@ -39,21 +45,26 @@ const entryComponent = computed(() => {
 
 const entryAttributes = computed(() => {
   return props.filter
-    ? { name: props.filter, value: props.value, icon: props.icon, color: props.color }
-    : { query: props.query }
+    ? { name: props.filter, value: props.value, icon: props.icon, color: props.color, noIcon: props.noIcon }
+    : { query: props.query, noIcon: props.noIcon }
 })
 </script>
 
 <template>
-  <div class="search-breadcrumb-entry d-md-inline-flex">
+  <div class="search-breadcrumb-entry d-inline-flex flex-wrap">
     <component :is="entryComponent" v-bind="entryAttributes" />
     <div class="text-nowrap">
-      <search-breadcrumb-entry-occurrences v-bind="entryAttributes" :occurrences="occurrences" />
+      <search-breadcrumb-entry-occurrences
+        v-if="!noOccurrences"
+        class="search-breadcrumb-entry__occurences"
+        v-bind="entryAttributes"
+        :occurrences="occurrences"
+      />
       <phosphor-icon
         v-if="!noCaret"
         role="separator"
         aria-hidden="true"
-        class="search-breadcrumb-entry__caret mb-2"
+        class="search-breadcrumb-entry__caret"
         size="1em"
         weight="fill"
         name="caret-right"
@@ -65,7 +76,6 @@ const entryAttributes = computed(() => {
 <style lang="scss" scoped>
 .search-breadcrumb-entry {
   align-items: center;
-  padding-right: $spacer-xs;
   color: var(--bs-secondary);
 }
 </style>
