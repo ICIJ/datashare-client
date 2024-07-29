@@ -179,11 +179,11 @@
     "next": "Next"
   },
   "documentUserActions": {
-    "tags":"Tags",
-    "comments":"Comments",
-    "recommended":"Recommended by",
-    "folders":"Folders",
-    "notes":"Notes"
+    "tags":"Tags | Tags ({tags}) | Tags ({tags}) ",
+    "comments":"Comments | Comments ({comments}) |  Comments ({comments}) ",
+    "recommended":"Recommended by | Recommended by {recommended} user | Recommended by {recommended} users",
+    "folders":"Folders | Folders ({folders}) |  Folders ({folders}) ",
+    "notes":"Notes | Notes ({notes}) | Notes ({notes}) "
   },
   "documentMetadataActions": {
     "copy": "Copy this metadata value",
