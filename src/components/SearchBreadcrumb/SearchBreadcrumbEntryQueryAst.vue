@@ -17,6 +17,9 @@ const props = defineProps({
   },
   noIcon: {
     type: Boolean
+  },
+  size: {
+    type: String
   }
 })
 
@@ -28,13 +31,20 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
 
 <template>
   <span class="search-breadcrumb-entry-query-ast d-inline-flex flex-wrap flex-wrap column-gap-1 row-gap-2">
-    <search-breadcrumb-entry-query-ast v-if="isLeft" :ast="ast.left" :operator="operator" :no-icon="noIcon" />
+    <search-breadcrumb-entry-query-ast
+      v-if="isLeft"
+      :ast="ast.left"
+      :operator="operator"
+      :no-icon="noIcon"
+      :size="size"
+    />
     <search-breadcrumb-entry-query-term
       v-if="isTerm"
       :term="ast.term"
       :operator="operator"
       :prefix="ast.prefix"
       :no-icon="noIcon"
+      :size="size"
     />
     <search-breadcrumb-entry-filter
       v-if="isFilter"
@@ -43,7 +53,14 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :prefix="ast.prefix"
       :value="ast.term"
       :no-icon="noIcon"
+      :size="size"
     />
-    <search-breadcrumb-entry-query-ast v-if="isRight" :ast="ast.right" :operator="ast.operator" :no-icon="noIcon" />
+    <search-breadcrumb-entry-query-ast
+      v-if="isRight"
+      :ast="ast.right"
+      :operator="ast.operator"
+      :no-icon="noIcon"
+      :size="size"
+    />
   </span>
 </template>
