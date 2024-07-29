@@ -1,6 +1,6 @@
 <template>
   <icon-button
-    class="document-user-actions-entry bg-action-subtle text-action border-0"
+    class="document-user-actions-entry bg-action-subtle text-action border-0 d-flex justify-content-center"
     variant="outline-action"
     :icon-left="icon"
     :label="value"

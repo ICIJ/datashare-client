@@ -1,5 +1,5 @@
 <template>
-  <b-button-group class="document-user-actions">
+  <b-button-group class="document-user-actions d-flex">
     <document-user-actions-entry
       v-for="action in actionsDisplayed"
       :key="action.name"
@@ -7,6 +7,7 @@
       :icon="action.icon"
       :label="action.tooltipLabel"
       :value="action.value"
+      class="text-action-emphasis"
     />
   </b-button-group>
 </template>
