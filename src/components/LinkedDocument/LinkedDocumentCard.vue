@@ -1,9 +1,9 @@
 <template>
   <div
-    class="linked-document-card d-flex rounded align-items-start bg-tertiary-subtle text-body"
+    class="linked-document-card d-flex rounded align-items-start bg-tertiary-subtle text-body justify-content-between"
     :class="{ 'linked-document-card--collapse': !modelValue }"
   >
-    <div class="d-flex flex-column flex-sm-row col-10 col-sm-11 justify-content-between">
+    <div class="d-flex flex-column flex-sm-row flex-grow-1 w-75 justify-content-between">
       <linked-document-section
         :title="t('linkedDocumentCard.siblings.title')"
         icon="files"
@@ -19,7 +19,7 @@
         class="col-12 col-sm-6 p-4"
       />
     </div>
-    <span class="linked-document-card__toggle col-1 mt-2 d-flex justify-content-center" @click="toggle">
+    <span class="linked-document-card__toggle m-2 d-flex justify-content-center" @click="toggle">
       <phosphor-icon :name="caretIcon" class="linked-document-card__toggle--btn btn btn-md border-0" />
     </span>
   </div>
@@ -59,8 +59,11 @@ function toggle() {
 <style lang="scss" scoped>
 .linked-document-card {
   &--collapse {
-    height: 70px;
+    height: 68px;
     overflow: hidden;
+  }
+  &__toggle {
+    width: 3em;
   }
 }
 </style>
