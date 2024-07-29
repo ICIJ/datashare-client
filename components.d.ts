@@ -50,6 +50,7 @@ declare module 'vue' {
     BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     BFormSelect: typeof import('bootstrap-vue-next')['BFormSelect']
+    BFormTags: typeof import('bootstrap-vue-next')['BFormTags']
     BLink: typeof import('bootstrap-vue-next')['BLink']
     BModal: typeof import('bootstrap-vue-next')['BModal']
     BNav: typeof import('bootstrap-vue-next')['BNav']
