@@ -67,7 +67,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/PathView/PathViewEntry copy.vue')['default']
+    copy: typeof import('./src/components/FormControl/FormControlTag copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayContentLength: typeof import('./src/components/Display/DisplayContentLength.vue')['default']
@@ -176,6 +176,10 @@ declare module 'vue' {
     FilterText: typeof import('./src/components/Filter/types/FilterText.vue')['default']
     FindNamedEntitiesForm: typeof import('./src/components/FindNamedEntitiesForm.vue')['default']
     FormActions: typeof import('./src/components/FormActions/FormActions.vue')['default']
+    FormControlMultiselect: typeof import('./src/components/FormControl/FormControlMultiselect.vue')['default']
+    FormControlTag: typeof import('./src/components/FormControl/FormControlTag.vue')['default']
+    FormControlTagEntry: typeof import('./src/components/FormControl/FormControlTagEntry.vue')['default']
+    FormControlTerm: typeof import('./src/components/FormControl/FormControlTerm.vue')['default']
     Hook: typeof import('./src/components/Hook.vue')['default']
     IconButton: typeof import('./src/components/IconButton.vue')['default']
     InlineDirectoryPicker: typeof import('./src/components/InlineDirectoryPicker.vue')['default']
@@ -294,7 +298,6 @@ declare module 'vue' {
     WidgetTreeMap: typeof import('./src/components/Widget/WidgetTreeMap.vue')['default']
   }
   export interface ComponentCustomProperties {
-    vBModal: typeof import('bootstrap-vue-next')['vBModal']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
