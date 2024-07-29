@@ -84,47 +84,46 @@ const props = defineProps({
 
 const emit = defineEmits(['click-star', 'click-download', 'click-share', 'click-expand', 'update:selected'])
 
-const clickStar = () => {
-  emit('click-star', { id: document.id })
-}
-const clickDownload = () => {
-  emit('click-download', { id: document.id })
-}
-const clickShare = () => {
-  emit('click-share', { id: document.id })
-}
-const clickExpand = () => {
-  emit('click-expand', { id: document.id })
-}
 const { t } = useI18n()
+
+const ACTION = {
+  STAR: 'star',
+  SHARE: 'share',
+  DOWNLOAD: 'download',
+  EXPAND: 'expand'
+}
+
+const click = (action) => {
+  return emit(`click-${action}`, { id: document.id })
+}
 const entries = computed(() => {
   return [
     {
-      name: 'star',
+      name: ACTION.STAR,
       icon: 'arrows-out-simple',
-      label: t('documentActionsGroup.star'),
+      label: t(`documentActionsGroup.${ACTION.STAR}`),
       fill: props.isStarred,
-      event: clickStar
+      event: click(ACTION.STAR)
     },
     {
-      name: 'share',
+      name: ACTION.SHARE,
       icon: 'share',
-      label: t('documentActionsGroup.share'),
-      event: clickShare
+      label: t(`documentActionsGroup.${ACTION.SHARE}`),
+      event: click(ACTION.SHARE)
     },
     {
-      name: 'download',
+      name: ACTION.DOWNLOAD,
       icon: 'download-simple',
-      label: t('documentActionsGroup.download'),
+      label: t(`documentActionsGroup.${ACTION.DOWNLOAD}`),
       disabled: !props.isDownloadAllowed,
       hideTooltip: true,
-      event: clickDownload
+      event: click(ACTION.DOWNLOAD)
     },
     {
-      name: 'expand',
+      name: ACTION.EXPAND,
       icon: 'arrows-out-simple',
-      label: t('documentActionsGroup.expand'),
-      event: clickExpand
+      label: t(`documentActionsGroup.${ACTION.EXPAND}`),
+      event: click(ACTION.EXPAND)
     }
   ]
 })
