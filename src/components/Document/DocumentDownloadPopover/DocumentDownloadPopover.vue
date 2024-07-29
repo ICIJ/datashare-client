@@ -8,6 +8,7 @@ import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import byteSize from '@/utils/byteSize'
+import IconButton from '@/components/IconButton'
 
 const props = defineProps({
   /**
@@ -142,7 +143,7 @@ const maxRootContentLength = computed(() => {
       />
       <icon-button
         icon-left="download-simple"
-        :href="documentF"
+        :href="document"
         :label="$t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
