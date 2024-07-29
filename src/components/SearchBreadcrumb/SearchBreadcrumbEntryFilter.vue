@@ -25,6 +25,9 @@ const props = defineProps({
     type: String,
     default: null
   },
+  size: {
+    type: String
+  },
   operator: {
     type: String
   },
@@ -66,6 +69,7 @@ const color = computed(() => {
     :term="term"
     :operator="operator"
     :prefix="prefix"
+    :size="size"
     :icon="icon"
     :color="color"
     :no-icon="noIcon"

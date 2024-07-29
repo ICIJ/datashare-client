@@ -1,6 +1,7 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
+import { pick } from 'lodash'
 
 import SearchBreadcrumbEntryOccurrences from './SearchBreadcrumbEntryOccurrences'
 import SearchBreadcrumbEntryFilter from './SearchBreadcrumbEntryFilter'
@@ -24,6 +25,9 @@ const props = defineProps({
     type: String,
     default: null
   },
+  size: {
+    type: String
+  },
   occurrences: {
     type: Number,
     default: 0
@@ -45,8 +49,8 @@ const entryComponent = computed(() => {
 
 const entryAttributes = computed(() => {
   return props.filter
-    ? { name: props.filter, value: props.value, icon: props.icon, color: props.color, noIcon: props.noIcon }
-    : { query: props.query, noIcon: props.noIcon }
+    ? { name: props.filter, ...pick(props, ['value', 'icon', 'color', 'noIcon', 'size']) }
+    : pick(props, ['query', 'noIcon', 'size'])
 })
 </script>
 
