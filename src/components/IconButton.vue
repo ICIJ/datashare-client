@@ -43,7 +43,7 @@
       :model-value="showTooltip"
       :placement="tooltipPlacement"
       :target="iconButton"
-      :title="label"
+      :title="tooltipText"
     />
   </b-button>
 </template>
@@ -152,6 +152,10 @@ const props = defineProps({
   loadingText: {
     type: String
   },
+  tooltipLabel: {
+    type: String,
+    default: null
+  },
   tooltipPlacement: {
     type: String,
     default: 'top'
@@ -183,8 +187,12 @@ const labelOrLoadingText = computed(() => {
   return props.loading && props.loadingText ? props.loadingText : props.label
 })
 
+const tooltipText = computed(() => {
+  return props.tooltipLabel ?? props.label
+})
+
 const showTooltip = computed(() => {
-  return currentHover.value && !props.hideTooltip && props.hideLabel && !!props.label
+  return currentHover.value && (!props.hideTooltip || props.hideLabel) && !!tooltipText.value
 })
 
 const buttonProps = computed(() => ({
