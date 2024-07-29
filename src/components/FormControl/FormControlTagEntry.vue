@@ -18,7 +18,7 @@ defineProps({
     :label="label"
     class="form-control-tag-entry"
     icon-right="x"
-    icon-right-variant="tertiary"
+    icon-right-variant="secondary"
     icon-right-hover-weight="bold"
     variant="light"
   />
