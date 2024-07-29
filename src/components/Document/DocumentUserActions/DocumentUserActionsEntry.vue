@@ -1,6 +1,6 @@
 <template>
   <icon-button
-    class="document-user-actions-entry bg-action-subtle text-action border-0 d-flex justify-content-center"
+    class="document-user-actions-entry text-action border-0 d-flex flex-grow-0 justify-content-center"
     variant="outline-action"
     :icon-left="icon"
     :label="value"
@@ -19,4 +19,12 @@ defineProps({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.document-user-actions-entry {
+  background: var(--bs-btn-action-bg);
+  &:hover {
+    background: var(--bs-btn-hover-bg);
+    color: var(--bs-btn-hover-color) !important;
+  }
+}
+</style>

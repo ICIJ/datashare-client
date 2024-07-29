@@ -1,5 +1,5 @@
 <template>
-  <b-button-group class="document-user-actions d-flex">
+  <b-button-group class="document-user-actions d-flex flex-grow-1 justify-content-between bg-action-subtle">
     <document-user-actions-entry
       v-for="action in actionsDisplayed"
       :key="action.name"
