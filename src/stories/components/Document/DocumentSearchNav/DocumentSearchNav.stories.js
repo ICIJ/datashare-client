@@ -5,8 +5,8 @@ export default {
   component: DocumentSearchNav,
   tags: ['autodocs'],
   args: {
-    disablePrevious: false,
-    disableNext: false,
+    disabledPrevious: false,
+    disabledNext: false,
     tooltipPlacement: 'bottom'
   }
 }
