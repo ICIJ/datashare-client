@@ -8,5 +8,8 @@ export default {
 }
 
 export const Default = {
-  args: { icon: 'tag', label: 'Tag', value: '3' }
+  args: { icon: 'tag', label: '3 tags', value: '3' }
+}
+export const Compact = {
+  args: { icon: 'tag', compact: true, label: '3 tags', value: '3' }
 }
