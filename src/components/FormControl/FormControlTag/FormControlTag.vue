@@ -72,7 +72,7 @@ const separators = computed(() => {
 })
 
 const escapedSeparators = computed(() => {
-  return separators.value.map((separator) => escapeRegExp(separator));
+  return separators.value.map((separator) => escapeRegExp(separator))
 })
 
 const separatorsPattern = computed(() => {
