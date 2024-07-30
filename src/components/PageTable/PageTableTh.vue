@@ -15,6 +15,9 @@ const props = defineProps({
   emphasis: {
     type: Boolean
   },
+  number: {
+    type: Boolean
+  },
   hideLabel: {
     type: Boolean
   },
@@ -38,7 +41,8 @@ const classList = computed(() => {
     'page-table-th--emphasis': props.emphasis,
     'page-table-th--compact': props.hideLabel,
     'page-table-th--sortable': props.sortable,
-    'page-table-th--sorted': props.sorted
+    'page-table-th--sorted': props.sorted,
+    'page-table-th--number': props.number
   }
 })
 
@@ -52,7 +56,7 @@ const labelClassList = computed(() => {
 <template>
   <b-th class="page-table-th text-nowrap" :class="classList">
     <slot>
-      <span class="d-flex align-items-center">
+      <span class="page-table-th__content">
         <phosphor-icon v-if="icon" :name="icon" class="me-1 my-2" />
         <span :class="labelClassList">{{ label }}</span>
         <page-table-th-sort
@@ -78,6 +82,16 @@ const labelClassList = computed(() => {
 
   &--sorted.page-table-th--sortable {
     color: var(--bs-action-text-emphasis);
+  }
+
+  &__content {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+
+  &--number &__content {
+    justify-content: end;
   }
 }
 </style>
