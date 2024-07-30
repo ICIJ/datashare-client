@@ -9,7 +9,8 @@ import { useActiveElement } from '@/utils/active-element'
 
 const props = defineProps({
   modelValue: {
-    type: Array
+    type: Array,
+    default: () => []
   },
   inputValue: {
     type: String,
