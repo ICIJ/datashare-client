@@ -124,10 +124,6 @@ defineExpose({
 
   transition: $input-transition;
 
-  &:deep(.form-control-tag-input-entry) + &__form &__form__field {
-    padding-left: 0;
-  }
-
   &--focus {
     color: $input-focus-color;
     background-color: $input-focus-bg;
