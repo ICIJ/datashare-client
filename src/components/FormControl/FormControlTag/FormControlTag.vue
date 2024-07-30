@@ -101,6 +101,7 @@ const addTag = (tag) => {
   }
   emit('update:modelValue', [...props.modelValue, ...tags])
   inputValueTrigger.value = ''
+  inputElement.value.focus()
 }
 
 const tagValidator = (tag) => {
@@ -118,6 +119,7 @@ const tagCreateValidator = (tag) => {
 const removeTag = (tag) => {
   const modelValue = props.modelValue.filter((t) => t !== tag)
   emit('update:modelValue', modelValue)
+  inputElement.value.focus()
 }
 
 const removeLastTag = () => {
