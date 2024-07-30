@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     '(feat': add PathView components)
+    '(refactor': build form control with bootstrap vue next)
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -67,7 +68,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/FormControl/FormControlTag copy.vue')['default']
+    copy: typeof import('./src/components/FormControl/FormControlTagInput copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayContentLength: typeof import('./src/components/Display/DisplayContentLength.vue')['default']
@@ -177,12 +178,15 @@ declare module 'vue' {
     FindNamedEntitiesForm: typeof import('./src/components/FindNamedEntitiesForm.vue')['default']
     FormActions: typeof import('./src/components/FormActions/FormActions.vue')['default']
     FormControlMultiselect: typeof import('./src/components/FormControl/FormControlMultiselect.vue')['default']
-    FormControlTag: typeof import('./src/components/FormControl/FormControlTag.vue')['default']
+    FormControlTag: typeof import('./src/components/FormControl/FormControlTag/FormControlTag.vue')['default']
     FormControlTagDropdown: typeof import('./src/components/FormControl/FormControlTag/FormControlTagDropdown.vue')['default']
     FormControlTagDropdownItem: typeof import('./src/components/FormControl/FormControlTag/FormControlTagDropdownItem.vue')['default']
     FormControlTagEntry: typeof import('./src/components/FormControl/FormControlTagEntry.vue')['default']
     FormControlTagInput: typeof import('./src/components/FormControl/FormControlTag/FormControlTagInput.vue')['default']
     FormControlTagInputEntry: typeof import('./src/components/FormControl/FormControlTag/FormControlTagInputEntry.vue')['default']
+    FormControlTagInputField: typeof import('./src/components/FormControl/FormControlTagInputField.vue')['default']
+    FormControlTagOptions: typeof import('./src/components/FormControl/FormControlTagOptions.vue')['default']
+    FormControlTagOptionsItem: typeof import('./src/components/FormControl/FormControlTagOptionsItem.vue')['default']
     FormControlTerm: typeof import('./src/components/FormControl/FormControlTerm.vue')['default']
     Hook: typeof import('./src/components/Hook.vue')['default']
     IconButton: typeof import('./src/components/IconButton.vue')['default']
