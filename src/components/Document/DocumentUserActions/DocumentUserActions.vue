@@ -1,24 +1,29 @@
 <template>
-  <b-button-group class="document-user-actions d-flex flex-grow-1 justify-content-between bg-action-subtle">
+  <b-button-group class="document-user-actions justify-content-between bg-action-subtle">
     <document-user-actions-entry
       v-for="action in actionsDisplayed"
       :key="action.name"
-      :hide-tooltip-label="hideLabels"
+      :hide-tooltip="hideTooltips"
+      :hide-label="hideLabels"
       :icon="action.icon"
       :label="action.tooltipLabel"
       :value="action.value"
-      class="text-action-emphasis"
+      :compact="compact"
     />
   </b-button-group>
 </template>
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { capitalize } from 'lodash'
 
 import DocumentUserActionsEntry from '@/components/Document/DocumentUserActions/DocumentUserActionsEntry'
 defineOptions({ name: 'DocumentUserActions' })
 const props = defineProps({
+  compact: {
+    type: Boolean,
+    default: false
+  },
   showTags: {
     type: Boolean,
     default: true
@@ -40,6 +45,10 @@ const props = defineProps({
     default: false
   },
   hideLabels: {
+    type: Boolean,
+    default: false
+  },
+  hideTooltips: {
     type: Boolean,
     default: false
   },
@@ -65,6 +74,7 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
+const show = ref(false)
 const USER_ACTIONS = {
   TAGS: 'tags',
   COMMENTS: 'comments',
@@ -83,7 +93,7 @@ const actions = Object.values(USER_ACTIONS).map((action) => ({
   name: action,
   show: props[`show${capitalize(action)}`],
   icon: icons[action],
-  tooltipLabel: t(`documentUserActions.${action}`, { [action]: props[action] }),
+  tooltipLabel: t(`documentUserActions.${action}`, { n: props[action] }),
   value: props[action].toString()
 }))
 const actionsDisplayed = computed(() => {
