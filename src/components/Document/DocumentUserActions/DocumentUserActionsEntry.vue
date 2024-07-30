@@ -1,21 +1,31 @@
 <template>
   <icon-button
-    class="document-user-actions-entry text-action border-0 d-flex flex-grow-0 justify-content-center"
+    class="document-user-actions-entry text-action-emphasis border-0 d-flex flex-grow-0 justify-content-center rounded"
     variant="outline-action"
     :icon-left="icon"
-    :label="value"
+    :label="actionLabel"
     :tooltip-label="label"
     :aria-describedby="label"
+    :hide-label="hideLabel"
+    :hide-tooltip="hideTooltip"
   />
 </template>
 <script setup>
+import { computed } from 'vue'
+
 import IconButton from '@/components/IconButton'
 defineOptions({ name: 'DocumentUserActionsEntry' })
-defineProps({
+const props = defineProps({
   label: { type: String, required: true },
   value: { type: String, required: true },
   icon: { type: String, required: true },
-  first: { type: Boolean }
+  first: { type: Boolean },
+  compact: { type: Boolean, default: false },
+  hideLabel: { type: Boolean, default: false },
+  hideTooltip: { type: Boolean, default: false }
+})
+const actionLabel = computed(() => {
+  return props.compact ? props.value : props.label
 })
 </script>
 
