@@ -6,7 +6,8 @@ export default {
   tags: ['autodocs'],
   args: {
     disablePrevious: false,
-    disableNext: false
+    disableNext: false,
+    tooltipPlacement: 'bottom'
   }
 }
 
