@@ -53,14 +53,18 @@ const nextFocusIndex = computed(() => {
 })
 
 const hasOption = (option) => {
-  return props.modelValue.includes(getValue(option))
+  return props.modelValue.includes(getOptionValue(option))
 }
 
-const getValue = (option) => {
+const getOptionValue = ({ item }) => {
+  return getValue(item)
+}
+
+const getValue = (value) => {
   if (isFunction(props.trackBy)) {
-    return props.trackBy(option)
+    return props.trackBy(value)
   }
-  return get(option, props.trackBy)
+  return get(value, props.trackBy)
 }
 
 const filteredOptions = computed(() => {
@@ -78,12 +82,25 @@ const fuse = computed(() => {
   return new Fuse(availableOptions.value, {
     distance: 100,
     shouldSort: true,
-    keys: props.searchKeys,
-    getFn: getValue
+    keys: props.searchKeys
   })
 })
 
-const emit = defineEmits(['update:show', 'update:tag', 'update:modelValue'])
+const emit = defineEmits(['addTag', 'update:show', 'update:tag', 'update:modelValue'])
+
+const addOption = (option) => {
+  addTag(getOptionValue(option))
+}
+
+const addFocusOption = () => {
+  if (props.focusIndex > -1) {
+    addOption(filteredOptions.value[props.focusIndex])
+  }
+}
+
+const addTag = (tag) => {
+  emit('addTag', tag)
+}
 
 watch(filteredOptions, (filteredOptions) => {
   emit('update:show', !!filteredOptions.length)
@@ -140,18 +157,19 @@ watch(
     :style="floatingStyles"
     @keydown.up.prevent="$emit('update:focusIndex', previousFocusIndex)"
     @keydown.down.prevent="$emit('update:focusIndex', nextFocusIndex)"
+    @keydown.enter.prevent="addFocusOption()"
   >
     <form-control-tag-dropdown-item
-      v-for="({ item: option }, i) in filteredOptions"
+      v-for="(option, i) in filteredOptions"
       :key="i"
-      :option="option"
-      :value="getValue(option)"
+      :item="option.item"
+      :value="getOptionValue(option)"
       :active="hasOption(option)"
-      @click="$emit('addTag', getValue(option))"
+      @click="addOption(option)"
     >
       <!-- eslint-disable-next-line vue/no-template-shadow -->
-      <template #default="{ active, option, value }">
-        <slot name="dropdown-item" v-bind="{ active, option, value }" />
+      <template #default="{ active, item, value }">
+        <slot name="dropdown-item" v-bind="{ active, item, value }" />
       </template>
     </form-control-tag-dropdown-item>
   </div>
@@ -160,7 +178,6 @@ watch(
 <style lang="scss" scoped>
 .form-control-tag-dropdown {
   border: var(--bs-border-width) solid var(--bs-border-color);
-  // display: none;
   position: fixed;
   width: max-content;
   top: 0;
