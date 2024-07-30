@@ -100,7 +100,7 @@ const entries = computed(() => {
   return [
     {
       name: ACTION.STAR,
-      icon: 'arrows-out-simple',
+      icon: 'star',
       label: t(`documentActionsGroup.${ACTION.STAR}`),
       fill: props.isStarred,
       event: click(ACTION.STAR)
