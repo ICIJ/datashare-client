@@ -7,6 +7,10 @@ defineProps({
   },
   disabledNext: {
     type: Boolean
+  },
+  tooltipPlacement: {
+    type: String,
+    default: 'top'
   }
 })
 </script>
@@ -18,12 +22,14 @@ defineProps({
         icon="caret-left"
         :label="$t('documentSearchNavItem.previous')"
         :disabled="disabledPrevious"
+        :tooltip-placement="tooltipPlacement"
         @click="$emit('previous')"
       />
       <document-search-nav-item
         icon="caret-right"
         :label="$t('documentSearchNavItem.next')"
         :disabled="disabledNext"
+        :tooltip-placement="tooltipPlacement"
         @click="$emit('next')"
       />
     </slot>

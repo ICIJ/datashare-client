@@ -10,6 +10,10 @@ defineProps({
   },
   disabled: {
     type: Boolean
+  },
+  tooltipPlacement: {
+    type: String,
+    default: 'top'
   }
 })
 </script>
@@ -18,6 +22,7 @@ defineProps({
   <icon-button
     class="document-search-nav-item"
     variant="outline-secondary"
+    :tooltip-placement="tooltipPlacement"
     :icon-left="icon"
     icon-left-hover-weight="bold"
     :disabled="disabled"
