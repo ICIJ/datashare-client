@@ -20,6 +20,12 @@ export const Default = {
     tags: 3
   }
 }
+export const Compact = {
+  args: {
+    compact: true,
+    tags: 3
+  }
+}
 export const Complete = {
   args: {
     showTags: true,
