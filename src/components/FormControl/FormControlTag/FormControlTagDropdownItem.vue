@@ -3,7 +3,7 @@ defineProps({
   active: {
     type: Boolean
   },
-  option: {
+  item: {
     type: [Number, String, Object]
   },
   value: {
@@ -14,6 +14,6 @@ defineProps({
 
 <template>
   <b-dropdown-item :active="active">
-    <slot v-bind="{ active, value, option }">{{ value }}</slot>
+    <slot v-bind="{ active, value, item }">{{ value }}</slot>
   </b-dropdown-item>
 </template>
