@@ -7,8 +7,9 @@
   .btn-#{$variant} {
     --bs-btn-disabled-color: var(--bs-secondary);
     --bs-btn-disabled-bg: transparent;
-    --bs-btn-disabled-border-color: var(--bs-secondary);
-    --bs-btn-disabled-opacity: 1;
+    --bs-btn-disabled-color: var(--bs-secondary-color-subtle);
+    --bs-btn-disabled-border-color: var(--bs-secondary-border-subtle);
+    --bs-btn-disabled-opacity: 0.6;
   }
 }
 
