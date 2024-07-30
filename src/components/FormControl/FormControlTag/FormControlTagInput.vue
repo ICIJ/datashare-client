@@ -56,7 +56,8 @@ const onInput = (event) => {
 
 const classList = computed(() => {
   return {
-    'form-control-tag-input--focus': focus.value
+    'form-control-tag-input--focus': focus.value,
+    'form-control-tag-input--has-value': props.inputValue
   }
 })
 
@@ -135,9 +136,17 @@ defineExpose({
     box-shadow: $input-focus-box-shadow;
   }
 
+  &--has-value &__form__button {
+    visibility: visible;
+  }
+
   &__form {
     display: flex;
     flex: 1;
+
+    &__button {
+      visibility: hidden;
+    }
 
     &__field {
       padding-block: 0;
