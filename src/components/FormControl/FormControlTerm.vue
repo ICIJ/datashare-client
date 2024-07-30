@@ -1,5 +1,5 @@
 <script setup>
-import FormControlTag from './FormControlTag'
+import FormControlTag from './FormControlTag/FormControlTag'
 
 import SearchBreadcrumbEntry from '@/components/SearchBreadcrumb/SearchBreadcrumbEntry'
 

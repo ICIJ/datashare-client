@@ -600,17 +600,13 @@
     "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
     "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
-  "formControlTag": {
+  "formControlTagInput": {
     "placeholder": "Add tag",
-    "addButtonText": "Add",
-    "invalidTagText" : "This tag already exists:",
-    "duplicateTagText": "This tag is not valid:"
+    "addButtonText": "Add"
   },
   "formControlTerm": {
     "placeholder": "Add term",
-    "addButtonText": "Add",
-    "invalidTagText" : "This term already exists:",
-    "duplicateTagText": "This term is not valid:"
+    "addButtonText": "Add"
   },
   "indexing": {
     "title": "Analyze your documents",
