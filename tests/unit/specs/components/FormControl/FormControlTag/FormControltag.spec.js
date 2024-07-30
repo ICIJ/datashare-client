@@ -15,10 +15,6 @@ describe('FormControlTag', () => {
     const wrapper = mount(FormControlTag, {
       global: {
         plugins
-      },
-      props: {
-        modelValue: [],
-        inputValue: ''
       }
     })
     expect(wrapper.exists()).toBeTruthy()
@@ -28,10 +24,6 @@ describe('FormControlTag', () => {
     const wrapper = mount(FormControlTag, {
       global: {
         plugins
-      },
-      props: {
-        modelValue: [],
-        inputValue: ''
       }
     })
 
@@ -43,10 +35,6 @@ describe('FormControlTag', () => {
     const wrapper = mount(FormControlTag, {
       global: {
         plugins
-      },
-      props: {
-        modelValue: [],
-        inputValue: ''
       }
     })
 
@@ -138,10 +126,6 @@ describe('FormControlTag', () => {
     const wrapper = mount(FormControlTag, {
       global: {
         plugins
-      },
-      props: {
-        modelValue: [],
-        inputValue: ''
       }
     })
 
