@@ -63,7 +63,7 @@ const inputValueTrigger = ref('')
 const showDropdown = ref(false)
 const focusIndex = ref(-1)
 
-const emit = defineEmits(['update:modelValue', 'update:inputValue', 'blur', 'focus'])
+const emit = defineEmits(['update:modelValue', 'update:inputValue', 'update:focusIndex', 'blur', 'focus'])
 
 const separators = computed(() => {
   if (Array.isArray(props.separator)) {
@@ -152,7 +152,7 @@ watch(useActiveElement(), async (activeElement) => {
 
 watch(focusIndex, (value) => {
   if (value === -1) {
-    return inputElement.value.focus()
+    inputElement.value.focus()
   } else {
     showDropdown.value = !!inputValueTrigger.value
   }
