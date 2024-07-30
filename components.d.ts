@@ -50,6 +50,7 @@ declare module 'vue' {
     BFormCheckboxGroup: typeof import('bootstrap-vue-next')['BFormCheckboxGroup']
     BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
+    BFormRadio: typeof import('bootstrap-vue-next')['BFormRadio']
     BFormSelect: typeof import('bootstrap-vue-next')['BFormSelect']
     BFormTags: typeof import('bootstrap-vue-next')['BFormTags']
     BLink: typeof import('bootstrap-vue-next')['BLink']
@@ -306,6 +307,7 @@ declare module 'vue' {
     WidgetTreeMap: typeof import('./src/components/Widget/WidgetTreeMap.vue')['default']
   }
   export interface ComponentCustomProperties {
+    vBModal: typeof import('bootstrap-vue-next')['vBModal']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
