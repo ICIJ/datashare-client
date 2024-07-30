@@ -24,6 +24,7 @@
     "build:storybook": "storybook build"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.2",
     "@fortawesome/fontawesome": "^1.1.4",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
