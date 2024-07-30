@@ -41,5 +41,6 @@ defineProps({
   --bs-btn-hover-border-color: transparent;
   --bs-btn-active-bg: var(--bs-primary);
   --bs-btn-active-color: var(--bs-white);
+  --bs-btn-disabled-border-color: transparent;
 }
 </style>
