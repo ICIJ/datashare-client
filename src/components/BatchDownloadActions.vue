@@ -1,5 +1,6 @@
 <script>
 import { uniqueId } from 'lodash'
+import {queue} from "vue3-toastify";
 
 export default {
   name: 'BatchDownloadActions',
@@ -116,7 +117,7 @@ export default {
       this.$emit('deleteFailed', error)
     },
     parseQuery() {
-      return JSON.parse(this.value.query || null) ?? {}
+      return JSON.parse(this.value.query?.query || null) ?? {}
     },
     tryToParseQuery() {
       try {
