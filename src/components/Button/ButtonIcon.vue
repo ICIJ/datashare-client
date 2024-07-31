@@ -192,7 +192,7 @@ const tooltipText = computed(() => {
 })
 
 const showTooltip = computed(() => {
-  return currentHover.value && (!props.hideTooltip || props.hideLabel) && !!tooltipText.value
+  return currentHover.value && !props.hideTooltip && props.hideLabel && !!tooltipText.value
 })
 
 const buttonProps = computed(() => ({
