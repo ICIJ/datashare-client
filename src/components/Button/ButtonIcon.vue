@@ -36,6 +36,7 @@
       :variant="iconRightVariant"
       class="button-icon__icon-right"
     />
+    <button-icon-counter :counter="counter" :variant="counterVariant" />
     <slot name="end" />
     <b-tooltip
       teleport-to="body"
@@ -51,6 +52,8 @@
 <script setup>
 import { computed, ref, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+
+import ButtonIconCounter from './ButtonIconCounter'
 
 const element = ref(null)
 
@@ -162,6 +165,14 @@ const props = defineProps({
   },
   hover: {
     type: Boolean
+  },
+  counter: {
+    type: Number,
+    default: null
+  },
+  counterVariant: {
+    type: String,
+    default: 'secondary'
   }
 })
 
@@ -211,12 +222,25 @@ const buttonProps = computed(() => ({
   display: inline-flex;
   align-items: center;
 
+  &:deep(.button-icon-counter) {
+    margin-left: $spacer-xs;
+  }
+
   &--square {
     padding: 0;
     align-items: center;
     justify-content: center;
     width: calc(#{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2);
     height: calc(#{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2);
+    position: relative;
+
+    &:deep(.button-icon-counter) {
+      margin-left: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(50%, -50%);
+    }
   }
 
   &--square.btn-sm {

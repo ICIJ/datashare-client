@@ -65,6 +65,7 @@ declare module 'vue' {
     BTooltip: typeof import('bootstrap-vue-next')['BTooltip']
     BTr: typeof import('bootstrap-vue-next')['BTr']
     ButtonIcon: typeof import('./src/components/Button/ButtonIcon.vue')['default']
+    ButtonIconCounter: typeof import('./src/components/Button/ButtonIconCounter.vue')['default']
     ColumnChartPicker: typeof import('./src/components/ColumnChartPicker.vue')['default']
     ColumnFilter: typeof import('./src/components/ColumnFilter.vue')['default']
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
