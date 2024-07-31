@@ -5,9 +5,9 @@ export default {
   tags: ['autodocs'],
   component: FormControlRange,
   args: {
-    modelValue: 1,
-    min: 1,
-    max: 6
+    modelValue: 0,
+    min: 0,
+    max: 2
   },
   decorators: [
     () => ({
@@ -17,3 +17,11 @@ export default {
 }
 
 export const Default = {}
+
+export const MaxSix = {
+  args: {
+    modelValue: 0,
+    min: 0,
+    max: 6
+  }
+}
