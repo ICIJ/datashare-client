@@ -6,6 +6,8 @@ import SeparatorLineDrag from './SeparatorLineDrag'
 import SeparatorLineReduce from './SeparatorLineReduce'
 import SeparatorLineExpand from './SeparatorLineExpand'
 
+import { draggable as vDraggable } from '@/directives/draggable'
+
 const props = defineProps({
   active: Boolean,
   reduceDisabled: Boolean,
@@ -22,80 +24,20 @@ const classList = computed(() => {
   }
 })
 
-const root = ref(null)
+const target = ref(null)
 const emit = defineEmits(['reduce', 'expand', 'drag', 'dragstart', 'dragend'])
-const maxX = () => root.value.parentNode.getBoundingClientRect().width - root.value.getBoundingClientRect().width
+const getMax = () => target.value.parentNode.getBoundingClientRect().width - target.value.getBoundingClientRect().width
 const reduce = () => emit('reduce', 0)
-const expand = () => emit('reduce', maxX())
-
-const vDraggable = {
-  mounted(el, binding, vnode) {
-    let startX, initialClientX
-    const relative = binding.modifiers?.relative ?? false
-    const percent = binding.modifiers?.percent ?? false
-
-    // Emit an event to the parent component
-    function emitEvent({ name, detail = null }) {
-      vnode.el?.dispatchEvent(new CustomEvent(name, { detail }))
-      const handlers = get(vnode, 'data.on') ?? get(vnode, 'componentOptions.listeners')
-      if (has(handlers, name)) {
-        invoke(handlers, `${name}.fns`, detail)
-      }
-    }
-
-    // Handle the dragging of the element
-    function move(event) {
-      const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX
-      const offset = relative ? el.offsetWidth : 0
-      const maxX = root.value.parentNode.getBoundingClientRect().width
-      const x = clamp(startX + clientX - initialClientX, props.min, maxX - offset)
-      const detail = percent ? (x / maxX) * 100 : x
-      emitEvent({ name: 'drag', detail })
-      return false
-    }
-
-    // Clean up listeners once the dragging ends
-    function end(event) {
-      emitEvent({ name: 'dragend' })
-      if (event instanceof MouseEvent) {
-        document.removeEventListener('mousemove', move)
-        document.removeEventListener('mouseup', end)
-      } else {
-        document.removeEventListener('touchmove', move)
-        document.removeEventListener('touchend', end)
-      }
-    }
-
-    // Register listeners when dragging start
-    function start(event) {
-      emitEvent({ name: 'dragstart' })
-      startX = root.value.offsetLeft
-      if (event instanceof MouseEvent) {
-        initialClientX = event.clientX
-        document.addEventListener('mousemove', move)
-        document.addEventListener('mouseup', end)
-      } else {
-        initialClientX = event.touches[0].clientX
-        document.addEventListener('touchmove', move)
-        document.addEventListener('touchend', end)
-      }
-      return false
-    }
-
-    // Register the drag and touch event handlers
-    el.addEventListener('mousedown', start)
-    el.addEventListener('touchstart', start)
-  }
-}
+const expand = () => emit('reduce', getMax())
 </script>
 
 <template>
-  <div ref="root" class="separator-line" :class="classList">
+  <div ref="target" class="separator-line" :class="classList">
     <div class="separator-line__buttons">
       <slot>
         <separator-line-reduce :disabled="reduceDisabled" @click="reduce()" />
         <separator-line-drag
-          v-draggable.relative
+          v-draggable.relative="{ target, min }"
           @drag="emit('drag', $event.detail)"
           @dragstart="emit('dragstart', $event.detail)"
           @dragend="emit('dragend', $event.detail)"
