@@ -1,9 +1,9 @@
-import SepratorLine from '@/components/SeparatorLine/SeparatorLine'
+import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
 
 export default {
-  components: { SepratorLine },
-  title: 'Components/SepratorLine',
-  component: SepratorLine,
+  components: { SeparatorLine },
+  title: 'Components/SeparatorLine',
+  component: SeparatorLine,
   tags: ['autodocs'],
   args: {
     active: true,
@@ -13,7 +13,7 @@ export default {
   },
   render: (args) => ({
     components: {
-      SepratorLine
+      SeparatorLine
     },
     setup() {
       return {
