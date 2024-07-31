@@ -136,6 +136,11 @@ const getValue = (option) => {
   return get(option, props.trackBy)
 }
 
+const clear = () => {
+  emit('update:modelValue', [])
+  inputElement.value.focus()
+}
+
 const classList = computed(() => {
   return {
     'form-control-tag--show-dropdown': showDropdown.value
@@ -171,7 +176,7 @@ watch(focusIndex, (value) => {
       :model-value="modelValue"
       :input-value="inputValueTrigger"
       :disabled="!tagValidator(inputValueTrigger)"
-      @update:modelValue="$emit('update:modelValue', $event)"
+      @clear="clear"
       @update:inputValue="inputTag($event)"
       @add-tag="addTag($event)"
       @remove-tag="removeTag($event)"
