@@ -1,6 +1,5 @@
 <script>
 import { uniqueId } from 'lodash'
-import {queue} from "vue3-toastify";
 
 export default {
   name: 'BatchDownloadActions',
