@@ -30,19 +30,21 @@ const classList = computed(() => {
 
 <template>
   <div class="path-view-entry-stats-documents d-inline-flex align-items-center">
-    <a class="path-view-entry-stats-documents__link d-inline-flex align-items-center" :class="classList">
+    <a class="path-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate" :class="classList">
       <phosphor-icon
         name="files"
         aria-hidden="true"
-        class="me-2 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--default"
+        class="me-2 flex-shrink-0 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--default"
       />
       <phosphor-icon
         name="magnifying-glass"
         aria-hidden="true"
         weight="bold"
-        class="me-2 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--hover"
+        class="me-2 flex-shrink-0 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--hover"
       />
-      <display-number :value="value" />
+      <span class="text-truncate">
+        <display-number :value="value" />
+      </span>
     </a>
   </div>
 </template>
@@ -86,7 +88,7 @@ const classList = computed(() => {
       background: var(--bs-action-text-emphasis);
       color: var(--bs-body-bg);
 
-      .path-view-entry-stats-documents__icon {
+      .path-view-entry-stats-documents__link__icon {
         color: var(--bs-body-bg);
       }
     }
@@ -101,11 +103,11 @@ const classList = computed(() => {
     }
 
     &:hover:not(&--compact) {
-      .path-view-entry-stats-documents__icon--default {
+      .path-view-entry-stats-documents__link__icon--default {
         display: none;
       }
 
-      .path-view-entry-stats-documents__icon--hover {
+      .path-view-entry-stats-documents__link__icon--hover {
         display: inline-flex;
       }
     }
