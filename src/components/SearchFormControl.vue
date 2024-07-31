@@ -171,12 +171,6 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-@include color-mode(dark) {
-  .search-form-control--shadow {
-    box-shadow: none;
-  }
-}
-
 .search-form-control {
   border-radius: 6px;
 
@@ -235,11 +229,11 @@ const classList = computed(() => {
   }
 
   &--shadow {
-    box-shadow: 0.05em 0.05em 0.5em 0.3em $light;
+    box-shadow: var(--bs-box-shadow-lg);
   }
 
   &--shadow.search-form-control--sm {
-    box-shadow: 1px 1px 8px 5px $light;
+    box-shadow: var(--bs-box-shadow);
   }
 }
 </style>
