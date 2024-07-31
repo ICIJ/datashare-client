@@ -40,7 +40,7 @@ describe('BatchDownloadActions.vue', () => {
 
   describe('relaunchTask method', () => {
     it('should emit an error when the relaunch fails', async () => {
-      const query = ';ERRORED;'
+      const query = { query: ';ERRORED;'}
       const props = mockRunBatchDownload('id', 'erroredTask', { projects, query })
       const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.emitted().relaunchFailed).toBeUndefined()
@@ -49,7 +49,7 @@ describe('BatchDownloadActions.vue', () => {
     })
 
     it('should emit a success when the relaunch', async () => {
-      const query = '{ }'
+      const query = { query: '{ }'}
       const props = mockRunBatchDownload('id', 'task', { projects, query })
       const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.emitted().relaunched).toBeUndefined()
@@ -58,7 +58,7 @@ describe('BatchDownloadActions.vue', () => {
     })
 
     it('should call the API with a parsed query', async () => {
-      const query = '{ "foo": "bar" }'
+      const query = { query: '{ "foo": "bar" }'}
       const props = mockRunBatchDownload('id', 'task', { projects, query })
       const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
       await wrapper.vm.relaunchTask()
