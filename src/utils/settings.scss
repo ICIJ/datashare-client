@@ -123,7 +123,8 @@ $border-radius-xl: 0.5rem;
 $border-radius-xxl: 1rem;
 $border-radius-pill: 50rem;
 
-$box-shadow: 0 4px 8px 3px rgba($black, .07), 0 1px 3px rgba($black, .15);
+$box-shadow: 1px 1px 8px 5px rgba($black, .05);
+$box-shadow-lg: 1px 1px 20px 5px rgba($black, .05);
 
 $alert-border-width: 0;
 $alert-border-scale: 100%;
