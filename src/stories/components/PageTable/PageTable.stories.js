@@ -1,7 +1,7 @@
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import PageTable from '@/components/PageTable/PageTable'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 import PageTableTh from '@/components/PageTable/PageTableTh'
@@ -17,7 +17,7 @@ export default {
   },
   render: (args) => ({
     components: {
-      IconButton,
+      ButtonIcon,
       PageTable,
       PageTableTh,
       PageTableTr,
@@ -52,10 +52,10 @@ export default {
           <td>John Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-01" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr v-model:active="activeRows[1]">
@@ -66,10 +66,10 @@ export default {
           <td>Jane Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-02" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr v-model:active="activeRows[2]">
@@ -80,10 +80,10 @@ export default {
           <td>Jan Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-03" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr v-model:active="activeRows[3]">
@@ -94,10 +94,10 @@ export default {
           <td>Jin Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-04" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
       </page-table>
@@ -110,7 +110,7 @@ export const Default = {}
 export const WithoutSelectMode = {
   render: () => ({
     components: {
-      IconButton,
+      ButtonIcon,
       PageTable,
       PageTableTh,
       PageTableTr,
@@ -143,9 +143,9 @@ export const WithoutSelectMode = {
           <td>John Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-01" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
@@ -158,9 +158,9 @@ export const WithoutSelectMode = {
           <td>Jane Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-02" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
@@ -173,9 +173,9 @@ export const WithoutSelectMode = {
           <td>Jan Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-03" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
@@ -188,9 +188,9 @@ export const WithoutSelectMode = {
           <td>Jin Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-04" /></td>
           <page-table-td-actions>
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <icon-button variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
       </page-table>

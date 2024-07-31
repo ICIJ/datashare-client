@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   active: {
@@ -26,7 +26,7 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     v-b-tooltip.right
     :icon-left="icon"
     square
@@ -37,7 +37,7 @@ const classList = computed(() => {
     :class="classList"
   >
     {{ title }}
-  </icon-button>
+  </button-icon>
 </template>
 
 <style lang="scss" scoped>

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   compact: {
@@ -27,7 +27,7 @@ const title = computed(() => {
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     tooltip-placement="right"
     icon-left="sidebar-simple"
     square
@@ -39,5 +39,5 @@ const title = computed(() => {
     @click="toggle"
   >
     {{ title }}
-  </icon-button>
+  </button-icon>
 </template>

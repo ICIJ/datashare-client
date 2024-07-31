@@ -1,11 +1,11 @@
 <script setup>
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <icon-button class="filters-panel-toggler" variant="outline-dark" icon-left="x" @click="emit('close')">
+  <button-icon class="filters-panel-toggler" variant="outline-dark" icon-left="x" @click="emit('close')">
     <slot>Close filters</slot>
-  </icon-button>
+  </button-icon>
 </template>

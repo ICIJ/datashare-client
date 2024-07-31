@@ -1,5 +1,5 @@
 <script setup>
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   icon: {
@@ -22,7 +22,7 @@ defineProps({
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     class="border-0"
     hide-label
     variant="outline-secondary"

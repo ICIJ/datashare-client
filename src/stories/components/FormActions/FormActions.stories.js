@@ -1,5 +1,5 @@
 import FormActions from '@/components/FormActions/FormActions'
-import IconButton from '@/components//IconButton'
+import ButtonIcon from '@/components//Button/ButtonIcon'
 
 export default {
   title: 'Components/FormActions/FormActions',
@@ -44,12 +44,12 @@ export default {
   },
   render(args) {
     return {
-      components: { FormActions, IconButton },
+      components: { FormActions, ButtonIcon },
       template: `
         <form-actions v-bind="args">
-          <icon-button icon-left="x">Cancel</icon-button>
-          <icon-button icon-left="arrow-counter-clockwise">Reset</icon-button>
-          <icon-button variant="action" icon-right="caret-right">Proceed</icon-button>
+          <button-icon icon-left="x">Cancel</button-icon>
+          <button-icon icon-left="arrow-counter-clockwise">Reset</button-icon>
+          <button-icon variant="action" icon-right="caret-right">Proceed</button-icon>
         </form-actions>
       `,
       data() {

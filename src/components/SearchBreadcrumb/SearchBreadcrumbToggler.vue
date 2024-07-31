@@ -1,11 +1,11 @@
 <script setup>
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     class="search-breadcrumb-toggler"
     variant="action"
     :label="$t('searchBreadcrumbToggler.close')"
@@ -14,5 +14,5 @@ const emit = defineEmits(['close'])
     @click="emit('close')"
   >
     <slot>{{ $t('searchBreadcrumbToggler.close') }}</slot>
-  </icon-button>
+  </button-icon>
 </template>

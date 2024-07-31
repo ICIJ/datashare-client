@@ -8,7 +8,7 @@ import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import byteSize from '@/utils/byteSize'
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   /**
@@ -126,14 +126,14 @@ const maxRootContentLength = computed(() => {
     @update:modelValue="$emit('update:modelValue')"
   >
     <div class="document-download-popover__body">
-      <icon-button
+      <button-icon
         :disabled="isRootTooBig"
         :href="documentFullUrl"
         :label="$t('documentDownloadPopover.download')"
         icon-left="download-simple"
         class="document-download-popover__body__button"
       />
-      <icon-button
+      <button-icon
         v-if="hasCleanableContentType"
         icon-left="download-simple"
         :href="documentFullUrlWithoutMetadata"
@@ -141,14 +141,14 @@ const maxRootContentLength = computed(() => {
         variant="outline-action"
         class="document-download-popover__body__button"
       />
-      <icon-button
+      <button-icon
         icon-left="download-simple"
         :href="document"
         :label="$t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
       />
-      <icon-button
+      <button-icon
         v-if="hasRoot"
         icon-left="download-simple"
         :href="rootDocumentFullUrl"

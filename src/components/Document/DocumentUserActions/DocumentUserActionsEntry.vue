@@ -1,5 +1,5 @@
 <template>
-  <icon-button
+  <button-icon
     class="document-user-actions-entry text-action-emphasis border-0 d-flex flex-grow-0 justify-content-center rounded"
     variant="outline-action"
     :icon-left="icon"
@@ -13,7 +13,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 defineOptions({ name: 'DocumentUserActionsEntry' })
 const props = defineProps({
   label: { type: String, required: true },

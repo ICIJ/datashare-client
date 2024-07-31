@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const emit = defineEmits(['update:sorted', 'update:order'])
 
@@ -36,7 +36,7 @@ const toggleOrder = () => {
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     :icon-left="icon"
     :class="classList"
     class="page-table-th-sort"

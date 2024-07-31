@@ -1,9 +1,9 @@
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 export default {
-  components: { IconButton },
-  title: 'Components/Button/IconButton',
-  component: IconButton,
+  components: { ButtonIcon },
+  title: 'Components/Button/ButtonIcon',
+  component: ButtonIcon,
   tags: ['autodocs'],
   argTypes: {
     size: {
@@ -97,7 +97,7 @@ export const Loading = {
   },
   render: (args) => ({
     components: {
-      IconButton
+      ButtonIcon
     },
     setup() {
       return {
@@ -106,7 +106,7 @@ export const Loading = {
     },
     template: `
       <p class="text-muted">Click to toggle loading state.</p>
-      <icon-button v-bind="args" @click="args.loading = !args.loading" />
+      <button-icon v-bind="args" @click="args.loading = !args.loading" />
     `
   })
 }
@@ -125,7 +125,7 @@ export const LoadingSpinner = {
   },
   render: (args) => ({
     components: {
-      IconButton
+      ButtonIcon
     },
     setup() {
       return {
@@ -134,7 +134,7 @@ export const LoadingSpinner = {
     },
     template: `
       <p class="text-muted">Click to toggle loading state.</p>
-      <icon-button v-bind="args" @click="args.loading = !args.loading" />
+      <button-icon v-bind="args" @click="args.loading = !args.loading" />
     `
   })
 }
