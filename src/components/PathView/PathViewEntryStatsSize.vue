@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="path-view-entry-stats-size d-flex align-items-center px-2 py-1">
+  <div class="path-view-entry-stats-size px-2 py-1">
     <display-content-length :value="value" />
   </div>
 </template>
@@ -18,5 +18,11 @@ defineProps({
 <style lang="scss" scoped>
 .path-view-entry-stats-size {
   color: var(--bs-secondary-color);
+  display: flex;
+  align-items: center;
+
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
 }
 </style>
