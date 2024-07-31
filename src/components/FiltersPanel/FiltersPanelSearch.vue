@@ -1,5 +1,5 @@
 <script setup>
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 
 defineProps({
   modelValue: {
@@ -15,7 +15,7 @@ const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <search-form-control
+  <form-control-search
     :model-value="modelValue"
     :placeholder="placeholder"
     clear-text

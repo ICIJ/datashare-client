@@ -1,5 +1,5 @@
 <script setup>
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 
 defineProps({
   modelValue: {
@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <search-form-control
+  <form-control-search
     class="document-local-search-input"
     placeholder="Search in document"
     clear-text

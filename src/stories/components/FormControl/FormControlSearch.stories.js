@@ -1,9 +1,9 @@
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 
 export default {
-  title: 'Components/SearchBar/SearchFormControl',
+  title: 'Components/FormControl/FormControlSearch',
   tags: ['autodocs'],
-  component: SearchFormControl,
+  component: FormControlSearch,
   argTypes: {
     placeholder: {
       control: {

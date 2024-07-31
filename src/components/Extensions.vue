@@ -32,7 +32,7 @@
           </b-modal>
         </div>
         <div class="extensions__search ms-auto">
-          <search-form-control v-model="searchTerm" :placeholder="$t('extensions.search')" @input="search" />
+          <form-control-search v-model="searchTerm" :placeholder="$t('extensions.search')" @input="search" />
         </div>
       </div>
       <b-overlay :show="isLoading">
@@ -120,7 +120,7 @@
 <script>
 import { camelCase, find, get, startCase, uniqueId } from 'lodash'
 
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 import { isUrl } from '@/utils/strings'
 
 /**
@@ -129,7 +129,7 @@ import { isUrl } from '@/utils/strings'
 export default {
   name: 'Extensions',
   components: {
-    SearchFormControl
+    FormControlSearch
   },
   data() {
     return {

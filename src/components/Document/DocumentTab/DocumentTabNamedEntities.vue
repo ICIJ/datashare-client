@@ -5,12 +5,12 @@
     </template>
     <div class="p-3">
       <div class="document__named-entities__toolbox">
-        <search-form-control
+        <form-control-search
           v-model="filterToken"
           :loading="$wait.is('load named entities')"
           class="document__named-entities__toolbox__filter"
           :placeholder="$t('document.namedEntityFilter')"
-        ></search-form-control>
+        ></form-control-search>
       </div>
       <div
         v-if="$config.is('manageDocuments') && !document.hasNerTags"
@@ -87,7 +87,7 @@ import { capitalize, flatten, get, mapValues, sumBy, pickBy, throttle } from 'lo
 import { mapState } from 'vuex'
 
 import NamedEntityInContext from '@/components/NamedEntityInContext'
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 
@@ -98,7 +98,7 @@ export default {
   name: 'DocumentTabNamedEntities',
   components: {
     NamedEntityInContext,
-    SearchFormControl
+    FormControlSearch
   },
   mixins: [ner, utils],
   props: {
