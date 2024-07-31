@@ -24,10 +24,10 @@
         </template>
       </h6>
       <div class="batch-search-results-filters__queries__search text-dark">
-        <search-form-control
+        <form-control-search
           v-model="queriesFilter"
           :placeholder="$t('batchSearchResultsFilters.filterQueries')"
-        ></search-form-control>
+        ></form-control-search>
       </div>
       <div class="small">
         <template v-if="filteredQueries?.length">
@@ -78,7 +78,7 @@
 import { compact, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 
 /**
  * Form to filter a batch search results by query
@@ -86,7 +86,7 @@ import SearchFormControl from '@/components/SearchFormControl'
 export default {
   name: 'BatchSearchResultsFilters',
   components: {
-    SearchFormControl
+    FormControlSearch
   },
   props: {
     /**

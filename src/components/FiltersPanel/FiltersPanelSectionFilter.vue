@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import FiltersPanelSectionFilterTitle from '@/components/FiltersPanel/FiltersPanelSectionFilterTitle'
 import FiltersPanelSectionFilterFooter from '@/components/FiltersPanel/FiltersPanelSectionFilterFooter'
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 
 const props = defineProps({
   collapse: {
@@ -73,7 +73,7 @@ const classList = computed(() => {
     </filters-panel-section-filter-title>
     <b-collapse :model-value="!collapse">
       <div class="filters-panel-section-filter__content px-2 pt-3">
-        <search-form-control
+        <form-control-search
           v-if="!hideSearch"
           :model-value="search"
           :placeholder="searchPlaceholder"

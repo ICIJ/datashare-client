@@ -1,5 +1,5 @@
 <script setup>
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 
 defineProps({
   modelValue: {
@@ -10,7 +10,7 @@ defineProps({
 
 <template>
   <div class="path-view-search">
-    <search-form-control
+    <form-control-search
       class="path-view-search__control"
       :placeholder="$t('pathViewSearch.placeholder')"
       clear-text

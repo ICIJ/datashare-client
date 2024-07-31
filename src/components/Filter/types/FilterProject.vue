@@ -10,7 +10,7 @@
       </h6>
     </div>
     <slide-up-down class="list-group list-group-flush filter__items pb-2" :active="!collapseItems">
-      <search-form-control
+      <form-control-search
         v-model="query"
         class="filter__items__search mb-2"
         dark
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 
@@ -35,7 +35,7 @@ export default {
   name: 'FilterProject',
   components: {
     ProjectSelector,
-    SearchFormControl
+    FormControlSearch
   },
   mixins: [utils],
   data() {

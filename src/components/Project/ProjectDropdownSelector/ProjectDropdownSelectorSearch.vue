@@ -16,7 +16,7 @@ const emit = defineEmits(['update:model-value', 'blur', 'up', 'down', 'enter'])
 <template>
   <li class="project-dropdown-selector-search">
     <div class="b-dropdown-form pt-1 mb-3">
-      <search-form-control
+      <form-control-search
         :model-value="query"
         autofocus
         shado
