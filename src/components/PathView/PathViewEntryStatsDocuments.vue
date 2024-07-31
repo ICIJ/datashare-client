@@ -29,73 +29,85 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <a class="path-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
-    <phosphor-icon
-      name="files"
-      aria-hidden="true"
-      class="me-2 path-view-entry-stats-documents__icon path-view-entry-stats-documents__icon--default"
-    />
-    <phosphor-icon
-      name="magnifying-glass"
-      aria-hidden="true"
-      weight="bold"
-      class="me-2 path-view-entry-stats-documents__icon path-view-entry-stats-documents__icon--hover"
-    />
-    <display-number :value="value" />
-  </a>
+  <div class="path-view-entry-stats-documents d-inline-flex align-items-center">
+    <a class="path-view-entry-stats-documents__link d-inline-flex align-items-center" :class="classList">
+      <phosphor-icon
+        name="files"
+        aria-hidden="true"
+        class="me-2 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--default"
+      />
+      <phosphor-icon
+        name="magnifying-glass"
+        aria-hidden="true"
+        weight="bold"
+        class="me-2 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--hover"
+      />
+      <display-number :value="value" />
+    </a>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .path-view-entry-stats-documents {
-  border-radius: var(--bs-border-radius);
-  line-height: 1;
-  color: inherit;
-  justify-content: space-between;
-  cursor: pointer;
-  padding: $spacer-xxs $spacer-xs;
+  min-width: 115px;
+  flex: 0 0 115px;
 
-  &--compact {
-    border-radius: var(--bs-border-radius-pill);
-    background: var(--bs-secondary);
-    color: var(--bs-body-bg);
-    padding: $badge-padding-y $badge-padding-x;
-    font-size: $badge-font-size;
-    font-weight: $badge-font-weight;
+  @include media-breakpoint-down(sm) {
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__link {
+    border-radius: var(--bs-border-radius);
     line-height: 1;
-    text-align: center;
-    white-space: nowrap;
+    color: inherit;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: $spacer-xxs $spacer-xs;
 
-    .path-view-entry-stats-documents__icon {
-      display: none;
-    }
-  }
-
-  &--active,
-  &:hover:not(&--compact) {
-    background: var(--bs-action-text-emphasis);
-    color: var(--bs-body-bg);
-
-    .path-view-entry-stats-documents__icon {
+    &--compact {
+      border-radius: var(--bs-border-radius-pill);
+      background: var(--bs-secondary);
       color: var(--bs-body-bg);
-    }
-  }
+      padding: $badge-padding-y $badge-padding-x;
+      font-size: $badge-font-size;
+      font-weight: $badge-font-weight;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
 
-  &__icon {
-    color: var(--bs-secondary-color);
-    display: inline-flex;
-
-    &--hover {
-      display: none;
-    }
-  }
-
-  &:hover:not(&--compact) {
-    .path-view-entry-stats-documents__icon--default {
-      display: none;
+      .path-view-entry-stats-documents__icon {
+        display: none;
+      }
     }
 
-    .path-view-entry-stats-documents__icon--hover {
+    &--active,
+    &:hover:not(&--compact) {
+      background: var(--bs-action-text-emphasis);
+      color: var(--bs-body-bg);
+
+      .path-view-entry-stats-documents__icon {
+        color: var(--bs-body-bg);
+      }
+    }
+
+    &__icon {
+      color: var(--bs-secondary-color);
       display: inline-flex;
+
+      &--hover {
+        display: none;
+      }
+    }
+
+    &:hover:not(&--compact) {
+      .path-view-entry-stats-documents__icon--default {
+        display: none;
+      }
+
+      .path-view-entry-stats-documents__icon--hover {
+        display: inline-flex;
+      }
     }
   }
 }

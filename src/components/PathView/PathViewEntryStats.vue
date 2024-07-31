@@ -47,10 +47,17 @@ const classList = computed(() => {
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .path-view-entry-stats:not(.path-view-entry-stats--compact) {
-  max-width: 260px;
+  max-width: 300px;
+  flex: 300px 0 0;
   width: 100%;
   font-variant-numeric: tabular-nums;
+
+  @include media-breakpoint-down(md) {
+    max-width: 260px;
+    flex: 1 0 0;
+    width: auto;
+  }
 }
 </style>
