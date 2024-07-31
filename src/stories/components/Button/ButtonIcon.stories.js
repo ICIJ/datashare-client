@@ -5,6 +5,11 @@ export default {
   title: 'Components/Button/ButtonIcon',
   component: ButtonIcon,
   tags: ['autodocs'],
+  decorators: [
+    () => ({
+      template: '<div class="p-4"><story /></div>'
+    })
+  ],
   argTypes: {
     size: {
       control: { type: 'select' },
@@ -12,13 +17,58 @@ export default {
     },
     variant: {
       control: { type: 'select' },
-      options: ['action', 'primary', 'secondary', 'tertiary', 'light']
+      options: [
+        'action',
+        'primary',
+        'secondary',
+        'success',
+        'danger',
+        'warning',
+        'info',
+        'light',
+        'dark',
+        'outline-action',
+        'outline-primary',
+        'outline-secondary',
+        'outline-success',
+        'outline-danger',
+        'outline-warning',
+        'outline-info',
+        'outline-light',
+        'outline-dark'
+      ]
     },
     pill: {
       control: { type: 'boolean' }
     },
     loading: {
       control: { type: 'boolean' }
+    },
+    counter: {
+      control: { type: 'number' }
+    },
+    counterVariant: {
+      control: { type: 'select' },
+      options: [
+        'action',
+        'primary',
+        'secondary',
+        'success',
+        'danger',
+        'warning',
+        'info',
+        'light',
+        'dark',
+        'outline-action',
+        'outline-primary',
+        'outline-secondary',
+        'outline-success',
+        'outline-danger',
+        'outline-warning',
+        'outline-info',
+        'outline-light',
+        'outline-dark'
+      ]
     }
   },
   args: {
@@ -64,6 +114,16 @@ export const IconRight = {
   }
 }
 
+export const WithCounter = {
+  args: {
+    variant: 'outline-primary',
+    size: 'md',
+    label: 'Shakira',
+    iconLeft: 'UserCircle',
+    counter: 134
+  }
+}
+
 export const HideLabel = {
   args: {
     variant: 'action',
@@ -71,6 +131,32 @@ export const HideLabel = {
     label: 'Button',
     hideLabel: true,
     iconRight: 'users'
+  }
+}
+
+export const Square = {
+  args: {
+    variant: 'action',
+    size: 'md',
+    label: 'Path',
+    hideLabel: true,
+    pill: false,
+    square: true,
+    iconRight: 'path'
+  }
+}
+
+export const SquareWithCounter = {
+  args: {
+    variant: 'action',
+    size: 'md',
+    label: 'Path',
+    hideLabel: true,
+    pill: false,
+    square: true,
+    iconRight: 'path',
+    counter: '6',
+    counterVariant: 'action'
   }
 }
 
