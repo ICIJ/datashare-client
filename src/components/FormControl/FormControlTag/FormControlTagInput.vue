@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import FormControlTagInputEntry from './FormControlTagInputEntry'
 
 const props = defineProps({
@@ -31,7 +32,7 @@ const props = defineProps({
 const { t } = useI18n()
 const inputElement = ref(null)
 const focus = ref(false)
-const emit = defineEmits(['blur', 'focus', 'removeLastTag', 'addTag', 'update:inputValue'])
+const emit = defineEmits(['blur', 'focus', 'clear', 'removeLastTag', 'addTag', 'update:inputValue'])
 
 const placeholderIfEmpty = computed(() => {
   if (props.modelValue.length > 0) {
@@ -57,7 +58,8 @@ const onInput = (event) => {
 const classList = computed(() => {
   return {
     'form-control-tag-input--focus': focus.value,
-    'form-control-tag-input--has-value': props.inputValue
+    'form-control-tag-input--has-value': props.inputValue,
+    'form-control-tag-input--has-model-value': !!props.modelValue.length
   }
 })
 
@@ -87,11 +89,19 @@ defineExpose({
         @keydown.delete="$emit('removeLastTag', $event)"
         @keydown.enter="$emit('addTag', inputValue)"
       />
+      <button-icon
+        icon-left="x"
+        variant="outline-secondary"
+        hide-label
+        class="form-control-tag-input__form__clear border-0 me-1"
+        @click="$emit('clear')"
+      />
       <b-button
+        v-if="inputValue"
         :size="size"
         :disabled="disabled"
         type="button"
-        class="form-control-tag-input__form__button"
+        class="form-control-tag-input__form__submit"
         variant="action"
         @click="$emit('addTag', inputValue)"
       >
@@ -132,7 +142,7 @@ defineExpose({
     box-shadow: $input-focus-box-shadow;
   }
 
-  &--has-value &__form__button {
+  &--has-model-value &__form__clear {
     visibility: visible;
   }
 
@@ -140,7 +150,7 @@ defineExpose({
     display: flex;
     flex: 1;
 
-    &__button {
+    &__clear {
       visibility: hidden;
     }
 
