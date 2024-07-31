@@ -1,4 +1,6 @@
 <script setup>
+import DisplayNumber from '@/components/Display/DisplayNumber'
+
 defineProps({
   counter: {
     type: Number,
@@ -13,7 +15,7 @@ defineProps({
 
 <template>
   <b-badge v-if="counter != null" :variant="variant" class="button-icon-counter text-nowrap" pill>
-    {{ counter }}
+    <display-number :value="counter" />
   </b-badge>
 </template>
 
