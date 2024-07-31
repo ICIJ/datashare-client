@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="path-view-entry-stats-directories d-flex align-items-center px-2 py-1">
+  <div class="path-view-entry-stats-directories px-2 py-1">
     <phosphor-icon name="folders" class="me-2" />
     <display-number :value="value" />
   </div>
@@ -21,5 +21,11 @@ defineProps({
 <style lang="scss" scoped>
 .path-view-entry-stats-directories {
   color: var(--bs-secondary-color);
+  display: flex;
+  align-items: center;
+
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
 }
 </style>
