@@ -29,8 +29,8 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="path-view-entry-stats-documents d-inline-flex align-items-center">
-    <a class="path-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate" :class="classList">
+  <div class="path-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
+    <a class="path-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate">
       <phosphor-icon
         name="files"
         aria-hidden="true"
@@ -59,15 +59,11 @@ const classList = computed(() => {
     flex: 1;
   }
 
-  &__link {
-    border-radius: var(--bs-border-radius);
-    line-height: 1;
-    color: inherit;
-    justify-content: space-between;
-    cursor: pointer;
-    padding: $spacer-xxs $spacer-xs;
+  &--compact {
+    min-width: 0;
+    flex: 1;
 
-    &--compact {
+    .path-view-entry-stats-documents__link {
       border-radius: var(--bs-border-radius-pill);
       background: var(--bs-secondary);
       color: var(--bs-body-bg);
@@ -78,20 +74,39 @@ const classList = computed(() => {
       text-align: center;
       white-space: nowrap;
 
-      .path-view-entry-stats-documents__icon {
+      &__icon {
         display: none;
       }
     }
+  }
 
-    &--active,
-    &:hover:not(&--compact) {
-      background: var(--bs-action-text-emphasis);
+  &--active &__link,
+  &:not(&--compact) &__link:hover {
+    background: var(--bs-action-text-emphasis);
+    color: var(--bs-body-bg);
+
+    .path-view-entry-stats-documents__link__icon {
       color: var(--bs-body-bg);
-
-      .path-view-entry-stats-documents__link__icon {
-        color: var(--bs-body-bg);
-      }
     }
+  }
+
+  &:not(&--compact) &__link:hover {
+    .path-view-entry-stats-documents__link__icon--default {
+      display: none;
+    }
+
+    .path-view-entry-stats-documents__link__icon--hover {
+      display: inline-flex;
+    }
+  }
+
+  &__link {
+    border-radius: var(--bs-border-radius);
+    line-height: 1;
+    color: inherit;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: $spacer-xxs $spacer-xs;
 
     &__icon {
       color: var(--bs-secondary-color);
@@ -99,16 +114,6 @@ const classList = computed(() => {
 
       &--hover {
         display: none;
-      }
-    }
-
-    &:hover:not(&--compact) {
-      .path-view-entry-stats-documents__link__icon--default {
-        display: none;
-      }
-
-      .path-view-entry-stats-documents__link__icon--hover {
-        display: inline-flex;
       }
     }
   }
