@@ -24,7 +24,7 @@
         <phosphor-icon name="question" />
       </a>
       <slot name="addons"></slot>
-      <icon-button
+      <button-icon
         v-if="showSubmit"
         icon-left="magnifying-glass"
         variant="action"
@@ -32,7 +32,7 @@
         type="submit"
         :disabled="disableSubmit"
       >
-        {{ $t('search.buttonLabel') }}</icon-button
+        {{ $t('search.buttonLabel') }}</button-icon
       >
 
       <slot name="suggestions"></slot
@@ -43,14 +43,14 @@
 <script>
 import settings from '@/utils/settings'
 import SearchFormControl from '@/components/SearchFormControl'
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
  * The general search input group with field options.
  */
 export default {
   name: 'SearchBarInput',
-  components: [SearchFormControl, IconButton],
+  components: [SearchFormControl, ButtonIcon],
   props: {
     /**
      * Placeholder in the search bar.

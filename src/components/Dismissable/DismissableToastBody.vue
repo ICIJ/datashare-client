@@ -95,7 +95,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
       </span>
     </div>
     <slot name="close">
-      <icon-button
+      <button-icon
         v-if="!noClose"
         class="toast-body__close py-1"
         :class="closeClass"

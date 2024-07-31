@@ -12,7 +12,7 @@
         <slot name="document-list" v-bind="{ documents }">
           <linked-document-list :documents="documents" />
         </slot>
-        <icon-button icon-right="magnifying-glass" :label="searchLabel" @click="emitSearch" />
+        <button-icon icon-right="magnifying-glass" :label="searchLabel" @click="emitSearch" />
       </div>
     </div>
   </section>
@@ -22,7 +22,7 @@
 import { useI18n } from 'vue-i18n'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import LinkedDocumentList from '@/components/LinkedDocument/LinkedDocumentList'
 defineOptions({
   name: 'LinkedDocumentSection'

@@ -1,6 +1,6 @@
 <script setup>
 import FormActions from '@/components/FormActions/FormActions'
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   cancelDisabled: {
@@ -31,12 +31,12 @@ defineProps({
 <template>
   <form-actions class="app-modal-footer">
     <slot>
-      <icon-button v-if="!okOnly" :disabled="cancelDisabled" :variant="cancelVariant" @click="$emit('cancel')">
+      <button-icon v-if="!okOnly" :disabled="cancelDisabled" :variant="cancelVariant" @click="$emit('cancel')">
         {{ cancelTitle || $t('appModalFooter.cancelTitle') }}
-      </icon-button>
-      <icon-button :disabled="okDisabled" :variant="okVariant" @click="$emit('ok')">
+      </button-icon>
+      <button-icon :disabled="okDisabled" :variant="okVariant" @click="$emit('ok')">
         {{ okTitle || $t('appModalFooter.okTitle') }}
-      </icon-button>
+      </button-icon>
     </slot>
   </form-actions>
 </template>

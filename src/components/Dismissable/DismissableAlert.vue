@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
 
 const props = defineProps({
@@ -99,7 +99,7 @@ const classList = {
       </template>
       <template #close>
         <slot name="close">
-          <icon-button
+          <button-icon
             v-if="!noClose"
             :class="closeClass"
             class="dismissable-alert__close p-2 align-self-md-center align-self-start"

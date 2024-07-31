@@ -50,7 +50,7 @@ const showOperator = computed(() => {
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     variant="outline-danger"
     class="search-breadcrumb-entry-query-term"
     :class="classList"
@@ -68,7 +68,7 @@ const showOperator = computed(() => {
     <span class="search-breadcrumb-entry-query-term__value">
       {{ term }}
     </span>
-  </icon-button>
+  </button-icon>
 </template>
 
 <style lang="scss" scoped>
@@ -81,7 +81,7 @@ const showOperator = computed(() => {
   &:hover {
     border-style: solid;
 
-    &:deep(.icon-button__icon-right) {
+    &:deep(.button-icon__icon-right) {
       color: var(--bs-body-color);
     }
   }
@@ -90,8 +90,8 @@ const showOperator = computed(() => {
     background: rgba(var(--bs-body-bg-rgb), 0.2);
   }
 
-  &:active:deep(.icon-button__icon-left),
-  &:active:deep(.icon-button__icon-right) {
+  &:active:deep(.button-icon__icon-left),
+  &:active:deep(.button-icon__icon-right) {
     color: inherit;
   }
 
@@ -107,11 +107,11 @@ const showOperator = computed(() => {
     text-decoration: line-through;
   }
 
-  &:deep(.icon-button__icon-left) {
+  &:deep(.button-icon__icon-left) {
     color: var(--color, currentColor);
   }
 
-  &:deep(.icon-button__icon-right) {
+  &:deep(.button-icon__icon-right) {
     color: var(--bs-tertiary);
   }
 }

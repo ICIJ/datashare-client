@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   collapse: {
@@ -14,7 +14,7 @@ const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     class="filters-panel-section-filter-title-toggler"
     variant="link"
     size="sm"
@@ -26,7 +26,7 @@ const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
     @click="emit('toggle', !collapse)"
   >
     <slot />
-  </icon-button>
+  </button-icon>
 </template>
 
 <style lang="scss" scoped>

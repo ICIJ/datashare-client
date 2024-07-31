@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   icon: {
@@ -22,7 +22,7 @@ const iconWeight = computed(() => {
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     variant="outline-secondary"
     class="document-local-search-nav-item"
     :icon-left="icon"

@@ -1,9 +1,9 @@
 <script setup>
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     square
     pill
     hide-label

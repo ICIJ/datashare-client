@@ -43,7 +43,7 @@ const occurrences = computed(() => {
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     variant="outline-tertiary"
     class="named-entity-button"
     :class="classList"
@@ -52,7 +52,7 @@ const occurrences = computed(() => {
   >
     {{ namedEntity.mention }}
     <named-entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
-  </icon-button>
+  </button-icon>
 </template>
 
 <style lang="scss" scoped>
@@ -69,7 +69,7 @@ const occurrences = computed(() => {
   align-items: center;
   justify-content: center;
 
-  &:deep(.icon-button__icon-left) {
+  &:deep(.button-icon__icon-left) {
     transition: $btn-transition;
   }
 
@@ -77,11 +77,11 @@ const occurrences = computed(() => {
     border-style: solid;
   }
 
-  &:active:deep(.icon-button__icon-left) {
+  &:active:deep(.button-icon__icon-left) {
     color: inherit;
   }
 
-  &:deep(.icon-button__icon-left) {
+  &:deep(.button-icon__icon-left) {
     color: var(--color, currentColor);
   }
 }
