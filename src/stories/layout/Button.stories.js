@@ -1,6 +1,6 @@
 import { BButton } from 'bootstrap-vue-next'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 export default {
   title: 'Layout/Button',
@@ -14,7 +14,7 @@ export default {
   render: (args) => ({
     components: {
       BButton,
-      IconButton
+      ButtonIcon
     },
     setup() {
       return {
@@ -69,7 +69,7 @@ export default {
               </td>
               <td><b-button v-bind="args" :variant="variant">{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" class="hover">{{args.label}}</b-button></td>
-              <td><icon-button v-bind="args" :variant="variant" loading>{{args.label}}</icon-button></td>
+              <td><button-icon v-bind="args" :variant="variant" loading>{{args.label}}</button-icon></td>
               <td><b-button v-bind="args" :variant="variant" class="focus">{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" disabled>{{args.label}}</b-button></td>
               <td><b-button v-bind="args" :variant="variant" pressed>{{args.label}}</b-button></td>

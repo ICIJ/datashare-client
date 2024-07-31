@@ -19,7 +19,7 @@ defineProps({
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     class="document-search-nav-item"
     variant="outline-secondary"
     :tooltip-placement="tooltipPlacement"

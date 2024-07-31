@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   hideContextualize: {
@@ -52,7 +52,7 @@ const classList = computed(() => {
     <b-form-checkbox v-if="!hideExclude" :model-value="exclude" @update:modelValue="emit('update:exclude', $event)">
       Exclude
     </b-form-checkbox>
-    <icon-button
+    <button-icon
       v-if="!hideExpand"
       variant="link"
       class="bg-action-subtle text-action-emphasis-subtle p-1 ms-auto"

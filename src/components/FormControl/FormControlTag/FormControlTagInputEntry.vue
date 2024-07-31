@@ -1,5 +1,5 @@
 <script setup>
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   label: {
@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     :size="size"
     :label="label"
     class="form-control-tag-input-entry"

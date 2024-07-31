@@ -1,6 +1,6 @@
 import { vueRouter } from 'storybook-vue3-router'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
 import NavigationBreadcrumbEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbEntry'
 
@@ -72,7 +72,7 @@ export const ActiveSlot = {
 export const ButtonAddon = {
   render: () => ({
     components: {
-      IconButton,
+      ButtonIcon,
       NavigationBreadcrumb,
       NavigationBreadcrumbEntry
     },
@@ -80,9 +80,9 @@ export const ButtonAddon = {
       <navigation-breadcrumb current-route-name="tasks.batch-searches.view">
         <template #addon>
           <navigation-breadcrumb-entry>
-            <icon-button variant="outline-secondary" icon-left="download-simple">
+            <button-icon variant="outline-secondary" icon-left="download-simple">
               Download 8,506 documents
-            </icon-button>
+            </button-icon>
           </navigation-breadcrumb-entry>
         </template>
       </navigation-breadcrumb>
@@ -93,7 +93,7 @@ export const ButtonAddon = {
 export const MultipleAddons = {
   render: () => ({
     components: {
-      IconButton,
+      ButtonIcon,
       NavigationBreadcrumb,
       NavigationBreadcrumbEntry
     },
@@ -101,12 +101,12 @@ export const MultipleAddons = {
       <navigation-breadcrumb current-route-name="tasks.batch-searches.view">
         <template #addon>
           <navigation-breadcrumb-entry>
-            <icon-button variant="outline-secondary" icon-left="download-simple">
+            <button-icon variant="outline-secondary" icon-left="download-simple">
               Download 8,506 documents
-            </icon-button>
+            </button-icon>
           </navigation-breadcrumb-entry>
           <navigation-breadcrumb-entry class="ms-auto">
-            <icon-button
+            <button-icon
               tooltip-placement="left"
               variant="action"
               pill
@@ -116,7 +116,7 @@ export const MultipleAddons = {
               label="Start a batch search" />
           </navigation-breadcrumb-entry>
           <navigation-breadcrumb-entry class="pe-0">
-            <icon-button
+            <button-icon
               tooltip-placement="left"
               variant="link"
               square

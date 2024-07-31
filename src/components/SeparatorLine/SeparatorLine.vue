@@ -149,7 +149,7 @@ const vDraggable = {
     flex-direction: column;
     justify-content: space-between;
 
-    &:deep(.icon-button) {
+    &:deep(.button-icon) {
       border-color: var(--bs-action-text-emphasis);
 
       .phosphor-icon {
@@ -158,13 +158,13 @@ const vDraggable = {
       }
     }
 
-    &:deep(.icon-button:hover) {
+    &:deep(.button-icon:hover) {
       border-width: 2px;
       color: var(--bs-body-color);
       background: var(--bs-body-bg);
     }
 
-    &:deep(.icon-button[disabled]) {
+    &:deep(.button-icon[disabled]) {
       opacity: 1;
       background: var(--bs-body-bg);
       color: var(--bs-tertiary-border-subtle);

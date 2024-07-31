@@ -1,5 +1,5 @@
 <script setup>
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   title: {
@@ -21,7 +21,7 @@ defineProps({
 <template>
   <div class="app-modal-header w-100">
     <slot name="header-close">
-      <icon-button
+      <button-icon
         icon-left="x"
         hide-label
         hide-tooltip

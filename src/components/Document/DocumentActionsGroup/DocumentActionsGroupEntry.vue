@@ -1,5 +1,5 @@
 <template>
-  <icon-button
+  <button-icon
     :id="btnId"
     :icon-left="icon"
     :icon-left-weight="iconWeight"
@@ -20,7 +20,7 @@
 import { computed } from 'vue'
 import uniqueId from 'lodash/uniqueId'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'DocumentActionsEntry' })
 const props = defineProps({

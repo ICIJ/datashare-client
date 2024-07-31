@@ -1,5 +1,5 @@
 <script setup>
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   icon: {
@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     class="document-carousel-bar border-0"
     square
     variant="outline-tertiary"

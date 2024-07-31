@@ -1,9 +1,9 @@
 <template>
   <b-button
     v-bind="buttonProps"
-    ref="iconButton"
+    ref="element"
     :to="to"
-    class="icon-button"
+    class="button-icon"
     :class="classList"
     @mouseenter="currentHover = true"
     @mouseleave="currentHover = false"
@@ -19,9 +19,9 @@
       :spin="loading"
       :spin-duration="loadingDuration"
       :variant="iconLeftVariant"
-      class="icon-button__icon-left"
+      class="button-icon__icon-left"
     />
-    <span v-if="!hideLabel" class="icon-button__label">
+    <span v-if="!hideLabel" class="button-icon__label">
       <slot v-bind="{ labelOrLoadingText }">{{ labelOrLoadingText }}</slot>
     </span>
     <phosphor-icon
@@ -34,7 +34,7 @@
       :spin="loading"
       :spin-duration="loadingDuration"
       :variant="iconRightVariant"
-      class="icon-button__icon-right"
+      class="button-icon__icon-right"
     />
     <slot name="end" />
     <b-tooltip
@@ -42,7 +42,7 @@
       manual
       :model-value="showTooltip"
       :placement="tooltipPlacement"
-      :target="iconButton"
+      :target="element"
       :title="tooltipText"
     />
   </b-button>
@@ -52,7 +52,7 @@
 import { computed, ref, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-const iconButton = ref(null)
+const element = ref(null)
 
 const injectedVariant = inject('variant', 'action')
 const injectedSize = inject('size', 'md')
@@ -169,9 +169,9 @@ const currentHover = ref(false)
 
 const classList = computed(() => {
   return {
-    'icon-button--square': props.square,
-    'icon-button--loading': props.loading,
-    'icon-button--hover': props.currentHover
+    'button-icon--square': props.square,
+    'button-icon--loading': props.loading,
+    'button-icon--hover': props.currentHover
   }
 })
 
@@ -207,7 +207,7 @@ const buttonProps = computed(() => ({
 </script>
 
 <style lang="scss" scoped>
-.icon-button {
+.button-icon {
   display: inline-flex;
   align-items: center;
 

@@ -1,6 +1,6 @@
 <script setup>
 import FormActions from '@/components/FormActions/FormActions'
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   hideClearFilters: {
@@ -23,20 +23,20 @@ defineProps({
 
 <template>
   <form-actions class="search-breadcrumb-footer" variant="link">
-    <icon-button v-if="!hideClearFilters" icon-left="eraser">
+    <button-icon v-if="!hideClearFilters" icon-left="eraser">
       {{ $t('searchBreadcrumbFooter.clearFilters') }}
-    </icon-button>
-    <icon-button v-if="!hideClearQueries" icon-left="x-circle">
+    </button-icon>
+    <button-icon v-if="!hideClearQueries" icon-left="x-circle">
       {{ $t('searchBreadcrumbFooter.clearQueries') }}
-    </icon-button>
-    <icon-button v-if="!hideClearFiltersAndQueries" icon-left="arrow-counter-clockwise">
+    </button-icon>
+    <button-icon v-if="!hideClearFiltersAndQueries" icon-left="arrow-counter-clockwise">
       {{ $t('searchBreadcrumbFooter.clearFiltersAndQueries') }}
-    </icon-button>
-    <icon-button v-if="!hideSaveSearch" variant="outline-dark" icon-left="floppy-disk">
+    </button-icon>
+    <button-icon v-if="!hideSaveSearch" variant="outline-dark" icon-left="floppy-disk">
       {{ $t('searchBreadcrumbFooter.saveSearch') }}
-    </icon-button>
-    <icon-button v-if="!hideCreateAlert" variant="outline-dark" icon-left="siren">
+    </button-icon>
+    <button-icon v-if="!hideCreateAlert" variant="outline-dark" icon-left="siren">
       {{ $t('searchBreadcrumbFooter.createAlert') }}
-    </icon-button>
+    </button-icon>
   </form-actions>
 </template>

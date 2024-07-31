@@ -1,7 +1,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 
-import IconButton from '@/components/IconButton'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   page: {
@@ -35,7 +35,7 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
 </script>
 
 <template>
-  <icon-button
+  <button-icon
     v-if="directoriesLeft > 0"
     icon-left="caret-down"
     icon-left-variant="primary"
@@ -46,5 +46,5 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
     <slot>
       {{ $t('pathViewEntryMore.label', { nextPageSize, directoriesLeft }, directoriesLeft) }}
     </slot>
-  </icon-button>
+  </button-icon>
 </template>
