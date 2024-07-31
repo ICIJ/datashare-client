@@ -34,14 +34,14 @@
       <div class="filter__items pb-2">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }" />
         <slot v-if="!hideSearch && filter.isSearchable" name="search">
-          <search-form-control
+          <form-control-search
             v-model="query"
             class="filter__items__search p-2 m-0 mb-2"
             :placeholder="$t('search.searchIn', { plural: $t('filter.' + filter.name).toLowerCase() })"
             :rounded="false"
             :dark="dark"
             @submit.prevent="openFilterSearch"
-          ></search-form-control>
+          ></form-control-search>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }" />
         <slot
@@ -147,7 +147,7 @@ import InfiniteLoading from 'v3-infinite-loading'
 
 import FilterFooter from '@/components/Filter/FilterFooter'
 import Hook from '@/components/Hook'
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 import filters from '@/mixins/filters'
 import settings from '@/utils/settings'
 
@@ -162,7 +162,7 @@ export default {
     FilterFooter,
     Hook,
     InfiniteLoading,
-    SearchFormControl
+    FormControlSearch
   },
   mixins: [filters],
   props: {

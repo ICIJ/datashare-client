@@ -5,7 +5,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
  * A search input with pill layout.
  */
 defineOptions({
-  name: 'SearchFormControl'
+  name: 'FormControlSearch'
 })
 
 const props = defineProps({
@@ -99,24 +99,24 @@ function input(value) {
 const target = ref(null)
 
 function clearInputText() {
-  target.value?.querySelector('.search-form-control__input').focus()
+  target.value?.querySelector('.form-control-search__input').focus()
   input('')
 }
 
 const classList = computed(() => {
   return {
-    'search-form-control--shadow': props.shadow,
-    [`search-form-control--${props.size}`]: true
+    'form-control-search--shadow': props.shadow,
+    [`form-control-search--${props.size}`]: true
   }
 })
 </script>
 
 <template>
-  <form class="search-form-control" :class="classList" @submit.prevent="$emit('submit', modelValue)">
-    <div class="search-form-control__input-group input-group">
+  <form class="form-control-search" :class="classList" @submit.prevent="$emit('submit', modelValue)">
+    <div class="form-control-search__input-group input-group">
       <span
-        class="search-form-control__start input-group-text border-end-0"
-        :class="{ 'search-form-control--rounded--start': rounded }"
+        class="form-control-search__start input-group-text border-end-0"
+        :class="{ 'form-control-search--rounded--start': rounded }"
       >
         <slot name="input-start" v-bind="{ loading, noIcon }">
           <phosphor-icon
@@ -132,12 +132,12 @@ const classList = computed(() => {
         :model-value="modelValue"
         :autocomplete="autocomplete"
         :autofocus="autofocus"
-        class="search-form-control__input border-start-0 border-end-0 mx-0 px-0"
+        class="form-control-search__input border-start-0 border-end-0 mx-0 px-0"
         :class="{
-          'search-form-control__input--no-icon': noIcon,
-          'search-form-control__input--no-clear-text': noIcon,
-          'search-form-control--rounded--start': rounded && noIcon,
-          'search-form-control--rounded--end': rounded && !clearText
+          'form-control-search__input--no-icon': noIcon,
+          'form-control-search__input--no-clear-text': noIcon,
+          'form-control-search--rounded--start': rounded && noIcon,
+          'form-control-search--rounded--end': rounded && !clearText
         }"
         :placeholder="placeholder"
         @keydown.up="$emit('up', $event)"
@@ -149,8 +149,8 @@ const classList = computed(() => {
       />
 
       <span
-        class="search-form-control__end input-group-text py-0 border-start-0"
-        :class="{ 'search-form-control--rounded--end': rounded }"
+        class="form-control-search__end input-group-text py-0 border-start-0"
+        :class="{ 'form-control-search--rounded--end': rounded }"
       >
         <button-icon
           v-if="clearText"
@@ -158,9 +158,9 @@ const classList = computed(() => {
           hide-label
           variant="outline-secondary"
           :size="size"
-          class="search-form-control__clear__icon p-1 border-0"
+          class="form-control-search__clear__icon p-1 border-0"
           :class="{
-            'search-form-control__clear__icon--hide': !showClearText
+            'form-control-search__clear__icon--hide': !showClearText
           }"
           @click="clearInputText()"
         />
@@ -171,7 +171,7 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.search-form-control {
+.form-control-search {
   border-radius: 6px;
 
   &__start,
@@ -202,16 +202,16 @@ const classList = computed(() => {
   &__input-group:has(&__input:hover) {
     box-shadow: none;
 
-    .search-form-control__start {
+    .form-control-search__start {
       border-left: 1px solid $input-focus-border-color;
       border-top: 1px solid $input-focus-border-color;
       border-bottom: 1px solid $input-focus-border-color;
     }
-    .search-form-control__input {
+    .form-control-search__input {
       border-top: 1px solid $input-focus-border-color;
       border-bottom: 1px solid $input-focus-border-color;
     }
-    .search-form-control__end {
+    .form-control-search__end {
       border-right: 1px solid $input-focus-border-color;
       border-top: 1px solid $input-focus-border-color;
       border-bottom: 1px solid $input-focus-border-color;
@@ -232,7 +232,7 @@ const classList = computed(() => {
     box-shadow: var(--bs-box-shadow-lg);
   }
 
-  &--shadow.search-form-control--sm {
+  &--shadow.form-control-search--sm {
     box-shadow: var(--bs-box-shadow);
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <search-form-control
+  <form-control-search
     v-model="value"
     class="search-bar-input"
     :placeholder="localizedPlaceholder"
@@ -37,12 +37,12 @@
 
       <slot name="suggestions"></slot
     ></template>
-  </search-form-control>
+  </form-control-search>
 </template>
 
 <script>
 import settings from '@/utils/settings'
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
@@ -50,7 +50,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
  */
 export default {
   name: 'SearchBarInput',
-  components: [SearchFormControl, ButtonIcon],
+  components: [FormControlSearch, ButtonIcon],
   props: {
     /**
      * Placeholder in the search bar.

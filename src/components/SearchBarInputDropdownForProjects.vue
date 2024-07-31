@@ -19,7 +19,7 @@
     <template #above="{ visible }">
       <li v-if="visible" class="search-bar-input-dropdown-for-projects__query-input">
         <div class="b-dropdown-form px-2 pt-1 pb-2">
-          <search-form-control
+          <form-control-search
             v-model="query"
             placeholder="Filter projects..."
             :rounded="false"
@@ -89,7 +89,7 @@ import { compact, iteratee, trim } from 'lodash'
 
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/FormControl/FormControlSearch'
 import { iwildcardMatch } from '@/utils/strings'
 
 export default {
@@ -97,7 +97,7 @@ export default {
   components: {
     ProjectThumbnail,
     SearchBarInputDropdown,
-    SearchFormControl
+    FormControlSearch
   },
   props: {
     /**
