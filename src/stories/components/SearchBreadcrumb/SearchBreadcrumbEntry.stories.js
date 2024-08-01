@@ -4,21 +4,11 @@ export default {
   decorators: [],
   title: 'Components/SearchBreadcrumb/SearchBreadcrumbEntry',
   tags: ['autodocs'],
+  component: SearchBreadcrumbEntry,
   args: {
     query: 'London AND Biden AND -JO',
     occurrences: 987
-  },
-  render: (args) => ({
-    components: {
-      SearchBreadcrumbEntry
-    },
-    setup() {
-      return { args }
-    },
-    template: `
-      <search-breadcrumb-entry v-bind="args" />
-    `
-  })
+  }
 }
 
 export const Default = {}
