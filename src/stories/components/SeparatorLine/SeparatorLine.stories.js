@@ -1,7 +1,6 @@
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
 
 export default {
-  components: { SeparatorLine },
   title: 'Components/SeparatorLine',
   component: SeparatorLine,
   tags: ['autodocs'],
@@ -41,7 +40,7 @@ export default {
     },
     template: `
       <div style="position: relative; height: 400px; max-height: 80vh; background-color: var(--bs-tertiary-bg-subtle); overflow: hidden; display: flex;">
-        <seprator-line
+        <separator-line
           :style="separatorLineStyle"
           @drag="left = $event"
           @reduce="left = $event"
