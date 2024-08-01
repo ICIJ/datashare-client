@@ -1,16 +1,17 @@
 <script setup>
 import { computed } from 'vue'
+import { castArray } from 'lodash'
 
 const props = defineProps({
-  modelValue: {
-    type: Array,
-    required: true
+  value: {
+    type: [Array, String]
   }
 })
 
 const toHashtag = (tag) => `#${tag}`
+
 const tags = computed(() => {
-  return props.modelValue.map(toHashtag).join(' ')
+  return castArray(props.value).map(toHashtag).join(' ')
 })
 </script>
 
