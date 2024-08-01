@@ -51,6 +51,7 @@ const classList = computed(() => {
   max-width: calc(var(--display-progress-label-width) + var(--display-progress-bar-width));
   width: 100%;
   align-items: center;
+  gap: $spacer-xs;
 
   @each $variant, $value in $theme-colors {
     &.display-progress--#{$variant} {
@@ -61,7 +62,6 @@ const classList = computed(() => {
   &__label {
     font-size: $font-size-sm;
     color: var(--bs-secondary-text-emphasis);
-    margin-right: $spacer-xs;
     display: block;
     width: var(--display-progress-label-width);
     text-align: right;
