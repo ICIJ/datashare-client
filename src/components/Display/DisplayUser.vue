@@ -61,7 +61,7 @@ export default {
     /**
      * Username to display
      */
-    username: {
+    value: {
       type: String
     },
     /**
@@ -91,7 +91,7 @@ export default {
       applyPipelineChain: 'applyPipelineChainByCategory'
     }),
     avatarAlt() {
-      return `${this.username} avatar`
+      return `${this.value} avatar`
     },
     avatarSrc() {
       return this.transformedAvatar
@@ -120,11 +120,11 @@ export default {
       return !this.hideAvatar && this.avatarSrc
     },
     loader() {
-      return `load-username-${this.username}`
+      return `load-username-${this.value}`
     }
   },
   watch: {
-    username() {
+    value() {
       return this.applyPipelines()
     }
   },
@@ -148,13 +148,13 @@ export default {
       this.transformedUsername = await this.applyUsernamePipeline()
     },
     applyAvatarPipeline() {
-      return this.applyPipelineChain(this.avatarPipeline)(this.username)
+      return this.applyPipelineChain(this.avatarPipeline)(this.value)
     },
     applyUsernamePipeline() {
-      return this.applyPipelineChain(this.usernamePipeline)(this.username, this.$core?.auth)
+      return this.applyPipelineChain(this.usernamePipeline)(this.value, this.$core?.auth)
     },
     applyLinkPipeline() {
-      return this.applyPipelineChain(this.linkPipeline)(this.linkFallback, this.username)
+      return this.applyPipelineChain(this.linkPipeline)(this.linkFallback, this.value)
     }
   }
 }
