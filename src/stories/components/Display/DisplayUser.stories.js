@@ -24,7 +24,7 @@ export default {
   tags: ['autodocs'],
   component: DisplayUser,
   args: {
-    username: 'batman'
+    value: 'batman'
   }
 }
 
