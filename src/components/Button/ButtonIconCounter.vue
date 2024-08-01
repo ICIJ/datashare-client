@@ -34,6 +34,5 @@ defineProps({
       background: var(--bs-body-bg);
     }
   }
-
 }
 </style>
