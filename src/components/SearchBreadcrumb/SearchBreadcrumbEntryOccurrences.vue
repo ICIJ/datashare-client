@@ -21,9 +21,9 @@ const lessOccurrences = computed(() => {
   <div
     v-b-tooltip.top="{ offset: '0' }"
     class="search-breadcrumb-entry-occurrences d-inline-flex px-2"
-    :title="$t('searchBreadcrumbEntryOccurences.title', lessOccurrences, { lessOccurrences: $n(lessOccurrences) })"
+    :title="$t('searchBreadcrumbEntryOccurences.title', { lessOccurrences: $n(lessOccurrences) }, lessOccurrences)"
   >
-    {{ $t('searchBreadcrumbEntryOccurences.label', occurrences, { occurrences: $n(occurrences) }) }}
+    {{ $t('searchBreadcrumbEntryOccurences.label', { occurrences: $n(occurrences) }, occurrences) }}
   </div>
 </template>
 
