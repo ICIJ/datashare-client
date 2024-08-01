@@ -35,7 +35,7 @@ const title = computed(() => {
 </script>
 
 <template>
-  <span class="display-datetime-range" :title="title" v-b-tooltip.body>
+  <span v-b-tooltip.body class="display-datetime-range" :title="title">
     <display-datetime :value="start" :format="format" no-tooltip />
     <display-datetime :value="end" :format="format" no-tooltip />
   </span>
