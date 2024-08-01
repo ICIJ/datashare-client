@@ -2,7 +2,16 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW, humanLongDate, humanShortDate, fromNow } from '@/utils/humanDate'
+import {
+  FORMAT_SHORT,
+  FORMAT_MONTH,
+  FORMAT_LONG,
+  FORMAT_FROM_NOW,
+  humanMonthDate,
+  humanLongDate,
+  humanShortDate,
+  fromNow
+} from '@/utils/humanDate'
 
 const props = defineProps({
   value: {
@@ -12,7 +21,7 @@ const props = defineProps({
   format: {
     type: String,
     default: FORMAT_SHORT,
-    validator: (value) => [FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
+    validator: (value) => [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
   }
 })
 
@@ -29,6 +38,8 @@ const display = computed(() => {
   }
 
   switch (props.format) {
+    case FORMAT_MONTH:
+      return humanMonthDate(props.value, useI18n().locale.value)
     case FORMAT_LONG:
       return humanLongDate(props.value, useI18n().locale.value)
     case FORMAT_FROM_NOW:

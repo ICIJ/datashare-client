@@ -1,5 +1,5 @@
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
-import { FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
+import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
 
 export default {
   title: 'Components/Display/DisplayDatetime',
@@ -11,7 +11,7 @@ export default {
     },
     format: {
       control: 'select',
-      options: [FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW]
+      options: [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW]
     }
   },
   args: {
