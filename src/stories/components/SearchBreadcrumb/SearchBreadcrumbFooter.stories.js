@@ -38,18 +38,7 @@ export default {
     hideClearFiltersAndQueries: false,
     hideSaveSearch: false,
     hideCreateAlert: false
-  },
-  render: (args) => ({
-    components: {
-      SearchBreadcrumbFooter
-    },
-    setup() {
-      return { args }
-    },
-    template: `
-      <search-breadcrumb-footer v-bind="args" />
-    `
-  })
+  }
 }
 
 export const Default = {}
