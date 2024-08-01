@@ -72,10 +72,10 @@ export const SplitContentExample = {
     template: `
       <document-user-actions-card v-bind="args">
         <template #others>
-          <display-tags :model-value="['test']" />
+          <display-tags :value="['test']" />
         </template>
         <template #yours>
-          <display-tags :model-value="['test']" />
+          <display-tags :value="['test']" />
         </template>
         <template #footer-warning>
           Your tags are public to project members

@@ -14,6 +14,6 @@ defineProps({
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="tag">
-    <display-tags :model-value="document.tags" />
+    <display-tags :value="document.tags" />
   </document-card-properties-entry>
 </template>
