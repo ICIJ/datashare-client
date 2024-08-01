@@ -11,6 +11,7 @@ const props = defineProps({
   },
   format: {
     type: String,
+    default: FORMAT_SHORT,
     validator: (value) => [FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
   }
 })
@@ -39,7 +40,7 @@ const display = computed(() => {
 </script>
 
 <template>
-  <span v-b-tooltip.body class="display-display" :title="title">
+  <span v-b-tooltip.body class="display-datetime" :title="title">
     <slot v-bind="{ display }">
       {{ display }}
     </slot>
