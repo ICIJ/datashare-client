@@ -85,6 +85,7 @@ const classList = computed(() => {
   }
 
   &:active:after,
+  &:focus-visible:after,
   &--active:after,
   &--active:hover:after {
     box-shadow: 0 0 0 1px var(--bs-white), $focus-ring-box-shadow;
