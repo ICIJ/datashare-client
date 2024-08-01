@@ -1,9 +1,6 @@
-import { defineComponent } from 'vue'
-
 import FilterDocument from './FilterDocument'
 
-import { FORMAT_MONTH } from '@/utils/humanDate'
-import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import DisplayDatetimeMonth from '@/components/Display/DisplayDatetimeMonth'
 
 export default class FilterDate extends FilterDocument {
   constructor(options) {
@@ -61,17 +58,6 @@ export default class FilterDate extends FilterDocument {
   }
 
   static get display() {
-    return {
-      extends: DisplayDatetime,
-      props: {
-        format: {
-          type: String,
-          default: FORMAT_MONTH
-        }
-      },
-      setup(props, ctx) {
-        return { ...DisplayDatetime.setup(props, ctx) }
-      }
-    }
+    return DisplayDatetimeMonth
   }
 }
