@@ -2,17 +2,18 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  value: {
-    type: Array
+  modelValue: {
+    type: Array,
+    required: true
   }
 })
 
+const toHashtag = (tag) => `#${tag}`
 const tags = computed(() => {
-  const toHashtag = (tag) => `#${tag}`
-  return props.value.map(toHashtag).join(' ')
+  return props.modelValue.map(toHashtag).join(' ')
 })
 </script>
 
 <template>
-  {{ tags }}
+  <span class="text-action-emphasis">{{ tags }}</span>
 </template>
