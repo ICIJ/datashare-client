@@ -162,6 +162,7 @@ declare module 'vue' {
     DocumentUserCommentsInput: typeof import('./src/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserCommentsInput.vue')['default']
     DocumentUserCommentsList: typeof import('./src/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserCommentsList.vue')['default']
     DocumentUserCommentsListEntry: typeof import('./src/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserCommentsListEntry.vue')['default']
+    DocumentUserTags: typeof import('./src/components/Document/DocumentUserActions/DocumentUserTags/DocumentUserTags.vue')['default']
     DocumentViewerAudio: typeof import('./src/components/Document/DocumentViewer/DocumentViewerAudio.vue')['default']
     DocumentViewerImage: typeof import('./src/components/Document/DocumentViewer/DocumentViewerImage.vue')['default']
     DocumentViewerJson: typeof import('./src/components/Document/DocumentViewer/DocumentViewerJson.vue')['default']
