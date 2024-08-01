@@ -36,8 +36,7 @@ const noComments = 'No comments on this document yet.'
     <header class="d-flex justify-content-between align-items-center">
       <span><phosphor-icon name="sortAscending" />{{ sortingText }}</span>
       <span
-        class="btn btn-outline-link d-inline-flex justify-content-between"
-        style="width: 190px"
+        class="document-user-comments-list__display-comments btn btn-outline-link d-inline-flex justify-content-between"
         @click="open = !open"
         ><phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2" />{{ displayComments }}</span
       >
@@ -71,6 +70,9 @@ const noComments = 'No comments on this document yet.'
 
 <style scoped lang="scss">
 .document-user-comments-list {
+  &__display-comments {
+    width: 200px;
+  }
   &__comments__list {
     height: var(--document-user-comments-list__comments__list--height);
   }
