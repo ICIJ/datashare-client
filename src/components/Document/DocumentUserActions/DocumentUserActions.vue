@@ -74,7 +74,6 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
-const show = ref(false)
 const USER_ACTIONS = {
   TAGS: 'tags',
   COMMENTS: 'comments',
