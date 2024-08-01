@@ -51,7 +51,12 @@ const display = computed(() => {
 </script>
 
 <template>
-  <span v-b-tooltip.body class="display-datetime d-inline-flex align-items-center" :title="title" aria-label="datetime">
+  <span
+    v-b-tooltip.body
+    class="display-datetime d-inline-flex align-items-center flex-wrap"
+    :title="title"
+    aria-label="datetime"
+  >
     <slot v-bind="{ display }">
       {{ display }}
     </slot>
