@@ -1,6 +1,7 @@
 import moment from 'moment'
 
 export const FORMAT_SHORT = 'short'
+export const FORMAT_MONTH = 'month'
 export const FORMAT_LONG = 'long'
 export const FORMAT_FROM_NOW = 'fromNow'
 
@@ -13,6 +14,17 @@ export const FORMAT_FROM_NOW = 'fromNow'
  */
 export function humanDate(date, locale) {
   return moment(date).locale(locale).format('Y/MM/DD')
+}
+
+/**
+ * Formats a date to only show the month and the year
+ *
+ * @param {string|Date} date - The date to be formatted.
+ * @param {string} locale - The locale code for formatting the date.
+ * @returns {string} The formatted date.
+ */
+export function humanMonthDate(date, locale) {
+  return moment(date).locale(locale).format('MMM YYYY')
 }
 
 /**
