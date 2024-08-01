@@ -2,8 +2,9 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import FormControlTagInputEntry from './FormControlTagInputEntry'
+
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   modelValue: {

@@ -31,7 +31,7 @@ export default {
     statusIcon: undefined,
     statusTitle: undefined,
     progress: 0.5,
-    progressVariant: undefined,
+    progressVariant: undefined
   }
 }
 

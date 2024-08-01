@@ -40,7 +40,6 @@ const style = computed(() => {
   </div>
 </template>
 
-
 <style lang="scss" scoped>
 .form-control-range-ticks {
   display: flex;
