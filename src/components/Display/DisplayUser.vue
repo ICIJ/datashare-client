@@ -168,14 +168,21 @@ export default {
     :class="userDisplayClass"
   >
     <template v-if="showAvatar">
-      <img v-if="isAvatarSrcValid" class="display-user__avatar rounded-circle" :src="avatarSrc" :alt="avatarAlt" />
-      <phosphor-icon v-else class="display-user__avatar" name="user" :size="avatarHeight" />
+      <img
+        v-if="isAvatarSrcValid"
+        aria-label="avatar"
+        class="display-user__avatar rounded-circle"
+        :src="avatarSrc"
+        :alt="avatarAlt"
+      />
+      <phosphor-icon v-else aria-label="avatar-icon" class="display-user__avatar" name="user" :size="avatarHeight" />
     </template>
     <component
       :is="usernameTag"
       :href="transformedLink"
       class="display-user__username"
       :class="{ 'display-user__username--loading': $wait.is(loader) }"
+      aria-label="username"
     >
       <v-wait :for="loader" class="d-inline">
         <template #waiting>
