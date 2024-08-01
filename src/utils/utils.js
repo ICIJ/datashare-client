@@ -49,11 +49,11 @@ function objectIncludes(object, text) {
   return Object.values(object).some((object) => objectIncludes(object, text))
 }
 
-function toVariant(string = '', defaultVariant = 'darker', prefix = '') {
+function toVariant(string = '', defaultVariant = 'dark', prefix = '') {
   return prefix + settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
 }
 
-function toVariantPhosphorIcon(string = '', defaultVariant = 'darker') {
+function toVariantPhosphorIcon(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
     queued: 'clock-countdown',
@@ -65,7 +65,7 @@ function toVariantPhosphorIcon(string = '', defaultVariant = 'darker') {
   return icons[string] ?? icons[variant]
 }
 
-function toVariantIcon(string = '', defaultVariant = 'darker') {
+function toVariantIcon(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
     success: faCheck,
@@ -75,7 +75,7 @@ function toVariantIcon(string = '', defaultVariant = 'darker') {
   return icons[variant]
 }
 
-function toVariantColor(string = '', defaultVariant = 'darker') {
+function toVariantColor(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const style = getComputedStyle(document.body)
   return style.getPropertyValue(`--${variant}`) || '#eee'
