@@ -2,6 +2,7 @@ import { map, toLower } from 'lodash'
 
 import FilterText from './FilterText'
 
+import DisplayContentType from '@/components/Display/DisplayContentType'
 import types from '@/utils/types.json'
 import { getDocumentTypeLabel } from '@/utils/utils'
 
@@ -18,5 +19,8 @@ export default class FilterContentType extends FilterText {
   }
   itemLabel(item) {
     return getDocumentTypeLabel(item.key)
+  }
+  static get display() {
+    return DisplayContentType
   }
 }

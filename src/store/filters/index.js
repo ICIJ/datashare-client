@@ -9,6 +9,7 @@ export { default as FilterNamedEntity } from './FilterNamedEntity'
 export { default as FilterPath } from './FilterPath'
 export { default as FilterRecommendedBy } from './FilterRecommendedBy'
 export { default as FilterStarred } from './FilterStarred'
+export { default as FilterTag } from './FilterTag'
 export { default as FilterText } from './FilterText'
 
 export default [
@@ -23,11 +24,11 @@ export default [
     }
   },
   {
-    type: 'FilterText',
+    type: 'FilterTag',
     options: {
       name: 'tags',
       key: 'tags',
-      icon: 'tags',
+      icon: 'tag',
       isSearchable: true,
       order: 20,
       preference: 'filter-tags'
@@ -80,7 +81,7 @@ export default [
     options: {
       name: 'language',
       key: 'language',
-      icon: 'language',
+      icon: 'globe',
       order: 60,
       preference: 'filter-language'
     }

@@ -1,5 +1,7 @@
 import FilterText from './FilterText'
 
+import DisplayUser from '@/components/Display/DisplayUser'
+
 export default class FilterRecommendedBy extends FilterText {
   constructor(options) {
     super(options)
@@ -12,5 +14,16 @@ export default class FilterRecommendedBy extends FilterText {
 
   addChildExcludeFilter(body) {
     return body.notFilter('terms', this.key, this.rootState.recommended.documents)
+  }
+
+  static get display() {
+    return {
+      extends: DisplayUser,
+      props: {
+        hideAvatar: {
+          default: true
+        }
+      }
+    }
   }
 }
