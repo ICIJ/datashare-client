@@ -5,6 +5,7 @@ export default {
   tags: ['autodocs'],
   component: DocumentUserTags,
   args: {
+    modelValue: 'test',
     tags: [],
     listNameOthers: 'Added by others',
     listNameYours: 'Added by you'

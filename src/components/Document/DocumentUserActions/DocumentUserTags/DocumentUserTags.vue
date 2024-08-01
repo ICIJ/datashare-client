@@ -1,8 +1,8 @@
 <script setup>
 import DocumentUserActionsCard from '@/components/Document/DocumentUserActions/DocumentUserActionsCard'
 import DisplayTags from '@/components/Display/DisplayTags'
-import ButtonIcon from '@/components/Button/ButtonIcon'
-
+import DocumentUserTagsAction from '@/components/Document/DocumentUserActions/DocumentUserTags/DocumentUserTagsAction'
+const modelValue = defineModel({ type: String, required: true })
 const props = defineProps({
   tags: {
     type: Array,
@@ -20,7 +20,6 @@ const title = `${nbTags} tags`
 const tagListOthers = 'Added by others'
 const tagListYours = 'Added by you'
 const tagWarning = 'Your tags are public to project members'
-const actionLabel = 'Add a tag'
 const noTags = 'No tags added yet.'
 </script>
 
@@ -43,7 +42,7 @@ const noTags = 'No tags added yet.'
     </template>
     <template #footer-warning>{{ tagWarning }}</template>
     <template #footer>
-      <button-icon icon-left="tag" :label="actionLabel" />
+      <document-user-tags-action v-model="modelValue" class="d-inline-flex" />
     </template>
   </document-user-actions-card>
 </template>
