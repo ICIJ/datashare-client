@@ -22,8 +22,6 @@ export default {
         'warning',
         'light',
         'dark',
-        'lighter',
-        'darker',
         'outline-primary',
         'outline-secondary',
         'outline-secondary',
@@ -33,8 +31,7 @@ export default {
         'outline-warning',
         'outline-tertiary',
         'outline-dark',
-        'outline-light',
-        'outline-darker'
+        'outline-light'
       ]
     }
   },
