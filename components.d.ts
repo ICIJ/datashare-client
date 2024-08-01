@@ -7,8 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    '(feat': add PathView components)
-    '(refactor': build form control with bootstrap vue next)
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -277,6 +275,7 @@ declare module 'vue' {
     SearchBreadcrumbFooter: typeof import('./src/components/SearchBreadcrumb/SearchBreadcrumbFooter.vue')['default']
     SearchBreadcrumbToggler: typeof import('./src/components/SearchBreadcrumb/SearchBreadcrumbToggler.vue')['default']
     SearchDocumentNavbar: typeof import('./src/components/SearchDocumentNavbar.vue')['default']
+    SearchFormControl: typeof import('./src/components/SearchFormControl.vue')['default']
     SearchLayoutSelector: typeof import('./src/components/SearchLayoutSelector.vue')['default']
     SearchResults: typeof import('./src/components/SearchResults.vue')['default']
     SearchResultsGrid: typeof import('./src/components/SearchResultsGrid.vue')['default']
