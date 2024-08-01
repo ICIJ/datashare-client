@@ -22,11 +22,14 @@ const props = defineProps({
     type: String,
     default: FORMAT_SHORT,
     validator: (value) => [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
+  },
+  noTooltip: {
+    type: Boolean
   }
 })
 
 const title = computed(() => {
-  if (props.format !== FORMAT_LONG) {
+  if (!props.noTooltip && props.format !== FORMAT_LONG) {
     return humanLongDate(props.value, useI18n().locale.value)
   }
   return null

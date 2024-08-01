@@ -32,6 +32,9 @@
     "yes": "Yes",
     "no": "No"
   },
+  "displayDatetimeRange": {
+    "title": "From {start} to {end}"
+  },
   "displayStatus": {
     "success": "Success",
     "error": "Failure",
