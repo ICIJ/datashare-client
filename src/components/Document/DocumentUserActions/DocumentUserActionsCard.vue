@@ -13,20 +13,21 @@
         @close="$emit('close')"
       />
     </div>
-    <template v-if="isSplit">
-      <document-user-actions-card-list :title="listNameOthers">
-        <slot name="others"></slot>
-      </document-user-actions-card-list>
-      <document-user-actions-card-list :title="listNameYours">
-        <slot name="yours"></slot>
-      </document-user-actions-card-list>
-    </template>
-    <template v-else>
-      <div class="py-2">
-        <slot name="yours"></slot>
-        <slot name="content"></slot>
-      </div>
-    </template>
+    <div class="py-4">
+      <slot name="content">
+        <template v-if="isSplit">
+          <document-user-actions-card-list :title="listNameOthers">
+            <slot name="others"></slot>
+          </document-user-actions-card-list>
+          <document-user-actions-card-list :title="listNameYours">
+            <slot name="yours"></slot>
+          </document-user-actions-card-list>
+        </template>
+        <template v-else>
+          <slot name="yours"></slot>
+        </template>
+      </slot>
+    </div>
     <footer class="pt-2">
       <p v-if="showWarning" class="text-light-emphasis">
         <phosphor-icon name="info" class="me-1" /><slot name="footer-warning"></slot>
