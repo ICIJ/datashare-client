@@ -1,9 +1,10 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DisplayDatetime from './DisplayDatetime'
 
-import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
+import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW, humanLongDate } from '@/utils/humanDate'
 
 const props = defineProps({
   value: {
@@ -23,12 +24,20 @@ const start = computed(() => {
 const end = computed(() => {
   return props.value[1]
 })
+
+const { t, locale } = useI18n()
+
+const title = computed(() => {
+  const humanStart = humanLongDate(start.value, locale.value)
+  const humanEnd = humanLongDate(end.value, locale.value)
+  return t('displayDatetimeRange.title', { start: humanStart, end: humanEnd })
+})
 </script>
 
 <template>
-  <span class="display-datetime-range">
-    <display-datetime :value="start" :format="format" />
-    <display-datetime :value="end" :format="format" />
+  <span class="display-datetime-range" :title="title" v-b-tooltip.body>
+    <display-datetime :value="start" :format="format" no-tooltip />
+    <display-datetime :value="end" :format="format" no-tooltip />
   </span>
 </template>
 
