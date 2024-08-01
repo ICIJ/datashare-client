@@ -186,7 +186,7 @@ export default {
     >
       <v-wait :for="loader" class="d-inline">
         <template #waiting>
-          {{ username }}
+          {{ value }}
         </template>
         <template #default>
           {{ transformedUsername }}
