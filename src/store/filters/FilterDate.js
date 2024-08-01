@@ -1,4 +1,9 @@
+import { defineComponent } from 'vue'
+
 import FilterDocument from './FilterDocument'
+
+import { FORMAT_MONTH } from '@/utils/humanDate'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
 export default class FilterDate extends FilterDocument {
   constructor(options) {
@@ -52,6 +57,21 @@ export default class FilterDate extends FilterDocument {
         return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
       default:
         return { interval: '1y', format: 'yyyy', missing: '1970' }
+    }
+  }
+
+  static get display() {
+    return {
+      extends: DisplayDatetime,
+      props: {
+        format: {
+          type: String,
+          default: FORMAT_MONTH
+        }
+      },
+      setup(props, ctx) {
+        return { ...DisplayDatetime.setup(props, ctx) }
+      }
     }
   }
 }
