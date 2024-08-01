@@ -1,7 +1,7 @@
 <script setup>
-import DisplayUser from '@/components/Display/DisplayUser.vue'
-import DisplayDatetime from '@/components/Display/DisplayDatetime.vue'
-import ButtonIcon from '@/components/Button/ButtonIcon.vue'
+import DisplayUser from '@/components/Display/DisplayUser'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   username: { type: String, required: true },
@@ -16,7 +16,7 @@ const goToComment = 'Go to comment'
 <template>
   <section class="py-2">
     <div class="d-flex">
-      <display-user :username="username" />
+      <display-user :value="username" />
       <display-datetime class="ms-auto" :value="date" />
       <button-icon variant="link" icon-left="arrowSquareOut" square hide-label :label="goToComment" />
       <!--      <button-icon variant="link" icon-left="arrowSquareOut" square hide-label label="Link to comment" :to="to" />-->
