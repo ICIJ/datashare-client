@@ -1,26 +1,9 @@
-import { identity } from 'lodash'
-
-import { withVuex } from '~storybook/decorators/vuex'
 import DisplayUser from '@/components/Display/DisplayUser'
-
-const storeDecorator = withVuex({
-  modules: {
-    pipelines: {
-      namespaced: true,
-      getters: {
-        applyPipelineChainByCategory() {
-          return () => {
-            return identity
-          }
-        }
-      }
-    }
-  }
-})
+import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
 
 export default {
   title: 'Components/Display/DisplayUser',
-  decorators: [storeDecorator],
+  decorators: [storeDecoratorPipelineChainByCategory],
   tags: ['autodocs'],
   component: DisplayUser,
   args: {
