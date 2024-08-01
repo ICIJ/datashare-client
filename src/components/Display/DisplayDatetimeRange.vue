@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import DisplayDatetime from './DisplayDatetime'
 
-import { FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
+import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
 
 const props = defineProps({
   value: {
@@ -12,7 +12,7 @@ const props = defineProps({
   format: {
     type: String,
     default: FORMAT_SHORT,
-    validator: (value) => [FORMAT_SHORT, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
+    validator: (value) => [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
   }
 })
 
