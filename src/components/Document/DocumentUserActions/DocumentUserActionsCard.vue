@@ -21,7 +21,7 @@ defineProps({
 })
 
 const { t } = useI18n()
-const closeLabel = t('documentUserActionCard.close')
+const closeLabel = t('documentUserActionsCard.close')
 </script>
 
 <template>
@@ -58,7 +58,7 @@ const closeLabel = t('documentUserActionCard.close')
         <p v-if="showWarning" class="text-light-emphasis">
           <phosphor-icon name="info" class="me-1" /><slot name="footer-warning"></slot>
         </p>
-        <slot name="footer">ActionFooter</slot>
+        <slot name="footer"></slot>
       </footer>
     </b-card-text>
   </b-card>
