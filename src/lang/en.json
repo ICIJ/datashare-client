@@ -192,6 +192,9 @@
     "folders":"0 folders | 1 folder | {n} folders",
     "notes":"0 notes | 1 note | {n} notes"
   },
+  "documentUserActionsCard": {
+    "close": "Close"
+  },
   "documentUserCommentsList": {
     "hideComments":"Hide comments",
     "showComments":"Show comments",
