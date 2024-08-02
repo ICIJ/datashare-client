@@ -1,7 +1,12 @@
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 import DocumentUserCommentsList from '@/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserCommentsList'
 import DocumentUserCommentsAction from '@/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserCommentsAction'
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActions/DocumentUserActionsCard.vue'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActions/DocumentUserActionsCard'
+
+defineOptions({ name: 'DocumentUserComments' })
 const comment = defineModel({
   type: String,
   required: true
@@ -10,7 +15,8 @@ const props = defineProps({
   comments: { type: Array, default: () => [] }
 })
 
-const title = `${props.comments.length} comments`
+const { t } = useI18n()
+const title = computed(() => t('documentUserActions.tags', props.comments.length))
 </script>
 
 <template>

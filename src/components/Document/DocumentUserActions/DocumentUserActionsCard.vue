@@ -1,3 +1,29 @@
+<script setup>
+import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
+
+import DocumentUserActionsCardList from '@/components/Document/DocumentUserActions/DocumentUserActionsCardList'
+import ButtonIcon from '@/components/Button/ButtonIcon'
+defineOptions({ name: 'DocumentUserActionsCard' })
+defineProps({
+  title: { type: String, required: true },
+  icon: { type: String, required: true },
+  isSplit: {
+    type: Boolean,
+    default: false
+  },
+  showWarning: {
+    type: Boolean,
+    default: false
+  },
+  listNameOthers: { type: String, required: false, default: 'Others' },
+  listNameYours: { type: String, required: false, default: 'Yours' }
+})
+
+const { t } = useI18n()
+const closeLabel = t('documentUserActionCard.close')
+</script>
+
 <template>
   <b-card class="document-user-actions-card shadow border-0">
     <b-card-title
@@ -37,28 +63,3 @@
     </b-card-text>
   </b-card>
 </template>
-<script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
-import { useI18n } from 'vue-i18n'
-
-import DocumentUserActionsCardList from '@/components/Document/DocumentUserActions/DocumentUserActionsCardList'
-import ButtonIcon from '@/components/Button/ButtonIcon'
-defineOptions({ name: 'DocumentUserActionsCard' })
-defineProps({
-  title: { type: String, required: true },
-  icon: { type: String, required: true },
-  isSplit: {
-    type: Boolean,
-    default: false
-  },
-  showWarning: {
-    type: Boolean,
-    default: false
-  },
-  listNameOthers: { type: String, required: false, default: 'Others' },
-  listNameYours: { type: String, required: false, default: 'Yours' }
-})
-
-const { t } = useI18n()
-const closeLabel = t('documentUserActionCard.close')
-</script>

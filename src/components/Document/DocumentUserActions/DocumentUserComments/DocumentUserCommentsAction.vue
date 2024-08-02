@@ -1,4 +1,6 @@
 <script setup>
+defineOptions({ name: 'DocumentUserCommentsAction' })
+
 const comment = defineModel({
   type: String,
   required: true

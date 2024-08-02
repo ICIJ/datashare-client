@@ -1,7 +1,13 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
+
 import DocumentUserActionsCard from '@/components/Document/DocumentUserActions/DocumentUserActionsCard'
 import DisplayTags from '@/components/Display/DisplayTags'
 import DocumentUserTagsAction from '@/components/Document/DocumentUserActions/DocumentUserTags/DocumentUserTagsAction'
+
+defineOptions({ name: 'DocumentUserTags' })
+
 const modelValue = defineModel({ type: String, required: true })
 const props = defineProps({
   tags: {
@@ -14,13 +20,17 @@ const props = defineProps({
   },
   isServer: { type: Boolean, default: false }
 })
+const { t } = useI18n()
 
-const nbTags = props.tags.length + props.othersTags.length
-const title = `${nbTags} tags`
-const tagListOthers = 'Added by others'
-const tagListYours = 'Added by you'
-const tagWarning = 'Your tags are public to project members'
-const noTags = 'No tags added yet.'
+const nbTags = computed(() => {
+  return props.tags.length + props.othersTags.length
+})
+
+const title = computed(() => t('documentUserActions.tags', nbTags.value))
+const tagListOthers = t('documentUserTags.tagListOthers')
+const tagListYours = t('documentUserTags.tagListYours')
+const tagWarning = t('documentUserTags.tagWarning')
+const noTags = t('documentUserTags.noTags')
 </script>
 
 <template>
