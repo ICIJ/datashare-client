@@ -192,6 +192,14 @@
     "folders":"0 folders | 1 folder | {n} folders",
     "notes":"0 notes | 1 note | {n} notes"
   },
+  "documentUserCommentsList": {
+    "hideComments":"Hide comments",
+    "showComments":"Show comments",
+    "noComments":"No comments on this document yet.",
+    "sortingText":"Oldest to newest",
+    "goToOldest":"Go to oldest",
+    "goToRecent":"Go to newest"
+  },
   "documentMetadataActions": {
     "copy": "Copy this metadata value",
     "search": "Search this metadata value",
