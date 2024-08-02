@@ -1,19 +1,20 @@
 <template>
-  <b-card class="document-user-actions-card">
-    <div class="d-flex justify-content-between">
-      <h3 class="fw-bold text-action-emphasis mb-2">
-        <phosphor-icon :name="icon" class="me-2" /><slot name="title">{{ title }}</slot>
-      </h3>
-      <button-icon
-        variant="outline-tertiary"
-        icon-left="x"
-        hide-label
-        square
-        :label="closeLabel"
-        @close="$emit('close')"
-      />
-    </div>
-    <div class="py-4">
+  <b-card class="document-user-actions-card shadow border-0">
+    <b-card-title
+      ><div class="d-flex justify-content-between align-items-center">
+        <h4 class="fw-bold mb-2">
+          <phosphor-icon :name="icon" class="me-2" /><slot name="title">{{ title }}</slot>
+        </h4>
+        <button-icon
+          variant="outline-tertiary"
+          icon-left="x"
+          hide-label
+          square
+          :label="closeLabel"
+          @close="$emit('close')"
+        /></div
+    ></b-card-title>
+    <b-card-text>
       <slot name="content">
         <template v-if="isSplit">
           <document-user-actions-card-list :title="listNameOthers">
@@ -27,13 +28,13 @@
           <slot name="yours"></slot>
         </template>
       </slot>
-    </div>
-    <footer class="pt-2">
-      <p v-if="showWarning" class="text-light-emphasis">
-        <phosphor-icon name="info" class="me-1" /><slot name="footer-warning"></slot>
-      </p>
-      <slot name="footer">ActionFooter</slot>
-    </footer>
+      <footer class="pt-2">
+        <p v-if="showWarning" class="text-light-emphasis">
+          <phosphor-icon name="info" class="me-1" /><slot name="footer-warning"></slot>
+        </p>
+        <slot name="footer">ActionFooter</slot>
+      </footer>
+    </b-card-text>
   </b-card>
 </template>
 <script setup>
