@@ -200,8 +200,16 @@
     "goToOldest":"Go to oldest",
     "goToRecent":"Go to newest"
   },
+  "documentUserComments": {
+    "warning":"Your comments are public to project’s members and are also be visible on the iHub"
+  },
   "documentUserCommentsListEntry": {
     "goToComment": "Go to comment (external link)"
+  },
+  "documentUserRecommendations": {
+    "warning":"Your recommendations are public to project’s members",
+    "noRecommendations":"No recommendations yet.",
+    "recommendButtonLabel" : "Recommend this document"
   },
   "documentUserTags": {
     "tagListOthers":"Added by others",
