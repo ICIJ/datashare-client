@@ -1,15 +1,3 @@
-<template>
-  <button-icon
-    class="document-user-actions-entry text-action-emphasis border-0 d-flex flex-grow-0 justify-content-center rounded"
-    variant="outline-action"
-    :icon-left="icon"
-    :label="actionLabel"
-    :tooltip-label="label"
-    :aria-describedby="label"
-    :hide-label="hideLabel"
-    :hide-tooltip="hideTooltip"
-  />
-</template>
 <script setup>
 import { computed } from 'vue'
 
@@ -29,6 +17,18 @@ const actionLabel = computed(() => {
 })
 </script>
 
+<template>
+  <button-icon
+    class="document-user-actions-entry text-action-emphasis border-0 d-flex flex-grow-0 justify-content-center rounded"
+    variant="outline-action"
+    :icon-left="icon"
+    :label="actionLabel"
+    :tooltip-label="label"
+    :aria-describedby="label"
+    :hide-label="hideLabel"
+    :hide-tooltip="hideTooltip"
+  />
+</template>
 <style lang="scss" scoped>
 .document-user-actions-entry {
   background: var(--bs-btn-action-bg);

@@ -186,7 +186,7 @@
     "next": "Next"
   },
   "documentUserActions": {
-    "tags":"0 tag | 1 tag | {n} tags",
+    "tags":"0 tags | 1 tag | {n} tags",
     "comments":"0 comments | 1 comment | {n} comments",
     "recommended":"0 recommendations | 1 recommendation | {n} recommendations",
     "folders":"0 folders | 1 folder | {n} folders",
@@ -199,6 +199,18 @@
     "sortingText":"Oldest to newest",
     "goToOldest":"Go to oldest",
     "goToRecent":"Go to newest"
+  },
+  "documentUserCommentsListEntry": {
+    "goToComment": "Go to comment (external link)"
+  },
+  "documentUserTags": {
+    "tagListOthers":"Added by others",
+    "tagListYours":"Added by you",
+    "tagWarning":"Your tags are public to project members",
+    "noTags":"No tags added yet."
+  },
+  "documentUserTagsAction": {
+    "placeholder": "Add tags"
   },
   "documentMetadataActions": {
     "copy": "Copy this metadata value",
