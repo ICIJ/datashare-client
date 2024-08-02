@@ -16,17 +16,17 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const title = computed(() => t('documentUserActions.tags', props.comments.length))
+const title = computed(() => t('documentUserActions.comments', props.comments.length))
+const warning = t('documentUserComments.warning')
+const commentsIcon = 'chats-teardrop'
 </script>
 
 <template>
-  <document-user-actions-card icon="chats-teardrop" :title="title" :show-warning="true">
+  <document-user-actions-card :icon="commentsIcon" :title="title" show-warning>
     <template #content>
       <document-user-comments-list :comments="comments" />
     </template>
-    <template #footer-warning
-      >Your comments are public to project’s members and are also be visible on the iHub
-    </template>
+    <template #footer-warning>{{ warning }}</template>
     <template #footer>
       <document-user-comments-action :model-value="comment" @update:model-value="$emit('update:modelValue', $event)" />
     </template>

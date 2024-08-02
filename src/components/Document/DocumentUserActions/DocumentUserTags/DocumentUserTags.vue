@@ -31,11 +31,12 @@ const tagListOthers = t('documentUserTags.tagListOthers')
 const tagListYours = t('documentUserTags.tagListYours')
 const tagWarning = t('documentUserTags.tagWarning')
 const noTags = t('documentUserTags.noTags')
+const tagIcon = 'tag'
 </script>
 
 <template>
   <document-user-actions-card
-    icon="tag"
+    :icon="tagIcon"
     :title="title"
     :is-split="isServer"
     :show-warning="isServer"
