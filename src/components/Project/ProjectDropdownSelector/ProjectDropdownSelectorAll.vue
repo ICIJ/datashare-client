@@ -12,7 +12,6 @@ defineProps({
   <li class="project-dropdown-selector-all">
     <project-dropdown-selector-checkbox
       :model-value="modelValue"
-      :disabled="modelValue"
       @update:model-value="$emit('update:modelValue', $event)"
     >
       {{ $t('projectDropdownSelectorAll.label') }}
