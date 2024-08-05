@@ -26,7 +26,7 @@
         @down="moveFocusDown"
         @enter="selectFocusValue"
       />
-      <project-dropdown-selector-all v-if="hasMatches" v-model="selectAll" />
+      <project-dropdown-selector-all v-if="hasMatches" v-model="selectAll" @click.stop />
     </template>
     <template #button-content>
       <project-dropdown-selector-button-content :projects="slicedProjects" />
@@ -153,7 +153,7 @@ export default {
         return this.selectedProjects.length === this.projects.length
       },
       set(value) {
-        this.selectedProjects = value ? this.projects : []
+        this.selectedProjects = value ? this.projects : this.projects.slice(0, 1)
       }
     }
   },
