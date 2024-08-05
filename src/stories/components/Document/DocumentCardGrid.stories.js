@@ -3,9 +3,7 @@ import { PhFilePdf } from '@phosphor-icons/vue'
 import { vueRouter } from 'storybook-vue3-router'
 
 import { withMurmur } from '~storybook/decorators/murmur'
-import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
-import { template } from 'lodash'
-import { components } from 'storybook/internal/components'
+import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
 
 const routes = [
   {
@@ -19,9 +17,15 @@ const routes = [
 ]
 
 export default {
-  title: 'Components/Document/DocumentCard/DocumentCard',
-  decorators: [withMurmur({ previewHost: null }), vueRouter(routes)],
-  component: DocumentCard,
+  title: 'Components/Document/DocumentCard/DocumentCardGrid',
+  decorators: [
+    withMurmur({ previewHost: null }),
+    vueRouter(routes),
+    () => ({
+      template: '<div style="max-width: 230px"><story /></div>'
+    })
+  ],
+  component: DocumentCardGrid,
   tags: ['autodocs'],
   argTypes: {
     properties: {
@@ -49,21 +53,7 @@ export default {
     selectMode: false,
     isDownloadAllowed: true,
     to: { name: 'document' },
-    properties: [
-      'title',
-      'thumbnail',
-      'path',
-      'author',
-      'highlights',
-      'creationDate',
-      'contentLength',
-      'contentTextLength',
-      'contentType',
-      'language',
-      'extractionLevel',
-      'tags',
-      'project'
-    ],
+    properties: ['title', 'thumbnail', 'path', 'creationDate', 'project'],
     document: {
       title: 'Inter IKEA Investment S.à r.l._cover letter 2010-2011 tax returns.pdf',
       extractionLevel: 0,
@@ -87,9 +77,9 @@ export default {
     }
   },
   render: (args) => ({
-    components: { DocumentCard },
+    components: { DocumentCardGrid },
     setup: () => ({ args }),
-    template: `<document-card v-bind="args" @update:selected="args.selected = $event" />`
+    template: `<document-card-grid v-bind="args" @update:selected="args.selected = $event" />`
   })
 }
 
