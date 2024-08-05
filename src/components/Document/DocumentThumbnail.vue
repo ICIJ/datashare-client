@@ -220,6 +220,7 @@ export default {
   );
 
   --height: var(--estimated-height, 0);
+  --width: var(--height);
 
   @each $name, $value in $heights {
     &--#{$name} {
@@ -229,8 +230,8 @@ export default {
 
   background: var(--bs-body-bg);
   color: var(--bs-secondary-color);
-  min-width: var(--height);
-  max-width: var(--height);
+  min-width: var(--width);
+  max-width: var(--width);
   min-height: var(--height);
   overflow: hidden;
   position: relative;
@@ -269,13 +270,39 @@ export default {
     }
   }
 
-  &--fit {
-    max-width: 100%;
-  }
-
   &--crop {
     height: var(--height);
-    width: var(--height);
+    width: var(--width);
+  }
+
+  &--fit {
+    width: 100%;
+    max-width: var(--width);
+    min-width: auto;
+
+    &.document-thumbnail--crop {
+      position: relative;
+      min-height: auto;
+      height: auto;
+
+      &:before {
+        content: '';
+        padding-bottom: 100%;
+        display: block;
+      }
+
+      .document-thumbnail__image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+      }
+    }
   }
 
   &--loaded:not(&--errored) &__image {
@@ -323,7 +350,6 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 100%;
     height: 100%;
     object-fit: center top;
   }
