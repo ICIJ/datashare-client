@@ -1,5 +1,5 @@
 <template>
-  <div class="document-actions-group d-flex align-items-center" :class="{ 'flex-column': vertical }">
+  <div class="document-actions-group" :class="classList">
     <div class="document-actions-group__checkbox">
       <b-form-checkbox
         v-if="selectMode"
@@ -16,6 +16,8 @@
         v-for="entry in entries"
         ref="entryButtons"
         :key="entry.name"
+        :size="entrySize"
+        :icon-size="entryIconSize"
         :tooltip-placement="tooltipPlacement"
         v-bind="entry"
       />
@@ -100,6 +102,19 @@ const ACTION = {
 const click = (action) => {
   return emit(`click-${action}`, { id: document.id })
 }
+
+const entrySize = computed(() => {
+  return props.vertical ? 'sm' : 'md'
+})
+
+const entryIconSize = computed(() => {
+  return props.vertical ? 'lg' : 'md'
+})
+
+const classList = computed(() => {
+  return { 'document-actions-group--vertical': props.vertical }
+})
+
 const entries = computed(() => {
   return [
     {
@@ -135,6 +150,14 @@ const entries = computed(() => {
 
 <style lang="scss" scoped>
 .document-actions-group {
+  display: flex;
+  align-items: center;
+
+  &--vertical {
+    flex-direction: column;
+    gap: $spacer-xs;
+  }
+
   &__checkbox {
     &:deep(.form-check) {
       padding: 0;
@@ -145,7 +168,7 @@ const entries = computed(() => {
       justify-content: center;
 
       .form-check-input {
-        margin: $btn-padding-y $btn-padding-x;
+        margin: 0 $btn-padding-x;
         float: none;
       }
 
