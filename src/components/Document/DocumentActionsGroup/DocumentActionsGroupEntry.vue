@@ -2,12 +2,14 @@
   <button-icon
     :id="btnId"
     :icon-left="icon"
+    :icon-left-size="iconSize"
     :icon-left-weight="iconWeight"
     :icon-left-hover-weight="iconHoverWeight"
     :label="label"
-    hide-label
     :hide-tooltip="hideTooltip"
     :tooltip-placement="tooltipPlacement"
+    :size="size"
+    hide-label
     square
     variant="outline-secondary"
     class="document-actions-entry border-0"
@@ -70,6 +72,20 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  /**
+   * Button size
+   */
+  size: {
+    type: String,
+    default: 'md'
+  },
+  /**
+   * Button's icon size
+   */
+  iconSize: {
+    type: String,
+    default: 'md'
   }
 })
 
