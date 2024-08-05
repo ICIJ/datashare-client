@@ -1,12 +1,16 @@
 <template>
   <div class="document-actions-group d-flex align-items-center" :class="{ 'flex-column': vertical }">
-    <b-form-checkbox
-      v-if="selectMode"
-      class="m-2"
-      :model-value="selected"
-      name="checkbox"
-      @update:modelValue="$emit('update:selected', $event)"
-    />
+    <div class="document-actions-group__checkbox">
+      <b-form-checkbox
+        v-if="selectMode"
+        aria-label="Select this document"
+        :model-value="selected"
+        name="checkbox"
+        @update:modelValue="$emit('update:selected', $event)"
+      >
+        <span class="visually-hidden">Select this document</span>
+      </b-form-checkbox>
+    </div>
     <slot name="actions" v-bind="{ document }">
       <document-actions-group-entry
         v-for="entry in entries"
@@ -128,3 +132,32 @@ const entries = computed(() => {
   ]
 })
 </script>
+
+<style lang="scss" scoped>
+.document-actions-group {
+  &__checkbox {
+    &:deep(.form-check) {
+      padding: 0;
+      margin: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .form-check-input {
+        margin: $btn-padding-y $btn-padding-x;
+        float: none;
+      }
+
+      .form-check-label {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    }
+  }
+}
+</style>
