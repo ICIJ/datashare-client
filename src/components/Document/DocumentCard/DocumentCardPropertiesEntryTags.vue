@@ -4,7 +4,8 @@ import DisplayTags from '@/components/Display/DisplayTags'
 
 defineProps({
   document: {
-    type: Object
+    type: Object,
+    required: true
   },
   property: {
     type: String

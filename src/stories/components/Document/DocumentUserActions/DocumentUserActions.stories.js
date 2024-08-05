@@ -10,7 +10,8 @@ export default {
     showRecommended: false,
     showFolders: false,
     showNotes: false,
-    hideLabels: false
+    hideLabels: false,
+    hideTooltips: false
   }
 }
 
@@ -28,6 +29,21 @@ export const Compact = {
 }
 export const Complete = {
   args: {
+    showTags: true,
+    showComments: true,
+    showRecommended: true,
+    showFolders: true,
+    showNotes: true,
+    tags: 3,
+    comments: 4,
+    recommended: 0,
+    folders: 5,
+    notes: 3
+  }
+}
+export const Dropdown = {
+  args: {
+    dropdown: true,
     showTags: true,
     showComments: true,
     showRecommended: true,
