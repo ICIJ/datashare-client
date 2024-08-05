@@ -116,7 +116,7 @@ const tagAction = computed(() => {
   return tag
 })
 const otherActions = computed(() => {
-  return actions.slice(1)
+  return actions.slice(1).filter((action) => action.show === true)
 })
 </script>
 <style lang="scss">
