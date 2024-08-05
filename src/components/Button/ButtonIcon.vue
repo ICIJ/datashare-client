@@ -163,6 +163,10 @@ const props = defineProps({
     type: String,
     default: 'top'
   },
+  showTooltipForce: {
+    type: Boolean,
+    default: false
+  },
   hover: {
     type: Boolean
   },
@@ -203,7 +207,8 @@ const tooltipText = computed(() => {
 })
 
 const showTooltip = computed(() => {
-  return currentHover.value && !props.hideTooltip && props.hideLabel && !!tooltipText.value
+  const showTooltipIfLabelIsHidden = !props.hideTooltip && props.hideLabel
+  return currentHover.value && !!tooltipText.value && (props.showTooltipForce || showTooltipIfLabelIsHidden)
 })
 
 const buttonProps = computed(() => ({
