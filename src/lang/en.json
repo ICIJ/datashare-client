@@ -622,6 +622,33 @@
     "meta": "This was extracted from metadata.",
     "none": "Entities preview not available, the document is too big."
   },
+  "namedEntitySection": {
+    "person": {
+      "title": "People"
+    },
+    "location": {
+      "title": "Locations"
+    },
+    "organization": {
+      "title": "Organizations"
+    },
+    "email": {
+      "title": "Email"
+    }
+  },
+  "namedEntitySectionActions": {
+    "copy": "Copy",
+    "download": "Download"
+  },
+  "namedEntitySectionMore": {
+    "label": "Show more {category}",
+    "category": {
+      "person": "people",
+      "location": "locations",
+      "organization": "organizations",
+      "email": "emails"
+    }
+  },
   "email": {
     "detail": "See detail",
     "to": "To",
