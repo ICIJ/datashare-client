@@ -3,7 +3,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import DocumentUserCommentsListEntry from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsListEntry.vue'
+import DocumentUserCommentsListEntry from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsListEntry'
 
 defineOptions({ name: 'DocumentUserCommentsList' })
 
@@ -45,13 +45,16 @@ const sortedComments = computed(() => [...props.comments].sort((a, b) => a.date 
 <template>
   <section class="document-user-comments-list">
     <header class="d-flex justify-content-between align-items-center">
-      <span class="d-inline-flex align-items-center"
+      <span class="d-inline-flex align-items-center text-nowrap"
         ><phosphor-icon name="sortAscending" class="me-1" />{{ sortingText }}</span
       >
       <span
-        class="document-user-comments-list__display-comments btn btn-outline-link d-inline-flex justify-content-between"
+        class="document-user-comments-list__display-comments btn btn-outline-link d-inline-flex justify-content-between text-nowrap"
         @click="open = !open"
-        ><phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2" />{{ displayComments }}</span
+        ><span v-b-tooltip.hover="{ customClass: 'd-sm-none' }" :title="displayComments"
+          ><phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2"
+        /></span>
+        <span class="d-none d-sm-inline">{{ displayComments }}</span></span
       >
     </header>
     <section v-if="open" class="document-user-comments-list__comments py-2">
@@ -87,9 +90,6 @@ const sortedComments = computed(() => [...props.comments].sort((a, b) => a.date 
 
 <style scoped lang="scss">
 .document-user-comments-list {
-  &__display-comments {
-    width: 200px;
-  }
   &__comments__list {
     height: var(--document-user-comments-list__comments__list--height);
   }
