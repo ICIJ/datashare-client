@@ -45,10 +45,11 @@ const occurrences = computed(() => {
 <template>
   <button-icon
     variant="outline-tertiary"
-    class="named-entity-button"
+    class="named-entity-button text-nowrap"
     :class="classList"
     :style="style"
     :icon-left="icon"
+    icon-left-size="lg"
   >
     {{ namedEntity.mention }}
     <named-entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
@@ -63,6 +64,7 @@ const occurrences = computed(() => {
   --bs-btn-hover-color: --bs-btn-color;
   --bs-btn-hover-bg: --bs-btn-bg;
   --bs-btn-hover-border-color: var(--bs-btn-border-color);
+  --bs-btn-padding-y: #{math.div(10, 16) * 1em};
 
   border-style: dashed;
   display: inline-flex;
@@ -75,14 +77,6 @@ const occurrences = computed(() => {
 
   &:hover {
     border-style: solid;
-  }
-
-  &:active:deep(.button-icon__icon-left) {
-    color: inherit;
-  }
-
-  &:deep(.button-icon__icon-left) {
-    color: var(--color, currentColor);
   }
 }
 </style>
