@@ -2,9 +2,9 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActions/DocumentUserActionsCard'
-import DisplayTags from '@/components/Display/DisplayTags'
-import DocumentUserTagsAction from '@/components/Document/DocumentUserActions/DocumentUserTags/DocumentUserTagsAction'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard.vue'
+import DisplayTags from '@/components/Display/DisplayTags.vue'
+import DocumentUserTagsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTagsAction.vue'
 
 defineOptions({ name: 'DocumentUserTags' })
 

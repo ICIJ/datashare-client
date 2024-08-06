@@ -1,8 +1,8 @@
-import DocumentUserComments from '@/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserComments'
+import DocumentUserComments from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserComments.vue'
 import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
 
 export default {
-  title: 'Components/Document/DocumentUserActions/DocumentUserComments/DocumentUserComments',
+  title: 'Components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserComments',
   tags: ['autodocs'],
   decorators: [storeDecoratorPipelineChainByCategory],
   component: DocumentUserComments,
