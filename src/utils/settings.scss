@@ -14,7 +14,7 @@ $white: #fff;
 $light: #F3F3F3;
 $black: #000;
 $dark: #212529;
-$darker: #020203;
+$darker: #0F0F10;
 
 $link-color: $action;
 $link-color-dark: mix($white, $action, 40%);
@@ -128,6 +128,8 @@ $box-shadow-lg: 1px 1px 20px 5px rgba($black, .05);
 
 $alert-border-width: 0;
 $alert-border-scale: 100%;
+
+$badge-padding-x: 0.45em;
 
 $input-bg:  var(--bs-body-bg);
 $input-focus-border-color: var(--bs-primary);
