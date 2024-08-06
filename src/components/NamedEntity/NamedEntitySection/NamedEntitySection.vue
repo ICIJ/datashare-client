@@ -21,6 +21,8 @@ defineProps({
     type: Boolean
   }
 })
+
+const emit = defineEmits(['copy', 'download', 'more'])
 </script>
 
 <template>
@@ -29,13 +31,13 @@ defineProps({
       <named-entity-section-title class="text-nowrap text-truncate" :category="category" :count="count" />
       <named-entity-section-actions
         :category="category"
-        @copy="$emit('copy', $event)"
-        @download="$emit('download', $event)"
+        @copy="emit('copy', $event)"
+        @download="emit('download', $event)"
       />
     </div>
     <named-entity-section-list :entries="entries">
       <slot />
     </named-entity-section-list>
-    <named-entity-section-more v-if="hasMore" :category="category" />
+    <named-entity-section-more v-if="hasMore" :category="category" @click="emit('more', $event)" />
   </section>
 </template>
