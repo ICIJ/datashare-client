@@ -113,4 +113,14 @@
     --bs-btn-hover-bg: rgba(var(--bs-body-color-rgb), #{$btn-hover-bg-tint-amount});
     --bs-btn-hover-border-color: currentColor;
   }
+
+  .btn-light {
+    --bs-btn-bg: #{$darker};
+    --bs-btn-border-color: #{$darker};
+    --bs-btn-color: var(--bs-body-color);
+
+    --bs-btn-hover-bg: var(--bs-black);
+    --bs-btn-hover-border-color: #{$darker};
+    --bs-btn-hover-color: var(--bs-body-color);
+  }
 }
