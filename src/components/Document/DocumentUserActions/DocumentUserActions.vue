@@ -3,7 +3,7 @@
     v-if="dropdown"
     split
     variant="outline-action"
-    class="document-user-actions document-user-actions--dropdown text-action-emphasis bg-action-subtle p-0 m-2"
+    class="document-user-actions document-user-actions--dropdown text-action-emphasis bg-action-subtle p-0"
   >
     <template #button-content><document-user-actions-entry v-bind="tagAction" /></template>
     <document-user-actions-entry v-for="action in otherActions" :key="action.name" v-bind="action" dropdown-item />
