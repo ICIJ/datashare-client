@@ -111,7 +111,7 @@ const component = computed(() => {
   return props.dropdown ? DocumentUserActionsDropdown : DocumentUserActionsList
 })
 const classList = computed(() => {
-  return 'text-action-emphasis bg-action-subtle'
+  return 'text-action-emphasis'
 })
 </script>
 <style lang="scss">
