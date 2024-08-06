@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import DocumentUserCommentsList from '@/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserCommentsList'
-import DocumentUserCommentsAction from '@/components/Document/DocumentUserActions/DocumentUserComments/DocumentUserCommentsAction'
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActions/DocumentUserActionsCard'
+import DocumentUserCommentsList from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsList.vue'
+import DocumentUserCommentsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsAction.vue'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard.vue'
 
 defineOptions({ name: 'DocumentUserComments' })
 const comment = defineModel({

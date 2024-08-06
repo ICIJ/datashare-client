@@ -2,8 +2,8 @@
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
-import DocumentUserActionsCardList from '@/components/Document/DocumentUserActions/DocumentUserActionsCardList'
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import DocumentUserActionsCardList from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCardList.vue'
+import ButtonIcon from '@/components/Button/ButtonIcon.vue'
 defineOptions({ name: 'DocumentUserActionsCard' })
 defineProps({
   title: { type: String, required: true },
@@ -43,11 +43,11 @@ const closeLabel = t('documentUserActionsCard.close')
     <b-card-text>
       <slot name="content">
         <template v-if="isSplit">
-          <document-user-actions-card-list :title="listNameOthers">
-            <slot name="others"></slot>
-          </document-user-actions-card-list>
           <document-user-actions-card-list :title="listNameYours">
             <slot name="yours"></slot>
+          </document-user-actions-card-list>
+          <document-user-actions-card-list :title="listNameOthers">
+            <slot name="others"></slot>
           </document-user-actions-card-list>
         </template>
         <template v-else>

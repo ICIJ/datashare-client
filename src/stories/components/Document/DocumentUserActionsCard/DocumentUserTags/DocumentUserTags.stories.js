@@ -1,7 +1,7 @@
-import DocumentUserTags from '@/components/Document/DocumentUserActions/DocumentUserTags/DocumentUserTags'
+import DocumentUserTags from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTags.vue'
 
 export default {
-  title: 'Components/Document/DocumentUserActions/DocumentUserTags/DocumentUserTags',
+  title: 'Components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTags',
   tags: ['autodocs'],
   component: DocumentUserTags,
   args: {

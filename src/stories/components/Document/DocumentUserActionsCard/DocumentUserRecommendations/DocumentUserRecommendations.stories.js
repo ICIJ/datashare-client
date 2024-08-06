@@ -1,8 +1,8 @@
-import DocumentUserRecommendations from '@/components/Document/DocumentUserActions/DocumentUserRecommendations/DocumentUserRecommendations'
+import DocumentUserRecommendations from '@/components/Document/DocumentUserActionsCard/DocumentUserRecommendations/DocumentUserRecommendations.vue'
 import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
 
 export default {
-  title: 'Components/Document/DocumentUserActions/DocumentUserRecommendations/DocumentUserRecommendations',
+  title: 'Components/Document/DocumentUserActionsCard/DocumentUserRecommendations/DocumentUserRecommendations',
   tags: ['autodocs'],
   decorators: [storeDecoratorPipelineChainByCategory],
   component: DocumentUserRecommendations,
