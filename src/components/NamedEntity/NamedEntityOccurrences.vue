@@ -16,5 +16,9 @@ defineProps({
 <style lang="scss" scoped>
 .named-entity-occurrences {
   border: 1px solid currentColor;
+
+  .btn &.badge {
+    top: 0;
+  }
 }
 </style>
