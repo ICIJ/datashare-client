@@ -2,9 +2,9 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActions/DocumentUserActionsCard'
-import DisplayUser from '@/components/Display/DisplayUser'
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard.vue'
+import DisplayUser from '@/components/Display/DisplayUser.vue'
+import ButtonIcon from '@/components/Button/ButtonIcon.vue'
 
 defineOptions({ name: 'DocumentUserRecommendations' })
 const props = defineProps({

@@ -1,5 +1,5 @@
 <script setup>
-import DocumentUserActionsCardListTitle from '@/components/Document/DocumentUserActions/DocumentUserActionsCardListTitle'
+import DocumentUserActionsCardListTitle from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCardListTitle.vue'
 
 defineOptions({ name: 'DocumentUserActionsCardList' })
 defineProps({
