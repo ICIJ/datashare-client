@@ -1,5 +1,5 @@
 <template>
-  <b-button-group class="document-user-actions-list justify-content-between">
+  <b-button-group class="document-user-actions-list justify-content-between bg-action-subtle">
     <document-user-actions-entry v-for="action in items" :key="action.name" v-bind="action" class="mx-2" />
   </b-button-group>
 </template>
