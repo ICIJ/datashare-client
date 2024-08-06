@@ -30,7 +30,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
 </script>
 
 <template>
-  <span class="search-breadcrumb-entry-query-ast d-inline-flex flex-wrap flex-wrap column-gap-1 row-gap-2">
+  <span class="search-breadcrumb-entry-query-ast d-inline-flex flex-wrap column-gap-1 row-gap-2">
     <search-breadcrumb-entry-query-ast
       v-if="isLeft"
       :ast="ast.left"
