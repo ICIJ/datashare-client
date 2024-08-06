@@ -41,6 +41,7 @@
     <b-tooltip
       teleport-to="body"
       manual
+      :boundary-padding="20"
       :model-value="showTooltip"
       :placement="tooltipPlacement"
       :target="element"
@@ -224,6 +225,10 @@ const buttonProps = computed(() => ({
 
 <style lang="scss" scoped>
 .button-icon {
+  --button-icon-square-size: calc(
+    #{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2
+  );
+
   display: inline-flex;
   align-items: center;
 
@@ -235,8 +240,8 @@ const buttonProps = computed(() => ({
     padding: 0;
     align-items: center;
     justify-content: center;
-    width: calc(#{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2);
-    height: calc(#{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2);
+    width: var(--button-icon-square-size);
+    height: var(--button-icon-square-size);
     position: relative;
 
     &:deep(.button-icon-counter) {
