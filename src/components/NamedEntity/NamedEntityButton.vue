@@ -49,7 +49,6 @@ const occurrences = computed(() => {
     :class="classList"
     :style="style"
     :icon-left="icon"
-    icon-left-size="lg"
   >
     {{ namedEntity.mention }}
     <named-entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
@@ -67,9 +66,6 @@ const occurrences = computed(() => {
   --bs-btn-padding-y: #{math.div(10, 16) * 1em};
 
   border-style: dashed;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 
   &:deep(.button-icon__icon-left) {
     transition: $btn-transition;
