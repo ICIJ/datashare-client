@@ -18,3 +18,21 @@ export default {
 }
 
 export const Default = {}
+
+export const ForOrganization = {
+  args: {
+    category: 'organization'
+  }
+}
+
+export const ForLocation = {
+  args: {
+    category: 'location'
+  }
+}
+
+export const ForEmail = {
+  args: {
+    category: 'email'
+  }
+}
