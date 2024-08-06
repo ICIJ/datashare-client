@@ -1,0 +1,29 @@
+<template>
+  <b-button-group class="document-user-actions-list justify-content-between">
+    <document-user-actions-entry v-for="action in items" :key="action.name" v-bind="action" />
+  </b-button-group>
+</template>
+<script setup>
+import DocumentUserActionsEntry from '@/components/Document/DocumentUserActions/DocumentUserActionsEntry'
+
+defineOptions({ name: 'DocumentUserActionsList' })
+
+defineProps({
+  items: {
+    type: Array,
+    default: () => []
+  },
+  compact: {
+    type: Boolean,
+    default: false
+  },
+  hideLabels: {
+    type: Boolean,
+    default: false
+  },
+  hideTooltips: {
+    type: Boolean,
+    default: false
+  }
+})
+</script>
