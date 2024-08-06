@@ -31,7 +31,11 @@ const props = defineProps({
   /**
    * Display as a dropdown item
    */
-  dropdownItem: { type: Boolean, default: false }
+  dropdownItem: { type: Boolean, default: false },
+  /**
+   * Display horizontal dropdown item
+   */
+  dropdownHorizontal: { type: Boolean, default: false }
 })
 const actionLabel = computed(() => {
   return props.compact ? props.value : props.label
@@ -40,8 +44,8 @@ const actionLabel = computed(() => {
 
 <template>
   <button-icon
-    class="document-user-actions-entry text-action-emphasis border-0 rounded text-nowrap"
-    :class="{ 'w-100': dropdownItem, 'd-flex justify-content-center flex-grow-0': !dropdownItem }"
+    class="document-user-actions-entry d-flex flex-grow-0 text-nowrap text-action-emphasis border-0 rounded my-1"
+    :class="{ 'w-100': dropdownItem, 'justify-content-center': !dropdownItem }"
     variant="outline-action"
     :icon-left="icon"
     :label="actionLabel"
