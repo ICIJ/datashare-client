@@ -20,7 +20,12 @@ const label = computed(() => {
 </script>
 
 <template>
-  <button-icon class="named-entity-section-actions-entry-more" variant="outline-primary" icon-right="caret-right" icon-right-variant="secondary">
+  <button-icon
+    class="named-entity-section-actions-entry-more"
+    variant="outline-primary"
+    icon-right="caret-right"
+    icon-right-variant="secondary"
+  >
     {{ label }}
   </button-icon>
 </template>
