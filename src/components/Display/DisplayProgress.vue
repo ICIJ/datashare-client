@@ -92,7 +92,7 @@ const classList = computed(() => {
 
 @include color-mode(dark) {
   .display-progress {
-    --display-progress-bg: #{$darker};
+    --display-progress-bg: #{$gray-600};
     --bs-action: var(--bs-white);
   }
 }
