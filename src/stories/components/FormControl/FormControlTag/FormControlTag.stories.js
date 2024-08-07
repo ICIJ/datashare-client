@@ -1,6 +1,5 @@
 import types from '@/utils/types'
 import FormControlTag from '@/components/FormControl/FormControlTag/FormControlTag'
-import { add } from 'lodash'
 
 export default {
   title: 'Components/FormControl/FormControlTag/FormControlTag',
