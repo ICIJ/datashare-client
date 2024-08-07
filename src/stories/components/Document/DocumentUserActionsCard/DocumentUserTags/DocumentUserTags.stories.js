@@ -1,4 +1,4 @@
-import DocumentUserTags from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTags.vue'
+import DocumentUserTags from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTags'
 
 export default {
   title: 'Components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTags',
