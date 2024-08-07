@@ -9,11 +9,14 @@ const props = defineProps({
   query: {
     type: String
   },
+  size: {
+    type: String
+  },
   noIcon: {
     type: Boolean
   },
-  size: {
-    type: String
+  noXIcon: {
+    type: Boolean
   }
 })
 
@@ -27,11 +30,12 @@ const ast = computed(() => {
 </script>
 
 <template>
-  <search-parameter-query-ast v-if="ast" :ast="ast" :no-icon="noIcon" :size="size" />
+  <search-parameter-query-ast v-if="ast" :ast="ast" :no-icon="noIcon" :no-x-icon="noXIcon" :size="size" />
   <search-parameter-query-term
     v-else
     :term="query"
     :no-icon="noIcon"
+    :no-x-icon="noXIcon"
     :size="size"
     title="Unable to parse the query"
     color="var(--bs-danger)"

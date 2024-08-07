@@ -33,6 +33,9 @@ const props = defineProps({
   },
   noIcon: {
     type: Boolean
+  },
+  noXIcon: {
+    type: Boolean
   }
 })
 
@@ -73,5 +76,6 @@ const color = computed(() => {
     :icon="icon"
     :color="color"
     :no-icon="noIcon"
+    :no-x-icon="noXIcon"
   />
 </template>

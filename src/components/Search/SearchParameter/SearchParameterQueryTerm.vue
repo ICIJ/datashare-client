@@ -27,6 +27,9 @@ const props = defineProps({
   noIcon: {
     type: Boolean
   },
+  noXIcon: {
+    type: Boolean
+  },
   size: {
     type: String
   }
@@ -57,7 +60,7 @@ const showOperator = computed(() => {
     :size="size"
     :style="style"
     :icon-left="noIcon ? null : icon"
-    icon-right="x"
+    :icon-right="noXIcon ? null : 'x'"
     icon-right-hover-weight="bold"
   >
     <template v-if="showOperator" #start>
