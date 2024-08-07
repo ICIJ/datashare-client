@@ -26,18 +26,22 @@ const toProjectSearch = computed(() => ({
 </script>
 
 <template>
-  <div class="project-card-footer d-flex justify-content-between">
-    <button-icon
-      :to="toProjectInsights"
-      icon-left="chart-bar"
-      variant="outline-tertiary"
-      :label="$t('projectCardFooter.insights')"
-    />
-    <button-icon
-      :to="toProjectSearch"
-      icon-left="magnifying-glass"
-      variant="outline-primary"
-      :label="$t('projectCardFooter.search')"
-    />
+  <div class="project-card-footer d-flex flex-lg-row flex-column gap-3 align-items-start justify-content-between">
+    <slot>
+      <button-icon
+        :to="toProjectInsights"
+        icon-left="chart-bar"
+        variant="outline-tertiary"
+        truncate
+        :label="$t('projectCardFooter.insights')"
+      />
+      <button-icon
+        :to="toProjectSearch"
+        icon-left="magnifying-glass"
+        variant="outline-primary"
+        truncate
+        :label="$t('projectCardFooter.search')"
+      />
+    </slot>
   </div>
 </template>
