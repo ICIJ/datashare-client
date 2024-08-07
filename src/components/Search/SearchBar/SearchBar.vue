@@ -88,9 +88,9 @@ import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 
 import ShortkeysModal from '@/components/ShortkeysModal'
-import SearchBarInput from '@/components/SearchBarInput'
-import SearchBarInputDropdownForField from '@/components/SearchBarInputDropdownForField'
-import SearchBarInputDropdownForProjects from '@/components/SearchBarInputDropdownForProjects'
+import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
+import SearchBarInputDropdownForField from '@/components/Search/SearchBar/SearchBarInputDropdownForField'
+import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
 

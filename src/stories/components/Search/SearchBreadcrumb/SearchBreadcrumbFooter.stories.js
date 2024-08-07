@@ -1,8 +1,8 @@
-import SearchBreadcrumbFooter from '@/components/SearchBreadcrumb/SearchBreadcrumbFooter'
+import SearchBreadcrumbFooter from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbFooter'
 
 export default {
   decorators: [],
-  title: 'Components/SearchBreadcrumb/SearchBreadcrumbFooter',
+  title: 'Components/Search/SearchBreadcrumb/SearchBreadcrumbFooter',
   component: SearchBreadcrumbFooter,
   tags: ['autodocs'],
   argTypes: {

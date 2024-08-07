@@ -15,7 +15,7 @@
 
 <script>
 import Hook from '@/components/Hook'
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import SearchLayoutSelector from '@/components/SearchLayoutSelector'
 
 /**

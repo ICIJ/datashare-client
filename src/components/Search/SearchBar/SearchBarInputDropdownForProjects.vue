@@ -88,7 +88,7 @@
 import { compact, iteratee, trim } from 'lodash'
 
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
-import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
 import FormControlSearch from '@/components/FormControl/FormControlSearch'
 import { iwildcardMatch } from '@/utils/strings'
 

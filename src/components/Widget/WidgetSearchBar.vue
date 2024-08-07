@@ -7,7 +7,7 @@
 <script>
 import { castArray } from 'lodash'
 
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/Search/SearchBar/SearchBar'
 
 /**
  * Widget to display a search bar

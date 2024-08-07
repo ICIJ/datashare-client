@@ -1,8 +1,8 @@
-import SearchBreadcrumbEntryFilter from '@/components/SearchBreadcrumb/SearchBreadcrumbEntryFilter'
+import SearchBreadcrumbEntryFilter from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryFilter'
 
 export default {
   decorators: [],
-  title: 'Components/SearchBreadcrumb/SearchBreadcrumbEntryFilter',
+  title: 'Components/Search/SearchBreadcrumb/SearchBreadcrumbEntryFilter',
   component: SearchBreadcrumbEntryFilter,
   tags: ['autodocs'],
   args: {

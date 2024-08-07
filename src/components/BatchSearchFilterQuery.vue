@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import SearchBarInput from '@/components/SearchBarInput'
-import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
+import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
 import utils from '@/mixins/utils'
 
 export default {

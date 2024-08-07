@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 
-import SearchBarInputDropdownForProjects from '@/components/SearchBarInputDropdownForProjects'
+import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('SearchBarInputDropdownForProjects.vue', function () {

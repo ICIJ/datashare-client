@@ -23,7 +23,7 @@
 <script>
 import Hook from '@/components/Hook'
 import ProjectCards from '@/components/ProjectCards'
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/Search/SearchBar/SearchBar'
 
 export default {
   name: 'Landing',
