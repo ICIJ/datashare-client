@@ -92,7 +92,7 @@ export const MutlipleCards = {
     template: `
       <div class="container-fluid">
         <div class="row g-4">
-          <div class="col-6" v-for="project in args.projects" :key="project.name">
+          <div class="col-lg-6 col-12" v-for="project in args.projects" :key="project.name">
             <project-card :project="project" class="h-100 w-100" />
           </div>
         </div>
