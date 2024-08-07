@@ -25,12 +25,16 @@ const props = defineProps({
     default: '100%'
   },
   checked: {
-    type: Boolean,
-    default: false
+    type: Boolean
   },
   noCaption: {
-    type: Boolean,
-    default: false
+    type: Boolean
+  },
+  rounded: {
+    type: [Boolean, Number],
+    validator: (value) => {
+      return [true, false, 1, 2, 3, 4, 5].includes(value)
+    }
   }
 })
 
@@ -102,7 +106,9 @@ const classList = computed(() => {
   return {
     'project-thumbnail--colorized': !hasBackgroundWithLogo.value,
     'project-thumbnail--checked': props.checked,
-    'project-thumbnail--dark-foreground': isForegroundDark.value
+    'project-thumbnail--dark-foreground': isForegroundDark.value,
+    'project-thumbnail--rounded': props.rounded === true,
+    [`project-thumbnail--rounded-${props.rounded}`]: !isNaN(props.rounded)
   }
 })
 </script>
@@ -121,6 +127,27 @@ const classList = computed(() => {
     display: inline-block;
     padding-top: 100%;
     margin: 0;
+  }
+
+  &--rounded-1 {
+    border-radius: var(--bs-border-radius-sm);
+  }
+
+  &--rounded,
+  &--rounded-2 {
+    border-radius: var(--bs-border-radius);
+  }
+
+  &--rounded-3 {
+    border-radius: var(--bs-border-radius-lg);
+  }
+
+  &--rounded-4 {
+    border-radius: var(--bs-border-radius-xl);
+  }
+
+  &--rounded-5 {
+    border-radius: var(--bs-border-radius-xxl);
   }
 
   &--colorized {

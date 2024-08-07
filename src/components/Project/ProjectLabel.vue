@@ -5,7 +5,8 @@
       :project="resolvedProject"
       :no-caption="noCaption"
       :width="thumbnailWidth"
-      class="project-label__thumbnail me-2 rounded"
+      :rounded="1"
+      class="project-label__thumbnail me-2"
     />
     <span class="project-label__display">{{ projectDisplay }}</span>
   </span>
@@ -72,7 +73,7 @@ export default {
 <style lang="scss" scoped>
 .project-label {
   display: inline-flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   vertical-align: top;
 }
