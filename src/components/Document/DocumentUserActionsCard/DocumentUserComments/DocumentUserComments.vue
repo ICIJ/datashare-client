@@ -2,33 +2,41 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import DocumentUserCommentsList from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsList.vue'
-import DocumentUserCommentsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsAction.vue'
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard.vue'
+import DocumentUserCommentsList from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsList'
+import DocumentUserCommentsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsAction'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
 
 defineOptions({ name: 'DocumentUserComments' })
-const comment = defineModel({
-  type: String,
-  required: true
+const comments = defineModel({
+  type: Array,
+  default: () => []
 })
 const props = defineProps({
-  comments: { type: Array, default: () => [] }
+  comment: { type: String, default: '' },
+  to: { type: String, default: '' },
+  username: { type: String, default: '' }
 })
 
 const { t } = useI18n()
-const title = computed(() => t('documentUserActions.comments', props.comments.length))
+const title = computed(() => t('documentUserActions.comments', comments.value.length))
 const warning = t('documentUserComments.warning')
 const commentsIcon = 'chats-teardrop'
+
+function addComment(comment) {
+  // TODO CD retrieve real url here
+  const newComment = { username: props.username, date: comment.date, to: props.to, text: comment.text }
+  comments.value = [...comments.value, newComment]
+}
 </script>
 
 <template>
-  <document-user-actions-card :icon="commentsIcon" :title="title" show-warning>
+  <document-user-actions-card :icon="commentsIcon" :title="title" show-warning action-end>
     <template #content>
-      <document-user-comments-list :comments="comments" />
+      <document-user-comments-list :comments="comments" :to="to" />
     </template>
     <template #action-warning>{{ warning }}</template>
     <template #action>
-      <document-user-comments-action :model-value="comment" @update:model-value="$emit('update:modelValue', $event)" />
+      <document-user-comments-action :model-value="comment" :to="to" :username="username" @submit="addComment" />
     </template>
   </document-user-actions-card>
 </template>
