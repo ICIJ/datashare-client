@@ -36,7 +36,7 @@ export default {
           Warning is activated (in general in server mode)
         </template>
         <template #action>
-          <b-button variant="action" class="me-2" >Action</b-button> Action footer
+          <b-button variant="action" class="me-2" >Action</b-button> Action block
         </template>
       </document-user-actions-card>
     `
