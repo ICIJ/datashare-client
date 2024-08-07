@@ -47,6 +47,7 @@ const uniqueOptions = computed(() => {
 
 <template>
   <document-user-actions-card
+    action-start
     :icon="tagIcon"
     :title="title"
     :is-split="isServer"
