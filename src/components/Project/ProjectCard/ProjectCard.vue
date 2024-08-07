@@ -19,7 +19,7 @@ defineProps({
     <project-card-thumbnail :project="project">
       <slot name="thumbnail" />
     </project-card-thumbnail>
-    <div class="d-flex flex-column gap-4 h-100">
+    <div class="d-flex flex-column gap-4 h-100 w-100">
       <div>
         <project-card-label :project="project" class="mb-2">
           <slot name="label" />
