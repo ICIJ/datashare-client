@@ -1197,6 +1197,16 @@
       "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
     }
   },
+  "projectCardUpdateDate": {
+    "label": "Updated:"
+  },
+  "projectCardDocumentsCount": {
+    "label": "{humanDocumentsCount} documents"
+  },
+  "projectCardFooter": {
+    "insights": "See insights",
+    "search": "Search documents"
+  },
   "projectCards": {
     "documentsCount": "No documents | 1 document | {count} documents",
     "about": "About",
