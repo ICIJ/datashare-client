@@ -1,6 +1,6 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
-import { computed } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsListEntry'
@@ -13,7 +13,9 @@ const open = defineModel('open', {
 })
 const props = defineProps({
   comments: { type: Array, default: () => [] },
-  height: { type: String, default: '250px' }
+  to: { type: String, default: '' },
+  height: { type: String, default: '250px' },
+  scrollToRecent: { type: Boolean, default: true }
 })
 const { t } = useI18n()
 
@@ -31,8 +33,8 @@ const sortingText = t('documentUserCommentsList.sortingText')
 const goToOldest = t('documentUserCommentsList.goToOldest')
 const goToRecent = t('documentUserCommentsList.goToRecent')
 
-const goToOldestIcon = 'arrow-up'
-const goToRecentIcon = 'arrow-down'
+const goToOldestIcon = 'caret-up'
+const goToRecentIcon = 'caret-down'
 
 const displayComments = computed(() => (open.value ? hideComments : showComments))
 
@@ -40,6 +42,24 @@ const closedEye = computed(() => {
   return open.value ? 'regular' : 'fill'
 })
 const sortedComments = computed(() => [...props.comments].sort((a, b) => a.date - b.date))
+
+function generateToUrl(toComment) {
+  return `${props.to}${toComment}`
+}
+
+const container = ref(null)
+if (props.scrollToRecent) {
+  watch(
+    () => props.comments,
+    async () => {
+      const anchor = `#comment-${props.comments.length - 1}`
+      await nextTick() // can't scroll before the element is added to the DOM
+      const lastElement = container.value?.querySelector(anchor)
+      lastElement?.scrollIntoView(false)
+    },
+    { deep: true, immediate: true }
+  )
+}
 </script>
 
 <template>
@@ -64,13 +84,17 @@ const sortedComments = computed(() => [...props.comments].sort((a, b) => a.date 
             ><phosphor-icon :name="goToOldestIcon" class="me-1" />{{ goToOldest }}</a
           >
         </header>
-        <article class="document-user-comments-list__comments__list d-block overflow-y-scroll" :style="style">
+        <article
+          ref="container"
+          class="document-user-comments-list__comments__list d-block overflow-y-scroll"
+          :style="style"
+        >
           <document-user-comments-list-entry
             v-for="(comment, index) in sortedComments"
             :id="`comment-${index}`"
             :key="index"
             :text="comment.text"
-            :to="comment.to"
+            :to="generateToUrl(comment.to)"
             :date="comment.date"
             :username="comment.username"
           />

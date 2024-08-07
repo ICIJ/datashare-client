@@ -16,6 +16,14 @@ defineProps({
     type: Boolean,
     default: false
   },
+  actionStart: {
+    type: Boolean,
+    default: false
+  },
+  actionEnd: {
+    type: Boolean,
+    default: false
+  },
   listNameOthers: { type: String, required: false, default: 'Others' },
   listNameYours: { type: String, required: false, default: 'Yours' }
 })
@@ -40,8 +48,8 @@ const closeLabel = t('documentUserActionsCard.close')
           @close="$emit('close')"
         /></div
     ></b-card-title>
-    <b-card-text>
-      <header class="pb-2">
+    <b-card-text class="d-flex flex-column gap-2">
+      <header v-if="actionStart">
         <p v-if="showWarning" class="text-light-emphasis">
           <phosphor-icon name="info" class="me-1" /><slot name="action-warning"></slot>
         </p>
@@ -60,6 +68,12 @@ const closeLabel = t('documentUserActionsCard.close')
           <slot name="yours"></slot>
         </template>
       </slot>
+      <header v-if="actionEnd">
+        <p v-if="showWarning" class="text-light-emphasis">
+          <phosphor-icon name="info" class="me-1" /><slot name="action-warning"></slot>
+        </p>
+        <slot name="action"></slot>
+      </header>
     </b-card-text>
   </b-card>
 </template>
