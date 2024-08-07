@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { trimStart } from 'lodash'
 
-import SearchBreadcrumbEntryQueryTerm from './SearchBreadcrumbEntryQueryTerm'
+import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
 import filters from '@/store/filters'
 
@@ -65,7 +65,7 @@ const color = computed(() => {
 </script>
 
 <template>
-  <search-breadcrumb-entry-query-term
+  <search-parameter-query-term
     :term="term"
     :operator="operator"
     :prefix="prefix"

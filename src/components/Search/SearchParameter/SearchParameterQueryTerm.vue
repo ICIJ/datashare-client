@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 defineOptions({
-  name: 'SearchBreadcrumbEntryQueryTerm'
+  name: 'SearchParameterQueryTerm'
 })
 
 const props = defineProps({
@@ -34,7 +34,7 @@ const props = defineProps({
 
 const classList = computed(() => {
   return {
-    'search-breadcrumb-entry-query-term--negative': props.prefix === '-'
+    'search-parameter-query-term--negative': props.prefix === '-'
   }
 })
 
@@ -52,7 +52,7 @@ const showOperator = computed(() => {
 <template>
   <button-icon
     variant="outline-danger"
-    class="search-breadcrumb-entry-query-term"
+    class="search-parameter-query-term"
     :class="classList"
     :size="size"
     :style="style"
@@ -61,18 +61,18 @@ const showOperator = computed(() => {
     icon-right-hover-weight="bold"
   >
     <template v-if="showOperator" #start>
-      <span class="search-breadcrumb-entry-query-term__operator">
+      <span class="search-parameter-query-term__operator">
         {{ operator }}
       </span>
     </template>
-    <span class="search-breadcrumb-entry-query-term__value">
+    <span class="search-parameter-query-term__value">
       {{ term }}
     </span>
   </button-icon>
 </template>
 
 <style lang="scss" scoped>
-.search-breadcrumb-entry-query-term {
+.search-parameter-query-term {
   border-style: dashed;
   border-color: var(--color, currentColor);
   color: var(--bs-body-color);
