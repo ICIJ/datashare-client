@@ -26,8 +26,8 @@ const recommendationIcon = 'user-gear'
       <display-user v-for="(user, index) in usernames" :key="index" :value="user" class="me-3" />
       <span v-if="!usernames.length">{{ noRecommendations }}</span>
     </template>
-    <template #footer-warning>{{ warning }}</template>
-    <template #footer>
+    <template #action-warning>{{ warning }}</template>
+    <template #action>
       <button-icon :icon-left="recommendationIcon" variant="action">{{ recommendButtonLabel }}</button-icon>
     </template>
   </document-user-actions-card>
