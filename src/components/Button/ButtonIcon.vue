@@ -167,8 +167,7 @@ const props = defineProps({
     default: 'top'
   },
   showTooltipForce: {
-    type: Boolean,
-    default: false
+    type: Boolean
   },
   hover: {
     type: Boolean
@@ -180,6 +179,9 @@ const props = defineProps({
   counterVariant: {
     type: String,
     default: 'secondary'
+  },
+  truncate: {
+    type: Boolean
   }
 })
 
@@ -193,6 +195,7 @@ const classList = computed(() => {
   return {
     'button-icon--square': props.square,
     'button-icon--loading': props.loading,
+    'button-icon--truncate': props.truncate,
     'button-icon--hover': props.currentHover
   }
 })
@@ -232,7 +235,7 @@ const buttonProps = computed(() => ({
 }))
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .button-icon {
   --button-icon-square-size: calc(
     #{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2
@@ -240,9 +243,21 @@ const buttonProps = computed(() => ({
 
   display: inline-flex;
   align-items: center;
+  min-width: 0;
 
-  &:deep(.button-icon-counter) {
+  .button-icon-counter {
     margin-left: $spacer-xs;
+  }
+
+  &--truncate {
+    max-width: 100%;
+
+    .button-icon__label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1 0 0;
+    }
   }
 
   &--square {
@@ -253,7 +268,7 @@ const buttonProps = computed(() => ({
     height: var(--button-icon-square-size);
     position: relative;
 
-    &:deep(.button-icon-counter) {
+    .button-icon-counter {
       margin-left: 0;
       position: absolute;
       top: 0;
