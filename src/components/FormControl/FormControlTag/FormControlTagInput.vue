@@ -17,6 +17,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  addButtonSize: {
+    type: String,
+    default: null
+  },
   placeholder: {
     type: String,
     default: null
@@ -27,6 +31,12 @@ const props = defineProps({
   },
   disabled: {
     type: Boolean
+  },
+  noTags: {
+    type: Boolean
+  },
+  noClear: {
+    type: Boolean
   }
 })
 
@@ -36,7 +46,7 @@ const focus = ref(false)
 const emit = defineEmits(['blur', 'focus', 'clear', 'removeLastTag', 'addTag', 'update:inputValue'])
 
 const placeholderIfEmpty = computed(() => {
-  if (props.modelValue.length > 0) {
+  if (!props.noTags && props.modelValue.length > 0) {
     return null
   }
   return props.placeholder ?? t('formControlTagInput.placeholder')
@@ -64,6 +74,10 @@ const classList = computed(() => {
   }
 })
 
+const tags = computed(() => {
+  return props.noTags ? [] : props.modelValue
+})
+
 defineExpose({
   focus() {
     inputElement.value.focus()
@@ -73,7 +87,7 @@ defineExpose({
 
 <template>
   <div class="form-control-tag-input" :class="classList">
-    <template v-for="(tag, index) in modelValue">
+    <template v-for="(tag, index) in tags">
       <slot name="tag" v-bind="{ tag }">
         <form-control-tag-input-entry :key="index" :label="tag" :size="size" @click="$emit('removeTag', tag)" />
       </slot>
@@ -91,6 +105,7 @@ defineExpose({
         @keydown.enter="$emit('addTag', inputValue)"
       />
       <button-icon
+        v-if="!noClear"
         icon-left="x"
         variant="outline-secondary"
         hide-label
@@ -99,10 +114,10 @@ defineExpose({
       />
       <b-button
         v-if="inputValue"
-        :size="size"
+        :size="addButtonSize ?? size"
         :disabled="disabled"
         type="button"
-        class="form-control-tag-input__form__submit"
+        class="form-control-tag-input__form__submit text-nowrap"
         variant="action"
         @click="$emit('addTag', inputValue)"
       >

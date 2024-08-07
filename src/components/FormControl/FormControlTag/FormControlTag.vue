@@ -20,6 +20,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  addButtonSize: {
+    type: String,
+    default: null
+  },
   placeholder: {
     type: String,
     default: null
@@ -52,6 +56,12 @@ const props = defineProps({
   },
   noCreate: {
     type: Boolean
+  },
+  noTags: {
+    type: Boolean
+  },
+  noClear: {
+    type: Boolean
   }
 })
 
@@ -80,14 +90,14 @@ const separatorsPattern = computed(() => {
   return new RegExp(escapedSeparators.value.join('|'), 'g')
 })
 
-const hasAnySeparators = (tag) => {
-  return separatorsPattern.value.test(tag)
+const endWithSeparator = (tag) => {
+  return separators.value.some((separator) => tag.endsWith(separator))
 }
 
 const inputTag = (tag) => {
   focusIndex.value = -1
   inputValueTrigger.value = tag
-  if (hasAnySeparators(tag)) {
+  if (endWithSeparator(tag)) {
     return addTag(tag)
   }
 }
@@ -123,7 +133,7 @@ const removeTag = (tag) => {
 }
 
 const removeLastTag = () => {
-  if (inputValueTrigger.value === '' && props.modelValue.length > 0) {
+  if (!props.noTags && inputValueTrigger.value === '' && props.modelValue.length > 0) {
     const modelValue = props.modelValue.slice(0, -1)
     emit('update:modelValue', modelValue)
   }
@@ -169,7 +179,10 @@ watch(focusIndex, (value) => {
     <form-control-tag-input
       ref="inputElement"
       class="form-control-tag__input"
+      :no-tags="noTags"
+      :no-clear="noClear"
       :add-button-text="addButtonText"
+      :add-button-size="addButtonSize"
       :placeholder="placeholder"
       :size="size"
       :state="state"
