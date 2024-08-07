@@ -1,16 +1,17 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
+import { uniq } from 'lodash'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard.vue'
-import DisplayTags from '@/components/Display/DisplayTags.vue'
-import DocumentUserTagsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTagsAction.vue'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
+import DocumentUserTagsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTagsAction'
+import DisplayTagsSearchParameter from '@/components/Display/DisplayTagsSearchParameter'
 
 defineOptions({ name: 'DocumentUserTags' })
 
-const modelValue = defineModel({ type: String, required: true })
+const tags = defineModel({ type: Array, required: true, default: () => [] })
 const props = defineProps({
-  tags: {
+  options: {
     type: Array,
     default: () => []
   },
@@ -20,11 +21,8 @@ const props = defineProps({
   },
   isServer: { type: Boolean, default: false }
 })
-const { t } = useI18n()
 
-const nbTags = computed(() => {
-  return props.tags.length + props.othersTags.length
-})
+const { t } = useI18n()
 
 const title = computed(() => t('documentUserActions.tags', nbTags.value))
 const tagListOthers = t('documentUserTags.tagListOthers')
@@ -32,6 +30,19 @@ const tagListYours = t('documentUserTags.tagListYours')
 const tagWarning = t('documentUserTags.tagWarning')
 const noTags = t('documentUserTags.noTags')
 const tagIcon = 'tag'
+
+const nbTags = computed(() => {
+  return tags.value.length + props.othersTags.length
+})
+
+function removeTag(tag) {
+  tags.value = tags.value.filter((currentTag) => currentTag !== tag)
+}
+
+// TODO CD: not sure this should be handle inside the component
+const uniqueOptions = computed(() => {
+  return uniq([...tags.value, ...props.options, ...props.othersTags])
+})
 </script>
 
 <template>
@@ -43,17 +54,17 @@ const tagIcon = 'tag'
     :list-name-others="tagListOthers"
     :list-name-yours="tagListYours"
   >
-    <template #others>
-      <display-tags v-if="othersTags.length" :value="othersTags" />
-      <span v-else>{{ noTags }}</span>
-    </template>
     <template #yours>
-      <display-tags v-if="tags.length" :value="tags" />
+      <display-tags-search-parameter v-if="tags.length" :value="tags" @remove-tag="removeTag" />
       <span v-else>{{ noTags }}</span>
     </template>
-    <template #footer-warning>{{ tagWarning }}</template>
-    <template #footer>
-      <document-user-tags-action v-model="modelValue" class="d-inline-flex" />
+    <template #others>
+      <display-tags-search-parameter v-if="othersTags.length" :value="othersTags" no-x-icon />
+      <span v-else>{{ noTags }}</span>
+    </template>
+    <template #action-warning>{{ tagWarning }}</template>
+    <template #action>
+      <document-user-tags-action v-model="tags" class="d-inline-flex" :options="uniqueOptions" />
     </template>
   </document-user-actions-card>
 </template>
