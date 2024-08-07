@@ -41,6 +41,7 @@
     <b-tooltip
       teleport-to="body"
       manual
+      v-if="hasTooltip"
       :boundary-padding="20"
       :model-value="showTooltip"
       :placement="tooltipPlacement"
@@ -207,9 +208,12 @@ const tooltipText = computed(() => {
   return props.tooltipLabel ?? props.label
 })
 
+const hasTooltip = computed(() => {
+  return !!tooltipText.value && !props.hideTooltip && props.hideLabel
+})
+
 const showTooltip = computed(() => {
-  const showTooltipIfLabelIsHidden = !props.hideTooltip && props.hideLabel
-  return currentHover.value && !!tooltipText.value && (props.showTooltipForce || showTooltipIfLabelIsHidden)
+  return currentHover.value && !!tooltipText.value && (props.showTooltipForce || hasTooltip.value)
 })
 
 const buttonProps = computed(() => ({
