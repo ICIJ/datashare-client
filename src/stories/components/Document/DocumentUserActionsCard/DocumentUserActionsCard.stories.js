@@ -1,9 +1,9 @@
 import { PhosphorIcon } from '@icij/murmur-next'
 import { BButton } from 'bootstrap-vue-next'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard.vue'
-import ButtonIcon from '@/components/Button/ButtonIcon.vue'
-import DisplayTags from '@/components/Display/DisplayTags.vue'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
+import ButtonIcon from '@/components/Button/ButtonIcon'
+import DisplayTags from '@/components/Display/DisplayTags'
 
 export default {
   components: { BButton, DisplayTags, PhosphorIcon, ButtonIcon },
@@ -32,10 +32,10 @@ export default {
         <template #yours>
           Your content
         </template>
-        <template #footer-warning>
+        <template #action-warning>
           Warning is activated (in general in server mode)
         </template>
-        <template #footer>
+        <template #action>
           <b-button variant="action" class="me-2" >Action</b-button> Action footer
         </template>
       </document-user-actions-card>
@@ -77,10 +77,10 @@ export const SplitContentExample = {
         <template #yours>
           <display-tags :value="['test']" />
         </template>
-        <template #footer-warning>
+        <template #action-warning>
           Your tags are public to project members
         </template>
-        <template #footer>
+        <template #action>
           <button-icon icon-left="tag" label="Add a tag" />
         </template>
       </document-user-actions-card>
@@ -106,10 +106,10 @@ export const DefaultContentSlot = {
         <template #content>
           Content slot (when split is not needed)
         </template>
-        <template #footer-warning>
+        <template #action-warning>
           Your tags are public to project members
         </template>
-        <template #footer>
+        <template #action>
           <button-icon icon-left="tag" label="Add a tag" />
         </template>
       </document-user-actions-card>
