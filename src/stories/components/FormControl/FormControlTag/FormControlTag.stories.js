@@ -1,5 +1,6 @@
 import types from '@/utils/types'
 import FormControlTag from '@/components/FormControl/FormControlTag/FormControlTag'
+import { add } from 'lodash'
 
 export default {
   title: 'Components/FormControl/FormControlTag/FormControlTag',
@@ -35,5 +36,18 @@ export const WithManyValues = {
     noDuplicates: true,
     noCreate: true,
     modelValue: []
+  }
+}
+
+export const WithoutTags = {
+  args: {
+    modelValue: ['Foo', 'Bar'],
+    options: ['Foo', 'Bar', 'Baz', 'Qux'],
+    noDuplicates: true,
+    noTags: true,
+    noClear: true,
+    addButtonText: 'Create',
+    addButtonSize: 'sm',
+    size: 'md'
   }
 }
