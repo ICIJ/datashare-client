@@ -43,11 +43,11 @@ const componentProps = computed(() => {
 })
 
 const filterComponentProps = computed(() => {
-  return { name: props.filter, ...pick(props, ['value', 'icon', 'color', 'noIcon', 'size']) }
+  return { name: props.filter, ...pick(props, ['value', 'icon', 'color', 'noIcon', 'noXIcon', 'size']) }
 })
 
 const queryComponentProps = computed(() => {
-  return pick(props, ['query', 'noIcon', 'size'])
+  return pick(props, ['query', 'noIcon', 'noXIcon', 'size'])
 })
 </script>
 
