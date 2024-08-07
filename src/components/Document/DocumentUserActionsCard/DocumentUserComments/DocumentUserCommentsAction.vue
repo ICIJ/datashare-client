@@ -19,12 +19,13 @@ function onSubmit() {
     text: comment.value,
     date: Date.now()
   })
+  onReset()
 }
 </script>
 
 <template>
-  <b-form id="form" class="d-flex flex-column gap-2" @submit.prevent="onSubmit" @reset="onReset">
-    <b-form-textarea id="textarea" v-model="comment" placeholder="Write your text"></b-form-textarea>
+  <b-form class="document-user-comments-action d-flex flex-column gap-2" @submit.prevent="onSubmit" @reset="onReset">
+    <b-form-textarea v-model="comment" placeholder="Write your text" class="border-action"></b-form-textarea>
     <div class="d-flex justify-content-end gap-2">
       <b-button type="reset" variant="outline-action">Clear</b-button>
       <b-button type="submit" variant="action">Comment</b-button>
@@ -32,4 +33,10 @@ function onSubmit() {
   </b-form>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.document-user-comments-action {
+  .form-control:focus {
+    box-shadow: 0 0 0 0 transparent, 0 0 0 0.25rem var(--bs-action-border-subtle);
+  }
+}
+</style>
