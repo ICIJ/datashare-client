@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 import lucene from 'lucene'
 
-import SearchBreadcrumbEntryQueryAst from './SearchBreadcrumbEntryQueryAst'
-import SearchBreadcrumbEntryQueryTerm from './SearchBreadcrumbEntryQueryTerm'
+import SearchParameterQueryAst from './SearchParameterQueryAst'
+import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
 const props = defineProps({
   query: {
@@ -27,8 +27,8 @@ const ast = computed(() => {
 </script>
 
 <template>
-  <search-breadcrumb-entry-query-ast v-if="ast" :ast="ast" :no-icon="noIcon" :size="size" />
-  <search-breadcrumb-entry-query-term
+  <search-parameter-query-ast v-if="ast" :ast="ast" :no-icon="noIcon" :size="size" />
+  <search-parameter-query-term
     v-else
     :term="query"
     :no-icon="noIcon"
