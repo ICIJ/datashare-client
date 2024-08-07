@@ -51,7 +51,7 @@ import ProjectDropdownSelectorButtonContent from './ProjectDropdownSelectorButto
 import ProjectDropdownSelectorEntry from './ProjectDropdownSelectorEntry'
 import ProjectDropdownSelectorSearch from './ProjectDropdownSelectorSearch'
 
-import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
 import { iwildcardMatch } from '@/utils/strings'
 
 export default {

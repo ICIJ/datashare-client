@@ -1,7 +1,7 @@
-import SearchBarInput from '@/components/SearchBarInput'
+import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
 
 export default {
-  title: 'Components/SearchBar/SearchBarInput',
+  title: 'Components/Search/SearchBar/SearchBarInput',
   tags: ['autodocs'],
   component: SearchBarInput,
   argTypes: {
