@@ -11,6 +11,17 @@ defineProps({
 
 <template>
   <div class="project-card-thumbnail">
-    <project-thumbnail width="95px" :project="project" rounded />
+    <project-thumbnail width="100%" :project="project" rounded />
   </div>
 </template>
+
+<style lang="scss">
+.project-card-thumbnail {
+  max-width: 90px;
+  width: 20%;
+
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
+}
+</style>
