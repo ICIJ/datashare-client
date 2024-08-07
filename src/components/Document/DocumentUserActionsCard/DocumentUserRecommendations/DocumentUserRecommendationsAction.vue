@@ -2,9 +2,9 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard.vue'
-import DisplayUser from '@/components/Display/DisplayUser.vue'
-import ButtonIcon from '@/components/Button/ButtonIcon.vue'
+import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
+import DisplayUser from '@/components/Display/DisplayUser'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'DocumentUserRecommendations' })
 const recommended = defineModel({ type: Boolean, default: false })
@@ -22,14 +22,16 @@ const recommendationIcon = 'user-gear'
 </script>
 
 <template>
-  <document-user-actions-card :title="title" :icon="recommendationIcon" show-warning action-start>
+  <document-user-actions-card :title="title" :icon="recommendationIcon" show-warning>
     <template #content>
       <display-user v-for="(user, index) in usernames" :key="index" :value="user" class="me-3" />
       <span v-if="!usernames.length">{{ noRecommendations }}</span>
     </template>
     <template #action-warning>{{ warning }}</template>
     <template #action>
-      <button-icon :icon-left="recommendationIcon" variant="action">{{ recommendButtonLabel }}</button-icon>
+      <button-icon :icon-left="recommendationIcon" :disabled="recommended" variant="action">{{
+        recommendButtonLabel
+      }}</button-icon>
     </template>
   </document-user-actions-card>
 </template>
