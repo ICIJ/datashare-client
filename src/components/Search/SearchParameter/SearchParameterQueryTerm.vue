@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 
+import ButtonIcon from '@/components/Button/ButtonIcon'
+
 defineOptions({
   name: 'SearchParameterQueryTerm'
 })
@@ -62,6 +64,7 @@ const showOperator = computed(() => {
     :icon-left="noIcon ? null : icon"
     :icon-right="noXIcon ? null : 'x'"
     icon-right-hover-weight="bold"
+    @click:icon-right="$emit('click:x')"
   >
     <template v-if="showOperator" #start>
       <span class="search-parameter-query-term__operator">
