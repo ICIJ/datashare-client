@@ -28,6 +28,9 @@ const props = defineProps({
   },
   noIcon: {
     type: Boolean
+  },
+  noXIcon: {
+    type: Boolean
   }
 })
 
