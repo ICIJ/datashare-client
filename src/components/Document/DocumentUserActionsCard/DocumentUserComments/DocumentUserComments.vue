@@ -26,8 +26,8 @@ const commentsIcon = 'chats-teardrop'
     <template #content>
       <document-user-comments-list :comments="comments" />
     </template>
-    <template #footer-warning>{{ warning }}</template>
-    <template #footer>
+    <template #action-warning>{{ warning }}</template>
+    <template #action>
       <document-user-comments-action :model-value="comment" @update:model-value="$emit('update:modelValue', $event)" />
     </template>
   </document-user-actions-card>

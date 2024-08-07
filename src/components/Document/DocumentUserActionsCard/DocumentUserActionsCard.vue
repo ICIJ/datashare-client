@@ -43,7 +43,7 @@ const closeLabel = t('documentUserActionsCard.close')
     <b-card-text>
       <header class="pb-2">
         <p v-if="showWarning" class="text-light-emphasis">
-          <phosphor-icon name="info" class="me-1" /><slot name="footer-warning"></slot>
+          <phosphor-icon name="info" class="me-1" /><slot name="action-warning"></slot>
         </p>
         <slot name="action"></slot>
       </header>
