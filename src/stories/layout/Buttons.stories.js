@@ -3,7 +3,7 @@ import { BButton } from 'bootstrap-vue-next'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 export default {
-  title: 'Layout/Button',
+  title: 'Layout/Buttons',
   component: BButton,
   argTypes: {
     size: {
@@ -62,8 +62,8 @@ export default {
           </tr>
         </thead>
         <tbody>
-          <template v-for="variant in variants">
-            <tr :key="variant">
+          <template v-for="variant in variants" :key="variant">
+            <tr>
               <td>
                 <code>.btn-{{ variant }}</code>
               </td>
