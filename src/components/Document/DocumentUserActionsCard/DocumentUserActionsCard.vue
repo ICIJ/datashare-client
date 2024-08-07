@@ -41,6 +41,12 @@ const closeLabel = t('documentUserActionsCard.close')
         /></div
     ></b-card-title>
     <b-card-text>
+      <header class="pb-2">
+        <p v-if="showWarning" class="text-light-emphasis">
+          <phosphor-icon name="info" class="me-1" /><slot name="footer-warning"></slot>
+        </p>
+        <slot name="action"></slot>
+      </header>
       <slot name="content">
         <template v-if="isSplit">
           <document-user-actions-card-list :title="listNameYours">
@@ -54,12 +60,6 @@ const closeLabel = t('documentUserActionsCard.close')
           <slot name="yours"></slot>
         </template>
       </slot>
-      <footer class="pt-2">
-        <p v-if="showWarning" class="text-light-emphasis">
-          <phosphor-icon name="info" class="me-1" /><slot name="footer-warning"></slot>
-        </p>
-        <slot name="footer"></slot>
-      </footer>
     </b-card-text>
   </b-card>
 </template>
