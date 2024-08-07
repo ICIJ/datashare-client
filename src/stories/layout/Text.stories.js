@@ -1,14 +1,8 @@
 export default {
   title: 'Layout/Text',
   render: (args) => ({
-    // Components used in your story `template` are defined in the `components` object
-    components: {},
-    // The story's `args` need to be mapped into the template through the `setup()` method
     setup() {
-      // Story args can be spread into the returned object
-      return {
-        args
-      }
+      return { args }
     },
     template: `
       <div class="container">
@@ -114,5 +108,4 @@ export default {
   })
 }
 
-// // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default = {}

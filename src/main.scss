@@ -15,6 +15,7 @@
 @import '~node_modules/@icij/murmur-next/dist/lib/murmur.css';
 
 // Must be after bootstrap
+@import './utils/alerts.scss';
 @import './utils/buttons.scss';
 
 .dropdown-item {
