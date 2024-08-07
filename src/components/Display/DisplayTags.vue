@@ -11,10 +11,16 @@ const props = defineProps({
 const toHashtag = (tag) => `#${tag}`
 
 const tags = computed(() => {
-  return castArray(props.value).map(toHashtag).join(' ')
+  return castArray(props.value)
 })
 </script>
 
 <template>
-  <span class="text-action-emphasis">{{ tags }}</span>
+  <span class="display-tags text-action-emphasis">
+    <template v-for="content in tags" :key="content">
+      <slot name="content" v-bind="{ content }">
+        <span class="ms-1">{{ toHashtag(content) }}</span>
+      </slot>
+    </template>
+  </span>
 </template>
