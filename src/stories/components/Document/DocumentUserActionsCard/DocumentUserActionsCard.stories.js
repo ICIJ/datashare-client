@@ -14,7 +14,9 @@ export default {
     icon: '',
     title: 'Generic card title',
     isSplit: false,
-    showWarning: false
+    showWarning: false,
+    actionStart: true,
+    actionEnd: false
   },
   render: (args) => ({
     components: {
