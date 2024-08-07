@@ -172,6 +172,31 @@ export const SquarePill = {
   }
 }
 
+export const Truncated = {
+  args: {
+    variant: 'action',
+    size: 'md',
+    label: 'Saving the tags',
+    truncate: true,
+    iconLeft: 'floppy-disk'
+  },
+  render: (args) => ({
+    components: {
+      ButtonIcon
+    },
+    setup() {
+      return {
+        args
+      }
+    },
+    template: `
+      <div style="max-width: 150px">
+        <button-icon v-bind="args" />
+      </div>
+    `
+  })
+}
+
 export const Loading = {
   args: {
     variant: 'action',
