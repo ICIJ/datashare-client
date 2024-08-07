@@ -35,8 +35,9 @@
       :spin-duration="loadingDuration"
       :variant="iconRightVariant"
       class="button-icon__icon-right"
+      @click="click('icon-right')"
     />
-    <button-icon-counter :counter="counter" :variant="counterVariant" />
+    <button-icon-counter v-if="counter !== null" :counter="counter" :variant="counterVariant" />
     <slot name="end" />
     <b-tooltip
       teleport-to="body"
@@ -182,6 +183,10 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['click:icon-right'])
+function click(name) {
+  emit(`click:${name}`)
+}
 const currentHover = ref(false)
 
 const classList = computed(() => {
