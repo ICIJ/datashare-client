@@ -1,11 +1,11 @@
 <script setup>
 import { computed } from 'vue'
 
-import SearchBreadcrumbEntryFilter from './SearchBreadcrumbEntryFilter'
-import SearchBreadcrumbEntryQueryTerm from './SearchBreadcrumbEntryQueryTerm'
+import SearchParameterFilter from './SearchParameterFilter'
+import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
 defineOptions({
-  name: 'SearchBreadcrumbEntryQueryAst'
+  name: 'SearchParameterQueryAst'
 })
 
 const props = defineProps({
@@ -30,15 +30,9 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
 </script>
 
 <template>
-  <span class="search-breadcrumb-entry-query-ast d-inline-flex flex-wrap column-gap-1 row-gap-2">
-    <search-breadcrumb-entry-query-ast
-      v-if="isLeft"
-      :ast="ast.left"
-      :operator="operator"
-      :no-icon="noIcon"
-      :size="size"
-    />
-    <search-breadcrumb-entry-query-term
+  <span class="search-parameter-query-ast d-inline-flex flex-wrap flex-wrap column-gap-1 row-gap-2">
+    <search-parameter-query-ast v-if="isLeft" :ast="ast.left" :operator="operator" :no-icon="noIcon" :size="size" />
+    <search-parameter-query-term
       v-if="isTerm"
       :term="ast.term"
       :operator="operator"
@@ -46,7 +40,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :no-icon="noIcon"
       :size="size"
     />
-    <search-breadcrumb-entry-filter
+    <search-parameter-filter
       v-if="isFilter"
       :name="ast.field"
       :operator="operator"
@@ -55,7 +49,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :no-icon="noIcon"
       :size="size"
     />
-    <search-breadcrumb-entry-query-ast
+    <search-parameter-query-ast
       v-if="isRight"
       :ast="ast.right"
       :operator="ast.operator"

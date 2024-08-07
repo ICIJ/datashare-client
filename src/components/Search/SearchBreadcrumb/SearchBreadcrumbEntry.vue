@@ -1,13 +1,10 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
-import { computed } from 'vue'
-import { pick } from 'lodash'
 
-import SearchBreadcrumbEntryOccurrences from './SearchBreadcrumbEntryOccurrences'
-import SearchBreadcrumbEntryFilter from './SearchBreadcrumbEntryFilter'
-import SearchBreadcrumbEntryQuery from './SearchBreadcrumbEntryQuery'
+import SearchBreadcrumbEntryOccurrences from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryOccurrences'
+import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
 
-const props = defineProps({
+defineProps({
   filter: {
     type: String
   },
@@ -42,21 +39,19 @@ const props = defineProps({
     type: Boolean
   }
 })
-
-const entryComponent = computed(() => {
-  return props.filter ? SearchBreadcrumbEntryFilter : SearchBreadcrumbEntryQuery
-})
-
-const entryAttributes = computed(() => {
-  return props.filter
-    ? { name: props.filter, ...pick(props, ['value', 'icon', 'color', 'noIcon', 'size']) }
-    : pick(props, ['query', 'noIcon', 'size'])
-})
 </script>
 
 <template>
   <div class="search-breadcrumb-entry d-inline-flex flex-wrap">
-    <component :is="entryComponent" v-bind="entryAttributes" />
+    <search-parameter
+      :color="color"
+      :icon="icon"
+      :filter="filter"
+      :no-icon="noIcon"
+      :query="query"
+      :size="size"
+      :value="value"
+    />
     <div class="text-nowrap">
       <search-breadcrumb-entry-occurrences
         v-if="!noOccurrences"

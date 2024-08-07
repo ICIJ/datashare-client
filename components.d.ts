@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    '(refactor': split search breadcrumb entry to search parameter #datashare/1499)
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -311,11 +312,8 @@ declare module 'vue' {
     SearchBreadcrumb: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumb.vue')['default']
     SearchBreadcrumbEmpty: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbEmpty.vue')['default']
     SearchBreadcrumbEntry: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbEntry.vue')['default']
-    SearchBreadcrumbEntryFilter: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryFilter.vue')['default']
+    SearchBreadcrumbEntryFilter: typeof import('./src/components/Search/SearchQueryEntry/SearchBreadcrumbEntryFilter.vue')['default']
     SearchBreadcrumbEntryOccurrences: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryOccurrences.vue')['default']
-    SearchBreadcrumbEntryQuery: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryQuery.vue')['default']
-    SearchBreadcrumbEntryQueryAst: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryQueryAst.vue')['default']
-    SearchBreadcrumbEntryQueryTerm: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryQueryTerm.vue')['default']
     SearchBreadcrumbFooter: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbFooter.vue')['default']
     SearchBreadcrumbToggler: typeof import('./src/components/Search/SearchBreadcrumb/SearchBreadcrumbToggler.vue')['default']
     SearchDocumentNavbar: typeof import('./src/components/SearchDocumentNavbar.vue')['default']
@@ -323,9 +321,15 @@ declare module 'vue' {
     SearchLayoutSelector: typeof import('./src/components/SearchLayoutSelector.vue')['default']
     SearchParameter: typeof import('./src/components/Search/SearchParameter/SearchParameter.vue')['default']
     SearchParameterFilter: typeof import('./src/components/Search/SearchParameter/SearchParameterFilter.vue')['default']
+    SearchParameterOccurrences: typeof import('./src/components/Search/SearchParameter/SearchParameterOccurrences.vue')['default']
     SearchParameterQuery: typeof import('./src/components/Search/SearchParameter/SearchParameterQuery.vue')['default']
     SearchParameterQueryAst: typeof import('./src/components/Search/SearchParameter/SearchParameterQueryAst.vue')['default']
     SearchParameterQueryTerm: typeof import('./src/components/Search/SearchParameter/SearchParameterQueryTerm.vue')['default']
+    SearchQueryEntryFilter: typeof import('./src/components/Search/SearchParameter/SearchQueryEntryFilter.vue')['default']
+    SearchQueryEntryOccurrences: typeof import('./src/components/Search/SearchParameter/SearchQueryEntryOccurrences.vue')['default']
+    SearchQueryEntryQuery: typeof import('./src/components/Search/SearchParameter/SearchQueryEntryQuery.vue')['default']
+    SearchQueryEntryQueryAst: typeof import('./src/components/Search/SearchParameter/SearchQueryEntryQueryAst.vue')['default']
+    SearchQueryEntryQueryTerm: typeof import('./src/components/Search/SearchParameter/SearchQueryEntryQueryTerm.vue')['default']
     SearchResults: typeof import('./src/components/SearchResults.vue')['default']
     SearchResultsGrid: typeof import('./src/components/SearchResultsGrid.vue')['default']
     SearchResultsHeader: typeof import('./src/components/SearchResultsHeader.vue')['default']
