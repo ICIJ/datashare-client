@@ -5,15 +5,15 @@ export default {
   tags: ['autodocs'],
   component: DocumentUserTags,
   args: {
-    modelValue: 'test',
-    tags: [],
+    modelValue: [],
+    options: ['toto', 'titi', 'tata'],
     listNameOthers: 'Added by others',
     listNameYours: 'Added by you'
   }
 }
 export const Default = {}
 export const WithTags = {
-  args: { tags: ['toto', 'titi', 'tata'] }
+  args: { modelValue: ['toto', 'titi', 'tata'], options: ['toto', 'titi', 'tata', 'test'] }
 }
 
 export const isServer = {
@@ -23,7 +23,7 @@ export const isServer = {
 export const isServerWithTags = {
   args: {
     isServer: true,
-    tags: ['toto', 'titi', 'tata'],
-    othersTags: ['toto', 'titi', 'tata']
+    modelValue: ['toto', 'titi', 'tata'],
+    othersTags: ['riri', 'fifi', 'loulou']
   }
 }
