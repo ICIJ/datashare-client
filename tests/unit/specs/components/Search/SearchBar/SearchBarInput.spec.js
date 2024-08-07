@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 
-import SearchBarInput from '@/components/SearchBarInput'
+import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('SearchBarInput.vue', function () {

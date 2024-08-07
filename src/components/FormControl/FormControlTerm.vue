@@ -1,7 +1,7 @@
 <script setup>
 import FormControlTag from './FormControlTag/FormControlTag'
 
-import SearchBreadcrumbEntry from '@/components/SearchBreadcrumb/SearchBreadcrumbEntry'
+import SearchBreadcrumbEntry from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbEntry'
 
 defineProps({
   modelValue: {

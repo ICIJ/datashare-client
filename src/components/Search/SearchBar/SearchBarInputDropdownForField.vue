@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import SearchBarInputDropdown from '@/components/SearchBarInputDropdown'
+import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
 import settings from '@/utils/settings'
 
 export default {

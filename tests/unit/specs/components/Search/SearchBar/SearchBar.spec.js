@@ -4,7 +4,7 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/Search/SearchBar/SearchBar'
 
 describe('SearchBar.vue', function () {
   const { index, es } = esConnectionHelper.build('search-bar')
