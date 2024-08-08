@@ -78,7 +78,7 @@
 import { compact, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 /**
  * Form to filter a batch search results by query

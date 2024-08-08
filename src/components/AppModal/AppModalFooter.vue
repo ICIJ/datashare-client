@@ -1,5 +1,5 @@
 <script setup>
-import FormActions from '@/components/FormActions/FormActions'
+import FormActions from '@/components/Form/FormActions/FormActions'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({

@@ -1,7 +1,7 @@
-import FormControlRange from '@/components/FormControl/FormControlRange/FormControlRange'
+import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange'
 
 export default {
-  title: 'Components/FormControl/FormControlRange/FormControlRange',
+  title: 'Components/Form/FormControl/FormControlRange/FormControlRange',
   tags: ['autodocs'],
   component: FormControlRange,
   args: {

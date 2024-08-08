@@ -1,8 +1,8 @@
 import types from '@/utils/types'
-import FormControlTag from '@/components/FormControl/FormControlTag/FormControlTag'
+import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
 
 export default {
-  title: 'Components/FormControl/FormControlTag/FormControlTag',
+  title: 'Components/Form/FormControl/FormControlTag/FormControlTag',
   tags: ['autodocs'],
   component: FormControlTag,
   argTypes: {

@@ -120,7 +120,7 @@
 <script>
 import { camelCase, find, get, startCase, uniqueId } from 'lodash'
 
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { isUrl } from '@/utils/strings'
 
 /**

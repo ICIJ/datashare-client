@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import FormControlTag from '@/components/FormControl/FormControlTag/FormControlTag'
+import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
 
 describe('FormControlTag', () => {
   let plugins
