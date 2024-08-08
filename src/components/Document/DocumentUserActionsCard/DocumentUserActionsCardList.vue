@@ -8,9 +8,9 @@ defineProps({
 </script>
 
 <template>
-  <div class="py-2">
+  <div class="d-flex flex-column gap-3">
     <document-user-actions-card-list-title :title="title" />
-    <div class="py-2">
+    <div class="">
       <slot></slot>
     </div>
   </div>
