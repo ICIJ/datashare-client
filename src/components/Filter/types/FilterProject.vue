@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 

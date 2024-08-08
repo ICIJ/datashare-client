@@ -87,7 +87,7 @@ import { capitalize, flatten, get, mapValues, sumBy, pickBy, throttle } from 'lo
 import { mapState } from 'vuex'
 
 import NamedEntityInContext from '@/components/NamedEntityInContext'
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 

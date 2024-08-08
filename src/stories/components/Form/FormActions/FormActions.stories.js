@@ -1,8 +1,8 @@
-import FormActions from '@/components/FormActions/FormActions'
+import FormActions from '@/components/Form/FormActions/FormActions'
 import ButtonIcon from '@/components//Button/ButtonIcon'
 
 export default {
-  title: 'Components/FormActions/FormActions',
+  title: 'Components/Form/FormActions/FormActions',
   tags: ['autodocs'],
   component: FormActions,
   argTypes: {

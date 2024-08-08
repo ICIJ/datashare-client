@@ -1,7 +1,7 @@
-import FormControlTerm from '@/components/FormControl/FormControlTerm'
+import FormControlTerm from '@/components/Form/FormControl/FormControlTerm'
 
 export default {
-  title: 'Components/FormControl/FormControlTerm',
+  title: 'Components/Form/FormControl/FormControlTerm',
   tags: ['autodocs'],
   component: FormControlTerm,
   argTypes: {

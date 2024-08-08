@@ -42,7 +42,7 @@
 
 <script>
 import settings from '@/utils/settings'
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
