@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { uniq } from 'lodash'
 
 import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
@@ -26,16 +26,18 @@ const uniqUsernames = computed(() => {
   return uniq(usernames.value)
 })
 
-const recommend = computed(() => {
-  return uniqUsernames.value.indexOf(props.username) > 1
-})
-function onRecommendChange(recommend) {
-  if (recommend) {
-    usernames.value = [...uniqUsernames.value, props.username]
-  } else {
-    usernames.value = uniqUsernames.value.filter((u) => u !== props.username)
+const recommended = computed({
+  get: () => {
+    return uniqUsernames.value.indexOf(props.username) > -1
+  },
+  set: (recoByMe) => {
+    if (recoByMe) {
+      usernames.value = [...uniqUsernames.value, props.username]
+    } else {
+      usernames.value = uniqUsernames.value.filter((u) => u !== props.username)
+    }
   }
-}
+})
 </script>
 
 <template>
@@ -57,11 +59,7 @@ function onRecommendChange(recommend) {
     </template>
     <template #action-warning>{{ warning }}</template>
     <template #action>
-      <document-user-recommendations-action
-        :model-value="recommend"
-        class="d-inline-flex align-self-end"
-        @update:modelValue="onRecommendChange"
-      />
+      <document-user-recommendations-action v-model="recommended" class="d-inline-flex align-self-end" />
     </template>
   </document-user-actions-card>
 </template>
