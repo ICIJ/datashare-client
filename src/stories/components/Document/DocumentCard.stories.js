@@ -1,8 +1,6 @@
 import { markRaw } from 'vue'
 import { PhFilePdf } from '@phosphor-icons/vue'
 import { vueRouter } from 'storybook-vue3-router'
-import { template } from 'lodash'
-import { components } from 'storybook/internal/components'
 
 import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
