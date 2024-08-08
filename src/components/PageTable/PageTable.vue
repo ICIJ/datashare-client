@@ -8,6 +8,7 @@ const props = defineProps({
 })
 
 const slots = useSlots()
+const hasColgroup = computed(() => !!slots.colgroup)
 const hasThead = computed(() => !!slots.thead)
 const hasTbody = computed(() => !!slots.default)
 const hasTfooter = computed(() => !!slots.tfooter)
@@ -20,6 +21,9 @@ const classList = computed(() => {
 
 <template>
   <b-table-simple responsive borderless striped class="page-table" :class="classList">
+    <colgroup v-if="hasColgroup">
+      <slot v-bind="{ selectMode }" name="colgroup" />
+    </colgroup>
     <thead v-if="hasThead">
       <tr>
         <th class="page-table__select"></th>
