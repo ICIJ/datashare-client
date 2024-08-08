@@ -24,3 +24,9 @@ const label = computed(() => {
     @click="$emit('update:active', !active)"
   />
 </template>
+
+<style lang="scss" scoped>
+.document-translation-alert-toggler {
+  --bs-btn-bg: var(--bs-body-bg);
+}
+</style>
