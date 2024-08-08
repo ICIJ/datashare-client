@@ -36,7 +36,7 @@ const closeLabel = t('documentUserActionsCard.close')
   <b-card class="document-user-actions-card shadow border-0">
     <b-card-title
       ><div class="d-flex justify-content-between align-items-center">
-        <h4 class="fw-bold mb-2">
+        <h4 class="fw-bold my-2">
           <phosphor-icon :name="icon" class="me-2" /><slot name="title">{{ title }}</slot>
         </h4>
         <button-icon
