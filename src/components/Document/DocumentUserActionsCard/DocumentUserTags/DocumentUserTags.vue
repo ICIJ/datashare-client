@@ -60,7 +60,7 @@ const uniqueOptions = computed(() => {
       <span v-else>{{ noTags }}</span>
     </template>
     <template #others>
-      <display-tags-search-parameter v-if="othersTags.length" :value="othersTags" no-x-icon />
+      <display-tags-search-parameter v-if="othersTags.length" :value="othersTags" />
       <span v-else>{{ noTags }}</span>
     </template>
     <template #action-warning>{{ tagWarning }}</template>
