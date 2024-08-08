@@ -14,8 +14,11 @@ export default {
     },
     template: `
       <div>
-        <b-alert v-for="variant in args.variants" model-value :variant="variant">
+        <b-alert v-for="variant in args.variants" model-value :variant="variant" class="position-relative">
           {{ args.content }}
+          <span class="badge rounded-0 position-absolute top-0 end-0" :class="'text-bg-' + variant">
+            {{ variant }}
+          </span>
         </b-alert>
       </div>
     `
