@@ -2,8 +2,8 @@
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
-import DocumentUserActionsCardList from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCardList.vue'
-import ButtonIcon from '@/components/Button/ButtonIcon.vue'
+import DocumentUserActionsCardList from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCardList'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 defineOptions({ name: 'DocumentUserActionsCard' })
 defineProps({
   title: { type: String, required: true },
@@ -34,21 +34,19 @@ const closeLabel = t('documentUserActionsCard.close')
 
 <template>
   <b-card class="document-user-actions-card shadow border-0">
-    <b-card-title
-      ><div class="d-flex justify-content-between align-items-center">
-        <h4 class="fw-bold my-2">
-          <phosphor-icon :name="icon" class="me-2" /><slot name="title">{{ title }}</slot>
-        </h4>
-        <button-icon
-          variant="outline-tertiary"
-          icon-left="x"
-          hide-label
-          square
-          :label="closeLabel"
-          @close="$emit('close')"
-        /></div
-    ></b-card-title>
-    <b-card-text class="d-flex flex-column gap-2">
+    <b-card-title class="d-flex justify-content-between align-items-center">
+      <h4 class="fw-bold my-2">
+        <phosphor-icon :name="icon" class="me-2" /><slot name="title">{{ title }}</slot>
+      </h4>
+      <button-icon
+        variant="outline-tertiary"
+        icon-left="x"
+        hide-label
+        square
+        :label="closeLabel"
+        @close="$emit('close')"
+    /></b-card-title>
+    <b-card-text class="d-flex flex-column gap-4">
       <header v-if="actionStart">
         <p v-if="showWarning" class="text-light-emphasis">
           <phosphor-icon name="info" class="me-1" /><slot name="action-warning"></slot>
@@ -77,3 +75,11 @@ const closeLabel = t('documentUserActionsCard.close')
     </b-card-text>
   </b-card>
 </template>
+
+<style scoped lang="scss">
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+</style>
