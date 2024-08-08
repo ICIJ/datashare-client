@@ -23,7 +23,7 @@ const title = computed(() => {
 </script>
 
 <template>
-  <span v-if="detectedLanguage === sourceLanguage" :title="title" v-b-tooltip>
+  <span v-if="detectedLanguage === sourceLanguage" v-b-tooltip :title="title">
     {{ $t('documentTranslationAlertSource.detected') }}
   </span>
   <display-language v-else :value="sourceLanguage" />

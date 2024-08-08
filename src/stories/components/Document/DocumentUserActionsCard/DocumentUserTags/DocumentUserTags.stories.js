@@ -14,6 +14,7 @@ export default {
     listNameYours: 'Added by you'
   }
 }
+
 const tag = (tagName, username) => {
   return {
     tag: tagName,
@@ -23,7 +24,9 @@ const tag = (tagName, username) => {
 const tagMine = (tagName) => tag(tagName, 'jsmith')
 const tagOther = (tagName) => tag(tagName, uniqueId('other'))
 const tags = [tagMine('toto'), tagMine('titi'), tagMine('tata'), tagOther('riri'), tagOther('fifi'), tagOther('loulou')]
+
 export const Default = {}
+
 export const WithTags = {
   args: {
     modelValue: tags,
@@ -31,13 +34,13 @@ export const WithTags = {
   }
 }
 
-export const isServer = {
+export const IsServer = {
   args: {
     isServer: true
   }
 }
 
-export const isServerWithTags = {
+export const IsServerWithTags = {
   args: {
     isServer: true,
     modelValue: tags

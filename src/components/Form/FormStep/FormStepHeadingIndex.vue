@@ -23,7 +23,6 @@ const classList = computed(() => ({
   </div>
 </template>
 
-
 <style lang="scss" scoped>
 .form-step-heading-index {
   --form-step-heading-index-size: 2rem;

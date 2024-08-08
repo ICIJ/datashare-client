@@ -1,6 +1,5 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
 
 import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
 
