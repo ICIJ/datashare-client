@@ -1,4 +1,4 @@
-import DocumentUserRecommendations from '@/components/Document/DocumentUserActionsCard/DocumentUserRecommendations/DocumentUserRecommendations.vue'
+import DocumentUserRecommendations from '@/components/Document/DocumentUserActionsCard/DocumentUserRecommendations/DocumentUserRecommendations'
 import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
 
 export default {
@@ -7,10 +7,11 @@ export default {
   decorators: [storeDecoratorPipelineChainByCategory],
   component: DocumentUserRecommendations,
   args: {
-    usernames: []
+    modelValue: [],
+    username: 'jsmith'
   }
 }
 export const Default = {}
 export const WithRecommendations = {
-  args: { usernames: ['Riri', 'Fifi', 'Loulou'] }
+  args: { modelValue: ['Riri', 'Fifi', 'Loulou'] }
 }

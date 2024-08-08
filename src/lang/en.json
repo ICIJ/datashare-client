@@ -219,7 +219,8 @@
   "documentUserRecommendations": {
     "warning":"Your recommendations are public to project’s members",
     "noRecommendations":"No recommendations yet.",
-    "recommendButtonLabel" : "Recommend this document"
+    "markAsRecommended": "Mark as recommended",
+    "unmarkAsRecommended": "Unmark as recommended"
   },
   "documentUserTags": {
     "tagListOthers":"Added by others",

@@ -33,8 +33,8 @@ const closeLabel = t('documentUserActionsCard.close')
 </script>
 
 <template>
-  <b-card class="document-user-actions-card shadow border-0">
-    <b-card-title class="d-flex justify-content-between align-items-center">
+  <b-card class="document-user-actions-card shadow border-0 px-2">
+    <b-card-title class="d-flex justify-content-between align-items-center mb-4">
       <h4 class="fw-bold my-2">
         <phosphor-icon :name="icon" class="me-2" /><slot name="title">{{ title }}</slot>
       </h4>
@@ -53,25 +53,27 @@ const closeLabel = t('documentUserActionsCard.close')
         </p>
         <slot name="action"></slot>
       </header>
-      <slot name="content">
-        <template v-if="isSplit">
-          <document-user-actions-card-list :title="listNameYours">
+      <section class="d-flex flex-column gap-4">
+        <slot name="content">
+          <template v-if="isSplit">
+            <document-user-actions-card-list :title="listNameYours">
+              <slot name="yours"></slot>
+            </document-user-actions-card-list>
+            <document-user-actions-card-list :title="listNameOthers">
+              <slot name="others"></slot>
+            </document-user-actions-card-list>
+          </template>
+          <template v-else>
             <slot name="yours"></slot>
-          </document-user-actions-card-list>
-          <document-user-actions-card-list :title="listNameOthers">
-            <slot name="others"></slot>
-          </document-user-actions-card-list>
-        </template>
-        <template v-else>
-          <slot name="yours"></slot>
-        </template>
-      </slot>
-      <header v-if="actionEnd">
+          </template>
+        </slot>
+      </section>
+      <footer v-if="actionEnd" class="d-flex flex-column">
         <p v-if="showWarning" class="text-light-emphasis">
           <phosphor-icon name="info" class="me-1" /><slot name="action-warning"></slot>
         </p>
         <slot name="action"></slot>
-      </header>
+      </footer>
     </b-card-text>
   </b-card>
 </template>
