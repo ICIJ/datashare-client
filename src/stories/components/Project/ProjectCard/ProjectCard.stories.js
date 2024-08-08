@@ -14,10 +14,8 @@ const routes = [
 ]
 
 export default {
-  title: 'Components/Project/ProjectCard',
-  decorators: [
-    vueRouter(routes)
-  ],
+  title: 'Components/Project/ProjectCard/ProjectCard',
+  decorators: [vueRouter(routes)],
   tags: ['autodocs'],
   component: ProjectCard,
   args: {
