@@ -25,7 +25,7 @@ function removeValue(content) {
         filter="tag"
         :term="content"
         :no-x-icon="noXIcon"
-        class="ms-1 text-action-emphasis"
+        class="text-action-emphasis"
         @click:x="removeValue(content)"
       />
     </template>
