@@ -2,38 +2,47 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
-import DisplayUser from '@/components/Display/DisplayUser'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
-defineOptions({ name: 'DocumentUserRecommendations' })
+defineOptions({ name: 'DocumentUserRecommendationsAction' })
 const recommended = defineModel({ type: Boolean, default: false })
-const props = defineProps({
-  usernames: { type: Array, default: () => [] }
-})
 
 const { t } = useI18n()
 
-const title = computed(() => t('documentUserActions.recommended', props.usernames.length))
-const warning = t('documentUserRecommendations.warning')
-const noRecommendations = t('documentUserRecommendations.noRecommendations')
-const recommendButtonLabel = t('documentUserRecommendations.recommendButtonLabel')
-const recommendationIcon = 'user-gear'
+const recommendButtonLabel = t('documentUserRecommendations.markAsRecommended')
+const stopRecommendButtonLabel = t('documentUserRecommendations.unmarkAsRecommended')
+const buttonLabel = computed(() => {
+  return recommended.value ? stopRecommendButtonLabel : recommendButtonLabel
+})
+const recommendationIcon = 'check'
+const stopRecommendIcon = 'x'
+const icon = computed(() => {
+  return recommended.value ? stopRecommendIcon : recommendationIcon
+})
+const variant = computed(() => {
+  return recommended.value ? 'action' : 'outline-action'
+})
+function toggleRecommend() {
+  recommended.value = !recommended.value
+}
 </script>
 
 <template>
-  <document-user-actions-card :title="title" :icon="recommendationIcon" show-warning>
-    <template #content>
-      <display-user v-for="(user, index) in usernames" :key="index" :value="user" class="me-3" />
-      <span v-if="!usernames.length">{{ noRecommendations }}</span>
-    </template>
-    <template #action-warning>{{ warning }}</template>
-    <template #action>
-      <button-icon :icon-left="recommendationIcon" :disabled="recommended" variant="action">{{
-        recommendButtonLabel
-      }}</button-icon>
-    </template>
-  </document-user-actions-card>
+  <button-icon
+    :icon-left="icon"
+    :variant="variant"
+    class="document-user-recommendations-action align-self-end text-nowrap"
+    @click="toggleRecommend"
+    >{{ buttonLabel }}</button-icon
+  >
 </template>
 
-<style scoped lang="scss"></style>
+<style lang="scss">
+.document-user-recommendations-action {
+  width: 270px;
+  & .button-icon__label {
+    width: 100%;
+    text-align: center;
+  }
+}
+</style>
