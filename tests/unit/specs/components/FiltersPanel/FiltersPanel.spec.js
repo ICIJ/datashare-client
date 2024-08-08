@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 
-import FiltersPanel from '@/components/FiltersPanel/FiltersPanel.vue'
+import FiltersPanel from '@/components/FiltersPanel/FiltersPanel'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('FiltersPanel.vue', () => {

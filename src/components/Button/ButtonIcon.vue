@@ -40,9 +40,9 @@
     <button-icon-counter v-if="counter !== null" :counter="counter" :variant="counterVariant" />
     <slot name="end" />
     <b-tooltip
+      v-if="hasTooltip"
       teleport-to="body"
       manual
-      v-if="hasTooltip"
       :boundary-padding="20"
       :model-value="showTooltip"
       :placement="tooltipPlacement"

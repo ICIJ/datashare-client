@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n  } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 import { PhCaretDown, PhCaretUp } from '@phosphor-icons/vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
