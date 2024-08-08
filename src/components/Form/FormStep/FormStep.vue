@@ -43,8 +43,8 @@ const classList = computed(() => ({
 
 <style lang="scss" scoped>
 .form-step {
-  @include transition($transition-base);
   box-shadow: 0 0 0 1px transparent inset;
+  @include transition($transition-base);
 }
 
 .form-step:not(.form-step--collapsed) {
