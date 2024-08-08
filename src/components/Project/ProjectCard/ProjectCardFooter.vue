@@ -33,6 +33,7 @@ const toProjectSearch = computed(() => ({
         icon-left="chart-bar"
         variant="outline-tertiary"
         truncate
+        class="fw-medium"
         :label="$t('projectCardFooter.insights')"
       />
       <button-icon
@@ -40,6 +41,7 @@ const toProjectSearch = computed(() => ({
         icon-left="magnifying-glass"
         variant="outline-primary"
         truncate
+        class="fw-medium"
         :label="$t('projectCardFooter.search')"
       />
     </slot>
