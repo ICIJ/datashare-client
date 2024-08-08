@@ -12,7 +12,7 @@ defineProps({
   }
 })
 const emit = defineEmits(['remove-value'])
-function removeValue(content) {
+const removeValue = (content) => {
   emit('remove-value', content)
 }
 </script>

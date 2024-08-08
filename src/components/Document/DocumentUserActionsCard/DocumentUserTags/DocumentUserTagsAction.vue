@@ -9,20 +9,16 @@ defineOptions({ name: 'DocumentUserTagsAction' })
 const modelValue = defineModel({ type: Array, required: true })
 defineProps({
   options: {
-    type: Array
+    type: Array,
+    default: () => []
   }
 })
 
 const emit = defineEmits(['update:tags'])
 const { t } = useI18n()
 const placeholder = t('documentUserTagsAction.placeholder')
-const show = ref(false)
 async function tagAdded($event) {
-  show.value = !show.value
   emit('update:tags', $event)
-  setTimeout(() => {
-    show.value = !show.value
-  }, 500)
 }
 </script>
 
@@ -38,9 +34,6 @@ async function tagAdded($event) {
       no-tags
       @update:model-value="tagAdded"
     />
-    <Transition name="fade" mode="out-in">
-      <span v-if="show">Tag added</span>
-    </Transition>
   </div>
 </template>
 

@@ -16,7 +16,7 @@ const tags = computed(() => {
 </script>
 
 <template>
-  <span class="display-tags text-action-emphasis d-inline-flex gap-2">
+  <span class="display-tags text-action-emphasis d-inline-flex flex-wrap gap-2">
     <template v-for="(content, index) in tags" :key="content">
       <slot name="content" v-bind="{ content, index }">
         <span>{{ toHashtag(content) }}</span>
