@@ -15,9 +15,8 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  othersTags: {
-    type: Array,
-    default: () => []
+  username: {
+    type: String
   },
   isServer: { type: Boolean, default: false }
 })
@@ -32,16 +31,29 @@ const noTags = t('documentUserTags.noTags')
 const tagIcon = 'tag'
 
 const nbTags = computed(() => {
-  return tags.value.length + props.othersTags.length
+  return tags.value.length
 })
 
-function removeTag(tag) {
-  tags.value = tags.value.filter((currentTag) => currentTag !== tag)
+const removeTag = (tagName) => {
+  tags.value = tags.value.filter((currentTag) => currentTag.tag !== tagName)
 }
+const yoursTags = computed(() => {
+  return tags.value.filter((currentTag) => currentTag.username === props.username).map((t) => t.tag)
+})
+const othersTags = computed(() => {
+  return tags.value.filter((currentTag) => currentTag.username !== props.username).map((t) => t.tag)
+})
 
+const tagList = computed(() => {
+  return tags.value.map((t) => t.tag)
+})
+const onNewTag = (tagListArray) => {
+  const last = tagListArray.pop() // CD: Assume that we only add tag through the tag action input
+  tags.value = [...tags.value, { tag: last, username: props.username }]
+}
 // TODO CD: not sure this should be handle inside the component
 const uniqueOptions = computed(() => {
-  return uniq([...tags.value, ...props.options, ...props.othersTags])
+  return uniq([...tagList.value, ...props.options])
 })
 </script>
 
@@ -56,16 +68,21 @@ const uniqueOptions = computed(() => {
     :list-name-yours="tagListYours"
   >
     <template #yours>
-      <display-tags-search-parameter v-if="tags.length" :value="tags" @remove-tag="removeTag" />
+      <display-tags-search-parameter v-if="yoursTags.length" :value="yoursTags" @remove-value="removeTag" />
       <span v-else>{{ noTags }}</span>
     </template>
     <template #others>
-      <display-tags-search-parameter v-if="othersTags.length" :value="othersTags" />
+      <display-tags-search-parameter v-if="othersTags.length" :value="othersTags" @remove-value="removeTag" />
       <span v-else>{{ noTags }}</span>
     </template>
     <template #action-warning>{{ tagWarning }}</template>
     <template #action>
-      <document-user-tags-action v-model="tags" class="d-inline-flex" :options="uniqueOptions" />
+      <document-user-tags-action
+        :model-value="tagList"
+        class="d-inline-flex"
+        :options="uniqueOptions"
+        @update:model-value="onNewTag"
+      />
     </template>
   </document-user-actions-card>
 </template>
