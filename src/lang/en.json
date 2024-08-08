@@ -49,6 +49,13 @@
     "private": "Private to you",
     "public": "Public to project members"
   },
+  "documentTranslationAlertToggler": {
+    "viewOriginal": "View original",
+    "viewTranslation": "View translation"
+  },
+  "documentTranslationAlertSource": {
+    "detected": "Detected language"
+  },
   "documentDownloadPopover": {
     "extensionWarning": "This document has the wrong file extension for its type. You might need to <strong>add the extension {extension}</strong> before you can open it.",
     "download": "Download",
