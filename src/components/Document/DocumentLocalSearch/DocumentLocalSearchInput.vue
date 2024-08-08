@@ -1,5 +1,5 @@
 <script setup>
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 defineProps({
   modelValue: {

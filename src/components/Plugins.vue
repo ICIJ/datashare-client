@@ -116,7 +116,7 @@
 import { camelCase, find, get, startCase, uniqueId } from 'lodash'
 
 import { isUrl } from '@/utils/strings'
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 /**
  * A list of available plugins.

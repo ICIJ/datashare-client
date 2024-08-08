@@ -147,7 +147,7 @@ import InfiniteLoading from 'v3-infinite-loading'
 
 import FilterFooter from '@/components/Filter/FilterFooter'
 import Hook from '@/components/Hook'
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import filters from '@/mixins/filters'
 import settings from '@/utils/settings'
 

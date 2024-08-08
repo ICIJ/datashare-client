@@ -1,7 +1,7 @@
-import FormControlSearch from '@/components/FormControl/FormControlSearch'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 export default {
-  title: 'Components/FormControl/FormControlSearch',
+  title: 'Components/Form/FormControl/FormControlSearch',
   tags: ['autodocs'],
   component: FormControlSearch,
   argTypes: {
