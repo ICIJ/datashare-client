@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { has, get, invoke, clamp } from 'lodash'
 
 import SeparatorLineDrag from './SeparatorLineDrag'
 import SeparatorLineReduce from './SeparatorLineReduce'

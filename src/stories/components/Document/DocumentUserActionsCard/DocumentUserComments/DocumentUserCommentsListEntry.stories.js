@@ -1,4 +1,4 @@
-import DocumentUserCommentsListEntry from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsListEntry.vue'
+import DocumentUserCommentsListEntry from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsListEntry'
 import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
 
 export default {

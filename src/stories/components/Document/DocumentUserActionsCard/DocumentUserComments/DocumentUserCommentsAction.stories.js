@@ -1,4 +1,4 @@
-import DocumentUserCommentsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsAction.vue'
+import DocumentUserCommentsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsAction'
 
 export default {
   title: 'Components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsAction',

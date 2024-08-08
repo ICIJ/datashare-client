@@ -1,6 +1,5 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { compact } from 'lodash'
 
 import PathViewEntryName from './PathViewEntryName'
 

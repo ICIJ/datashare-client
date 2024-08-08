@@ -1,9 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import DisplayUser from '@/components/Display/DisplayUser.vue'
-import DisplayDatetime from '@/components/Display/DisplayDatetime.vue'
-import ButtonIcon from '@/components/Button/ButtonIcon.vue'
+import DisplayUser from '@/components/Display/DisplayUser'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'DocumentUserCommentsListEntry' })
 defineProps({

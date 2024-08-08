@@ -14,11 +14,11 @@ export const WithTags = {
   args: { tags: ['toto', 'titi', 'tata'] }
 }
 
-export const isServer = {
+export const IsServer = {
   isServer: true
 }
 
-export const isServerWithTags = {
+export const IsServerWithTags = {
   args: {
     isServer: true,
     tags: ['toto', 'titi', 'tata'],

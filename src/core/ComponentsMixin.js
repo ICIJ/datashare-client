@@ -61,7 +61,7 @@ const ComponentMixin = (superclass) =>
       const path = name.split('/components/').pop().split('/').slice(0, -1).join('/') || ''
       // Split the name by '/' and get the last element (the file name) from the array.
       const filname = name.split('/').pop()
-      // Remove the file extension from the file name (e.g., '.vue' or '.js') using regex.
+      // Remove the file extension from the file name (e.g., '' or '.js') using regex.
       const component = filname.replace(/\.(vue|js)$/i, '')
       // Convert the component name to kebab case and then to lowercase using the slugger utility function.
       const componentSlug = slugger(kebabCase(component)).toLowerCase()
