@@ -30,8 +30,6 @@ const classList = computed(() => ({
   --form-step-heading-index-bg: var(--bs-action);
   --form-step-heading-index-color: var(--bs-white);
 
-  @include transition($transition-base);
-
   width: var(--form-step-heading-index-size);
   height: var(--form-step-heading-index-size);
   line-height: var(--form-step-heading-index-size);
@@ -43,6 +41,8 @@ const classList = computed(() => ({
   font-weight: 500;
   flex-shrink: 0;
   cursor: pointer;
+
+  @include transition($transition-base);
 
   &--collapsed {
     --form-step-heading-index-bg: var(--bs-secondary);
