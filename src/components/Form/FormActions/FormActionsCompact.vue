@@ -79,7 +79,7 @@ const classList = computed(() => {
   @each $variant, $value in $theme-colors {
     &--#{$variant} {
       --form-actions-compact-bg: var(--bs-#{$variant});
-      --form-actions-compact-color: #{text-contrast($value)};
+      --form-actions-compact-color: #{color-contrast($value)};
     }
   }
 }
