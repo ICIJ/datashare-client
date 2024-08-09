@@ -1,7 +1,12 @@
 <script setup>
 import { watch, provide } from 'vue'
 
+import FormActionsCompact from './FormActionsCompact'
+
 const props = defineProps({
+  compact: {
+    type: Boolean
+  },
   size: {
     type: String,
     default: 'md'
@@ -9,6 +14,10 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'outline-secondary'
+  },
+  compactVariant: {
+    type: String,
+    default: 'action'
   },
   tag: {
     type: String,
@@ -24,6 +33,7 @@ watch(
   () => provide('size', props.size),
   { immediate: true }
 )
+
 watch(
   () => props.variant,
   () => provide('variant', props.variant),
@@ -33,11 +43,26 @@ watch(
 
 <template>
   <component :is="tag" class="form-actions" :aria-label="ariaLabel">
-    <slot />
+    <template v-if="compact">
+      <slot name="start" />
+      <form-actions-compact :variant="compactVariant" :size="size">
+        <slot name="compact" />
+        <template #dropdown>
+          <slot />
+        </template>
+      </form-actions-compact>
+      <slot name="end" />
+    </template>
+    <template v-else>
+      <slot name="start" />
+      <slot name="compact" />
+      <slot />
+      <slot name="end" />
+    </template>
   </component>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -47,6 +72,12 @@ watch(
 
   @include media-breakpoint-down(md) {
     justify-content: flex-start;
+  }
+
+  &__dropdown > li .btn {
+    display: flex;
+    min-width: 100%;
+    --bs-btn-border-width: 0;
   }
 }
 </style>

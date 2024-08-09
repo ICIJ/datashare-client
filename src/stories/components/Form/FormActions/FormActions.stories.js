@@ -6,6 +6,9 @@ export default {
   tags: ['autodocs'],
   component: FormActions,
   argTypes: {
+    compact: {
+      control: 'boolean'
+    },
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg']
@@ -13,6 +16,32 @@ export default {
     variant: {
       control: 'select',
       options: [
+        'action',
+        'primary',
+        'secondary',
+        'tertiary',
+        'danger',
+        'info',
+        'success',
+        'warning',
+        'light',
+        'dark',
+        'outline-primary',
+        'outline-secondary',
+        'outline-secondary',
+        'outline-danger',
+        'outline-info',
+        'outline-success',
+        'outline-warning',
+        'outline-tertiary',
+        'outline-dark',
+        'outline-light'
+      ]
+    },
+    compactVariant: {
+      control: 'select',
+      options: [
+        'action',
         'primary',
         'secondary',
         'tertiary',
@@ -37,7 +66,8 @@ export default {
   },
   args: {
     size: 'md',
-    variant: 'outline-secondary'
+    variant: 'outline-secondary',
+    compactVariant: 'action'
   },
   render(args) {
     return {
@@ -57,3 +87,30 @@ export default {
 }
 
 export const Default = {}
+
+export const Compact = {
+  args: {
+    compact: true
+  },
+  render(args) {
+    return {
+      components: { FormActions, ButtonIcon },
+      template: `
+        <form-actions v-bind="args">
+          <template #start>
+            <button-icon icon-left="hamburger">Menu</button-icon>
+          </template>
+          <template #compact>
+            <button-icon icon-left="star">Star</button-icon>
+          </template>
+          <button-icon icon-left="tag">Tag</button-icon>
+          <button-icon icon-left="user-gear">Recommend</button-icon>
+          <button-icon icon-left="download">Download</button-icon>
+        </form-actions>
+      `,
+      data() {
+        return { args }
+      }
+    }
+  }
+}
