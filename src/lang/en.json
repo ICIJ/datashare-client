@@ -72,6 +72,14 @@
     "noProjects": "Your project list is empty. Please contact your administrator.",
     "notFound": "Page not found."
   },
+  "searchResultsActions": {
+    "deselectAll": "Unselect {count} documents",
+    "selectAll": "Select all {count}",
+    "tag": "Tag",
+    "star": "Star",
+    "recommend": "Recommend",
+    "download": "Download"
+  },
   "search": {
     "title": "Search",
     "layout": {
