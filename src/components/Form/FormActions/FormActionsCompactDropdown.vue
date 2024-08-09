@@ -72,7 +72,7 @@ const menuClassList = computed(() => {
 
         --bs-form-actions-compact-dropdown-btn-color: var(--bs-#{$variant}-text-emphasis);
         --bs-form-actions-compact-dropdown-btn-hover-bg: var(--bs-#{$variant});
-        --bs-form-actions-compact-dropdown-btn-hover-color: #{text-contrast($value)};
+        --bs-form-actions-compact-dropdown-btn-hover-color: #{color-contrast($value)};
       }
     }
 

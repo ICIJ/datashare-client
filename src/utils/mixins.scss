@@ -7,13 +7,13 @@
 }
 
 @mixin popover-magnified-variant($bg, $bg-darker: $action) {
-  color: text-contrast($bg);
+  color: color-contrast($bg);
   @include gradient-y(mix($bg, $bg-darker), $bg);
 
   .popover-header {
     background: mix($bg-darker, $bg);
     border: 0;
-    color: text-contrast(mix($bg-darker, $bg));
+    color: color-contrast(mix($bg-darker, $bg));
   }
 
   .popover-body {
@@ -45,13 +45,13 @@
 
 @mixin popover-variant($bg, $border-width: $popover-border-width, $border-color: $popover-border-color) {
   $bg-darker: darken($bg, 3%);
-  color: text-contrast($bg);
+  color: color-contrast($bg);
   background: $bg;
   border: $border-width solid $border-color;
 
   .popover-header {
     background: mix($bg-darker, $bg);
-    color: text-contrast(mix($bg-darker, $bg));
+    color: color-contrast(mix($bg-darker, $bg));
   }
 
   .popover-body {
