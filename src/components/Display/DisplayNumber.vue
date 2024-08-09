@@ -21,5 +21,5 @@ const roundedValue = computed(() => {
 </script>
 
 <template>
-  {{ $n(roundedValue) }}
+  <span>{{ $n(roundedValue) }}</span>
 </template>

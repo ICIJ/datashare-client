@@ -44,7 +44,11 @@ const emit = defineEmits([
 </script>
 
 <template>
-  <form-actions variant="outline-dark" class="justify-content-start flex-nowrap flex-md-wrap flex-truncate" compact-auto>
+  <form-actions
+    variant="outline-dark"
+    class="justify-content-start flex-nowrap flex-md-wrap flex-truncate"
+    compact-auto
+  >
     <template #start="{ isCompact }">
       <search-results-actions-select-all
         class="me-auto me-md-0"
