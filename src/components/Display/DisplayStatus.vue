@@ -19,6 +19,9 @@ const props = defineProps({
   },
   title: {
     type: String
+  },
+  size: {
+    type: String
   }
 })
 
@@ -50,6 +53,11 @@ const valueTitle = computed(() => {
 .display-status {
   --display-status-bg: var(--bs-body-bg);
   --display-status-color: var(--bs-secondary-text-emphasis);
+
+  &-sm {
+    width: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
+    height: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
+  }
 
   display: inline-flex;
   align-items: center;
