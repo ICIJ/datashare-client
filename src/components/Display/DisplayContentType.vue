@@ -15,5 +15,5 @@ const label = computed(() => {
 </script>
 
 <template>
-  {{ label }}
+  <span>{{ label }}</span>
 </template>
