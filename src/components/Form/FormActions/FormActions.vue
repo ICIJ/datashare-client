@@ -62,20 +62,20 @@ watch(
 <template>
   <component :is="tag" class="form-actions" :aria-label="ariaLabel">
     <template v-if="isCompact">
-      <slot name="start" />
+      <slot name="start" v-bind="{ isCompact }" />
       <form-actions-compact :variant="compactVariant" :size="size">
-        <slot name="compact" />
+        <slot name="compact" v-bind="{ isCompact }" />
         <template #dropdown>
-          <slot />
+          <slot v-bind="{ isCompact }" />
         </template>
       </form-actions-compact>
-      <slot name="end" />
+      <slot name="end" v-bind="{ isCompact }" />
     </template>
     <template v-else>
-      <slot name="start" />
-      <slot name="compact" />
-      <slot />
-      <slot name="end" />
+      <slot name="start" v-bind="{ isCompact }" />
+      <slot name="compact" v-bind="{ isCompact }" />
+      <slot v-bind="{ isCompact }" />
+      <slot name="end" v-bind="{ isCompact }" />
     </template>
   </component>
 </template>
