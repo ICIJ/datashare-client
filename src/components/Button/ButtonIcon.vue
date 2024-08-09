@@ -196,7 +196,9 @@ const classList = computed(() => {
     'button-icon--square': props.square,
     'button-icon--loading': props.loading,
     'button-icon--truncate': props.truncate,
-    'button-icon--hover': props.currentHover
+    'button-icon--hover': props.currentHover,
+    'button-icon--use-injected-variant': !props.variant,
+    'button-icon--use-injected-size': !props.size
   }
 })
 
