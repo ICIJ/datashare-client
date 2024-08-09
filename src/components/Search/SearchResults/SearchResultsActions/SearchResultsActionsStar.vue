@@ -9,5 +9,5 @@ defineProps({
 </script>
 
 <template>
-  <button-icon icon-left="star" :label="$t('searchResultsActions.star')" :hide-label="hideLabel" />
+  <button-icon icon-left="star" :label="$t('searchResultsActions.star')" :hide-label="hideLabel" hide-tooltip />
 </template>
