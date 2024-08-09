@@ -27,7 +27,7 @@ export default {
     /**
      * The project to use to generate the thumbnail. Can contain `name`, `label` and `logoUrl` which
      * will be used to generate the thumbnail consistently. If passed as a string, the project will be
-     * retreived from the config.
+     * retrieved from the config.
      */
     project: {
       type: [Object, String],
