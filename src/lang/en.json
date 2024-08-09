@@ -201,11 +201,11 @@
     "next": "Next"
   },
   "documentUserActions": {
-    "tags":"0 tag | 1 tag | {n} tags",
-    "comments":"0 comment | 1 comment | {n} comments",
-    "recommended":"0 recommendation | 1 recommendation | {n} recommendations",
-    "folders":"in 0 folder | in 1 folder | in {n} folders",
-    "notes":"0 note | 1 note | {n} notes"
+    "tags":"0 tags | 1 tag | {n} tags",
+    "comments":"0 comments | 1 comment | {n} comments",
+    "recommended":"0 recommendations | 1 recommendation | {n} recommendations",
+    "folders":"in 0 folders | in 1 folder | in {n} folders",
+    "notes":"0 notes | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
     "close": "Close"
