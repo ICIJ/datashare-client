@@ -58,5 +58,5 @@ const toggle = () => {
 </script>
 
 <template>
-  <button-icon :icon-left="icon" :variant="variant" :label="label" @click="toggle" />
+  <button-icon truncate :icon-left="icon" :variant="variant" :label="label" @click="toggle" />
 </template>
