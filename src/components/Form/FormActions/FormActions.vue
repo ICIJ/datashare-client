@@ -42,7 +42,7 @@ const { breakpointDown } = useBreakpoints()
 const isCompact = computed(() => {
   // If compactAuto is true, use the compactAutoBreakpoint value to determine if the
   // form actions should be compact. This is done through the reactive breakpointDown value.
-  // Alternativly, if compactAuto is false, use the compact prop value to determine if the form actions.
+  // Alternativly, if compactAuto is false, use the compact prop value.
   return (props.compactAuto && breakpointDown.value[props.compactAutoBreakpoint]) || props.compact
 })
 
