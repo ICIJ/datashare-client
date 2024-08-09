@@ -89,7 +89,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActionsDownload copy.vue')['default']
+    copy: typeof import('./src/components/Form/FormActions/FormActionsCompactDropdown copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayBoolean: typeof import('./src/components/Display/DisplayBoolean.vue')['default']
@@ -239,6 +239,10 @@ declare module 'vue' {
     FormActions: typeof import('./src/components/Form/FormActions/FormActions.vue')['default']
     FormActionsCompact: typeof import('./src/components/Form/FormActions/FormActionsCompact.vue')['default']
     FormActionsCompactDropdown: typeof import('./src/components/Form/FormActions/FormActionsCompactDropdown.vue')['default']
+<<<<<<< HEAD
+=======
+    FormActionsDropdown: typeof import('./src/components/Form/FormActions/FormActionsDropdown.vue')['default']
+>>>>>>> 821ff23b (build: a BBtnGroup)
     FormControlMultiselect: typeof import('./src/components/FormControl/FormControlMultiselect.vue')['default']
     FormControlRange: typeof import('./src/components/Form/FormControl/FormControlRange/FormControlRange.vue')['default']
     FormControlRangeSlider: typeof import('./src/components/Form/FormControl/FormControlRange/FormControlRangeSlider.vue')['default']
