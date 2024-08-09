@@ -872,6 +872,24 @@
       "description": "Description"
     }
   },
+  "batchSearchCardDetails": {
+    "status": "Status",
+    "date":"Creation date",
+    "author": "Author",
+    "visibilityPrivate":"Private",
+    "visibilityShared": "Shared",
+    "visibility":"Visibility",
+    "phraseMatchOn": "Phrase match: on",
+    "phraseMatchOff":"Phrase match: off",
+    "phraseMatch": "Phrase match",
+    "proximity": "Proximity",
+    "proximityValue":"Proximity: {n}",
+    "fuzziness": "Fuzziness",
+    "fuzzinessValue":"Fuzziness: {n}",
+    "projects":"Projects",
+    "description": "Description",
+    "descriptionEdit": "Edit"
+  },
   "newBatchSearch": {
     "title": "Start a new batch search"
   },
