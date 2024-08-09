@@ -45,9 +45,7 @@ export default {
   })
 }
 
-export const Default = {
-  args: {}
-}
+export const Default = {}
 export const IsServer = {
   args: {
     isSplit: true,
