@@ -1,23 +1,32 @@
 <script setup>
-import { watch, provide } from 'vue'
+import { computed, watch, provide } from 'vue'
 
 import FormActionsCompact from './FormActionsCompact'
+
+import { useBreakpoints } from '@/utils/breakpoints'
 
 const props = defineProps({
   compact: {
     type: Boolean
   },
-  size: {
+  compactAuto: {
+    type: Boolean
+  },
+  compactAutoBreakpoint: {
     type: String,
     default: 'md'
+  },
+  compactVariant: {
+    type: String,
+    default: 'action'
   },
   variant: {
     type: String,
     default: 'outline-secondary'
   },
-  compactVariant: {
+  size: {
     type: String,
-    default: 'action'
+    default: 'md'
   },
   tag: {
     type: String,
@@ -26,6 +35,15 @@ const props = defineProps({
   ariaLabel: {
     type: String
   }
+})
+
+const { breakpointDown } = useBreakpoints()
+
+const isCompact = computed(() => {
+  // If compactAuto is true, use the compactAutoBreakpoint value to determine if the
+  // form actions should be compact. This is done through the reactive breakpointDown value.
+  // Alternativly, if compactAuto is false, use the compact prop value to determine if the form actions.
+  return (props.compactAuto && breakpointDown.value[props.compactAutoBreakpoint]) || props.compact
 })
 
 watch(
@@ -43,7 +61,7 @@ watch(
 
 <template>
   <component :is="tag" class="form-actions" :aria-label="ariaLabel">
-    <template v-if="compact">
+    <template v-if="isCompact">
       <slot name="start" />
       <form-actions-compact :variant="compactVariant" :size="size">
         <slot name="compact" />

@@ -114,3 +114,10 @@ export const Compact = {
     }
   }
 }
+
+export const CompactAuto = {
+  ...Compact,
+  args: {
+    compactAuto: true
+  }
+}
