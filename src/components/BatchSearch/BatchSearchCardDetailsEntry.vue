@@ -1,6 +1,6 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
-defineOptions({ name: 'BatchSearchDetailsEntry' })
+defineOptions({ name: 'BatchSearchCardDetailsEntry' })
 defineProps({
   icon: {
     type: String
@@ -13,17 +13,17 @@ defineProps({
 </script>
 
 <template>
-  <span class="batch-search-details-entry d-inline-flex align-items-center gap-2" :title="label"
+  <span class="batch-search-card-details-entry d-inline-flex align-items-center gap-2" :title="label"
     ><phosphor-icon
       v-if="icon"
       :name="icon"
       style=""
-      class="batch-search-details-entry__icon text-secondary-emphasis"
+      class="batch-search-card-details-entry__icon text-secondary-emphasis"
     /><slot>{{ value }}</slot></span
   >
 </template>
 <style scoped lang="scss">
-.batch-search-details-entry {
+.batch-search-card-details-entry {
   &__icon {
     width: 27.5px;
   }

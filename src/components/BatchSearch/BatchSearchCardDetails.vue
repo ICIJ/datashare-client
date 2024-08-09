@@ -9,7 +9,7 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
 import ProjectLink from '@/components/Project/ProjectLink'
 import LineActionButton from '@/components/Button/LineActionButton'
-defineOptions({ name: 'BatchSearchDetails' })
+defineOptions({ name: 'BatchSearchCardDetails' })
 const props = defineProps({
   name: { type: String },
   status: { type: String },
