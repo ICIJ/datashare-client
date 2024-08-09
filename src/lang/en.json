@@ -872,6 +872,16 @@
       "description": "Description"
     }
   },
+  "batchSearchCard": {
+    "seeAllDocuments": "See all documents",
+    "downloadLabel": "Download {n} documents"
+  },
+  "batchSearchCardActions": {
+    "rename": "Rename",
+    "edit": "Edit properties",
+    "relaunch":"Relaunch",
+    "delete": "Delete"
+  },
   "batchSearchCardDetails": {
     "status": "Status",
     "date":"Creation date",
