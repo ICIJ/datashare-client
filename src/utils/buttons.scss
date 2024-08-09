@@ -14,14 +14,7 @@
 }
 
 .btn-action {
-  --bs-btn-focus-box-shadow: 0 0 0 2px var(--bs-primary);
-
-  &:focus,
-  &:focus-visible,
-  &.pseudo-focus {
-    --bs-btn-border-color: var(--bs-white);
-    --bs-btn-hover-border-color: var(--bs-white);
-  }
+  --bs-btn-focus-box-shadow: 0 0 0 1px var(--bs-white), 0 0 0 3px var(--bs-primary);
 }
 
 .btn-outline-action {
