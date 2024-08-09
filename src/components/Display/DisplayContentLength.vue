@@ -9,5 +9,5 @@ defineProps({
 </script>
 
 <template>
-  {{ humanSize(value, false, $tm('human.size')) }}
+  <span>{{ humanSize(value, false, $tm('human.size')) }}</span>
 </template>

@@ -14,5 +14,5 @@ const isTruthy = computed(() => {
 </script>
 
 <template>
-  {{ isTruthy ? $t('displayBoolean.yes') : $t('displayBoolean.no') }}
+  <span>{{ isTruthy ? $t('displayBoolean.yes') : $t('displayBoolean.no') }}</span>
 </template>

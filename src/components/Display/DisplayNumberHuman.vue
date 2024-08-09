@@ -18,5 +18,5 @@ const humanValue = computed(() => {
 </script>
 
 <template>
-  {{ humanValue }}
+  <span>{{ humanValue }}</span>
 </template>

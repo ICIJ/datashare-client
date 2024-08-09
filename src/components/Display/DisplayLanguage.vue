@@ -13,5 +13,5 @@ const translationKey = computed(() => {
 </script>
 
 <template>
-  {{ $t(translationKey) }}
+  <span>{{ $t(translationKey) }}</span>
 </template>
