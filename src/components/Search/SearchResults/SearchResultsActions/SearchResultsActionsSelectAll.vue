@@ -30,6 +30,10 @@ const icon = computed(() => {
   return PhSquare
 })
 
+const iconWeight = computed(() => {
+  return props.selected || props.indeterminate ? 'fill' : 'regular'
+})
+
 const variant = computed(() => {
   return props.selected && !props.indeterminate ? 'action' : null
 })
@@ -58,5 +62,12 @@ const toggle = () => {
 </script>
 
 <template>
-  <button-icon truncate :icon-left="icon" :variant="variant" :label="label" @click="toggle" />
+  <button-icon
+    truncate
+    :icon-left="icon"
+    :icon-left-weight="iconWeight"
+    :variant="variant"
+    :label="label"
+    @click="toggle"
+  />
 </template>
