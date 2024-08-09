@@ -58,6 +58,7 @@ declare module 'vue' {
     BFormCheckbox: typeof import('bootstrap-vue-next')['BFormCheckbox']
     BFormCheckboxGroup: typeof import('bootstrap-vue-next')['BFormCheckboxGroup']
     BFormDatalist: typeof import('bootstrap-vue-next')['BFormDatalist']
+    BFormFile: typeof import('bootstrap-vue-next')['BFormFile']
     BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     BFormRadio: typeof import('bootstrap-vue-next')['BFormRadio']
@@ -68,8 +69,10 @@ declare module 'vue' {
     BModal: typeof import('bootstrap-vue-next')['BModal']
     BNav: typeof import('bootstrap-vue-next')['BNav']
     BNavItem: typeof import('bootstrap-vue-next')['BNavItem']
+    BOverlay: typeof import('bootstrap-vue-next')['BOverlay']
     BPopover: typeof import('bootstrap-vue-next')['BPopover']
     BRow: typeof import('bootstrap-vue-next')['BRow']
+    BTable: typeof import('bootstrap-vue-next')['BTable']
     BTableSimple: typeof import('bootstrap-vue-next')['BTableSimple']
     BTd: typeof import('bootstrap-vue-next')['BTd']
     BTh: typeof import('bootstrap-vue-next')['BTh']
@@ -85,7 +88,7 @@ declare module 'vue' {
     ColumnFilterBadge: typeof import('./src/components/ColumnFilterBadge.vue')['default']
     ColumnFilterDropdown: typeof import('./src/components/ColumnFilterDropdown.vue')['default']
     ContentTypeBadge: typeof import('./src/components/ContentTypeBadge.vue')['default']
-    copy: typeof import('./src/components/Project/ProjectRow/ProjectRowDescription copy.vue')['default']
+    copy: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActionsDownload copy.vue')['default']
     DismissableAlert: typeof import('./src/components/Dismissable/DismissableAlert.vue')['default']
     DismissableToastBody: typeof import('./src/components/Dismissable/DismissableToastBody.vue')['default']
     DisplayBoolean: typeof import('./src/components/Display/DisplayBoolean.vue')['default']
@@ -374,6 +377,12 @@ declare module 'vue' {
     SearchQueryEntryQueryAst: typeof import('./src/components/Search/SearchParameter/SearchQueryEntryQueryAst.vue')['default']
     SearchQueryEntryQueryTerm: typeof import('./src/components/Search/SearchParameter/SearchQueryEntryQueryTerm.vue')['default']
     SearchResults: typeof import('./src/components/SearchResults.vue')['default']
+    SearchResultsActions: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActions.vue')['default']
+    SearchResultsActionsDownload: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActionsDownload.vue')['default']
+    SearchResultsActionsRecommend: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActionsRecommend.vue')['default']
+    SearchResultsActionsSelectAll: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActionsSelectAll.vue')['default']
+    SearchResultsActionsStar: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActionsStar.vue')['default']
+    SearchResultsActionsTag: typeof import('./src/components/Search/SearchResults/SearchResultsActions/SearchResultsActionsTag.vue')['default']
     SearchResultsGrid: typeof import('./src/components/SearchResultsGrid.vue')['default']
     SearchResultsHeader: typeof import('./src/components/SearchResultsHeader.vue')['default']
     SearchResultsList: typeof import('./src/components/SearchResultsList.vue')['default']
@@ -411,6 +420,7 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     vBModal: typeof import('bootstrap-vue-next')['vBModal']
+    vBToggle: typeof import('bootstrap-vue-next')['vBToggle']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
