@@ -36,7 +36,7 @@ const icon = computed(() => {
 </script>
 
 <template>
-  <kbd class="keyboard-shortcuts-section-entry-key">
+  <kbd class="keyboard-shortcuts-section-entry-key flex-shrink-0">
     <phosphor-icon v-if="icon" :name="icon" size="1em" />
     <template v-else>{{ value }}</template>
   </kbd>
@@ -53,5 +53,6 @@ const icon = computed(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-transform: capitalize;
 }
 </style>
