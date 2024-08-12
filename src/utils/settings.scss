@@ -113,7 +113,7 @@ $text-muted: #717171;
 
 $font-size-base: 1rem;
 $font-size-sm: math.div(14, 16) * 1rem;
-$font-size-lg: 1.2rem;
+$font-size-lg: math.div(20, 16) * 1rem;
 $line-height-sm: 1.7;
 
 $border-radius: 6px;
