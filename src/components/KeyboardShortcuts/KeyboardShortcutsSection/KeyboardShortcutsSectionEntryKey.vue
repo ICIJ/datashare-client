@@ -19,12 +19,16 @@ const icon = computed(() => {
       return 'command'
     case 'meta':
       return 'command'
-    case '⌥':
-      return 'option'
     case 'option':
       return 'option'
-    case '⇧':
+    case '→':
+      return 'arrow-fat-right'
+    case '←':
+      return 'arrow-fat-left'
+    case '↑':
       return 'arrow-fat-up'
+    case '↓':
+      return 'arrow-fat-down'
     case 'shift':
       return 'arrow-fat-up'
     case '⌃':
@@ -54,5 +58,6 @@ const icon = computed(() => {
   align-items: center;
   justify-content: center;
   text-transform: capitalize;
+  font-variant-numeric: tabular-nums;
 }
 </style>
