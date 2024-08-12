@@ -28,6 +28,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  placeholderIcon: {
+    type: String,
+    default: 'tag'
+  },
   size: {
     type: String,
     default: 'md'
@@ -61,6 +65,9 @@ const props = defineProps({
     type: Boolean
   },
   noClear: {
+    type: Boolean
+  },
+  noPlaceholderIcon: {
     type: Boolean
   }
 })
@@ -181,9 +188,11 @@ watch(focusIndex, (value) => {
       class="form-control-tag__input"
       :no-tags="noTags"
       :no-clear="noClear"
+      :no-placeholder-icon="noPlaceholderIcon"
       :add-button-text="addButtonText"
       :add-button-size="addButtonSize"
       :placeholder="placeholder"
+      :placeholder-icon="placeholderIcon"
       :size="size"
       :state="state"
       :model-value="modelValue"
