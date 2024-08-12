@@ -1029,6 +1029,12 @@
     "deleteConfirmation": "Are you sure you want to delete the project?",
     "delete": "Delete"
   },
+  "keyboardShortcutsPopoverLink": {
+    "label": "See all shortcuts"
+  },
+  "keyboardShortcutsPopoverTitle": {
+    "label": "Keyboard shortcuts"
+  },
   "shortkeys": {
     "title": "Search shortcuts",
     "goToPreviousDocument": "Go to the previous document",
