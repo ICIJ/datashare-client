@@ -34,7 +34,7 @@ const closeLabel = t('documentUserActionsCard.close')
       />
     </b-card-title>
     <b-card-text class="card-panel__content d-flex flex-column gap-4">
-      <slot></slot>
+      <slot />
     </b-card-text>
   </b-card>
 </template>
