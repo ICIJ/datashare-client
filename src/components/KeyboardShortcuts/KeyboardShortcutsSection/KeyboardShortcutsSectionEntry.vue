@@ -1,9 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { isArray, trim } from 'lodash'
-import { getShortkeyOS } from '@/utils/utils'
 
 import KeyboardShortcutsSectionEntryKey from './KeyboardShortcutsSectionEntryKey'
+
+import { getShortkeyOS } from '@/utils/utils'
 
 const props = defineProps({
   label: {
@@ -31,7 +32,7 @@ const allKeys = computed(() => {
     <div class="keyboard-shortcuts-section-entry__label">
       <slot name="label">{{ label }}</slot>
     </div>
-    <div class="keyboard-shortcuts-section-entry__keys d-flex gap-3 align-items-center">
+    <div class="keyboard-shortcuts-section-entry__keys d-flex gap-3 align-items-center text-nowrap flex-nowrap">
       <slot>
         <keyboard-shortcuts-section-entry-key v-for="(key, i) in allKeys" :key="i" :value="key" />
       </slot>
@@ -41,7 +42,6 @@ const allKeys = computed(() => {
 
 <style lang="scss" scoped>
 .keyboard-shortcuts-section-entry {
-
   &__label {
     max-width: 290px;
     width: 100%;
