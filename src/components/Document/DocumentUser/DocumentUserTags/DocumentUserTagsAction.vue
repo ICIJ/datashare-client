@@ -22,7 +22,7 @@ async function tagAdded($event) {
 </script>
 
 <template>
-  <div class="">
+  <div>
     <form-control-tag
       v-model="modelValue"
       :options="options"
@@ -35,17 +35,3 @@ async function tagAdded($event) {
     />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
-}
-
-.fade-enter-from {
-  opacity: 1;
-}
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
