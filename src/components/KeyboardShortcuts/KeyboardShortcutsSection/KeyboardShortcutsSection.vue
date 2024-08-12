@@ -1,5 +1,5 @@
 <script setup>
-import KeyboardShortcutsSectionTitle from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionTitle'
+import KeyboardShortcutsSectionTitle from './KeyboardShortcutsSectionTitle'
 
 defineProps({
   title: {
