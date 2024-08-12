@@ -68,7 +68,7 @@ const menuClassList = computed(() => {
       &--#{$variant} {
         --bs-form-actions-compact-dropdown-bg: var(--bs-#{$variant}-bg-subtle);
         --bs-form-actions-compact-dropdown-border-color: var(--bs-#{$variant}-border);
-        --bs-form-actions-compact-dropdown-color: var(--bs-#{$variant});
+        --bs-form-actions-compact-dropdown-color: var(--bs-#{$variant}-text-emphasis);
 
         --bs-form-actions-compact-dropdown-btn-color: var(--bs-#{$variant}-text-emphasis);
         --bs-form-actions-compact-dropdown-btn-hover-bg: var(--bs-#{$variant});

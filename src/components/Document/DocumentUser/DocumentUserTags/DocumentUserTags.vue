@@ -3,8 +3,8 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { uniq } from 'lodash'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
-import DocumentUserTagsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTagsAction'
+import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
+import DocumentUserTagsAction from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTagsAction'
 import DisplayTagsSearchParameter from '@/components/Display/DisplayTagsSearchParameter'
 
 defineOptions({ name: 'DocumentUserTags' })

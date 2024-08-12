@@ -1,9 +1,9 @@
 import uniqueId from 'lodash/uniqueId'
 
-import DocumentUserTags from '@/components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTags'
+import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
 
 export default {
-  title: 'Components/Document/DocumentUserActionsCard/DocumentUserTags/DocumentUserTags',
+  title: 'Components/Document/DocumentUser/DocumentUserTags/DocumentUserTags',
   tags: ['autodocs'],
   component: DocumentUserTags,
   args: {

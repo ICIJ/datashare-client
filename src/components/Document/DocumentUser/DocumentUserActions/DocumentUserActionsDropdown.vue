@@ -9,7 +9,7 @@
   </b-dropdown>
 </template>
 <script setup>
-import DocumentUserActionsEntry from '@/components/Document/DocumentUserActions/DocumentUserActionsEntry'
+import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 
 defineOptions({ name: 'DocumentUserActionsDropdown' })
 /**

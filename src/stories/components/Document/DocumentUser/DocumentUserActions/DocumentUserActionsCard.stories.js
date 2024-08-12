@@ -1,13 +1,13 @@
 import { PhosphorIcon } from '@icij/murmur-next'
 import { BButton } from 'bootstrap-vue-next'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
+import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayTags from '@/components/Display/DisplayTags'
 
 export default {
   components: { BButton, DisplayTags, PhosphorIcon, ButtonIcon },
-  title: 'Components/Document/DocumentUserActionsCard/DocumentUserActionsCard',
+  title: 'Components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard',
   tags: ['autodocs'],
   component: DocumentUserActionsCard,
   args: {

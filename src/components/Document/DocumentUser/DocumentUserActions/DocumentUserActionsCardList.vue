@@ -1,5 +1,5 @@
 <script setup>
-import DocumentUserActionsCardListTitle from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCardListTitle'
+import DocumentUserActionsCardListTitle from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCardListTitle'
 
 defineOptions({ name: 'DocumentUserActionsCardList' })
 defineProps({

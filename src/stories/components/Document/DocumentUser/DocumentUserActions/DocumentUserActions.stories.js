@@ -1,7 +1,7 @@
-import DocumentUserActions from '@/components/Document/DocumentUserActions/DocumentUserActions'
+import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 
 export default {
-  title: 'Components/Document/DocumentUserActions/DocumentUserActions',
+  title: 'Components/Document/DocumentUser/DocumentUserActions/DocumentUserActions',
   tags: ['autodocs'],
   component: DocumentUserActions,
   args: {

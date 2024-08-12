@@ -3,7 +3,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import DocumentUserCommentsListEntry from '@/components/Document/DocumentUserActionsCard/DocumentUserComments/DocumentUserCommentsListEntry'
+import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
 
 defineOptions({ name: 'DocumentUserCommentsList' })
 
