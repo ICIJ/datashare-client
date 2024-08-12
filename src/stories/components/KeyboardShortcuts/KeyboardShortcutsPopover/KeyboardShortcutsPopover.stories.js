@@ -36,8 +36,8 @@ export default {
         <keyboard-shortcuts-section-entry label="Open or Close breadcrumb" keys="esc" />
         <keyboard-shortcuts-section-entry label="Open expanded view of document" keys="ctrl + option + E" />
         <keyboard-shortcuts-section-entry label="Go to Previous or Next document" keys="ctrl + ←/→" mac-keys="super + ←/→" />
-        <keyboard-shortcuts-section-entry label="Go to Previous or Next tab" keys="ctrl + option + →" />
-        <keyboard-shortcuts-section-entry label="Go to Previous or Next page" keys="ctrl + option + →" />
+        <keyboard-shortcuts-section-entry label="Go to Previous or Next tab" keys="ctrl + option + ←/→" />
+        <keyboard-shortcuts-section-entry label="Go to Previous or Next page" keys="ctrl + option + ←/→" />
         <keyboard-shortcuts-section-entry label="Go to Previous or Next occurrence" keys="ctrl + F" />
         <keyboard-shortcuts-section-entry label="Star or Unstar a document" keys="ctrl + option + S" />
         <keyboard-shortcuts-section-entry label="Add tag" keys="ctrl + option + T" />
