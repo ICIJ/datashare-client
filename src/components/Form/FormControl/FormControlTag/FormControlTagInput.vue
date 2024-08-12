@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import FormControlTagInputEntry from './FormControlTagInputEntry'
 
@@ -25,6 +26,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  placeholderIcon: {
+    type: String,
+    default: 'tag'
+  },
   size: {
     type: String,
     default: 'md'
@@ -36,6 +41,9 @@ const props = defineProps({
     type: Boolean
   },
   noClear: {
+    type: Boolean
+  },
+  noPlaceholderIcon: {
     type: Boolean
   }
 })
@@ -50,6 +58,10 @@ const placeholderIfEmpty = computed(() => {
     return null
   }
   return props.placeholder ?? t('formControlTagInput.placeholder')
+})
+
+const showPlaceholderIcon = computed(() => {
+  return props.noTags || (!props.noPlaceholderIcon && props.modelValue.length === 0)
 })
 
 const onBlur = () => {
@@ -94,6 +106,11 @@ defineExpose({
       </slot>
     </template>
     <div class="form-control-tag-input__form">
+      <phosphor-icon
+        v-if="showPlaceholderIcon"
+        :name="placeholderIcon"
+        class="form-control-tag-input__form__icon text-secondary ms-2 me-1"
+      />
       <input
         ref="inputElement"
         class="form-control form-control-tag-input__form__field"
