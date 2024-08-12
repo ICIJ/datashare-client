@@ -68,6 +68,7 @@ const onInput = (event) => {
 
 const classList = computed(() => {
   return {
+    [`form-control-tag-input--${props.size}`]: true,
     'form-control-tag-input--focus': focus.value,
     'form-control-tag-input--has-value': props.inputValue,
     'form-control-tag-input--has-model-value': !!props.modelValue.length
@@ -133,7 +134,7 @@ defineExpose({
   flex-wrap: wrap;
   column-gap: $spacer-xxs;
   row-gap: $spacer-xs;
-  padding: $spacer-xs;
+  padding: 2px;
   width: 100%;
 
   font-family: $input-font-family;
@@ -141,6 +142,7 @@ defineExpose({
   font-weight: $input-font-weight;
   line-height: $input-line-height;
   color: $input-color;
+  min-height: 46px;
 
   appearance: none;
   background-color: $input-bg;
@@ -149,6 +151,14 @@ defineExpose({
   border-radius: $input-border-radius;
 
   transition: $input-transition;
+
+  &--sm {
+    min-height: calc(1.25em + 0.5rem + calc(var(--bs-border-width) * 2));
+  }
+
+  &--lg &__form__field {
+    font-size: $input-font-size-lg;
+  }
 
   &--focus {
     color: $input-focus-color;
@@ -166,16 +176,13 @@ defineExpose({
     display: flex;
     flex: 1;
 
-    &__clear {
-      visibility: hidden;
-    }
-
     &__field {
       padding-block: 0;
       padding-inline: calc(#{$input-padding-x} - #{$spacer-xs});
       flex: 0 1 auto;
       min-width: 5rem;
       color: inherit;
+      height: 100%;
 
       &,
       &:focus {
@@ -183,6 +190,15 @@ defineExpose({
         border: 0;
         box-shadow: none;
       }
+    }
+
+    &__clear {
+      visibility: hidden;
+    }
+
+    &__clear,
+    &__submit {
+      padding-block: 0;
     }
   }
 }
