@@ -13,8 +13,8 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { capitalize } from 'lodash'
 
-import DocumentUserActionsDropdown from '@/components/Document/DocumentUserActions/DocumentUserActionsDropdown'
-import DocumentUserActionsList from '@/components/Document/DocumentUserActions/DocumentUserActionsList'
+import DocumentUserActionsDropdown from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsDropdown'
+import DocumentUserActionsList from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsList'
 
 defineOptions({ name: 'DocumentUserActions' })
 

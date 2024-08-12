@@ -3,8 +3,8 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { uniq } from 'lodash'
 
-import DocumentUserActionsCard from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCard'
-import DocumentUserRecommendationsAction from '@/components/Document/DocumentUserActionsCard/DocumentUserRecommendations/DocumentUserRecommendationsAction'
+import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
+import DocumentUserRecommendationsAction from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendationsAction'
 import DisplayUser from '@/components/Display/DisplayUser'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
 
