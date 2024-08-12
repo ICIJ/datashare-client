@@ -5,6 +5,11 @@ import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTag
 export default {
   title: 'Components/Document/DocumentUser/DocumentUserTags/DocumentUserTags',
   tags: ['autodocs'],
+  decorators: [
+    () => ({
+      template: '<div style="min-height: 450px"><story /></div>'
+    })
+  ],
   component: DocumentUserTags,
   args: {
     modelValue: [],
