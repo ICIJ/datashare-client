@@ -194,9 +194,11 @@ $modal-md: 500px;
 $modal-lg: 800px;
 $modal-xl: 1140px;
 
-$kbd-padding-y: .2em;
-$kbd-padding-x: .4em;
-$kbd-bg: rgba(#222, .7);
+$kbd-padding-y: $spacer-xxs;
+$kbd-padding-x: $spacer-xs;
+$kbd-font-size: 1rem;
+$kbd-color: var(--bs-body-bg);
+$kbd-bg: var(--bs-body-color);
 
 $tooltip-max-width: 260px;
 $tooltip-opacity: 1;
