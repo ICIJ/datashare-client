@@ -30,7 +30,8 @@ const closeLabel = t('documentUserActionsCard.close')
         square
         :label="closeLabel"
         @close="$emit('close')"
-    /></b-card-title>
+      />
+    </b-card-title>
     <b-card-text class="card-panel__content d-flex flex-column gap-4">
       <slot></slot>
     </b-card-text>
