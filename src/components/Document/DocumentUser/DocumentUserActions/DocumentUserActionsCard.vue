@@ -1,7 +1,7 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import DocumentUserActionsCardList from '@/components/Document/DocumentUserActionsCard/DocumentUserActionsCardList'
+import DocumentUserActionsCardList from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCardList'
 import CardPanel from '@/components/Card/CardPanel'
 defineOptions({ name: 'DocumentUserActionsCard' })
 defineProps({
