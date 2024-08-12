@@ -16,10 +16,11 @@ const closeLabel = t('documentUserActionsCard.close')
 </script>
 
 <template>
-  <b-card class="card-panel shadow border-0 px-2">
-    <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold my-2">
+  <b-card class="card-panel shadow border-0">
+    <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold">
       <span>
-        <phosphor-icon :name="icon" class="me-2" /><slot name="title">{{ title }}</slot>
+        <phosphor-icon :name="icon" class="me-2" />
+        <slot name="title">{{ title }}</slot>
       </span>
       <button-icon
         v-if="!noXIcon"
@@ -38,12 +39,22 @@ const closeLabel = t('documentUserActionsCard.close')
   </b-card>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .card-panel {
-  .card-body {
+  &__title {
+    font-size: $font-size-lg;
+    margin: 0;
+  }
+
+  &__close {
+    --button-icon-square-size: 44px;
+  }
+
+  &:deep(.card-body) {
     display: flex;
     flex-direction: column;
-    gap: $spacer-lg;
+    gap: $spacer-xl;
+    padding: $spacer-sm $spacer-xl;
   }
 }
 </style>
