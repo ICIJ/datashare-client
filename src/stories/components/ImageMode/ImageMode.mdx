@@ -1,0 +1,31 @@
+import { Canvas, Meta } from '@storybook/blocks'
+
+import * as ImageMode from './ImageMode.stories'
+
+<Meta of={ImageMode} />
+
+# ImageMode
+
+`ImageMode` component helps you do use image in different color modes. It must be used in
+combination with `ImageModeSource` to explicitely define different images for each color mode. By
+default Bootstrap comes with a build-in dark mode but this component is not limited to the
+2 default color modes. You can define as many image variant as you want.
+
+For instance:
+
+```html
+<image-mode image-class="rounded-5 img-fluid shadow">
+  <image-mode-source src="https://placehold.co/300x200/2f2e41/949fb6?text=dark&font=playfair-display" color-mode="dark" />
+  <image-mode-source src="https://placehold.co/300x200/F3F5F8/112A5C?text=light&font=playfair-display" />
+</image-mode>
+```
+
+Will result to (try to switch theme in the toolbar):
+
+<Canvas of={ImageMode.Default} sourceState='none' />
+
+This component is mindfull of the current component's parent and therefore, will use the color mode of
+the closest parent that uses the `data-bs-theme` attribute. If the parent's color mode changes, the
+image will be updated reactivly using the [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
+
+<Canvas of={ImageMode.LocalTheme} sourceState='none' />
