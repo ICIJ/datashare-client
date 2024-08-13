@@ -46,3 +46,22 @@ export const LocalTheme = {
     })
   ]
 }
+
+
+export const CustomTheme = {
+  args: {},
+  render: () => ({
+    components: {
+      ImageMode,
+      ImageModeSource
+    },
+    template: `
+      <div data-bs-theme="high-contrast">
+        <image-mode image-class="rounded-5 img-fluid shadow">
+          <image-mode-source src="https://placehold.co/300x200/000/FFF?text=high contrast&font=playfair-display" color-mode="high-contrast" />
+          <image-mode-source src="https://placehold.co/300x200/F3F5F8/112A5C?text=light&font=playfair-display" />
+        </image-mode>
+      </div>
+    `
+  })
+}

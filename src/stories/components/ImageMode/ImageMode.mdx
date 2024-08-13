@@ -29,3 +29,20 @@ the closest parent that uses the `data-bs-theme` attribute. If the parent's colo
 image will be updated reactivly using the [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
 
 <Canvas of={ImageMode.LocalTheme} sourceState='none' />
+
+If you implement additional Bootstrap theme, the component will be compatible as long as you
+define the additional `ImageModeSource`:
+
+```html
+<div data-bs-theme="high-contrast">
+  <image-mode image-class="rounded-5 img-fluid shadow">
+    <image-mode-source src="https://placehold.co/300x200/000/FFF?text=high contrast&font=playfair-display" color-mode="high-contrast" />
+    <image-mode-source src="https://placehold.co/300x200/F3F5F8/112A5C?text=light&font=playfair-display" />
+  </image-mode>
+</div>
+```
+
+Regardless of the selected theme, this will display:
+
+<Canvas of={ImageMode.CustomTheme} sourceState='none' />
+
