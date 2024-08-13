@@ -54,8 +54,9 @@
   --bs-btn-focus-box-shadow: 0 0 0 #{$btn-focus-width} rgba(var(--bs-action-rgb), 0.5), 0 0 0 1px var(--bs-primary) inset;
 }
 
+.btn-outline-tertiary,
 .btn-outline-light {
-  --bs-btn-focus-box-shadow: 0 0 0 3px var(--bs-primary);
+  --bs-btn-focus-box-shadow: 0 0 0 1px var(--bs-primary);
 }
 
 .btn-outline-dark {
