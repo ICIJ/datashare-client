@@ -287,7 +287,6 @@ declare module 'vue' {
     KeyboardShortcutsSectionEntry: typeof import('./src/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry.vue')['default']
     KeyboardShortcutsSectionEntryKey: typeof import('./src/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntryKey.vue')['default']
     KeyboardShortcutsSectionTitle: typeof import('./src/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionTitle.vue')['default']
-    LineActionButton: typeof import('./src/components/Button/LineActionButton.vue')['default']
     LinkedDocumentCard: typeof import('./src/components/LinkedDocument/LinkedDocumentCard.vue')['default']
     LinkedDocumentList: typeof import('./src/components/LinkedDocument/LinkedDocumentList.vue')['default']
     LinkedDocumentListEntry: typeof import('./src/components/LinkedDocument/LinkedDocumentListEntry.vue')['default']
