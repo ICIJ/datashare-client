@@ -3,7 +3,6 @@ import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 
 export default {
   title: 'Components/ImageMode/ImageMode',
-  tags: ['autodocs'],
   component: ImageMode,
   args: {
     colorModes: ['light', 'dark'],
