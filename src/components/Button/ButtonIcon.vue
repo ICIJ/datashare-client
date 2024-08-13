@@ -55,6 +55,7 @@
 <script setup>
 import { computed, ref, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { PhCircleNotch } from '@phosphor-icons/vue'
 
 import ButtonIconCounter from './ButtonIconCounter'
 
@@ -103,8 +104,8 @@ const props = defineProps({
     type: String
   },
   iconSpinner: {
-    type: String,
-    default: 'circle-notch'
+    type: [String, Object],
+    default: PhCircleNotch
   },
   hideLabel: {
     type: Boolean,
