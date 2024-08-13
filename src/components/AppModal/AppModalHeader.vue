@@ -1,5 +1,6 @@
 <script setup>
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import ImageMode from '@/components/ImageMode/ImageMode'
 
 defineProps({
   title: {
@@ -20,7 +21,7 @@ defineProps({
 
 <template>
   <div class="app-modal-header w-100">
-    <slot name="header-close">
+    <slot name="close">
       <button-icon
         icon-left="x"
         hide-label
@@ -33,7 +34,9 @@ defineProps({
       />
     </slot>
     <slot name="image">
-      <img v-if="image" class="app-modal-header__image" :width="imageWidth" :src="image" :alt="imageAlt" />
+      <image-mode v-if="image" image-class="app-modal-header__image" :src="image" :alt="imageAlt" :width="imageWidth">
+        <slot name="image-source" />
+      </image-mode>
     </slot>
     <slot>
       <h3 class="app-modal-header__title text-center mt-2 flex-grow-1">{{ title }}</h3>
@@ -41,7 +44,7 @@ defineProps({
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .app-modal-header {
   position: relative;
   min-height: 2.5rem;
