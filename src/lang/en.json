@@ -22,6 +22,12 @@
     "placeholder": "Search for people, organizations, locations...",
     "relative": "Relative to the search"
   },
+  "buttonAdd": {
+    "label": "Add new"
+  },
+  "buttonClearSearch": {
+    "label": "Clear search"
+  },
   "contentTextLengthWarning": {
     "title": "This document is huge",
     "description": "Opening it <strong>might crash your Web Browser</strong>.",
