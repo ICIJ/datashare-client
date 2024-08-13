@@ -3,7 +3,7 @@ import { computed, watch, provide } from 'vue'
 
 import FormActionsCompact from './FormActionsCompact'
 
-import { useBreakpoints } from '@/utils/breakpoints'
+import { useBreakpoints } from '@/composables/breakpoints'
 
 const props = defineProps({
   compact: {

@@ -5,7 +5,7 @@ import { compact, every, identity, isFunction, escapeRegExp, get, trim } from 'l
 import FormControlTagInput from './FormControlTagInput'
 import FormControlTagDropdown from './FormControlTagDropdown'
 
-import { useActiveElement } from '@/utils/active-element'
+import { useActiveElement } from '@/composables/active-element'
 
 const props = defineProps({
   modelValue: {
