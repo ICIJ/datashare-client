@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 
+import ImageMode from '@/components/ImageMode/ImageMode'
+import ImageModeSource from '@/components/ImageMode/ImageModeSource'
+
 const props = defineProps({
   image: {
     type: String,
@@ -27,8 +30,10 @@ const style = computed(() => {
 
 <template>
   <div class="empty-state-image" :style="style">
-    <img v-if="imageDark" :src="imageDark" class="empty-state-image empty-state-image__dark" aria-hidden="true" />
-    <img :src="image" :alt="alt" class="empty-state-image empty-state-image__light" />
+    <image-mode image-class="img-fluid w-100">
+      <image-mode-source v-if="imageDark" :src="imageDark" color-mode="dark" />
+      <image-mode-source :src="image" :alt="alt" />
+    </image-mode>
   </div>
 </template>
 
@@ -36,26 +41,5 @@ const style = computed(() => {
 .empty-state-image {
   max-width: var(--empty-state-image-max-width, 200px);
   margin: 0 auto;
-
-  &__dark {
-    display: none;
-  }
-
-  &__light,
-  &__dark {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
-@include color-mode(dark) {
-  .empty-state-image__dark {
-    display: block;
-  }
-
-  // Hide the light image *only* when the dark image exists
-  .empty-state-image__dark + .empty-state-image__light {
-    display: none;
-  }
 }
 </style>
