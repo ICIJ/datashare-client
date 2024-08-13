@@ -36,6 +36,9 @@
   "buttonToggleAdvancedSearch": {
     "label": "Advanced"
   },
+  "buttonToggleFiltersPanel": {
+    "label": "Filter"
+  },
   "contentTextLengthWarning": {
     "title": "This document is huge",
     "description": "Opening it <strong>might crash your Web Browser</strong>.",
