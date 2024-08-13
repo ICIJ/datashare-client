@@ -39,6 +39,9 @@
   "buttonToggleFiltersPanel": {
     "label": "Filter"
   },
+  "buttonToggleSearchBreadcrumb": {
+    "label": "Toggle search breadcrumb"
+  },
   "contentTextLengthWarning": {
     "title": "This document is huge",
     "description": "Opening it <strong>might crash your Web Browser</strong>.",
