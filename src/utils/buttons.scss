@@ -14,7 +14,7 @@
 }
 
 .btn-action {
-  --bs-btn-focus-box-shadow: 0 0 0 1px var(--bs-white), 0 0 0 3px var(--bs-primary);
+  --bs-btn-focus-box-shadow: 0 0 0 3px var(--bs-primary);
 }
 
 .btn-outline-action {
@@ -52,6 +52,10 @@
   --bs-btn-disabled-color: var(--bs-secondary);
   --bs-btn-disabled-border-color: var(--bs-light);
   --bs-btn-focus-box-shadow: 0 0 0 #{$btn-focus-width} rgba(var(--bs-action-rgb), 0.5), 0 0 0 1px var(--bs-primary) inset;
+}
+
+.btn-outline-light {
+  --bs-btn-focus-box-shadow: 0 0 0 3px var(--bs-primary);
 }
 
 .btn-outline-dark {
