@@ -274,8 +274,10 @@ const buttonProps = computed(() => ({
     .button-icon-counter {
       margin-left: 0;
       position: absolute;
-      top: 0;
+      bottom: auto;
+      left: auto;
       right: 0;
+      top: 0;
       transform: translate(50%, -50%);
     }
   }

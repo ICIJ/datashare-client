@@ -24,7 +24,7 @@ defineProps({
   // Override negative top position done by
   // .badge when used inside a button.
   .btn &.badge {
-    top: auto;
+    top: 0;
   }
 
   @each $variant, $value in $theme-colors {
