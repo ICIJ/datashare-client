@@ -5,8 +5,19 @@ export default {
   title: 'Components/Button/ButtonToggleAdvancedSearch',
   component: ButtonToggleAdvancedSearch,
   args: {
-    loading: false
-  }
+    loading: false,
+    compactBreakpoint: 'sm'
+  },
+  decorators: [
+    () => ({
+      template: `
+        <story/>
+        <p class="small my-3 text-secondary-emphasis">
+          Resize the window down to see the compact version.
+        </p>
+      `
+    })
+  ]
 }
 
 export const Default = {}
