@@ -28,6 +28,11 @@
   "buttonClearSearch": {
     "label": "Clear search"
   },
+  "buttonSaveSearch": {
+    "label": "Save",
+    "labelSaving": "Saving",
+    "labelSaved": "Seach saved"
+  },
   "contentTextLengthWarning": {
     "title": "This document is huge",
     "description": "Opening it <strong>might crash your Web Browser</strong>.",
