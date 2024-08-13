@@ -42,6 +42,9 @@
   "buttonToggleSearchBreadcrumb": {
     "label": "Toggle search breadcrumb"
   },
+  "buttonToTop": {
+    "label": "Back to top"
+  },
   "contentTextLengthWarning": {
     "title": "This document is huge",
     "description": "Opening it <strong>might crash your Web Browser</strong>.",
