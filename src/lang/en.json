@@ -33,6 +33,9 @@
     "labelSaving": "Saving",
     "labelSaved": "Seach saved"
   },
+  "buttonToggleAdvancedSearch": {
+    "label": "Advanced"
+  },
   "contentTextLengthWarning": {
     "title": "This document is huge",
     "description": "Opening it <strong>might crash your Web Browser</strong>.",
