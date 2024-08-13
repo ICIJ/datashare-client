@@ -183,8 +183,14 @@ defineProps({
     <template #header="{ cancel, close, hide, ok, visible }">
       <slot name="header" v-bind="{ cancel, close, hide, ok, visible }">
         <app-modal-header :image="image" :image-alt="imageAlt" :image-width="imageWidth" :title="title" @close="close">
-          <template #header-close>
+          <template #close>
             <slot name="header-close" />
+          </template>
+          <template #image>
+            <slot name="header-image" />
+          </template>
+          <template #image-source>
+            <slot name="header-image-source" />
           </template>
         </app-modal-header>
       </slot>

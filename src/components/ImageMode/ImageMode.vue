@@ -15,6 +15,12 @@ const props = defineProps({
   alt: {
     type: String
   },
+  height: {
+    type: [String, Number]
+  },
+  width: {
+    type: [String, Number]
+  },
   imageClass: {
     type: [String, Array, Object]
   }
@@ -42,13 +48,13 @@ const defaultSource = computed(() => {
 })
 
 const src = computed(() => {
-  return source.value?.src ?? defaultSource ?? props.src
+  return source.value?.src ?? defaultSource.value ?? props.src
 })
 </script>
 
 <template>
   <picture ref="element" :class="classList">
     <slot />
-    <img :src="src" :alt="alt" :class="imageClass" />
+    <img :src="src" :alt="alt" :height="height" :width="width" :class="imageClass" />
   </picture>
 </template>
