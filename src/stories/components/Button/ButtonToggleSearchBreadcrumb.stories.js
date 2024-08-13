@@ -6,7 +6,9 @@ export default {
   component: ButtonToggleSearchBreadcrumb,
   args: {
     loading: false,
-    disabled: false
+    disabled: false,
+    active: false,
+    counter: 12
   }
 }
 
