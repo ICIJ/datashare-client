@@ -2,14 +2,16 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import LineActionButton from '@/components/Button/LineActionButton'
 import ButtonIcon from '@/components/Button/ButtonIcon'
+
 defineOptions({ name: 'BatchSearchCardActions' })
+
 const props = defineProps({
   uuid: { type: String },
   nbResults: { type: Number },
   projects: { type: Array }
 })
+
 const { t } = useI18n()
 
 const actions = {
@@ -50,13 +52,15 @@ const launchDownload = () => {
 <template>
   <div class="batch-search-card-actions d-flex flex-column gap-4">
     <div class="d-flex flex-wrap gap-2">
-      <line-action-button
+      <button-icon
         v-for="(action, index) in actions"
         :key="index"
-        :icon="action.icon"
+        :icon-left="action.icon"
+        :label="action.label"
+        size="sm"
+        variant="outline-secondary"
         @click="$emit(action.event, { uuid })"
-        >{{ action.label }}</line-action-button
-      >
+      />
     </div>
     <div class="d-inline-flex flex-sm-row flex-column">
       <button-icon

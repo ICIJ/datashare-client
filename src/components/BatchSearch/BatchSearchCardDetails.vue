@@ -8,8 +8,9 @@ import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSearchCar
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
 import ProjectLink from '@/components/Project/ProjectLink'
-import LineActionButton from '@/components/Button/LineActionButton'
+
 defineOptions({ name: 'BatchSearchCardDetails' })
+
 const props = defineProps({
   name: { type: String },
   status: { type: String },
@@ -129,8 +130,8 @@ const descriptionEdit = t('batchSearchCardDetails.descriptionEdit')
     <div
       class="batch-search-card-details__description d-flex justify-content-between text-tertiary-emphasis align-items-center mb-2"
     >
-      <span class="text-secondary-emphasis">{{ descriptionLabel }}</span
-      ><line-action-button icon="pencil-simple">{{ descriptionEdit }}</line-action-button>
+      <span class="text-secondary-emphasis">{{ descriptionLabel }}</span>
+      <button-icon icon-left="pencil-simple" :label="descriptionEdit" size="sm" variant="outline-secondary" />
     </div>
     <p>
       {{ description }}
