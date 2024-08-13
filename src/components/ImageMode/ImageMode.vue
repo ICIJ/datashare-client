@@ -48,7 +48,7 @@ const defaultSource = computed(() => {
 })
 
 const src = computed(() => {
-  return source.value?.src ?? defaultSource.value ?? props.src
+  return source.value?.src ?? defaultSource.value?.src ?? props.src
 })
 </script>
 
