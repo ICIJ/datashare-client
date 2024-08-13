@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue'
 
-import { useColorMode } from '@/utils/color-mode'
-import { useQueryObserver } from '@/utils/query-observer'
+import { useColorMode } from '@/composables/color-mode'
+import { useQueryObserver } from '@/composables/query-observer'
 
 const props = defineProps({
   defaultColorMode: {
