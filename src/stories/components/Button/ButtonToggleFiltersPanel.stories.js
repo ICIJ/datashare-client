@@ -5,7 +5,7 @@ export default {
   title: 'Components/Button/ButtonToggleFiltersPanel',
   component: ButtonToggleFiltersPanel,
   args: {
-    loading: true
+    loading: false
   }
 }
 
