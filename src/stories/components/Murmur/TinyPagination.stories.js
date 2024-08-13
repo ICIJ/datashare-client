@@ -1,7 +1,7 @@
 import { TinyPagination } from '@icij/murmur-next'
 
 export default {
-  title: 'Components/TinyPagination',
+  title: 'Components/Murmur/TinyPagination',
   component: TinyPagination,
   tags: ['autodocs'],
   argTypes: {

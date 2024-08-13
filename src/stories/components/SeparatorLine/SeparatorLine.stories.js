@@ -1,7 +1,7 @@
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
 
 export default {
-  title: 'Components/SeparatorLine',
+  title: 'Components/SeparatorLine/SeparatorLine',
   component: SeparatorLine,
   tags: ['autodocs'],
   args: {
