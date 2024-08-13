@@ -155,7 +155,7 @@ export const SquareWithCounter = {
     pill: false,
     square: true,
     iconRight: 'path',
-    counter: '6',
+    counter: 6,
     counterVariant: 'action'
   }
 }
