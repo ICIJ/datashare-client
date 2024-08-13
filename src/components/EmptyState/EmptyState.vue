@@ -54,7 +54,11 @@ const hasAction = computed(() => {
     <empty-state-label :label="label">
       <slot name="label" />
     </empty-state-label>
-    <empty-state-image :image="image" :image-dark="imageDark" :max-width="imageMaxWidth" :alt="imageAlt" />
+    <empty-state-image :image="image" :image-dark="imageDark" :max-width="imageMaxWidth" :alt="imageAlt">
+      <template #source>
+        <slot name="image-source" />
+      </template>
+    </empty-state-image>
     <empty-state-action
       v-if="hasAction"
       :label="actionLabel"
