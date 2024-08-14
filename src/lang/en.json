@@ -804,6 +804,9 @@
     "logout": "You have been logged out from Datashare.",
     "login": "Login"
   },
+  "loginLocaleDropdownSelector": {
+    "label": "Switch language:"
+  },
   "userHistory": {
     "heading": "Your history",
     "description": "On this page you can retrieve the documents you opened and the searches you saved.",
