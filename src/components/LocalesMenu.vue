@@ -1,8 +1,8 @@
 <template>
-  <b-button :id="uniqueId" class="locales-menu" href="#" variant="none" @click.prevent>
+  <b-button :id="uniqueId" class="locales-menu" href="#" :variant="null" @click.prevent>
     <span class="locales-menu__button">
       <slot v-bind="{ currentLocale, locales }">
-        <fa icon="globe" class="me-1"></fa>
+        <phosphor-icon name="globe-hemisphere-west" class="me-1" />
         {{ currentLocale.label }}
       </slot>
     </span>
@@ -33,6 +33,7 @@
 
 <script>
 import { uniqueId, find } from 'lodash'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import settings from '@/utils/settings'
 
@@ -41,6 +42,9 @@ import settings from '@/utils/settings'
  */
 export default {
   name: 'LocalesMenu',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * Button size
@@ -77,7 +81,7 @@ export default {
   },
   watch: {
     currentLocale({ key }) {
-      return this.$core.loadI18Locale(key)
+      return this.$core?.loadI18Locale(key)
     }
   },
   methods: {
@@ -85,7 +89,7 @@ export default {
       if (this.$refs.popover?.hide) {
         this.$refs.popover.hide(new Event('forceHide'))
       }
-      await this.$core.loadI18Locale(locale)
+      await this?.$core?.loadI18Locale(locale)
     },
     dropdownItemClass({ key }) {
       return {
