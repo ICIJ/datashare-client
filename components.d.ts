@@ -300,6 +300,8 @@ declare module 'vue' {
     LinkedDocumentSection: typeof import('./src/components/LinkedDocument/LinkedDocumentSection.vue')['default']
     LocalesMenu: typeof import('./src/components/LocalesMenu.vue')['default']
     LoginImage: typeof import('./src/components/Login/LoginImage.vue')['default']
+    LoginLanguageDropdownSelector: typeof import('./src/components/Login/LoginLanguageDropdownSelector.vue')['default']
+    LoginLocaleDropdownSelector: typeof import('./src/components/Login/LoginLocaleDropdownSelector.vue')['default']
     MountedDataLocation: typeof import('./src/components/MountedDataLocation.vue')['default']
     NamedEntityButton: typeof import('./src/components/NamedEntity/NamedEntityButton.vue')['default']
     NamedEntityInContext: typeof import('./src/components/NamedEntityInContext.vue')['default']
