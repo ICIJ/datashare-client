@@ -5,7 +5,6 @@ import LoginImage from '@/components/Login/LoginImage'
 
 export default {
   title: 'Components/Login/LoginImage',
-  tags: ['autodocs'],
   component: LoginImage,
   render: () => ({
     components: {
