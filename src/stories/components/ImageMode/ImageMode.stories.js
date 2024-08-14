@@ -47,7 +47,6 @@ export const LocalTheme = {
   ]
 }
 
-
 export const CustomTheme = {
   args: {},
   render: () => ({
