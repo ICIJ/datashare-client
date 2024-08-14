@@ -283,6 +283,8 @@ declare module 'vue' {
     FormStepsGroup: typeof import('./src/components/Form/FormStepsGroup/FormStepsGroup.vue')['default']
     FormStepsGroupToggler: typeof import('./src/components/Form/FormStepsGroup/FormStepsGroupToggler.vue')['default']
     Hook: typeof import('./src/components/Hook.vue')['default']
+    I18nLocaleDropdown: typeof import('./src/components/I18n/I18nLocaleDropdown.vue')['default']
+    I18nLocalesDropdown: typeof import('./src/components/I18n/I18nLocalesDropdown.vue')['default']
     ImageMode: typeof import('./src/components/ImageMode/ImageMode.vue')['default']
     ImageModeSource: typeof import('./src/components/ImageMode/ImageModeSource.vue')['default']
     InlineDirectoryPicker: typeof import('./src/components/InlineDirectoryPicker.vue')['default']
