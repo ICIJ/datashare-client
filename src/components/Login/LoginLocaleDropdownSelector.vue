@@ -1,5 +1,5 @@
 <script setup>
-import LocalesMenu from '@/components/LocalesMenu'
+import I18nLocaleDropdown from '@/components/I18n/I18nLocaleDropdown'
 </script>
 
 <template>
@@ -7,6 +7,6 @@ import LocalesMenu from '@/components/LocalesMenu'
     <span class="p-1">
       {{ $t('loginLocaleDropdownSelector.label') }}
     </span>
-    <locales-menu class="p-1" popover-placement="top" />
+    <i18n-locale-dropdown class="p-1" popover-placement="top" />
   </span>
 </template>
