@@ -22,7 +22,7 @@ describe('TaskBatchDownloadList.vue', () => {
         email: null,
         name: null
       },
-      properties: {
+      args: {
         batchDownload: {
           uuid: 'uuid_01',
           encrypted: false,
@@ -53,7 +53,7 @@ describe('TaskBatchDownloadList.vue', () => {
         email: null,
         name: null
       },
-      properties: {
+      args: {
         batchDownload: {
           uuid: 'uuid_02',
           encrypted: true,
@@ -84,7 +84,7 @@ describe('TaskBatchDownloadList.vue', () => {
         email: null,
         name: null
       },
-      properties: {
+      args: {
         batchDownload: {
           uuid: 'uuid_03',
           encrypted: false,
@@ -114,11 +114,11 @@ describe('TaskBatchDownloadList.vue', () => {
         email: null,
         name: null
       },
-      properties: {
+      args: {
         batchDownload: {
           uuid: 'uuid_04',
           encrypted: false,
-          filename: 'filename_03_2024-05-02T18_13_45.61Z',
+          filename: 'filename_04_2024-05-02T18_13_45.61Z',
           query: 'query_04',
           project: {
             name: 'project',

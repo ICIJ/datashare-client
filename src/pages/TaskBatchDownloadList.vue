@@ -7,29 +7,29 @@
         </div>
       </template>
       <tasks-list :tasks="tasks">
-        <template #status="{ item: { properties, state, error } }">
+        <template #status="{ item: { args, state, error } }">
           <task-item-status
             :task-item="{
-              ...properties.batchDownload,
+              ...args.batchDownload,
               state,
               errorMessage: error,
               key: 'batchDownload'
             }"
           />
         </template>
-        <template #default="{ item: { id, name, properties, state } }">
+        <template #default="{ item: { id, name, args, state } }">
           <div
-            :id="'task-batch-download-list__item--' + properties.batchDownload.uuid"
+            :id="'task-batch-download-list__item--' + args.batchDownload.uuid"
             class="d-flex task-batch-download-list__item"
           >
             <a
-              v-if="properties.batchDownload.exists"
+              v-if="args.batchDownload.exists"
               :href="downloadResultsUrl(id)"
               class="task-batch-download-list__item__link"
               target="_blank"
             >
               <fa icon="download" fixed-width />
-              {{ basename(properties.batchDownload.filename) }}
+              {{ basename(args.batchDownload.filename) }}
             </a>
             <span
               v-else
@@ -38,14 +38,14 @@
               :title="$t('batchDownload.noFile')"
             >
               <fa icon="xmark" fixed-width />
-              {{ basename(properties.batchDownload.filename) }}
+              {{ basename(args.batchDownload.filename) }}
             </span>
             <batch-download-actions
               :id="id"
               class="ms-auto"
               :name="name"
               :state="state"
-              :value="properties.batchDownload"
+              :value="args.batchDownload"
               @relaunched="startPollingDownloadTasks"
               @deleted="getDownloadTasks"
             />
@@ -71,7 +71,7 @@ import polling from '@/mixins/polling'
 
 function extractDateFromTask(task) {
   const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d_[0-5]\d_[0-5]\d.\d+Z/
-  return task?.properties?.batchDownload?.filename?.match(dateRegExp)?.[0].replaceAll('_', ':') ?? null
+  return task?.args?.batchDownload?.filename?.match(dateRegExp)?.[0].replaceAll('_', ':') ?? null
 }
 export default {
   name: 'TaskBatchDownloadList',
