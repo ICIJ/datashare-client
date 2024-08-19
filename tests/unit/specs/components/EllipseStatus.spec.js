@@ -90,6 +90,12 @@ describe('EllipseStatus.vue', () => {
     expect(wrapper.vm.statusAsVariant).toBe('info')
   })
 
+  it('should turn the status "CREATED" into a "info" variant', () => {
+    const props = { status: 'CREATED' }
+    const wrapper = shallowMount(EllipseStatus, { plugins, props })
+    expect(wrapper.vm.statusAsVariant).toBe('info')
+  })
+
   it('should turn the status "running" into a "info" variant', () => {
     const props = { status: 'running' }
     const wrapper = shallowMount(EllipseStatus, { plugins, props })

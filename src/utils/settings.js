@@ -210,7 +210,8 @@ export default {
     queued: 'info',
     running: 'info',
     warning: 'warning',
-    cancelled: 'warning'
+    cancelled: 'warning',
+    created: 'info'
   },
   elasticsearch: {
     waitForAnswer: 700,
