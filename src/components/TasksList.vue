@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     isBatchDownloadEncrypted(item) {
-      return item.name.includes('BatchDownload') && item.properties.batchDownload.encrypted
+      return item.name.includes('BatchDownload') && item.args.batchDownload.encrypted
     },
     hasZipSize(item) {
       return item.name.includes('BatchDownload') && item.state !== 'ERROR' && item.result?.size !== undefined
