@@ -79,13 +79,13 @@ export default {
       return style.getPropertyValue('--light') || '#eee'
     },
     statusAnimation() {
-      if (this.statusAsVariant === 'info') {
+      if (this.variantIsInfo) {
         return this.animation
       }
       return 'default 0 0'
     },
     statusProgress() {
-      if (this.statusAsVariant === 'info') {
+      if (this.variantIsInfo) {
         const rounded = Math.round(this.progress)
         return Math.max(Math.min(rounded, 100), 0)
       }
@@ -97,8 +97,11 @@ export default {
     statusAsVariant() {
       return toVariant(this.status)
     },
+    variantIsInfo() {
+      return this.statusAsVariant === 'info'
+    },
     loading() {
-      return this.statusAsVariant === 'info' && this.idle
+      return this.variantIsInfo && this.idle
     },
     idle() {
       return this.progress === null || this.progress <= 0 || this.progress >= 100
@@ -133,7 +136,7 @@ export default {
       :loading="loading"
     >
       <slot>
-        <template v-if="statusAsVariant === 'info'">
+        <template v-if="variantIsInfo">
           {{ statusProgressAsPercentage }}
         </template>
         <template v-else>
