@@ -1,4 +1,6 @@
 import ButtonIconCounter from '@/components/Button/ButtonIconCounter'
+import { variantsArgType } from '~storybook/utils'
+import { VARIANT } from '@/enums/variants'
 
 export default {
   components: { ButtonIconCounter },
@@ -9,32 +11,10 @@ export default {
     counter: {
       control: { type: 'number' }
     },
-    variant: {
-      control: { type: 'select' },
-      options: [
-        'action',
-        'primary',
-        'secondary',
-        'success',
-        'danger',
-        'warning',
-        'info',
-        'light',
-        'dark',
-        'outline-action',
-        'outline-primary',
-        'outline-secondary',
-        'outline-success',
-        'outline-danger',
-        'outline-warning',
-        'outline-info',
-        'outline-light',
-        'outline-dark'
-      ]
-    }
+    variant: variantsArgType
   },
   args: {
-    variant: 'secondary',
+    variant: VARIANT.SECONDARY,
     counter: 123
   }
 }

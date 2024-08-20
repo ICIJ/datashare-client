@@ -37,8 +37,8 @@ export default {
         <navigation-tabs-entry icon="list" :to="{ name: 'general' }">
           General
         </navigation-tabs-entry>
-        <navigation-tabs-entry icon="moon" :to="{ name: 'appearence' }">
-          Appearence
+        <navigation-tabs-entry icon="moon" :to="{ name: 'appearance' }">
+          Appearance
         </navigation-tabs-entry>
         <navigation-tabs-entry icon="file-text" :to="{ name: 'document-processing' }">
           Document processing

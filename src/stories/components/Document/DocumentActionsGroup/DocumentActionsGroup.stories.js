@@ -3,6 +3,7 @@ import { PhFilePdf } from '@phosphor-icons/vue'
 
 import types from '@/utils/types.json'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
+import { PLACEMENT } from '@/enums/placements'
 
 export default {
   components: { DocumentActionsGroup },
@@ -33,7 +34,7 @@ export default {
       contentTypeIcon: markRaw(PhFilePdf)
     },
     vertical: false,
-    tooltipPlacement: 'bottom',
+    tooltipPlacement: PLACEMENT.BOTTOM,
     isStarred: false,
     isDownloadAllowed: true,
     selectMode: true,

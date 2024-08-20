@@ -1,21 +1,20 @@
 import types from '@/utils/types'
 import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
+import { buttonSizesArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   title: 'Components/Form/FormControl/FormControlTag/FormControlTag',
   tags: ['autodocs'],
   component: FormControlTag,
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg']
-    }
+    size: buttonSizesArgType
   },
   args: {
     modelValue: ['Foo', 'Bar'],
     options: ['Foo', 'Bar', 'Baz', 'Qux'],
     noDuplicates: true,
-    size: 'md'
+    size: SIZE.MD
   },
   decorators: [
     () => ({

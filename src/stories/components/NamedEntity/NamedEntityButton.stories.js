@@ -1,4 +1,5 @@
 import NamedEntityButton from '@/components/NamedEntity/NamedEntityButton'
+import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 
 export default {
   title: 'Components/NamedEntity/NamedEntityButton',
@@ -9,7 +10,7 @@ export default {
       mention: 'Elton John',
       length: 'Elton John'.length,
       offsets: [12e2, 13e2],
-      category: 'PERSON'
+      category: ENTITY_CATEGORY.PERSON
     }
   }
 }

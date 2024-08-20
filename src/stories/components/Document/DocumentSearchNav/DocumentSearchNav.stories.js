@@ -1,4 +1,5 @@
 import DocumentSearchNav from '@/components/Document/DocumentSearchNav/DocumentSearchNav'
+import { PLACEMENT } from '@/enums/placements'
 
 export default {
   title: 'Components/Document/DocumentSearchNav/DocumentSearchNav',
@@ -7,7 +8,7 @@ export default {
   args: {
     disabledPrevious: false,
     disabledNext: false,
-    tooltipPlacement: 'bottom'
+    tooltipPlacement: PLACEMENT.BOTTOM
   }
 }
 

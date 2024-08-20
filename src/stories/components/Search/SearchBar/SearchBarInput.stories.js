@@ -1,4 +1,6 @@
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
+import { buttonSizesArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   title: 'Components/Search/SearchBar/SearchBarInput',
@@ -15,10 +17,7 @@ export default {
         type: 'string'
       }
     },
-    size: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg']
-    },
+    size: buttonSizesArgType,
     disableSubmit: {
       control: {
         type: 'boolean'
@@ -41,7 +40,7 @@ export const Default = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'lg',
+    size: SIZE.LG,
     disableSubmit: false,
     hideTips: true,
     showSubmit: false
@@ -52,7 +51,7 @@ export const ShowTips = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'md',
+    size: SIZE.MD,
     disableSubmit: false,
     hideTips: false,
     showSubmit: false
@@ -63,7 +62,7 @@ export const ShowSubmit = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'md',
+    size: SIZE.MD,
     disableSubmit: false,
     hideTips: false,
     showSubmit: true
@@ -86,7 +85,7 @@ export const AddonSlot = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'md',
+    size: SIZE.MD,
     disableSubmit: false,
     hideTips: false,
     showSubmit: true

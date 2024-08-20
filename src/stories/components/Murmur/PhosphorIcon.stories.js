@@ -1,18 +1,15 @@
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import { iconWeightsArgType, variantsPlainArgType } from '~storybook/utils'
+import { ICON_WEIGHT } from '@/enums/iconWeights'
+
 export default {
   title: 'Components/Murmur/PhosphorIcon',
   tags: ['autodocs'],
   component: PhosphorIcon,
   argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary', 'tertiary', 'body-color']
-    },
-    weight: {
-      control: { type: 'select' },
-      options: ['thin', 'light', 'regular', 'bold', 'fill', 'duotone']
-    },
+    variant: variantsPlainArgType,
+    weight: iconWeightsArgType,
     spin: {
       control: { type: 'boolean' }
     },
@@ -27,7 +24,7 @@ export default {
     }
   },
   args: {
-    weight: 'regular',
+    weight: ICON_WEIGHT.REGULAR,
     spin: false,
     spinReverse: false,
     beat: false,
@@ -59,7 +56,7 @@ export const Default = {
 export const WeightBold = {
   args: {
     name: 'User',
-    weight: 'bold',
+    weight: ICON_WEIGHT.BOLD,
     size: '32px'
   }
 }

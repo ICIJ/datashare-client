@@ -1,4 +1,6 @@
 import DisplayProgress from '@/components/Display/DisplayProgress'
+import { variantsPlainArgType } from '~storybook/utils'
+import { VARIANT } from '@/enums/variants'
 
 export default {
   title: 'Components/Display/DisplayProgress',
@@ -8,14 +10,11 @@ export default {
     value: {
       control: { type: 'number', min: 0, max: 1, step: 0.1 }
     },
-    variant: {
-      control: { type: 'select' },
-      options: ['action', 'primary', 'secondary', 'tertiary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
-    }
+    variant: variantsPlainArgType
   },
   args: {
     value: 0.5,
-    variant: 'primary'
+    variant: VARIANT.PRIMARY
   }
 }
 

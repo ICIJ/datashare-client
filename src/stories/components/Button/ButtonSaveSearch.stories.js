@@ -1,4 +1,5 @@
 import ButtonSaveSearch from '@/components/Button/ButtonSaveSearch'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   tags: ['autodocs'],
@@ -7,7 +8,7 @@ export default {
   args: {
     saved: false,
     loading: false,
-    compactBreakpoint: 'sm'
+    compactBreakpoint: SIZE.SM
   },
   decorators: [
     () => ({

@@ -1,4 +1,5 @@
 import ButtonToggleAdvancedSearch from '@/components/Button/ButtonToggleAdvancedSearch'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   tags: ['autodocs'],
@@ -6,7 +7,7 @@ export default {
   component: ButtonToggleAdvancedSearch,
   args: {
     loading: false,
-    compactBreakpoint: 'sm'
+    compactBreakpoint: SIZE.SM
   },
   decorators: [
     () => ({
