@@ -1,19 +1,16 @@
 import NamedEntitySectionMore from '@/components/NamedEntity/NamedEntitySection/NamedEntitySectionMore'
+import { entityCategoriesArgType } from '~storybook/utils'
+import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 
 export default {
   title: 'Components/NamedEntity/NamedEntitySection/NamedEntitySectionMore',
   tags: ['autodocs'],
   component: NamedEntitySectionMore,
   argTypes: {
-    category: {
-      control: {
-        type: 'select'
-      },
-      options: ['person', 'organization', 'location', 'email']
-    }
+    category: entityCategoriesArgType
   },
   args: {
-    category: 'person'
+    category: ENTITY_CATEGORY.PERSON
   }
 }
 
@@ -21,18 +18,18 @@ export const Default = {}
 
 export const ForOrganization = {
   args: {
-    category: 'organization'
+    category: ENTITY_CATEGORY.ORGANIZATION
   }
 }
 
 export const ForLocation = {
   args: {
-    category: 'location'
+    category: ENTITY_CATEGORY.LOCATION
   }
 }
 
 export const ForEmail = {
   args: {
-    category: 'email'
+    category: ENTITY_CATEGORY.EMAIL
   }
 }

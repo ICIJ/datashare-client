@@ -3,6 +3,8 @@ import { PhFilePdf } from '@phosphor-icons/vue'
 
 import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import { breakpointSizeArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   title: 'Components/Document/DocumentThumbnail',
@@ -10,13 +12,10 @@ export default {
   component: DocumentThumbnail,
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: { type: 'select' },
-      options: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl']
-    }
+    size: breakpointSizeArgType
   },
   args: {
-    size: 'xs',
+    size: SIZE.XS,
     crop: true,
     hover: false,
     clickable: true,
@@ -37,7 +36,7 @@ export const Default = {}
 
 export const WithPlaceholder = {
   args: {
-    size: 'xs',
+    size: SIZE.XS,
     crop: true,
     fit: false,
     hidePlaceholder: false,

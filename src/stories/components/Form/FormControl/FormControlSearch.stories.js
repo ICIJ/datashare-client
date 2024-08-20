@@ -1,4 +1,6 @@
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+import { buttonSizesArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   title: 'Components/Form/FormControl/FormControlSearch',
@@ -10,10 +12,7 @@ export default {
         type: 'string'
       }
     },
-    size: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg']
-    },
+    size: buttonSizesArgType,
     noIcon: {
       control: {
         type: 'boolean'
@@ -51,7 +50,7 @@ export const Default = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'md',
+    size: SIZE.MD,
     clearText: true,
     rounded: false
   }
@@ -60,7 +59,7 @@ export const Large = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'lg',
+    size: SIZE.LG,
     clearText: true,
     rounded: false,
     shadow: false
@@ -70,7 +69,7 @@ export const LargeShadow = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'lg',
+    size: SIZE.LG,
     clearText: true,
     rounded: false,
     shadow: true
@@ -80,7 +79,7 @@ export const Small = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
     modelValue: '',
-    size: 'sm',
+    size: SIZE.SM,
     clearText: true,
     rounded: false,
     shadow: false

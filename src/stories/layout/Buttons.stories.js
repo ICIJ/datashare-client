@@ -1,15 +1,15 @@
 import { BButton } from 'bootstrap-vue-next'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import { VARIANTS } from '@/enums/variants'
+import { buttonSizesArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   title: 'Layout/Buttons',
   component: BButton,
   argTypes: {
-    size: {
-      control: { type: 'select' },
-      options: ['sm', 'md', 'lg']
-    }
+    size: buttonSizesArgType
   },
   render: (args) => ({
     components: {
@@ -23,29 +23,7 @@ export default {
     },
     computed: {
       variants() {
-        return [
-          'link',
-          'action',
-          'primary',
-          'secondary',
-          'tertiary',
-          'dark',
-          'light',
-          'info',
-          'danger',
-          'success',
-          'warning',
-          'outline-action',
-          'outline-primary',
-          'outline-secondary',
-          'outline-tertiary',
-          'outline-dark',
-          'outline-light',
-          'outline-info',
-          'outline-danger',
-          'outline-success',
-          'outline-warning'
-        ]
+        return VARIANTS
       }
     },
     template: `
@@ -89,7 +67,7 @@ export default {
 
 export const Default = {
   args: {
-    size: 'md',
+    size: SIZE.MD,
     label: 'Button'
   }
 }

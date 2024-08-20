@@ -2,16 +2,15 @@ import AppModal from '@/components/AppModal/AppModal'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
+import { breakpointSizeArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   title: 'Components/AppModal/AppModal',
   tags: ['autodocs'],
   component: AppModal,
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg', 'xl']
-    }
+    size: breakpointSizeArgType
   },
   args: {
     image,
@@ -25,7 +24,7 @@ export default {
     hideBackdrop: false,
     hideFooter: false,
     hideHeader: false,
-    size: 'md'
+    size: SIZE.MD
   },
   parameters: {
     slots: {

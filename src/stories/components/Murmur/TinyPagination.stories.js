@@ -1,14 +1,14 @@
 import { TinyPagination } from '@icij/murmur-next'
 
+import { buttonSizesArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
+
 export default {
   title: 'Components/Murmur/TinyPagination',
   component: TinyPagination,
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: ['sm', 'md', 'lg']
-    },
+    size: buttonSizesArgType,
     pages: {
       control: 'number',
       min: 0
@@ -37,7 +37,7 @@ Small.args = {
   modelValue: 1,
   perPage: 10,
   totalRows: 200,
-  size: 'sm'
+  size: SIZE.SM
 }
 
 export const Medium = Template.bind({})
@@ -45,7 +45,7 @@ Medium.args = {
   modelValue: 1,
   perPage: 10,
   totalRows: 200,
-  size: 'md'
+  size: SIZE.MD
 }
 
 export const Large = Template.bind({})
@@ -53,7 +53,7 @@ Large.args = {
   modelValue: 1,
   perPage: 10,
   totalRows: 200,
-  size: 'lg'
+  size: SIZE.LG
 }
 
 export const HideNavigation = Template.bind({})

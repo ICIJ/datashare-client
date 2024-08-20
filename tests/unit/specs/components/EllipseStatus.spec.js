@@ -42,7 +42,7 @@ describe('EllipseStatus.vue', () => {
     expect(wrapper.vm.statusProgress).toBe(0)
   })
 
-  it('should return 100 as progress number when value is abose 100', () => {
+  it('should return 100 as progress number when value is above 100', () => {
     const props = { status: 'RUNNING', progress: 104 }
     const wrapper = shallowMount(EllipseStatus, { plugins, props })
     expect(wrapper.vm.statusProgress).toBe(100)

@@ -1,5 +1,6 @@
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
-import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
+import { FORMAT_LONG } from '@/utils/humanDate'
+import { dateFormatArgType } from '~storybook/utils'
 
 export default {
   title: 'Components/Display/DisplayDatetime',
@@ -9,10 +10,7 @@ export default {
     value: {
       control: 'date'
     },
-    format: {
-      control: 'select',
-      options: [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW]
-    }
+    format: dateFormatArgType
   },
   args: {
     value: new Date(),
