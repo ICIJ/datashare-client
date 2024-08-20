@@ -2,16 +2,15 @@ import { h } from 'vue'
 import { toast } from 'vue3-toastify'
 
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
+import { variantsPlainArgType } from '~storybook/utils'
+import { VARIANT } from '@/enums/variants'
 
 export default {
   title: 'Components/Dismissable/DismissableToastBody',
   tags: ['autodocs'],
   component: ToastBody,
   argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark']
-    },
+    variant: variantsPlainArgType,
     body: {
       control: { type: 'text' }
     },
@@ -26,7 +25,7 @@ export default {
     }
   },
   args: {
-    variant: 'info',
+    variant: VARIANT.INFO,
     body: 'Indexing task to add documents launched.',
     href: '#/tasks/',
     title: null,

@@ -1,4 +1,5 @@
 import ButtonAdd from '@/components/Button/ButtonAdd'
+import { PLACEMENT } from '@/enums/placements'
 
 export default {
   tags: ['autodocs'],
@@ -7,7 +8,7 @@ export default {
   args: {
     loading: false,
     disabled: false,
-    tooltipPlacement: 'left'
+    tooltipPlacement: PLACEMENT.LEFT
   }
 }
 

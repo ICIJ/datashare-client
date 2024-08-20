@@ -1,4 +1,5 @@
 import DisplayStatusProgress from '@/components/Display/DisplayStatusProgress'
+import { variantsPlainArgType } from '~storybook/utils'
 
 export default {
   title: 'Components/Display/DisplayStatusProgress',
@@ -12,17 +13,11 @@ export default {
       control: 'select',
       options: ['queued', 'success', 'failure', 'draft']
     },
-    statusVariant: {
-      control: { type: 'select', required: false },
-      options: ['action', 'primary', 'secondary', 'tertiary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
-    },
+    statusVariant: variantsPlainArgType,
     progress: {
       control: { type: 'number', min: 0, max: 1, step: 0.1 }
     },
-    progressVariant: {
-      control: { type: 'select', required: false },
-      options: ['action', 'primary', 'secondary', 'tertiary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
-    }
+    progressVariant: variantsPlainArgType
   },
   args: {
     fixedWidth: true,

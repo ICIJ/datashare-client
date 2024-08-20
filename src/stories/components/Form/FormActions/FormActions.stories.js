@@ -1,5 +1,8 @@
 import FormActions from '@/components/Form/FormActions/FormActions'
 import ButtonIcon from '@/components//Button/ButtonIcon'
+import { VARIANT } from '@/enums/variants'
+import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
+import { SIZE } from '@/enums/sizes'
 
 export default {
   title: 'Components/Form/FormActions/FormActions',
@@ -9,65 +12,14 @@ export default {
     compact: {
       control: 'boolean'
     },
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg']
-    },
-    variant: {
-      control: 'select',
-      options: [
-        'action',
-        'primary',
-        'secondary',
-        'tertiary',
-        'danger',
-        'info',
-        'success',
-        'warning',
-        'light',
-        'dark',
-        'outline-primary',
-        'outline-secondary',
-        'outline-secondary',
-        'outline-danger',
-        'outline-info',
-        'outline-success',
-        'outline-warning',
-        'outline-tertiary',
-        'outline-dark',
-        'outline-light'
-      ]
-    },
-    compactVariant: {
-      control: 'select',
-      options: [
-        'action',
-        'primary',
-        'secondary',
-        'tertiary',
-        'danger',
-        'info',
-        'success',
-        'warning',
-        'light',
-        'dark',
-        'outline-primary',
-        'outline-secondary',
-        'outline-secondary',
-        'outline-danger',
-        'outline-info',
-        'outline-success',
-        'outline-warning',
-        'outline-tertiary',
-        'outline-dark',
-        'outline-light'
-      ]
-    }
+    size: buttonSizesArgType,
+    variant: variantsArgType,
+    compactVariant: variantsArgType
   },
   args: {
-    size: 'md',
-    variant: 'outline-secondary',
-    compactVariant: 'action'
+    size: SIZE.MD,
+    variant: VARIANT.OUTLINE_SECONDARY,
+    compactVariant: VARIANT.ACTION
   },
   render(args) {
     return {

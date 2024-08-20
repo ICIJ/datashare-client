@@ -2,16 +2,15 @@ import { uniqueId } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
+import { variantsPlainArgType } from '~storybook/utils'
+import { VARIANT } from '@/enums/variants'
 
 export default {
   title: 'Components/Dismissable/DismissableAlert',
   tags: ['autodocs'],
   component: DismissableAlert,
   argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: ['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark']
-    },
+    variant: variantsPlainArgType,
     name: {
       control: { type: 'text' }
     },
@@ -20,7 +19,7 @@ export default {
     }
   },
   args: {
-    variant: 'primary',
+    variant: VARIANT.PRIMARY,
     name: uniqueId('a-unique-name-'),
     persist: false,
     noIcon: false,
@@ -44,7 +43,7 @@ export const Default = {
 
 export const CustomSlots = {
   args: {
-    variant: 'info',
+    variant: VARIANT.INFO,
     icon: 'book'
   },
   render: (args) => ({
