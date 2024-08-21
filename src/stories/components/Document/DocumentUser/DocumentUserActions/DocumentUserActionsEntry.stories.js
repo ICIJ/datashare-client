@@ -10,6 +10,6 @@ export default {
 export const Default = {
   args: { icon: 'tag', label: '3 tags', value: '3' }
 }
-export const Compact = {
-  args: { icon: 'tag', compact: true, label: '3 tags', value: '3' }
+export const ShorterLabel = {
+  args: { icon: 'tag', shorter: true, label: '3 tags', value: '3' }
 }

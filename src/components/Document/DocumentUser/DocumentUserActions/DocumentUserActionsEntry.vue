@@ -17,13 +17,9 @@ const props = defineProps({
    */
   icon: { type: String, required: true },
   /**
-   * Show compact label (only value as label)
+   * Show shorter label (only value as label)
    */
-  compact: { type: Boolean, default: false },
-  /**
-   * Hide label
-   */
-  hideLabel: { type: Boolean, default: false },
+  shorter: { type: Boolean, default: false },
   /**
    * Force hide tooltip
    */
@@ -31,14 +27,10 @@ const props = defineProps({
   /**
    * Display as a dropdown item
    */
-  dropdownItem: { type: Boolean, default: false },
-  /**
-   * Display horizontal dropdown item
-   */
-  dropdownHorizontal: { type: Boolean, default: false }
+  dropdownItem: { type: Boolean, default: false }
 })
 const actionLabel = computed(() => {
-  return props.compact ? props.value : props.label
+  return props.shorter ? props.value : props.label
 })
 </script>
 
@@ -51,7 +43,7 @@ const actionLabel = computed(() => {
     :label="actionLabel"
     :tooltip-label="label"
     :aria-describedby="label"
-    :hide-label="hideLabel"
+    :hide-label="false"
     :hide-tooltip="hideTooltip"
     :show-tooltip-force="!hideTooltip"
   />

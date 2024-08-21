@@ -1,28 +1,31 @@
 <template>
-  <component
-    :is="component"
-    :class="classList"
-    :items="actionsDisplayed"
+  <form-actions
+    compact-auto
     :compact="compact"
-    :hide-tooltips="hideTooltips"
-    :hide-labels="hideLabels"
-  />
+    dropdown-icon="dots-three-vertical"
+    variant="action"
+    compact-variant="outline-action"
+    class="document-user-actions d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
+  >
+    <document-user-actions-entry
+      v-for="action in actionsDisplayed"
+      :key="action.name"
+      v-bind="action"
+      class="my-1 mx-1"
+    />
+  </form-actions>
 </template>
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { capitalize } from 'lodash'
 
-import DocumentUserActionsDropdown from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsDropdown'
-import DocumentUserActionsList from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsList'
+import FormActions from '@/components/Form/FormActions/FormActions'
+import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 
 defineOptions({ name: 'DocumentUserActions' })
 
 const props = defineProps({
-  dropdown: {
-    type: Boolean,
-    default: false
-  },
   compact: {
     type: Boolean,
     default: false
@@ -31,7 +34,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  hideLabels: {
+  shorterLabels: {
     type: Boolean,
     default: false
   },
@@ -100,44 +103,18 @@ const actions = computed(() => {
     value: props[action].toString(),
     hideTooltip: props.hideTooltips,
     hideLabel: props.hideLabels,
-    compact: props.compact
+    shorter: props.shorterLabels,
+    dropdownItem: props.compact
   }))
 })
 const actionsDisplayed = computed(() => {
   return actions.value.filter((action) => action.show === true)
 })
-
-const component = computed(() => {
-  return props.dropdown ? DocumentUserActionsDropdown : DocumentUserActionsList
-})
-const classList = computed(() => {
-  return 'text-action-emphasis'
-})
 </script>
 <style lang="scss">
 .document-user-actions {
-  &--dropdown {
-    & > .btn:first-child {
-      border: 0;
-      padding: 0;
-      text-align: center;
-      background: inherit;
-      &:hover {
-        color: unset;
-        background: unset;
-      }
-    }
-
-    & > .btn.dropdown-toggle {
-      &::after {
-        all: unset;
-        content: '⋮';
-      }
-    }
-  }
-
-  & > .btn.dropdown-toggle,
-  & > .btn.show {
+  /*  & > .btn.dropdown-toggle,
+  & .btn.show {
     border: 0;
     color: inherit;
     background: inherit;
@@ -152,6 +129,11 @@ const classList = computed(() => {
     background: inherit;
     border-color: var(--bs-action-color);
     --bs-dropdown-min-width: null;
+  }*/
+  & .form-actions-compact-dropdown__toggle {
+    background: var(--bs-btn-action-bg);
+    color: var(--bs-btn-action-text);
+    border: 0;
   }
 }
 </style>
