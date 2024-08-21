@@ -11,6 +11,10 @@ const props = defineProps({
   size: {
     type: String,
     default: 'md'
+  },
+  dropdownIcon: {
+    type: String,
+    default: 'dots-three-outline-vertical'
   }
 })
 
@@ -36,7 +40,7 @@ const classList = computed(() => {
     <b-button-group class="form-actions-compact__group" :size="size">
       <slot />
     </b-button-group>
-    <form-actions-compact-dropdown :variant="variant" :size="size">
+    <form-actions-compact-dropdown :variant="variant" :size="size" :dropdown-icon="dropdownIcon">
       <slot name="dropdown" />
     </form-actions-compact-dropdown>
   </div>

@@ -10,6 +10,10 @@ const props = defineProps({
   size: {
     type: String,
     default: 'md'
+  },
+  dropdownIcon: {
+    type: String,
+    default: 'dots-three-outline-vertical'
   }
 })
 
@@ -44,7 +48,7 @@ const menuClassList = computed(() => {
       <slot />
     </li>
     <template #button-content>
-      <phosphor-icon name="dots-three-outline-vertical" />
+      <phosphor-icon :name="dropdownIcon" />
     </template>
   </b-dropdown>
 </template>

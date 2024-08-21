@@ -220,11 +220,11 @@ const tooltipText = computed(() => {
 })
 
 const hasTooltip = computed(() => {
-  return !!tooltipText.value && !props.hideTooltip && props.hideLabel
+  return !!tooltipText.value && !props.hideTooltip
 })
 
 const showTooltip = computed(() => {
-  return currentHover.value && !!tooltipText.value && (props.showTooltipForce || hasTooltip.value)
+  return currentHover.value && hasTooltip.value && (props.showTooltipForce || props.hideLabel)
 })
 
 const buttonProps = computed(() => ({
