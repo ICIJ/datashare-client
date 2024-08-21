@@ -4,6 +4,8 @@ import { computed, watch, provide } from 'vue'
 import FormActionsCompact from './FormActionsCompact'
 
 import { useBreakpoints } from '@/composables/breakpoints'
+import { VARIANT } from '@/enums/variants'
+import { SIZE } from '@/enums/sizes'
 
 const props = defineProps({
   compact: {
@@ -14,19 +16,23 @@ const props = defineProps({
   },
   compactAutoBreakpoint: {
     type: String,
-    default: 'md'
+    default: SIZE.MD
   },
   compactVariant: {
     type: String,
-    default: 'action'
+    default: VARIANT.ACTION
   },
   variant: {
     type: String,
-    default: 'outline-secondary'
+    default: VARIANT.OUTLINE_SECONDARY
   },
   size: {
     type: String,
-    default: 'md'
+    default: SIZE.MD
+  },
+  dropdownIcon: {
+    type: String,
+    default: 'dots-three-outline-vertical'
   },
   tag: {
     type: String,
@@ -63,7 +69,7 @@ watch(
   <component :is="tag" class="form-actions" :aria-label="ariaLabel">
     <template v-if="isCompact">
       <slot name="start" v-bind="{ isCompact }" />
-      <form-actions-compact :variant="compactVariant" :size="size">
+      <form-actions-compact :variant="compactVariant" :size="size" :dropdown-icon="dropdownIcon">
         <slot name="compact" v-bind="{ isCompact }" />
         <template #dropdown>
           <slot v-bind="{ isCompact }" />
