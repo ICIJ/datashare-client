@@ -13,3 +13,4 @@ export const ICON_WEIGHT = Object.freeze({
   DUOTONE
 })
 export const ICON_WEIGHTS = Object.values(ICON_WEIGHT)
+export const iconWeightValidator = (v) => ICON_WEIGHTS.includes(v)

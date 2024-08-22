@@ -31,3 +31,4 @@ export const PLACEMENT = Object.freeze({
   BOTTOM_START
 })
 export const PLACEMENTS = Object.values(PLACEMENT)
+export const placementValidator = (v) => PLACEMENTS.includes(v)
