@@ -1,3 +1,6 @@
+const AUTO = 'auto'
+const AUTO_START = 'auto_start'
+const AUTO_END = 'auto_end'
 const RIGHT = 'right'
 const LEFT = 'left'
 const TOP = 'top'
@@ -11,6 +14,9 @@ const LEFT_START = 'left-start'
 const TOP_START = 'top-start'
 const BOTTOM_START = 'bottom-start'
 export const PLACEMENT = Object.freeze({
+  AUTO,
+  AUTO_START,
+  AUTO_END,
   RIGHT,
   LEFT,
   TOP,
