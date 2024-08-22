@@ -1,5 +1,5 @@
 import {VARIANTS, VARIANTS_PLAIN} from "@/enums/variants";
-import {Sizes, BREAKPOINT_SIZES} from "@/enums/sizes";
+import {BUTTON_SIZES, BREAKPOINT_SIZES} from "@/enums/sizes";
 import {FORMAT_FROM_NOW, FORMAT_LONG, FORMAT_SHORT} from "@/utils/humanDate";
 import {ICON_WEIGHTS} from "@/enums/iconWeights";
 import {ENTITY_CATEGORIES} from "@/enums/entityCategories";
@@ -15,7 +15,7 @@ export const variantsPlainArgType = {
 
 export const buttonSizesArgType = {
   control: 'inline-radio',
-  options: Sizes
+  options: BUTTON_SIZES
 }
 export const breakpointSizeArgType = {
   control: 'select',
