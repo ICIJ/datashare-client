@@ -4,8 +4,8 @@ import { computed, watch, provide } from 'vue'
 import FormActionsCompact from './FormActionsCompact'
 
 import { useBreakpoints } from '@/composables/breakpoints'
-import { VARIANT } from '@/enums/variants'
-import { SIZE } from '@/enums/sizes'
+import { VARIANT, variantValidator } from '@/enums/variants'
+import { breakpointSizeValidator, buttonSizeValidator, SIZE } from '@/enums/sizes'
 
 const props = defineProps({
   compact: {
@@ -16,19 +16,23 @@ const props = defineProps({
   },
   compactAutoBreakpoint: {
     type: String,
-    default: SIZE.MD
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
   },
   compactVariant: {
     type: String,
-    default: VARIANT.ACTION
+    default: VARIANT.ACTION,
+    validator: variantValidator
   },
   variant: {
     type: String,
-    default: VARIANT.OUTLINE_SECONDARY
+    default: VARIANT.OUTLINE_SECONDARY,
+    validator: variantValidator
   },
   size: {
     type: String,
-    default: SIZE.MD
+    default: SIZE.MD,
+    validator: buttonSizeValidator
   },
   dropdownIcon: {
     type: String,

@@ -38,6 +38,8 @@ import { useI18n } from 'vue-i18n'
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
+import { SIZE } from '@/enums/sizes'
+import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 const entryButtons = ref(null)
 
@@ -60,7 +62,8 @@ const props = defineProps({
    */
   tooltipPlacement: {
     type: String,
-    default: 'top'
+    default: PLACEMENT.TOP,
+    validator: placementValidator
   },
   /**
    * True if download is allowed for the document
@@ -104,11 +107,11 @@ const click = (action) => {
 }
 
 const entrySize = computed(() => {
-  return props.vertical ? 'sm' : 'md'
+  return props.vertical ? SIZE.SM : SIZE.MD
 })
 
 const entryIconSize = computed(() => {
-  return props.vertical ? 'lg' : 'md'
+  return props.vertical ? SIZE.LG : SIZE.MD
 })
 
 const classList = computed(() => {

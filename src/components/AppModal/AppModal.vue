@@ -2,6 +2,8 @@
 import AppModalHeader from './AppModalHeader'
 import AppModalFooter from './AppModalFooter'
 
+import { breakpointSizeValidator, buttonSizeValidator, SIZE } from '@/enums/sizes'
+
 defineProps({
   title: {
     type: String
@@ -27,7 +29,7 @@ defineProps({
   },
   buttonSize: {
     type: String,
-    validator: (value) => ['sm', 'lg', 'xl'].includes(value)
+    validator: buttonSizeValidator
   },
   cancelDisabled: {
     type: Boolean
@@ -127,8 +129,8 @@ defineProps({
   },
   size: {
     type: String,
-    default: 'md',
-    validator: (value) => ['sm', 'md', 'lg', 'xl'].includes(value)
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
   }
 })
 </script>
