@@ -21,6 +21,7 @@ import { sum, uniqueId, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import humanNumber from '@/utils/humanNumber'
+import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 
 /**
  * Widget to display a summary of names
@@ -67,12 +68,22 @@ export default {
     return this.loadData()
   },
   methods: {
+    // TODO Refactor: duplicate code in WidgetEntities =>  extract countFor promises logic
     async loadData() {
       this.$wait.start(this.loader)
-      this.entities.locations = await this.countFor('LOCATION')
-      this.entities.organizations = await this.countFor('ORGANIZATION')
-      this.entities.people = await this.countFor('PERSON')
+      const [locations, organizations, people] = await Promise.all([
+        this.handleCountForPromise(ENTITY_CATEGORY.LOCATION),
+        this.handleCountForPromise(ENTITY_CATEGORY.ORGANIZATION),
+        this.handleCountForPromise(ENTITY_CATEGORY.PERSON)
+      ])
+      this.entities = { locations, organizations, people }
       this.$wait.end(this.loader)
+    },
+    handleCountForPromise(category) {
+      return this.countFor(category).catch((error) => {
+        console.error(`Failed to count ${category}:`, error)
+        return 0
+      })
     },
     async countFor(category) {
       const index = this.project
