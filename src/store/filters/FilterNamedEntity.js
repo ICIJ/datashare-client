@@ -2,17 +2,19 @@ import includes from 'lodash/includes'
 
 import FilterType from './FilterType'
 
+import { ENTITY_CATEGORY } from '@/enums/entityCategories'
+
 export const namedEntityCategoryTranslation = {
-  namedEntityPerson: 'PERSON',
-  namedEntityOrganization: 'ORGANIZATION',
-  namedEntityLocation: 'LOCATION',
-  namedEntityEmail: 'EMAIL'
+  namedEntityPerson: ENTITY_CATEGORY.PERSON,
+  namedEntityOrganization: ENTITY_CATEGORY.ORGANIZATION,
+  namedEntityLocation: ENTITY_CATEGORY.LOCATION,
+  namedEntityEmail: ENTITY_CATEGORY.EMAIL
 }
 
 export default class FilterNamedEntity extends FilterType {
   constructor(options) {
     super(options)
-    this.category = options.category || 'PERSON'
+    this.category = options.category || ENTITY_CATEGORY.PERSON
     this.component = 'FilterNamedEntity'
     this.sortByOptions = [
       { sortBy: '_count', sortByOrder: 'asc' },

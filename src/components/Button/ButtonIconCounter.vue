@@ -1,5 +1,6 @@
 <script setup>
 import DisplayNumber from '@/components/Display/DisplayNumber'
+import { VARIANT, variantValidator } from '@/enums/variants'
 
 defineProps({
   counter: {
@@ -8,7 +9,8 @@ defineProps({
   },
   variant: {
     type: String,
-    default: 'secondary'
+    default: VARIANT.SECONDARY,
+    validator: variantValidator
   }
 })
 </script>
