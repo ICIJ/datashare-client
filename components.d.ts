@@ -100,6 +100,7 @@ declare module 'vue' {
     ButtonIconCounter: typeof import('./src/components/Button/ButtonIconCounter.vue')['default']
     ButtonSaveSearch: typeof import('./src/components/Button/ButtonSaveSearch.vue')['default']
     ButtonToggleAdvancedSearch: typeof import('./src/components/Button/ButtonToggleAdvancedSearch.vue')['default']
+    ButtonToggleBatchMode: typeof import('./src/components/Button/ButtonToggleBatchMode.vue')['default']
     ButtonToggleFiltersPanel: typeof import('./src/components/Button/ButtonToggleFiltersPanel.vue')['default']
     ButtonToggleSearchBreadcrumb: typeof import('./src/components/Button/ButtonToggleSearchBreadcrumb.vue')['default']
     ButtonToTop: typeof import('./src/components/Button/ButtonToTop.vue')['default']

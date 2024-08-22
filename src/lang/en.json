@@ -31,6 +31,10 @@
   "buttonDownloadDocuments": {
     "label": "Download documents"
   },
+  "buttonToggleBatchMode": {
+    "labelBatchMode": "Toggle batch mode",
+    "labelSingleFlow": "Toggle single flow"
+  },
   "buttonSaveSearch": {
     "label": "Save",
     "labelSaving": "Saving",
