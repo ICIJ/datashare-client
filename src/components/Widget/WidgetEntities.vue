@@ -32,6 +32,7 @@ import bodybuilder from 'bodybuilder'
 
 import { namedEntityIcon } from '@/utils/named-entities'
 import humanNumber from '@/utils/humanNumber'
+import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 
 /**
  * Widget to display a summary of entities
@@ -88,11 +89,20 @@ export default {
     namedEntityIcon,
     async loadData() {
       this.$wait.start(this.loader)
-      this.entities.emails = await this.countFor('EMAIL')
-      this.entities.locations = await this.countFor('LOCATION')
-      this.entities.organizations = await this.countFor('ORGANIZATION')
-      this.entities.people = await this.countFor('PERSON')
+      const [emails, locations, organizations, people] = await Promise.all([
+        this.handleCountForPromise(ENTITY_CATEGORY.EMAIL),
+        this.handleCountForPromise(ENTITY_CATEGORY.LOCATION),
+        this.handleCountForPromise(ENTITY_CATEGORY.ORGANIZATION),
+        this.handleCountForPromise(ENTITY_CATEGORY.PERSON)
+      ])
+      this.entities = { emails, locations, organizations, people }
       this.$wait.end(this.loader)
+    },
+    handleCountForPromise(category) {
+      return this.countFor(category).catch((error) => {
+        console.error(`Failed to count ${category}:`, error)
+        return 0
+      })
     },
     async countFor(category) {
       const index = this.project
