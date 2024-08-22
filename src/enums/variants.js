@@ -8,6 +8,7 @@ const WARNING = 'warning'
 const DANGER = 'danger'
 const LIGHT = 'light'
 const DARK = 'dark'
+const OUTLINE_ACTION = 'outline-action'
 const OUTLINE_PRIMARY = 'outline-primary'
 const OUTLINE_SECONDARY = 'outline-secondary'
 const OUTLINE_TERTIARY = 'outline-tertiary'
@@ -41,6 +42,7 @@ export const VARIANT = Object.freeze({
   WARNING,
   LIGHT,
   DARK,
+  OUTLINE_ACTION,
   OUTLINE_PRIMARY,
   OUTLINE_SECONDARY,
   OUTLINE_DANGER,
