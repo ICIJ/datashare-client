@@ -59,10 +59,15 @@ import { PhCircleNotch } from '@phosphor-icons/vue'
 
 import ButtonIconCounter from './ButtonIconCounter'
 
+import { SIZE } from '@/enums/sizes'
+import { VARIANT, variantValidator } from '@/enums/variants'
+import { iconWeightValidator } from '@/enums/iconWeights'
+import { PLACEMENT, placementValidator } from '@/enums/placements'
+
 const element = ref(null)
 
-const injectedVariant = inject('variant', 'action')
-const injectedSize = inject('size', 'md')
+const injectedVariant = inject('variant', VARIANT.ACTION)
+const injectedSize = inject('size', SIZE.MD)
 
 const props = defineProps({
   iconLeft: {
@@ -71,15 +76,18 @@ const props = defineProps({
   },
   iconLeftVariant: {
     type: String,
-    default: null
+    default: null,
+    validator: variantValidator
   },
   iconLeftWeight: {
     type: String,
-    default: null
+    default: null,
+    validator: iconWeightValidator
   },
   iconLeftHoverWeight: {
     type: String,
-    default: null
+    default: null,
+    validator: iconWeightValidator
   },
   iconLeftSize: {
     type: String
@@ -90,15 +98,18 @@ const props = defineProps({
   },
   iconRightVariant: {
     type: String,
-    default: null
+    default: null,
+    validator: variantValidator
   },
   iconRightWeight: {
     type: String,
-    default: null
+    default: null,
+    validator: iconWeightValidator
   },
   iconRightHoverWeight: {
     type: String,
-    default: null
+    default: null,
+    validator: iconWeightValidator
   },
   iconRightSize: {
     type: String
@@ -165,7 +176,8 @@ const props = defineProps({
   },
   tooltipPlacement: {
     type: String,
-    default: 'top'
+    default: PLACEMENT.TOP,
+    validator: placementValidator
   },
   showTooltipForce: {
     type: Boolean
@@ -179,7 +191,8 @@ const props = defineProps({
   },
   counterVariant: {
     type: String,
-    default: 'secondary'
+    default: VARIANT.SECONDARY,
+    validator: variantValidator
   },
   truncate: {
     type: Boolean

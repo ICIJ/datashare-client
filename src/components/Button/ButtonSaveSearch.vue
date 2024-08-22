@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useBreakpoints } from '@/composables/breakpoints'
+import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const props = defineProps({
   saved: {
@@ -15,7 +16,8 @@ const props = defineProps({
   },
   compactBreakpoint: {
     type: String,
-    default: 'md'
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
   }
 })
 
