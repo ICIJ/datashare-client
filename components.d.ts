@@ -94,6 +94,7 @@ declare module 'vue' {
     BTr: typeof import('bootstrap-vue-next')['BTr']
     ButtonAdd: typeof import('./src/components/Button/ButtonAdd.vue')['default']
     ButtonClearSearch: typeof import('./src/components/Button/ButtonClearSearch.vue')['default']
+    ButtonDownloadDocuments: typeof import('./src/components/Button/ButtonDownloadDocuments.vue')['default']
     ButtonIcon: typeof import('./src/components/Button/ButtonIcon.vue')['default']
     ButtonIconContent: typeof import('./src/components/Button/ButtonIconContent.vue')['default']
     ButtonIconCounter: typeof import('./src/components/Button/ButtonIconCounter.vue')['default']
