@@ -28,6 +28,9 @@
   "buttonClearSearch": {
     "label": "Clear search"
   },
+  "buttonDownloadDocuments": {
+    "label": "Download documents"
+  },
   "buttonSaveSearch": {
     "label": "Save",
     "labelSaving": "Saving",
