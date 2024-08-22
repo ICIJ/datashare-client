@@ -1,3 +1,5 @@
+import { PLACEMENTS } from '@/enums/placements'
+
 const ACTION = 'action'
 const PRIMARY = 'primary'
 const SECONDARY = 'secondary'
@@ -54,4 +56,7 @@ export const VARIANT = Object.freeze({
   OUTLINE_LIGHT
 })
 export const VARIANTS_PLAIN = Object.values(VARIANT_PLAIN)
+export const variantPlainValidator = (v) => VARIANTS_PLAIN.includes(v)
+
 export const VARIANTS = Object.values(VARIANT)
+export const variantValidator = (v) => VARIANTS.includes(v)
