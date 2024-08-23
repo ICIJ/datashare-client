@@ -38,7 +38,7 @@
   "buttonSaveSearch": {
     "label": "Save",
     "labelSaving": "Saving",
-    "labelSaved": "Seach saved"
+    "labelSaved": "Search saved"
   },
   "buttonToggleAdvancedSearch": {
     "label": "Advanced"
