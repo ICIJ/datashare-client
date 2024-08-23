@@ -16,7 +16,7 @@ defineProps({
     type: Boolean
   },
   okOnly: {
-    type: String
+    type: Boolean
   },
   okTitle: {
     type: String
