@@ -95,7 +95,7 @@ defineProps({
     type: String
   },
   modelValue: {
-    type: String
+    type: Boolean
   },
   noCloseOnBackdrop: {
     type: Boolean
@@ -176,11 +176,6 @@ defineProps({
     :size="size"
     class="app-modal"
     :title="title"
-    @update:modelValue="$emit('update:modelValue', $event)"
-    @ok="$emit('ok')"
-    @hide="$emit('hide')"
-    @close="$emit('close')"
-    @cancel="$emit('cancel')"
   >
     <template #header="{ cancel, close, hide, ok, visible }">
       <slot name="header" v-bind="{ cancel, close, hide, ok, visible }">
