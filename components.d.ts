@@ -38,6 +38,7 @@ declare module 'vue' {
     BatchSearchDetails: typeof import('./src/components/BatchSearch/BatchSearchDetails.vue')['default']
     BatchSearchDetailsDescription: typeof import('./src/components/BatchSearch/BatchSearchDetailsDescription.vue')['default']
     BatchSearchDetailsEntry: typeof import('./src/components/BatchSearch/BatchSearchDetailsEntry.vue')['default']
+    BatchSearchErrorModal: typeof import('./src/components/BatchSearch/BatchSearchErrorModal.vue')['default']
     BatchSearchFilterDate: typeof import('./src/components/BatchSearchFilterDate.vue')['default']
     BatchSearchFilterQuery: typeof import('./src/components/BatchSearchFilterQuery.vue')['default']
     BatchSearchForm: typeof import('./src/components/BatchSearchForm.vue')['default']
