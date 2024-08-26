@@ -1,10 +1,9 @@
-import { mount, flushPromises, shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import ApiPage from '@/components/Api'
 import { getMode, MODE_NAME } from '@/mode'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { render } from 'jsdoc-to-markdown'
 
 describe('Api.vue', () => {
   let plugins, api
