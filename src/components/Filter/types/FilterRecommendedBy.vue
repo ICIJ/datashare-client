@@ -20,7 +20,7 @@
           <b-form-checkbox :value="user">
             <span class="d-flex">
               <span class="filter__items__item__label pe-1 text-truncate d-inline-block">
-                <display-user :username="user" hide-avatar hide-link />
+                <display-user :value="user" hide-avatar hide-link />
               </span>
               <span class="filter__items__item__count my-auto ms-auto">
                 <span class="badge rounded-pill text-bg-tertiary">
