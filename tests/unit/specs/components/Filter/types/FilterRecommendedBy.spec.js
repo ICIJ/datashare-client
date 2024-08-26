@@ -1,5 +1,5 @@
 import toLower from 'lodash/toLower'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FilterRecommendedBy from '@/components/Filter/types/FilterRecommendedBy'
@@ -8,7 +8,6 @@ import FilterRecommendedBy from '@/components/Filter/types/FilterRecommendedBy'
 FilterRecommendedBy.methods.refreshRouteAndSearch = vi.fn()
 
 describe('FilterRecommendedBy.vue', () => {
-  const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0))
   let core, wrapper, api
   const project = toLower('FilterRecommendedBy')
 
