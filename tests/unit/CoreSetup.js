@@ -16,7 +16,7 @@ class CoreSetup extends Core {
       this.plugin,
       this.bootstrapVue,
       this.i18n,
-      this.murmur,
+      [this.murmur, { useI18n: false, useBootstrap: false }],
       this.store,
       this.vueShortkey,
       this.vueScrollTo,
