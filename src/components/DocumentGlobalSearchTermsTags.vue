@@ -154,7 +154,7 @@ export default {
     cursor: pointer;
 
     &:hover {
-      box-shadow: 0 3px 0 0 darken($mark-bg, 20%);
+      box-shadow: 0 3px 0 0 darken(#fff5bd, 20%);
     }
 
     & &__count {
