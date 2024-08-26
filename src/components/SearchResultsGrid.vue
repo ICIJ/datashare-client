@@ -50,10 +50,10 @@
 <script>
 import { mapState } from 'vuex'
 
-import DocumentActions from '@/components/Document/DocumentActions'
+import DocumentActions from '@/components/DocumentActions'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
-import SearchResultsHeader from '@/components/Document/SearchResultsHeader'
+import SearchResultsHeader from '@/components/SearchResultsHeader'
 import settings from '@/utils/settings'
 
 /**
