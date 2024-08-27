@@ -9,7 +9,7 @@ defineProps({
     type: String,
     default: 'text'
   },
-  placeholder: {
+  inputPlaceholder: {
     type: String,
     default: null
   },
@@ -53,7 +53,7 @@ const onOk = () => {
           :invalid-feedback="inputInvalidFeedback"
           :state="inputState"
         >
-          <b-form-input id="input-1" v-model="inputValue" :type="inputType" :placeholder="placeholder" />
+          <b-form-input id="input-1" v-model="inputValue" :type="inputType" :placeholder="inputPlaceholder" />
         </b-form-group>
         <p class="text-secondary-emphasis">
           <slot name="description">{{ description }}</slot>
