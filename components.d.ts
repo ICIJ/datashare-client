@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    '(build': a BBtnGroup)
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
