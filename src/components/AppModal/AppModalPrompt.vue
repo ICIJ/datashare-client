@@ -1,10 +1,10 @@
 <script setup>
-import { useAttrs, useSlots } from 'vue'
+import { nextTick, ref, useAttrs, useSlots, watch } from 'vue'
 
 import AppModal from './AppModal'
 const inputValue = defineModel('inputValue', { type: String, required: true })
 const modelValue = defineModel({ type: Boolean, required: true })
-defineProps({
+const props = defineProps({
   inputType: {
     type: String,
     default: 'text'
@@ -25,8 +25,13 @@ defineProps({
   },
   inputInvalidFeedback: {
     type: String
+  },
+  inputAutofocus: {
+    type: Boolean,
+    default: false
   }
 })
+const inputModal = ref(null)
 // Retrieve all slots passed to AppModalPrompt to pass them to AppModal
 const slots = useSlots()
 const slots_ = Object.fromEntries(Object.entries(slots).filter(([name]) => name !== 'default'))
@@ -35,6 +40,18 @@ const attrs = useAttrs() // This will forward any props passed to AppModalPrompt
 const emits = defineEmits(['submit'])
 const onOk = () => {
   emits('submit', { value: inputValue.value })
+}
+watch(modelValue, (show) => {
+  if (props.inputAutofocus === true && show === true) {
+    focusInput()
+  }
+})
+const focusInput = () => {
+  if (inputModal.value) {
+    nextTick(() => {
+      inputModal.value.focus()
+    })
+  }
 }
 </script>
 
@@ -53,7 +70,13 @@ const onOk = () => {
           :invalid-feedback="inputInvalidFeedback"
           :state="inputState"
         >
-          <b-form-input id="input-1" v-model="inputValue" :type="inputType" :placeholder="inputPlaceholder" />
+          <b-form-input
+            id="input-1"
+            ref="inputModal"
+            v-model="inputValue"
+            :type="inputType"
+            :placeholder="inputPlaceholder"
+          />
         </b-form-group>
         <p class="text-secondary-emphasis">
           <slot name="description">{{ description }}</slot>
