@@ -3,7 +3,9 @@ import { computed, useAttrs, useSlots } from 'vue'
 
 import AppModal from '@/components/AppModal/AppModal'
 import JsonFormatter from '@/components/JsonFormatter'
-import imageLight from '@/assets/images/illustrations/batch-search-error-modal-light.svg'
+import imageLight from '@/assets/images/illustrations/app-modal-error-light.svg'
+import imageDark from '@/assets/images/illustrations/app-modal-error-dark.svg'
+import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 const modelValue = defineModel({ type: Boolean, required: true })
 
 const props = defineProps({
@@ -22,7 +24,8 @@ const props = defineProps({
 })
 const slots = useSlots()
 const attrs = useAttrs()
-const image = imageLight
+const imageHeaderLight = imageLight
+const imageHeaderDark = imageDark
 const errorMessageAsJson = computed(() => {
   const re = /{"error":.+}/gm
   const match = props.errorMessage.match(re)
@@ -35,7 +38,17 @@ const errorMessageAsJson = computed(() => {
 </script>
 
 <template>
-  <app-modal v-bind="attrs" v-model="modelValue" :image="image" class="batch-search-error-modal" ok-only size="xl">
+  <app-modal
+    v-bind="attrs"
+    v-model="modelValue"
+    :image="imageHeaderLight"
+    class="batch-search-error-modal"
+    ok-only
+    size="xl"
+  >
+    <template #header-image-source>
+      <image-mode-source :src="imageHeaderDark" color-mode="dark" />
+    </template>
     <template v-if="slots.default">
       <div class="d-flex flex-column gap-2 mt-0 pt-0">
         <div class="d-flex justify-content-center pb-2">
