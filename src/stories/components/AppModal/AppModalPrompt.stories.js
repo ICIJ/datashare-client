@@ -1,4 +1,4 @@
-import { breakpointSizeArgType } from '~storybook/utils'
+import { breakpointSizeArgType, inputTypeArgType } from '~storybook/utils'
 import AppModalPrompt from '@/components/AppModal/AppModalPrompt'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
@@ -9,13 +9,15 @@ export default {
   tags: ['autodocs'],
   component: AppModalPrompt,
   argTypes: {
-    size: breakpointSizeArgType
+    size: breakpointSizeArgType,
+    inputType: inputTypeArgType
   },
   args: {
     image,
     imageDark,
     modelValue: false,
-    inputValue: 'test'
+    inputValue: 'test',
+    inputAutofocus: false
   },
   render(args) {
     return {
@@ -50,6 +52,17 @@ export const Default = {
     okTitle: 'Save search',
     cancelTitle: 'Cancel',
     inputValue: '',
+    inputPlaceholder: 'Type here',
+    description: 'You will find your saved searches in the left menu in Explore > Saved Searches'
+  }
+}
+export const Autofocus = {
+  args: {
+    title: 'Name your saved search',
+    okTitle: 'Save search',
+    cancelTitle: 'Cancel',
+    inputValue: '',
+    inputAutofocus: true,
     inputPlaceholder: 'Type here',
     description: 'You will find your saved searches in the left menu in Explore > Saved Searches'
   }
