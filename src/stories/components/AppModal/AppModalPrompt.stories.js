@@ -60,6 +60,7 @@ export const InputError = {
     okTitle: 'Create alert',
     cancelTitle: 'Cancel',
     inputValue: 'bad alert name',
+    inputPlaceholder: 'Type here',
     description: 'You will find your saved searches in the left menu in Explore > Alerts',
     inputState: false,
     inputInvalidFeedback: 'Invalid alert name'
