@@ -17,7 +17,6 @@ defineProps({
     ><phosphor-icon
       v-if="icon"
       :name="icon"
-      style=""
       class="batch-search-card-details-entry__icon text-secondary-emphasis"
     /><slot>{{ value }}</slot></span
   >
