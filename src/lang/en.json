@@ -907,7 +907,10 @@
   },
   "batchSearchCard": {
     "seeAllDocuments": "See all documents",
-    "downloadLabel": "Download {n} documents"
+    "downloadDocumentsLabel": "Download {n} documents",
+    "noDocumentsLabel": "No documents found",
+    "downloadQueriesLabel": "Download {n} queries",
+    "downloadQueriesWithoutResultsLabel": "Download {n} queries without results"
   },
   "batchSearchCardActions": {
     "rename": "Rename",
@@ -922,13 +925,13 @@
     "visibilityPrivate":"Private",
     "visibilityShared": "Shared",
     "visibility":"Visibility",
-    "phraseMatchOn": "Phrase match: on",
-    "phraseMatchOff":"Phrase match: off",
+    "phraseMatchOn": "Do phrase match: yes",
+    "phraseMatchOff":"Do phrase match: no",
     "phraseMatch": "Phrase match",
-    "proximity": "Proximity",
-    "proximityValue":"Proximity: {n}",
-    "fuzziness": "Fuzziness",
-    "fuzzinessValue":"Fuzziness: {n}",
+    "proximity": "Proximity - Sentence changes",
+    "proximityValue":"Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
+    "fuzziness": "Fuzziness - Spelling changes",
+    "fuzzinessValue":"Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
     "projects":"Projects",
     "description": "Description",
     "descriptionEdit": "Edit"
