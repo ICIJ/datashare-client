@@ -3,14 +3,19 @@ import { computed, watch, provide } from 'vue'
 
 import FormActionsCompactDropdown from './FormActionsCompactDropdown'
 
+import { VARIANT, variantValidator } from '@/enums/variants'
+import { buttonSizeValidator, SIZE } from '@/enums/sizes'
+
 const props = defineProps({
   variant: {
     type: String,
-    default: 'action'
+    default: VARIANT.ACTION,
+    validator: variantValidator
   },
   size: {
     type: String,
-    default: 'md'
+    default: SIZE.MD,
+    validator: buttonSizeValidator
   },
   dropdownIcon: {
     type: String,
