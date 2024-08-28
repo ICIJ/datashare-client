@@ -1,9 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
 
-import DSDropdown from '@/components/DSDropdown'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'BatchSearchCardActions' })
