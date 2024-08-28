@@ -7,12 +7,7 @@
     compact-variant="outline-action"
     class="document-user-actions d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
   >
-    <document-user-actions-entry
-      v-for="action in actionsDisplayed"
-      :key="action.name"
-      v-bind="action"
-      class="my-1 mx-1"
-    />
+    <document-user-actions-entry v-for="action in actionsDisplayed" :key="action.name" v-bind="action" class="m-1" />
   </form-actions>
 </template>
 <script setup>
