@@ -1,17 +1,21 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 
+import DSDropdown from '@/components/DSDropdown'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'BatchSearchCardActions' })
 
 const props = defineProps({
   uuid: { type: String },
-  nbResults: { type: Number },
+  nbDocuments: { type: Number },
+  nbQueries: { type: Number },
   projects: { type: Array }
 })
 
+const emit = defineEmits(['downloadDocuments', 'downloadQueries', 'downloadQueriesWithoutResults'])
 const { t } = useI18n()
 
 const actions = {
@@ -39,13 +43,27 @@ const actions = {
 }
 
 const seeAllDocumentsLabel = t('batchSearchCard.seeAllDocuments')
-const downloadLabel = t('batchSearchCard.downloadLabel', { n: props.nbResults })
+const downloadDocumentsLabel = t('batchSearchCard.downloadDocumentsLabel', { n: props.nbDocuments })
+const noDocuments = computed(() => {
+  return props.nbDocuments === 0
+})
+const noDocumentsLabel = t('batchSearchCard.seeAllDocuments')
+
+const downloadQueriesLabel = t('batchSearchCard.downloadQueriesLabel', { n: props.nbQueries })
+const downloadQueriesWithoutResultsLabel = t('batchSearchCard.downloadQueriesWithoutResultsLabel')
+
 const indices = computed(() => {
   return props.projects.join(',')
 })
 const to = { name: 'batch-tasks.view.results', params: { indices: indices.value, uuid: props.uuid } }
-const launchDownload = () => {
-  alert('Launch download uuid: ' + props.uuid)
+const downloadDocuments = () => {
+  emit('downloadDocuments')
+}
+const downloadQueries = () => {
+  emit('downloadQueries')
+}
+const downloadQueriesWithoutResults = () => {
+  emit('downloadQueriesWithoutResults')
 }
 </script>
 
@@ -59,6 +77,7 @@ const launchDownload = () => {
         :label="action.label"
         size="sm"
         variant="outline-secondary"
+        class="border-0"
         @click="$emit(action.event, { uuid })"
       />
     </div>
@@ -74,12 +93,31 @@ const launchDownload = () => {
     </div>
     <div class="d-inline-flex flex-sm-row flex-column">
       <button-icon
+        :disabled="noDocuments"
         icon-left="download-simple"
         variant="outline-primary"
         class="batch-search-card-actions__download text-nowrap"
-        @click="launchDownload"
-        >{{ downloadLabel }}</button-icon
+        @click="downloadDocuments"
+        >{{ noDocuments ? noDocumentsLabel : downloadDocumentsLabel }}</button-icon
       >
+    </div>
+    <div class="d-inline-flex flex-sm-row flex-column">
+      <button-icon
+        icon-left="download-simple"
+        variant="outline-primary"
+        class="d-inline-flex flex-nowrap"
+        @click="downloadQueries"
+      >
+        <span>{{ downloadQueriesLabel }}</span>
+      </button-icon>
+      <button-icon
+        icon-left="download-simple"
+        variant="outline-primary"
+        class="d-inline-flex flex-nowrap"
+        @click="downloadQueriesWithoutResults"
+      >
+        <span>{{ downloadQueriesWithoutResultsLabel }}</span>
+      </button-icon>
     </div>
   </div>
 </template>
