@@ -8,6 +8,7 @@ import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSearchCar
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
 import ProjectLink from '@/components/Project/ProjectLink'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'BatchSearchCardDetails' })
 
@@ -33,7 +34,7 @@ const dateItem = computed(() => {
   return { icon: 'calendar-blank', label: t('batchSearchCardDetails.date'), value: props.date }
 })
 const authorItem = computed(() => {
-  return { icon: 'user-gear', label: t('batchSearchCardDetails.author'), value: props.author }
+  return { icon: 'user', label: t('batchSearchCardDetails.author'), value: props.author }
 })
 const visibilityPrivate = 'eye-slash'
 const visibilityPublic = 'eye'
@@ -50,16 +51,16 @@ const visibilityItem = computed(() => {
   return { icon: visibilityIcon.value, label: t('batchSearchCardDetails.visibility'), value: visibilityValue.value }
 })
 
-const phraseMatchOff = 'toggle-left'
-const phraseMatchOn = 'toggle-right'
-const phraseMatchIcon = computed(() => {
-  return props.phraseMatch ? phraseMatchOn : phraseMatchOff
-})
+const phraseMatchIcon = 'quotes'
 const phraseMatchValue = computed(() => {
   return props.phraseMatch ? t('batchSearchCardDetails.phraseMatchOn') : t('batchSearchCardDetails.phraseMatchOff')
 })
 const phraseMatchItem = computed(() => {
-  return { icon: phraseMatchIcon.value, label: t('batchSearchCardDetails.phraseMatch'), value: phraseMatchValue.value }
+  return {
+    icon: phraseMatchIcon,
+    label: t('batchSearchCardDetails.phraseMatch'),
+    value: phraseMatchValue.value
+  }
 })
 
 const fuzzinessValue = computed(() => {
