@@ -2,10 +2,15 @@ import { vueRouter } from 'storybook-vue3-router'
 
 import BatchSearchCardDetails from '@/components/BatchSearch/BatchSearchCardDetails'
 import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
+
 const routes = [
   {
     path: '/project/:name',
     name: 'project.view'
+  },
+  {
+    path: '/:indices/:uuid',
+    name: 'batch-tasks.view.results'
   }
 ]
 export default {
@@ -14,6 +19,10 @@ export default {
   component: BatchSearchCardDetails,
   tags: ['autodocs'],
   args: {
+    uuid: 'abd',
+    nbResults: 7,
+    nbQueriesWithoutResults: 5,
+    nbQueries: 6,
     name: 'Richest people in the EU',
     status: 'success',
     date: new Date(),

@@ -4,10 +4,6 @@ export default {
   title: 'Components/BatchSearch/BatchSearchCardActions',
   component: BatchSearchCardActions,
   tags: ['autodocs'],
-  args: {
-    uuid: '1',
-    nbResults: 5,
-    projects: ['banana papers', 'citrus confidential']
-  }
+  args: {}
 }
 export const Default = {}

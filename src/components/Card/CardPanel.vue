@@ -1,25 +1,31 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'CardPanel' })
-defineProps({
+const props = defineProps({
   title: { type: String, required: true },
-  icon: { type: String, required: true },
-  noXIcon: { type: Boolean, default: false }
+  icon: { type: String, required: false },
+  noXIcon: { type: Boolean, default: false },
+  width: { type: String },
+  contentClass: { type: String, default: 'gap-4' }
 })
 
 const { t } = useI18n()
 const closeLabel = t('documentUserActionsCard.close')
+const panelWidth = computed(() => {
+  return `--card-panel-width : ${props.width}`
+})
 </script>
 
 <template>
-  <b-card class="card-panel shadow border-0">
+  <b-card class="card-panel shadow border-0 py-4" :style="panelWidth">
     <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold">
       <span>
-        <phosphor-icon :name="icon" class="me-2" />
+        <phosphor-icon v-if="icon" :name="icon" class="me-2" />
         <slot name="title">{{ title }}</slot>
       </span>
       <button-icon
@@ -33,7 +39,7 @@ const closeLabel = t('documentUserActionsCard.close')
         @close="$emit('close')"
       />
     </b-card-title>
-    <b-card-text class="card-panel__content d-flex flex-column gap-4">
+    <b-card-text class="card-panel__content d-flex flex-column" :class="contentClass">
       <slot />
     </b-card-text>
   </b-card>
@@ -41,6 +47,7 @@ const closeLabel = t('documentUserActionsCard.close')
 
 <style lang="scss" scoped>
 .card-panel {
+  width: var(--card-panel-width);
   &__title {
     font-size: $font-size-lg;
     margin: 0;
