@@ -8,14 +8,15 @@ const routes = [
     name: 'project.view'
   },
   {
-    path: ':indices/:uuid',
+    path: '/:indices/:uuid',
     name: 'batch-tasks.view.results'
   }
 ]
-
 const batchSearch = {
-  uuid: 1,
-  nbResults: 5,
+  uuid: 'aabc',
+  nbResults: 7,
+  nbQueriesWithoutResults: 5,
+  nbQueries: 6,
   name: 'Richest people in the EU',
   status: 'success',
   date: new Date(),
