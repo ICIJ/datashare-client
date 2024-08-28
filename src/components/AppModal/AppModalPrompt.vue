@@ -37,9 +37,9 @@ const slots = useSlots()
 const slots_ = Object.fromEntries(Object.entries(slots).filter(([name]) => name !== 'default'))
 const attrs = useAttrs() // This will forward any props passed to AppModalPrompt to AppModal
 
-const emits = defineEmits(['submit'])
+const emit = defineEmits(['submit'])
 const onOk = () => {
-  emits('submit', { value: inputValue.value })
+  emit('submit', { value: inputValue.value })
 }
 watch(modelValue, (show) => {
   if (props.inputAutofocus === true && show === true) {
