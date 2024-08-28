@@ -906,18 +906,28 @@
     }
   },
   "batchSearchCard": {
+    "status": "Status",
     "seeAllDocuments": "See all documents",
-    "downloadDocumentsLabel": "Download {n} documents",
-    "noDocumentsLabel": "No documents found",
-    "downloadQueriesLabel": "Download {n} queries",
-    "downloadQueriesWithoutResultsLabel": "Download {n} queries without results"
+    "downloadResultsLabel": "Download results (CSV)",
+    "nbDocuments": "Batch search document results",
+    "nbDocumentsLabel": "{n} documents | {n} document | {n} documents",
+    "nbQueries": "Batch search queries",
+    "nbQueriesLabel": "{n} queries | {n} query | {n} queries",
+    "downloadQueriesLabel": "Download queries",
+    "nbQueriesWithoutResults": "Zero-result queries",
+    "nbQueriesWithoutResultsLabel": "{n} zero-result queries | {n} zero-result query | {n} zero-result queries",
+    "downloadQueriesWithoutResultsLabel": "Download zero-result queries"
   },
   "batchSearchCardActions": {
-    "rename": "Rename",
-    "edit": "Edit properties",
+    "edit": "Edit",
     "relaunch":"Relaunch",
     "delete": "Delete"
   },
+  "textTruncate": {
+    "seeLess": "See less",
+    "seeMore":"See more"
+  },
+
   "batchSearchCardDetails": {
     "status": "Status",
     "date":"Creation date",
@@ -933,8 +943,7 @@
     "fuzziness": "Fuzziness - Spelling changes",
     "fuzzinessValue":"Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
     "projects":"Projects",
-    "description": "Description",
-    "descriptionEdit": "Edit"
+    "description": "Description"
   },
   "newBatchSearch": {
     "title": "Start a new batch search"
