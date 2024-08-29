@@ -101,7 +101,7 @@ describe('DismissableAlert', () => {
         noButton: true
       }
     })
-    expect(wrapper.find('button').exists()).toBe(false)
+    expect(wrapper.find('.dismissable-alert__body__button').exists()).toBe(false)
   })
 
   it('renders the icon if noIcon is false', () => {
@@ -113,7 +113,7 @@ describe('DismissableAlert', () => {
         noIcon: false
       }
     })
-    expect(wrapper.findComponent(PhosphorIcon).exists()).toBeTruthy()
+    expect(wrapper.find('.toast-body__icon').exists()).toBeTruthy()
     expect(wrapper.findComponent(ToastBody).props('icon')).toBe('info')
   })
 
@@ -125,6 +125,7 @@ describe('DismissableAlert', () => {
         noIcon: true
       }
     })
-    expect(wrapper.findComponent(PhosphorIcon).exists()).toBeFalsy()
+
+    expect(wrapper.find('.toast-body__icon').exists()).toBeFalsy()
   })
 })
