@@ -10,7 +10,7 @@ describe('DismissableToastBody', () => {
         body: 'Test body'
       }
     })
-    expect(wrapper.vm.variant).toBe('primary')
+    expect(wrapper.vm.variant).toBe('action')
   })
 
   it('renders with error variant when toastProps type is error', () => {
