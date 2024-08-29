@@ -442,7 +442,7 @@ declare module 'vue' {
     SortingArrow: typeof import('./src/components/SortingArrow.vue')['default']
     TaskItemStatus: typeof import('./src/components/TaskItemStatus.vue')['default']
     TasksList: typeof import('./src/components/TasksList.vue')['default']
-    TextTruncate: typeof import('./src/components/BatchSearch/TextTruncate.vue')['default']
+    TextTruncate: typeof import('./src/components/Text/TextTruncate.vue')['default']
     TreeBreadcrumb: typeof import('./src/components/TreeBreadcrumb.vue')['default']
     TreeView: typeof import('./src/components/TreeView.vue')['default']
     UserHistorySaveSearchForm: typeof import('./src/components/UserHistorySaveSearchForm.vue')['default']
