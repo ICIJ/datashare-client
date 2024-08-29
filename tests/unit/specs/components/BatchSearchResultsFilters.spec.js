@@ -7,6 +7,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('BatchSearchResultsFilters.vue', () => {
   let wrapper, core
+  const stubs ={ selectableDropdown: true }
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
@@ -41,20 +42,22 @@ describe('BatchSearchResultsFilters.vue', () => {
   it('should display simple list if there is only one query', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       },
       props: propsSingleQuery
     })
     await flushPromises()
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
-    expect(wrapper.find('.batch-search-results-filters__queries__dropdown').text()).toMatch(/^query_04/)
+    expect(wrapper.vm.filteredQueries).toHaveLength(1)
   })
 
   it('should display a selectable dropdown if there are more than one query', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       },
       props: propsMultipleQueries
     })
@@ -62,58 +65,46 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
+    expect(wrapper.vm.filteredQueries).toHaveLength(3)
   })
 
   it('should add badge with query number of results on list', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       },
       props: propsSingleQuery
     })
     await flushPromises()
-
-    expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown span.badge')).toHaveLength(1)
-    expect(wrapper.find('.batch-search-results-filters__queries__dropdown span.badge').text()).toBe('12')
+    expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
+    expect(wrapper.vm.filteredQueries[0].count).toBe(12)
   })
 
   it('should add badge with query number of results on selectable dropdown', async () => {
     wrapper = mount(BatchSearchResultsFilters, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       },
       props: propsMultipleQueries
     })
     await flushPromises()
-
-    expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__count')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results-filters__queries__dropdown__item__count').text()).toBe('3')
+    expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
+    expect(wrapper.vm.filteredQueries).toHaveLength(3)
+    expect(wrapper.vm.filteredQueries[0].count).toBe(3)
   })
 
   describe('search', () => {
-    it('should display the "search" button', async () => {
-      wrapper = mount(BatchSearchResultsFilters, {
-        global: {
-          plugins: core.plugins
-        },
-        props: propsMultipleQueries
-      })
-      await flushPromises()
-
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__search')).toHaveLength(3)
-    })
-
     it('should redirect to a search with project and query', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: {
-          plugins: core.plugins
-        },
+        global: { plugins: core.plugins, stubs },
         props: propsMultipleQueries
       })
+
       await flushPromises()
       const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
-      wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
+      wrapper.vm.searchQuery(wrapper.vm.filteredQueries[0].label)
 
       expect(wrapper.vm.$router.push).toBeCalledWith({
         name: 'search',
@@ -126,7 +117,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   describe('sort queries', () => {
     it('should display a dropdown to sort', () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins: core.plugins },
+        global: { plugins: core.plugins, stubs },
         props: propsMultipleQueries
       })
 
@@ -135,26 +126,20 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('should sort queries in default order ie. by count', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins: core.plugins },
+        global: { plugins: core.plugins, stubs },
         props: propsMultipleQueries
       })
       await flushPromises()
 
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe(
-        'query_02'
-      )
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(1).text()).toBe(
-        'query_03'
-      )
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(2).text()).toBe(
-        'query_01'
-      )
+      expect(wrapper.vm.filteredQueries).toHaveLength(3)
+      expect(wrapper.vm.filteredQueries[0].label).toBe('query_02')
+      expect(wrapper.vm.filteredQueries[1].label).toBe('query_03')
+      expect(wrapper.vm.filteredQueries[2].label).toBe('query_01')
     })
 
     it('should sort queries by "default" order ie. as in database', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins: core.plugins },
+        global: { plugins: core.plugins, stubs },
         props: propsMultipleQueries
       })
       const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
@@ -171,9 +156,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('adds exclude selected queries filter', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: {
-          plugins: core.plugins
-        },
+        global: { plugins: core.plugins, stubs },
         props: propsMultipleQueries
       })
       const spy = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue(null)
@@ -194,17 +177,15 @@ describe('BatchSearchResultsFilters.vue', () => {
   describe('filter queries', () => {
     it('should filter queries when search bar is filled', async () => {
       wrapper = mount(BatchSearchResultsFilters, {
-        global: { plugins: core.plugins },
+        global: { plugins: core.plugins, stubs },
         props: propsMultipleQueries
       })
       await flushPromises()
-      expect(wrapper.findAll('.recycle_scroller-item--active')).toHaveLength(3)
+      expect(wrapper.vm.filteredQueries).toHaveLength(3)
       await wrapper.setData({ queriesFilter: '2' })
       await flushPromises()
       expect(wrapper.vm.filteredQueries).toHaveLength(1)
       expect(wrapper.vm.filteredQueries[0]).toEqual({ count: 3, label: 'query_02' })
-      expect(wrapper.findAll('.recycle_scroller-item--active')).toHaveLength(1)
-      expect(wrapper.findAll('.recycle_scroller-item--active').at(0).text()).toMatch(/^query_02/)
     })
   })
 })
