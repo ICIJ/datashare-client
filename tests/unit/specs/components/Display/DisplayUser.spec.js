@@ -13,7 +13,7 @@ describe('DisplayUser.vue', () => {
   })
 
   beforeEach(async () => {
-    const props = { username: 'foo' }
+    const props = { value: 'foo' }
     const global = { plugins: core.plugins }
     wrapper = mount(DisplayUser, { props, global })
     await flushPromises()
@@ -30,13 +30,13 @@ describe('DisplayUser.vue', () => {
   })
 
   it('should display "bar"', async () => {
-    wrapper.setProps({ username: 'bar' })
+    wrapper.setProps({ value: 'bar' })
     await flushPromises()
     expect(wrapper.find('.display-user__username').text()).toBe('bar')
   })
 
   it('should display "you"', async () => {
-    await wrapper.setProps({ username: 'local' })
+    await wrapper.setProps({ value: 'local' })
     await flushPromises()
     expect(wrapper.find('.display-user__username').text().toLowerCase()).toBe('you')
   })
@@ -59,7 +59,7 @@ describe('DisplayUser.vue', () => {
     core.store.commit('pipelines/register', {
       name: 'avatar-from-username',
       category: wrapper.vm.avatarPipeline,
-      type: (_, username) => `http://datashare.icij.org/${username}.png`
+      type: (username) => `http://datashare.icij.org/${username}.png`
     })
     await flushPromises()
     const src = 'http://datashare.icij.org/foo.png'
