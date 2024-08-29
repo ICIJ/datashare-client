@@ -1,5 +1,3 @@
-import { PLACEMENTS } from '@/enums/placements'
-
 const ACTION = 'action'
 const PRIMARY = 'primary'
 const SECONDARY = 'secondary'

@@ -1,8 +1,6 @@
 import { breakpointSizeArgType } from '~storybook/utils'
 import BatchSearchErrorModal from '@/components/BatchSearch/BatchSearchErrorModal'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
-import image from '@/assets/images/illustrations/app-modal-default-light.svg'
-import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 export default {
   components: { BatchSearchErrorModal },
   title: 'Components/BatchSearch/BatchSearchErrorModal',
