@@ -19,6 +19,20 @@ const OUTLINE_DANGER = 'outline-danger'
 const OUTLINE_LIGHT = 'outline-light'
 const OUTLINE_DARK = 'outline-dark'
 
+const CATEGORY_BAN = 'category-ban'
+const CATEGORY_PERSON = 'category-person'
+const CATEGORY_ORGANIZATION = 'category-organization'
+const CATEGORY_LOCATION = 'category-location'
+const CATEGORY_EMAIL = 'category-email'
+
+export const VARIANT_CATEGORY = Object.freeze({
+  CATEGORY_BAN,
+  CATEGORY_PERSON,
+  CATEGORY_ORGANIZATION,
+  CATEGORY_LOCATION,
+  CATEGORY_EMAIL
+})
+
 export const VARIANT_PLAIN = Object.freeze({
   ACTION,
   PRIMARY,
@@ -42,6 +56,11 @@ export const VARIANT = Object.freeze({
   WARNING,
   LIGHT,
   DARK,
+  CATEGORY_BAN,
+  CATEGORY_PERSON,
+  CATEGORY_ORGANIZATION,
+  CATEGORY_LOCATION,
+  CATEGORY_EMAIL,
   OUTLINE_ACTION,
   OUTLINE_PRIMARY,
   OUTLINE_SECONDARY,
