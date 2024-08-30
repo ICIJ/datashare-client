@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import NamedEntityOccurrences from './NamedEntityOccurrences'
 
 import { getCategoryIcon, getCategoryColor } from '@/utils/namedEntity'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({
   name: 'NamedEntityButton'
