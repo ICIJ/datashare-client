@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { BCardBody, BCardFooter } from 'bootstrap-vue-next'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectForm from '@/components/ProjectForm'
@@ -13,8 +14,8 @@ describe('ProjectForm.vue', () => {
     })
 
     it('should not use b-card-* components by default', () => {
-      expect(wrapper.findComponent({ name: 'b-card-body' }).exists()).toBeFalsy()
-      expect(wrapper.findComponent({ name: 'b-card-footer' }).exists()).toBeFalsy()
+      expect(wrapper.findComponent(BCardBody).exists()).toBeFalsy()
+      expect(wrapper.findComponent(BCardFooter).exists()).toBeFalsy()
     })
 
     it('should not have the .card class by default', async () => {
@@ -23,8 +24,8 @@ describe('ProjectForm.vue', () => {
 
     it('should use b-card-* components when `card` prop is set', async () => {
       await wrapper.setProps({ card: true })
-      expect(wrapper.findComponent({ name: 'b-card-body' }).exists()).toBeTruthy()
-      expect(wrapper.findComponent({ name: 'b-card-footer' }).exists()).toBeTruthy()
+      expect(wrapper.findComponent(BCardBody).exists()).toBeTruthy()
+      expect(wrapper.findComponent(BCardFooter).exists()).toBeTruthy()
     })
 
     it('should have the .card class when `card` prop is set', async () => {
