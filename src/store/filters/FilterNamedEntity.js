@@ -14,7 +14,7 @@ export const namedEntityCategoryTranslation = {
 export default class FilterNamedEntity extends FilterType {
   constructor(options) {
     super(options)
-    this.category = options.category || ENTITY_CATEGORY.PERSON
+    this.category = (options.category || ENTITY_CATEGORY.PERSON).toUpperCase()
     this.component = 'FilterNamedEntity'
     this.sortByOptions = [
       { sortBy: '_count', sortByOrder: 'asc' },
@@ -41,7 +41,7 @@ export default class FilterNamedEntity extends FilterType {
           })
           .query('query_string', {
             default_field: 'category',
-            query: namedEntityCategoryTranslation[param.name] || param.name
+            query: (namedEntityCategoryTranslation[param.name] || param.name).toUpperCase()
           })
       })
 
