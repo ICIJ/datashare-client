@@ -7,7 +7,7 @@
       <p :class="{ 'card-body': widget.card }">
         <fa icon="hard-drive" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
-          {{ $t('widget.barometer.document', total, { total: humanNumber(total, $tm('human.number')) }) }}
+          {{ $t('widget.barometer.document', n, { n: humanNumber(total, $tm('human.number')) }) }}
         </strong>
         <template v-if="onDisk != total">
           {{ $t('widget.barometer.amongWhich') }}
