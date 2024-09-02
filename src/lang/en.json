@@ -1189,7 +1189,7 @@
       "title": "Authors"
     },
     "barometer": {
-      "document": "no documents | {value} document | {value} documents",
+      "document": "no documents | {n} document | {n} documents",
       "amongWhich": "among which",
       "onDisk": "on disk"
     },
