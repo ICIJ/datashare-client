@@ -27,7 +27,10 @@ describe('DocumentActions.vue', () => {
     wrapper = shallowMount(DocumentActions, {
       global: {
         plugins: core.plugins,
-        renderStubDefaultSlot: true
+        renderStubDefaultSlot: true,
+        stubs: {
+          fa: true
+        }
       },
       props: {
         document
@@ -36,16 +39,16 @@ describe('DocumentActions.vue', () => {
   })
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
-    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('far,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
     core.store.commit('starred/documents', [document])
     await flushPromises()
 
-    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('fa,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace an empty star by a filled one on click on it', async () => {
     expect(wrapper.vm.starredDocuments).toEqual([])
-    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('far,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
 
     await wrapper.vm.toggleStarDocument()
 
@@ -55,7 +58,7 @@ describe('DocumentActions.vue', () => {
         index: document.index
       }
     ])
-    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('fa,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
@@ -68,12 +71,12 @@ describe('DocumentActions.vue', () => {
         index: document.index
       }
     ])
-    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('fa,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
 
     await wrapper.vm.toggleStarDocument()
 
     expect(wrapper.vm.starredDocuments).toEqual([])
-    expect(wrapper.find('.document-actions__star font-awesome-icon-stub').attributes('icon')).toBe('far,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
   })
 
   it('should raise an "filter::starred::refresh" event when adding a star', async () => {
