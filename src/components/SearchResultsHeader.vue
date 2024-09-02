@@ -227,7 +227,7 @@ export default {
     },
     nbDocuments() {
       const total = this.$n(this.response.total)
-      return this.$t('search.results.results', this.response.total, { total })
+      return this.$tc('search.results.results', this.response.total, { total })
     },
     firstLastDocument() {
       return `${this.firstDocument} - ${this.lastDocument}`
