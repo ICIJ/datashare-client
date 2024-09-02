@@ -32,7 +32,7 @@ const isLastProjectSlice = (p) => {
       </template>
       <template v-else-if="isLastProjectSlice(p)">
         <span class="ms-2">
-          {{ $t('searchBarInputDropdownForProjects.projectsCount', projects.length) }}
+          {{ $t('searchBarInputDropdownForProjects.projectsCount', projects.length, { count: projects.length }) }}
         </span>
       </template>
     </span>
