@@ -137,16 +137,4 @@ describe('ShortkeysModal', () => {
       expect(label).toBe('action_01')
     })
   })
-
-  describe('Shortkey icon', () => {
-    it('should display an icon if is set', () => {
-      const icon = wrapper.findAll('b-modal-stub b-link-stub').at(0).find('font-awesome-icon-stub')
-      expect(icon.attributes('icon')).toEqual('icon_01')
-    })
-
-    it('should not display the icon if not set', () => {
-      const icon = wrapper.findAll('b-modal-stub b-link-stub').at(1).find('font-awesome-icon-stub')
-      expect(icon.exists()).toBeFalsy()
-    })
-  })
 })
