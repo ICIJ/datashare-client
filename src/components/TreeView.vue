@@ -28,7 +28,7 @@
               :title="$t('treeView.hits', hits, { hits })"
               class="tree-view__header__hits ms-2 badge text-bg-tertiary rounded-pill"
             >
-              {{ humanNumber(hits, $tm('human.number')) }} {{ $t('treeView.docs', hits) }}
+              {{ humanNumber(hits, $tm('human.number')) }} {{ $tc('treeView.docs', hits) }}
             </span>
           </div>
         </transition>
