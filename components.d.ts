@@ -7,6 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddonCard: typeof import('./src/components/Addon/AddonCard.vue')['default']
+    AddonCardActions: typeof import('./src/components/Addon/AddonCardActions.vue')['default']
+    AddonCardDetails: typeof import('./src/components/Addon/AddonCardDetails.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
     AppliedSearchFiltersItem: typeof import('./src/components/AppliedSearchFiltersItem.vue')['default']
@@ -49,6 +52,7 @@ declare module 'vue' {
     BatchSearchStatus: typeof import('./src/components/BatchSearchStatus.vue')['default']
     BatchSearchTable: typeof import('./src/components/BatchSearchTable.vue')['default']
     BBadge: typeof import('bootstrap-vue-next')['BBadge']
+    BBagde: typeof import('bootstrap-vue-next')['BBagde']
     BBtnGroup: typeof import('bootstrap-vue-next')['BBtnGroup']
     BButton: typeof import('bootstrap-vue-next')['BButton']
     BButtonGroup: typeof import('bootstrap-vue-next')['BButtonGroup']

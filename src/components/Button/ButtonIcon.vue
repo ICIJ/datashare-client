@@ -3,7 +3,7 @@
     v-bind="buttonProps"
     ref="element"
     :to="to"
-    class="button-icon"
+    class="button-icon text-truncate"
     :class="classList"
     @mouseenter="currentHover = true"
     @mouseleave="currentHover = false"
@@ -150,7 +150,8 @@ const props = defineProps({
     type: Boolean
   },
   pressed: {
-    type: Boolean
+    type: Boolean,
+    default: null
   },
   tag: {
     type: String,

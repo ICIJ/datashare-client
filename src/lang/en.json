@@ -10,6 +10,14 @@
     "emptyTextTable": "There are no records to show",
     "you": "You"
   },
+  "addonCard": {
+    "version": "Version: {v}",
+    "homepage":"Homepage:",
+    "install": "Install {v}",
+    "update":"Update to {v}",
+    "installed": "Installed",
+    "uninstall":"Uninstall"
+  },
   "appModalHeader": {
     "close": "Close"
   },
