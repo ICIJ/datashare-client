@@ -1,5 +1,7 @@
 <template>
-  <widget-barometer-entry :icon="icon" :label="label" :to="to">{{ value }}</widget-barometer-entry>
+  <widget-barometer-entry class="widget-barometer-entry-documents" :icon="icon" :label="label" :to="to">{{
+    value
+  }}</widget-barometer-entry>
 </template>
 
 <script setup>
