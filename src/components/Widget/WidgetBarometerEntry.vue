@@ -2,15 +2,15 @@
   <b-card
     tag="a"
     :href="to"
-    class="widget-entity"
+    class="widget-barometer-entry"
     body-class="d-flex flex-column align-items-center gap-1"
     :border-variant="variant"
   >
     <phosphor-icon :variant="variant" :name="icon" :weight="ICON_WEIGHT.BOLD" />
-    <span class="widget-entity__value fw-bold"
+    <span class="widget-barometer-entry__value fw-bold"
       ><slot>{{ humanValue }}</slot></span
     >
-    <span class="widget-entity__label text-secondary-emphasis">{{ label }}</span>
+    <span class="widget-barometer-entry__label text-secondary-emphasis">{{ label }}</span>
   </b-card>
 </template>
 
