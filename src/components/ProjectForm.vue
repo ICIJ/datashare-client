@@ -1,5 +1,6 @@
 <script>
 import { every, cloneDeep, kebabCase } from 'lodash'
+import { BCardBody, BCardFooter } from 'bootstrap-vue-next'
 
 import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
 import { slugger, isUrl } from '@/utils/strings'
@@ -53,10 +54,10 @@ export default {
   },
   computed: {
     bodyComponent() {
-      return this.card ? 'b-card-body' : 'div'
+      return this.card ? BCardBody : 'div'
     },
     footerComponent() {
-      return this.card ? 'b-card-footer' : 'div'
+      return this.card ? BCardFooter : 'div'
     },
     classList() {
       return this.card ? ['card'] : []
