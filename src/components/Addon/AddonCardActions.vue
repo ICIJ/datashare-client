@@ -38,6 +38,14 @@ const uninstallAddon = () => {
       >{{ installLabel }}</button-icon
     >
     <template v-else>
+      <button-icon
+        v-if="shouldUpdate"
+        icon-left="arrows-clockwise"
+        variant="action"
+        class="flex-grow-0"
+        @click="updateAddon"
+        >{{ updateLabel }}</button-icon
+      >
       <span v-if="version" class="addon-card-actions__text text-secondary-emphasis text-nowrap">{{
         versionLabel
       }}</span>
@@ -47,13 +55,6 @@ const uninstallAddon = () => {
         class="addon-card__uninstall"
         @click="uninstallAddon"
         >{{ uninstallLabel }}</button-icon
-      ><button-icon
-        v-if="shouldUpdate"
-        icon-left="arrows-clockwise"
-        variant="action"
-        class="flex-grow-0"
-        @click="updateAddon"
-        >{{ updateLabel }}</button-icon
       >
     </template>
   </div>
