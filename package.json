@@ -140,7 +140,8 @@
       "vue/no-v-model-argument": "off",
       "vue/no-v-for-template-key": "off",
       "vue/no-custom-modifiers-on-v-model": "off",
-      "vue/valid-v-slot": "off"
+      "vue/valid-v-slot": "off",
+      "import/extensions": "off"
     }
   }
 }
