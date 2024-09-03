@@ -1,10 +1,7 @@
 <script setup>
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import TextTruncate from '@/components/Text/TextTruncate'
-import AddonCardActions from '@/components/Addon/AddonCardActions'
 
 const props = defineProps({
   title: { type: String, required: true },
