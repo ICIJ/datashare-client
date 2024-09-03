@@ -3,11 +3,12 @@ import { useI18n } from 'vue-i18n'
 
 import TextTruncate from '@/components/Text/TextTruncate'
 
-const props = defineProps({
+defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
   url: { type: String, required: true }
 })
+
 const { t } = useI18n()
 
 const homepageLabel = t('addonCard.homepage')
