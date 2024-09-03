@@ -222,7 +222,7 @@ export default {
       const path = `/${trimStart(uri.split('?').shift(0), '/')}`
       const { params } = this.matchDocumentPath(path)
       const { index: _index, id: _id, routing: _routing } = params || {}
-      return new Document({ _index,  _id, _routing })
+      return new Document({ _index, _id, _routing })
     },
     projectName(uri) {
       return uri.split('/')[2]

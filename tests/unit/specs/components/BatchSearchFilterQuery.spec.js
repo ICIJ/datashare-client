@@ -27,10 +27,9 @@ describe('BatchSearchFilterQuery.vue', () => {
   })
 
   describe('data change on search params changed', () => {
-    let router, config
+    let router
 
     beforeAll(() => {
-      config = core.config
       const routes = [
         {
           name: 'task.batch-search.list',
