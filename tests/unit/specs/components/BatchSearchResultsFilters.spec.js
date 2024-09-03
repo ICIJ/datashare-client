@@ -7,7 +7,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('BatchSearchResultsFilters.vue', () => {
   let wrapper, core
-  const stubs ={ selectableDropdown: true }
+  const stubs = { selectableDropdown: true }
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
