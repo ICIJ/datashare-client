@@ -13,10 +13,9 @@
     menu-class="search-bar-input-dropdown__menu"
     toggle-class="d-inline-flex align-items-center"
     boundary="viewport"
-    teleport-to="body"
+    :teleport-to="teleportTo"
+    :teleport-disabled="teleportDisabled"
     variant="outline-tertiary"
-    @shown="shown"
-    @hidden="hidden"
   >
     <template #button-content>
       <slot name="button-content" :dropdown="dropdown">
@@ -112,6 +111,19 @@ export default {
      * Remove padding on items
      */
     flushItems: {
+      type: Boolean
+    },
+    /**
+     * Teleport the dropdown to a different element.
+     */
+    teleportTo: {
+      type: [String, Object],
+      default: 'body'
+    },
+    /**
+     * Disable teleporting the dropdown to a different element.
+     */
+    teleportDisabled: {
       type: Boolean
     }
   },
