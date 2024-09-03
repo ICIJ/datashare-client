@@ -15,7 +15,6 @@
     "homepage":"Homepage:",
     "install": "Install {v}",
     "update":"Update to {v}",
-    "installed": "Installed",
     "uninstall":"Uninstall"
   },
   "appModalHeader": {
