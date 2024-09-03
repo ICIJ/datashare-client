@@ -71,7 +71,7 @@ describe('TaskBatchSearchList.vue', () => {
     const getters = { hasBatchSearch: vi.fn().mockReturnValue(false) }
     const actions = { getBatchSearches: vi.fn() }
     const storeOptions = { modules: { batchSearch: { namespaced: true, state, getters, actions } } }
-    const { plugins } = CoreSetup.init(api).useVuex(storeOptions)
+    const { plugins } = CoreSetup.init(api).useI18n().useVuex(storeOptions)
 
     wrapper = mount(TaskBatchSearchList, { global: { plugins } })
     await flushPromises()
