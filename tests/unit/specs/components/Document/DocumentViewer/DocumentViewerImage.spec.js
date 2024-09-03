@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Document from '@/api/resources/Document'
-import DocumentViewerImage from '@/ccomponents/Document/DocumentViewer/DocumentViewerImage'
+import DocumentViewerImage from '@/components/Document/DocumentViewer/DocumentViewerImage'
 
 describe('DocumentViewerImage.vue', () => {
   let wrapper
