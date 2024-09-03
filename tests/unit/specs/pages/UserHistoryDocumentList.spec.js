@@ -114,7 +114,7 @@ describe('UserHistoryDocumentList.vue', () => {
     it('should display the project name based on the uri', () => {
       const wrapper = mount(UserHistoryDocumentList, { global: { plugins: core.plugins }, props })
       const projectLink = wrapper.find('.user-history-document-list__list__item__project')
-      const projectDisplay = projectLink.find('.project-link__display')
+      const projectDisplay = projectLink.find('.project-label__display')
       expect(projectDisplay.text()).toEqual('Server Project 2')
     })
 
