@@ -49,7 +49,7 @@ describe('ComponentsMixin', () => {
   })
 
   it('should find component in sub-folder', async () => {
-    const WidgetDiskUsage = await core.findComponent('widget/WidgetDiskUsage')
+    const WidgetDiskUsage = await core.findComponent('Widget/WidgetDiskUsage')
     expect(WidgetDiskUsage.name).toBe('WidgetDiskUsage')
   })
 })
