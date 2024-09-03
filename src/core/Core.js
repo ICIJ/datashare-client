@@ -100,6 +100,24 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useI18n() {
+    const numberFormats = {
+      'en-US': {
+        currency: {
+          style: 'currency',
+          currency: 'USD',
+          notation: 'standard'
+        },
+        decimal: {
+          style: 'decimal',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        },
+        percent: {
+          style: 'percent',
+          useGrouping: false
+        }
+      }
+    }
     this._i18n = createI18n({
       warnHtmlInMessage: 'off',
       warnHtmlMessage: 'off',
@@ -110,7 +128,8 @@ class Core extends Behaviors {
       fallbackLocale: settings.defaultLocale,
       messages: {
         [settings.defaultLocale]: messages
-      }
+      },
+      numberFormats
     })
     this.use(this._i18n)
     return this
