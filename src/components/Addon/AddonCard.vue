@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 import AddonCardActions from '@/components/Addon/AddonCardActions'
 import AddonCardDetails from '@/components/Addon/AddonCardDetails'
@@ -12,8 +11,6 @@ const props = defineProps({
   description: { type: String, required: true },
   url: { type: String, required: true }
 })
-const emit = defineEmits(['install', 'update', 'uninstall'])
-const { t } = useI18n()
 
 const shouldInstall = computed(() => {
   return props.version === null
