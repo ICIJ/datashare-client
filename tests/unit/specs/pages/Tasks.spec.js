@@ -25,7 +25,7 @@ describe('Tasks.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useRouter(routes)
+    core = CoreSetup.init().useI18n().useRouter(routes)
   })
 
   it('should select the no tab by default', async () => {
