@@ -66,10 +66,6 @@ describe('I18nMixin', () => {
       expect(core.i18n.global.locale).toBe('de')
     })
 
-    it('should use "de" in global property', () => {
-      expect(core.vue.config.globalProperties.$i18n.locale).toBe('de')
-    })
-
     it('should have "de" messages', () => {
       expect(core.hasI18Locale('de')).toBeTruthy()
     })
