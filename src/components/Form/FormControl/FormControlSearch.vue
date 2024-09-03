@@ -87,7 +87,9 @@ const props = defineProps({
     default: false
   }
 })
+
 const emit = defineEmits(['submit', 'up', 'down', 'input', 'update:modelValue', 'enter', 'blur'])
+
 const showClearText = computed(() => {
   return props.modelValue?.length > 0
 })
@@ -98,8 +100,12 @@ function input(value) {
 
 const target = ref(null)
 
-function clearInputText() {
+function focus() {
   target.value?.querySelector('.form-control-search__input').focus()
+}
+
+function clearInputText() {
+  focus()
   input('')
 }
 
@@ -108,6 +114,10 @@ const classList = computed(() => {
     'form-control-search--shadow': props.shadow,
     [`form-control-search--${props.size}`]: true
   }
+})
+
+defineExpose({
+  focus
 })
 </script>
 

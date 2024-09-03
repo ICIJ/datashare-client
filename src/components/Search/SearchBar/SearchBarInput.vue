@@ -1,5 +1,6 @@
 <template>
   <form-control-search
+    ref="input"
     v-model="value"
     class="search-bar-input"
     :placeholder="localizedPlaceholder"
@@ -32,11 +33,10 @@
         type="submit"
         :disabled="disableSubmit"
       >
-        {{ $t('search.buttonLabel') }}</button-icon
-      >
-
-      <slot name="suggestions"></slot
-    ></template>
+        {{ $t('search.buttonLabel') }}
+      </button-icon>
+      <slot name="suggestions"></slot>
+    </template>
   </form-control-search>
 </template>
 
