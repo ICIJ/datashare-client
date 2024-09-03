@@ -45,7 +45,7 @@
                 lazy
                 size="30"
               />
-              <span class="d-inline-block w-100 text-nowrap text-truncate"> {{ name }}</span>
+              <span class="d-inline-block w-100 text-nowrap text-truncate">{{ name }}</span>
             </router-link>
             <document-actions
               :document="{
@@ -75,7 +75,7 @@
 
 <script>
 import { castArray, compact, find, property, trimStart } from 'lodash'
-import { pathToRegexp } from 'path-to-regexp'
+import { match } from 'path-to-regexp'
 
 import Document from '@/api/resources/Document'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
@@ -181,10 +181,8 @@ export default {
         return this.updateParams({ projects })
       }
     },
-    documentPathRegexp() {
-      const routes = this.$router.getRoutes()
-      const { path } = find(routes, { name: 'document-standalone' }) || {}
-      return pathToRegexp(path)
+    matchDocumentPath() {
+      return match('/ds/:index/:id{/:routing}')
     }
   },
   mounted() {
@@ -222,12 +220,9 @@ export default {
     eventAsDocument({ uri }) {
       // Ensure the URI starts with a / and doesn't contain query params
       const path = `/${trimStart(uri.split('?').shift(0), '/')}`
-      const [, _index, _id, _routing] = this.documentPathRegexp.exec(path) || []
-      return new Document({
-        _index,
-        _id,
-        _routing
-      })
+      const { params } = this.matchDocumentPath(path)
+      const { index: _index, id: _id, routing: _routing } = params || {}
+      return new Document({ _index,  _id, _routing })
     },
     projectName(uri) {
       return uri.split('/')[2]
