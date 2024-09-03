@@ -12,6 +12,8 @@
     :disabled="disabled"
     :no-caret="noCaret"
     :options="options"
+    :teleport-to="teleportTo"
+    :teleport-disabled="teleportDisabled"
     @selected="reset"
     @hidden="$emit('hidden', $event)"
     @changed="$emit('changed', $event)"
@@ -96,6 +98,19 @@ export default {
     projects: {
       type: Array,
       default: () => []
+    },
+    /**
+     * Teleport the dropdown to a different element.
+     */
+    teleportTo: {
+      type: [String, Object],
+      default: 'body'
+    },
+    /**
+     * Disable teleporting the dropdown to a different element.
+     */
+    teleportDisabled: {
+      type: Boolean
     }
   },
   data() {
