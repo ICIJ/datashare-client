@@ -1,5 +1,5 @@
-import { Fa } from '@icij/murmur-next'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /**
  * @see https://github.com/FortAwesome/vue-fontawesome
  */
-export default Fa
+export default FontAwesomeIcon
