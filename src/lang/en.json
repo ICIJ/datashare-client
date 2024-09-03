@@ -103,6 +103,19 @@
     "sectionContentType": "What's the document's type",
     "sectionDescription": "Once downloaded, how do I open it ?"
   },
+  "entityPopoverInfo": {
+    "content": "This entity was extracted with:",
+    "model": "{model} model",
+    "language": "in {language} language."
+  },
+  "entityPopoverMentionOccurrences": {
+    "occurrences":  "This mention appears {nbMentions} times | This mention appears {nbMentions} time | This mention appears {nbMentions} times",
+    "projectList":  "in {n} projects | in {n} project | in {n} projects:"
+  },
+  "entityPopoverTabs": {
+    "mentions": "Mentions",
+    "info": "Info"
+  },
   "error": {
     "title": "Something's wrong here",
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
