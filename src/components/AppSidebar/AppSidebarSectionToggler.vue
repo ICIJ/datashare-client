@@ -33,6 +33,7 @@ const classList = computed(() => {
     hide-label
     variant="outline-primary"
     class="app-sidebar-section-toggler"
+    :to="to"
     :title="title"
     :class="classList"
   >
@@ -40,7 +41,7 @@ const classList = computed(() => {
   </button-icon>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .app-sidebar-section-toggler {
   border-color: transparent;
   width: calc(#{$btn-line-height * $btn-font-size} + #{$spacer * 2} + #{$btn-border-width} * 2);
