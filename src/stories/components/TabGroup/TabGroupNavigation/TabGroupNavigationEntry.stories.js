@@ -1,7 +1,7 @@
-import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigationEntry'
+import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
 
 export default {
-  title: 'Components/TabGroupNavigation/TabGroupNavigationEntry',
+  title: 'Components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry',
   tags: ['autodocs'],
   component: TabGroupNavigationEntry,
   args: {

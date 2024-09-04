@@ -1,7 +1,7 @@
-import EntityPopoverTabGroup from '@/components/EntityPopover/EntityPopoverTabGroup'
+import EntityPopoverTabGroup from '@/components/Entity/EntityPopover/EntityPopoverTabGroup'
 
 export default {
-  title: 'Components/EntityPopover/EntityPopoverTabGroup',
+  title: 'Components/Entity/EntityPopover/EntityPopoverTabGroup',
   component: EntityPopoverTabGroup,
   tags: ['autodocs'],
   args: {
