@@ -1,13 +1,17 @@
 export const state = () => ({
   redirectAfterLogin: null,
   sidebar: {
-    reduced: true
+    compact: false,
+    closed: false
   }
 })
 
 export const mutations = {
-  sidebarReduced(state, reduced) {
-    state.sidebar.reduced = reduced
+  sidebarCompact(state, compact) {
+    state.sidebar.compact = compact
+  },
+  sidebarClosed(state, closed) {
+    state.sidebar.closed = closed
   },
   setRedirectAfterLogin(state, path = null) {
     if (!path || !path.startsWith('/login')) {
@@ -17,11 +21,17 @@ export const mutations = {
 }
 
 export const actions = {
-  toggleSidebar({ state, commit }, toggler = null) {
+  toggleSidebarCompact({ state, commit }, toggler = null) {
     if (toggler === null) {
-      return commit('sidebarReduced', !state.sidebar.reduced)
+      return commit('sidebarCompact', !state.sidebar.compact)
     }
-    return commit('sidebarReduced', toggler)
+    return commit('sidebarCompact', toggler)
+  },
+  toggleSidebarClosed({ state, commit }, toggler = null) {
+    if (toggler === null) {
+      return commit('sidebarClosed', !state.sidebar.closed)
+    }
+    return commit('sidebarClosed', toggler)
   },
   popRedirectAfterLogin({ state: { redirectAfterLogin }, commit }) {
     commit('setRedirectAfterLogin', null)
