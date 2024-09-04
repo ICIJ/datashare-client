@@ -19,6 +19,7 @@ declare module 'vue' {
     AppModalPrompt: typeof import('./src/components/AppModal/AppModalPrompt.vue')['default']
     AppNav: typeof import('./src/components/AppNav.vue')['default']
     AppSidebar: typeof import('./src/components/AppSidebar/AppSidebar.vue')['default']
+    AppSidebarClose: typeof import('./src/components/AppSidebar/AppSidebarClose.vue')['default']
     AppSidebarFooter: typeof import('./src/components/AppSidebar/AppSidebarFooter.vue')['default']
     AppSidebarSection: typeof import('./src/components/AppSidebar/AppSidebarSection.vue')['default']
     AppSidebarSectionEntry: typeof import('./src/components/AppSidebar/AppSidebarSectionEntry.vue')['default']
