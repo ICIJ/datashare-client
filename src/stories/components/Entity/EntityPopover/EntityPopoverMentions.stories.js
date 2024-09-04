@@ -1,10 +1,12 @@
 import { computed, ref } from 'vue'
 
-import EntityPopoverMentions from '@/components/EntityPopover/EntityPopoverMentions'
+import EntityPopoverMentions from '@/components/Entity/EntityPopover/EntityPopoverMentions'
+
 const excerpt = 'Lorem ipsum Bruno Mars dolor ipset'
 const excerpts = [excerpt, 'Lorem ipsum  dolor ipset Bruno Mars', 'Bruno Mars Lorem ipsum  dolor ipset']
+
 export default {
-  title: 'Components/EntityPopover/EntityPopoverMentions',
+  title: 'Components/Entity/EntityPopover/EntityPopoverMentions',
   component: EntityPopoverMentions,
   tags: ['autodocs'],
   args: {
@@ -24,10 +26,7 @@ export default {
       return { args, index, current }
     },
 
-    template: `
-
-        <entity-popover-mentions v-bind="args" :excerpt="current" v-model="index"   />
-    `
+    template: `<entity-popover-mentions v-bind="args" :excerpt="current" v-model="index"   />`
   })
 }
 export const Default = {}

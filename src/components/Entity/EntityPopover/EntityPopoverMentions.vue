@@ -1,9 +1,11 @@
 <script setup>
 import { TinyPagination } from '@icij/murmur-next'
 
-import EntityPopoverMentionOccurrences from '@/components/EntityPopover/EntityPopoverMentionOccurrences'
-import EntityPopoverMentionExcerpt from '@/components/EntityPopover/EntityPopoverMentionExcerpt'
+import EntityPopoverMentionOccurrences from './EntityPopoverMentionOccurrences'
+import EntityPopoverMentionExcerpt from './EntityPopoverMentionExcerpt'
+
 const mentionIndex = defineModel({ type: Number })
+
 defineProps({
   mention: { type: String },
   excerpt: { type: String },
@@ -11,6 +13,7 @@ defineProps({
   nbMentions: { type: Number }
 })
 </script>
+
 <template>
   <div class="d-flex flex-column align-items-center gap-3">
     <entity-popover-mention-excerpt :mention="mention" :excerpt="excerpt" />

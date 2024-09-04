@@ -18,13 +18,15 @@
     </b-tab>
   </b-tabs>
 </template>
+
 <script setup>
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
-import EntityPopoverMentions from '@/components/EntityPopover/EntityPopoverMentions'
-import EntityPopoverInfo from '@/components/EntityPopover/EntityPopoverInfo'
+import EntityPopoverMentions from './EntityPopoverMentions'
+import EntityPopoverInfo from './EntityPopoverInfo'
+
 const props = defineProps({
   mention: { type: String },
   excerpt: { type: String },

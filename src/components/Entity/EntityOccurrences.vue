@@ -8,13 +8,13 @@ defineProps({
 </script>
 
 <template>
-  <div class="named-entity-occurrences badge rounded-pill text-secondary-emphasis bg-transparent">
+  <div class="entity-occurrences badge rounded-pill text-secondary-emphasis bg-transparent">
     {{ $n(occurrences) }}
   </div>
 </template>
 
 <style lang="scss" scoped>
-.named-entity-occurrences {
+.entity-occurrences {
   border: 1px solid currentColor;
 
   .btn &.badge {

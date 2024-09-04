@@ -1,11 +1,11 @@
-import NamedEntitySectionMore from '@/components/NamedEntity/NamedEntitySection/NamedEntitySectionMore'
+import EntitySectionMore from '@/components/Entity/EntitySection/EntitySectionMore'
 import { entityCategoriesArgType } from '~storybook/utils'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 
 export default {
-  title: 'Components/NamedEntity/NamedEntitySection/NamedEntitySectionMore',
+  title: 'Components/Entity/EntitySection/EntitySectionMore',
   tags: ['autodocs'],
-  component: NamedEntitySectionMore,
+  component: EntitySectionMore,
   argTypes: {
     category: entityCategoriesArgType
   },

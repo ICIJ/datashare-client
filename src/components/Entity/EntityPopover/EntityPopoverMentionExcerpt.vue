@@ -25,6 +25,7 @@ const content = computed(() => {
   &::after {
     content: '...';
   }
+
   &__mark {
     font-weight: $font-weight-bold;
   }
