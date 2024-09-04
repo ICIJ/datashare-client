@@ -24,12 +24,17 @@ const classList = computed(() => {
 const title = computed(() => {
   return props.compact ? 'Extend sidebar' : 'Reduce sidebar'
 })
+
+const weight = computed(() => {
+  return props.compact ? 'regular' : 'fill'
+})
 </script>
 
 <template>
   <button-icon
     tooltip-placement="right"
     icon-left="sidebar-simple"
+    :icon-left-weight="weight"
     square
     hide-label
     variant="primary"
