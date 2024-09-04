@@ -3,8 +3,8 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { getCategoryIcon } from '@/utils/namedEntity'
-import NamedEntityOccurrences from '@/components/NamedEntity/NamedEntityOccurrences'
+import { getCategoryIcon } from '@/utils/entity'
+import EntityOccurrences from '@/components/Entity/EntityOccurrences'
 
 const props = defineProps({
   category: {
@@ -24,7 +24,7 @@ const icon = computed(() => {
 })
 
 const title = computed(() => {
-  return t(`namedEntitySection.${props.category}.title`)
+  return t(`entitySection.${props.category}.title`)
 })
 </script>
 
@@ -32,6 +32,6 @@ const title = computed(() => {
   <h3 class="fs-6 fw-medium m-0">
     <phosphor-icon :name="icon" class="mr-2" weight="bold" />
     {{ title }}
-    <named-entity-occurrences :occurrences="count" />
+    <entity-occurrences :occurrences="count" />
   </h3>
 </template>

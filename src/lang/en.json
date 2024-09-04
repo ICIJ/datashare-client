@@ -688,7 +688,7 @@
     "meta": "This was extracted from metadata.",
     "none": "Entities preview not available, the document is too big."
   },
-  "namedEntitySection": {
+  "entitySection": {
     "person": {
       "title": "People"
     },
@@ -702,11 +702,11 @@
       "title": "Email"
     }
   },
-  "namedEntitySectionActions": {
+  "entitySectionActions": {
     "copy": "Copy",
     "download": "Download"
   },
-  "namedEntitySectionMore": {
+  "entitySectionMore": {
     "label": "Show more {category}",
     "category": {
       "person": "people",

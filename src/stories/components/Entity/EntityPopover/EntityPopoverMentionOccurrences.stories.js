@@ -1,7 +1,7 @@
-import EntityPopoverMentionOccurrences from '@/components/EntityPopover/EntityPopoverMentionOccurrences'
+import EntityPopoverMentionOccurrences from '@/components/Entity/EntityPopover/EntityPopoverMentionOccurrences'
 
 export default {
-  title: 'Components/EntityPopover/EntityPopoverMentionOccurrences',
+  title: 'Components/Entity/EntityPopover/EntityPopoverMentionOccurrences',
   component: EntityPopoverMentionOccurrences,
   tags: ['autodocs'],
   args: {

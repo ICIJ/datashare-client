@@ -1,23 +1,23 @@
 <script setup>
 import { computed } from 'vue'
 
-import NamedEntityOccurrences from './NamedEntityOccurrences'
+import EntityOccurrences from './EntityOccurrences'
 
-import { getCategoryIcon, getCategoryColor } from '@/utils/namedEntity'
+import { getCategoryIcon, getCategoryColor } from '@/utils/entity'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({
-  name: 'NamedEntityButton'
+  name: 'EntityButton'
 })
 
 const props = defineProps({
-  namedEntity: {
+  entity: {
     type: Object
   }
 })
 
 const category = computed(() => {
-  return props.namedEntity.category.toLowerCase()
+  return props.entity.category.toLowerCase()
 })
 
 const color = computed(() => {
@@ -29,7 +29,7 @@ const icon = computed(() => {
 })
 
 const classList = computed(() => {
-  return [`named-entity-button--category-${category.value}`]
+  return [`entity-button--category-${category.value}`]
 })
 
 const style = computed(() => {
@@ -39,25 +39,25 @@ const style = computed(() => {
 })
 
 const occurrences = computed(() => {
-  return props.namedEntity?.offsets?.length ?? 0
+  return props.entity?.offsets?.length ?? 0
 })
 </script>
 
 <template>
   <button-icon
     variant="outline-tertiary"
-    class="named-entity-button text-nowrap"
+    class="entity-button text-nowrap"
     :class="classList"
     :style="style"
     :icon-left="icon"
   >
-    {{ namedEntity.mention }}
-    <named-entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
+    {{ entity.mention }}
+    <entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
   </button-icon>
 </template>
 
 <style lang="scss" scoped>
-.named-entity-button {
+.entity-button {
   --bs-btn-border-color: var(--color, currentColor);
   --bs-btn-color: var(--bs-body-color);
   --bs-btn-bg: var(--bs-body-bg);

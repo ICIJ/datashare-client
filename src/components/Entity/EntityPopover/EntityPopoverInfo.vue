@@ -24,6 +24,7 @@ const sentence = `${modelLabel} ${languageLabel}`
     <span v-html="sentence" />
   </div>
 </template>
+
 <style scoped lang="scss">
 .entity-popover-info {
   &__property {

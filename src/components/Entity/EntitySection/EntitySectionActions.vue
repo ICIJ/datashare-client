@@ -1,5 +1,5 @@
 <script setup>
-import NamedEntitySectionActionsEntry from './NamedEntitySectionActionsEntry'
+import EntitySectionActionsEntry from './EntitySectionActionsEntry'
 
 defineProps({
   category: {
@@ -10,14 +10,14 @@ defineProps({
 </script>
 
 <template>
-  <div class="named-entity-section-actions d-inline-flex gap-2">
+  <div class="entity-section-actions d-inline-flex gap-2">
     <slot>
-      <named-entity-section-actions-entry
+      <entity-section-actions-entry
         :label="$t('namedEntitySectionActions.copy')"
         icon="clipboard"
         @click="$emit('copy', category)"
       />
-      <named-entity-section-actions-entry
+      <entity-section-actions-entry
         :label="$t('namedEntitySectionActions.download')"
         icon="download-simple"
         @click="$emit('download', category)"

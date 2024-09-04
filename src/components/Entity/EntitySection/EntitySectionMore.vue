@@ -14,14 +14,14 @@ const props = defineProps({
 const { t } = useI18n()
 
 const label = computed(() => {
-  const category = t(`namedEntitySectionMore.category.${props.category}`)
-  return t(`namedEntitySectionMore.label`, { category })
+  const category = t(`entitySectionMore.category.${props.category}`)
+  return t(`entitySectionMore.label`, { category })
 })
 </script>
 
 <template>
   <button-icon
-    class="named-entity-section-actions-entry-more"
+    class="entity-section-actions-entry-more"
     variant="outline-primary"
     icon-right="caret-right"
     icon-right-variant="secondary"

@@ -23,7 +23,7 @@ defineProps({
 
 <template>
   <button-icon
-    class="named-entity-section-actions-entry"
+    class="entity-section-actions-entry"
     hide-label
     variant="light"
     square
@@ -35,7 +35,7 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-.named-entity-section-actions-entry {
+.entity-section-actions-entry {
   --bs-btn-border-width: 0;
   --button-icon-square-size: #{math.div(44, 16) * 1rem};
 }

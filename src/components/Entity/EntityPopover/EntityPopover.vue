@@ -15,7 +15,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import EntityPopoverTabs from '@/components/EntityPopover/EntityPopoverTabs'
+import EntityPopoverTabs from './EntityPopoverTabs'
 
 const props = defineProps({
   /**

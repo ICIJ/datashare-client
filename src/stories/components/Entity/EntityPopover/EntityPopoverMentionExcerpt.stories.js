@@ -1,7 +1,7 @@
-import EntityPopoverMentionExcerpt from '@/components/EntityPopover/EntityPopoverMentionExcerpt'
+import EntityPopoverMentionExcerpt from '@/components/Entity/EntityPopover/EntityPopoverMentionExcerpt'
 
 export default {
-  title: 'Components/EntityPopover/EntityPopoverMentionExcerpt',
+  title: 'Components/Entity/EntityPopover/EntityPopoverMentionExcerpt',
   component: EntityPopoverMentionExcerpt,
   tags: ['autodocs'],
   args: {
