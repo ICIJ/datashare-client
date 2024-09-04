@@ -234,7 +234,7 @@ $dropdown-border-color: var(--bs-tertiary-border-subtle);
 $dropdown-padding-x: math.div(12, 16) * 1rem;
 $dropdown-padding-y: math.div(12, 16) * 1rem;
 $dropdown-item-padding-y: $spacer-xs;
-$dropdown-item-padding-x: $spacer-xxs;
+$dropdown-item-padding-x: $spacer-sm;
 $dropdown-link-hover-bg: var(--bs-action-bg-subtle);
 $dropdown-link-hover-color: var(--bs-action-text-emphasis);
 $dropdown-link-active-color: var(--bs-action-text-emphasis);
