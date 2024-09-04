@@ -10,7 +10,7 @@ defineProps({
 <template>
   <div class="d-flex flex-column gap-3">
     <document-user-actions-card-list-title :title="title" />
-    <div class="">
+    <div>
       <slot></slot>
     </div>
   </div>

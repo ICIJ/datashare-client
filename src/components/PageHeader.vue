@@ -9,7 +9,7 @@
           <slot name="preTitle">
             <page-icon v-if="icon" :icon="icon" class="me-3" />
           </slot>
-          <div class="">
+          <div>
             <h3 class="page-header__title d-flex align-items-center m-0">
               {{ title }}
             </h3>
