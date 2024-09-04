@@ -34,6 +34,7 @@ const toProjectSearch = computed(() => ({
           icon-left="chart-bar"
           variant="outline-tertiary"
           truncate
+          hide-tooltip
           class="fw-medium"
           :label="$t('projectCardFooter.insights')"
         />
@@ -42,6 +43,7 @@ const toProjectSearch = computed(() => ({
           icon-left="magnifying-glass"
           variant="outline-primary"
           truncate
+          hide-tooltip
           class="fw-medium"
           :label="$t('projectCardFooter.search')"
         />
