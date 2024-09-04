@@ -25,7 +25,7 @@ const projectList = t('entityPopoverMentionOccurrences.projectList', { n: nbProj
 <template>
   <div class="entity-popover-mention-occurrences">
     <p>{{ `${occurrences} ${projectList}` }}</p>
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap gap-2">
       <project-button v-for="(project, index) in projects" :key="index" :project="project" />
     </div>
   </div>
