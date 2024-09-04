@@ -16,6 +16,9 @@ const props = defineProps({
   },
   active: {
     type: Boolean
+  },
+  to: {
+    type: Object
   }
 })
 
@@ -28,7 +31,7 @@ const classList = computed(() => {
 
 <template>
   <section class="app-sidebar-section" :class="classList">
-    <app-sidebar-section-toggler v-if="compact" :title="title" :icon="icon" :active="active" />
+    <app-sidebar-section-toggler v-if="compact" :title="title" :icon="icon" :active="active" :to="to" />
     <template v-else>
       <slot name="title">
         <app-sidebar-section-title class="p-3" :title="title" :icon="icon" :compact="compact" />
