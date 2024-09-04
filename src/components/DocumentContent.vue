@@ -331,7 +331,7 @@ export default {
     <hook name="document.content:before" />
     <div class="document-content__toolbox mt-3 mx-3" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
       <hook name="document.content.toolbox:before" />
-      <b-overlay :show="$wait.is('document-content-*')" opacity="0.6" rounded spinner-small class="">
+      <b-overlay :show="$wait.is('document-content-*')" opacity="0.6" rounded spinner-small>
         <div class="d-flex align-items-center">
           <tiny-pagination
             v-if="isPaginated && loadedOnce"
