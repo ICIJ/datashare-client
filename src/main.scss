@@ -333,6 +333,7 @@ html[data-bs-theme] body .Toastify {
      &.router-link-active {
 
        --color: var(--bs-emphasis-color);
+       background: transparent;
        border-bottom: 2px solid var(--bs-primary);
        font-weight: 500;
 
