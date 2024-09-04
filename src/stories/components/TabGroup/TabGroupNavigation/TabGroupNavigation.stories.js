@@ -1,7 +1,7 @@
 import { vueRouter } from 'storybook-vue3-router'
 
-import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation'
-import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigationEntry'
+import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
+import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
 
 const routes = [
   { path: '/', name: 'general' },
@@ -13,7 +13,7 @@ const routes = [
 ]
 
 export default {
-  title: 'Components/TabGroupNavigation/TabGroupNavigation',
+  title: 'Components/TabGroup/TabGroupNavigation/TabGroupNavigation',
   tags: ['autodocs'],
   decorators: [vueRouter(routes)],
   component: TabGroupNavigation,

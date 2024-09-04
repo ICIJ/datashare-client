@@ -15,6 +15,7 @@ import { useI18n } from 'vue-i18n'
 
 import EntityPopoverMentions from './EntityPopoverMentions'
 import EntityPopoverInfo from './EntityPopoverInfo'
+
 import TabGroup from '@/components/TabGroup/TabGroup'
 import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
 const props = defineProps({
