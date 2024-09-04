@@ -1,7 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import ProjectLink from '@/components/Project/ProjectLink'
 import ProjectButton from '@/components/Project/ProjectButton'
 
 const props = defineProps({
