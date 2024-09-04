@@ -1,5 +1,3 @@
-import EntityPopoverTabs from '@/components/Entity/EntityPopover/EntityPopoverTabs'
-
 import EntityPopoverTabGroup from '@/components/EntityPopover/EntityPopoverTabGroup'
 
 export default {

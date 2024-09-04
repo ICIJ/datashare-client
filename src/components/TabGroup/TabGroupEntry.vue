@@ -1,5 +1,5 @@
 <script setup>
-import TabTitle from '@/components/NavigationTabs/TabTitle'
+import TabGroupTitle from '@/components/TabGroup/TabGroupTitle'
 
 defineProps({
   icon: {
@@ -32,19 +32,17 @@ defineProps({
 
 <template>
   <b-tab
-    class="tabs-entry"
+    class="tab-group-entry"
     :active="active"
     :disabled="disabled"
-    :title-item-class="titleItemClass"
+    title-item-class="tab-group-navigation-entry"
     :title-link-attrs="titleLinkAttrs"
     :title-link-class="titleLinkClass"
     ><template #title>
-      <tab-title :icon="icon" :count="count"
-        ><slot name="title">{{ title }}</slot></tab-title
+      <tab-group-title :icon="icon" :count="count"
+        ><slot name="title">{{ title }}</slot></tab-group-title
       ></template
     >
     <slot />
   </b-tab>
 </template>
-
-<style lang="scss"></style>

@@ -302,7 +302,7 @@ html[data-bs-theme] body .Toastify {
   }
 }
 
-.navigation-tabs {
+.tab-group-navigation {
   &--nowrap:not(.flex-column) {
     overflow: auto;
     flex-wrap: nowrap;
@@ -321,7 +321,8 @@ html[data-bs-theme] body .Toastify {
   }
 }
 
-.navigation-tabs-entry,.navigation-tabs  .nav-item {
+.tab-group-navigation-entry {
+
    & .nav-link {
      --color: var(--bs-secondary-text-emphasis);
 
@@ -330,6 +331,7 @@ html[data-bs-theme] body .Toastify {
 
      &.active,
      &.router-link-active {
+
        --color: var(--bs-emphasis-color);
        border-bottom: 2px solid var(--bs-primary);
        font-weight: 500;
