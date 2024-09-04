@@ -31,8 +31,8 @@ const props = defineProps({
 
 const classList = computed(() => {
   return {
-    'navigation-tabs--nowrap': props.nowrap,
-    'navigation-tabs--flush': props.flush
+    'tab-group-navigation--nowrap': props.nowrap,
+    'tab-group-navigation--flush': props.flush
   }
 })
 </script>
@@ -41,7 +41,7 @@ const classList = computed(() => {
   <b-nav
     tabs
     underline
-    class="navigation-tabs"
+    class="tab-group-navigation"
     :class="classList"
     :card-header="cardHeader"
     :fill="fill"

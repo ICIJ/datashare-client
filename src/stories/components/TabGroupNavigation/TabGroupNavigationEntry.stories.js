@@ -1,9 +1,9 @@
-import NavigationTabsEntry from '@/components/NavigationTabs/NavigationTabsEntry'
+import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigationEntry'
 
 export default {
-  title: 'Components/NavigationTabs/NavigationTabsEntry',
+  title: 'Components/TabGroupNavigation/TabGroupNavigationEntry',
   tags: ['autodocs'],
-  component: NavigationTabsEntry,
+  component: TabGroupNavigationEntry,
   args: {
     active: true,
     default: 'Entities',

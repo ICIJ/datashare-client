@@ -112,7 +112,7 @@
     "occurrences":  "This mention appears {nbMentions} times | This mention appears {nbMentions} time | This mention appears {nbMentions} times",
     "projectList":  "in {n} projects | in {n} project | in {n} projects:"
   },
-  "entityPopoverTabs": {
+  "entityPopoverTabGroup": {
     "mentions": "Mentions",
     "info": "Info"
   },
