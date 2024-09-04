@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 
 import ProjectLink from '@/components/Project/ProjectLink'
+import ProjectButton from '@/components/Project/ProjectButton'
 
 const props = defineProps({
   nbMentions: {
@@ -25,7 +26,7 @@ const projectList = t('entityPopoverMentionOccurrences.projectList', { n: nbProj
   <div class="entity-popover-mention-occurrences">
     <p>{{ `${occurrences} ${projectList}` }}</p>
     <div class="d-flex gap-2">
-      <project-link v-for="(project, index) in projects" :key="index" :project="project" />
+      <project-button v-for="(project, index) in projects" :key="index" :project="project" />
     </div>
   </div>
 </template>

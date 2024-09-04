@@ -26,7 +26,7 @@ const props = defineProps({
     type: Boolean
   },
   /**
-   * Hide the project thumbail.
+   * Hide the project thumbnail.
    */
   hideThumbnail: {
     type: Boolean
