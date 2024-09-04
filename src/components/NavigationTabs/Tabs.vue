@@ -15,8 +15,7 @@ const props = defineProps({
     type: Boolean
   },
   tag: {
-    type: String,
-    default: 'ul'
+    type: String
   },
   vertical: {
     type: Boolean
@@ -26,11 +25,16 @@ const props = defineProps({
   },
   flush: {
     type: Boolean
-  }
+  },
+  activeNavItemClass: { type: String },
+  navItemClass: { type: String },
+  activeTabClass: { type: String },
+  contentClass: { type: String }
 })
 
-const classList = computed(() => {
+const navClassList = computed(() => {
   return {
+    'navigation-tabs': true,
     'navigation-tabs--nowrap': props.nowrap,
     'navigation-tabs--flush': props.flush
   }
@@ -38,11 +42,13 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <b-nav
-    tabs
-    underline
-    class="navigation-tabs"
-    :class="classList"
+  <b-tabs
+    class="tab-group"
+    :active-nav-item-class="activeNavItemClass"
+    :nav-class="navClassList"
+    :nav-item-class="navItemClass"
+    :active-tab-class="activeTabClass"
+    :content-class="contentClass"
     :card-header="cardHeader"
     :fill="fill"
     :justified="justified"
@@ -51,5 +57,13 @@ const classList = computed(() => {
     :vertical="vertical"
   >
     <slot />
-  </b-nav>
+  </b-tabs>
 </template>
+
+<style lang="scss" scoped>
+.tab-group {
+  &:deep(.tab-content) {
+    padding: $spacer-md 0;
+  }
+}
+</style>
