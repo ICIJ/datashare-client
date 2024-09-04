@@ -4,7 +4,7 @@
       <div class="tiff-viewer__header bg-tertiary d-flex algin-items-center p-3">
         <div v-if="hasPages" class="tiff-viewer__header__pagination text-muted">
           <span class="badge text-bg-dark">
-            <span class="">
+            <span>
               {{ active }}
             </span>
             <span class="fw-normal"> / {{ pages.length }} </span>
