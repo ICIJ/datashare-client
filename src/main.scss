@@ -177,7 +177,7 @@ $value in $theme-colors {
         color: inherit;
 
         &:hover {
-          background: rgba(white, 0.1);
+          background: rgba(var(--bs-body-bg-rgb), 0.7);
         }
       }
     }
