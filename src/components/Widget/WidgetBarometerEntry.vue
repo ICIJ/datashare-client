@@ -3,10 +3,10 @@
     tag="a"
     :href="to"
     class="widget-barometer-entry"
-    body-class="d-flex flex-column align-items-center gap-1"
+    body-class="d-flex flex-column align-items-center gap-1 "
     :border-variant="variant"
   >
-    <phosphor-icon :variant="variant" :name="icon" :weight="ICON_WEIGHT.BOLD" />
+    <span style="height: 20px"><phosphor-icon :variant="variant" :name="icon" :weight="ICON_WEIGHT.BOLD" /></span>
     <span class="widget-barometer-entry__value fw-bold"
       ><slot>{{ humanValue }}</slot></span
     >
@@ -29,3 +29,10 @@ const props = defineProps({
 })
 const humanValue = typeof props.value === 'number' ? humanNumber(props.value) : props.value
 </script>
+<style lang="scss">
+.widget-barometer-entry {
+  &:hover {
+    border-color: $input-hover-border-color !important;
+  }
+}
+</style>
