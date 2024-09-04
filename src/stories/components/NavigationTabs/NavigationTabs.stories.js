@@ -5,7 +5,7 @@ import NavigationTabsEntry from '@/components/NavigationTabs/NavigationTabsEntry
 
 const routes = [
   { path: '/', name: 'general' },
-  { path: '/appearence', name: 'appearence' },
+  { path: '/appearance', name: 'appearance' },
   { path: '/document-processing', name: 'document-processing' },
   { path: '/batch-tasks', name: 'batch-tasks' },
   { path: '/plugins', name: 'plugins' },
@@ -32,6 +32,9 @@ export default {
       NavigationTabsEntry
     },
     setup: () => ({ args }),
+    mounted() {
+      console.log(this.$route)
+    },
     template: `
       <navigation-tabs v-bind="args">
         <navigation-tabs-entry icon="list" :to="{ name: 'general' }">
