@@ -36,6 +36,20 @@ import { useCore } from '@/composables/core'
 /**
  * Display Datashare's version number.
  */
+defineOptions({
+  name: 'VersionNumber'
+})
+
+defineProps({
+  /**
+   * Placement of the tooltip with version info.
+   * @values auto, top, bottom, left, right, topleft, topright, bottomleft, bottomright, lefttop, leftbottom, righttop, rightbottom
+   */
+  tooltipPlacement: {
+    type: String,
+    default: 'top-end'
+  }
+})
 const serverHash = ref(null)
 const serverVersion = ref(null)
 
