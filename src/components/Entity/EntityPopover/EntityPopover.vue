@@ -9,13 +9,13 @@
     custom-class="document-download-popover"
     @update:modelValue="$emit('update:modelValue')"
   >
-    <entity-popover-tabs v-bind="mentionTabsProps" />
+    <entity-popover-tab-group v-bind="mentionTabsProps" />
   </b-popover>
 </template>
 <script setup>
 import { computed } from 'vue'
 
-import EntityPopoverTabs from './EntityPopoverTabs'
+import EntityPopoverTabGroup from './EntityPopoverTabGroup'
 
 const props = defineProps({
   /**

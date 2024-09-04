@@ -1,5 +1,5 @@
 <script setup>
-import TabTitle from '@/components/NavigationTabs/TabTitle'
+import TabGroupTitle from '@/components/TabGroup/TabGroupTitle'
 
 defineProps({
   active: {
@@ -38,7 +38,7 @@ defineProps({
 
 <template>
   <b-nav-item
-    class="navigation-tabs-entry"
+    class="tab-group-navigation-entry"
     :active="active"
     :active-class="activeClass"
     :exact-active-class="exactActiveClass"
@@ -48,8 +48,8 @@ defineProps({
     :target="target"
     :to="to"
   >
-    <tab-title :icon="icon" :count="count">
+    <tab-group-title :icon="icon" :count="count">
       <slot />
-    </tab-title>
+    </tab-group-title>
   </b-nav-item>
 </template>
