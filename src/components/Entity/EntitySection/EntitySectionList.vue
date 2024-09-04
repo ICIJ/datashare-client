@@ -1,5 +1,5 @@
 <script setup>
-import NamedEntitySectionListEntry from './NamedEntitySectionListEntry'
+import EntitySectionListEntry from './EntitySectionListEntry'
 
 defineProps({
   entries: {
@@ -12,7 +12,7 @@ defineProps({
 <template>
   <div class="d-flex flex-wrap gap-2">
     <slot v-bind="{ entries }">
-      <named-entity-section-list-entry v-for="(namedEntity, i) in entries" :key="i" :named-entity="namedEntity" />
+      <entity-section-list-entry v-for="(entity, i) in entries" :key="i" :entity="entity" />
     </slot>
   </div>
 </template>

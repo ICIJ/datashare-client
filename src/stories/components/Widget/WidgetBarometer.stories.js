@@ -1,5 +1,5 @@
 import { variantsArgType } from '~storybook/utils'
-import { getCategoryIcon } from '@/utils/namedEntity'
+import { getCategoryIcon } from '@/utils/entity'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 import { VARIANT } from '@/enums/variants'
 import WidgetBarometer from '@/components/Widget/WidgetBarometer'

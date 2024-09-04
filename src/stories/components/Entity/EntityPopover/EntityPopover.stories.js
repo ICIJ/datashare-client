@@ -1,7 +1,7 @@
-import EntityPopover from '@/components/EntityPopover/EntityPopover'
+import EntityPopover from '@/components/Entity/EntityPopover/EntityPopover'
 
 export default {
-  title: 'Components/EntityPopover/EntityPopover',
+  title: 'Components/Entity/EntityPopover/EntityPopover',
   component: EntityPopover,
   tags: ['autodocs'],
   args: {
