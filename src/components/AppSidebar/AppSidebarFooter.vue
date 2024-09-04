@@ -104,11 +104,15 @@ const classList = computed(() => {
     .app-sidebar-footer__links {
       order: -1;
       flex-direction: column;
-      margin-bottom: $spacer;
 
       &__item {
-        margin-bottom: $spacer-xs;
+        padding: 8px 0;
+        margin-bottom: $spacer;
       }
+    }
+
+    .app-sidebar-footer__content {
+      margin-top: $spacer;
     }
   }
 
