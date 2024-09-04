@@ -31,6 +31,7 @@ const classList = computed(() => {
 .page-table-tr {
   border: none;
   border-left: 1px solid transparent;
+  vertical-align: middle;
 
   &__select {
     display: none;
