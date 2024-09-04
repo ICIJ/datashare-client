@@ -15,10 +15,11 @@
       :size="iconLeftSize"
       :weight="iconLeftWeight"
       :hover-weight="iconLeftHoverWeight"
-      :hover="currentHover"
       :spin="loading"
       :spin-duration="loadingDuration"
       :variant="iconLeftVariant"
+      :hover-variant="iconLeftHoverVariant"
+      :hover="currentHover"
       class="button-icon__icon-left"
     />
     <span v-if="!hideLabel" class="button-icon__label">
@@ -30,10 +31,11 @@
       :size="iconRightSize"
       :weight="iconRightWeight"
       :hover-weight="iconRightHoverWeight"
-      :hover="currentHover"
       :spin="loading"
       :spin-duration="loadingDuration"
       :variant="iconRightVariant"
+      :hover-variant="iconRightHoverVariant"
+      :hover="currentHover"
       class="button-icon__icon-right"
       @click="click('icon-right')"
     />
@@ -79,6 +81,11 @@ const props = defineProps({
     default: null,
     validator: variantValidator
   },
+  iconLeftHoverVariant: {
+    type: String,
+    default: null,
+    validator: variantValidator
+  },
   iconLeftWeight: {
     type: String,
     default: null,
@@ -97,6 +104,11 @@ const props = defineProps({
     default: null
   },
   iconRightVariant: {
+    type: String,
+    default: null,
+    validator: variantValidator
+  },
+  iconRightHoverVariant: {
     type: String,
     default: null,
     validator: variantValidator
