@@ -32,6 +32,9 @@
   "buttonAdd": {
     "label": "Add new"
   },
+  "buttonSettings": {
+    "label": "Settings"
+  },
   "buttonClearSearch": {
     "label": "Clear search"
   },
