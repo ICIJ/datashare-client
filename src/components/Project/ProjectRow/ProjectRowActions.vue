@@ -35,7 +35,6 @@ const toProjetDelete = computed(() => ({
           icon-left="pencil"
           icon-left-hover-weight="bold"
           hide-label
-          hide-tooltip
           square
           size="sm"
           variant="outline-secondary"
@@ -46,7 +45,6 @@ const toProjetDelete = computed(() => ({
           icon-left="trash"
           icon-left-hover-weight="bold"
           hide-label
-          hide-tooltip
           square
           size="sm"
           variant="outline-secondary"
