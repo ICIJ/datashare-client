@@ -39,11 +39,6 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     }
   }
 
-  function reduceAppSideBar(_to, _from, next) {
-    store.dispatch('app/toggleSidebar', true)
-    next()
-  }
-
   async function setPageTitleFromMeta({ meta }, _from, next) {
     const params = { router, auth, store, config, i18n }
     const title = isFunction(meta.title) ? await meta.title(params) : meta.title
@@ -65,6 +60,5 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
   router.beforeEach(checkMode)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
-  router.beforeEach(reduceAppSideBar)
   router.beforeEach(setPageTitleFromMeta)
 }
