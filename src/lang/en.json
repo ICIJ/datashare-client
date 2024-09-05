@@ -999,6 +999,10 @@
     "links": "Links",
     "actions": "Actions"
   },
+  "projectRowActions": {
+    "edit": "Edit project",
+    "delete": "Delete project"
+  },
   "projectList": {
     "title": "Projects",
     "newProject": "New project",
