@@ -3,7 +3,7 @@
     v-bind="buttonProps"
     ref="element"
     :to="to"
-    class="button-icon text-truncate"
+    class="button-icon"
     :class="classList"
     @mouseenter="currentHover = true"
     @mouseleave="currentHover = false"
