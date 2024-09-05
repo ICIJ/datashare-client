@@ -7,6 +7,12 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     class="button-toggle-filters-panel"
     :label="$t('buttonToggleFiltersPanel.label')"
     icon-left="funnel"
-    variant="outline-dark"
+    variant="outline-tertiary"
   />
 </template>
+
+<style lang="scss" scoped>
+.button-toggle-filters-panel {
+  --bs-btn-color: var(--bs-link-color);
+}
+</style>
