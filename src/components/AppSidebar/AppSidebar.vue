@@ -101,7 +101,12 @@ const noAnalysis = computed(() => {
             {{ t('appSidebar.savedSearches') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
-        <app-sidebar-section :title="t('appSidebar.tasks')" icon="rocket-launch" :to="{ name: 'search' }" :compact="compact">
+        <app-sidebar-section
+          :title="t('appSidebar.tasks')"
+          icon="rocket-launch"
+          :to="{ name: 'search' }"
+          :compact="compact"
+        >
           <app-sidebar-section-entry
             icon="list-magnifying-glass"
             :to="{ name: 'task.batch-search.list' }"

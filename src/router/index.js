@@ -250,7 +250,7 @@ export const routes = [
             meta: {
               icon: 'dots-nine',
               title: 'All projects'
-            },
+            }
           },
           {
             name: 'project.new',
