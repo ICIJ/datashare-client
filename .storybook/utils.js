@@ -1,4 +1,5 @@
 import {VARIANTS, VARIANTS_PLAIN} from "@/enums/variants";
+import {LAYOUTS} from "@/enums/layouts";
 import {BUTTON_SIZES, BREAKPOINT_SIZES} from "@/enums/sizes";
 import {FORMAT_FROM_NOW, FORMAT_LONG, FORMAT_SHORT} from "@/utils/humanDate";
 import {ICON_WEIGHTS} from "@/enums/iconWeights";
@@ -12,7 +13,6 @@ export const variantsPlainArgType = {
   control: 'select',
   options: VARIANTS_PLAIN
 }
-
 export const buttonSizesArgType = {
   control: 'inline-radio',
   options: BUTTON_SIZES
@@ -52,4 +52,8 @@ export const inputTypeArgType = {
     'month',
     'week'
   ]
+}
+export const layoutArgType = {
+  control: 'select',
+  options: LAYOUTS
 }
