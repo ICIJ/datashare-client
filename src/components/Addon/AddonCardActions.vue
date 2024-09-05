@@ -31,6 +31,7 @@ const uninstallAddon = () => {
   <div class="addon-card-actions d-flex flex-column align-items-end gap-2">
     <button-icon
       v-if="shouldInstall"
+      truncate
       icon-left="cloud-arrow-down"
       variant="action"
       class="flex-grow-0"
