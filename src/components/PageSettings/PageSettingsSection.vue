@@ -74,7 +74,6 @@ const localValue = computed({
 const localOpen = computed({
   get: () => open.value,
   set: (newVal) => {
-    console.log('test', newVal)
     open.value = newVal
   }
 })
