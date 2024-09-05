@@ -18,6 +18,6 @@ defineProps({
     hide-label
     icon-left="sliders-horizontal"
     square
-    :variant="variant"
+    variant="outline-secondary"
   />
 </template>
