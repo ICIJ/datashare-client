@@ -7,6 +7,7 @@ export default {
   component: ButtonToggleAdvancedSearch,
   args: {
     loading: false,
+    active: false,
     compactBreakpoint: SIZE.SM
   },
   decorators: [

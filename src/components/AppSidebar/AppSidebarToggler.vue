@@ -1,15 +1,9 @@
 <script setup>
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 
-const props = defineProps({
-  compact: {
-    type: Boolean
-  }
-})
-
-const emit = defineEmits(['toggle'])
+const active = defineModel('active', { type: Boolean })
 </script>
 
 <template>
-  <button-toggle-sidebar :compact="props.compact" @toggle="emit('toggle', $event)" />
+  <button-toggle-sidebar v-model="active" />
 </template>

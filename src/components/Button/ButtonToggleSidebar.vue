@@ -3,24 +3,18 @@ import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
-const props = defineProps({
-  compact: {
-    type: Boolean
-  }
-})
-
-const emit = defineEmits(['toggle'])
+const active = defineModel('active', { type: Boolean })
 
 const toggle = () => {
-  emit('toggle', !props.compact)
+  active.value = !active.value
 }
 
 const title = computed(() => {
-  return props.compact ? 'Open sidebar' : 'Close sidebar'
+  return active.value ? 'Open sidebar' : 'Close sidebar'
 })
 
 const weight = computed(() => {
-  return props.compact ? 'regular' : 'fill'
+  return active.value ? 'regular' : 'fill'
 })
 </script>
 

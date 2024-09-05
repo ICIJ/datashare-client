@@ -67,8 +67,8 @@ const noAnalysis = computed(() => {
   <div class="app-sidebar d-flex flex-column" :class="classList">
     <div class="flex-grow-1 px-3 py-4">
       <div class="d-flex justify-content-between">
-        <app-sidebar-toggler :compact="compact" @toggle="compact = $event" />
-        <app-sidebar-close v-if="!compact" :closed="closed" @toggle="closed = $event" />
+        <app-sidebar-toggler v-model.active="compact" />
+        <app-sidebar-close v-if="!compact" v-model.active="closed" />
       </div>
       <div class="py-4 d-flex flex-column gap-3">
         <app-sidebar-section :title="t('appSidebar.projects')" icon="circles-three-plus" :compact="compact">
