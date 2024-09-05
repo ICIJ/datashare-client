@@ -32,7 +32,7 @@
   "buttonAdd": {
     "label": "Add new"
   },
-  "buttonSettings": {
+  "buttonToggleSettings": {
     "label": "Settings"
   },
   "buttonClearSearch": {
@@ -53,7 +53,7 @@
   "buttonToggleAdvancedSearch": {
     "label": "Advanced"
   },
-  "buttonToggleFiltersPanel": {
+  "buttonToggleFilters": {
     "label": "Filter"
   },
   "buttonToggleSearchBreadcrumb": {
