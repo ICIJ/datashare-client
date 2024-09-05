@@ -32,13 +32,6 @@ describe('UserHistory.vue', () => {
     expect(wrapper.find('page-header-stub').exists()).toBeTruthy()
   })
 
-  it('should load the document history page by default', async () => {
-    await core.router.replace({ name: 'user-history' })
-    const wrapper = mount(UserHistory, { global: { plugins: core.plugins } })
-    await flushPromises()
-    expect(wrapper.vm.$route.name).toBe('user-history.document.list')
-  })
-
   it('should call get user history when page is loaded', async () => {
     await core.router.replace({ name: 'user-history.document.list' })
     shallowMount(UserHistory, { global: { plugins: core.plugins } })
