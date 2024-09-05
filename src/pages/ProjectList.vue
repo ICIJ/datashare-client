@@ -12,6 +12,6 @@ const projects = computed(() => core.projects)
 <template>
   <div class="project-list">
     <page-header no-toggle-settings :to-add="{ name: 'project.new' }" />
-    <project-entries :projects="projects" />
+    <project-entries :projects="projects" layout="table" />
   </div>
 </template>
