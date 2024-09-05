@@ -1,10 +1,10 @@
-import ButtonSettings from '@/components/Button/ButtonSettings'
+import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import { PLACEMENT } from '@/enums/placements'
 
 export default {
   tags: ['autodocs'],
-  title: 'Components/Button/ButtonSettings',
-  component: ButtonSettings,
+  title: 'Components/Button/ButtonToggleSettings',
+  component: ButtonToggleSettings,
   args: {
     loading: false,
     disabled: false,

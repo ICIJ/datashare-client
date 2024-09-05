@@ -4,6 +4,9 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 defineProps({
   label: {
     type: String
+  },
+  active: {
+    type: Boolean
   }
 })
 </script>
@@ -11,10 +14,10 @@ defineProps({
 <template>
   <button-icon
     :label="label ?? $t('buttonSettings.label')"
-    class="button-add border-0"
+    class="button-toggle-settings border-0"
     hide-label
     icon-left="sliders-horizontal"
     square
-    variant="outline-secondary"
+    :variant="variant"
   />
 </template>
