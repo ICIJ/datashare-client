@@ -1,5 +1,8 @@
 <script setup>
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, provide } from 'vue'
+
+const sort = defineModel('sort', { type: String, default: null })
+const order = defineModel('order', { type: String, default: 'desc' })
 
 const props = defineProps({
   selectMode: {
@@ -8,33 +11,55 @@ const props = defineProps({
 })
 
 const slots = useSlots()
+
 const hasColgroup = computed(() => !!slots.colgroup)
 const hasThead = computed(() => !!slots.thead)
 const hasTbody = computed(() => !!slots.default)
 const hasTfooter = computed(() => !!slots.tfooter)
+
 const classList = computed(() => {
   return {
     'page-table--select-mode': props.selectMode
   }
 })
+
+// `sort` model getter and setter
+const sortBy = (value = null) => {
+  if (value) {
+    sort.value = value
+  }
+  return sort.value
+}
+
+provide('sortBy', sortBy)
+
+// `order` model getter and setter
+const orderBy = (value = null) => {
+  if (value) {
+    order.value = value
+  }
+  return order.value
+}
+
+provide('orderBy', orderBy)
 </script>
 
 <template>
   <b-table-simple responsive borderless striped class="page-table" :class="classList">
     <colgroup v-if="hasColgroup">
-      <slot v-bind="{ selectMode }" name="colgroup" />
+      <slot v-bind="{ selectMode, sortBy, orderBy }" name="colgroup" />
     </colgroup>
     <thead v-if="hasThead">
       <tr>
         <th class="page-table__select"></th>
-        <slot v-bind="{ selectMode }" name="thead" />
+        <slot v-bind="{ selectMode, sortBy, orderBy }" name="thead" />
       </tr>
     </thead>
     <tbody v-if="hasTbody">
-      <slot v-bind="{ selectMode }" />
+      <slot v-bind="{ selectMode, sortBy, orderBy }" />
     </tbody>
     <tfooter v-if="hasTfooter">
-      <slot v-bind="{ selectMode }" name="tfooter" />
+      <slot v-bind="{ selectMode, sortBy, orderBy }" name="tfooter" />
     </tfooter>
   </b-table-simple>
 </template>
