@@ -23,7 +23,7 @@ defineProps({
     :placement="placement"
     hide-backdrop
     :title="title"
-    header-class="page-offcanvas__header pb-4"
+    header-class="page-offcanvas__header"
   >
     <template #header="{ hide }">
       <h5 v-if="title" class="page-offcanvas__header__title m-0">{{ title }}</h5>
