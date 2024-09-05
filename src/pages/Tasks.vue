@@ -36,7 +36,7 @@
 import { findIndex } from 'lodash'
 
 import utils from '@/mixins/utils'
-import PageHeader from '@/components/PageHeader'
+import PageHeader from '@/components/PageHeader/PageHeader'
 
 export default {
   name: 'Tasks',

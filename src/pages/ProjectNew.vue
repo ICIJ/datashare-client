@@ -1,7 +1,7 @@
 <script>
 import { get } from 'lodash'
 
-import PageHeader from '@/components/PageHeader'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectForm from '@/components/ProjectForm'
 
 /**
