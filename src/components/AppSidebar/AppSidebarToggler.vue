@@ -5,5 +5,5 @@ const active = defineModel('active', { type: Boolean })
 </script>
 
 <template>
-  <button-toggle-sidebar v-model="active" />
+  <button-toggle-sidebar v-model:active="active" />
 </template>

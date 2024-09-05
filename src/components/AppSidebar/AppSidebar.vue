@@ -64,11 +64,11 @@ const noAnalysis = computed(() => {
 </script>
 
 <template>
-  <div class="app-sidebar d-flex flex-column" :class="classList">
-    <div class="flex-grow-1 px-3 py-4">
+  <div class="app-sidebar" :class="classList">
+    <div class="flex-grow-1 p-3">
       <div class="d-flex justify-content-between">
-        <app-sidebar-toggler v-model.active="compact" />
-        <app-sidebar-close v-if="!compact" v-model.active="closed" />
+        <app-sidebar-toggler v-model:active="compact" />
+        <app-sidebar-close v-if="!compact" v-model:active="closed" />
       </div>
       <div class="py-4 d-flex flex-column gap-3">
         <app-sidebar-section :title="t('appSidebar.projects')" icon="circles-three-plus" :compact="compact">
@@ -136,7 +136,7 @@ const noAnalysis = computed(() => {
 .app-sidebar {
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
-  flex: 1;
+  flex: 0 0 310px;
   width: 100%;
   max-width: 310px;
   min-height: 100%;
@@ -146,8 +146,15 @@ const noAnalysis = computed(() => {
   top: 0;
   left: 0;
 
+  display: flex;
+  flex-direction: column;
+
   &--compact {
     max-width: 85px;
+  }
+
+  &--closed {
+    display: none;
   }
 }
 </style>
