@@ -1,5 +1,4 @@
 <script setup>
-import { property } from 'lodash'
 import { computed, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -13,6 +12,7 @@ const props = defineProps({
 
 const route = useRoute()
 const router = useRouter()
+
 const currentRoute = computed(() => {
   const name = props.currentRouteName ?? route.name
   try {
@@ -21,11 +21,18 @@ const currentRoute = computed(() => {
     return null
   }
 })
+
 const matchedRoutes = computed(() => {
   if (currentRoute.value) {
-    return currentRoute.value?.matched.filter(property('name')) ?? []
+    return currentRoute.value?.matched ?? []
   }
   return []
+})
+
+const visibleRoutes = computed(() => {
+  return matchedRoutes.value.filter((route) => {
+    return route.meta?.breadcrumb !== false && (route.name || route.meta?.title)
+  })
 })
 
 const isActiveRoute = (name) => {
@@ -43,9 +50,9 @@ const hasActiveSlot = computed(() => {
 
 <template>
   <div class="navigation-breadcrumb">
-    <slot v-bind="{ currentRoute, matchedRoutes }">
+    <slot v-bind="{ currentRoute, matchedRoutes, visibleRoutes }">
       <navigation-breadcrumb-link
-        v-for="{ name } in matchedRoutes"
+        v-for="{ name } in visibleRoutes"
         :key="name"
         :route-name="name"
         :current-route-name="currentRouteName"
