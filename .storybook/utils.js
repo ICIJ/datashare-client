@@ -1,9 +1,10 @@
-import {VARIANTS, VARIANTS_PLAIN} from "@/enums/variants";
-import {LAYOUTS} from "@/enums/layouts";
-import {BUTTON_SIZES, BREAKPOINT_SIZES} from "@/enums/sizes";
-import {FORMAT_FROM_NOW, FORMAT_LONG, FORMAT_SHORT} from "@/utils/humanDate";
-import {ICON_WEIGHTS} from "@/enums/iconWeights";
-import {ENTITY_CATEGORIES} from "@/enums/entityCategories";
+import { VARIANTS, VARIANTS_PLAIN } from "@/enums/variants"
+import { LAYOUTS } from "@/enums/layouts"
+import { BUTTON_SIZES, BREAKPOINT_SIZES } from "@/enums/sizes"
+import { FORMAT_FROM_NOW, FORMAT_LONG, FORMAT_SHORT } from "@/utils/humanDate"
+import { ICON_WEIGHTS } from "@/enums/iconWeights"
+import { ENTITY_CATEGORIES } from "@/enums/entityCategories"
+import { OFFCANVAS_PLACEMENTS } from "@/enums/placements"
 
 export const variantsArgType = {
   control: 'select',
@@ -56,4 +57,8 @@ export const inputTypeArgType = {
 export const layoutArgType = {
   control: 'select',
   options: LAYOUTS
+}
+export const offcanvasPlacementArgType = {
+  control: 'select',
+  options: OFFCANVAS_PLACEMENTS
 }
