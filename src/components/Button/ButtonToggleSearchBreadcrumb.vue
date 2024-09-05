@@ -8,9 +8,6 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  active: {
-    type: Boolean
-  },
   loading: {
     type: Boolean
   },
@@ -19,12 +16,18 @@ const props = defineProps({
   }
 })
 
+const active = defineModel('active', { type: Boolean })
+
+const toggle = () => {
+  active.value = !active.value
+}
+
 const nonzeroCounter = computed(() => {
   return props.counter || null
 })
 
 const variant = computed(() => {
-  return props.active ? 'action' : 'outline-dark'
+  return active.value ? 'action' : 'outline-dark'
 })
 
 const counterVariant = computed(() => {
@@ -49,5 +52,6 @@ const iconLeftWeight = computed(() => {
     hide-label
     icon-left="path"
     square
+    @click="toggle"
   />
 </template>

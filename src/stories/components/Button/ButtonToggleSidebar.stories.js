@@ -5,7 +5,7 @@ export default {
   title: 'Components/Button/ButtonToggleSidebar',
   component: ButtonToggleSidebar,
   args: {
-    compact: true
+    active: true
   }
 }
 

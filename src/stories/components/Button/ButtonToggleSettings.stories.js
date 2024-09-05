@@ -8,6 +8,7 @@ export default {
   args: {
     loading: false,
     disabled: false,
+    active: false,
     tooltipPlacement: PLACEMENT.LEFT
   }
 }
