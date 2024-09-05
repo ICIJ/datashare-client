@@ -1,4 +1,5 @@
 <script setup>
+import { property } from 'lodash'
 import { computed, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -22,7 +23,7 @@ const currentRoute = computed(() => {
 })
 const matchedRoutes = computed(() => {
   if (currentRoute.value) {
-    return currentRoute.value?.matched ?? []
+    return currentRoute.value?.matched.filter(property('name')) ?? []
   }
   return []
 })
