@@ -232,6 +232,11 @@ export const routes = [
       },
       {
         path: 'project',
+        name: 'project',
+        meta: {
+          icon: 'circles-three-plus',
+          title: 'Projects'
+        },
         components: {
           default: () => import('@/pages/Project')
         },
@@ -241,7 +246,11 @@ export const routes = [
             name: 'project.list',
             components: {
               default: () => import('@/pages/ProjectList')
-            }
+            },
+            meta: {
+              icon: 'dots-nine',
+              title: 'All projects'
+            },
           },
           {
             name: 'project.new',
