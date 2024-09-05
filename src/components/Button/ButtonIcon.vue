@@ -1,7 +1,7 @@
 <template>
   <b-button
     v-bind="buttonProps"
-    ref="element"
+    :id="buttonId"
     :to="to"
     class="button-icon"
     :class="classList"
@@ -48,7 +48,7 @@
       :boundary-padding="20"
       :model-value="showTooltip"
       :placement="tooltipPlacement"
-      :target="element"
+      :target="buttonId"
       :title="tooltipText"
     />
   </b-button>
@@ -56,6 +56,7 @@
 
 <script setup>
 import { computed, ref, inject } from 'vue'
+import { uniqueId } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { PhCircleNotch } from '@phosphor-icons/vue'
 
@@ -65,8 +66,6 @@ import { SIZE } from '@/enums/sizes'
 import { VARIANT, variantValidator } from '@/enums/variants'
 import { iconWeightValidator } from '@/enums/iconWeights'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
-
-const element = ref(null)
 
 const injectedVariant = inject('variant', VARIANT.ACTION)
 const injectedSize = inject('size', SIZE.MD)
@@ -213,10 +212,14 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['click:icon-right'])
+
 function click(name) {
   emit(`click:${name}`)
 }
+
 const currentHover = ref(false)
+
+const buttonId = computed(() => uniqueId('button-icon-'))
 
 const classList = computed(() => {
   return {
