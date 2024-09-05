@@ -21,9 +21,6 @@ export default {
       TabGroupEntry
     },
     setup: () => ({ args }),
-    mounted() {
-      console.log(this.$route)
-    },
     template: `
       <tab-group v-bind="args">
         <tab-group-entry icon="list" :to="{ name: 'general' }" title="General">
