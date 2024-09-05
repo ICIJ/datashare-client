@@ -81,7 +81,7 @@ const showSidebarToggle = computed(() => {
 </script>
 
 <template>
-  <div class="page-header d-flex flex-column gap-4 p-3">
+  <div class="page-header d-flex flex-column gap-4 container-fluid py-3">
     <div class="d-flex justify-content-between gap-4">
       <slot name="toggle-sidebar">
         <button-toggle-sidebar v-if="showSidebarToggle" v-model:active="closedSidebar" class="flex-shrink-0" />
