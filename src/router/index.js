@@ -284,6 +284,14 @@ export const routes = [
                 }
               },
               {
+                name: 'project.view.delete',
+                path: 'delete',
+                props: true,
+                redirect: {
+                  name: 'project.view.edit'
+                }
+              },
+              {
                 name: 'project.view.add-documents',
                 path: 'add-documents',
                 components: {
