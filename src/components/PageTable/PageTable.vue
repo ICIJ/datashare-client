@@ -15,7 +15,7 @@ const slots = useSlots()
 const hasColgroup = computed(() => !!slots.colgroup)
 const hasThead = computed(() => !!slots.thead)
 const hasTbody = computed(() => !!slots.default)
-const hasTfooter = computed(() => !!slots.tfooter)
+const hasTfoot = computed(() => !!slots.tfoot)
 
 const classList = computed(() => {
   return {
@@ -58,9 +58,9 @@ provide('orderBy', orderBy)
     <tbody v-if="hasTbody">
       <slot v-bind="{ selectMode, sortBy, orderBy }" />
     </tbody>
-    <tfooter v-if="hasTfooter">
-      <slot v-bind="{ selectMode, sortBy, orderBy }" name="tfooter" />
-    </tfooter>
+    <tfoot v-if="hasTfoot">
+      <slot v-bind="{ selectMode, sortBy, orderBy }" name="tfoot" />
+    </tfoot>
   </b-table-simple>
 </template>
 
