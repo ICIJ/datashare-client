@@ -17,6 +17,16 @@ const props = defineProps({
   }
 })
 
+const active = defineModel('active', { type: Boolean })
+
+const toggle = () => {
+  active.value = !active.value
+}
+
+const variant = computed(() => {
+  return active.value ? 'action' : 'outline-tertiary'
+})
+
 const { breakpointDown } = useBreakpoints()
 
 const compact = computed(() => {
@@ -26,12 +36,13 @@ const compact = computed(() => {
 
 <template>
   <button-icon
-    class="button-toggle-advanced-search"
-    :label="$t('buttonToggleAdvancedSearch.label')"
     :hide-label="compact"
-    :square="compact"
+    :label="$t('buttonToggleAdvancedSearch.label')"
     :loading="loading"
+    :square="compact"
+    :variant="variant"
+    class="button-toggle-advanced-search"
     icon-right="eyeglasses"
-    variant="outline-tertiary"
+    @click="toggle"
   />
 </template>

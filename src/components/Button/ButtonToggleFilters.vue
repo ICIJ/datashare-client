@@ -3,17 +3,20 @@ import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
-const props = defineProps({
-  active: {
-    type: Boolean
-  },
+const active = defineModel('active', { type: Boolean })
+
+defineProps({
   loading: {
     type: Boolean
   }
 })
 
+const toggle = () => {
+  active.value = !active.value
+}
+
 const variant = computed(() => {
-  return props.active ? 'action' : 'outline-tertiary'
+  return active.value ? 'action' : 'outline-tertiary'
 })
 </script>
 
@@ -24,6 +27,7 @@ const variant = computed(() => {
     icon-left="funnel"
     :loading="loading"
     :variant="variant"
+    @click="toggle"
   />
 </template>
 

@@ -3,26 +3,14 @@ import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
-const props = defineProps({
-  closed: {
-    type: Boolean
-  }
-})
-
-const emit = defineEmits(['toggle'])
+const active = defineModel('active', { type: Boolean })
 
 const toggle = () => {
-  emit('toggle', !props.compact)
+  active.value = !active.value
 }
 
-const classList = computed(() => {
-  return {
-    'app-sidebar-toggler--closed': props.compact
-  }
-})
-
 const title = computed(() => {
-  return props.closed ? 'Open sidebar' : 'Close sidebar'
+  return active.value ? 'Open sidebar' : 'Close sidebar'
 })
 </script>
 
@@ -35,7 +23,6 @@ const title = computed(() => {
     variant="light"
     class="app-sidebar-close"
     :title="title"
-    :class="classList"
     @click="toggle"
   >
     {{ title }}
