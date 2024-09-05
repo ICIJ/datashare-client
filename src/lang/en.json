@@ -991,6 +991,14 @@
   "columnFilterDropdown": {
     "apply": "Apply"
   },
+  "projectEntriesTableHead": {
+    "name": "Name of the project",
+    "description": "Description" ,
+    "documents": "Documents" ,
+    "updatedOn": "Updated on",
+    "links": "Links",
+    "actions": "Actions"
+  },
   "projectList": {
     "title": "Projects",
     "newProject": "New project",
