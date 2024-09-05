@@ -32,9 +32,6 @@ export default {
       TabGroupNavigationEntry
     },
     setup: () => ({ args }),
-    mounted() {
-      console.log(this.$route)
-    },
     template: `
       <tab-group-navigation v-bind="args">
         <tab-group-navigation-entry icon="list" :to="{ name: 'general' }">

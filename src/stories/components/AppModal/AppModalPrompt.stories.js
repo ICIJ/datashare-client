@@ -25,23 +25,18 @@ export default {
         AppModalPrompt,
         ImageModeSource
       },
+      setup: () => ({ args }),
       template: `
         <button class="btn btn-action" @click="args.modelValue = !args.modelValue">
           Toggle modal
         </button>
-        <app-modal-prompt v-bind="args" :model-value="args.modelValue" @update:modelValue="args.modelValue = $event" @submit="onSubmit">
+        <app-modal-prompt v-bind="args" :model-value="args.modelValue" @update:modelValue="args.modelValue = $event">
           <template #header-image-source>
             <image-mode-source :src="args.imageDark" color-mode="dark" />
           </template>
           {{ args.default }}
         </app-modal-prompt>
-      `,
-      data() {
-        const onSubmit = ({ value }) => {
-          console.log('submitted text', value)
-        }
-        return { args, onSubmit }
-      }
+      `
     }
   }
 }
