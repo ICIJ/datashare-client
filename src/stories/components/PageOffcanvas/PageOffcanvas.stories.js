@@ -28,7 +28,7 @@ export default {
         <story />
       `
     })
-  ],
+  ]
 }
 
 export const Default = {}
