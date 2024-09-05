@@ -28,7 +28,7 @@
 <script>
 import Api from '@/components/Api'
 import Extensions from '@/components/Extensions'
-import PageHeader from '@/components/PageHeader'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import Plugins from '@/components/Plugins'
 import ServerSettings from '@/components/ServerSettings'
 import utils from '@/mixins/utils'

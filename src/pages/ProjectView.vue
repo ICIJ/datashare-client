@@ -2,7 +2,7 @@
 import { startCase } from 'lodash'
 
 import utils from '@/mixins/utils'
-import PageHeader from '@/components/PageHeader'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 /**
