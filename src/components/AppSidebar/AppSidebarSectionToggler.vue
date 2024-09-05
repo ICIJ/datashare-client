@@ -27,14 +27,14 @@ const classList = computed(() => {
 
 <template>
   <button-icon
-    v-b-tooltip.right
     :icon-left="icon"
     square
     hide-label
     variant="outline-primary"
     class="app-sidebar-section-toggler"
+    tooltip-placement="right"
     :to="to"
-    :title="title"
+    :label="title"
     :class="classList"
   >
     {{ title }}
