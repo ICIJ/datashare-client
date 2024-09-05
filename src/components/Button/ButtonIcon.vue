@@ -249,7 +249,7 @@ const tooltipText = computed(() => {
 })
 
 const hasTooltip = computed(() => {
-  return !!tooltipText.value && !props.hideTooltip &&  (props.showTooltipForce || props.hideLabel)
+  return !!tooltipText.value && !props.hideTooltip && (props.showTooltipForce || props.hideLabel)
 })
 
 const showTooltip = computed(() => {

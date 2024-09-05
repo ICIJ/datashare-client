@@ -30,7 +30,6 @@ describe('AppSidebar.vue', () => {
     return shallowMount(AppSidebar, { ...options })
   }
 
-
   beforeEach(async () => {
     vi.clearAllMocks()
     wrapper = setLocalMode()
