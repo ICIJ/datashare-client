@@ -1,10 +1,13 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import PageTableThSort from './PageTableThSort'
 
 const props = defineProps({
+  name: {
+    type: String
+  },
   label: {
     type: String,
     required: true
@@ -31,17 +34,24 @@ const props = defineProps({
     type: Boolean
   },
   order: {
-    type: String,
-    default: 'desc'
+    type: String
   }
 })
+
+const sortBy = inject('sortBy')
+
+const isSorted = computed(() => {
+  return props.sorted || (props.name && sortBy() === props.name)
+})
+
+const orderBy = inject('orderBy')
 
 const classList = computed(() => {
   return {
     'page-table-th--emphasis': props.emphasis,
     'page-table-th--compact': props.hideLabel,
     'page-table-th--sortable': props.sortable,
-    'page-table-th--sorted': props.sorted,
+    'page-table-th--sorted': isSorted.value,
     'page-table-th--number': props.number
   }
 })
@@ -62,10 +72,10 @@ const labelClassList = computed(() => {
         <page-table-th-sort
           v-if="sortable"
           class="ms-1"
-          :sorted="sorted"
-          :order="order"
-          @update:sorted="$emit('update:sorted', $event)"
-          @update:order="$emit('update:order', $event)"
+          :sorted="isSorted"
+          :order="order ?? orderBy()"
+          @update:sorted="sortBy(name)"
+          @update:order="orderBy($event)"
         />
       </span>
     </slot>
