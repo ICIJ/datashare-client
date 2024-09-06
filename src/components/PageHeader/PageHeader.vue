@@ -15,7 +15,7 @@ import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 const searchQuery = defineModel('searchQuery', { type: String })
 const page = defineModel('page', { type: Number, default: 1 })
 
-const emit = defineEmits(['toggleFilters', 'toggleSettings', 'toggleAdd'])
+const emit = defineEmits(['toggleFilters'])
 
 const { core } = useCore()
 const { breakpointDown } = useBreakpoints()
@@ -45,9 +45,6 @@ const props = defineProps({
   activeFilters: {
     type: Boolean
   },
-  activeSettings: {
-    type: Boolean
-  },
   pageRow: {
     type: Boolean
   },
@@ -70,13 +67,18 @@ const props = defineProps({
   }
 })
 
-const closedSidebar = computed({
-  get: () => core?.store.state.app.sidebar.closed,
-  set: (value) => core?.store.dispatch('app/toggleSidebarClosed', value)
+const activeToggleSidebar = computed({
+  get: () => !core?.store.state.app.sidebar.closed,
+  set: (value) => core?.store.dispatch('app/toggleSidebarClosed', !value)
 })
 
-const showSidebarToggle = computed(() => {
-  return !props.noToggleSidebar && (closedSidebar.value || breakpointDown.value[props.sidebarTogglerBreakpoint])
+const activeToggleSettings = computed({
+  get: () => !core?.store.state.app.settings.closed,
+  set: (value) => core?.store.dispatch('app/toggleSettingsClosed', !value)
+})
+
+const showToggleSidebar = computed(() => {
+  return !props.noToggleSidebar && (!activeToggleSidebar.value || breakpointDown.value[props.sidebarTogglerBreakpoint])
 })
 </script>
 
@@ -84,19 +86,15 @@ const showSidebarToggle = computed(() => {
   <div class="page-header d-flex flex-column gap-4 container-fluid py-3">
     <div class="d-flex justify-content-between gap-4">
       <slot name="toggle-sidebar">
-        <button-toggle-sidebar v-if="showSidebarToggle" v-model:active="closedSidebar" class="flex-shrink-0" />
+        <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="activeToggleSidebar" class="flex-shrink-0" />
       </slot>
       <navigation-breadcrumb v-if="!noBreadcrumb" class="page-header__breadcrumb me-auto">
         <slot name="breadcrumb" />
       </navigation-breadcrumb>
       <div class="page-header__actions d-flex gap-4 ms-4">
         <slot name="action">
-          <button-add v-if="toAdd" :to="toAdd" @click="emit('toggleAdd')" />
-          <button-toggle-settings
-            v-if="!noToggleSettings"
-            :active="activeSettings"
-            @toggle="emit('toggleSettings', $event)"
-          />
+          <button-add v-if="toAdd" :to="toAdd" />
+          <button-toggle-settings v-if="!noToggleSettings" v-model:active="activeToggleSettings" />
         </slot>
       </div>
     </div>
