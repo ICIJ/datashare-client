@@ -116,8 +116,9 @@ const showToggleSidebar = computed(() => {
         <form-control-search
           v-if="searchable"
           v-model="searchQuery"
+          autofocus
           :placeholder="searchPlaceholder ?? $t('pageHeader.searchPlaceholder')"
-          class="page-header__search"
+          class="page-header__search ms-auto"
         />
       </slot>
     </div>
