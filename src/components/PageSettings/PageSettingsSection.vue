@@ -1,9 +1,9 @@
 <template>
-  <page-settings-section-group v-model="localOpen" :label="label" class="page-settings-section">
+  <page-settings-section-group v-model="open" :label="label" class="page-settings-section">
     <component
       :is="formGroup"
       id="checkbox-group-1"
-      v-model="localValue"
+      v-model="modelValue"
       class="page-settings-section__input-group ps-4 pb-4"
       stacked
     >
@@ -56,29 +56,20 @@ const props = defineProps({
   }
 })
 const modelValue = defineModel({
-  type: [String, Array],
+  type: [String, Number, Boolean, Array],
   default: () => []
 })
+
 const open = defineModel('open', {
   type: Boolean,
   default: true
 })
+
 const formGroup = computed(() => {
   return props.type === RADIO ? BFormRadioGroup : BFormCheckboxGroup
 })
+
 const formInput = computed(() => {
   return props.type === RADIO ? BFormRadio : BFormCheckbox
-})
-const localValue = computed({
-  get: () => modelValue.value,
-  set: (newVal) => {
-    modelValue.value = newVal
-  }
-})
-const localOpen = computed({
-  get: () => open.value,
-  set: (newVal) => {
-    open.value = newVal
-  }
 })
 </script>
