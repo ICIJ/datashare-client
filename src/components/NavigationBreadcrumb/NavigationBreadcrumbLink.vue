@@ -1,8 +1,10 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { capitalize, isFunction } from 'lodash'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
+
+import { useCore } from '@/composables/core'
 
 function castFunction(value) {
   if (isFunction(value)) {
@@ -56,11 +58,21 @@ const routeLocation = computed(() => {
   return { name, params, query }
 })
 
-const title = computed(() => {
+const routeHref = computed(() => {
+  return router.resolve(routeLocation.value).href
+})
+
+const { core } = useCore()
+
+const display = ref(null)
+
+const setDisplay = async () => {
   const name = route.value?.name.split('.').pop()
   const fn = castFunction(props.title ?? route.value?.meta?.title ?? capitalize(name))
-  return fn()
-})
+  display.value = await fn({ route: route.value, core })
+}
+
+onMounted(setDisplay)
 
 const icon = computed(() => {
   return props.icon ?? route.value?.meta?.icon
@@ -78,11 +90,11 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <router-link v-if="route" :to="routeLocation" class="navigation-breadcrumb-link" :class="classList">
+  <a v-if="route" :href="routeHref" class="navigation-breadcrumb-link" :class="classList">
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
-        <slot>{{ title }}</slot>
+        <slot>{{ display }}</slot>
       </span>
     </span>
     <phosphor-icon
@@ -93,7 +105,7 @@ const classList = computed(() => {
       size="1em"
       name="caret-right"
     />
-  </router-link>
+  </a>
 </template>
 
 <style lang="scss" scoped>
