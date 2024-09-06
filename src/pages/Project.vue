@@ -6,6 +6,6 @@ export default {
 
 <template>
   <div class="project">
-    <router-view></router-view>
+    <router-view />
   </div>
 </template>
