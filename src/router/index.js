@@ -238,7 +238,8 @@ export const routes = [
           title: 'Projects'
         },
         components: {
-          default: () => import('@/pages/Project')
+          default: () => import('@/pages/Project'),
+          settings: () => import('@/pages/ProjectListSettings')
         },
         children: [
           {
