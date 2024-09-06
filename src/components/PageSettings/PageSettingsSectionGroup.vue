@@ -11,7 +11,7 @@
       </div>
     </template>
     <b-collapse id="page-settings-group-collapse" v-model="modelValue">
-      <slot v-bind="{ open: modelValue }"></slot>
+      <slot v-bind="{ open: modelValue }" />
     </b-collapse>
   </b-form-group>
 </template>
@@ -19,7 +19,7 @@
 <script setup>
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { PhCaretUp, PhCaretDown } from '@phosphor-icons/vue';
+import { PhCaretUp, PhCaretDown } from '@phosphor-icons/vue'
 
 defineOptions({
   name: 'PageSettingsSectionGroup'
