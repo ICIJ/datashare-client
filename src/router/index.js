@@ -1,5 +1,3 @@
-import { NumberFormat } from 'vue-i18n'
-
 export const routes = [
   {
     path: '/',

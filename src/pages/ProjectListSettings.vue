@@ -55,7 +55,6 @@ const perPage = ref({
   ]
 })
 
-
 const sortBy = ref({
   label: 'Sort by',
   type: 'radio',
