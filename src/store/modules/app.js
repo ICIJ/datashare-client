@@ -1,3 +1,7 @@
+import { get } from 'lodash'
+
+import { LAYOUTS } from '@/enums/layouts'
+
 export const state = () => ({
   redirectAfterLogin: null,
   sidebar: {
@@ -5,7 +9,12 @@ export const state = () => ({
     closed: false
   },
   settings: {
-    closed: true
+    closed: true,
+    views: {
+      projectList: {
+        layout: LAYOUTS.TABLE
+      }
+    }
   }
 })
 
@@ -19,9 +28,22 @@ export const mutations = {
   settingsClosed(state, closed) {
     state.settings.closed = closed
   },
+  setSettings(state, { view, ...settings }) {
+    if (view in state.settings.views) {
+      state.settings.views[view] = { ...state.settings.views[view], ...settings }
+    }
+  },
   setRedirectAfterLogin(state, path = null) {
     if (!path || !path.startsWith('/login')) {
       state.redirectAfterLogin = path
+    }
+  }
+}
+
+export const getters = {
+  getSettings(state) {
+    return (view, name) => {
+      return get(state.settings.views, [view, name].join('.'))
     }
   }
 }
@@ -53,6 +75,7 @@ export const actions = {
 
 export default {
   namespaced: true,
+  getters,
   actions,
   mutations,
   state
