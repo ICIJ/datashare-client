@@ -7,13 +7,17 @@ defineProps({
 </script>
 
 <template>
-  <h3 class="page-settings-title">
+  <h5 class="page-settings-title">
     <slot>{{ title }}</slot>
-  </h3>
+  </h5>
 </template>
 
 <style lang="scss" scoped>
 .page-settings-title {
-  font-weight: bold;
+  color: var(--bs-body-color);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0;
 }
 </style>
