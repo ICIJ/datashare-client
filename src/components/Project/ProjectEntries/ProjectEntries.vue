@@ -13,12 +13,12 @@ const props = defineProps({
   layout: {
     type: String,
     validator: layoutValidator,
-    default: LAYOUTS.CARDS
+    default: LAYOUTS.GRID
   }
 })
 
 const is = computed(() => {
-  return props.layout === LAYOUTS.CARDS ? ProjectEntriesCards : ProjectEntriesTable
+  return props.layout === LAYOUTS.GRID ? ProjectEntriesCards : ProjectEntriesTable
 })
 </script>
 
