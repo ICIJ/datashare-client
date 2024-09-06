@@ -22,10 +22,9 @@ setup((app) => {
         offset: '16px'
       },
       BTooltip: {
-        noFade: true,
         offset: '6px',
         delay: {
-          show: 0,
+          show: 500,
           hide: 0
         }
       }
