@@ -1,3 +1,5 @@
+import { NumberFormat } from 'vue-i18n'
+
 export const routes = [
   {
     path: '/',
@@ -260,6 +262,8 @@ export const routes = [
               default: () => import('@/pages/ProjectNew')
             },
             meta: {
+              icon: 'plus',
+              title: 'Create project',
               allowedModes: ['LOCAL', 'EMBEDDED']
             }
           },
@@ -268,12 +272,24 @@ export const routes = [
             path: ':name',
             props: true,
             component: () => import('@/pages/ProjectView'),
+            meta: {
+              icon: null,
+              title({ route, core }) {
+                return core.findProject(route.params.name).label
+              }
+            },
             children: [
               {
                 name: 'project.view.insights',
                 path: '',
                 props: true,
-                component: () => import('@/pages/ProjectViewInsights')
+                component: () => import('@/pages/ProjectViewInsights'),
+                meta: {
+                  icon: 'chart-bar',
+                  title() {
+                    return 'Insights'
+                  }
+                }
               },
               {
                 name: 'project.view.edit',
@@ -281,6 +297,8 @@ export const routes = [
                 props: true,
                 component: () => import('@/pages/ProjectViewEdit'),
                 meta: {
+                  icon: 'pen',
+                  title: 'Edit project',
                   allowedModes: ['LOCAL', 'EMBEDDED']
                 }
               },
