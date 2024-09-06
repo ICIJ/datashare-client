@@ -72,7 +72,7 @@ const injectedSize = inject('size', SIZE.MD)
 
 const props = defineProps({
   iconLeft: {
-    type: String,
+    type: [String, Object, Array],
     default: null
   },
   iconLeftVariant: {
@@ -99,7 +99,7 @@ const props = defineProps({
     type: String
   },
   iconRight: {
-    type: String,
+    type: [String, Object, Array],
     default: null
   },
   iconRightVariant: {
