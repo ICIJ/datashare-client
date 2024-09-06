@@ -1,5 +1,5 @@
 <script setup>
-import { OFFCANVAS_PLACEMENTS, offcanvasPlacementValidator } from '@/enums/placements'
+import { OFFCANVAS_PLACEMENT, offcanvasPlacementValidator } from '@/enums/placements'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const modelValue = defineModel({ type: Boolean })
@@ -7,7 +7,7 @@ const modelValue = defineModel({ type: Boolean })
 defineProps({
   placement: {
     type: String,
-    default: OFFCANVAS_PLACEMENTS.END,
+    default: OFFCANVAS_PLACEMENT.END,
     validator: offcanvasPlacementValidator
   },
   title: {
@@ -19,11 +19,11 @@ defineProps({
 <template>
   <b-offcanvas
     v-model="modelValue"
-    class="page-offcanvas"
     :placement="placement"
-    hide-backdrop
     :title="title"
+    class="page-offcanvas"
     header-class="page-offcanvas__header"
+    hide-backdrop
   >
     <template #header="{ hide }">
       <h5 v-if="title" class="page-offcanvas__header__title m-0">{{ title }}</h5>
@@ -38,7 +38,9 @@ defineProps({
         @click="hide"
       />
     </template>
-    <slot />
+    <template #default="{ visible, hide }">
+      <slot v-bind="{ visible, placement, hide }" />
+    </template>
   </b-offcanvas>
 </template>
 
