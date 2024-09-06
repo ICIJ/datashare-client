@@ -4,6 +4,9 @@ import ProjectEntriesTableBody from './ProjectEntriesTableBody'
 
 import PageTable from '@/components/PageTable/PageTable'
 
+const sort = defineModel('sort', { type: String, default: null })
+const order = defineModel('order', { type: String, default: 'desc' })
+
 defineProps({
   projects: {
     type: Array
@@ -12,7 +15,7 @@ defineProps({
 </script>
 <template>
   <div class="project-entries-table container-fluid">
-    <page-table>
+    <page-table v-model:sort="sort" v-model:order="order">
       <template #colgroup>
         <col style="min-width: 200px" />
         <col style="min-width: 200px" />

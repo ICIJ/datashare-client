@@ -1,10 +1,14 @@
 <script setup>
+import { pickBy } from 'lodash'
 import { computed } from 'vue'
 
 import ProjectEntriesCards from './ProjectEntriesCards'
 import ProjectEntriesTable from './ProjectEntriesTable'
 
 import { LAYOUTS, layoutValidator } from '@/enums/layouts'
+
+defineModel('sort', { type: String, default: null })
+defineModel('order', { type: String, default: 'desc' })
 
 const props = defineProps({
   projects: {
@@ -17,13 +21,23 @@ const props = defineProps({
   }
 })
 
-const is = computed(() => {
+const component = computed(() => {
   return props.layout === LAYOUTS.GRID ? ProjectEntriesCards : ProjectEntriesTable
+})
+
+const componentProps = computed(() => {
+  return pickBy(props, (value, name) => {
+    return name in component.value.props
+  })
 })
 </script>
 
 <template>
-  <div class="project-entries">
-    <component :is="is" :projects="projects" />
-  </div>
+  <component
+    :is="component"
+    v-bind="componentProps"
+    class="project-entries"
+    @update:order="$emit('update:order', $event)"
+    @update:sort="$emit('update:sort', $event)"
+  />
 </template>
