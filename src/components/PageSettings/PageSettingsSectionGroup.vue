@@ -19,6 +19,8 @@
 <script setup>
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { PhCaretUp, PhCaretDown } from '@phosphor-icons/vue';
+
 defineOptions({
   name: 'PageSettingsSectionGroup'
 })
@@ -29,12 +31,13 @@ defineProps({
     default: 'Settings'
   }
 })
+
 const modelValue = defineModel({
   type: Boolean,
   default: true
 })
 
-const caretIcon = computed(() => (modelValue.value ? 'caret-up' : 'caret-down'))
+const caretIcon = computed(() => (modelValue.value ? PhCaretUp : PhCaretDown))
 
 function toggleSection() {
   modelValue.value = !modelValue.value
