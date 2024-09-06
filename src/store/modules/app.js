@@ -3,6 +3,9 @@ export const state = () => ({
   sidebar: {
     compact: false,
     closed: false
+  },
+  settings: {
+    closed: true
   }
 })
 
@@ -12,6 +15,9 @@ export const mutations = {
   },
   sidebarClosed(state, closed) {
     state.sidebar.closed = closed
+  },
+  settingsClosed(state, closed) {
+    state.settings.closed = closed
   },
   setRedirectAfterLogin(state, path = null) {
     if (!path || !path.startsWith('/login')) {
@@ -32,6 +38,12 @@ export const actions = {
       return commit('sidebarClosed', !state.sidebar.closed)
     }
     return commit('sidebarClosed', toggler)
+  },
+  toggleSettingsClosed({ state, commit }, toggler = null) {
+    if (toggler === null) {
+      return commit('settingsClosed', !state.settings.closed)
+    }
+    return commit('settingsClosed', toggler)
   },
   popRedirectAfterLogin({ state: { redirectAfterLogin }, commit }) {
     commit('setRedirectAfterLogin', null)
