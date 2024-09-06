@@ -1,5 +1,5 @@
 const TABLE = 'table'
-const CARDS = 'cards'
+const GRID = 'grid'
 
-export const LAYOUTS = Object.freeze({ TABLE, CARDS })
+export const LAYOUTS = Object.freeze({ TABLE, GRID })
 export const layoutValidator = (l) => Object.values(LAYOUTS).includes(l)
