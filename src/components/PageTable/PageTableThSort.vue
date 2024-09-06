@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { PhSortDescending, PhSortAscending } from '@phosphor-icons/vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -22,7 +23,7 @@ const classList = computed(() => {
 })
 
 const icon = computed(() => {
-  return props.order === 'desc' ? `sort-descending` : 'sort-ascending'
+  return props.order === 'desc' ? PhSortDescending : PhSortAscending
 })
 
 const toggleOrder = () => {
