@@ -52,7 +52,7 @@ export default {
 
 <template>
   <div class="project-new">
-    <page-header icon="database" :title="$t('projectNew.title')" :description="$t('projectNew.description')" />
+    <page-header no-toggle-settings />
     <div class="container">
       <div class="mx-1 mb-2 mt-3">
         <router-link :to="projectRoute">
