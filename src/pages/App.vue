@@ -10,43 +10,37 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted, onBeforeUnmount } from 'vue'
 import { get } from 'lodash'
 
 import AppSidebar from '@/components/AppSidebar/AppSidebar'
 import Hook from '@/components/Hook'
 import ScrollTracker from '@/components/ScrollTracker'
+import { useCore } from '@/composables/core'
 
-export default {
-  name: 'App',
-  components: {
-    AppSidebar,
-    Hook,
-    ScrollTracker
-  },
-  computed: {
-    signinUrl() {
-      return import.meta.env.VITE_DS_AUTH_SIGNIN
-    }
-  },
-  created() {
-    this.$core.on('http::error', this.handleHttpError)
-  },
-  beforeDestroy() {
-    this.$core.off('http::error', this.handleHttpError)
-  },
-  methods: {
-    handleHttpError(err) {
-      const code = get(err, 'request.response.status') || get(err, 'response.status')
-      if (code === 401) {
-        const body = this.$t('login.logout')
-        const linkLabel = this.$t('login.login')
-        const href = this.signinUrl
-        this.$toast.error(body, { href, linkLabel, autoClose: false })
-      }
-    }
+const { core } = useCore()
+
+const signinUrl = computed(() => import.meta.env.VITE_DS_AUTH_SIGNIN)
+
+// Function to handle HTTP errors
+const handleHttpError = (err) => {
+  const code = get(err, 'request.response.status') || get(err, 'response.status')
+  if (code === 401) {
+    const body = this.$t('login.logout')
+    const linkLabel = this.$t('login.login')
+    const href = signinUrl.value
+    this.$toast.error(body, { href, linkLabel, autoClose: false })
   }
 }
+
+onMounted(() => {
+  core.on('http::error', handleHttpError)
+})
+
+onBeforeUnmount(() => {
+  core.off('http::error', handleHttpError)
+})
 </script>
 
 <style lang="scss" scoped>
