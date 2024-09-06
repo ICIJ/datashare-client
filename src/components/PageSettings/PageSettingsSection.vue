@@ -15,7 +15,7 @@
         :name="name ?? defaultName"
         class="page-settings-section__input-group__input"
       >
-        <page-settings-entry :text="option.text ?? option.value" :icon="option.icon" />
+        <page-settings-entry :text="option.text ?? String(option.value)" :icon="option.icon" />
       </component>
     </component>
   </page-settings-section-group>
