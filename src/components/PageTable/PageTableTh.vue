@@ -13,7 +13,7 @@ const props = defineProps({
     required: true
   },
   icon: {
-    type: String
+    type: [String, Object, Array]
   },
   emphasis: {
     type: Boolean
