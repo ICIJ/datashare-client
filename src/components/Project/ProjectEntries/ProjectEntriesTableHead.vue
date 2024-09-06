@@ -10,7 +10,13 @@ const { t } = useI18n()
 <template>
   <page-table-th :label="t('projectEntriesTableHead.name')" :icon="PhCirclesThreePlus" emphasis sortable name="name" />
   <page-table-th :label="t('projectEntriesTableHead.description')" />
-  <page-table-th :label="t('projectEntriesTableHead.documents')" :icon="PhFiles" number />
+  <page-table-th
+    :label="t('projectEntriesTableHead.documents')"
+    :icon="PhFiles"
+    number
+    sortable
+    name="documentsCount"
+  />
   <page-table-th :label="t('projectEntriesTableHead.updatedOn')" :icon="PhCalendarBlank" />
   <page-table-th :label="t('projectEntriesTableHead.links')" hide-label />
   <page-table-th :label="t('projectEntriesTableHead.actions')" hide-label />

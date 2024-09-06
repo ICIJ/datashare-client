@@ -12,7 +12,9 @@ export const state = () => ({
     closed: true,
     views: {
       projectList: {
-        layout: LAYOUTS.TABLE
+        layout: LAYOUTS.TABLE,
+        orderBy: ['name', 'asc'],
+        perPage: 25
       }
     }
   }
