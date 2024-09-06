@@ -89,7 +89,21 @@ class Core extends Behaviors {
   useAll() {
     this.useVuex()
     this.useI18n()
-    this.useBootstrapVue()
+    this.useBootstrapVue({
+      directives: true,
+      components: {
+        BPopover: {
+          offset: '16px'
+        },
+        BTooltip: {
+          offset: '6px',
+          delay: {
+            show: 500,
+            hide: 0
+          }
+        }
+      }
+    })
     this.useCommons()
     this.useWait()
     this.useCore()
