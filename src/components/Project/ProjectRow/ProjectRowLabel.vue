@@ -14,7 +14,7 @@ defineProps({
 <template>
   <td class="project-row-label">
     <div class="d-flex gap-3 align-items-middle">
-      <project-row-thumbnail :project="project" rounded class="flex-shrink-0" />
+      <project-row-thumbnail :project="project" rounded class="flex-shrink-0 d-flex" />
       <project-link :project="project" hide-thumbnail class="fw-medium" />
     </div>
   </td>
