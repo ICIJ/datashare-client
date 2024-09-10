@@ -6,7 +6,7 @@
     :model-value="modelValue"
     :no-auto-close="noAutoClose"
     :placement="placement"
-    custom-class="document-download-popover"
+    custom-class="entity-popover"
     @update:modelValue="$emit('update:modelValue')"
   >
     <entity-popover-tab-group v-bind="mentionTabsProps" />
