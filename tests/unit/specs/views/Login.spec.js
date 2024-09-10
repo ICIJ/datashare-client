@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import Login from '@/pages/Login'
+import Login from '@/views/Login'
 
 describe('Login.vue', () => {
   let wrapper

@@ -4,7 +4,7 @@ import { removeCookie } from 'tiny-cookie'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import TaskBatchSearchViewResults from '@/pages/TaskBatchSearchViewResults'
+import TaskBatchSearchViewResults from '@/views/TaskBatchSearchViewResults'
 
 describe('TaskBatchSearchViewResults.vue', () => {
   const routes = [
