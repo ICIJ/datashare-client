@@ -1,5 +1,5 @@
 <script setup>
-import ProjectLabel from '@/components/Project/ProjectLabel'
+import ProjectLink from '@/components/Project/ProjectLink'
 
 defineProps({
   project: {
@@ -11,7 +11,7 @@ defineProps({
 
 <template>
   <h3 class="project-card-label text-dark-emphasis">
-    <project-label :project="project" hide-thumbnail />
+    <project-link :project="project" hide-thumbnail />
   </h3>
 </template>
 
