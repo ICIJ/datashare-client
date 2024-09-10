@@ -2,7 +2,7 @@ import { shallowMount, mount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Document from '@/api/resources/Document'
-import UserHistoryDocumentList from '@/pages/UserHistoryDocumentList'
+import UserHistoryDocumentList from '@/views/UserHistoryDocumentList'
 
 describe('UserHistoryDocumentList.vue', () => {
   const props = {

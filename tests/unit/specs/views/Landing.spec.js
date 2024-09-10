@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import Landing from '@/pages/Landing'
+import Landing from '@/views/Landing'
 
 describe('Landing.vue', () => {
   const { config, plugins } = CoreSetup.init().useAll()

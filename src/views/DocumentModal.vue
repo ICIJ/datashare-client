@@ -1,5 +1,5 @@
 <template>
-  <div class="document-standalone">
+  <div class="document-modal">
     <document-navbar v-bind="$props" />
     <document-view v-bind="$props" />
   </div>
@@ -7,10 +7,10 @@
 
 <script>
 import DocumentNavbar from '@/components/Document/DocumentNavbar'
-import DocumentView from '@/pages/DocumentView'
+import DocumentView from '@/views/DocumentView'
 
 export default {
-  name: 'DocumentStandalone',
+  name: 'DocumentModal',
   components: {
     DocumentNavbar,
     DocumentView
@@ -35,22 +35,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.document-standalone {
-  max-width: 1140px;
-  margin: 5vh auto;
-  border: $border-color 1px solid;
-  border-radius: $border-radius-lg;
-  box-shadow: $box-shadow-sm;
-
-  @media (max-width: #{1140px + $app-sidebar-reduced-width}) {
-    margin: 0 auto;
-    border: 0;
-  }
-
-  .document-navbar {
-    border-radius: $border-radius-lg $border-radius-lg 0 0;
-  }
-}
-</style>

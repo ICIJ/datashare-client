@@ -4,7 +4,7 @@ import { errors as esErrors } from 'elasticsearch-browser'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import Search from '@/pages/Search'
+import Search from '@/views/Search'
 import { state, getters, mutations } from '@/store/modules/search'
 
 describe('Search.vue', () => {

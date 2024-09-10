@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import UserHistory from '@/pages/UserHistory'
+import UserHistory from '@/views/UserHistory'
 
 describe('UserHistory.vue', () => {
   const routes = [
