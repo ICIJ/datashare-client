@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import Settings from '@/pages/Settings'
+import Settings from '@/views/Settings'
 
 describe('Settings.vue', () => {
   const { plugins } = CoreSetup.init().useAll()

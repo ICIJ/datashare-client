@@ -3,7 +3,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import TaskBatchSearchList from '@/pages/TaskBatchSearchList'
+import TaskBatchSearchList from '@/views/TaskBatchSearchList'
 
 describe('TaskBatchSearchList.vue', () => {
   const mockedBatchSearches = {

@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import UserHistorySavedSearchList from '@/pages/UserHistorySavedSearchList'
+import UserHistorySavedSearchList from '@/views/UserHistorySavedSearchList'
 
 const props = {
   events: [

@@ -4,7 +4,7 @@ import { setCookie, removeCookie } from 'tiny-cookie'
 import Auth from '@/api/resources/Auth'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { getMode } from '@/mode'
-import Error from '@/pages/Error'
+import Error from '@/views/Error'
 
 describe('Error.vue local mode', () => {
   let wrapper

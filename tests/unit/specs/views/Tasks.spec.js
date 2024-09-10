@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import Tasks from '@/pages/Tasks'
+import Tasks from '@/views/Tasks'
 
 describe('Tasks.vue', () => {
   const routes = [

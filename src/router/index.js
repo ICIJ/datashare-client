@@ -1,12 +1,12 @@
 export const routes = [
   {
     path: '/',
-    component: () => import('@/pages/App'),
+    component: () => import('@/views/App'),
     children: [
       {
         name: 'landing',
         path: '',
-        component: () => import('@/pages/Landing'),
+        component: () => import('@/views/Landing'),
         meta: {
           docs: [
             {
@@ -53,7 +53,7 @@ export const routes = [
           ]
         },
         components: {
-          default: () => import('@/pages/Search'),
+          default: () => import('@/views/Search'),
           sidebar: () => import('@/components/FiltersPanel/FiltersPanel')
         },
         children: [
@@ -61,7 +61,7 @@ export const routes = [
             name: 'document',
             path: 'd/:index/:id/:routing?',
             alias: 'e/:index/:id/:routing?',
-            component: () => import('@/pages/DocumentView'),
+            component: () => import('@/views/DocumentView'),
             props: true,
             meta: {
               title: ({ i18n }) => i18n.global.t('document.title'),
@@ -98,7 +98,7 @@ export const routes = [
       {
         name: 'tasks',
         path: 'tasks',
-        component: () => import('@/pages/Tasks'),
+        component: () => import('@/views/Tasks'),
         redirect: {
           name: 'task.batch-search.list'
         },
@@ -115,7 +115,7 @@ export const routes = [
           {
             name: 'task.analysis',
             path: 'analysis',
-            component: () => import('@/pages/TaskAnalysis'),
+            component: () => import('@/views/TaskAnalysis'),
             meta: {
               title: ({ i18n }) => i18n.global.t('indexing.title'),
               allowedModes: ['LOCAL', 'EMBEDDED']
@@ -124,7 +124,7 @@ export const routes = [
               {
                 name: 'task.analysis.list',
                 path: '',
-                component: () => import('@/pages/TaskAnalysisList'),
+                component: () => import('@/views/TaskAnalysisList'),
                 meta: {
                   title: ({ i18n }) => i18n.global.t('indexing.title'),
                   allowedModes: ['LOCAL', 'EMBEDDED'],
@@ -145,12 +145,12 @@ export const routes = [
           {
             name: 'task.batch-download',
             path: 'batch-download',
-            component: () => import('@/pages/TaskBatchDownload'),
+            component: () => import('@/views/TaskBatchDownload'),
             children: [
               {
                 name: 'task.batch-download.list',
                 path: '',
-                component: () => import('@/pages/TaskBatchDownloadList'),
+                component: () => import('@/views/TaskBatchDownloadList'),
                 meta: {
                   title: ({ i18n }) => i18n.global.t('batchDownload.title'),
                   docs: [
@@ -172,14 +172,14 @@ export const routes = [
             name: 'task.batch-search',
             path: 'batch-search',
             components: {
-              default: () => import('@/pages/TaskBatchSearch')
+              default: () => import('@/views/TaskBatchSearch')
             },
             children: [
               {
                 path: '',
                 name: 'task.batch-search.list',
                 components: {
-                  default: () => import('@/pages/TaskBatchSearchList')
+                  default: () => import('@/views/TaskBatchSearchList')
                 },
                 meta: {
                   title: ({ i18n }) => i18n.global.t('batchSearch.title'),
@@ -195,7 +195,7 @@ export const routes = [
                 name: 'task.batch-search.new',
                 path: 'new',
                 components: {
-                  default: () => import('@/pages/TaskBatchSearchNew')
+                  default: () => import('@/views/TaskBatchSearchNew')
                 },
                 meta: {
                   title: ({ i18n }) => i18n.global.t('newBatchSearch.title'),
@@ -211,7 +211,7 @@ export const routes = [
                 name: 'task.batch-search.view',
                 path: ':indices/:uuid',
                 components: {
-                  default: () => import('@/pages/TaskBatchSearchView')
+                  default: () => import('@/views/TaskBatchSearchView')
                 },
                 props: true,
                 children: [
@@ -219,7 +219,7 @@ export const routes = [
                     name: 'task.batch-search.view.results',
                     path: '',
                     props: true,
-                    component: () => import('@/pages/TaskBatchSearchViewResults')
+                    component: () => import('@/views/TaskBatchSearchViewResults')
                   }
                 ],
                 meta: {
@@ -238,15 +238,15 @@ export const routes = [
           title: 'Projects'
         },
         components: {
-          default: () => import('@/pages/Project'),
-          settings: () => import('@/pages/ProjectListSettings')
+          default: () => import('@/views/Project'),
+          settings: () => import('@/views/ProjectListSettings')
         },
         children: [
           {
             path: '',
             name: 'project.list',
             components: {
-              default: () => import('@/pages/ProjectList')
+              default: () => import('@/views/ProjectList')
             },
             meta: {
               icon: 'dots-nine',
@@ -257,7 +257,7 @@ export const routes = [
             name: 'project.new',
             path: 'new',
             components: {
-              default: () => import('@/pages/ProjectNew')
+              default: () => import('@/views/ProjectNew')
             },
             meta: {
               icon: 'plus',
@@ -269,7 +269,7 @@ export const routes = [
             name: 'project.view',
             path: ':name',
             props: true,
-            component: () => import('@/pages/ProjectView'),
+            component: () => import('@/views/ProjectView'),
             meta: {
               icon: null,
               title({ route, core }) {
@@ -281,7 +281,7 @@ export const routes = [
                 name: 'project.view.insights',
                 path: '',
                 props: true,
-                component: () => import('@/pages/ProjectViewInsights'),
+                component: () => import('@/views/ProjectViewInsights'),
                 meta: {
                   icon: 'chart-bar',
                   title() {
@@ -293,7 +293,7 @@ export const routes = [
                 name: 'project.view.edit',
                 path: 'edit',
                 props: true,
-                component: () => import('@/pages/ProjectViewEdit'),
+                component: () => import('@/views/ProjectViewEdit'),
                 meta: {
                   icon: 'pen',
                   title: 'Edit project',
@@ -312,7 +312,7 @@ export const routes = [
                 name: 'project.view.add-documents',
                 path: 'add-documents',
                 components: {
-                  default: () => import('@/pages/ProjectViewAddDocuments')
+                  default: () => import('@/views/ProjectViewAddDocuments')
                 },
                 meta: {
                   allowedModes: ['LOCAL', 'EMBEDDED']
@@ -322,7 +322,7 @@ export const routes = [
                 name: 'project.view.find-named-entities',
                 path: 'find-named-entities',
                 components: {
-                  default: () => import('@/pages/ProjectViewFindNamedEntities')
+                  default: () => import('@/views/ProjectViewFindNamedEntities')
                 },
                 meta: {
                   allowedModes: ['LOCAL', 'EMBEDDED']
@@ -335,7 +335,7 @@ export const routes = [
       {
         name: 'user-history',
         path: 'user-history',
-        component: () => import('@/pages/UserHistory'),
+        component: () => import('@/views/UserHistory'),
         redirect: {
           name: 'user-history.document.list'
         },
@@ -346,7 +346,7 @@ export const routes = [
           {
             name: 'user-history.document.list',
             path: 'document',
-            component: () => import('@/pages/UserHistoryDocumentList'),
+            component: () => import('@/views/UserHistoryDocumentList'),
             meta: {
               title: ({ i18n }) => i18n.global.t('userHistory.heading')
             }
@@ -360,7 +360,7 @@ export const routes = [
           {
             name: 'user-history.saved-search.list',
             path: 'saved-search',
-            component: () => import('@/pages/UserHistorySavedSearchList'),
+            component: () => import('@/views/UserHistorySavedSearchList'),
             meta: {
               title: ({ i18n }) => i18n.global.t('userHistory.heading')
             }
@@ -373,7 +373,7 @@ export const routes = [
         meta: {
           title: ({ i18n }) => i18n.global.t('server.title')
         },
-        component: () => import('@/pages/Settings')
+        component: () => import('@/views/Settings')
       },
       {
         name: 'document-standalone',
@@ -384,7 +384,7 @@ export const routes = [
         props(route) {
           return { ...route.params, ...route.query }
         },
-        component: () => import('@/pages/DocumentStandalone')
+        component: () => import('@/views/DocumentStandalone')
       }
     ]
   },
@@ -397,12 +397,12 @@ export const routes = [
     props(route) {
       return { ...route.params, ...route.query }
     },
-    component: () => import('@/pages/DocumentModal')
+    component: () => import('@/views/DocumentModal')
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/pages/Login'),
+    component: () => import('@/views/Login'),
     meta: {
       skipsAuth: true,
       title: 'Login'
@@ -411,7 +411,7 @@ export const routes = [
   {
     name: 'error',
     path: '/:pathMatch(.*)*',
-    component: () => import('@/pages/Error'),
+    component: () => import('@/views/Error'),
     props: true,
     meta: {
       skipsAuth: true,
