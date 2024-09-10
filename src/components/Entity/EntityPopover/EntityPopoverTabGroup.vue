@@ -45,3 +45,8 @@ const { t } = useI18n()
 const infoLabel = t('entityPopoverTabGroup.info')
 const mentionsLabel = t('entityPopoverTabGroup.mentions')
 </script>
+<style scoped lang="scss">
+.entity-popover-tab-group {
+  width: 306px;
+}
+</style>
