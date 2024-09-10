@@ -1,7 +1,7 @@
 <script setup>
 import ProjectRowThumbnail from './ProjectRowThumbnail'
 
-import ProjectLabel from '@/components/Project/ProjectLabel'
+import ProjectLink from '@/components/Project/ProjectLink'
 
 defineProps({
   project: {
@@ -15,7 +15,7 @@ defineProps({
   <td class="project-row-label">
     <div class="d-flex gap-3 align-items-middle">
       <project-row-thumbnail :project="project" rounded class="flex-shrink-0" />
-      <project-label :project="project" hide-thumbnail class="fw-medium" />
+      <project-link :project="project" hide-thumbnail class="fw-medium" />
     </div>
   </td>
 </template>
