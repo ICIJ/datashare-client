@@ -73,6 +73,14 @@ const sortBy = ref({
       text: 'Name (Z to A)'
     },
     {
+      value: ['updateDate', 'asc'],
+      text: 'Latest update (new)'
+    },
+    {
+      value: ['updateDate', 'desc'],
+      text: 'Latest update (old)'
+    },
+    {
       value: ['documentsCount', 'desc'],
       text: 'Documents (increasing)'
     },
