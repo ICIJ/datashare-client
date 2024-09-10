@@ -1,7 +1,7 @@
 <script setup>
 import Fuse from 'fuse.js'
 import { orderBy as orderArrayBy, property } from 'lodash'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
@@ -50,8 +50,8 @@ const fetchMaxExtractionDateByProject = async () => {
   buckets.forEach(({ key, maxExtractionDate }) => (maxExtractionDateByProject.value[key] = maxExtractionDate.value))
 }
 
-onMounted(fetchDocumentsCountByProject)
-onMounted(fetchMaxExtractionDateByProject)
+onBeforeMount(fetchDocumentsCountByProject)
+onBeforeMount(fetchMaxExtractionDateByProject)
 
 const extendedProjects = computed(() => {
   return core.projects.map((project) => {
