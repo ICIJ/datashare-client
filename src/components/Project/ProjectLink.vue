@@ -30,7 +30,7 @@ const is = computed(() => {
 
 const to = computed(() => {
   const name = props.project.name ?? props.project
-  return { name: 'project.view', params: { name } }
+  return { name: 'project.view.insights', params: { name } }
 })
 </script>
 
