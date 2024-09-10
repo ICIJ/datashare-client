@@ -28,28 +28,55 @@ const fetchDocumentsCountByProject = async () => {
   buckets.forEach(({ key, doc_count: count }) => (documentsCountByProject.value[key] = count))
 }
 
+const maxExtractionDateByProject = ref({})
+
+const fetchMaxExtractionDateByProject = async () => {
+  const index = core.projectIds.join(',')
+  const size = 1000
+  const aggs = {
+    index: {
+      terms: { field: '_index', size },
+      aggs: {
+        maxExtractionDate: { max: { field: 'extractionDate' } }
+      }
+    }
+  }
+  const query = { match: { type: 'Document' } }
+  const body = { size: 0, query, aggs }
+  const preference = 'max-extraction-date-by-project'
+  const { aggregations } = await core.api.elasticsearch._search({ index, body, preference })
+  const buckets = aggregations?.index?.buckets ?? []
+  // Finally we store the max extraction date by project
+  buckets.forEach(({ key, maxExtractionDate }) => (maxExtractionDateByProject.value[key] = maxExtractionDate.value))
+}
+
 onMounted(fetchDocumentsCountByProject)
+onMounted(fetchMaxExtractionDateByProject)
+
+const extendedProjects = computed(() => {
+  return core.projects.map((project) => {
+    const documentsCount = documentsCountByProject.value?.[project.name]
+    const updateDate = maxExtractionDateByProject.value?.[project.name]
+    return { ...project, documentsCount, updateDate }
+  })
+})
 
 const fuse = computed(() => {
   const keys = ['name', 'label']
   const options = { shouldSort: false, keys }
-  return new Fuse(core.projects, options)
+  return new Fuse(extendedProjects.value, options)
 })
 
 const filteredProjects = computed(() => {
   if (searchQuery.value) {
     return fuse.value.search(searchQuery.value).map(property('item'))
   }
-  return core.projects
+  return extendedProjects.value
 })
 
 const sortedProjects = computed(() => {
   const [sort, order] = orderBy.value
-  const extended = filteredProjects.value.map((project) => {
-    const documentsCount = documentsCountByProject.value[project.name] ?? 0
-    return { ...project, documentsCount }
-  })
-  return orderArrayBy(extended, sort, order)
+  return orderArrayBy(filteredProjects.value, sort, order)
 })
 
 const projects = computed(() => {
