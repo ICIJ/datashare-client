@@ -17,7 +17,7 @@ const { t } = useI18n()
     sortable
     name="documentsCount"
   />
-  <page-table-th :label="t('projectEntriesTableHead.updatedOn')" :icon="PhCalendarBlank" />
+  <page-table-th :label="t('projectEntriesTableHead.updatedOn')" :icon="PhCalendarBlank" sortable name="updateDate" />
   <page-table-th :label="t('projectEntriesTableHead.links')" hide-label />
   <page-table-th :label="t('projectEntriesTableHead.actions')" hide-label />
 </template>
