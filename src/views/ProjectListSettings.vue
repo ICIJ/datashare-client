@@ -1,9 +1,10 @@
 <script setup>
 import { noop } from 'lodash'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 import { LAYOUTS } from '@/enums/layouts'
 import { useCore } from '@/composables/core'
+import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 
@@ -13,7 +14,7 @@ const layout = ref({
   label: 'View',
   type: 'radio',
   open: true,
-  modelValue: computed({
+  modelValue: useUrlParamWithStore('layout', {
     get: () => core?.store.getters['app/getSettings']('projectList', 'layout'),
     set: (layout) => core?.store.commit('app/setSettings', { view: 'projectList', layout })
   }),
@@ -35,7 +36,7 @@ const perPage = ref({
   label: 'Projects per page',
   type: 'radio',
   open: true,
-  modelValue: computed({
+  modelValue: useUrlParamWithStore('perPage', {
     get: () => core?.store.getters['app/getSettings']('projectList', 'perPage'),
     set: (perPage) => core?.store.commit('app/setSettings', { view: 'projectList', perPage })
   }),
@@ -59,9 +60,9 @@ const sortBy = ref({
   label: 'Sort by',
   type: 'radio',
   open: true,
-  modelValue: computed({
+  modelValue: useUrlParamsWithStore(['sort', 'order'], {
     get: () => core?.store.getters['app/getSettings']('projectList', 'orderBy'),
-    set: (orderBy) => core?.store.commit('app/setSettings', { view: 'projectList', orderBy })
+    set: (sort, order) => core?.store.commit('app/setSettings', { view: 'projectList', orderBy: [sort, order] })
   }),
   options: [
     {
@@ -81,11 +82,11 @@ const sortBy = ref({
       text: 'Latest update (old)'
     },
     {
-      value: ['documentsCount', 'desc'],
+      value: ['documentsCount', 'asc'],
       text: 'Documents (increasing)'
     },
     {
-      value: ['documentsCount', 'asc'],
+      value: ['documentsCount', 'desc'],
       text: 'Documents (decreasing)'
     }
   ]
