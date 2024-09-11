@@ -29,6 +29,11 @@ export default {
       control: {
         type: 'boolean'
       }
+    },
+    noKeyboardShortcuts: {
+      control: {
+        type: 'boolean'
+      }
     }
   },
   render: (args) => ({
@@ -49,7 +54,9 @@ export const Default = {
     compact: false,
     noHelp: false,
     noRemoveAll: false,
-    noSignOut: true
+    noSignOut: true,
+    noSettings: true,
+    noKeyboardShortcuts: true
   }
 }
 
