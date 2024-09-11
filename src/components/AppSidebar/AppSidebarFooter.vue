@@ -20,6 +20,9 @@ const props = defineProps({
   },
   noSignOut: {
     type: Boolean
+  },
+  noKeyboardShortcuts: {
+    type: Boolean
   }
 })
 
@@ -38,13 +41,33 @@ const classList = computed(() => {
 
 <template>
   <footer class="app-sidebar-footer" :class="classList">
-    <div class="app-sidebar-footer__logo">
-      <img src="@/assets/images/logo-color-symbol.svg" alt="Datashare" class="img-fluid" />
-    </div>
-    <div class="app-sidebar-footer__content">
-      <slot />
+    <div class="app-sidebar-footer__lead">
+      <div class="app-sidebar-footer__lead__logo">
+        <img src="@/assets/images/logo-color-symbol.svg" alt="Datashare" class="img-fluid" />
+      </div>
+      <div class="app-sidebar-footer__lead__version">
+        <slot />
+      </div>
+      <a
+        v-if="!noKeyboardShortcuts && !compact"
+        v-b-tooltip.body
+        title="Keyboard Shortcuts"
+        class="app-sidebar-footer__links__item ms-auto"
+      >
+        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
+        <span class="visually-hidden">Keyboard Shortcut</span>
+      </a>
     </div>
     <div class="app-sidebar-footer__links">
+      <a
+        v-if="!noKeyboardShortcuts && compact"
+        v-b-tooltip.body
+        title="Keyboard Shortcuts"
+        class="app-sidebar-footer__links__item"
+      >
+        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
+        <span class="visually-hidden">Keyboard Shortcut</span>
+      </a>
       <router-link v-b-tooltip.body :to="{ name: 'settings' }" title="Settings" class="app-sidebar-footer__links__item">
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="gear" hover-weight="bold" />
         <span class="visually-hidden">Settings</span>
@@ -89,15 +112,17 @@ const classList = computed(() => {
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  gap: $spacer;
   padding: $spacer;
 
   &--compact {
     flex-direction: column;
 
     .app-sidebar-footer__links__item,
-    .app-sidebar-footer__content,
-    .app-sidebar-footer__logo {
+    .app-sidebar-footer__lead__version,
+    .app-sidebar-footer__lead__logo {
       margin: 0;
     }
 
@@ -111,25 +136,36 @@ const classList = computed(() => {
       }
     }
 
-    .app-sidebar-footer__content {
-      margin-top: $spacer;
+    .app-sidebar-footer__lead {
+      display: block;
+      margin: auto;
+
+      &__version {
+        width: 100%;
+        margin-top: $spacer;
+      }
     }
   }
 
-  &__logo {
-    height: calc(#{$line-height-base * 1em} + #{$spacer-xxs * 2});
-    line-height: $line-height-base * 1em;
-    margin-right: $spacer-xxs;
+  &__lead {
+    display: flex;
+    text-align: center;
 
-    img {
-      height: 100%;
+    &__logo {
+      height: calc(#{$line-height-base * 1em} + #{$spacer-xxs * 2});
+      line-height: $line-height-base * 1em;
+      margin-right: $spacer-xxs;
+
+      img {
+        height: 100%;
+      }
     }
-  }
 
-  &__content {
-    font-weight: 400;
-    padding: $spacer-xxs;
-    margin-right: $spacer;
+    &__version {
+      font-weight: 400;
+      padding: $spacer-xxs;
+      margin-right: $spacer;
+    }
   }
 
   &__links {
