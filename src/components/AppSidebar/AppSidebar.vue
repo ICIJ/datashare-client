@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AppSidebarFooter from './AppSidebarFooter'
@@ -9,12 +9,15 @@ import AppSidebarToggler from './AppSidebarToggler'
 import AppSidebarClose from './AppSidebarClose'
 
 import { Api } from '@/api'
+import { useBreakpoints } from '@/composables/breakpoints'
 import { useCore } from '@/composables/core'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
+import { SIZE } from '@/enums/sizes'
 import settings from '@/utils/settings'
 
 const { core } = useCore()
+const { breakpointDown } = useBreakpoints()
 const { t } = useI18n()
 
 const projects = computed(() => {
@@ -22,7 +25,8 @@ const projects = computed(() => {
 })
 
 const compact = computed({
-  get: () => core.store.state.app.sidebar.compact,
+  // Compact mode is always disabled on screen smaller than MD
+  get: () => !breakpointDown.value[SIZE.MD] && core.store.state.app.sidebar.compact,
   set: (value) => core.store.dispatch('app/toggleSidebarCompact', value)
 })
 
@@ -31,10 +35,21 @@ const closed = computed({
   set: (value) => core.store.dispatch('app/toggleSidebarClosed', value)
 })
 
+// Watch the current breadpoint state to
+// automaticaly close the sidebar if it's
+// not closed already on screens smaller than MD
+watch(
+  () => breakpointDown.value[SIZE.MD],
+  (downMd) => {
+    closed.value = !closed.value && downMd
+  }
+)
+
 const classList = computed(() => {
   return {
     'app-sidebar--compact': compact.value,
-    'app-sidebar--closed': closed.value
+    'app-sidebar--closed': closed.value,
+    'app-sidebar--full-width': breakpointDown.value[SIZE.MD]
   }
 })
 
@@ -67,7 +82,7 @@ const noAnalysis = computed(() => {
   <div class="app-sidebar" :class="classList">
     <div class="flex-grow-1 p-3">
       <div class="d-flex justify-content-between">
-        <app-sidebar-toggler v-model:active="compact" />
+        <app-sidebar-toggler v-model:active="compact" class="d-none d-md-block" />
         <app-sidebar-close v-if="!compact" v-model:active="closed" />
       </div>
       <div class="py-4 d-flex flex-column gap-3">
@@ -139,6 +154,7 @@ const noAnalysis = computed(() => {
 
 <style lang="scss" scoped>
 .app-sidebar {
+  z-index: $zindex-sticky;
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
   flex: 0 0 310px;
@@ -160,6 +176,15 @@ const noAnalysis = computed(() => {
 
   &--closed {
     display: none;
+  }
+
+  &--full-width {
+    max-width: 100%;
+    width: 100%;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
   }
 }
 </style>
