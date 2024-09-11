@@ -154,7 +154,7 @@ const noAnalysis = computed(() => {
 
 <style lang="scss" scoped>
 .app-sidebar {
-  z-index: $zindex-sticky;
+  z-index: $zindex-offcanvas + 1;
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
   flex: 0 0 310px;
