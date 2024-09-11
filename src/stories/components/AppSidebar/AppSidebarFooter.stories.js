@@ -55,8 +55,8 @@ export const Default = {
     noHelp: false,
     noRemoveAll: false,
     noSignOut: true,
-    noSettings: true,
-    noKeyboardShortcuts: true
+    noSettings: false,
+    noKeyboardShortcuts: false
   }
 }
 
