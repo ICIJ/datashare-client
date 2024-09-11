@@ -2,7 +2,7 @@
 import { pickBy } from 'lodash'
 import { computed } from 'vue'
 
-import ProjectEntriesCards from './ProjectEntriesCards'
+import ProjectEntriesGrid from './ProjectEntriesGrid'
 import ProjectEntriesTable from './ProjectEntriesTable'
 
 import { LAYOUTS, layoutValidator } from '@/enums/layouts'
@@ -22,7 +22,7 @@ const props = defineProps({
 })
 
 const component = computed(() => {
-  return props.layout === LAYOUTS.GRID ? ProjectEntriesCards : ProjectEntriesTable
+  return props.layout === LAYOUTS.GRID ? ProjectEntriesGrid : ProjectEntriesTable
 })
 
 const componentProps = computed(() => {
