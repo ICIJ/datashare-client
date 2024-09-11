@@ -21,6 +21,9 @@ const props = defineProps({
   noSignOut: {
     type: Boolean
   },
+  noSettings: {
+    type: Boolean
+  },
   noKeyboardShortcuts: {
     type: Boolean
   }
@@ -68,7 +71,13 @@ const classList = computed(() => {
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
         <span class="visually-hidden">Keyboard Shortcut</span>
       </a>
-      <router-link v-b-tooltip.body :to="{ name: 'settings' }" title="Settings" class="app-sidebar-footer__links__item">
+      <router-link
+        v-if="!noSettings"
+        v-b-tooltip.body
+        :to="{ name: 'settings' }"
+        title="Settings"
+        class="app-sidebar-footer__links__item"
+      >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="gear" hover-weight="bold" />
         <span class="visually-hidden">Settings</span>
       </router-link>
