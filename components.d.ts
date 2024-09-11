@@ -368,6 +368,7 @@ declare module 'vue' {
     ProjectDropdownSelectorSearch: typeof import('./src/components/Project/ProjectDropdownSelector/ProjectDropdownSelectorSearch.vue')['default']
     ProjectEntries: typeof import('./src/components/Project/ProjectEntries/ProjectEntries.vue')['default']
     ProjectEntriesCards: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesCards.vue')['default']
+    ProjectEntriesGrid: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesGrid.vue')['default']
     ProjectEntriesRows: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesRows.vue')['default']
     ProjectEntriesTable: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesTable.vue')['default']
     ProjectEntriesTableBody: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesTableBody.vue')['default']
