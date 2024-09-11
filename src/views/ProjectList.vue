@@ -5,16 +5,22 @@ import { computed, ref, onBeforeMount } from 'vue'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
+import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useCore } from '@/composables/core'
 
 const { core } = useCore()
 
-const searchQuery = ref('')
+const searchQuery = useUrlParam('q', '')
 
-const page = ref(1)
+const page = useUrlParam('page', {
+  transform: (value) => parseInt(value),
+  initialValue: 1
+})
 
-const perPage = computed(() => {
-  return core?.store.getters['app/getSettings']('projectList', 'perPage')
+const perPage = useUrlParamWithStore('perPage', {
+  transform: (value) => parseInt(value),
+  get: () => core?.store.getters['app/getSettings']('projectList', 'perPage'),
+  set: (value) => core?.store.commit('app/setSettings', { view: 'projectList', perPage: parseInt(value) })
 })
 
 const documentsCountByProject = ref({})
@@ -84,22 +90,24 @@ const projects = computed(() => {
   return sortedProjects.value.slice(start, start + perPage.value)
 })
 
-const layout = computed(() => {
-  return core?.store.getters['app/getSettings']('projectList', 'layout')
+const layout = useUrlParamWithStore('layout', {
+  get: () => core?.store.getters['app/getSettings']('projectList', 'layout'),
+  set: (layout) => core?.store.commit('app/setSettings', { view: 'projectList', layout })
 })
 
-const orderBy = computed(() => {
-  return core?.store.getters['app/getSettings']('projectList', 'orderBy')
+const orderBy = useUrlParamsWithStore(['sort', 'order'], {
+  get: () => core?.store.getters['app/getSettings']('projectList', 'orderBy'),
+  set: (sort, order) => core?.store.commit('app/setSettings', { view: 'projectList', orderBy: [sort, order] })
 })
 
 const sort = computed({
   get: () => orderBy.value?.[0],
-  set: (value) => core?.store.commit('app/setSettings', { view: 'projectList', orderBy: [value, order.value] })
+  set: (value) => (orderBy.value = [value, order.value])
 })
 
 const order = computed({
   get: () => orderBy.value?.[1],
-  set: (value) => core?.store.commit('app/setSettings', { view: 'projectList', orderBy: [sort.value, value] })
+  set: (value) => (orderBy.value = [sort.value, value])
 })
 </script>
 
