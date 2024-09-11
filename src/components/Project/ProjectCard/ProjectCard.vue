@@ -32,7 +32,7 @@ defineProps({
         <project-card-update-date :project="project">
           <slot name="update-date" />
         </project-card-update-date>
-        <project-card-documents-count :project="project" class="ms-lg-auto" >
+        <project-card-documents-count :project="project" class="ms-lg-auto">
           <slot name="documents-count" />
         </project-card-documents-count>
       </div>
