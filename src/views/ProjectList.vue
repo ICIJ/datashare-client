@@ -18,7 +18,7 @@ const page = useUrlParam('page', {
 })
 
 const perPage = useUrlParamWithStore('perPage', {
-  transform: (value) => parseInt(value),
+  transform: (value) => Math.max(10, parseInt(value)),
   get: () => core?.store.getters['app/getSettings']('projectList', 'perPage'),
   set: (value) => core?.store.commit('app/setSettings', { view: 'projectList', perPage: parseInt(value) })
 })

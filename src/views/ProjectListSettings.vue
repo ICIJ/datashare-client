@@ -37,6 +37,7 @@ const perPage = ref({
   type: 'radio',
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
+    transform: (value) => Math.max(10, parseInt(value)),
     get: () => core?.store.getters['app/getSettings']('projectList', 'perPage'),
     set: (perPage) => core?.store.commit('app/setSettings', { view: 'projectList', perPage })
   }),
