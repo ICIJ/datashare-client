@@ -46,8 +46,12 @@ html {
 }
 
 body {
-  overflow-x: hidden;
-  max-width: 100vw;
+  overflow: auto;
+
+  // Disable overflow scrollbar when the sidebar is in full width and not closed
+  &:has(.app-sidebar--full-width:not(.app-sidebar--closed)) {
+    overflow: hidden;
+  }
 }
 
 @keyframes rotateLogo {
