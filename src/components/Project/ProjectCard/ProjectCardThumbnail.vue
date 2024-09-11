@@ -18,10 +18,14 @@ defineProps({
 <style lang="scss">
 .project-card-thumbnail {
   max-width: 90px;
-  width: 20%;
+  width: 100%;
+
+  @include media-breakpoint-down(md) {
+    max-width: 60px;
+  }
 
   @include media-breakpoint-down(sm) {
-    display: none;
+    max-width: 40px;
   }
 }
 </style>
