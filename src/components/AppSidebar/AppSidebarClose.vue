@@ -42,5 +42,9 @@ const variant = computed(() => {
   &.btn-light {
     --bs-btn-bg: #fff;
   }
+
+  &.btn-primary {
+    --bs-btn-color: #fff;
+  }
 }
 </style>
