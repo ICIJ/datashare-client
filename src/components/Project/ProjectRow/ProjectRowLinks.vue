@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
 const props = defineProps({
   project: {
@@ -26,7 +27,7 @@ const toProjectSearch = computed(() => ({
 </script>
 
 <template>
-  <td class="project-row-link">
+  <page-table-td-actions class="project-row-actions">
     <div class="d-flex gap-3">
       <slot>
         <button-icon
@@ -49,5 +50,5 @@ const toProjectSearch = computed(() => ({
         />
       </slot>
     </div>
-  </td>
+  </page-table-td-actions>
 </template>
