@@ -39,6 +39,10 @@ const classList = computed(() => {
 .page-container {
   @include make-container($spacer * 4);
 
+  &--fluid {
+    max-width: 100vw;
+  }
+
   &--compact {
     --bs-gutter-x: #{$spacer * 2};
   }
