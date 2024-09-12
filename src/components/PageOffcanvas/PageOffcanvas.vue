@@ -1,10 +1,14 @@
 <script setup>
+import { computed } from 'vue'
+
 import { OFFCANVAS_PLACEMENT, offcanvasPlacementValidator } from '@/enums/placements'
+import { useBreakpoints } from '@/composables/breakpoints'
+import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const modelValue = defineModel({ type: Boolean })
 
-defineProps({
+const props = defineProps({
   placement: {
     type: String,
     default: OFFCANVAS_PLACEMENT.END,
@@ -12,6 +16,23 @@ defineProps({
   },
   title: {
     type: String
+  },
+  compactBreakpoint: {
+    type: String,
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
+  }
+})
+
+const { breakpointDown } = useBreakpoints()
+
+const compact = computed(() => {
+  return breakpointDown.value[props.compactBreakpoint]
+})
+
+const classList = computed(() => {
+  return {
+    'page-offcanvas--compact': compact.value
   }
 })
 </script>
@@ -21,6 +42,7 @@ defineProps({
     v-model="modelValue"
     :placement="placement"
     :title="title"
+    :class="classList"
     class="page-offcanvas"
     header-class="page-offcanvas__header"
   >
@@ -43,8 +65,12 @@ defineProps({
   </b-offcanvas>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .page-offcanvas {
+  &--compact.offcanvas {
+    --bs-offcanvas-padding-x: #{$spacer};
+  }
+
   &__header {
     &__title {
       color: var(--bs-body-color);
