@@ -18,7 +18,7 @@ export default {
       using our default grid system. We enhanced it with some responsive horiztonal padding
       so they can use a small amount of space on the sides of the screen depending of
       the given "compactBreakpoint" property.
-    `
+    `.replace(/\n+/g, ' ')
   },
   parameters: {
     slots: {
