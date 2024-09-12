@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-import { BCardBody, BCardFooter } from 'bootstrap-vue-next'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectForm from '@/components/Project/ProjectForm'
