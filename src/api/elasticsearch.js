@@ -203,6 +203,20 @@ export function datasharePlugin(Client) {
     const preference = 'count-by-project'
     return this._search({ index, body, preference })
   }
+
+  Client.prototype.maxExtractionDateByProject = function (index, query = undefined, size = 1000) {
+    const aggs = {
+      index: {
+        terms: { field: '_index', size },
+        aggs: {
+          maxExtractionDate: { max: { field: 'extractionDate' } }
+        }
+      }
+    }
+    const body = { size: 0, query, aggs }
+    const preference = 'max-extraction-date-by-project'
+    return this._search({ index, body, preference })
+  }
 }
 
 const elasticsearch = new es.Client({
