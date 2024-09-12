@@ -28,7 +28,7 @@ const humanDocumentsCount = computed(() => {
   >
     <slot>
       <phosphor-icon name="files" class="me-1" />
-      {{ $t('projectCardDocumentsCount.label', { humanDocumentsCount }) }}
+      {{ $tc('projectCardDocumentsCount.label', project.documentsCount, { humanDocumentsCount }) }}
     </slot>
   </div>
 </template>
