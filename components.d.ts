@@ -278,6 +278,7 @@ declare module 'vue' {
     FormControlTagInput: typeof import('./src/components/Form/FormControl/FormControlTag/FormControlTagInput.vue')['default']
     FormControlTagInputEntry: typeof import('./src/components/Form/FormControl/FormControlTag/FormControlTagInputEntry.vue')['default']
     FormControlTerm: typeof import('./src/components/Form/FormControl/FormControlTerm.vue')['default']
+    FormFieldset: typeof import('./src/components/Form/FormFieldset/FormFieldset.vue')['default']
     FormStep: typeof import('./src/components/Form/FormStep/FormStep.vue')['default']
     FormStepContent: typeof import('./src/components/Form/FormStep/FormStepContent.vue')['default']
     FormStepGroup: typeof import('./src/components/Form/FormStepGroup/FormStepGroup.vue')['default']
