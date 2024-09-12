@@ -21,6 +21,8 @@ export function useCore() {
     // `proxy.$core` gives us access to the global `$core` object provided by the "core" plugin.
     core: proxy.$core,
     // `proxy.$toast` gives us access to the global `$toast` object provided by the "core" plugin.
-    toast: proxy.$toast
+    toast: proxy.$toast,
+    // `proxy.$wait` gives us access to the global `$wait` object provided by the "core" plugin
+    wait: proxy.$wait
   }
 }
