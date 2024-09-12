@@ -322,6 +322,7 @@ declare module 'vue' {
     NavigationBreadcrumbLink: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumbLink.vue')['default']
     NavigationTabs: typeof import('./src/components/NavigationTabs/NavigationTabs.vue')['default']
     NavigationTabsEntry: typeof import('./src/components/NavigationTabs/NavigationTabsEntry.vue')['default']
+    PageContainer: typeof import('./src/components/PageContainer/PageContainer.vue')['default']
     PageHeader: typeof import('./src/components/PageHeader/PageHeader.vue')['default']
     PageIcon: typeof import('./src/components/PageIcon.vue')['default']
     PageOffcanvas: typeof import('./src/components/PageOffcanvas/PageOffcanvas.vue')['default']
