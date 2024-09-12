@@ -33,7 +33,7 @@ const toProjectSearch = computed(() => ({
         icon-left="chart-bar"
         variant="outline-tertiary"
         truncate
-        class="fw-medium"
+        class="project-card-footer__insights"
         :label="$t('projectCardFooter.insights')"
       />
       <button-icon
@@ -41,9 +41,19 @@ const toProjectSearch = computed(() => ({
         icon-left="magnifying-glass"
         variant="outline-primary"
         truncate
-        class="fw-medium"
+        class="project-card-footer__search"
         :label="$t('projectCardFooter.search')"
       />
     </slot>
   </div>
 </template>
+
+<style lang="scss">
+.project-card-footer {
+  &__insights,
+  &__search {
+    --bs-btn-font-weight: 500;
+    --bs-btn-bg: var(--bs-white);
+  }
+}
+</style>
