@@ -820,7 +820,9 @@
     "supportDesk": "If you need any help, please visit our support desk:",
     "askHelp": "Ask for help",
     "logout": "You have been logged out from Datashare.",
-    "login": "Login"
+    "login": "Login",
+    "switchLanguage": "Switch language",
+    "tagline": "ICIJ search and discovery platform"
   },
   "loginLocaleDropdownSelector": {
     "label": "Switch language:"
