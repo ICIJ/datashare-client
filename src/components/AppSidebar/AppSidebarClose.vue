@@ -45,6 +45,7 @@ const variant = computed(() => {
 
   &.btn-primary {
     --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
   }
 }
 </style>
