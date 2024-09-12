@@ -99,7 +99,7 @@ const showToggleSidebar = computed(() => {
         </slot>
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-wrap gap-3">
+    <div v-if="filterable || paginable || searchable" class="d-flex justify-content-between flex-wrap gap-3">
       <slot name="toggle-filters">
         <button-toggle-filters
           v-if="filterable"
