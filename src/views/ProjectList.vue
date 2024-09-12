@@ -69,7 +69,7 @@ const extendedProjects = computed(() => {
 
 const fuse = computed(() => {
   const keys = ['name', 'label']
-  const options = { shouldSort: false, keys }
+  const options = { shouldSort: false, threshold: 0.1, keys }
   return new Fuse(extendedProjects.value, options)
 })
 
