@@ -42,7 +42,10 @@ watch(
   () => breakpointDown.value[SIZE.MD],
   (downMd) => {
     closed.value = !closed.value && downMd
-  }
+  },
+  // Eager watcher to trigger the callback immediately
+  // when the component is mounted.
+  { immediate: true }
 )
 
 const classList = computed(() => {
