@@ -4,7 +4,7 @@ import { get, uniqueId } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
-import ProjectForm from '@/components/ProjectForm'
+import ProjectForm from '@/components/Project/ProjectForm'
 import { useCore } from '@/composables/core'
 
 const OPERATION = Object.freeze({ DELETE: 'delete', UPDATE: 'update' })
