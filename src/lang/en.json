@@ -1329,7 +1329,7 @@
     "label": "Updated:"
   },
   "projectCardDocumentsCount": {
-    "label": "{humanDocumentsCount} documents"
+    "label": "No documents | 1 document | {humanDocumentsCount} documents"
   },
   "projectCardFooter": {
     "insights": "See insights",
