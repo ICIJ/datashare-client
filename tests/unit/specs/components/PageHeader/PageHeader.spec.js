@@ -10,7 +10,8 @@ describe('PageHeader.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(PageHeader, {
       global: {
-        plugins
+        plugins,
+        renderStubDefaultSlot: true
       }
     })
   })
