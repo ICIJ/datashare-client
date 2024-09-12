@@ -8,7 +8,7 @@
       <button-icon :label="loginLabel" :to="signinRoute" icon-left="user" @click="image.shake()" />
     </div>
     <div class="view-login__help d-flex flex-column align-items-center justify-content-end gap-2">
-      <button-icon :label="askHelpLabel" :to="helpRoute" variant="outline-secondary" @click="image.shake()" />
+      <button-icon :label="askHelpLabel" tag="a" :href="helpLink" variant="outline-secondary" @click="image.shake()" />
       <div class="d-flex align-items-center gap-2">
         <span>{{ switchLanguageLabel }}</span
         ><locales-menu class="px-2" />
@@ -36,7 +36,6 @@ const { core } = useCore()
 const signinUrl = import.meta.env.VITE_DS_AUTH_SIGNIN
 const signinRoute = computed(() => ({ path: signinUrl }))
 const helpLink = core.vue.config.globalProperties.$config.get('helpLink', settings.helpLink)
-const helpRoute = computed(() => ({ path: helpLink }))
 </script>
 <style scoped lang="scss">
 .view-login {
