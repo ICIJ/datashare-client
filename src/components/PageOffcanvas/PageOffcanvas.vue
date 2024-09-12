@@ -69,6 +69,7 @@ const classList = computed(() => {
 .page-offcanvas {
   &--compact.offcanvas {
     --bs-offcanvas-padding-x: #{$spacer};
+    --bs-offcanvas-width: 100%;
   }
 
   &__header {
