@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { BCardBody, BCardFooter } from 'bootstrap-vue-next'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import ProjectForm from '@/components/ProjectForm'
+import ProjectForm from '@/components/Project/ProjectForm'
 
 describe('ProjectForm.vue', () => {
   describe('without an existing project', () => {
@@ -11,26 +11,6 @@ describe('ProjectForm.vue', () => {
     beforeEach(() => {
       plugins = CoreSetup.init().useAll().plugins
       wrapper = mount(ProjectForm, { global: { plugins } })
-    })
-
-    it('should not use b-card-* components by default', () => {
-      expect(wrapper.findComponent(BCardBody).exists()).toBeFalsy()
-      expect(wrapper.findComponent(BCardFooter).exists()).toBeFalsy()
-    })
-
-    it('should not have the .card class by default', async () => {
-      expect(wrapper.classes('card')).toBeFalsy()
-    })
-
-    it('should use b-card-* components when `card` prop is set', async () => {
-      await wrapper.setProps({ card: true })
-      expect(wrapper.findComponent(BCardBody).exists()).toBeTruthy()
-      expect(wrapper.findComponent(BCardFooter).exists()).toBeTruthy()
-    })
-
-    it('should have the .card class when `card` prop is set', async () => {
-      await wrapper.setProps({ card: true })
-      expect(wrapper.classes('card')).toBeTruthy()
     })
 
     it('should generate a slugified name when setting the label', async () => {

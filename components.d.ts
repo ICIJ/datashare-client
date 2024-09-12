@@ -375,7 +375,7 @@ declare module 'vue' {
     ProjectEntriesTable: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesTable.vue')['default']
     ProjectEntriesTableBody: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesTableBody.vue')['default']
     ProjectEntriesTableHead: typeof import('./src/components/Project/ProjectEntries/ProjectEntriesTableHead.vue')['default']
-    ProjectForm: typeof import('./src/components/ProjectForm.vue')['default']
+    ProjectForm: typeof import('./src/components/Project/ProjectForm.vue')['default']
     ProjectLabel: typeof import('./src/components/Project/ProjectLabel.vue')['default']
     ProjectLink: typeof import('./src/components/Project/ProjectLink.vue')['default']
     ProjectRow: typeof import('./src/components/Project/ProjectRow/ProjectRow.vue')['default']
