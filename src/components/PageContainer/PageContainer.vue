@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import { useBreakpoints } from '@/composables/breakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const props = defineProps({
@@ -14,10 +15,16 @@ const props = defineProps({
   }
 })
 
+const { breakpointDown } = useBreakpoints()
+
+const compact = computed(() => {
+  return breakpointDown.value[props.compactBreakpoint]
+})
+
 const classList = computed(() => {
   return {
     'page-container--fluid': props.fluid,
-    [`page-container--compact-${props.compactBreakpoint}`]: true
+    'page-container--compact': compact.value
   }
 })
 </script>
@@ -32,12 +39,8 @@ const classList = computed(() => {
 .page-container {
   @include make-container($spacer * 4);
 
-  @each $breakpoint, $container-max-width in $container-max-widths {
-    &--compact-#{$breakpoint} {
-      @include media-breakpoint-down($breakpoint) {
-        --bs-gutter-x: #{$spacer * 2};
-      }
-    }
+  &--compact {
+    --bs-gutter-x: #{$spacer * 2};
   }
 
   &:not(&--fluid) {
