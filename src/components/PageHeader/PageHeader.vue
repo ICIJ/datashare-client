@@ -8,6 +8,7 @@ import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
+import PageContainer from '@/components/PageContainer/PageContainer'
 import { useCore } from '@/composables/core'
 import { useBreakpoints } from '@/composables/breakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
@@ -83,7 +84,7 @@ const showToggleSidebar = computed(() => {
 </script>
 
 <template>
-  <div class="page-header d-flex flex-column gap-4 container-fluid py-3">
+  <page-container fluid class="page-header d-flex flex-column gap-4 py-3">
     <div class="d-flex justify-content-between gap-4">
       <slot name="toggle-sidebar">
         <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="activeToggleSidebar" class="flex-shrink-0" />
@@ -122,7 +123,7 @@ const showToggleSidebar = computed(() => {
         />
       </slot>
     </div>
-  </div>
+  </page-container>
 </template>
 
 <style lang="scss" scoped>
