@@ -45,7 +45,7 @@ provide('orderBy', orderBy)
 </script>
 
 <template>
-  <b-table-simple responsive borderless striped class="page-table" :class="classList">
+  <b-table-simple responsive borderless striped hover class="page-table" :class="classList">
     <colgroup v-if="hasColgroup">
       <slot v-bind="{ selectMode, sortBy, orderBy }" name="colgroup" />
     </colgroup>
