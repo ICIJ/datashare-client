@@ -1,80 +1,45 @@
 <template>
-  <div class="login">
-    <div class="login__card card text-center">
-      <div class="login__card__heading card-title mt-4">
-        <h2 class="display-4">{{ $t('login.welcome') }}</h2>
-        <p class="lead mb-0" v-html="$t('login.sumUp')"></p>
-      </div>
-      <div class="login__card__body">
-        <ul class="list-group">
-          <li class="list-group-item bg-tertiary py-3">
-            <p>
-              {{ $t('login.authenticationPlatform') }}
-            </p>
-            <a class="btn btn-action btn-lg" :href="signinUrl">
-              <fa icon="user-shield" class="me-2"></fa>
-              {{ $t('login.account') }}
-            </a>
-          </li>
-          <li class="list-group-item py-3">
-            <p>{{ $t('login.supportDesk') }}</p>
-            <a class="btn btn-outline-primary btn-lg" :href="helpLink" target="_blank" :title="$t('login.askHelp')">
-              <fa icon="truck-medical" class="me-2"></fa>
-              {{ $t('login.askHelp') }}
-            </a>
-          </li>
-        </ul>
-      </div>
+  <div class="view-login d-flex flex-column justify-content-between align-items-stretch gap-2 p-4 vh-100">
+    <div class="view-login__enter d-flex flex-column align-items-center text-action-emphasis p-4">
+      <login-image ref="image" style="width: 240px" />
+      <h3>{{ welcomeLabel }}</h3>
+      <p>{{ taglineLabel }}</p>
+
+      <button-icon :label="loginLabel" :to="signinRoute" icon-left="user" @click="image.shake()" />
     </div>
-    <div class="login__footer d-flex">
-      <locales-menu v-slot="{ currentLocale }" class="ms-auto" popover-placement="bottom">
-        <fa icon="globe" fixed-width />
-        {{ currentLocale.label }}
-      </locales-menu>
+    <div class="view-login__help d-flex flex-column align-items-center justify-content-end gap-2">
+      <button-icon :label="askHelpLabel" :to="helpRoute" variant="outline-secondary" @click="image.shake()" />
+      <div class="d-flex align-items-center gap-2">
+        <span>{{ switchLanguageLabel }}</span
+        ><locales-menu class="px-2" />
+      </div>
     </div>
   </div>
 </template>
+<script setup>
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-<script>
+import LoginImage from '@/components/Login/LoginImage'
+import ButtonIcon from '@/components/Button/ButtonIcon'
+import { useCore } from '@/composables/core'
 import settings from '@/utils/settings'
-
-export default {
-  name: 'Login',
-  computed: {
-    signinUrl() {
-      return import.meta.env.VITE_DS_AUTH_SIGNIN
-    },
-    helpLink() {
-      return this.$config.get('helpLink', settings.helpLink)
-    }
-  },
-  async mounted() {
-    if (await this.$core.auth.getUsername()) {
-      return this.$router.push('/')
-    }
-  }
-}
+import LocalesMenu from '@/components/LocalesMenu'
+const image = ref(null)
+const { t } = useI18n()
+const loginLabel = computed(() => t('login.account'))
+const welcomeLabel = computed(() => t('login.welcome'))
+const askHelpLabel = computed(() => t('login.askHelp'))
+const switchLanguageLabel = computed(() => t('login.switchLanguage'))
+const taglineLabel = computed(() => t('login.tagline'))
+const { core } = useCore()
+const signinUrl = import.meta.env.VITE_DS_AUTH_SIGNIN
+const signinRoute = computed(() => ({ path: signinUrl }))
+const helpLink = core.vue.config.globalProperties.$config.get('helpLink', settings.helpLink)
+const helpRoute = computed(() => ({ path: helpLink }))
 </script>
-
-<style lang="scss" scoped>
-.login {
-  background: darken($action, 10%);
-  min-height: 100vh;
-  padding: 10vh;
-
-  &__card {
-    margin: 0 auto;
-    max-width: 660px;
-
-    &__heading h2 {
-      font-size: 2.5rem;
-    }
-  }
-
-  &__footer {
-    margin: 0 auto;
-    color: #fff;
-    max-width: 660px;
-  }
+<style scoped lang="scss">
+.view-login {
+  max-height: 630px;
 }
 </style>
