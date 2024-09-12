@@ -273,7 +273,7 @@ export const routes = [
             meta: {
               icon: null,
               title({ route, core }) {
-                return core.findProject(route.params.name).label
+                return core?.findProject(route.params.name).label
               }
             },
             children: [
