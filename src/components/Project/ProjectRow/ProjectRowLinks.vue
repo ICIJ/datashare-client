@@ -36,7 +36,7 @@ const toProjectSearch = computed(() => ({
           variant="outline-tertiary"
           truncate
           hide-tooltip
-          class="fw-medium"
+          class="project-row-actions__insights"
           :label="$t('projectCardFooter.insights')"
         />
         <button-icon
@@ -45,10 +45,20 @@ const toProjectSearch = computed(() => ({
           variant="outline-primary"
           truncate
           hide-tooltip
-          class="fw-medium"
+          class="project-row-actions__search"
           :label="$t('projectCardFooter.search')"
         />
       </slot>
     </div>
   </page-table-td-actions>
 </template>
+
+<style lang="scss">
+.project-row-actions {
+  &__insights,
+  &__search {
+    --bs-btn-font-weight: 500;
+    --bs-btn-bg: var(--bs-white);
+  }
+}
+</style>
