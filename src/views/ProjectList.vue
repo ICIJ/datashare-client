@@ -26,9 +26,9 @@ const perPage = useUrlParamWithStore('perPage', {
 const documentsCountByProject = ref({})
 
 const fetchDocumentsCountByProject = async () => {
-  const body = { match: { type: 'Document' } }
+  const query = { match: { type: 'Document' } }
   const projectIds = core.projectIds.join(',')
-  const { aggregations } = await core.api.elasticsearch.countByProject(projectIds, body)
+  const { aggregations } = await core.api.elasticsearch.countByProject(projectIds, query)
   const buckets = aggregations?.index?.buckets ?? []
   // Finally we store the count of documents by project
   buckets.forEach(({ key, doc_count: count }) => (documentsCountByProject.value[key] = count))
@@ -37,20 +37,9 @@ const fetchDocumentsCountByProject = async () => {
 const maxExtractionDateByProject = ref({})
 
 const fetchMaxExtractionDateByProject = async () => {
-  const index = core.projectIds.join(',')
-  const size = 1000
-  const aggs = {
-    index: {
-      terms: { field: '_index', size },
-      aggs: {
-        maxExtractionDate: { max: { field: 'extractionDate' } }
-      }
-    }
-  }
   const query = { match: { type: 'Document' } }
-  const body = { size: 0, query, aggs }
-  const preference = 'max-extraction-date-by-project'
-  const { aggregations } = await core.api.elasticsearch._search({ index, body, preference })
+  const projectIds = core.projectIds.join(',')
+  const { aggregations } = await core.api.elasticsearch._search(projectIds, query)
   const buckets = aggregations?.index?.buckets ?? []
   // Finally we store the max extraction date by project
   buckets.forEach(({ key, maxExtractionDate }) => (maxExtractionDateByProject.value[key] = maxExtractionDate.value))
