@@ -2,6 +2,7 @@
 import ProjectEntriesTableHead from './ProjectEntriesTableHead'
 import ProjectEntriesTableBody from './ProjectEntriesTableBody'
 
+import PageContainer from '@/components/PageContainer/PageContainer'
 import PageTable from '@/components/PageTable/PageTable'
 
 const sort = defineModel('sort', { type: String, default: null })
@@ -14,7 +15,7 @@ defineProps({
 })
 </script>
 <template>
-  <div class="project-entries-table container-fluid">
+  <page-container fluid class="project-entries-table">
     <page-table v-model:sort="sort" v-model:order="order">
       <template #colgroup>
         <col style="min-width: 200px" />
@@ -25,5 +26,5 @@ defineProps({
       </template>
       <project-entries-table-body :projects="projects" />
     </page-table>
-  </div>
+  </page-container>
 </template>
