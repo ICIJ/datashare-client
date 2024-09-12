@@ -1,72 +1,54 @@
-<script>
+<script setup>
 import { get } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
+import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectForm from '@/components/ProjectForm'
+import { useCore } from '@/composables/core'
 
-/**
- * This page display a form to create a new project.
- */
-export default {
-  name: 'ProjectNew',
-  components: {
-    PageHeader,
-    ProjectForm
-  },
-  computed: {
-    projectRoute() {
-      return { name: 'project.list' }
-    }
-  },
-  methods: {
-    async submit(project) {
-      try {
-        this.$wait.start('creating')
-        await this.$core.api.createProject(project)
-        await this.$core.setProject(project)
-        this.notifyCreationSucceed()
-        this.redirectToProject(project)
-      } catch (error) {
-        this.notifyCreationFailed(error)
-      } finally {
-        this.$wait.end('creating')
-      }
-    },
-    notifyCreationSucceed() {
-      const title = this.$t('projectNew.notify.succeed')
-      const body = this.$t('projectNew.notify.succeedBody')
-      this.$toast.success(body, { title })
-    },
-    notifyCreationFailed(error) {
-      const title = this.$t('projectNew.notify.failed')
-      const body = get(error, 'response.data.error') ?? this.$t('projectNew.notify.failedBody')
-      this.$toast.danger(body, { title })
-    },
-    redirectToProject({ name }) {
-      const params = { name }
-      return this.$router.push({ name: 'project.view', params })
-    }
+const { core, toast, wait } = useCore()
+const { t } = useI18n()
+
+async function submit(project) {
+  try {
+    wait.start('creating')
+    await core.api.createProject(project)
+    await core.setProject(project)
+    notifyCreationSucceed()
+    redirectToProject(project)
+  } catch (error) {
+    notifyCreationFailed(error)
+  } finally {
+    wait.end('creating')
   }
+}
+
+function notifyCreationSucceed() {
+  const title = t('projectNew.notify.succeed')
+  const body = t('projectNew.notify.succeedBody')
+  toast.success(body, { title })
+}
+
+function notifyCreationFailed(error) {
+  const title = t('projectNew.notify.failed')
+  const body = get(error, 'response.data.error') ?? t('projectNew.notify.failedBody')
+  toast.danger(body, { title })
+}
+
+function redirectToProject({ name }) {
+  const params = { name }
+  core.router.push({ name: 'project.view.insights', params })
 }
 </script>
 
 <template>
   <div class="project-new">
     <page-header no-toggle-settings />
-    <div class="container">
-      <div class="mx-1 mb-2 mt-3">
-        <router-link :to="projectRoute">
-          <fa icon="angle-left" class="me-1" fixed-width />
-          {{ $t('projectList.title') }}
-        </router-link>
-      </div>
+    <page-container fluid>
       <b-overlay rounded="sm" opacity="0.6" :show="$wait.is('creating')">
-        <project-form class="mb-4" card :disabled="$wait.is('creating')" @submit="submit">
-          <template #submit-text>
-            {{ $t('projectNew.submit') }}
-          </template>
-        </project-form>
+        <project-form class="mb-4" card :disabled="$wait.is('creating')" @submit="submit" />
       </b-overlay>
-    </div>
+    </page-container>
   </div>
 </template>
