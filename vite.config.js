@@ -10,6 +10,7 @@ export default ({ mode }) => {
   process.env = Object.assign(process.env, { VITE_GIT_HASH, ...loadEnv(mode, process.cwd(), '') })
 
   return defineConfig({
+    base: mode === 'production' ? '/next/' :  '/',
     plugins: [
       vue(),
       Components({
