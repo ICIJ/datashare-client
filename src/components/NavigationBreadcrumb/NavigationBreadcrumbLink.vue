@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { capitalize, isFunction } from 'lodash'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/core'
 
@@ -63,13 +64,14 @@ const routeHref = computed(() => {
 })
 
 const { core } = useCore()
+const i18n = useI18n()
 
 const display = ref(null)
 
 const setDisplay = async () => {
   const name = route.value?.name.split('.').pop()
   const fn = castFunction(props.title ?? route.value?.meta?.title ?? capitalize(name))
-  display.value = await fn({ route: route.value, core })
+  display.value = await fn({ route: route.value, core, i18n })
 }
 
 onMounted(setDisplay)
