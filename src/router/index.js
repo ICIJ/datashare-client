@@ -371,9 +371,12 @@ export const routes = [
         name: 'settings',
         path: '/settings',
         meta: {
-          title: ({ i18n }) => i18n.global.t('server.title')
+          title: ({ i18n }) => {
+            const key = 'server.title'
+            return i18n.global?.t(key) ?? i18n.t(key)
+          }
         },
-        component: () => import('@/views/Settings')
+        component: () => import('@/views/Settings/SettingsView')
       },
       {
         name: 'document-standalone',
