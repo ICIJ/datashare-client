@@ -12,8 +12,8 @@
     <hook name="landing.form:after" />
     <hook name="landing.form.project:before" />
     <div class="landing__projects">
-      <div class="text-white container">
-        <project-cards class="mt-3"></project-cards>
+      <div class="container">
+        <project-entries :projects="$core.projects" class="mt-3" />
         <hook name="landing.form.project:after" />
       </div>
     </div>
@@ -22,14 +22,14 @@
 
 <script>
 import Hook from '@/components/Hook'
-import ProjectCards from '@/components/ProjectCards'
+import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 
 export default {
   name: 'Landing',
   components: {
     Hook,
-    ProjectCards,
+    ProjectEntries,
     SearchBar
   }
 }
@@ -38,7 +38,6 @@ export default {
 <style lang="scss" scoped>
 .landing {
   position: relative;
-  background-color: $body-secondary-bg;
   min-height: 100vh;
 
   &__form {
