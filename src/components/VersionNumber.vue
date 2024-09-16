@@ -66,7 +66,7 @@ const fetchVersion = async () => {
 const setVersion = async () => {
   const version = await fetchVersion()
   serverHash.value = version['git.commit.id.abbrev']
-  serverVersion.value = version['git.tag']
+  serverVersion.value = version['git.tag'] || version['git.build.version']
 }
 
 onMounted(() => {
