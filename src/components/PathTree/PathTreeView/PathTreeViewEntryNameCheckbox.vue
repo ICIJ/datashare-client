@@ -17,7 +17,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="path-view-entry-name-checkbox px-1">
+  <div class="path-tree-view-entry-name-checkbox px-1">
     <b-form-checkbox
       :id="id"
       :disabled="disabled"
@@ -30,7 +30,7 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-.path-view-entry-name-checkbox {
+.path-tree-view-entry-name-checkbox {
   &:deep(.form-check-input:checked) {
     border-color: currentColor;
   }

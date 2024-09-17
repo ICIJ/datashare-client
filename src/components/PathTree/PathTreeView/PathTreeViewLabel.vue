@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="path-view-label d-flex gap-2 align-items-center">
+  <div class="path-tree-view-label d-flex gap-2 align-items-center">
     <phosphor-icon v-if="icon" :name="icon" />
     <div class="text-truncate">
       {{ label ?? $t('pathViewLabel.label') }}
@@ -22,7 +22,7 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-.path-view-label {
+.path-tree-view-label {
   font-size: 1.25rem;
   font-weight: 700;
 }

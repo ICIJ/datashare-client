@@ -22,25 +22,25 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
 
 const classList = computed(() => {
   return {
-    'path-view-entry-stats-documents--active': props.active,
-    'path-view-entry-stats-documents--compact': compactOrInjected.value
+    'path-tree-view-entry-stats-documents--active': props.active,
+    'path-tree-view-entry-stats-documents--compact': compactOrInjected.value
   }
 })
 </script>
 
 <template>
-  <div class="path-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
-    <a class="path-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate">
+  <div class="path-tree-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
+    <a class="path-tree-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate">
       <phosphor-icon
         name="files"
         aria-hidden="true"
-        class="me-2 flex-shrink-0 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--default"
+        class="me-2 flex-shrink-0 path-tree-view-entry-stats-documents__link__icon path-tree-view-entry-stats-documents__link__icon--default"
       />
       <phosphor-icon
         name="magnifying-glass"
         aria-hidden="true"
         weight="bold"
-        class="me-2 flex-shrink-0 path-view-entry-stats-documents__link__icon path-view-entry-stats-documents__link__icon--hover"
+        class="me-2 flex-shrink-0 path-tree-view-entry-stats-documents__link__icon path-tree-view-entry-stats-documents__link__icon--hover"
       />
       <span class="text-truncate">
         <display-number :value="value" />
@@ -50,7 +50,7 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.path-view-entry-stats-documents {
+.path-tree-view-entry-stats-documents {
   min-width: 115px;
   flex: 0 0 115px;
 
@@ -63,7 +63,7 @@ const classList = computed(() => {
     min-width: 0;
     flex: 1;
 
-    .path-view-entry-stats-documents__link {
+    .path-tree-view-entry-stats-documents__link {
       border-radius: var(--bs-border-radius-pill);
       background: var(--bs-secondary);
       color: var(--bs-body-bg);
@@ -90,17 +90,17 @@ const classList = computed(() => {
     background: var(--bs-body-bg);
     color: var(--bs-body-color);
 
-    .path-view-entry-stats-documents__link__icon {
+    .path-tree-view-entry-stats-documents__link__icon {
       color: var(--bs-body-color);
     }
   }
 
   &:not(&--compact) &__link:hover {
-    .path-view-entry-stats-documents__link__icon--default {
+    .path-tree-view-entry-stats-documents__link__icon--default {
       display: none;
     }
 
-    .path-view-entry-stats-documents__link__icon--hover {
+    .path-tree-view-entry-stats-documents__link__icon--hover {
       display: inline-flex;
     }
   }

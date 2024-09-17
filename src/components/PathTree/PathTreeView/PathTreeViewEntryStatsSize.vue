@@ -10,13 +10,13 @@ defineProps({
 </script>
 
 <template>
-  <div class="path-view-entry-stats-size px-2 py-1">
+  <div class="path-tree-view-entry-stats-size px-2 py-1">
     <display-content-length :value="value" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.path-view-entry-stats-size {
+.path-tree-view-entry-stats-size {
   display: flex;
   align-items: center;
 
