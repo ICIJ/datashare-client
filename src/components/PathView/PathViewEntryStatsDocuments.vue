@@ -82,11 +82,11 @@ const classList = computed(() => {
 
   &--active &__link,
   &:not(&--compact) &__link:hover {
-    background: var(--bs-action-text-emphasis);
-    color: var(--bs-body-bg);
+    background: var(--bs-body-bg);
+    color: var(--bs-body-color);
 
     .path-view-entry-stats-documents__link__icon {
-      color: var(--bs-body-bg);
+      color: var(--bs-body-color);
     }
   }
 
@@ -109,7 +109,7 @@ const classList = computed(() => {
     padding: $spacer-xxs $spacer-xs;
 
     &__icon {
-      color: var(--bs-secondary-color);
+      color: inherit;
       display: inline-flex;
 
       &--hover {
