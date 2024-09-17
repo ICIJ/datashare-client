@@ -26,7 +26,7 @@ import { isEqual } from 'lodash'
 
 import FilterBoilerplate from '@/components/Filter/FilterBoilerplate'
 import FilterAbstract from '@/components/Filter/types/FilterAbstract'
-import PathTree from '@/components/PathTree'
+import PathTree from '@/components/PathTree/PathTree'
 
 /**
  * A Filter component to list unique directory paths.
