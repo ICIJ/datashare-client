@@ -144,7 +144,6 @@
                 id="modal-select-path"
                 :cancel-title="$t('global.cancel')"
                 :ok-title="$t('batchSearch.selectFolder')"
-                body-class="p-0 border-bottom"
                 cancel-variant="outline-primary"
                 hide-header
                 lazy
@@ -152,15 +151,13 @@
                 size="lg"
                 @ok="setPaths()"
               >
-                <tree-view
+                <path-tree
                   v-model:path="path"
+                  v-model:selected-paths="selectedPaths"
+                  select-mode
+                  multiple
                   :projects="projects"
-                  :selected-paths="selectedPaths"
-                  count
-                  selectable
-                  size
-                  @checked="selectedPaths = $event"
-                ></tree-view>
+                />
               </b-modal>
               <div>
                 <b-badge
@@ -247,7 +244,7 @@ import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
 import VueMultiselect from 'vue-multiselect'
 
-import TreeView from '@/components/TreeView'
+import PathTree from '@/components/PathTree/PathTree'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
 import { FilterText, FilterPath } from '@/store/filters'
@@ -289,7 +286,7 @@ const initData = {
 export default {
   name: 'BatchSearchForm',
   components: {
-    TreeView,
+    PathTree,
     VueMultiselect
   },
   filters: {

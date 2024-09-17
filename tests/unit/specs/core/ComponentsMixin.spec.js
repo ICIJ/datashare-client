@@ -10,27 +10,27 @@ describe('ComponentsMixin', () => {
   })
 
   it('should find component by name with exact match', async () => {
-    const TreeView = await core.findComponent('TreeView')
-    expect(TreeView.name).toBe('TreeView')
+    const ButtonIcon = await core.findComponent('Button/ButtonIcon')
+    expect(ButtonIcon.name).toBe('ButtonIcon')
   })
 
   it('should find component by name with wrong case', async () => {
-    const TreeView = await core.findComponent('treeView')
-    expect(TreeView.name).toBe('TreeView')
+    const ButtonIcon = await core.findComponent('Button/buttonIcon')
+    expect(ButtonIcon.name).toBe('ButtonIcon')
   })
 
   it('should find component by name with kebab case', async () => {
-    const TreeView = await core.findComponent('tree-view')
-    expect(TreeView.name).toBe('TreeView')
+    const ButtonIcon = await core.findComponent('Button/button-icon')
+    expect(ButtonIcon.name).toBe('ButtonIcon')
   })
 
   it('should find component by name with underscore case', async () => {
-    const TreeView = await core.findComponent('tree_view')
-    expect(TreeView.name).toBe('TreeView')
+    const ButtonIcon = await core.findComponent('Button/button_icon')
+    expect(ButtonIcon.name).toBe('ButtonIcon')
   })
 
   it('should return null with unknown component', async () => {
-    expect(await core.findComponent('foo')).toBeNull()
+    expect(await core.findComponent('Button/foo')).toBeNull()
   })
 
   it('should throw an exception with unknown component', async () => {
@@ -43,9 +43,9 @@ describe('ComponentsMixin', () => {
   })
 
   it('should find an instantiable component', async () => {
-    const PageIcon = await core.findComponent('PageIcon')
-    const wrapper = shallowMount(PageIcon, { localVue })
-    expect(wrapper.findComponent({ name: 'PageIcon' }).exists()).toBeTruthy()
+    const ButtonIcon = await core.findComponent('Button/ButtonIcon')
+    const wrapper = shallowMount(ButtonIcon, { localVue })
+    expect(wrapper.findComponent({ name: 'ButtonIcon' }).exists()).toBeTruthy()
   })
 
   it('should find component in sub-folder', async () => {
