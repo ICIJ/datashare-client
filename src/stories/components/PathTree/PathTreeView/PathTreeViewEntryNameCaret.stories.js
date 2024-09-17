@@ -5,7 +5,8 @@ export default {
   tags: ['autodocs'],
   component: PathTreeViewEntryNameCaret,
   args: {
-    collapse: true
+    collapse: true,
+    loading: false
   }
 }
 

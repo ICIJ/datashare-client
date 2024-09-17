@@ -1,22 +1,19 @@
 <template>
-  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="reloadTreeView">
+  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="reloadPathTree">
     <template #items="{ sortBy, sortByOrder, query }">
       <div class="filter__tree-view">
-        <tree-view
-          ref="treeView"
-          v-model:path="path"
+        <path-tree
+          ref="PathTree"
           v-model:selected-paths="selectedPaths"
+          :path="path"
           :query="query"
           :projects="projects"
           :pre-body-build="preBodyBuild"
           :sort-by="sortBy"
           :sort-by-order="sortByOrder"
-          :transition="null"
           :hide-empty="isContextualized"
           compact
-          count
           include-children-documents
-          no-bars
           selectable
         />
       </div>
@@ -29,7 +26,7 @@ import { isEqual } from 'lodash'
 
 import FilterBoilerplate from '@/components/Filter/FilterBoilerplate'
 import FilterAbstract from '@/components/Filter/types/FilterAbstract'
-import TreeView from '@/components/TreeView'
+import PathTree from '@/components/PathTree'
 
 /**
  * A Filter component to list unique directory paths.
@@ -38,7 +35,7 @@ export default {
   name: 'FilterPath',
   components: {
     FilterBoilerplate,
-    TreeView
+    PathTree
   },
   extends: FilterAbstract,
   data() {
@@ -104,11 +101,11 @@ export default {
       }
       return body
     },
-    reloadTreeView() {
+    reloadPathTree() {
       if (this.isContextualized) {
-        return this.$refs.treeView.reloadDataWithSpinner()
+        return this.$refs.PathTree.reloadDataWithSpinner()
       }
-      return this.$refs.treeView.loadData()
+      return this.$refs.PathTree.loadData()
     }
   }
 }

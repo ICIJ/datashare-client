@@ -70,6 +70,10 @@ import { PLACEMENT, placementValidator } from '@/enums/placements'
 const injectedVariant = inject('variant', VARIANT.ACTION)
 const injectedSize = inject('size', SIZE.MD)
 
+defineOptions({
+  name: 'ButtonIcon'
+})
+
 const props = defineProps({
   iconLeft: {
     type: [String, Object, Array],
