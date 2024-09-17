@@ -3,8 +3,8 @@ import { computed, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { PhFolder, PhFolderOpen } from '@phosphor-icons/vue'
 
-import PathViewEntryNameCaret from './PathViewEntryNameCaret'
-import PathViewEntryNameCheckbox from './PathViewEntryNameCheckbox'
+import PathTreeViewEntryNameCaret from './PathTreeViewEntryNameCaret'
+import PathTreeViewEntryNameCheckbox from './PathTreeViewEntryNameCheckbox'
 
 const props = defineProps({
   collapse: {
@@ -31,9 +31,9 @@ const props = defineProps({
 const icon = computed(() => (props.collapse ? PhFolder : PhFolderOpen))
 
 const classList = computed(() => ({
-  'path-view-entry-name--collapse': props.collapse,
-  'path-view-entry-name--compact': compactOrInjected.value,
-  'path-view-entry-name--selected': props.selected
+  'path-tree-view-entry-name--collapse': props.collapse,
+  'path-tree-view-entry-name--compact': compactOrInjected.value,
+  'path-tree-view-entry-name--selected': props.selected
 }))
 
 const selectModeOrInjected = computed(() => props.selectMode ?? inject('selectMode', false))
@@ -47,9 +47,9 @@ const toggle = () => {
 </script>
 
 <template>
-  <div class="path-view-entry-name d-flex gap-2 align-items-center flex-truncate w-100" :class="classList">
-    <path-view-entry-name-caret :collapse="collapse" class="flex-shrink-0" @click="toggle" />
-    <path-view-entry-name-checkbox
+  <div class="path-tree-view-entry-name d-flex gap-2 align-items-center flex-truncate w-100" :class="classList">
+    <path-tree-view-entry-name-caret :collapse="collapse" class="flex-shrink-0" @click="toggle" />
+    <path-tree-view-entry-name-checkbox
       v-if="selectModeOrInjected"
       class="flex-shrink-0"
       :model-value="selected"
@@ -58,7 +58,7 @@ const toggle = () => {
       @update:indeterminate="emit('update:indeterminate', $event)"
     />
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
-      <div class="path-view-entry-name__value text-truncate" @click="toggle">
+      <div class="path-tree-view-entry-name__value text-truncate" @click="toggle">
         <phosphor-icon v-if="!compactOrInjected" :name="icon" />
         {{ name }}
       </div>
@@ -67,8 +67,8 @@ const toggle = () => {
 </template>
 
 <style lang="scss" scoped>
-.path-view-entry-name {
-  &--compact.path-view-entry-name--selected {
+.path-tree-view-entry-name {
+  &--compact.path-tree-view-entry-name--selected {
     font-weight: 500;
     color: var(--bs-action-text-emphasis);
   }

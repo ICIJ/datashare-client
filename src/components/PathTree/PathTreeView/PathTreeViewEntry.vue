@@ -1,7 +1,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 
-import PathViewEntryName from './PathViewEntryName'
+import PathTreeViewEntryName from './PathTreeViewEntryName'
 
 const props = defineProps({
   collapse: {
@@ -35,6 +35,9 @@ const props = defineProps({
   size: {
     type: Number,
     default: 0
+  },
+  noHeader: {
+    type: Boolean
   }
 })
 
@@ -42,9 +45,9 @@ const active = ref(false)
 
 const classList = computed(() => {
   return {
-    'path-view-entry--active': active.value,
-    'path-view-entry--selected': props.selected,
-    'path-view-entry--compact': compactOrInjected.value
+    'path-tree-view-entry--active': active.value,
+    'path-tree-view-entry--selected': props.selected,
+    'path-tree-view-entry--compact': compactOrInjected.value
   }
 })
 
@@ -53,13 +56,14 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
 </script>
 
 <template>
-  <div class="path-view-entry" :class="classList">
+  <div class="path-tree-view-entry" :class="classList">
     <div
-      class="d-flex align-items-center path-view-entry__header"
+      v-if="!noHeader"
+      class="d-flex align-items-center path-tree-view-entry__header"
       @mouseenter="active = true"
       @mouseleave="active = false"
     >
-      <path-view-entry-name
+      <path-tree-view-entry-name
         :collapse="collapse"
         :compact="compactOrInjected"
         :selected="selected"
@@ -71,8 +75,8 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         @update:indeterminate="$emit('update:indeterminate', $event)"
       >
         <slot name="name" />
-      </path-view-entry-name>
-      <path-view-entry-stats
+      </path-tree-view-entry-name>
+      <path-tree-view-entry-stats
         class="ms-auto"
         :compact="compactOrInjected"
         :documents="documents"
@@ -82,28 +86,28 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :active="compactOrInjected ? selected : active"
       />
     </div>
-    <b-collapse :model-value="!collapse" class="path-view-entry__subdirectories">
-      <slot />
+    <b-collapse :model-value="!collapse" class="path-tree-view-entry__subdirectories">
+      <slot v-bind="{ collapse, selected, active }" />
     </b-collapse>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.path-view-entry {
+.path-tree-view-entry {
   &__header {
     border-radius: var(--bs-border-radius);
     padding: $spacer-sm $spacer;
 
-    .path-view-entry--compact & {
+    .path-tree-view-entry--compact & {
       padding: 2px 0;
     }
   }
 
-  &:deep(.path-view-entry__subdirectories) {
+  &:deep(.path-tree-view-entry__subdirectories) {
     padding-left: $spacer;
   }
 
-  &--compact:deep(.path-view-entry__subdirectories) {
+  &--compact:deep(.path-tree-view-entry__subdirectories) {
     padding-left: $spacer-xs;
   }
 
@@ -111,8 +115,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
     background: var(--bs-tertiary-bg-subtle);
   }
 
-  &--selected:not(&--compact) &__header,
-  &:not(&--compact):has(.path-view-entry--selected) &__header {
+  &--selected:not(&--compact) > &__header {
     background: var(--bs-action);
     color: var(--bs-white);
   }

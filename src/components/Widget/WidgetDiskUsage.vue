@@ -14,25 +14,8 @@
         </a>
       </p>
     </v-wait>
-    <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model:path="path" :projects="[project]" :query="query" count size searchable>
-        <template #above>
-          <div class="mx-3 mb-1">
-            <b-form-input
-              v-model="query"
-              autofocus
-              :placeholder="$t('widget.diskUsage.queryPlaceholder')"
-              type="search"
-              class="form-control widget__directory-filter"
-            />
-          </div>
-          <b-collapse :visible="path === dataDir">
-            <div class="my-2 mx-3 alert alert-warning p-2">
-              {{ $t('widget.diskUsage.warning') }}
-            </div>
-          </b-collapse>
-        </template>
-      </tree-view>
+    <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer size="lg">
+      <path-tree v-model:path="path" :projects="[project]" />
     </b-modal>
   </div>
 </template>
@@ -42,7 +25,7 @@ import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
 import { mapState } from 'vuex'
 
-import TreeView from '@/components/TreeView'
+import PathTree from '@/components/PathTree/PathTree'
 import humanSize from '@/utils/humanSize'
 
 /**
@@ -51,7 +34,7 @@ import humanSize from '@/utils/humanSize'
 export default {
   name: 'WidgetDiskUsage',
   components: {
-    TreeView
+    PathTree
   },
   props: {
     /**
@@ -65,8 +48,7 @@ export default {
     return {
       onDisk: null,
       path: null,
-      total: null,
-      query: null
+      total: null
     }
   },
   computed: {

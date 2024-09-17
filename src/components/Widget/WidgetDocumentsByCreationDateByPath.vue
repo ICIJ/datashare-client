@@ -6,35 +6,25 @@
         v-b-modal.modal-widget-select-path
         class="me-3 py-1 px-2 border btn btn-link d-inline-flex"
       >
-        <tree-breadcrumb
-          datadir-icon="filter"
-          :path="selectedPath"
-          no-datadir
-          @input="treeViewPath = $event"
-        ></tree-breadcrumb>
+        <tree-breadcrumb datadir-icon="filter" :path="selectedPath" no-datadir @input="pathTreeValue = $event" />
         <span v-if="selectedPath === dataDir">
           {{ $t('widget.creationDate.filterFolder') }}
         </span>
       </span>
       <b-modal
         id="modal-widget-select-path"
-        body-class="p-0 border-bottom"
-        cancel-variant="outline-primary"
+        cancel-variant="outline-action"
         :cancel-title="$t('global.cancel')"
         hide-header
         lazy
+        ok-variant="action"
         :ok-title="$t('widget.creationDate.selectFolder')"
+        :ok-disabled="!selectedPaths.length"
         scrollable
         size="lg"
-        @ok="setSelectedPath(treeViewPath)"
+        @ok="setSelectedPath(selectedPaths[0])"
       >
-        <tree-view
-          :path="treeViewPath || selectedPath"
-          :projects="projects"
-          count
-          size
-          @update:path="treeViewPath = $event"
-        ></tree-view>
+        <path-tree v-model:selected-paths="selectedPaths" :path="pathTreePath" :projects="projects" select-mode />
       </b-modal>
     </template>
   </widget-documents-by-creation-date>
@@ -45,7 +35,7 @@ import { castArray } from 'lodash'
 import { mapState } from 'vuex'
 
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
-import TreeView from '@/components/TreeView'
+import PathTree from '@/components/PathTree/PathTree'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
 
 /**
@@ -55,7 +45,7 @@ export default {
   name: 'WidgetDocumentsByCreationDateByPath',
   components: {
     TreeBreadcrumb,
-    TreeView,
+    PathTree,
     WidgetDocumentsByCreationDate
   },
   props: {
@@ -68,7 +58,7 @@ export default {
   },
   data() {
     return {
-      treeViewPath: null
+      selectedPaths: []
     }
   },
   computed: {
@@ -76,13 +66,16 @@ export default {
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     },
+    pathTreePath() {
+      return this.dataDir
+    },
     projects() {
       return castArray(this.project)
     }
   },
   watch: {
     project() {
-      this.treeViewPath = this.dataDir
+      this.selectedPaths = []
     }
   }
 }
