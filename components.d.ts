@@ -63,6 +63,7 @@ declare module 'vue' {
     BFormCheck: typeof import('bootstrap-vue-next')['BFormCheck']
     BFormCheckbox: typeof import('bootstrap-vue-next')['BFormCheckbox']
     BFormCheckboxGroup: typeof import('bootstrap-vue-next')['BFormCheckboxGroup']
+    BFormFile: typeof import('bootstrap-vue-next')['BFormFile']
     BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     BFormRadio: typeof import('bootstrap-vue-next')['BFormRadio']
@@ -294,6 +295,7 @@ declare module 'vue' {
     LocalesMenu: typeof import('./src/components/LocalesMenu.vue')['default']
     LoginImage: typeof import('./src/components/Login/LoginImage.vue')['default']
     LoginLocaleDropdownSelector: typeof import('./src/components/Login/LoginLocaleDropdownSelector.vue')['default']
+    MountedDataLocation: typeof import('./src/components/MountedDataLocation.vue')['default']
     NamedEntityInContext: typeof import('./src/components/NamedEntityInContext.vue')['default']
     NavigationBreadcrumb: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumb.vue')['default']
     NavigationBreadcrumbEntry: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumbEntry.vue')['default']
@@ -451,6 +453,7 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     vBModal: typeof import('bootstrap-vue-next')['vBModal']
+    vBToggle: typeof import('bootstrap-vue-next')['vBToggle']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }

@@ -38,6 +38,9 @@ const props = defineProps({
   },
   noHeader: {
     type: Boolean
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -69,6 +72,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :selected="selected"
         :indeterminate="indeterminate"
         :name="name"
+        :loading="loading"
         :select-mode="selectModeOrInjected"
         @update:collapse="$emit('update:collapse', $event)"
         @update:selected="$emit('update:selected', $event)"
