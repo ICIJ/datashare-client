@@ -80,7 +80,12 @@ const classList = computed(() => {
     }
   }
 
-  &--active &__link,
+  &--active &__link {
+    background: var(--bs-action);
+    color: var(--bs-white);
+  }
+
+  &--active:not(&--compact) &__link,
   &:not(&--compact) &__link:hover {
     background: var(--bs-body-bg);
     color: var(--bs-body-color);
