@@ -52,7 +52,7 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="path-view d-flex flex-column" :class="classList">
+  <div class="path-tree-view d-flex flex-column" :class="classList">
     <path-tree-view-label v-if="!noLabel" :label="label" :icon="icon" />
     <path-tree-view-search v-if="!noSearch" :model-value="query" @update:modelValue="$emit('update:query', $event)" />
     <div>
