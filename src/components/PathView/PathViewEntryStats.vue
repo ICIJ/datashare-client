@@ -18,6 +18,9 @@ const props = defineProps({
     type: Number,
     default: 0
   },
+  selected: {
+    type: Boolean
+  },
   active: {
     type: Boolean
   },
@@ -32,6 +35,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
 const classList = computed(() => {
   return {
     'path-view-entry-stats--active': props.active,
+    'path-view-entry-stats--selected': props.selected,
     'path-view-entry-stats--compact': compactOrInjected.value
   }
 })
@@ -41,23 +45,31 @@ const classList = computed(() => {
   <div class="path-view-entry-stats d-flex gap-2 text-nowrap" :class="classList">
     <path-view-entry-stats-documents :value="documents" :active="active" :compact="compactOrInjected" />
     <template v-if="!compactOrInjected">
-      <path-view-entry-stats-directories :value="directories" />
-      <path-view-entry-stats-size :value="size" class="ms-auto" />
+      <path-view-entry-stats-directories :value="directories" :active="active" :compact="compactOrInjected" />
+      <path-view-entry-stats-size :value="size" class="ms-auto" :active="active" :compact="compactOrInjected" />
     </template>
   </div>
 </template>
 
 <style lang="scss">
-.path-view-entry-stats:not(.path-view-entry-stats--compact) {
-  max-width: 300px;
-  flex: 300px 0 0;
-  width: 100%;
+.path-view-entry-stats {
   font-variant-numeric: tabular-nums;
+  color: var(--bs-secondary-color);
 
-  @include media-breakpoint-down(md) {
-    max-width: 260px;
-    flex: 1 0 0;
-    width: auto;
+  &--selected:not(.path-view-entry-stats--compact) {
+    color: var(--bs-white);
+  }
+
+  &:not(.path-view-entry-stats--compact) {
+    max-width: 300px;
+    flex: 300px 0 0;
+    width: 100%;
+
+    @include media-breakpoint-down(md) {
+      max-width: 260px;
+      flex: 1 0 0;
+      width: auto;
+    }
   }
 }
 </style>

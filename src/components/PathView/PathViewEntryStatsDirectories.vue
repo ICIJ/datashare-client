@@ -20,7 +20,6 @@ defineProps({
 
 <style lang="scss" scoped>
 .path-view-entry-stats-directories {
-  color: var(--bs-secondary-color);
   display: flex;
   align-items: center;
 

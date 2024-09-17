@@ -28,3 +28,11 @@ defineProps({
     />
   </div>
 </template>
+
+<style lang="scss" scoped>
+.path-view-entry-name-checkbox {
+  &:deep(.form-check-input:checked) {
+    border-color: currentColor;
+  }
+}
+</style>

@@ -78,6 +78,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :documents="documents"
         :directories="directories"
         :size="size"
+        :selected="selected"
         :active="compactOrInjected ? selected : active"
       />
     </div>
@@ -112,7 +113,8 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
 
   &--selected:not(&--compact) &__header,
   &:not(&--compact):has(.path-view-entry--selected) &__header {
-    box-shadow: 0 0 0 1px var(--bs-primary) inset;
+    background: var(--bs-action);
+    color: var(--bs-white);
   }
 }
 </style>
