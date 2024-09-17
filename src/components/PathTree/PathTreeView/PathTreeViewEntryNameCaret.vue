@@ -8,18 +8,18 @@ const props = defineProps({
   }
 })
 const classList = computed(() => ({
-  'path-view-entry-name-caret--collapse': props.collapse
+  'path-tree-view-entry-name-caret--collapse': props.collapse
 }))
 </script>
 
 <template>
-  <div class="path-view-entry-name-caret d-flex" :class="classList">
-    <phosphor-icon name="caret-down" fill class="path-view-entry-name-caret__icon" />
+  <div class="path-tree-view-entry-name-caret d-flex" :class="classList">
+    <phosphor-icon name="caret-down" fill class="path-tree-view-entry-name-caret__icon" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.path-view-entry-name-caret {
+.path-tree-view-entry-name-caret {
   &__icon {
     transition: $transition-base;
     color: var(--bs-primary);

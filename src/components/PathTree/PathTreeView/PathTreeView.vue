@@ -1,8 +1,8 @@
 <script setup>
 import { computed, provide, watch } from 'vue'
 
-import PathViewLabel from './PathViewLabel'
-import PathViewSearch from './PathViewSearch'
+import PathTreeViewLabel from './PathTreeViewLabel'
+import PathTreeViewSearch from './PathTreeViewSearch'
 
 const props = defineProps({
   label: {
@@ -46,15 +46,15 @@ watch(
 
 const classList = computed(() => {
   return {
-    'path-view--compact': props.compact
+    'path-tree-view--compact': props.compact
   }
 })
 </script>
 
 <template>
   <div class="path-view d-flex flex-column" :class="classList">
-    <path-view-label v-if="!noLabel" :label="label" :icon="icon" />
-    <path-view-search v-if="!noSearch" :model-value="query" @update:modelValue="$emit('update:query', $event)" />
+    <path-tree-view-label v-if="!noLabel" :label="label" :icon="icon" />
+    <path-tree-view-search v-if="!noSearch" :model-value="query" @update:modelValue="$emit('update:query', $event)" />
     <div>
       <slot v-bind="{ selectMode }" />
     </div>
@@ -62,7 +62,7 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.path-view {
+.path-tree-view {
   gap: $spacer-lg;
 
   &--compact {

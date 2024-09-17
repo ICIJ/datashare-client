@@ -103,7 +103,7 @@ const noAnalysis = computed(() => {
             v-for="project in projects"
             :key="project.name"
             icon="push-pin"
-            :to="{ name: 'project.view', params: { name: project.name } }"
+            :to="{ name: 'project.view.insights', params: { name: project.name } }"
           >
             <project-label :project="project" hide-thumbnail />
           </app-sidebar-section-entry>

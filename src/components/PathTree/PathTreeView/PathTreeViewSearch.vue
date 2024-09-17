@@ -9,9 +9,9 @@ defineProps({
 </script>
 
 <template>
-  <div class="path-view-search">
+  <div class="path-tree-view-search">
     <form-control-search
-      class="path-view-search__control"
+      class="path-tree-view-search__control"
       :placeholder="$t('pathViewSearch.placeholder')"
       clear-text
       shadow

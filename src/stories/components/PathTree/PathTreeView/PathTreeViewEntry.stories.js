@@ -1,9 +1,9 @@
-import PathViewEntry from '@/components/PathView/PathViewEntry'
+import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 
 export default {
-  title: 'Components/PathView/PathViewEntry',
+  title: 'Components/PathTree/PathTreeView/PathTreeViewEntry',
   tags: ['autodocs'],
-  component: PathViewEntry,
+  component: PathTreeViewEntry,
   args: {
     collapse: true,
     compact: false,
@@ -17,11 +17,11 @@ export default {
   },
   render: (args) => ({
     components: {
-      PathViewEntry
+      PathTreeViewEntry
     },
     setup: () => ({ args }),
     template: `
-      <path-view-entry v-bind="args"
+      <path-tree-view-entry v-bind="args"
         @update:selected="args.selected = $event"
         @update:indeterminate="args.indeterminate = $event"
         @update:collapse="args.collapse = $event" />
