@@ -75,6 +75,7 @@ export default {
   },
   watch: {
     project() {
+      this.selectedPath = this.pathTreePath
       this.selectedPaths = []
     }
   }
