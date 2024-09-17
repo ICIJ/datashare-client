@@ -17,7 +17,6 @@ defineProps({
 
 <style lang="scss" scoped>
 .path-view-entry-stats-size {
-  color: var(--bs-secondary-color);
   display: flex;
   align-items: center;
 
