@@ -11,6 +11,9 @@ const props = defineProps({
   justified: {
     type: Boolean
   },
+  lazy: {
+    type: Boolean
+  },
   small: {
     type: Boolean
   },
@@ -29,7 +32,8 @@ const props = defineProps({
   activeNavItemClass: { type: String },
   navItemClass: { type: String },
   activeTabClass: { type: String },
-  contentClass: { type: String }
+  contentClass: { type: String },
+  navClass: { type: String }
 })
 
 const navClassList = computed(() => {
@@ -37,7 +41,8 @@ const navClassList = computed(() => {
     'nav-underline': true,
     'tab-group-navigation': true,
     'tab-group-navigation--nowrap': props.nowrap,
-    'tab-group-navigation--flush': props.flush
+    'tab-group-navigation--flush': props.flush,
+    [props.navClass]: true
   }
 })
 </script>
@@ -52,6 +57,7 @@ const navClassList = computed(() => {
     :card-header="cardHeader"
     :fill="fill"
     :justified="justified"
+    :lazy="lazy"
     :small="small"
     :tag="tag"
     :vertical="vertical"
