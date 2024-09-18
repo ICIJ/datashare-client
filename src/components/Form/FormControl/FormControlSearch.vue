@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+
+import { buttonSizeValidator, SIZE } from '@/enums/sizes'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 /**
  * A search input with pill layout.
  */
@@ -67,10 +70,8 @@ const props = defineProps({
    */
   size: {
     type: String,
-    default: 'md',
-    validator: function (value) {
-      return ['sm', 'md', 'lg'].includes(value)
-    }
+    default: SIZE.MD,
+    validator: buttonSizeValidator
   },
   /**
    * Disable autocomplete by default.
