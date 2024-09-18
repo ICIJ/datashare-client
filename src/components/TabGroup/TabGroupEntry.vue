@@ -12,6 +12,9 @@ defineProps({
   active: {
     type: Boolean
   },
+  lazy: {
+    type: Boolean
+  },
   disabled: {
     type: Boolean
   },
@@ -34,6 +37,7 @@ defineProps({
   <b-tab
     class="tab-group-entry"
     :active="active"
+    :lazy="lazy"
     :disabled="disabled"
     title-item-class="tab-group-navigation-entry"
     :title-link-attrs="titleLinkAttrs"
