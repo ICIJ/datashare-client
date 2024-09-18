@@ -376,7 +376,57 @@ export const routes = [
             return i18n.global?.t(key) ?? i18n.t(key)
           }
         },
-        component: () => import('@/views/Settings/SettingsView')
+        component: () => import('@/views/Settings/SettingsView'),
+        children: [
+          {
+            name: 'settings.general',
+            path: 'general',
+            component: () => import('@/views/Settings/SettingsGeneral'),
+            meta: {
+              title: 'General'
+            }
+          },
+          {
+            name: 'settings.appearances',
+            path: 'general',
+            component: () => import('@/views/Settings/SettingsGeneral'),
+            meta: {
+              title: 'General'
+            }
+          },
+          {
+            name: 'settings.document-processing',
+            path: 'general',
+            component: () => import('@/views/Settings/SettingsGeneral'),
+            meta: {
+              title: 'General'
+            }
+          },
+          {
+            name: 'settings.batch-tasks',
+            path: 'general',
+            component: () => import('@/views/Settings/SettingsGeneral'),
+            meta: {
+              title: 'General'
+            }
+          },
+          {
+            name: 'settings.plugins',
+            path: 'general',
+            component: () => import('@/views/Settings/SettingsGeneral'),
+            meta: {
+              title: 'General'
+            }
+          },
+          {
+            name: 'settings.extensions',
+            path: 'general',
+            component: () => import('@/views/Settings/SettingsGeneral'),
+            meta: {
+              title: 'General'
+            }
+          }
+        ]
       },
       {
         name: 'document-standalone',
