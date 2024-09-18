@@ -6,6 +6,7 @@
     "yes": "Yes",
     "no": "No",
     "submit": "Submit",
+    "reset": "Reset",
     "confirmLabel": "Are you sure?",
     "emptyTextTable": "There are no records to show",
     "you": "You"
@@ -1124,6 +1125,16 @@
   "server": {
     "title": "Settings",
     "description": "Don't change these settings if you don't know what you're doing."
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Don't change these settings if you don't know what you're doing.",
+    "general":"General" ,
+    "appearance":"Appearance" ,
+    "document-processing":"Document Processing" ,
+    "batch-tasks":"Batch Tasks" ,
+    "plugins":"Plugins" ,
+    "extensions":"Extensions"
   },
   "serverSettings": {
     "title": "Server Settings",
