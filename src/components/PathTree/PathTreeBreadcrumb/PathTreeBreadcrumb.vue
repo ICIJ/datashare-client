@@ -3,6 +3,8 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { basename } from 'path'
 import { computed } from 'vue'
 
+import PathTreeBreadcrumbEntry from './PathTreeBreadcrumbEntry.vue'
+
 import { useCore } from '@/composables/core'
 
 const { core } = useCore()
@@ -18,6 +20,9 @@ const props = defineProps({
     type: Boolean
   },
   noDatadir: {
+    type: Boolean
+  },
+  noLink: {
     type: Boolean
   }
 })
@@ -55,48 +60,20 @@ const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithout
 </script>
 
 <template>
-  <ul class="list-inline flex-grow-1 m-0 path-tree-breadcrumb text-truncate">
-    <li
-      v-if="datadirLabel && !noDatadir"
-      class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--root"
-    >
-      <a href @click.prevent="modelValue = dataDir">
-        {{ $t('treeView.datadir') }}
-      </a>
-    </li>
-    <li
-      v-if="treeWithoutDataDir.length > maxDirectories"
-      class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--abbr"
-    >
+  <ul class="path-tree-breadcrumb list-inline flex-grow-1 m-0 text-truncate">
+    <path-tree-breadcrumb-entry v-if="datadirLabel && !noDatadir" root :no-link="noLink" @select="modelValue = dataDir">
+      {{ $t('treeView.datadir') }}
+    </path-tree-breadcrumb-entry>
+    <path-tree-breadcrumb-entry v-if="treeWithoutDataDir.length > maxDirectories" abbr>
       <phosphor-icon name="dots-three" />
-    </li>
-    <li
+    </path-tree-breadcrumb-entry>
+    <path-tree-breadcrumb-entry
       v-for="directory in tree.slice(-maxDirectories)"
       :key="directory"
-      class="list-inline-item path-tree-breadcrumb__item"
+      :no-link="noLink"
+      @select="modelValue = directory"
     >
-      <a href @click.prevent="modelValue = directory">
-        {{ basename(directory) }}
-      </a>
-    </li>
+      {{ basename(directory) }}
+    </path-tree-breadcrumb-entry>
   </ul>
 </template>
-
-<style lang="scss" scoped>
-.path-tree-breadcrumb {
-  &__item.list-inline-item {
-    margin-right: $spacer * 0.1;
-    padding: 0;
-
-    &:not(:last-child):after {
-      content: '/';
-      color: $text-muted;
-      margin-left: $spacer * 0.1;
-    }
-
-    &:last-child a {
-      color: inherit;
-    }
-  }
-}
-</style>

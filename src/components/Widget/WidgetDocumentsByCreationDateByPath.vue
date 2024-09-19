@@ -40,7 +40,7 @@
 import { castArray } from 'lodash'
 import { mapState } from 'vuex'
 
-import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb'
+import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import PathTree from '@/components/PathTree/PathTree'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
 
