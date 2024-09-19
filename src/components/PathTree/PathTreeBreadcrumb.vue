@@ -1,124 +1,86 @@
+<script setup>
+import { PhosphorIcon } from '@icij/murmur-next'
+import { basename } from 'path'
+import { computed } from 'vue'
+
+import { useCore } from '@/composables/core'
+
+const { core } = useCore()
+
+const modelValue = defineModel({ type: String })
+
+const props = defineProps({
+  maxDirectories: {
+    type: Number,
+    default: 5
+  },
+  datadirLabel: {
+    type: Boolean
+  },
+  noDatadir: {
+    type: Boolean
+  }
+})
+
+const getNextTreeEntry = (tree, directory) => {
+  const previous = tree.length > 0 ? tree[tree.length - 1] : ''
+  const sep = isWindowsPath.value ? '\\' : '/'
+  const root = isWindowsPath.value ? '' : sep
+  const entry = isRootEntry(tree) ? `${root}${directory}` : `${previous}${sep}${directory}`
+  tree.push(entry)
+  return tree
+}
+
+const isRootEntry = (tree) => tree.length === 0
+
+const isWindowsPath = computed(() => pathSeparator.value === '\\')
+
+const dataDir = computed(() => core.config.get('mountedDataDir') || core.config.get('dataDir'))
+
+const pathSeparator = computed(() => core.config.get('pathSeparator', '/'))
+
+const treeDirectories = computed(() => modelValue.value?.split(pathSeparator.value) ?? [])
+
+const fullTree = computed(() =>
+  treeDirectories.value
+    // Filter out empty directories
+    .filter((directory) => directory !== '')
+    // Transform each directory into a path entry
+    .reduce(getNextTreeEntry, [])
+)
+
+const treeWithoutDataDir = computed(() => fullTree.value.filter((d) => d.length > dataDir.value.length))
+
+const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithoutDataDir.value : fullTree.value))
+</script>
+
 <template>
   <ul class="list-inline flex-grow-1 m-0 path-tree-breadcrumb text-truncate">
-    <li class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--root">
-      <a href @click.prevent="$emit('input', dataDir)">
-        <phosphor-icon v-if="!noDatadirIcon" :name="datadirIcon" />
-        <span v-if="datadirLabel" class="ms-1">{{ $t('treeView.datadir') }}</span>
+    <li
+      v-if="datadirLabel && !noDatadir"
+      class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--root"
+    >
+      <a href @click.prevent="modelValue = dataDir">
+        {{ $t('treeView.datadir') }}
       </a>
     </li>
     <li
       v-if="treeWithoutDataDir.length > maxDirectories"
       class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--abbr"
     >
-      ...
+      <phosphor-icon name="dots-three" />
     </li>
     <li
       v-for="directory in tree.slice(-maxDirectories)"
       :key="directory"
       class="list-inline-item path-tree-breadcrumb__item"
     >
-      <a href @click.prevent="$emit('input', directory)">{{ getBasename(directory) }}</a>
+      <a href @click.prevent="modelValue = directory">
+        {{ basename(directory) }}
+      </a>
     </li>
   </ul>
 </template>
-
-<script>
-import { PhosphorIcon } from '@icij/murmur-next'
-import { filter, last, reduce } from 'lodash'
-import { basename } from 'path'
-
-/**
- * A clickable path breadcrumb.
- */
-export default {
-  name: 'PathTreeBreadcrumb',
-  model: {
-    prop: 'path',
-    event: 'input'
-  },
-  props: {
-    /**
-     * Path to use in the breadcrumb.
-     * @model
-     */
-    path: {
-      type: String
-    },
-    /**
-     * Maximum number of directories to display (truncate from the beginning using ellipsis)
-     */
-    maxDirectories: {
-      type: Number,
-      default: 5
-    },
-    /**
-     * Hide Datashare's root data directory from the breadcrumb.
-     */
-    noDatadir: {
-      type: Boolean
-    },
-    /**
-     * Data directory icon
-     */
-    datadirIcon: {
-      type: [String, Object, Array],
-      default: 'folder-open'
-    },
-    /**
-     * Use a label next to the datadir icon
-     */
-    datadirLabel: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Hide the icon
-     */
-    noDatadirIcon: {
-      type: Boolean
-    }
-  },
-  data() {
-    return {
-      pathSeparator: this.$core.config.get('pathSeparator', '/')
-    }
-  },
-  computed: {
-    PhosphorIcon
-  },
-  computed: {
-    fullTree() {
-      return reduce(
-        this.path.split(this.pathSeparator),
-        (tree, d) => {
-          if (d !== '') {
-            if (tree.length === 0 && this.pathSeparator === '\\') {
-              // fix Windows : avoid having a separator at the beginning
-              tree.push(basename(d))
-            } else {
-              tree.push([last(tree), basename(d)].join('/'))
-            }
-          }
-          return tree
-        },
-        []
-      )
-    },
-    treeWithoutDataDir() {
-      return filter(this.fullTree, (d) => d.length > this.dataDir.length)
-    },
-    tree() {
-      return this.noDatadir ? this.treeWithoutDataDir : this.fullTree
-    },
-    dataDir() {
-      return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
-    }
-  },
-  methods: {
-    getBasename: basename
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .path-tree-breadcrumb {
@@ -134,7 +96,6 @@ export default {
 
     &:last-child a {
       color: inherit;
-      font-weight: bold;
     }
   }
 }
