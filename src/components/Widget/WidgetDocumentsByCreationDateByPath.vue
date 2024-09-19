@@ -24,7 +24,13 @@
         size="lg"
         @ok="setSelectedPath(selectedPaths[0])"
       >
-        <path-tree v-model:selected-paths="selectedPaths" :path="pathTreePath" :projects="projects" select-mode />
+        <path-tree
+          v-model:selected-paths="selectedPaths"
+          :path="pathTreePath"
+          :projects="projects"
+          select-mode
+          elasticsearch-only
+        />
       </b-modal>
     </template>
   </widget-documents-by-creation-date>

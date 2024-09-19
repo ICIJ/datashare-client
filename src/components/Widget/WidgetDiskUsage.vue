@@ -15,7 +15,7 @@
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer size="lg">
-      <path-tree v-model:path="path" :projects="[project]" />
+      <path-tree v-model:path="path" :projects="[project]" elasticsearch-only />
     </b-modal>
   </div>
 </template>
