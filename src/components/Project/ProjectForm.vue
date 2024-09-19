@@ -2,7 +2,7 @@
 import { ref, watch, computed } from 'vue'
 import { every, cloneDeep, kebabCase } from 'lodash'
 
-import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
+import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { slugger, isUrl } from '@/utils/strings'
@@ -153,7 +153,7 @@ watch(
         :disabled="disabled"
         :validated="isPresent(form.sourcePath)"
       >
-        <inline-directory-picker v-model:path="form.sourcePath" />
+        <form-control-path v-model:path="form.sourcePath" />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--logo-url"

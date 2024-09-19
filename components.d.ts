@@ -260,6 +260,7 @@ declare module 'vue' {
     FormActions: typeof import('./src/components/Form/FormActions/FormActions.vue')['default']
     FormActionsCompact: typeof import('./src/components/Form/FormActions/FormActionsCompact.vue')['default']
     FormActionsCompactDropdown: typeof import('./src/components/Form/FormActions/FormActionsCompactDropdown.vue')['default']
+    FormControlPath: typeof import('./src/components/Form/FormControl/FormControlPath.vue')['default']
     FormControlRange: typeof import('./src/components/Form/FormControl/FormControlRange/FormControlRange.vue')['default']
     FormControlRangeSlider: typeof import('./src/components/Form/FormControl/FormControlRange/FormControlRangeSlider.vue')['default']
     FormControlRangeSliderBullet: typeof import('./src/components/Form/FormControl/FormControlRange/FormControlRangeSliderBullet.vue')['default']

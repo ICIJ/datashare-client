@@ -2,7 +2,7 @@
 import { compact, get, filter, trim, trimEnd, uniqueId } from 'lodash'
 
 export default {
-  name: 'InlineDirectoryPicker',
+  name: 'FormControlPath',
   props: {
     dark: {
       type: Boolean
@@ -56,7 +56,7 @@ export default {
       return trim(this.path.split(this.baseDir).pop(), this.pathSeparator)
     },
     waitIdentifier() {
-      return uniqueId('inline-directory-picker-')
+      return uniqueId('form-control-path-')
     },
     isReady() {
       return !this.$wait.is(this.waitIdentifier)
@@ -135,19 +135,19 @@ export default {
 </script>
 
 <template>
-  <div class="inline-directory-picker border rounded" :class="{ 'inline-directory-picker--dark': dark }">
+  <div class="form-control-path border rounded" :class="{ 'form-control-path--dark': dark }">
     <b-overlay rounded :show="!isReady" :variant="overlayVariant" spinner-small>
-      <div class="inline-directory-picker__header d-flex align-items-center p-2">
-        <fa v-if="!hideFolderIcon" class="inline-directory-picker__header__icon me-3" icon="folder" fixed-width />
+      <div class="form-control-path__header d-flex align-items-center p-2">
+        <fa v-if="!hideFolderIcon" class="form-control-path__header__icon me-3" icon="folder" fixed-width />
         <active-text-truncate
           :key="directories.length"
-          class="inline-directory-picker__header__list me-1"
+          class="form-control-path__header__list me-1"
           direction="rtl"
         >
           <div
             v-for="(directory, i) in directories"
             :key="directory"
-            class="inline-directory-picker__header__list__item"
+            class="form-control-path__header__list__item"
             @click="selectAndBrowse(i)"
           >
             <b-button
@@ -161,7 +161,7 @@ export default {
           </div>
         </active-text-truncate>
         <b-button
-          class="inline-directory-picker__header__browse py-0 ms-auto"
+          class="form-control-path__header__browse py-0 ms-auto"
           size="sm"
           :variant="browseBtnVariant"
           @click="toggleBrowser()"
@@ -170,14 +170,14 @@ export default {
         </b-button>
       </div>
       <b-collapse :visible="browse">
-        <ul v-if="browsingTreeDirectories.length" class="inline-directory-picker__browser list-unstyled m-0 border-top">
+        <ul v-if="browsingTreeDirectories.length" class="form-control-path__browser list-unstyled m-0 border-top">
           <li
             v-for="directory in browsingTreeDirectories"
             :key="directory.name"
-            class="inline-directory-picker__browser__item position-relative"
+            class="form-control-path__browser__item position-relative"
           >
             <a
-              class="inline-directory-picker__browser__item__link d-block p-2 stretched-link"
+              class="form-control-path__browser__item__link d-block p-2 stretched-link"
               href
               @click.prevent="selectAndBrowse(directory.name, true)"
             >
@@ -195,7 +195,7 @@ export default {
 </template>
 
 <style lang="scss">
-.inline-directory-picker {
+.form-control-path {
   &__header {
     &__list {
       & &__item {
@@ -233,8 +233,8 @@ export default {
         background: $table-hover-bg;
       }
 
-      .inline-directory-picker--dark &__link:hover,
-      .inline-directory-picker--dark &--active &__link {
+      .form-control-path--dark &__link:hover,
+      .form-control-path--dark &--active &__link {
         background: $dark;
       }
 
