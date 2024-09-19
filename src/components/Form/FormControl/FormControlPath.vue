@@ -1,4 +1,33 @@
-<script>
+<script setup>
+import { computed } from 'vue'
+
+import ButtonIcon from '@/components/Button/ButtonIcon'
+import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb'
+import { useCore } from '@/composables/core'
+
+const { core } = useCore()
+
+const modelValue = defineModel({ type: String })
+
+const props = defineProps({
+  path: {
+    type: String,
+    default: null
+  }
+})
+
+const dataDir = computed(() => core.config.get('dataDir'))
+const sourcePath = computed(() => props.path ?? dataDir.value)
+const display = computed(() => modelValue.value ?? sourcePath.value)
+</script>
+
+<template>
+  <button-icon icon-left="folder-open" variant="outline-tertiary">
+    <path-tree-breadcrumb :model-value="display" datadir-label />
+  </button-icon>
+</template>
+
+<!-- <script>
 import { compact, get, filter, trim, trimEnd, uniqueId } from 'lodash'
 
 export default {
@@ -244,4 +273,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->
