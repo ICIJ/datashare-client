@@ -1,6 +1,6 @@
 <template>
-  <ul class="list-inline flex-grow-1 m-0 tree-breadcrumb text-truncate">
-    <li class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--root">
+  <ul class="list-inline flex-grow-1 m-0 path-tree-breadcrumb text-truncate">
+    <li class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
         <fa :icon="datadirIcon" fixed-width></fa>
         <span v-if="datadirLabel" class="ms-1">{{ $t('treeView.datadir') }}</span>
@@ -8,14 +8,14 @@
     </li>
     <li
       v-if="treeWithoutDataDir.length > maxDirectories"
-      class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr"
+      class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--abbr"
     >
       ...
     </li>
     <li
       v-for="directory in tree.slice(-maxDirectories)"
       :key="directory"
-      class="list-inline-item tree-breadcrumb__item"
+      class="list-inline-item path-tree-breadcrumb__item"
     >
       <a href @click.prevent="$emit('input', directory)">{{ getBasename(directory) }}</a>
     </li>
@@ -30,7 +30,7 @@ import { basename } from 'path'
  * A clickable path breadcrumb.
  */
 export default {
-  name: 'TreeBreadcrumb',
+  name: 'PathTreeBreadcrumb',
   model: {
     prop: 'path',
     event: 'input'
@@ -111,7 +111,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tree-breadcrumb {
+.path-tree-breadcrumb {
   &__item.list-inline-item {
     margin-right: $spacer * 0.1;
     padding: 0;

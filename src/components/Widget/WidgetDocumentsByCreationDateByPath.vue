@@ -6,7 +6,7 @@
         v-b-modal.modal-widget-select-path
         class="me-3 py-1 px-2 border btn btn-link d-inline-flex"
       >
-        <tree-breadcrumb datadir-icon="filter" :path="selectedPath" no-datadir @input="pathTreeValue = $event" />
+        <path-tree-breadcrumb datadir-icon="filter" :path="selectedPath" no-datadir @input="pathTreeValue = $event" />
         <span v-if="selectedPath === dataDir">
           {{ $t('widget.creationDate.filterFolder') }}
         </span>
@@ -40,7 +40,7 @@
 import { castArray } from 'lodash'
 import { mapState } from 'vuex'
 
-import TreeBreadcrumb from '@/components/TreeBreadcrumb'
+import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb'
 import PathTree from '@/components/PathTree/PathTree'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
 
@@ -50,7 +50,7 @@ import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsBy
 export default {
   name: 'WidgetDocumentsByCreationDateByPath',
   components: {
-    TreeBreadcrumb,
+    PathTreeBreadcrumb,
     PathTree,
     WidgetDocumentsByCreationDate
   },
