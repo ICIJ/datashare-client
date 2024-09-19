@@ -5,7 +5,7 @@
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }">
       <div class="d-flex flex-row">
-        <tree-breadcrumb v-if="currentPath" :path="currentPath" no-datadir @input="update($event)" />
+        <path-tree-breadcrumb v-if="currentPath" :path="currentPath" no-datadir @input="update($event)" />
         <router-link
           :to="{ name: 'search', query: { index: widget.index, 'f[path]': currentPath } }"
           class="widget__content__search"
@@ -25,7 +25,7 @@ import { format, hierarchy, select, treemap } from 'd3'
 import { basename } from 'path'
 import VueScrollTo from 'vue-scrollto'
 
-import TreeBreadcrumb from '@/components/TreeBreadcrumb'
+import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb'
 
 /**
  * Widget to display a tree map on the insights page.
@@ -33,7 +33,7 @@ import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 export default {
   name: 'WidgetTreeMap',
   components: {
-    TreeBreadcrumb
+    PathTreeBreadcrumb
   },
   props: {
     /**
