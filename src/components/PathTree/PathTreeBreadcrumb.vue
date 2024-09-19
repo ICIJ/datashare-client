@@ -2,7 +2,7 @@
   <ul class="list-inline flex-grow-1 m-0 path-tree-breadcrumb text-truncate">
     <li class="list-inline-item path-tree-breadcrumb__item path-tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
-        <fa :icon="datadirIcon" fixed-width></fa>
+        <phosphor-icon v-if="!noDatadirIcon" :name="datadirIcon" />
         <span v-if="datadirLabel" class="ms-1">{{ $t('treeView.datadir') }}</span>
       </a>
     </li>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { PhosphorIcon } from '@icij/murmur-next'
 import { filter, last, reduce } from 'lodash'
 import { basename } from 'path'
 
@@ -69,12 +70,21 @@ export default {
     datadirLabel: {
       type: Boolean,
       default: false
+    },
+    /**
+     * Hide the icon
+     */
+    noDatadirIcon: {
+      type: Boolean
     }
   },
   data() {
     return {
       pathSeparator: this.$core.config.get('pathSeparator', '/')
     }
+  },
+  computed: {
+    PhosphorIcon
   },
   computed: {
     fullTree() {
