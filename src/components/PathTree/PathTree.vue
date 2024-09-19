@@ -206,7 +206,7 @@ const reachedTheEnd = computed(() => {
 })
 
 const treeChildren = computed(() => {
-  return filter(tree.value.contents, { type: 'directory' })
+  return filter(tree.value?.contents ?? [], { type: 'directory' })
 })
 
 const treeAsPagesBuckets = computed(() => {
@@ -322,6 +322,10 @@ const loadDataWithSpinner = async (...args) => {
   }
 }
 
+const reloadDataWithSpinner = async () => {
+  await loadDataWithSpinner({ clearPages: true })
+}
+
 const nextLoadData = async ($infiniteLoadingState) => {
   await loadData()
   // Did we reach the end?
@@ -377,7 +381,7 @@ onBeforeMount(() => {
   return loadDataWithSpinner({ clearPages: true })
 })
 
-defineExpose({ loadData, loadDataWithSpinner, isLoading })
+defineExpose({ loadData, loadDataWithSpinner, reloadDataWithSpinner, isLoading })
 </script>
 
 <template>
