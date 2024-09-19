@@ -326,7 +326,7 @@ declare module 'vue' {
     Pagination: typeof import('./src/components/Pagination.vue')['default']
     PathPathTreeBreadcrumb: typeof import('./src/components/PathTree/PathPathTreeBreadcrumb.vue')['default']
     PathTree: typeof import('./src/components/PathTree/PathTree.vue')['default']
-    PathTreeBreadcrumb: typeof import('./src/components/PathTree/PathTreeBreadcrumb.vue')['default']
+    PathTreeBreadcrumb: typeof import('./src/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb.vue')['default']
     PathTreeBreadcrumbEntry: typeof import('./src/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumbEntry.vue')['default']
     PathTreeBreadcrumbEntryLabel: typeof import('./src/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumbEntryLabel.vue')['default']
     PathTreeBreadcrumbEntryLink: typeof import('./src/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumbEntryLink.vue')['default']

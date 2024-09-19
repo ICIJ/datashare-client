@@ -6,7 +6,13 @@
         v-b-modal.modal-widget-select-path
         class="me-3 py-1 px-2 border btn btn-link d-inline-flex"
       >
-        <path-tree-breadcrumb datadir-icon="filter" :model-value="selectedPath" datadir-label no-link />
+        <path-tree-breadcrumb
+          datadir-icon="filter"
+          :model-value="selectedPath"
+          datadir-label
+          no-link
+          :no-datadir="selectedPath === dataDir"
+        />
         <span v-if="selectedPath === dataDir">
           {{ $t('widget.creationDate.filterFolder') }}
         </span>
