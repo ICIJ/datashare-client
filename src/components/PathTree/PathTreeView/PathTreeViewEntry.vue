@@ -41,6 +41,9 @@ const props = defineProps({
   },
   loading: {
     type: Boolean
+  },
+  noStats: {
+    type: Boolean
   }
 })
 
@@ -81,6 +84,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         <slot name="name" />
       </path-tree-view-entry-name>
       <path-tree-view-entry-stats
+        v-if="!noStats"
         class="ms-auto"
         :compact="compactOrInjected"
         :documents="documents"
