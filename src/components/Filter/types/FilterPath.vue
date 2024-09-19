@@ -3,7 +3,7 @@
     <template #items="{ sortBy, sortByOrder, query }">
       <div class="filter__tree-view">
         <path-tree
-          ref="PathTree"
+          ref="pathTree"
           v-model:selected-paths="selectedPaths"
           :path="path"
           :query="query"
@@ -103,9 +103,9 @@ export default {
     },
     reloadPathTree() {
       if (this.isContextualized) {
-        return this.$refs.PathTree.reloadDataWithSpinner()
+        return this.$refs.pathTree.reloadDataWithSpinner()
       }
-      return this.$refs.PathTree.loadData()
+      return this.$refs.pathTree.loadData()
     }
   }
 }
