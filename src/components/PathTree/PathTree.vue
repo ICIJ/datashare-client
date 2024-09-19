@@ -1,7 +1,6 @@
 <script setup>
-import { onBeforeMount, computed, ref, watch } from 'vue'
-import { flatten, filter, get, identity, includes, noop, trim, trimEnd, uniq, uniqueId, uniqBy, last } from 'lodash'
-import { get as makeGet } from 'lodash/fp'
+import { onBeforeMount, computed, ref, reactive, watch } from 'vue'
+import { flatten, filter, get, identity, includes, trim, trimEnd, uniq, uniqueId, uniqBy, throttle } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
@@ -79,6 +78,11 @@ const props = defineProps({
    * child documents.
    */
   includeChildrenDocuments: { type: Boolean },
+  /**
+   * If true, the tree will only display directories that have documents
+   * indexed in Elasticsearch.
+   */
+  elasticsearchOnly: { type: Boolean },
   level: { type: Number, default: 0 }
 })
 
@@ -88,9 +92,11 @@ const pathSeparator = computed(() => {
 })
 
 const pages = ref([])
+const directoriesRefs = reactive({})
 const tree = ref({ contents: [] })
 const notCollapsed = ref([])
 const loaderId = uniqueId()
+const isLoading = computed(() => wait.is(loaderId))
 const perPage = 50
 
 const isCollapsedDirectory = (directory) => {
@@ -138,7 +144,10 @@ const usesWindowsSeparator = computed(() => {
 
 watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
-watch(makeGet(props, 'path'), () => loadDataWithSpinner({ clearPages: true }))
+watch(
+  () => props.path,
+  () => loadDataWithSpinner({ clearPages: true })
+)
 
 /**
  * Since 9.4.2, the dirname field is tokenized using the
@@ -202,9 +211,7 @@ const treeAsPagesBuckets = computed(() => {
   return (
     treeChildren.value
       // Only keep directories
-      .filter(({ type }) => {
-        return type === 'directory'
-      })
+      .filter(({ type }) => type === 'directory')
       // Only keep the ones matching with the query
       .filter(({ name }) => {
         if (hasQuery.value) {
@@ -254,7 +261,7 @@ const selectDirectory = (directory) => {
 }
 
 const getBasename = (value) => {
-  return last(value.split(pathSeparator.value))
+  return value.split(pathSeparator.value).pop()
 }
 
 const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
@@ -289,12 +296,20 @@ const loadData = async ({ clearPages = false } = {}) => {
   pages.value.push(res)
 }
 
+const toggleLoader = (start = true) => {
+  const method = start ? 'start' : 'end'
+  wait[method](loaderId)
+}
+
+// Avoid flashing effect by throttling the loader display to 500ms
+const throttleToggleLoader = throttle(toggleLoader, 500)
+
 const loadDataWithSpinner = async (...args) => {
   try {
-    wait.start(loaderId)
+    throttleToggleLoader(true)
     await loadData(...args)
   } finally {
-    wait.end(loaderId)
+    throttleToggleLoader(false)
   }
 }
 
@@ -303,7 +318,7 @@ const nextLoadData = async ($infiniteLoadingState) => {
   // Did we reach the end?
   const method = reachedTheEnd.value ? 'complete' : 'loaded'
   // Call the right method (with "noop" as safety net in case the method can't be found)
-  return get($infiniteLoadingState, method, noop)()
+  return get($infiniteLoadingState, method, () => null)()
 }
 
 const clearPages = () => {
@@ -318,17 +333,21 @@ const loadTree = async () => {
   }
 }
 
-const clearPagesAndLoadTree = async () => {
-  clearPages()
+const shouldLoadTree = computed(() => {
+  // The /tree API is disabled in server so we ensure
+  // the mode is correct before running it.
+  const isServer = core.config.get('mode') === 'SERVER'
   // Only load the tree if we clear out the pages
   // and entirely load the folder. This way we avoid
   // load directories from the /tree API when they are
   // already present in next result page of the
   // ElasticSearch aggregation.
-  //
-  // The /tree API is disabled in server so we ensure
-  // the mode is correct before running it.
-  if (reachedTheEnd.value && core.config.get('mode') !== 'SERVER') {
+  return reachedTheEnd.value && !isServer && !props.elasticsearchOnly
+})
+
+const clearPagesAndLoadTree = async () => {
+  clearPages()
+  if (shouldLoadTree.value) {
     await loadTree()
   }
 }
@@ -349,7 +368,7 @@ onBeforeMount(() => {
   return loadDataWithSpinner({ clearPages: true })
 })
 
-defineExpose({ loadData, loadDataWithSpinner })
+defineExpose({ loadData, loadDataWithSpinner, isLoading })
 </script>
 
 <template>
@@ -362,7 +381,7 @@ defineExpose({ loadData, loadDataWithSpinner })
       :multiple="multiple"
     >
       <path-tree-view-entry
-        :loading="wait.is(loaderId)"
+        :loading="isLoading"
         :name="getBasename(path)"
         :selected="isSelectedDirectory(path)"
         :documents="totalDocuments"
@@ -376,6 +395,7 @@ defineExpose({ loadData, loadDataWithSpinner })
         <path-tree-view-entry
           v-for="directory in directories"
           :key="directory"
+          :loading="!!directoriesRefs[directory.key]?.isLoading"
           :name="getBasename(directory.key)"
           :documents="directory.doc_count"
           :directories="directory.directories.value"
@@ -389,6 +409,7 @@ defineExpose({ loadData, loadDataWithSpinner })
           <template #default="{ collapse }">
             <path-tree
               v-if="!collapse"
+              :ref="(el) => (directoriesRefs[directory.key] = el)"
               v-model:selected-paths="selectedPaths"
               no-label
               no-search
