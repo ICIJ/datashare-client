@@ -29,9 +29,7 @@ const props = defineProps({
    */
   projects: {
     type: Array,
-    default: () => {
-      return ['local-datashare']
-    }
+    default: () => []
   },
   /**
    * Root path of the tree
@@ -45,6 +43,10 @@ const props = defineProps({
    * Deactivate the search input
    */
   noSearch: { type: Boolean },
+  /**
+   * Deactivate the stats display
+   */
+  noStats: { type: Boolean },
   /**
    * Whether to display empty directories
    */
@@ -284,16 +286,23 @@ const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
 }
 
 const loadData = async ({ clearPages = false } = {}) => {
-  const index = props.projects.join(',')
-  const from = clearPages ? 0 : offset.value
-  const size = perPage
-  const body = props.preBodyBuild(bodybuilderBase({ from, size })).build()
-  const preference = 'tree-view-paths'
-  const res = await core.api.elasticsearch.search({ index, body, preference, size: 0 })
-  // Clear the list of pages (to start over!)
-  if (clearPages) await clearPagesAndLoadTree()
-  // Add the result as a page
-  pages.value.push(res)
+  // Only load data if there are any projects
+  if (props.projects.length) {
+    const index = props.projects.join(',')
+    const from = clearPages ? 0 : offset.value
+    const size = perPage
+    const body = props.preBodyBuild(bodybuilderBase({ from, size })).build()
+    const preference = 'tree-view-paths'
+    const res = await core.api.elasticsearch.search({ index, body, preference, size: 0 })
+    // Clear the list of pages (to start over!)
+    if (clearPages) await clearPagesAndLoadTree()
+    // Add the result as a page
+    pages.value.push(res)
+  } else if (clearPages) {
+    // If no projects are given and we are clearing the pages,
+    // we should load the tree anyway.
+    await loadTree()
+  }
 }
 
 const toggleLoader = (start = true) => {
@@ -357,11 +366,11 @@ const totalDocuments = computed(() => {
 })
 
 const totalDirectories = computed(() => {
-  return get(lastPage.value, 'aggregations.total_directories.value', -1)
+  return get(lastPage.value, 'aggregations.total_directories.value', 0)
 })
 
 const totalSize = computed(() => {
-  return get(lastPage.value, 'aggregations.total_size.value', -1)
+  return get(lastPage.value, 'aggregations.total_size.value', 0)
 })
 
 onBeforeMount(() => {
@@ -379,6 +388,7 @@ defineExpose({ loadData, loadDataWithSpinner, isLoading })
       :no-search="noSearch"
       :select-mode="selectMode"
       :multiple="multiple"
+      :compact="compact"
     >
       <path-tree-view-entry
         :loading="isLoading"
@@ -387,9 +397,10 @@ defineExpose({ loadData, loadDataWithSpinner, isLoading })
         :documents="totalDocuments"
         :directories="totalDirectories"
         :size="totalSize"
-        :collapse="false"
+        :compact="compact"
         :indeterminate="hasSelectedChildDirectory(path)"
         :no-header="level > 0"
+        :no-stats="noStats"
         @update:selected="selectDirectory(path)"
       >
         <path-tree-view-entry
@@ -402,6 +413,8 @@ defineExpose({ loadData, loadDataWithSpinner, isLoading })
           :size="directory.size.value"
           :selected="isSelectedDirectory(directory.key)"
           :collapse="isCollapsedDirectory(directory.key)"
+          :compact="compact"
+          :no-stats="noStats"
           :indeterminate="hasSelectedChildDirectory(directory.key)"
           @update:selected="selectDirectory(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
@@ -418,6 +431,8 @@ defineExpose({ loadData, loadDataWithSpinner, isLoading })
               :projects="projects"
               :select-mode="selectMode"
               :multiple="multiple"
+              :no-stats="noStats"
+              :compact="compact"
             />
           </template>
         </path-tree-view-entry>
