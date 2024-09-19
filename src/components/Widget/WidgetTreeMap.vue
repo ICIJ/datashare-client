@@ -25,7 +25,7 @@ import { format, hierarchy, select, treemap } from 'd3'
 import { basename } from 'path'
 import VueScrollTo from 'vue-scrollto'
 
-import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb'
+import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 
 /**
  * Widget to display a tree map on the insights page.
