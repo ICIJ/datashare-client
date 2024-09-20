@@ -2,7 +2,7 @@
   <b-form class="d-flex flex-column gap-1">
     <b-form-group v-for="(_, name) in settings" :key="name" label-cols-xs="12" label-cols-sm="4" label-cols-lg="3">
       <template #label>
-        <settings-general-server-label :name="name" :field-changed="fieldChanged(name)" @restore="restore"
+        <settings-general-label :name="name" :field-changed="fieldChanged(name)" @restore="restore"
       /></template>
       <b-form-input v-model="replica[name]"></b-form-input>
     </b-form-group>
@@ -19,7 +19,7 @@ import { computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { isEqual } from 'lodash'
 
-import SettingsGeneralServerLabel from '@/components/Settings/SettingsGeneralServerLabel'
+import SettingsGeneralLabel from '@/components/Settings/SettingsGeneral/SettingsGeneralLabel'
 const props = defineProps({
   settings: {
     type: Object,

@@ -1127,14 +1127,18 @@
     "description": "Don't change these settings if you don't know what you're doing."
   },
   "settings": {
-    "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing.",
-    "general":"General" ,
-    "appearance":"Appearance" ,
-    "document-processing":"Document Processing" ,
-    "batch-tasks":"Batch Tasks" ,
-    "plugins":"Plugins" ,
-    "extensions":"Extensions"
+    "title": {"title": "Settings"},
+    "description": {"title": "Don't change these settings if you don't know what you're doing."},
+    "general":{"title": "General" },
+    "appearance":{"title": "Appearance" ,
+      "info": "Choosing the dark or the light mode can improve your visual comfort.",
+      "dismissInfo": "Got it!"
+    },
+    "document-processing":{"title": "Document Processing" },
+    "batch-tasks":{"title": "Batch Tasks" },
+    "plugins":{"title": "Plugins" },
+    "extensions":{"title": "Extensions"}
+
   },
   "serverSettings": {
     "title": "Server Settings",
