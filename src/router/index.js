@@ -421,7 +421,7 @@ export const routes = [
           {
             name: 'settings.extensions',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsGeneral'),
+            component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
               title: 'General'
             }
