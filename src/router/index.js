@@ -387,8 +387,8 @@ export const routes = [
             }
           },
           {
-            name: 'settings.appearances',
-            path: 'general',
+            name: 'settings.appearance',
+            path: 'appearance',
             component: () => import('@/views/Settings/SettingsViewAppearance'),
             meta: {
               title: 'General'
