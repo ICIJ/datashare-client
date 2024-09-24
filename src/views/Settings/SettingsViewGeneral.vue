@@ -2,15 +2,12 @@
 /**
  * A list of settings for the backend (only available in local mode).
  */
-import { computed, onBeforeMount, reactive, ref } from 'vue'
-import Fuse from 'fuse.js'
+import { computed, onBeforeMount, reactive } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { isEmpty, property } from 'lodash'
 
-import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import SettingsGeneralServer from '@/components/Settings/SettingsGeneralServer'
+import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
 import { useUtils } from '@/composables/utils'
 import { useCore } from '@/composables/core'
 
@@ -48,7 +45,7 @@ async function onSubmit(newSettings) {
       <template #waiting>
         <phosphor-icon icon="circle" spin></phosphor-icon>
       </template>
-      <settings-general-server :settings="settings" class="card border-0 p-4" @submit.prevent="onSubmit" />
+      <settings-general :settings="settings" class="card border-0 p-4" @submit.prevent="onSubmit" />
     </v-wait>
     <div v-else>
       <b-alert model-value variant="danger" show> {{ noAccessLabel }} </b-alert>

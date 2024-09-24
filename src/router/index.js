@@ -381,7 +381,7 @@ export const routes = [
           {
             name: 'settings.general',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsGeneral'),
+            component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
               title: 'General'
             }
@@ -389,7 +389,7 @@ export const routes = [
           {
             name: 'settings.appearances',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsGeneral'),
+            component: () => import('@/views/Settings/SettingsViewAppearance'),
             meta: {
               title: 'General'
             }
@@ -397,7 +397,7 @@ export const routes = [
           {
             name: 'settings.document-processing',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsGeneral'),
+            component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
               title: 'General'
             }
@@ -405,7 +405,7 @@ export const routes = [
           {
             name: 'settings.batch-tasks',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsGeneral'),
+            component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
               title: 'General'
             }
@@ -413,7 +413,7 @@ export const routes = [
           {
             name: 'settings.plugins',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsGeneral'),
+            component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
               title: 'General'
             }
