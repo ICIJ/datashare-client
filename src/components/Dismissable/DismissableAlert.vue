@@ -54,10 +54,11 @@ const props = defineProps({
 const localStorageKey = `dismissed-alert-${props.name}`
 const dissmissed = ref(props.persist && localStorage.getItem(localStorageKey) === 'true')
 const show = computed(() => dissmissed.value === false)
-const dissmiss = (persit) => {
+const dissmiss = (persist) => {
   dissmissed.value = true
   // Ensure that the state is persisted in local storage
-  if (persit && props.name) {
+
+  if (persist && props.name) {
     localStorage.setItem(localStorageKey, true)
   }
 }
@@ -90,7 +91,7 @@ const classList = {
               class="btn text-nowrap dismissable-alert__body__button ms-md-3"
               type="button"
               :class="linkClassList"
-              @click="dissmiss(persit)"
+              @click="dissmiss(persist)"
             >
               {{ linkLabel }}
             </button>
