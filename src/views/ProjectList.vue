@@ -7,8 +7,10 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useCore } from '@/composables/core'
+import { useUtils } from '@/composables/utils'
 
 const { core } = useCore()
+const { isServer } = useUtils()
 
 const searchQuery = useUrlParam('q', '')
 
@@ -28,6 +30,7 @@ const documentsCountByProject = ref({})
 const fetchDocumentsCountByProject = async () => {
   const query = { match: { type: 'Document' } }
   const projectIds = core.projectIds.join(',')
+  console.log(projectIds)
   const { aggregations } = await core.api.elasticsearch.countByProject(projectIds, query)
   const buckets = aggregations?.index?.buckets ?? []
   // Finally we store the count of documents by project
@@ -98,6 +101,10 @@ const order = computed({
   get: () => orderBy.value?.[1],
   set: (value) => (orderBy.value = [sort.value, value])
 })
+
+const toAddRoute = computed(() => {
+  return isServer.value ? null : { name: 'project.new' }
+})
 </script>
 
 <template>
@@ -107,7 +114,7 @@ const order = computed({
       v-model:page="page"
       :per-page="perPage"
       :total-rows="filteredProjects.length"
-      :to-add="{ name: 'project.new' }"
+      :to-add="toAddRoute"
       searchable
       paginable
       search-placeholder="Search projects"
