@@ -6,6 +6,7 @@ export default {
   tags: ['autodocs'],
   component: SettingsAppearanceRadioGroup,
   args: {
+    modelValue: 'light',
     options: [
       {
         icon: 'sun',

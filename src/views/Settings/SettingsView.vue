@@ -28,7 +28,7 @@ const tabs = computed(() => [
           :title="tab.title"
           @click="$router.push({ name: tab.name })"
         >
-          <router-view keep-alive />
+          <router-view  />
         </tab-group-entry>
       </tab-group>
     </div>
