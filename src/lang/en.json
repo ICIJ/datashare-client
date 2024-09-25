@@ -743,6 +743,9 @@
     "placeholder": "Add term",
     "addButtonText": "Add"
   },
+  "formControlPath": {
+    "browse": "Browse"
+  },
   "formStepHeadingToggler": {
     "label": "Toggle"
   },
