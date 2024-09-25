@@ -41,7 +41,7 @@ const maxExtractionDateByProject = ref({})
 const fetchMaxExtractionDateByProject = async () => {
   const query = { match: { type: 'Document' } }
   const projectIds = core.projectIds.join(',')
-  const { aggregations } = await core.api.elasticsearch._search(projectIds, query)
+  const { aggregations } = await core.api.elasticsearch.maxExtractionDateByProject(projectIds, query)
   const buckets = aggregations?.index?.buckets ?? []
   // Finally we store the max extraction date by project
   buckets.forEach(({ key, maxExtractionDate }) => (maxExtractionDateByProject.value[key] = maxExtractionDate.value))
