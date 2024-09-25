@@ -30,7 +30,6 @@ const documentsCountByProject = ref({})
 const fetchDocumentsCountByProject = async () => {
   const query = { match: { type: 'Document' } }
   const projectIds = core.projectIds.join(',')
-  console.log(projectIds)
   const { aggregations } = await core.api.elasticsearch.countByProject(projectIds, query)
   const buckets = aggregations?.index?.buckets ?? []
   // Finally we store the count of documents by project
