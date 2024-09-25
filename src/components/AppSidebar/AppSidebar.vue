@@ -11,12 +11,14 @@ import AppSidebarClose from './AppSidebarClose'
 import { Api } from '@/api'
 import { useBreakpoints } from '@/composables/breakpoints'
 import { useCore } from '@/composables/core'
+import { useUtils } from '@/composables/utils'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
 import { SIZE } from '@/enums/sizes'
 import settings from '@/utils/settings'
 
 const { core } = useCore()
+const { isServer } = useUtils()
 const { breakpointDown } = useBreakpoints()
 const { t } = useI18n()
 
@@ -64,20 +66,16 @@ const helpLink = computed(() => {
   return core.config.get('helpLink', settings.helpLink)
 })
 
-const isServerMode = computed(() => {
-  return core.config && core.config.get('mode') === 'SERVER'
-})
-
 const noRemoveAll = computed(() => {
-  return compact.value || isServerMode.value
+  return compact.value || isServer.value
 })
 
 const noSignOut = computed(() => {
-  return !isServerMode.value
+  return !isServer.value
 })
 
 const noAnalysis = computed(() => {
-  return isServerMode.value
+  return isServer.value
 })
 </script>
 
