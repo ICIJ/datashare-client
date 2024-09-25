@@ -153,7 +153,7 @@ watch(
         :disabled="disabled"
         :validated="isPresent(form.sourcePath)"
       >
-        <form-control-path v-model:path="form.sourcePath" />
+        <form-control-path v-model="form.sourcePath" />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--logo-url"
