@@ -7,9 +7,7 @@
     class="widget-barometer"
     body-class="d-flex flex-column align-items-center gap-1 "
   >
-    <span style="height: 20px">
-      <phosphor-icon :variant="variant" :name="icon" :weight="ICON_WEIGHT.BOLD" />
-    </span>
+    <phosphor-icon :variant="variant" size="2rem" :name="icon" />
     <span class="widget-barometer__value fw-bold">
       <slot>{{ humanValue }}</slot>
     </span>
@@ -24,7 +22,6 @@ import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import humanNumber from '@/utils/humanNumber'
-import { ICON_WEIGHT } from '@/enums/iconWeights'
 import { variantValidator } from '@/enums/variants'
 
 const props = defineProps({
@@ -57,6 +54,8 @@ const classList = computed(() => {
 
 <style lang="scss" scoped>
 .widget-barometer {
+  height: 100%;
+
   &[href]:hover {
     border-color: $input-hover-border-color !important;
   }
