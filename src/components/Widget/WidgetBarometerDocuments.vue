@@ -1,18 +1,20 @@
 <template>
-  <widget-barometer-entry class="widget-barometer-entry-documents" :icon="icon" :label="label" :to="to">{{
-    value
-  }}</widget-barometer-entry>
+  <widget-barometer class="widget-barometer-documents" :icon="icon" :label="label" :to="to">
+    {{ value }}
+  </widget-barometer>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import WidgetBarometerEntry from '@/components/Widget/WidgetBarometerEntry'
+import WidgetBarometer from '@/components/Widget/WidgetBarometer'
 import humanNumber from '@/utils/humanNumber'
+
 const props = defineProps({
   nbDocuments: { type: Number },
   nbDocumentsOnDisks: { type: Number }
 })
+
 const { t } = useI18n()
 const icon = 'files'
 const to = `#`
