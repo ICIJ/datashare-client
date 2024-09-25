@@ -1,17 +1,19 @@
 <template>
-  <widget-barometer-entry class="widget-barometer-entry-disk-usage" :icon="icon" :label="label" :to="to">{{
-    value
-  }}</widget-barometer-entry>
+  <widget-barometer class="widget-barometer-disk-usage" :icon="icon" :label="label" :to="to">
+    {{ value }}
+  </widget-barometer>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import WidgetBarometerEntry from '@/components/Widget/WidgetBarometerEntry'
+import WidgetBarometer from '@/components/Widget/WidgetBarometer'
 import humanSize from '@/utils/humanSize'
+
 const props = defineProps({
   size: { type: Number, default: null }
 })
+
 const { t } = useI18n()
 const icon = 'floppy-disk'
 const to = `#`
