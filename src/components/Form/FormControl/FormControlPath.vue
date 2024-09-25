@@ -24,10 +24,12 @@ const display = computed(() => modelValue.value ?? sourcePath.value)
 </script>
 
 <template>
-  <button-icon icon-left="folder-open" variant="outline-tertiary" class="me-3">
+  <button-icon v-b-modal.modal-form-control-path icon-left="folder-open" variant="outline-tertiary" class="me-3">
     <path-tree-breadcrumb :model-value="display" datadir-label no-link />
   </button-icon>
-  <button-icon v-b-modal.modal-form-control-path icon-right="magnifying-glass" variant="action">Browse</button-icon>
+  <button-icon v-b-modal.modal-form-control-path icon-right="magnifying-glass" variant="action">
+    {{ $t('formControlPath.browse') }}
+  </button-icon>
   <app-modal id="modal-form-control-path" lazy scrollable hide-header size="lg" @ok="modelValue = selectedPaths[0]">
     <path-tree :path="dataDir" :selected-paths="selectedPaths" select-mode no-stats />
   </app-modal>
