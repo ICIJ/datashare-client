@@ -58,6 +58,10 @@ const classList = computed(() => {
   }
 })
 
+const toAddProject = computed(() => {
+  return isServer.value ? null : { name: 'project.new' }
+})
+
 const signOutLink = computed(() => {
   return Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
 })
@@ -92,7 +96,7 @@ const noAnalysis = computed(() => {
             icon="dots-nine"
             exact-match
             :to="{ name: 'project.list' }"
-            :action-to="{ name: 'project.new' }"
+            :action-to="toAddProject"
             action-title="Add project"
           >
             {{ t('appSidebar.allProjects') }}
