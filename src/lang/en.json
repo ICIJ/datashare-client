@@ -1133,9 +1133,11 @@
     "title": {"title": "Settings"},
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
     "general":{"title": "General" },
-    "appearance":{"title": "Appearance" ,
+    "appearance":
+    {
+      "title": "Appearance" ,
       "info": "Choosing the dark or the light mode can improve your visual comfort.",
-      "dismissInfo": "Got it!"
+      "dismissInfo": "Got it, don't show again!"
     },
     "document-processing":{"title": "Document Processing" },
     "batch-tasks":{"title": "Batch Tasks" },
