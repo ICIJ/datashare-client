@@ -11,7 +11,7 @@ import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGener
 import { useUtils } from '@/composables/utils'
 import { useCore } from '@/composables/core'
 
-defineOptions({ name: 'ServerSettings' })
+defineOptions({ name: 'SettingsViewGeneral' })
 
 const { isServer } = useUtils()
 const { core, toast, wait } = useCore()
@@ -40,7 +40,7 @@ async function onSubmit(newSettings) {
 }
 </script>
 <template>
-  <div class="settings-general my-4">
+  <div class="settings-view-general my-4">
     <v-wait v-if="!isServer" for="load server settings" class="">
       <template #waiting>
         <phosphor-icon icon="circle" spin></phosphor-icon>
@@ -52,5 +52,3 @@ async function onSubmit(newSettings) {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss"></style>
