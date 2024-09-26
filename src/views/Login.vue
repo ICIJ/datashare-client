@@ -14,9 +14,16 @@
         @click="image.shake()"
       />
     </div>
-    <div class="login-view__help d-flex flex-column align-items-center justify-content-end gap-2">
-      <button-icon :label="askHelpLabel" tag="a" :href="helpLink" variant="outline-secondary" @click="image.shake()" />
-      <div class="d-flex align-items-center gap-2">
+    <div class="login-view__assistance d-flex flex-column align-items-center justify-content-end gap-2">
+      <button-icon
+        class="login-view__assistance__help"
+        :label="askHelpLabel"
+        tag="a"
+        :href="helpLink"
+        variant="outline-secondary"
+        @click="image.shake()"
+      />
+      <div class="login-view__assistance__locale d-flex align-items-center gap-2">
         <span>{{ switchLanguageLabel }}</span
         ><locales-menu class="px-2" />
       </div>
