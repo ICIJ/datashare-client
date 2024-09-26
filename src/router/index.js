@@ -391,7 +391,7 @@ export const routes = [
             path: 'appearance',
             component: () => import('@/views/Settings/SettingsViewAppearance'),
             meta: {
-              title: 'General'
+              title: 'Appearance'
             }
           },
           {
