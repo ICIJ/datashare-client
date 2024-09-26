@@ -16,6 +16,10 @@ describe('Login.vue', () => {
   })
 
   it('should display a help link', () => {
-    expect(wrapper.findAll('.login-view__help .btn').at(1).text()).toBe('Ask for help')
+    expect(wrapper.find('.login-view__assistance__help').text()).toBe('Ask for help')
+  })
+  it('should show the locale menu with the current locale', () => {
+    expect(wrapper.find('.locales-menu').text()).toBe('English')
+    expect(wrapper.find('.locales-menu').exists()).toBe(true)
   })
 })
