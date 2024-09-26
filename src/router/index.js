@@ -378,12 +378,14 @@ export const routes = [
         },
         component: () => import('@/views/Settings/SettingsView'),
         children: [
+          { path: '', component: () => import('@/views/Settings/SettingsViewGeneral') },
           {
             name: 'settings.general',
             path: 'general',
             component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
-              title: 'General'
+              title: 'General',
+              breadcrumb: false
             }
           },
           {
@@ -391,7 +393,8 @@ export const routes = [
             path: 'appearance',
             component: () => import('@/views/Settings/SettingsViewAppearance'),
             meta: {
-              title: 'Appearance'
+              title: 'Appearance',
+              breadcrumb: false
             }
           },
           {
@@ -399,7 +402,8 @@ export const routes = [
             path: 'general',
             component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
-              title: 'General'
+              title: 'General',
+              breadcrumb: false
             }
           },
           {
@@ -407,7 +411,8 @@ export const routes = [
             path: 'general',
             component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
-              title: 'General'
+              title: 'General',
+              breadcrumb: false
             }
           },
           {
@@ -415,7 +420,8 @@ export const routes = [
             path: 'general',
             component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
-              title: 'General'
+              title: 'General',
+              breadcrumb: false
             }
           },
           {
@@ -423,7 +429,8 @@ export const routes = [
             path: 'general',
             component: () => import('@/views/Settings/SettingsViewGeneral'),
             meta: {
-              title: 'General'
+              title: 'General',
+              breadcrumb: false
             }
           }
         ]
