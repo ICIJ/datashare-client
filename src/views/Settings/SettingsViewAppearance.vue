@@ -5,6 +5,7 @@ import { ref, onBeforeMount, computed, watch } from 'vue'
 import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert.vue'
 
+defineOptions({ name: 'SettingsViewAppearance' })
 onBeforeMount(() => {
   options.value = retrieveThemes()
 })
@@ -58,16 +59,18 @@ watch(
 </script>
 
 <template>
-  <dismissable-alert
-    no-icon
-    persist
-    name="appearance"
-    variant="info"
-    :info-label="infoLabel"
-    :link-label="dismissInfoLabel"
-  >
-    {{ infoLabel }}
-  </dismissable-alert>
+  <div class="settings-view-appearance">
+    <dismissable-alert
+      no-icon
+      persist
+      name="appearance"
+      variant="info"
+      :info-label="infoLabel"
+      :link-label="dismissInfoLabel"
+    >
+      {{ infoLabel }}
+    </dismissable-alert>
 
-  <settings-appearance-radio-group v-model="selectedTheme" :options="options" />
+    <settings-appearance-radio-group v-model="selectedTheme" :options="options" />
+  </div>
 </template>
