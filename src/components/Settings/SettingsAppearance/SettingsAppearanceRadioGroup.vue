@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 import SettingsAppearanceTheme from '@/components/Settings/SettingsAppearance/SettingsAppearanceTheme'
-defineModel({type: String, required: true})
+defineModel({ type: String, required: true })
 defineProps({
   options: { type: Array, required: true }
 })
@@ -14,12 +14,12 @@ const selected = ref('light')
   <b-form-group v-slot="{ ariaDescribedby }" class="settings-appearance-radio-group col-12 col-md-4 offset-md-4">
     <b-form-radio-group
       id="radio-group-theme"
-      :modelValue="modelValue"
-      @update:model-value="$emit('update:modelValue', $event)"
+      :model-value="modelValue"
       class="settings-appearance-radio-group__radio-group"
       :aria-describedby="ariaDescribedby"
       name="radio-options"
       stacked
+      @update:model-value="$emit('update:modelValue', $event)"
     >
       <b-form-radio
         v-for="option in options"
