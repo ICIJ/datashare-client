@@ -26,6 +26,7 @@ const tabs = computed(() => [
           :key="tab.title"
           :icon="tab.icon"
           :title="tab.title"
+          :active="$route.name === tab.name"
           @click="$router.push({ name: tab.name })"
         >
           <router-view />
