@@ -30,13 +30,12 @@ export default {
   computed: {
     ...mapState('search', ['index'])
   },
-  mounted() {
-    this.retrieveNotes(this.index, this.path)
+  async beforeMount() {
+    this.notes = await this.retrieveNotes(this.index, this.path)
   },
   methods: {
-    async retrieveNotes(project, path) {
-      const notes = await this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
-      this.notes = notes
+    retrieveNotes(project, path) {
+      return this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
     }
   }
 }
