@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Login from '@/views/Login'
@@ -8,14 +8,14 @@ describe('Login.vue', () => {
 
   beforeEach(() => {
     const { plugins } = CoreSetup.init().useAll()
-    wrapper = shallowMount(Login, { global: { plugins } })
+    wrapper = mount(Login, { global: { plugins } })
   })
 
-  it('should display a login link', () => {
-    expect(wrapper.findAll('.login__card__body .btn').at(0).text()).toBe('Login')
+  it('should display a login link', async () => {
+    expect(wrapper.find('.login-view__enter_link').text()).toBe('Login')
   })
 
   it('should display a help link', () => {
-    expect(wrapper.findAll('.login__card__body .btn').at(1).text()).toBe('Ask for help')
+    expect(wrapper.findAll('.login-view__help .btn').at(1).text()).toBe('Ask for help')
   })
 })

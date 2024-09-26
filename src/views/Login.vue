@@ -1,13 +1,20 @@
 <template>
-  <div class="view-login d-flex flex-column justify-content-between align-items-stretch gap-2 p-4 vh-100">
-    <div class="view-login__enter d-flex flex-column align-items-center text-action-emphasis p-4">
+  <div class="login-view d-flex flex-column justify-content-between align-items-stretch gap-2 p-4 vh-100">
+    <div class="login-view__enter d-flex flex-column align-items-center text-action-emphasis p-4">
       <login-image ref="image" style="width: 240px" />
       <h3>{{ welcomeLabel }}</h3>
       <p>{{ taglineLabel }}</p>
 
-      <button-icon :label="loginLabel" :to="signinRoute" icon-left="user" @click="image.shake()" />
+      <button-icon
+        :label="loginLabel"
+        :to="signinRoute"
+        class="login-view__enter_link"
+        icon-left="user"
+        variant="action"
+        @click="image.shake()"
+      />
     </div>
-    <div class="view-login__help d-flex flex-column align-items-center justify-content-end gap-2">
+    <div class="login-view__help d-flex flex-column align-items-center justify-content-end gap-2">
       <button-icon :label="askHelpLabel" tag="a" :href="helpLink" variant="outline-secondary" @click="image.shake()" />
       <div class="d-flex align-items-center gap-2">
         <span>{{ switchLanguageLabel }}</span
@@ -38,7 +45,7 @@ const signinRoute = computed(() => ({ path: signinUrl }))
 const helpLink = core.vue.config.globalProperties.$config.get('helpLink', settings.helpLink)
 </script>
 <style scoped lang="scss">
-.view-login {
+.login-view {
   max-height: 630px;
 }
 </style>
