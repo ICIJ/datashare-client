@@ -400,36 +400,36 @@ export const routes = [
           {
             name: 'settings.document-processing',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsViewGeneral'),
+            component: () => import('@/views/Settings/SettingsViewDocumentProcessing'),
             meta: {
-              title: 'General',
+              title: 'Document Processing',
               breadcrumb: false
             }
           },
           {
             name: 'settings.batch-tasks',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsViewGeneral'),
+            component: () => import('@/views/Settings/SettingsViewBatchTasks'),
             meta: {
-              title: 'General',
+              title: 'Batch Tasks',
               breadcrumb: false
             }
           },
           {
             name: 'settings.plugins',
-            path: 'general',
-            component: () => import('@/views/Settings/SettingsViewGeneral'),
+            path: 'plugins',
+            component: () => import('@/views/Settings/SettingsViewPlugins'),
             meta: {
-              title: 'General',
+              title: 'Plugins',
               breadcrumb: false
             }
           },
           {
             name: 'settings.extensions',
-            path: 'general',
-            component: () => import('@/views/Settings/SettingsViewGeneral'),
+            path: 'extensions',
+            component: () => import('@/views/Settings/SettingsViewExtensions'),
             meta: {
-              title: 'General',
+              title: 'Extensions',
               breadcrumb: false
             }
           }
