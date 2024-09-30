@@ -144,7 +144,7 @@ export default {
       return this.url === '' ? null : isUrl(this.url)
     },
     loaderId() {
-      return uniqueId('extentions-loader-')
+      return uniqueId('extensions-loader-')
     },
     isLoading() {
       return this.$wait.is(this.loaderId)
