@@ -1306,7 +1306,7 @@
     "version": "Version {version}",
     "officialVersion": "Official version",
     "homePage": "Home page",
-    "install": "Install now",
+    "install": "Install",
     "uninstall": "Uninstall",
     "update": "Update",
     "installFromUrl": "Install plugin from URL"
