@@ -8,7 +8,8 @@ const props = defineProps({
   shouldInstall: { type: Boolean },
   shouldUpdate: { type: Boolean },
   version: { type: String },
-  recommendedVersion: { type: String, required: true }
+  recommendedVersion: { type: String, required: true },
+  loading: { type: Boolean }
 })
 const emit = defineEmits(['install', 'update', 'uninstall'])
 const { t } = useI18n()
@@ -32,6 +33,8 @@ const uninstallAddon = () => {
   <div class="addon-card-actions d-flex flex-column align-items-end gap-2">
     <button-icon
       v-if="shouldInstall"
+      :loading="loading"
+      :disabled="loading"
       truncate
       icon-left="cloud-arrow-down"
       variant="action"
@@ -42,6 +45,8 @@ const uninstallAddon = () => {
     <template v-else>
       <button-icon
         v-if="shouldUpdate"
+        :loading="loading"
+        :disabled="loading"
         icon-left="arrows-clockwise"
         variant="action"
         class="flex-grow-0"
@@ -52,6 +57,8 @@ const uninstallAddon = () => {
         versionLabel
       }}</span>
       <button-icon
+        :loading="loading"
+        :disabled="loading"
         icon-left="trash"
         variant="outline-secondary"
         class="addon-card__uninstall"
