@@ -1,5 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -12,10 +13,10 @@ const props = defineProps({
 const emit = defineEmits(['install', 'update', 'uninstall'])
 const { t } = useI18n()
 
-const versionLabel = t('addonCard.version', { v: props.version })
-const installLabel = t('addonCard.install', { v: props.recommendedVersion })
-const updateLabel = t('addonCard.update', { v: props.recommendedVersion })
-const uninstallLabel = t('addonCard.uninstall')
+const versionLabel = computed(() => t('addonCard.version', { v: props.version }))
+const installLabel = computed(() => t('addonCard.install', { v: props.recommendedVersion }))
+const updateLabel = computed(() => t('addonCard.update', { v: props.recommendedVersion }))
+const uninstallLabel = computed(() => t('addonCard.uninstall'))
 const installAddon = () => {
   emit('install')
 }

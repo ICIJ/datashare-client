@@ -1,17 +1,18 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 import TextTruncate from '@/components/Text/TextTruncate'
 
 defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  url: { type: String, required: true }
+  url: { type: String }
 })
 
 const { t } = useI18n()
 
-const homepageLabel = t('addonCard.homepage')
+const homepageLabel = computed(() => t('addonCard.homepage'))
 </script>
 
 <template>
@@ -20,9 +21,9 @@ const homepageLabel = t('addonCard.homepage')
       <a class="fw-bold h4 text-action-emphasis">{{ title }}</a>
     </div>
     <p>
-      <slot><text-truncate :text="description" truncate-length="250" /></slot>
+      <slot><text-truncate :text="description" :truncate-length="250" /></slot>
     </p>
-    <span class="text-secondary-emphasis flex-grow-0 gap-2">
+    <span v-if="url" class="text-secondary-emphasis flex-grow-0 gap-2">
       {{ homepageLabel }} <a :href="url">{{ url }}</a>
     </span>
   </div>
