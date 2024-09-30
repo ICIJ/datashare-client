@@ -10,7 +10,8 @@ const props = defineProps({
   installed: { type: Boolean },
   recommendedVersion: { type: String, required: true },
   description: { type: String, required: true },
-  url: { type: String }
+  url: { type: String },
+  loading: { type: Boolean }
 })
 
 const hasAvailableUpdate = computed(() => {
@@ -26,6 +27,7 @@ const hasAvailableUpdate = computed(() => {
       :recommended-version="recommendedVersion"
       :should-install="!installed"
       :should-update="hasAvailableUpdate"
+      :loading="loading"
       @install="$emit('install')"
       @update="$emit('update')"
       @uninstall="$emit('uninstall')"
