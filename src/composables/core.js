@@ -16,34 +16,17 @@ export function useCore() {
   // This `proxy` allows us to access properties like `$core` and `$toast` that are globally provided by the "core" plugin.
   const { proxy } = instance
 
-  function useApi(promise, { toast: { successMessage, errorMessage }, isLoading, waitLoaderId }) {
-    const data = ref(null)
-    const error = ref(null)
-    const loadingPromise = ref()
-    const loaderId = waitLoaderId ?? uniqueId('waiter')
-    const toastedPromise = () => {
-      proxy.$wait.start(loaderId)
-      isLoading.value = true
-      loadingPromise.value = promise
-        .then((res) => {
-          data.value = res
-          if (successMessage) {
-            proxy.$toast.success(successMessage)
-          }
-        })
-        .catch((err) => {
-          error.value = err
-          if (errorMessage) {
-            proxy.$toast.error(errorMessage)
-          }
-        })
-        .finally(() => {
-          proxy.$wait.end(loaderId)
-          isLoading.value = false
-        })
-    }
-    toastedPromise()
-    return { data, error, loadingPromise, isLoading, loaderId }
+  function toastedPromise(promise, { successMessage, errorMessage }) {
+    return promise.then(
+      (data) => {
+        if (successMessage) proxy.$toast.success(successMessage)
+        return data
+      },
+      (err) => {
+        if (errorMessage) proxy.$toast.error(errorMessage)
+        throw err
+      }
+    )
   }
 
   // We return an object with the global `$core` and `$toast` properties.
@@ -55,6 +38,6 @@ export function useCore() {
     toast: proxy.$toast,
     // `proxy.$wait` gives us access to the global `$wait` object provided by the "core" plugin
     wait: proxy.$wait,
-    useApi
+    toastedPromise
   }
 }
