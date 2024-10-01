@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { camelCase, startCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
@@ -21,7 +21,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['installed', 'uninstalled'])
 const { t } = useI18n()
-const { useApi, core } = useCore()
+const { toastedPromise, core } = useCore()
 const isLoading = ref(false)
 const deleteSuccess = computed(() => t('extensions.deleteSuccess'))
 const deleteError = computed(() => t('extensions.deleteError'))
@@ -46,35 +46,35 @@ const recommendedVersion = computed(() => {
 })
 const homepage = computed(() => props.deliverableFromRegistry?.homepage ?? null)
 
-function install() {
-  useApi(
-    core.api.installExtensionFromId(props.id).then((res) => {
-      emit('installed')
-      return res
-    }),
-    {
-      toast: {
-        successMessage: submitSuccess.value,
-        errorMessage: submitError.value
-      },
-      isLoading
-    }
-  )
+async function install() {
+  const toast = {
+    successMessage: submitSuccess.value,
+    errorMessage: submitError.value
+  }
+  isLoading.value = true
+  try {
+    const promise = core.api.installExtensionFromId(props.id)
+    await toastedPromise(promise, toast)
+    emit('installed')
+  } catch (e) {
+  } finally {
+    isLoading.value = false
+  }
 }
-function uninstall() {
-  useApi(
-    core.api.uninstallExtension(props.id).then((res) => {
-      emit('uninstalled')
-      return res
-    }),
-    {
-      toast: {
-        successMessage: deleteSuccess.value,
-        errorMessage: deleteError.value
-      },
-      isLoading
-    }
-  )
+async function uninstall() {
+  const toast = {
+    successMessage: deleteSuccess.value,
+    errorMessage: deleteError.value
+  }
+  isLoading.value = true
+  try {
+    const promise = core.api.uninstallExtension(props.id)
+    await toastedPromise(promise, toast)
+    emit('uninstalled')
+  } catch (e) {
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
