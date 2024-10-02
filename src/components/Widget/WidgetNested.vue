@@ -51,22 +51,21 @@ export default {
 
   .widget__container {
     .row {
-      margin-right: -$spacer-xxs;
-      margin-left: -$spacer-xxs;
-      margin-bottom: -$spacer-xs;
+      margin-right: -$spacer;
+      margin-left: -$spacer;
+      row-gap: $spacer-xl;
 
       & > .col,
       & > [class*='col-'] {
         min-width: 0;
-        padding-right: $spacer-xxs;
-        padding-left: $spacer-xxs;
+        padding-right: $spacer;
+        padding-left: $spacer;
       }
     }
 
     &__widget {
       display: flex;
       flex-direction: row;
-      margin-bottom: $spacer-xs;
       min-height: calc(100% - #{$spacer-xs});
       position: relative;
 
