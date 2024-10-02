@@ -16,7 +16,7 @@ const props = defineProps({
   },
   properties: {
     type: Array,
-    default: () => ['title', 'thumbnail']
+    default: () => ['title', 'thumbnail', 'path']
   },
   to: {
     type: Object
@@ -60,7 +60,7 @@ const showTitle = computed(() => {
 
 <template>
   <div class="document-card" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
-    <div class="d-flex flex-column align-items-center pe-2">
+    <div class="d-flex flex-column align-items-center">
       <document-card-checkbox
         v-if="props.selectMode"
         :model-value="props.selected"
@@ -77,19 +77,21 @@ const showTitle = computed(() => {
         @click="emit('preview')"
       />
     </div>
-    <div class="document-card__properties pe-2">
+    <div class="document-card__properties">
       <router-link v-if="showTitle" class="document-card__properties__title" :to="to" :target="target">
         {{ document.title }}
       </router-link>
       <document-card-properties :document="document" :properties="properties" />
     </div>
     <div class="document-card__actions">
-      <document-actions-group
-        tooltip-placement="right"
-        :document="document"
-        vertical
-        :is-download-allowed="isDownloadAllowed"
-      />
+      <slot name="actions">
+        <document-actions-group
+          tooltip-placement="right"
+          :document="document"
+          vertical
+          :is-download-allowed="isDownloadAllowed"
+        />
+      </slot>
     </div>
   </div>
 </template>
@@ -97,6 +99,7 @@ const showTitle = computed(() => {
 <style lang="scss">
 .document-card {
   display: flex;
+  gap: $spacer-sm;
   padding: $spacer;
   border-radius: var(--bs-border-radius);
 
