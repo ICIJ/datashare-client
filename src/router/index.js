@@ -295,7 +295,7 @@ export const routes = [
                 props: true,
                 component: () => import('@/views/ProjectViewEdit'),
                 meta: {
-                  icon: 'pen',
+                  icon: 'pencil-simple',
                   title: 'Edit project',
                   allowedModes: ['LOCAL', 'EMBEDDED']
                 }
