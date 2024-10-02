@@ -1,18 +1,14 @@
 <template>
-  <form
-    :id="uniqueId"
-    class="search-bar container-fluid"
-    :class="{ 'search-bar--focused': focused }"
-    @submit.prevent="submit"
-  >
+  <div :id="uniqueId" class="search-bar" :class="{ 'search-bar--focused': focused }">
     <div class="d-flex align-items-center">
       <search-bar-input
         ref="searchInput"
         v-model="query"
-        class="search-bar__input"
+        class="search-bar__input w-100"
         :placeholder="localizedPlaceholder"
         :size="size"
         @blur="onBlur"
+        @submit="onSubmit"
         @input="onInput"
         @focus="onFocus"
       >
@@ -24,6 +20,7 @@
             @changed="focusOnSearchInput"
           />
           <search-bar-input-dropdown-for-projects
+            v-if="!hideProjectsDropdown"
             v-model="selectedProjects"
             :disabled="!!indices"
             :no-caret="!!indices"
@@ -79,7 +76,7 @@
         </b-button>
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
 <script>
@@ -117,7 +114,7 @@ export default {
      */
     placeholder: {
       type: String,
-      default: ''
+      default: null
     },
     /**
      * Display the shortcuts button.
@@ -132,6 +129,12 @@ export default {
       type: Boolean
     },
     /**
+     * Hide the projects dropdown
+     */
+    hideProjectsDropdown: {
+      type: Boolean
+    },
+    /**
      * Search input size
      * @values sm, md, lg
      */
@@ -140,7 +143,7 @@ export default {
       default: 'md'
     },
     /**
-     * Force the search bar to search intogiven indices
+     * Force the search bar to search into given indices
      */
     indices: {
       type: Array,
@@ -301,6 +304,10 @@ export default {
       this.focused = false
       this.hideSuggestionsAfterDelay()
     },
+    onSubmit() {
+      this.hideSuggestions()
+      this.submit()
+    },
     onInput() {
       this.searchTerms()
     },
@@ -318,7 +325,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-bar {
-  &::v-deep(.search-bar-input__input) {
+  &:deep(.search-bar-input__input) {
     height: auto;
   }
 
@@ -327,8 +334,8 @@ export default {
     border-bottom-color: $primary;
   }
 
-  &:deep(.input-group-append .dropdown-toggle:focus) {
-    box-shadow: 0 0 0 1px $primary inset;
+  &:deep(.dropdown-toggle) {
+    border: 0;
   }
 
   & &__suggestions.dropdown-menu {
