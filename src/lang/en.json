@@ -1028,6 +1028,15 @@
     },
     "submit": "Create project"
   },
+  "projectView": {
+    "nav": {
+      "insights": "Insights",
+      "paths": "Paths",
+      "graph": "Graph",
+      "details": "Details",
+      "history": "History"
+    }
+  },
   "projectViewEdit":{
     "title": "Edit project",
     "notify": {
