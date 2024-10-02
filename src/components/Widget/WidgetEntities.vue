@@ -1,37 +1,38 @@
 <template>
-  <div class="widget widget--entities">
-    <v-wait :for="loader" transition="fade">
-      <template #waiting>
-        <div class="widget__spinner">
-          <fa icon="circle-notch" spin size="2x"></fa>
-        </div>
-      </template>
-      <div class="widget__content text-center" :class="{ 'card-body': widget.card }">
-        <div v-if="total > 0" class="row">
-          <div
-            v-for="category in categories"
-            :key="category"
-            class="widget__content__count col-3"
-            :class="{ 'widget__content__count--muted': !entities[category] }"
-          >
-            <fa fixed-width :icon="namedEntityIcon(category)" class="me-1" />
-            <span v-html="$t(`widget.entities.${category}`, entities[category], { count: humanEntities[category] })" />
+  <v-wait :for="loader" transition="fade">
+    <template #waiting>
+      <div class="m-5 text-center h-100">
+        <phosphor-icon name="circle-notch" spin size="2em" />
+      </div>
+    </template>
+    <div class="widget widget--entities d-flex h-100 w-100">
+      <template v-if="total">
+        <div class="row flex-grow-1">
+          <div v-for="category in categories" :key="category" class="col-6 col-lg">
+            <widget-barometer
+              :icon="getCategoryIcon(category)"
+              :variant="getCategoryVariant(category)"
+              :border-variant="getCategoryVariant(category)"
+              :value="entities[category]"
+              :label="$tc(`widgetEntities.${category}`, entities[category])"
+            />
           </div>
         </div>
-        <p v-else class="text-muted text-center mb-0 col-12">
-          {{ $t('widget.noEntities') }}
-        </p>
-      </div>
-    </v-wait>
-  </div>
+      </template>
+      <p v-else class="text-muted text-center w-100 align-self-center m-0">
+        {{ $t('widget.noEntities') }}
+      </p>
+    </div>
+  </v-wait>
 </template>
 
 <script>
 import { sum, uniqueId, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
-import { namedEntityIcon } from '@/utils/named-entities'
-import humanNumber from '@/utils/humanNumber'
+import WidgetBarometer from './WidgetBarometer'
+
+import { getCategoryIcon, getCategoryVariant } from '@/utils/entity'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 
 /**
@@ -39,6 +40,9 @@ import { ENTITY_CATEGORY } from '@/enums/entityCategories'
  */
 export default {
   name: 'WidgetEntities',
+  components: {
+    WidgetBarometer
+  },
   props: {
     /**
      * The widget definition object.
@@ -50,22 +54,16 @@ export default {
   data() {
     return {
       entities: {
-        emails: 0,
-        locations: 0,
-        organizations: 0,
-        people: 0
+        email: 0,
+        location: 0,
+        organization: 0,
+        person: 0
       }
     }
   },
   computed: {
     total() {
       return sum(values(this.entities))
-    },
-    humanEntities() {
-      return Object.entries(this.entities).reduce((human, [key, value]) => {
-        human[key] = humanNumber(value)
-        return human
-      }, {})
     },
     categories() {
       return Object.keys(this.entities)
@@ -86,16 +84,17 @@ export default {
     return this.loadData()
   },
   methods: {
-    namedEntityIcon,
+    getCategoryIcon,
+    getCategoryVariant,
     async loadData() {
       this.$wait.start(this.loader)
-      const [emails, locations, organizations, people] = await Promise.all([
+      const [email, location, organization, person] = await Promise.all([
         this.handleCountForPromise(ENTITY_CATEGORY.EMAIL),
         this.handleCountForPromise(ENTITY_CATEGORY.LOCATION),
         this.handleCountForPromise(ENTITY_CATEGORY.ORGANIZATION),
         this.handleCountForPromise(ENTITY_CATEGORY.PERSON)
       ])
-      this.entities = { emails, locations, organizations, people }
+      this.entities = { person, location, organization, email }
       this.$wait.end(this.loader)
     },
     handleCountForPromise(category) {
@@ -107,12 +106,14 @@ export default {
     async countFor(category) {
       const index = this.project
       const body = this.bodybuilderFor(category).build()
-      const preference = 'widget-entities'
+      const preference = `widget-entities-${category}`
       const { count = 0 } = await this.$core.api.elasticsearch.count({ index, body, preference })
       return count
     },
     bodybuilderFor(category) {
-      return bodybuilder().andQuery('match', 'type', 'NamedEntity').andQuery('match', 'category', category)
+      return bodybuilder()
+        .andQuery('match', 'type', 'NamedEntity')
+        .andQuery('match', 'category', category.toUpperCase())
     }
   }
 }
@@ -120,21 +121,9 @@ export default {
 
 <style lang="scss" scoped>
 .widget {
-  min-height: 100%;
-  position: relative;
-
-  &__spinner {
-    text-align: center;
-    width: 100%;
-    padding: $spacer;
-  }
-
-  &__content {
-    &__count {
-      &--muted {
-        color: $text-muted;
-      }
-    }
+  &--entities .row {
+    --bs-gutter-x: #{$spacer-xl};
+    --bs-gutter-y: #{$spacer-xl};
   }
 }
 </style>
