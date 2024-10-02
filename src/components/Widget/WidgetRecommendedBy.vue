@@ -130,7 +130,7 @@ export default {
     async loadPageWithLoader() {
       this.$wait.start(this.loader)
       await this.loadPage()
-      //this.$wait.end(this.loader)
+      this.$wait.end(this.loader)
     },
     async loadPage() {
       const page = await this.$core.api.getDocumentUserRecommendations(this.offset, this.pageSize, this.project)
