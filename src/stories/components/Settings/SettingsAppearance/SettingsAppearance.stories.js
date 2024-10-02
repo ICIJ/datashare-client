@@ -1,4 +1,4 @@
-import SettingsAppearance from '@/views/Settings/SettingsAppearance'
+import SettingsAppearance from '@/views/Settings/SettingsViewAppearance'
 
 export default {
   decorators: [],
