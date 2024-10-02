@@ -1,6 +1,6 @@
 <template>
   <div class="widget widget--recommended-by">
-    <div class="widget__header d-flex align-items-center" :class="{ 'card-body': widget.card }">
+    <div class="widget__header d-flex align-items-center">
       <fa icon="users" fixed-width class="me-2" />
       <h3 class="m-0 p-0 h5">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
@@ -11,48 +11,21 @@
         </div>
       </template>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
-        <a
-          v-for="({ document, href, user, creationDate }, i) in items"
+        <document-card
+          v-for="({ document, to, user, creationDate }, i) in items"
           :key="i"
-          class="list-group-item list-group-item-action widget__list__item d-flex align-items-start flex-truncate"
-          :href="href"
+          :to="to"
+          class="list-group-item list-group-item-action widget__list__item py-3"
+          :document="document"
+          :properties="['title', 'thumbnail', 'path', 'creationDate']"
         >
-          <div v-if="!widget.hideThumbnails && widget.cols >= 6" class="d-none d-md-block flex-shrink-0">
-            <document-thumbnail :document="document" crop lazy class="mt-1 me-3" />
-          </div>
-          <div class="flex-grow-1">
-            <div class="widget__list__item__heading d-flex align-items-start">
-              <document-sliced-name
-                wrap
-                :document="document"
-                class="widget__list__item__heading__name text-action py-1"
-              />
-              <div
-                class="widget__list__item__heading__meta ms-auto py-1 ps-3 d-flex align-items-center text-muted flex-shrink-0"
-              >
-                <span
-                  v-if="creationDate"
-                  v-b-tooltip
-                  class="widget__list__item__heading__meta__creation-date text-nowrap d-flex"
-                  :title="humanLongDate(creationDate, $i18n.locale)"
-                >
-                  {{ fromNow(creationDate, $i18n.locale, true) }}
-                </span>
-                <display-user
-                  :username="user.id"
-                  avatar-height="1em"
-                  flip
-                  hide-link
-                  class="widget__list__item__heading__meta__user text-nowrap"
-                />
-              </div>
+          <template #actions>
+            <div class="d-flex flew-nowrap gap-3">
+              <display-user v-if="showUser" :value="user.id" />
+              <display-datetime :value="creationDate" format="fromNow" class="text-secondary-emphasis" />
             </div>
-            <div class="widget__list__item__path text-muted text-truncate">
-              <fa icon="folder" class="me-1" />
-              {{ shortenPath(document.path) }}
-            </div>
-          </div>
-        </a>
+          </template>
+        </document-card>
         <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteScrollId" @infinite="loadNextPage">
           <template #spinner><span></span></template>
           <template #complete><span></span></template>
@@ -71,11 +44,11 @@ import bodybuilder from 'bodybuilder'
 import { get, property, find, flatten, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 
-import { fromNow, humanLongDate } from '@/utils/humanDate'
+import { MODE_NAME } from '@/mode'
 import EsDocList from '@/api/resources/EsDocList'
-import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
-import DocumentSlicedName from '@/components/DocumentSlicedName'
+import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DisplayUser from '@/components/Display/DisplayUser'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
 /**
  * Widget to display a list of facets on the insights page.
@@ -83,9 +56,9 @@ import DisplayUser from '@/components/Display/DisplayUser'
 export default {
   name: 'WidgetRecommendedBy',
   components: {
-    DocumentThumbnail,
-    DocumentSlicedName,
+    DocumentCard,
     InfiniteLoading,
+    DisplayDatetime,
     DisplayUser
   },
   props: {
@@ -135,14 +108,15 @@ export default {
     },
     useInfiniteScroll() {
       return this.offset > 0 && !this.reachedTheEnd
+    },
+    showUser() {
+      return this.$config?.get('mode') === MODE_NAME.SERVER
     }
   },
   mounted() {
     return this.loadFirstPage()
   },
   methods: {
-    fromNow,
-    humanLongDate,
     clearPages() {
       this.pages.splice(0, this.pages.length)
       this.documents.splice(0, this.documents.length)
@@ -171,8 +145,9 @@ export default {
     },
     recordToItem({ user, document: { id }, creationDate }) {
       const document = this.findDocument(id)
-      const { href } = this.$router.resolve({ name: 'document-standalone', params: document.routerParams })
-      return { document, href, user, creationDate }
+      const params = document.routerParams
+      const to = { name: 'document-standalone', params }
+      return { document, to, user, creationDate }
     },
     async getPageHits(page) {
       const preference = 'widget-recommended-by'
@@ -188,9 +163,6 @@ export default {
     },
     findDocument(id) {
       return find(this.documents, { id })
-    },
-    shortenPath(path) {
-      return '.' + path.split(this.$config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
     }
   }
 }
@@ -200,11 +172,23 @@ export default {
 .widget--recommended-by {
   min-height: 100%;
 
+  .card & .widget__header {
+    padding: $spacer-lg;
+  }
+
   .widget__list {
     max-height: 400px;
     overflow: auto;
 
+    .card & {
+      padding: 0 $spacer-lg;
+    }
+
     &__item {
+      background: transparent;
+      padding: $spacer-sm 0;
+      border: 0;
+
       &__heading {
         &__meta {
           &__creation-date {
