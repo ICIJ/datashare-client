@@ -1,23 +1,26 @@
 <template>
   <div class="widget">
-    <div v-if="widget.title" class="widget__header d-md-flex align-items-center" :class="{ 'card-body': widget.card }">
-      <h3 class="m-0 flex-grow-1 h5" v-html="widget.title"></h3>
+    <div v-if="widget.title" class="widget__header d-md-flex align-items-center">
+      <h3 class="widget__header__title m-0 flex-grow-1" v-html="widget.title"></h3>
       <div class="widget__header__selectors d-flex align-items-center">
-        <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath"></slot>
+        <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath" />
         <div class="btn-group">
-          <span
+          <button
             v-for="(_, interval) in intervals"
             :key="interval"
-            :class="{ active: selectedInterval === interval }"
-            class="btn btn-outline-tertiary py-1 px-2 widget__header__selectors__selector"
+            :class="{
+              'btn-action': selectedInterval === interval,
+              'btn-outline-light': selectedInterval !== interval
+            }"
+            class="btn py-1 px-3 widget__header__selectors__selector"
             @click="setSelectedInterval(interval)"
           >
             {{ $t('widget.creationDate.intervals.' + interval) }}
-          </span>
+          </button>
         </div>
       </div>
     </div>
-    <div class="widget__content" :class="{ 'card-body': widget.card }">
+    <div class="widget__content">
       <v-wait :for="loader">
         <template #waiting>
           <div class="widget__content_spinner">
@@ -346,15 +349,22 @@ export default {
 .widget {
   min-height: 100%;
 
-  &__header {
-    &__selectors {
-      &__selector {
-        color: inherit;
-        border-color: var(--bs-border-color);
+  .card & {
+    padding: $spacer-xxl;
+  }
 
-        &.active {
-          font-weight: bold;
-        }
+  &__header {
+    margin-bottom: $spacer-xl;
+
+    &__title {
+      font-weight: 500;
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+
+    &__selectors {
+      &__selector + &__selector {
+        margin-left: 0;
       }
     }
   }
@@ -368,7 +378,7 @@ export default {
   }
 
   &:deep(.column-chart__columns__item) {
-    fill: $action;
+    fill: var(--bs-tertiary);
     cursor: pointer;
   }
 }

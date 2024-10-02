@@ -9,11 +9,11 @@
         <path-tree-breadcrumb
           datadir-icon="filter"
           :model-value="selectedPath"
+          :no-datadir="isDataDir(selectedPath)"
           datadir-label
           no-link
-          :no-datadir="selectedPath === dataDir"
         />
-        <span v-if="selectedPath === dataDir">
+        <span v-if="isDataDir(selectedPath)">
           {{ $t('widget.creationDate.filterFolder') }}
         </span>
       </span>
@@ -25,14 +25,14 @@
         lazy
         ok-variant="action"
         :ok-title="$t('widget.creationDate.selectFolder')"
-        :ok-disabled="!selectedPaths.length"
+        :ok-disabled="!pathTreeValues.length"
         scrollable
         size="lg"
-        @ok="setSelectedPath(selectedPaths[0])"
+        @ok="setSelectedPath(pathTreeValue)"
       >
         <path-tree
-          v-model:selected-paths="selectedPaths"
-          :path="pathTreePath"
+          v-model:selected-paths="pathTreeValues"
+          :path="dataDir"
           :projects="projects"
           select-mode
           elasticsearch-only
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { castArray } from 'lodash'
+import { castArray, trimEnd } from 'lodash'
 import { mapState } from 'vuex'
 
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      selectedPaths: []
+      pathTreeValues: []
     }
   },
   computed: {
@@ -78,17 +78,27 @@ export default {
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     },
-    pathTreePath() {
-      return this.dataDir
-    },
     projects() {
       return castArray(this.project)
+    },
+    pathTreeValue() {
+      return trimEnd(this.pathTreeValues[0], this.pathSeparator)
+    },
+    pathSeparator() {
+      return this.$config.get('pathSeparator', '/')
     }
   },
   watch: {
     project() {
-      this.selectedPath = this.pathTreePath
-      this.selectedPaths = []
+      this.selectedPaths = [this.dataDir]
+    }
+  },
+  methods: {
+    isDataDir(selectedPath) {
+      return !selectedPath || this.trimPathEnd(selectedPath) === this.trimPathEnd(this.dataDir)
+    },
+    trimPathEnd(path) {
+      return trimEnd(path, this.pathSeparator)
     }
   }
 }
