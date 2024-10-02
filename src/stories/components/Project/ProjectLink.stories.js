@@ -5,7 +5,7 @@ import ProjectLink from '@/components/Project/ProjectLink'
 const routes = [
   {
     path: '/project/:name',
-    name: 'project.view.insights'
+    name: 'project.view.overview.insights'
   }
 ]
 

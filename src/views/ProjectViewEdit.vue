@@ -48,7 +48,7 @@ function notifyFailed(error, operation) {
 
 function redirectToProject({ name }) {
   const params = { name }
-  return core.router.push({ name: 'project.view.insights', params })
+  return core.router.push({ name: 'project.view.overview.insights', params })
 }
 
 function redirectToProjectList() {

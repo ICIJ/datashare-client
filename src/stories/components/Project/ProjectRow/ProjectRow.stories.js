@@ -7,7 +7,7 @@ import ProjectRow from '@/components/Project/ProjectRow/ProjectRow'
 const routes = [
   {
     path: '/project/:name',
-    name: 'project.view.insights'
+    name: 'project.view.overview.insights'
   },
   {
     path: '/project/:name/edit',

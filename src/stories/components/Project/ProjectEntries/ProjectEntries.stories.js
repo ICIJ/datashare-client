@@ -6,7 +6,7 @@ import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 const routes = [
   {
     path: '/project/:name',
-    name: 'project.view.insights'
+    name: 'project.view.overview.insights'
   },
   {
     path: '/project/:name/edit',
