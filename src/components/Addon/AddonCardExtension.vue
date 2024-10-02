@@ -79,19 +79,16 @@ async function uninstall() {
 </script>
 
 <template>
-  <div class="d-flex flex-grow-1">
-    <addon-card
-      :is-from-registry="isFromRegistry"
-      :title="formattedName"
-      :description="extensionDescription"
-      :url="homepage"
-      :loading="isLoading"
-      :installed="installed"
-      :recommended-version="recommendedVersion"
-      :version="version"
-      @install="install"
-      @uninstall="uninstall"
-    ></addon-card>
-  </div>
+  <addon-card
+    :is-from-registry="isFromRegistry"
+    :title="formattedName"
+    :description="extensionDescription"
+    :url="homepage"
+    :loading="isLoading"
+    :installed="installed"
+    :recommended-version="recommendedVersion"
+    :version="version"
+    @install="install"
+    @uninstall="uninstall"
+  ></addon-card>
 </template>
-<style lang="scss" scoped></style>

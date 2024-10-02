@@ -1130,19 +1130,22 @@
     "description": "Don't change these settings if you don't know what you're doing."
   },
   "settings": {
+    "layout": {"infoDismiss": "Got it, don't show again!"},
     "title": {"title": "Settings"},
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
     "general":{"title": "General" },
     "appearance":
     {
       "title": "Appearance" ,
-      "info": "Choosing the dark or the light mode can improve your visual comfort.",
-      "dismissInfo": "Got it, don't show again!"
+      "info": "Choosing the dark or the light mode can improve your visual comfort."
     },
     "document-processing":{"title": "Document Processing" },
     "batch-tasks":{"title": "Batch Tasks" },
     "plugins":{"title": "Plugins" },
-    "extensions":{"title": "Extensions"}
+    "extensions":{"title": "Extensions",
+      "info": "Extensions are programs that you add to Datashare's back-end to add new features to store and manipulate data.",
+      "searchPlaceholder": "Search extensions"
+    }
 
   },
   "serverSettings": {

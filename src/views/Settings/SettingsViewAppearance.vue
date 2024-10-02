@@ -60,14 +60,7 @@ watch(
 
 <template>
   <div class="settings-view-appearance">
-    <dismissable-alert
-      no-icon
-      persist
-      name="appearance"
-      variant="info"
-      :info-label="infoLabel"
-      :link-label="dismissInfoLabel"
-    >
+    <dismissable-alert no-icon persist name="appearance" variant="info" :link-label="dismissInfoLabel">
       {{ infoLabel }}
     </dismissable-alert>
 
