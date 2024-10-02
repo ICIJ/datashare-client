@@ -69,12 +69,12 @@ const updateDate = computed(() => {
             :label="$t('projectJumbotron.edit')"
           />
           <div class="d-flex flex-wrap gap-3 text-secondary py-3">
-            <span class="text-nowrap">
+            <span v-if="creationDate" class="text-nowrap">
               <phosphor-icon name="calendar-blank" />
               {{ $t('projectJumbotron.creationDate') }}
               <display-datetime :value="creationDate" />
             </span>
-            <span class="text-nowrap">
+            <span v-if="updateDate" class="text-nowrap">
               <phosphor-icon name="calendar-check" />
               {{ $t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
