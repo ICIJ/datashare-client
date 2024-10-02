@@ -2,7 +2,7 @@
   <div class="widget widget--recommended-by">
     <div class="widget__header d-flex align-items-center">
       <fa icon="users" fixed-width class="me-2" />
-      <h3 class="m-0 p-0 h5">{{ $t('widget.recommendedBy.title') }}</h3>
+      <h3 class="m-0 p-0 widget__header__title">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
     <v-wait :for="loader" transition="fade">
       <template #waiting>
@@ -172,8 +172,15 @@ export default {
 .widget--recommended-by {
   min-height: 100%;
 
-  .card & .widget__header {
-    padding: $spacer-lg;
+  .widget__header {
+    .card & {
+      padding: $spacer-lg;
+    }
+
+    &__title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
   }
 
   .widget__list {
