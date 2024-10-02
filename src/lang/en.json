@@ -162,7 +162,7 @@
       "thread": "Thread ID",
       "description": "Description"
     },
-    "placeholder": "Search in documents...",
+    "placeholder": "Type queries, use operators or type regex...",
     "buttonLabel": "Search",
     "searchIn": "Filter {plural}...",
     "searchInProjects": "Filter projects...",
