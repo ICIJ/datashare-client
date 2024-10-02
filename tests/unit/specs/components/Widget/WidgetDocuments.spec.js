@@ -1,11 +1,11 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import WidgetFileBarometer from '@/components/Widget/WidgetFileBarometer'
+import WidgetDocuments from '@/components/Widget/WidgetDocuments'
 
-describe('WidgetFileBarometer.vue', () => {
+describe('WidgetDocuments.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
   const api = { elasticsearch: es }
   const props = { widget: { title: 'Hello world' } }
@@ -15,7 +15,7 @@ describe('WidgetFileBarometer.vue', () => {
     const { store, plugins } = CoreSetup.init(api).useAll()
     store.commit('insights/reset')
     store.commit('insights/project', project)
-    wrapper = shallowMount(WidgetFileBarometer, { global: { plugins, renderStubDefaultSlot: true }, props })
+    wrapper = mount(WidgetDocuments, { global: { plugins }, props })
   })
 
   it('should be a Vue instance', () => {
@@ -26,6 +26,6 @@ describe('WidgetFileBarometer.vue', () => {
     await letData(es).have(new IndexedDocuments().withIndex(project).count(10)).commit()
     await wrapper.vm.loadData()
 
-    expect(wrapper.find('.widget__main-figure').text()).toBe('10 documents')
+    expect(wrapper.find('.widget-barometer__value').text()).toBe('10 documents')
   })
 })

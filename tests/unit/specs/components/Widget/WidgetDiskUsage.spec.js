@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -18,7 +18,7 @@ describe('WidgetDiskUsage.vue', () => {
     config.merge({ dataDir: 'dataDir' })
     store.commit('insights/reset')
     store.commit('insights/project', project)
-    wrapper = shallowMount(WidgetDiskUsage, { global: { plugins, renderStubDefaultSlot: true }, props })
+    wrapper = mount(WidgetDiskUsage, { global: { plugins, renderStubDefaultSlot: true }, props })
   })
 
   it('should be a Vue instance', () => {
@@ -29,7 +29,7 @@ describe('WidgetDiskUsage.vue', () => {
     await letData(es).have(new IndexedDocument('document', project).withContentLength(10)).commit()
     await wrapper.vm.loadData()
 
-    expect(wrapper.find('.widget__main-figure').text()).toBe('10.00 B')
+    expect(wrapper.find('.widget-barometer__value').text()).toBe('10.00 B')
   })
 
   it('should reset path on project change', async () => {
