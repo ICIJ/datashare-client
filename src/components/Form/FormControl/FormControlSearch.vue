@@ -158,7 +158,6 @@ defineExpose({
         @update:modelValue="input"
         @blur="$emit('blur', $event)"
       />
-
       <span
         class="form-control-search__end input-group-text p-0 border-start-0"
         :class="{ 'form-control-search--rounded--end': rounded }"
@@ -175,7 +174,7 @@ defineExpose({
           }"
           @click="clearInputText()"
         />
-        <slot name="input-end" v-bind="{ loading, clearText }"> </slot>
+        <slot name="input-end" v-bind="{ loading, clearText }"></slot>
       </span>
     </div>
   </form>
@@ -190,6 +189,7 @@ defineExpose({
     background-color: var(--bs-body-bg);
     color: $secondary;
     transition: $input-transition;
+    min-width: var(--bs-border-radius);
   }
 
   &--rounded {
