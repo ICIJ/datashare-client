@@ -52,10 +52,10 @@ const props = defineProps({
 })
 
 const localStorageKey = `dismissed-alert-${props.name}`
-const dissmissed = ref(props.persist && localStorage.getItem(localStorageKey) === 'true')
-const show = computed(() => dissmissed.value === false)
-const dissmiss = (persist) => {
-  dissmissed.value = true
+const dismissed = ref(props.persist && localStorage.getItem(localStorageKey) === 'true')
+const show = computed(() => dismissed.value === false)
+const dismiss = (persist) => {
+  dismissed.value = true
   // Ensure that the state is persisted in local storage
 
   if (persist && props.name) {
@@ -85,13 +85,13 @@ const classList = {
       <template #default="{ linkClassList }">
         <div class="d-md-flex align-items-center pb-2 pb-md-0 me-3">
           <p class="m-md-0"><slot /></p>
-          <slot name="button" v-bind="{ linkClassList, linkLabel, noButton, dissmiss }">
+          <slot name="button" v-bind="{ linkClassList, linkLabel, noButton, dismiss }">
             <button
               v-if="!noButton"
               class="btn text-nowrap dismissable-alert__body__button ms-md-3"
               type="button"
               :class="linkClassList"
-              @click="dissmiss(persist)"
+              @click="dismiss(persist)"
             >
               {{ linkLabel }}
             </button>
@@ -108,7 +108,7 @@ const classList = {
             label="Close"
             hide-label
             icon-left="x"
-            @click="dissmiss(false)"
+            @click="dismiss(false)"
           />
         </slot>
       </template>
