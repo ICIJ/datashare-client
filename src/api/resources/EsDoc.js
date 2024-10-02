@@ -31,6 +31,9 @@ export default class EsDoc {
   get serializedForStorage() {
     return this.raw
   }
+  get project() {
+    return this.get('_index')
+  }
   static match(hit) {
     const raw = hit.raw || hit
     return get(raw, '_source.type', 'Document') === (this.esName || this.name)
