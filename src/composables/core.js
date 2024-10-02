@@ -1,5 +1,4 @@
-import { getCurrentInstance, ref } from 'vue'
-import uniqueId from 'lodash/uniqueId'
+import { getCurrentInstance } from 'vue'
 
 export function useCore() {
   // `getCurrentInstance` is a Vue Composition API function that gives us access to the current component instance.

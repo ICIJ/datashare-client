@@ -3,7 +3,7 @@
  * A list of extensions for the frontend.
  */
 
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { uniqueId } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
