@@ -1,13 +1,13 @@
 <template>
   <div class="widget widget--recommended-by">
     <div class="widget__header d-flex align-items-center">
-      <fa icon="users" fixed-width class="me-2" />
+      <phosphor-icon name="users-three" class="me-2" size="2em" />
       <h3 class="m-0 p-0 widget__header__title">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
     <v-wait :for="loader" transition="fade">
       <template #waiting>
         <div class="widget__spinner text-center p-4">
-          <fa icon="circle-notch" spin size="2x"></fa>
+          <phosphor-icon name="circle-notch" spin size="2em" />
         </div>
       </template>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
@@ -43,6 +43,7 @@
 import bodybuilder from 'bodybuilder'
 import { get, property, find, flatten, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import { MODE_NAME } from '@/mode'
 import EsDocList from '@/api/resources/EsDocList'
@@ -59,7 +60,8 @@ export default {
     DocumentCard,
     InfiniteLoading,
     DisplayDatetime,
-    DisplayUser
+    DisplayUser,
+    PhosphorIcon
   },
   props: {
     /**
@@ -128,7 +130,7 @@ export default {
     async loadPageWithLoader() {
       this.$wait.start(this.loader)
       await this.loadPage()
-      this.$wait.end(this.loader)
+      //this.$wait.end(this.loader)
     },
     async loadPage() {
       const page = await this.$core.api.getDocumentUserRecommendations(this.offset, this.pageSize, this.project)
