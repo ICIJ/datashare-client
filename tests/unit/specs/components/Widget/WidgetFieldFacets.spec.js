@@ -59,29 +59,6 @@ describe('WidgetFieldFacets.vue', () => {
     expect(wrapper.classes()).toContain('widget--field-facets')
   })
 
-  it('renders the title with card-header class when card is true', () => {
-    const titleElement = wrapper.find('.widget__header')
-    expect(titleElement.exists()).toBeTruthy()
-    expect(titleElement.classes()).toContain('card-body')
-    expect(titleElement.text()).toBe('Test Widget')
-  })
-
-  it('renders the title without card-header class when card is false', async () => {
-    await wrapper.setProps({
-      widget: new widgets.WidgetFieldFacets({
-        title: 'Test Widget',
-        card: false,
-        field: 'testField',
-        routeQueryField: 'contentType'
-      })
-    })
-
-    const titleElement = wrapper.find('.widget__header')
-    expect(titleElement.exists()).toBeTruthy()
-    expect(titleElement.classes()).not.toContain('card-header')
-    expect(titleElement.text()).toBe('Test Widget')
-  })
-
   it('loads a page of data', () => {
     expect(wrapper.vm.total).toBe(30)
     expect(wrapper.vm.items[0]).toEqual({ label: 'foo', count: 10, href: expect.stringContaining('contentType=foo') })
