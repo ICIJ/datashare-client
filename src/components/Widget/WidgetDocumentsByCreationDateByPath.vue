@@ -81,8 +81,13 @@ export default {
     projects() {
       return castArray(this.project)
     },
-    pathTreeValue() {
-      return trimEnd(this.pathTreeValues[0], this.pathSeparator)
+    pathTreeValue: {
+      get () {
+        return trimEnd(this.pathTreeValues[0], this.pathSeparator)
+      },
+      set(value) {
+        this.pathTreeValues = [value]
+      }
     },
     pathSeparator() {
       return this.$config.get('pathSeparator', '/')
@@ -90,7 +95,7 @@ export default {
   },
   watch: {
     project() {
-      this.selectedPaths = [this.dataDir]
+      this.pathTreeValue = this.dataDir
     }
   },
   methods: {

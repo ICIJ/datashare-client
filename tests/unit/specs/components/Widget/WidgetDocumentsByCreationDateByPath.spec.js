@@ -23,11 +23,11 @@ describe('WidgetDocumentsByCreationDateByPath.vue', () => {
     expect(wrapper).toBeTruthy()
   })
 
-  it('should reset selectedPath on project change', async () => {
-    await wrapper.setData({ selectedPath: 'path_01' })
-    expect(wrapper.vm.selectedPath).toBe('path_01')
+  it('should reset pathTreeValue on project change', async () => {
+    await wrapper.setData({ pathTreeValue: 'path_01' })
+    expect(wrapper.vm.pathTreeValue).toBe('path_01')
     wrapper.vm.$store.commit('insights/project', anotherProject)
     await flushPromises()
-    expect(wrapper.vm.selectedPath).toBe('dataDir')
+    expect(wrapper.vm.pathTreeValue).toBe('dataDir')
   })
 })
