@@ -5,7 +5,6 @@
       :disable-submit="emptySearch"
       :placeholder="$t('batchSearch.placeholder')"
       class="batch-search-filter-query__input"
-      hide-tips
     >
       <template #addons>
         <search-bar-input-dropdown
