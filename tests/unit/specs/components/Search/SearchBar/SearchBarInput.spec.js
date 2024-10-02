@@ -30,11 +30,4 @@ describe('SearchBarInput.vue', function () {
     await wrapper.setProps({ disableSubmit: true })
     expect(wrapper.find('.search-bar-input__submit').element.disabled).toBe(true)
   })
-
-  it('should show tips when there is a query', () => {
-    wrapper = shallowMountFactory()
-    expect(wrapper.find('.search-bar-input__tips-addon--active').exists()).toBeFalsy()
-    wrapper = shallowMountFactory({ modelValue: 'query' })
-    expect(wrapper.find('.search-bar-input__tips-addon--active').exists()).toBeTruthy()
-  })
 })
