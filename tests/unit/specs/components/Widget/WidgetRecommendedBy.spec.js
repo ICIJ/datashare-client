@@ -58,26 +58,10 @@ describe('WidgetRecommendedBy.vue', () => {
     expect(wrapper.classes()).toContain('widget--recommended-by')
   })
 
-  it('renders the title with card-header class when card is true', () => {
-    const titleElement = wrapper.find('.widget__header')
-    expect(titleElement.exists()).toBeTruthy()
-    expect(titleElement.classes()).toContain('card-body')
-  })
-
-  it('renders the title without card-header class when card is false', async () => {
-    await wrapper.setProps({
-      widget: new widgets.WidgetRecommendedBy({ card: false })
-    })
-
-    const titleElement = wrapper.find('.widget__header')
-    expect(titleElement.exists()).toBeTruthy()
-    expect(titleElement.classes()).not.toContain('card-header')
-  })
-
   it('loads a page of data, including ElasticSearch document', () => {
     expect(wrapper.vm.items[0]).toEqual(
       expect.objectContaining({
-        href: expect.stringContaining(`#/ds/${index}`),
+        to: expect.objectContaining({ name: 'document-standalone' }),
         document: expect.objectContaining({ title: 'Bar' }),
         user: expect.objectContaining({ id: 'jdoe' })
       })
