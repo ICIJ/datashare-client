@@ -1242,7 +1242,7 @@
       "warning": "The number of documents only counts parent documents here (files on disk), not attachments (embedded documents)."
     },
     "creationDate": {
-      "filterFolder": "Filter by folder",
+      "filterFolder": "All folders",
       "selectFolder": "Select folder",
       "intervals": {
         "year": "Year",
@@ -1280,6 +1280,12 @@
       "seeDocuments": "See documents in Datashare",
       "others": "Others"
     }
+  },
+  "widgetEntities": {
+    "person": "person | people",
+    "location": "location | locations",
+    "organization": "organization | organizations",
+    "email": "email | emails"
   },
   "api": {
     "title": "API",
