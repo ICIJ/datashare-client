@@ -2,6 +2,7 @@
   <search-bar-input-dropdown
     v-model="selectedField"
     class="search-bar-input-dropdown-for-field"
+    end
     :disabled="disabled"
     :no-caret="noCaret"
     :options="options"
