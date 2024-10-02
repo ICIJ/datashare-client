@@ -20,7 +20,7 @@ const hasAvailableUpdate = computed(() => {
 </script>
 
 <template>
-  <b-card class="addon-card border-light" body-class="d-flex flex-grow-1 justify-content-between gap-2 col-12">
+  <b-card class="addon-card border-light" body-class="d-flex  gap-2">
     <addon-card-details :title="title" :url="url" :description="description" />
     <addon-card-actions
       :version="version"
@@ -36,8 +36,6 @@ const hasAvailableUpdate = computed(() => {
 </template>
 <style lang="scss" scoped>
 .addon-card {
-  .addon-card-action {
-    flex-basis: 170px;
-  }
+  flex: 1 0 360px;
 }
 </style>
