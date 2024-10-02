@@ -53,7 +53,7 @@ const widgets = [
   {
     name: 'languages',
     order: 40,
-    icon: 'language',
+    icon: 'globe-hemisphere-west',
     card: true,
     cols: 4,
     field: 'language',
@@ -75,7 +75,7 @@ const widgets = [
   {
     name: 'authors',
     order: 60,
-    icon: 'file-signature',
+    icon: 'user-circle',
     card: true,
     cols: 4,
     field: 'metadata.tika_metadata_dc_creator.keyword',

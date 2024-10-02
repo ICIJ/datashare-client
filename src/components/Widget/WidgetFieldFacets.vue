@@ -1,13 +1,13 @@
 <template>
   <div class="widget widget--field-facets">
     <div v-if="widget.title" class="widget__header d-flex align-items-center">
-      <fa v-if="widget.icon" :icon="widget.icon" fixed-width class="me-2" />
+      <phosphor-icon v-if="widget.icon" :name="widget.icon" class="me-2" size="2em" />
       <h3 class="m-0 p-0 h5" v-html="title"></h3>
     </div>
     <v-wait :for="loader" transition="fade">
       <template #waiting>
         <div class="widget__spinner text-center p-4">
-          <fa icon="circle-notch" spin size="2x"></fa>
+          <phosphor-icon name="circle-notch" spin size="2em" />
         </div>
       </template>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
@@ -47,6 +47,7 @@ import bodybuilder from 'bodybuilder'
 import { get, flatten, camelCase, iteratee, noop, round, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import InfiniteLoading from 'v3-infinite-loading'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 /**
  * Widget to display a list of facets on the insights page.
@@ -54,7 +55,8 @@ import InfiniteLoading from 'v3-infinite-loading'
 export default {
   name: 'WidgetListGroup',
   components: {
-    InfiniteLoading
+    InfiniteLoading,
+    PhosphorIcon
   },
   props: {
     /**
