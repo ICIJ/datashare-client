@@ -278,16 +278,27 @@ export const routes = [
             },
             children: [
               {
-                name: 'project.view.insights',
+                name: 'project.view.overview',
                 path: '',
                 props: true,
-                component: () => import('@/views/ProjectViewInsights'),
+                component: () => import('@/views/ProjectViewOverview'),
                 meta: {
-                  icon: 'chart-bar',
-                  title() {
-                    return 'Insights'
+                  breadcrumb: false
+                },
+                children: [
+                  {
+                    name: 'project.view.overview.insights',
+                    path: '',
+                    props: true,
+                    component: () => import('@/views/ProjectViewOverviewInsights'),
+                    meta: {
+                      icon: 'chart-bar',
+                      title() {
+                        return 'Insights'
+                      }
+                    }
                   }
-                }
+                ]
               },
               {
                 name: 'project.view.edit',

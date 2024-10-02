@@ -38,7 +38,7 @@ function notifyCreationFailed(error) {
 
 function redirectToProject({ name }) {
   const params = { name }
-  core.router.push({ name: 'project.view.insights', params })
+  core.router.push({ name: 'project.view.overview.insights', params })
 }
 </script>
 

@@ -12,7 +12,7 @@ const props = defineProps({
 })
 
 const toProjectInsights = computed(() => ({
-  name: 'project.view.insights',
+  name: 'project.view.overview.insights',
   params: {
     name: props.project.name
   }
