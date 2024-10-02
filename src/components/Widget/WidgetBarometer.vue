@@ -5,15 +5,15 @@
     :border-variant="borderVariant"
     :class="classList"
     class="widget-barometer"
-    body-class="d-flex flex-column align-items-center gap-1 "
+    body-class="d-flex flex-column flex-truncate text-center gap-1 "
   >
     <phosphor-icon :variant="variant" size="2rem" :name="icon" />
-    <span class="widget-barometer__value fw-bold">
+    <div class="widget-barometer__value fw-bold text-truncate w-100">
       <slot>{{ humanValue }}</slot>
-    </span>
-    <span class="widget-barometer__label">
+    </div>
+    <div class="widget-barometer__label text-truncate w-100">
       <slot name="label">{{ label }}</slot>
-    </span>
+    </div>
   </b-card>
 </template>
 
@@ -25,7 +25,7 @@ import humanNumber from '@/utils/humanNumber'
 import { variantValidator } from '@/enums/variants'
 
 const props = defineProps({
-  icon: { type: String },
+  icon: { type: [String, Object, Array] },
   value: { type: [Number, String] },
   label: { type: String },
   to: { type: String, default: null },
@@ -69,7 +69,7 @@ const classList = computed(() => {
   }
 
   &--no-border {
-    --bs-card-border-width: 0;
+    --bs-card-border-color: var(--bs-card-bg);
   }
 }
 </style>
