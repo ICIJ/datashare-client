@@ -1,6 +1,6 @@
 <template>
   <div class="project-view-insights">
-    <div class="container project-view-insights__container">
+    <div class="project-view-insights__container">
       <b-row class="align-items-stretch">
         <b-col v-for="(widget, index) in instantiatedWidgets" :key="index" :lg="widget.cols">
           <div class="project-view-insights__container__widget" :class="{ card: widget.card }">
@@ -46,25 +46,30 @@ export default {
 <style lang="scss" scoped>
 .project-view-insights {
   &__container {
-    margin: $spacer-lg auto;
+    margin: $spacer-xl auto;
+
     .row {
-      margin-right: $spacer-xxs;
-      margin-left: $spacer-xxs;
+      margin-right: 0;
+      margin-left: 0;
 
       & > .col,
       & > [class*='col-'] {
         min-width: 0;
-        padding-right: $spacer-xxs;
-        padding-left: $spacer-xxs;
+        padding-right: $spacer;
+        padding-left: $spacer;
       }
     }
 
     &__widget {
       display: flex;
       flex-direction: row;
-      margin-bottom: $spacer-xs;
-      min-height: calc(100% - #{$spacer-xs});
+      margin-bottom: $spacer-xl;
+      min-height: calc(100% - #{$spacer-xl});
       position: relative;
+
+      &.card {
+        border: 0;
+      }
 
       & > * {
         min-width: 0;
