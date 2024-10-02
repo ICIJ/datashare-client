@@ -8,28 +8,19 @@
     :clear-text="true"
     shadow
     @blur="onBlur"
+    @submit="onSubmit"
     @input="onInput"
     @focus="onFocus"
   >
     <template #input-end>
-      <a
-        v-if="!hideTips"
-        v-b-tooltip.body.bottomleft
-        tabindex="-1"
-        class="search-bar-input__tips-addon ms-2"
-        target="_blank"
-        :class="{ 'search-bar-input__tips-addon--active': showTips }"
-        :href="operatorLink"
-        :title="$t('search.tips')"
-      >
-        <phosphor-icon name="question" />
-      </a>
-      <slot name="addons"></slot>
+      <div class="d-flex flew-nowrap gap-2 px-2">
+        <slot name="addons"></slot>
+      </div>
       <button-icon
         v-if="showSubmit"
         icon-left="magnifying-glass"
         variant="action"
-        class="search-bar-input__submit ms-2"
+        class="search-bar-input__submit"
         type="submit"
         :disabled="disableSubmit"
       >
@@ -81,12 +72,6 @@ export default {
       default: false
     },
     /**
-     * Hide tips icon in the input bar
-     */
-    hideTips: {
-      type: Boolean
-    },
-    /**
      * Hide the submit button icon in the input bar
      */
     showSubmit: {
@@ -107,9 +92,6 @@ export default {
         this.$emit('update:modelValue', value)
       }
     },
-    showTips() {
-      return !this.hideTips && this.modelValue?.length
-    },
     localizedPlaceholder() {
       return this.placeholder ?? this.$t('search.placeholder')
     }
@@ -117,6 +99,9 @@ export default {
   methods: {
     onBlur() {
       this.$emit('blur')
+    },
+    onSubmit() {
+      this.$emit('submit')
     },
     onInput() {
       this.$emit('input')
