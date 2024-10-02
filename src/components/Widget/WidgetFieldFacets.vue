@@ -1,6 +1,6 @@
 <template>
   <div class="widget widget--field-facets">
-    <div v-if="widget.title" class="widget__header d-flex align-items-center" :class="{ 'card-body': widget.card }">
+    <div v-if="widget.title" class="widget__header d-flex align-items-center">
       <fa v-if="widget.icon" :icon="widget.icon" fixed-width class="me-2" />
       <h3 class="m-0 p-0 h5" v-html="title"></h3>
     </div>
@@ -23,7 +23,9 @@
             <div class="widget__list__item__label">
               {{ item.label }}
             </div>
-            <b-badge class="widget__list__item__count ms-auto" pill variant="dark">{{ $n(item.count) }}</b-badge>
+            <span class="widget__list__item__count ms-auto">
+              {{ $n(item.count) }}
+            </span>
           </div>
           <span class="widget__list__item__bar" :style="{ width: totalPercentage(item.count) }"></span>
         </component>
@@ -31,7 +33,7 @@
           <template #spinner><span></span></template>
           <template #complete><span></span></template>
         </infinite-loading>
-        <div v-if="reachedTheEnd" class="text-muted p-3 text-center">
+        <div v-if="reachedTheEnd" class="text-secondary p-3 text-center">
           <span v-if="items.length">•</span>
           <span v-else>{{ $t('widget.noData') }}</span>
         </div>
@@ -211,13 +213,25 @@ export default {
     min-height: 100%;
   }
 
+  .card &__header {
+    padding: $spacer-lg;
+  }
+
   &__list {
     max-height: 400px;
     overflow: auto;
 
+    .card & {
+      padding: 0 $spacer-lg;
+    }
+
     &__item {
       color: $body-color;
       min-width: 0;
+      width: 100%;
+      background: transparent;
+      padding: $spacer-sm 0;
+      border: 0;
 
       &[href] {
         color: $link-color;
@@ -228,15 +242,21 @@ export default {
         word-break: break-all;
       }
 
+      &__count {
+        color: var(--bs-body-color);
+        font-variant-numeric: tabular-nums;
+      }
+
       &__bar {
         animation: slidingBar 200ms forwards;
-        height: 3px;
-        background: currentColor;
+        height: 8px;
+        background: var(--bs-tertiary);
         position: absolute;
         left: 0;
         bottom: 0;
         min-width: 1px;
         transform: translateX(-100%);
+        border-radius: 0 4px 4px 0;
       }
 
       @for $i from 0 through 100 {
