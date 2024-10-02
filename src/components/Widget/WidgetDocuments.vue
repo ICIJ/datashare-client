@@ -1,36 +1,33 @@
 <template>
-  <div class="widget widget--file-barometer d-flex align-items-center text-center">
-    <v-wait for="barometer counters" class="flex-grow-1" transition="fade">
-      <template #waiting>
-        <fa icon="circle-notch" spin size="2x" class="m-3" />
-      </template>
-      <p :class="{ 'card-body': widget.card }">
-        <fa icon="hard-drive" class="widget__icon" size="2x" />
-        <strong class="widget__main-figure" :title="total">
-          {{ $t('widget.barometer.document', n, { n: humanNumber(total, $tm('human.number')) }) }}
-        </strong>
-        <template v-if="onDisk != total">
-          {{ $t('widget.barometer.amongWhich') }}
-          <router-link :to="searchOnDiskRoute">
-            {{ humanNumber(onDisk, $tm('human.number')) }}
-            {{ $t('widget.barometer.onDisk') }}
-          </router-link>
-        </template>
-      </p>
-    </v-wait>
-  </div>
+  <v-wait for="barometer counters" class="flex-grow-1" transition="fade">
+    <template #waiting>
+      <div class="m-5 text-center h-100">
+        <phosphor-icon name="circle-notch" spin size="2em" />
+      </div>
+    </template>
+    <widget-barometer-documents
+      class="widget widget--documents"
+      :nb-documents="total"
+      :nb-documents-on-disks="onDisk"
+    />
+  </v-wait>
 </template>
 
 <script>
 import { waitFor } from 'vue-wait'
+import { PhosphorIcon } from '@icij/murmur-next'
 
-import humanNumber from '@/utils/humanNumber'
+import WidgetBarometerDocuments from './WidgetBarometerDocuments'
 
 /**
  * Widget to display the number of indexed files on the insights page.
  */
 export default {
   name: 'WidgetFileBarometer',
+  components: {
+    PhosphorIcon,
+    WidgetBarometerDocuments
+  },
   props: {
     /**
      * The widget definition object.
@@ -82,19 +79,7 @@ export default {
     loadData: waitFor('barometer counters', async function () {
       this.total = await this.countTotal()
       this.onDisk = await this.countOnDisk()
-    }),
-    humanNumber
+    })
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.widget {
-  min-height: 100%;
-
-  &__main-figure {
-    display: block;
-    font-size: 1.8rem;
-  }
-}
-</style>
