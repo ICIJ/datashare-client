@@ -1009,6 +1009,15 @@
     "edit": "Edit project",
     "delete": "Delete project"
   },
+  "projectJumbotron": {
+    "edit": "Edit",
+    "creationDate": "Created:",
+    "updateDate": "Updated:"
+  },
+  "projectJumbotronPin": {
+    "pin": "Pin project in the sidebar",
+    "unpin": "Unpin project in the sidebar"
+  },
   "projectList": {
     "title": "Projects",
     "newProject": "New project",
