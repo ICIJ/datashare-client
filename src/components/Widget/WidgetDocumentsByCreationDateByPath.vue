@@ -82,7 +82,7 @@ export default {
       return castArray(this.project)
     },
     pathTreeValue: {
-      get () {
+      get() {
         return trimEnd(this.pathTreeValues[0], this.pathSeparator)
       },
       set(value) {
