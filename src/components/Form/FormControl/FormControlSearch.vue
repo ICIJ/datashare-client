@@ -160,7 +160,7 @@ defineExpose({
       />
 
       <span
-        class="form-control-search__end input-group-text py-0 border-start-0"
+        class="form-control-search__end input-group-text p-0 border-start-0"
         :class="{ 'form-control-search--rounded--end': rounded }"
       >
         <button-icon
