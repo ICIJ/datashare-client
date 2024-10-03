@@ -11,7 +11,6 @@ onBeforeMount(() => {
 })
 const { t } = useI18n()
 const infoLabel = computed(() => t('settings.appearance.info'))
-const dismissInfoLabel = computed(() => t('settings.layout.infoDismiss'))
 const DEFAULT_THEME = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 
 const LOCAL_STORAGE_KEY = 'data-bs-theme'
@@ -58,7 +57,7 @@ watch(
 </script>
 
 <template>
-  <settings-view-layout info-name="appearance" :info-dismiss-label="dismissInfoLabel" :info-label="infoLabel">
+  <settings-view-layout info-name="appearance" :info-label="infoLabel">
     <settings-appearance-radio-group v-model="selectedTheme" :options="options" />
   </settings-view-layout>
 </template>
