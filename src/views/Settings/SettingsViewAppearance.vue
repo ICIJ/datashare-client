@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { ref, onBeforeMount, computed, watch } from 'vue'
 
 import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
-import DismissableAlert from '@/components/Dismissable/DismissableAlert.vue'
+import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
 
 defineOptions({ name: 'SettingsViewAppearance' })
 onBeforeMount(() => {
@@ -11,7 +11,7 @@ onBeforeMount(() => {
 })
 const { t } = useI18n()
 const infoLabel = computed(() => t('settings.appearance.info'))
-const dismissInfoLabel = computed(() => t('settings.appearance.dismissInfo'))
+const dismissInfoLabel = computed(() => t('settings.layout.infoDismiss'))
 const DEFAULT_THEME = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 
 const LOCAL_STORAGE_KEY = 'data-bs-theme'
@@ -58,11 +58,7 @@ watch(
 </script>
 
 <template>
-  <div class="settings-view-appearance">
-    <dismissable-alert no-icon persist name="appearance" variant="info" :link-label="dismissInfoLabel">
-      {{ infoLabel }}
-    </dismissable-alert>
-
+  <settings-view-layout info-name="appearance" :info-dismiss-label="dismissInfoLabel" :info-label="infoLabel">
     <settings-appearance-radio-group v-model="selectedTheme" :options="options" />
-  </div>
+  </settings-view-layout>
 </template>
