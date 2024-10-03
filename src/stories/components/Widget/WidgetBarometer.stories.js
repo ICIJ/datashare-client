@@ -1,3 +1,5 @@
+import { vueRouter } from 'storybook-vue3-router'
+
 import WidgetBarometer from '@/components/Widget/WidgetBarometer'
 import { variantsArgType } from '~storybook/utils'
 import { getCategoryIcon } from '@/utils/entity'
@@ -18,6 +20,7 @@ export default {
     variant: 'action'
   },
   decorators: [
+    vueRouter([]),
     () => ({
       template: '<div class="bg-tertiary-subtle rounded-1 p-4"><story /></div>'
     })

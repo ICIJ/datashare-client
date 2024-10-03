@@ -1,7 +1,7 @@
 <template>
   <b-card
     :tag="tag"
-    :href="to"
+    :href="href"
     :border-variant="borderVariant"
     :class="classList"
     class="widget-barometer"
@@ -18,7 +18,9 @@
 </template>
 
 <script setup>
+import { isString, isObject } from 'lodash'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import humanNumber from '@/utils/humanNumber'
@@ -28,7 +30,8 @@ const props = defineProps({
   icon: { type: [String, Object, Array] },
   value: { type: [Number, String] },
   label: { type: String },
-  to: { type: String, default: null },
+  to: { type: [String, Object], default: null },
+  clickable: { type: Boolean, default: false },
   variant: { type: String, validator: variantValidator, default: null },
   borderVariant: { type: String, validator: variantValidator, default: null }
 })
@@ -40,14 +43,28 @@ const humanValue = computed(() => {
   return props.value
 })
 
+const router = useRouter()
+
+const href = computed(() => {
+  if (isString(props.to)) {
+    return router?.resolve({ to: props.to })?.href
+  }
+
+  if (isObject(props.to)) {
+    return router?.resolve(props.to)?.href
+  }
+
+  return null
+})
+
 const tag = computed(() => {
-  return props.to ? 'a' : 'div'
+  return href.value ? 'a' : 'div'
 })
 
 const classList = computed(() => {
   return {
     'widget-barometer--no-border': !props.borderVariant,
-    'widget-barometer--clickable': props.to
+    'widget-barometer--clickable': props.to || props.clickable
   }
 })
 </script>
@@ -56,11 +73,14 @@ const classList = computed(() => {
 .widget-barometer {
   height: 100%;
 
-  &[href]:hover {
+  &[href]:hover,
+  &.widget-barometer--clickable:hover {
+    cursor: pointer;
     border-color: $input-hover-border-color !important;
   }
 
-  &[href]:hover &__label {
+  &[href]:hover &__label,
+  &.widget-barometer--clickable:hover &__label {
     color: var(--bs-body-color);
   }
 
