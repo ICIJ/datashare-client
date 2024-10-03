@@ -6,7 +6,9 @@ import { useI18n } from 'vue-i18n'
 import AddonCard from '@/components/Addon/AddonCard'
 import { useCore } from '@/composables/core'
 
+const EXTENSION = 'extension'
 const props = defineProps({
+  addonType: { type: String, validator: (s) => ['extension', 'plugin'].includes(s.toLowerCase()) },
   id: { type: String, required: true },
   name: { type: String, required: true },
   version: { type: String, required: true },
@@ -23,10 +25,10 @@ const emit = defineEmits(['installed', 'uninstalled'])
 const { t } = useI18n()
 const { toastedPromise, core } = useCore()
 const isLoading = ref(false)
-const deleteSuccess = computed(() => t('extensions.deleteSuccess'))
-const deleteError = computed(() => t('extensions.deleteError'))
-const submitSuccess = computed(() => t('extensions.submitSuccess'))
-const submitError = computed(() => t('extensions.submitError'))
+const deleteSuccess = computed(() => t(`${props.addonType}.deleteSuccess`))
+const deleteError = computed(() => t(`${props.addonType}.deleteError`))
+const submitSuccess = computed(() => t(`${props.addonType}.submitSuccess`))
+const submitError = computed(() => t(`${props.addonType}.submitError`))
 
 const isFromRegistry = computed(() => {
   return !!props.deliverableFromRegistry ?? false
@@ -38,7 +40,7 @@ const formattedName = computed(() => {
   }
   return startCase(camelCase(props.name))
 })
-const extensionDescription = computed(() =>
+const addonDescription = computed(() =>
   isFromRegistry.value ? props.deliverableFromRegistry?.description : props.description
 )
 const recommendedVersion = computed(() => {
@@ -46,6 +48,12 @@ const recommendedVersion = computed(() => {
 })
 const homepage = computed(() => props.deliverableFromRegistry?.homepage ?? null)
 
+const addonInstallFn = computed(() => {
+  return props.addonType === EXTENSION ? core.api.installExtensionFromId : core.api.installPluginFromId
+})
+const addonUninstallFn = computed(() => {
+  return props.addonType === EXTENSION ? core.api.uninstallExtension : core.api.uninstallPlugin
+})
 async function install() {
   const toast = {
     successMessage: submitSuccess.value,
@@ -53,7 +61,7 @@ async function install() {
   }
   isLoading.value = true
   try {
-    const promise = core.api.installExtensionFromId(props.id)
+    const promise = addonInstallFn.value(props.id)
     await toastedPromise(promise, toast)
     emit('installed')
   } catch (e) {
@@ -68,7 +76,7 @@ async function uninstall() {
   }
   isLoading.value = true
   try {
-    const promise = core.api.uninstallExtension(props.id)
+    const promise = addonUninstallFn.value(props.id)
     await toastedPromise(promise, toast)
     emit('uninstalled')
   } catch (e) {
@@ -82,7 +90,7 @@ async function uninstall() {
   <addon-card
     :is-from-registry="isFromRegistry"
     :title="formattedName"
-    :description="extensionDescription"
+    :description="addonDescription"
     :url="homepage"
     :loading="isLoading"
     :installed="installed"

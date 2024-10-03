@@ -10,7 +10,7 @@ import Fuse from 'fuse.js'
 
 import { useCore } from '@/composables/core'
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
-import AddonCardExtension from '@/components/Addon/AddonCardExtension'
+import AddonCardInstance from '@/components/Addon/AddonCardInstance'
 import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
 
 defineOptions({ name: 'SettingsViewExtensions' })
@@ -62,14 +62,12 @@ const fuse = computed(() => {
     keys: ['deliverableFromRegistry.name', 'name'],
     shouldSort: true
   }
-
   return new Fuse(addons.value, options)
 })
 
 const filteredAddons = computed(() => {
   if (filterTerm.value.length > 0) {
-    const res = fuse.value.search(filterTerm.value)
-    return res.map((r) => r.item)
+    return fuse.value.search(filterTerm.value).map((r) => r.item)
   }
   return addons.value
 })
@@ -84,8 +82,9 @@ const filteredAddons = computed(() => {
     </div>
     <div class="row g-4">
       <div v-for="addon in filteredAddons" :key="addon.id" class="col-12 col-xl-6 d-flex">
-        <addon-card-extension
+        <addon-card-instance
           :id="addon.id"
+          addon-type="extension"
           :name="addon.name"
           :version="addon.version"
           :description="addon.description"
