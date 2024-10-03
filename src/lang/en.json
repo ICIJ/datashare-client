@@ -1169,12 +1169,14 @@
       "plugins":{
         "title": "Plugins",
         "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
-        "searchPlaceholder": "Search plugins"
+        "searchPlaceholder": "Search plugins",
+        "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
       },
       "extensions":{
         "title": "Extensions",
         "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
-        "searchPlaceholder": "Search extensions"
+        "searchPlaceholder": "Search extensions",
+        "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
       }
     }
   },
