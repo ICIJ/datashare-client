@@ -1,9 +1,9 @@
 <template>
-  <div class="project-view-insights">
-    <div class="project-view-insights__container">
+  <div class="project-view-overview-insights">
+    <div class="project-view-overview-insights__container">
       <b-row class="align-items-stretch">
         <b-col v-for="(widget, index) in instantiatedWidgets" :key="index" :lg="widget.cols">
-          <div class="project-view-insights__container__widget" :class="{ card: widget.card }">
+          <div class="project-view-overview-insights__container__widget" :class="{ card: widget.card }">
             <component :is="widget.component" :widget="widget" class="flex-grow-1" />
           </div>
         </b-col>
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.project-view-insights {
+.project-view-overview-insights {
   &__container {
     margin: $spacer-xl auto;
 
