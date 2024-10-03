@@ -13,7 +13,8 @@ defineOptions({ name: 'SettingsViewLayout' })
 const props = defineProps({
   infoName: { type: String, required: true },
   infoLabel: { type: String },
-  infoDismissLabel: { type: String }
+  infoDismissLabel: { type: String },
+  noResults: { type: Boolean, default: false }
 })
 const { t } = useI18n()
 
@@ -25,11 +26,10 @@ const dismissLabel = computed(() => props.infoDismissLabel ?? t('settings.layout
       <dismissable-alert variant="info" class="m-0" persist :name="infoName" :link-label="dismissLabel">
         <span v-html="infoLabel" /></dismissable-alert
     ></slot>
-    <div>
-      <slot name="filter"> </slot>
-    </div>
+    <slot name="filter"></slot>
     <b-card class="border-0 p-4 gap-4" body-class="d-flex flex-column gap-4">
       <slot></slot>
+      <slot v-if="noResults" name="noResult"></slot>
     </b-card>
   </div>
 </template>
