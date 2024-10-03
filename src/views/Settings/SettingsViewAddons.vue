@@ -99,7 +99,7 @@ const filteredAddons = computed(() => {
       ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
     /></template>
     <template #noResult>{{ noResultsLabel }}</template>
-    <div class="col-8">
+    <div class="col-12 col-xl-8">
       <addon-url-input v-model="url" :loading="isLoading" @install="installFromUrl" />
     </div>
     <b-alert v-if="error" variant="danger" model-value>{{ errorLabel }}</b-alert>
