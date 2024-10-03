@@ -34,6 +34,7 @@ export default ({ mode }) => {
       preprocessorOptions: {
         scss: {
           quietDeps: true,
+          silenceDeprecations: ['legacy-js-api'],
           api: 'modern',
           additionalData: `
             @use 'sass:math';
