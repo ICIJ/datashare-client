@@ -2,7 +2,7 @@ import { shallowMount, mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import ProjectViewEdit from '@/views/ProjectViewEdit'
+import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit'
 
 describe('ProjectViewEdit.vue', () => {
   let api, core

@@ -238,15 +238,15 @@ export const routes = [
           title: 'Projects'
         },
         components: {
-          default: () => import('@/views/Project'),
-          settings: () => import('@/views/ProjectListSettings')
+          default: () => import('@/views/Project/Project'),
+          settings: () => import('@/views/Project/ProjectList/ProjectListSettings')
         },
         children: [
           {
             path: '',
             name: 'project.list',
             components: {
-              default: () => import('@/views/ProjectList')
+              default: () => import('@/views/Project/ProjectList/ProjectList')
             },
             meta: {
               icon: 'dots-nine',
@@ -257,7 +257,7 @@ export const routes = [
             name: 'project.new',
             path: 'new',
             components: {
-              default: () => import('@/views/ProjectNew')
+              default: () => import('@/views/Project/ProjectNew')
             },
             meta: {
               icon: 'plus',
@@ -269,7 +269,7 @@ export const routes = [
             name: 'project.view',
             path: ':name',
             props: true,
-            component: () => import('@/views/ProjectView'),
+            component: () => import('@/views/Project/ProjectView/ProjectView'),
             meta: {
               icon: null,
               title({ route, core }) {
@@ -281,7 +281,7 @@ export const routes = [
                 name: 'project.view.overview',
                 path: '',
                 props: true,
-                component: () => import('@/views/ProjectViewOverview'),
+                component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverview'),
                 meta: {
                   breadcrumb: false
                 },
@@ -290,7 +290,7 @@ export const routes = [
                     name: 'project.view.overview.insights',
                     path: '',
                     props: true,
-                    component: () => import('@/views/ProjectViewOverviewInsights'),
+                    component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),
                     meta: {
                       icon: 'chart-bar',
                       title() {
@@ -304,7 +304,7 @@ export const routes = [
                 name: 'project.view.edit',
                 path: 'edit',
                 props: true,
-                component: () => import('@/views/ProjectViewEdit'),
+                component: () => import('@/views/Project/ProjectView/ProjectViewEdit'),
                 meta: {
                   icon: 'pencil-simple',
                   title: 'Edit project',
@@ -317,26 +317,6 @@ export const routes = [
                 props: true,
                 redirect: {
                   name: 'project.view.edit'
-                }
-              },
-              {
-                name: 'project.view.add-documents',
-                path: 'add-documents',
-                components: {
-                  default: () => import('@/views/ProjectViewAddDocuments')
-                },
-                meta: {
-                  allowedModes: ['LOCAL', 'EMBEDDED']
-                }
-              },
-              {
-                name: 'project.view.find-named-entities',
-                path: 'find-named-entities',
-                components: {
-                  default: () => import('@/views/ProjectViewFindNamedEntities')
-                },
-                meta: {
-                  allowedModes: ['LOCAL', 'EMBEDDED']
                 }
               }
             ]
