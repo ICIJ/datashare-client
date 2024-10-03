@@ -6,7 +6,7 @@
       </div>
     </template>
     <div class="widget widget--entities d-flex h-100 w-100">
-      <template v-if="total">
+      <template v-if="total || isServer">
         <div class="row flex-grow-1">
           <div v-for="category in categories" :key="category" class="col-6 col-lg">
             <widget-barometer
@@ -19,9 +19,15 @@
           </div>
         </div>
       </template>
-      <p v-else class="text-muted text-center w-100 align-self-center m-0">
-        {{ $t('widget.noEntities') }}
-      </p>
+      <div v-else class="text-center w-100 align-self-center">
+        <p>{{ $t('widget.noEntitiesFindSome') }}</p>
+        <button-icon
+          :to="{ name: 'task.analysis.list' }"
+          icon-left="plus"
+          variant="outline-action"
+          :label="$t('widget.findEntities')"
+        />
+      </div>
     </div>
   </v-wait>
 </template>
@@ -32,8 +38,10 @@ import bodybuilder from 'bodybuilder'
 
 import WidgetBarometer from './WidgetBarometer'
 
+import { MODE_NAME } from '@/mode'
 import { getCategoryIcon, getCategoryVariant } from '@/utils/entity'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
  * Widget to display a summary of entities
@@ -41,6 +49,7 @@ import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 export default {
   name: 'WidgetEntities',
   components: {
+    ButtonIcon,
     WidgetBarometer
   },
   props: {
@@ -73,6 +82,9 @@ export default {
     },
     project() {
       return this.$store.state.insights.project
+    },
+    isServer() {
+      return this.$config?.get('mode') === MODE_NAME.SERVER
     }
   },
   watch: {
