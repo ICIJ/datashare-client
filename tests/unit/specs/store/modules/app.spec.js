@@ -1,9 +1,7 @@
 import { createStore } from 'vuex'
-import { describe, it, expect, beforeEach } from 'vitest'
 
 import app from '@/store/modules/app'
 
-// Create a new store instance using the provided module
 const createVuexStore = () => {
   return createStore({
     state: app.state,
