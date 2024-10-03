@@ -28,7 +28,7 @@ const imageClassList = computed(() => {
       <phosphor-icon :name="icon" />
       <span class="text-nowrap">{{ label }}</span></span
     >
-    <image-mode :image-class="imageClassList">
+    <image-mode :image-class="imageClassList" width="200px">
       <image-mode-source :src="thumbnail" />
     </image-mode>
   </div>

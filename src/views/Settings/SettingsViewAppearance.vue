@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ref, onBeforeMount, computed, watch } from 'vue'
 
+import themeLight from '@/assets/images/illustrations/theme-light.png'
+import themeDark from '@/assets/images/illustrations/theme-dark.png'
 import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
 import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
 
@@ -27,13 +29,13 @@ function retrieveThemes() {
       icon: 'sun',
       name: DEFAULT_THEME,
       label: 'Light mode',
-      thumbnail: 'https://placehold.co/169x95'
+      thumbnail: themeLight
     },
     {
       icon: 'moon',
       name: 'dark',
       label: 'Dark mode',
-      thumbnail: 'https://placehold.co/169x95'
+      thumbnail: themeDark
     }
   ]
 }
