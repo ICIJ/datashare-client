@@ -378,8 +378,11 @@ export default {
   }
 
   &:deep(.column-chart__columns__item) {
-    fill: var(--bs-tertiary);
+    fill: var(--bs-secondary-bg-subtle);
     cursor: pointer;
+  }
+  &:deep(.column-chart__axis .tick line) {
+    stroke: var(--bs-tertiary-bg-subtle);
   }
 }
 </style>
