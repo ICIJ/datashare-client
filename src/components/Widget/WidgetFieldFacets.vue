@@ -228,7 +228,7 @@ export default {
     }
 
     &__item {
-      color: $body-color;
+      color: var(--bs-body-color);
       min-width: 0;
       width: 100%;
       background: transparent;
@@ -236,7 +236,7 @@ export default {
       border: 0;
 
       &[href] {
-        color: $link-color;
+        color: var(--bs-link-color);
       }
 
       &__label {
@@ -252,7 +252,7 @@ export default {
       &__bar {
         animation: slidingBar 200ms forwards;
         height: 8px;
-        background: var(--bs-tertiary);
+        background: var(--bs-secondary-bg-subtle);
         position: absolute;
         left: 0;
         bottom: 0;
