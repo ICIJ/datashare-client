@@ -5,7 +5,12 @@
         <phosphor-icon name="circle-notch" spin size="2em" />
       </div>
     </template>
-    <widget-barometer-disk-usage v-b-modal.modal-disk-usage-details clickable class="widget widget--disk-usage" :size="size" />
+    <widget-barometer-disk-usage
+      v-b-modal.modal-disk-usage-details
+      clickable
+      class="widget widget--disk-usage"
+      :size="size"
+    />
   </v-wait>
   <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer size="lg">
     <path-tree v-model:path="path" :projects="[project]" elasticsearch-only />
