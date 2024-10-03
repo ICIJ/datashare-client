@@ -77,16 +77,16 @@ watch(
           <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights' }">
             {{ $t('projectViewOverview.nav.insights') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="tree-structure" disabled>
+          <tab-group-navigation-entry icon="tree-structure" :to="{ name: 'project.view.overview.paths' }">
             {{ $t('projectViewOverview.nav.paths') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="polygon" disabled>
+          <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph' }">
             {{ $t('projectViewOverview.nav.graph') }}
           </tab-group-navigation-entry>
           <tab-group-navigation-entry icon="circles-three-plus" :to="{ name: 'project.view.overview.details' }">
             {{ $t('projectViewOverview.nav.details') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="clock-counter-clockwise" disabled>
+          <tab-group-navigation-entry icon="clock-counter-clockwise" :to="{ name: 'project.view.overview.history' }">
             {{ $t('projectViewOverview.nav.history') }}
           </tab-group-navigation-entry>
         </tab-group-navigation>

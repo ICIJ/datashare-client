@@ -9,7 +9,8 @@
     "reset": "Reset",
     "confirmLabel": "Are you sure?",
     "emptyTextTable": "There are no records to show",
-    "you": "You"
+    "you": "You",
+    "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
   "addonCard": {
     "version": "Version: {v}",
