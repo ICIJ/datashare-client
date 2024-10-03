@@ -1165,6 +1165,10 @@
       "title": "Appearance" ,
       "info": "Choosing the dark or the light mode can improve your visual comfort."
     },
+    "languages": {
+      "title": "Languages",
+      "info": "Translations are <a href='%{href}' >maintained on Crowdin</a>."
+    },
     "document-processing":{"title": "Document Processing" },
     "batch-tasks":{"title": "Batch Tasks" },
 

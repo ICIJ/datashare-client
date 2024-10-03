@@ -25,7 +25,7 @@
       />
       <div class="login-view__assistance__locale d-flex align-items-center gap-2">
         <span>{{ switchLanguageLabel }}</span
-        ><locales-menu class="px-2" />
+        ><i18n-locale-dropdown class="px-2" />
       </div>
     </div>
   </div>
@@ -38,7 +38,6 @@ import LoginImage from '@/components/Login/LoginImage'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useCore } from '@/composables/core'
 import settings from '@/utils/settings'
-import LocalesMenu from '@/components/LocalesMenu'
 const image = ref(null)
 const { t } = useI18n()
 const loginLabel = computed(() => t('login.account'))

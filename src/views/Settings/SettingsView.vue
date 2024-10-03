@@ -9,6 +9,7 @@ const { t } = useI18n()
 const tabs = computed(() => [
   { icon: 'list', title: t('settings.general.title'), name: 'settings.general' },
   { icon: 'moon', title: t('settings.appearance.title'), name: 'settings.appearance' },
+  { icon: 'translate', title: t('settings.languages.title'), name: 'settings.languages' },
   { icon: 'file-text', title: t('settings.document-processing.title'), name: 'settings.document-processing' },
   { icon: 'rocket-launch', title: t('settings.batch-tasks.title'), name: 'settings.batch-tasks' },
   { icon: 'monitor', title: t('settings.addons.plugins.title'), name: 'settings.plugins' },

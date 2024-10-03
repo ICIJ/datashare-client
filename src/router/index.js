@@ -389,7 +389,7 @@ export const routes = [
         },
         component: () => import('@/views/Settings/SettingsView'),
         children: [
-          { path: '', component: () => import('@/views/Settings/SettingsViewGeneral') },
+          { path: '/', component: () => import('@/views/Settings/SettingsViewGeneral') },
           {
             name: 'settings.general',
             path: 'general',
@@ -405,6 +405,15 @@ export const routes = [
             component: () => import('@/views/Settings/SettingsViewAppearance'),
             meta: {
               title: 'Appearance',
+              breadcrumb: false
+            }
+          },
+          {
+            name: 'settings.languages',
+            path: 'languages',
+            component: () => import('@/views/Settings/SettingsViewLanguages'),
+            meta: {
+              title: 'Languages',
               breadcrumb: false
             }
           },
