@@ -1238,6 +1238,8 @@
     "noRecommendations": "No recommendations",
     "noFolders": "No folders",
     "noEntities": "No named entities",
+    "noEntitiesFindSome": "You have not found entities yet. Want to identify some?",
+    "findEntities": "Find entities",
     "languages": {
       "title": "Languages"
     },
