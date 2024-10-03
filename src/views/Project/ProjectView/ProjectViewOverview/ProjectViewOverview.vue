@@ -73,7 +73,7 @@ watch(
 
         <project-jumbotron v-model:pinned="pinned" :project="project" />
         <search-bar class="my-4 py-3 mx-3" size="lg" :indices="indices" hide-field-dropdown hide-projects-dropdown />
-        <tab-group-navigation class="mx-3">
+        <tab-group-navigation class="mx-3" nowrap>
           <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights' }">
             {{ $t('projectViewOverview.nav.insights') }}
           </tab-group-navigation-entry>
@@ -83,7 +83,7 @@ watch(
           <tab-group-navigation-entry icon="polygon" disabled>
             {{ $t('projectViewOverview.nav.graph') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="circles-three-plus" disabled>
+          <tab-group-navigation-entry icon="circles-three-plus" :to="{ name: 'project.view.overview.details' }">
             {{ $t('projectViewOverview.nav.details') }}
           </tab-group-navigation-entry>
           <tab-group-navigation-entry icon="clock-counter-clockwise" disabled>

@@ -290,11 +290,25 @@ export const routes = [
                     name: 'project.view.overview.insights',
                     path: '',
                     props: true,
-                    component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),
+                    component: () =>
+                      import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),
                     meta: {
                       icon: 'chart-bar',
                       title() {
                         return 'Insights'
+                      }
+                    }
+                  },
+                  {
+                    name: 'project.view.overview.details',
+                    path: '',
+                    props: true,
+                    component: () =>
+                      import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewDetails'),
+                    meta: {
+                      icon: 'chart-bar',
+                      title() {
+                        return 'Details'
                       }
                     }
                   }
