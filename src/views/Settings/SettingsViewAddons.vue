@@ -48,7 +48,6 @@ async function installFromUrl(urlToInstall) {
   }
 }
 const infoLabel = computed(() => t(`settings.addons.${props.addonsType}.info`))
-const dismissInfoLabel = computed(() => t('settings.layout.infoDismiss'))
 const errorLabel = computed(() => t(`settings.addons.${props.addonsType}.errorLabel`))
 const searchPlaceholder = computed(() => t(`settings.addons.${props.addonsType}.searchPlaceholder`))
 
@@ -91,7 +90,7 @@ const filteredAddons = computed(() => {
 })
 </script>
 <template>
-  <settings-view-layout :info-name="addonsType" :info-label="infoLabel" :dismiss-info-label="dismissInfoLabel">
+  <settings-view-layout :info-name="addonsType" :info-label="infoLabel">
     <template #filter
       ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
     /></template>

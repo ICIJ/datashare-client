@@ -26,7 +26,6 @@ onBeforeMount(async () => {
   wait.end('load server settings')
 })
 const infoLabel = computed(() => t(`settings.general.info`))
-const dismissInfoLabel = computed(() => t('settings.layout.infoDismiss'))
 
 const noAccessLabel = computed(() => t('serverSettings.noAccess'))
 const submitSuccessLabel = computed(() => t('serverSettings.submitSuccess'))
@@ -43,7 +42,7 @@ async function onSubmit(newSettings) {
 }
 </script>
 <template>
-  <settings-view-layout info-name="general" :info-label="infoLabel" :dismiss-info-label="dismissInfoLabel">
+  <settings-view-layout info-name="general" :info-label="infoLabel">
     <v-wait v-if="!isServer" for="load server settings" class="">
       <template #waiting>
         <phosphor-icon name="circle" spin></phosphor-icon>

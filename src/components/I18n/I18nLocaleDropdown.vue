@@ -1,33 +1,27 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { uniqueId, find } from 'lodash'
+import { ref } from 'vue'
+import { uniqueId } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { useI18n } from 'vue-i18n'
 
-import { useCore } from '@/composables/core'
-import settings from '@/utils/settings'
+import { useLocale } from '@/composables/useLocale'
+import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 defineProps({
   popoverPlacement: {
     type: String,
-    default: 'right'
+    default: PLACEMENT.RIGHT,
+    validator: placementValidator
   }
 })
 
-const { locale } = useI18n()
-const { core } = useCore()
-
 const id = uniqueId('i18n-locale-dropdown')
 const popover = ref(null)
-const currentLocale = computed(() => find(settings.locales, { key: locale.value }))
-// Watch for changes in the current locale and load the locale
-watch(currentLocale, ({ key }) => core?.loadI18Locale(key))
-
+const { currentLocale, setLocale, locales } = useLocale()
 const chooseLocale = async (localeKey) => {
   if (popover.value?.hide) {
     popover.value.hide(new Event('forceHide'))
   }
-  await core?.loadI18Locale(localeKey)
+  await setLocale(localeKey)
 }
 
 const dropdownItemClass = (key) => {
@@ -41,7 +35,7 @@ const dropdownItemClass = (key) => {
 <template>
   <b-button :id="id" class="i18n-locale-dropdown" href="#" :variant="null" @click.prevent>
     <span class="i18n-locale-dropdown__button">
-      <slot v-bind="{ currentLocale, locales: settings.locales }">
+      <slot v-bind="{ currentLocale, locales }">
         <phosphor-icon name="globe-hemisphere-west" class="me-1" />
         {{ currentLocale.label }}
       </slot>
@@ -56,7 +50,7 @@ const dropdownItemClass = (key) => {
       >
         <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
           <a
-            v-for="{ key, label } in settings.locales"
+            v-for="{ key, label } in locales"
             :key="key"
             href="#"
             class="dropdown-item"
