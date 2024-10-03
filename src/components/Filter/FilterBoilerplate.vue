@@ -600,7 +600,7 @@ export default {
 <style lang="scss">
 .filter {
   .content-placeholder .content-placeholder__wrapper__row__box {
-    background: darken($app-context-sidebar-bg, 5%);
+    background: color.adjust($app-context-sidebar-bg, $lightness: -5%);
   }
 
   &__header {

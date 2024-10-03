@@ -263,7 +263,7 @@ $dropdown-link-active-bg: var(--bs-dropdown-bg);
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 
-$app-sidebar-bg: darken(#31313a, 10%);
+$app-sidebar-bg: color.adjust(#31313a, $lightness: -10%);
 $app-sidebar-color: #fff;
 $app-sidebar-border-color: mix($app-sidebar-color, $app-sidebar-bg, 5%);
 $app-sidebar-width: 290px;
