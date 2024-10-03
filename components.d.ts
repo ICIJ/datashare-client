@@ -11,6 +11,7 @@ declare module 'vue' {
     AddonCardActions: typeof import('./src/components/Addon/AddonCardActions.vue')['default']
     AddonCardDetails: typeof import('./src/components/Addon/AddonCardDetails.vue')['default']
     AddonCardExtension: typeof import('./src/components/Addon/AddonCardExtension.vue')['default']
+    AddonCardInstance: typeof import('./src/components/Addon/AddonCardInstance.vue')['default']
     AddonUrlInput: typeof import('./src/components/Addon/AddonUrlInput.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']
