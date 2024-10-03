@@ -8,7 +8,7 @@
       <button-icon
         :label="loginLabel"
         :to="signinRoute"
-        class="login-view__enter_link"
+        class="login-view__enter_link mt-4"
         icon-left="user"
         variant="action"
         @click="image.shake()"
