@@ -7,6 +7,7 @@ import { computed, onBeforeMount, ref } from 'vue'
 import { uniqueId } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import { useCore } from '@/composables/core'
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
@@ -99,6 +100,9 @@ const filteredAddons = computed(() => {
     </div>
     <b-alert v-if="error" variant="danger" model-value>{{ errorLabel }}</b-alert>
     <v-wait :for="loaderId" class="row g-4">
+      <template #waiting>
+        <phosphor-icon name="circle" spin size="lg" class="ms-auto"></phosphor-icon>
+      </template>
       <div v-for="addon in filteredAddons" :key="addon.id" class="col-12 col-xl-6 d-flex">
         <addon-card-instance
           :id="addon.id"

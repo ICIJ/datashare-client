@@ -1158,7 +1158,8 @@
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
     "general":{
       "title": "General" ,
-      "info": "Don’t change these settings if you don’t know what you are doing."
+      "info": "Don’t change these settings if you don’t know what you are doing.",
+      "searchPlaceholder": "Search settings"
     },
     "appearance":
     {
@@ -1169,9 +1170,6 @@
       "title": "Languages",
       "info": "Translations are <a href='%{href}' >maintained on Crowdin</a>."
     },
-    "document-processing":{"title": "Document Processing" },
-    "batch-tasks":{"title": "Batch Tasks" },
-
     "addons": {
       "installFromUrl": "Install from a URL",
       "install": "Install",
