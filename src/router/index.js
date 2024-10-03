@@ -429,7 +429,8 @@ export const routes = [
           {
             name: 'settings.plugins',
             path: 'plugins',
-            component: () => import('@/views/Settings/SettingsViewPlugins'),
+            component: () => import('@/views/Settings/SettingsViewAddons'),
+            props: { addonsType: 'plugins' },
             meta: {
               title: 'Plugins',
               breadcrumb: false
@@ -438,7 +439,8 @@ export const routes = [
           {
             name: 'settings.extensions',
             path: 'extensions',
-            component: () => import('@/views/Settings/SettingsViewExtensions'),
+            component: () => import('@/views/Settings/SettingsViewAddons'),
+            props: { addonsType: 'extensions' },
             meta: {
               title: 'Extensions',
               breadcrumb: false
