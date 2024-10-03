@@ -1,4 +1,6 @@
 import EmptyState from '@/components/EmptyState/EmptyState'
+import appBuilding from '@/assets/images/illustrations/app-building.svg'
+import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
 
 export default {
   title: 'Components/EmptyState/EmptyState',
@@ -28,6 +30,16 @@ export const WithoutAction = {
     ].join('\n'),
     image: 'https://imgur.com/mWnO7gd.png',
     imageDark: null,
+    actionLabel: null
+  }
+}
+
+export const UnderConstruction = {
+  args: {
+    label: 'Our team is still working on this new page.',
+    image: appBuilding,
+    imageDark: appBuildingDark,
+    imageMaxWidth: '200px',
     actionLabel: null
   }
 }
