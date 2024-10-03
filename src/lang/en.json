@@ -1037,7 +1037,9 @@
     },
     "submit": "Create project"
   },
-  "projectView": {
+  "projectViewOverview": {
+    "emptyStateLabel": "Oh, it’s lonely in here...\nYour project has no documents! Want to add some?",
+    "emptyStateAction": "Add your first documents",
     "nav": {
       "insights": "Insights",
       "paths": "Paths",
