@@ -25,6 +25,7 @@ const loaderId = uniqueId(`${props.addonType}-loader-`)
 const addons = ref([])
 const url = ref('')
 const isLoading = ref(false)
+const error = ref(true)
 const filterTerm = ref('')
 
 onBeforeMount(() => {
@@ -48,6 +49,7 @@ async function installFromUrl(urlToInstall) {
 }
 const infoLabel = computed(() => t(`settings.addons.${props.addonsType}.info`))
 const dismissInfoLabel = computed(() => t('settings.layout.infoDismiss'))
+const errorLabel = computed(() => t(`settings.addons.${props.addonsType}.errorLabel`))
 const searchPlaceholder = computed(() => t(`settings.addons.${props.addonsType}.searchPlaceholder`))
 
 const installAddonFromUrlFn = computed(() =>
@@ -63,10 +65,11 @@ const retrieveAddonsFn = computed(() =>
 
 async function loadAddons(searchTerm) {
   wait.start(loaderId)
+  error.value = false
   try {
     addons.value = await retrieveAddonsFn.value(searchTerm)
   } catch (e) {
-    console.log('err', e)
+    error.value = true
   } finally {
     wait.end(loaderId)
   }
@@ -88,13 +91,19 @@ const filteredAddons = computed(() => {
 })
 </script>
 <template>
-  <settings-view-layout info-name="extensions" :info-label="infoLabel" :dismiss-info-label="dismissInfoLabel">
+  <settings-view-layout
+    :info-name="addonsType"
+    :info-label="infoLabel"
+    :dismiss-info-label="dismissInfoLabel"
+    :show-error="error"
+  >
     <template #filter
       ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
     /></template>
     <div class="col-8">
       <addon-url-input v-model="url" :loading="isLoading" @install="installFromUrl" />
     </div>
+    <b-alert v-if="error" variant="danger" model-value>{{ errorLabel }}</b-alert>
     <v-wait :for="loaderId" class="row g-4">
       <div v-for="addon in filteredAddons" :key="addon.id" class="col-12 col-xl-6 d-flex">
         <addon-card-instance
