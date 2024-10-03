@@ -23,13 +23,26 @@ const { core } = useCore()
 const project = computed(() => {
   return core.findProject(props.name)
 })
+
+const pinned = computed({
+  get: () => {
+    return core.store.getters['app/isProjectPinned'](props.name)
+  },
+  set: (pinned) => {
+    if (pinned) {
+      core.store.commit('app/pinProject', props.name)
+    } else {
+      core.store.commit('app/unpinProject', props.name)
+    }
+  }
+})
 </script>
 
 <template>
   <div class="project-view-overview">
     <page-container fluid>
       <div class="bg-tertiary-subtle rounded-1 p-4">
-        <project-jumbotron :project="project" />
+        <project-jumbotron :project="project" v-model:pinned="pinned" />
         <search-bar class="my-4 py-3 mx-3" size="lg" :indices="indices" hide-field-dropdown hide-projects-dropdown />
         <tab-group-navigation class="mx-3">
           <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights' }">
