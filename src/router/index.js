@@ -389,7 +389,7 @@ export const routes = [
         },
         component: () => import('@/views/Settings/SettingsView'),
         children: [
-          { path: '/', component: () => import('@/views/Settings/SettingsViewGeneral') },
+          { path: '', component: () => import('@/views/Settings/SettingsViewGeneral') },
           {
             name: 'settings.general',
             path: 'general',
@@ -414,24 +414,6 @@ export const routes = [
             component: () => import('@/views/Settings/SettingsViewLanguages'),
             meta: {
               title: 'Languages',
-              breadcrumb: false
-            }
-          },
-          {
-            name: 'settings.document-processing',
-            path: 'general',
-            component: () => import('@/views/Settings/SettingsViewDocumentProcessing'),
-            meta: {
-              title: 'Document Processing',
-              breadcrumb: false
-            }
-          },
-          {
-            name: 'settings.batch-tasks',
-            path: 'general',
-            component: () => import('@/views/Settings/SettingsViewBatchTasks'),
-            meta: {
-              title: 'Batch Tasks',
               breadcrumb: false
             }
           },
