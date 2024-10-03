@@ -40,8 +40,7 @@ function retrieveThemes() {
 }
 
 const useTheme = (theme) => {
-  const app = document.getElementById('app')
-  app?.setAttribute('data-bs-theme', theme)
+  document.body?.setAttribute('data-bs-theme', theme)
 }
 
 const persistSelectedTheme = (theme) => {
