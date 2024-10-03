@@ -20,7 +20,7 @@ const hasAvailableUpdate = computed(() => {
 </script>
 
 <template>
-  <b-card class="addon-card border-light" body-class="d-flex  gap-2">
+  <b-card class="addon-card border-light" body-class="d-flex gap-2">
     <addon-card-details :title="title" :url="url" :description="description" />
     <addon-card-actions
       :version="version"

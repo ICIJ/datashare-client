@@ -40,9 +40,9 @@ defineProps({
 const emit = defineEmits(['install'])
 
 const { t } = useI18n()
-const installLabel = computed(() => t('plugins.install'))
+const installLabel = computed(() => t('settings.addons.install'))
 const enterCorrectUrlLabel = computed(() => t('global.enterCorrectUrl'))
-const installFromUrlLabel = computed(() => t('plugins.installFromUrl'))
+const installFromUrlLabel = computed(() => t('settings.addons.installFromUrl'))
 
 const isFormValid = computed(() => {
   return url.value?.length ? isUrl(url.value) : null

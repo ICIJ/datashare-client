@@ -1149,7 +1149,10 @@
     "description": "Don't change these settings if you don't know what you're doing."
   },
   "settings": {
-    "layout": {"infoDismiss": "Got it, don't show again!"},
+    "layout": {
+      "infoDismiss": "Got it, don't show again!",
+      "searchPlaceholder": "Filter the list"
+    },
     "title": {"title": "Settings"},
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
     "general":{"title": "General" },
@@ -1161,7 +1164,12 @@
     "document-processing":{"title": "Document Processing" },
     "batch-tasks":{"title": "Batch Tasks" },
     "plugins":{"title": "Plugins" },
-    "extensions":{"title": "Extensions",
+    "addons": {
+      "installFromUrl": "Install from a URL",
+      "install": "Install"
+    },
+    "extensions":{
+      "title": "Extensions",
       "info": "Extensions are programs that you add to Datashare's back-end to add new features to store and manipulate data.",
       "searchPlaceholder": "Search extensions"
     }
@@ -1326,9 +1334,7 @@
       }
     }
   },
-  "plugins": {
-    "title": "Plugins",
-    "search": "Search plugins",
+  "plugin": {
     "submitSuccess": "Plugin successfully installed.",
     "submitError": "Error while installing the plugin.",
     "deleteSuccess": "Plugin successfully deleted.",
@@ -1341,9 +1347,7 @@
     "update": "Update",
     "installFromUrl": "Install plugin from URL"
   },
-  "extensions": {
-    "title": "Extensions",
-    "search": "Search extensions",
+  "extension": {
     "submitSuccess": "Extension successfully installed, please restart Datashare.",
     "submitError": "Error while installing the extension.",
     "deleteSuccess": "Extension successfully deleted.",
