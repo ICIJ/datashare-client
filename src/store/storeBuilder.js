@@ -44,6 +44,7 @@ export function storeBuilder(api) {
           'app.redirectAfterLogin',
           'app.sidebar.compact',
           'app.sidebar.closed',
+          'app.pins.projects',
           'document.showTranslatedContent',
           'player.autoplay',
           'player.loop',

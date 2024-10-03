@@ -17,6 +17,9 @@ export const state = () => ({
         perPage: 25
       }
     }
+  },
+  pins: {
+    projects: []
   }
 })
 
@@ -39,6 +42,14 @@ export const mutations = {
     if (!path || !path.startsWith('/login')) {
       state.redirectAfterLogin = path
     }
+  },
+  pinProject(state, name) {
+    if (!state.pins.projects.includes(name)) {
+      state.pins.projects.push(name)
+    }
+  },
+  unpinProject(state, name) {
+    state.pins.projects = state.pins.projects.filter((n) => n !== name)
   }
 }
 
@@ -47,6 +58,9 @@ export const getters = {
     return (view, name) => {
       return get(state.settings.views, [view, name].join('.'))
     }
+  },
+  isProjectPinned(state) {
+    return (name) => state.pins.projects.includes(name)
   }
 }
 
