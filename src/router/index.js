@@ -300,15 +300,52 @@ export const routes = [
                     }
                   },
                   {
+                    name: 'project.view.overview.paths',
+                    path: '',
+                    props: true,
+                    component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewPaths'),
+                    meta: {
+                      icon: 'tree-structure',
+                      title() {
+                        return 'Paths'
+                      }
+                    }
+                  },
+                  {
+                    name: 'project.view.overview.graph',
+                    path: '',
+                    props: true,
+                    component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewGraph'),
+                    meta: {
+                      icon: 'polygon',
+                      title() {
+                        return 'Graph'
+                      }
+                    }
+                  },
+                  {
                     name: 'project.view.overview.details',
                     path: '',
                     props: true,
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewDetails'),
                     meta: {
-                      icon: 'chart-bar',
+                      icon: 'circles-three-plus',
                       title() {
                         return 'Details'
+                      }
+                    }
+                  },
+                  {
+                    name: 'project.view.overview.history',
+                    path: '',
+                    props: true,
+                    component: () =>
+                      import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewHistory'),
+                    meta: {
+                      icon: 'clock-counter-clockwise',
+                      title() {
+                        return 'History'
                       }
                     }
                   }
