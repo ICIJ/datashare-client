@@ -11,8 +11,8 @@ const tabs = computed(() => [
   { icon: 'moon', title: t('settings.appearance.title'), name: 'settings.appearance' },
   { icon: 'file-text', title: t('settings.document-processing.title'), name: 'settings.document-processing' },
   { icon: 'rocket-launch', title: t('settings.batch-tasks.title'), name: 'settings.batch-tasks' },
-  { icon: 'monitor', title: t('settings.plugins.title'), name: 'settings.plugins' },
-  { icon: 'database', title: t('settings.extensions.title'), name: 'settings.extensions' }
+  { icon: 'monitor', title: t('settings.addons.plugins.title'), name: 'settings.plugins' },
+  { icon: 'database', title: t('settings.addons.extensions.title'), name: 'settings.extensions' }
 ])
 </script>
 

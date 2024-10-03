@@ -1162,17 +1162,21 @@
     },
     "document-processing":{"title": "Document Processing" },
     "batch-tasks":{"title": "Batch Tasks" },
-    "plugins":{"title": "Plugins" },
+
     "addons": {
       "installFromUrl": "Install from a URL",
-      "install": "Install"
-    },
-    "extensions":{
-      "title": "Extensions",
-      "info": "Extensions are programs that you add to Datashare's back-end to add new features to store and manipulate data.",
-      "searchPlaceholder": "Search extensions"
+      "install": "Install",
+      "plugins":{
+        "title": "Plugins",
+        "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
+        "searchPlaceholder": "Search plugins"
+      },
+      "extensions":{
+        "title": "Extensions",
+        "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
+        "searchPlaceholder": "Search extensions"
+      }
     }
-
   },
   "serverSettings": {
     "title": "Server Settings",

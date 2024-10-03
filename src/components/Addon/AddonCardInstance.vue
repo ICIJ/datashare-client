@@ -5,10 +5,10 @@ import { useI18n } from 'vue-i18n'
 
 import AddonCard from '@/components/Addon/AddonCard'
 import { useCore } from '@/composables/core'
+import { ADDON_TYPE, addonTypeValidator } from '@/enums/addons'
 
-const EXTENSION = 'extension'
 const props = defineProps({
-  addonType: { type: String, validator: (s) => ['extension', 'plugin'].includes(s.toLowerCase()) },
+  addonType: { type: String, validator: addonTypeValidator },
   id: { type: String, required: true },
   name: { type: String, required: true },
   version: { type: String, required: true },
@@ -49,10 +49,10 @@ const recommendedVersion = computed(() => {
 const homepage = computed(() => props.deliverableFromRegistry?.homepage ?? null)
 
 const addonInstallFn = computed(() => {
-  return props.addonType === EXTENSION ? core.api.installExtensionFromId : core.api.installPluginFromId
+  return props.addonType === ADDON_TYPE.EXTENSION ? core.api.installExtensionFromId : core.api.installPluginFromId
 })
 const addonUninstallFn = computed(() => {
-  return props.addonType === EXTENSION ? core.api.uninstallExtension : core.api.uninstallPlugin
+  return props.addonType === ADDON_TYPE.EXTENSION ? core.api.uninstallExtension : core.api.uninstallPlugin
 })
 async function install() {
   const toast = {
