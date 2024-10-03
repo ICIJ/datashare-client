@@ -15,7 +15,7 @@ const translationHref = 'https://crowdin.com/project/datashare'
 const infoLabel = computed(() => t('settings.languages.info', { href: translationHref }))
 </script>
 <template>
-  <settings-view-layout info-name="languages" :info-label="infoLabel">
+  <settings-view-layout class="settings-view-languages" info-name="languages" :info-label="infoLabel">
     <b-form-radio-group
       :model-value="currentLocale.key"
       stacked
@@ -28,4 +28,10 @@ const infoLabel = computed(() => t('settings.languages.info', { href: translatio
   </settings-view-layout>
 </template>
 
-<style scoped lang="scss"></style>
+<style lang="scss">
+.settings-view-languages {
+  & .form-check {
+    margin-bottom: 0.5em;
+  }
+}
+</style>

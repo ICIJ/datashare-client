@@ -27,7 +27,7 @@ const dismissLabel = computed(() => props.infoDismissLabel ?? t('settings.layout
         <span v-html="infoLabel" /></dismissable-alert
     ></slot>
     <slot name="filter"></slot>
-    <b-card class="border-0 p-4 gap-4" body-class="d-flex flex-column gap-4">
+    <b-card class="border-0 p-4" body-class="d-flex flex-column gap-4">
       <slot></slot>
       <slot v-if="noResults" name="noResult"></slot>
     </b-card>
