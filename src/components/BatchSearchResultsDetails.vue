@@ -23,7 +23,7 @@
         </div>
         <div v-if="isServer && isMyBatchSearch" class="batch-search-results-details__info__published">
           <dt>{{ $t('batchSearch.published') }}</dt>
-          <dd><b-form-checkbox :checked="batchSearch.published" switch @change="changePublished" /></dd>
+          <dd><b-form-checkbox v-model="published" switch /></dd>
         </div>
         <div>
           <dt>{{ $t('batchSearch.state') }}</dt>
@@ -130,6 +130,14 @@ export default {
     }
   },
   computed: {
+    published: {
+      get() {
+        return this.batchSearch.published
+      },
+      set(published) {
+        this.$emit('update:published', published)
+      }
+    },
     showProjects() {
       return this.isServer || this.$core.projects.length > 1
     },
@@ -180,9 +188,6 @@ export default {
     getDocumentSize(value) {
       const size = humanSize(value)
       return size === 'unknown' ? '-' : size
-    },
-    changePublished(published) {
-      this.$emit('update:published', published)
     },
     localeLongDate(date) {
       return humanLongDate(date, this.$i18n.locale)
