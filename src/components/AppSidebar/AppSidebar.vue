@@ -26,6 +26,10 @@ const projects = computed(() => {
   return core.projects
 })
 
+const pinnedProjects = computed(() => {
+  return projects.value.filter((project) => core.store.getters['app/isProjectPinned'](project.name))
+})
+
 const compact = computed({
   // Compact mode is always disabled on screen smaller than MD
   get: () => !breakpointDown.value[SIZE.MD] && core.store.state.app.sidebar.compact,
@@ -102,7 +106,7 @@ const noAnalysis = computed(() => {
             {{ t('appSidebar.allProjects') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
-            v-for="project in projects"
+            v-for="project in pinnedProjects"
             :key="project.name"
             icon="push-pin"
             :to="{ name: 'project.view.overview.insights', params: { name: project.name } }"
