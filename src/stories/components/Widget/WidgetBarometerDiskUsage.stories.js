@@ -1,3 +1,5 @@
+import { vueRouter } from 'storybook-vue3-router'
+
 import WidgetBarometerDiskUsage from '@/components/Widget/WidgetBarometerDiskUsage'
 import { variantsArgType } from '~storybook/utils'
 
@@ -12,6 +14,7 @@ export default {
     size: 300050005050
   },
   decorators: [
+    vueRouter([]),
     () => ({
       template: '<div class="bg-tertiary-subtle rounded-1 p-4"><story /></div>'
     })
