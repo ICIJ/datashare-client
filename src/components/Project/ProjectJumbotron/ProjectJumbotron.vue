@@ -32,7 +32,7 @@ const props = defineProps({
 const toEdit = computed(() => ({
   name: 'project.view.edit',
   params: {
-    naùe: props.project.name
+    name: props.project.name
   }
 }))
 
@@ -51,7 +51,7 @@ const updateDate = computed(() => {
 
 <template>
   <section class="project-jumbotron">
-    <div class="project-jumbotron__header d-flex align-items-center justify-content-between flex-truncate">
+    <div class="project-jumbotron__header d-md-flex align-items-center justify-content-between flex-truncate">
       <h3 class="project-jumbotron__header__title">
         <project-label :project="project" :hide-thumbnail="!compact" />
       </h3>
