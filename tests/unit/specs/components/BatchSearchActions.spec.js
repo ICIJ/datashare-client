@@ -37,7 +37,7 @@ describe('BatchSearchActions.vue', () => {
     api = { deleteBatchSearch: vi.fn() }
     const core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll().useRouter()
     router = core.router
-    plugins = [core.plugin, core.i18n, core.store, core.wait, core.router]
+    plugins = core.plugins
     store = core.store
   })
 
