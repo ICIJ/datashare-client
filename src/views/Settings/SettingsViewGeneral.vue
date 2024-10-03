@@ -10,11 +10,12 @@ import { useI18n } from 'vue-i18n'
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
 import { useUtils } from '@/composables/utils'
 import { useCore } from '@/composables/core'
+import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
 
 defineOptions({ name: 'SettingsViewGeneral' })
 
 const { isServer } = useUtils()
-const { core, toast, wait } = useCore()
+const { core, toastedPromise, wait } = useCore()
 const store = useStore()
 const { t } = useI18n()
 const settings = reactive({})
@@ -24,31 +25,33 @@ onBeforeMount(async () => {
   Object.assign(settings, await store.dispatch('settings/getSettings'))
   wait.end('load server settings')
 })
+const infoLabel = computed(() => t(`settings.general.info`))
+const dismissInfoLabel = computed(() => t('settings.layout.infoDismiss'))
 
 const noAccessLabel = computed(() => t('serverSettings.noAccess'))
 const submitSuccessLabel = computed(() => t('serverSettings.submitSuccess'))
 const submitErrorLabel = computed(() => t('serverSettings.submitError'))
 async function onSubmit(newSettings) {
   try {
-    await store.dispatch('settings/onSubmit', newSettings)
+    await toastedPromise(store.dispatch('settings/onSubmit', newSettings), {
+      successMessage: submitSuccessLabel.value,
+      errorMessage: submitErrorLabel.value
+    })
     core.config.merge(newSettings)
     Object.assign(settings, newSettings)
-    toast.success(submitSuccessLabel)
-  } catch (_) {
-    toast.error(submitErrorLabel)
-  }
+  } catch (_) {}
 }
 </script>
 <template>
-  <div class="settings-view-general my-4">
+  <settings-view-layout info-name="general" :info-label="infoLabel" :dismiss-info-label="dismissInfoLabel">
     <v-wait v-if="!isServer" for="load server settings" class="">
       <template #waiting>
-        <phosphor-icon icon="circle" spin></phosphor-icon>
+        <phosphor-icon name="circle" spin></phosphor-icon>
       </template>
-      <settings-general :settings="settings" class="card border-0 p-4" @submit.prevent="onSubmit" />
+      <settings-general :settings="settings" class="card border-0" @submit.prevent="onSubmit" />
     </v-wait>
     <div v-else>
-      <b-alert model-value variant="danger" show> {{ noAccessLabel }} </b-alert>
+      <b-alert model-value variant="danger"> {{ noAccessLabel }} </b-alert>
     </div>
-  </div>
+  </settings-view-layout>
 </template>

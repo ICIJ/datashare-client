@@ -91,12 +91,7 @@ const filteredAddons = computed(() => {
 })
 </script>
 <template>
-  <settings-view-layout
-    :info-name="addonsType"
-    :info-label="infoLabel"
-    :dismiss-info-label="dismissInfoLabel"
-    :show-error="error"
-  >
+  <settings-view-layout :info-name="addonsType" :info-label="infoLabel" :dismiss-info-label="dismissInfoLabel">
     <template #filter
       ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
     /></template>
