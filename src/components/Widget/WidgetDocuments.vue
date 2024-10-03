@@ -7,6 +7,7 @@
     </template>
     <widget-barometer-documents
       class="widget widget--documents"
+      :to="searchOnDiskRoute"
       :nb-documents="total"
       :nb-documents-on-disks="onDisk"
     />
