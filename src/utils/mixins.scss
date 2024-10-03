@@ -44,7 +44,7 @@
 
 
 @mixin popover-variant($bg, $border-width: $popover-border-width, $border-color: $popover-border-color) {
-  $bg-darker: darken($bg, 3%);
+  $bg-darker: color.adjust($bg, $lightness: -3%);
   color: color-contrast($bg);
   background: $bg;
   border: $border-width solid $border-color;

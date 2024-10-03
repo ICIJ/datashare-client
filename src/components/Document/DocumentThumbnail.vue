@@ -222,12 +222,6 @@ export default {
   --height: var(--estimated-height, 0);
   --width: var(--height);
 
-  @each $name, $value in $heights {
-    &--#{$name} {
-      --height: #{$value};
-    }
-  }
-
   background: var(--bs-body-bg);
   color: var(--bs-secondary-color);
   min-width: var(--width);
@@ -235,6 +229,12 @@ export default {
   min-height: var(--height);
   overflow: hidden;
   position: relative;
+
+  @each $name, $value in $heights {
+    &--#{$name} {
+      --height: #{$value};
+    }
+  }
 
   &:after {
     content: '';

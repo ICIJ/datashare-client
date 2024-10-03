@@ -143,7 +143,7 @@ export default {
 
 <style lang="scss" scoped>
 .filters-panel {
-  $card-bg: darken($app-context-sidebar-bg, 5%);
+  $card-bg: color.adjust($app-context-sidebar-bg, $lightness: -5%);
   $panel-color: $app-sidebar-color;
 
   align-items: flex-start;

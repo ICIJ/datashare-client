@@ -87,7 +87,7 @@
     &-icon {
 
       &:hover {
-        background: darken($action, 10%);
+        background: color.adjust($action, $lightness: -10%);
       }
 
       &:after {

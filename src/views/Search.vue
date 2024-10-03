@@ -200,7 +200,7 @@ export default {
     width: 40px;
 
     &:hover {
-      background: lighten($app-context-sidebar-bg, 10%);
+      background: color.adjust($app-context-sidebar-bg, $lightness: 10%);
       color: white;
     }
   }

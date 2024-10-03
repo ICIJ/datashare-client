@@ -34,9 +34,10 @@ export default ({ mode }) => {
       preprocessorOptions: {
         scss: {
           quietDeps: true,
-          api: "modern",
+          api: 'modern',
           additionalData: `
             @use 'sass:math';
+            @use 'sass:color';
             @import "@/utils/settings.scss";
           `
         }
