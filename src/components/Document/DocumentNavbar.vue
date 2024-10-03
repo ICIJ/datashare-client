@@ -163,7 +163,7 @@ export default {
   display: flex;
   margin: 0;
   color: #fff;
-  background: darken($action, 10%);
+  background: color.adjust($action, $lightness: -10%);
 
   @media (max-width: $document-float-breakpoint-width) {
     border-radius: 0;

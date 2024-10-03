@@ -62,7 +62,7 @@ body {
 
 .splashscreen {
   align-items: center;
-  background: darken($action, 10%);
+  background: color.adjust($action, $lightness: -10%);
   bottom: 0;
   color: white;
   display: flex;
@@ -262,13 +262,13 @@ html[data-bs-theme] body .Toastify {
 
   &.vc-yellow {
     --vc-accent-500: #{$secondary};
-    --vc-accent-400: #{lighten($secondary, 5)};
-    --vc-accent-300: #{lighten($secondary, 10)};
-    --vc-accent-200: #{lighten($secondary, 15)};
-    --vc-accent-100: #{lighten($secondary, 20)};
+    --vc-accent-400: #{color.adjust($secondary, $lightness: 5%)};
+    --vc-accent-300: #{color.adjust($secondary, $lightness: 10%)};
+    --vc-accent-200: #{color.adjust($secondary, $lightness: 15%)};
+    --vc-accent-100: #{color.adjust($secondary, $lightness: 20%)};
   }
 
-  --vc-gray-900: #{darken($app-context-sidebar-bg, 5%)};
+  --vc-gray-900: #{color.adjust($app-context-sidebar-bg, $lightness: -5%)};
   --vc-gray-800: #{$app-context-sidebar-bg};
   --vc-border: #{$border-color};
   --vc-popover-content-border: #{$border-color};

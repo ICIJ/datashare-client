@@ -99,7 +99,7 @@ export default {
 
         &:hover {
           text-decoration: none;
-          background: lighten($primary, 5);
+          background: color.adjust($primary, $lightness: 5%);
           color: white;
         }
       }

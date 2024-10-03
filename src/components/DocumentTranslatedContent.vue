@@ -127,7 +127,7 @@ export default {
 
     &__header {
       background: $translation-bg;
-      color: rgba(darken($translation-bg, 70), 0.7);
+      color: rgba(color.adjust($translation-bg, $lightness: -70%), 0.7);
     }
   }
 }
