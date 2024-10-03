@@ -33,6 +33,7 @@ const searchPlaceholder = computed(() => t(`settings.general.searchPlaceholder`)
 const noAccessLabel = computed(() => t('serverSettings.noAccess'))
 const submitSuccessLabel = computed(() => t('serverSettings.submitSuccess'))
 const submitErrorLabel = computed(() => t('serverSettings.submitError'))
+const noResultsLabel = computed(() => t('settings.layout.noResults', { query: filterTerm.value }))
 
 const loaderId = 'load server settings'
 
@@ -59,6 +60,9 @@ const filteredSettings = computed(() => {
   }
   return settings
 })
+const noResults = computed(() => {
+  return Object.keys(filteredSettings.value).length === 0
+})
 async function onSubmit(newSettings) {
   try {
     await toastedPromise(store.dispatch('settings/onSubmit', newSettings), {
@@ -71,12 +75,13 @@ async function onSubmit(newSettings) {
 }
 </script>
 <template>
-  <settings-view-layout info-name="general" :info-label="infoLabel">
+  <settings-view-layout info-name="general" :info-label="infoLabel" :no-results="noResults">
     <template #filter
       ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
     /></template>
+    <template #noResult>{{ noResultsLabel }}</template>
     <template v-if="!isServer">
-      <v-wait :for="loaderId">
+      <v-wait v-if="!noResults" :for="loaderId">
         <template #waiting>
           <phosphor-icon name="circle" spin size="lg" class="ms-auto"></phosphor-icon>
         </template>

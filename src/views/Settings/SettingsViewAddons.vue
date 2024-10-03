@@ -51,6 +51,7 @@ async function installFromUrl(urlToInstall) {
 const infoLabel = computed(() => t(`settings.addons.${props.addonsType}.info`))
 const errorLabel = computed(() => t(`settings.addons.${props.addonsType}.errorLabel`))
 const searchPlaceholder = computed(() => t(`settings.addons.${props.addonsType}.searchPlaceholder`))
+const noResultsLabel = computed(() => t('settings.layout.noResults', { query: filterTerm.value }))
 
 const installAddonFromUrlFn = computed(() =>
   props.addonType === ADDONS_TYPE.EXTENSIONS
@@ -82,7 +83,9 @@ const fuse = computed(() => {
   }
   return new Fuse(addons.value, options)
 })
-
+const noResults = computed(() => {
+  return filteredAddons.value.length === 0
+})
 const filteredAddons = computed(() => {
   if (filterTerm.value.length > 0) {
     return fuse.value.search(filterTerm.value).map((r) => r.item)
@@ -91,10 +94,11 @@ const filteredAddons = computed(() => {
 })
 </script>
 <template>
-  <settings-view-layout :info-name="addonsType" :info-label="infoLabel">
+  <settings-view-layout :info-name="addonsType" :info-label="infoLabel" :no-results="noResults">
     <template #filter
       ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
     /></template>
+    <template #noResult>{{ noResultsLabel }}</template>
     <div class="col-8">
       <addon-url-input v-model="url" :loading="isLoading" @install="installFromUrl" />
     </div>

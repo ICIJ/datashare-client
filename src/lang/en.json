@@ -1152,7 +1152,8 @@
   "settings": {
     "layout": {
       "infoDismiss": "Got it, don't show again!",
-      "searchPlaceholder": "Filter the list"
+      "searchPlaceholder": "Filter the list",
+      "noResults": "No matching result for the query '%{query}'"
     },
     "title": {"title": "Settings"},
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
