@@ -1,7 +1,9 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { useCore } from '@/composables/core'
+import { useWait } from '@/composables/wait'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbotron'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
@@ -19,6 +21,7 @@ const props = defineProps({
 })
 
 const { core } = useCore()
+const { waitFor } = useWait()
 
 const project = computed(() => {
   return core.findProject(props.name)
@@ -36,33 +39,67 @@ const pinned = computed({
     }
   }
 })
+
+const loaderId = 'loader-project-view-overview'
+
+const fetchDocumentsCount = async () => {
+  const { name: index } = props
+  const { count } = await core.api.elasticsearch.count({ index })
+  return count
+}
+
+const fetchDocumentsCountWithLoader = waitFor(loaderId, fetchDocumentsCount)
+
+const hasDocuments = ref(false)
+
+watch(
+  () => props.name,
+  async () => {
+    hasDocuments.value = !!(await fetchDocumentsCountWithLoader())
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
   <div class="project-view-overview">
     <page-container fluid>
-      <div class="bg-tertiary-subtle rounded-1 p-4">
+      <v-wait class="bg-tertiary-subtle rounded-1 p-4" :for="loaderId">
+        <template #waiting>
+          <div class="text-center py-5">
+            <phosphor-icon name="circle-notch" spin size="2em" />
+          </div>
+        </template>
+
         <project-jumbotron v-model:pinned="pinned" :project="project" />
         <search-bar class="my-4 py-3 mx-3" size="lg" :indices="indices" hide-field-dropdown hide-projects-dropdown />
         <tab-group-navigation class="mx-3">
           <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights' }">
-            {{ $t('projectView.nav.insights') }}
+            {{ $t('projectViewOverview.nav.insights') }}
           </tab-group-navigation-entry>
           <tab-group-navigation-entry icon="tree-structure" disabled>
-            {{ $t('projectView.nav.paths') }}
+            {{ $t('projectViewOverview.nav.paths') }}
           </tab-group-navigation-entry>
           <tab-group-navigation-entry icon="polygon" disabled>
-            {{ $t('projectView.nav.graph') }}
+            {{ $t('projectViewOverview.nav.graph') }}
           </tab-group-navigation-entry>
           <tab-group-navigation-entry icon="circles-three-plus" disabled>
-            {{ $t('projectView.nav.details') }}
+            {{ $t('projectViewOverview.nav.details') }}
           </tab-group-navigation-entry>
           <tab-group-navigation-entry icon="clock-counter-clockwise" disabled>
-            {{ $t('projectView.nav.history') }}
+            {{ $t('projectViewOverview.nav.history') }}
           </tab-group-navigation-entry>
         </tab-group-navigation>
-        <router-view />
-      </div>
+        <router-view v-if="hasDocuments" :key="name" />
+        <empty-state
+          v-else
+          :label="$t('projectViewOverview.emptyStateLabel')"
+          class="my-5"
+          action-icon="plus"
+          :action-label="$t('projectViewOverview.emptyStateAction')"
+          :action-to="{ name: 'task.analysis.list' }"
+        />
+      </v-wait>
     </page-container>
   </div>
 </template>
