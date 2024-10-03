@@ -21,7 +21,7 @@ const tabs = computed(() => [
   <div class="settings-view">
     <page-header no-toggle-settings />
     <div class="p-4">
-      <tab-group lazy class="bg-tertiary-subtle rounded-1 p-4" nav-class="px-4" content-class="p-4">
+      <tab-group lazy class="bg-tertiary-subtle rounded-2 p-4" nav-class="px-4" content-class="p-4">
         <tab-group-entry
           v-for="tab in tabs"
           :key="tab.title"

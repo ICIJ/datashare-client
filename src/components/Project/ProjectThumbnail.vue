@@ -104,6 +104,7 @@ const style = computed(() => {
 
 const classList = computed(() => {
   return {
+    'rounded-1': true,
     'project-thumbnail--colorized': !hasBackgroundWithLogo.value,
     'project-thumbnail--checked': props.checked,
     'project-thumbnail--dark-foreground': isForegroundDark.value,
