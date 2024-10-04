@@ -40,7 +40,7 @@ const classList = computed(() => {
   @include make-container($spacer * 4);
 
   &--fluid {
-    max-width: 100vw;
+    max-width: calc(100vw - var(--app-sidebar-width));
   }
 
   &--compact {
