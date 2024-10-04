@@ -40,7 +40,8 @@ const variant = computed(() => {
 <style lang="scss" scoped>
 .app-sidebar-close {
   &.btn-light {
-    --bs-btn-bg: #fff;
+    --bs-btn-bg: var(--bs-body-bg);
+    --bs-btn-color: var(--bs-body-color);
   }
 
   &.btn-primary {
