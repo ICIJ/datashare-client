@@ -1,7 +1,7 @@
 <template>
-  <div class="app d-flex">
+  <div class="app d-flex" :style="style">
     <hook name="app:before" />
-    <app-sidebar />
+    <app-sidebar ref="app-sidebar" />
     <div class="flex-grow-1">
       <router-view />
       <scroll-tracker />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import { get } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -28,6 +28,7 @@ import Hook from '@/components/Hook'
 import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/core'
+import { useResizeObserver } from '@/composables/resize-observer'
 
 const { core } = useCore()
 const { t } = useI18n()
@@ -53,6 +54,15 @@ const hasSettings = computed(() => {
 const showPageSettings = computed({
   get: () => hasSettings.value && !core.store.state.app.settings.closed,
   set: (value) => core.store.dispatch('app/toggleSettingsClosed', !value)
+})
+
+const appSidebarRef = useTemplateRef('app-sidebar')
+const { state: appSidebarState } = useResizeObserver(appSidebarRef)
+
+const style = computed(() => {
+  return {
+    '--app-sidebar-width': `${appSidebarState.contentRect.width}px`
+  }
 })
 
 onMounted(() => {
