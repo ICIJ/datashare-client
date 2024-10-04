@@ -266,8 +266,8 @@ $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 $app-sidebar-bg: color.adjust(#31313a, $lightness: -10%);
 $app-sidebar-color: #fff;
 $app-sidebar-border-color: mix($app-sidebar-color, $app-sidebar-bg, 5%);
-$app-sidebar-width: 290px;
-$app-sidebar-reduced-width: 100px;
+$app-sidebar-width: 310px;
+$app-sidebar-compact-width: 85px;
 $app-sidebar-link-color: mix($app-sidebar-bg, $app-sidebar-color, 40%);
 
 $app-context-sidebar-bg: mix(#fff, $app-sidebar-bg, 5%);
