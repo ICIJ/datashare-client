@@ -11,7 +11,7 @@ import Fuse from 'fuse.js'
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
 import { useUtils } from '@/composables/utils'
 import { useCore } from '@/composables/core'
-import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
+import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
 defineOptions({ name: 'SettingsViewGeneral' })
 

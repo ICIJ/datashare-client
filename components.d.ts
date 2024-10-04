@@ -8,10 +8,13 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AddonCard: typeof import('./src/components/Addon/AddonCard.vue')['default']
-    AddonCardActions: typeof import('./src/components/Addon/AddonCardActions.vue')['default']
-    AddonCardDetails: typeof import('./src/components/Addon/AddonCardDetails.vue')['default']
+    AddonCardActions: typeof import('./src/components/Addon/AddonCardView/AddonCardActions.vue')['default']
+    AddonCardDetails: typeof import('./src/components/Addon/AddonCardView/AddonCardDetails.vue')['default']
     AddonCardExtension: typeof import('./src/components/Addon/AddonCardExtension.vue')['default']
     AddonCardInstance: typeof import('./src/components/Addon/AddonCardInstance.vue')['default']
+    AddonCardView: typeof import('./src/components/Addon/AddonCardView/AddonCardView.vue')['default']
+    AddonCardViewActions: typeof import('./src/components/Addon/AddonCardView/AddonCardViewActions.vue')['default']
+    AddonCardViewDetails: typeof import('./src/components/Addon/AddonCardView/AddonCardViewDetails.vue')['default']
     AddonUrlInput: typeof import('./src/components/Addon/AddonUrlInput.vue')['default']
     Api: typeof import('./src/components/Api.vue')['default']
     AppliedSearchFilters: typeof import('./src/components/AppliedSearchFilters.vue')['default']

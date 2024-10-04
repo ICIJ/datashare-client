@@ -30,7 +30,7 @@ const uninstallAddon = () => {
 </script>
 
 <template>
-  <div class="addon-card-actions d-flex flex-column align-items-end gap-2">
+  <div class="addon-card-view-actions d-flex flex-column align-items-end gap-2">
     <button-icon
       v-if="shouldInstall"
       :loading="loading"
@@ -53,7 +53,7 @@ const uninstallAddon = () => {
         @click="updateAddon"
         >{{ updateLabel }}</button-icon
       >
-      <span v-if="version" class="addon-card-actions__text text-secondary-emphasis text-nowrap">{{
+      <span v-if="version" class="addon-card-view-actions__text text-secondary-emphasis text-nowrap">{{
         versionLabel
       }}</span>
       <button-icon
@@ -70,7 +70,7 @@ const uninstallAddon = () => {
 </template>
 
 <style scoped lang="scss">
-.addon-card-actions {
+.addon-card-view-actions {
   &__text {
     padding: $btn-padding-y $btn-padding-x;
   }

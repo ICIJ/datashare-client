@@ -16,7 +16,7 @@ const homepageLabel = computed(() => t('addonCard.homepage'))
 </script>
 
 <template>
-  <div class="addon-card__details d-flex flex-column gap-2 flex-grow-1">
+  <div class="addon-card-view-details d-flex flex-column gap-2 flex-grow-1">
     <div class="d-inline-flex align-items-center gap-2">
       <a class="fw-bold h4 text-action-emphasis">{{ title }}</a>
     </div>

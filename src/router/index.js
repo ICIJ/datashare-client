@@ -418,7 +418,7 @@ export const routes = [
             return i18n.global?.t(key) ?? i18n.t(key)
           }
         },
-        component: () => import('@/views/Settings/SettingsView'),
+        component: () => import('@/views/Settings/SettingsView/SettingsView'),
         children: [
           {
             path: '',
@@ -427,7 +427,7 @@ export const routes = [
           {
             name: 'settings.general',
             path: 'general',
-            component: () => import('@/views/Settings/SettingsViewGeneral'),
+            component: () => import('@/views/Settings/SettingsView/SettingsViewGeneral'),
             meta: {
               title: 'General',
               breadcrumb: false
@@ -436,7 +436,7 @@ export const routes = [
           {
             name: 'settings.appearance',
             path: 'appearance',
-            component: () => import('@/views/Settings/SettingsViewAppearance'),
+            component: () => import('@/views/Settings/SettingsView/SettingsViewAppearance'),
             meta: {
               title: 'Appearance',
               breadcrumb: false
@@ -445,7 +445,7 @@ export const routes = [
           {
             name: 'settings.languages',
             path: 'languages',
-            component: () => import('@/views/Settings/SettingsViewLanguages'),
+            component: () => import('@/views/Settings/SettingsView/SettingsViewLanguages'),
             meta: {
               title: 'Languages',
               breadcrumb: false
@@ -454,7 +454,7 @@ export const routes = [
           {
             name: 'settings.plugins',
             path: 'plugins',
-            component: () => import('@/views/Settings/SettingsViewAddons'),
+            component: () => import('@/views/Settings/SettingsView/SettingsViewAddons'),
             props: { addonsType: 'plugins' },
             meta: {
               title: 'Plugins',
@@ -464,7 +464,7 @@ export const routes = [
           {
             name: 'settings.extensions',
             path: 'extensions',
-            component: () => import('@/views/Settings/SettingsViewAddons'),
+            component: () => import('@/views/Settings/SettingsView/SettingsViewAddons'),
             props: { addonsType: 'extensions' },
             meta: {
               title: 'Extensions',

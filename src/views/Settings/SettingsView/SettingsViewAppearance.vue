@@ -5,7 +5,7 @@ import { ref, onBeforeMount, computed, watch } from 'vue'
 import themeLight from '@/assets/images/illustrations/theme-light.png'
 import themeDark from '@/assets/images/illustrations/theme-dark.png'
 import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
-import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
+import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
 defineOptions({ name: 'SettingsViewAppearance' })
 onBeforeMount(() => {
