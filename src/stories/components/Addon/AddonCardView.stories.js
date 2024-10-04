@@ -1,9 +1,9 @@
-import AddonCard from '@/components/Addon/AddonCard'
+import AddonCardView from '@/components/Addon/AddonCardView/AddonCardView'
 
 export default {
   tags: ['autodocs'],
-  title: 'Components/Addon/AddonCard',
-  component: AddonCard,
+  title: 'Components/Addon/AddonCardView',
+  component: AddonCardView,
   args: {
     title: 'Data connect',
     version: null,
