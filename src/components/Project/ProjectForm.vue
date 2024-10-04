@@ -157,7 +157,7 @@ watch(
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--logo-url"
-        icon="ilage"
+        icon="image"
         :label="$t('projectForm.form.logoUrl.label')"
         :disabled="disabled"
         :validated="isUrl(form.logoUrl)"
