@@ -13,11 +13,11 @@ describe('Login.vue', () => {
   })
 
   it('should display a login link', async () => {
-    expect(wrapper.find('.login-view__enter_link').text()).toBe('Login')
+    expect(wrapper.find('.login__enter_link').text()).toBe('Login')
   })
 
   it('should display a help link', () => {
-    expect(wrapper.find('.login-view__assistance__help').text()).toBe('Ask for help')
+    expect(wrapper.find('.login__assistance__help').text()).toBe('Ask for help')
   })
   it('should show the locale menu with the current locale', () => {
     expect(wrapper.findComponent(I18nLocaleDropdown).exists()).toBe(true)
