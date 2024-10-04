@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Login from '@/views/Login'
+import I18nLocaleDropdown from '@/components/I18n/I18nLocaleDropdown'
 
 describe('Login.vue', () => {
   let wrapper
@@ -19,7 +20,7 @@ describe('Login.vue', () => {
     expect(wrapper.find('.login-view__assistance__help').text()).toBe('Ask for help')
   })
   it('should show the locale menu with the current locale', () => {
-    expect(wrapper.find('.locales-menu').text()).toBe('English')
-    expect(wrapper.find('.locales-menu').exists()).toBe(true)
+    expect(wrapper.findComponent(I18nLocaleDropdown).exists()).toBe(true)
+    expect(wrapper.findComponent(I18nLocaleDropdown).text()).toBe('English')
   })
 })
