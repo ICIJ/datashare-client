@@ -367,9 +367,8 @@ class Core extends Behaviors {
   }
 
   loadTheme() {
-    const { theme, setTheme } = useTheme()
-    console.log(theme)
-    setTheme(theme)
+    const { getTheme, setTheme } = useTheme()
+    setTheme(getTheme())
   }
   /**
    * Append the given title to the page title
