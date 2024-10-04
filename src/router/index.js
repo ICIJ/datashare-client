@@ -420,7 +420,10 @@ export const routes = [
         },
         component: () => import('@/views/Settings/SettingsView'),
         children: [
-          { path: '', component: () => import('@/views/Settings/SettingsViewGeneral') },
+          {
+            path: '',
+            redirect: '/settings/general'
+          },
           {
             name: 'settings.general',
             path: 'general',
