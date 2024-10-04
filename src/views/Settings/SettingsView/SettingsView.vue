@@ -3,8 +3,9 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
-import TabGroup from '@/components/TabGroup/TabGroup'
-import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
+import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
+import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
+import PageContainer from '@/components/PageContainer/PageContainer'
 const { t } = useI18n()
 const tabs = computed(() => [
   { icon: 'list', title: t('settings.general.title'), name: 'settings.general' },
@@ -18,20 +19,16 @@ const tabs = computed(() => [
 <template>
   <div class="settings-view">
     <page-header no-toggle-settings />
-    <div class="p-4">
-      <tab-group lazy class="bg-tertiary-subtle rounded-2 p-4" nav-class="px-4" content-class="p-4">
-        <tab-group-entry
-          v-for="tab in tabs"
-          :key="tab.title"
-          :icon="tab.icon"
-          :title="tab.title"
-          :active="$route.name === tab.name"
-          @click="$router.push({ name: tab.name })"
-        >
-          <router-view />
-        </tab-group-entry>
-      </tab-group>
-    </div>
+    <page-container fluid>
+      <div class="bg-tertiary-subtle rounded-1 p-4">
+        <tab-group-navigation class="mx-3" nowrap>
+          <tab-group-navigation-entry v-for="tab in tabs" :key="tab.name" :icon="tab.icon" :to="{ name: tab.name }">
+            {{ tab.title }}
+          </tab-group-navigation-entry>
+        </tab-group-navigation>
+        <router-view />
+      </div>
+    </page-container>
   </div>
 </template>
 
