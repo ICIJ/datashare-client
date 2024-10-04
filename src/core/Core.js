@@ -33,6 +33,7 @@ import Fa from '@/components/Fa'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
+import { useTheme } from '@/composables/useTheme'
 
 class Base {}
 const Behaviors = compose(
@@ -281,6 +282,8 @@ class Core extends Behaviors {
       await this.store.dispatch('downloads/fetchIndicesStatus')
       // Initialize current locale
       await this.initializeI18n()
+      // Load theme
+      this.loadTheme()
       // Hold a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {
@@ -361,6 +364,12 @@ class Core extends Behaviors {
     this.config.merge(getMode(serverSettings.mode))
     // The backend can yet override some configuration
     this.config.merge(serverSettings)
+  }
+
+  loadTheme() {
+    const { theme, setTheme } = useTheme()
+    console.log(theme)
+    setTheme(theme)
   }
   /**
    * Append the given title to the page title
