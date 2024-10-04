@@ -166,9 +166,9 @@ const noAnalysis = computed(() => {
   z-index: $zindex-offcanvas + 1;
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
-  flex: 0 0 310px;
+  flex: 0 0 $app-sidebar-width;
   width: 100%;
-  max-width: 310px;
+  max-width: $app-sidebar-width;
   min-height: 100%;
   max-height: 100vh;
   overflow: auto;
@@ -180,7 +180,7 @@ const noAnalysis = computed(() => {
   flex-direction: column;
 
   &--compact {
-    max-width: 85px;
+    max-width: $app-sidebar-compact-width;
   }
 
   &--closed {
