@@ -44,7 +44,7 @@ export default {
   border-radius: $border-radius-lg;
   box-shadow: $box-shadow-sm;
 
-  @media (max-width: #{1140px + $app-sidebar-reduced-width}) {
+  @media (max-width: #{1140px + $app-sidebar-compact-width}) {
     margin: 0 auto;
     border: 0;
   }
