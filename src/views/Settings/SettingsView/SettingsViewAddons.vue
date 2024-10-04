@@ -11,8 +11,8 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import { useCore } from '@/composables/core'
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
-import AddonCardInstance from '@/components/Addon/AddonCardInstance'
-import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
+import AddonCard from '@/components/Addon/AddonCard'
+import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import { ADDONS_TYPE, addonsTypeValidator } from '@/enums/addons'
 
 defineOptions({ name: 'SettingsViewAddons' })
@@ -108,7 +108,7 @@ const filteredAddons = computed(() => {
         <phosphor-icon name="circle" spin size="lg" class="ms-auto"></phosphor-icon>
       </template>
       <div v-for="addon in filteredAddons" :key="addon.id" class="col-12 col-xl-6 d-flex">
-        <addon-card-instance
+        <addon-card
           :id="addon.id"
           addon-type="extension"
           :name="addon.name"

@@ -6,7 +6,7 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import SettingsViewLayout from '@/views/Settings/SettingsViewLayout'
+import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import { useLocale } from '@/composables/useLocale'
 defineOptions({ name: 'SettingsViewLanguages' })
 const { t } = useI18n()
