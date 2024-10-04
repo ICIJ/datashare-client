@@ -1,15 +1,37 @@
+import { reactive } from 'vue'
+
 import themeLight from '@/assets/images/illustrations/theme-light.png'
 import themeDark from '@/assets/images/illustrations/theme-dark.png'
+let eventAdded = false
 
 export function useTheme() {
-  const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   const LOCAL_STORAGE_KEY = 'data-bs-theme'
-  const theme = localStorage.getItem(LOCAL_STORAGE_KEY) || preferredTheme
+  const AUTOMATIC = 'automatic'
+  function getTheme() {
+    return localStorage.getItem(LOCAL_STORAGE_KEY) ?? AUTOMATIC
+  }
+  function getAutomaticTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+  if (!eventAdded) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+      if (getTheme() === AUTOMATIC) {
+        setTheme(AUTOMATIC)
+      }
+    })
+    eventAdded = true
+  }
   function setTheme(theme) {
-    document.body?.setAttribute('data-bs-theme', theme)
+    document.body?.setAttribute('data-bs-theme', theme === AUTOMATIC ? getAutomaticTheme() : theme)
     localStorage.setItem(LOCAL_STORAGE_KEY, theme)
   }
-  const themes = [
+  const themes = reactive([
+    {
+      icon: 'paint-roller',
+      name: 'automatic',
+      label: `Automatic`,
+      thumbnail: ''
+    },
     {
       icon: 'sun',
       name: 'light',
@@ -22,6 +44,6 @@ export function useTheme() {
       label: 'Dark mode',
       thumbnail: themeDark
     }
-  ]
-  return { theme, setTheme, preferredTheme, themes }
+  ])
+  return { getTheme, setTheme, themes }
 }

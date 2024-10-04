@@ -7,11 +7,10 @@ import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout
 import { useTheme } from '@/composables/useTheme'
 
 defineOptions({ name: 'SettingsViewAppearance' })
-const { theme, setTheme, themes } = useTheme()
+const { getTheme, setTheme, themes } = useTheme()
 const { t } = useI18n()
 const infoLabel = computed(() => t('settings.appearance.info'))
-const selectedTheme = ref(theme)
-const options = ref(themes)
+const selectedTheme = ref(getTheme())
 
 watch(
   () => selectedTheme.value,
@@ -24,6 +23,6 @@ watch(
 
 <template>
   <settings-view-layout info-name="appearance" :info-label="infoLabel">
-    <settings-appearance-radio-group v-model="selectedTheme" :options="options" />
+    <settings-appearance-radio-group v-model="selectedTheme" :options="themes" />
   </settings-view-layout>
 </template>
