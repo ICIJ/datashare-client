@@ -10,30 +10,21 @@
           <phosphor-icon name="circle-notch" spin size="2em" />
         </div>
       </template>
-      <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
-        <component
-          :is="itemComponent(item)"
-          v-for="(item, i) in items"
+      <div class="widget__list">
+        <widget-field-facets-entry
+          v-for="({ label, count, to }, i) in items"
           :key="i"
-          class="list-group-item list-group-item-action widget__list__item"
-          :href="item.href"
-          :class="{ active: item.active }"
-        >
-          <div class="d-flex align-items-center">
-            <div class="widget__list__item__label">
-              {{ item.label }}
-            </div>
-            <span class="widget__list__item__count ms-auto">
-              {{ $n(item.count) }}
-            </span>
-          </div>
-          <span class="widget__list__item__bar" :style="{ width: totalPercentage(item.count) }"></span>
-        </component>
+          class="widget__list__item mb-2"
+          :label="label"
+          :count="count"
+          :total="total"
+          :to="to"
+        />
         <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteScrollId" @infinite="loadNextPage">
           <template #spinner><span></span></template>
           <template #complete><span></span></template>
         </infinite-loading>
-        <div v-if="reachedTheEnd" class="text-secondary p-3 text-center">
+        <div v-if="reachedTheEnd" class="text-tertiary p-3 text-center">
           <span v-if="items.length">•</span>
           <span v-else>{{ $t('widget.noData') }}</span>
         </div>
@@ -44,10 +35,12 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { get, flatten, camelCase, iteratee, noop, round, uniqueId } from 'lodash'
+import { get, flatten, camelCase, iteratee, noop, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 import InfiniteLoading from 'v3-infinite-loading'
 import { PhosphorIcon } from '@icij/murmur-next'
+
+import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
 
 /**
  * Widget to display a list of facets on the insights page.
@@ -56,7 +49,8 @@ export default {
   name: 'WidgetListGroup',
   components: {
     InfiniteLoading,
-    PhosphorIcon
+    PhosphorIcon,
+    WidgetFieldFacetsEntry
   },
   props: {
     /**
@@ -128,9 +122,6 @@ export default {
     return this.loadFirstPage()
   },
   methods: {
-    itemComponent({ href = null } = {}) {
-      return href ? 'a' : 'div'
-    },
     clearPages() {
       this.pages.splice(0, this.pages.length)
     },
@@ -172,8 +163,8 @@ export default {
       const label = this.bucketToTranslation(bucket)
       const query = this.bucketToQuery(bucket)
       const count = get(bucket, 'doc_count', 0)
-      const { href } = this.$router.resolve({ name: 'search', query })
-      return { label, href, count }
+      const to = { name: 'search', query }
+      return { label, to, count }
     },
     bucketToQueryValue({ key }) {
       if (this.routeQueryField === 'q') {
@@ -189,27 +180,12 @@ export default {
     bucketToTranslation(bucket) {
       const translationKey = this.widget.bucketTranslation(bucket)
       return this.$te(translationKey) ? this.$t(translationKey) : translationKey
-    },
-    totalPercentage(value) {
-      if (this.total > 0) {
-        return round((value / this.total) * 100, 2) + '%'
-      }
-      return '0%'
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@keyframes slidingBar {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
-
 .widget {
   &--field-facets {
     min-height: 100%;
@@ -225,47 +201,6 @@ export default {
 
     .card & {
       padding: 0 $spacer-lg;
-    }
-
-    &__item {
-      color: var(--bs-body-color);
-      min-width: 0;
-      width: 100%;
-      background: transparent;
-      padding: $spacer-sm 0;
-      border: 0;
-
-      &[href] {
-        color: var(--bs-link-color);
-      }
-
-      &__label {
-        color: inherit;
-        word-break: break-all;
-      }
-
-      &__count {
-        color: var(--bs-body-color);
-        font-variant-numeric: tabular-nums;
-      }
-
-      &__bar {
-        animation: slidingBar 200ms forwards;
-        height: 8px;
-        background: var(--bs-secondary-bg-subtle);
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        min-width: 1px;
-        transform: translateX(-100%);
-        border-radius: 0 4px 4px 0;
-      }
-
-      @for $i from 0 through 100 {
-        &:nth-child(#{$i}) &__bar {
-          animation-delay: $i * 50ms;
-        }
-      }
     }
   }
 }

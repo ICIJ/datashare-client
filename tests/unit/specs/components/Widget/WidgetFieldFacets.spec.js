@@ -61,7 +61,7 @@ describe('WidgetFieldFacets.vue', () => {
 
   it('loads a page of data', () => {
     expect(wrapper.vm.total).toBe(30)
-    expect(wrapper.vm.items[0]).toEqual({ label: 'foo', count: 10, href: expect.stringContaining('contentType=foo') })
-    expect(wrapper.vm.items[1]).toEqual({ label: 'bar', count: 20, href: expect.stringContaining('contentType=bar') })
+    expect(wrapper.vm.items[0]).toEqual({ label: 'foo', count: 10, to: expect.objectContaining({ name: 'search' }) })
+    expect(wrapper.vm.items[1]).toEqual({ label: 'bar', count: 20, to: expect.objectContaining({ name: 'search' }) })
   })
 })
