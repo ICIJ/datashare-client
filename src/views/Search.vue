@@ -253,7 +253,7 @@ export default {
       right: 0;
       z-index: 20;
       width: $document-max-width;
-      max-width: calc(100vw - #{$app-sidebar-reduced-width});
+      max-width: calc(100vw - #{$app-sidebar-compact-width});
 
       &__wrapper {
         position: relative;
