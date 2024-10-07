@@ -11,9 +11,13 @@ export function useLocale() {
   const locales = settings.locales
   const currentLocale = computed(() => find(locales, { key: locale.value }))
   // Watch for changes in the current locale and load the locale
-  watch(currentLocale, ({ key }) => core?.loadI18Locale(key))
+  watch(currentLocale, async ({ key }, oldKey) => {
+    if (oldKey?.key !== key) {
+      await setLocale(key)
+    }
+  })
   const setLocale = async (localeKey) => {
-    await core?.loadI18Locale(localeKey)
+    return core?.loadI18Locale(localeKey)
   }
   return { currentLocale, setLocale, locales }
 }

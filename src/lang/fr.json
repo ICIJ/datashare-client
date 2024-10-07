@@ -853,6 +853,27 @@
     "submitError": "Impossible d'enregistrer ces paramètres.",
     "noAccess": "Vous n'avez pas accès à cette page en mode serveur."
   },
+  "settings": {
+    "title": {"title": "Paramètres"},
+    "general":{
+      "title": "Général"
+    },
+    "appearance":
+    {
+      "title": "Apparence"
+    },
+    "languages": {
+      "title": "Langues"
+    },
+    "addons": {
+      "plugins":{
+        "title": "Plugins"
+      },
+      "extensions":{
+        "title": "Extensions"
+      }
+    }
+  },
   "human": {
     "number": {
       "K": "%K",
