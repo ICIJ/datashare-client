@@ -9,7 +9,7 @@ import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import { useCore } from '@/composables/core'
+import { useViews } from '@/composables/views'
 import { useBreakpoints } from '@/composables/breakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
@@ -18,8 +18,8 @@ const page = defineModel('page', { type: Number, default: 1 })
 
 const emit = defineEmits(['toggleFilters'])
 
-const { core } = useCore()
 const { breakpointDown } = useBreakpoints()
+const { toggleSettings, toggleSidebar } = useViews()
 
 const props = defineProps({
   filterable: {
@@ -68,18 +68,8 @@ const props = defineProps({
   }
 })
 
-const activeToggleSidebar = computed({
-  get: () => !core?.store.state.app.sidebar.closed,
-  set: (value) => core?.store.dispatch('app/toggleSidebarClosed', !value)
-})
-
-const activeToggleSettings = computed({
-  get: () => !core?.store.state.app.settings.closed,
-  set: (value) => core?.store.dispatch('app/toggleSettingsClosed', !value)
-})
-
 const showToggleSidebar = computed(() => {
-  return !props.noToggleSidebar && (!activeToggleSidebar.value || breakpointDown.value[props.sidebarTogglerBreakpoint])
+  return !props.noToggleSidebar && (!toggleSidebar.value || breakpointDown.value[props.sidebarTogglerBreakpoint])
 })
 </script>
 
@@ -87,7 +77,7 @@ const showToggleSidebar = computed(() => {
   <page-container fluid class="page-header d-flex flex-column gap-4 py-3">
     <div class="d-flex justify-content-between gap-4">
       <slot name="toggle-sidebar">
-        <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="activeToggleSidebar" class="flex-shrink-0" />
+        <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
       </slot>
       <navigation-breadcrumb v-if="!noBreadcrumb" class="page-header__breadcrumb me-auto">
         <slot name="breadcrumb" />
@@ -95,7 +85,7 @@ const showToggleSidebar = computed(() => {
       <div class="page-header__actions d-flex gap-4 ms-4">
         <slot name="action">
           <button-add v-if="toAdd" :to="toAdd" />
-          <button-toggle-settings v-if="!noToggleSettings" v-model:active="activeToggleSettings" />
+          <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
         </slot>
       </div>
     </div>
