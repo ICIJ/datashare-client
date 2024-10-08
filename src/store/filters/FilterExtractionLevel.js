@@ -2,6 +2,7 @@ import get from 'lodash/get'
 
 import FilterText from './FilterText'
 
+import DisplayExtractionLevel from '@/components/Display/DisplayExtractionLevel'
 import { getExtractionLevelTranslationKey } from '@/utils/utils'
 
 export default class FilterExtractionLevel extends FilterText {
@@ -15,5 +16,9 @@ export default class FilterExtractionLevel extends FilterText {
 
   get sortByOrder() {
     return get(this, ['state', 'sortedFilters', this.name, 'sortByOrder'], 'asc')
+  }
+
+  static get display() {
+    return DisplayExtractionLevel
   }
 }

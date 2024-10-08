@@ -4,19 +4,6 @@ import { mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Hook from '@/components/Hook'
 
-// Functional component (such as Hook) must be wrapped inside a non-functional
-// component to be tested with Vue Test Utils.
-//
-// @see https://stevenklambert.com/writing/unit-testing-vuejs-functional-component-multiple-root-nodes/
-const WrappedHook = {
-  components: { Hook },
-  template: `
-    <div>
-      <hook v-bind="$attrs" v-on="$listeners" ref="hook" />
-    </div>
-  `
-}
-
 // Create a "hooked component" defintion with a render function.
 //
 // Because we use custom component, the runtime-build function must be defined
@@ -39,7 +26,7 @@ describe('Hook.vue', () => {
   })
 
   it('should be a Vue instance', () => {
-    const wrapper = mount(WrappedHook, { global: { plugins } })
+    const wrapper = mount(Hook, { global: { plugins } })
     expect(wrapper).toBeTruthy()
   })
 
@@ -47,7 +34,7 @@ describe('Hook.vue', () => {
     const definition = hookedComponentDefinition()
     store.commit('hooks/register', { target: 'test-hook-one-component', definition })
     const props = { name: 'test-hook-one-component' }
-    const wrapper = mount(WrappedHook, { global: { plugins }, props })
+    const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(1)
   })
 
@@ -55,7 +42,7 @@ describe('Hook.vue', () => {
     store.commit('hooks/register', { target: 'test-hook-two-components', definition: hookedComponentDefinition('foo') })
     store.commit('hooks/register', { target: 'test-hook-two-components', definition: hookedComponentDefinition('bar') })
     const props = { name: 'test-hook-two-components' }
-    const wrapper = mount(WrappedHook, { global: { plugins }, props })
+    const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(2)
   })
 
@@ -65,7 +52,7 @@ describe('Hook.vue', () => {
     store.commit('hooks/register', { target: 'test-foo', definition })
     store.commit('hooks/register', { target: 'test-bar', definition })
     const props = { name: 'test-hook-one-component-only' }
-    const wrapper = mount(WrappedHook, { global: { plugins }, props })
+    const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(1)
   })
 
@@ -73,7 +60,7 @@ describe('Hook.vue', () => {
     store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('0') })
     store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
     const props = { name: 'test-ordered-components' }
-    const wrapper = mount(WrappedHook, { global: { plugins }, props })
+    const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component').at(0).text()).toBe('0')
     expect(wrapper.findAll('.hooked-component').at(1).text()).toBe('1')
   })
@@ -86,19 +73,19 @@ describe('Hook.vue', () => {
     })
     store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
     const props = { name: 'test-ordered-components' }
-    const wrapper = mount(WrappedHook, { global: { plugins }, props })
+    const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component').at(0).text()).toBe('1')
     expect(wrapper.findAll('.hooked-component').at(1).text()).toBe('0')
   })
 
   it('should not be in debug mode', () => {
-    const wrapper = mount(WrappedHook, { global: { plugins } })
+    const wrapper = mount(Hook, { global: { plugins } })
     expect(wrapper.findAll('.hook-debug')).toHaveLength(0)
   })
 
   it('should be in debug mode', () => {
     config.merge({ hooksDebug: true })
-    const wrapper = mount(WrappedHook, { global: { plugins } })
+    const wrapper = mount(Hook, { global: { plugins } })
     expect(wrapper.findAll('.hook-debug')).toHaveLength(1)
   })
 })

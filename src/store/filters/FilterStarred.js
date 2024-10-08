@@ -2,6 +2,8 @@ import { get, map } from 'lodash'
 
 import FilterText from './FilterText'
 
+import DisplayBoolean from '@/components/Display/DisplayBoolean'
+
 export default class FilterStarred extends FilterText {
   constructor(options) {
     super(options)
@@ -29,5 +31,8 @@ export default class FilterStarred extends FilterText {
       true: 'filter.starred',
       false: 'filter.notStarred'
     }
+  }
+  static get display() {
+    return DisplayBoolean
   }
 }
