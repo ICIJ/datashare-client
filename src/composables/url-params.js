@@ -30,7 +30,7 @@ const applyBatchedUpdates = debounce((router, route) => {
  *
  * @param {Object} router - The Vue Router instance
  * @param {Object} route - The current Vue Router route instance
- * @param {string} queryParams - The query parameters to update
+ * @param {String[]} queryParams - The query parameters to update
  * @param {*} value - The new values for each query parameter
  */
 function batchQueryParamUpdate(router, route, queryParams, values) {
