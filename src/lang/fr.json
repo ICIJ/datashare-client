@@ -854,7 +854,7 @@
     "noAccess": "Vous n'avez pas accès à cette page en mode serveur."
   },
   "settings": {
-    "title": {"title": "Paramètres"},
+    "title":  "Paramètres",
     "general":{
       "title": "Général"
     },

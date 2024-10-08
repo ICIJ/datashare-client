@@ -32,7 +32,7 @@ export const routes = [
         name: 'search',
         path: '',
         meta: {
-          title: ({ i18n }) => i18n.global.t('search.title'),
+          title: 'search.title',
           docs: [
             {
               title: 'Search documents',
@@ -64,7 +64,7 @@ export const routes = [
             component: () => import('@/views/DocumentView'),
             props: true,
             meta: {
-              title: ({ i18n }) => i18n.global.t('document.title'),
+              title: 'document.title',
               docs: [
                 {
                   title: 'Star a document',
@@ -103,7 +103,7 @@ export const routes = [
           name: 'task.batch-search.list'
         },
         meta: {
-          title: ({ i18n }) => i18n.global.t('tasks.title')
+          title: 'tasks.title'
         },
         children: [
           {
@@ -117,7 +117,7 @@ export const routes = [
             path: 'analysis',
             component: () => import('@/views/TaskAnalysis'),
             meta: {
-              title: ({ i18n }) => i18n.global.t('indexing.title'),
+              title: 'indexing.title',
               allowedModes: ['LOCAL', 'EMBEDDED']
             },
             children: [
@@ -126,7 +126,7 @@ export const routes = [
                 path: '',
                 component: () => import('@/views/TaskAnalysisList'),
                 meta: {
-                  title: ({ i18n }) => i18n.global.t('indexing.title'),
+                  title: 'indexing.title',
                   allowedModes: ['LOCAL', 'EMBEDDED'],
                   docs: [
                     {
@@ -152,7 +152,7 @@ export const routes = [
                 path: '',
                 component: () => import('@/views/TaskBatchDownloadList'),
                 meta: {
-                  title: ({ i18n }) => i18n.global.t('batchDownload.title'),
+                  title: 'batchDownload.title',
                   docs: [
                     {
                       title: 'Add documents to Datashare',
@@ -182,7 +182,7 @@ export const routes = [
                   default: () => import('@/views/TaskBatchSearchList')
                 },
                 meta: {
-                  title: ({ i18n }) => i18n.global.t('batchSearch.title'),
+                  title: 'batchSearch.title',
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -198,7 +198,7 @@ export const routes = [
                   default: () => import('@/views/TaskBatchSearchNew')
                 },
                 meta: {
-                  title: ({ i18n }) => i18n.global.t('newBatchSearch.title'),
+                  title: 'newBatchSearch.title',
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -223,7 +223,7 @@ export const routes = [
                   }
                 ],
                 meta: {
-                  title: ({ i18n }) => i18n.global.t('batchSearchResults.title')
+                  title: 'batchSearchResults.title'
                 }
               }
             ]
@@ -382,7 +382,7 @@ export const routes = [
           name: 'user-history.document.list'
         },
         meta: {
-          title: ({ i18n }) => i18n.global.t('userHistory.heading')
+          title: 'userHistory.heading'
         },
         children: [
           {
@@ -390,7 +390,7 @@ export const routes = [
             path: 'document',
             component: () => import('@/views/UserHistoryDocumentList'),
             meta: {
-              title: ({ i18n }) => i18n.global.t('userHistory.heading')
+              title: 'userHistory.heading'
             }
           },
           {
@@ -404,7 +404,7 @@ export const routes = [
             path: 'saved-search',
             component: () => import('@/views/UserHistorySavedSearchList'),
             meta: {
-              title: ({ i18n }) => i18n.global.t('userHistory.heading')
+              title: 'userHistory.heading'
             }
           }
         ]
@@ -413,10 +413,7 @@ export const routes = [
         name: 'settings',
         path: '/settings',
         meta: {
-          title: ({ i18n }) => {
-            const key = 'server.title'
-            return i18n.global?.t(key) ?? i18n.t(key)
-          }
+          title: 'settings.title'
         },
         component: () => import('@/views/Settings/SettingsView/SettingsView'),
         children: [
@@ -429,7 +426,7 @@ export const routes = [
             path: 'general',
             component: () => import('@/views/Settings/SettingsView/SettingsViewGeneral'),
             meta: {
-              title: 'General',
+              title: 'settings.general.title',
               breadcrumb: false
             }
           },
@@ -438,7 +435,7 @@ export const routes = [
             path: 'appearance',
             component: () => import('@/views/Settings/SettingsView/SettingsViewAppearance'),
             meta: {
-              title: 'Appearance',
+              title: 'settings.appearance.title',
               breadcrumb: false
             }
           },
@@ -447,7 +444,7 @@ export const routes = [
             path: 'languages',
             component: () => import('@/views/Settings/SettingsView/SettingsViewLanguages'),
             meta: {
-              title: 'Languages',
+              title: 'settings.languages.title',
               breadcrumb: false
             }
           },
@@ -457,7 +454,7 @@ export const routes = [
             component: () => import('@/views/Settings/SettingsView/SettingsViewAddons'),
             props: { addonsType: 'plugins' },
             meta: {
-              title: 'Plugins',
+              title: 'settings.addons.extensions.title',
               breadcrumb: false
             }
           },
@@ -467,7 +464,7 @@ export const routes = [
             component: () => import('@/views/Settings/SettingsView/SettingsViewAddons'),
             props: { addonsType: 'extensions' },
             meta: {
-              title: 'Extensions',
+              title: 'settings.addons.plugins.title',
               breadcrumb: false
             }
           }

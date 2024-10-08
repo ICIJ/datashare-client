@@ -1156,7 +1156,7 @@
       "searchPlaceholder": "Filter the list",
       "noResults": "No matching result for the query '%{query}'"
     },
-    "title": {"title": "Settings"},
+    "title": "Settings",
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
     "general":{
       "title": "General" ,
