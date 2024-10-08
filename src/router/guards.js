@@ -41,7 +41,10 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
 
   async function setPageTitleFromMeta({ meta }, _from, next) {
     const params = { router, auth, store, config, i18n }
-    const title = isFunction(meta.title) ? await meta.title(params) : meta.title
+    let title
+    if (meta.title) {
+      title = isFunction(meta.title) ? await meta.title(params) : i18n.global.t(meta.title)
+    }
     setPageTitle(title)
     next()
   }

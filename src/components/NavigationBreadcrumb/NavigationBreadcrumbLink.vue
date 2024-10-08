@@ -64,17 +64,13 @@ const routeHref = computed(() => {
 })
 
 const { core } = useCore()
-const i18n = useI18n()
+const { t } = useI18n()
 
-const display = ref(null)
-
-const setDisplay = async () => {
+const title = computed(() => {
   const name = route.value?.name.split('.').pop()
-  const fn = castFunction(props.title ?? route.value?.meta?.title ?? capitalize(name))
-  display.value = await fn({ route: route.value, core, i18n })
-}
-
-onMounted(setDisplay)
+  const fn = castFunction(props.title ?? t(route.value?.meta?.title) ?? capitalize(name))
+  return fn({ route: route.value, core })
+})
 
 const icon = computed(() => {
   return props.icon ?? route.value?.meta?.icon
@@ -96,7 +92,7 @@ const classList = computed(() => {
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
-        <slot>{{ display }}</slot>
+        <slot>{{ title }}</slot>
       </span>
     </span>
     <phosphor-icon
