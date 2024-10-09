@@ -21,17 +21,15 @@ const imageClassList = computed(() => {
 
 <template>
   <div
-    class="settings-appearance-theme d-flex flex-grow-1 justify-content-between align-items-center gap-2 px-3"
+    class="settings-appearance-theme d-flex flex-shrink-0 flex-grow-1 justify-content-between align-items-center gap-2 px-3"
     style="height: 95px"
   >
-    <span class="d-flex gap-2">
+    <span class="d-inline-flex gap-2">
       <phosphor-icon :name="icon" />
       <span class="text-nowrap">{{ label }}</span></span
     >
-    <image-mode :image-class="imageClassList" width="200px">
+    <image-mode :image-class="imageClassList" :height="height">
       <image-mode-source :src="thumbnail" />
     </image-mode>
   </div>
 </template>
-
-<style scoped lang="scss"></style>

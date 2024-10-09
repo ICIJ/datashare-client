@@ -11,11 +11,11 @@ const selected = ref('light')
 </script>
 
 <template>
-  <b-form-group v-slot="{ ariaDescribedby }" class="settings-appearance-radio-group col-12 col-md-4 offset-md-4">
+  <b-form-group v-slot="{ ariaDescribedby }" class="settings-appearance-radio-group m-auto">
     <b-form-radio-group
       id="radio-group-theme"
       :model-value="modelValue"
-      class="settings-appearance-radio-group__radio-group"
+      class="settings-appearance-radio-group__radio-group d-flex flex-column gap-1"
       :aria-describedby="ariaDescribedby"
       name="radio-options"
       stacked
@@ -36,11 +36,8 @@ const selected = ref('light')
 
 <style lang="scss">
 .settings-appearance-radio-group {
-  &__radio-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-  }
+  min-width: 350px;
+  max-width: 400px;
   & .form-check {
     display: flex;
     align-items: center;
