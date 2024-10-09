@@ -9,6 +9,11 @@ export default {
     modelValue: 'light',
     options: [
       {
+        icon: 'paint',
+        name: 'automatic',
+        label: 'Automatic'
+      },
+      {
         icon: 'sun',
         name: 'light',
         label: 'Light mode',
