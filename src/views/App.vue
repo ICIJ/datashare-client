@@ -3,7 +3,13 @@
     <hook name="app:before" />
     <app-sidebar ref="app-sidebar" />
     <div class="flex-grow-1">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <component :is="Component">
+          <template v-if="hasFilters" #filters>
+            <component :is="FiltersComponent" />
+          </template>
+        </component>
+      </router-view>
       <scroll-tracker />
     </div>
     <page-offcanvas v-model="showPageSettings" no-header>
@@ -19,7 +25,7 @@
 
 <script setup>
 import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
-import { get } from 'lodash'
+import { get, property } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -54,6 +60,14 @@ const hasSettings = computed(() => {
 const showPageSettings = computed({
   get: () => hasSettings.value && !core.store.state.app.settings.closed,
   set: (value) => core.store.dispatch('app/toggleSettingsClosed', !value)
+})
+
+const hasFilters = computed(() => {
+  return route.matched.some((route) => 'filters' in route.components)
+})
+
+const FiltersComponent = computed(() => {
+  return route.matched.map(property('components')).findLast((components) => 'filters' in components)?.filters
 })
 
 const appSidebarRef = useTemplateRef('app-sidebar')
