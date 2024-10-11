@@ -5,6 +5,9 @@ import FiltersPanelSectionFilterTitle from '@/components/FiltersPanel/FiltersPan
 import FiltersPanelSectionFilterFooter from '@/components/FiltersPanel/FiltersPanelSectionFilterFooter'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
+const contextualize = defineModel('contextualize', { type: Boolean })
+const exclude = defineModel('exclude', { type: Boolean })
+
 const props = defineProps({
   collapse: {
     type: Boolean
@@ -77,18 +80,18 @@ const classList = computed(() => {
           v-if="!hideSearch"
           :model-value="search"
           :placeholder="searchPlaceholder"
-          shadow
           clear-text
-          size="sm"
           class="filters-panel-section-filter__content__search mb-3"
           @update:modelValue="emit('update:search', $event)"
         />
-        <div :class="flush ? '' : 'ps-4'">
+        <div :class="flush ? '' : 'ps-4 pe-2'">
           <slot />
         </div>
       </div>
       <slot name="footer">
         <filters-panel-section-filter-footer
+          v-model:contextualize="contextualize"
+          v-model:exclude="exclude"
           :hide-contextualize="hideContextualize"
           :hide-exclude="hideExclude"
           :hide-expand="hideExpand"
