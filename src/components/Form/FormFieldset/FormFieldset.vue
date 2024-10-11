@@ -28,6 +28,9 @@ const props = defineProps({
     type: Number,
     default: 3
   },
+  labelFor: {
+    type: String
+  },
   required: {
     type: Boolean
   }
@@ -48,11 +51,12 @@ const classList = computed(() => {
     :label-cols-md="labelColsMd"
     :label-cols-lg="labelColsLg"
     :label="label"
+    :label-for="labelFor"
   >
     <template #label>
       <div class="form-fieldset__label text-secondary-emphasis">
         <phosphor-icon v-if="icon" :name="icon" :variant="iconVariant" class="me-2" />
-        <slot name="label">
+        <slot name="label" v-bind="{ labelFor }">
           {{ label }}
         </slot>
       </div>
