@@ -2,12 +2,18 @@
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
-import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
+import { useBreakpoints } from '@/composables/breakpoints'
+
+const { breakpointDown } = useBreakpoints()
 
 const props = defineProps({
   project: {
     type: Object,
     required: true
+  },
+  compactBreakpoint: {
+    type: String,
+    default: 'sm'
   }
 })
 
@@ -24,10 +30,14 @@ const toProjectSearch = computed(() => ({
     indices: [props.project.name]
   }
 }))
+
+const compact = computed(() => {
+  return breakpointDown.value[props.compactBreakpoint]
+})
 </script>
 
 <template>
-  <page-table-td-actions class="project-row-actions">
+  <td class="project-row-actions">
     <div class="d-flex gap-3">
       <slot>
         <button-icon
@@ -35,7 +45,7 @@ const toProjectSearch = computed(() => ({
           icon-left="chart-bar"
           variant="outline-tertiary"
           truncate
-          hide-tooltip
+          hide-label
           class="project-row-actions__insights"
           :label="$t('projectCardFooter.insights')"
         />
@@ -44,13 +54,13 @@ const toProjectSearch = computed(() => ({
           icon-left="magnifying-glass"
           variant="outline-primary"
           truncate
-          hide-tooltip
+          :hide-label="compact"
           class="project-row-actions__search"
           :label="$t('projectCardFooter.search')"
         />
       </slot>
     </div>
-  </page-table-td-actions>
+  </td>
 </template>
 
 <style lang="scss">
