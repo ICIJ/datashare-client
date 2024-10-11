@@ -9,7 +9,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="filters-panel-section mb-5">
+  <div class="filters-panel-section w-100">
     <filters-panel-section-title :title="title">
       <slot name="title" />
     </filters-panel-section-title>
