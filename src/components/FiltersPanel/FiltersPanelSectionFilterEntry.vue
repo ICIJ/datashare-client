@@ -2,13 +2,14 @@
 import { computed } from 'vue'
 import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
 
-const props = defineProps({
+const modelValue = defineModel({
+  type: Boolean,
+  default: false
+})
+
+defineProps({
   label: {
     type: String
-  },
-  modelValue: {
-    type: Boolean,
-    default: false
   },
   count: {
     type: Number,
@@ -16,18 +17,16 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
-
 const classList = computed(() => {
   return {
-    'filters-panel-section-filter-entry--checked': props.modelValue
+    'filters-panel-section-filter-entry--checked': modelValue.value
   }
 })
 </script>
 
 <template>
   <div class="filters-panel-section-filter-entry" :class="classList">
-    <b-form-checkbox :model-value="modelValue" @update:modelValue="emit('update:modelValue', $event)">
+    <b-form-checkbox v-model="modelValue">
       <slot>
         <span v-ellipsis-tooltip="{ title: label, placement: 'right', offset: '0px' }" class="text-truncate">
           {{ label }}
@@ -48,6 +47,8 @@ const classList = computed(() => {
   &:deep(.form-check) {
     display: flex;
     min-width: 0;
+    margin-right: $spacer-xs;
+    margin-bottom: $spacer-xxs;
 
     .form-check-input {
       margin-right: $spacer-xs;
