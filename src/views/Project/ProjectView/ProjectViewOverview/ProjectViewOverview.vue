@@ -83,7 +83,7 @@ watch(
           <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph' }">
             {{ $t('projectViewOverview.nav.graph') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="circles-three-plus" :to="{ name: 'project.view.overview.details' }">
+          <tab-group-navigation-entry icon="info" :to="{ name: 'project.view.overview.details' }">
             {{ $t('projectViewOverview.nav.details') }}
           </tab-group-navigation-entry>
           <tab-group-navigation-entry icon="clock-counter-clockwise" :to="{ name: 'project.view.overview.history' }">
