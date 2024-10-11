@@ -3,6 +3,9 @@ import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
+const contextualize = defineModel('contextualize', { type: Boolean })
+const exclude = defineModel('exclude', { type: Boolean })
+
 const props = defineProps({
   hideContextualize: {
     type: Boolean
@@ -15,12 +18,6 @@ const props = defineProps({
   },
   sort: {
     type: Object
-  },
-  contextualize: {
-    type: Boolean
-  },
-  exclude: {
-    type: Boolean
   }
 })
 
@@ -42,16 +39,8 @@ const classList = computed(() => {
 
 <template>
   <div class="filters-panel-section-filter-footer" :class="classList">
-    <b-form-checkbox
-      v-if="!hideContextualize"
-      :model-value="contextualize"
-      @update:modelValue="emit('update:contextualize', $event)"
-    >
-      Contextualize
-    </b-form-checkbox>
-    <b-form-checkbox v-if="!hideExclude" :model-value="exclude" @update:modelValue="emit('update:exclude', $event)">
-      Exclude
-    </b-form-checkbox>
+    <b-form-checkbox v-if="!hideContextualize" v-model="contextualize">Contextualize</b-form-checkbox>
+    <b-form-checkbox v-if="!hideExclude" v-model="exclude">Exclude</b-form-checkbox>
     <button-icon
       v-if="!hideExpand"
       variant="link"
