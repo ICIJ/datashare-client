@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
-import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
 const props = defineProps({
   project: {
@@ -27,7 +26,7 @@ const toProjetDelete = computed(() => ({
 </script>
 
 <template>
-  <page-table-td-actions class="project-row-actions">
+  <td class="project-row-actions">
     <div class="d-flex gap-2">
       <slot>
         <button-icon
@@ -52,5 +51,5 @@ const toProjetDelete = computed(() => ({
         />
       </slot>
     </div>
-  </page-table-td-actions>
+  </td>
 </template>
