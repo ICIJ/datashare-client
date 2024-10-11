@@ -44,6 +44,7 @@ const classList = computed(() => {
     :title="title"
     :class="classList"
     class="page-offcanvas"
+    hide-backdrop
     header-class="page-offcanvas__header"
   >
     <template #header="{ hide }">
