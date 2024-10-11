@@ -7,7 +7,7 @@ defineProps({
 </script>
 
 <template>
-  <h3 class="filters-panel-section-title text-action-emphasis">
+  <h3 class="filters-panel-section-title text-action-emphasis fw-normal">
     <slot>{{ title }}</slot>
   </h3>
 </template>
