@@ -1,9 +1,9 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import { every, cloneDeep, kebabCase } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { slugger, isUrl } from '@/utils/strings'
 import { useCore } from '@/composables/core'
@@ -91,10 +91,26 @@ watch(
     }
   }
 )
+const { t } = useI18n()
+const deleteConfirmation = t('projectForm.deleteConfirmation')
+
+const deleteLabel = t('projectForm.delete')
+const resetLabel = t('projectForm.reset')
+const submitLabel = t('projectForm.submit')
 </script>
 
 <template>
-  <b-form class="project-form" novalidate @submit.stop.prevent="submit">
+  <form-creation
+    :show-delete-button="showDeleteButton"
+    :valid="valid"
+    :reset-label="resetLabel"
+    :delete-label="deleteLabel"
+    :submit-label="submitLabel"
+    :delete-confirmation="deleteConfirmation"
+    @delete="emitDelete"
+    @reset="reset"
+    @submit="submit"
+  >
     <div>
       <form-fieldset
         class="project-form__group project-form__group--label"
@@ -214,30 +230,5 @@ watch(
         />
       </form-fieldset>
     </div>
-    <div class="d-flex">
-      <confirm-button
-        v-if="showDeleteButton"
-        type="button"
-        class="project-form__action--delete btn btn-danger me-3"
-        :confirmed="emitDelete"
-        :label="$t('projectForm.deleteConfirmation')"
-      >
-        <fa icon="trash-can" class="me-1" />
-        <slot name="delete-text">{{ $t('projectForm.delete') }}</slot>
-      </confirm-button>
-      <button-icon
-        type="button"
-        variant="outline-light"
-        icon-left="arrow-counter-clockwise"
-        class="project-form__action--reset btn btn-outline-action ms-auto"
-        :label="$t('projectForm.reset')"
-        @click="reset"
-      >
-        <slot name="reset-text" />
-      </button-icon>
-      <b-button type="submit" variant="action" class="ms-2" :disabled="!valid">
-        <slot name="submit-text">{{ $t('projectForm.submit') }}</slot>
-      </b-button>
-    </div>
-  </b-form>
+  </form-creation>
 </template>
