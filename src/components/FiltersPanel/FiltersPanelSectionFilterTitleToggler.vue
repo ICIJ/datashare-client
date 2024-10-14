@@ -6,6 +6,9 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 const props = defineProps({
   collapse: {
     type: Boolean
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -18,6 +21,7 @@ const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
     class="filters-panel-section-filter-title-toggler"
     variant="link"
     size="sm"
+    :loading="loading"
     :icon-left="icon"
     icon-left-weight="bold"
     label="Toggle filter"

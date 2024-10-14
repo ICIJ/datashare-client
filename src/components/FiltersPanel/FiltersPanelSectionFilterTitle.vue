@@ -24,6 +24,9 @@ const props = defineProps({
   },
   hideSort: {
     type: Boolean
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -35,7 +38,8 @@ const showCount = computed(() => {
 
 const classList = computed(() => {
   return {
-    'filters-panel-section-filter-title--collapsed': props.collapse
+    'filters-panel-section-filter-title--collapsed': props.collapse,
+    'filters-panel-section-filter-title--loading': props.loading
   }
 })
 </script>
@@ -60,7 +64,7 @@ const classList = computed(() => {
         <b-badge v-if="showCount" class="filters-panel-section-filter-title__count" pill variant="primary-subtle">
           {{ count }}
         </b-badge>
-        <filters-panel-section-filter-title-toggler class="ms-auto" :collapse="collapse" />
+        <filters-panel-section-filter-title-toggler class="ms-auto" :collapse="collapse" :loading="loading" />
       </span>
     </slot>
   </h3>

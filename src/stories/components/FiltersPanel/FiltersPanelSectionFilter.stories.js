@@ -20,7 +20,8 @@ export default {
     hideExclude: false,
     hideExpand: false,
     hideSearch: false,
-    hideSort: false
+    hideSort: false,
+    loading: false
   },
   render: (args) => ({
     components: {
