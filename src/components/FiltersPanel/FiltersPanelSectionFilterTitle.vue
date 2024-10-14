@@ -5,6 +5,8 @@ import { computed } from 'vue'
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
 import FiltersPanelSectionFilterTitleToggler from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleToggler'
 
+const collapse = defineModel('collapse', { type: Boolean })
+
 const props = defineProps({
   title: {
     type: String
@@ -15,9 +17,6 @@ const props = defineProps({
   count: {
     type: Number,
     default: 0
-  },
-  collapse: {
-    type: Boolean
   },
   sort: {
     type: String
@@ -30,15 +29,15 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['toggle', 'update:sort'])
+const emit = defineEmits(['update:sort'])
 
 const showCount = computed(() => {
-  return props.count > 0 && props.collapse
+  return props.count > 0 && collapse.value
 })
 
 const classList = computed(() => {
   return {
-    'filters-panel-section-filter-title--collapsed': props.collapse,
+    'filters-panel-section-filter-title--collapsed': collapse.value,
     'filters-panel-section-filter-title--loading': props.loading
   }
 })
@@ -50,7 +49,7 @@ const classList = computed(() => {
       <span
         v-ellipsis-tooltip="{ title, placement: 'right' }"
         class="flex-grow-1 text-truncate"
-        @click="emit('toggle', !collapse)"
+        @click="collapse = !collapse"
       >
         <phosphor-icon :name="icon" class="me-2" />
         {{ title }}
@@ -60,7 +59,7 @@ const classList = computed(() => {
         :model-value="sort"
         @update:modelValue="emit('update:sort', $event)"
       />
-      <span @click="emit('toggle', !collapse)">
+      <span @click="collapse = !collapse">
         <b-badge v-if="showCount" class="filters-panel-section-filter-title__count" pill variant="primary-subtle">
           {{ count }}
         </b-badge>

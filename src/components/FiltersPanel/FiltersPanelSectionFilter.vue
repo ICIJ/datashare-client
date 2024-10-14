@@ -7,11 +7,9 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 const contextualize = defineModel('contextualize', { type: Boolean })
 const exclude = defineModel('exclude', { type: Boolean })
+const collapse = defineModel('collapse', { type: Boolean })
 
 const props = defineProps({
-  collapse: {
-    type: Boolean
-  },
   flush: {
     type: Boolean
   },
@@ -59,7 +57,7 @@ const emit = defineEmits(['toggle', 'update:search'])
 
 const classList = computed(() => {
   return {
-    'filters-panel-section-filter--collapsed': props.collapse,
+    'filters-panel-section-filter--collapsed': collapse.value,
     'filters-panel-section-filter--loading': props.loading
   }
 })
@@ -68,14 +66,13 @@ const classList = computed(() => {
 <template>
   <div class="filters-panel-section-filter mb-1" :class="classList">
     <filters-panel-section-filter-title
+      v-model:collapse="collapse"
       :title="title"
       :icon="icon"
-      :collapse="collapse"
       :count="count"
       :hide-sort="hideSort"
       :loading="loading"
       class="pe-2 mx-2"
-      @toggle="emit('toggle', $event)"
     >
       <slot name="title" />
     </filters-panel-section-filter-title>
