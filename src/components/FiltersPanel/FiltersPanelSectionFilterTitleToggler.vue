@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { PhCaretDown, PhCaretUp } from '@phosphor-icons/vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -13,7 +14,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['toggle'])
-const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
+const icon = computed(() => (props.collapse ? PhCaretDown : PhCaretUp))
 </script>
 
 <template>
