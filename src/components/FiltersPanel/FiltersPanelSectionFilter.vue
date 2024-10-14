@@ -49,6 +49,9 @@ const props = defineProps({
   },
   hideSort: {
     type: Boolean
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -56,7 +59,8 @@ const emit = defineEmits(['toggle', 'update:search'])
 
 const classList = computed(() => {
   return {
-    'filters-panel-section-filter--collapsed': props.collapse
+    'filters-panel-section-filter--collapsed': props.collapse,
+    'filters-panel-section-filter--loading': props.loading
   }
 })
 </script>
@@ -69,6 +73,7 @@ const classList = computed(() => {
       :collapse="collapse"
       :count="count"
       :hide-sort="hideSort"
+      :loading="loading"
       class="pe-2 mx-2"
       @toggle="emit('toggle', $event)"
     >
