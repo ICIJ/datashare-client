@@ -1,7 +1,7 @@
 <script setup>
-import { ref, getCurrentInstance, onMounted } from 'vue'
+import { useTemplateRef, getCurrentInstance, onMounted } from 'vue'
 
-const element = ref(null)
+const element = useTemplateRef('element')
 
 const props = defineProps({
   src: {
