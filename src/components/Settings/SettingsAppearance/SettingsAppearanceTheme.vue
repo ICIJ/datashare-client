@@ -8,8 +8,7 @@ const props = defineProps({
   icon: { type: String },
   label: { type: String },
   thumbnail: { type: String },
-  active: { type: Boolean },
-  height: { type: String, default: '95px' }
+  active: { type: Boolean }
 })
 const imageClassList = computed(() => {
   return {
@@ -28,7 +27,7 @@ const imageClassList = computed(() => {
       <phosphor-icon :name="icon" />
       <span class="text-nowrap">{{ label }}</span></span
     >
-    <image-mode :image-class="imageClassList" :height="height">
+    <image-mode :image-class="imageClassList">
       <image-mode-source :src="thumbnail" />
     </image-mode>
   </div>
