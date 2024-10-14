@@ -48,6 +48,9 @@ const selected = ref('light')
     & .form-check-label {
       display: flex;
       flex-grow: 1;
+      & img {
+        height: 95px;
+      }
     }
   }
 }
