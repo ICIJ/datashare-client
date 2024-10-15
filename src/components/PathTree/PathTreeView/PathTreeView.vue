@@ -4,14 +4,13 @@ import { computed, provide, watch } from 'vue'
 import PathTreeViewLabel from './PathTreeViewLabel'
 import PathTreeViewSearch from './PathTreeViewSearch'
 
+const query = defineModel('query', { type: String })
+
 const props = defineProps({
   label: {
     type: String
   },
   icon: {
-    type: String
-  },
-  query: {
     type: String
   },
   selectMode: {
@@ -54,7 +53,7 @@ const classList = computed(() => {
 <template>
   <div class="path-tree-view d-flex flex-column" :class="classList">
     <path-tree-view-label v-if="!noLabel" :label="label" :icon="icon" />
-    <path-tree-view-search v-if="!noSearch" :model-value="query" @update:modelValue="$emit('update:query', $event)" />
+    <path-tree-view-search v-if="!noSearch" v-model="query" :shadow="!compact" />
     <div>
       <slot v-bind="{ selectMode }" />
     </div>
