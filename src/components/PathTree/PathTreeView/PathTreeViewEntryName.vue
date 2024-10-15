@@ -6,19 +6,14 @@ import { PhFolder, PhFolderOpen } from '@phosphor-icons/vue'
 import PathTreeViewEntryNameCaret from './PathTreeViewEntryNameCaret'
 import PathTreeViewEntryNameCheckbox from './PathTreeViewEntryNameCheckbox'
 
+const collapse = defineModel('collapse', { type: Boolean })
+const selected = defineModel('selected', { type: Boolean })
+const indeterminate = defineModel('indeterminate', { type: Boolean })
+
 const props = defineProps({
-  collapse: {
-    type: Boolean
-  },
   compact: {
     type: Boolean,
     default: null
-  },
-  selected: {
-    type: Boolean
-  },
-  indeterminate: {
-    type: Boolean
   },
   name: {
     type: String
@@ -31,21 +26,19 @@ const props = defineProps({
   }
 })
 
-const icon = computed(() => (props.collapse ? PhFolder : PhFolderOpen))
+const icon = computed(() => (collapse.value ? PhFolder : PhFolderOpen))
 
 const classList = computed(() => ({
-  'path-tree-view-entry-name--collapse': props.collapse,
+  'path-tree-view-entry-name--collapse': collapse.value,
   'path-tree-view-entry-name--compact': compactOrInjected.value,
-  'path-tree-view-entry-name--selected': props.selected
+  'path-tree-view-entry-name--selected': selected.value
 }))
 
 const selectModeOrInjected = computed(() => props.selectMode ?? inject('selectMode', false))
 const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
 
-const emit = defineEmits(['update:collapse'])
-
 const toggle = () => {
-  emit('update:collapse', !props.collapse)
+  collapse.value = !collapse.value
 }
 </script>
 
@@ -54,11 +47,9 @@ const toggle = () => {
     <path-tree-view-entry-name-caret :collapse="collapse" :loading="loading" class="flex-shrink-0" @click="toggle" />
     <path-tree-view-entry-name-checkbox
       v-if="selectModeOrInjected"
+      v-model="selected"
+      v-model:indeterminate="indeterminate"
       class="flex-shrink-0"
-      :model-value="selected"
-      :indeterminate="indeterminate"
-      @update:modelValue="emit('update:selected', $event)"
-      @update:indeterminate="emit('update:indeterminate', $event)"
     />
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
       <div class="path-tree-view-entry-name__value text-truncate" @click="toggle">
