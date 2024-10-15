@@ -3,16 +3,11 @@ import { computed, inject, ref } from 'vue'
 
 import PathTreeViewEntryName from './PathTreeViewEntryName'
 
+const collapse = defineModel('collapse', { type: Boolean })
+const selected = defineModel('selected', { type: Boolean })
+const indeterminate = defineModel('indeterminate', { type: Boolean })
+
 const props = defineProps({
-  collapse: {
-    type: Boolean
-  },
-  selected: {
-    type: Boolean
-  },
-  indeterminate: {
-    type: Boolean
-  },
   name: {
     type: String
   },
@@ -52,7 +47,7 @@ const active = ref(false)
 const classList = computed(() => {
   return {
     'path-tree-view-entry--active': active.value,
-    'path-tree-view-entry--selected': props.selected,
+    'path-tree-view-entry--selected': selected.value,
     'path-tree-view-entry--compact': compactOrInjected.value
   }
 })
@@ -70,16 +65,13 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
       @mouseleave="active = false"
     >
       <path-tree-view-entry-name
-        :collapse="collapse"
+        v-model:collapse="collapse"
+        v-model:selected="selected"
+        v-model:indeterminate="indeterminate"
         :compact="compactOrInjected"
-        :selected="selected"
-        :indeterminate="indeterminate"
         :name="name"
         :loading="loading"
         :select-mode="selectModeOrInjected"
-        @update:collapse="$emit('update:collapse', $event)"
-        @update:selected="$emit('update:selected', $event)"
-        @update:indeterminate="$emit('update:indeterminate', $event)"
       >
         <slot name="name" />
       </path-tree-view-entry-name>
