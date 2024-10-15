@@ -2724,12 +2724,12 @@ bootstrap-vue-next@0.22.1:
     "@floating-ui/vue" "^1.0.6"
     "@vueuse/core" "^10.10.0"
 
-bootstrap-vue-next@^0.24.22:
-  version "0.24.22"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.24.22.tgz#6f49461c2e1ab5095504ee38dbea0464b494644b"
-  integrity sha512-hzancGDH0r5aMrRc3EHUTSF1UUXGw2IbTk9E/sk5IAA7rj2Q9U5WEcYWq38mG7lw22KPHKGV5th26zxq140WjA==
+bootstrap-vue-next@^0.25.2:
+  version "0.25.2"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.25.2.tgz#9efe260b72bbe124f2a060ef73c76fe2d3ca43e0"
+  integrity sha512-QeAcoQe0lcwbd0U6KGsLlKeYk2hQyBFAssMCqf6efJs4UU4xbiEYgM89CK9BDdfeNmk/RZIY/oTj9OaRlUk+/Q==
 
-bootstrap@5.3.3, bootstrap@^5.3.3:
+bootstrap@^5.3.3:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.3.3.tgz#de35e1a765c897ac940021900fcbb831602bac38"
   integrity sha512-8HLCdWgyoMguSO9o+aH+iuZ+aht+mzW0u3HIMzVu7Srrpv7EBBxTnrFlSCskwdY1+EOFQSm7uMJhNQHkdPcmjg==
