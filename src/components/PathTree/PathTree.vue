@@ -68,7 +68,7 @@ const props = defineProps({
   /**
    * Order to sort by (asc or desc)
    */
-  sortByOrder: {
+  orderBy: {
     type: String,
     default: 'desc',
     validator: (order) => {
@@ -129,7 +129,7 @@ const page = computed(() => {
   return Math.floor(offset.value / perPage)
 })
 const order = computed(() => {
-  return { [props.sortBy]: props.sortByOrder }
+  return { [props.sortBy]: props.orderBy }
 })
 const hasQuery = computed(() => {
   return query.value && trim(query.value)
@@ -245,7 +245,7 @@ const isSelectedDirectory = (directory) => {
   return selectedPaths.value.map(toDirectory).includes(toDirectory(directory))
 }
 
-const hasSelectedChildDirectory = (directory) => {
+const isIndeterminateDirectory = (directory) => {
   return selectedPaths.value.some((path) => {
     return toDirectory(path).startsWith(toDirectory(directory)) && !isSelectedDirectory(directory)
   })
@@ -254,11 +254,11 @@ const hasSelectedChildDirectory = (directory) => {
 const selectDirectory = (directory) => {
   const dir = toDirectory(directory)
   if (isSelectedDirectory(directory)) {
-    selectedPaths.value.splice(selectedPaths.value.indexOf(dir), 1)
+    selectedPaths.value = selectedPaths.value.toSpliced(selectedPaths.value.indexOf(dir), 1)
   } else if (props.multiple) {
-    selectedPaths.value.push(dir)
+    selectedPaths.value = [...selectedPaths.value, dir]
   } else {
-    selectedPaths.value.splice(0, selectedPaths.value.length, dir)
+    selectedPaths.value = selectedPaths.value.toSpliced(0, selectedPaths.value.length, dir)
   }
 }
 
@@ -402,7 +402,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadDataWithSpinner, isLoading }
         :directories="totalDirectories"
         :size="totalSize"
         :compact="compact"
-        :indeterminate="hasSelectedChildDirectory(path)"
+        :indeterminate="isIndeterminateDirectory(path)"
         :no-header="level > 0"
         :no-stats="noStats"
         @update:selected="selectDirectory(path)"
@@ -419,7 +419,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadDataWithSpinner, isLoading }
           :collapse="isCollapsedDirectory(directory.key)"
           :compact="compact"
           :no-stats="noStats"
-          :indeterminate="hasSelectedChildDirectory(directory.key)"
+          :indeterminate="isIndeterminateDirectory(directory.key)"
           @update:selected="selectDirectory(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
         >
