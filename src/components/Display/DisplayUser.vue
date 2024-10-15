@@ -204,7 +204,10 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  color: var(--bs-action-text-emphasis);
+
+  &[href] {
+    color: var(--bs-action-text-emphasis);
+  }
 
   &--flip {
     flex-direction: row-reverse;
