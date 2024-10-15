@@ -1,9 +1,12 @@
 <script setup>
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
+const modelValue = defineModel({ type: String })
+
 defineProps({
-  modelValue: {
-    type: String
+  shadow: {
+    type: Boolean,
+    default: true
   }
 })
 </script>
@@ -11,12 +14,11 @@ defineProps({
 <template>
   <div class="path-tree-view-search">
     <form-control-search
+      v-model="modelValue"
       class="path-tree-view-search__control"
       :placeholder="$t('pathViewSearch.placeholder')"
       clear-text
-      shadow
-      :model-value="modelValue"
-      @update:modelValue="$emit('update:modelValue', $event)"
+      :shadow="shadow"
     />
   </div>
 </template>
