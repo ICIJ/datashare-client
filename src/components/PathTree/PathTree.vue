@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeMount, computed, ref, reactive, watch } from 'vue'
-import { flatten, filter, get, identity, includes, trim, trimEnd, uniq, uniqueId, uniqBy, throttle } from 'lodash'
+import { flatten, filter, get, identity, includes, trim, trimEnd, uniq, uniqueId, uniqBy } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
@@ -11,6 +11,7 @@ import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
 
 const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })
+const openPaths = defineModel('openPaths', { type: Array, default: () => [] })
 const props = defineProps({
   /**
    * Whether to display the tree in a compact mode
@@ -96,20 +97,19 @@ const pathSeparator = computed(() => {
 const pages = ref([])
 const directoriesRefs = reactive({})
 const tree = ref({ contents: [] })
-const notCollapsed = ref([])
 const loaderId = uniqueId()
 const isLoading = computed(() => wait.is(loaderId))
 const perPage = 50
 
 const isCollapsedDirectory = (directory) => {
-  return !notCollapsed.value.includes(directory)
+  return !openPaths.value.includes(directory)
 }
 
 const collapseDirectory = (directory) => {
   if (isCollapsedDirectory(directory)) {
-    notCollapsed.value.push(directory)
+    openPaths.value = [...openPaths.value, directory]
   } else {
-    notCollapsed.value.splice(notCollapsed.value.indexOf(directory), 1)
+    openPaths.value = openPaths.value.toSpliced(openPaths.value.indexOf(directory), 1)
   }
 }
 
@@ -310,20 +310,27 @@ const toggleLoader = (start = true) => {
   wait[method](loaderId)
 }
 
-// Avoid flashing effect by throttling the loader display to 500ms
-const throttleToggleLoader = throttle(toggleLoader, 500)
-
 const loadDataWithSpinner = async (...args) => {
   try {
-    throttleToggleLoader(true)
+    toggleLoader(true)
     await loadData(...args)
   } finally {
-    throttleToggleLoader(false)
+    toggleLoader(false)
   }
 }
 
 const reloadDataWithSpinner = async () => {
+  for (const key in directoriesRefs) {
+    await directoriesRefs[key]?.reloadDataWithSpinner()
+  }
   await loadDataWithSpinner({ clearPages: true })
+}
+
+const reloadData = async () => {
+  for (const key in directoriesRefs) {
+    await directoriesRefs[key]?.reloadData()
+  }
+  await loadData({ clearPages: true })
 }
 
 const nextLoadData = async ($infiniteLoadingState) => {
@@ -381,7 +388,7 @@ onBeforeMount(() => {
   return loadDataWithSpinner({ clearPages: true })
 })
 
-defineExpose({ loadData, loadDataWithSpinner, reloadDataWithSpinner, isLoading })
+defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner, isLoading })
 </script>
 
 <template>
@@ -428,6 +435,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadDataWithSpinner, isLoading }
               v-if="!collapse"
               :ref="(el) => (directoriesRefs[directory.key] = el)"
               v-model:selected-paths="selectedPaths"
+              v-model:open-paths="openPaths"
               no-label
               no-search
               :level="level + 1"
@@ -437,6 +445,9 @@ defineExpose({ loadData, loadDataWithSpinner, reloadDataWithSpinner, isLoading }
               :multiple="multiple"
               :no-stats="noStats"
               :compact="compact"
+              :pre-body-build="preBodyBuild"
+              :sort-by="sortBy"
+              :order-by="orderBy"
             />
           </template>
         </path-tree-view-entry>
