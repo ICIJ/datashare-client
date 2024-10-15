@@ -115,7 +115,7 @@ describe('PathTree.vue', () => {
 
     it.skip('should load the tree one time when sortBy and order are changed', async () => {
       const spyLoadData = vi.spyOn(wrapper.vm, 'loadData')
-      await wrapper.setProps({ sortBy: '_key', sortByOrder: 'asc' })
+      await wrapper.setProps({ sortBy: '_key', orderBy: 'asc' })
       await flushPromises()
 
       expect(spyLoadData).toBeCalledTimes(1)
