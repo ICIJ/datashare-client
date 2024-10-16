@@ -867,7 +867,7 @@
       "new": "Add documents",
       "form": {
         "projectSelector": {"label": "Select a project"},
-        "path":{"label": "Select the folder or subfolder to analyse","description":"The entire Datashare home will be indexed by default."},
+        "path":{"label": "Select the folder or subfolder to analyze","description":"The entire Datashare home will be indexed by default."},
         "extractingLanguage": {"label": "Choose the language to extract","description":"Missing yours? Choose among 187 languages to install."},
         "extractOcr": {
           "label": "Extract text from images and PDFs (OCR)",
