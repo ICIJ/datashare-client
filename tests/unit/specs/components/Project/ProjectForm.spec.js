@@ -143,9 +143,9 @@ describe('ProjectForm.vue', () => {
     })
 
     it('should show the delete button', async () => {
-      expect(wrapper.find('.project-form__action--delete').exists()).toBe(false)
+      expect(wrapper.find('.form-creation__action--delete').exists()).toBe(false)
       await wrapper.setProps({ showDeleteButton: true })
-      expect(wrapper.find('.project-form__action--delete').exists()).toBe(true)
+      expect(wrapper.find('.form-creation__action--delete').exists()).toBe(true)
     })
   })
 })
