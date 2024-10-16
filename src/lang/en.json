@@ -862,6 +862,24 @@
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them."
   },
+  "task":{
+    "analysis": {
+      "new": "Add documents",
+      "form": {
+        "projectSelector": {"label": "Select a project"},
+        "path":{"label": "Select the folder or subfolder to analyse","description":"The entire Datashare home will be indexed by default."},
+        "extractingLanguage": {"label": "Choose the language to extract","description":"Missing yours? Choose among 187 languages to install."},
+        "extractOcr": {
+          "label": "Extract text from images and PDFs (OCR)",
+          "description":"If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
+          "options": {"yes": "Yes", "no": "No"}
+        },
+        "skipIndexedDocuments":{"label": "Skip already indexed documents","description":"If yes, Datashare will only extract text from documents that are not searchable yet.",
+          "options": {"yes": "Yes", "no": "No"}},
+        "submit": "Add"
+      }
+    }
+  },
   "batchSearch": {
     "lead": "Search multiple terms and documents at once.",
     "title": "Batch searches",
