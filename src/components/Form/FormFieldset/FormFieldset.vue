@@ -83,13 +83,13 @@ const classList = computed(() => {
       </div>
     </template>
     <template v-if="!isCompact">
-      <div class="col-4">
-        <slot />
+      <div class="col-4 form-fieldset__content">
+        <slot v-bind="{ isCompact }" />
       </div>
       <span class="form-fieldset__description-side text-secondary-emphasis">{{ description }}</span>
     </template>
     <template v-else>
-      <slot />
+      <slot v-bind="{ isCompact }" />
     </template>
   </b-form-group>
 </template>
@@ -104,10 +104,10 @@ const classList = computed(() => {
   & .col:has(.form-fieldset__description-side) {
     display: flex;
     gap: 1em;
-  }
-  &__description-side {
-    display: flex;
     align-items: center;
+  }
+  & .col:has(small) > div {
+    margin-bottom: $spacer-xxs;
   }
 }
 </style>
