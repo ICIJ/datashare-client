@@ -93,7 +93,6 @@ watch(
 )
 const { t } = useI18n()
 const deleteConfirmation = t('projectForm.deleteConfirmation')
-
 const deleteLabel = t('projectForm.delete')
 const resetLabel = t('projectForm.reset')
 const submitLabel = t('projectForm.submit')
