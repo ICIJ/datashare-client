@@ -3514,10 +3514,10 @@ data-view-byte-offset@^1.0.0:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
-date-fns-tz@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-2.0.1.tgz#0a9b2099031c0d74120b45de9fd23192e48ea495"
-  integrity sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==
+date-fns-tz@^1.0.12:
+  version "1.3.8"
+  resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-1.3.8.tgz#083e3a4e1f19b7857fa0c18deea6c2bc46ded7b9"
+  integrity sha512-qwNXUFtMHTTU6CFSFjoJ80W8Fzzp24LntbjFFBgL/faqds4e5mo9mftoRLgr3Vi1trISsg4awSpYVsOQCRnapQ==
 
 date-fns@^2.16.1:
   version "2.30.0"
@@ -7976,15 +7976,15 @@ uuid@^9.0.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
   integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
-v-calendar@^3:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-3.1.2.tgz#fb47320a5469973454f030d850134eebcd2307eb"
-  integrity sha512-QDWrnp4PWCpzUblctgo4T558PrHgHzDtQnTeUNzKxfNf29FkCeFpwGd9bKjAqktaa2aJLcyRl45T5ln1ku34kg==
+v-calendar@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-3.0.1.tgz#debc8bf1cbcc4c99dda8e6328ace3dabe0d83711"
+  integrity sha512-basXEXcmBsxHyxqjj/82vjgz5vbIMREiiUC2VOVh0pHCDXEF1birPUZD12lk8u3+5R+909WUnxu7bt0DFxCOLw==
   dependencies:
     "@types/lodash" "^4.14.165"
     "@types/resize-observer-browser" "^0.1.7"
     date-fns "^2.16.1"
-    date-fns-tz "^2.0.0"
+    date-fns-tz "^1.0.12"
     lodash "^4.17.20"
     vue-screen-utils "^1.0.0-beta.13"
 
