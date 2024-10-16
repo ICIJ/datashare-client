@@ -132,7 +132,11 @@ const skipOptions = computed(() => [
         />
       </div>
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="project-selector" translation-key="task.analysis.form.skipIndexedDocuments" compact-auto>
+    <form-fieldset-i18n
+      name="skip-indexed-documents"
+      translation-key="task.analysis.form.skipIndexedDocuments"
+      compact-auto
+    >
       <b-form-radio-group v-model="skipIndexedDocuments" name="skip-indexed-documents" :options="skipOptions" stacked />
     </form-fieldset-i18n>
   </form-creation>
