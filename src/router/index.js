@@ -122,6 +122,14 @@ export const routes = [
             },
             children: [
               {
+                name: 'task.analysis.new',
+                path: 'new',
+                component: () => import('@/views/Task/Analysis/TaskAnalysisNew'),
+                meta: {
+                  title: 'task.analysis.new'
+                }
+              },
+              {
                 name: 'task.analysis.list',
                 path: '',
                 component: () => import('@/views/TaskAnalysisList'),
