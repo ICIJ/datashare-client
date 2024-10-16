@@ -59,12 +59,12 @@ export default {
     <div v-if="!textLanguages.length" class="extracting-language-form-control--no-language mt-3 alert alert-danger">
       {{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}
     </div>
-    <b-form-select
-      v-else
-      :model-value="modelValue"
-      :options="[nullOption, ...options]"
-      class="extracting-language-form-control__ocr-options"
-      @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
-    />
+    <b-form-group v-else>
+      <b-form-select
+        :model-value="modelValue"
+        :options="[nullOption, ...options]"
+        class="extracting-language-form-control__ocr-options"
+        @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
+    /></b-form-group>
   </b-overlay>
 </template>
