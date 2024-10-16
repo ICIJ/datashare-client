@@ -26,11 +26,13 @@ const description = computed(() =>
 <template>
   <form-fieldset
     :id="id"
+    v-slot="slotProps"
     :label="t(`${translationKey}.label`)"
+    :class="name"
     :label-for="labelFor"
     :description="description"
     :description-side="descriptionSide"
   >
-    <slot v-bind="{ name: labelFor }"></slot>
+    <slot v-bind="{ name: labelFor, ...slotProps }"></slot>
   </form-fieldset>
 </template>
