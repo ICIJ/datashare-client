@@ -10,7 +10,8 @@ const props = defineProps({
     default: true
   },
   showDeleteButton: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   submitLabel: {
     type: String
@@ -45,7 +46,11 @@ function submit() {
     <div aria-description="form-content">
       <slot></slot>
     </div>
-    <div class="d-flex justify-content-between" aria-description="form-footer">
+    <div
+      class="d-flex"
+      :class="{ 'justify-content-between': showDeleteButton, 'justify-content-end': !showDeleteButton }"
+      aria-description="form-footer"
+    >
       <confirm-button
         v-if="showDeleteButton"
         type="button"
@@ -61,7 +66,7 @@ function submit() {
           type="button"
           variant="outline-light"
           icon-left="arrow-counter-clockwise"
-          class="form-creation__action--reset btn btn-outline-action ms-auto"
+          class="form-creation__action--reset btn btn-outline-action"
           :label="resetLabel ?? t('global.reset')"
           @click="emitReset"
         >
