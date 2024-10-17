@@ -1,13 +1,12 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
-import { min, max } from 'lodash'
 import { DatePicker } from 'v-calendar'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import { inputSizeValidator, SIZE } from '@/enums/sizes'
 import { useColorMode } from '@/composables/color-mode'
 
-const modelValue = defineModel({ type: Array, default: () => [] })
+const modelValue = defineModel({ type: [Object, Array], default: () => ({ start: null, end: null }) })
 
 defineProps({
   size: {
@@ -47,28 +46,12 @@ defineProps({
 const element = useTemplateRef('element')
 const { colorMode } = useColorMode(element)
 const isDark = computed(() => ['dark', 'black'].includes(colorMode.value))
-
-const toDate = (value) => (isNaN(value) ? value : new Date(value))
-const toTimestamp = (value) => toDate(value).getTime()
-const toLastTimestamp = (value) => toDate(value).setUTCHours(23, 59, 59, 999)
-
-const selected = computed({
-  get() {
-    const start = modelValue.value[0] ? toTimestamp(min(modelValue.value)) : null
-    const end = modelValue.value[1] ? toTimestamp(max(modelValue.value)) : null
-    return { start, end }
-  },
-  set(range) {
-    modelValue.value.start = range ? toTimestamp(range.start) : null
-    modelValue.value.end = range ? toLastTimestamp(range.end) : null
-  }
-})
 </script>
 
 <template>
   <div ref="element" class="form-control-date-range">
     <date-picker
-      v-model.range="selected"
+      v-model.range="modelValue"
       :locale="$i18n.locale"
       :color="color"
       :attributes="attributes"
@@ -76,7 +59,6 @@ const selected = computed({
       :timezone="timezone"
       :is-dark="isDark"
       :update-on-input="updateOnInput"
-      popover
     >
       <template #default="{ inputValue, inputEvents }">
         <div class="d-flex gap-3 align-items-center">
@@ -112,7 +94,7 @@ const selected = computed({
     --rounded: var(--bs-border-radius);
     --rounded-lg: var(--bs-border-radius-lg);
 
-    --shadow: var(--bs-box-shadow);
+    --shadow: none;
     --shadow-lg: var(--bs-box-shadow-lg);
     --vc-weekday-color: var(--bs-secondary-text-emphasis);
 
