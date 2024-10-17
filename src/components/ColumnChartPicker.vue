@@ -276,6 +276,11 @@ export default {
 
       &:deep(.column-chart__columns__item) {
         cursor: pointer;
+        fill: var(--bs-secondary-bg-subtle);
+      }
+
+      &:deep(.column-chart__axis .tick line) {
+        stroke: var(--bs-tertiary-bg-subtle);
       }
     }
   }
