@@ -92,10 +92,10 @@ watch(
   }
 )
 const { t } = useI18n()
-const deleteConfirmation = t('projectForm.deleteConfirmation')
-const deleteLabel = t('projectForm.delete')
-const resetLabel = t('projectForm.reset')
-const submitLabel = t('projectForm.submit')
+const deleteConfirmation = computed(() => t('projectForm.deleteConfirmation'))
+const deleteLabel = computed(() => t('projectForm.delete'))
+const resetLabel = computed(() => t('projectForm.reset'))
+const submitLabel = computed(() => t('projectForm.submit'))
 </script>
 
 <template>
