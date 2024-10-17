@@ -61,11 +61,13 @@ const isDark = computed(() => ['dark', 'black'].includes(colorMode.value))
       :update-on-input="updateOnInput"
     >
       <template #default="{ inputValue, inputEvents }">
-        <div class="d-flex gap-3 align-items-center">
-          <b-form-input :placeholder="masks" :value="inputValue.start" :size="size" v-on="inputEvents.start" />
-          <phosphor-icon name="arrow-right" />
-          <b-form-input :placeholder="masks" :value="inputValue.end" :size="size" v-on="inputEvents.end" />
-        </div>
+        <slot v-bind="{ inputValue, inputEvents, masks, size }">
+          <div class="d-flex gap-3 align-items-center">
+            <b-form-input :placeholder="masks" :value="inputValue.start" :size="size" v-on="inputEvents.start" />
+            <phosphor-icon name="arrow-right" />
+            <b-form-input :placeholder="masks" :value="inputValue.end" :size="size" v-on="inputEvents.end" />
+          </div>
+        </slot>
       </template>
     </date-picker>
   </div>
