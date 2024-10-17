@@ -1,4 +1,6 @@
 <script setup>
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+
 defineProps({
   query: {
     type: String,

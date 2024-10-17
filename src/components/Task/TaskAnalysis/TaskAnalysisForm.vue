@@ -6,6 +6,8 @@ import uniqueId from 'lodash/uniqueId'
 
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import { useCore } from '@/composables/core'
+import FormCreation from '@/components/Form/FormCreation'
+import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 
 // Props
 const props = defineProps({
@@ -46,7 +48,7 @@ function isPresent(value) {
   return value?.trim()?.length > 0
 }
 const valid = computed(() => {
-  return every([!props.disabled, isPresent(form.value.sourcePath), isPresent(form.value.language)])
+  return every([!props.disabled, isPresent(form.value.path)])
 })
 
 function submit() {}
