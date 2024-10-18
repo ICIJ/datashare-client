@@ -1,4 +1,4 @@
-import { each, find, isEqual, replace } from 'lodash'
+import { find, isEqual, replace } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
 
@@ -96,7 +96,7 @@ export function datasharePlugin(Client) {
     filter,
     query = '*',
     filters = [],
-    isGlobalSearch = false,
+    contextualize = true,
     options = {},
     fields = [],
     from = 0,
@@ -106,8 +106,10 @@ export function datasharePlugin(Client) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     let body = filter.body(bodybuilder(), options, from, size)
-    if (!isGlobalSearch) {
-      each(filters, (filter) => filter.addFilter(body))
+    if (contextualize) {
+      for (const filter of filters) {
+        filter.addFilter(body)
+      }
       this.addQueryToFilter(query, body, fields)
     }
     body = body.size(0).rawOption('track_total_hits', true).build()
@@ -115,9 +117,9 @@ export function datasharePlugin(Client) {
   }
 
   Client.prototype._addFiltersToBody = function (filters, body) {
-    each(filters, (filter) => {
+    for (const filter of filters) {
       filter.applyTo(body)
-    })
+    }
   }
 
   Client.prototype._addQueryToBody = function (query, body, fields = []) {
@@ -193,7 +195,8 @@ export function datasharePlugin(Client) {
   ) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    const body = this._buildBody(from, size, filters, query, sort, fields).rawOption('track_total_hits', true).build()
+    const builder = this._buildBody(from, size, filters, query, sort, fields)
+    const body = builder.rawOption('track_total_hits', true).build()
     return this._search({ index, body })
   }
 
