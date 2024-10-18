@@ -139,9 +139,10 @@
   "search": {
     "title": "Search",
     "layout": {
-      "grid": "View in grid",
-      "list": "View in list",
-      "table": "View in table"
+      "title": "View",
+      "grid": "Grid",
+      "list": "List",
+      "table": "Table"
     },
     "errors": {
       "badRequest": "Your search query is wrong",
@@ -174,9 +175,9 @@
     "contextualizeFiltersDescription": "Filters on the left panel will be updated according to the search results.",
     "tips": "Tips to improve searching",
     "settings": {
-      "title": "Search settings",
-      "resultsPerPage": "Number of results by page",
-      "sortBy": "Sort results by"
+      "title": "Results settings",
+      "resultsPerPage": "Documents per page",
+      "sortBy": "Sort by"
     },
     "results": {
       "match": "match in doc",
@@ -331,6 +332,7 @@
     "noSubdirectories": "No subdirectories",
     "invert": "Exclude",
     "contextualize": "Contextualize",
+    "project": "Projects",
     "contentType": "File types",
     "language": "Languages",
     "namedEntityPerson": "People",
@@ -350,6 +352,11 @@
     "notStarred": "Not starred",
     "recommendedBy": "Recommended by",
     "searchTerm": "Term",
+    "sections": {
+      "documentsInfo": "Documents info",
+      "userData": "User data",
+      "entities": "Entities"
+    },
     "sortByDropdown": {
       "toggler": "Sort",
       "options": {
@@ -1421,7 +1428,7 @@
   },
   "projectCardFooter": {
     "insights": "See insights",
-    "search": "Search documents"
+    "search": "Search"
   },
   "projectCards": {
     "documentsCount": "No documents | 1 document | {count} documents",
