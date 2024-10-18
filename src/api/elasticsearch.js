@@ -132,23 +132,6 @@ export function datasharePlugin(Client) {
     )
   }
 
-  Client.prototype._addSortToBody = function (name = 'relevance', body) {
-    const { field, desc } = find(settings.searchSortFields, { name }) || settings.searchSortFields[0]
-    if (name === 'creationDateNewest' || name === 'creationDateOldest') {
-      body.sort([
-        {
-          'metadata.tika_metadata_dcterms_created': {
-            order: desc ? 'desc' : 'asc',
-            unmapped_type: 'date'
-          }
-        }
-      ])
-    } else {
-      body.sort(field, desc ? 'desc' : 'asc')
-    }
-    if (field !== 'path') body.sort('path', 'asc')
-  }
-
   Client.prototype.rootSearch = function (filters, query, fields = []) {
     const body = bodybuilder()
     this._addFiltersToBody(filters, body)
@@ -161,7 +144,7 @@ export function datasharePlugin(Client) {
     const body = this.rootSearch(filters, query, fields)
 
     body.from(from).size(size)
-    this._addSortToBody(sort, body)
+    body.sort(sort)
     // Select only the Documents and not the NamedEntities
     // Add an option to exclude the content
     body.rawOption('_source', { includes: ['*'], excludes: ['content', 'content_translated'] })
@@ -190,7 +173,7 @@ export function datasharePlugin(Client) {
     filters = [],
     from = 0,
     size = 25,
-    sort = 'relevance',
+    sort = { _score: { order: 'desc' } },
     fields = []
   ) {
     // Avoid searching for nothing
