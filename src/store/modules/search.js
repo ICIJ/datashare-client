@@ -371,6 +371,14 @@ export const mutations = {
     const index = state.excludeFilters.indexOf(name)
     delete state.excludeFilters[index]
   },
+  toggleFilter(state, name) {
+    const index = state.excludeFilters.indexOf(name)
+    if (index === -1) {
+      state.excludeFilters.push(name)
+    } else {
+      delete state.excludeFilters[index]
+    }
+  },
   updateTab(state, tab) {
     state.tab = tab
   }
