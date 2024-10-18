@@ -2,6 +2,7 @@
   <project-dropdown-selector
     :projects="projects"
     :model-value="selectedProjects"
+    :multiple="multiple"
     @update:model-value="selectedProjects = $event"
   />
 </template>
@@ -16,16 +17,22 @@ export default {
   },
   props: {
     /**
-     * List of selected projects
+     * List of selected projects or single project object
      */
     modelValue: {
-      type: Array,
+      type: [Array, Object],
       default: () => []
     },
     /**
      * The dropdown toggler must be disabled.
      */
     disabled: {
+      type: Boolean
+    },
+    /**
+     * Select one or multiple
+     */
+    multiple: {
       type: Boolean
     }
   },
@@ -35,6 +42,9 @@ export default {
     },
     selectedProjects: {
       get() {
+        if (!this.multiple) {
+          return [this.modelValue]
+        }
         return this.modelValue.filter(({ name }) => !!this.$core.findProject(name))
       },
       set(value) {
