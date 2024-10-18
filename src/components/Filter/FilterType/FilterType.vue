@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, reactive, onBeforeMount, watch } from 'vue'
 import { useStore } from 'vuex'
-import { concat, compact, escapeRegExp, flatten, get, noop, uniqueId, pick, setWith } from 'lodash'
+import { concat, compact, escapeRegExp, flatten, get, noop, uniqueId, setWith } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 
 import { useWait } from '@/composables/wait'
