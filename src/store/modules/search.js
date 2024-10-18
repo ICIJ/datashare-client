@@ -50,9 +50,9 @@ export const RESET_KEYS = [
   'query',
   'response',
   'showFilters',
-  'reversedFilters',
-  'sortedFilters',
-  'contextualizedFilters',
+  'excludeFilters',
+  'sortFilters',
+  'contextualizeFilters',
   'size',
   'sort',
   'tab',
@@ -72,9 +72,9 @@ export function initialState() {
     layout: isNarrowScreen() ? 'table' : 'list',
     query: '',
     response: EsDocList.none(),
-    reversedFilters: [],
-    contextualizedFilters: [],
-    sortedFilters: {},
+    excludeFilters: [],
+    contextualizeFilters: [],
+    sortFilters: {},
     showFilters: true,
     size: 25,
     sort: settings.defaultSearchSort,
@@ -128,7 +128,7 @@ export const getters = {
   isFilterExcluded(state, getters) {
     return (name) => {
       return !!find(getters.instantiatedFilters, (filter) => {
-        return filter.name === name && filter.reverse
+        return filter.name === name && filter.excluded
       })
     }
   },
@@ -144,7 +144,7 @@ export const getters = {
   },
   filterSortedByOrder(state, getters) {
     return (name) => {
-      return getters.filterSorted(name).sortByOrder
+      return getters.filterSorted(name).orderBy
     }
   },
   activeFilters(state, getters) {
@@ -163,7 +163,7 @@ export const getters = {
           // We don't add filterValue that match with any existing filters
           // defined in the `aggregation` store.
           if (filter && filter.values.length > 0) {
-            const key = filter.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
+            const key = filter.excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
             memo[key] = compact(filter.values)
           }
           return memo
@@ -348,46 +348,28 @@ export const mutations = {
       }
     }
   },
-  sortFilter(state, { name, sortBy = '_count', sortByOrder = 'desc' } = {}) {
-    state.sortedFilters[name] = { sortBy, sortByOrder }
+  sortFilter(state, { name, sortBy = '_count', orderBy = 'desc' } = {}) {
+    state.sortFilters[name] = { sortBy, orderBy }
   },
   unsortFilter(state, name) {
-    delete state.sortedFilters[name]
+    delete state.sortFilters[name]
   },
   contextualizeFilter(state, name) {
-    if (state.contextualizedFilters.indexOf(name) === -1) {
-      state.contextualizedFilters.push(name)
+    if (state.contextualizeFilters.indexOf(name) === -1) {
+      state.contextualizeFilters.push(name)
     }
   },
   decontextualizeFilter(state, name) {
-    delete state.contextualizedFilters[state.contextualizedFilters.indexOf(name)]
-  },
-  toggleContextualizedFilter(state, name) {
-    const i = state.contextualizedFilters.indexOf(name)
-    if (i === -1) {
-      state.contextualizedFilters.push(name)
-    } else {
-      delete state.contextualizedFilters[i]
-    }
+    delete state.contextualizeFilters[state.contextualizeFilters.indexOf(name)]
   },
   excludeFilter(state, name) {
-    if (state.reversedFilters.indexOf(name) === -1) {
-      state.reversedFilters.push(name)
+    if (state.excludeFilters.indexOf(name) === -1) {
+      state.excludeFilters.push(name)
     }
   },
   includeFilter(state, name) {
-    delete state.reversedFilters[state.reversedFilters.indexOf(name)]
-  },
-  toggleFilter(state, name) {
-    const i = state.reversedFilters.indexOf(name)
-    if (i === -1) {
-      state.reversedFilters.push(name)
-    } else if (i > -1) {
-      delete state.reversedFilters[i]
-    }
-  },
-  toggleFilters(state, toggler = !state.showFilters) {
-    state.showFilters = toggler
+    const index = state.excludeFilters.indexOf(name)
+    delete state.excludeFilters[index]
   },
   updateTab(state, tab) {
     state.tab = tab
@@ -479,7 +461,7 @@ function actionsBuilder(api) {
           getters.getFilter({ name: params.name }),
           state.query,
           getters.instantiatedFilters,
-          !getters.isFilterContextualized(params.name),
+          getters.isFilterContextualized(params.name),
           params.options,
           getters.getFields(),
           params.from,
