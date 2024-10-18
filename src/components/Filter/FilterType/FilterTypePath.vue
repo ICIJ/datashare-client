@@ -1,6 +1,77 @@
+<script setup>
+import { computed, useTemplateRef } from 'vue'
+import { useStore } from 'vuex'
+
+import { useSearchFilter } from '@/composables/search-filter'
+import { useCore } from '@/composables/core'
+import FilterType from '@/components/Filter/FilterType/FilterType'
+import PathTree from '@/components/PathTree/PathTree'
+
+const { core } = useCore()
+const { state, getters } = useStore()
+const {
+  computedFilterValues,
+  whenFilterContextualized,
+  watchFilterContextualized,
+  watchFilterExcluded,
+  watchProjects,
+  watchValues
+} = useSearchFilter()
+
+const props = defineProps({
+  filter: {
+    type: Object,
+    required: true
+  }
+})
+
+const tree = useTemplateRef('tree')
+
+const path = computed(() => core.config.get('dataDir'))
+const projects = computed(() => state.search.indices)
+const selected = computedFilterValues(props.filter)
+
+const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
+  // Add every filter to the search body
+  getters['search/instantiatedFilters'].forEach((filter) => filter.addFilter(body))
+  // Add query to the search body
+  core.api.elasticsearch.addQueryToFilter(state.search.query || '*', body)
+  return body
+})
+
+const reloadData = () => tree.value.reloadData()
+
+watchFilterContextualized(props.filter, reloadData)
+// When the filter is excluded/included and it's contextualized then reload the data with a spinner
+watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadData))
+// When filter values change and the filter is contextualized then reload the data
+watchValues(whenFilterContextualized(props.filter, reloadData))
+// When project changes, we reset the filter to avoid filtering by unknown paths
+watchProjects(() => (selected.value = []))
+</script>
+
 <template>
+  <filter-type :filter="filter" flush>
+    <path-tree
+      ref="tree"
+      v-model:selected-paths="selected"
+      :path="path"
+      :projects="projects"
+      :pre-body-build="preBodyBuild"
+      :sort-by="filter.sortBy"
+      :order-by="filter.orderBy"
+      elasticsearch-only
+      compact
+      select-mode
+      multiple
+      no-label
+    />
+  </filter-type>
+</template>
+
+<!-- <template>
   <filter-boilerplate v-bind="$props" ref="filter" @aggregate="reloadPathTree">
-    <template #items="{ sortBy, sortByOrder, query }">
+    <template #items="{ sortBy, orderBy, query }">
       <div class="filter__tree-view">
         <path-tree
           ref="pathTree"
@@ -10,7 +81,7 @@
           :projects="projects"
           :pre-body-build="preBodyBuild"
           :sort-by="sortBy"
-          :sort-by-order="sortByOrder"
+          :sort-by-order="orderBy"
           :hide-empty="isContextualized"
           compact
           include-children-documents
@@ -25,7 +96,7 @@
 import { isEqual } from 'lodash'
 
 import FilterBoilerplate from '@/components/Filter/FilterBoilerplate'
-import FilterAbstract from '@/components/Filter/types/FilterAbstract'
+import FilterAbstract from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'
 
 /**
@@ -140,4 +211,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->
