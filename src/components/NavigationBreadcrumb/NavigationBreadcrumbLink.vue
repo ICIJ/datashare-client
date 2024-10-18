@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import { capitalize, isFunction } from 'lodash'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
