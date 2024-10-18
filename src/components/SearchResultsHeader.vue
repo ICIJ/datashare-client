@@ -57,10 +57,9 @@
 </template>
 
 <script>
-import { cloneDeep, compact, every, find, isEmpty, get, min } from 'lodash'
+import { cloneDeep, compact, isEmpty, min } from 'lodash'
 import { mapState } from 'vuex'
 
-import settings from '@/utils/settings'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 import Pagination from '@/components/Pagination'
 import features from '@/mixins/features'

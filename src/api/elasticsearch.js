@@ -1,4 +1,4 @@
-import { find, isEqual, replace } from 'lodash'
+import { isEqual, replace } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
 
