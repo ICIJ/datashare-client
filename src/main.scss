@@ -254,65 +254,6 @@ html[data-bs-theme] body .Toastify {
   }
 }
 
-.vc-popover-content-wrapper {
-  z-index: $zindex-tooltip !important;
-
-  .vc-popover-content.direction-top {
-    filter: drop-shadow(0 0.25rem 0.5rem rgba(black, .4));
-  }
-  .vc-popover-content.direction-bottom {
-    filter: drop-shadow(0 -0.25rem 0.5rem rgba(black, .4));
-  }
-}
-
-.vc-container, .vc-popover-content {
-
-  &.vc-yellow {
-    --vc-accent-500: #{$secondary};
-    --vc-accent-400: #{color.adjust($secondary, $lightness: 5%)};
-    --vc-accent-300: #{color.adjust($secondary, $lightness: 10%)};
-    --vc-accent-200: #{color.adjust($secondary, $lightness: 15%)};
-    --vc-accent-100: #{color.adjust($secondary, $lightness: 20%)};
-  }
-
-  --vc-gray-900: #{color.adjust($app-context-sidebar-bg, $lightness: -5%)};
-  --vc-gray-800: #{$app-context-sidebar-bg};
-  --vc-border: #{$border-color};
-  --vc-popover-content-border: #{$border-color};
-
-  font-size: 0.8rem;
-  color: inherit;
-  padding: 0;
-  margin: 0;
-  font-family: $font-family-base;
-
-  &.vc-dark {
-    --vc-bg: var(--vc-gray-900);
-    --vc-border: var(--vc-gray-800);
-    --vc-popover-content-border: var(--vc-gray-800);
-    --vc-weekday-color: var(--vc-accent-500);
-
-    [type=button] {
-      background: transparent;
-    }
-  }
-
-  .vc-highlights {
-    .vc-day-layer {
-
-      .vc-highlight-base-start,
-      .vc-highlight-base-middle,
-      .vc-highlight-base-end {
-        background-color: rgba($secondary, 0.4) !important;
-      }
-    }
-  }
-
-  .vc-day-content:hover {
-    background-color: rgba($secondary, 0.1) !important;
-  }
-}
-
 .tab-group-navigation {
   &--nowrap:not(.flex-column) {
     overflow: auto;
