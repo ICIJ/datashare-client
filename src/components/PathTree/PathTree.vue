@@ -12,6 +12,7 @@ import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
 const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })
 const openPaths = defineModel('openPaths', { type: Array, default: () => [] })
+
 const props = defineProps({
   /**
    * Whether to display the tree in a compact mode
@@ -148,6 +149,11 @@ watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
 watch(
   () => props.path,
+  () => loadDataWithSpinner({ clearPages: true })
+)
+
+watch(
+  () => props.projects.join(','),
   () => loadDataWithSpinner({ clearPages: true })
 )
 
