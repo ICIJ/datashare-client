@@ -218,10 +218,10 @@ onBeforeMount(async () => {
   watchFilterContextualized(filter, update)
   // Filter values that trigger an update of the data only if the filter is contextualized
   watchFilterValues(filter, whenFilterContextualized(filter, update))
-  watchQuery(filter, whenFilterContextualized(filter, update))
   watchFilterExcluded(filter, whenFilterContextualized(filter, update))
   // Values from all filters that trigger an update of the data only if the filter is contextualized
   watchValues(whenFilterContextualized(filter, update))
+  watchQuery(whenFilterContextualized(filter, update))
 })
 </script>
 
