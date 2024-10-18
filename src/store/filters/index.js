@@ -6,6 +6,7 @@ export { default as FilterDateRange } from './FilterDateRange'
 export { default as FilterExtractionLevel } from './FilterExtractionLevel'
 export { default as FilterLanguage } from './FilterLanguage'
 export { default as FilterNamedEntity } from './FilterNamedEntity'
+export { default as FilterProject } from './FilterProject'
 export { default as FilterPath } from './FilterPath'
 export { default as FilterRecommendedBy } from './FilterRecommendedBy'
 export { default as FilterStarred } from './FilterStarred'
@@ -14,13 +15,37 @@ export { default as FilterText } from './FilterText'
 
 export default [
   {
+    type: 'FilterProject',
+    options: {
+      name: 'project',
+      key: '_index',
+      icon: 'circles-three-plus',
+      order: 0,
+      section: 'documentsInfo',
+      preference: 'filter-project',
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: false,
+      hideExclude: true,
+      hideExpand: true,
+      fromElasticSearch: true
+    }
+  },
+  {
     type: 'FilterStarred',
     options: {
       name: 'starred',
       key: '_id',
       icon: 'star',
       order: 10,
-      preference: 'filter-starred'
+      section: 'userData',
+      preference: 'filter-starred',
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: true,
+      hideExclude: true,
+      hideExpand: true,
+      fromElasticSearch: false
     }
   },
   {
@@ -29,8 +54,8 @@ export default [
       name: 'tags',
       key: 'tags',
       icon: 'tag',
-      isSearchable: true,
       order: 20,
+      section: 'userData',
       preference: 'filter-tags'
     }
   },
@@ -41,7 +66,13 @@ export default [
       key: '_id',
       icon: 'users',
       order: 30,
-      fromElasticSearch: false
+      section: 'userData',
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: true,
+      hideExclude: true,
+      hideExpand: true,
+      fromElasticSearch: true
     }
   },
   {
@@ -51,7 +82,8 @@ export default [
       key: 'byDirname',
       icon: 'tree-structure',
       order: 35,
-      isSearchable: true,
+      section: 'documentsInfo',
+      hideSearch: true,
       fromElasticSearch: false,
       preference: 'filter-path'
     }
@@ -62,8 +94,8 @@ export default [
       name: 'contentType',
       key: 'contentType',
       icon: 'file',
-      isSearchable: true,
       order: 40,
+      section: 'documentsInfo',
       preference: 'filter-content-type'
     }
   },
@@ -73,7 +105,13 @@ export default [
       name: 'creationDate',
       key: 'metadata.tika_metadata_dcterms_created',
       icon: 'calendar-blank',
-      order: 50
+      order: 50,
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: true,
+      hideExclude: false,
+      hideExpand: true,
+      section: 'documentsInfo'
     }
   },
   {
@@ -83,6 +121,7 @@ export default [
       key: 'language',
       icon: 'globe',
       order: 60,
+      section: 'documentsInfo',
       preference: 'filter-language'
     }
   },
@@ -93,9 +132,9 @@ export default [
       key: 'byMentions',
       icon: 'user-square',
       color: 'var(--bs-category-person)',
-      isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityPerson,
       order: 70,
+      section: 'entities',
       preference: 'filter-named-entity-person'
     }
   },
@@ -106,9 +145,9 @@ export default [
       key: 'byMentions',
       icon: 'buildings',
       color: 'var(--bs-category-organization)',
-      isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityOrganization,
       order: 80,
+      section: 'entities',
       preference: 'filter-named-entity-organization'
     }
   },
@@ -119,9 +158,9 @@ export default [
       key: 'byMentions',
       icon: 'map-pin',
       color: 'var(--bs-category-location)',
-      isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityLocation,
       order: 90,
+      section: 'entities',
       preference: 'filter-named-entity-location'
     }
   },
@@ -131,7 +170,9 @@ export default [
       name: 'extractionLevel',
       key: 'extractionLevel',
       icon: 'paperclip',
+      hideSearch: true,
       order: 110,
+      section: 'documentsInfo',
       preference: 'filter-extraction-level'
     }
   },
@@ -141,7 +182,9 @@ export default [
       name: 'indexingDate',
       key: 'extractionDate',
       icon: 'calendar-blank',
-      order: 120
+      hideSearch: true,
+      order: 120,
+      section: 'documentsInfo'
     }
   }
 ]
