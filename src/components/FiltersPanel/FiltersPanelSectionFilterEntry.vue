@@ -2,18 +2,30 @@
 import { computed } from 'vue'
 import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
 
+import DisplayNumber from '@/components/Display/DisplayNumber'
+
 const modelValue = defineModel({
   type: Boolean,
-  default: false
+  default: null
 })
 
-defineProps({
+const props = defineProps({
   label: {
     type: String
   },
   count: {
     type: Number,
     default: 0
+  },
+  value: {
+    type: [String, Number, Date, Boolean],
+    default: true
+  },
+  disabled: {
+    type: Boolean
+  },
+  hideCount: {
+    type: Boolean
   }
 })
 
@@ -22,19 +34,26 @@ const classList = computed(() => {
     'filters-panel-section-filter-entry--checked': modelValue.value
   }
 })
+
+const showCount = computed(() => !props.hideCount && !isNaN(props.count))
 </script>
 
 <template>
   <div class="filters-panel-section-filter-entry" :class="classList">
-    <b-form-checkbox v-model="modelValue">
-      <slot>
-        <span v-ellipsis-tooltip="{ title: label, placement: 'right', offset: '0px' }" class="text-truncate">
+    <b-form-checkbox v-model="modelValue" :value="value" :disabled="disabled">
+      <slot v-bind="{ label }">
+        <span
+          v-ellipsis-tooltip="{ title: label, placement: 'right', offset: '0px' }"
+          class="filters-panel-section-filter-entry__label text-truncate"
+        >
           {{ label }}
         </span>
       </slot>
     </b-form-checkbox>
-    <b-badge class="filters-panel-section-filter-entry__count" pill variant="link">
-      {{ $n(count) }}
+    <b-badge v-if="showCount" class="filters-panel-section-filter-entry__count" pill variant="link">
+      <slot name="count" v-bind="{ count }">
+        <display-number :value="Number(count)" />
+      </slot>
     </b-badge>
   </div>
 </template>
@@ -70,7 +89,8 @@ const classList = computed(() => {
     background: var(--bs-secondary);
   }
 
-  &--checked {
+  &--checked,
+  &:has(.form-check-input:checked) {
     .filters-panel-section-filter-entry__count {
       background: var(--bs-action-text-emphasis);
     }
