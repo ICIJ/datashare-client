@@ -381,6 +381,7 @@ export default {
     fill: var(--bs-secondary-bg-subtle);
     cursor: pointer;
   }
+
   &:deep(.column-chart__axis .tick line) {
     stroke: var(--bs-tertiary-bg-subtle);
   }
