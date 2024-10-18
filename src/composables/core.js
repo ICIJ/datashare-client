@@ -1,4 +1,5 @@
 import { getCurrentInstance } from 'vue'
+import isFunction from 'lodash/isFunction'
 
 export function useCore() {
   // `getCurrentInstance` is a Vue Composition API function that gives us access to the current component instance.
@@ -22,7 +23,13 @@ export function useCore() {
         return data
       },
       (err) => {
-        if (errorMessage) proxy.$toast.error(errorMessage)
+        if (errorMessage) {
+          if (isFunction(errorMessage)) {
+            proxy.$toast.error(errorMessage(err))
+          } else {
+            proxy.$toast.error(errorMessage)
+          }
+        }
         throw err
       }
     )
