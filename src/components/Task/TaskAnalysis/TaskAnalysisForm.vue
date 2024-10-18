@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
 import { every, castArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
@@ -32,28 +32,19 @@ const defaultProject = computed(() => core.config.get('defaultProject'))
 const defaultDataDir = computed(() => core.config.get('dataDir'))
 const initialFormValues = computed(() => ({
   path: defaultDataDir.value,
-  imagesFromPdf: false,
   language: null,
   extractOcr: true,
-  skipIndexedFiles: true,
+  skipIndexedDocuments: true,
+  hasTesseract: true,
   project: props.projectName ?? defaultProject.value,
   ...props.values
 }))
-const form = ref(initialFormValues.value)
 
-function reset() {
-  form.value = initialFormValues.value
-}
 function isPresent(value) {
   return value?.trim()?.length > 0
 }
-const valid = computed(() => {
-  return every([!props.disabled, isPresent(form.value.path)])
-})
 
-function submit() {}
-
-const selectedProject = ref([{ name: initialFormValues.value.project }])
+const selectedProject = ref({ name: initialFormValues.value.project })
 const currentProject = computed(() => core.findProject(selectedProject.value))
 
 const sourcePath = computed(() => {
@@ -64,13 +55,50 @@ const sourcePath = computed(() => {
 const path = ref(initialFormValues.value.path)
 const language = ref(initialFormValues.value.language)
 const hasTesseract = ref(true)
-const ocr = ref(true)
+const extractOcr = ref(true)
 const textLanguages = ref([])
 const ocrLanguages = ref([])
-const skipIndexedDocuments = ref(initialFormValues.value.skipIndexedFiles)
+const skipIndexedDocuments = ref(initialFormValues.value.skipIndexedDocuments)
+const form = reactive({
+  defaultProject: selectedProject.value.name,
+  language: computed(() => (language.value?.length ? language.value : null)),
+  hasTesseract,
+  ocr: extractOcr,
+  textLanguages,
+  ocrLanguages,
+  filter: skipIndexedDocuments
+})
+function reset() {
+  selectedProject.value = { name: initialFormValues.value.project }
+  path.value = initialFormValues.value.path
+  language.value = initialFormValues.value.language
+  hasTesseract.value = initialFormValues.value.hasTesseract
+  extractOcr.value = initialFormValues.value.extractOcr
+  textLanguages.value = initialFormValues.value.textLanguages
+  ocrLanguages.value = initialFormValues.value.ocrLanguages
+  skipIndexedDocuments.value = initialFormValues.value.skipIndexedDocuments
+}
+
+function dispatchExtract() {
+  if (path.value) {
+    return core.api.indexPath(path.value, form)
+  }
+  return core.api.index(form)
+}
+const successMessage = computed(() => t(`task.analysis.form.success`))
+const errorMessage = (error) => t(`task.analysis.form.error`, { error })
+async function submit() {
+  try {
+    await toastedPromise(dispatchExtract(), { successMessage, errorMessage })
+  } catch (error) {}
+  await core.router.push({ name: 'task.analysis.list' })
+}
+const valid = computed(() => {
+  return every([!props.disabled, isPresent(path.value)])
+})
 
 const showOcrMessage = computed(() => {
-  return !hasTesseract.value || !!ocr.value
+  return !hasTesseract.value || !!extractOcr.value
 })
 async function retrieveLanguages() {
   try {
@@ -84,7 +112,7 @@ async function retrieveLanguages() {
     }
   }
 }
-const waitOcrIdentifier = uniqueId('extracting-form-ocr-control-')
+const waitOcrIdentifier = uniqueId('extracting-form-extract-ocr-control-')
 onMounted(() => {
   return loadLanguages()
 })
@@ -114,17 +142,26 @@ const skipOptions = computed(() => [
 <template>
   <form-creation class="indexing-form" :valid="valid" :submit-label="submitLabel" @reset="reset" @submit="submit">
     <form-fieldset-i18n name="project-selector" translation-key="task.analysis.form.projectSelector" compact-auto>
-      <SearchBarInputDropdownForProjects v-model="selectedProject" />
+      <search-bar-input-dropdown-for-projects v-model="selectedProject" />
+      <input type="hidden" name="project" :value="selectedProject.name" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="source-path" translation-key="task.analysis.form.path" compact-auto>
-      <form-control-path v-model:path="path" :source-path="sourcePath" hide-folder-icon />
+      <input type="hidden" name="path" :value="path" />
+      <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="extracting-language" translation-key="task.analysis.form.extractingLanguage" compact-auto>
+      <input type="hidden" name="language" :value="language" />
       <extracting-language-form-control v-model="language" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="extract-ocr" translation-key="task.analysis.form.extractOcr" compact-auto>
-      <b-form-radio-group v-model="ocr" name="extract-ocr" :disabled="!hasTesseract" :options="ocrOptions" stacked />
-      <div v-show="showOcrMessage" class="ms-4 ps-3">
+    <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.analysis.form.extractOcr" compact-auto>
+      <b-form-radio-group
+        v-model="extractOcr"
+        name="extract-ocr"
+        :disabled="!hasTesseract"
+        :options="ocrOptions"
+        stacked
+      />
+      <div v-show="showOcrMessage" class="">
         <extracting-form-ocr-control
           :iso-lang="language"
           :text-languages="textLanguages"
