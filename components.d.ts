@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    '(refactor': delete legacy tests)
     AddonCard: typeof import('./src/components/Addon/AddonCard.vue')['default']
     AddonCardActions: typeof import('./src/components/Addon/AddonCardActions.vue')['default']
     AddonCardDetails: typeof import('./src/components/Addon/AddonCardDetails.vue')['default']
@@ -248,6 +249,7 @@ declare module 'vue' {
     FilterType: typeof import('./src/components/Filter/FilterType/FilterType.vue')['default']
     FilterTypeDate: typeof import('./src/components/Filter/FilterType/FilterTypeDate.vue')['default']
     FilterTypeDateRange: typeof import('./src/components/Filter/FilterType/FilterTypeDateRange.vue')['default']
+    FilterTypeNamedEntity: typeof import('./src/components/Filter/FilterType/FilterTypeNamedEntity.vue')['default']
     FilterTypePath: typeof import('./src/components/Filter/FilterType/FilterTypePath.vue')['default']
     FilterTypeProject: typeof import('./src/components/Filter/FilterType/FilterTypeProject.vue')['default']
     FilterTypeRecommendedBy: typeof import('./src/components/Filter/FilterType/FilterTypeRecommendedBy.vue')['default']
