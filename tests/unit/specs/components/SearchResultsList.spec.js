@@ -48,7 +48,7 @@ describe('SearchResultsList.vue', () => {
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
     })
 
-    it.only('should return 3 documents', async () => {
+    it('should return 3 documents', async () => {
       await letData(es)
         .have(new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(4))
         .commit()
