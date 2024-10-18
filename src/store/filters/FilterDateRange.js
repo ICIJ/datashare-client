@@ -8,7 +8,7 @@ import DisplayDatetimeRange from '@/components/Display/DisplayDatetimeRange'
 export default class FilterDateRange extends FilterDate {
   constructor({ interval = 'year', ...options }) {
     super(options)
-    this.component = 'FilterDateRange'
+    this.component = 'FilterTypeDateRange'
     this.interval = interval
   }
 
