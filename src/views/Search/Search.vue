@@ -6,16 +6,20 @@ import { useRoute } from 'vue-router'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
+import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
+import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import Hook from '@/components/Hook'
 import { useViews } from '@/composables/views'
 import { useSearchFilter } from '@/composables/search-filter'
 
-const { toggleSettings, toggleFilters, isFiltersClosed } = useViews()
+const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { refreshRouteAndSearch, refreshSearch, watchProjects } = useSearchFilter()
 const store = useStore()
 const route = useRoute()
 
 onBeforeMount(refreshSearch)
+// Refresh search when route query changes
+watch(() => route.query, refreshSearch, { deep: true })
 // Refresh store and search based on route query
 store.dispatch('search/updateFromRouteQuery', route.query)
 // Refresh route and search when filter values change
@@ -38,13 +42,19 @@ const hits = computed(() => store.state.search.response.hits)
     <hook name="search:before" />
     <div class="search__main d-flex">
       <slot name="filters" />
-      <div class="search__main__content py-3 px-5">
-        <button-toggle-filters
-          v-if="isFiltersClosed"
-          v-model:active="toggleFilters"
-          class="search__main__toggle-filters"
-        />
-        <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
+      <div class="search__main__content flex-grow-1 py-3">
+        <div class="d-flex gap-3">
+          <button-toggle-sidebar v-if="!toggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
+          <button-toggle-filters
+            v-if="isFiltersClosed"
+            v-model:active="toggleFilters"
+            class="search__main__toggle-filters"
+          />
+          <div class="flex-grow-1">
+            <search-bar class="search__main__search-bar" />
+          </div>
+          <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
+        </div>
         <div class="search__main__results">
           <pre>{{ hits.map((h) => h.title) }}</pre>
         </div>
