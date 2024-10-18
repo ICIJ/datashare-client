@@ -53,8 +53,9 @@ export const routes = [
           ]
         },
         components: {
-          default: () => import('@/views/Search'),
-          sidebar: () => import('@/components/FiltersPanel/FiltersPanel')
+          default: () => import('@/views/Search/Search'),
+          filters: () => import('@/views/Search/SearchFilters'),
+          settings: () => import('@/views/Search/SearchSettings')
         },
         children: [
           {
@@ -338,7 +339,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewDetails'),
                     meta: {
-                      icon: 'circles-three-plus',
+                      icon: 'info',
                       title() {
                         return 'Details'
                       }
