@@ -50,7 +50,7 @@ describe('FilterPath.vue', () => {
     expect(wrapper.vm.selected).toContain('/data/bar')
   })
 
-  it.only('should reset the selected paths when project change', async () => {
+  it('should reset the selected paths when project change', async () => {
     const key = ['/data/foo', '/data/bar']
     core.store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
     await flushPromises()
