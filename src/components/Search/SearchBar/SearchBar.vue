@@ -24,6 +24,7 @@
             v-model="selectedProjects"
             :disabled="!!indices"
             :no-caret="!!indices"
+            multiple
             @changed="focusOnSearchInput"
           />
         </template>

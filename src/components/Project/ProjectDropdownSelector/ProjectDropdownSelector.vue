@@ -3,7 +3,7 @@
     ref="inputDropdown"
     v-model="selectedProjects"
     class="project-dropdown-selector"
-    multiple
+    :multiple="multiple"
     flush-items
     :class="{
       'project-dropdown-selector--multiple': hasMultipleProjects,
@@ -28,7 +28,7 @@
         @down="moveFocusDown"
         @enter="selectFocusValue"
       />
-      <project-dropdown-selector-all v-if="hasMatches" v-model="selectAll" @click.stop />
+      <project-dropdown-selector-all v-if="hasMatches && multiple" v-model="selectAll" @click.stop />
     </template>
     <template #button-content>
       <project-dropdown-selector-button-content :projects="slicedProjects" />
@@ -38,6 +38,7 @@
         :project="option"
         :focus="focusIndex === index"
         :selected="hasValue(option)"
+        :no-checkbox="!multiple"
         @toggleValue="toggleValue($event, option)"
         @toggleUniqueValue="toggleUniqueValue($event, option)"
       />
@@ -46,7 +47,7 @@
 </template>
 
 <script>
-import { compact, find, iteratee, trim } from 'lodash'
+import { compact, find, isArray, trim } from 'lodash'
 
 import ProjectDropdownSelectorAll from './ProjectDropdownSelectorAll'
 import ProjectDropdownSelectorButtonContent from './ProjectDropdownSelectorButtonContent'
@@ -57,7 +58,7 @@ import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInput
 import { iwildcardMatch } from '@/utils/strings'
 
 export default {
-  name: 'SearchBarInputDropdownForProjects',
+  name: 'ProjectDropdownSelector',
   components: {
     ProjectDropdownSelectorAll,
     ProjectDropdownSelectorButtonContent,
@@ -67,10 +68,10 @@ export default {
   },
   props: {
     /**
-     * List of selected projects
+     * List of selected projects (multiple selection), or object (single selection)
      */
     modelValue: {
-      type: Array,
+      type: [Array, Object],
       default: () => []
     },
     /**
@@ -121,24 +122,27 @@ export default {
   },
   computed: {
     hasMatches() {
-      return !this.hasQuery || this.options.length
+      return !this.hasQuery || this.options.length > 0
     },
     hasQuery() {
       return !!this.query
     },
     wildcardQuery() {
       if (this.hasQuery) {
-        // This ensure the query ends and starts
+        // This ensures the query ends and starts
         // with one (and only one) wildcard
         return '*' + trim(this.query, '*') + '*'
       }
       return '*'
     },
-    valueNames() {
-      return this.modelValue.map(iteratee('name'))
+    multiple() {
+      return isArray(this.modelValue)
     },
     selectedProjects: {
       get() {
+        if (!this.multiple) {
+          return [this.modelValue]
+        }
         return compact(
           this.modelValue.map(({ name }) => {
             return find(this.projects, { name })
@@ -158,14 +162,14 @@ export default {
       })
     },
     hasMultipleProjects() {
-      return this.selectedProjects.length > 1
+      return this.selectedProjects?.length > 1
     },
     hasSlicedProjects() {
-      return this.selectedProjects.length > this.sliceSize
+      return this.selectedProjects?.length > this.sliceSize
     },
     selectAll: {
       get() {
-        return this.selectedProjects.length === this.projects.length
+        return this.selectedProjects?.length === this.projects.length
       },
       set(value) {
         this.selectedProjects = value ? this.projects : this.projects.slice(0, 1)

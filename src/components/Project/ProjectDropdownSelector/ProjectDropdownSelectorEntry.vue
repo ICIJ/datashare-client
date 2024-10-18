@@ -14,6 +14,9 @@ const props = defineProps({
   },
   selected: {
     type: Boolean
+  },
+  noCheckbox: {
+    type: Boolean
   }
 })
 
@@ -28,7 +31,11 @@ const emit = defineEmits(['toggleValue', 'toggleUniqueValue'])
 
 <template>
   <div class="project-dropdown-selector-entry rounded" :class="classList">
-    <project-dropdown-selector-checkbox :model-value="selected" @click="emit('toggleValue', $event)" />
+    <project-dropdown-selector-checkbox
+      v-if="!noCheckbox"
+      :model-value="selected"
+      @click="emit('toggleValue', $event)"
+    />
     <project-label class="pe-1 py-2" no-caption :project="project" @click="emit('toggleUniqueValue', $event)" />
   </div>
 </template>
