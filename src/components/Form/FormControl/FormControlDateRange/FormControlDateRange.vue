@@ -40,6 +40,10 @@ defineProps({
   attributes: {
     type: Array,
     default: () => [{ key: 'today', highlight: 'primary', dates: new Date() }]
+  },
+  popover: {
+    type: Object,
+    default: () => ({ visibility: 'focus' })
   }
 })
 
@@ -59,6 +63,7 @@ const isDark = computed(() => ['dark', 'black'].includes(colorMode.value))
       :timezone="timezone"
       :is-dark="isDark"
       :update-on-input="updateOnInput"
+      :popover="popover"
     >
       <template #default="{ inputValue, inputEvents }">
         <slot v-bind="{ inputValue, inputEvents, masks, size }">
