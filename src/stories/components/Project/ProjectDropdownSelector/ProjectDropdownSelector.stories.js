@@ -33,3 +33,11 @@ export default {
 }
 
 export const Default = {}
+export const SingleSelection = {
+  args: {
+    modelValue: {
+      name: 'banana-papers',
+      label: 'Banana Papers'
+    }
+  }
+}
