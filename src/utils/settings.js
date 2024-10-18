@@ -221,12 +221,12 @@ export default {
   filter: {
     bucketSize: 25,
     sortBy: '_count',
-    sortByOrder: 'desc',
+    orderBy: 'desc',
     sortByOptions: [
-      { sortBy: '_count', sortByOrder: 'asc' },
-      { sortBy: '_count', sortByOrder: 'desc' },
-      { sortBy: '_key', sortByOrder: 'asc' },
-      { sortBy: '_key', sortByOrder: 'desc' }
+      { sortBy: '_count', orderBy: 'asc' },
+      { sortBy: '_count', orderBy: 'desc' },
+      { sortBy: '_key', orderBy: 'asc' },
+      { sortBy: '_key', orderBy: 'desc' }
     ]
   },
   helpLink: 'https://icij.gitbook.io/datashare/ask-for-help',
