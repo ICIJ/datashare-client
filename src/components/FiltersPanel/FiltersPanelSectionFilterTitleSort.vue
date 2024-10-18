@@ -7,7 +7,7 @@ import settings from '@/utils/settings'
 const props = defineProps({
   modelValue: {
     type: Object,
-    default: () => ({ sortBy: '_count', sortByOrder: 'desc' })
+    default: () => ({ sortBy: '_count', orderBy: 'desc' })
   },
   sortByOptions: {
     type: Array,
@@ -19,20 +19,20 @@ const emit = defineEmits(['update:modelValue'])
 const showDropdown = ref(false)
 
 const sortByOptionsWithLabels = computed(() => {
-  return props.sortByOptions.map(({ sortBy, sortByOrder }) => {
-    const label = `filter.sortByDropdown.options.${sortBy}.${sortByOrder}`
-    return { label, sortBy, sortByOrder }
+  return props.sortByOptions.map(({ sortBy, orderBy }) => {
+    const label = `filter.sortByDropdown.options.${sortBy}.${orderBy}`
+    return { label, sortBy, orderBy }
   })
 })
 
-const applySort = ({ sortBy, sortByOrder }) => {
-  if (sortBy !== props.modelValue.sortBy || sortByOrder !== props.modelValue.sortByOrder) {
-    emit('update:modelValue', { sortBy, sortByOrder })
+const applySort = ({ sortBy, orderBy }) => {
+  if (sortBy !== props.modelValue.sortBy || orderBy !== props.modelValue.orderBy) {
+    emit('update:modelValue', { sortBy, orderBy })
   }
 }
 
-const isOptionActive = ({ sortBy, sortByOrder }) => {
-  return props.modelValue.sortBy === sortBy && props.modelValue.sortByOrder === sortByOrder
+const isOptionActive = ({ sortBy, orderBy }) => {
+  return props.modelValue.sortBy === sortBy && props.modelValue.orderBy === orderBy
 }
 </script>
 
