@@ -21,8 +21,7 @@ describe('FiltersMixin', () => {
         order: 65,
         name: 'namedEntityEmail',
         key: 'byMentions',
-        category: 'EMAIL',
-        isSearchable: true
+        category: 'EMAIL'
       }
     })
 
@@ -41,8 +40,7 @@ describe('FiltersMixin', () => {
             order: 65,
             name: 'namedEntityEmail',
             key: 'byMentions',
-            category: 'EMAIL',
-            isSearchable: true
+            category: 'EMAIL'
           }
         })
 
