@@ -883,7 +883,9 @@
         },
         "skipIndexedDocuments":{"label": "Skip already indexed documents","description":"If yes, Datashare will only extract text from documents that are not searchable yet.",
           "options": {"yes": "Yes", "no": "No"}},
-        "submit": "Add"
+        "submit": "Add",
+        "success":"Add document task is launched",
+        "error":"An error occured when creating the task: {error}"
       }
     }
   },
