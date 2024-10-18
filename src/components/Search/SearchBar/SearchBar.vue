@@ -151,6 +151,7 @@ export default {
       default: null
     }
   },
+  emits: ['submit'],
   data() {
     return {
       field: this.$store.state.search.field,
