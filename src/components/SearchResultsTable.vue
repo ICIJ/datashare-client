@@ -36,7 +36,7 @@
         responsive
         :busy="$wait.waiting('load results table')"
         :fields="fields"
-        :items=" response.hits"
+        :items="response.hits"
         class="border-bottom m-0 small search-results-table__items"
         tbody-tr-class="search-results-table__items__row"
         thead-tr-class="text-nowrap"
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { castArray, find, iteratee, startCase, uniqBy } from 'lodash'
+import { castArray, iteratee, startCase, uniqBy } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
