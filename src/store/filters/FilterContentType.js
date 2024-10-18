@@ -20,6 +20,7 @@ export default class FilterContentType extends FilterText {
   itemLabel(item) {
     return getDocumentTypeLabel(item.key)
   }
+
   static get display() {
     return DisplayContentType
   }
