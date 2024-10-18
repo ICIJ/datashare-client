@@ -3,7 +3,6 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-
 import DisplayUser from '@/components/Display/DisplayUser'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
