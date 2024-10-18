@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import FilterDateRange from '@/components/Filter/types/FilterDateRange'
+import FilterDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
 
 describe('FilterDateRange.vue', () => {
   const { index, es } = esConnectionHelper.build()
@@ -36,29 +36,22 @@ describe('FilterDateRange.vue', () => {
     const start = new Date('2019-08-19')
     const end = new Date('2019-08-20')
 
-    await wrapper.find('.filter--date-range__inputs__start').setValue(start.toDateString())
-    await wrapper.find('.filter--date-range__inputs__end').setValue(end.toDateString())
-
-    const expectedStart = Date.parse(start) - start.getTimezoneOffset() * 60 * 1000
-    const expectedEnd = Date.parse(end) - end.getTimezoneOffset() * 60 * 1000 + 24 * 60
+    await wrapper.findAll('input[type=text]').at(0).setValue(start.toDateString())
+    await wrapper.findAll('input[type=text]').at(1).setValue(end.toDateString())
 
     const existingFilter = find(wrapper.vm.$store.getters['search/instantiatedFilters'], { name })
-    expect(existingFilter.values).toEqual([expectedStart, expectedEnd])
+    expect(existingFilter.values).toEqual([start.getTime(), end.setUTCHours(23, 59, 59, 999)])
   })
 
   it('has two inputs containing the date range', () => {
-    const elementStart = wrapper.find('.filter--date-range__inputs__start')
+    const elementStart = wrapper.findAll('input[type=text]').at(0)
     expect(elementStart.exists()).toBeTruthy()
     const startAttr = elementStart.attributes()
-    expect(startAttr.title).toBe('From MM/DD/YYYY')
-    expect(startAttr.alt).toBe('Starting date')
     expect(startAttr.placeholder).toBe('MM/DD/YYYY')
 
-    const elementEnd = wrapper.find('.filter--date-range__inputs__end')
+    const elementEnd = wrapper.findAll('input[type=text]').at(1)
     expect(elementEnd.exists()).toBeTruthy()
     const endAttr = elementEnd.attributes()
-    expect(endAttr.title).toBe('To MM/DD/YYYY')
-    expect(endAttr.alt).toBe('Ending date')
     expect(endAttr.placeholder).toBe('MM/DD/YYYY')
   })
 })
