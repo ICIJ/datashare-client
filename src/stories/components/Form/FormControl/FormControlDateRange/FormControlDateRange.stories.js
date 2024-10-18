@@ -5,7 +5,10 @@ export default {
   tags: ['autodocs'],
   component: FormControlDateRange,
   args: {
-    modelValue: [new Date('2017-05-07'), new Date('2017-11-05')]
+    modelValue: {
+      start: null,
+      end: null
+    }
   },
   decorators: [
     () => ({
