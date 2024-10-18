@@ -15,8 +15,16 @@ export const state = () => ({
         layout: LAYOUTS.TABLE,
         orderBy: ['name', 'asc'],
         perPage: 25
+      },
+      search: {
+        layout: LAYOUTS.LIST,
+        orderBy: ['_score', 'desc'],
+        perPage: 25
       }
     }
+  },
+  filters: {
+    close: true
   },
   pins: {
     projects: []
@@ -32,6 +40,9 @@ export const mutations = {
   },
   settingsClosed(state, closed) {
     state.settings.closed = closed
+  },
+  filtersClosed(state, closed) {
+    state.filters.closed = closed
   },
   setSettings(state, { view, ...settings }) {
     if (view in state.settings.views) {
@@ -82,6 +93,12 @@ export const actions = {
       return commit('settingsClosed', !state.settings.closed)
     }
     return commit('settingsClosed', toggler)
+  },
+  toggleFiltersClosed({ state, commit }, toggler = null) {
+    if (toggler === null) {
+      return commit('filtersClosed', !state.filters.closed)
+    }
+    return commit('filtersClosed', toggler)
   },
   popRedirectAfterLogin({ state: { redirectAfterLogin }, commit }) {
     commit('setRedirectAfterLogin', null)
