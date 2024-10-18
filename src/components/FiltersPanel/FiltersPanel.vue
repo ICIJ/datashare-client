@@ -31,5 +31,6 @@ const emit = defineEmits(['close'])
   background: var(--bs-tertiary-bg-subtle);
   max-width: 320px;
   width: 100%;
+  min-height: 100vh;
 }
 </style>
