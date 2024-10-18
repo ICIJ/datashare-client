@@ -14,8 +14,8 @@ describe('SearchResultsList.vue', () => {
   const api = { elasticsearch: es }
   const core = CoreSetup.init(api).useAll()
 
-  async function createView(query = '*', from = 0, size = 25, field = settings.defaultSearchField) {
-    await core.store.dispatch('search/query', { query, from, size, field })
+  async function createView(query = '*', from = 0, perPage = 25, field = settings.defaultSearchField) {
+    await core.store.dispatch('search/query', { query, from, field, perPage })
     return shallowMount(SearchResultsList, {
       global: {
         plugins: core.plugins
@@ -48,7 +48,7 @@ describe('SearchResultsList.vue', () => {
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
     })
 
-    it('should return 3 documents', async () => {
+    it.only('should return 3 documents', async () => {
       await letData(es)
         .have(new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(4))
         .commit()

@@ -53,8 +53,6 @@ export const RESET_KEYS = [
   'excludeFilters',
   'sortFilters',
   'contextualizeFilters',
-  'size',
-  'sort',
   'tab',
   'values'
 ]
@@ -76,8 +74,6 @@ export function initialState() {
     contextualizeFilters: [],
     sortFilters: {},
     showFilters: true,
-    size: 25,
-    sort: settings.defaultSearchSort,
     values: {},
     tab: TAB_NAME.EXTRACTED_TEXT
   })
@@ -176,8 +172,9 @@ export const getters = {
     return () => ({
       q: state.query,
       from: `${state.from}`,
-      size: `${state.size}`,
-      sort: state.sort,
+      perPage: `${getters.getPerPage()}`,
+      sort: getters.getSortBy(),
+      order: getters.getOrderBy(),
       indices: state.indices.join(','),
       field: state.field,
       tab: state.tab,
@@ -236,11 +233,36 @@ export const getters = {
   },
   sortBy(state) {
     return find(settings.searchSortFields, { name: state.sort })
+  },
+  getPerPage(state, getters, rootState, rootGetters) {
+    return () => rootGetters['app/getSettings']('search', 'perPage')
+  },
+  getSort(state, getters, rootState, rootGetters) {
+    return () => {
+      const [sort, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score', 'desc']
+      // Find optional extra params
+      const { extraParams = {} } = find(settings.searchSortFields, { name: sort }) ?? {}
+      // We add a secondary path filter is the current sort is not the path itself
+      const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
+      return [{ [sort]: { order, ...extraParams } }, ...secondarySort]
+    }
+  },
+  getSortBy(state, getters, rootState, rootGetters) {
+    return () => {
+      const [sort] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score']
+      return sort
+    }
+  },
+  getOrderBy(state, getters, rootState, rootGetters) {
+    return () => {
+      const [, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? [null, 'desc']
+      return order
+    }
   }
 }
 
 export const mutations = {
-  reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout', 'size', 'sort']) {
+  reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout']) {
     const s = initialState()
     RESET_KEYS.forEach((key) => {
       if (excludedKeys.indexOf(key) === -1) {
@@ -275,12 +297,6 @@ export const mutations = {
   },
   from(state, from) {
     state.from = Number(from)
-  },
-  size(state, size) {
-    state.size = Number(size)
-  },
-  sort(state, sort) {
-    state.sort = sort
   },
   isReady(state, isReady = !state.isReady) {
     state.isReady = isReady
@@ -396,8 +412,8 @@ function actionsBuilder(api) {
           state.query,
           getters.instantiatedFilters,
           state.from,
-          state.size,
-          state.sort,
+          getters.getPerPage(),
+          getters.getSort(),
           getters.getFields()
         )
         commit('buildResponse', raw)
@@ -411,7 +427,7 @@ function actionsBuilder(api) {
     },
     updateFromRouteQuery({ commit, getters }, query) {
       const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
-      const updatedKeys = ['q', 'index', 'indices', 'from', 'size', 'sort', 'field']
+      const updatedKeys = ['q', 'index', 'indices', 'from', 'field']
       commit('reset', excludedKeys)
       // Add the query to the state with a mutation to avoid triggering a search
       updatedKeys.forEach((key) => (key in query ? commit(key, query[key]) : null))
@@ -441,8 +457,6 @@ function actionsBuilder(api) {
         indices: state.indices,
         query: state.query,
         from: state.from,
-        size: state.size,
-        sort: state.sort,
         field: state.field
       }
     ) {
@@ -452,10 +466,16 @@ function actionsBuilder(api) {
       } else if (isString(q)) {
         commit('query', q)
       }
+
+      // Retro compatibility with old query parameters
+      if (has(q, 'perPage')) {
+        commit('app/setSettings', { view: 'search', perPage: q.perPage }, { root: true })
+      }
+
       // Then mutates all values if they are in queryOrParams. The mutation
       // for "indices" must be after "index" since the two mutations are
       // updating concurent values.
-      ;['index', 'indices', 'from', 'size', 'sort', 'field'].forEach((key) => {
+      ;['index', 'indices', 'from', 'field'].forEach((key) => {
         if (has(q, key)) {
           commit(key, q[key])
         }
@@ -497,12 +517,12 @@ function actionsBuilder(api) {
       commit('toggleFilter', name)
       return dispatch('query')
     },
-    previousPage({ state, commit, dispatch }, name) {
-      commit('from', state.from - state.size)
+    previousPage({ state, commit, dispatch, getters }) {
+      commit('from', state.from - getters.getPerPage())
       return dispatch('query')
     },
-    nextPage({ state, commit, dispatch }, name) {
-      commit('from', state.from + state.size)
+    nextPage({ state, commit, dispatch, getters }) {
+      commit('from', state.from + getters.getPerPage())
       return dispatch('query')
     },
     deleteQueryTerm({ state, commit, dispatch }, term) {
