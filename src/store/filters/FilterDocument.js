@@ -3,7 +3,7 @@ import FilterType from './FilterType'
 export default class FilterDocument extends FilterType {
   constructor(options) {
     super(options)
-    this.component = 'FilterDocument'
+    this.component = 'FilterTypeDocument'
   }
 
   addParentIncludeFilter(body, param) {

@@ -15,12 +15,12 @@ export default class FilterNamedEntity extends FilterType {
   constructor(options) {
     super(options)
     this.category = (options.category || ENTITY_CATEGORY.PERSON).toUpperCase()
-    this.component = 'FilterNamedEntity'
+    this.component = 'FilterType'
     this.sortByOptions = [
-      { sortBy: '_count', sortByOrder: 'asc' },
-      { sortBy: '_count', sortByOrder: 'desc' },
-      { sortBy: '_key', sortByOrder: 'asc' },
-      { sortBy: '_key', sortByOrder: 'desc' }
+      { sortBy: '_count', orderBy: 'asc' },
+      { sortBy: '_count', orderBy: 'desc' },
+      { sortBy: '_key', orderBy: 'asc' },
+      { sortBy: '_key', orderBy: 'desc' }
     ]
   }
 
