@@ -31,18 +31,18 @@ const emit = defineEmits(['submit', 'reset', 'delete'])
 function emitDelete() {
   emit('delete')
 }
-function emitReset() {
+function reset() {
   emit('reset')
 }
-function submit() {
+function submit(values) {
   if (props.valid) {
-    emit('submit')
+    emit('submit', new FormData(values.target))
   }
 }
 </script>
 
 <template>
-  <b-form class="form-creation" novalidate @submit.stop.prevent="submit">
+  <b-form class="form-creation" novalidate @reset.stop.prevent="reset" @submit.stop.prevent="submit">
     <div aria-description="form-content">
       <slot></slot>
     </div>
@@ -63,12 +63,11 @@ function submit() {
       </confirm-button>
       <span class="d-flex gap-2">
         <button-icon
-          type="button"
+          type="reset"
           variant="outline-light"
           icon-left="arrow-counter-clockwise"
           class="form-creation__action--reset btn btn-outline-action"
           :label="resetLabel ?? t('global.reset')"
-          @click="emitReset"
         >
           <slot name="reset-text" />
         </button-icon>
