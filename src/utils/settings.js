@@ -127,12 +127,14 @@ export default {
     {
       name: 'creationDateNewest',
       field: 'metadata.tika_metadata_dcterms_created',
-      desc: true
+      desc: true,
+      extraParams: { unmapped_type: 'date' }
     },
     {
       name: 'creationDateOldest',
       field: 'metadata.tika_metadata_dcterms_created',
-      desc: false
+      desc: false,
+      extraParams: { unmapped_type: 'date' }
     },
     {
       name: 'dateNewest',
