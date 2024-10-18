@@ -26,10 +26,10 @@ describe('SearchStore', () => {
     expect(store.state.search).toBeDefined()
   })
 
-  it('should instantiate the default 12 filters, with order', () => {
+  it('should instantiate the default 13 filters, with order', () => {
     const filters = store.getters['search/instantiatedFilters']
 
-    expect(filters).toHaveLength(12)
+    expect(filters).toHaveLength(13)
     expect(find(filters, { name: 'contentType' }).order).toBe(40)
   })
 
@@ -40,7 +40,6 @@ describe('SearchStore', () => {
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
-    store.commit('search/toggleFilters')
 
     store.commit('search/reset')
 
@@ -338,12 +337,6 @@ describe('SearchStore', () => {
 
     store.commit('search/resetFilterValues', 'contentType')
     expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(0)
-  })
-
-  it('should change the state after `toggleFilters` mutation', () => {
-    const showFilters = store.state.search.showFilters
-    store.commit('search/toggleFilters')
-    expect(store.state.search.showFilters).toBe(!showFilters)
   })
 
   describe('updateFromRouteQuery should not be cumulated with existing filter', () => {
@@ -784,43 +777,43 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits[2].shortId).toBe('c')
   })
 
-  describe('sortedFilters with language filter', () => {
+  describe('sortFilters with language filter', () => {
     beforeEach(() => {
       store.commit('search/reset')
     })
 
-    it('this filter should have no sortedFilters', () => {
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(0)
+    it('this filter should have no sortFilters', () => {
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(0)
     })
 
     it('this filter should have one sorted filter', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', sortByOrder: 'asc' })
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(1)
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', orderBy: 'asc' })
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(1)
     })
 
     it('this filter should sort language by _count', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', sortByOrder: 'asc' })
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', orderBy: 'asc' })
       expect(store.getters['search/filterSortedBy']('language')).toBe('_count')
       expect(store.getters['search/filterSortedByOrder']('language')).toBe('asc')
     })
 
     it('this filter should sort language by _count once', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', sortByOrder: 'desc' })
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', sortByOrder: 'asc' })
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', orderBy: 'desc' })
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', orderBy: 'asc' })
       expect(store.getters['search/filterSortedBy']('language')).toBe('_count')
       expect(store.getters['search/filterSortedByOrder']('language')).toBe('asc')
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(1)
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(1)
     })
 
     it('this filter should not sort language anymore', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', sortByOrder: 'desc' })
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(1)
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', orderBy: 'desc' })
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(1)
       store.commit('search/unsortFilter', 'language')
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(0)
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(0)
     })
 
     it('this filter should have a default sort for language', () => {
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(0)
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(0)
       expect(store.getters['search/filterSortedBy']('language')).not.toBeUndefined()
       expect(store.getters['search/filterSortedByOrder']('language')).not.toBeUndefined()
     })
