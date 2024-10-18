@@ -5,7 +5,7 @@ import DisplayDatetimeMonth from '@/components/Display/DisplayDatetimeMonth'
 export default class FilterDate extends FilterDocument {
   constructor(options) {
     super(options)
-    this.component = 'FilterDate'
+    this.component = 'FilterType'
   }
 
   itemLabel(item) {
