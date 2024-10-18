@@ -77,18 +77,6 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.find('.search-results-header__settings__size__dropdown').exists()).toBeTruthy()
   })
 
-  it('should display the dropdown to choose the sort order', () => {
-    expect(wrapper.find('.search-results-header__settings__sort__toggler').exists()).toBeTruthy()
-    expect(wrapper.find('.search-results-header__settings__sort__dropdown').exists()).toBeTruthy()
-  })
-
-  it('should change the searchSort and searchSize via the dropdown', () => {
-    wrapper.findAll('.search-results-header__settings__sort__dropdown .dropdown-item').at(3).trigger('click')
-    expect(wrapper.vm.sort).toBe('sizeLargest')
-    wrapper.findAll('.search-results-header__settings__size__dropdown .dropdown-item').at(3).trigger('click')
-    expect(wrapper.vm.size).toBe(100)
-  })
-
   it('should not show the download results button when there is no results', () => {
     expect(wrapper.find('.search-results-header__settings__btn-download').exists()).toBeFalsy()
   })

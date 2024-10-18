@@ -6,28 +6,6 @@
     <div class="search-results-header__settings d-flex align-items-center">
       <b-button-group v-if="!noProgress" class="flex-grow-1">
         <b-dropdown
-          class="search-results-header__settings__sort"
-          menu-class="search-results-header__settings__sort__dropdown"
-          toggle-class="text-decoration-none px-2 border search-results-header__settings__sort__toggler"
-          size="sm"
-          variant="link"
-        >
-          <template #button-content>
-            {{ $t('search.results.sort.sortLabel') }}
-          </template>
-          <b-dropdown-header>
-            {{ $t('search.settings.sortBy') }}
-          </b-dropdown-header>
-          <b-dropdown-item
-            v-for="selectedSort in visibleSorts"
-            :key="selectedSort"
-            :active="selectedSort === sort"
-            @click="selectSort(selectedSort)"
-          >
-            {{ $t('search.results.sort.' + selectedSort) }}
-          </b-dropdown-item>
-        </b-dropdown>
-        <b-dropdown
           class="search-results-header__settings__size me-2"
           menu-class="search-results-header__settings__size__dropdown pt-0"
           size="sm"
@@ -48,16 +26,6 @@
           <b-dropdown-header>
             {{ $t('search.settings.resultsPerPage') }}
           </b-dropdown-header>
-          <b-dropdown-item
-            v-for="selectedSize in sizes"
-            :key="selectedSize"
-            :active="selectedSize === size"
-            @click="selectSize(selectedSize)"
-          >
-            <div class="d-flex align-items-center">
-              <span>{{ selectedSize }} {{ $t('search.results.perPage') }}</span>
-            </div>
-          </b-dropdown-item>
         </b-dropdown>
       </b-button-group>
       <confirm-button
@@ -149,27 +117,13 @@ export default {
       batchDownloadMaxNbFiles: parseInt(this.$config.get('batchDownloadMaxNbFiles')),
       batchDownloadMaxSize: this.$config.get('batchDownloadMaxSize'),
       mappings: {},
-      sizes: [10, 25, 50, 100],
-      keywordSorts: ['titleNorm', 'titleNormReverse'],
-      sorts: [
-        'relevance',
-        'creationDateNewest',
-        'creationDateOldest',
-        'sizeLargest',
-        'sizeSmallest',
-        'titleNorm',
-        'titleNormReverse',
-        'path',
-        'pathReverse',
-        'dateNewest',
-        'dateOldest'
-      ]
+      keywordSorts: ['titleNorm', 'titleNormReverse']
     }
   },
   computed: {
-    ...mapState('search', ['from', 'response', 'size', 'sort']),
-    fields() {
-      return this.keywordSorts.map(this.getSortField).join(',')
+    ...mapState('search', ['from', 'response']),
+    size() {
+      return this.$store.getters['app/getSettings']('projectList', 'perPage')
     },
     firstDocument() {
       return this.lastDocument === 0 ? 0 : this.from + 1
@@ -240,14 +194,7 @@ export default {
       const query = { ...this.$store.getters['search/toRouteQuery'](), from }
       const { fullPath } = this.$router.resolve({ name: 'search', query })
       return fullPath
-    },
-    visibleSorts() {
-      return this.sorts.filter(this.isSortVisible)
     }
-  },
-  async created() {
-    // We need to load all mappings to filter out non-sortable fields
-    this.mappings = await this.$core.api.getMappingsByFields(this.projectIds, this.fields)
   },
   async mounted() {
     // Force page to scroll top at each load
@@ -260,30 +207,6 @@ export default {
     },
     isDisplayed() {
       return this.response.total > this.size
-    },
-    isSortVisible(sort) {
-      if (this.keywordSorts.includes(sort)) {
-        const field = this.getSortField(sort)
-        return every(this.mappings, (mapping) => {
-          return get(mapping, ['mappings', field, 'mapping', field, 'type']) === 'keyword'
-        })
-      }
-      return true
-    },
-    getSortField(name) {
-      return find(settings.searchSortFields, { name })?.field
-    },
-    selectSize(size) {
-      // Store new search size into store
-      this.$store.commit('search/size', size)
-      // Change the route
-      return this.refreshRouteAndSearch()
-    },
-    selectSort(sort) {
-      // Store new search sort into store
-      this.$store.commit('search/sort', sort)
-      // Change the route
-      return this.refreshRouteAndSearch()
     },
     async refreshRouteAndSearch() {
       await this.refreshRoute()
@@ -325,35 +248,6 @@ export default {
   &__settings {
     color: $text-muted;
     font-size: 0.95em;
-
-    &__size,
-    &__sort {
-      &__toggler {
-        font-size: $font-size-sm;
-        line-height: inherit;
-      }
-    }
-
-    &__size {
-      &:deep(.search-results-header__settings__size__toggler) {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-      }
-
-      &:deep(.search-results-header__settings__size__toggler__slot) {
-        max-width: 167px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-      &:deep(.search-results-header__settings__size__toggler__hits) {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        max-width: 145px;
-      }
-    }
   }
 
   .search-results-header__settings__size__dropdown,
