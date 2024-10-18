@@ -29,7 +29,6 @@
       </div>
       <b-table
         ref="selectableTable"
-        v-model:sort-by="sortModel"
         :empty-text="$t('global.emptyTextTable')"
         striped
         hover
@@ -37,7 +36,7 @@
         responsive
         :busy="$wait.waiting('load results table')"
         :fields="fields"
-        :items="items"
+        :items=" response.hits"
         class="border-bottom m-0 small search-results-table__items"
         tbody-tr-class="search-results-table__items__row"
         thead-tr-class="text-nowrap"
@@ -157,25 +156,6 @@ export default {
         this.$store.state.search.field !== settings.defaultSearchField
       )
     },
-    defaultSortField() {
-      return this.fields[0]
-    },
-    sortBy() {
-      const { field } = this.$store.getters['search/sortBy']
-      const { key } = find(this.fields, { sortBy: field }) || this.defaultSortField
-      return key
-    },
-    sortDesc() {
-      return this.$store.getters['search/sortBy'].desc ? 'desc' : 'asc'
-    },
-    sortModel: {
-      get() {
-        return [{ key: this.sortBy, order: this.sortDesc }]
-      },
-      async set(sortModel) {
-        this.items = await this.itemsProvider(sortModel[0])
-      }
-    },
     fields() {
       return [
         {
@@ -191,13 +171,7 @@ export default {
         },
         {
           key: 'path',
-          sortBy: 'path',
-          sortable: true,
-          label:
-            this.$t('document.document') +
-            (this.$store.getters['search/sortBy'].field === 'path'
-              ? ` (${this.$t('search.results.sortedByPath')})`
-              : ''),
+          label: this.$t('document.document'),
           class: 'ps-0'
         },
         {
@@ -207,15 +181,11 @@ export default {
         },
         {
           key: 'creationDateHumanShort',
-          sortBy: 'metadata.tika_metadata_dcterms_created',
-          sortable: true,
           label: this.$t('document.creationDate'),
           class: 'fit'
         },
         {
           key: 'contentLength',
-          sortBy: 'contentLength',
-          sortable: true,
           label: this.$t('document.size'),
           formatter: (value, name, item) => item?.source?.contentLength,
           class: 'fit'
@@ -228,9 +198,6 @@ export default {
         }
       ]
     }
-  },
-  async created() {
-    this.items = await this.itemsProvider(this.sortModel[0])
   },
   methods: {
     startCase,
@@ -267,19 +234,7 @@ export default {
       }
       this.$wait.end('load results table')
     },
-    async itemsProvider(sortModel) {
-      // Refresh response only if sortBy or sortDesc are different from the state
-      if (sortModel.key !== this.sortBy || sortModel.order !== this.sortDesc) {
-        // Find the table field for the sorting key (or use the first by default)
-        const tableField = find(this.fields, { key: sortModel.key }) || this.defaultSortField
-        // Find the corresponding sort field in the settings
-        const desc = sortModel.order === 'desc'
-        const sortField = find(settings.searchSortFields, { field: tableField.sortBy, desc })
-        // Update the sort value in the store
-        this.$store.commit('search/sort', sortField ? sortField.name : 'relevance')
-        // Refresh the store without changing the "isReady"
-        await this.$store.dispatch('search/refresh', false)
-      }
+    async itemsProvider() {
       return this.response.hits
     },
     humanSize(value) {
