@@ -8,6 +8,7 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 const contextualize = defineModel('contextualize', { type: Boolean })
 const exclude = defineModel('exclude', { type: Boolean })
 const collapse = defineModel('collapse', { type: Boolean })
+const sort = defineModel('sort', { type: Object })
 
 const props = defineProps({
   flush: {
@@ -64,9 +65,10 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="filters-panel-section-filter mb-1" :class="classList">
+  <div class="filters-panel-section-filter" :class="classList">
     <filters-panel-section-filter-title
       v-model:collapse="collapse"
+      v-model:sort="sort"
       :title="title"
       :icon="icon"
       :count="count"
@@ -77,7 +79,7 @@ const classList = computed(() => {
       <slot name="title" />
     </filters-panel-section-filter-title>
     <b-collapse :model-value="!collapse">
-      <div class="filters-panel-section-filter__content px-2 pt-3">
+      <div class="filters-panel-section-filter__content px-2 pt-3 pb-2">
         <form-control-search
           v-if="!hideSearch"
           :model-value="search"
@@ -109,6 +111,7 @@ const classList = computed(() => {
   border-radius: $border-radius;
   transition: $transition-base;
   padding: $spacer-xxs 0;
+  margin-bottom: $spacer-xxs;
 
   &:not(&--collapsed),
   &:hover {
