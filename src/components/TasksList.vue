@@ -27,7 +27,7 @@
           </slot>
         </div>
         <div class="d-flex align-items-center">
-          <b-badge variant="light" class="tasks-list__tasks__item__id my-1">
+          <b-badge variant="tertiary" class="tasks-list__tasks__item__id my-1">
             {{ item.id }}
           </b-badge>
           <template v-if="item.state === 'RUNNING' && stoppable">

@@ -3,7 +3,7 @@
     <confirm-button
       v-if="isMyBatchSearch"
       v-b-tooltip.hover
-      class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ms-2"
+      class="batch-search-actions__item batch-search-actions__item--delete btn btn-tertiary ms-2"
       :confirmed="deleteBatchSearch"
       :label="$t('batchSearch.delete')"
       :no="$t('global.no')"
@@ -19,7 +19,7 @@
     <b-button
       v-if="isMyBatchSearch && isEnded"
       class="batch-search-actions__item action batch-search-actions__item--relaunch ms-2"
-      variant="light"
+      variant="tertiary"
       :disabled="isRelaunched"
       @click="$refs['batch-search-copy-form'].show()"
     >
@@ -41,7 +41,7 @@
       split
       end
       class="batch-search-actions__item batch-search-actions__item--download-queries ms-2"
-      variant="light"
+      variant="tertiary"
       :split-href="downloadQueriesUrl"
       :title="$t('batchSearchResults.downloadQueriesTooltip')"
     >
@@ -59,7 +59,7 @@
       v-if="isEnded"
       v-b-tooltip.hover
       class="batch-search-actions__item batch-search-actions__item--download-results ms-2"
-      variant="primary"
+      variant="action"
       :title="$t('batchSearchResults.downloadQueriesTooltip')"
       :href="downloadResultsUrl"
     >

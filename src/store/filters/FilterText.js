@@ -12,9 +12,14 @@ export default class FilterText {
     name,
     key,
     icon = null,
-    isSearchable = false,
+    hideContextualize = false,
+    hideExclude = false,
+    hideExpand = false,
+    hideSearch = false,
+    hideSort = false,
     alternativeSearch = () => {},
     order = null,
+    section = null,
     fromElasticSearch = true,
     preference = '_local',
     forceExclude = false
@@ -22,10 +27,15 @@ export default class FilterText {
     this.name = name
     this.key = key
     this.icon = icon
-    this.isSearchable = isSearchable
-    this.component = 'FilterText'
+    this.hideContextualize = hideContextualize
+    this.hideExclude = hideExclude
+    this.hideExpand = hideExpand
+    this.hideSearch = hideSearch
+    this.hideSort = hideSort
+    this.component = 'FilterType'
     this.alternativeSearch = alternativeSearch
     this.order = order
+    this.section = section
     this.fromElasticSearch = fromElasticSearch
     this.preference = preference
     this.forceExclude = forceExclude
@@ -77,9 +87,9 @@ export default class FilterText {
   addFilter(body) {
     if (this.hasValues()) {
       const filterType = this.isNamedEntityAggregation(body) ? 'Parent' : 'Child'
-      const exclude = this.reverse || this.forceExclude
+      const exclude = this.excluded || this.forceExclude
       const filterName = exclude ? 'Exclude' : 'Include'
-      const options = { name: this.name, values: this.values, reverse: exclude }
+      const options = { name: this.name, values: this.values, exclude }
       const method = `add${filterType}${filterName}Filter`
       return this[method] ? this[method](body, options) : null
     }
@@ -96,7 +106,7 @@ export default class FilterText {
   }
 
   applyTo(body) {
-    this.addFilter(body)
+    return this.addFilter(body)
   }
 
   bindRootState(rootState) {
@@ -124,19 +134,19 @@ export default class FilterText {
     return this
   }
 
-  get reverse() {
-    return get(this, ['state', 'reversedFilters'], []).indexOf(this.name) > -1
+  get excluded() {
+    return get(this, ['state', 'excludeFilters'], []).indexOf(this.name) > -1
   }
 
   get contextualized() {
-    return get(this, ['state', 'contextualizedFilters'], []).indexOf(this.name) > -1
+    return get(this, ['state', 'contextualizeFilters'], []).indexOf(this.name) > -1
   }
 
   get sortBy() {
-    return get(this, ['state', 'sortedFilters', this.name, 'sortBy'], '_count')
+    return get(this, ['state', 'sortFilters', this.name, 'sortBy'], '_count')
   }
 
-  get sortByOrder() {
-    return get(this, ['state', 'sortedFilters', this.name, 'sortByOrder'], 'desc')
+  get orderBy() {
+    return get(this, ['state', 'sortFilters', this.name, 'orderBy'], 'desc')
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <v-wait for="load ner pipelines">
     <template #waiting>
-      <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-light" />
+      <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto my-5 text-tertiary" />
     </template>
     <form class="find-named-entities-form position-relative" @submit.prevent="submitFindNamedEntities">
       <div v-if="showProjectSelector" class="find-named-entities-form__group mb-4">
@@ -53,7 +53,7 @@
       <div class="find-named-entities-form__footer mt-4 row no-gutters">
         <slot name="footer" :disabled="disabled">
           <div class="col text-end">
-            <b-button variant="primary" class="fw-bold" type="submit" :disabled="disabled">
+            <b-button variant="action" class="fw-bold" type="submit" :disabled="disabled">
               {{ $t('indexing.go') }}
             </b-button>
           </div>

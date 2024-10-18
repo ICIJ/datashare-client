@@ -28,10 +28,12 @@ import { getMode, MODE_NAME } from '@/mode'
 import { routes } from '@/router'
 import { storeBuilder } from '@/store/storeBuilder'
 import Auth from '@/api/resources/Auth'
-import ToastBody from '@/components/ToastBody'
+import ToastBody from '@/components/Dismissable/DismissableToastBody'
+import Fa from '@/components/Fa'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
+import { useTheme } from '@/composables/useTheme'
 
 class Base {}
 const Behaviors = compose(
@@ -88,7 +90,21 @@ class Core extends Behaviors {
   useAll() {
     this.useVuex()
     this.useI18n()
-    this.useBootstrapVue()
+    this.useBootstrapVue({
+      directives: true,
+      components: {
+        BPopover: {
+          offset: '16px'
+        },
+        BTooltip: {
+          offset: '6px',
+          delay: {
+            show: 500,
+            hide: 0
+          }
+        }
+      }
+    })
     this.useCommons()
     this.useWait()
     this.useCore()
@@ -99,16 +115,36 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useI18n() {
+    const numberFormats = {
+      'en-US': {
+        currency: {
+          style: 'currency',
+          currency: 'USD',
+          notation: 'standard'
+        },
+        decimal: {
+          style: 'decimal',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        },
+        percent: {
+          style: 'percent',
+          useGrouping: false
+        }
+      }
+    }
     this._i18n = createI18n({
       warnHtmlInMessage: 'off',
       warnHtmlMessage: 'off',
       globalInjection: true,
+      allowComposition: true,
       legacy: true,
       locale: settings.defaultLocale,
       fallbackLocale: settings.defaultLocale,
       messages: {
         [settings.defaultLocale]: messages
-      }
+      },
+      numberFormats
     })
     this.use(this._i18n)
     return this
@@ -154,6 +190,7 @@ class Core extends Behaviors {
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
     this.use(VueEllipseProgress)
+    this.vue.component('Fa', Fa)
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
@@ -194,7 +231,7 @@ class Core extends Behaviors {
           toast(body, { title = null, href = null, linkLabel = null, ...options } = {}) {
             const closeOnClick = options.closeOnClick ?? !href
             const props = { title, body, href, linkLabel }
-            const toastProps = { closeOnClick, ...options }
+            const toastProps = { closeOnClick, ...options, icon: false, closeButton: false }
             toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...props }), toastProps)
           },
           error(body, options) {
@@ -245,6 +282,8 @@ class Core extends Behaviors {
       await this.store.dispatch('downloads/fetchIndicesStatus')
       // Initialize current locale
       await this.initializeI18n()
+      // Load theme
+      this.loadTheme()
       // Hold a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {
@@ -325,6 +364,11 @@ class Core extends Behaviors {
     this.config.merge(getMode(serverSettings.mode))
     // The backend can yet override some configuration
     this.config.merge(serverSettings)
+  }
+
+  loadTheme() {
+    const { getTheme, setTheme } = useTheme()
+    setTheme(getTheme())
   }
   /**
    * Append the given title to the page title

@@ -6,7 +6,7 @@ import { extname } from 'path'
 import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/utils/humanSize'
-import { findContentTypeIcon } from '@/utils/font-awesome-files'
+import { findContentTypeIcon } from '@/utils/phosphor-icon-files'
 import types from '@/utils/types.json'
 
 const _parent = '_PARENT'
@@ -144,8 +144,16 @@ export default class Document extends EsDoc {
   get slicedNameToString() {
     return this.slicedName.join(' › ')
   }
+  get author() {
+    return this.get('_source.metadata.tika_metadata_dc_creator', null)
+  }
   get highlight() {
     return this.raw.highlight
+  }
+  get excerpt() {
+    const content = this.get(['highlight', 'content', 0], '')
+    const contentTranslated = this.get(['highlight', 'content_translated.content', 0], '')
+    return trim(content || contentTranslated)
   }
   get highlights() {
     const content = this.get(['highlight', 'content'], [])
@@ -272,11 +280,6 @@ export default class Document extends EsDoc {
   }
   get messageTo() {
     return this.get('_source.metadata.tika_metadata_message_to', null)
-  }
-  get excerpt() {
-    const content = this.get(['highlight', 'content', 0], '')
-    const contentTranslated = this.get(['highlight', 'content_translated.content', 0], '')
-    return trim(content || contentTranslated)
   }
   set translations(translations) {
     this.set('_source.content_translated', translations)

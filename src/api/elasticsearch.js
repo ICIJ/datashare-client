@@ -1,4 +1,4 @@
-import { each, find, isEqual, replace } from 'lodash'
+import { isEqual, replace } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
 
@@ -96,7 +96,7 @@ export function datasharePlugin(Client) {
     filter,
     query = '*',
     filters = [],
-    isGlobalSearch = false,
+    contextualize = true,
     options = {},
     fields = [],
     from = 0,
@@ -106,8 +106,10 @@ export function datasharePlugin(Client) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     let body = filter.body(bodybuilder(), options, from, size)
-    if (!isGlobalSearch) {
-      each(filters, (filter) => filter.addFilter(body))
+    if (contextualize) {
+      for (const filter of filters) {
+        filter.addFilter(body)
+      }
       this.addQueryToFilter(query, body, fields)
     }
     body = body.size(0).rawOption('track_total_hits', true).build()
@@ -115,9 +117,9 @@ export function datasharePlugin(Client) {
   }
 
   Client.prototype._addFiltersToBody = function (filters, body) {
-    each(filters, (filter) => {
+    for (const filter of filters) {
       filter.applyTo(body)
-    })
+    }
   }
 
   Client.prototype._addQueryToBody = function (query, body, fields = []) {
@@ -128,23 +130,6 @@ export function datasharePlugin(Client) {
         fields: fields.length ? fields : undefined
       })
     )
-  }
-
-  Client.prototype._addSortToBody = function (name = 'relevance', body) {
-    const { field, desc } = find(settings.searchSortFields, { name }) || settings.searchSortFields[0]
-    if (name === 'creationDateNewest' || name === 'creationDateOldest') {
-      body.sort([
-        {
-          'metadata.tika_metadata_dcterms_created': {
-            order: desc ? 'desc' : 'asc',
-            unmapped_type: 'date'
-          }
-        }
-      ])
-    } else {
-      body.sort(field, desc ? 'desc' : 'asc')
-    }
-    if (field !== 'path') body.sort('path', 'asc')
   }
 
   Client.prototype.rootSearch = function (filters, query, fields = []) {
@@ -159,7 +144,7 @@ export function datasharePlugin(Client) {
     const body = this.rootSearch(filters, query, fields)
 
     body.from(from).size(size)
-    this._addSortToBody(sort, body)
+    body.sort(sort)
     // Select only the Documents and not the NamedEntities
     // Add an option to exclude the content
     body.rawOption('_source', { includes: ['*'], excludes: ['content', 'content_translated'] })
@@ -188,12 +173,13 @@ export function datasharePlugin(Client) {
     filters = [],
     from = 0,
     size = 25,
-    sort = 'relevance',
+    sort = { _score: { order: 'desc' } },
     fields = []
   ) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    const body = this._buildBody(from, size, filters, query, sort, fields).rawOption('track_total_hits', true).build()
+    const builder = this._buildBody(from, size, filters, query, sort, fields)
+    const body = builder.rawOption('track_total_hits', true).build()
     return this._search({ index, body })
   }
 
@@ -201,6 +187,20 @@ export function datasharePlugin(Client) {
     const aggs = { index: { terms: { field: '_index', size } } }
     const body = { size: 0, query, aggs }
     const preference = 'count-by-project'
+    return this._search({ index, body, preference })
+  }
+
+  Client.prototype.maxExtractionDateByProject = function (index, query = undefined, size = 1000) {
+    const aggs = {
+      index: {
+        terms: { field: '_index', size },
+        aggs: {
+          maxExtractionDate: { max: { field: 'extractionDate' } }
+        }
+      }
+    }
+    const body = { size: 0, query, aggs }
+    const preference = 'max-extraction-date-by-project'
     return this._search({ index, body, preference })
   }
 }

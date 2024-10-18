@@ -20,27 +20,30 @@ describe('SearchStore', () => {
   afterEach(() => {
     store.commit('search/index', project)
     store.commit('search/reset')
+    store.commit('app/setSettings', { view: 'search', perPage: 25 })
+    store.commit('app/setSettings', { view: 'search', orderBy: ['_score', 'desc'] })
   })
 
   it('should define a store module', () => {
     expect(store.state.search).toBeDefined()
   })
 
-  it('should instantiate the default 12 filters, with order', () => {
+  it('should instantiate the default 13 filters, with order', () => {
     const filters = store.getters['search/instantiatedFilters']
 
-    expect(filters).toHaveLength(12)
+    expect(filters).toHaveLength(13)
     expect(find(filters, { name: 'contentType' }).order).toBe(40)
   })
 
   it('should reset to initial state', async () => {
     const initialState = cloneDeep(store.state.search)
+
+    store.commit('app/setSettings', { view: 'search', perPage: 12 })
+    store.commit('app/setSettings', { view: 'search', orderBy: ['randomOrder', 'asc'] })
+
     store.commit('search/indices', [anotherProject])
     store.commit('search/query', 'datashare')
-    store.commit('search/size', 12)
-    store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
-    store.commit('search/toggleFilters')
 
     store.commit('search/reset')
 
@@ -50,7 +53,7 @@ describe('SearchStore', () => {
     expect(store.state.search.isReady).toBeTruthy()
     expect(find(store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
 
-    store.commit('search/size', 25)
+    store.commit('app/setSettings', { view: 'search', perPage: 25 })
   })
 
   it('should change the state after "query" mutation', async () => {
@@ -95,7 +98,7 @@ describe('SearchStore', () => {
 
   it('should return document from another project', async () => {
     await letData(es).have(new IndexedDocument('document', anotherProject).withContent('bar')).commit()
-    await store.dispatch('search/query', { indices: [anotherProject], query: 'bar', from: 0, size: 25 })
+    await store.dispatch('search/query', { indices: [anotherProject], query: 'bar', from: 0, perPage: 25 })
 
     expect(store.state.search.response.hits).toHaveLength(1)
     expect(store.state.search.response.hits[0].basename).toBe('document')
@@ -263,9 +266,10 @@ describe('SearchStore', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
       .commit()
 
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
+    store.commit('app/setSettings', { view: 'search', perPage: 2 })
+    await store.dispatch('search/query', { query: 'document', from: 0 })
     expect(store.state.search.response.hits).toHaveLength(2)
-    store.commit('search/size', 25)
+    store.commit('app/setSettings', { view: 'search', perPage: 25 })
   })
 
   it('should return 3 documents', async () => {
@@ -273,9 +277,9 @@ describe('SearchStore', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
       .commit()
 
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
+    store.commit('app/setSettings', { view: 'search', perPage: 3 })
+    await store.dispatch('search/query', { query: 'document', from: 0 })
     expect(store.state.search.response.hits).toHaveLength(3)
-    store.commit('search/size', 25)
   })
 
   it('should return 1 document (1/3)', async () => {
@@ -283,9 +287,9 @@ describe('SearchStore', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
       .commit()
 
-    await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
+    store.commit('app/setSettings', { view: 'search', perPage: 3 })
+    await store.dispatch('search/query', { query: 'document', from: 3 })
     expect(store.state.search.response.hits).toHaveLength(1)
-    store.commit('search/size', 25)
   })
 
   it('should return 0 documents in total', async () => {
@@ -298,9 +302,9 @@ describe('SearchStore', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(5))
       .commit()
 
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
+    await store.dispatch('search/query', { query: 'document', from: 0, perPage: 2 })
     expect(store.state.search.response.total).toBe(5)
-    store.commit('search/size', 25)
+    store.commit('app/setSettings', { view: 'search', perPage: 25 })
   })
 
   it('should return the default query parameters', () => {
@@ -308,28 +312,29 @@ describe('SearchStore', () => {
       field: 'all',
       indices: project,
       q: '',
-      size: '25',
+      perPage: '25',
       from: '0'
     })
   })
 
   it('should return an advanced and filtered query parameters', () => {
+    store.commit('app/setSettings', { view: 'search', orderBy: ['randomOrder', 'asc'] })
+    store.commit('app/setSettings', { view: 'search', perPage: 12 })
+
     store.commit('search/indices', [project])
     store.commit('search/query', 'datashare')
-    store.commit('search/size', 12)
-    store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
 
     expect(store.getters['search/toRouteQuery']()).toMatchObject({
       indices: project,
       q: 'datashare',
       from: '0',
-      size: '12',
+      perPage: '12',
       sort: 'randomOrder',
       'f[contentType]': ['TXT']
     })
 
-    store.commit('search/size', 25)
+    store.commit('app/setSettings', { view: 'search', perPage: 25 })
   })
 
   it('should reset the values of a filter', async () => {
@@ -338,12 +343,6 @@ describe('SearchStore', () => {
 
     store.commit('search/resetFilterValues', 'contentType')
     expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(0)
-  })
-
-  it('should change the state after `toggleFilters` mutation', () => {
-    const showFilters = store.state.search.showFilters
-    store.commit('search/toggleFilters')
-    expect(store.state.search.showFilters).toBe(!showFilters)
   })
 
   describe('updateFromRouteQuery should not be cumulated with existing filter', () => {
@@ -421,21 +420,6 @@ describe('SearchStore', () => {
       store.dispatch('search/updateFromRouteQuery', { from: 0 })
 
       expect(store.state.search.from).toBe(0)
-    })
-
-    it('should set the size of the store according to the url', async () => {
-      store.commit('search/size', 12)
-      store.dispatch('search/updateFromRouteQuery', { size: 24 })
-
-      expect(store.state.search.size).toBe(24)
-      store.commit('search/size', 25)
-    })
-
-    it('should set the sort of the store according to the url', async () => {
-      store.commit('search/sort', 'anything')
-      store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
-
-      expect(store.state.search.sort).toBe('new_sort')
     })
 
     it('should set the filter of the store according to the url', async () => {
@@ -784,43 +768,43 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits[2].shortId).toBe('c')
   })
 
-  describe('sortedFilters with language filter', () => {
+  describe('sortFilters with language filter', () => {
     beforeEach(() => {
       store.commit('search/reset')
     })
 
-    it('this filter should have no sortedFilters', () => {
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(0)
+    it('this filter should have no sortFilters', () => {
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(0)
     })
 
     it('this filter should have one sorted filter', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', sortByOrder: 'asc' })
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(1)
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', orderBy: 'asc' })
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(1)
     })
 
     it('this filter should sort language by _count', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', sortByOrder: 'asc' })
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', orderBy: 'asc' })
       expect(store.getters['search/filterSortedBy']('language')).toBe('_count')
       expect(store.getters['search/filterSortedByOrder']('language')).toBe('asc')
     })
 
     it('this filter should sort language by _count once', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', sortByOrder: 'desc' })
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', sortByOrder: 'asc' })
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', orderBy: 'desc' })
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_count', orderBy: 'asc' })
       expect(store.getters['search/filterSortedBy']('language')).toBe('_count')
       expect(store.getters['search/filterSortedByOrder']('language')).toBe('asc')
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(1)
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(1)
     })
 
     it('this filter should not sort language anymore', () => {
-      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', sortByOrder: 'desc' })
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(1)
+      store.commit('search/sortFilter', { name: 'language', sortBy: '_key', orderBy: 'desc' })
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(1)
       store.commit('search/unsortFilter', 'language')
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(0)
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(0)
     })
 
     it('this filter should have a default sort for language', () => {
-      expect(Object.keys(store.state.search.sortedFilters).length).toBe(0)
+      expect(Object.keys(store.state.search.sortFilters).length).toBe(0)
       expect(store.getters['search/filterSortedBy']('language')).not.toBeUndefined()
       expect(store.getters['search/filterSortedByOrder']('language')).not.toBeUndefined()
     })

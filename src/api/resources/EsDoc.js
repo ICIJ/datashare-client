@@ -3,7 +3,7 @@ import { cloneDeep, extend, get, set } from 'lodash'
 const _raw = '_RAW'
 
 export default class EsDoc {
-  constructor(raw) {
+  constructor(raw = {}) {
     this[_raw] = cloneDeep(raw)
     this.map(raw)
   }
@@ -30,6 +30,9 @@ export default class EsDoc {
   }
   get serializedForStorage() {
     return this.raw
+  }
+  get project() {
+    return this.get('_index')
   }
   static match(hit) {
     const raw = hit.raw || hit
