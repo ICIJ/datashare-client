@@ -6,6 +6,7 @@ import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/Filter
 import FiltersPanelSectionFilterTitleToggler from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleToggler'
 
 const collapse = defineModel('collapse', { type: Boolean })
+const sort = defineModel('sort', { type: Object })
 
 const props = defineProps({
   title: {
@@ -18,9 +19,6 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  sort: {
-    type: String
-  },
   hideSort: {
     type: Boolean
   },
@@ -29,11 +27,8 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:sort'])
-
-const showCount = computed(() => {
-  return props.count > 0 && collapse.value
-})
+const showCount = computed(() => props.count > 0 && collapse.value)
+const showSort = computed(() => !props.hideSort && !collapse.value)
 
 const classList = computed(() => {
   return {
@@ -54,11 +49,7 @@ const classList = computed(() => {
         <phosphor-icon :name="icon" class="me-2" />
         {{ title }}
       </span>
-      <filters-panel-section-filter-title-sort
-        v-if="!hideSort && !collapse"
-        :model-value="sort"
-        @update:modelValue="emit('update:sort', $event)"
-      />
+      <filters-panel-section-filter-title-sort v-if="showSort" v-model="sort" />
       <span @click="collapse = !collapse">
         <b-badge v-if="showCount" class="filters-panel-section-filter-title__count" pill variant="primary-subtle">
           {{ count }}
