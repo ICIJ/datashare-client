@@ -1,7 +1,18 @@
 import { computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router'
 import { useStore } from 'vuex'
-import { debounce, identity, noop, castArray, isString, isObject, isFunction, isUndefined } from 'lodash'
+import {
+  compact,
+  debounce,
+  identity,
+  noop,
+  castArray,
+  isEqual,
+  isString,
+  isObject,
+  isFunction,
+  isUndefined
+} from 'lodash'
 
 /**
  * Global object to store batched updates
@@ -58,9 +69,6 @@ export function useUrlParamWithStore(queryParam, getOrGetters, setMutation, opti
   const router = useRouter()
   const store = useStore()
 
-  // Determine the transform function, defaulting to identity (no transformation)
-  const transform = isString(getOrGetters) ? options.transform || identity : getOrGetters.transform || identity
-
   // Determine the getter function from Vuex or a custom getter
   const getValue = isString(getOrGetters)
     ? () => store.getters[getOrGetters]
@@ -73,12 +81,20 @@ export function useUrlParamWithStore(queryParam, getOrGetters, setMutation, opti
     : // Do nothing if the setter is not set
       (value) => getOrGetters?.set(value)
 
+  // Determine the transform function, defaulting to identity (no transformation)
+  const transform = isString(getOrGetters) ? options.transform || identity : getOrGetters.transform || identity
+
+  // Get and transform the route value
+  const getRouteValue = () => {
+    const value = route.query[queryParam]
+    return value !== undefined ? transform(value) : null
+  }
+
   // Create a computed property that synchronizes the query parameter with the Vuex store
   const param = computed({
     get() {
-      const value = route.query[queryParam]
       // If the query parameter exists in the URL, transform and return it, else return the value from the store
-      return value !== undefined ? transform(value) : getValue()
+      return getRouteValue() ?? getValue()
     },
     set(value) {
       setValue(value)
@@ -89,10 +105,15 @@ export function useUrlParamWithStore(queryParam, getOrGetters, setMutation, opti
 
   // Watch the Vuex store value directly and update the URL when it changes
   watch(getValue, (newValue) => {
-    if (newValue !== route.query[queryParam]) {
+    if (newValue !== getRouteValue()) {
       batchQueryParamUpdate(router, route, [queryParam], [newValue])
     }
   })
+
+  // Initialize the store value with the URL value if they are different
+  if (getRouteValue() && !isEqual(getRouteValue(), getValue())) {
+    setValue(getRouteValue())
+  }
 
   return param
 }
@@ -115,9 +136,6 @@ export function useUrlParamsWithStore(queryParams, getOrGetters, setMutation, op
   const router = useRouter()
   const store = useStore()
 
-  // Determine the transform function, defaulting to identity (no transformation)
-  const transform = isString(getOrGetters) ? options.transform || identity : getOrGetters.transform || identity
-
   // Determine the getter function from Vuex or a custom getter
   const getValue = isString(getOrGetters)
     ? () => store.getters[getOrGetters]
@@ -129,12 +147,20 @@ export function useUrlParamsWithStore(queryParams, getOrGetters, setMutation, op
     ? (values) => store.commit(setMutation, values)
     : (values) => getOrGetters?.set(...values)
 
+  // Determine the transform function, defaulting to identity (no transformation)
+  const transform = isString(getOrGetters) ? options.transform || identity : getOrGetters.transform || identity
+
+  // Get and transform the route value
+  const getRouteValue = () => {
+    const values = queryParams.map((param) => route.query[param])
+    // If all query parameters exist in the URL, transform and return them, else return the values from the store
+    return values.every(isUndefined) ? null : compact(values).map(transform)
+  }
+
   // Create a computed property that synchronizes the query parameters with the Vuex store
   const param = computed({
     get() {
-      const values = queryParams.map((param) => route.query[param])
-      // If all query parameters exist in the URL, transform and return them, else return the values from the store
-      return values.every(isUndefined) ? getValue() : values.map(transform)
+      return getRouteValue() ?? getValue()
     },
     set(values) {
       setValue(values)
@@ -145,14 +171,13 @@ export function useUrlParamsWithStore(queryParams, getOrGetters, setMutation, op
 
   // Watch the Vuex store value directly and update the URL when it changes
   watch(getValue, (newValues) => {
-    const queryUpdate = {}
-    queryParams.forEach((param, index) => {
-      if (newValues[index] !== route.query[param]) {
-        queryUpdate[param] = newValues[index]
-      }
-    })
     batchQueryParamUpdate(router, route, queryParams, newValues)
   })
+
+  // Initialize the store value with the URL value if they are different
+  if (getRouteValue() && getRouteValue() !== getValue()) {
+    setValue(getRouteValue())
+  }
 
   return param
 }
@@ -251,4 +276,67 @@ export function useUrlParams(queryParams, initialOrOptions = {}) {
   )
 
   return param
+}
+
+/**
+ * Replaces a URL query parameter with a new one, optionally transforming the value.
+ *
+ * This function checks if the 'from' query parameter exists in the current route's query.
+ * If it does, it removes 'from' and adds 'to' to the query parameters.
+ * - If 'to' is a string, it assigns the value of 'from' to the new parameter named 'to'.
+ * - If 'to' is a function, it calls the function with the value of 'from' and merges the returned object into the query.
+ *
+ * @param {Object} options - The options object.
+ * @param {string} options.from - The name of the query parameter to replace.
+ * @param {string|Function} options.to - The name of the new query parameter, or a function that returns an object of new parameters.
+ * @returns {void}
+ *
+ * @example
+ * // Simple replacement
+ * replaceUrlParam({ from: 'size', to: 'perPage' })
+ *
+ * // Transformation to multiple parameters
+ * replaceUrlParam({
+ *   from: 'sort',
+ *   to: (value) => ({
+ *     sortBy: value.toLowerCase(),
+ *     order: 'desc',
+ *   }),
+ * })
+ */
+export function replaceUrlParam({ from, to }) {
+  const route = useRoute()
+  const router = useRouter()
+
+  const apply = () => {
+    const value = route.query[from]
+
+    // Check if the 'from' query parameter exists
+    if (value === undefined) {
+      return
+    }
+
+    const query = { ...route.query }
+    // Remove the old parameter
+    delete query[from]
+
+    if (typeof to === 'string') {
+      // Redirect to the new route with updated query parameters
+      router.replace({ query: { ...query, [to]: value } })
+    }
+
+    if (typeof to === 'function') {
+      // Apply the transformation function to get new parameters
+      const transformedParams = to(value)
+      // Ensure that transformedParams is an object
+      if (transformedParams && typeof transformedParams === 'object') {
+        router.replace({ query: { ...query, ...transformedParams } })
+      }
+    }
+  }
+
+  apply()
+  // We don't use the onBeforeRouteUpdate guard because for some reasons
+  // it is not triggered when used in tests.
+  watch(() => route.query, apply)
 }

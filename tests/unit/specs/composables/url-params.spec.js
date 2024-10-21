@@ -3,7 +3,13 @@ import { createRouter, createMemoryHistory } from 'vue-router'
 import { flushPromises } from '@vue/test-utils'
 import Vuex from 'vuex'
 
-import { useUrlParam, useUrlParams, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
+import {
+  useUrlParam,
+  useUrlParams,
+  useUrlParamWithStore,
+  useUrlParamsWithStore,
+  replaceUrlParam
+} from '@/composables/url-params'
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
@@ -13,7 +19,7 @@ vi.mock('lodash', async (importOriginal) => {
   }
 })
 
-export function withSetup(composable, store, routes = []) {
+export function withSetup({ composable, store, routes = [], initialRoute = null }) {
   let result
 
   // Create a Vue Router instance with memory history for test environment
@@ -22,8 +28,10 @@ export function withSetup(composable, store, routes = []) {
     routes: [
       ...routes,
       {
-        path: '/', // Add a default root route to match '/'
-        component: { template: '<div>Default route</div>' }
+        path: '/', // Add a default root route to match /
+        component: {
+          template: '<div>Default route</div>'
+        }
       }
     ]
   })
@@ -44,6 +52,11 @@ export function withSetup(composable, store, routes = []) {
   // Provide the Vue Router instance
   app.use(router)
 
+  // Intialize the router with the initial route if any given
+  if (initialRoute) {
+    router.replace(initialRoute)
+  }
+
   // Mount the app in a virtual DOM element
   app.mount(document.createElement('div'))
 
@@ -52,7 +65,7 @@ export function withSetup(composable, store, routes = []) {
 
 describe('useUrlParam', () => {
   it('should sync a single query parameter with the initial value', async () => {
-    const [result, router] = withSetup(() => useUrlParam('q', 'default'))
+    const [result, router] = withSetup({ composable: () => useUrlParam('q', 'default') })
 
     await router.push({ query: { q: 'test' } })
     await flushPromises()
@@ -62,7 +75,7 @@ describe('useUrlParam', () => {
   })
 
   it('should fallback to the initial value if query parameter is missing', async () => {
-    const [result, router] = withSetup(() => useUrlParam('q', 'default'))
+    const [result, router] = withSetup({ composable: () => useUrlParam('q', 'default') })
 
     await router.push({ query: {} })
     await flushPromises()
@@ -71,7 +84,7 @@ describe('useUrlParam', () => {
   })
 
   it('should update the query parameter when the value changes', async () => {
-    const [result, router] = withSetup(() => useUrlParam('q', 'default'))
+    const [result, router] = withSetup({ composable: () => useUrlParam('q', 'default') })
 
     await router.push({ query: { q: 'default' } })
     await flushPromises()
@@ -85,9 +98,9 @@ describe('useUrlParam', () => {
 
 describe('useUrlParams', () => {
   it('should sync multiple query parameters with the initial values', async () => {
-    const [result, router] = withSetup(() =>
-      useUrlParams(['sort', 'order'], { initialValue: ['defaultSort', 'defaultOrder'] })
-    )
+    const [result, router] = withSetup({
+      composable: () => useUrlParams(['sort', 'order'], { initialValue: ['defaultSort', 'defaultOrder'] })
+    })
 
     await router.push({ query: { sort: 'date', order: 'asc' } })
     await flushPromises()
@@ -96,9 +109,9 @@ describe('useUrlParams', () => {
   })
 
   it('should fallback to the initial values if query parameters are missing', async () => {
-    const [result, router] = withSetup(() =>
-      useUrlParams(['sort', 'order'], { initialValue: ['defaultSort', 'defaultOrder'] })
-    )
+    const [result, router] = withSetup({
+      composable: () => useUrlParams(['sort', 'order'], { initialValue: ['defaultSort', 'defaultOrder'] })
+    })
 
     await router.push({ query: {} })
     await flushPromises()
@@ -107,9 +120,9 @@ describe('useUrlParams', () => {
   })
 
   it('should update the query parameters when the values change', async () => {
-    const [result, router] = withSetup(() =>
-      useUrlParams(['sort', 'order'], { initialValue: ['defaultSort', 'defaultOrder'] })
-    )
+    const [result, router] = withSetup({
+      composable: () => useUrlParams(['sort', 'order'], { initialValue: ['defaultSort', 'defaultOrder'] })
+    })
 
     await router.push({ query: {} })
     await flushPromises()
@@ -144,7 +157,10 @@ describe('useUrlParamWithStore', () => {
   })
 
   it('should sync a single query parameter with Vuex store getter', async () => {
-    const [result, router] = withSetup(() => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort'), store)
+    const [result, router] = withSetup({
+      store,
+      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
+    })
 
     await router.push({ query: { sort: 'name' } })
     await flushPromises()
@@ -153,7 +169,10 @@ describe('useUrlParamWithStore', () => {
   })
 
   it('should fallback to Vuex store value if query parameter is missing', async () => {
-    const [result, router] = withSetup(() => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort'), store)
+    const [result, router] = withSetup({
+      store,
+      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
+    })
 
     await router.push({ query: {} })
     await flushPromises()
@@ -162,7 +181,10 @@ describe('useUrlParamWithStore', () => {
   })
 
   it('should update Vuex store when query parameter changes', async () => {
-    const [result, router] = withSetup(() => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort'), store)
+    const [result, router] = withSetup({
+      store,
+      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
+    })
 
     await router.push({ query: {} })
     await flushPromises()
@@ -174,7 +196,10 @@ describe('useUrlParamWithStore', () => {
   })
 
   it('should update query parameter when Vuex store value changes', async () => {
-    const [, router] = withSetup(() => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort'), store)
+    const [, router] = withSetup({
+      store,
+      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
+    })
 
     store.commit('app/setSort', 'creationDate')
     await flushPromises()
@@ -207,14 +232,15 @@ describe('useUrlParamsWithStore', () => {
   })
 
   it('should sync multiple query parameters with Vuex store getter', async () => {
-    const [result, router] = withSetup(
-      () =>
-        useUrlParamsWithStore(['sort', 'order'], {
+    const [result, router] = withSetup({
+      store,
+      composable: () => {
+        return useUrlParamsWithStore(['sort', 'order'], {
           get: () => store.getters['app/getSortOrder'],
           set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        }),
-      store
-    )
+        })
+      }
+    })
 
     await router.push({ query: { sort: 'name', order: 'desc' } })
     await flushPromises()
@@ -223,14 +249,15 @@ describe('useUrlParamsWithStore', () => {
   })
 
   it('should fallback to Vuex store values if query parameters are missing', async () => {
-    const [result, router] = withSetup(
-      () =>
-        useUrlParamsWithStore(['sort', 'order'], {
+    const [result, router] = withSetup({
+      store,
+      composable: () => {
+        return useUrlParamsWithStore(['sort', 'order'], {
           get: () => store.getters['app/getSortOrder'],
           set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        }),
-      store
-    )
+        })
+      }
+    })
 
     await router.push({ query: {} })
     await flushPromises()
@@ -239,14 +266,15 @@ describe('useUrlParamsWithStore', () => {
   })
 
   it('should update Vuex store when query parameters change', async () => {
-    const [result, router] = withSetup(
-      () =>
-        useUrlParamsWithStore(['sort', 'order'], {
+    const [result, router] = withSetup({
+      store,
+      composable: () => {
+        return useUrlParamsWithStore(['sort', 'order'], {
           get: () => store.getters['app/getSortOrder'],
           set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        }),
-      store
-    )
+        })
+      }
+    })
 
     await router.push({ query: {} })
     await flushPromises()
@@ -259,14 +287,15 @@ describe('useUrlParamsWithStore', () => {
   })
 
   it('should update query parameters when Vuex store values change', async () => {
-    const [, router] = withSetup(
-      () =>
-        useUrlParamsWithStore(['sort', 'order'], {
+    const [, router] = withSetup({
+      store,
+      composable: () => {
+        return useUrlParamsWithStore(['sort', 'order'], {
           get: () => store.getters['app/getSortOrder'],
           set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        }),
-      store
-    )
+        })
+      }
+    })
 
     store.commit('app/setSortOrder', { sort: 'creationDate', order: 'desc' })
     await flushPromises()
@@ -275,3 +304,112 @@ describe('useUrlParamsWithStore', () => {
     expect(router.currentRoute.value.query.order).toBe('desc')
   })
 })
+
+describe('replaceUrlParam', () => {
+  beforeEach(() => {
+    // Reset the console warnings
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('should do nothing if the "from" parameter does not exist', async () => {
+    const [, router] = withSetup({
+      initialRoute: { path: '/' },
+      composable: () => replaceUrlParam({ from: 'oldParam', to: 'newParam' })
+    })
+
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({})
+  })
+
+  it('should replace "from" parameter with "to" when "to" is a string', async () => {
+    const [, router] = withSetup({
+      initialRoute: { path: '/', query: { oldParam: 'testValue' } },
+      composable: () => replaceUrlParam({ from: 'oldParam', to: 'newParam' })
+    })
+
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({ newParam: 'testValue' })
+  })
+
+  it('should transform the parameter when "to" is a function', async () => {
+    const to = (value) => ({
+      transformedParam: value.toUpperCase(),
+    })
+
+    const [, router] = withSetup({
+      initialRoute: { path: '/', query: { oldParam: 'testValue' } },
+      composable: () => replaceUrlParam({ from: 'oldParam', to })
+    })
+
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({ transformedParam: 'TESTVALUE' })
+  })
+
+  it('should not change query if "to" function returns null', async () => {
+    const to = (value) => null
+
+    const [, router] = withSetup({
+      initialRoute: { path: '/', query: { oldParam: 'testValue' } },
+      composable: () => replaceUrlParam({ from: 'oldParam', to })
+    })
+
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({ oldParam: 'testValue' })
+  })
+
+  it('should not do anythng if "to" is neither a string nor a function', async () => {
+    const [, router] = withSetup({
+      initialRoute: { path: '/', query: { oldParam: 'testValue' } },
+      composable: () => replaceUrlParam({ from: 'oldParam', to: 42 })
+    })
+
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({ oldParam: 'testValue' })
+  })
+
+  it('should handle multiple replacements', async () => {
+    const [, router] = withSetup({
+      initialRoute: { path: '/', query: { param1: 'value1', param2: 'value2' } },
+      composable: () => {
+        replaceUrlParam({ from: 'param1', to: 'newParam1' })
+        replaceUrlParam({ from: 'param2', to: (value) => ({ newParam2: value + '_suffix' }) })
+      }
+    })
+
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({
+      newParam1: 'value1',
+      newParam2: 'value2_suffix'
+    })
+  })
+
+  it('should not cause infinite loops when replacing', async () => {
+    const [, router] = withSetup({
+      initialRoute: { path: '/', query: { size: '10' } },
+      composable: () => {
+        replaceUrlParam({ from: 'size', to: 'perPage' })
+      }
+    })
+
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({ perPage: '10' })
+
+    // Simulate the route update that triggers the composable again
+    // After the initial replacement, 'size' no longer exists, so no further action is taken
+    await flushPromises()
+
+    expect(router.currentRoute.value.query).toEqual({ perPage: '10' })
+  })
+})
+
