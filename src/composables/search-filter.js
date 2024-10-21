@@ -1,7 +1,7 @@
-import { computed, watch } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 import { get, identity, last } from 'lodash'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
@@ -9,6 +9,7 @@ import { useCore } from '@/composables/core'
 
 export function useSearchFilter() {
   const store = useStore()
+  const route = useRoute()
   const router = useRouter()
   const { t, te } = useI18n()
   const { core } = useCore()
@@ -47,6 +48,22 @@ export function useSearchFilter() {
 
   function getFilterValues({ name }) {
     return getFilterValuesByName(name)
+  }
+
+  function getPerPage() {
+    return store.getters['app/getSettings']('search', 'perPage')
+  }
+
+  function getOrderBy() {
+    return store.getters['app/getSettings']('search', 'orderBy')
+  }
+
+  function getSort() {
+    return getOrderBy()[0]
+  }
+
+  function getOrder() {
+    return getOrderBy()[1]
   }
 
   async function getTotal({ query = 'type:Document' } = {}) {
@@ -107,6 +124,16 @@ export function useSearchFilter() {
     const name = 'search'
     const query = store.getters['search/toRouteQuery']()
     return router.push({ name, query }).catch(() => {})
+  }
+
+  function refreshSearchFromRoute() {
+    // Extract the query parameters that must be saved in the app state
+    const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
+    store.commit('app/setSettings', { view: 'search', perPage, orderBy: [sort, order] })
+    // Update the search store using the route query
+    store.dispatch('search/updateFromRouteQuery', route.query)
+    // And finally, refresh the search if t
+    return nextTick(refreshSearch)
   }
 
   function refreshRecommendedBy() {
@@ -206,6 +233,7 @@ export function useSearchFilter() {
     isFilterExcluded,
     labelToHuman,
     refreshRoute,
+    refreshSearchFromRoute,
     refreshRouteAndSearch,
     removeFilterValue,
     setFilterValue,

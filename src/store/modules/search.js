@@ -468,8 +468,8 @@ function actionsBuilder(api) {
       }
 
       // Retro compatibility with old query parameters
-      if (has(q, 'perPage')) {
-        commit('app/setSettings', { view: 'search', perPage: q.perPage }, { root: true })
+      if (has(q, 'size')) {
+        commit('app/setSettings', { view: 'search', perPage: q.size }, { root: true })
       }
 
       // Then mutates all values if they are in queryOrParams. The mutation
