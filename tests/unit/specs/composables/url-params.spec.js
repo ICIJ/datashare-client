@@ -339,7 +339,7 @@ describe('replaceUrlParam', () => {
 
   it('should transform the parameter when "to" is a function', async () => {
     const to = (value) => ({
-      transformedParam: value.toUpperCase(),
+      transformedParam: value.toUpperCase()
     })
 
     const [, router] = withSetup({
@@ -412,4 +412,3 @@ describe('replaceUrlParam', () => {
     expect(router.currentRoute.value.query).toEqual({ perPage: '10' })
   })
 })
-
