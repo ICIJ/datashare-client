@@ -2,6 +2,7 @@
 import Fuse from 'fuse.js'
 import { orderBy as orderArrayBy, property } from 'lodash'
 import { computed, ref, onBeforeMount } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
@@ -11,7 +12,7 @@ import { useUtils } from '@/composables/utils'
 
 const { core } = useCore()
 const { isServer } = useUtils()
-
+const { t } = useI18n()
 const searchQuery = useUrlParam('q', '')
 
 const page = useUrlParam('page', {
@@ -104,6 +105,8 @@ const order = computed({
 const toAddRoute = computed(() => {
   return isServer.value ? null : { name: 'project.new' }
 })
+
+const searchPlaceholder = computed(() => t('projectList.searchPlaceholder'))
 </script>
 
 <template>
@@ -116,7 +119,7 @@ const toAddRoute = computed(() => {
       :to-add="toAddRoute"
       searchable
       paginable
-      search-placeholder="Search projects"
+      :search-placeholder="searchPlaceholder"
     />
     <project-entries v-model:sort="sort" v-model:order="order" :projects="projects" :layout="layout" />
   </div>

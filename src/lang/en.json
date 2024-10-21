@@ -1052,6 +1052,7 @@
   "projectList": {
     "title": "Projects",
     "newProject": "New project",
+    "searchPlaceholder": "Search projects",
     "fields": {
       "label": "Label",
       "updateDate": "Updated"
