@@ -1,7 +1,8 @@
 <script setup>
-import { computed, watch, onBeforeMount } from 'vue'
+import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { find } from 'lodash'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
@@ -9,32 +10,44 @@ import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import Hook from '@/components/Hook'
-import { useViews } from '@/composables/views'
+import settings from '@/utils/settings'
+import { replaceUrlParam } from '@/composables/url-params'
 import { useSearchFilter } from '@/composables/search-filter'
+import { useViews } from '@/composables/views'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { refreshRouteAndSearch, refreshSearch, watchProjects } = useSearchFilter()
+const { refreshRoute, refreshSearchFromRoute, watchProjects } = useSearchFilter()
 const store = useStore()
 const route = useRoute()
 
-onBeforeMount(refreshSearch)
-// Refresh search when route query changes
-watch(() => route.query, refreshSearch, { deep: true })
-// Refresh store and search based on route query
-store.dispatch('search/updateFromRouteQuery', route.query)
-// Refresh route and search when filter values change
-watch(() => store.state.search.values, refreshRouteAndSearch, { deep: true })
-// Refresh route and search when reversed filters change
-watch(() => store.state.search.excludeFilters, refreshRouteAndSearch, { deep: true })
-// Refresh route and search when sort by and order by changes
-watch(() => store.getters['app/getSettings']('search', 'sortBy'), refreshRouteAndSearch)
-watch(() => store.getters['app/getSettings']('search', 'orderBy'), refreshRouteAndSearch)
-// Refresh route and search when size (per page) changes
-watch(() => store.getters['app/getSettings']('search', 'perPage'), refreshRouteAndSearch)
-// Refresh route and search when projects change
-watchProjects(refreshRouteAndSearch)
+// The size query parameter is replaced by the perPage query parameter
+replaceUrlParam({ from: 'size', to: 'perPage' })
+// This function replaces a unique sort query parameter with a pair of sort and order query parameters
+// based on the settings's searchSortFields. This way we can ensure retro-compatibility with
+// the former sort query parameter which used to contain both the sort field and the order.
+replaceUrlParam({
+  from: 'sort',
+  to: (name) => {
+    const { field: sort = null, desc } = find(settings.searchSortFields, { name }) ?? {}
+    const order = desc ? 'desc' : 'asc'
+    // Only redirect if the sort field is found
+    return sort ? { sort, order } : null
+  }
+})
 
 const hits = computed(() => store.state.search.response.hits)
+
+// Refresh search when route query changes. Among all the watcher of this view, it probably
+// the most important one. It will trigger the search API call when the route query changes
+// which mean that only route change can trigger a search.
+watch(() => route.query, refreshSearchFromRoute, { deep: true, immediate: true })
+
+// Refresh route query when filter values change
+watch(() => store.state.search.values, refreshRoute, { deep: true })
+// Refresh route query when reversed filters change
+watch(() => store.state.search.excludeFilters, refreshRoute, { deep: true })
+// Refresh route query when projects change
+watchProjects(refreshRoute)
 </script>
 
 <template>
