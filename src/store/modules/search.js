@@ -467,11 +467,6 @@ function actionsBuilder(api) {
         commit('query', q)
       }
 
-      // Retro compatibility with old query parameters
-      if (has(q, 'size')) {
-        commit('app/setSettings', { view: 'search', perPage: q.size }, { root: true })
-      }
-
       // Then mutates all values if they are in queryOrParams. The mutation
       // for "indices" must be after "index" since the two mutations are
       // updating concurent values.
