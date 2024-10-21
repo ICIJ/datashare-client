@@ -38,7 +38,7 @@ export default {
     }
   },
   async mounted() {
-    await this.loadLanguages()
+    return this.loadLanguages()
   },
   methods: {
     async loadLanguages() {
@@ -56,14 +56,19 @@ export default {
 
 <template>
   <b-overlay :show="!isReady" class="extracting-language-form-control" rounded spinner-small>
-    <div v-if="!textLanguages.length" class="extracting-language-form-control--no-language mt-3 alert alert-danger">
+    <b-alert
+      v-if="isReady && !textLanguages.length"
+      model-value
+      variant="danger"
+      class="extracting-language-form-control--no-language m-0"
+    >
       {{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}
-    </div>
+    </b-alert>
     <b-form-group v-else>
       <b-form-select
         :model-value="modelValue"
         :options="[nullOption, ...options]"
-        class="extracting-language-form-control__ocr-options"
+        class="extracting-language-form-control__ocr-options p-3"
         @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
     /></b-form-group>
   </b-overlay>

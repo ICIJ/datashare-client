@@ -146,12 +146,12 @@ const skipOptions = computed(() => [
       <input type="hidden" name="project" :value="selectedProject.name" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="source-path" translation-key="task.analysis.form.path" compact-auto>
-      <input type="hidden" name="path" :value="path" />
       <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
+      <input type="hidden" name="path" :value="path" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="extracting-language" translation-key="task.analysis.form.extractingLanguage" compact-auto>
-      <input type="hidden" name="language" :value="language" />
       <extracting-language-form-control v-model="language" />
+      <input type="hidden" name="language" :value="language" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.analysis.form.extractOcr" compact-auto>
       <b-form-radio-group
