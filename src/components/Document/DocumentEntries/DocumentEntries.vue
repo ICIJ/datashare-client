@@ -1,0 +1,75 @@
+<script setup>
+import { pickBy } from 'lodash'
+import { computed } from 'vue'
+
+import DocumentEntriesHeader from './DocumentEntriesHeader'
+import DocumentEntriesList from './DocumentEntriesList'
+import DocumentEntriesGrid from './DocumentEntriesGrid'
+import DocumentEntriesTable from './DocumentEntriesTable'
+
+import { LAYOUTS, layoutValidator } from '@/enums/layouts'
+
+const sort = defineModel('sort', { type: String, default: null })
+const order = defineModel('order', { type: String, default: 'desc' })
+const selectMode = defineModel('selectMode', { type: Boolean, default: false })
+const page = defineModel('page', { type: Number, default: 1 })
+
+const props = defineProps({
+  entries: {
+    type: Array
+  },
+  layout: {
+    type: String,
+    validator: layoutValidator,
+    default: LAYOUTS.LIST
+  },
+  perPage: {
+    type: Number,
+    default: 25
+  },
+  total: {
+    type: Number,
+    default: 0
+  },
+  properties: {
+    type: Array,
+    default: () => ['title']
+  }
+})
+
+const component = computed(() => {
+  const layouts = {
+    [LAYOUTS.LIST]: DocumentEntriesList,
+    [LAYOUTS.GRID]: DocumentEntriesGrid,
+    [LAYOUTS.TABLE]: DocumentEntriesTable
+  }
+
+  return layouts[props.layout]
+})
+
+const componentProps = computed(() => {
+  return pickBy({ ...props, selectMode: selectMode.value }, (value, name) => {
+    return name in component.value.props
+  })
+})
+</script>
+
+<template>
+  <component
+    :is="component"
+    v-bind="componentProps"
+    class="document-entries"
+    @update:order="$emit('update:order', $event)"
+    @update:sort="$emit('update:sort', $event)"
+  >
+    <slot />
+    <template #header>
+      <document-entries-header
+        v-model:select-mode="selectMode"
+        v-model:page="page"
+        :total="total"
+        :per-page="perPage"
+      />
+    </template>
+  </component>
+</template>
