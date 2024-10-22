@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { LAYOUTS } from '@/enums/layouts'
 import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
+import { useSearchSettings } from '@/composables/search-settings'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import settings from '@/utils/settings'
@@ -17,7 +18,7 @@ const layout = ref({
   label: computed(() => t('search.layout.title')),
   type: 'radio',
   open: true,
-  modelValue: useUrlParamWithStore('layout', {
+  modelValue: computed({
     get: () => core?.store.getters['app/getSettings']('search', 'layout'),
     set: (layout) => core?.store.commit('app/setSettings', { view: 'search', layout })
   }),
@@ -80,6 +81,25 @@ const sortBy = ref({
   })
 })
 
+const { propertiesOrder, propertiesLabel, propertiesIcon } = useSearchSettings()
+
+const properties = ref({
+  label: computed(() => t('search.settings.properties')),
+  type: 'checkbox',
+  open: true,
+  modelValue: computed({
+    get: () => core?.store.getters['app/getSettings']('search', 'properties'),
+    set: (properties) => core?.store.commit('app/setSettings', { view: 'search', properties })
+  }),
+  options: computed(() => {
+    return propertiesOrder.map((value) => {
+      const text = propertiesLabel.value[value]
+      const icon = propertiesIcon[value]
+      return { value, icon, text }
+    })
+  })
+})
+
 defineProps({
   hide: {
     type: Function,
@@ -116,6 +136,13 @@ defineProps({
       :type="layout.type"
       :options="layout.options"
       :label="layout.label"
+    />
+    <page-settings-section
+      v-model="properties.modelValue"
+      v-model:open="properties.open"
+      :type="properties.type"
+      :options="properties.options"
+      :label="properties.label"
     />
   </page-settings>
 </template>
