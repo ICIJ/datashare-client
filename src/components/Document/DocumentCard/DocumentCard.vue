@@ -26,7 +26,8 @@ const props = defineProps({
     default: '_self'
   },
   selectMode: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   selected: {
     type: Boolean
@@ -62,8 +63,8 @@ const showTitle = computed(() => {
   <div class="document-card" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
     <div class="d-flex flex-column align-items-center">
       <document-card-checkbox
-        v-if="props.selectMode"
-        :model-value="props.selected"
+        v-if="selectMode"
+        :model-value="selected"
         @update:model-value="emit('update:selected', $event)"
       />
       <document-thumbnail
