@@ -7,7 +7,7 @@ defineProps({
 </script>
 
 <template>
-  <td>
+  <td class="text-beak">
     <div v-html="document.highlights.join(' … ')"></div>
   </td>
 </template>
