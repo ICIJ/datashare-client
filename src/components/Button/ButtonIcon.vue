@@ -2,10 +2,11 @@
   <b-button
     v-bind="buttonProps"
     :id="buttonId"
+    ref="element"
     :to="to"
     class="button-icon"
     :class="classList"
-    @mouseenter="currentHover = true"
+    @mousenter="currentHover = true"
     @mouseleave="currentHover = false"
   >
     <slot name="start" />
@@ -44,18 +45,16 @@
     <b-tooltip
       v-if="hasTooltip"
       teleport-to="body"
-      manual
       :boundary-padding="20"
-      :model-value="showTooltip"
       :placement="tooltipPlacement"
-      :target="buttonId"
+      :target="elementRef"
       :title="tooltipText"
     />
   </b-button>
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, useTemplateRef } from 'vue'
 import { uniqueId } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { PhCircleNotch } from '@phosphor-icons/vue'
@@ -69,6 +68,7 @@ import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 const injectedVariant = inject('variant', VARIANT.ACTION)
 const injectedSize = inject('size', SIZE.MD)
+const elementRef = useTemplateRef('element')
 
 defineOptions({
   name: 'ButtonIcon'
@@ -257,10 +257,6 @@ const tooltipText = computed(() => {
 
 const hasTooltip = computed(() => {
   return !!tooltipText.value && !props.hideTooltip && (props.showTooltipForce || props.hideLabel)
-})
-
-const showTooltip = computed(() => {
-  return currentHover.value && hasTooltip.value
 })
 
 const buttonProps = computed(() => ({
