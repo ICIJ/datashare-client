@@ -1,4 +1,6 @@
-import { remove } from 'lodash'
+import { filter, remove, sortBy } from 'lodash'
+
+import { TASK_STATUS } from '@/enums/taskStatus'
 
 export function initialState() {
   return {
@@ -16,7 +18,22 @@ export function initialState() {
 }
 
 export const state = initialState()
-
+export const getters = {
+  sortedTasks(state) {
+    // Move running tasks on top
+    const states = [TASK_STATUS.RUNNING]
+    return sortBy(state.tasks, ({ state }) => -states.indexOf(state))
+  },
+  pendingTasks(state) {
+    return filter(state.tasks, { state: TASK_STATUS.RUNNING })
+  },
+  hasPendingTasks(state, getters) {
+    return getters.pendingTasks.length > 0
+  },
+  hasDoneTasks(state, getters) {
+    return state.tasks.length - getters.pendingTasks.length > 0
+  }
+}
 export const mutations = {
   reset(state) {
     Object.assign(state, initialState())
@@ -118,6 +135,7 @@ export function indexingStoreBuilder(api) {
   return {
     namespaced: true,
     state,
+    getters,
     mutations,
     actions: actionsBuilder(api)
   }
