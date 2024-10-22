@@ -42,8 +42,9 @@ export function storeBuilder(api) {
       createPersistedState({
         paths: [
           'app.redirectAfterLogin',
-          'app.sidebar.compact',
-          'app.sidebar.closed',
+          'app.sidebar',
+          'app.settings',
+          'app.filters',
           'app.pins.projects',
           'document.showTranslatedContent',
           'player.autoplay',
