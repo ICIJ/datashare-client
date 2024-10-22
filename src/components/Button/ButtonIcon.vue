@@ -75,6 +75,9 @@ defineOptions({
 })
 
 const props = defineProps({
+  id: {
+    type: String
+  },
   iconLeft: {
     type: [String, Object, Array],
     default: null
@@ -223,7 +226,7 @@ function click(name) {
 
 const currentHover = ref(false)
 
-const buttonId = computed(() => uniqueId('button-icon-'))
+const buttonId = computed(() => props.id ?? uniqueId('button-icon-'))
 
 const classList = computed(() => {
   return {
