@@ -223,10 +223,7 @@ export default {
         contentTextLength: 30e3,
         contentType: 'image/jpeg',
         isSupportedImage: true,
-        highlights: [
-          'Introducing our latest <mark>product line</mark>.',
-          'Company mission and <mark>values</mark>.'
-        ],
+        highlights: ['Introducing our latest <mark>product line</mark>.', 'Company mission and <mark>values</mark>.'],
         contentTypeIcon: markRaw(PhFile)
       },
       {

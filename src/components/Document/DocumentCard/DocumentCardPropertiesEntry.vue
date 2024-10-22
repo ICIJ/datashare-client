@@ -1,5 +1,6 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
+
 import { useSearchSettings } from '@/composables/search-settings'
 
 const { propertiesLabel, propertiesIcon } = useSearchSettings()
