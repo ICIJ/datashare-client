@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { uniqueId } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { useLocale } from '@/composables/useLocale'
+import { useLocale } from '@/composables/locale'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 defineProps({
