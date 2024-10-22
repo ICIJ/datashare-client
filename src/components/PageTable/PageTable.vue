@@ -51,7 +51,7 @@ provide('orderBy', orderBy)
     </colgroup>
     <thead v-if="hasThead">
       <tr>
-        <th class="page-table__select"></th>
+        <th v-show="selectMode" class="page-table__select"></th>
         <slot v-bind="{ selectMode, sortBy, orderBy }" name="thead" />
       </tr>
     </thead>
@@ -71,7 +71,6 @@ provide('orderBy', orderBy)
 
   &__select {
     width: 2rem;
-    display: none;
   }
 
   &--select-mode {
