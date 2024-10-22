@@ -19,7 +19,8 @@ export const state = () => ({
       search: {
         layout: LAYOUTS.LIST,
         orderBy: ['_score', 'desc'],
-        perPage: 25
+        perPage: 25,
+        properties: ['title', 'thumbnail', 'highlights', 'project']
       }
     }
   },
