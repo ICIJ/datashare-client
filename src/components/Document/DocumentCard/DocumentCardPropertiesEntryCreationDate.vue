@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property" icon="calendar">
+  <document-card-properties-entry :document="document" :property="property">
     <display-datetime :value="document.creationDate" />
   </document-card-properties-entry>
 </template>

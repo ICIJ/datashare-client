@@ -12,5 +12,5 @@ defineProps({
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property" icon="user-circle" />
+  <document-card-properties-entry :document="document" :property="property" />
 </template>
