@@ -2,13 +2,13 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { find } from 'lodash'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook'
 import settings from '@/utils/settings'
 import { replaceUrlParam } from '@/composables/url-params'
@@ -36,6 +36,8 @@ replaceUrlParam({
 })
 
 const hits = computed(() => store.state.search.response.hits)
+const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
+const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
 
 // Refresh search when route query changes. Among all the watcher of this view, it probably
 // the most important one. It will trigger the search API call when the route query changes
@@ -56,7 +58,7 @@ watchProjects(refreshRoute)
     <div class="search__main d-flex">
       <slot name="filters" />
       <div class="search__main__content flex-grow-1 py-3">
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 pb-3">
           <button-toggle-sidebar v-if="!toggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
           <button-toggle-filters
             v-if="isFiltersClosed"
@@ -68,8 +70,10 @@ watchProjects(refreshRoute)
           </div>
           <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
         </div>
-        <div class="search__main__results">
-          <pre>{{ hits.map((h) => h.title) }}</pre>
+        <div class="search__main__results py-3">
+          <document-entries :entries="hits" :properties="properties" :layout="layout">
+            <router-view />
+          </document-entries>
         </div>
       </div>
     </div>
