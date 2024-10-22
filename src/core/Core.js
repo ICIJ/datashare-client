@@ -33,7 +33,7 @@ import Fa from '@/components/Fa'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
-import { useTheme } from '@/composables/useTheme'
+import { useTheme } from '@/composables/theme'
 
 class Base {}
 const Behaviors = compose(
