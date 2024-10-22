@@ -49,7 +49,8 @@ const orderBy = inject('orderBy')
 const classList = computed(() => {
   return {
     'page-table-th--emphasis': props.emphasis,
-    'page-table-th--compact': props.hideLabel,
+    'page-table-th--hide-label': props.hideLabel,
+    'page-table-th--compact': props.compact,
     'page-table-th--sortable': props.sortable,
     'page-table-th--sorted': isSorted.value,
     'page-table-th--number': props.number
