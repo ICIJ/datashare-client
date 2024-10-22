@@ -118,6 +118,11 @@ const showToggleSidebar = computed(() => {
 
 <style lang="scss" scoped>
 .page-header {
+  position: sticky;
+  top: 0;
+  z-index: $zindex-sticky;
+  background: var(--bs-body-bg);
+
   @include media-breakpoint-down(md) {
     &__pagination {
       order: 1;
