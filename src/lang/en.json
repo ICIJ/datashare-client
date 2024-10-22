@@ -177,7 +177,8 @@
     "settings": {
       "title": "Results settings",
       "resultsPerPage": "Documents per page",
-      "sortBy": "Sort by"
+      "sortBy": "Sort by",
+      "properties": "Visible properties"
     },
     "results": {
       "match": "match in doc",
@@ -1486,7 +1487,7 @@
   },
   "documentRow": {
     "properties": {
-      "thumbnail": "",
+      "thumbnail": "Thumbnail ",
       "title": "Document name",
       "highlights": "Highlights",
       "author": "Author",
