@@ -1,5 +1,4 @@
 <script setup>
-import { filter } from 'lodash'
 import { computed } from 'vue'
 
 import DocumentCardPropertiesEntryAuthor from './DocumentCardPropertiesEntryAuthor'
@@ -13,6 +12,8 @@ import DocumentCardPropertiesEntryLanguage from './DocumentCardPropertiesEntryLa
 import DocumentCardPropertiesEntryPath from './DocumentCardPropertiesEntryPath'
 import DocumentCardPropertiesEntryProject from './DocumentCardPropertiesEntryProject'
 import DocumentCardPropertiesEntryTags from './DocumentCardPropertiesEntryTags'
+
+import { useSearchSettings } from '@/composables/search-settings'
 
 const entryComponents = {
   author: DocumentCardPropertiesEntryAuthor,
@@ -37,9 +38,11 @@ const props = defineProps({
   }
 })
 
+const { propertiesOrder } = useSearchSettings()
+
 const availableProperties = computed(() => {
-  return filter(props.properties, (property) => {
-    return property in entryComponents
+  return propertiesOrder.filter((property) => {
+    return props.properties.includes(property) && property in entryComponents
   })
 })
 </script>
