@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property" icon="text-columns">
+  <document-card-properties-entry :document="document" :property="property">
     {{ $n(document.contentTextLength) }}
   </document-card-properties-entry>
 </template>

@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property" icon="tree-structure">
+  <document-card-properties-entry :document="document" :property="property">
     {{ document.path }}
   </document-card-properties-entry>
 </template>
