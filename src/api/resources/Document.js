@@ -1,4 +1,5 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
+import { markRaw } from 'vue'
 import Murmur from '@icij/murmur-next'
 import moment from 'moment'
 import { extname } from 'path'
@@ -196,7 +197,7 @@ export default class Document extends EsDoc {
     return get(types, [this.contentType, 'warning'], {})
   }
   get contentTypeIcon() {
-    return findContentTypeIcon(this.contentType)
+    return markRaw(findContentTypeIcon(this.contentType))
   }
   get rootContentType() {
     return this.root ? this.root.source.contentType : 'unknown'
