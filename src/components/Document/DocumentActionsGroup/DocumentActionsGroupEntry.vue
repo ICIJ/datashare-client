@@ -1,6 +1,5 @@
 <template>
   <button-icon
-    :id="btnId"
     :icon-left="icon"
     :icon-left-size="iconSize"
     :icon-left-weight="iconWeight"
@@ -20,7 +19,6 @@
 
 <script setup>
 import { computed } from 'vue'
-import uniqueId from 'lodash/uniqueId'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -89,7 +87,6 @@ const props = defineProps({
   }
 })
 
-const btnId = uniqueId('action-btn-')
 const iconWeight = computed(() => (props.fill ? 'fill' : 'regular'))
 const iconHoverWeight = computed(() => (props.fill ? 'fill' : 'bold'))
 </script>
