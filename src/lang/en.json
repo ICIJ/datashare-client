@@ -1484,6 +1484,23 @@
     "next": "Next document",
     "previous": "Previous document"
   },
+  "documentRow": {
+    "properties": {
+      "thumbnail": "",
+      "title": "Document name",
+      "highlights": "Highlights",
+      "author": "Author",
+      "path": "Path",
+      "tags": "Tags",
+      "contentLength": "File size",
+      "contentTextLength": "Text length",
+      "contentType": "File type",
+      "creationDate": "Created at",
+      "extractionLevel": "Extraction level",
+      "language": "Language",
+      "project": "Project"
+    }
+  },
   "tiny-pagination": {
     "page": "Page",
     "aria": "Jump to page",
