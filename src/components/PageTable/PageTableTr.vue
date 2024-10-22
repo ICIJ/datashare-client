@@ -1,18 +1,20 @@
 <script setup>
 import { computed } from 'vue'
 
+const selected = defineModel('selected', { type: Boolean })
+
 const props = defineProps({
-  active: {
+  emphasis: {
     type: Boolean
   },
-  emphasis: {
+  selectMode: {
     type: Boolean
   }
 })
 
 const classList = computed(() => {
   return {
-    'page-table-tr--active': props.active,
+    'page-table-tr--selected': selected.value,
     'page-table-tr--emphasis': props.emphasis
   }
 })
@@ -20,8 +22,8 @@ const classList = computed(() => {
 
 <template>
   <b-tr :class="classList" class="page-table-tr">
-    <td class="page-table-tr__select">
-      <b-form-checkbox :model-value="active" @update:model-value="$emit('update:active', $event)" />
+    <td v-show="selectMode" class="page-table-tr__select">
+      <b-form-checkbox v-model="selected" />
     </td>
     <slot />
   </b-tr>
@@ -34,7 +36,6 @@ const classList = computed(() => {
   vertical-align: middle;
 
   &__select {
-    display: none;
     width: 2rem;
     position: relative;
 
@@ -53,8 +54,8 @@ const classList = computed(() => {
     box-shadow: var(--box-shadow);
   }
 
-  &--active {
-    // Due to CSS/HTML limitation, we draw the border of the active
+  &--selected {
+    // Due to CSS/HTML limitation, we draw the border of the selected
     // row using box-shadow on the `td` elements.
     --box-shadow-top: inset 0 1px 0 0 var(--bs-action-text-emphasis);
     --box-shadow-bottom: inset 0 -1px 0 0 var(--bs-action-text-emphasis);
