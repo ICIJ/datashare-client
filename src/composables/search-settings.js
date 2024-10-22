@@ -1,6 +1,6 @@
 import { useI18n } from 'vue-i18n'
 
-export function useSearchSettings () {
+export function useSearchSettings() {
   const { t } = useI18n()
 
   const propertiesOrder = [
