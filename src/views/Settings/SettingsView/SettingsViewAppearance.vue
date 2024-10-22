@@ -4,7 +4,7 @@ import { ref, computed, watch } from 'vue'
 
 import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
-import { useTheme } from '@/composables/useTheme'
+import { useTheme } from '@/composables/theme'
 
 defineOptions({ name: 'SettingsViewAppearance' })
 const { getTheme, setTheme, themes } = useTheme()
