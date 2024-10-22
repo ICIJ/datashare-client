@@ -144,6 +144,9 @@ export default class Document extends EsDoc {
   get slicedNameToString() {
     return this.slicedName.join(' › ')
   }
+  get language() {
+    return this.get('_source.language')
+  }
   get author() {
     return this.get('_source.metadata.tika_metadata_dc_creator', null)
   }
