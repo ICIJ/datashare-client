@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { PhCards, PhX } from '@phosphor-icons/vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { VARIANT } from '@/enums/variants'
@@ -20,13 +21,17 @@ const variant = computed(() => {
 const label = computed(() => {
   return active.value ? t('buttonToggleBatchMode.labelSingleFlow') : t('buttonToggleBatchMode.labelBatchMode')
 })
+
+const icon = computed(() => {
+  return active.value ? PhX : PhCards
+})
 </script>
 
 <template>
   <button-icon
     class="button-toggle-batch-mode"
     :label="label"
-    icon-left="stack"
+    :icon-left="icon"
     :variant="variant"
     square
     hide-label
