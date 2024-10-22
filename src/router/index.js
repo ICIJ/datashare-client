@@ -99,10 +99,7 @@ export const routes = [
       {
         name: 'tasks',
         path: 'tasks',
-        component: () => import('@/views/Tasks'),
-        redirect: {
-          name: 'task.batch-search.list'
-        },
+        component: () => import('@/views/Task/Tasks'),
         meta: {
           title: 'tasks.title'
         },
@@ -116,24 +113,16 @@ export const routes = [
           {
             name: 'task.analysis',
             path: 'analysis',
-            component: () => import('@/views/TaskAnalysis'),
+            component: () => import('@/views/Task/Analysis/TaskAnalysis'),
             meta: {
               title: 'indexing.title',
               allowedModes: ['LOCAL', 'EMBEDDED']
             },
             children: [
               {
-                name: 'task.analysis.new',
-                path: 'new',
-                component: () => import('@/views/Task/Analysis/TaskAnalysisNew'),
-                meta: {
-                  title: 'task.analysis.new'
-                }
-              },
-              {
                 name: 'task.analysis.list',
                 path: '',
-                component: () => import('@/views/TaskAnalysisList'),
+                component: () => import('@/views/Task/Analysis/TaskAnalysisList'),
                 meta: {
                   title: 'indexing.title',
                   allowedModes: ['LOCAL', 'EMBEDDED'],
@@ -147,6 +136,14 @@ export const routes = [
                       path: 'all/analyze-documents'
                     }
                   ]
+                }
+              },
+              {
+                name: 'task.analysis.new',
+                path: 'new',
+                component: () => import('@/views/Task/Analysis/TaskAnalysisNew'),
+                meta: {
+                  title: 'task.analysis.new'
                 }
               }
             ]
