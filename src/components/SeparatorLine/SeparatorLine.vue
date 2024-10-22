@@ -27,7 +27,7 @@ const target = ref(null)
 const emit = defineEmits(['reduce', 'expand', 'drag', 'dragstart', 'dragend'])
 const getMax = () => target.value.parentNode.getBoundingClientRect().width - target.value.getBoundingClientRect().width
 const reduce = () => emit('reduce', 0)
-const expand = () => emit('reduce', getMax())
+const expand = () => emit('expand', getMax())
 </script>
 
 <template>
@@ -49,9 +49,10 @@ const expand = () => emit('reduce', getMax())
 
 <style lang="scss" scoped>
 .separator-line {
-  width: 2em;
+  width: 2rem;
   height: 100%;
-  position: relative;
+  top: 0;
+  position: absolute;
 
   &:before {
     content: '';
@@ -80,14 +81,15 @@ const expand = () => emit('reduce', getMax())
     opacity: 0;
     pointer-events: none;
     transition: $transition-fade;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 100%;
+    position: sticky;
+    transform: translateY(-50%);
+    top: 50vh;
+    height: 240px;
+    width: 2rem;
     max-height: 240px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: space-between;
 
     &:deep(.button-icon) {
