@@ -15,7 +15,7 @@ const toggle = () => {
 const { t } = useI18n()
 
 const variant = computed(() => {
-  return active.value ? VARIANT.ACTION : VARIANT.OUTLINE_ACTION
+  return active.value ? VARIANT.ACTION : VARIANT.OUTLINE_TERTIARY
 })
 
 const label = computed(() => {
