@@ -2,10 +2,10 @@
   <div v-b-tooltip.right class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle" :title="title">
     <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
     <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
-      <phosphor-icon :name="document.contentTypeIcon" :size="size" :scale="1.5" />
+      <phosphor-icon :name="document.contentTypeIcon" :size="String(size)" :scale="1.5" />
     </span>
     <span class="document-thumbnail__overlay">
-      <phosphor-icon :name="overlayIcon" :size="size" :scale="1.5" />
+      <phosphor-icon :name="overlayIcon" :size="String(size)" :scale="1.5" />
     </span>
   </div>
 </template>
