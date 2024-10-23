@@ -81,6 +81,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
 
   &__start {
     margin-right: $spacer;
+    min-height: 50vh;
     max-height: 100vh;
     display: flex;
     flex-direction: column;
