@@ -28,3 +28,19 @@ defineProps({
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.document-entries-grid {
+  position: relative;
+
+  &__header {
+    background: var(--bs-body-bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+</style>
