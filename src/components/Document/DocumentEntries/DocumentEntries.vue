@@ -32,6 +32,9 @@ const props = defineProps({
   properties: {
     type: Array,
     default: () => ['title']
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -67,6 +70,7 @@ const componentProps = computed(() => {
         v-model:page="page"
         :total="total"
         :per-page="perPage"
+        :loading="loading"
       />
     </template>
   </component>
