@@ -11,7 +11,7 @@ import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook'
 import settings from '@/utils/settings'
-import { replaceUrlParam, useUrlPageFrom } from '@/composables/url-params'
+import { replaceUrlParam, useUrlPageFrom, whenIsRoute } from '@/composables/url-params'
 import { useSearchFilter } from '@/composables/search-filter'
 import { useViews } from '@/composables/views'
 
@@ -38,19 +38,21 @@ replaceUrlParam({
 const hits = computed(() => store.state.search.response.hits)
 const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
 const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
+const loading = computed(() => !store.state.search.isReady)
 
 const total = computed(() => parseInt(store.state.search.response.total))
 const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
-const page = useUrlPageFrom({ perPage: perPage.value })
+const page = useUrlPageFrom({ perPage: perPage.value, to: 'search' })
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
 // can still be populated with the previous search results.
 resetSearchResponse()
+
 // Refresh search when route query changes. Among all the watcher of this view, it probably
 // the most important one. It will trigger the search API call when the route query changes
 // which mean that only route change can trigger a search.
-watch(() => route.query, refreshSearchFromRoute, { deep: true, immediate: true })
+watch(() => route.query, whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
 
 // Refresh route query when filter values change
 watch(() => store.state.search.values, refreshRoute, { deep: true })
@@ -65,8 +67,8 @@ watchProjects(refreshRoute)
     <hook name="search:before" />
     <div class="search__main d-flex">
       <slot name="filters" />
-      <div class="search__main__content flex-grow-1 py-3">
-        <div class="d-flex gap-3 pb-3">
+      <div class="search__main__content flex-grow-1">
+        <div class="d-flex gap-3 py-3">
           <button-toggle-sidebar v-if="!toggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
           <button-toggle-filters
             v-if="isFiltersClosed"
@@ -78,7 +80,7 @@ watchProjects(refreshRoute)
           </div>
           <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
         </div>
-        <div class="search__main__results py-3">
+        <div class="search__main__results h-100">
           <document-entries
             v-model:page="page"
             :entries="hits"
@@ -86,6 +88,7 @@ watchProjects(refreshRoute)
             :layout="layout"
             :total="total"
             :per-page="perPage"
+            :loading="loading"
           >
             <router-view />
           </document-entries>
