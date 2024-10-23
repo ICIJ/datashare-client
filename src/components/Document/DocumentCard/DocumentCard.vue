@@ -18,9 +18,6 @@ const props = defineProps({
     type: Array,
     default: () => ['title', 'thumbnail', 'path']
   },
-  to: {
-    type: Object
-  },
   target: {
     type: String,
     default: '_self'
@@ -56,6 +53,10 @@ const showThumbnail = computed(() => {
 
 const showTitle = computed(() => {
   return props.properties.includes('title')
+})
+
+const to = computed(() => {
+  return { name: 'document', params: props.document.routerParams }
 })
 </script>
 

@@ -1,4 +1,7 @@
 <script setup>
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
 
 defineProps({
@@ -14,6 +17,12 @@ defineProps({
     default: () => ['title', 'thumbnail']
   }
 })
+
+const route = useRoute()
+const router = useRouter()
+
+const showDocument = computed(() => route.name === 'document')
+const onHideDocument = () => router.push({ name: 'search' })
 </script>
 
 <template>
@@ -26,6 +35,9 @@ defineProps({
         <document-card-grid :document="entry" :select-mode="selectMode" :properties="properties" />
       </div>
     </div>
+    <app-modal v-model="showDocument" size="xl" hide-footer @hide="onHideDocument">
+      <slot />
+    </app-modal>
   </div>
 </template>
 
