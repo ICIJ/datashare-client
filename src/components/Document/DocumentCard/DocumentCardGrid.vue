@@ -6,6 +6,8 @@ import DocumentCardProperties from './DocumentCardProperties'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 
+const selected = defineModel('selected', { type: Boolean })
+
 const props = defineProps({
   document: {
     type: Object
@@ -24,15 +26,10 @@ const props = defineProps({
   selectMode: {
     type: Boolean
   },
-  selected: {
-    type: Boolean
-  },
   isDownloadAllowed: {
     type: Boolean
   }
 })
-
-const emit = defineEmits(['preview', 'update:selected'])
 
 const hover = ref(false)
 
@@ -40,7 +37,7 @@ const classList = computed(() => {
   return {
     'document-card-grid--active': props.active,
     'document-card-grid--select-mode': props.selectMode,
-    'document-card-grid--selected': props.selected,
+    'document-card-grid--selected': selected.value,
     'document-card-grid--hover': hover.value
   }
 })
@@ -65,14 +62,13 @@ const to = computed(() => {
         <document-thumbnail :document="document" size="md" crop clickable :active="hover" class="mx-auto" />
       </router-link>
       <document-actions-group
+        v-model:selected="selected"
         :document="document"
         :is-download-allowed="isDownloadAllowed"
-        :selected="selected"
         :select-mode="selectMode"
         name="checkbox"
         tooltip-placement="right"
         vertical
-        @update:selected="$emit('update:selected', $event)"
       />
     </div>
     <div class="document-card-grid__properties">
