@@ -872,6 +872,8 @@
   },
   "task":{
     "analysis": {
+      "home": "Document addition",
+      "list": "All tasks",
       "new": "Add documents",
       "form": {
         "projectSelector": {"label": "Select a project"},
