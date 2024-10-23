@@ -17,9 +17,6 @@ const props = defineProps({
     type: Array,
     default: () => ['title', 'thumbnail']
   },
-  to: {
-    type: Object
-  },
   target: {
     type: String,
     default: '_self'
@@ -55,21 +52,18 @@ const showThumbnail = computed(() => {
 const showTitle = computed(() => {
   return props.properties.includes('title')
 })
+
+const to = computed(() => {
+  return { name: 'document', params: props.document.routerParams }
+})
 </script>
 
 <template>
   <div class="document-card-grid" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
     <div class="d-flex align-items-start justify-content-center gap-2 px-3">
-      <document-thumbnail
-        v-if="showThumbnail"
-        :document="document"
-        size="md"
-        crop
-        fit
-        clickable
-        :active="hover"
-        @click="emit('preview')"
-      />
+      <router-link v-if="showThumbnail" :to="to" :target="target">
+        <document-thumbnail :document="document" size="md" crop clickable :active="hover" class="mx-auto" />
+      </router-link>
       <document-actions-group
         :document="document"
         :is-download-allowed="isDownloadAllowed"
