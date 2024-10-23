@@ -1,30 +1,7 @@
-<template>
-  <page-header
-    v-model:searchQuery="searchQuery"
-    v-model:page="page"
-    :per-page="perPage"
-    :total-rows="50"
-    :to-add="toAddRoute"
-    searchable
-    paginable
-    search-placeholder="Search analysis task"
-  >
-    <template #end>
-      <tasks-actions />
-    </template>
-  </page-header>
-  <page-container fluid>
-    <tasks-list :tasks="tasks">
-      <template #empty>
-        <p class="text-center m-0" v-html="$t('indexing.empty', { howToLink })"></p>
-      </template>
-    </tasks-list>
-  </page-container>
-</template>
-
 <script setup>
 import { computed, onMounted } from 'vue'
 import { random } from 'lodash'
+import { useStore } from 'vuex'
 
 import TasksList from '@/components/TasksList'
 import { getOS } from '@/utils/utils'
@@ -39,7 +16,7 @@ const { core, wait } = useCore()
 const { registerPollOnce } = usePolling()
 
 const { isServer } = useUtils()
-
+const store = useStore()
 const searchQuery = useUrlParam('q', '')
 const page = useUrlParam('page', {
   transform: (value) => parseInt(value),
@@ -48,28 +25,28 @@ const page = useUrlParam('page', {
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
   get: () => core?.store.getters['app/getSettings']('taskList', 'perPage'),
-  set: (value) => core?.store.commit('app/setSettings', { view: 'taskAnalysisList', perPage: parseInt(value) })
+  set: (value) => core?.store.commit('app/setSettings', { view: 'taskList', perPage: parseInt(value) })
 })
 const toAddRoute = computed(() => {
-  return isServer.value ? null : { name: 'task.analysis.new' }
+  return isServer.value ? null : { name: 'task.document-addition.new' }
 })
-const tasks = computed(() => core.store.getters['indexing/sortedTasks'])
+const tasks = computed(() => store.getters['indexing/sortedTasks'])
 
 onMounted(async () => {
-  wait.start('load task-analysis-list tasks')
+  wait.start('load task-documentAddition-list tasks')
   try {
     await startPollingTasks()
   } finally {
-    wait.end('load task-analysis-list tasks')
+    wait.end('load task-documentAddition-list tasks')
   }
 })
 
 const hasPendingTasks = computed(() => {
-  return core.store.getters['indexing/hasPendingTasks']
+  return store.getters['indexing/hasPendingTasks']
 })
 
 async function getTasks() {
-  await core.store.dispatch('indexing/getTasks')
+  await store.dispatch('indexing/getTasks')
   // Continue to poll task if they are pending ones
   return hasPendingTasks.value
 }
@@ -87,9 +64,31 @@ const howToLink = computed(() => {
   return settings.documentationLinks.indexing[os] || fallback
 })
 </script>
-
+<template>
+  <page-header
+    v-model:searchQuery="searchQuery"
+    v-model:page="page"
+    :per-page="perPage"
+    :total-rows="50"
+    :to-add="toAddRoute"
+    searchable
+    paginable
+    :search-placeholder="$t('task.document-addition.list.searchPlaceholder')"
+  >
+    <template #end>
+      <tasks-actions />
+    </template>
+  </page-header>
+  <page-container fluid>
+    <tasks-list :tasks="tasks">
+      <template #empty>
+        <p class="text-center m-0" v-html="$t('task.document-addition.list.empty', { howToLink })"></p>
+      </template>
+    </tasks-list>
+  </page-container>
+</template>
 <style lang="scss">
-.task-analysis-list {
+.task-documentAddition-list {
   &__table td {
     vertical-align: middle;
   }

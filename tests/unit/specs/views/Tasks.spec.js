@@ -9,7 +9,7 @@ describe('Tasks.vue', () => {
       name: 'tasks',
       path: '/tasks',
       children: [
-        { name: 'task.analysis.list', path: 'analysis' },
+        { name: 'task.document-addition.list', path: 'analysis' },
         { name: 'task.batch-download.list', path: 'batch-download' },
         { name: 'task.batch-search.list', path: 'batch-search' }
       ]
@@ -48,7 +48,7 @@ describe('Tasks.vue', () => {
   })
 
   it('should select the "indexing" tab when the route is active', async () => {
-    await replaceRouteby({ name: 'task.analysis.list' })
+    await replaceRouteby({ name: 'task.document-addition.list' })
     const wrapper = shallowMount(Tasks, { global: { plugins: core.plugins } })
     expect(wrapper.vm.tab).toBe(2)
   })

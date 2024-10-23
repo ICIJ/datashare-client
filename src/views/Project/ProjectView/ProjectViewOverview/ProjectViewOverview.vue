@@ -97,7 +97,7 @@ watch(
           class="my-5"
           action-icon="plus"
           :action-label="$t('projectViewOverview.emptyStateAction')"
-          :action-to="{ name: 'task.analysis.list' }"
+          :action-to="{ name: 'task.document-addition.list' }"
         />
       </v-wait>
     </page-container>
