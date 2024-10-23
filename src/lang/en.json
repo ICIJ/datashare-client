@@ -871,10 +871,16 @@
     "description": "Some tasks must be run in the background. Use this panel to manage them."
   },
   "task":{
-    "analysis": {
+    "document-addition": {
       "home": "Document addition",
-      "list": "All tasks",
-      "new": "Add documents",
+      "list": {
+        "title":"All tasks",
+        "searchPlaceholder": "Search task",
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+      },
+      "new": {
+        "title":"Add documents"
+      },
       "form": {
         "projectSelector": {"label": "Select a project"},
         "path":{"label": "Select the folder or subfolder to analyze","description":"The entire Datashare home will be indexed by default."},
@@ -888,7 +894,7 @@
           "options": {"yes": "Yes", "no": "No"}},
         "submit": "Add",
         "success":"Add document task is launched",
-        "error":"An error occured when creating the task: {error}"
+        "error":"An error occurred when creating the task: {error}"
       }
     }
   },

@@ -1,11 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { filter, random, uniqueId } from 'lodash'
+import { useStore } from 'vuex'
 
 import { useCore } from '@/composables/core'
 const { core } = useCore()
 const emit = defineEmits(['start-polling'])
 
+const store = useStore()
 const extractingFormId = uniqueId('extracting-form-')
 const showExtractingForm = ref(false)
 
@@ -22,19 +24,19 @@ const showFindNamedEntitiesForm = ref(false)
 const findNamedEntitiesFormId = uniqueId('find-named-entities-form-')
 
 const hasPendingTasks = computed(() => {
-  return core.store.getters['indexing/hasPendingTasks']
+  return store.getters['indexing/hasPendingTasks']
 })
 const hasDoneTasks = computed(() => {
-  return core.store.getters['indexing/hasDoneTasks']
+  return store.getters['indexing/hasDoneTasks']
 })
 async function stopPendingTasks() {
-  await core.store.dispatch('indexing/stopPendingTasks')
-  await core.store.dispatch('indexing/getTasks')
+  await store.dispatch('indexing/stopPendingTasks')
+  await store.dispatch('indexing/getTasks')
 }
 
 async function deleteDoneTasks() {
-  await core.store.dispatch('indexing/deleteDoneTasks')
-  await core.store.dispatch('indexing/getTasks')
+  await store.dispatch('indexing/deleteDoneTasks')
+  await store.dispatch('indexing/getTasks')
 }
 </script>
 

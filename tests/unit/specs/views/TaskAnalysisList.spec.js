@@ -1,14 +1,14 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import TaskAnalysisList from '@/views/Task/Analysis/TaskAnalysisList'
+import TaskDocumentAdditionList from '@/views/Task/DocumentAddition/TaskDocumentAdditionList'
 
 const flushPromisesAndPendingTimers = async ({ vm }) => {
   await vm.$nextTick()
   await vi.runOnlyPendingTimersAsync()
 }
 
-describe('TaskAnalysisList.vue', () => {
+describe('TaskDocumentAdditionList.vue', () => {
   const api = {
     index: vi.fn(),
     getTasks: vi.fn().mockResolvedValue([
@@ -40,7 +40,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should display tasks list', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
 
     expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(2)
@@ -49,7 +49,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     core.store.commit('indexing/updateTasks', [])
@@ -59,7 +59,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should not disable the "Stop pending tasks" button, if a task is running', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
@@ -68,7 +68,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should disable the "Stop pending tasks" if no tasks are running', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
@@ -77,7 +77,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should not disable the "Delete done tasks" if a task is done', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
@@ -86,7 +86,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
@@ -99,7 +99,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
@@ -112,14 +112,14 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should display 1 available "Stop task" buttons if 1 tasks are running', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     expect(wrapper.findAll('.tasks-list__tasks__item__stop')).toHaveLength(1)
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     wrapper.find('.tasks-list__tasks__item__stop').trigger('click')
@@ -129,7 +129,7 @@ describe('TaskAnalysisList.vue', () => {
   })
 
   it('should display 1 disabled "Stop task" button if 1 task is done', async () => {
-    const wrapper = mount(TaskAnalysisList, { global: { plugins: core.plugins } })
+    const wrapper = mount(TaskDocumentAdditionList, { global: { plugins: core.plugins } })
     await flushPromisesAndPendingTimers(wrapper)
     await wrapper.vm.unregisteredPolls()
     core.store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])

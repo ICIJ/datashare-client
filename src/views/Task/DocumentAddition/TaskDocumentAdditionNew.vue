@@ -2,13 +2,13 @@
   <page-header />
   <div class="project-new">
     <page-container fluid>
-      <task-analysis-form />
+      <task-document-addition-form />
     </page-container>
   </div>
 </template>
 
 <script setup>
 import PageContainer from '@/components/PageContainer/PageContainer'
-import TaskAnalysisForm from '@/components/Task/TaskAnalysis/TaskAnalysisForm'
+import TaskDocumentAdditionForm from '@/components/Task/TaskDocumentAddition/TaskDocumentAdditionForm'
 import PageHeader from '@/components/PageHeader/PageHeader'
 </script>
