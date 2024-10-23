@@ -14,8 +14,9 @@ describe('SearchResultsList.vue', () => {
   const api = { elasticsearch: es }
   const core = CoreSetup.init(api).useAll()
 
-  async function createView(query = '*', from = 0, size = 25, field = settings.defaultSearchField) {
-    await core.store.dispatch('search/query', { query, from, size, field })
+  async function createView(query = '*', from = 0, perPage = 25, field = settings.defaultSearchField) {
+    await core.store.commit('app/setSettings', { view: 'search', perPage })
+    await core.store.dispatch('search/query', { query, from, field })
     return shallowMount(SearchResultsList, {
       global: {
         plugins: core.plugins

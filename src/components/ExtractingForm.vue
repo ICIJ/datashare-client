@@ -12,7 +12,7 @@
       <div class="ms-4 ps-3">
         <p class="fw-bold mb-0">{{ $t('indexing.folderSelection') }}</p>
         <p class="small mb-2">{{ $t('indexing.folderSelectionDescription') }}</p>
-        <inline-directory-picker v-model:path="path" :source-path="sourcePath" hide-folder-icon />
+        <form-control-path v-model:path="path" :source-path="sourcePath" hide-folder-icon />
       </div>
     </div>
     <div class="extracting-form__group mb-4">
@@ -60,7 +60,7 @@
       <slot name="footer" :disabled="isWaitingForSubmitExtract">
         <div class="col text-end">
           <b-overlay :show="isWaitingForSubmitExtract" opacity="0.6" rounded spinner-small class="d-inline-flex">
-            <b-button variant="primary" class="ms-2" type="submit" :disabled="isWaitingForSubmitExtract">
+            <b-button variant="action" class="ms-2" type="submit" :disabled="isWaitingForSubmitExtract">
               {{ $t('indexing.go') }}
             </b-button>
           </b-overlay>
@@ -76,7 +76,7 @@ import { waitFor } from 'vue-wait'
 
 import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
 import ExtractingFormOcrControl from '@/components/ExtractingFormOcrControl'
-import InlineDirectoryPicker from '@/components/InlineDirectoryPicker'
+import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import ProjectSelector from '@/components/ProjectSelector'
 
 /**
@@ -86,7 +86,7 @@ export default {
   name: 'ExtractingForm',
   components: {
     ExtractingLanguageFormControl,
-    InlineDirectoryPicker,
+    FormControlPath,
     ExtractingFormOcrControl,
     ProjectSelector
   },

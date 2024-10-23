@@ -1,6 +1,6 @@
 <template>
   <div v-if="isReady && hasAttachments" class="document-attachments">
-    <h6>{{ $tc('document.attachments.heading', total, { total }) }}</h6>
+    <h6>{{ $t('document.attachments.heading', total, { total }) }}</h6>
     <ul class="document-attachments__list list-unstyled d-flex-inline">
       <li v-for="attachment in attachments" :key="attachment.id" class="document-attachments__list__item">
         <router-link
@@ -94,12 +94,12 @@ export default {
         display: inline-block;
         padding: $spacer * 0.25 $spacer * 0.5;
         margin-bottom: $spacer * 0.25;
-        background: $secondary;
+        background: $primary;
         color: white;
 
         &:hover {
           text-decoration: none;
-          background: lighten($secondary, 5);
+          background: color.adjust($primary, $lightness: 5%);
           color: white;
         }
       }
@@ -110,7 +110,7 @@ export default {
     display: inline-block;
     padding: $spacer * 0.25 $spacer * 0.5;
     margin-bottom: $spacer * 0.25;
-    background: $light;
+    background: $tertiary;
 
     &:hover {
       text-decoration: white;

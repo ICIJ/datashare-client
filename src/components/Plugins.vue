@@ -16,11 +16,11 @@
                 <b-form-input v-model="url" :state="isFormValid" class="b-form-control" placeholder="URL" type="url" />
               </div>
               <div class="d-flex align-items-center">
-                <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
+                <b-form-invalid-feedback class="text-primary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
                 <b-button
-                  variant="primary"
+                  variant="action"
                   class="ms-auto text-nowrap"
                   :disabled="isFormValid !== true"
                   @click="installPluginFromUrl"
@@ -32,7 +32,7 @@
           </b-modal>
         </div>
         <div class="plugins__search ms-auto">
-          <search-form-control v-model="searchTerm" :placeholder="$t('plugins.search')" @input="search" />
+          <form-control-search v-model="searchTerm" :placeholder="$t('plugins.search')" @input="search" />
         </div>
       </div>
       <b-overlay :show="isLoading">
@@ -62,7 +62,7 @@
                     <b-button
                       v-if="!plugin.installed"
                       class="plugins__card__download-button mb-2"
-                      variant="primary"
+                      variant="action"
                       @click="installPluginFromId(plugin.id)"
                     >
                       <fa icon="cloud-arrow-down"></fa>
@@ -71,7 +71,7 @@
                     <b-button
                       v-if="hasAvailableUpdate(plugin)"
                       class="plugins__card__update-button mb-2"
-                      variant="primary"
+                      variant="action"
                       size="sm"
                       @click="installPluginFromId(plugin.id)"
                     >
@@ -116,7 +116,7 @@
 import { camelCase, find, get, startCase, uniqueId } from 'lodash'
 
 import { isUrl } from '@/utils/strings'
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 /**
  * A list of available plugins.
@@ -124,7 +124,7 @@ import SearchFormControl from '@/components/SearchFormControl'
 export default {
   name: 'Plugins',
   components: {
-    SearchFormControl
+    FormControlSearch
   },
   data() {
     return {

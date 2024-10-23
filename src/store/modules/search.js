@@ -50,11 +50,9 @@ export const RESET_KEYS = [
   'query',
   'response',
   'showFilters',
-  'reversedFilters',
-  'sortedFilters',
-  'contextualizedFilters',
-  'size',
-  'sort',
+  'excludeFilters',
+  'sortFilters',
+  'contextualizeFilters',
   'tab',
   'values'
 ]
@@ -72,12 +70,10 @@ export function initialState() {
     layout: isNarrowScreen() ? 'table' : 'list',
     query: '',
     response: EsDocList.none(),
-    reversedFilters: [],
-    contextualizedFilters: [],
-    sortedFilters: {},
+    excludeFilters: [],
+    contextualizeFilters: [],
+    sortFilters: {},
     showFilters: true,
-    size: 25,
-    sort: settings.defaultSearchSort,
     values: {},
     tab: TAB_NAME.EXTRACTED_TEXT
   })
@@ -128,7 +124,7 @@ export const getters = {
   isFilterExcluded(state, getters) {
     return (name) => {
       return !!find(getters.instantiatedFilters, (filter) => {
-        return filter.name === name && filter.reverse
+        return filter.name === name && filter.excluded
       })
     }
   },
@@ -144,7 +140,7 @@ export const getters = {
   },
   filterSortedByOrder(state, getters) {
     return (name) => {
-      return getters.filterSorted(name).sortByOrder
+      return getters.filterSorted(name).orderBy
     }
   },
   activeFilters(state, getters) {
@@ -163,7 +159,7 @@ export const getters = {
           // We don't add filterValue that match with any existing filters
           // defined in the `aggregation` store.
           if (filter && filter.values.length > 0) {
-            const key = filter.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
+            const key = filter.excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
             memo[key] = compact(filter.values)
           }
           return memo
@@ -176,8 +172,9 @@ export const getters = {
     return () => ({
       q: state.query,
       from: `${state.from}`,
-      size: `${state.size}`,
-      sort: state.sort,
+      perPage: `${getters.getPerPage()}`,
+      sort: getters.getSortBy(),
+      order: getters.getOrderBy(),
       indices: state.indices.join(','),
       field: state.field,
       tab: state.tab,
@@ -236,11 +233,36 @@ export const getters = {
   },
   sortBy(state) {
     return find(settings.searchSortFields, { name: state.sort })
+  },
+  getPerPage(state, getters, rootState, rootGetters) {
+    return () => rootGetters['app/getSettings']('search', 'perPage')
+  },
+  getSort(state, getters, rootState, rootGetters) {
+    return () => {
+      const [sort, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score', 'desc']
+      // Find optional extra params
+      const { extraParams = {} } = find(settings.searchSortFields, { name: sort }) ?? {}
+      // We add a secondary path filter is the current sort is not the path itself
+      const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
+      return [{ [sort]: { order, ...extraParams } }, ...secondarySort]
+    }
+  },
+  getSortBy(state, getters, rootState, rootGetters) {
+    return () => {
+      const [sort] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score']
+      return sort
+    }
+  },
+  getOrderBy(state, getters, rootState, rootGetters) {
+    return () => {
+      const [, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? [null, 'desc']
+      return order
+    }
   }
 }
 
 export const mutations = {
-  reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout', 'size', 'sort']) {
+  reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout']) {
     const s = initialState()
     RESET_KEYS.forEach((key) => {
       if (excludedKeys.indexOf(key) === -1) {
@@ -275,12 +297,6 @@ export const mutations = {
   },
   from(state, from) {
     state.from = Number(from)
-  },
-  size(state, size) {
-    state.size = Number(size)
-  },
-  sort(state, sort) {
-    state.sort = sort
   },
   isReady(state, isReady = !state.isReady) {
     state.isReady = isReady
@@ -348,46 +364,36 @@ export const mutations = {
       }
     }
   },
-  sortFilter(state, { name, sortBy = '_count', sortByOrder = 'desc' } = {}) {
-    state.sortedFilters[name] = { sortBy, sortByOrder }
+  sortFilter(state, { name, sortBy = '_count', orderBy = 'desc' } = {}) {
+    state.sortFilters[name] = { sortBy, orderBy }
   },
   unsortFilter(state, name) {
-    delete state.sortedFilters[name]
+    delete state.sortFilters[name]
   },
   contextualizeFilter(state, name) {
-    if (state.contextualizedFilters.indexOf(name) === -1) {
-      state.contextualizedFilters.push(name)
+    if (state.contextualizeFilters.indexOf(name) === -1) {
+      state.contextualizeFilters.push(name)
     }
   },
   decontextualizeFilter(state, name) {
-    delete state.contextualizedFilters[state.contextualizedFilters.indexOf(name)]
-  },
-  toggleContextualizedFilter(state, name) {
-    const i = state.contextualizedFilters.indexOf(name)
-    if (i === -1) {
-      state.contextualizedFilters.push(name)
-    } else {
-      delete state.contextualizedFilters[i]
-    }
+    delete state.contextualizeFilters[state.contextualizeFilters.indexOf(name)]
   },
   excludeFilter(state, name) {
-    if (state.reversedFilters.indexOf(name) === -1) {
-      state.reversedFilters.push(name)
+    if (state.excludeFilters.indexOf(name) === -1) {
+      state.excludeFilters.push(name)
     }
   },
   includeFilter(state, name) {
-    delete state.reversedFilters[state.reversedFilters.indexOf(name)]
+    const index = state.excludeFilters.indexOf(name)
+    delete state.excludeFilters[index]
   },
   toggleFilter(state, name) {
-    const i = state.reversedFilters.indexOf(name)
-    if (i === -1) {
-      state.reversedFilters.push(name)
-    } else if (i > -1) {
-      delete state.reversedFilters[i]
+    const index = state.excludeFilters.indexOf(name)
+    if (index === -1) {
+      state.excludeFilters.push(name)
+    } else {
+      delete state.excludeFilters[index]
     }
-  },
-  toggleFilters(state, toggler = !state.showFilters) {
-    state.showFilters = toggler
   },
   updateTab(state, tab) {
     state.tab = tab
@@ -406,8 +412,8 @@ function actionsBuilder(api) {
           state.query,
           getters.instantiatedFilters,
           state.from,
-          state.size,
-          state.sort,
+          getters.getPerPage(),
+          getters.getSort(),
           getters.getFields()
         )
         commit('buildResponse', raw)
@@ -419,12 +425,16 @@ function actionsBuilder(api) {
         throw error
       }
     },
-    updateFromRouteQuery({ commit, getters }, query) {
-      const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
-      const updatedKeys = ['q', 'index', 'indices', 'from', 'size', 'sort', 'field']
-      commit('reset', excludedKeys)
+    updateFromRouteQuery({ commit, getters }, query, resetResponse = false) {
+      const excludedFromReset = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
+      // The response can conditional be reseted to avoid flashing effect
+      if (!resetResponse) excludedFromReset.push('response')
+      // Reset the state except for the given keys
+      commit('reset', excludedFromReset)
+      // This is all the key that can be found in the URL (apart from filters keys)
+      const updatedKeys = ['q', 'index', 'indices', 'from', 'field']
       // Add the query to the state with a mutation to avoid triggering a search
-      updatedKeys.forEach((key) => (key in query ? commit(key, query[key]) : null))
+      updatedKeys.forEach((key) => key in query && commit(key, query[key]))
       // Iterate over the list of filter
       each(getters.instantiatedFilters, (filter) => {
         // The filter key are formatted in the URL as follow.
@@ -451,8 +461,6 @@ function actionsBuilder(api) {
         indices: state.indices,
         query: state.query,
         from: state.from,
-        size: state.size,
-        sort: state.sort,
         field: state.field
       }
     ) {
@@ -462,10 +470,11 @@ function actionsBuilder(api) {
       } else if (isString(q)) {
         commit('query', q)
       }
+
       // Then mutates all values if they are in queryOrParams. The mutation
       // for "indices" must be after "index" since the two mutations are
       // updating concurent values.
-      ;['index', 'indices', 'from', 'size', 'sort', 'field'].forEach((key) => {
+      ;['index', 'indices', 'from', 'field'].forEach((key) => {
         if (has(q, key)) {
           commit(key, q[key])
         }
@@ -479,7 +488,7 @@ function actionsBuilder(api) {
           getters.getFilter({ name: params.name }),
           state.query,
           getters.instantiatedFilters,
-          !getters.isFilterContextualized(params.name),
+          getters.isFilterContextualized(params.name),
           params.options,
           getters.getFields(),
           params.from,
@@ -507,12 +516,12 @@ function actionsBuilder(api) {
       commit('toggleFilter', name)
       return dispatch('query')
     },
-    previousPage({ state, commit, dispatch }, name) {
-      commit('from', state.from - state.size)
+    previousPage({ state, commit, dispatch, getters }) {
+      commit('from', state.from - getters.getPerPage())
       return dispatch('query')
     },
-    nextPage({ state, commit, dispatch }, name) {
-      commit('from', state.from + state.size)
+    nextPage({ state, commit, dispatch, getters }) {
+      commit('from', state.from + getters.getPerPage())
       return dispatch('query')
     },
     deleteQueryTerm({ state, commit, dispatch }, term) {

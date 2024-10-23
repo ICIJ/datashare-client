@@ -1,0 +1,100 @@
+<script setup>
+import { computed, watch } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+
+import PageContainer from '@/components/PageContainer/PageContainer'
+import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
+import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
+import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
+import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
+import Hook from '@/components/Hook'
+import settings from '@/utils/settings'
+import { replaceUrlParam, useUrlPageFrom, whenIsRoute } from '@/composables/url-params'
+import { useSearchFilter } from '@/composables/search-filter'
+import { useViews } from '@/composables/views'
+
+const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
+const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
+const store = useStore()
+const route = useRoute()
+
+// The size query parameter is replaced by the perPage query parameter
+replaceUrlParam({ from: 'size', to: 'perPage' })
+// This function replaces a unique sort query parameter with a pair of sort and order query parameters
+// based on the settings's searchSortFields. This way we can ensure retro-compatibility with
+// the former sort query parameter which used to contain both the sort field and the order.
+replaceUrlParam({
+  from: 'sort',
+  to: (name) => {
+    const { field: sort = null, desc } = find(settings.searchSortFields, { name }) ?? {}
+    const order = desc ? 'desc' : 'asc'
+    // Only redirect if the sort field is found
+    return sort ? { sort, order } : null
+  }
+})
+
+const hits = computed(() => store.state.search.response.hits)
+const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
+const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
+const loading = computed(() => !store.state.search.isReady)
+
+const total = computed(() => parseInt(store.state.search.response.total))
+const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
+const page = useUrlPageFrom({ perPage: perPage.value, to: 'search' })
+
+// Reset the search response when the component is mounted to ensure that the displayed search result
+// are always up-to-date with the current route query. This is important because the search response
+// can still be populated with the previous search results.
+resetSearchResponse()
+
+// Refresh search when route query changes. Among all the watcher of this view, it probably
+// the most important one. It will trigger the search API call when the route query changes
+// which mean that only route change can trigger a search.
+watch(() => route.query, whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
+
+// Refresh route query when filter values change
+watch(() => store.state.search.values, refreshRoute, { deep: true })
+// Refresh route query when reversed filters change
+watch(() => store.state.search.excludeFilters, refreshRoute, { deep: true })
+// Refresh route query when projects change
+watchProjects(refreshRoute)
+</script>
+
+<template>
+  <page-container class="search" fluid>
+    <hook name="search:before" />
+    <div class="search__main d-flex">
+      <slot name="filters" />
+      <div class="search__main__content flex-grow-1">
+        <div class="d-flex gap-3 py-3">
+          <button-toggle-sidebar v-if="!toggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
+          <button-toggle-filters
+            v-if="isFiltersClosed"
+            v-model:active="toggleFilters"
+            class="search__main__toggle-filters"
+          />
+          <div class="flex-grow-1">
+            <search-bar class="search__main__search-bar" />
+          </div>
+          <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
+        </div>
+        <div class="search__main__results h-100">
+          <document-entries
+            v-model:page="page"
+            :entries="hits"
+            :properties="properties"
+            :layout="layout"
+            :total="total"
+            :per-page="perPage"
+            :loading="loading"
+          >
+            <router-view />
+          </document-entries>
+        </div>
+      </div>
+    </div>
+    <hook name="search:after" />
+  </page-container>
+</template>

@@ -1,6 +1,6 @@
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/widget/WidgetRecommendedBy'
+import Component from '@/components/Widget/WidgetRecommendedBy'
 
 /**
  * Widget to display latest recommend documents.
