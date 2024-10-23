@@ -1,19 +1,7 @@
 import { computed, watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import {
-  compact,
-  debounce,
-  identity,
-  noop,
-  castArray,
-  isEqual,
-  isString,
-  isObject,
-  isFunction,
-  isUndefined,
-  toNumber
-} from 'lodash'
+import { compact, debounce, identity, noop, isEqual, isString, isObject, isUndefined, toNumber } from 'lodash'
 
 /**
  * Global object to store batched updates
