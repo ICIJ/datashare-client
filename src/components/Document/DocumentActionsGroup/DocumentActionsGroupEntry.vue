@@ -23,6 +23,7 @@ import { computed } from 'vue'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'DocumentActionsEntry' })
+
 const props = defineProps({
   /**
    * Icon name
