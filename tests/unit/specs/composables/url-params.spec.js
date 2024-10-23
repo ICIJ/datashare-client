@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import {
   useUrlParam,
   useUrlParams,
+  useUrlPageFrom,
   useUrlParamWithStore,
   useUrlParamsWithStore,
   replaceUrlParam
@@ -132,6 +133,46 @@ describe('useUrlParams', () => {
 
     expect(router.currentRoute.value.query.sort).toBe('name')
     expect(router.currentRoute.value.query.order).toBe('desc')
+  })
+})
+
+describe('useUrlPageFrom', () => {
+  const perPage = 100
+
+  it('should update the page to 2', async () => {
+    const [result, router] = withSetup({ composable: () => useUrlPageFrom({ perPage }) })
+    await router.push({ query: { from: 100 } })
+    expect(result.value).toBe(2)
+  })
+
+  it('should update the page to 2, even with a string parameter', async () => {
+    const [result, router] = withSetup({ composable: () => useUrlPageFrom({ perPage }) })
+    await router.push({ query: { from: '100' } })
+    expect(result.value).toBe(2)
+  })
+
+  it('should update the page to 11', async () => {
+    const [result, router] = withSetup({ composable: () => useUrlPageFrom({ perPage }) })
+    await router.push({ query: { from: '1000' } })
+    expect(result.value).toBe(11)
+  })
+
+  it('should update the from parameter to 100', async () => {
+    const [result, router] = withSetup({ composable: () => useUrlPageFrom({ perPage }) })
+
+    result.value = 2
+    await flushPromises()
+
+    expect(router.currentRoute.value.query.from).toBe('100')
+  })
+
+  it('should update the from parameter to 1900', async () => {
+    const [result, router] = withSetup({ composable: () => useUrlPageFrom({ perPage }) })
+
+    result.value = 20
+    await flushPromises()
+
+    expect(router.currentRoute.value.query.from).toBe('1900')
   })
 })
 
