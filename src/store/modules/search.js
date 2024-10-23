@@ -425,12 +425,16 @@ function actionsBuilder(api) {
         throw error
       }
     },
-    updateFromRouteQuery({ commit, getters }, query) {
-      const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
+    updateFromRouteQuery({ commit, getters }, query, resetResponse = false) {
+      const excludedFromReset = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
+      // The response can conditional be reseted to avoid flashing effect
+      if (!resetResponse) excludedFromReset.push('response')
+      // Reset the state except for the given keys
+      commit('reset', excludedFromReset)
+      // This is all the key that can be found in the URL (apart from filters keys)
       const updatedKeys = ['q', 'index', 'indices', 'from', 'field']
-      commit('reset', excludedKeys)
       // Add the query to the state with a mutation to avoid triggering a search
-      updatedKeys.forEach((key) => (key in query ? commit(key, query[key]) : null))
+      updatedKeys.forEach((key) => key in query && commit(key, query[key]))
       // Iterate over the list of filter
       each(getters.instantiatedFilters, (filter) => {
         // The filter key are formatted in the URL as follow.
