@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import TaskAnalysisList from '@/views/TaskAnalysisList'
+import TaskAnalysisList from '@/views/Task/Analysis/TaskAnalysisList'
 
 const flushPromisesAndPendingTimers = async ({ vm }) => {
   await vm.$nextTick()
