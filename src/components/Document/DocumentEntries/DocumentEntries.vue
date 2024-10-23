@@ -9,8 +9,6 @@ import DocumentEntriesTable from './DocumentEntriesTable'
 
 import { LAYOUTS, layoutValidator } from '@/enums/layouts'
 
-const sort = defineModel('sort', { type: String, default: null })
-const order = defineModel('order', { type: String, default: 'desc' })
 const selectMode = defineModel('selectMode', { type: Boolean, default: false })
 const page = defineModel('page', { type: Number, default: 1 })
 
