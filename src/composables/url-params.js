@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import {
@@ -11,7 +11,8 @@ import {
   isString,
   isObject,
   isFunction,
-  isUndefined
+  isUndefined,
+  toNumber
 } from 'lodash'
 
 /**
@@ -190,7 +191,7 @@ export function useUrlParamsWithStore(queryParams, getOrGetters, setMutation, op
  * between the URL and the reactive value.
  *
  * @param {string} queryParam - The query parameter to sync.
- * @param {string|Object} [initialOrOptions={}] - Either an initial value or an options object (e.g., get/set methods).
+ * @param {string|Object} [initialOrOptions={}] - Either an initial value or an options object (e.g., initialValue/transform methods).
  * @returns {ComputedRef} - A computed reference to the synchronized value.
  */
 export function useUrlParam(queryParam, initialOrOptions = {}) {
@@ -199,33 +200,18 @@ export function useUrlParam(queryParam, initialOrOptions = {}) {
 
   // Handle both simple initial value or options object
   const options = isObject(initialOrOptions) ? initialOrOptions : { initialValue: initialOrOptions }
-  const { initialValue = null, get, set, transform = identity } = options
+  const { initialValue = null, transform = identity } = options
 
-  // Determine the getter function (from options or fallback to initialValue)
-  const getValue = isFunction(get) ? get : () => initialValue
-
-  // Determine the setter function (from options or fallback to updating the query parameter in the URL)
-  const setValue = isFunction(set)
-    ? (value) => set(transform(value))
-    : (value) => batchQueryParamUpdate(router, route, [queryParam], [transform(value)])
+  const get = () => transform(route.query[queryParam] ?? initialValue)
+  const set = (value) => batchQueryParamUpdate(router, route, [queryParam], [transform(value)])
 
   // Create a computed property that synchronizes the query parameter with the reactive value
-  const param = computed({
-    get() {
-      const value = route.query[queryParam]
-      // If the query parameter exists in the URL, transform and return it, else return the reactive value
-      return isUndefined(value) ? getValue() : transform(value)
-    },
-    set: setValue
-  })
+  const param = computed({ get, set })
 
   // Watch the query parameter in the URL and sync it with the reactive value when it changes
-  watch(
-    () => route.query[queryParam],
-    (value) => {
-      param.value = isUndefined(value) ? getValue() : transform(value)
-    }
-  )
+  watch(get, (value) => {
+    param.value = value
+  })
 
   return param
 }
@@ -276,6 +262,31 @@ export function useUrlParams(queryParams, initialOrOptions = {}) {
   )
 
   return param
+}
+
+/**
+ * Creates a reactive page number synchronized with the 'from' URL query parameter.
+ *
+ * This composable function calculates the page number based on the 'from' query parameter and 'perPage' value.
+ * It keeps the 'page' and 'from' values in sync, updating one when the other changes.
+ *
+ * @param {Object} [options] - Configuration options.
+ * @param {number} [options.initialValue=1] - The initial value for 'from' query parameter.
+ * @param {number} [options.perPage=25] - The number of items per page.
+ * @returns {Ref<number>} - A reactive reference to the current page number.
+ */
+export function useUrlPageFrom({ initialValue = 1, perPage = 25 } = {}) {
+  const from = useUrlParam('from', { initialValue, transform: toNumber })
+  const page = ref((initialValue - 1) * perPage)
+  // Check if two values are equal numbers
+  const eqNumber = (a, b) => toNumber(a) === toNumber(b)
+  // Helper function to set the value if it has changed
+  const set = (reference, value) => !eqNumber(reference.value, value) && (reference.value = value)
+  // Update the page number when the 'from' value changes
+  watch(from, (value) => set(page, Math.floor(value / perPage) + 1), { immediate: true })
+  // Update the 'from' value when the page number changes
+  watch(page, (value) => set(from, (value - 1) * perPage))
+  return page
 }
 
 /**
