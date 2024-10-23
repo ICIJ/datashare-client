@@ -11,12 +11,12 @@ import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook'
 import settings from '@/utils/settings'
-import { replaceUrlParam } from '@/composables/url-params'
+import { replaceUrlParam, useUrlPageFrom } from '@/composables/url-params'
 import { useSearchFilter } from '@/composables/search-filter'
 import { useViews } from '@/composables/views'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { refreshRoute, refreshSearchFromRoute, watchProjects } = useSearchFilter()
+const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
 const store = useStore()
 const route = useRoute()
 
@@ -39,6 +39,14 @@ const hits = computed(() => store.state.search.response.hits)
 const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
 const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
 
+const total = computed(() => parseInt(store.state.search.response.total))
+const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
+const page = useUrlPageFrom({ perPage: perPage.value })
+
+// Reset the search response when the component is mounted to ensure that the displayed search result
+// are always up-to-date with the current route query. This is important because the search response
+// can still be populated with the previous search results.
+resetSearchResponse()
 // Refresh search when route query changes. Among all the watcher of this view, it probably
 // the most important one. It will trigger the search API call when the route query changes
 // which mean that only route change can trigger a search.
@@ -71,7 +79,14 @@ watchProjects(refreshRoute)
           <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
         </div>
         <div class="search__main__results py-3">
-          <document-entries :entries="hits" :properties="properties" :layout="layout">
+          <document-entries
+            v-model:page="page"
+            :entries="hits"
+            :properties="properties"
+            :layout="layout"
+            :total="total"
+            :per-page="perPage"
+          >
             <router-view />
           </document-entries>
         </div>
