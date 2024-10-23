@@ -33,7 +33,7 @@ const compact = computed(() => elementWidth.value <= props.compactThreshold)
 <template>
   <div ref="element" class="document-entries-header d-flex align-items-center justify-content-start gap-1 py-3">
     <button-toggle-batch-mode v-model:active="selectMode" />
-    <tiny-pagination v-model="page" :total-rows="total" :per-page="perPage" row :compact="compact" />
+    <tiny-pagination v-model="page" row :total-rows="total" :per-page="perPage" :compact="compact" />
     <button-download-documents />
   </div>
 </template>
