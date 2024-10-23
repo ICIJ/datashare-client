@@ -1,4 +1,5 @@
 <template>
+  <page-header />
   <div class="project-new">
     <page-container fluid>
       <task-analysis-form />
@@ -9,4 +10,5 @@
 <script setup>
 import PageContainer from '@/components/PageContainer/PageContainer'
 import TaskAnalysisForm from '@/components/Task/TaskAnalysis/TaskAnalysisForm'
+import PageHeader from '@/components/PageHeader/PageHeader'
 </script>

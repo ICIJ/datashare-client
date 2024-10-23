@@ -112,6 +112,7 @@ const showToggleSidebar = computed(() => {
           class="page-header__search ms-auto"
         />
       </slot>
+      <slot name="end"></slot>
     </div>
   </page-container>
 </template>

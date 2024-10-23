@@ -113,19 +113,17 @@ export const routes = [
           {
             name: 'task.analysis',
             path: 'analysis',
+            meta: { title: 'task.analysis.home' },
             component: () => import('@/views/Task/Analysis/TaskAnalysis'),
-            meta: {
-              title: 'indexing.title',
-              allowedModes: ['LOCAL', 'EMBEDDED']
-            },
             children: [
               {
                 name: 'task.analysis.list',
                 path: '',
                 component: () => import('@/views/Task/Analysis/TaskAnalysisList'),
                 meta: {
-                  title: 'indexing.title',
+                  title: 'All tasks',
                   allowedModes: ['LOCAL', 'EMBEDDED'],
+                  meta: { title: null },
                   docs: [
                     {
                       title: 'Add documents to Datashare',

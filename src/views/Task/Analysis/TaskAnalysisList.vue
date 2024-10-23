@@ -1,12 +1,25 @@
 <template>
-  <div class="task-analysis-list">
-    <tasks-action-bar />
+  <page-header
+    v-model:searchQuery="searchQuery"
+    v-model:page="page"
+    :per-page="perPage"
+    :total-rows="50"
+    :to-add="toAddRoute"
+    searchable
+    paginable
+    search-placeholder="Search analysis task"
+  >
+    <template #end>
+      <tasks-actions />
+    </template>
+  </page-header>
+  <page-container fluid>
     <tasks-list :tasks="tasks">
       <template #empty>
         <p class="text-center m-0" v-html="$t('indexing.empty', { howToLink })"></p>
       </template>
     </tasks-list>
-  </div>
+  </page-container>
 </template>
 
 <script setup>
@@ -17,11 +30,31 @@ import TasksList from '@/components/TasksList'
 import { getOS } from '@/utils/utils'
 import settings from '@/utils/settings'
 import { useCore } from '@/composables/core'
-import TasksActionBar from '@/views/Task/TasksActionBar'
 import { usePolling } from '@/composables/polling'
+import PageHeader from '@/components/PageHeader/PageHeader'
+import TasksActions from '@/views/Task/TasksActions'
+import { useUtils } from '@/composables/utils'
+import { useUrlParam, useUrlParamWithStore } from '@/composables/url-params'
 const { core, wait } = useCore()
 const { registerPollOnce } = usePolling()
+
+const { isServer } = useUtils()
+
+const searchQuery = useUrlParam('q', '')
+const page = useUrlParam('page', {
+  transform: (value) => parseInt(value),
+  initialValue: 1
+})
+const perPage = useUrlParamWithStore('perPage', {
+  transform: (value) => Math.max(10, parseInt(value)),
+  get: () => core?.store.getters['app/getSettings']('taskList', 'perPage'),
+  set: (value) => core?.store.commit('app/setSettings', { view: 'taskAnalysisList', perPage: parseInt(value) })
+})
+const toAddRoute = computed(() => {
+  return isServer.value ? null : { name: 'task.analysis.new' }
+})
 const tasks = computed(() => core.store.getters['indexing/sortedTasks'])
+
 onMounted(async () => {
   wait.start('load task-analysis-list tasks')
   try {
