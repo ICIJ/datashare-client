@@ -115,6 +115,10 @@ export function useSearchFilter() {
     store.commit('search/removeFilter', name)
   }
 
+  function resetSearchResponse() {
+    store.commit('search/buildResponse')
+  }
+
   async function refreshRouteAndSearch() {
     await refreshRoute()
     await refreshSearch()
@@ -232,6 +236,7 @@ export function useSearchFilter() {
     isFilterContextualized,
     isFilterExcluded,
     labelToHuman,
+    resetSearchResponse,
     refreshRoute,
     refreshSearchFromRoute,
     refreshRouteAndSearch,
