@@ -36,7 +36,16 @@ const compact = computed(() => elementWidth.value <= props.compactThreshold)
 <template>
   <div ref="element" class="document-entries-header d-flex align-items-center justify-content-start gap-1 py-3">
     <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" />
-    <tiny-pagination :key="total" v-model="page" row :total-rows="total" :per-page="perPage" :compact="compact" />
+    <tiny-pagination :key="total" v-model="page" row :total-rows="total" :per-page="perPage" :compact="compact">
+      <template #number-of-rows="{ lastRangeRow: to }">
+        <template v-if="compact">
+          {{ $tc('documentEntriesHeader.tinyPagination.rowRangeCompact', total, { total: $n(total) }) }}
+        </template>
+        <template v-else>
+          {{ $tc('documentEntriesHeader.tinyPagination.rowRange', total, { to: $n(to), total: $n(total) }) }}
+        </template>
+      </template>
+    </tiny-pagination>
     <button-download-documents />
   </div>
 </template>
