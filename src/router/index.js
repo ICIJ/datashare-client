@@ -107,21 +107,27 @@ export const routes = [
           {
             path: 'indexing',
             redirect: {
-              name: 'task.analysis.list'
+              name: 'task.document-addition.list'
             }
           },
           {
-            name: 'task.analysis',
             path: 'analysis',
-            meta: { title: 'task.analysis.home' },
-            component: () => import('@/views/Task/Analysis/TaskAnalysis'),
+            redirect: {
+              name: 'task.document-addition.list'
+            }
+          },
+          {
+            name: 'task.document-addition',
+            path: 'document-addition',
+            meta: { title: 'task.document-addition.home' },
+            component: () => import('@/views/Task/DocumentAddition/TaskDocumentAddition'),
             children: [
               {
-                name: 'task.analysis.list',
+                name: 'task.document-addition.list',
                 path: '',
-                component: () => import('@/views/Task/Analysis/TaskAnalysisList'),
+                component: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionList'),
                 meta: {
-                  title: 'All tasks',
+                  title: 'task.document-addition.list.title',
                   allowedModes: ['LOCAL', 'EMBEDDED'],
                   meta: { title: null },
                   docs: [
@@ -137,11 +143,11 @@ export const routes = [
                 }
               },
               {
-                name: 'task.analysis.new',
+                name: 'task.document-addition.new',
                 path: 'new',
-                component: () => import('@/views/Task/Analysis/TaskAnalysisNew'),
+                component: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionNew'),
                 meta: {
-                  title: 'task.analysis.new'
+                  title: 'task.document-addition.new.title'
                 }
               }
             ]

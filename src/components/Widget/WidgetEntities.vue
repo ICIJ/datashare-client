@@ -22,7 +22,7 @@
       <div v-else class="text-center w-100 align-self-center">
         <p>{{ $t('widget.noEntitiesFindSome') }}</p>
         <button-icon
-          :to="{ name: 'task.analysis.list' }"
+          :to="{ name: 'task.document-addition.list' }"
           icon-left="plus"
           variant="outline-action"
           :label="$t('widget.findEntities')"
