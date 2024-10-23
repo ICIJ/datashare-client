@@ -46,6 +46,7 @@ const perPage = ref({
   type: 'radio',
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
+    to: 'search',
     transform: (value) => Math.max(10, parseInt(value)),
     get: () => core?.store.getters['app/getSettings']('search', 'perPage'),
     set: (perPage) => core?.store.commit('app/setSettings', { view: 'search', perPage })
@@ -71,6 +72,7 @@ const sortBy = ref({
   type: 'radio',
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
+    to: 'search',
     get: () => core?.store.getters['app/getSettings']('search', 'orderBy'),
     set: (sort, order) => core?.store.commit('app/setSettings', { view: 'search', orderBy: [sort, order] })
   }),
