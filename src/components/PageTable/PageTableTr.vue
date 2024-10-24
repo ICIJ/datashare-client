@@ -14,7 +14,7 @@ const props = defineProps({
 
 const classList = computed(() => {
   return {
-    'page-table-tr--selected': selected.value,
+    'page-table-tr--selected': props.selectMode && selected.value,
     'page-table-tr--emphasis': props.emphasis
   }
 })
