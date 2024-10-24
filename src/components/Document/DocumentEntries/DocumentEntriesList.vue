@@ -3,6 +3,10 @@ import { computed, ref } from 'vue'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
+import { useSelection } from '@/composables/selection'
+
+const selection = defineModel('selection', { type: Array, default: () => [] })
+const { selectionValues } = useSelection(selection)
 
 const props = defineProps({
   entries: {
@@ -50,6 +54,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
         <document-card
           v-for="entry in entries"
           :key="entry.id"
+          v-model:selected="selectionValues[entry.id]"
           :document="entry"
           :select-mode="selectMode"
           :properties="properties"

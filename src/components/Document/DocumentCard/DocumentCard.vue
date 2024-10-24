@@ -103,6 +103,7 @@ const to = computed(() => {
   display: flex;
   gap: $spacer-sm;
   padding: $spacer;
+  background: var(--bs-body);
   border-radius: var(--bs-border-radius);
 
   &:hover,
