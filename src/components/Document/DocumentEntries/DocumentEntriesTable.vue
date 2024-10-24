@@ -11,6 +11,7 @@ import { useSearchSettings } from '@/composables/search-settings'
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
+const selection = defineModel('selection', { type: Array, default: () => [] })
 
 const props = defineProps({
   entries: {
@@ -62,6 +63,7 @@ const onHideDocument = () => router.push({ name: 'search' })
         />
       </template>
       <document-entries-table-body
+        v-model:selection="selection"
         :compact-breakpoint="compactBreakpoint"
         :entries="entries"
         :properties="sortedProperties"

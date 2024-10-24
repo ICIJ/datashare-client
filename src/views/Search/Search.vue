@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -43,6 +43,7 @@ const loading = computed(() => !store.state.search.isReady)
 const total = computed(() => parseInt(store.state.search.response.total))
 const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
 const page = useUrlPageFrom({ perPage: perPage.value, to: 'search' })
+const selection = ref([])
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
@@ -84,6 +85,7 @@ watchProjects(refreshRoute)
           <document-entries
             v-model:page="page"
             :entries="hits"
+            :selection="selection"
             :properties="properties"
             :layout="layout"
             :total="total"

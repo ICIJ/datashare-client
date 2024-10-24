@@ -3,6 +3,10 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
+import { useSelection } from '@/composables/selection'
+
+const selection = defineModel('selection', { type: Array, default: () => [] })
+const { selectionValues } = useSelection(selection)
 
 defineProps({
   entries: {
@@ -32,7 +36,12 @@ const onHideDocument = () => router.push({ name: 'search' })
     </div>
     <div class="document-entries-grid__list row g-3 px-0">
       <div v-for="entry in entries" :key="entry.id" class="col-lg-3 col-md-4 col-sm-6">
-        <document-card-grid :document="entry" :select-mode="selectMode" :properties="properties" />
+        <document-card-grid
+          v-model:selected="selectionValues[entry.id]"
+          :document="entry"
+          :select-mode="selectMode"
+          :properties="properties"
+        />
       </div>
     </div>
     <app-modal v-model="showDocument" size="xl" hide-footer @hide="onHideDocument">
