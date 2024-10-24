@@ -1,17 +1,18 @@
-import { computed, ref } from 'vue'
+import { computed, ref, toRef } from 'vue'
 
-export function useSelection(initialSelection = null) {
-  const selection = initialSelection ?? ref([])
+export function useSelection(initialSelection, initialValues = null) {
+  const selection = initialSelection ? toRef(initialSelection) : ref([])
+  const values = initialValues ? toRef(initialValues) : ref([])
 
   const selectionValues = computed(() => {
     return new Proxy(Object.create(null), {
       get(_, value) {
         const parsedValue = isNaN(value) ? value : Number(value)
-        return isSelection(parsedValue)
+        return isSelected(parsedValue)
       },
-      set(_, value, isSelection) {
+      set(_, value, isSelected) {
         const parsedValue = isNaN(value) ? value : Number(value)
-        toggleSelection(parsedValue, isSelection)
+        toggleSelection(parsedValue, isSelected)
         return true
       }
     })
@@ -30,24 +31,44 @@ export function useSelection(initialSelection = null) {
     }
   }
 
-  const toggleSelection = (value, isSelection) => {
-    if (isSelection) {
+  const toggleSelection = (value, isSelected) => {
+    if (isSelected) {
       addToSelection(value)
     } else {
       removeFromSelection(value)
     }
   }
 
-  const isSelection = (value) => {
+  const isSelected = (value) => {
     return selection.value.includes(value)
+  }
+
+  const indeterminate = computed({
+    get() {
+      return selection.value.length && selection.value.length < values.value.length
+    },
+    set() {
+      selectAll()
+    }
+  })
+
+  const selectAll = () => {
+    values.value.forEach(addToSelection)
+  }
+
+  const unselectAll = () => {
+    values.value.forEach(removeFromSelection)
   }
 
   return {
     selection,
     selectionValues,
-    isSelection,
+    isSelected,
+    indeterminate,
     addToSelection,
     removeFromSelection,
-    toggleSelection
+    toggleSelection,
+    selectAll,
+    unselectAll
   }
 }
