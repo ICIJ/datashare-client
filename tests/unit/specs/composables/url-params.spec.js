@@ -4,6 +4,9 @@ import { flushPromises } from '@vue/test-utils'
 import Vuex from 'vuex'
 
 import {
+  whenIsRoute,
+  whenDifferentRoute,
+  onRouteUpdateMatch,
   useUrlParam,
   useUrlParams,
   useUrlPageFrom,
@@ -451,5 +454,129 @@ describe('replaceUrlParam', () => {
     await flushPromises()
 
     expect(router.currentRoute.value.query).toEqual({ perPage: '10' })
+  })
+})
+
+describe('whenIsRoute', () => {
+  let router
+
+  beforeEach(() => {
+    router = null
+  })
+
+  it('should call the callback when the route name matches', async () => {
+    const callback = vi.fn()
+    const composable = () => whenIsRoute('test-route', callback)
+
+    const routes = [{ path: '/', name: 'test-route', component: { template: '<div>Home</div>' } }]
+    const initialRoute = { name: 'test-route', path: '/' }
+
+    const [fn, testRouter] = withSetup({ composable, routes, initialRoute })
+    router = testRouter
+
+    await router.isReady()
+    await flushPromises()
+
+    fn()
+
+    expect(callback).toHaveBeenCalled()
+  })
+
+  it('should not call the callback when the route name does not match', async () => {
+    const callback = vi.fn()
+    const composable = () => whenIsRoute('other-route', callback)
+
+    const routes = [{ path: '/', name: 'test-route', component: { template: '<div>Home</div>' } }]
+    const initialRoute = { name: 'test-route', path: '/' }
+
+    const [fn, testRouter] = withSetup({ composable, routes, initialRoute })
+    router = testRouter
+
+    await router.isReady()
+    await flushPromises()
+
+    fn()
+
+    expect(callback).not.toHaveBeenCalled()
+  })
+
+  it('should always call the callback when no name is provided', async () => {
+    const callback = vi.fn()
+    const composable = () => whenIsRoute(null, callback)
+
+    const routes = [{ path: '/', name: 'test-route', component: { template: '<div>Home</div>' } }]
+    const initialRoute = { name: 'test-route', path: '/' }
+
+    const [fn, testRouter] = withSetup({ composable, routes, initialRoute })
+    router = testRouter
+
+    await router.isReady()
+    await flushPromises()
+
+    fn()
+
+    expect(callback).toHaveBeenCalled()
+  })
+})
+
+describe('whenDifferentRoute', () => {
+  let router
+
+  beforeEach(() => {
+    router = null
+  })
+
+  it('should call the callback when the route name does not match', async () => {
+    const callback = vi.fn()
+    const composable = () => whenDifferentRoute('other-route', callback)
+
+    const routes = [{ path: '/', name: 'test-route', component: { template: '<div>Home</div>' } }]
+    const initialRoute = { name: 'test-route', path: '/' }
+
+    const [fn, testRouter] = withSetup({ composable, routes, initialRoute })
+    router = testRouter
+
+    await router.isReady()
+    await flushPromises()
+
+    fn()
+
+    expect(callback).toHaveBeenCalled()
+  })
+
+  it('should not call the callback when the route name matches', async () => {
+    const callback = vi.fn()
+    const composable = () => whenDifferentRoute('test-route', callback)
+
+    const routes = [{ path: '/', name: 'test-route', component: { template: '<div>Home</div>' } }]
+    const initialRoute = { name: 'test-route', path: '/' }
+
+    const [fn, testRouter] = withSetup({ composable, routes, initialRoute })
+    router = testRouter
+
+    await router.isReady()
+    await flushPromises()
+
+    fn()
+
+    expect(callback).not.toHaveBeenCalled()
+  })
+
+  it('should not call the callback when no name is provided', async () => {
+    const callback = vi.fn()
+    const composable = () => whenDifferentRoute(null, callback)
+
+    const routes = [{ path: '/', name: 'test-route', component: { template: '<div>Home</div>' } }]
+    const initialRoute = { name: 'test-route', path: '/' }
+
+    const [fn, testRouter] = withSetup({ composable, routes, initialRoute })
+    router = testRouter
+
+    await router.isReady()
+    await flushPromises()
+
+    fn()
+
+    expect(callback).not.toHaveBeenCalled()
   })
 })
