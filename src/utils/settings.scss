@@ -149,6 +149,7 @@ $form-check-input-border: var(--bs-border-width) solid var(--bs-action-text-emph
 $form-check-input-border-radius: 2px;
 $form-check-input-checked-border-color: var(--bs-action-text-emphasis);
 $form-check-input-checked-bg-color: $action;
+$form-check-input-indeterminate-bg-color: $form-check-input-checked-bg-color;
 
 $form-radio-input-border: var(--bs-border-width) solid $action;
 $form-radio-input-checked-border-color: $form-check-input-checked-border-color;
