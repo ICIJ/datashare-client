@@ -1,5 +1,5 @@
 import { computed, watch, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router'
 import { useStore } from 'vuex'
 import { compact, debounce, identity, noop, isEqual, isString, isObject, isUndefined, toNumber } from 'lodash'
 
@@ -65,6 +65,93 @@ export function whenIsRoute(name = null, callback = noop) {
       callback.apply(null, args)
     }
   }
+}
+
+/**
+ * Executes a callback function when the current route doesn't match the specified name.
+ *
+ * This composable returns a function that, when called, checks if the current route's still name matches the provided name.
+ * If the route doesn't match (and if no name is specified), it invokes the provided callback with the given arguments.
+ *
+ * @param {string|null} [name=null] - The name of the route to match. If null, the callback is never executed.
+ * @param {Function} [callback=() => {}] - The callback function to execute when the route doesn't match.
+ * @returns {Function} - A function that accepts any arguments and invokes the callback if the route doesn't match
+ */
+export function whenDifferentRoute(name = null, callback = noop, to = null) {
+  const route = to ?? useRoute()
+  return (...args) => {
+    if (name && route.name !== name) {
+      callback.apply(null, args)
+    }
+  }
+}
+
+/**
+ * Registers a navigation guard that executes a callback when the provided condition function returns true during a route update.
+ *
+ * @param {Function} condition - A function that receives (to, from) and returns a boolean.
+ * @param {Function} callback - The callback function to execute when the condition is true.
+ */
+export function onRouteUpdateCondition(condition, callback) {
+  onBeforeRouteUpdate((to, from) => {
+    if (condition(to, from)) {
+      callback(to, from)
+    }
+  })
+}
+
+/**
+ * Registers a navigation guard that executes a callback when updating to a route with a matching name.
+ *
+ * @param {string} name - The name of the target route to match.
+ * @param {Function} callback - The callback function to execute.
+ */
+export function onRouteUpdateMatch(name, callback) {
+  onRouteUpdateCondition((to, from) => name && to.name === name, callback)
+}
+
+/**
+ * Registers a navigation guard that executes a callback when updating to a route with a different name.
+ *
+ * @param {string} name - The name of the route to not match.
+ * @param {Function} callback - The callback function to execute.
+ */
+export function onRouteUpdateNotMatch(name, callback) {
+  onRouteUpdateCondition((to, from) => name && to.name !== name, callback)
+}
+
+/**
+ * Registers a navigation guard that executes a callback when the provided condition function returns true during a route leave.
+ *
+ * @param {Function} condition - A function that receives (to, from) and returns a boolean.
+ * @param {Function} callback - The callback function to execute when the condition is true.
+ */
+export function onRouteLeaveCondition(condition, callback) {
+  onBeforeRouteLeave((to, from) => {
+    if (condition(to, from)) {
+      callback(to, from)
+    }
+  })
+}
+
+/**
+ * Registers a navigation guard that executes a callback when leaving the current route with a matching name.
+ *
+ * @param {string} name - The name of the current route to match.
+ * @param {Function} callback - The callback function to execute.
+ */
+export function onRouteLeaveMatch(name, callback) {
+  onRouteLeaveCondition((to, from) => name && from.name === name, callback)
+}
+
+/**
+ * Registers a navigation guard that executes a callback when leaving the current route with a different name.
+ *
+ * @param {string} name - The name of the route to not match.
+ * @param {Function} callback - The callback function to execute.
+ */
+export function onRouteLeaveNotMatch(name, callback) {
+  onRouteLeaveCondition((to, from) => name && from.name !== name, callback)
 }
 
 /**
