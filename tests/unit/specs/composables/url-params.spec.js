@@ -6,7 +6,6 @@ import Vuex from 'vuex'
 import {
   whenIsRoute,
   whenDifferentRoute,
-  onRouteUpdateMatch,
   useUrlParam,
   useUrlParams,
   useUrlPageFrom,
