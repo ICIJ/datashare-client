@@ -50,7 +50,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
       <div class="document-entries-list__start__header">
         <slot name="header" />
       </div>
-      <div class="document-entries-list__start__list">
+      <div class="document-entries-list__start__list d-flex flex-column gap-1">
         <document-card
           v-for="entry in entries"
           :key="entry.id"
