@@ -56,7 +56,7 @@ export const inputTypeArgType = {
 }
 export const layoutArgType = {
   control: 'select',
-  options: LAYOUTS
+  options: Object.values(LAYOUTS)
 }
 export const offcanvasPlacementArgType = {
   control: 'select',
