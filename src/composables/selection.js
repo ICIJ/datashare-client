@@ -1,8 +1,8 @@
 import { computed, ref, toRef } from 'vue'
 
-export function useSelection(initialSelection, initialValues = null) {
+export function useSelection(initialSelection, initialAll = []) {
   const selection = initialSelection ? toRef(initialSelection) : ref([])
-  const values = initialValues ? toRef(initialValues) : ref([])
+  const all = toRef(initialAll)
 
   const selectionValues = computed(() => {
     return new Proxy(Object.create(null), {
@@ -45,7 +45,7 @@ export function useSelection(initialSelection, initialValues = null) {
 
   const indeterminate = computed({
     get() {
-      return selection.value.length && selection.value.length < values.value.length
+      return selection.value.length && selection.value.length < all.value.length
     },
     set() {
       selectAll()
@@ -53,11 +53,11 @@ export function useSelection(initialSelection, initialValues = null) {
   })
 
   const selectAll = () => {
-    values.value.forEach(addToSelection)
+    all.value.forEach(addToSelection)
   }
 
   const unselectAll = () => {
-    values.value.forEach(removeFromSelection)
+    all.value.forEach(removeFromSelection)
   }
 
   return {
