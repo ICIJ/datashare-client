@@ -10,6 +10,7 @@ import DocumentEntriesTable from './DocumentEntriesTable'
 import { LAYOUTS, layoutValidator } from '@/enums/layouts'
 
 const selectMode = defineModel('selectMode', { type: Boolean, default: false })
+const selection = defineModel('selection', { type: Array, default: () => [] })
 const page = defineModel('page', { type: Number, default: 1 })
 
 const props = defineProps({
@@ -56,13 +57,7 @@ const componentProps = computed(() => {
 </script>
 
 <template>
-  <component
-    :is="component"
-    v-bind="componentProps"
-    class="document-entries"
-    @update:order="$emit('update:order', $event)"
-    @update:sort="$emit('update:sort', $event)"
-  >
+  <component :is="component" v-model:selection="selection" v-bind="componentProps" class="document-entries">
     <slot />
     <template #header>
       <document-entries-header

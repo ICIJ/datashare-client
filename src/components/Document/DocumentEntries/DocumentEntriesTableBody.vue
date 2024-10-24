@@ -1,5 +1,9 @@
 <script setup>
+import { useSelection } from '@/composables/selection'
 import DocumentRow from '@/components/Document/DocumentRow/DocumentRow'
+
+const selection = defineModel('selection', { type: Array, default: () => [] })
+const { selectionValues } = useSelection(selection)
 
 defineProps({
   entries: {
@@ -24,6 +28,7 @@ defineProps({
   <document-row
     v-for="entry in entries"
     :key="entry.id"
+    v-model:selected="selectionValues[entry.id]"
     :document="entry"
     :properties="properties"
     :select-mode="selectMode"
