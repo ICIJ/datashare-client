@@ -43,6 +43,7 @@ const menuClassList = computed(() => {
     boundary="viewport"
     teleport-to="body"
     no-caret
+    end
   >
     <li>
       <slot />
