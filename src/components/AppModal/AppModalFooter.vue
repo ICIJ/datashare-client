@@ -29,7 +29,7 @@ defineProps({
 </script>
 
 <template>
-  <form-actions class="app-modal-footer">
+  <form-actions class="app-modal-footer" end>
     <slot>
       <button-icon v-if="!okOnly" :disabled="cancelDisabled" :variant="cancelVariant" @click="$emit('cancel')">
         {{ cancelTitle || $t('appModalFooter.cancelTitle') }}
