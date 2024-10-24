@@ -27,6 +27,7 @@ export default {
       components: { FormActions, ButtonIcon },
       template: `
         <form-actions v-bind="args">
+          10 items selected
           <button-icon icon-left="x">Cancel</button-icon>
           <button-icon icon-left="arrow-counter-clockwise">Reset</button-icon>
           <button-icon variant="action" icon-right="caret-right">Proceed</button-icon>
