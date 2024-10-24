@@ -9,12 +9,14 @@
 </template>
 
 <script setup>
-import { noop } from 'lodash'
+import { noop, ary } from 'lodash'
+import { onBeforeRouteLeave } from 'vue-router'
 
+import { onRouteUpdateNotMatch } from '@/composables/url-params'
 import PageSettingsHide from '@/components/PageSettings/PageSettingsHide'
 import PageSettingsTitle from '@/components/PageSettings/PageSettingsTitle'
 
-defineProps({
+const { hide, route } = defineProps({
   title: {
     type: String,
     required: true
@@ -28,6 +30,13 @@ defineProps({
   },
   placement: {
     type: String
+  },
+  route: {
+    type: String,
+    default: null
   }
 })
+
+onRouteUpdateNotMatch(route, ary(hide, 0))
+onBeforeRouteLeave(ary(hide, 0))
 </script>
