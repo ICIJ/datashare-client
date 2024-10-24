@@ -1530,6 +1530,12 @@
   "searchBreadcrumbToggler": {
     "close": "Close"
   },
+  "searchSelection": {
+    "count": "No selected documents | 1 selected document | {count} selected documents",
+    "star": "Star",
+    "unstar": "Unstar",
+    "tag": "Tag"
+  },
   "documentCarousel": {
     "next": "Next document",
     "previous": "Previous document"
