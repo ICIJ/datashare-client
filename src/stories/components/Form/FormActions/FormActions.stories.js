@@ -18,6 +18,7 @@ export default {
   },
   args: {
     size: SIZE.MD,
+    end: true,
     variant: VARIANT.OUTLINE_SECONDARY,
     compactVariant: VARIANT.ACTION
   },

@@ -44,6 +44,9 @@ const props = defineProps({
   },
   ariaLabel: {
     type: String
+  },
+  end: {
+    type: Boolean
   }
 })
 
@@ -54,6 +57,13 @@ const isCompact = computed(() => {
   // form actions should be compact. This is done through the reactive breakpointDown value.
   // Alternatively, if compactAuto is false, use the compact prop value.
   return (props.compactAuto && breakpointDown.value[props.compactAutoBreakpoint]) || props.compact
+})
+
+const classList = computed(() => {
+  return {
+    'form-actions--end': props.end,
+    'form-actions--compact': isCompact.value
+  }
 })
 
 watch(
@@ -70,7 +80,7 @@ watch(
 </script>
 
 <template>
-  <component :is="tag" class="form-actions" :aria-label="ariaLabel">
+  <component :is="tag" class="form-actions" :aria-label="ariaLabel" :class="classList">
     <template v-if="isCompact">
       <slot name="start" v-bind="{ isCompact }" />
       <form-actions-compact :variant="compactVariant" :size="size" :dropdown-icon="dropdownIcon">
@@ -93,10 +103,13 @@ watch(
 <style lang="scss">
 .form-actions {
   display: flex;
-  justify-content: flex-end;
   flex-wrap: wrap;
   column-gap: $spacer-lg;
   row-gap: $spacer-sm;
+
+  &--end {
+    justify-content: flex-end;
+  }
 
   @include media-breakpoint-down(md) {
     justify-content: flex-start;

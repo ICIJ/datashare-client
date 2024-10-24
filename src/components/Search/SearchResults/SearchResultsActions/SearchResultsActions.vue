@@ -48,6 +48,7 @@ const emit = defineEmits([
     variant="outline-dark"
     class="justify-content-start flex-nowrap flex-md-wrap flex-truncate"
     compact-auto
+    end
   >
     <template #start="{ isCompact }">
       <search-results-actions-select-all

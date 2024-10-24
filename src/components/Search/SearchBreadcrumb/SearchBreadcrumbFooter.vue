@@ -22,7 +22,7 @@ defineProps({
 </script>
 
 <template>
-  <form-actions class="search-breadcrumb-footer" variant="link">
+  <form-actions class="search-breadcrumb-footer" variant="link" end>
     <button-icon v-if="!hideClearFilters" icon-left="eraser">
       {{ $t('searchBreadcrumbFooter.clearFilters') }}
     </button-icon>
