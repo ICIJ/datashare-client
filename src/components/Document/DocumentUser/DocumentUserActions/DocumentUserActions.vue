@@ -1,5 +1,6 @@
 <template>
   <form-actions
+    end
     compact-auto
     :compact="compact"
     dropdown-icon="dots-three-vertical"
