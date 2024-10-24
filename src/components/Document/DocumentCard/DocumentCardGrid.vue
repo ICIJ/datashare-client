@@ -37,7 +37,7 @@ const classList = computed(() => {
   return {
     'document-card-grid--active': props.active,
     'document-card-grid--select-mode': props.selectMode,
-    'document-card-grid--selected': selected.value,
+    'document-card-grid--selected': props.selectMode && selected.value,
     'document-card-grid--hover': hover.value
   }
 })

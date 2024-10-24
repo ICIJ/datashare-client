@@ -42,7 +42,7 @@ const classList = computed(() => {
   return {
     'document-card--active': props.active,
     'document-card--select-mode': props.selectMode,
-    'document-card--selected': props.selected,
+    'document-card--selected': props.selectMode && props.selected,
     'document-card--hover': hover.value
   }
 })
