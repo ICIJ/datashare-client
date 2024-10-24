@@ -1,53 +1,53 @@
 import { computed, ref } from 'vue'
 
-export function useSelection(initialSelected = null) {
-  const selected = initialSelected ?? ref([])
+export function useSelection(initialSelection = null) {
+  const selection = initialSelection ?? ref([])
 
-  const selectedValues = computed(() => {
+  const selectionValues = computed(() => {
     return new Proxy(Object.create(null), {
       get(_, value) {
         const parsedValue = isNaN(value) ? value : Number(value)
-        return isSelected(parsedValue)
+        return isSelection(parsedValue)
       },
-      set(_, value, isSelected) {
+      set(_, value, isSelection) {
         const parsedValue = isNaN(value) ? value : Number(value)
-        toggleSelection(parsedValue, isSelected)
+        toggleSelection(parsedValue, isSelection)
         return true
       }
     })
   })
 
-  const addToSelected = (value) => {
-    if (!selected.value.includes(value)) {
-      selected.value.push(value)
+  const addToSelection = (value) => {
+    if (!selection.value.includes(value)) {
+      selection.value.push(value)
     }
   }
 
-  const removeFromSelected = (value) => {
-    const index = selected.value.indexOf(value)
+  const removeFromSelection = (value) => {
+    const index = selection.value.indexOf(value)
     if (index !== -1) {
-      selected.value.splice(index, 1)
+      selection.value.splice(index, 1)
     }
   }
 
-  const toggleSelection = (value, isSelected) => {
-    if (isSelected) {
-      addToSelected(value)
+  const toggleSelection = (value, isSelection) => {
+    if (isSelection) {
+      addToSelection(value)
     } else {
-      removeFromSelected(value)
+      removeFromSelection(value)
     }
   }
 
-  const isSelected = (value) => {
-    return selected.value.includes(value)
+  const isSelection = (value) => {
+    return selection.value.includes(value)
   }
 
   return {
-    selected,
-    selectedValues,
-    isSelected,
-    addToSelected,
-    removeFromSelected,
+    selection,
+    selectionValues,
+    isSelection,
+    addToSelection,
+    removeFromSelection,
     toggleSelection
   }
 }
