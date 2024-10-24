@@ -66,7 +66,9 @@ const componentProps = computed(() => {
         :total="total"
         :per-page="perPage"
         :loading="loading"
-      />
+      >
+        <slot name="header" />
+      </document-entries-header>
     </template>
   </component>
 </template>
