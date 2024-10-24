@@ -1,7 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { property } from 'lodash'
+import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
+import { useCore } from '@/composables/core'
 import { useSelection } from '@/composables/selection'
 import { useBreakpoints } from '@/composables/breakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
@@ -31,10 +34,11 @@ const props = defineProps({
   }
 })
 
+const selectionEntries = computed(() => props.entries.filter(({ id }) => isSelected(id)))
 const count = computed(() => selection.value.length)
 const all = computed(() => props.entries.map(property('id')))
 
-const { selectAll, unselectAll, indeterminate } = useSelection(selection, all)
+const { selectAll, unselectAll, isSelected, indeterminate } = useSelection(selection, all)
 
 const selected = computed({
   get: () => count.value === props.entries.length,
@@ -43,6 +47,20 @@ const selected = computed({
 
 const { breakpointDown } = useBreakpoints()
 const isCompact = computed(() => breakpointDown.value[props.compactAutoBreakpoint] || props.compact)
+
+const store = useStore()
+const { toastedPromise } = useCore()
+const { t } = useI18n()
+
+const starSelection = async () => {
+  const successMessage = t('document.starred')
+  return toastedPromise(store.dispatch('starred/starDocuments', selectionEntries.value), { successMessage })
+}
+
+const unstarSelection = async () => {
+  const successMessage = t('document.unstarred')
+  return toastedPromise(store.dispatch('starred/unstarDocuments', selectionEntries.value), { successMessage })
+}
 </script>
 
 <template>
@@ -59,9 +77,10 @@ const isCompact = computed(() => breakpointDown.value[props.compactAutoBreakpoin
         icon-left-weight="fill"
         :hide-label="isCompact"
         :square="isCompact"
+        @click="starSelection"
       />
     </template>
-    <button-icon :label="$t('searchSelection.unstar')" icon-left="star" />
+    <button-icon :label="$t('searchSelection.unstar')" icon-left="star" @click="unstarSelection" />
     <button-icon :label="$t('searchSelection.tag')" icon-left="hash" />
   </form-actions>
 </template>
