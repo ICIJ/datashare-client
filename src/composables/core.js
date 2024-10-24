@@ -19,7 +19,9 @@ export function useCore() {
   function toastedPromise(promise, { successMessage, errorMessage }) {
     return promise.then(
       (data) => {
-        if (successMessage) proxy.$toast.success(successMessage)
+        if (successMessage) {
+          proxy.$toast.success(successMessage)
+        }
         return data
       },
       (err) => {
@@ -38,12 +40,12 @@ export function useCore() {
   // We return an object with the global `$core` and `$toast` properties.
   // These properties can then be destructured and used in any component that calls `useCore`.
   return {
+    toastedPromise,
     // `proxy.$core` gives us access to the global `$core` object provided by the "core" plugin.
     core: proxy.$core,
     // `proxy.$toast` gives us access to the global `$toast` object provided by the "core" plugin.
     toast: proxy.$toast,
     // `proxy.$wait` gives us access to the global `$wait` object provided by the "core" plugin
-    wait: proxy.$wait,
-    toastedPromise
+    wait: proxy.$wait
   }
 }
