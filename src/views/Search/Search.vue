@@ -8,6 +8,7 @@ import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import SearchSelection from '@/views/Search/SearchSelection'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook'
 import settings from '@/utils/settings'
@@ -44,6 +45,7 @@ const total = computed(() => parseInt(store.state.search.response.total))
 const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
 const page = useUrlPageFrom({ perPage: perPage.value, to: 'search' })
 const selection = ref([])
+const selectMode = ref(false)
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
@@ -81,9 +83,17 @@ watchProjects(refreshRoute)
           </div>
           <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
         </div>
-        <div class="search__main__results h-100">
+        <search-selection
+          v-model:selection="selection"
+          :entries="hits"
+          :select-mode="selectMode"
+          class="py-3"
+          compact-auto
+        />
+        <div class="search__main__results">
           <document-entries
             v-model:page="page"
+            v-model:select-mode="selectMode"
             :entries="hits"
             :selection="selection"
             :properties="properties"
