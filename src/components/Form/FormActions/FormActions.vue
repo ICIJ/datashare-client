@@ -103,6 +103,7 @@ watch(
 <style lang="scss">
 .form-actions {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   column-gap: $spacer-lg;
   row-gap: $spacer-sm;
