@@ -34,7 +34,8 @@ setup((app) => {
     warnHtmlInMessage: 'off',
     warnHtmlMessage: 'off',
     globalInjection: true,
-    legacy: false,
+    allowComposition: true,
+    legacy: true,
     locale: settings.defaultLocale,
     fallbackLocale: settings.defaultLocale,
     messages: {
