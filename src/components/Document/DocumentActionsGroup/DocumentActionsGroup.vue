@@ -34,6 +34,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
@@ -64,18 +65,6 @@ const props = defineProps({
     type: String,
     default: PLACEMENT.TOP,
     validator: placementValidator
-  },
-  /**
-   * True if download is allowed for the document
-   */
-  isDownloadAllowed: {
-    type: Boolean
-  },
-  /**
-   * True if download is allowed for the document
-   */
-  isStarred: {
-    type: Boolean
   },
   /**
    * True if selectMode is allowed
@@ -118,13 +107,24 @@ const classList = computed(() => {
   return { 'document-actions-group--vertical': props.vertical }
 })
 
+const store = useStore()
+
+const isStarred = computed(() => {
+  return store?.getters['starred/isStarred'](props.document)
+})
+
+const isDownloadAllowed = computed(() => {
+  // Use nullish coalescing operator to allow download if the store/getter is undefined
+  return store?.getters['downloads/isDownloadAllowed'](props.document) ?? true
+})
+
 const entries = computed(() => {
   return [
     {
       name: ACTION.STAR,
       icon: 'star',
       label: t(`documentActionsGroup.${ACTION.STAR}`),
-      fill: props.isStarred,
+      fill: isStarred.value,
       event: click(ACTION.STAR)
     },
     {
@@ -137,7 +137,7 @@ const entries = computed(() => {
       name: ACTION.DOWNLOAD,
       icon: 'download-simple',
       label: t(`documentActionsGroup.${ACTION.DOWNLOAD}`),
-      disabled: !props.isDownloadAllowed,
+      disabled: !isDownloadAllowed.value,
       hideTooltip: true,
       event: click(ACTION.DOWNLOAD)
     },
