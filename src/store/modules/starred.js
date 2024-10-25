@@ -81,11 +81,18 @@ function actionsBuilder(api) {
   }
 }
 
+export const getters = {
+  isStarred(state) {
+    return ({ index, id }) => findIndex(state.documents, { index, id }) > -1
+  }
+}
+
 export function starredStoreBuilder(api) {
   return {
     namespaced: true,
     state,
     mutations,
+    getters,
     actions: actionsBuilder(api)
   }
 }

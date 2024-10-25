@@ -46,12 +46,23 @@ function actionBuilder(api) {
   }
 }
 
+export const getters = {
+  isDownloadAllowed(state) {
+    return ({ index }) => {
+      // Stricktly equal to true so download is allowed by default
+      // even if the index' status is not loaded.
+      return state.allowedFor[index] === true
+    }
+  }
+}
+
 export function downloadsBuilder(api) {
   const actions = actionBuilder(api)
   return {
     namespaced: true,
     state,
     mutations,
+    getters,
     actions
   }
 }
