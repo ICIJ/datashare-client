@@ -35,8 +35,6 @@ export default {
     },
     vertical: false,
     tooltipPlacement: PLACEMENT.BOTTOM,
-    isStarred: false,
-    isDownloadAllowed: true,
     selectMode: true,
     selected: false
   }
