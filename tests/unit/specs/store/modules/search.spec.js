@@ -63,26 +63,28 @@ describe('SearchStore', () => {
   })
 
   it('should build a EsDocList object from raw value', () => {
-    store.commit('search/setResponse', {
+    const raw = {
       hits: {
         hits: [
           { _source: { type: 'Document' }, _id: 'foo' },
           { _source: { type: 'NamedEntity' }, _id: 'bar' }
         ]
       }
-    })
+    }
+    store.commit('search/setResponse', { raw })
     expect(store.state.search.response).toBeInstanceOf(EsDocList)
   })
 
   it('should build a correct EsDocList object from raw value', () => {
-    store.commit('search/setResponse', {
+    const raw = {
       hits: {
         hits: [
           { _source: { type: 'Document' }, _id: 'foo' },
           { _source: { type: 'NamedEntity' }, _id: 'bar' }
         ]
       }
-    })
+    }
+    store.commit('search/setResponse', { raw })
     expect(store.state.search.response.hits[0]).toBeInstanceOf(Document)
     expect(store.state.search.response.hits[1]).toBeInstanceOf(NamedEntity)
     expect(store.state.search.response.hits[2]).toBeUndefined()

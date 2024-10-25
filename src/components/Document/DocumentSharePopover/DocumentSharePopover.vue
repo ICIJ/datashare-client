@@ -31,7 +31,7 @@ defineExpose({
 </script>
 
 <template>
-  <b-popover ref="popover" v-model="modelValue" custom-class="document-share-popover" teleport-to="body">
+  <b-popover ref="popover" v-model="modelValue" lazy custom-class="document-share-popover" teleport-to="body">
     <document-share-popover-form :document="document" />
   </b-popover>
 </template>
