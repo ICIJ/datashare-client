@@ -1,7 +1,8 @@
 <script setup>
 import { computed, onMounted } from 'vue'
-import { random } from 'lodash'
+import { orderBy as orderArrayBy, property, random } from 'lodash'
 import { useStore } from 'vuex'
+import Fuse from 'fuse.js'
 
 import TasksList from '@/components/TasksList'
 import { getOS } from '@/utils/utils'
@@ -11,12 +12,18 @@ import { usePolling } from '@/composables/polling'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TasksActions from '@/views/Task/TasksActions'
 import { useUtils } from '@/composables/utils'
-import { useUrlParam, useUrlParamWithStore } from '@/composables/url-params'
+import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
+
 const { core, wait } = useCore()
 const { registerPollOnce } = usePolling()
 
 const { isServer } = useUtils()
 const store = useStore()
+
+const toAddRoute = computed(() => {
+  return isServer.value ? null : { name: 'task.document-addition.new' }
+})
+const viewKey = 'taskList'
 const searchQuery = useUrlParam('q', '')
 const page = useUrlParam('page', {
   transform: (value) => parseInt(value),
@@ -24,13 +31,35 @@ const page = useUrlParam('page', {
 })
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
-  get: () => core?.store.getters['app/getSettings']('taskList', 'perPage'),
-  set: (value) => core?.store.commit('app/setSettings', { view: 'taskList', perPage: parseInt(value) })
+  get: () => core?.store.getters['app/getSettings'](viewKey, 'perPage'),
+  set: (value) => core?.store.commit('app/setSettings', { view: viewKey, perPage: parseInt(value) })
 })
-const toAddRoute = computed(() => {
-  return isServer.value ? null : { name: 'task.document-addition.new' }
+
+const orderBy = useUrlParamsWithStore(['sort', 'order'], {
+  get: () => core?.store.getters['app/getSettings'](viewKey, 'orderBy'),
+  set: (sort, order) => core?.store.commit('app/setSettings', { view: viewKey, orderBy: [sort, order] })
 })
-const tasks = computed(() => store.getters['indexing/sortedTasks'])
+const originalTasks = computed(() => store.state.indexing.tasks)
+
+const fuse = computed(() => {
+  const keys = ['name', 'id']
+  const options = { shouldSort: false, keys }
+  return new Fuse(originalTasks.value, options)
+})
+const filteredTasks = computed(() => {
+  if (searchQuery.value) {
+    return fuse.value.search(searchQuery.value).map(property('item'))
+  }
+  return originalTasks.value
+})
+const sortedTasks = computed(() => {
+  const [sort, order] = orderBy.value
+  return orderArrayBy(filteredTasks.value, sort, order)
+})
+const tasks = computed(() => {
+  const start = (page.value - 1) * perPage.value
+  return sortedTasks.value?.slice(start, start + perPage.value)
+})
 
 onMounted(async () => {
   wait.start('load task-documentAddition-list tasks')
@@ -69,7 +98,7 @@ const howToLink = computed(() => {
     v-model:searchQuery="searchQuery"
     v-model:page="page"
     :per-page="perPage"
-    :total-rows="50"
+    :total-rows="filteredTasks.length"
     :to-add="toAddRoute"
     searchable
     paginable

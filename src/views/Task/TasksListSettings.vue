@@ -47,19 +47,35 @@ const sortBy = ref({
   options: [
     {
       value: ['name', 'asc'],
-      text: tSortByOption('name', SORT_ORDER_KEY.ASC)
+      text: tSortByOption('name', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.ALPHA)
     },
     {
       value: ['name', 'desc'],
-      text: tSortByOption('name', SORT_ORDER_KEY.DESC)
+      text: tSortByOption('name', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.ALPHA)
     },
     {
-      value: ['updateDate', 'asc'],
-      text: tSortByOption('updateDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
+      value: ['id', 'asc'],
+      text: tSortByOption('id', SORT_ORDER_KEY.ASC)
     },
     {
-      value: ['updateDate', 'desc'],
-      text: tSortByOption('updateDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
+      value: ['id', 'desc'],
+      text: tSortByOption('id', SORT_ORDER_KEY.DESC)
+    },
+    {
+      value: ['progress', 'asc'],
+      text: tSortByOption('progress', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.QUANTITY)
+    },
+    {
+      value: ['progress', 'desc'],
+      text: tSortByOption('progress', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.QUANTITY)
+    },
+    {
+      value: ['creationDate', 'asc'],
+      text: tSortByOption('creationDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
+    },
+    {
+      value: ['creationDate', 'desc'],
+      text: tSortByOption('creationDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
     }
   ]
 })
