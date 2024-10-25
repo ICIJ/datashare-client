@@ -21,6 +21,10 @@ export const state = () => ({
         orderBy: ['_score', 'desc'],
         perPage: 25,
         properties: ['title', 'thumbnail', 'highlights', 'project']
+      },
+      tasksList: {
+        orderBy: ['date', 'desc'],
+        perPage: 10
       }
     }
   },
