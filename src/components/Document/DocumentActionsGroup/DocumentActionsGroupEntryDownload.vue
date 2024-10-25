@@ -51,6 +51,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     <document-download-popover
       :target="elementRef"
       :offset="16"
+      :boundary-padding="32"
       close-on-hide
       :document="document"
       :placement="tooltipPlacement"
