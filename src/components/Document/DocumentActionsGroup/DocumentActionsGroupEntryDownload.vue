@@ -29,6 +29,7 @@ const { document } = defineProps({
 })
 
 const elementRef = useTemplateRef('element')
+const popoverRef = useTemplateRef('popover')
 
 const store = useStore()
 
@@ -47,8 +48,10 @@ const isDownloadAllowed = computed(() => {
       hide-tooltip
       :vertical="vertical"
       :disabled="!isDownloadAllowed"
+      @focus="popoverRef?.hide"
     />
     <document-download-popover
+      ref="popover"
       :target="elementRef"
       :offset="16"
       close-on-hide
