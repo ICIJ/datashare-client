@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue'
+import { computed, useTemplateRef, nextTick } from 'vue'
 import { useStore } from 'vuex'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
@@ -29,7 +29,6 @@ const { document } = defineProps({
 })
 
 const elementRef = useTemplateRef('element')
-const popoverRef = useTemplateRef('popover')
 
 const store = useStore()
 
@@ -37,6 +36,8 @@ const isDownloadAllowed = computed(() => {
   // Use nullish coalescing operator to allow download if the store/getter is undefined
   return store?.getters['downloads/isDownloadAllowed'](document) ?? true
 })
+
+const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 
 <template>
@@ -48,10 +49,9 @@ const isDownloadAllowed = computed(() => {
       hide-tooltip
       :vertical="vertical"
       :disabled="!isDownloadAllowed"
-      @focus="popoverRef?.hide"
+      @focus="blur"
     />
     <document-download-popover
-      ref="popover"
       :target="elementRef"
       :offset="16"
       close-on-hide

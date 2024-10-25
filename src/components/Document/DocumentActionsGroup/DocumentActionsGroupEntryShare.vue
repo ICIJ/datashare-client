@@ -1,5 +1,5 @@
 <script setup>
-import { useTemplateRef } from 'vue'
+import { useTemplateRef, nextTick } from 'vue'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
@@ -28,7 +28,8 @@ defineProps({
 })
 
 const elementRef = useTemplateRef('element')
-const popoverRef = useTemplateRef('popover')
+
+const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 
 <template>
@@ -39,10 +40,9 @@ const popoverRef = useTemplateRef('popover')
       hide-tooltip
       :label="$t('documentActionsGroup.share')"
       :vertical="vertical"
-      @focus="popoverRef?.hide"
+      @focus="blur"
     />
     <document-share-popover
-      ref="popover"
       :target="elementRef"
       :offset="16"
       close-on-hide
