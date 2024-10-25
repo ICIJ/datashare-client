@@ -48,7 +48,7 @@ defineExpose({
 </script>
 
 <template>
-  <b-popover ref="popover" v-model="modelValue" teleport-to="body" custom-class="document-download-popover">
+  <b-popover ref="popover" v-model="modelValue" lazy teleport-to="body" custom-class="document-download-popover">
     <div class="document-download-popover__body">
       <button-icon
         :disabled="isRootTooBig"
