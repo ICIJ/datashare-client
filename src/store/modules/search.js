@@ -172,9 +172,9 @@ export const getters = {
     return () => ({
       q: state.query,
       from: `${state.from}`,
-      perPage: `${getters.getPerPage()}`,
-      sort: getters.getSortBy(),
-      order: getters.getOrderBy(),
+      perPage: `${getters.perPage}`,
+      sort: getters.sortBy,
+      order: getters.orderBy,
       indices: state.indices.join(','),
       field: state.field,
       tab: state.tab,
@@ -190,6 +190,17 @@ export const getters = {
         range(6).map(() => random(97, 122))
       )
     })
+  },
+  toSearchParams(state, getters) {
+    return [
+      state.indices.join(','),
+      state.query,
+      getters.instantiatedFilters,
+      state.from,
+      getters.perPage,
+      getters.sort,
+      getters.fields
+    ]
   },
   retrieveQueryTerms(state) {
     let terms = []
@@ -231,33 +242,24 @@ export const getters = {
     const fields = ['', 'content']
     return filterCollection(getters.retrieveQueryTerms, (item) => fields.includes(item.field))
   },
-  sortBy(state) {
-    return find(settings.searchSortFields, { name: state.sort })
+  perPage(state, getters, rootState, rootGetters) {
+    return rootGetters['app/getSettings']('search', 'perPage')
   },
-  getPerPage(state, getters, rootState, rootGetters) {
-    return () => rootGetters['app/getSettings']('search', 'perPage')
+  sort(state, getters, rootState, rootGetters) {
+    const [sort, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score', 'desc']
+    // Find optional extra params
+    const { extraParams = {} } = find(settings.searchSortFields, { name: sort }) ?? {}
+    // We add a secondary path filter is the current sort is not the path itself
+    const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
+    return [{ [sort]: { order, ...extraParams } }, ...secondarySort]
   },
-  getSort(state, getters, rootState, rootGetters) {
-    return () => {
-      const [sort, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score', 'desc']
-      // Find optional extra params
-      const { extraParams = {} } = find(settings.searchSortFields, { name: sort }) ?? {}
-      // We add a secondary path filter is the current sort is not the path itself
-      const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
-      return [{ [sort]: { order, ...extraParams } }, ...secondarySort]
-    }
+  sortBy(state, getters, rootState, rootGetters) {
+    const [sort] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score']
+    return sort
   },
-  getSortBy(state, getters, rootState, rootGetters) {
-    return () => {
-      const [sort] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score']
-      return sort
-    }
-  },
-  getOrderBy(state, getters, rootState, rootGetters) {
-    return () => {
-      const [, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? [null, 'desc']
-      return order
-    }
+  orderBy(state, getters, rootState, rootGetters) {
+    const [, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? [null, 'desc']
+    return order
   }
 }
 
@@ -406,16 +408,7 @@ function actionsBuilder(api) {
       commit('isReady', !updateIsReady)
       commit('error', null)
       try {
-        const indices = state.indices.join(',')
-        const raw = await api.elasticsearch.searchDocs(
-          indices,
-          state.query,
-          getters.instantiatedFilters,
-          state.from,
-          getters.getPerPage(),
-          getters.getSort(),
-          getters.getFields()
-        )
+        const raw = await api.elasticsearch.searchDocs(...getters.toSearchParams)
         commit('buildResponse', raw)
         commit('isReady', true)
         return raw
