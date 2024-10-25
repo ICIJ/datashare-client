@@ -104,7 +104,7 @@ export const routes = [
           settings: () => import('@/views/Task/TasksListSettings')
         },
         meta: {
-          title: 'tasks.title'
+          title: 'task.title'
         },
         children: [
           {
