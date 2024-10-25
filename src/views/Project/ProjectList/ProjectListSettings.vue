@@ -7,11 +7,12 @@ import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
+import { useSettingsI18n } from '@/composables/settings-i18n'
 
+const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, tLayout, perPageLabel } = useSettingsI18n()
 const { core } = useCore()
-
 const layout = ref({
-  label: 'View',
+  label: tLayout.label,
   type: 'radio',
   open: true,
   modelValue: useUrlParamWithStore('layout', {
@@ -21,19 +22,19 @@ const layout = ref({
   options: [
     {
       value: LAYOUTS.GRID,
-      text: 'Grid',
+      text: tLayout.grid,
       icon: 'dots-nine'
     },
     {
       value: LAYOUTS.TABLE,
-      text: 'Table',
+      text: tLayout.table,
       icon: 'table'
     }
   ]
 })
 
 const perPage = ref({
-  label: 'Projects per page',
+  label: perPageLabel('projectList.title'),
   type: 'radio',
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
@@ -58,7 +59,7 @@ const perPage = ref({
 })
 
 const sortBy = ref({
-  label: 'Sort by',
+  label: sortByLabel,
   type: 'radio',
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
@@ -68,27 +69,27 @@ const sortBy = ref({
   options: [
     {
       value: ['name', 'asc'],
-      text: 'Name (A to Z)'
+      text: tSortByOption('name', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.ALPHA)
     },
     {
       value: ['name', 'desc'],
-      text: 'Name (Z to A)'
+      text: tSortByOption('name', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.ALPHA)
     },
     {
       value: ['updateDate', 'asc'],
-      text: 'Latest update (new)'
+      text: tSortByOption('updateDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
     },
     {
       value: ['updateDate', 'desc'],
-      text: 'Latest update (old)'
+      text: tSortByOption('updateDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
     },
     {
       value: ['documentsCount', 'asc'],
-      text: 'Documents (increasing)'
+      text: tSortByOption('documentsCount', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.NUMBER)
     },
     {
       value: ['documentsCount', 'desc'],
-      text: 'Documents (decreasing)'
+      text: tSortByOption('documentsCount', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.NUMBER)
     }
   ]
 })
