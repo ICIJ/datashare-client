@@ -28,6 +28,7 @@ defineProps({
 })
 
 const elementRef = useTemplateRef('element')
+const popoverRef = useTemplateRef('popover')
 </script>
 
 <template>
@@ -38,8 +39,10 @@ const elementRef = useTemplateRef('element')
       hide-tooltip
       :label="$t('documentActionsGroup.share')"
       :vertical="vertical"
+      @focus="popoverRef?.hide"
     />
     <document-share-popover
+      ref="popover"
       :target="elementRef"
       :offset="16"
       close-on-hide
