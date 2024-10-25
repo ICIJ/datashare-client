@@ -422,7 +422,8 @@ function actionsBuilder(api) {
     },
     searchRoots({ state, commit, getters }, raw) {
       const indices = state.indices.join(',')
-      const ids = compact(get(raw, 'hits.hits', []).map((hit) => hit._source.rootDocument))
+      const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
+      const ids = embedded.map((hit) => hit._source.rootDocument)
       const source = ['contentType', 'contentLength', 'title', 'path']
       return api.elasticsearch.ids(indices, ids, source)
     },
