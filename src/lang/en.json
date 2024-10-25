@@ -866,11 +866,14 @@
     "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>.",
     "save": "Save"
   },
-  "tasks": {
+  "task": {
     "title": "Tasks",
-    "description": "Some tasks must be run in the background. Use this panel to manage them."
-  },
-  "task":{
+    "description": "Some tasks must be run in the background. Use this panel to manage them.",
+    "settings": {
+      "createdAt": "Created at",
+      "name": "Name",
+      "state": "State"
+    },
     "document-addition": {
       "home": "Document addition",
       "list": {
@@ -1233,8 +1236,9 @@
     "submitError": "Unable to submit the settings.",
     "noAccess": "You do not have access to that page in server mode."
   },
-  "settingsI18n": {
+  "viewSettings": {
     "perPage": "{title} per page",
+    "properties":"Visible properties",
     "view" : {
       "label":"View",
       "grid" : "Grid",
