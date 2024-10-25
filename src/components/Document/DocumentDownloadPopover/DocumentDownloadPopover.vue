@@ -10,6 +10,11 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import byteSize from '@/utils/byteSize'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
+/**
+ * Toggle value when the popover is open
+ */
+const modelValue = defineModel({ type: Boolean })
+
 const props = defineProps({
   /**
    * The selected document
@@ -22,12 +27,6 @@ const props = defineProps({
    */
   target: {
     type: Object
-  },
-  /**
-   * Toggle value when the popover is open
-   */
-  modelValue: {
-    type: Boolean
   },
   /**
    * True if the popover is open manually
@@ -72,8 +71,12 @@ const extensionWarning = computed(() => {
 
 const description = computed(() => {
   const descriptions = props.document.contentTypeDescription ?? {}
-  const description = descriptions[locale.value] || descriptions.en
-  return props.document.hasStandardExtension ? description : `${description} ${extensionWarning.value}`
+  const description = descriptions[locale.value] || descriptions.en || ''
+  return showExtensionWarning.value ? `${description} ${extensionWarning.value}` : description
+})
+
+const showExtensionWarning = computed(() => {
+  return !props.document.hasStandardExtension && !executionWarning.value
 })
 
 const executionWarning = computed(() => {
@@ -116,14 +119,13 @@ const maxRootContentLength = computed(() => {
 
 <template>
   <b-popover
+    v-model="modelValue"
     teleport-to="body"
     :target="target"
     :manual="manual"
-    :model-value="modelValue"
     :no-auto-close="noAutoClose"
     :placement="placement"
     custom-class="document-download-popover"
-    @update:modelValue="$emit('update:modelValue')"
   >
     <div class="document-download-popover__body">
       <button-icon
