@@ -1,5 +1,5 @@
 import { computed, nextTick, watch } from 'vue'
-import { get, identity, last } from 'lodash'
+import { get, identity, last, toString } from 'lodash'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -80,7 +80,7 @@ export function useSearchFilter() {
 
   const hasFilterValue = (filter, item) => {
     const { value } = filter.itemParam(item)
-    return getFilterValues(filter).includes(value)
+    return getFilterValues(filter).map(toString).includes(toString(value))
   }
 
   const hasAnyFilterValue = (filter) => {
@@ -88,7 +88,9 @@ export function useSearchFilter() {
   }
 
   const toggleFilterValue = (filter, item, checked) => {
-    const { value } = filter.itemParam(item)
+    const param = filter.itemParam(item)
+    const value = toString(param.value)
+
     if (checked) {
       return store.commit('search/addFilterValue', { ...filter, value })
     }
