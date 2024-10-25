@@ -1,11 +1,13 @@
 import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 
 import { useCore } from '@/composables/core'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'
 
 export function useDocumentDownload(document) {
+  const store = useStore()
   const { core } = useCore()
   const { locale, t } = useI18n()
 
@@ -59,6 +61,11 @@ export function useDocumentDownload(document) {
     return hasRoot.value && rootContentLength.value > maxRootContentLength.value
   })
 
+  const isDownloadAllowed = computed(() => {
+    // Use nullish coalescing operator to allow download if the store/getter is undefined
+    return store?.getters['downloads/isDownloadAllowed'](documentRef.value) ?? true
+  })
+
   const rootContentLength = computed(() => {
     return documentRef.value?.root?.contentLength
   })
@@ -79,6 +86,7 @@ export function useDocumentDownload(document) {
     hasCleanableContentType,
     embeddedDocumentDownloadMaxSize,
     isRootTooBig,
+    isDownloadAllowed,
     rootContentLength,
     maxRootContentLength
   }
