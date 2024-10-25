@@ -1,19 +1,19 @@
 <template>
   <button-icon
-    :icon-left="icon"
+    :class="classList"
+    :disabled="disabled"
+    :hide-tooltip="hideTooltip"
+    :icon-left-hover-weight="iconHoverWeight"
     :icon-left-size="iconSize"
     :icon-left-weight="iconWeight"
-    :icon-left-hover-weight="iconHoverWeight"
+    :icon-left="icon"
     :label="label"
-    :hide-tooltip="hideTooltip"
-    :tooltip-placement="tooltipPlacement"
     :size="size"
+    :tooltip-placement="tooltipPlacement"
+    class="document-actions-entry border-0"
     hide-label
     square
     variant="outline-secondary"
-    class="document-actions-entry border-0"
-    :class="{ 'document-actions-entry--fill': fill }"
-    :disabled="disabled"
   />
 </template>
 
@@ -21,6 +21,8 @@
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import { SIZE } from '@/enums/sizes'
+import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 defineOptions({ name: 'DocumentActionsEntry' })
 
@@ -40,13 +42,6 @@ const props = defineProps({
     default: ''
   },
   /**
-   * Class to apply to the action button
-   */
-  btnClass: {
-    type: String,
-    default: 'btn-sm'
-  },
-  /**
    * Button is fill
    */
   fill: {
@@ -59,37 +54,33 @@ const props = defineProps({
     type: Boolean
   },
   /**
-   * Class to apply to the action button when document is fill
+   * Tooltip's placement on each action using Floating UI: https://floating-ui.com/docs/tutorial#placements
+   * @values 'auto', 'auto-start', 'auto-end', 'top', 'right', 'bottom', 'left', 'top-start', 'right-start', 'bottom-start', 'left-start', 'top-end', 'right-end', 'bottom-end', 'left-end'
    */
   tooltipPlacement: {
     type: String,
-    default: 'bottom'
+    default: PLACEMENT.TOP,
+    validator: placementValidator
   },
   /**
    * Disable button
    */
   disabled: {
-    type: Boolean,
-    default: false
+    type: Boolean
   },
   /**
-   * Button size
+   * Use vertical layout for the button
    */
-  size: {
-    type: String,
-    default: 'md'
-  },
-  /**
-   * Button's icon size
-   */
-  iconSize: {
-    type: String,
-    default: 'md'
+  vertical: {
+    type: Boolean
   }
 })
 
+const size = computed(() => (props.vertical ? SIZE.SM : SIZE.MD))
+const iconSize = computed(() => (props.vertical ? SIZE.LG : SIZE.MD))
 const iconWeight = computed(() => (props.fill ? 'fill' : 'regular'))
 const iconHoverWeight = computed(() => (props.fill ? 'fill' : 'bold'))
+const classList = computed(() => ({ 'document-actions-entry--fill': props.fill }))
 </script>
 
 <style lang="scss" scoped>
