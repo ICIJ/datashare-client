@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
+import { useCore } from '@/composables/core'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import byteSize from '@/utils/byteSize'
@@ -28,15 +29,10 @@ const props = defineProps({
   cleanableContentTypes: {
     type: Array,
     default: () => ['application/pdf', 'application/msword']
-  },
-  /**
-   * The maximum allowed size to download an embedded document
-   */
-  embeddedDocumentDownloadMaxSize: {
-    type: String,
-    default: '1G'
   }
 })
+
+const { core } = useCore()
 
 const { locale, t } = useI18n()
 
@@ -80,6 +76,10 @@ const hasCleanableContentType = computed(() => {
   return props.cleanableContentTypes.includes(props.document.contentType)
 })
 
+const embeddedDocumentDownloadMaxSize = computed(() => {
+  return core?.config?.get('embeddedDocumentDownloadMaxSize')
+})
+
 const isRootTooBig = computed(() => {
   return hasRoot.value && rootContentLength.value > maxRootContentLength.value
 })
@@ -89,7 +89,7 @@ const rootContentLength = computed(() => {
 })
 
 const maxRootContentLength = computed(() => {
-  return byteSize(props.embeddedDocumentDownloadMaxSize)
+  return byteSize(embeddedDocumentDownloadMaxSize.value)
 })
 
 const popoverRef = useTemplateRef('popover')
