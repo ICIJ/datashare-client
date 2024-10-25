@@ -1,9 +1,9 @@
 <script setup>
 import { computed, useTemplateRef, nextTick } from 'vue'
-import { useStore } from 'vuex'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
+import { useDocumentDownload } from '@/composables/document-download'
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
 
 const { document } = defineProps({
@@ -28,15 +28,10 @@ const { document } = defineProps({
   }
 })
 
+const { isDownloadAllowed, isRootTooBig, documentFullUrl } = useDocumentDownload(document)
 const elementRef = useTemplateRef('element')
-
-const store = useStore()
-
-const isDownloadAllowed = computed(() => {
-  // Use nullish coalescing operator to allow download if the store/getter is undefined
-  return store?.getters['downloads/isDownloadAllowed'](document) ?? true
-})
-
+const hasDownload = computed(() => isDownloadAllowed.value && !isRootTooBig.value)
+const href = computed(() => (hasDownload.value ? documentFullUrl.value : null))
 const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 
@@ -45,10 +40,12 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     <document-actions-group-entry
       ref="element"
       icon="download-simple"
-      :label="$t('documentActionsGroup.download')"
+      download
       hide-tooltip
+      :label="$t('documentActionsGroup.download')"
       :vertical="vertical"
       :disabled="!isDownloadAllowed"
+      :href="href"
       @focus="blur"
     />
     <document-download-popover
