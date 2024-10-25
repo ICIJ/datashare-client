@@ -1,5 +1,5 @@
 <template>
-  <page-header />
+  <page-header no-toggle-settings />
   <div class="project-new">
     <page-container fluid>
       <task-document-addition-form />
