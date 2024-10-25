@@ -23,30 +23,6 @@ const props = defineProps({
     type: Object
   },
   /**
-   * The target element
-   */
-  target: {
-    type: Object
-  },
-  /**
-   * True if the popover is open manually
-   */
-  manual: {
-    type: Boolean
-  },
-  /**
-   * Disable auto close
-   */
-  noAutoClose: {
-    type: Boolean
-  },
-  /**
-   * The placement of the popover
-   */
-  placement: {
-    type: String
-  },
-  /**
    * List of content type that can be cleaned
    */
   cleanableContentTypes: {
@@ -118,15 +94,7 @@ const maxRootContentLength = computed(() => {
 </script>
 
 <template>
-  <b-popover
-    v-model="modelValue"
-    teleport-to="body"
-    :target="target"
-    :manual="manual"
-    :no-auto-close="noAutoClose"
-    :placement="placement"
-    custom-class="document-download-popover"
-  >
+  <b-popover v-model="modelValue" teleport-to="body" custom-class="document-download-popover">
     <div class="document-download-popover__body">
       <button-icon
         :disabled="isRootTooBig"
