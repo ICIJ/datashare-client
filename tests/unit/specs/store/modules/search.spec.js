@@ -63,7 +63,7 @@ describe('SearchStore', () => {
   })
 
   it('should build a EsDocList object from raw value', () => {
-    store.commit('search/buildResponse', {
+    store.commit('search/setResponse', {
       hits: {
         hits: [
           { _source: { type: 'Document' }, _id: 'foo' },
@@ -75,7 +75,7 @@ describe('SearchStore', () => {
   })
 
   it('should build a correct EsDocList object from raw value', () => {
-    store.commit('search/buildResponse', {
+    store.commit('search/setResponse', {
       hits: {
         hits: [
           { _source: { type: 'Document' }, _id: 'foo' },
