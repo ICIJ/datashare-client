@@ -325,7 +325,7 @@ export const mutations = {
     const fields = settings.searchFields.map((field) => field.key)
     state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
-  buildResponse(state, raw) {
+  setResponse(state, raw) {
     state.response = new EsDocList(raw)
   },
   addFilterValue(state, filter) {
@@ -408,10 +408,8 @@ function actionsBuilder(api) {
       commit('isReady', !updateIsReady)
       commit('error', null)
       try {
-        const raw = await api.elasticsearch.searchDocs(...getters.toSearchParams)
-        commit('buildResponse', raw)
+        commit('setResponse', await api.elasticsearch.searchDocs(...getters.toSearchParams))
         commit('isReady', true)
-        return raw
       } catch (error) {
         commit('isReady', true)
         commit('error', error)

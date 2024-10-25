@@ -118,7 +118,7 @@ export function useSearchFilter() {
   }
 
   function resetSearchResponse() {
-    store.commit('search/buildResponse')
+    store.commit('search/setResponse')
   }
 
   async function refreshRouteAndSearch() {
