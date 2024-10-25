@@ -45,7 +45,7 @@ export function useSelection(initialSelection, initialAll = []) {
 
   const indeterminate = computed({
     get() {
-      return selection.value.length && selection.value.length < all.value.length
+      return !!selection.value.length && selection.value.length < all.value.length
     },
     set() {
       selectAll()
