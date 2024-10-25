@@ -1248,7 +1248,11 @@
       "name": "Name",
       "creationDate": "Creation date",
       "updateDate": "Latest update",
-      "documentsCount": "Documents count"
+      "documentsCount": "Documents count",
+      "taskStatus": "Task status",
+      "progress": "Progress",
+      "project": "Project",
+      "id": "Id"
     },
     "order": {
       "default": {
