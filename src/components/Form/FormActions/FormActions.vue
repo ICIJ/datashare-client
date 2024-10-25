@@ -105,7 +105,7 @@ watch(
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  column-gap: $spacer-lg;
+  column-gap: $spacer;
   row-gap: $spacer-sm;
 
   &--end {
