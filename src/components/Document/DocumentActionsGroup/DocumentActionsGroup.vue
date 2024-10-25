@@ -1,52 +1,48 @@
 <template>
   <div class="document-actions-group" :class="classList">
     <div class="document-actions-group__checkbox">
-      <b-form-checkbox
-        v-if="selectMode"
-        aria-label="Select this document"
-        :model-value="selected"
-        name="checkbox"
-        @update:modelValue="$emit('update:selected', $event)"
-      >
+      <b-form-checkbox v-if="selectMode" v-model="selected" aria-label="Select this document" name="checkbox">
         <span class="visually-hidden">Select this document</span>
       </b-form-checkbox>
     </div>
-    <slot name="actions" v-bind="{ document }">
-      <document-actions-group-entry
-        v-for="entry in entries"
-        ref="entryButtons"
-        :key="entry.name"
-        :size="entrySize"
-        :icon-size="entryIconSize"
-        :tooltip-placement="tooltipPlacement"
-        v-bind="entry"
-      />
-      <document-download-popover
-        v-if="entryButtons !== null"
-        :target="entryButtons[2]"
+    <slot name="actions" v-bind="{ document, tooltipPlacement, vertical }">
+      <document-actions-group-entry-star
         :document="document"
-        :placement="tooltipPlacement"
+        :tooltip-placement="tooltipPlacement"
+        :vertical="vertical"
+      />
+      <document-actions-group-entry-share
+        :document="document"
+        :tooltip-placement="tooltipPlacement"
+        :vertical="vertical"
+      />
+      <document-actions-group-entry-download
+        :document="document"
+        :tooltip-placement="tooltipPlacement"
+        :vertical="vertical"
+      />
+      <document-actions-group-entry-expand
+        :document="document"
+        :tooltip-placement="tooltipPlacement"
+        :vertical="vertical"
       />
     </slot>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
+import { computed } from 'vue'
 
-import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
-
-import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
-import { SIZE } from '@/enums/sizes'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 
-const entryButtons = ref(null)
+/**
+ * True if checkbox is selected
+ */
+const selected = defineModel('selected', { type: Boolean })
 
-const props = defineProps({
+const { vertical } = defineProps({
   /**
-   * The selected document
+   * The current document
    */
   document: {
     type: Object
@@ -71,83 +67,13 @@ const props = defineProps({
    */
   selectMode: {
     type: Boolean
-  },
-  /**
-   * True if checkbox is selected
-   */
-  selected: {
-    type: Boolean
   }
 })
 
-const emit = defineEmits(['click-star', 'click-download', 'click-share', 'click-expand', 'update:selected'])
-
-const { t } = useI18n()
-
-const ACTION = {
-  STAR: 'star',
-  SHARE: 'share',
-  DOWNLOAD: 'download',
-  EXPAND: 'expand'
-}
-
-const click = (action) => {
-  return emit(`click-${action}`, { id: document.id })
-}
-
-const entrySize = computed(() => {
-  return props.vertical ? SIZE.SM : SIZE.MD
-})
-
-const entryIconSize = computed(() => {
-  return props.vertical ? SIZE.LG : SIZE.MD
-})
-
 const classList = computed(() => {
-  return { 'document-actions-group--vertical': props.vertical }
-})
-
-const store = useStore()
-
-const isStarred = computed(() => {
-  return store?.getters['starred/isStarred'](props.document)
-})
-
-const isDownloadAllowed = computed(() => {
-  // Use nullish coalescing operator to allow download if the store/getter is undefined
-  return store?.getters['downloads/isDownloadAllowed'](props.document) ?? true
-})
-
-const entries = computed(() => {
-  return [
-    {
-      name: ACTION.STAR,
-      icon: 'star',
-      label: t(`documentActionsGroup.${ACTION.STAR}`),
-      fill: isStarred.value,
-      event: click(ACTION.STAR)
-    },
-    {
-      name: ACTION.SHARE,
-      icon: 'share',
-      label: t(`documentActionsGroup.${ACTION.SHARE}`),
-      event: click(ACTION.SHARE)
-    },
-    {
-      name: ACTION.DOWNLOAD,
-      icon: 'download-simple',
-      label: t(`documentActionsGroup.${ACTION.DOWNLOAD}`),
-      disabled: !isDownloadAllowed.value,
-      hideTooltip: true,
-      event: click(ACTION.DOWNLOAD)
-    },
-    {
-      name: ACTION.EXPAND,
-      icon: 'arrows-out-simple',
-      label: t(`documentActionsGroup.${ACTION.EXPAND}`),
-      event: click(ACTION.EXPAND)
-    }
-  ]
+  return {
+    'document-actions-group--vertical': vertical
+  }
 })
 </script>
 
