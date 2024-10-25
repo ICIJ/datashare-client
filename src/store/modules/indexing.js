@@ -5,12 +5,7 @@ import { TASK_STATUS } from '@/enums/taskStatus'
 export function initialState() {
   return {
     form: {
-      filter: true,
-      language: null,
-      ocr: false,
       offline: false,
-      path: null,
-      defaultProject: null,
       pipeline: 'CORENLP'
     },
     tasks: []
@@ -19,11 +14,6 @@ export function initialState() {
 
 export const state = initialState()
 export const getters = {
-  sortedTasks(state) {
-    // Move running tasks on top
-    const states = [TASK_STATUS.RUNNING]
-    return sortBy(state.tasks, ({ state }) => -states.indexOf(state))
-  },
   pendingTasks(state) {
     return filter(state.tasks, { state: TASK_STATUS.RUNNING })
   },
@@ -50,30 +40,9 @@ export const mutations = {
   updateTasks(state, tasks) {
     state.tasks = tasks
   },
-  resetExtractForm(state) {
-    state.form.ocr = initialState().form.ocr
-    state.form.language = initialState().form.language
-    state.form.filter = initialState().form.filter
-    state.form.path = initialState().form.path
-  },
   resetFindNamedEntitiesForm(state) {
     state.form.pipeline = initialState().form.pipeline
     state.form.offline = initialState().form.offline
-  },
-  formOcr(state, value) {
-    state.form.ocr = value
-  },
-  formFilter(state, value) {
-    state.form.filter = value
-  },
-  formPath(state, value) {
-    state.form.path = value
-  },
-  formLanguage(state, value) {
-    state.form.language = value
-  },
-  formDefaultProject(state, value) {
-    state.form.defaultProject = value
   },
   formPipeline(state, value) {
     state.form.pipeline = value
