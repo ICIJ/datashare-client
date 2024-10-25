@@ -35,6 +35,7 @@ defineProps({
     </b-badge>
   </span>
 </template>
+
 <style lang="scss">
 .tab-group-title {
   display: flex;
