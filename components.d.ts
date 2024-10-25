@@ -233,6 +233,8 @@ declare module 'vue' {
     DocumentRowTitle: typeof import('./src/components/Document/DocumentRow/DocumentRowTitle.vue')['default']
     DocumentSearchNav: typeof import('./src/components/Document/DocumentSearchNav/DocumentSearchNav.vue')['default']
     DocumentSearchNavItem: typeof import('./src/components/Document/DocumentSearchNav/DocumentSearchNavItem.vue')['default']
+    DocumentSharePopover: typeof import('./src/components/Document/DocumentSharePopover/DocumentSharePopover.vue')['default']
+    DocumentSharePopoverForm: typeof import('./src/components/Document/DocumentSharePopover/DocumentSharePopoverForm.vue')['default']
     DocumentSlicedName: typeof import('./src/components/DocumentSlicedName.vue')['default']
     DocumentTabDetails: typeof import('./src/components/Document/DocumentTab/DocumentTabDetails.vue')['default']
     DocumentTabExtractedText: typeof import('./src/components/Document/DocumentTab/DocumentTabExtractedText.vue')['default']
