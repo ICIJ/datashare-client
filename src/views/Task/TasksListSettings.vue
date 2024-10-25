@@ -1,18 +1,20 @@
 <script setup>
 import { noop } from 'lodash'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useSettingsI18n } from '@/composables/settings-i18n'
+import { useViewSettings } from '@/composables/view-settings'
+import { useTaskSettings } from '@/composables/task-settings'
 
 const { core } = useCore()
-const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, perPageLabel } = useSettingsI18n()
+const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } =
+  useViewSettings()
 const settingName = 'taskList'
 const perPage = ref({
-  label: perPageLabel('tasks.title'),
+  label: perPageLabel('task.title'),
   type: 'radio',
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
@@ -79,6 +81,24 @@ const sortBy = ref({
     }
   ]
 })
+const { propertiesOrder, propertiesLabel, propertiesIcon } = useTaskSettings()
+
+const properties = ref({
+  label: visiblePropertiesLabel,
+  type: 'checkbox',
+  open: true,
+  modelValue: computed({
+    get: () => core?.store.getters['app/getSettings']('settingName', 'properties'),
+    set: (properties) => core?.store.commit('app/setSettings', { view: 'search', properties })
+  }),
+  options: computed(() => {
+    return propertiesOrder.map((value) => {
+      const text = propertiesLabel.value[value]
+      const icon = propertiesIcon[value]
+      return { value, icon, text }
+    })
+  })
+})
 
 defineProps({
   hide: {
@@ -109,6 +129,14 @@ defineProps({
       :type="perPage.type"
       :options="perPage.options"
       :label="perPage.label"
+    />
+
+    <page-settings-section
+      v-model="properties.modelValue"
+      v-model:open="properties.open"
+      :type="properties.type"
+      :options="properties.options"
+      :label="properties.label"
     />
   </page-settings>
 </template>
