@@ -48,6 +48,12 @@ const isDownloadAllowed = computed(() => {
       :vertical="vertical"
       :disabled="!isDownloadAllowed"
     />
-    <document-download-popover :target="elementRef" :document="document" :placement="tooltipPlacement" />
+    <document-download-popover
+      :target="elementRef"
+      :offset="16"
+      close-on-hide
+      :document="document"
+      :placement="tooltipPlacement"
+    />
   </span>
 </template>
