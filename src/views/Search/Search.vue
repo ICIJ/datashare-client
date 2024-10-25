@@ -84,6 +84,7 @@ watchProjects(refreshRoute)
           <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
         </div>
         <search-selection
+          v-if="selectMode"
           v-model:selection="selection"
           :entries="hits"
           :select-mode="selectMode"
