@@ -31,6 +31,10 @@ const store = useStore()
 const isStarred = computed(() => {
   return store?.getters['starred/isStarred'](document)
 })
+
+const toggleStar = () => {
+  store?.dispatch('starred/toggleStarDocument', document)
+}
 </script>
 
 <template>
@@ -40,5 +44,6 @@ const isStarred = computed(() => {
     :tooltip-placement="tooltipPlacement"
     :vertical="vertical"
     :fill="isStarred"
+    @click="toggleStar()"
   />
 </template>
