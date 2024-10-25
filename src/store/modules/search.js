@@ -325,8 +325,8 @@ export const mutations = {
     const fields = settings.searchFields.map((field) => field.key)
     state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
-  setResponse(state, raw) {
-    state.response = new EsDocList(raw)
+  setResponse(state, { raw, parents = null, roots = null } = {}) {
+    state.response = new EsDocList(raw, parents, roots)
   },
   addFilterValue(state, filter) {
     // We cast the new filter values to allow several new values at the same time
@@ -404,17 +404,27 @@ export const mutations = {
 
 function actionsBuilder(api) {
   return {
-    async refresh({ state, commit, getters }, updateIsReady = true) {
-      commit('isReady', !updateIsReady)
+    async refresh({ state, commit, getters, dispatch }) {
+      commit('isReady', false)
       commit('error', null)
       try {
-        commit('setResponse', await api.elasticsearch.searchDocs(...getters.toSearchParams))
-        commit('isReady', true)
+        const raw = await dispatch('searchDocs')
+        const roots = await dispatch('searchRoots', raw)
+        commit('setResponse', { raw, roots })
       } catch (error) {
-        commit('isReady', true)
         commit('error', error)
-        throw error
+      } finally {
+        commit('isReady', true)
       }
+    },
+    searchDocs({ getters }) {
+      return api.elasticsearch.searchDocs(...getters.toSearchParams)
+    },
+    searchRoots({ state, commit, getters }, raw) {
+      const indices = state.indices.join(',')
+      const ids = compact(get(raw, 'hits.hits', []).map((hit) => hit._source.rootDocument))
+      const source = ['contentType', 'contentLength', 'title', 'path']
+      return api.elasticsearch.ids(indices, ids, source)
     },
     updateFromRouteQuery({ commit, getters }, query, resetResponse = false) {
       const excludedFromReset = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
@@ -470,22 +480,22 @@ function actionsBuilder(api) {
           commit(key, q[key])
         }
       })
-      return dispatch('refresh', true)
+      return dispatch('refresh')
     },
-    queryFilter({ state, getters }, params) {
-      return api.elasticsearch
-        .searchFilter(
-          state.indices.join(','),
-          getters.getFilter({ name: params.name }),
-          state.query,
-          getters.instantiatedFilters,
-          getters.isFilterContextualized(params.name),
-          params.options,
-          getters.getFields(),
-          params.from,
-          params.size
-        )
-        .then((raw) => new EsDocList(raw))
+    async queryFilter({ state, getters }, { name, options, from, size }) {
+      const raw = await api.elasticsearch.searchFilter(
+        state.indices.join(','),
+        getters.getFilter({ name }),
+        state.query,
+        getters.instantiatedFilters,
+        getters.isFilterContextualized(name),
+        options,
+        getters.getFields(),
+        from,
+        size
+      )
+
+      return new EsDocList(raw)
     },
     setFilterValue({ commit, dispatch }, filter) {
       commit('setFilterValue', filter)

@@ -167,6 +167,7 @@ export function datasharePlugin(Client) {
     })
     return body
   }
+
   Client.prototype.searchDocs = function (
     index,
     query = '*',
@@ -181,6 +182,12 @@ export function datasharePlugin(Client) {
     const builder = this._buildBody(from, size, filters, query, sort, fields)
     const body = builder.rawOption('track_total_hits', true).build()
     return this._search({ index, body })
+  }
+
+  Client.prototype.ids = function (index, values = [], _source = null) {
+    const size = values.length
+    const body = { query: { ids: { values } } }
+    return this._search({ index, size, body, _source })
   }
 
   Client.prototype.countByProject = function (index, query = undefined, size = 1000) {
