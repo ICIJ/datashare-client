@@ -132,6 +132,7 @@ const to = computed(() => {
       font-weight: 500;
       margin-bottom: $spacer-xs;
       color: inherit;
+      word-break: break-all;
     }
   }
 }
