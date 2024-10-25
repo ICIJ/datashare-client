@@ -1,4 +1,6 @@
 <script setup>
+import { useTemplateRef } from 'vue'
+
 import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
 /**
@@ -14,10 +16,22 @@ defineProps({
     type: Object
   }
 })
+
+const popoverRef = useTemplateRef('popover')
+
+defineExpose({
+  popoverRef,
+  hide() {
+    popoverRef.value.hide()
+  },
+  show() {
+    popoverRef.value.show()
+  }
+})
 </script>
 
 <template>
-  <b-popover v-model="modelValue" custom-class="document-share-popover" teleport-to="body">
+  <b-popover ref="popover" v-model="modelValue" custom-class="document-share-popover" teleport-to="body">
     <document-share-popover-form :document="document" />
   </b-popover>
 </template>
