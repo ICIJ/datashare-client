@@ -1233,6 +1233,46 @@
     "submitError": "Unable to submit the settings.",
     "noAccess": "You do not have access to that page in server mode."
   },
+  "settingsI18n": {
+    "perPage": "{title} per page",
+    "view" : {
+      "label":"View",
+      "grid" : "Grid",
+      "table" : "Table"
+    },
+    "sortBy" : {
+      "label":"Sort by",
+      "format" : "{name} ({order})"
+    },
+    "options": {
+      "name": "Name",
+      "creationDate": "Creation date",
+      "updateDate": "Latest update",
+      "documentsCount": "Documents count"
+    },
+    "order": {
+      "default": {
+        "asc":"ascending",
+        "desc": "descending"
+      },
+      "alpha": {
+        "asc":"A to Z",
+        "desc": "Z to A"
+      },
+      "number": {
+        "asc":"increasing",
+        "desc": "decreasing"
+      },
+      "quantity": {
+        "asc":"low",
+        "desc": "high"
+      },
+      "date": {
+        "asc":"recent",
+        "desc": "old"
+      }
+    }
+  },
   "human": {
     "number": {
       "K": "%K",
