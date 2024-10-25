@@ -99,7 +99,10 @@ export const routes = [
       {
         name: 'tasks',
         path: 'tasks',
-        component: () => import('@/views/Task/Tasks'),
+        components: {
+          default: () => import('@/views/Task/Tasks'),
+          settings: () => import('@/views/Task/TasksListSettings')
+        },
         meta: {
           title: 'tasks.title'
         },
@@ -120,16 +123,17 @@ export const routes = [
             name: 'task.document-addition',
             path: 'document-addition',
             meta: { title: 'task.document-addition.home' },
-            component: () => import('@/views/Task/DocumentAddition/TaskDocumentAddition'),
+            components: {
+              default: () => import('@/views/Task/DocumentAddition/TaskDocumentAddition')
+            },
             children: [
               {
                 name: 'task.document-addition.list',
                 path: '',
-                component: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionList'),
+                components: { default: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionList') },
                 meta: {
                   title: 'task.document-addition.list.title',
                   allowedModes: ['LOCAL', 'EMBEDDED'],
-                  meta: { title: null },
                   docs: [
                     {
                       title: 'Add documents to Datashare',
@@ -145,7 +149,9 @@ export const routes = [
               {
                 name: 'task.document-addition.new',
                 path: 'new',
-                component: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionNew'),
+                components: {
+                  default: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionNew')
+                },
                 meta: {
                   title: 'task.document-addition.new.title'
                 }
