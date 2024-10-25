@@ -56,6 +56,7 @@ defineExpose({
         :label="$t('documentDownloadPopover.download')"
         icon-left="download-simple"
         class="document-download-popover__body__button"
+        download
       />
       <button-icon
         v-if="hasCleanableContentType"
@@ -64,6 +65,7 @@ defineExpose({
         :label="$t('documentDownloadPopover.downloadWithoutMetadata')"
         variant="outline-action"
         class="document-download-popover__body__button"
+        download
       />
       <button-icon
         icon-left="download-simple"
@@ -71,6 +73,7 @@ defineExpose({
         :label="$t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
+        download
       />
       <button-icon
         v-if="hasRoot"
@@ -79,6 +82,7 @@ defineExpose({
         :label="$t('documentDownloadPopover.downloadRoot')"
         variant="outline-action"
         class="document-download-popover__body__button"
+        download
       />
       <div class="document-download-popover__body__sections">
         <document-download-popover-section
