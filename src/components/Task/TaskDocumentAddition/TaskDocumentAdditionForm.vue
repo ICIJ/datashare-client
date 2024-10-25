@@ -33,7 +33,7 @@ const defaultDataDir = computed(() => core.config.get('dataDir'))
 const initialFormValues = computed(() => ({
   path: defaultDataDir.value,
   language: null,
-  extractOcr: true,
+  extractOcr: false,
   skipIndexedDocuments: true,
   hasTesseract: true,
   project: props.projectName ?? defaultProject.value,
@@ -54,8 +54,8 @@ const sourcePath = computed(() => {
 
 const path = ref(initialFormValues.value.path)
 const language = ref(initialFormValues.value.language)
-const hasTesseract = ref(true)
-const extractOcr = ref(true)
+const hasTesseract = ref(initialFormValues.value.hasTesseract)
+const extractOcr = ref(initialFormValues.value.extractOcr)
 const textLanguages = ref([])
 const ocrLanguages = ref([])
 const skipIndexedDocuments = ref(initialFormValues.value.skipIndexedDocuments)
