@@ -1,4 +1,5 @@
 export default {
+  cleanableContentTypes: ['application/pdf', 'application/msword'],
   contentPlaceholder: {
     rows: [
       {
