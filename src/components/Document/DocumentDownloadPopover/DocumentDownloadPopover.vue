@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
@@ -91,10 +91,22 @@ const rootContentLength = computed(() => {
 const maxRootContentLength = computed(() => {
   return byteSize(props.embeddedDocumentDownloadMaxSize)
 })
+
+const popoverRef = useTemplateRef('popover')
+
+defineExpose({
+  popoverRef,
+  hide() {
+    popoverRef.value.hide()
+  },
+  show() {
+    popoverRef.value.show()
+  }
+})
 </script>
 
 <template>
-  <b-popover v-model="modelValue" teleport-to="body" custom-class="document-download-popover">
+  <b-popover ref="popover" v-model="modelValue" teleport-to="body" custom-class="document-download-popover">
     <div class="document-download-popover__body">
       <button-icon
         :disabled="isRootTooBig"
