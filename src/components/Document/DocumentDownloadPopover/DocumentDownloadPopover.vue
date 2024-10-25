@@ -1,14 +1,12 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue'
+import { useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { useI18n } from 'vue-i18n'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
-import { useCore } from '@/composables/core'
+import { useDocumentDownload } from '@/composables/document-download'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
-import byteSize from '@/utils/byteSize'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
@@ -22,75 +20,19 @@ const props = defineProps({
    */
   document: {
     type: Object
-  },
-  /**
-   * List of content type that can be cleaned
-   */
-  cleanableContentTypes: {
-    type: Array,
-    default: () => ['application/pdf', 'application/msword']
   }
 })
 
-const { core } = useCore()
-
-const { locale, t } = useI18n()
-
-const extensionWarning = computed(() => {
-  const { standardExtension: extension } = props.document
-  return t('documentDownloadPopover.extensionWarning', { extension })
-})
-
-const description = computed(() => {
-  const descriptions = props.document.contentTypeDescription ?? {}
-  const description = descriptions[locale.value] || descriptions.en || ''
-  return showExtensionWarning.value ? `${description} ${extensionWarning.value}` : description
-})
-
-const showExtensionWarning = computed(() => {
-  return !props.document.hasStandardExtension && !executionWarning.value
-})
-
-const executionWarning = computed(() => {
-  const warnings = props.document.contentTypeWarning ?? {}
-  return warnings[locale.value] || warnings.en
-})
-
-const documentFullUrl = computed(() => {
-  return props.document.fullUrl
-})
-
-const documentFullUrlWithoutMetadata = computed(() => {
-  return props.document.fullUrl + '&filter_metadata=true'
-})
-
-const rootDocumentFullUrl = computed(() => {
-  return props.document.fullRootUrl
-})
-
-const hasRoot = computed(() => {
-  return !!props.document.root
-})
-
-const hasCleanableContentType = computed(() => {
-  return props.cleanableContentTypes.includes(props.document.contentType)
-})
-
-const embeddedDocumentDownloadMaxSize = computed(() => {
-  return core?.config?.get('embeddedDocumentDownloadMaxSize')
-})
-
-const isRootTooBig = computed(() => {
-  return hasRoot.value && rootContentLength.value > maxRootContentLength.value
-})
-
-const rootContentLength = computed(() => {
-  return props.document?.root?.contentLength
-})
-
-const maxRootContentLength = computed(() => {
-  return byteSize(embeddedDocumentDownloadMaxSize.value)
-})
+const {
+  description,
+  executionWarning,
+  documentFullUrl,
+  documentFullUrlWithoutMetadata,
+  rootDocumentFullUrl,
+  hasRoot,
+  hasCleanableContentType,
+  isRootTooBig
+} = useDocumentDownload(props.document)
 
 const popoverRef = useTemplateRef('popover')
 
