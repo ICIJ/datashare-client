@@ -15,9 +15,8 @@ const { document } = defineProps({
 const router = useRouter()
 
 const link = computed(() => {
-  const route = router.resolve({ name: 'document-standalone', params: document.routerParams })
-  const { protocol, host, pathname } = window.location
-  return [protocol, '//', host, pathname, route.href].join('')
+  const { href } = router.resolve({ name: 'document-standalone', params: document.routerParams })
+  return window.location.origin + href
 })
 </script>
 
