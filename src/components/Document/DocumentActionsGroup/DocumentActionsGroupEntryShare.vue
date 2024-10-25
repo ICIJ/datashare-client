@@ -1,5 +1,9 @@
 <script setup>
+import { useTemplateRef } from 'vue'
+
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
+
+import DocumentSharePopover from '@/components/Document/DocumentSharePopover/DocumentSharePopover'
 
 defineProps({
   /**
@@ -22,13 +26,25 @@ defineProps({
     type: Boolean
   }
 })
+
+const elementRef = useTemplateRef('element')
 </script>
 
 <template>
-  <document-actions-group-entry
-    icon="share"
-    :label="$t('documentActionsGroup.share')"
-    :tooltip-placement="tooltipPlacement"
-    :vertical="vertical"
-  />
+  <span>
+    <document-actions-group-entry
+      ref="element"
+      icon="share-network"
+      hide-tooltip
+      :label="$t('documentActionsGroup.share')"
+      :vertical="vertical"
+    />
+    <document-share-popover
+      :target="elementRef"
+      :offset="16"
+      close-on-hide
+      :document="document"
+      :placement="tooltipPlacement"
+    />
+  </span>
 </template>
