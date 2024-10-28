@@ -62,8 +62,8 @@ const tasks = computed(() => {
 })
 
 onMounted(async () => {
-  wait.start('load task-documentAddition-list tasks')
   try {
+    wait.start('load task-documentAddition-list tasks')
     await startPollingTasks()
   } finally {
     wait.end('load task-documentAddition-list tasks')
@@ -95,6 +95,7 @@ const howToLink = computed(() => {
 </script>
 <template>
   <page-header
+    :key="filteredTasks.length"
     v-model:searchQuery="searchQuery"
     v-model:page="page"
     :per-page="perPage"
