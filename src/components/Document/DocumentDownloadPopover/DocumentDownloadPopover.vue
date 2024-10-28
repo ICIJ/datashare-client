@@ -31,7 +31,8 @@ const {
   rootDocumentFullUrl,
   hasRoot,
   hasCleanableContentType,
-  isRootTooBig
+  isRootTooBig,
+  downloadTextContent
 } = useDocumentDownload(props.document)
 
 const popoverRef = useTemplateRef('popover')
@@ -69,11 +70,10 @@ defineExpose({
       />
       <button-icon
         icon-left="download-simple"
-        :href="document"
         :label="$t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
-        download
+        @click="downloadTextContent"
       />
       <button-icon
         v-if="hasRoot"
