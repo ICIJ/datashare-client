@@ -11,7 +11,7 @@ const props = defineProps({
   },
   image: {
     type: String,
-    requred: true
+    required: false
   },
   imageDark: {
     type: String
