@@ -74,6 +74,18 @@ export function useDocumentDownload(document) {
     return byteSize(embeddedDocumentDownloadMaxSize.value)
   })
 
+  const downloadTextContent = async function () {
+    if (!documentRef.value.content) {
+      await store?.dispatch('document/getContent')
+    }
+
+    const { content, title } = documentRef.value
+    const a = window.document.createElement('a')
+    a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=UTF-8' }))
+    a.download = `${title}.txt`
+    a.click()
+  }
+
   return {
     extensionWarning,
     description,
@@ -88,6 +100,7 @@ export function useDocumentDownload(document) {
     isRootTooBig,
     isDownloadAllowed,
     rootContentLength,
-    maxRootContentLength
+    maxRootContentLength,
+    downloadTextContent
   }
 }
