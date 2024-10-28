@@ -5,6 +5,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const contextualize = defineModel('contextualize', { type: Boolean })
 const exclude = defineModel('exclude', { type: Boolean })
+const expand = defineModel('expand', { type: Boolean })
 
 const props = defineProps({
   hideContextualize: {
@@ -20,8 +21,6 @@ const props = defineProps({
     type: Object
   }
 })
-
-const emit = defineEmits(['update:contextualize', 'update:exclude', 'expand'])
 
 const isEmpty = computed(() => {
   return props.hideContextualize && props.hideExclude && props.hideExpand
@@ -49,7 +48,7 @@ const classList = computed(() => {
       icon-left="arrows-out-simple"
       hide-label
       label="Expand"
-      @click="emit('expand')"
+      @click="expand = !expand"
     />
   </div>
 </template>
