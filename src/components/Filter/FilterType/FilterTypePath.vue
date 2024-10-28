@@ -58,6 +58,7 @@ watchProjects(() => (selected.value = []))
     <path-tree
       ref="tree"
       v-model:selected-paths="selected"
+      include-children-documents
       :compact="!modal"
       :path="path"
       :projects="projects"
