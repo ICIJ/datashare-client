@@ -7,9 +7,9 @@ import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useSettingsI18n } from '@/composables/settings-i18n'
+import { useViewSettings } from '@/composables/view-settings'
 
-const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, tLayout, perPageLabel } = useSettingsI18n()
+const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, tLayout, perPageLabel } = useViewSettings()
 const { core } = useCore()
 const layout = ref({
   label: tLayout.label,
