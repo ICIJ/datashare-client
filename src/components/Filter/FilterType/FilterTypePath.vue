@@ -22,6 +22,9 @@ const props = defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  modal: {
+    type: Boolean
   }
 })
 
@@ -51,17 +54,17 @@ watchProjects(() => (selected.value = []))
 </script>
 
 <template>
-  <filter-type :filter="filter" flush>
+  <filter-type :filter="filter" flush :modal="modal">
     <path-tree
       ref="tree"
       v-model:selected-paths="selected"
+      :compact="!modal"
       :path="path"
       :projects="projects"
       :pre-body-build="preBodyBuild"
       :sort-by="filter.sortBy"
       :order-by="filter.orderBy"
       elasticsearch-only
-      compact
       select-mode
       multiple
       no-label
