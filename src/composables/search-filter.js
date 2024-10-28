@@ -1,11 +1,17 @@
 import { computed, nextTick, watch } from 'vue'
-import { get, identity, last, toString } from 'lodash'
+import { clone, cloneDeep, get, identity, last, toString } from 'lodash'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
 import { useCore } from '@/composables/core'
+import FilterType from '@/components/Filter/FilterType/FilterType'
+import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
+import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
+import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
+import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
+import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 
 export function useSearchFilter() {
   const store = useStore()
@@ -13,6 +19,19 @@ export function useSearchFilter() {
   const router = useRouter()
   const { t, te } = useI18n()
   const { core } = useCore()
+
+  const filterTypes = {
+    FilterType,
+    FilterTypeDateRange,
+    FilterTypeStarred,
+    FilterTypeRecommendedBy,
+    FilterTypePath,
+    FilterTypeProject
+  }
+
+  function getFilterComponent({ component }) {
+    return filterTypes[component]
+  }
 
   function labelToHuman(label) {
     if (te(label)) {
@@ -208,7 +227,10 @@ export function useSearchFilter() {
   }
 
   function watchFilterSort(filter, callback, options) {
-    return watch(computedSortFilter(filter), callback, options)
+    // We watch the values as string to avoid deep watching the object
+    // with unnecessary reactivity and unwanted side effects.
+    const values = () => Object.values(computedSortFilter(filter).value).join(':')
+    return watch(values, callback, options)
   }
 
   function watchQuery(callback, options) {
@@ -230,6 +252,7 @@ export function useSearchFilter() {
     computedContextualizeFilter,
     computedProjects,
     getFilterByName,
+    getFilterComponent,
     getFilterValues,
     getFilterValuesByName,
     getTotal,
