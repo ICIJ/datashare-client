@@ -6,14 +6,18 @@ import InfiniteLoading from 'v3-infinite-loading'
 
 import { useWait } from '@/composables/wait'
 import { useSearchFilter } from '@/composables/search-filter'
+import FilterModal from '@/components/Filter/FilterModal/FilterModal'
 import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import settings from '@/utils/settings'
 
-const { filter } = defineProps({
+const { filter, modal } = defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  modal: {
+    type: Boolean
   }
 })
 
@@ -22,6 +26,7 @@ const emit = defineEmits(['aggregate', 'update', 'update:filter-value'])
 
 const pages = reactive([])
 const collapse = ref(true)
+const expand = ref(false)
 
 const { wait } = useWait()
 const store = useStore()
@@ -38,7 +43,7 @@ const aggregateOverWithLoading = () => {
 }
 
 const aggregateIfVisible = () => {
-  if (!collapse.value) {
+  if (modal || !collapse.value) {
     return aggregateOverWithLoading()
   }
 }
@@ -232,6 +237,7 @@ onBeforeMount(async () => {
     v-model:collapse="collapse"
     v-model:search="query"
     v-model:sort="sort"
+    v-model:expand="expand"
     :hide-search="filter.hideSearch"
     :hide-sort="filter.hideSort"
     :hide-contextualize="filter.hideContextualize"
@@ -241,6 +247,7 @@ onBeforeMount(async () => {
     :icon="filter.icon"
     :count="count"
     :loading="wait.is(loaderId)"
+    :modal="modal"
   >
     <slot v-bind="{ entries, filter }">
       <filters-panel-section-filter-entry
@@ -261,5 +268,6 @@ onBeforeMount(async () => {
         <template #complete><span></span></template>
       </infinite-loading>
     </slot>
+    <filter-modal v-model="expand" v-model:sort="sort" :filter="filter" :modal="modal" />
   </filters-panel-section-filter>
 </template>
