@@ -7,7 +7,9 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 const contextualize = defineModel('contextualize', { type: Boolean })
 const exclude = defineModel('exclude', { type: Boolean })
+const expand = defineModel('expand', { type: Boolean })
 const collapse = defineModel('collapse', { type: Boolean })
+const search = defineModel('search', { type: String })
 const sort = defineModel('sort', { type: Object })
 
 const props = defineProps({
@@ -18,9 +20,6 @@ const props = defineProps({
     type: String
   },
   name: {
-    type: String
-  },
-  search: {
     type: String
   },
   searchPlaceholder: {
@@ -51,14 +50,16 @@ const props = defineProps({
   },
   loading: {
     type: Boolean
+  },
+  modal: {
+    type: Boolean
   }
 })
-
-const emit = defineEmits(['toggle', 'update:search'])
 
 const classList = computed(() => {
   return {
     'filters-panel-section-filter--collapsed': collapse.value,
+    'filters-panel-section-filter--modal': props.modal,
     'filters-panel-section-filter--loading': props.loading
   }
 })
@@ -67,6 +68,7 @@ const classList = computed(() => {
 <template>
   <div class="filters-panel-section-filter" :class="classList">
     <filters-panel-section-filter-title
+      v-if="!modal"
       v-model:collapse="collapse"
       v-model:sort="sort"
       :title="title"
@@ -75,18 +77,15 @@ const classList = computed(() => {
       :hide-sort="hideSort"
       :loading="loading"
       class="pe-2 mx-2"
-    >
-      <slot name="title" />
-    </filters-panel-section-filter-title>
-    <b-collapse :model-value="!collapse">
-      <div class="filters-panel-section-filter__content px-2 pt-3 pb-2">
+    />
+    <b-collapse :model-value="modal || !collapse">
+      <div class="filters-panel-section-filter__content">
         <form-control-search
           v-if="!hideSearch"
-          :model-value="search"
+          v-model="search"
           :placeholder="searchPlaceholder"
           clear-text
           class="filters-panel-section-filter__content__search mb-3"
-          @update:modelValue="emit('update:search', $event)"
         />
         <div :class="flush ? '' : 'ps-4 pe-2'">
           <slot />
@@ -96,10 +95,11 @@ const classList = computed(() => {
         <filters-panel-section-filter-footer
           v-model:contextualize="contextualize"
           v-model:exclude="exclude"
+          v-model:expand="expand"
           :hide-contextualize="hideContextualize"
           :hide-exclude="hideExclude"
-          :hide-expand="hideExpand"
-          class="ps-2 pe-2"
+          :hide-expand="modal || hideExpand"
+          class="filters-panel-section-filter__footer ps-2 pe-2"
         />
       </slot>
     </b-collapse>
@@ -129,6 +129,31 @@ const classList = computed(() => {
   &__content {
     max-height: 380px;
     overflow: auto;
+    padding: $spacer $spacer-md $spacer-md;
+  }
+
+  &--modal &__content {
+    padding: 0;
+    max-height: none;
+    min-height: 20vh;
+    overflow: visible;
+  }
+
+  &--modal &__content__search,
+  &--modal &__footer {
+    position: sticky;
+    background: $modal-content-bg;
+    z-index: 10;
+  }
+
+  &--modal &__content__search {
+    top: 0;
+    padding: $spacer-sm 0;
+  }
+
+  &--modal &__footer {
+    bottom: 0;
+    padding: $spacer-xs 0;
   }
 }
 </style>
