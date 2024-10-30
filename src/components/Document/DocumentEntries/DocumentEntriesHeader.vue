@@ -1,5 +1,5 @@
 <script setup>
-import { toRef, useTemplateRef, watch } from 'vue'
+import { computed, toRef, useTemplateRef, watch } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
 
 import { useCompact } from '@/composables/compact'
@@ -20,7 +20,7 @@ const props = defineProps({
   },
   compactThreshold: {
     type: Number,
-    default: 430
+    default: 660
   },
   loading: {
     type: Boolean
@@ -29,25 +29,34 @@ const props = defineProps({
 
 const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
+
+const classList = computed(() => {
+  return {
+    'document-entries-header--compact': compact.value
+  }
+})
+
 // Hide the batch mode toggle if there are no items to select
 watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && total > 0))
 </script>
 
 <template>
-  <div ref="element" class="document-entries-header d-flex align-items-center justify-content-start gap-1 py-3">
+  <div ref="element" class="document-entries-header py-3" :class="classList">
     <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" :disabled="total === 0" />
-    <slot>
-      <tiny-pagination :key="total" v-model="page" row :total-rows="total" :per-page="perPage" :compact="compact">
-        <template #number-of-rows="{ lastRangeRow: to }">
-          <template v-if="compact">
-            {{ $tc('documentEntriesHeader.tinyPagination.rowRangeCompact', total, { total: $n(total) }) }}
+    <slot v-bind="{ compact }">
+      <div>
+        <tiny-pagination :key="total" v-model="page" row :total-rows="total" :per-page="perPage" :compact="compact">
+          <template #number-of-rows="{ lastRangeRow: to }">
+            <template v-if="compact">
+              {{ $tc('documentEntriesHeader.tinyPagination.rowRangeCompact', total, { total: $n(total) }) }}
+            </template>
+            <template v-else>
+              {{ $tc('documentEntriesHeader.tinyPagination.rowRange', total, { to: $n(to), total: $n(total) }) }}
+            </template>
           </template>
-          <template v-else>
-            {{ $tc('documentEntriesHeader.tinyPagination.rowRange', total, { to: $n(to), total: $n(total) }) }}
-          </template>
-        </template>
-      </tiny-pagination>
-      <button-download-documents />
+        </tiny-pagination>
+        <button-download-documents />
+      </div>
     </slot>
   </div>
 </template>
@@ -55,6 +64,15 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
 <style lang="scss" scoped>
 .document-entries-header {
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: $spacer-xs;
+
+  &--compact {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
 
   & > * {
     flex-shrink: 0;
