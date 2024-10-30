@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     request({ element, offset = 0, container = this.container } = {}) {
-      this.target = toRef(element).value
+      this.target = toRef(element).value.$el
       this.offset = offset
       this.container = container
       this.toggle(this.shouldBeVisible())
