@@ -67,7 +67,9 @@ const componentProps = computed(() => {
         :per-page="perPage"
         :loading="loading"
       >
-        <slot name="header" />
+        <template #default="{ compact }">
+          <slot name="header" v-bind="{ compact }"/>
+        </template>
       </document-entries-header>
     </template>
   </component>

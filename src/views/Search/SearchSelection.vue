@@ -64,7 +64,7 @@ const unstarSelection = async () => {
 </script>
 
 <template>
-  <form-actions class="search-selection" variant="outline-tertiary" :compact="compact" compact-auto>
+  <form-actions class="search-selection px-3" variant="outline-tertiary" :compact="compact" compact-auto>
     <template #start>
       <b-form-checkbox v-model="selected" v-model:indeterminate="indeterminate">
         {{ $tc('searchSelection.count', count, { count: $n(count) }) }}
