@@ -1,8 +1,8 @@
 <script setup>
-import { computed, toRef, useTemplateRef, watch } from 'vue'
+import { toRef, useTemplateRef, watch } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
 
-import useResizeObserver from '@/composables/resize-observer'
+import { useCompact } from '@/composables/compact'
 import ButtonToggleBatchMode from '@/components/Button/ButtonToggleBatchMode'
 import ButtonDownloadDocuments from '@/components/Button/ButtonDownloadDocuments'
 
@@ -28,9 +28,7 @@ const props = defineProps({
 })
 
 const elementRef = useTemplateRef('element')
-const { state: elementState } = useResizeObserver(elementRef)
-const elementWidth = computed(() => elementState.offsetWidth)
-const compact = computed(() => elementWidth.value <= props.compactThreshold)
+const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 // Hide the batch mode toggle if there are no items to select
 watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && total > 0))
 </script>
