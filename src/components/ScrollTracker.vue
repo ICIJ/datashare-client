@@ -1,4 +1,5 @@
 <script>
+import { toRef } from 'vue'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
 import VueScrollTo from 'vue-scrollto'
@@ -33,7 +34,7 @@ export default {
   },
   methods: {
     request({ element, offset = 0, container = this.container } = {}) {
-      this.target = element
+      this.target = toRef(element).value
       this.offset = offset
       this.container = container
       this.toggle(this.shouldBeVisible())
