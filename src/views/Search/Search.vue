@@ -83,14 +83,6 @@ watchProjects(refreshRoute)
           </div>
           <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
         </div>
-        <search-selection
-          v-if="selectMode"
-          v-model:selection="selection"
-          :entries="hits"
-          :select-mode="selectMode"
-          class="py-3"
-          compact-auto
-        />
         <div class="search__main__results">
           <document-entries
             v-model:page="page"
@@ -103,7 +95,15 @@ watchProjects(refreshRoute)
             :per-page="perPage"
             :loading="loading"
           >
-            <router-view />
+            <template v-if="selectMode" #header="{ compact }">
+              <search-selection
+                v-model:selection="selection"
+                :entries="hits"
+                :select-mode="selectMode"
+                :compact="compact"
+              />
+            </template>
+            <router-view class="py-3" />
           </document-entries>
         </div>
       </div>
