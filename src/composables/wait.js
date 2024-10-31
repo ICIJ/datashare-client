@@ -1,4 +1,4 @@
-import { getCurrentInstance, useId } from 'vue'
+import { getCurrentInstance, useId, toRef } from 'vue'
 
 export function useWait() {
   const instance = getCurrentInstance()
@@ -16,10 +16,11 @@ export function useWait() {
 
   // `waitFor` is a higher-order function that takes an `id` and a function `fn`.
   const waitFor = (id, fn) => {
+    const idRef = toRef(id)
     return async (...args) => {
-      wait.start(id)
+      wait.start(idRef.value)
       const promise = await fn(...args)
-      wait.end(id)
+      wait.end(idRef.value)
       return promise
     }
   }
