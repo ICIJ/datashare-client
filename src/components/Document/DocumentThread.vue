@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, computed, onMounted, nextTick, useTemplateRef, watch } from 'vue'
+import { reactive, ref, computed, onMounted, nextTick, useTemplateRef } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useStore } from 'vuex'
 import { findIndex, reduce } from 'lodash'
