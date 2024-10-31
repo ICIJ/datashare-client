@@ -1,21 +1,22 @@
 <script setup>
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
+const modelValue = defineModel({ type: String, default: '' })
+
 defineProps({
-  modelValue: {
-    type: String,
-    default: ''
+  loading: {
+    type: Boolean
   }
 })
 </script>
 
 <template>
   <form-control-search
+    v-model="modelValue"
+    :loading="loading"
     class="document-local-search-input"
     placeholder="Search in document"
     clear-text
-    :model-value="modelValue"
-    @update:modelValue="($event) => $emit('update:modelValue', $event)"
   />
 </template>
 
