@@ -1,6 +1,6 @@
 <template>
   <div class="tiff-viewer w-100">
-    <b-overlay :show="isLoading" opacity="0.6" rounded spinner-small variant="transparent">
+    <b-overlay :show="isLoading" opacity="0.6" rounded spinner-small variant="light" :blur="null">
       <div class="tiff-viewer__header bg-tertiary-subtle d-flex algin-items-center rounded p-3">
         <div v-if="hasPages" class="tiff-viewer__header__pagination text-muted">
           <span class="badge text-bg-dark">

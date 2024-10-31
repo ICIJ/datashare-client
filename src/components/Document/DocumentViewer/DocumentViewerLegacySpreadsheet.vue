@@ -1,6 +1,14 @@
 <template>
   <div class="legacy-spreadsheet-viewer w-100">
-    <b-overlay :show="$wait.is(loaderId)" opacity="0.6" spinner-small class="position-sticky sticky-top">
+    <b-overlay
+      :show="$wait.is(loaderId)"
+      opacity="0.6"
+      spinner-small
+      class="position-sticky sticky-top"
+      rounded
+      variant="light"
+      :blur="null"
+    >
       <div class="legacy-spreadsheet-viewer__header bg-tertiary-subtle p-3 rounded">
         <b-form-select
           v-model="activeSheetName"
