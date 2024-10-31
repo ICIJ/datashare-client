@@ -40,7 +40,7 @@
       class="button-icon__icon-right"
       @click="click('icon-right')"
     />
-    <button-icon-counter v-if="counter !== null" :counter="counter" :variant="counterVariant" />
+    <button-icon-counter v-if="counter !== null" :counter="counter" :variant="counterVariant" :style="counterStyle" />
     <slot name="end" />
     <b-tooltip
       v-if="hasTooltip"
@@ -212,6 +212,10 @@ const props = defineProps({
     type: String,
     default: VARIANT.SECONDARY,
     validator: variantValidator
+  },
+  counterStyle: {
+    type: [String, Object],
+    default: null
   },
   truncate: {
     type: Boolean
