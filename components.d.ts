@@ -167,9 +167,15 @@ declare module 'vue' {
     DocumentCarouselEntry: typeof import('./src/components/Document/DocumentCarousel/DocumentCarouselEntry.vue')['default']
     DocumentCarouselNav: typeof import('./src/components/Document/DocumentCarousel/DocumentCarouselNav.vue')['default']
     DocumentContent: typeof import('./src/components/Document/DocumentContent.vue')['default']
+<<<<<<< HEAD
     DocumentContentSlice: typeof import('./src/components/DocumentContentSlice.vue')['default']
     DocumentContentSlicePlaceholder: typeof import('./src/components/DocumentContentSlicePlaceholder.vue')['default']
     DocumentContentSlices: typeof import('./src/components/DocumentContentSlices.vue')['default']
+=======
+    DocumentContentSlice: typeof import('./src/components/Document/DocumentContent/DocumentContentSlice.vue')['default']
+    DocumentContentSlicePlaceholder: typeof import('./src/components/Document/DocumentContent/DocumentContentSlicePlaceholder.vue')['default']
+    DocumentContentSlices: typeof import('./src/components/Document/DocumentContent/DocumentContentSlices.vue')['default']
+>>>>>>> a83add9f (build: update components)
     DocumentDownloadPopover: typeof import('./src/components/Document/DocumentDownloadPopover/DocumentDownloadPopover.vue')['default']
     DocumentDownloadPopoverSection: typeof import('./src/components/Document/DocumentDownloadPopover/DocumentDownloadPopoverSection.vue')['default']
     DocumentEntries: typeof import('./src/components/Document/DocumentEntries/DocumentEntries.vue')['default']
