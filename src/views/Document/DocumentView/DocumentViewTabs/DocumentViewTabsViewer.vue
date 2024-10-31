@@ -1,6 +1,62 @@
+<script setup>
+import { computed, defineAsyncComponent } from 'vue'
+
+import { useFeatures } from '@/composables/features'
+import { useDocument } from '@/composables/document'
+
+const { document } = useDocument()
+const { hasFeature } = useFeatures()
+
+const paginatedTypes = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'text/html'
+]
+
+const isPaginated = computed(() => {
+  return paginatedTypes.includes(document.value.contentType)
+})
+
+const previewComponent = computed(() => {
+  switch (true) {
+    case document.value.isJson:
+      return 'DocumentViewerJson'
+    case isPaginated.value:
+      return 'DocumentViewerPaginated'
+    case document.value.isTiff:
+      return 'DocumentViewerTiff'
+    case document.value.isSpreadsheet && hasFeature('SERVER_RENDERING_SPREADSHEET'):
+      return 'DocumentViewerSpreadsheet'
+    case document.value.isSpreadsheet:
+      return 'DocumentViewerLegacySpreadsheet'
+    case document.value.isImage:
+      return 'DocumentViewerImage'
+    case document.value.isAudio:
+      return 'DocumentViewerAudio'
+    case document.value.isVideo:
+      return 'DocumentViewerVideo'
+    default:
+      return null
+  }
+})
+
+const asyncPreviewComponent = computed(() => {
+  const componentName = previewComponent.value
+  if (componentName) {
+    return defineAsyncComponent(() => {
+      return import(`@/components/Document/DocumentViewer/${componentName}.vue`)
+    })
+  }
+  return null
+})
+</script>
+
+
 <template>
   <div class="d-flex flex-grow-1 document__preview">
-    <template v-if="!disabled && previewComponent">
+    <template v-if="previewComponent">
       <component :is="asyncPreviewComponent" :document="document" />
     </template>
     <template v-else>
@@ -10,74 +66,3 @@
     </template>
   </div>
 </template>
-
-<script>
-import { defineAsyncComponent } from 'vue'
-
-import features from '@/mixins/features'
-
-/**
- * A panel displaying a preview for a document.
- */
-export default {
-  name: 'DocumentTabPreview',
-  mixins: [features],
-  props: {
-    /**
-     * Disable the preview
-     */
-    disabled: {
-      type: Boolean
-    },
-    /**
-     * The selected document
-     */
-    document: {
-      type: Object
-    }
-  },
-  data() {
-    return {
-      paginatedTypes: [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'text/html'
-      ]
-    }
-  },
-  computed: {
-    isPaginated() {
-      return this.paginatedTypes.indexOf(this.document.contentType) > -1
-    },
-    previewComponent() {
-      switch (true) {
-        case this.document.isJson:
-          return 'DocumentViewerJson'
-        case this.isPaginated:
-          return 'DocumentViewerPaginated'
-        case this.document.isTiff:
-          return 'DocumentViewerTiff'
-        case this.document.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
-          return 'DocumentViewerSpreadsheet'
-        case this.document.isSpreadsheet:
-          return 'DocumentViewerLegacySpreadsheet'
-        case this.document.isImage:
-          return 'DocumentViewerImage'
-        case this.document.isAudio:
-          return 'DocumentViewerAudio'
-        case this.document.isVideo:
-          return 'DocumentViewerVideo'
-        default:
-          return null
-      }
-    },
-    asyncPreviewComponent() {
-      return defineAsyncComponent(() => {
-        return import(`@/ccomponents/Document/DocumentTab/DocumentViewer/${this.previewComponent}.vue`)
-      })
-    }
-  }
-}
-</script>
