@@ -1,16 +1,20 @@
 <script setup>
+import { HapticCopy } from '@icij/murmur-next'
 import { computed } from 'vue'
 
 import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 
-const props = defineProps({
-  pinned: {
-    type: Boolean
+const pinned = defineModel('pinned', { type: Boolean })
+
+defineProps({
+  value: {
+    type: String,
+    required: true
   }
 })
 
-const pinIconWeight = computed(() => (props.pinned ? 'fill' : null))
-const pinIconHoverWeight = computed(() => (props.pinned ? 'fill' : 'bold'))
+const pinIconWeight = computed(() => (pinned.value ? 'fill' : null))
+const pinIconHoverWeight = computed(() => (pinned.value ? 'fill' : 'bold'))
 </script>
 
 <template>
@@ -21,17 +25,19 @@ const pinIconHoverWeight = computed(() => (props.pinned ? 'fill' : 'bold'))
         icon="magnifying-glass"
         @click="$emit('search')"
       />
-      <document-metadata-actions-entry
+      <haptic-copy
         :label="$t('documentMetadataActions.copy')"
-        icon="clipboard"
-        @click="$emit('copy')"
+        :text="value"
+        hide-label
+        class="border-0"
+        variant="outline-secondary"
       />
       <document-metadata-actions-entry
         :label="$t('documentMetadataActions.pin')"
         icon="push-pin"
         :icon-weight="pinIconWeight"
         :icon-hover-weight="pinIconHoverWeight"
-        @click="$emit('update:pinned', !pinned)"
+        @click="pinned = !pinned"
       />
     </slot>
   </div>
