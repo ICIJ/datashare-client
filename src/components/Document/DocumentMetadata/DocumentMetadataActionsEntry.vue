@@ -26,7 +26,6 @@ defineProps({
     class="border-0"
     hide-label
     variant="outline-secondary"
-    square
     :label="label"
     :icon-left="icon"
     :icon-left-weight="iconWeight"
