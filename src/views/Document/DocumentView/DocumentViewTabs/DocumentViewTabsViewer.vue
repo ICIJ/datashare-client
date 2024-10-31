@@ -53,7 +53,6 @@ const asyncPreviewComponent = computed(() => {
 })
 </script>
 
-
 <template>
   <div class="d-flex flex-grow-1 document__preview">
     <template v-if="previewComponent">
