@@ -87,7 +87,6 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
   &__start {
     margin-right: $spacer;
     min-height: 50vh;
-    max-height: 100vh;
     display: flex;
     flex-direction: column;
 
@@ -110,7 +109,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
 
   &__end {
     width: 100%;
-    padding-left: $spacer;
+    padding-left: $spacer-xl;
   }
 }
 </style>
