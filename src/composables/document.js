@@ -53,5 +53,31 @@ export const useDocument = function (element) {
     return store.state.document.parentDocument
   })
 
-  return { fetchDocument, fetchDocumentOnce, document, parent, loaderId, isActive, isRouteActive }
+  const documentPath = computed(() => {
+    if (core.config.get('mountedDataDir')) {
+      return document.value.source.path.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
+    } else {
+      return document.value.source.path
+    }
+  })
+
+  const documentDirname = computed(() => {
+    if (core.config.get('mountedDataDir')) {
+      return document.value.source.dirname.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
+    } else {
+      return document.value.source.dirname
+    }
+  })
+
+  return {
+    fetchDocument,
+    fetchDocumentOnce,
+    document,
+    documentPath,
+    documentDirname,
+    parent,
+    loaderId,
+    isActive,
+    isRouteActive
+  }
 }
