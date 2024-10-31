@@ -62,7 +62,7 @@ export const routes = [
             name: 'document',
             path: 'd/:index/:id/:routing?',
             alias: 'e/:index/:id/:routing?',
-            component: () => import('@/views/DocumentView'),
+            component: () => import('@/views/Document/DocumentView/DocumentView'),
             props: true,
             meta: {
               title: 'document.title',
@@ -80,7 +80,29 @@ export const routes = [
                   path: 'usage/use-keyboard-shortcuts'
                 }
               ]
-            }
+            },
+            children: [
+              {
+                name: 'document.text',
+                path: 'text',
+                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsText')
+              },
+              {
+                name: 'document.viewer',
+                path: 'viewer',
+                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer')
+              },
+              {
+                name: 'document.metadata',
+                path: 'metadata',
+                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata')
+              },
+              {
+                name: 'document.entities',
+                path: 'entities',
+                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities')
+              }
+            ]
           }
         ]
       },

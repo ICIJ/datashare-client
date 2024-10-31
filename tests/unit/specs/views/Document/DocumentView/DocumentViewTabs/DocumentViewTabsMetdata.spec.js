@@ -3,9 +3,9 @@ import { mount } from '@vue/test-utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import DocumentTabDetails from '@/components/Document/DocumentTab/DocumentTabDetails'
+import DocumentViewTabsMetadata from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata'
 
-describe('DocumentTabDetails.vue', () => {
+describe('DocumentViewTabsMetadata.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
   let wrapper, core
@@ -25,7 +25,7 @@ describe('DocumentTabDetails.vue', () => {
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -41,7 +41,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display the document type', async () => {
     await letData(es).have(new IndexedDocument(id, index).withContentType('application/pdf')).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -61,7 +61,7 @@ describe('DocumentTabDetails.vue', () => {
     await core.store
       .dispatch('document/get', { index, id, routing: parentDocument })
       .then(() => core.store.dispatch('document/getParent'))
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -84,7 +84,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should not display the creation date if it is missing', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -99,7 +99,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display the creation date if it is defined', async () => {
     await letData(es).have(new IndexedDocument(id, index).withCreationDate('2020-12-04T00:00:01Z')).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -114,7 +114,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should not display the author if it is missing', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -129,7 +129,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display the author date if it is defined', async () => {
     await letData(es).have(new IndexedDocument(id, index).withAuthor('local')).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -144,7 +144,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display a link to the list of children documents', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -159,7 +159,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display a link to the search in the folder of the document', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -174,7 +174,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display an "Unknown" file size', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
@@ -190,7 +190,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display an file size', async () => {
     await letData(es).have(new IndexedDocument(id, index).withContentLength('123456')).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -208,7 +208,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display the title and the normalized title', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
-    wrapper = mount(DocumentTabDetails, {
+    wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
       },
