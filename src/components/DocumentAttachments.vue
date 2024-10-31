@@ -88,6 +88,10 @@ export default {
 
 <style lang="scss">
 .document-attachments {
+  margin-top: $spacer;
+  padding-top: $spacer;
+  border-top: $border-color 1px solid;
+
   &__list {
     &__item {
       &__link {
