@@ -3,6 +3,8 @@ import { PhosphorIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-
 
 import DocumentMetadataActions from './DocumentMetadataActions'
 
+const pinned = defineModel('pinned', { type: Boolean })
+
 defineProps({
   icon: {
     type: String,
@@ -18,9 +20,6 @@ defineProps({
   },
   description: {
     type: String
-  },
-  pinned: {
-    type: Boolean
   }
 })
 </script>
@@ -31,16 +30,14 @@ defineProps({
     <div v-b-tooltip class="document-metadata__label" :title="description">
       {{ label }}
     </div>
-    <div v-ellipsis-tooltip="{ title: value }" class="document-metadata__value">
-      <slot v-bind="{ icon, label, value, description }">
-        {{ value }}
-      </slot>
+    <div class="document-metadata__value">
+      <div v-ellipsis-tooltip="{ title: value }" class="text-truncate">
+        <slot v-bind="{ icon, label, value, description }">
+          {{ value }}
+        </slot>
+      </div>
     </div>
-    <document-metadata-actions
-      :pinned="pinned"
-      class="document-metadata__actions"
-      @update:pinned="$emit('update:pinned', $event)"
-    />
+    <document-metadata-actions v-model:pinned="pinned" :value="value" class="document-metadata__actions" />
   </div>
 </template>
 
@@ -57,6 +54,7 @@ defineProps({
   gap: $spacer-sm;
   padding: $spacer-xs $spacer;
   border-radius: var(--bs-border-radius);
+  min-width: 0;
 
   &:hover {
     box-shadow: 1px 1px 8px 5px var(--bs-light);
@@ -70,6 +68,7 @@ defineProps({
   &__label {
     max-width: 140px;
     width: 100%;
+    flex-shrink: 0;
   }
 
   &__value {
