@@ -7,6 +7,10 @@ import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 const pinned = defineModel('pinned', { type: Boolean })
 
 defineProps({
+  name: {
+    type: String,
+    required: true
+  },
   value: {
     type: String,
     required: true
@@ -15,6 +19,8 @@ defineProps({
 
 const pinIconWeight = computed(() => (pinned.value ? 'fill' : null))
 const pinIconHoverWeight = computed(() => (pinned.value ? 'fill' : 'bold'))
+const q = ''
+const indices = ''
 </script>
 
 <template>
@@ -22,6 +28,7 @@ const pinIconHoverWeight = computed(() => (pinned.value ? 'fill' : 'bold'))
     <slot>
       <document-metadata-actions-entry
         :label="$t('documentMetadataActions.search')"
+        :to="{ name: 'search', query: { q, indices } }"
         icon="magnifying-glass"
         @click="$emit('search')"
       />
