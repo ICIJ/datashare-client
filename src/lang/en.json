@@ -326,6 +326,12 @@
   "documentContent": {
     "noContent": "No content extracted for this document"
   },
+  "documentViewTabs": {
+    "text": "Text",
+    "preview": "View",
+    "metadata": "Metadata",
+    "entities": "Entities"
+  },
   "filter": {
     "none": "No values",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
