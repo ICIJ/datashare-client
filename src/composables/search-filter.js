@@ -1,5 +1,5 @@
 import { computed, nextTick, watch } from 'vue'
-import { clone, cloneDeep, get, identity, last, toString } from 'lodash'
+import { get, identity, last, toString } from 'lodash'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'

@@ -68,7 +68,7 @@ const componentProps = computed(() => {
         :loading="loading"
       >
         <template #default="{ compact }">
-          <slot name="header" v-bind="{ compact }"/>
+          <slot name="header" v-bind="{ compact }" />
         </template>
       </document-entries-header>
     </template>
