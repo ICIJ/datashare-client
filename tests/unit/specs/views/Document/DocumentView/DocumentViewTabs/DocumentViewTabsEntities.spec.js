@@ -4,9 +4,9 @@ import { uniqueId } from 'lodash'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import DocumentTabNamedEntities from '@/components/Document/DocumentTab/DocumentTabNamedEntities'
+import DocumentViewTabsEntities from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities'
 
-describe('DocumentTabNamedEntities.vue', () => {
+describe('DocumentViewTabsEntities.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const id = uniqueId('document-')
   let core
@@ -30,7 +30,7 @@ describe('DocumentTabNamedEntities.vue', () => {
 
     const document = await core.store.dispatch('document/get', { id, index })
     await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    const wrapper = shallowMount(DocumentTabNamedEntities, {
+    const wrapper = shallowMount(DocumentViewTabsEntities, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -61,7 +61,7 @@ describe('DocumentTabNamedEntities.vue', () => {
 
     const document = await core.store.dispatch('document/get', { id, index })
     await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    const wrapper = shallowMount(DocumentTabNamedEntities, {
+    const wrapper = shallowMount(DocumentViewTabsEntities, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -84,7 +84,7 @@ describe('DocumentTabNamedEntities.vue', () => {
     const document = await core.store.dispatch('document/get', { id, index })
     await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
-    const wrapper = shallowMount(DocumentTabNamedEntities, {
+    const wrapper = shallowMount(DocumentViewTabsEntities, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -101,7 +101,7 @@ describe('DocumentTabNamedEntities.vue', () => {
     const document = await core.store.dispatch('document/get', { id, index })
     await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
-    const wrapper = shallowMount(DocumentTabNamedEntities, {
+    const wrapper = shallowMount(DocumentViewTabsEntities, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true

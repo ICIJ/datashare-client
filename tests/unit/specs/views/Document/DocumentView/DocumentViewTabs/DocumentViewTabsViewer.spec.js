@@ -3,9 +3,9 @@ import { shallowMount } from '@vue/test-utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import DocumentTabPreview from '@/components/Document/DocumentTab/DocumentTabPreview'
+import DocumentViewTabsViewer from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer'
 
-describe('DocumentTabPreview.vue', () => {
+describe('DocumentViewTabsViewer.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
   const disabled = true
@@ -24,7 +24,7 @@ describe('DocumentTabPreview.vue', () => {
       )
       .commitAndGetLastDocument()
 
-    const wrapper = shallowMount(DocumentTabPreview, {
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -39,7 +39,7 @@ describe('DocumentTabPreview.vue', () => {
       .have(new IndexedDocument(id, index).withContentType('text/csv'))
       .commitAndGetLastDocument()
 
-    const wrapper = shallowMount(DocumentTabPreview, {
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -54,7 +54,7 @@ describe('DocumentTabPreview.vue', () => {
       .have(new IndexedDocument(id, index).withContentType('application/pdf'))
       .commitAndGetLastDocument()
 
-    const wrapper = shallowMount(DocumentTabPreview, {
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -69,7 +69,7 @@ describe('DocumentTabPreview.vue', () => {
       .have(new IndexedDocument(id, index).withContentType('image/tiff'))
       .commitAndGetLastDocument()
 
-    const wrapper = shallowMount(DocumentTabPreview, {
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -84,7 +84,7 @@ describe('DocumentTabPreview.vue', () => {
       .have(new IndexedDocument(id, index).withContentType('audio/ogg'))
       .commitAndGetLastDocument()
 
-    const wrapper = shallowMount(DocumentTabPreview, {
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -100,7 +100,7 @@ describe('DocumentTabPreview.vue', () => {
       .have(new IndexedDocument(id, index).withContentType('video/mp4'))
       .commitAndGetLastDocument()
 
-    const wrapper = shallowMount(DocumentTabPreview, {
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
