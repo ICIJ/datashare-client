@@ -49,7 +49,7 @@ const qSent = computed(() => {
   <component :is="tag" ref="element" class="email-string">
     {{ nameOrRawEmail }}
   </component>
-  <b-popover :target="elementRef" custom-class="email-string__popover" placement="bottom">
+  <b-popover :target="elementRef" teleport-to="body" custom-class="email-string__popover" placement="bottom">
     <div class="email-string__popover__content">
       <div class="h6 m-0">{{ nameWithoutEmail }}</div>
       <div class="mb-3">{{ emailWithoutName || email }}</div>
