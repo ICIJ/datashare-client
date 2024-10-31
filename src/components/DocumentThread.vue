@@ -11,15 +11,15 @@
           class="document-thread__list__email"
           :class="{ 'document-thread__list__email--active': isActive(email) }"
         >
-          <router-link v-once :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block">
-            <div class="d-flex text-nowrap">
-              <div class="w-100">
-                <email-string class="document-thread__list__email__from me-3" :email="email.messageFrom" tag="strong" />
+          <router-link v-once :to="{ name: 'document', params: email.routerParams }" class="p-3 d-block">
+            <div class="d-flex text-nowrap gap-3">
+              <div class="flex-grow-1">
+                <email-string class="document-thread__list__email__from" :email="email.messageFrom" tag="strong" />
               </div>
               <abbr
                 v-if="email.creationDate"
                 v-b-tooltip
-                class="document-thread__list__email__date align-self-end small"
+                class="document-thread__list__email__date"
                 :title="email.creationDateHuman"
               >
                 {{ $d(email.creationDate) }}
@@ -43,7 +43,7 @@
               </span>
             </div>
           </router-link>
-          <document-translation v-if="isActive(email)" :document="document" :q="q" class="m-3" />
+          <document-translation v-if="isActive(email)" :document="document" :q="q" class="mt-0 m-3" />
         </li>
       </ul>
     </div>
