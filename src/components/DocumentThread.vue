@@ -14,11 +14,7 @@
           <router-link v-once :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block">
             <div class="d-flex text-nowrap">
               <div class="w-100">
-                <email-string
-                  class="document-thread__list__email__from me-3"
-                  :email="email.messageFrom"
-                  tag="strong"
-                ></email-string>
+                <email-string class="document-thread__list__email__from me-3" :email="email.messageFrom" tag="strong" />
               </div>
               <abbr
                 v-if="email.creationDate"
@@ -29,8 +25,8 @@
                 {{ $d(email.creationDate) }}
               </abbr>
             </div>
-            <div class="d-flex">
-              <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-muted me-3">
+            <div class="d-flex gap-3">
+              <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-secondary">
                 {{ $t('email.to') }}
                 <ul class="list-inline d-inline">
                   <email-string
@@ -39,10 +35,10 @@
                     class="list-inline-item"
                     :email="to"
                     tag="li"
-                  ></email-string>
+                  />
                 </ul>
               </span>
-              <span v-else class="document-thread__list__email__excerpt text-muted w-100">
+              <span v-else class="document-thread__list__email__excerpt text-secondary w-100">
                 {{ email.excerpt }}
               </span>
             </div>
@@ -226,10 +222,15 @@ export default {
       }
 
       &__to {
-        .list-inline-item:not(:last-of-type):after {
-          clear: right;
-          content: ',';
-          float: right;
+        &:deep(.email-string) {
+          &:after {
+            content: ', ';
+            margin-right: $spacer-xxs;
+          }
+
+          &:last-of-type:after {
+            content: '';
+          }
         }
       }
     }
