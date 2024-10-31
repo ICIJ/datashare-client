@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { PhCircleNotch, PhMagnifyingGlass } from '@phosphor-icons/vue'
 
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -35,8 +36,8 @@ const props = defineProps({
    * Icon name in the start slot
    */
   iconName: {
-    type: String,
-    default: 'magnifying-glass'
+    type: [String, Object, Array],
+    default: () => PhMagnifyingGlass
   },
   /**
    * Add clear text option
@@ -110,6 +111,10 @@ function clearInputText() {
   input('')
 }
 
+const icon = computed(() => {
+  return props.loading ? PhCircleNotch : props.iconName
+})
+
 const classList = computed(() => {
   return {
     'form-control-search--shadow': props.shadow,
@@ -129,13 +134,8 @@ defineExpose({
         class="form-control-search__start input-group-text border-end-0"
         :class="{ 'form-control-search--rounded--start': rounded }"
       >
-        <slot name="input-start" v-bind="{ loading, noIcon }">
-          <phosphor-icon
-            v-if="!noIcon"
-            :name="loading ? 'circle-notch' : iconName"
-            square
-            :spin="loading"
-          ></phosphor-icon>
+        <slot name="input-start" v-bind="{ loading, icon, noIcon }">
+          <phosphor-icon v-if="!noIcon" :name="icon" square :spin="loading" />
         </slot>
       </span>
       <b-form-input
@@ -159,7 +159,7 @@ defineExpose({
         @blur="$emit('blur', $event)"
       />
       <span
-        class="form-control-search__end input-group-text p-0 border-start-0"
+        class="form-control-search__end input-group-text px-1 py-0 border-start-0"
         :class="{ 'form-control-search--rounded--end': rounded }"
       >
         <button-icon
@@ -168,7 +168,7 @@ defineExpose({
           hide-label
           variant="outline-secondary"
           :size="size"
-          class="form-control-search__clear__icon p-1 border-0"
+          class="form-control-search__clear__icon p-1 mx-1 border-0"
           :class="{
             'form-control-search__clear__icon--hide': !showClearText
           }"
