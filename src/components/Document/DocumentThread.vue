@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, computed, onMounted, nextTick, useTemplateRef } from 'vue'
+import { reactive, ref, computed, onMounted, nextTick, useTemplateRef, watch } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useStore } from 'vuex'
 import { findIndex, reduce } from 'lodash'
@@ -80,13 +80,12 @@ const threadBody = computed(() => {
 
 async function scrollToActive() {
   await nextTick()
-  const element = !documentIndex.value
-    ? // For the first email, we go to the top of the page
-      elementRef.value.$el
-    : // For the others, we select the active email
-      elementRef.value.$el.querySelector('.document-thread__list__email--active')
+  // For the first email, we go to the top of the page
+  const activeElementSelector = '.document-thread__list__email:not(:first-of-type).document-thread__list__email--active'
+  const element = elementRef.value.$el.querySelector(activeElementSelector) ?? elementRef.value.$el
+  // We assume the closest container is the one with overflow-auto class
+  const container = element.closest('.overflow-auto') ?? window.document.body
   // Use the scroll-tracker component
-  const container = elementRef.value.$el.closest('.overflow-auto') ?? window.document.body
   core.emit('scroll-tracker:request', { element, container })
 }
 
@@ -134,7 +133,7 @@ onBeforeRouteUpdate(init)
     <template #waiting>
       <phosphor-icon name="circle-notch" spin class="d-flex mx-auto my-5" />
     </template>
-    <div v-if="document" class="document-thread">
+    <div class="document-thread">
       <ul class="list-unstyled document-thread__list m-0">
         <li
           v-for="email in thread.hits"
@@ -142,7 +141,7 @@ onBeforeRouteUpdate(init)
           class="document-thread__list__email"
           :class="{ 'document-thread__list__email--active': isActive(email) }"
         >
-          <router-link v-once :to="{ name: 'document', params: email.routerParams }" class="p-3 d-block">
+          <router-link :to="{ name: 'document', params: email.routerParams }" class="p-3 d-block">
             <div class="d-flex text-nowrap gap-3">
               <div class="document-thread__list__email__from flex-grow-1">
                 <email-string :email="email.messageFrom" tag="strong" />
