@@ -70,7 +70,7 @@ onMounted(loadAvailableTranslations)
 </script>
 
 <template>
-  <div class="document-translated-content">
+  <div class="document-translation">
     <document-content :document="document" :q="q" :target-language="selectedTargetLanguage">
       <template v-if="hasTranslations" #before-content>
         <document-translation-alert
