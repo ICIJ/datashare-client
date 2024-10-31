@@ -180,13 +180,25 @@ onBeforeRouteUpdate(init)
 <style lang="scss" scoped>
 .document-thread {
   &__list {
-    border: 1px solid $border-color;
-    border-bottom: 0;
     margin: 0;
     padding: 0;
 
     &__email {
-      border-bottom: 1px solid $border-color;
+      border: 1px solid $border-color;
+
+      &:not(:last-of-type) {
+        margin-bottom: -1px;
+      }
+
+      &:first-of-type {
+        border-top-left-radius: var(--bs-border-radius);
+        border-top-right-radius: var(--bs-border-radius);
+      }
+
+      &:last-of-type {
+        border-bottom-left-radius: var(--bs-border-radius);
+        border-bottom-right-radius: var(--bs-border-radius);
+      }
 
       & > a {
         color: $body-color;
@@ -198,16 +210,7 @@ onBeforeRouteUpdate(init)
 
       &--active {
         position: relative;
-
-        &:before {
-          border-left: 2px solid $primary;
-          bottom: 0;
-          box-shadow: 0 0 10px 0 $primary;
-          content: '';
-          left: 0;
-          position: absolute;
-          top: 0;
-        }
+        border-color: $primary;
       }
 
       &__to {
