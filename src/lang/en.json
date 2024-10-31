@@ -328,7 +328,7 @@
   },
   "documentViewTabs": {
     "text": "Text",
-    "preview": "View",
+    "viewer": "View",
     "metadata": "Metadata",
     "entities": "Entities"
   },
