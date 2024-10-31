@@ -2,16 +2,12 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const props = defineProps({
-  active: {
-    type: Boolean
-  }
-})
+const active = defineModel('active', { type: Boolean, default: false })
 
 const { t } = useI18n()
 
 const label = computed(() => {
-  const message = props.active ? 'viewOriginal' : 'viewTranslation'
+  const message = active.value ? 'viewOriginal' : 'viewTranslation'
   return t(`documentTranslationAlertToggler.${message}`)
 })
 </script>
@@ -21,7 +17,7 @@ const label = computed(() => {
     class="document-translation-alert-toggler"
     variant="outline-warning"
     :label="label"
-    @click="$emit('update:active', !active)"
+    @click="active = !active"
   />
 </template>
 
