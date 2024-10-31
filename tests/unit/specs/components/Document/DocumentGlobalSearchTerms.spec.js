@@ -4,9 +4,9 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
+import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms'
 
-describe('DocumentGlobalSearchTermsTags.vue', () => {
+describe('DocumentGlobalSearchTerms.vue', () => {
   function mockedDocumentSearchFactory() {
     return {
       terms: {},
@@ -37,7 +37,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
     core.store.commit('search/query', query)
     const { plugins } = core
     const props = { document: core.store.state.document.doc }
-    const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
+    const wrapper = shallowMount(DocumentGlobalSearchTerms, {
       global: {
         plugins,
         renderStubDefaultSlot: true
