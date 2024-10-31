@@ -47,13 +47,7 @@
               </span>
             </div>
           </router-link>
-          <div v-if="isActive(email)">
-            <document-translated-content
-              class="document-thread__list__email__content"
-              :document="activeDocument"
-              :named-entities="namedEntities"
-            ></document-translated-content>
-          </div>
+          <document-translation v-if="isActive(email)" :document="activeDocument" :named-entities="namedEntities" />
         </li>
       </ul>
     </div>
@@ -65,7 +59,7 @@ import { findIndex, reduce } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import EsDocList from '@/api/resources/EsDocList'
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
+import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import EmailString from '@/components/EmailString'
 
 /**
@@ -74,7 +68,7 @@ import EmailString from '@/components/EmailString'
 export default {
   name: 'DocumentThread',
   components: {
-    DocumentTranslatedContent,
+    DocumentTranslation,
     EmailString
   },
   beforeRouteEnter(_to, _from, next) {
