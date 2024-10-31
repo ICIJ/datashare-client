@@ -5,38 +5,40 @@ import DocumentLocalSearchInput from './DocumentLocalSearchInput'
 import DocumentLocalSearchNav from './DocumentLocalSearchNav'
 import DocumentLocalSearchOccurrences from './DocumentLocalSearchOccurrences'
 
+const modelValue = defineModel({ type: String, default: '' })
+const activeIndex = defineModel('activeIndex', { type: Number, default: 0 })
+
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: ''
-  },
-  activeIndex: {
-    type: Number,
-    default: 0
-  },
   occurrences: {
     type: Number,
     default: 0
+  },
+  loading: {
+    type: Boolean
   }
 })
 
-const disabledPrevious = computed(() => !props.modelValue || props.activeIndex === 0)
+const disabledPrevious = computed(() => !props.modelValue || props.activeIndex <= 1)
 const disabledNext = computed(() => !props.modelValue || props.activeIndex === props.occurrences)
+const previous = () => (activeIndex.value = Math.max(1, activeIndex.value - 1))
+const next = () => (activeIndex.value = Math.min(props.occurrences, activeIndex.value + 1))
 </script>
 
 <template>
   <div class="document-local-search d-flex">
     <document-local-search-input
-      :model-value="modelValue"
+      v-model="modelValue"
       class="flex-grow-1"
-      @update:modelValue="$emit('update:modelValue', $event)"
+      :loading="loading"
+      @keyup.enter="next"
+      @keyup.enter.shift="previous"
     />
     <document-local-search-nav
       :disabled-previous="disabledPrevious"
       :disabled-next="disabledNext"
       class="ms-2"
-      @previous="$emit('update:activeIndex', activeIndex - 1)"
-      @next="$emit('update:activeIndex', activeIndex + 1)"
+      @previous="previous"
+      @next="next"
     />
     <document-local-search-occurrences
       :hidden="!modelValue"
