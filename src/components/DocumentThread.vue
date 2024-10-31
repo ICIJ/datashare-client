@@ -3,7 +3,7 @@
     <template #waiting>
       <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" />
     </template>
-    <div v-if="document" class="document-thread p-0">
+    <div v-if="document" class="document-thread">
       <ul class="list-unstyled document-thread__list m-0">
         <li
           v-for="email in thread.hits"
@@ -47,7 +47,7 @@
               </span>
             </div>
           </router-link>
-          <document-translation v-if="isActive(email)" :document="activeDocument" :named-entities="namedEntities" />
+          <document-translation v-if="isActive(email)" :document="document" :q="q" class="m-3" />
         </li>
       </ul>
     </div>
@@ -78,18 +78,12 @@ export default {
     this.init().then(next)
   },
   props: {
-    /**
-     * The selected document
-     */
     document: {
       type: Object
     },
-    /**
-     * A list of named entities to forward to the document content component
-     */
-    namedEntities: {
-      type: Array,
-      default: () => []
+    q: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -104,16 +98,7 @@ export default {
     }
   },
   computed: {
-    activeDocument: {
-      // Document's content is not a reactive property yet, so we cannot use
-      // vue caching mechanism to ensure the activeDocument computed property is
-      // refreshed after the content was updated.
-      cache: false,
-      get() {
-        return this.document
-      }
-    },
-    activeDocumentIndex() {
+    documentIndex() {
       return findIndex(this.thread.hits, this.isActive)
     },
     threadBody() {
@@ -155,7 +140,7 @@ export default {
   mounted() {
     this.$store.subscribe(({ type, payload }) => {
       if (type === 'document/content') {
-        this.thread.hits[this.activeDocumentIndex].content = payload
+        this.thread.hits[this.documentIndex].content = payload
       }
     })
     this.init()
@@ -170,7 +155,7 @@ export default {
       // Use the active email
       let element = this.$el.querySelector('.document-thread__list__email--active')
       // For the first email, we go to the top of the page
-      if (this.activeDocumentIndex === 0) element = this.$el
+      if (this.documentIndex === 0) element = this.$el
       // Get the offset from the navbar height (which is sticky)
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Use the scroll-tracker component
@@ -209,11 +194,7 @@ export default {
 
 <style lang="scss" scoped>
 .document-thread {
-  background: black;
-  margin: $spacer;
-
   &__list {
-    background: white;
     border: 1px solid $border-color;
     border-bottom: 0;
     margin: 0;
