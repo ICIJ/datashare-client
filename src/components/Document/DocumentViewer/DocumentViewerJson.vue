@@ -1,5 +1,5 @@
 <template>
-  <div v-if="source" class="json-viewer p-3">
+  <div v-if="source" class="json-viewer">
     <json-formatter :json="source" class="json-viewer__formatter" />
   </div>
 </template>

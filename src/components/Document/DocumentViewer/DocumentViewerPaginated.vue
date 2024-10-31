@@ -16,7 +16,7 @@
       ></iframe>
     </div>
     <div v-else-if="isPreviewable" class="paginated-viewer paginated-viewer--previewable d-flex flex-grow-1">
-      <div class="paginated-viewer__thumbnails">
+      <div class="paginated-viewer__thumbnails bg-tertiary-subtle">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
           <select
             v-model.number="active"
@@ -201,7 +201,6 @@ export default {
     top: 0;
     display: flex;
     flex-direction: column;
-    background: $tertiary;
     max-height: calc(100vh - var(--search-document-navbar-height));
 
     .document-standalone & {
@@ -261,7 +260,7 @@ export default {
 
       &:after {
         content: attr(data-page);
-        background: $tertiary;
+        background: $tertiary-subtle;
         border: 1px solid $border-color;
         bottom: 0;
         font-size: 0.8rem;
