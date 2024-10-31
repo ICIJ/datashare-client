@@ -29,6 +29,9 @@ export const state = () => ({
       },
       documentView: {
         tab: 'text'
+      },
+      documentViewMetadata: {
+        pinned: {}
       }
     }
   },
