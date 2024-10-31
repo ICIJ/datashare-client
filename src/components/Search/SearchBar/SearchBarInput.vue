@@ -13,7 +13,7 @@
     @focus="onFocus"
   >
     <template #input-end>
-      <div class="d-flex flew-nowrap gap-2 px-2">
+      <div class="d-flex flew-nowrap gap-1">
         <slot name="addons"></slot>
       </div>
       <button-icon
