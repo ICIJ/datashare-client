@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import DocumentThread from '@/components/DocumentThread'
+import DocumentThread from '@/components/Document/DocumentThread'
 
 describe('DocumentThread.vue', () => {
   const { index, es } = esConnectionHelper.build()
