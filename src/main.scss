@@ -282,7 +282,8 @@ html[data-bs-theme] body .Toastify {
      padding: 10px $spacer-xs;
 
      &.active,
-     &.router-link-active {
+     &.router-link-active,
+     &.router-link-exact-active {
 
        --color: var(--bs-emphasis-color);
        background: transparent;
