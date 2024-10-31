@@ -1,9 +1,12 @@
 <script setup>
+import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import DocumentTranslationAlertSource from './DocumentTranslationAlertSource'
 import DocumentTranslationAlertTarget from './DocumentTranslationAlertTarget'
 import DocumentTranslationAlertToggler from './DocumentTranslationAlertToggler'
+
+const active = defineModel('active', { type: Boolean, default: false })
 
 defineProps({
   detectedLanguage: {
@@ -20,15 +23,17 @@ defineProps({
   },
   translator: {
     type: String
-  },
-  active: {
-    type: Boolean
   }
+})
+
+const classList = computed(() => {
+  const alertVariant = active.value ? 'alert-warning' : 'alert-tertiary'
+  return [alertVariant]
 })
 </script>
 
 <template>
-  <div class="document-translation-alert alert alert-warning flex-truncate d-flex align-items-center py-2">
+  <div class="document-translation-alert alert flex-truncate d-flex align-items-center py-2" :class="classList">
     <phosphor-icon name="translate" class="me-2 my-1 flex-shrink-0 d-none d-md-inline-flex" />
     <div class="d-flex align-items-center gap-1 gap-md-3 flex-wrap">
       Translated from:
@@ -41,7 +46,7 @@ defineProps({
         <phosphor-icon name="caret-right" class="flex-shrink-0" variant="warning" />
         <document-translation-alert-target :target-language="targetLanguage" class="text-truncate" />
       </div>
-      <document-translation-alert-toggler :active="active" @update:active="$emit('update:active', $event)" />
+      <document-translation-alert-toggler v-model:active="active" />
     </div>
   </div>
 </template>
