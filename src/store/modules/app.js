@@ -26,6 +26,9 @@ export const state = () => ({
         orderBy: ['name', 'desc'],
         perPage: 10,
         properties: ['id', 'name', 'createdAt', 'progress', 'result', 'state']
+      },
+      documentView: {
+        tab: 'text'
       }
     }
   },
