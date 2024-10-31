@@ -1,5 +1,5 @@
 <template>
-  <b-card class="audio-viewer my-auto w-100 m-3" overflow-hidden :border-variant="cardVariant">
+  <b-card class="audio-viewer my-auto w-100" overflow-hidden :border-variant="cardVariant">
     <audio controls :autoplay="autoplay" :loop="loop" class="audio-viewer__player w-100 d-inline-block">
       <source :src="document.inlineFullUrl" :type="document.contentType" />
     </audio>
