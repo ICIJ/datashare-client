@@ -1,7 +1,7 @@
 <template>
   <div class="tiff-viewer w-100">
-    <b-overlay :show="isLoading" opacity="0.6" rounded spinner-small class="m-3">
-      <div class="tiff-viewer__header bg-tertiary d-flex algin-items-center p-3">
+    <b-overlay :show="isLoading" opacity="0.6" rounded spinner-small variant="transparent">
+      <div class="tiff-viewer__header bg-tertiary-subtle d-flex algin-items-center rounded p-3">
         <div v-if="hasPages" class="tiff-viewer__header__pagination text-muted">
           <span class="badge text-bg-dark">
             <span>
@@ -12,17 +12,17 @@
         </div>
         <div class="tiff-viewer__header__pagination__actions flex-grow-1 text-end">
           <div class="btn-group">
-            <button class="btn btn-outline-action" @click="rotateActivePage(active, -1)">
+            <button class="btn btn-outline-tertiary" @click="rotateActivePage(active, -1)">
               <fa icon="arrow-rotate-left" class="float-end" />
             </button>
-            <button class="btn btn-outline-action" @click="rotateActivePage(active, 1)">
+            <button class="btn btn-outline-tertiary" @click="rotateActivePage(active, 1)">
               <fa icon="arrow-rotate-right" class="float-end" />
             </button>
           </div>
         </div>
       </div>
     </b-overlay>
-    <div v-if="!isLoading" class="d-flex mx-3">
+    <div v-if="!isLoading" class="d-flex my-3">
       <div v-if="hasPages" class="tiff-viewer__thumbnails ms-3">
         <div
           v-for="page in pages.length"

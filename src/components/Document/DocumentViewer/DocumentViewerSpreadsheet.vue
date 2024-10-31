@@ -9,7 +9,7 @@
       {{ $t('document.notAvailable') }}
     </div>
     <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
-      <div class="spreadsheet-viewer__content__toolbox d-flex align-items-center p-2">
+      <div class="spreadsheet-viewer__content__toolbox bg-tertiary-subtle d-flex align-items-center p-2">
         <b-form-checkbox v-model="fieldsInFirstItem" switch class="ms-3">
           {{ $t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
@@ -211,7 +211,6 @@ export default {
 .spreadsheet-viewer {
   &__content {
     &__toolbox {
-      background: $tertiary;
       box-shadow: 0 -1 * $spacer 0 0 white;
       margin: $spacer $grid-gutter-width * 0.5;
 
