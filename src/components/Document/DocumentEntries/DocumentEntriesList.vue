@@ -82,6 +82,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
 .document-entries-list {
   position: relative;
   display: flex;
+  max-width: 100%;
 
   &__separator-line {
     transform: translateX(-50%);
@@ -111,7 +112,8 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
   }
 
   &__end {
-    width: 100%;
+    width: 0;
+    flex-basis: 100%;
     padding-left: $spacer-xl;
   }
 }
