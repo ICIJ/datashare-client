@@ -5,9 +5,9 @@
         {{ $t('document.fetching') }}
       </div>
     </template>
-    <div v-if="document.isPdf" class="paginated-viewer paginated-viewer--pdf p-3 flex-grow-1">
+    <div v-if="document.isPdf" class="paginated-viewer paginated-viewer--pdf flex-grow-1">
       <iframe
-        class="paginated-viewer__iframe border shadow"
+        class="paginated-viewer__iframe border"
         :src="document.inlineFullUrl"
         width="100%"
         height="100%"
@@ -195,6 +195,8 @@ export default {
 
 <style lang="scss">
 .paginated-viewer {
+  min-height: 90vh;
+
   &__thumbnails {
     width: 150px;
     position: sticky;
@@ -260,7 +262,7 @@ export default {
 
       &:after {
         content: attr(data-page);
-        background: $tertiary-subtle;
+        background: var(--bs-tertiary-bg-subtle);
         border: 1px solid $border-color;
         bottom: 0;
         font-size: 0.8rem;
