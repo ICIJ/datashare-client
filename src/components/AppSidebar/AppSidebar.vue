@@ -145,6 +145,9 @@ const noAnalysis = computed(() => {
           <app-sidebar-section-entry v-if="!noAnalysis" icon="files" :to="{ name: 'task.document-addition.list' }">
             {{ t('appSidebar.documents') }}
           </app-sidebar-section-entry>
+          <app-sidebar-section-entry v-if="!noAnalysis" icon="users-three" :to="{ name: 'task.find-entities.list' }">
+            {{ t('appSidebar.entities') }}
+          </app-sidebar-section-entry>
         </app-sidebar-section>
       </div>
     </div>

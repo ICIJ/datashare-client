@@ -16,7 +16,6 @@ describe('IndexingStore', () => {
       stopTask: vi.fn(),
       getTasks: vi.fn(),
       deleteDoneTasks: vi.fn(),
-      deleteAll: vi.fn(),
       getNerPipelines: vi.fn()
     }
     store = storeBuilder(api)
@@ -127,11 +126,6 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.form.pipeline).toBe('CORENLP')
     expect(store.state.indexing.form.offline).toBeFalsy()
-  })
-
-  it('should delete all the documents in the index', async () => {
-    await store.dispatch('indexing/deleteAll')
-    expect(api.deleteAll).toBeCalledTimes(1)
   })
 
   it('should retrieve the NER pipelines', async () => {

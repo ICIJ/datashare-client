@@ -1,8 +1,8 @@
 <template>
   <page-header no-toggle-settings />
-  <div class="task-document-addition-new">
+  <div class="project-new">
     <page-container fluid>
-      <task-document-addition-form :project-name="project" />
+      <task-find-entities-form :project-name="project" />
     </page-container>
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script setup>
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
-import TaskDocumentAdditionForm from '@/components/Task/TaskDocumentAddition/TaskDocumentAdditionForm'
 import { useUrlParam } from '@/composables/url-params'
+import TaskFindEntitiesForm from '@/components/Task/TaskFindEntities/TaskFindEntitiesForm'
 const project = useUrlParam('project', null)
 </script>
