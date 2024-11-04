@@ -132,13 +132,13 @@ export const routes = [
           {
             path: 'indexing',
             redirect: {
-              name: 'task.document-addition.list'
+              name: 'task.documents.list'
             }
           },
           {
             path: 'analysis',
             redirect: {
-              name: 'task.document-addition.list'
+              name: 'task.documents.list'
             }
           },
           {
@@ -172,19 +172,19 @@ export const routes = [
             ]
           },
           {
-            name: 'task.document-addition',
-            path: 'document-addition',
-            meta: { title: 'task.document-addition.title' },
+            name: 'task.documents',
+            path: 'documents',
+            meta: { title: 'task.documents.title' },
             components: {
               default: () => import('@/views/Task/Task')
             },
             children: [
               {
-                name: 'task.document-addition.list',
+                name: 'task.documents.list',
                 path: '',
-                components: { default: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionList') },
+                components: { default: () => import('@/views/Task/Documents/TaskDocumentsList') },
                 meta: {
-                  title: 'task.document-addition.list.title',
+                  title: 'task.documents.list.title',
                   allowedModes: ['LOCAL', 'EMBEDDED'],
                   docs: [
                     {
@@ -199,13 +199,13 @@ export const routes = [
                 }
               },
               {
-                name: 'task.document-addition.new',
+                name: 'task.documents.new',
                 path: 'new',
                 components: {
-                  default: () => import('@/views/Task/DocumentAddition/TaskDocumentAdditionNew')
+                  default: () => import('@/views/Task/Documents/TaskDocumentsNew')
                 },
                 meta: {
-                  title: 'task.document-addition.new.title'
+                  title: 'task.documents.new.title'
                 }
               }
             ]

@@ -26,7 +26,7 @@ const props = defineProps({
 const { toastedPromise, core, wait } = useCore()
 const { t } = useI18n()
 
-const submitLabel = computed(() => t(`task.document-addition.form.submit`))
+const submitLabel = computed(() => t(`task.documents.form.submit`))
 
 const defaultProject = computed(() => core.config.get('defaultProject'))
 const defaultDataDir = computed(() => core.config.get('dataDir'))
@@ -86,13 +86,13 @@ function dispatchExtract() {
   }
   return core.api.index(form)
 }
-const successMessage = computed(() => t(`task.document-addition.form.success`))
-const errorMessage = (error) => t(`task.document-addition.form.error`, { error })
+const successMessage = computed(() => t(`task.documents.form.success`))
+const errorMessage = (error) => t(`task.documents.form.error`, { error })
 async function submit() {
   try {
     await toastedPromise(dispatchExtract(), { successMessage, errorMessage })
   } catch (error) {}
-  await core.router.push({ name: 'task.document-addition.list' })
+  await core.router.push({ name: 'task.documents.list' })
 }
 const valid = computed(() => {
   return every([!props.disabled, isPresent(path.value)])
@@ -113,7 +113,7 @@ async function retrieveLanguages() {
     }
   }
 }
-const waitOcrIdentifier = uniqueId('documentAddition-form-extract-ocr-control-')
+const waitOcrIdentifier = uniqueId('documents-form-extract-ocr-control-')
 onMounted(() => {
   return loadLanguages()
 })
@@ -131,48 +131,34 @@ const isReady = computed(() => {
 })
 
 const ocrOptions = computed(() => [
-  { text: t('task.document-addition.form.extractOcr.options.yes'), value: true },
-  { text: t('task.document-addition.form.extractOcr.options.no'), value: false }
+  { text: t('task.documents.form.extractOcr.options.yes'), value: true },
+  { text: t('task.documents.form.extractOcr.options.no'), value: false }
 ])
 const skipOptions = computed(() => [
-  { text: t('task.document-addition.form.skipIndexedDocuments.options.yes'), value: true },
-  { text: t('task.document-addition.form.skipIndexedDocuments.options.no'), value: false }
+  { text: t('task.documents.form.skipIndexedDocuments.options.yes'), value: true },
+  { text: t('task.documents.form.skipIndexedDocuments.options.no'), value: false }
 ])
 </script>
 
 <template>
-  <form-creation
-    class="task-document-addition-form"
-    :valid="valid"
-    :submit-label="submitLabel"
-    @reset="reset"
-    @submit="submit"
-  >
-    <form-fieldset-i18n
-      name="project-selector"
-      translation-key="task.document-addition.form.projectSelector"
-      compact-auto
-    >
+  <form-creation class="task-documents-form" :valid="valid" :submit-label="submitLabel" @reset="reset" @submit="submit">
+    <form-fieldset-i18n name="project-selector" translation-key="task.documents.form.projectSelector" compact-auto>
       <search-bar-input-dropdown-for-projects v-model="selectedProject" />
       <input type="hidden" name="project" :value="selectedProject.name" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="source-path" translation-key="task.document-addition.form.path" compact-auto>
+    <form-fieldset-i18n name="source-path" translation-key="task.documents.form.path" compact-auto>
       <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
       <input type="hidden" name="path" :value="path" />
     </form-fieldset-i18n>
     <form-fieldset-i18n
       name="extracting-language"
-      translation-key="task.document-addition.form.extractingLanguage"
+      translation-key="task.documents.form.extractingLanguage"
       compact-auto
     >
       <extracting-language-form-control v-model="language" />
       <input type="hidden" name="language" :value="language" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n
-      name="extract-extract-ocr"
-      translation-key="task.document-addition.form.extractOcr"
-      compact-auto
-    >
+    <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.documents.form.extractOcr" compact-auto>
       <b-form-radio-group
         v-model="extractOcr"
         name="extract-ocr"
@@ -192,7 +178,7 @@ const skipOptions = computed(() => [
     </form-fieldset-i18n>
     <form-fieldset-i18n
       name="skip-indexed-documents"
-      translation-key="task.document-addition.form.skipIndexedDocuments"
+      translation-key="task.documents.form.skipIndexedDocuments"
       compact-auto
     >
       <b-form-radio-group v-model="skipIndexedDocuments" name="skip-indexed-documents" :options="skipOptions" stacked />
