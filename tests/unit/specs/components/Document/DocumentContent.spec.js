@@ -132,7 +132,7 @@ describe('DocumentContent.vue', () => {
   })
 
   describe('search term', () => {
-    describe('with 1 occurence', () => {
+    describe('with 1 occurrence', () => {
       beforeEach(() => {
         api.searchDocument.mockImplementation(() => {
           return Promise.resolve({ count: 1, offsets: [10] })
@@ -149,7 +149,7 @@ describe('DocumentContent.vue', () => {
       })
     })
 
-    describe('with 2 occurences', () => {
+    describe('with 2 occurrences', () => {
       let wrapper
       let mockDocument
       beforeEach(async () => {
@@ -160,7 +160,7 @@ describe('DocumentContent.vue', () => {
         wrapper = mount(DocumentContent, { props, global: { plugins } })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
-        // Use vm.$set method to set nested value reactivly
+        // Use vm.$set method to set nested value reactively
         wrapper.setData({ localSearchTerm: 'full' })
         await flushPromises()
       })
@@ -229,7 +229,7 @@ describe('DocumentContent.vue', () => {
       })
     })
 
-    describe('with 3 occurences', () => {
+    describe('with 3 occurrences', () => {
       let wrapper
 
       beforeEach(async () => {
@@ -244,7 +244,7 @@ describe('DocumentContent.vue', () => {
       })
 
       it('should be case insensitive', async () => {
-        // Use vm.$set method to set nested value reactivly
+        // Use vm.$set method to set nested value reactively
         wrapper.setData({ localSearchTerm: 'full' })
         await flushPromises()
         expect(wrapper.vm.localSearchOccurrences).toEqual(3)
@@ -265,7 +265,7 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.vm.getContentSlice().content).toBe('this is a content')
     })
 
-    it('should lazy load 2 slices of 10 caracters of a long text document', async () => {
+    it('should lazy load 2 slices of 10 characters of a long text document', async () => {
       // Create a document with a small content text length
       const content = 'this is a content from Elastic Search doc which looks huge'
       const { document } = await mockDocumentContentSlice(content)
