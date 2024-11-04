@@ -156,7 +156,7 @@ export const routes = [
                   default: () => import('@/views/Task/Entities/TaskEntitiesList')
                 },
                 meta: {
-                  title: 'task.entities.list.title'
+                  breadcrumb: false
                 }
               },
               {
@@ -184,7 +184,7 @@ export const routes = [
                 path: '',
                 components: { default: () => import('@/views/Task/Documents/TaskDocumentsList') },
                 meta: {
-                  title: 'task.documents.list.title',
+                  breadcrumb: false,
                   allowedModes: ['LOCAL', 'EMBEDDED'],
                   docs: [
                     {
