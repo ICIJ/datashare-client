@@ -155,7 +155,7 @@ const projectsItem = computed(() => {
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="statusItem.label">
-          <display-status class="display-status-sm" :value="status" /> {{ statusItem.value }}
+          <display-status class="display-status" size="sm" :value="status" /> {{ statusItem.value }}
         </batch-search-card-details-entry>
       </li>
       <li>
