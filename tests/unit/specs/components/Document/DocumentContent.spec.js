@@ -5,9 +5,9 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import DocumentContent from '@/components/DocumentContent'
+import DocumentContent from '@/components/Document/DocumentContent'
 
-// Disable lodash throttle to avoid side-effets
+// Disable lodash throttle to avoid side-effect
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
   return {
