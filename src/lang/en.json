@@ -825,7 +825,8 @@
     "batchSearches": "Batch searches",
     "batchSearchesAction": "Add batch searches",
     "batchDownloads": "Batch downloads",
-    "documents": "Documents"
+    "documents": "Documents",
+    "entities": "Entities"
   },
   "footer": {
     "homedir": "Move files to this directory in order to analyze them",
@@ -880,8 +881,36 @@
       "name": "Name",
       "state": "State"
     },
+    "find-entities": {
+      "title": "Find entities",
+      "list": {
+        "title":"All tasks",
+        "searchPlaceholder": "Search task",
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+      },
+      "new": {
+        "title":"New"
+      },
+      "form": {
+        "projectSelector": {"label": "Select a project"},
+        "submit": "Go",
+        "failedPipelines": "Failed to retrieve pipelines",
+        "defaultPipeline": "default",
+        "pipeline": {
+          "label": "What would you like to do?",
+          "description": "Datashare uses Natural Language Processing models."
+        },
+        "offline": {
+          "label": "Do you want to work offline?",
+          "description": "Select 'No' if you want to sync latest models.",
+          "options": {"yes": "Yes", "no": "No"}
+        },
+        "success":"Find entities task is launched",
+        "error":"An error occurred when creating the task: {error}"
+      }
+    },
     "document-addition": {
-      "home": "Document addition",
+      "title": "Document addition",
       "list": {
         "title":"All tasks",
         "searchPlaceholder": "Search task",
@@ -899,8 +928,11 @@
           "description":"If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
           "options": {"yes": "Yes", "no": "No"}
         },
-        "skipIndexedDocuments":{"label": "Skip already indexed documents","description":"If yes, Datashare will only extract text from documents that are not searchable yet.",
-          "options": {"yes": "Yes", "no": "No"}},
+        "skipIndexedDocuments":{
+          "label": "Skip already indexed documents",
+          "description":"If yes, Datashare will only extract text from documents that are not searchable yet.",
+          "options": {"yes": "Yes", "no": "No"}
+        },
         "submit": "Add",
         "success":"Add document task is launched",
         "error":"An error occurred when creating the task: {error}"

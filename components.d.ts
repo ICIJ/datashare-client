@@ -514,6 +514,7 @@ declare module 'vue' {
     TabGroupTitle: typeof import('./src/components/TabGroup/TabGroupTitle.vue')['default']
     TaskAnalysisForm: typeof import('./src/components/Task/TaskAnalysis/TaskAnalysisForm.vue')['default']
     TaskDocumentAdditionForm: typeof import('./src/components/Task/TaskDocumentAddition/TaskDocumentAdditionForm.vue')['default']
+    TaskFindEntitiesForm: typeof import('./src/components/Task/TaskFindEntities/TaskFindEntitiesForm.vue')['default']
     TaskItemStatus: typeof import('./src/components/TaskItemStatus.vue')['default']
     TasksList: typeof import('./src/components/TasksList.vue')['default']
     TextTruncate: typeof import('./src/components/Text/TextTruncate.vue')['default']

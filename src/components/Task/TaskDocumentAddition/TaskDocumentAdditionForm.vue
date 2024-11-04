@@ -68,6 +68,7 @@ const form = reactive({
   ocrLanguages,
   filter: skipIndexedDocuments
 })
+
 function reset() {
   selectedProject.value = { name: initialFormValues.value.project }
   path.value = initialFormValues.value.path
@@ -141,7 +142,7 @@ const skipOptions = computed(() => [
 
 <template>
   <form-creation
-    class="document-addition-form"
+    class="task-document-addition-form"
     :valid="valid"
     :submit-label="submitLabel"
     @reset="reset"
