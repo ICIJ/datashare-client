@@ -63,10 +63,10 @@ const tasks = computed(() => {
 
 onMounted(async () => {
   try {
-    wait.start('load task-documents-list tasks')
+    wait.start('load task-entities-list tasks')
     await startPollingTasks()
   } finally {
-    wait.end('load task-documents-list tasks')
+    wait.end('load task-entities-list tasks')
   }
 })
 
@@ -103,7 +103,7 @@ const howToLink = computed(() => {
     :to-add="toAddRoute"
     searchable
     paginable
-    :search-placeholder="$t('task.documents.list.searchPlaceholder')"
+    :search-placeholder="$t('task.entities.list.searchPlaceholder')"
   >
     <template #end>
       <tasks-actions />
@@ -112,13 +112,13 @@ const howToLink = computed(() => {
   <page-container fluid>
     <tasks-list :tasks="tasks">
       <template #empty>
-        <p class="text-center m-0" v-html="$t('task.documents.list.empty', { howToLink })"></p>
+        <p class="text-center m-0" v-html="$t('task.entities.list.empty', { howToLink })"></p>
       </template>
     </tasks-list>
   </page-container>
 </template>
 <style lang="scss">
-.task-documents-list {
+.task-entities-list {
   &__table td {
     vertical-align: middle;
   }
