@@ -1,7 +1,7 @@
-import DocumentTranslationAlert from '@/components/Document/DocumentTranslationAlert/DocumentTranslationAlert'
+import DocumentTranslationAlert from '@/components/Document/DocumentTranslation/DocumentTranslationAlert/DocumentTranslationAlert'
 
 export default {
-  title: 'Components/Document/DocumentTranslationAlert/DocumentTranslationAlert',
+  title: 'Components/Document/DocumentTranslation/DocumentTranslationAlert/DocumentTranslationAlert',
   component: DocumentTranslationAlert,
   tags: ['autodocs'],
   args: {
