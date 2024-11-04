@@ -882,7 +882,7 @@
       "name": "Name",
       "state": "State"
     },
-    "find-entities": {
+    "entities": {
       "title": "Find entities",
       "list": {
         "title":"All tasks",

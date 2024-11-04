@@ -2,7 +2,7 @@
   <page-header no-toggle-settings />
   <div class="project-new">
     <page-container fluid>
-      <task-find-entities-form :project-name="project" />
+      <task-entities-form :project-name="project" />
     </page-container>
   </div>
 </template>
@@ -11,6 +11,6 @@
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import { useUrlParam } from '@/composables/url-params'
-import TaskFindEntitiesForm from '@/components/Task/TaskFindEntities/TaskFindEntitiesForm'
+import TaskEntitiesForm from '@/components/Task/TaskEntities/TaskEntitiesForm'
 const project = useUrlParam('project', null)
 </script>

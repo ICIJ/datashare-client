@@ -142,31 +142,31 @@ export const routes = [
             }
           },
           {
-            name: 'task.find-entities',
-            path: 'find-entities',
-            meta: { title: 'task.find-entities.title' },
+            name: 'task.entities',
+            path: 'entities',
+            meta: { title: 'task.entities.title' },
             components: {
               default: () => import('@/views/Task/Task')
             },
             children: [
               {
-                name: 'task.find-entities.list',
+                name: 'task.entities.list',
                 path: '',
                 components: {
-                  default: () => import('@/views/Task/FindEntities/TaskFindEntitiesList')
+                  default: () => import('@/views/Task/Entities/TaskEntitiesList')
                 },
                 meta: {
-                  title: 'task.find-entities.list.title'
+                  title: 'task.entities.list.title'
                 }
               },
               {
-                name: 'task.find-entities.new',
+                name: 'task.entities.new',
                 path: 'new',
                 components: {
-                  default: () => import('@/views/Task/FindEntities/TaskFindEntitiesNew')
+                  default: () => import('@/views/Task/Entities/TaskEntitiesNew')
                 },
                 meta: {
-                  title: 'task.find-entities.new.title'
+                  title: 'task.entities.new.title'
                 }
               }
             ]

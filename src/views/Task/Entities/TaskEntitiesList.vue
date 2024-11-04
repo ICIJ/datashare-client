@@ -21,7 +21,7 @@ const { isServer } = useUtils()
 const store = useStore()
 
 const toAddRoute = computed(() => {
-  return isServer.value ? null : { name: 'task.find-entities.new' }
+  return isServer.value ? null : { name: 'task.entities.new' }
 })
 const viewKey = 'taskList'
 const searchQuery = useUrlParam('q', '')
