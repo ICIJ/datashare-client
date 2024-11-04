@@ -67,7 +67,7 @@ export default class Document extends EsDoc {
   set content(content) {
     this.set('_source.content', content)
   }
-  get metas() {
+  get metadata() {
     return keys(this.source.metadata || {})
   }
   get shortId() {
