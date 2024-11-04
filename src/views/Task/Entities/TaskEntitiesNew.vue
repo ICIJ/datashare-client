@@ -1,6 +1,6 @@
 <template>
   <page-header no-toggle-settings />
-  <div class="project-new">
+  <div class="task-entities-new">
     <page-container fluid>
       <task-entities-form :project-name="project" />
     </page-container>
