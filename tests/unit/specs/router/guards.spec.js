@@ -58,13 +58,13 @@ describe('guards', () => {
 
     it('should redirect task.analysis.list to error in SERVER mode', async () => {
       config.set('mode', 'SERVER')
-      await router.push({ name: 'task.document-addition.list' })
+      await router.push({ name: 'task.documents.list' })
       expect(router.currentRoute.value.name).toBe('error')
     })
 
     it('should not redirect task.analysis.list to error in LOCAL mode', async () => {
       config.set('mode', 'LOCAL')
-      await router.push({ name: 'task.document-addition.list' })
+      await router.push({ name: 'task.documents.list' })
       expect(router.currentRoute.value.name).not.toBe('error')
     })
 

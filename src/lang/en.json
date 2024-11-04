@@ -882,7 +882,7 @@
       "state": "State"
     },
     "entities": {
-      "title": "Find entities",
+      "title": "Entities",
       "list": {
         "title":"All tasks",
         "searchPlaceholder": "Search task",
@@ -909,8 +909,8 @@
         "error":"An error occurred when creating the task: {error}"
       }
     },
-    "document-addition": {
-      "title": "Document addition",
+    "documents": {
+      "title": "Documents",
       "list": {
         "title":"All tasks",
         "searchPlaceholder": "Search task",
