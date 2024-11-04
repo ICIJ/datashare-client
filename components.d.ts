@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    '(refactor': delete legacy tests)
     AddonCard: typeof import('./src/components/Addon/AddonCard.vue')['default']
     AddonCardActions: typeof import('./src/components/Addon/AddonCardActions.vue')['default']
     AddonCardDetails: typeof import('./src/components/Addon/AddonCardDetails.vue')['default']
@@ -514,7 +513,7 @@ declare module 'vue' {
     TabGroupTitle: typeof import('./src/components/TabGroup/TabGroupTitle.vue')['default']
     TaskAnalysisForm: typeof import('./src/components/Task/TaskAnalysis/TaskAnalysisForm.vue')['default']
     TaskDocumentAdditionForm: typeof import('./src/components/Task/TaskDocumentAddition/TaskDocumentAdditionForm.vue')['default']
-    TaskFindEntitiesForm: typeof import('./src/components/Task/TaskFindEntities/TaskFindEntitiesForm.vue')['default']
+    TaskEntitiesForm: typeof import('./src/components/Task/TaskEntities/TaskEntitiesForm.vue')['default']
     TaskItemStatus: typeof import('./src/components/TaskItemStatus.vue')['default']
     TasksList: typeof import('./src/components/TasksList.vue')['default']
     TextTruncate: typeof import('./src/components/Text/TextTruncate.vue')['default']
