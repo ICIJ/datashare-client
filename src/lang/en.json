@@ -889,7 +889,7 @@
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
       },
       "new": {
-        "title":"New"
+        "title":"Find entities"
       },
       "form": {
         "projectSelector": {"label": "Select a project"},
