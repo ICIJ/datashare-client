@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const { sticky } = defineProps({
   noToggler: {
     type: Boolean,
     default: false
@@ -7,14 +9,19 @@ defineProps({
   noSearch: {
     type: Boolean,
     default: false
+  },
+  sticky: {
+    type: Boolean,
+    default: false
   }
 })
 
 const emit = defineEmits(['close'])
+const classList = computed(() => ({ 'filters-panel--sticky': sticky }))
 </script>
 
 <template>
-  <div class="filters-panel">
+  <div class="filters-panel" :class="classList">
     <filters-panel-toggler v-if="!noToggler" @close="emit('close')" />
     <filters-panel-search v-if="!noSearch" />
     <slot />
@@ -31,6 +38,12 @@ const emit = defineEmits(['close'])
   background: var(--bs-tertiary-bg-subtle);
   max-width: 320px;
   width: 100%;
-  min-height: 100vh;
+
+  &--sticky {
+    position: sticky;
+    top: 0;
+    overflow: auto;
+    height: 100vh;
+  }
 }
 </style>
