@@ -4,7 +4,7 @@
       :show="$wait.is(loaderId)"
       opacity="0.6"
       spinner-small
-      class="position-sticky sticky-top"
+      class="sticky-top"
       rounded
       variant="light"
       :blur="null"
