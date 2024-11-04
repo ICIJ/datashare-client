@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
+import { SIZE, buttonSizeValidator } from '@/enums/sizes'
 import { toVariant, toVariantPhosphorIcon } from '@/utils/utils'
 
 const { t } = useI18n()
@@ -21,12 +22,14 @@ const props = defineProps({
     type: String
   },
   size: {
-    type: String
+    type: String,
+    default: SIZE.MD,
+    validator: buttonSizeValidator
   }
 })
 
 const classList = computed(() => {
-  return [`display-status--${props.variant ?? valueVariant.value}`]
+  return [`display-status--${props.variant ?? valueVariant.value}`, `display-status--${props.size}`]
 })
 
 const valueVariant = computed(() => {
@@ -54,11 +57,6 @@ const valueTitle = computed(() => {
   --display-status-bg: var(--bs-body-bg);
   --display-status-color: var(--bs-secondary-text-emphasis);
 
-  &-sm {
-    width: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
-    height: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
-  }
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -66,6 +64,16 @@ const valueTitle = computed(() => {
   border-radius: var(--bs-border-radius);
   background: var(--display-status-bg);
   color: var(--display-status-color);
+
+  &--sm {
+    width: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
+    height: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
+  }
+
+  &--lg {
+    width: calc(#{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2);
+    height: calc(#{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2);
+  }
 
   @each $state in map-keys($theme-colors) {
     &.display-status--#{$state} {
