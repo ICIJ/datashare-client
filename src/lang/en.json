@@ -895,10 +895,22 @@
         "projectSelector": {"label": "Select a project"},
         "submit": "Go",
         "failedPipelines": "Failed to retrieve pipelines",
-        "defaultPipeline": "default",
+        "defaultPipeline": "recommended",
+        "findEntitiesType": "Find",
+        "pipelineOptions": {
+          "corenlp": "CoreNLP",
+          "opennlp": "OpenNLP",
+          "mitie": "MITIE",
+          "ixapipe": "IXA Pipe",
+          "gatenlp": "GateNLP"
+        },
         "pipeline": {
-          "label": "What would you like to do?",
+          "label": "Choose a model",
           "description": "Datashare uses Natural Language Processing models."
+        },
+        "findEntities": {
+          "label": "Find",
+          "options": {"emails": "Emails", "named-entities": "People, organisations and locations"}
         },
         "offline": {
           "label": "Do you want to work offline?",

@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { orderBy, values } from 'lodash'
+import { ref, computed, onMounted, watch } from 'vue'
+import { filter, orderBy, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
+import includes from 'lodash/includes'
 
 import { useCore } from '@/composables/core'
 import FormCreation from '@/components/Form/FormCreation'
@@ -31,9 +32,12 @@ const { wait, waitFor } = useWait()
 
 const defaultProject = core.config.get('defaultProject')
 const defaultPipeline = 'CORENLP'
+const emailPipeline = 'EMAIL'
 const loaderPipelineId = 'load ner pipelines'
-
+const EMAILS = 'emails'
+const NAMED_ENTITIES = 'named-entities'
 const initialFormValues = computed(() => ({
+  findEntities: NAMED_ENTITIES,
   pipeline: defaultPipeline,
   pipelines: {},
   offline: false,
@@ -45,6 +49,7 @@ const pipeline = ref(initialFormValues.value.pipeline)
 const pipelines = ref(initialFormValues.value.pipelines)
 const offline = ref(initialFormValues.value.offline)
 const error = ref(null)
+const findEntities = ref(initialFormValues.value.findEntities)
 
 const getNerPipelines = () => core.api.getNerPipelines()
 const fetchPipelines = waitFor(loaderPipelineId, getNerPipelines)
@@ -57,18 +62,43 @@ onMounted(async () => {
   }
 })
 
+watch(
+  () => findEntities.value,
+  (entityType) => {
+    if (entityType === EMAILS) {
+      pipeline.value = emailPipeline
+    } else {
+      pipeline.value = defaultPipeline
+    }
+  }
+)
+const pipelinesNamedEntities = computed(() => filter(values(pipelines.value), (p) => p !== emailPipeline))
+const hasPipelinesNamedEntities = computed(() => pipelinesNamedEntities.value.length > 0)
+const hasPipelineEmail = computed(() => includes(values(pipelines.value), emailPipeline))
+
+const isPipelineNamedEntities = computed(() => findEntities.value === NAMED_ENTITIES)
+const findEntitiesOptions = computed(() => {
+  const options = []
+  if (hasPipelinesNamedEntities.value) {
+    options.push({ text: t('task.entities.form.findEntities.options.named-entities'), value: NAMED_ENTITIES })
+  }
+  if (hasPipelineEmail.value) {
+    options.push({ text: t('task.entities.form.findEntities.options.emails'), value: EMAILS })
+  }
+  return options
+})
 const offlineOptions = computed(() => [
   { text: t('task.entities.form.offline.options.yes'), value: true },
   { text: t('task.entities.form.offline.options.no'), value: false }
 ])
 const pipelineOptions = computed(() => {
   return orderBy(
-    values(pipelines.value).map((pip) => {
-      const text = t(`indexing.pipelineOptions.${pip.toLowerCase()}`)
+    pipelinesNamedEntities.value.map((pip) => {
+      const text = t(`task.entities.form.pipelineOptions.${pip.toLowerCase()}`)
       const value = pip.toUpperCase()
       if (pip === defaultPipeline) {
         const defaultLabel = t('task.entities.form.defaultPipeline')
-        const html = `${text} <span class="font-italic small">(${defaultLabel})</span>`
+        const html = `${text} <span class="font-italic small">- ${defaultLabel}</span>`
         return { html, value, isDefault: true }
       }
       return { text, value, isDefault: false }
@@ -90,6 +120,7 @@ function reset() {
   selectedProject.value = { name: initialFormValues.value.project }
   pipeline.value = initialFormValues.value.pipeline
   offline.value = initialFormValues.value.offline
+  findEntities.value = initialFormValues.value.findEntities
 }
 
 function findNamedEntities() {
@@ -118,7 +149,16 @@ async function submit() {
       <form-fieldset-i18n name="project-selector" translation-key="task.entities.form.projectSelector" compact-auto>
         <search-bar-input-dropdown-for-projects v-model="selectedProject" />
       </form-fieldset-i18n>
-      <form-fieldset-i18n name="pipeline" translation-key="task.entities.form.pipeline" compact-auto>
+
+      <form-fieldset-i18n name="findEntities" translation-key="task.entities.form.findEntities" compact-auto>
+        <b-form-radio-group v-model="findEntities" name="findEntities" :options="findEntitiesOptions" stacked />
+      </form-fieldset-i18n>
+      <form-fieldset-i18n
+        v-if="isPipelineNamedEntities"
+        name="pipeline"
+        translation-key="task.entities.form.pipeline"
+        compact-auto
+      >
         <b-alert v-if="error" model-value variant="danger">{{ error }}</b-alert>
         <b-form-radio-group v-else v-model="pipeline" :options="pipelineOptions" name="pipeline" stacked />
       </form-fieldset-i18n>
