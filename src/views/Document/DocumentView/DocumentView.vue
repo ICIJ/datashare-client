@@ -78,7 +78,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
     </div>
 
     <document-view-title :document="document" />
-    <document-view-tabs :document="document" />
+    <document-view-tabs :document="document" :base="base" />
 
     <router-view />
   </v-wait>
