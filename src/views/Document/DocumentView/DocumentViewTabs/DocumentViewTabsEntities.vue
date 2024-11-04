@@ -132,7 +132,7 @@ export default {
       return throttle(this.getFirstPageInAllCategories, 1000)
     },
     indexingLink() {
-      const { href } = this.$router.resolve({ name: 'task.document-addition.list' })
+      const { href } = this.$router.resolve({ name: 'task.documents.list' })
       return href
     }
   },
