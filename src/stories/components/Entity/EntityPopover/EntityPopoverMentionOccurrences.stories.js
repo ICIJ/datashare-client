@@ -5,7 +5,7 @@ export default {
   component: EntityPopoverMentionOccurrences,
   tags: ['autodocs'],
   args: {
-    nbMentions: 5033,
+    offsets: 5033,
     projects: ['banana papers', 'citrus confidential']
   }
 }

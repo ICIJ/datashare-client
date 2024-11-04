@@ -1,34 +1,18 @@
-<template>
-  <b-popover
-    teleport-to="body"
-    :target="target"
-    :manual="manual"
-    :model-value="modelValue"
-    :no-auto-close="noAutoClose"
-    :placement="placement"
-    custom-class="entity-popover"
-    @update:modelValue="$emit('update:modelValue')"
-  >
-    <entity-popover-tab-group v-bind="mentionTabsProps" />
-  </b-popover>
-</template>
 <script setup>
 import { computed } from 'vue'
+import { pick } from 'lodash'
 
 import EntityPopoverTabGroup from './EntityPopoverTabGroup'
+
+const modelValue = defineModel({ type: Boolean })
+const offset = defineModel('offset', { type: Number, default: 1 })
 
 const props = defineProps({
   /**
    * The target element
    */
   target: {
-    type: Object
-  },
-  /**
-   * Toggle value when the popover is open
-   */
-  modelValue: {
-    type: Boolean
+    type: [String, Object, Function],
   },
   /**
    * True if the popover is open manually
@@ -48,22 +32,46 @@ const props = defineProps({
   placement: {
     type: String
   },
-  mention: { type: String },
-  excerpt: { type: String },
-  projects: { type: Array, default: () => [] },
-  nbMentions: { type: Number },
-  language: { type: String },
-  model: { type: String }
-})
-
-const mentionTabsProps = computed(() => {
-  return {
-    mention: props.mention,
-    excerpt: props.excerpt,
-    projects: props.projects,
-    nbMentions: props.nbMentions,
-    language: props.language,
-    model: props.model
+  teleportTo: {
+    type: String,
+    default: 'body'
+  },
+  mention: {
+    type: String
+  },
+  excerpt: {
+    type: String
+  },
+  projects: {
+    type: Array,
+    default: () => []
+  },
+  offsets: {
+    type: Number
+  },
+  language: {
+    type: String
+  },
+  extractor: {
+    type: String
   }
 })
+
+const mentionTabsBinding = computed(() => {
+  return pick(props, ['mention', 'excerpt', 'projects', 'offsets', 'language', 'extractor'])
+})
 </script>
+
+<template>
+  <b-popover
+    v-model="modelValue"
+    :teleport-to="teleportTo"
+    :target="target"
+    :manual="manual"
+    :no-auto-close="noAutoClose"
+    :placement="placement"
+    custom-class="entity-popover"
+  >
+    <entity-popover-tab-group v-bind="mentionTabsBinding" v-model:offset="offset" />
+  </b-popover>
+</template>

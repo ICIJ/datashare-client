@@ -6,10 +6,10 @@ export default {
   tags: ['autodocs'],
   args: {
     language: 'english',
-    model: 'CoreNLP',
+    extractor: 'CoreNLP',
     mention: 'Bruno Mars',
     excerpt: 'Lorem ipsum Bruno Mars dolor ipset ',
-    nbMentions: 5033,
+    offsets: 5033,
     projects: ['banana papers', 'citrus confidential']
   }
 }
