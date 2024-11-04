@@ -111,12 +111,11 @@
   },
   "entityPopoverInfo": {
     "content": "This entity was extracted with:",
-    "model": "{model} model",
-    "language": "in {language} language."
+    "label": "{extractor} in {language}"
   },
   "entityPopoverMentionOccurrences": {
-    "occurrences":  "This mention appears {nbMentions} times | This mention appears {nbMentions} time | This mention appears {nbMentions} times",
-    "projectList":  "in {n} projects | in {n} project | in {n} projects:"
+    "occurrences":  "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
+    "projects":  "in {n} projects | in {n} project | in {n} projects:"
   },
   "entityPopoverTabGroup": {
     "mentions": "Mentions",
