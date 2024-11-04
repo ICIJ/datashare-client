@@ -1,5 +1,6 @@
 <script setup>
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import { ICON_WEIGHT, iconWeightValidator } from '@/enums/iconWeights'
 
 defineProps({
   icon: {
@@ -8,11 +9,13 @@ defineProps({
   },
   iconWeight: {
     type: String,
-    default: 'normal'
+    default: ICON_WEIGHT.REGULAR,
+    validator: iconWeightValidator
   },
   iconHoverWeight: {
     type: String,
-    default: 'bold'
+    default: ICON_WEIGHT.BOLD,
+    validator: iconWeightValidator
   },
   label: {
     type: String,
