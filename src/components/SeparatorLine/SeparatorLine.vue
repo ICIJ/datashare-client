@@ -51,6 +51,7 @@ const expand = () => emit('expand', getMax())
 .separator-line {
   width: 2rem;
   height: 100%;
+  min-height: 440px;
   top: 0;
   position: absolute;
 
