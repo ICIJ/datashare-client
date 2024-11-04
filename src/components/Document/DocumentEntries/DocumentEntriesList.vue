@@ -52,7 +52,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
       <div class="document-entries-list__start__header">
         <slot name="header" />
       </div>
-      <div class="document-entries-list__start__list d-flex flex-column gap-1">
+      <div class="document-entries-list__start__list">
         <document-card
           v-for="entry in entries"
           :key="entry.id"
@@ -83,16 +83,20 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
   position: relative;
   display: flex;
   max-width: 100%;
+  align-items: flex-start;
 
   &__separator-line {
     transform: translateX(-50%);
   }
 
   &__start {
-    margin-right: $spacer;
-    min-height: 50vh;
+    max-height: calc(100vh - #{$spacer * 2});
+    margin: $spacer 0;
+    overflow: auto;
     display: flex;
     flex-direction: column;
+    position: sticky;
+    top: 0;
 
     &__header {
       background: var(--bs-body-bg);
@@ -102,12 +106,17 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
       min-width: 0;
       max-width: 100%;
       width: 100%;
+      padding-right: $spacer;
+      padding-bottom: $spacer;
     }
 
     &__list {
-      overflow: auto;
       position: relative;
       z-index: 0;
+      display: flex;
+      flex-direction: column;
+      padding-right: $spacer;
+      gap: $spacer;
     }
   }
 

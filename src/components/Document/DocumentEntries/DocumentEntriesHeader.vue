@@ -41,7 +41,7 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
 </script>
 
 <template>
-  <div ref="element" class="document-entries-header py-3" :class="classList">
+  <div ref="element" class="document-entries-header" :class="classList">
     <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" :disabled="total === 0" />
     <slot v-bind="{ compact }">
       <div>

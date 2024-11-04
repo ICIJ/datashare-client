@@ -48,7 +48,7 @@ const onHideDocument = () => router.push({ name: 'search' })
 
 <template>
   <div class="document-entries-table">
-    <div class="document-entries-table__header">
+    <div class="document-entries-table__header py-3">
       <slot name="header" />
     </div>
     <page-table v-model:sort="sort" v-model:order="order" :select-mode="selectMode">

@@ -66,7 +66,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
 </script>
 
 <template>
-  <v-wait ref="element" class="document-view d-flex flex-column gap-3" :for="loaderId">
+  <v-wait ref="element" class="document-view d-flex flex-column gap-3 position-sticky sticky-top" :for="loaderId">
     <template #waiting>
       <content-placeholder />
     </template>

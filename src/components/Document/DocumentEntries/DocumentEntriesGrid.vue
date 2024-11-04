@@ -31,7 +31,7 @@ const onHideDocument = () => router.push({ name: 'search' })
 
 <template>
   <div class="document-entries-grid">
-    <div class="document-entries-grid__header">
+    <div class="document-entries-grid__header py-3">
       <slot name="header" />
     </div>
     <div class="document-entries-grid__list row g-3 px-0">
