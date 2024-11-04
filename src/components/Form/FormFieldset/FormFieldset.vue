@@ -46,6 +46,10 @@ const props = defineProps({
     type: String,
     default: SIZE.LG,
     validator: breakpointSizeValidator
+  },
+  noDescription: {
+    type: Boolean,
+    default: false
   }
 })
 const { breakpointDown } = useBreakpoints()
@@ -82,7 +86,7 @@ const classList = computed(() => {
         </slot>
       </div>
     </template>
-    <template v-if="!isCompact">
+    <template v-if="!isCompact && !noDescription">
       <div class="col-4 form-fieldset__content">
         <slot v-bind="{ isCompact }" />
       </div>

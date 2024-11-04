@@ -142,11 +142,41 @@ export const routes = [
             }
           },
           {
+            name: 'task.find-entities',
+            path: 'find-entities',
+            meta: { title: 'task.find-entities.title' },
+            components: {
+              default: () => import('@/views/Task/Task')
+            },
+            children: [
+              {
+                name: 'task.find-entities.list',
+                path: '',
+                components: {
+                  default: () => import('@/views/Task/FindEntities/TaskFindEntitiesList')
+                },
+                meta: {
+                  title: 'task.find-entities.list.title'
+                }
+              },
+              {
+                name: 'task.find-entities.new',
+                path: 'new',
+                components: {
+                  default: () => import('@/views/Task/FindEntities/TaskFindEntitiesNew')
+                },
+                meta: {
+                  title: 'task.find-entities.new.title'
+                }
+              }
+            ]
+          },
+          {
             name: 'task.document-addition',
             path: 'document-addition',
-            meta: { title: 'task.document-addition.home' },
+            meta: { title: 'task.document-addition.title' },
             components: {
-              default: () => import('@/views/Task/DocumentAddition/TaskDocumentAddition')
+              default: () => import('@/views/Task/Task')
             },
             children: [
               {
