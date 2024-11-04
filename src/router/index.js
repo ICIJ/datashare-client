@@ -541,13 +541,35 @@ export const routes = [
       {
         name: 'document-standalone',
         path: '/ds/:index/:id/:routing?',
-        meta: {
-          title: 'Document'
-        },
+        component: () => import('@/views/DocumentStandalone'),
         props(route) {
           return { ...route.params, ...route.query }
         },
-        component: () => import('@/views/DocumentStandalone')
+        meta: {
+          title: 'document.title'
+        },
+        children: [
+          {
+            name: 'document-standalone.text',
+            path: 'text',
+            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsText')
+          },
+          {
+            name: 'document-standalone.viewer',
+            path: 'viewer',
+            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer')
+          },
+          {
+            name: 'document-standalone.metadata',
+            path: 'metadata',
+            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata')
+          },
+          {
+            name: 'document-standalone.entities',
+            path: 'entities',
+            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities')
+          }
+        ]
       }
     ]
   },
