@@ -1,7 +1,5 @@
 <script setup>
-import { computed } from 'vue'
-
-const props = defineProps({
+defineProps({
   mention: {
     type: String
   },
@@ -9,25 +7,17 @@ const props = defineProps({
     type: String
   }
 })
-const replacement = `<span class="entity-popover-mention-excerpt__mark">${props.mention}</span>`
-const content = computed(() => {
-  return props.excerpt.replace(new RegExp(props.mention, 'g'), replacement)
-})
 </script>
 
 <template>
-  <p class="entity-popover-mention-excerpt text-center m-0" v-html="content" />
+  <p class="entity-popover-mention-excerpt text-center m-0" v-html="excerpt" />
 </template>
 
 <style lang="scss">
 .entity-popover-mention-excerpt {
-  &::before,
-  &::after {
-    content: '...';
-  }
-
-  &__mark {
+  mark {
     font-weight: $font-weight-bold;
+    padding: 0;
   }
 }
 </style>

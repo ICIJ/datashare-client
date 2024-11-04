@@ -6,7 +6,7 @@ export default {
   tags: ['autodocs'],
   args: {
     language: 'english',
-    model: 'CoreNLP'
+    extractor: 'CoreNLP'
   }
 }
 export const Default = {}

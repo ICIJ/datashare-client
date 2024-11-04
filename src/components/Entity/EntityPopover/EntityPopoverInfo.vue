@@ -1,27 +1,37 @@
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const props = defineProps({
-  language: { type: String },
-  model: { type: String }
+import DisplayLanguage from '@/components/Display/DisplayLanguage'
+
+defineProps({
+  language: {
+    type: String
+  },
+  extractor: {
+    type: String
+  }
 })
+
 const { t } = useI18n()
-const content = t('entityPopoverInfo.content')
-const propertyHtml = (property) => {
-  return `<span class="font-monospace border border-tertiary rounded-1 p-1 cursor-pointer">${property}</span>`
-}
-const modelLabel = t('entityPopoverInfo.model', { model: propertyHtml(props.model) })
-const languageLabel = t('entityPopoverInfo.language', { language: propertyHtml(props.language) })
-const sentence = `${modelLabel} ${languageLabel}`
+
+const content = computed(() => t('entityPopoverInfo.content'))
 </script>
 
 <template>
   <div class="entity-popover-info">
-    <p class="text-secondary-emphasis">
-      {{ content }}
-    </p>
-
-    <span v-html="sentence" />
+    <p class="text-secondary-emphasis mb-2">{{ content }}</p>
+    <i18n-t keypath="entityPopoverInfo.label" tag="p">
+      <template #extractor>
+        <span class="font-monospace border border-tertiary rounded-1 p-1 cursor-pointer">{{ extractor }}</span>
+      </template>
+      <template #language>
+        <display-language
+          class="font-monospace border border-tertiary rounded-1 p-1 cursor-pointer"
+          :value="language"
+        />
+      </template>
+    </i18n-t>
   </div>
 </template>
 

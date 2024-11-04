@@ -12,7 +12,7 @@ export default {
   args: {
     mention: 'Bruno Mars',
     projects: ['banana papers', 'citrus confidential'],
-    nbMentions: excerpts.length,
+    offsets: excerpts.length,
     excerpt,
     excerpts
   },
