@@ -19,7 +19,7 @@ const sections = computed(() => uniq(filters.map((filter) => filter.section)))
 </script>
 
 <template>
-  <filters-panel v-show="toggleFilters" class="search-filters flex-shrink-0 me-5" @close="closeFilters">
+  <filters-panel v-show="toggleFilters" class="search-filters flex-shrink-0 me-5" sticky @close="closeFilters">
     <filters-panel-section v-for="section in sections" :key="section" :title="$t(`filter.sections.${section}`)">
       <component
         :is="getFilterComponent(filter)"
