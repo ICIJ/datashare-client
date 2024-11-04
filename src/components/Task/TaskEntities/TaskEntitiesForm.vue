@@ -58,8 +58,8 @@ onMounted(async () => {
 })
 
 const offlineOptions = computed(() => [
-  { text: t('task.find-entities.form.offline.options.yes'), value: true },
-  { text: t('task.find-entities.form.offline.options.no'), value: false }
+  { text: t('task.entities.form.offline.options.yes'), value: true },
+  { text: t('task.entities.form.offline.options.no'), value: false }
 ])
 const pipelineOptions = computed(() => {
   return orderBy(
@@ -67,7 +67,7 @@ const pipelineOptions = computed(() => {
       const text = t(`indexing.pipelineOptions.${pip.toLowerCase()}`)
       const value = pip.toUpperCase()
       if (pip === defaultPipeline) {
-        const defaultLabel = t('task.find-entities.form.defaultPipeline')
+        const defaultLabel = t('task.entities.form.defaultPipeline')
         const html = `${text} <span class="font-italic small">(${defaultLabel})</span>`
         return { html, value, isDefault: true }
       }
@@ -78,9 +78,9 @@ const pipelineOptions = computed(() => {
   )
 })
 
-const submitLabel = computed(() => t(`task.find-entities.form.submit`))
-const successMessage = computed(() => t('task.find-entities.form.success'))
-const errorMessage = (error) => t(`task.find-entities.form.error`, { error })
+const submitLabel = computed(() => t(`task.entities.form.submit`))
+const successMessage = computed(() => t('task.entities.form.success'))
+const errorMessage = (error) => t(`task.entities.form.error`, { error })
 
 const valid = computed(() => {
   return !wait.waiting(loaderPipelineId) && !wait.waiting(loaderLaunchTask) && !error.value
@@ -102,31 +102,27 @@ async function submit() {
   try {
     await toastedPromise(launchTask(), { successMessage, errorMessage })
   } catch (error) {}
-  await core.router.push({ name: 'task.find-entities.list' })
+  await core.router.push({ name: 'task.entities.list' })
 }
 </script>
 
 <template>
   <v-wait :for="loaderPipelineId">
     <form-creation
-      class="task-find-entities-form"
+      class="task-entities-form"
       :submit-label="submitLabel"
       :valid="valid"
       @reset="reset"
       @submit="submit"
     >
-      <form-fieldset-i18n
-        name="project-selector"
-        translation-key="task.find-entities.form.projectSelector"
-        compact-auto
-      >
+      <form-fieldset-i18n name="project-selector" translation-key="task.entities.form.projectSelector" compact-auto>
         <search-bar-input-dropdown-for-projects v-model="selectedProject" />
       </form-fieldset-i18n>
-      <form-fieldset-i18n name="pipeline" translation-key="task.find-entities.form.pipeline" compact-auto>
+      <form-fieldset-i18n name="pipeline" translation-key="task.entities.form.pipeline" compact-auto>
         <b-alert v-if="error" model-value variant="danger">{{ error }}</b-alert>
         <b-form-radio-group v-else v-model="pipeline" :options="pipelineOptions" name="pipeline" stacked />
       </form-fieldset-i18n>
-      <form-fieldset-i18n name="offline" translation-key="task.find-entities.form.offline" compact-auto>
+      <form-fieldset-i18n name="offline" translation-key="task.entities.form.offline" compact-auto>
         <b-form-radio-group v-model="offline" name="offline" :options="offlineOptions" stacked />
       </form-fieldset-i18n>
     </form-creation>
