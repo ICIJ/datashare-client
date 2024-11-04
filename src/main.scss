@@ -61,6 +61,12 @@ body {
   }
 }
 
+// This class should be provided by default in Bootstrap 5 but for some reasong it's not working.
+.bg-body {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-body-bg-rgb), var(--bs-bg-opacity)) !important;
+}
+
 @keyframes rotateLogo {
   100% {
     transform: translate(-50%, -50%) rotate(1turn);
