@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import ExtractingFormOcrControl from '@/components/ExtractingFormOcrControl'
+import ExtractingFormOcrControl from '@/components/Task/TaskDocuments/ExtractingFormOcrControl'
 
 const OCR_LANGUAGES = [
   { name: 'CHINESE', iso6392: 'zho' },

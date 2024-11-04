@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import ExtractingLanguageFormControl from '@/components/ExtractingLanguageFormControl'
+import ExtractingLanguageFormControl from '@/components/Task/TaskDocuments/ExtractingLanguageFormControl'
 
 const TEXT_LANGUAGES = [
   { name: 'CHINESE', iso6392: 'zho' },

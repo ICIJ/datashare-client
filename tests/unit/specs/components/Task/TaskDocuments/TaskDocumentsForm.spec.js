@@ -2,8 +2,8 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ExtractingForm from '@/components/ExtractingForm'
-
-describe('ExtractingForm.vue', () => {
+// TODO file renamed but the tests have to be rewritten
+describe('TaskDocumentsForm.vue', () => {
   let api, wrapper, core
 
   const props = {
