@@ -12,7 +12,7 @@ import DocumentViewUserActions from './DocumentViewUserActions'
 import { useDocument } from '@/composables/document'
 
 const elementRef = useTemplateRef('element')
-const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
+const { document, documentRoute, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
 const props = defineProps({
   id: {
@@ -27,10 +27,6 @@ const props = defineProps({
   q: {
     type: String,
     default: ''
-  },
-  base: {
-    type: String,
-    default: 'document'
   }
 })
 
@@ -44,8 +40,8 @@ const tab = computed({
 })
 
 const selectRouteTab = ({ name, params, query } = route) => {
-  if (name === props.base) {
-    router.replace({ name: `${props.base}.${tab.value}`, params, query })
+  if (name === documentRoute.value.name) {
+    router.replace({ name: `${documentRoute.value.name}.${tab.value}`, params, query })
   } else {
     tab.value = name?.split('.').pop() ?? 'text'
   }
@@ -78,7 +74,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
     </div>
 
     <document-view-title :document="document" />
-    <document-view-tabs :document="document" :base="base" />
+    <document-view-tabs :document="document" />
 
     <router-view />
   </v-wait>
