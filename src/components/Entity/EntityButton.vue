@@ -34,7 +34,7 @@ const classList = computed(() => {
 
 const style = computed(() => {
   return {
-    '--color': color.value
+    '--bs-btn-border-color': color.value
   }
 })
 
@@ -56,9 +56,8 @@ const occurrences = computed(() => {
   </button-icon>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .entity-button {
-  --bs-btn-border-color: var(--color, currentColor);
   --bs-btn-color: var(--bs-body-color);
   --bs-btn-bg: var(--bs-body-bg);
   --bs-btn-hover-color: --bs-btn-color;
