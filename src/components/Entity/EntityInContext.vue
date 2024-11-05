@@ -31,11 +31,11 @@ const props = defineProps({
 const store = useStore()
 const { waitFor, loaderId } = useWait()
 
-const showContentTextLengthWarning = computed(() => props.document.showContentTextLengthWarning)
+const hasBigContentTextLength = computed(() => props.document.hasBigContentTextLength)
 const isContentLoaded = computed(() => store.state.document.isContentLoaded)
 
 const fetch = waitFor(loaderId, async () => {
-  if (!isContentLoaded.value && !showContentTextLengthWarning.value) {
+  if (!isContentLoaded.value && !hasBigContentTextLength.value) {
     await store.dispatch('document/getContent')
   }
 })
@@ -88,6 +88,7 @@ onBeforeMount(fetch)
   <entity-popover
     v-model:offset="offset"
     lazy
+    :no-excerpt="hasBigContentTextLength"
     :excerpt="highlightedExcerpt"
     :language="document.language"
     :mention="entity.mention"
