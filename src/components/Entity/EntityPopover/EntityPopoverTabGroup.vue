@@ -9,7 +9,7 @@ import EntityPopoverInfo from './EntityPopoverInfo'
 import TabGroup from '@/components/TabGroup/TabGroup'
 import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
 
-const offset = defineModel('offset', { type: Number, default: 1 })
+const offset = defineModel('offset', { type: Number, default: 0 })
 
 const props = defineProps({
   mention: {
