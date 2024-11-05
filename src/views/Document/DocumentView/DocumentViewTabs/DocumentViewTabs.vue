@@ -1,9 +1,7 @@
 <script setup>
 import { useDocument } from '@/composables/document'
-
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
-
 
 const { documentRoute } = useDocument()
 </script>
