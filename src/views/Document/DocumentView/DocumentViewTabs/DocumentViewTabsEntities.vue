@@ -1,205 +1,117 @@
-<template>
-  <v-wait for="load first page of named entities">
-    <template #waiting>
-      <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" />
-    </template>
-    <div class="p-3">
-      <div class="document__named-entities__toolbox">
-        <form-control-search
-          v-model="filterToken"
-          :loading="$wait.is('load named entities')"
-          class="document__named-entities__toolbox__filter"
-          :placeholder="$t('document.namedEntityFilter')"
-        ></form-control-search>
-      </div>
-      <div
-        v-if="$config.is('manageDocuments') && !document.hasNerTags"
-        class="document__named-entities document__named-entities--not--searched"
-      >
-        <div v-html="$t('document.namedEntitiesNotSearched', { indexingLink })"></div>
-      </div>
-      <div
-        v-else-if="!hasNamedEntities && !isLoadingNamedEntities"
-        class="document__named-entities document__named-entities--not--found"
-      >
-        {{ $t('document.namedEntitiesNotFound') }}
-      </div>
-      <div v-else-if="!isLoadingNamedEntities" class="document__named-entitie">
-        <div v-for="(hits, category) in namedEntitiesByCategories" :key="category" class="s border-bottom pb-4 mb-4">
-          <div
-            v-if="categoryIsNotEmpty(category)"
-            class="mb-2 d-flex align-items-center"
-            :class="getCategoryClass(category, 'text-')"
-          >
-            <fa :icon="getCategoryIcon(category)" class="me-2" />
-            {{ $t('filter.namedEntity' + capitalize(category)) }}
-            <i>({{ getCategoryTotal(category) }})</i>
-            <div class="ms-auto">
-              <haptic-copy class="btn-tertiary btn-sm py-1" :label="$t('document.copyAsCsv')" :text="hitsAsCsv(hits)" />
-            </div>
-          </div>
-          <span v-for="(ne, index) in hits" :key="index" class="d-inline-block">
-            <b-badge
-              :id="`named-entity-${ne.id}`"
-              class="p-1 text-uppercase text-black border"
-              pill
-              variant="tertiary"
-              :class="getCategoryClass(category, 'border-')"
-            >
-              {{ ne.source.mentionNorm }}
-            </b-badge>
-            <span>&nbsp;</span>
-            <b-popover :target="`named-entity-${ne.id}`" triggers="hover" placement="top">
-              <named-entity-in-context :document="document" :named-entity="ne"></named-entity-in-context>
-              <template #title>
-                <div class="d-flex">
-                  <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
-                  <div v-if="ne.offsets.length > 1" class="ms-auto ps-2">
-                    {{ $t('document.namedEntitiesOccurences', ne.offsets.length, { count: ne.offsets.length }) }}
-                  </div>
-                </div>
-              </template>
-            </b-popover>
-          </span>
-          <v-wait :for="`load_more_data_${category}`">
-            <template #waiting>
-              <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-3" />
-            </template>
-            <div v-if="categoryHasNextPage(category)" class="mt-3 text-center">
-              <b-button
-                class="document__named-entities__more"
-                size="sm"
-                variant="link"
-                @click.prevent="getNextPageInCategory(category)"
-              >
-                {{ $t('document.namedEntitiesShowMore.showMore' + capitalize(category)) }}
-              </b-button>
-            </div>
-          </v-wait>
-        </div>
-      </div>
-    </div>
-  </v-wait>
-</template>
-
-<script>
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import { capitalize, flatten, get, mapValues, sumBy, pickBy, throttle } from 'lodash'
-import { mapState } from 'vuex'
 
-import NamedEntityInContext from '@/components/NamedEntityInContext'
+import EntityButton from '@/components/Entity/EntityButton'
+import EntityOccurrences from '@/components/Entity/EntityOccurrences'
+import EntityInContext from '@/components/Entity/EntityInContext'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import ner from '@/mixins/ner'
-import utils from '@/mixins/utils'
+import { useCore } from '@/composables/core'
+import { useDocument } from '@/composables/document'
+import { useWait } from '@/composables/wait'
+import { getCategoryIcon } from '@/utils/entity'
 
-/**
- * A panel to navigate through the named entities of a document
- */
-export default {
-  name: 'DocumentTabNamedEntities',
-  components: {
-    NamedEntityInContext,
-    FormControlSearch
-  },
-  mixins: [ner, utils],
-  props: {
-    /**
-     * The selected document
-     */
-    document: {
-      type: Object
-    }
-  },
-  data() {
-    return {
-      filterToken: null
-    }
-  },
-  computed: {
-    ...mapState('document', ['isLoadingNamedEntities', 'namedEntitiesPaginatedByCategories']),
-    hasNamedEntities() {
-      return sumBy(this.categories, (category) => this.getCategoryTotal(category))
-    },
-    namedEntitiesByCategories() {
-      const namedEntitiesByCategories = mapValues(this.namedEntitiesPaginatedByCategories, (pages) => {
-        return flatten(pages.map((page) => page.hits))
-      })
-      return pickBy(namedEntitiesByCategories, (hits) => !!hits.length)
-    },
-    categories() {
-      return this.$store.getters['document/categories']
-    },
-    getFirstPageInAllCategoriesWithThrottle() {
-      return throttle(this.getFirstPageInAllCategories, 1000)
-    },
-    indexingLink() {
-      const { href } = this.$router.resolve({ name: 'task.documents.list' })
-      return href
-    }
-  },
-  watch: {
-    filterToken(filterToken) {
-      // No throttle when the filter token is empty
-      if (!filterToken) {
-        return this.getFirstPageInAllCategories()
-      }
-      return this.getFirstPageInAllCategoriesWithThrottle()
-    }
-  },
-  mounted() {
-    this.getFirstPageInAllCategories('load first page of named entities')
-  },
-  methods: {
-    hitsAsCsv(hits = []) {
-      const csvHeader = ['named entity', 'occurences'].join(',')
-      const csvBody = hits
-        .map(({ source }) => {
-          return [source.mentionNorm, source.offsets.length].join(',')
-        })
-        .join('\n')
-      return [csvHeader, csvBody].join('\n')
-    },
-    getCategoryTotal(category) {
-      return get(this, ['namedEntitiesPaginatedByCategories', category, 0, 'total'], 0)
-    },
-    categoryIsNotEmpty(category) {
-      return !!this.getCategoryTotal(category)
-    },
-    categoryHasNextPage(category) {
-      return this.getCategoryTotal(category) > this.$store.getters['document/countNamedEntitiesInCategory'](category)
-    },
-    async getNextPageInCategory(category) {
-      // Don't load named entities if they are already loading
-      if (!this.isLoadingNamedEntities) {
-        this.$wait.start(`load_more_data_${category}`)
-        const filterToken = this.filterToken
-        await this.$store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken })
-        this.$wait.end(`load_more_data_${category}`)
-      }
-    },
-    async getFirstPageInAllCategories(waitIdentifier = 'load named entities') {
-      this.$wait.start(waitIdentifier)
-      const filterToken = this.filterToken
-      await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories', { filterToken })
-      this.$wait.end(waitIdentifier)
-    },
-    capitalize
+const { document, documentRoute } = useDocument()
+const { waitFor, loaderId } = useWait()
+const { core } = useCore()
+const store = useStore()
+const router = useRouter()
+const filterToken = ref(null)
+
+const mustExtractEntities = computed(() => core.config.is('manageDocuments') && !document.value.hasNerTags)
+const loadingNamedEntities = computed(() => store.state.document.loadingNamedEntities)
+const hasNamedEntities = computed(() => sumBy(categories.value, getCategoryTotal))
+const namedEntitiesPaginatedByCategories = computed(() => store.state.document.namedEntitiesPaginatedByCategories)
+const namedEntitiesByCategories = computed(() => {
+  const namedEntitiesByCategories = mapValues(namedEntitiesPaginatedByCategories.value, (pages) => {
+    return flatten(pages.map((page) => page.hits))
+  })
+  return pickBy(namedEntitiesByCategories, (hits) => !!hits.length)
+})
+
+const hitsAsCsv = (hits = []) => {
+  const csvHeader = ['named entity', 'occurences'].join(',')
+  const csvBody = hits
+    .map(({ source }) => {
+      return [source.mentionNorm, source.offsets.length].join(',')
+    })
+    .join('\n')
+  return [csvHeader, csvBody].join('\n')
+}
+
+const categories = computed(() => store.getters['document/categories'])
+const indexingLink = computed(() => router.resolve({ name: 'task.document-addition.list' }).href)
+const getCategoryTotal = (category) => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
+const categoryIsNotEmpty = (category) => !!getCategoryTotal(category)
+const categoryHasNextPage = (category) => {
+  return getCategoryTotal(category) > store.getters['document/countNamedEntitiesInCategory'](category)
+}
+
+const getNextPageInCategory = async (category) => {
+  if (!loadingNamedEntities.value) {
+    store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken: filterToken.value })
   }
 }
+
+const getFirstPageInAllCategories = waitFor(loaderId, async () => {
+  return store.dispatch('document/getFirstPageForNamedEntityInAllCategories', { filterToken: filterToken.value })
+})
+
+const getFirstPageInAllCategoriesWithThrottle = throttle(getFirstPageInAllCategories, 1000)
+
+watch(filterToken, (newFilterToken) => {
+  if (!newFilterToken) {
+    return getFirstPageInAllCategories()
+  }
+  return getFirstPageInAllCategoriesWithThrottle()
+})
+
+onMounted(getFirstPageInAllCategories)
 </script>
 
-<style lang="scss" scoped>
-.document__named-entities {
-  &__toolbox {
-    background: $light;
-    display: flex;
-    margin: 0 0 $spacer;
-    padding: $spacer-xs $spacer;
+<template>
+  <div class="bg-body sticky-top py-3">
+    <form-control-search
+      v-model="filterToken"
+      :loading="$wait.is(loaderId)"
+      :placeholder="$t('document.namedEntityFilter')"
+      clear-text
+      shadow
+    />
+  </div>
 
-    &__filter {
-      margin-left: auto;
-      max-width: 300px;
-      width: 100%;
-    }
-  }
-}
-</style>
+  <div v-if="mustExtractEntities" v-html="$t('document.namedEntitiesNotSearched', { indexingLink })"></div>
+  <div v-else-if="!hasNamedEntities && !loadingNamedEntities">
+    {{ $t('document.namedEntitiesNotFound') }}
+  </div>
+
+  <div v-for="(hits, category) in namedEntitiesByCategories" :key="category" class="mb-5">
+    <h3 v-if="categoryIsNotEmpty(category)" class="mb-3 d-flex align-items-center gap-2 h6 fw-normal">
+      <phosphor-icon :name="getCategoryIcon(category)" weight="bold" />
+      {{ $t('filter.namedEntity' + capitalize(category)) }}
+      <entity-occurrences :occurrences="getCategoryTotal(category)" />
+      <haptic-copy
+        variant="tertiary"
+        class="p-2 ms-auto"
+        hide-label
+        :label="$t('document.copyAsCsv')"
+        :text="hitsAsCsv(hits)"
+      />
+    </h3>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <span v-for="(entity, index) in hits" :key="index" class="d-inline-block">
+        <entity-button
+          :id="`entity-${entity.id}`"
+          :entity="entity"
+          :to="{ name: `${documentRoute.name}.text`, query: { q: entity.mention } }"
+        />
+        <entity-in-context :entity="entity" :document="document" :target="`entity-${entity.id}`" />
+      </span>
+    </div>
+    <b-button v-if="categoryHasNextPage(category)" variant="outline-primary" @click="getNextPageInCategory(category)">
+      {{ $t('document.namedEntitiesShowMore.showMore' + capitalize(category)) }}
+    </b-button>
+  </div>
+</template>
