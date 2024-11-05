@@ -5,7 +5,7 @@ import { pick } from 'lodash'
 import EntityPopoverTabGroup from './EntityPopoverTabGroup'
 
 const modelValue = defineModel({ type: Boolean })
-const offset = defineModel('offset', { type: Number, default: 1 })
+const offset = defineModel('offset', { type: Number, default: 0 })
 
 const props = defineProps({
   /**
