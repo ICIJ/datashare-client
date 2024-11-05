@@ -7,7 +7,6 @@ export function initialState() {
     doc: null,
     idAndRouting: null,
     isContentLoaded: false,
-    isTranslatedContentLoaded: false,
     isRecommended: false,
     namedEntitiesPaginatedByCategories: {
       PERSON: [],
@@ -18,7 +17,6 @@ export function initialState() {
     parentDocument: null,
     recommendedBy: [],
     rootDocument: null,
-    useContentTextLazyLoading: false,
     showTranslatedContent: true,
     tags: []
   }
@@ -61,8 +59,6 @@ export const mutations = {
     if (raw !== null) {
       state.doc = EsDocList.instantiate(raw)
       state.isContentLoaded = state.doc.hasContent
-      state.isTranslatedContentLoaded = state.doc.hasTranslatedContent
-      state.useContentTextLazyLoading = state.doc.hasBigContentTextLength
     } else {
       state.doc = null
     }
@@ -76,7 +72,6 @@ export const mutations = {
   translations(state, translations = []) {
     if (state.doc) {
       state.doc.translations = translations
-      state.isTranslatedContentLoaded = true
     }
   },
   tags(state, tags = []) {
