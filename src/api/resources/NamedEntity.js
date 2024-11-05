@@ -24,6 +24,9 @@ export default class NamedEntity extends EsDoc {
   get mention() {
     return this.source.mention
   }
+  get extractor() {
+    return this.source.extractor
+  }
   static get esName() {
     return 'NamedEntity'
   }
