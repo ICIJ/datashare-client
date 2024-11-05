@@ -14,15 +14,18 @@ import { useWait } from '@/composables/wait'
 import { getCategoryIcon } from '@/utils/entity'
 
 const { document, documentRoute } = useDocument()
-const { waitFor, loaderId } = useWait()
+const { wait, waitFor, loaderId } = useWait()
 const { core } = useCore()
 const store = useStore()
 const router = useRouter()
 const filterToken = ref(null)
 
-const mustExtractEntities = computed(() => core.config.is('manageDocuments') && !document.value.hasNerTags)
-const loadingNamedEntities = computed(() => store.state.document.loadingNamedEntities)
-const hasNamedEntities = computed(() => sumBy(categories.value, getCategoryTotal))
+const mustExtractEntities = computed(() => canManageDocuments.value && !hasNerTags.value)
+const canManageDocuments = computed(() => core.config.is('manageDocuments'))
+const loadingNamedEntities = computed(() => wait.is(loaderId))
+const hasNerTags = computed(() => document.value.hasNerTags)
+const hasEntities = computed(() => sumBy(categories.value, getCategoryTotal))
+
 const namedEntitiesPaginatedByCategories = computed(() => store.state.document.namedEntitiesPaginatedByCategories)
 const namedEntitiesByCategories = computed(() => {
   const namedEntitiesByCategories = mapValues(namedEntitiesPaginatedByCategories.value, (pages) => {
@@ -83,7 +86,7 @@ onMounted(getFirstPageInAllCategories)
   </div>
 
   <div v-if="mustExtractEntities" v-html="$t('document.namedEntitiesNotSearched', { indexingLink })"></div>
-  <div v-else-if="!hasNamedEntities && !loadingNamedEntities">
+  <div v-else-if="!hasEntities && !loadingNamedEntities">
     {{ $t('document.namedEntitiesNotFound') }}
   </div>
 
