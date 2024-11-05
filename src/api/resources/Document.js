@@ -346,8 +346,8 @@ export default class Document extends EsDoc {
     return this.get('_source.nerTags', []).length > 0
   }
   get hasBigContentTextLength() {
-    // 25,000 characters
-    return this.contentTextLength === undefined || this.contentTextLength === 0 || this.contentTextLength > 25e3
+    // 50,000 characters
+    return this.contentTextLength === undefined || this.contentTextLength === 0 || this.contentTextLength > 5e4
   }
   static get esName() {
     return 'Document'
