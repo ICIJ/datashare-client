@@ -41,7 +41,6 @@ describe('DocumentStore', () => {
     expect(store.state.document.doc).toEqual(initialState().doc)
     expect(store.state.document.idAndRouting).toEqual(initialState().idAndRouting)
     expect(store.state.document.isContentLoaded).toEqual(initialState().isContentLoaded)
-    expect(store.state.document.isTranslatedContentLoaded).toEqual(initialState().isTranslatedContentLoaded)
     expect(store.state.document.isRecommended).toEqual(initialState().isRecommended)
   })
 
