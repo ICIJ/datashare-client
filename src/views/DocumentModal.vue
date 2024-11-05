@@ -7,7 +7,7 @@
 
 <script>
 import DocumentNavbar from '@/components/Document/DocumentNavbar'
-import DocumentView from '@/views/DocumentView'
+import DocumentView from '@/views/Document/DocumentView/DocumentView'
 
 export default {
   name: 'DocumentModal',
