@@ -12,7 +12,7 @@ const props = defineProps({
    * The target element
    */
   target: {
-    type: [String, Object, Function],
+    type: [String, Object, Function]
   },
   /**
    * True if the popover is open manually

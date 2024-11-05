@@ -7,6 +7,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+<<<<<<< HEAD
+=======
+    '(build': update components)
+    '(refactor': delete legacy tests)
+>>>>>>> b468e088 (refactor: lint)
     AddonCard: typeof import('./src/components/Addon/AddonCard.vue')['default']
     AddonCardActions: typeof import('./src/components/Addon/AddonCardActions.vue')['default']
     AddonCardDetails: typeof import('./src/components/Addon/AddonCardDetails.vue')['default']
