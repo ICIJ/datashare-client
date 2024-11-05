@@ -8,7 +8,6 @@ export function initialState() {
     idAndRouting: null,
     isContentLoaded: false,
     isTranslatedContentLoaded: false,
-    isLoadingNamedEntities: false,
     isRecommended: false,
     namedEntitiesPaginatedByCategories: {
       PERSON: [],
