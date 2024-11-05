@@ -1,7 +1,7 @@
 import { computed, useId } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { matches } from 'lodash'
+import { matches, overSome } from 'lodash'
 
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
@@ -41,9 +41,14 @@ export const useDocument = function (element) {
   }
 
   const isRouteActive = function ({ index, id, routing }) {
-    const { matched } = router.currentRoute.value ?? []
-    return isActive({ index, id, routing }) && matched.some(matches({ name: 'document' }))
+    return isActive({ index, id, routing }) && !!documentRoute.value
   }
+
+  const documentRoute = computed(() => {
+    const { matched } = router.currentRoute.value ?? []
+    const predicates = ['document', 'document-standalone'].map((name) => matches({ name }))
+    return matched.find(overSome(predicates))
+  })
 
   const document = computed(() => {
     return store.state.document.doc
@@ -75,6 +80,7 @@ export const useDocument = function (element) {
     document,
     documentPath,
     documentDirname,
+    documentRoute,
     parent,
     loaderId,
     isActive,
