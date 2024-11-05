@@ -8,27 +8,15 @@ const modelValue = defineModel({ type: Boolean })
 const offset = defineModel('offset', { type: Number, default: 0 })
 
 const props = defineProps({
-  /**
-   * The target element
-   */
   target: {
     type: [String, Object, Function]
   },
-  /**
-   * True if the popover is open manually
-   */
   manual: {
     type: Boolean
   },
-  /**
-   * Disable auto close
-   */
   noAutoClose: {
     type: Boolean
   },
-  /**
-   * The placement of the popover
-   */
   placement: {
     type: String
   },
@@ -37,9 +25,6 @@ const props = defineProps({
     default: 'body'
   },
   mention: {
-    type: String
-  },
-  excerpt: {
     type: String
   },
   projects: {
@@ -54,11 +39,17 @@ const props = defineProps({
   },
   extractor: {
     type: String
+  },
+  excerpt: {
+    type: String
+  },
+  noExcerpt: {
+    type: Boolean
   }
 })
 
-const mentionTabsBinding = computed(() => {
-  return pick(props, ['mention', 'excerpt', 'projects', 'offsets', 'language', 'extractor'])
+const tabsBinding = computed(() => {
+  return pick(props, ['mention', 'excerpt', 'noExcerpt', 'projects', 'offsets', 'language', 'extractor'])
 })
 </script>
 
@@ -72,6 +63,6 @@ const mentionTabsBinding = computed(() => {
     :placement="placement"
     custom-class="entity-popover"
   >
-    <entity-popover-tab-group v-bind="mentionTabsBinding" v-model:offset="offset" />
+    <entity-popover-tab-group v-bind="tabsBinding" v-model:offset="offset" />
   </b-popover>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pick } from 'lodash'
 
@@ -9,14 +9,15 @@ import EntityPopoverInfo from './EntityPopoverInfo'
 import TabGroup from '@/components/TabGroup/TabGroup'
 import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
 
-const offset = defineModel('offset', { type: Number, default: 0 })
-
 const props = defineProps({
   mention: {
     type: String
   },
   excerpt: {
     type: String
+  },
+  noExcerpt: {
+    type: Boolean
   },
   projects: {
     type: Array,
@@ -33,8 +34,11 @@ const props = defineProps({
   }
 })
 
+const offset = defineModel('offset', { type: Number, default: 0 })
+const tabIndex = ref(props.noExcerpt ? 1 : 0)
+
 const mentionsBinding = computed(() => {
-  return pick(props, ['mention', 'excerpt', 'projects', 'offsets', 'language', 'extractor'])
+  return pick(props, ['mention', 'excerpt', 'noExcerpt', 'projects', 'offsets', 'language', 'extractor'])
 })
 
 const infoBinding = computed(() => {
@@ -47,7 +51,7 @@ const mentionsLabel = computed(() => t('entityPopoverTabGroup.mentions'))
 </script>
 
 <template>
-  <tab-group class="entity-popover-tab-group">
+  <tab-group v-model="tabIndex" class="entity-popover-tab-group">
     <tab-group-entry icon="list-magnifying-glass" :count="props.offsets" :title="mentionsLabel">
       <entity-popover-mentions v-bind="mentionsBinding" v-model:offset="offset" />
     </tab-group-entry>
