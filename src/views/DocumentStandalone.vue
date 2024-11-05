@@ -1,6 +1,6 @@
 <template>
   <div class="document-standalone mx-5 my-3">
-    <document-view :id="id" :routing="routing" :index="index" :q="q" base="document-standalone" />
+    <document-view :id="id" :routing="routing" :index="index" :q="q" />
   </div>
 </template>
 
