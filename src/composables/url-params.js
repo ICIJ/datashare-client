@@ -49,6 +49,28 @@ function batchQueryParamUpdate(router, route, to = null, queryParams = [], value
 }
 
 /**
+ * Checks if two values are equal when converted to numbers.
+ *
+ * @param {*} a - The first value to compare.
+ * @param {*} b - The second value to compare.
+ * @returns {boolean} - True if both values are equal when converted to numbers, false otherwise.
+ */
+function eqNumber(a, b) {
+  return toNumber(a) === toNumber(b)
+}
+
+/**
+ * Sets the value of a reactive reference if the new value is different when converted to a number.
+ *
+ * @param {Ref} reference - The reactive reference to set.
+ * @param {*} value - The new value to set.
+ * @returns {boolean} - True if the value was updated, false otherwise.
+ */
+function setNumberRef(reference, value) {
+  return !eqNumber(reference.value, value) && (reference.value = value)
+}
+
+/**
  * Executes a callback function when the current route matches the specified name.
  *
  * This composable returns a function that, when called, checks if the current route's name matches the provided name.
@@ -376,26 +398,43 @@ export function useUrlParams(queryParams, initialOrOptions = {}) {
  * It keeps the 'page' and 'from' values in sync, updating one when the other changes.
  *
  * @param {Object} [options] - Configuration options.
- * @param {number} [options.initialValue=1] - The initial value for 'from' query parameter.
+ * @param {number} [options.initialValue=1] - The initial value for the 'from' query parameter.
  * @param {number} [options.perPage=25] - The number of items per page.
- * @returns {Ref<number>} - A reactive reference to the current page number.
+ * @param {Function|null} [options.to=null] - An optional function to transform the value when updating the URL parameter.
+ * @returns {ComputedRef<number>} - A computed reactive reference to the current page number.
  */
 export function useUrlPageFrom({ initialValue = 1, perPage = 25, to = null } = {}) {
-  const from = useUrlParam('from', { initialValue, transform: toNumber, to })
-  const page = ref((initialValue - 1) * perPage)
-  // Check if two values are equal numbers
-  const eqNumber = (a, b) => toNumber(a) === toNumber(b)
-  // Helper function to set the value if it has changed
-  const set = (reference, value) => !eqNumber(reference.value, value) && (reference.value = value)
-  // Update the page number when the 'from' value changes
-  watch(
-    from,
-    whenIsRoute(to, (value) => set(page, Math.floor(value / perPage) + 1)),
-    { immediate: true }
-  )
-  // Update the 'from' value when the page number changes
-  watch(page, (value) => set(from, (value - 1) * perPage))
-  return page
+  const transform = toNumber
+  const from = useUrlParam('from', { initialValue, transform, to })
+  return computed({
+    set: (value) => setNumberRef(from, (value - 1) * perPage),
+    get: () => Math.floor(from.value / perPage) + 1
+  })
+}
+
+/**
+ * Creates a reactive page number synchronized with the 'from' URL query parameter and Vuex store.
+ *
+ * This composable function calculates the page number based on the 'from' query parameter and 'perPage' value,
+ * keeping the page number and 'from' values in sync, and synchronizing with the Vuex store.
+ *
+ * @param {Object} [options] - Configuration options.
+ * @param {number} [options.perPage=25] - The number of items per page.
+ * @param {Function|null} [options.to=null] - An optional function to transform the value when updating the URL parameter.
+ * @param {string|Function} [options.get] - A Vuex getter name or a custom getter function to get the value.
+ * @param {string|Function} [options.set] - A Vuex mutation name or a custom setter function to set the value.
+ * @returns {ComputedRef<number>} - A computed reactive reference to the current page number.
+ */
+export function useUrlPageFromWithStore({ perPage = 25, to = null, get, set, ...options } = {}) {
+  const store = useStore()
+  const transform = toNumber
+  const getOrGetter = isString(get) ? () => store.getter[get] : get
+  const setOrSetter = isString(set) ? (value) => store.commit(set, value) : set
+  const from = useUrlParamWithStore('from', { get: getOrGetter, set: setOrSetter, to, transform, ...options })
+  return computed({
+    set: (value) => setNumberRef(from, (value - 1) * perPage),
+    get: () => Math.floor(from.value / perPage) + 1
+  })
 }
 
 /**
