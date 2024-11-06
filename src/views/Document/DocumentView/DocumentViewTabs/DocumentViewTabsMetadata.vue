@@ -5,10 +5,15 @@ import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { property, orderBy } from 'lodash'
 
+import DisplayContentLength from '@/components/Display/DisplayContentLength'
+import DisplayContentType from '@/components/Display/DisplayContentType'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import DisplayExtractionLevel from '@/components/Display/DisplayExtractionLevel'
+import DisplayLanguage from '@/components/Display/DisplayLanguage'
+import DisplayNumber from '@/components/Display/DisplayNumber'
 import ProjectLink from '@/components/Project/ProjectLink'
 import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMetadata'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { useDocument } from '@/composables/document'
 import { useDebouncedRef } from '@/composables/debounce'
 
@@ -55,7 +60,8 @@ const canonicalItems = computed(() => [
     name: 'metadata.tika_metadata_dcterms_created',
     label: t('document.creationDate'),
     icon: 'calendar',
-    value: document.value.meta('dcterms_created')
+    value: document.value.meta('dcterms_created'),
+    component: DisplayDatetime
   },
   {
     name: 'metadata.tika_metadata_dc_creator',
@@ -67,27 +73,28 @@ const canonicalItems = computed(() => [
     name: 'extractionDate',
     label: t('document.extractionDate'),
     icon: 'calendar',
-    value: document.value.source.extractionDate
+    value: document.value.source.extractionDate,
+    component: DisplayDatetime
   },
   {
     name: 'contentLength',
     label: t('document.size'),
     icon: 'file',
-    value: document.value.humanSize,
-    rawValue: document.value.contentLength
+    value: document.value.contentLength,
+    component: DisplayContentLength
   },
   {
     name: 'language',
     label: t('document.contentLanguage'),
     icon: 'globe-hemisphere-west',
-    value: t(`filter.lang.${document.value.source.language}`),
-    rawValue: document.value.source.language
+    value: document.value.source.language,
+    component: DisplayLanguage
   },
   {
     name: 'metadata.tika_metadata_content_type',
     label: t('document.contentType'),
-    value: getDocumentTypeLabel(document.value.source.contentType),
-    rawValue: document.value.source.contentType
+    value: document.value.source.contentType,
+    component: DisplayContentType
   },
   {
     name: 'contentEncoding',
@@ -98,8 +105,8 @@ const canonicalItems = computed(() => [
     name: 'extractionLevel',
     label: t('filter.extractionLevel'),
     icon: 'note-blank',
-    value: t(getExtractionLevelTranslationKey(document.value.source.extractionLevel)),
-    rawValue: document.value.source.extractionLevel
+    value: document.value.source.extractionLevel,
+    component: DisplayExtractionLevel
   },
   {
     name: 'metadata.tika_metadata_message_raw_header_thread_index',
@@ -117,7 +124,8 @@ const canonicalItems = computed(() => [
     name: 'contentTextLength',
     label: t('document.contentTextLength'),
     icon: 'text-columns',
-    value: document.value.source.contentTextLength
+    value: document.value.source.contentTextLength,
+    component: DisplayNumber
   }
 ])
 
@@ -198,7 +206,7 @@ const classList = computed(() => {
         class="document-view-tabs-metadata__entry"
         @update:pinned="pin(item.name, $event)"
       >
-        <component :is="item.component" v-if="item.component" v-bind="item.binding" />
+        <component :is="item.component" v-if="item.component" v-bind="item.binding ?? { value: item.value }" />
       </document-metadata>
     </transition-group>
   </div>
