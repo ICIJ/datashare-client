@@ -1,7 +1,7 @@
 <template>
   <div class="batch-search-actions">
     <confirm-button
-      v-if="isMyBatchSearch"
+      v-if="isMyBatchSearch && isEnded"
       v-b-tooltip.hover
       class="batch-search-actions__item batch-search-actions__item--delete btn btn-light ms-2"
       :confirmed="deleteBatchSearch"
