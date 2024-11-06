@@ -9,15 +9,16 @@ import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import SearchSelection from '@/views/Search/SearchSelection'
+import SearchNav from '@/views/Search/SearchNav'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook'
 import settings from '@/utils/settings'
-import { replaceUrlParam, useUrlPageFrom, whenIsRoute } from '@/composables/url-params'
+import { replaceUrlParam, useUrlPageFromWithStore, whenIsRoute } from '@/composables/url-params'
 import { useSearchFilter } from '@/composables/search-filter'
 import { useViews } from '@/composables/views'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
+const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchFrom, watchProjects } = useSearchFilter()
 const store = useStore()
 const route = useRoute()
 
@@ -36,16 +37,26 @@ replaceUrlParam({
   }
 })
 
-const hits = computed(() => store.state.search.response.hits)
+const entries = computed(() => store.state.search.response.hits)
 const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
 const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
 const loading = computed(() => !store.state.search.isReady)
 
-const total = computed(() => parseInt(store.state.search.response.total))
-const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
-const page = useUrlPageFrom({ perPage: perPage.value, to: 'search' })
 const selection = ref([])
 const selectMode = ref(false)
+
+const total = computed(() => parseInt(store.state.search.response.total))
+const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
+const page = useUrlPageFromWithStore({
+  perPage: perPage.value,
+  // The "from" query parameter is updated to reflect the current state
+  // which while force the route to redirect to "search".
+  to: 'search',
+  // The value of the "from" query parameter is directly taken from the store state
+  get: () => store.state.search.from,
+  // The value of the "from" query parameter is mutated with the store commit "search/from"
+  set: 'search/from'
+})
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
@@ -87,7 +98,7 @@ watchProjects(refreshRoute)
           <document-entries
             v-model:page="page"
             v-model:select-mode="selectMode"
-            :entries="hits"
+            :entries="entries"
             :selection="selection"
             :properties="properties"
             :layout="layout"
@@ -98,12 +109,18 @@ watchProjects(refreshRoute)
             <template v-if="selectMode" #header="{ compact }">
               <search-selection
                 v-model:selection="selection"
-                :entries="hits"
+                :entries="entries"
                 :select-mode="selectMode"
                 :compact="compact"
               />
             </template>
-            <router-view class="py-3" />
+            <router-view v-slot="{ Component }">
+              <component :is="Component" class="py-3">
+                <template #nav>
+                  <search-nav :entries="entries" :page="page" :per-page="perPage" :total="total" />
+                </template>
+              </component>
+            </router-view>
           </document-entries>
         </div>
       </div>
