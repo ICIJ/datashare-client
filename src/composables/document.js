@@ -1,4 +1,4 @@
-import { computed, useId } from 'vue'
+import { computed, useId, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { matches, overSome } from 'lodash'
@@ -74,6 +74,13 @@ export const useDocument = function (element) {
     }
   })
 
+  const watchDocument = function (callback, options) {
+    // We watch the document's router params as string to avoid deep watching the object
+    // with unnecessary reactivity and unwanted side effects.
+    const values = () => Object.values(document.value?.routerParams ?? {}).join(':')
+    return watch(values, () => callback(document.value), options)
+  }
+
   return {
     fetchDocument,
     fetchDocumentOnce,
@@ -84,6 +91,7 @@ export const useDocument = function (element) {
     parent,
     loaderId,
     isActive,
-    isRouteActive
+    isRouteActive,
+    watchDocument
   }
 }
