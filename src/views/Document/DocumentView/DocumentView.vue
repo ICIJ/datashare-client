@@ -4,7 +4,6 @@ import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { useStore } from 'vuex'
 
 import DocumentViewActions from './DocumentViewActions'
-import DocumentViewNav from './DocumentViewNav'
 import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
 import DocumentViewTitle from './DocumentViewTitle'
 import DocumentViewUserActions from './DocumentViewUserActions'
@@ -70,7 +69,9 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <div class="document-view__header d-flex justify-content-between align-items-center gap-2">
       <document-view-user-actions :document="document" />
       <document-view-actions :document="document" class="ms-auto" />
-      <document-view-nav :document="document" />
+      <slot name="nav" v-bind="{ document }">
+        <router-view name="nav" />
+      </slot>
     </div>
 
     <document-view-title :document="document" />
