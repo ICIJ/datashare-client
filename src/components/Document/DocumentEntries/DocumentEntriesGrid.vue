@@ -1,8 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
+import { useDocument } from '@/composables/document'
+import { useSearchFilter } from '@/composables/search-filter'
 import { useSelection } from '@/composables/selection'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
@@ -22,11 +23,9 @@ defineProps({
   }
 })
 
-const route = useRoute()
-const router = useRouter()
-
-const showDocument = computed(() => route.name === 'document')
-const onHideDocument = () => router.push({ name: 'search' })
+const { documentRoute } = useDocument()
+const { refreshRoute: refreshSearchRoute } = useSearchFilter()
+const showDocument = computed(() => !!documentRoute.value)
 </script>
 
 <template>
@@ -44,7 +43,7 @@ const onHideDocument = () => router.push({ name: 'search' })
         />
       </div>
     </div>
-    <app-modal v-model="showDocument" size="xl" hide-footer @hide="onHideDocument">
+    <app-modal :model-value="showDocument" size="xl" hide-footer hide-header @hide="refreshSearchRoute">
       <slot />
     </app-modal>
   </div>

@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 
 import DocumentEntriesTableBody from './DocumentEntriesTableBody'
 import DocumentEntriesTableHead from './DocumentEntriesTableHead'
@@ -8,6 +7,8 @@ import DocumentEntriesTableHead from './DocumentEntriesTableHead'
 import AppModal from '@/components/AppModal/AppModal'
 import PageTable from '@/components/PageTable/PageTable'
 import { useSearchSettings } from '@/composables/search-settings'
+import { useDocument } from '@/composables/document'
+import { useSearchFilter } from '@/composables/search-filter'
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
@@ -31,6 +32,8 @@ const props = defineProps({
   }
 })
 
+const { documentRoute } = useDocument()
+const { refreshRoute: refreshSearchRoute } = useSearchFilter()
 const { propertiesOrder } = useSearchSettings()
 
 const sortedProperties = computed(() => {
@@ -39,11 +42,7 @@ const sortedProperties = computed(() => {
   })
 })
 
-const route = useRoute()
-const router = useRouter()
-
-const showDocument = computed(() => route.name === 'document')
-const onHideDocument = () => router.push({ name: 'search' })
+const showDocument = computed(() => !!documentRoute.value)
 </script>
 
 <template>
@@ -70,7 +69,7 @@ const onHideDocument = () => router.push({ name: 'search' })
         :select-mode="selectMode"
       />
     </page-table>
-    <app-modal v-model="showDocument" size="xl" hide-footer @hide="onHideDocument">
+    <app-modal :model-value="showDocument" size="xl" hide-footer hide-header @hide="refreshSearchRoute">
       <slot />
     </app-modal>
   </div>
