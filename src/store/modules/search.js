@@ -519,11 +519,11 @@ function actionsBuilder(api) {
       return dispatch('query')
     },
     previousPage({ state, commit, dispatch, getters }) {
-      commit('from', state.from - getters.getPerPage())
+      commit('from', state.from - getters.perPage)
       return dispatch('query')
     },
     nextPage({ state, commit, dispatch, getters }) {
-      commit('from', state.from + getters.getPerPage())
+      commit('from', state.from + getters.perPage)
       return dispatch('query')
     },
     deleteQueryTerm({ state, commit, dispatch }, term) {
