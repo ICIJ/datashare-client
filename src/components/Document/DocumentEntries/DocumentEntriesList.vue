@@ -101,30 +101,24 @@ watchDocument(scrollDocumentCardIntoView)
   }
 
   &__start {
-    max-height: calc(100vh - #{$spacer * 2});
-    margin: $spacer 0;
-    overflow: auto;
+    max-height: 100vh;
+    margin: 0;
+    padding-bottom: $spacer;
     display: flex;
     flex-direction: column;
     position: sticky;
     top: 0;
 
     &__header {
-      background: var(--bs-body-bg);
-      position: sticky;
-      top: 0;
-      z-index: 10;
       min-width: 0;
       max-width: 100%;
       width: 100%;
-      padding-top: 0;
-      padding-right: $spacer;
-      padding-bottom: $spacer;
+      padding: $spacer;
     }
 
     &__list {
-      position: relative;
-      z-index: 0;
+      flex-grow: 1;
+      overflow: auto;
       display: flex;
       flex-direction: column;
       padding-right: $spacer;
