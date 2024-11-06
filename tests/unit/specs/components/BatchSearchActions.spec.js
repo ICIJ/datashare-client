@@ -75,6 +75,36 @@ describe('BatchSearchActions.vue', () => {
     expect(wrapper.find('.batch-search-actions__item--delete').exists()).toBeFalsy()
   })
 
+  it('should NOT display a button to delete the batchSearch if it is running', async () => {
+    const props = {
+      batchSearch: {
+        uuid: '19',
+        projects: [
+          {
+            name: 'BatchSearchActions'
+          }
+        ],
+        name: 'Running BatchSearch Test',
+        description: 'This is the description of the batch search',
+        state: 'RUNNING',
+        date: '2019-07-18T14:45:34.869+0000',
+        nbResults: 333,
+        phraseMatch: 1,
+        fuzziness: 1,
+        fileTypes: [],
+        paths: [],
+        published: true,
+        user: { id: 'test' }
+      }
+    }
+
+    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    wrapper = mount(BatchSearchActions, { props, global: { plugins } })
+    await wrapper.vm.$core.auth.getUsername()
+    await flushPromises()
+    expect(wrapper.find('.batch-search-actions__item--delete').exists()).toBeFalsy()
+  })
+
   it('should display a button to download queries', () => {
     wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
     expect(wrapper.find('.batch-search-actions__item--download-queries').exists()).toBeTruthy()
