@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
@@ -7,8 +7,9 @@ import { useSelection } from '@/composables/selection'
 import { useDocument } from '@/composables/document'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
-const { isRouteActive } = useDocument()
+const { isRouteActive, watchDocument } = useDocument()
 const { selectionValues } = useSelection(selection)
+const elementRef = useTemplateRef('element')
 
 const props = defineProps({
   entries: {
@@ -28,6 +29,7 @@ const props = defineProps({
   }
 })
 
+const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth)
 const separatorLineLeft = ref(450)
 
 const separatorLineStyle = computed(() => {
@@ -43,11 +45,18 @@ const listStyle = computed(() => {
   }
 })
 
-const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth)
+const scrollDocumentCardIntoView = function ({ id, index } = {}) {
+  const selector = `.document-card[data-entry-id="${id}"][data-entry-index="${index}"]`
+  const card = elementRef.value.querySelector(selector)
+  // Use nullish coalescing operator to prevent error when document card is not found
+  card?.scrollIntoView({ behavior: 'auto', block: 'center' })
+}
+
+watchDocument(scrollDocumentCardIntoView)
 </script>
 
 <template>
-  <div class="document-entries-list">
+  <div ref="element" class="document-entries-list">
     <div class="document-entries-list__start" :style="listStyle">
       <div class="document-entries-list__start__header">
         <slot name="header" />
@@ -61,6 +70,8 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
           :document="entry"
           :select-mode="selectMode"
           :properties="properties"
+          :data-entry-id="entry.id"
+          :data-entry-index="entry.index"
         />
       </div>
     </div>
@@ -106,6 +117,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
       min-width: 0;
       max-width: 100%;
       width: 100%;
+      padding-top: 0;
       padding-right: $spacer;
       padding-bottom: $spacer;
     }
