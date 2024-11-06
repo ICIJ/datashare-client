@@ -237,6 +237,10 @@ export function useSearchFilter() {
     return watch(() => store.state.search.query, callback, options)
   }
 
+  function watchFrom(callback, options) {
+    return watch(() => store.state.search.from, callback, options)
+  }
+
   function watchProjects(callback, options) {
     return watch(() => store.state.search.indices.join(','), callback, options)
   }
@@ -276,6 +280,7 @@ export function useSearchFilter() {
     watchFilterSort,
     watchFilterValues,
     watchFilterExcluded,
+    watchFrom,
     watchQuery,
     watchProjects,
     watchValues,
