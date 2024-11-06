@@ -45,7 +45,7 @@ const hitsAsCsv = (hits = []) => {
 }
 
 const categories = computed(() => store.getters['document/categories'])
-const indexingLink = computed(() => router.resolve({ name: 'task.document-addition.list' }).href)
+const indexingLink = computed(() => router.resolve({ name: 'task.entities.new' }).href)
 const getCategoryTotal = (category) => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
 const categoryIsNotEmpty = (category) => !!getCategoryTotal(category)
 const categoryHasNextPage = (category) => {
