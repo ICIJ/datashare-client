@@ -26,10 +26,6 @@ import { SIZE } from '@/enums/sizes'
 defineOptions({ name: 'DocumentUserActions' })
 
 const props = defineProps({
-  shorterLabels: {
-    type: Boolean,
-    default: false
-  },
   showTags: {
     type: Boolean,
     default: true
@@ -74,15 +70,15 @@ const props = defineProps({
     type: String,
     default: SIZE.SM
   },
-  hideLabelsThreshold: {
+  shorterLabelsThreshold: {
     type: Number,
     default: 660
   }
 })
 
 const elementRef = useTemplateRef('element')
-// We hide labels based on the width of the element.
-const { compact: hideLabels } = useCompact(elementRef, { threshold: toRef(props, 'hideLabelsThreshold') })
+// We short labels based on the width of the element.
+const { compact: shorterLabels } = useCompact(elementRef, { threshold: toRef(props, 'shorterLabelsThreshold') })
 
 const { t } = useI18n()
 
@@ -109,9 +105,8 @@ const actions = computed(() => {
     icon: icons[action],
     label: t(`documentUserActions.${action}`, { n: props[action] }),
     value: props[action].toString(),
-    hideTooltip: !hideLabels.value,
-    hideLabel: hideLabels.value,
-    shorterLabel: props.shorterLabels
+    hideTooltip: !shorterLabels.value,
+    shorterLabel: shorterLabels.value
   }))
 })
 

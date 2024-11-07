@@ -11,7 +11,6 @@ export default {
     showRecommended: false,
     showFolders: false,
     showNotes: false,
-    shorterLabels: false,
     tags: 0,
     comments: 0,
     recommended: 0,
@@ -22,14 +21,6 @@ export default {
 
 export const Default = {
   args: {
-    showTags: true,
-    tags: 3
-  }
-}
-
-export const ShorterLabels = {
-  args: {
-    shorterLabels: true,
     showTags: true,
     tags: 3
   }
