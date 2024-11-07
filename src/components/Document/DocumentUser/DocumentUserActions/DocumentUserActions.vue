@@ -1,35 +1,31 @@
 <template>
-  <form-actions
-    end
-    compact-auto
-    :compact="compact"
-    dropdown-icon="dots-three-vertical"
-    variant="action"
-    compact-variant="outline-action"
-    class="document-user-actions d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
-  >
-    <document-user-actions-entry v-for="action in actionsDisplayed" :key="action.name" v-bind="action" class="m-1" />
-  </form-actions>
+  <div ref="element" class="document-user-actions">
+    <form-actions
+      end
+      compact-auto
+      :compact-auto-breakpoint="compactAutoBreakpoint"
+      dropdown-icon="dots-three-vertical"
+      variant="action"
+      compact-variant="outline-action"
+      class="d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
+    >
+      <document-user-actions-entry v-for="action in visibleActions" :key="action.name" v-bind="action" class="m-1" />
+    </form-actions>
+  </div>
 </template>
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
-import { capitalize } from 'lodash'
+import { computed, toRef, useTemplateRef } from 'vue'
+import { capitalize, property } from 'lodash'
 
 import FormActions from '@/components/Form/FormActions/FormActions'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
+import { useCompact } from '@/composables/compact'
+import { SIZE } from '@/enums/sizes'
 
 defineOptions({ name: 'DocumentUserActions' })
 
 const props = defineProps({
-  compact: {
-    type: Boolean,
-    default: false
-  },
-  hideTooltips: {
-    type: Boolean,
-    default: false
-  },
   shorterLabels: {
     type: Boolean,
     default: false
@@ -73,9 +69,23 @@ const props = defineProps({
   notes: {
     type: Number,
     default: 0
+  },
+  compactAutoBreakpoint: {
+    type: String,
+    default: SIZE.SM
+  },
+  hideLabelsThreshold: {
+    type: Number,
+    default: 660
   }
 })
+
+const elementRef = useTemplateRef('element')
+// We hide labels based on the width of the element.
+const { compact: hideLabels } = useCompact(elementRef, { threshold: toRef(props, 'hideLabelsThreshold') })
+
 const { t } = useI18n()
+
 const USER_ACTIONS = {
   TAGS: 'tags',
   COMMENTS: 'comments',
@@ -83,6 +93,7 @@ const USER_ACTIONS = {
   FOLDERS: 'folders',
   NOTES: 'notes'
 }
+
 const icons = {
   [USER_ACTIONS.TAGS]: 'tag',
   [USER_ACTIONS.COMMENTS]: 'chats-teardrop',
@@ -90,6 +101,7 @@ const icons = {
   [USER_ACTIONS.FOLDERS]: 'folder',
   [USER_ACTIONS.NOTES]: 'note-blank'
 }
+
 const actions = computed(() => {
   return Object.values(USER_ACTIONS).map((action) => ({
     name: action,
@@ -97,39 +109,23 @@ const actions = computed(() => {
     icon: icons[action],
     label: t(`documentUserActions.${action}`, { n: props[action] }),
     value: props[action].toString(),
-    hideTooltip: props.hideTooltips,
-    hideLabel: props.hideLabels,
-    shorter: props.shorterLabels,
-    dropdownItem: props.compact
+    hideTooltip: !hideLabels.value,
+    hideLabel: hideLabels.value,
+    shorterLabel: props.shorterLabels
   }))
 })
-const actionsDisplayed = computed(() => {
-  return actions.value.filter((action) => action.show === true)
-})
-</script>
-<style lang="scss">
-.document-user-actions {
-  /*  & > .btn.dropdown-toggle,
-  & .btn.show {
-    border: 0;
-    color: inherit;
-    background: inherit;
-    &:hover {
-      background: var(--bs-btn-hover-bg);
-      color: var(--bs-btn-hover-color);
-    }
-  }
 
-  & .dropdown-menu {
-    color: inherit;
-    background: inherit;
-    border-color: var(--bs-action-color);
-    --bs-dropdown-min-width: null;
-  }*/
-  & .form-actions-compact-dropdown__toggle {
-    background: var(--bs-btn-action-bg);
-    color: var(--bs-btn-action-text);
-    border: 0;
+const visibleActions = computed(() => actions.value.filter(property('show')))
+</script>
+
+<style lang="scss" scoped>
+.document-user-actions {
+  width: 100%;
+
+  &:deep(.form-actions-compact-dropdown__toggle) {
+    --bs-btn-bg: var(--bs-btn-action-bg);
+    --bs-btn-color: var(--bs-btn-action-text);
+    --bs-btn-border-color: transparent;
   }
 }
 </style>

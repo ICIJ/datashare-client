@@ -2,7 +2,9 @@
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+
 defineOptions({ name: 'DocumentUserActionsEntry' })
+
 const props = defineProps({
   /**
    * Label of the button
@@ -19,25 +21,19 @@ const props = defineProps({
   /**
    * Show shorter label (only value as label)
    */
-  shorter: { type: Boolean, default: false },
+  shorterLabel: { type: Boolean, default: false },
   /**
    * Force hide tooltip
    */
-  hideTooltip: { type: Boolean, default: false },
-  /**
-   * Display as a dropdown item
-   */
-  dropdownItem: { type: Boolean, default: false }
+  hideTooltip: { type: Boolean, default: false }
 })
-const actionLabel = computed(() => {
-  return props.shorter ? props.value : props.label
-})
+
+const actionLabel = computed(() => (props.shorterLabel ? props.value : props.label))
 </script>
 
 <template>
   <button-icon
-    class="document-user-actions-entry d-flex flex-grow-0 text-nowrap text-action-emphasis border-0 rounded my-1"
-    :class="{ 'w-100': dropdownItem, 'justify-content-center': !dropdownItem }"
+    class="document-user-actions-entry border-0"
     variant="outline-action"
     :icon-left="icon"
     :label="actionLabel"
@@ -48,12 +44,12 @@ const actionLabel = computed(() => {
     :show-tooltip-force="!hideTooltip"
   />
 </template>
+
 <style lang="scss" scoped>
 .document-user-actions-entry {
-  background: var(--bs-btn-action-bg);
-  &:hover {
-    background: var(--bs-btn-hover-bg);
-    color: var(--bs-btn-hover-color) !important;
-  }
+  --bs-btn-color: var(--bs-action-text-emphasis);
+  --bs-btn-bg: transparent;
+  --bs-btn-hover-bg: #{$action};
+  --bs-btn-hover-color: #{text-contrast($action)};
 }
 </style>
