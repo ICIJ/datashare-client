@@ -61,7 +61,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
 </script>
 
 <template>
-  <v-wait ref="element" class="document-view d-flex flex-column gap-3 sticky-top" :for="loaderId">
+  <v-wait ref="element" class="document-view d-flex flex-column gap-3" :for="loaderId">
     <template #waiting>
       <content-placeholder />
     </template>
@@ -80,3 +80,11 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <router-view />
   </v-wait>
 </template>
+
+<style lang="scss" scoped>
+.document-view {
+  width: 0;
+  min-width: 100%;
+  flex-basis: 100%;
+}
+</style>

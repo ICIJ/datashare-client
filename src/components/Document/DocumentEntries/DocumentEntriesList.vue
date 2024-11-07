@@ -127,8 +127,7 @@ watchDocument(scrollDocumentCardIntoView)
   }
 
   &__end {
-    width: 0;
-    flex-basis: 100%;
+    width: 100%;
     padding-left: $spacer-xl;
   }
 }
