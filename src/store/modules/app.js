@@ -22,7 +22,7 @@ export const state = () => ({
         perPage: 25,
         properties: ['title', 'thumbnail', 'highlights', 'project']
       },
-      taskList: {
+      task: {
         orderBy: ['name', 'desc'],
         perPage: 10,
         properties: ['id', 'name', 'createdAt', 'progress', 'result', 'state']
