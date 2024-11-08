@@ -63,7 +63,10 @@ const showPageSettings = computed({
 })
 
 const hasFilters = computed(() => {
-  return route.matched.some((route) => 'filters' in route.components)
+  if (route.components) {
+    return route.matched.some((route) => 'filters' in route.components)
+  }
+  return false
 })
 
 const FiltersComponent = computed(() => {
@@ -84,7 +87,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  core.off('http::error', handleHttpError)
+  core?.off('http::error', handleHttpError)
 })
 </script>
 
