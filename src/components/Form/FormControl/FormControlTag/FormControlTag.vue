@@ -30,7 +30,7 @@ const props = defineProps({
   },
   placeholderIcon: {
     type: String,
-    default: 'tag'
+    default: 'hash'
   },
   size: {
     type: String,
