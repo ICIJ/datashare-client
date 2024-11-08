@@ -10,7 +10,7 @@
     "delete": "Delete",
     "confirmLabel": "Are you sure?",
     "emptyTextTable": "There are no records to show",
-    "you": "You",
+    "you": "{username} (you)",
     "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
   "addonCard": {
@@ -61,6 +61,10 @@
   },
   "buttonToggleSearchBreadcrumb": {
     "label": "Toggle search breadcrumb"
+  },
+  "buttonToggleRecommendation": {
+    "mark": "Mark as recommended",
+    "unmark": "Unmark as recommended"
   },
   "buttonToTop": {
     "label": "Back to top"
@@ -263,12 +267,16 @@
   "documentUserActions": {
     "tags":"0 tags | 1 tag | {n} tags",
     "comments":"0 comments | 1 comment | {n} comments",
-    "recommended":"0 recommendations | 1 recommendation | {n} recommendations",
+    "recommendations":"0 recommendations | 1 recommendation | {n} recommendations",
     "folders":"in 0 folders | in 1 folder | in {n} folders",
     "notes":"0 notes | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
     "close": "Close"
+  },
+  "documentUserActionsCardRecommendations": {
+    "title": "0 recommendations | 1 recommendation | {count} recommendations",
+    "info": "Your recommendations are public to all project’s members"
   },
   "documentUserCommentsList": {
     "hideComments":"Hide comments",
