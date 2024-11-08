@@ -1,5 +1,5 @@
 import { getCurrentInstance } from 'vue'
-import isFunction from 'lodash/isFunction'
+import { isFunction } from 'lodash'
 
 export function useCore() {
   // `getCurrentInstance` is a Vue Composition API function that gives us access to the current component instance.
