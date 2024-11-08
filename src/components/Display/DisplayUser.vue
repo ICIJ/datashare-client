@@ -172,10 +172,18 @@ export default {
         v-if="isAvatarSrcValid"
         aria-label="avatar"
         class="display-user__avatar rounded-circle"
+        :height="avatarHeight"
         :src="avatarSrc"
         :alt="avatarAlt"
       />
-      <phosphor-icon v-else aria-label="avatar-icon" class="display-user__avatar" name="user" :size="avatarHeight" />
+      <phosphor-icon
+        v-else
+        aria-label="avatar-icon"
+        class="display-user__avatar rounded-circle"
+        name="user"
+        weight="regular"
+        :size="avatarHeight"
+      />
     </template>
     <component
       :is="usernameTag"
@@ -216,6 +224,7 @@ export default {
   &__avatar {
     height: var(--avatar-height);
     margin-right: $spacer-xxs;
+    overflow: hidden;
   }
 
   &--flip &__avatar {
