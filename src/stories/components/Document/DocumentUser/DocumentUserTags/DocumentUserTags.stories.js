@@ -12,42 +12,39 @@ export default {
   ],
   component: DocumentUserTags,
   args: {
-    modelValue: [],
+    tags: [],
     username: 'jsmith',
-    options: ['toto', 'titi', 'tata'],
     listNameOthers: 'Added by others',
     listNameYours: 'Added by you'
   }
 }
 
-const tag = (tagName, username) => {
-  return {
-    tag: tagName,
-    username
-  }
+const tag = (label, userId) => {
+  const user = { id: userId }
+  return { label, user }
 }
-const tagMine = (tagName) => tag(tagName, 'jsmith')
-const tagOther = (tagName) => tag(tagName, uniqueId('other'))
+const tagMine = (label) => tag(label, 'jsmith')
+const tagOther = (label) => tag(label, uniqueId('other'))
 const tags = [tagMine('toto'), tagMine('titi'), tagMine('tata'), tagOther('riri'), tagOther('fifi'), tagOther('loulou')]
 
 export const Default = {}
 
 export const WithTags = {
   args: {
-    modelValue: tags,
-    options: ['toto', 'titi', 'tata', 'test']
+    tags
   }
 }
 
 export const IsServer = {
   args: {
+    tags: [],
     isServer: true
   }
 }
 
 export const IsServerWithTags = {
   args: {
+    tags,
     isServer: true,
-    modelValue: tags
   }
 }
