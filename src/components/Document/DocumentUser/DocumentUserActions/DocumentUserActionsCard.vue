@@ -1,6 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
-
+import DocumentUserActionsCardInfo from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCardInfo'
 import DocumentUserActionsCardList from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCardList'
 import CardPanel from '@/components/Card/CardPanel'
 import { ICON_WEIGHTS } from '@/enums/iconWeights'
@@ -53,10 +52,9 @@ defineProps({
 <template>
   <card-panel v-model="modelValue" :title="title" :icon="icon" :icon-weight="iconWeight">
     <header v-if="actionStart">
-      <p v-if="showWarning" class="text-light-emphasis d-flex flex-wrap">
-        <phosphor-icon name="info" class="me-1" />
+      <document-user-actions-card-info v-if="showWarning">
         <slot name="action-warning" />
-      </p>
+      </document-user-actions-card-info>
       <slot name="action" />
     </header>
     <section class="d-flex flex-column gap-4">
@@ -75,9 +73,9 @@ defineProps({
       </slot>
     </section>
     <footer v-if="actionEnd" class="d-flex flex-column">
-      <p v-if="showWarning" class="text-light-emphasis">
-        <phosphor-icon name="info" class="me-1" /><slot name="action-warning" />
-      </p>
+      <document-user-actions-card-info if="showWarning" class="text-light-emphasis">
+        <slot name="action-warning" />
+      </document-user-actions-card-info>
       <slot name="action" />
     </footer>
   </card-panel>
