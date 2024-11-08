@@ -41,10 +41,16 @@ defineProps({
     required: false,
     default: 'Others'
   },
+  listBodyClassOthers: {
+    type: [String, Array, Object]
+  },
   listNameYours: {
     type: String,
     required: false,
     default: 'Yours'
+  },
+  listBodyClassYours: {
+    type: [String, Array, Object]
   }
 })
 </script>
@@ -60,15 +66,17 @@ defineProps({
     <section class="d-flex flex-column gap-4">
       <slot>
         <template v-if="isSplit">
-          <document-user-actions-card-list :title="listNameYours">
+          <document-user-actions-card-list :title="listNameYours" :body-class="listBodyClassYours">
             <slot name="yours" />
           </document-user-actions-card-list>
-          <document-user-actions-card-list :title="listNameOthers">
+          <document-user-actions-card-list :title="listNameOthers" :body-class="listBodyClassOthers">
             <slot name="others" />
           </document-user-actions-card-list>
         </template>
         <template v-else>
-          <slot name="yours" />
+          <document-user-actions-card-list :body-class="listBodyClassYours">
+            <slot name="yours" />
+          </document-user-actions-card-list>
         </template>
       </slot>
     </section>
