@@ -103,7 +103,7 @@ export const DefaultContentSlot = {
     setup: () => ({ args }),
     template: `
       <document-user-actions-card v-bind="args">
-        <template #content>
+        <template>
           Content slot (when split is not needed)
         </template>
         <template #action-warning>
