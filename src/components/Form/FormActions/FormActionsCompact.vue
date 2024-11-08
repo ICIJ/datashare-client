@@ -66,6 +66,7 @@ const classList = computed(() => {
   &__group {
     position: relative;
     display: none;
+    border: 0;
 
     &:has(*) {
       display: inline-flex;

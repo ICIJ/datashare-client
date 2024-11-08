@@ -56,6 +56,10 @@ const menuClassList = computed(() => {
 
 <style lang="scss">
 .form-actions-compact-dropdown {
+  &__toggle {
+    border: 0;
+  }
+
   &__menu {
     --bs-form-actions-compact-dropdown-bg: var(--bs-body-bg);
     --bs-form-actions-compact-dropdown-border-color: var(--bs-border-color);
