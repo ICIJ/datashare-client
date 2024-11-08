@@ -1,15 +1,16 @@
 <script setup>
 import { noop } from 'lodash'
 import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 
-import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useViewSettings } from '@/composables/view-settings'
 import { useTaskSettings } from '@/composables/task-settings'
 
-const { core } = useCore()
+const store = useStore()
+
 const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } =
   useViewSettings()
 const settingName = 'taskList'
@@ -19,8 +20,8 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => core?.store.getters['app/getSettings'](settingName, 'perPage'),
-    set: (perPage) => core?.store.commit('app/setSettings', { view: settingName, perPage })
+    get: () => store.getters['app/getSettings'](settingName, 'perPage'),
+    set: (perPage) => store.commit('app/setSettings', { view: settingName, perPage })
   }),
   options: [
     {
@@ -43,8 +44,8 @@ const sortBy = ref({
   type: 'radio',
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => core?.store.getters['app/getSettings'](settingName, 'orderBy'),
-    set: (sort, order) => core?.store.commit('app/setSettings', { view: settingName, orderBy: [sort, order] })
+    get: () => store.getters['app/getSettings'](settingName, 'orderBy'),
+    set: (sort, order) => store.commit('app/setSettings', { view: settingName, orderBy: [sort, order] })
   }),
   options: [
     {
@@ -88,8 +89,8 @@ const properties = ref({
   type: 'checkbox',
   open: true,
   modelValue: computed({
-    get: () => core?.store.getters['app/getSettings']('settingName', 'properties'),
-    set: (properties) => core?.store.commit('app/setSettings', { view: 'search', properties })
+    get: () => store.getters['app/getSettings']('settingName', 'properties'),
+    set: (properties) => store.commit('app/setSettings', { view: 'search', properties })
   }),
   options: computed(() => {
     return propertiesOrder.map((value) => {
