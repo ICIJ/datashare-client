@@ -45,6 +45,6 @@ export const IsServer = {
 export const IsServerWithTags = {
   args: {
     tags,
-    isServer: true,
+    isServer: true
   }
 }
