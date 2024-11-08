@@ -9,23 +9,38 @@ const props = defineProps({
   /**
    * Label of the button
    */
-  label: { type: String, required: true },
+  label: {
+    type: String,
+    required: true
+  },
   /**
    * Number value as label
    */
-  value: { type: String, required: true },
+  value: {
+    type: String,
+    required: true
+  },
   /**
    * Entry icon
    */
-  icon: { type: String, required: true },
+  icon: {
+    type: [Array, Object, String],
+    required: true
+  },
   /**
    * Show shorter label (only value as label)
    */
-  shorterLabel: { type: Boolean, default: false },
+  shorterLabel: {
+    type: Boolean,
+    default: false
+  },
   /**
    * Force hide tooltip
    */
-  hideTooltip: { type: Boolean, default: false }
+  hideTooltip: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const actionLabel = computed(() => (props.shorterLabel ? props.value : props.label))
