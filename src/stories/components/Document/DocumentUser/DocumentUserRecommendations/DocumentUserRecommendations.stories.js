@@ -8,10 +8,13 @@ export default {
   component: DocumentUserRecommendations,
   args: {
     modelValue: [],
-    username: 'jsmith'
+    recommendedBy: ['jsmith']
   }
 }
 export const Default = {}
+
 export const WithRecommendations = {
-  args: { modelValue: ['Riri', 'Fifi', 'Loulou'] }
+  args: {
+    recommendedBy: ['Riri', 'Fifi', 'Loulou']
+  }
 }
