@@ -163,7 +163,7 @@ describe('DocumentStore', () => {
     })
 
     it('should add tags to the store', () => {
-      store.commit('document/addTag', { tag: 'tag_01      tag_01 tag_02', userId: 'user' })
+      store.commit('document/addTag', { label: 'tag_01      tag_01 tag_02', userId: 'user' })
 
       expect(store.state.document.tags).toHaveLength(2)
       expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')

@@ -109,14 +109,14 @@ export const mutations = {
   toggleShowTranslatedContent(state, toggle = null) {
     state.showTranslatedContent = toggle !== null ? toggle : !state.showTranslatedContent
   },
-  addTag(state, { tag, userId }) {
-    const tags = map(compact(tag.split(' ')), (tag) => {
-      return { label: tag, user: { id: userId }, creationDate: Date.now() }
-    })
+  addTag(state, { label, userId }) {
+    const user = { id: userId }
+    const creationDate = Date.now()
+    const tags = compact(label.split(' ')).map((label) => ({ label, user, creationDate }))
     state.tags = uniqBy(concat(state.tags, tags), 'label')
   },
-  deleteTag(state, tagToDelete) {
-    state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
+  deleteTag(state, label) {
+    state.tags.splice(findIndex(state.tags, { label }), 1)
   },
   isRecommended(state, isRecommended) {
     state.isRecommended = isRecommended
@@ -259,17 +259,17 @@ function actionBuilder(api) {
       }
       return state.tags
     },
-    async tag({ state, dispatch }, { documents, tag, userId }) {
+    async addTag({ dispatch }, { documents, label }) {
+      await dispatch('addTags', { documents, labels: compact(label.split(' ')) })
+    },
+    async addTags({ state, dispatch }, { documents, labels }) {
       const index = state.doc ? state.doc.index : get(documents, '0.index', null)
-      await api.tagDocuments(index, map(documents, 'id'), compact(tag.split(' ')))
-      if (documents.length === 1) dispatch('addTag', { tag, userId })
+      await api.tagDocuments(index, map(documents, 'id'), labels)
+      await dispatch('getTags')
     },
-    addTag({ state, commit }, { tag, userId }) {
-      commit('addTag', { tag, userId })
-    },
-    async deleteTag({ state, commit }, { documents, tag }) {
-      await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
-      if (documents.length === 1) commit('deleteTag', tag)
+    async deleteTag({ state, commit }, { documents, label }) {
+      await api.untagDocuments(state.doc.index, map(documents, 'id'), [label])
+      if (documents.length === 1) commit('deleteTag', label)
     },
     async toggleAsRecommended({ state, dispatch }, userId) {
       try {
