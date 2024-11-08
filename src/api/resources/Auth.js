@@ -21,9 +21,6 @@ export default class Auth {
 
   async _checkAuthentication() {
     try {
-      if (this.mode.name === 'local') {
-        return 'local' // default username
-      }
       return this._getCookieUsername() || (await this._getBasicAuthUserName())
     } catch (_) {
       return null
