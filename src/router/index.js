@@ -145,9 +145,6 @@ export const routes = [
             name: 'task.entities',
             path: 'entities',
             meta: { title: 'task.entities.title' },
-            components: {
-              default: () => import('@/views/Task/Task')
-            },
             children: [
               {
                 name: 'task.entities.list',
@@ -175,27 +172,15 @@ export const routes = [
             name: 'task.documents',
             path: 'documents',
             meta: { title: 'task.documents.title' },
-            components: {
-              default: () => import('@/views/Task/Task')
-            },
             children: [
               {
                 name: 'task.documents.list',
                 path: '',
-                components: { default: () => import('@/views/Task/Documents/TaskDocumentsList') },
+                components: {
+                  default: () => import('@/views/Task/Documents/TaskDocumentsList')
+                },
                 meta: {
-                  breadcrumb: false,
-                  allowedModes: ['LOCAL', 'EMBEDDED'],
-                  docs: [
-                    {
-                      title: 'Add documents to Datashare',
-                      path: '<%- os %>/add-documents-to-datashare-on-<%- os %>'
-                    },
-                    {
-                      title: 'Analyse documents',
-                      path: 'all/analyze-documents'
-                    }
-                  ]
+                  breadcrumb: false
                 }
               },
               {
