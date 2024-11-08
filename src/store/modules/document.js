@@ -130,7 +130,7 @@ export const mutations = {
   unmarkAsRecommended(state, userId) {
     const index = state.recommendedBy.indexOf(userId)
     if (index > -1) {
-      delete state.recommendedBy[index]
+      state.recommendedBy.splice(index, 1)
     }
   }
 }
@@ -271,15 +271,15 @@ function actionBuilder(api) {
       await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
       if (documents.length === 1) commit('deleteTag', tag)
     },
-    async toggleAsRecommended({ state, commit }, userId) {
-      if (state.isRecommended) {
-        await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
-        commit('unmarkAsRecommended', userId)
-        commit('isRecommended', false)
-      } else {
-        await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
-        commit('markAsRecommended', userId)
-        commit('isRecommended', true)
+    async toggleAsRecommended({ state, dispatch }, userId) {
+      try {
+        if (state.isRecommended) {
+          await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
+        } else {
+          await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
+        }
+      } finally {
+        await dispatch('getRecommendationsByDocuments', userId)
       }
     },
     async getRecommendationsByDocuments({ state, commit }, userId) {
@@ -287,11 +287,10 @@ function actionBuilder(api) {
         const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
         commit('recommendedBy', map(sortBy(get(recommendedBy, 'aggregates', []), 'item.id'), 'item.id'))
         const index = state.recommendedBy.indexOf(userId)
-        if (index > -1) {
-          commit('isRecommended', true)
-        }
+        commit('isRecommended', index > -1)
       } catch (_) {
         commit('recommendedBy', [])
+        commit('isRecommended', false)
       }
       return state.recommendedBy
     }
