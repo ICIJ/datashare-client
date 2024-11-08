@@ -4,28 +4,54 @@ import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import { ICON_WEIGHTS } from '@/enums/iconWeights'
 
 defineOptions({ name: 'CardPanel' })
+
+const modelValue = defineModel({ type: Boolean, default: true })
+
 const props = defineProps({
-  title: { type: String, required: true },
-  icon: { type: String, required: false },
-  noXIcon: { type: Boolean, default: false },
-  width: { type: String },
-  contentClass: { type: String, default: 'gap-4' }
+  title: {
+    type: String,
+    required: true
+  },
+  icon: {
+    type: [String, Array, Object]
+  },
+  iconWeight: {
+    type: String,
+    default: ICON_WEIGHTS.REGULAR
+  },
+  noXIcon: {
+    type: Boolean,
+    default: false
+  },
+  width: {
+    type: String
+  },
+  contentClass: {
+    type: String,
+    default: 'gap-4'
+  }
 })
 
 const { t } = useI18n()
 const closeLabel = t('documentUserActionsCard.close')
-const panelWidth = computed(() => {
-  return `--card-panel-width : ${props.width}`
-})
+const panelWidth = computed(() => `--card-panel-width : ${props.width}`)
+
+const emit = defineEmits(['close'])
+
+const close = () => {
+  modelValue.value = false
+  emit('close')
+}
 </script>
 
 <template>
-  <b-card class="card-panel shadow border-0 py-4" :style="panelWidth">
+  <b-card v-if="modelValue" class="card-panel shadow-sm border-0 py-4" :style="panelWidth">
     <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold">
       <span>
-        <phosphor-icon v-if="icon" :name="icon" class="me-2" />
+        <phosphor-icon v-if="icon" :name="icon" :weight="iconWeight" class="me-2" />
         <slot name="title">{{ title }}</slot>
       </span>
       <button-icon
@@ -36,7 +62,7 @@ const panelWidth = computed(() => {
         hide-label
         square
         :label="closeLabel"
-        @close="$emit('close')"
+        @click="close()"
       />
     </b-card-title>
     <b-card-text class="card-panel__content d-flex flex-column" :class="contentClass">
