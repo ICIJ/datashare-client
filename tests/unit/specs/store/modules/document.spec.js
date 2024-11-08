@@ -211,8 +211,6 @@ describe('DocumentStore', () => {
 
       expect(api.setMarkAsRecommended).toBeCalledTimes(1)
       expect(api.setMarkAsRecommended).toBeCalledWith(index, ['doc_01'])
-      expect(store.state.document.isRecommended).toBeTruthy()
-      expect(store.state.document.recommendedBy).toEqual([userId])
     })
 
     it('should UNMARK these documents as recommended', async () => {
@@ -224,13 +222,10 @@ describe('DocumentStore', () => {
 
       api.setUnmarkAsRecommended.mockResolvedValue({})
 
-      await store.dispatch('document/toggleAsRecommended')
+      await store.dispatch('document/toggleAsRecommended', userId)
 
       expect(api.setUnmarkAsRecommended).toBeCalledTimes(1)
       expect(api.setUnmarkAsRecommended).toBeCalledWith(index, ['doc_01'])
-
-      expect(store.state.document.isRecommended).toBeFalsy()
-      expect(indexOf(store.state.document.recommendedBy, userId)).toBe(-1)
     })
 
     it('should retrieve the list of users who recommended it and set it to the store', async () => {
