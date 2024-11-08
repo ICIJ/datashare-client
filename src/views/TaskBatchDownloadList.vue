@@ -6,7 +6,7 @@
           <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
         </div>
       </template>
-      <tasks-list :tasks="tasks">
+      <task-list :tasks="tasks">
         <template #status="{ item: { args, state, error } }">
           <task-item-status
             :task-item="{
@@ -54,7 +54,7 @@
         <template #empty>
           <p class="text-center m-0" v-html="$t('batchDownload.empty')"></p>
         </template>
-      </tasks-list>
+      </task-list>
       <p class="text-center m-0 text-muted" v-html="$t('batchDownload.limitations', batchDownloadLimitations)"></p>
     </v-wait>
   </div>
@@ -65,7 +65,7 @@ import { some, random } from 'lodash'
 
 import TaskItemStatus from '@/components/TaskItemStatus'
 import BatchDownloadActions from '@/components/BatchDownloadActions'
-import TasksList from '@/components/TasksList'
+import TaskList from '@/components/Task/TaskList'
 import features from '@/mixins/features'
 import polling from '@/mixins/polling'
 
@@ -78,7 +78,7 @@ export default {
   components: {
     BatchDownloadActions,
     TaskItemStatus,
-    TasksList
+    TaskList
   },
   mixins: [features, polling],
   data() {
