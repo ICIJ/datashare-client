@@ -1,6 +1,7 @@
 <script setup>
 import DisplayTags from '@/components/Display/DisplayTags'
-import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
+import ButtonTag from '@/components/Button/ButtonTag'
+
 defineOptions({ name: 'DisplayTagsSearchParameter' })
 
 defineProps({
@@ -11,23 +12,13 @@ defineProps({
     type: Boolean
   }
 })
-const emit = defineEmits(['remove-value'])
-const removeValue = (content) => {
-  emit('remove-value', content)
-}
+const emit = defineEmits(['delete'])
 </script>
 
 <template>
   <display-tags :value="value">
-    <template #content="{ content }">
-      <search-parameter
-        icon="tag"
-        filter="tag"
-        :term="content"
-        :no-x-icon="noXIcon"
-        class="text-action-emphasis"
-        @click:x="removeValue(content)"
-      />
+    <template #content="{ content: label }">
+      <button-tag :label="label" @delete="emit('delete', label)" />
     </template>
   </display-tags>
 </template>
