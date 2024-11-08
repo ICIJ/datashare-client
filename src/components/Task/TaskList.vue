@@ -1,7 +1,7 @@
 <template>
-  <div class="tasks-list">
+  <div class="task-list">
     <b-table
-      :fields="tasksFields"
+      :fields="showTasksFields"
       :items="sortedTasks"
       responsive
       striped
@@ -50,7 +50,7 @@
         </div>
       </template>
       <template #table-colgroup="{ fields }">
-        <col v-for="{ key } in fields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }" />
+        <col v-for="{ key } in taskFields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }" />
       </template>
     </b-table>
   </div>
@@ -74,6 +74,9 @@ export default {
     tasks: {
       type: Array
     },
+    taskFields: {
+      type: Array
+    },
     /**
      * Display a button to stop the task
      */
@@ -87,8 +90,8 @@ export default {
       const states = ['RUNNING']
       return sortBy(this.tasks, ({ state }) => -states.indexOf(state))
     },
-    tasksFields() {
-      return this.tasks.length ? ['state', 'name'] : []
+    showTasksFields() {
+      return this.tasks.length ? ['state', 'name'] : this.taskFields
     }
   },
   methods: {
