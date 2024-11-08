@@ -1,4 +1,4 @@
-import { compact, concat, findIndex, flattenDeep, get, keys, map, sortBy, sumBy, uniqBy, values } from 'lodash'
+import { compact, concat, findIndex, flattenDeep, get, keys, map, groupBy, sortBy, sumBy, uniqBy, values } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
 
@@ -262,14 +262,19 @@ function actionBuilder(api) {
     async addTag({ dispatch }, { documents, label }) {
       await dispatch('addTags', { documents, labels: compact(label.split(' ')) })
     },
-    async addTags({ state, dispatch }, { documents, labels }) {
-      const index = state.doc ? state.doc.index : get(documents, '0.index', null)
-      await api.tagDocuments(index, map(documents, 'id'), labels)
+    async addTags({ dispatch }, { documents, labels }) {
+      const grouped = groupBy(documents, 'index')
+      for (const [index, subset] of Object.entries(grouped)) {
+        await api.tagDocuments(index, map(subset, 'id'), labels)
+      }
       await dispatch('getTags')
     },
-    async deleteTag({ state, commit }, { documents, label }) {
-      await api.untagDocuments(state.doc.index, map(documents, 'id'), [label])
-      if (documents.length === 1) commit('deleteTag', label)
+    async deleteTag({ dispatch }, { documents, label }) {
+      const grouped = groupBy(documents, 'index')
+      for (const [index, subset] of Object.entries(grouped)) {
+        await api.untagDocuments(index, map(subset, 'id'), [label])
+      }
+      await dispatch('getTags')
     },
     async toggleAsRecommended({ state, dispatch }, userId) {
       try {
