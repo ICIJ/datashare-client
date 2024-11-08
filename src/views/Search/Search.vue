@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, provide, ref, watch, useId } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -18,7 +18,7 @@ import { useSearchFilter } from '@/composables/search-filter'
 import { useViews } from '@/composables/views'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchFrom, watchProjects } = useSearchFilter()
+const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
 const store = useStore()
 const route = useRoute()
 
@@ -57,6 +57,9 @@ const page = useUrlPageFromWithStore({
   // The value of the "from" query parameter is mutated with the store commit "search/from"
   set: 'search/from'
 })
+
+const documentViewFloatingId = useId()
+provide('documentViewFloatingId', documentViewFloatingId)
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
@@ -113,6 +116,9 @@ watchProjects(refreshRoute)
                 :select-mode="selectMode"
                 :compact="compact"
               />
+            </template>
+            <template #floating>
+              <div :id="documentViewFloatingId"></div>
             </template>
             <router-view v-slot="{ Component }">
               <component :is="Component" class="py-3">

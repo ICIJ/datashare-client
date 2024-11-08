@@ -58,6 +58,9 @@ watchDocument(scrollDocumentCardIntoView)
 <template>
   <div ref="element" class="document-entries-list">
     <div class="document-entries-list__start" :style="listStyle">
+      <div class="document-entries-list__start__floating p-3 rounded bg-action-subtle">
+        <slot name="floating" />
+      </div>
       <div class="document-entries-list__start__header">
         <slot name="header" />
       </div>
@@ -108,6 +111,21 @@ watchDocument(scrollDocumentCardIntoView)
     flex-direction: column;
     position: sticky;
     top: 0;
+
+    &__floating {
+      position: sticky;
+      z-index: 100;
+      top: $spacer;
+      left: 0;
+      right: 0;
+      min-height: calc(100vh - #{2 * $spacer});
+      display: none;
+      box-shadow: 0 $spacer 0 0 var(--bs-body-bg);
+
+      &:has(*:not(:empty)) {
+        display: block;
+      }
+    }
 
     &__header {
       min-width: 0;

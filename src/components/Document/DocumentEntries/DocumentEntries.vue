@@ -72,5 +72,8 @@ const componentProps = computed(() => {
         </template>
       </document-entries-header>
     </template>
+    <template #floating>
+      <slot name="floating" />
+    </template>
   </component>
 </template>
