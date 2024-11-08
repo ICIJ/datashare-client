@@ -76,7 +76,7 @@ const classList = computed(() => {
       :count="count"
       :hide-sort="hideSort"
       :loading="loading"
-      class="pe-2 mx-2"
+      class="mx-2"
     />
     <b-collapse :model-value="modal || !collapse">
       <div class="filters-panel-section-filter__content">
