@@ -1,87 +1,65 @@
 <script setup>
-import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
-import { uniq } from 'lodash'
+import { matchesProperty, negate, property } from 'lodash'
 
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
 import DocumentUserTagsAction from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTagsAction'
-import DisplayTagsSearchParameter from '@/components/Display/DisplayTagsSearchParameter'
 
 defineOptions({ name: 'DocumentUserTags' })
 
-const tags = defineModel({ type: Array, required: true, default: () => [] })
-const props = defineProps({
-  options: {
+const { tags, allTags, username } = defineProps({
+  tags: {
+    type: Array,
+    default: () => []
+  },
+  allTags: {
     type: Array,
     default: () => []
   },
   username: {
     type: String
   },
-  isServer: { type: Boolean, default: false }
+  isServer: {
+    type: Boolean
+  }
 })
 
-const { t } = useI18n()
-
-const title = computed(() => t('documentUserActions.tags', nbTags.value))
-const tagListOthers = t('documentUserTags.tagListOthers')
-const tagListYours = t('documentUserTags.tagListYours')
-const tagWarning = t('documentUserTags.tagWarning')
-const noTags = t('documentUserTags.noTags')
-const tagIcon = 'tag'
-
-const nbTags = computed(() => {
-  return tags.value.length
-})
-
-const removeTag = (tagName) => {
-  tags.value = tags.value.filter((currentTag) => currentTag.tag !== tagName)
-}
-const yoursTags = computed(() => {
-  return tags.value.filter((currentTag) => currentTag.username === props.username).map((t) => t.tag)
-})
-const othersTags = computed(() => {
-  return tags.value.filter((currentTag) => currentTag.username !== props.username).map((t) => t.tag)
-})
-
-const tagList = computed(() => {
-  return tags.value.map((t) => t.tag)
-})
-const onNewTag = (tagListArray) => {
-  const last = tagListArray.pop() // CD: Assume that we only add tag through the tag action input
-  tags.value = [...tags.value, { tag: last, username: props.username }]
-}
-// TODO CD: not sure this should be handle inside the component
-const uniqueOptions = computed(() => {
-  return uniq([...tagList.value, ...props.options])
-})
+const emit = defineEmits(['delete', 'add'])
+const tagslabels = computed(() => tags.map(property('label')))
+const allTagsLabels = computed(() => allTags.map(property('label')))
+const matchesUsername = computed(() => matchesProperty('user.id', username))
+const yourTags = computed(() => tags.filter(matchesUsername.value))
+const othersTags = computed(() => tags.filter(negate(matchesUsername.value)))
+const count = computed(() => tags.length)
 </script>
 
 <template>
   <document-user-actions-card
     action-start
-    :icon="tagIcon"
-    :title="title"
+    icon="hash"
+    :title="$tc('documentUserActions.tags', count)"
     :is-split="isServer"
     :show-warning="isServer"
-    :list-name-others="tagListOthers"
-    :list-name-yours="tagListYours"
+    :list-name-others="$t('documentUserTags.tagListOthers')"
+    list-body-class-others="d-flex flex-row flex-wrap gap-2"
+    :list-name-yours="$t('documentUserTags.tagListYours')"
+    list-body-class-yours="d-flex flex-row flex-wrap gap-2"
   >
     <template #yours>
-      <display-tags-search-parameter v-if="yoursTags.length" :value="yoursTags" @remove-value="removeTag" />
-      <span v-else>{{ noTags }}</span>
+      <button-tag v-for="{ label } in yourTags" :key="label" :label="label" @delete="emit('delete', label)" />
     </template>
     <template #others>
-      <display-tags-search-parameter v-if="othersTags.length" :value="othersTags" @remove-value="removeTag" />
-      <span v-else>{{ noTags }}</span>
+      <button-tag v-for="{ label } in othersTags" :key="label" :label="label" @delete="emit('delete', label)" />
     </template>
-    <template #action-warning>{{ tagWarning }}</template>
+    <template #action-warning>
+      {{ $t('documentUserTags.tagWarning') }}
+    </template>
     <template #action>
       <document-user-tags-action
-        :model-value="tagList"
+        :model-value="tagslabels"
+        :options="allTagsLabels"
         class="d-inline-flex"
-        :options="uniqueOptions"
-        @update:model-value="onNewTag"
+        @update:model-value="emit('add', $event)"
       />
     </template>
   </document-user-actions-card>
