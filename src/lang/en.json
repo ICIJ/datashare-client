@@ -276,7 +276,11 @@
   },
   "documentUserActionsCardRecommendations": {
     "title": "0 recommendations | 1 recommendation | {count} recommendations",
-    "info": "Your recommendations are public to all project’s members"
+    "info": "Recommendations are public to all project’s members."
+  },
+  "documentUserActionsCardTags": {
+    "title": "0 tags | 1 tag | {count} tags",
+    "info": "Tags are public to all project’s members."
   },
   "documentUserCommentsList": {
     "hideComments":"Hide comments",
@@ -287,13 +291,13 @@
     "goToRecent":"Go to newest"
   },
   "documentUserComments": {
-    "warning":"Your comments are public to project’s members"
+    "warning":"Comments are public to project’s members."
   },
   "documentUserCommentsListEntry": {
     "goToComment": "Go to comment (external link)"
   },
   "documentUserRecommendations": {
-    "warning":"Your recommendations are public to project’s members",
+    "warning":"Recommendations are public to all project’s members",
     "noRecommendations":"No recommendations yet.",
     "markAsRecommended": "Mark as recommended",
     "unmarkAsRecommended": "Unmark as recommended"
@@ -301,7 +305,7 @@
   "documentUserTags": {
     "tagListOthers":"Added by others",
     "tagListYours":"Added by you",
-    "tagWarning":"Your tags are public to project members",
+    "tagWarning": "Tags are public to project members",
     "noTags":"No tags added yet."
   },
   "documentUserTagsAction": {
