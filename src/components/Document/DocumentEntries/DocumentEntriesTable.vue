@@ -69,7 +69,7 @@ const showDocument = computed(() => !!documentRoute.value)
         :select-mode="selectMode"
       />
     </page-table>
-    <app-modal :model-value="showDocument" size="xl" hide-footer hide-header @hide="refreshSearchRoute">
+    <app-modal :model-value="showDocument" size="xl" hide-footer hide-header fullscreen @hide="refreshSearchRoute">
       <slot />
     </app-modal>
   </div>
