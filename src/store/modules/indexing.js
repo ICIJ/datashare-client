@@ -46,18 +46,23 @@ function actionsBuilder(api) {
       await api.stopPendingTasks()
       commit(STOP_PENDING_TASKS)
     },
-    async stopTask({ commit }, name) {
-      await api.stopTask(name)
-      commit(STOP_TASK, name)
+    async stopTask({ commit }, id) {
+      await api.stopTask(id)
+      commit(STOP_TASK, id)
     },
     async deleteDoneTasks({ commit }) {
       await api.deleteDoneTasks()
       commit(DELETE_DONE_TASKS)
     },
-    async getTasks({ commit }) {
+    async getTasks({ commit }, taskNames) {
       try {
-        const tasks = await api.getTasks()
-        commit(UPDATE_TASKS, tasks)
+        if (taskNames.includes('ALL')) {
+          const tasks = await api.getTasks()
+          commit(UPDATE_TASKS, tasks)
+        } else {
+          const tasks = await Promise.all(taskNames.map((t) => api.getTasks(t)))
+          commit(UPDATE_TASKS, ...tasks)
+        }
       } catch (_) {
         commit(UPDATE_TASKS, [])
       }
