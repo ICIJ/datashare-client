@@ -9,7 +9,13 @@
       compact-variant="outline-action"
       class="d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
     >
-      <document-user-actions-entry v-for="action in visibleActions" :key="action.name" v-bind="action" class="m-1" />
+      <document-user-actions-entry
+        v-for="action in visibleActions"
+        :key="action.name"
+        v-bind="action"
+        class="m-1"
+        @click="emit('action', action)"
+      />
     </form-actions>
   </div>
 </template>
@@ -34,7 +40,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  showRecommended: {
+  showRecommendations: {
     type: Boolean,
     default: false
   },
@@ -54,7 +60,7 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  recommended: {
+  recommendations: {
     type: Number,
     default: 0
   },
@@ -80,12 +86,13 @@ const elementRef = useTemplateRef('element')
 // We short labels based on the width of the element.
 const { compact: shorterLabels } = useCompact(elementRef, { threshold: toRef(props, 'shorterLabelsThreshold') })
 
+const emit = defineEmits(['action'])
 const { t } = useI18n()
 
 const USER_ACTIONS = {
   TAGS: 'tags',
   COMMENTS: 'comments',
-  RECOMMENDED: 'recommended',
+  RECOMMENDATIONS: 'recommendations',
   FOLDERS: 'folders',
   NOTES: 'notes'
 }
@@ -93,7 +100,7 @@ const USER_ACTIONS = {
 const icons = {
   [USER_ACTIONS.TAGS]: 'tag',
   [USER_ACTIONS.COMMENTS]: 'chats-teardrop',
-  [USER_ACTIONS.RECOMMENDED]: 'user-gear',
+  [USER_ACTIONS.RECOMMENDATIONS]: ['eyes', 'fill'],
   [USER_ACTIONS.FOLDERS]: 'folder',
   [USER_ACTIONS.NOTES]: 'note-blank'
 }
