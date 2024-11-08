@@ -111,9 +111,12 @@ describe('DocumentStore', () => {
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
 
-      await store.dispatch('document/tag', {
-        documents: [{ id: 'doc_01' }, { id: 'doc_02' }],
-        tag: 'tag_01 tag_02 tag_03'
+      await store.dispatch('document/addTag', {
+        documents: [
+          { id: 'doc_01', index },
+          { id: 'doc_02', index }
+        ],
+        label: 'tag_01 tag_02 tag_03'
       })
 
       expect(api.tagDocuments).toBeCalledTimes(1)
@@ -135,18 +138,11 @@ describe('DocumentStore', () => {
 
       // WHEN
       api.tagDocuments.mockResolvedValue({})
-      await store.dispatch('document/tag', { documents: [document01, document02], tag: 'tag_01 tag_02 tag_03' })
+      await store.dispatch('document/addTag', { documents: [document01, document02], label: 'tag_01 tag_02 tag_03' })
 
       // THEN
       expect(api.tagDocuments).toBeCalledTimes(1)
       expect(api.tagDocuments).toBeCalledWith(index, ['doc_01', 'doc_02'], ['tag_01', 'tag_02', 'tag_03'])
-    })
-    it('should tag a single doc with a userId user', async () => {
-      await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }], tag: 'tag_01', userId: 'user' })
-
-      expect(store.state.document.tags).toHaveLength(1)
-      expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
-      expect(orderBy(store.state.document.tags, ['label'])[0].user.id).toBe('user')
     })
 
     it('should call deleteTag from 1 document', async () => {
@@ -156,7 +152,8 @@ describe('DocumentStore', () => {
 
       api.untagDocuments.mockResolvedValue({})
 
-      await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
+      const document = await store.dispatch('document/get', { id: 'doc_01', index })
+      await store.dispatch('document/deleteTag', { documents: [document], label: 'tag_01' })
 
       expect(api.untagDocuments).toBeCalledTimes(1)
       expect(api.untagDocuments).toBeCalledWith(index, ['doc_01'], ['tag_01'])
