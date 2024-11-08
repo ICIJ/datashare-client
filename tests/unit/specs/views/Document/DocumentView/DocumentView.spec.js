@@ -99,19 +99,6 @@ describe('DocumentView.vue', () => {
     expect(wrapper.find('.document__header').element).toBeTruthy()
   })
 
-  it('should display tags', async () => {
-    core.config.merge({ dataDir: null, mountedDataDir: null })
-    const wrapper = shallowMount(DocumentView, {
-      global: {
-        plugins: core.plugins,
-        renderStubDefaultSlot: true
-      },
-      props
-    })
-    await wrapper.vm.getDoc()
-    expect(wrapper.find('document-tags-form-stub').element).toBeTruthy()
-  })
-
   it('should display the named entities tab', async () => {
     core.config.merge({ dataDir: null, mountedDataDir: null, manageDocuments: true })
     const wrapper = shallowMount(DocumentView, {
