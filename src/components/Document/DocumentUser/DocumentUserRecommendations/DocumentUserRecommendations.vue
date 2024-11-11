@@ -22,7 +22,7 @@ const count = computed(() => recommendedBy.length)
 <template>
   <document-user-actions-card
     v-model="modelValue"
-    :title="$t('documentUserActions.recommendations', count)"
+    :title="$tc('documentUserActions.recommendations', count)"
     icon="eyes"
     icon-weight="fill"
     show-warning
