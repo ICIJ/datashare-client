@@ -1,6 +1,5 @@
 <script setup>
-import { useId, provide } from 'vue'
-
+import { useDocument } from '@/composables/document'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
 
 defineProps({
@@ -19,8 +18,8 @@ defineProps({
   }
 })
 
-const documentViewFloatingId = useId()
-provide('documentViewFloatingId', documentViewFloatingId)
+const { provideDocumentViewFloatingId } = useDocument()
+const documentViewFloatingId = provideDocumentViewFloatingId()
 </script>
 
 <template>
