@@ -58,8 +58,8 @@ const expand = () => emit('expand', getMax())
   &:before {
     content: '';
     position: absolute;
-    top: $spacer;
-    bottom: $spacer;
+    top: 0;
+    bottom: 0;
     left: 50%;
     width: 1px;
     transform: translateX(-50%);

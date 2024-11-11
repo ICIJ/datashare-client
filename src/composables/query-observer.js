@@ -1,7 +1,7 @@
-import { computed, reactive, toRef } from 'vue'
+import { computed, reactive, toRef, watch } from 'vue'
 import { first, get } from 'lodash'
 
-export function useQueryObserver(root = window.document) {
+export function useQueryObserver(root = window.document, once = false) {
   const rootRef = toRef(root)
   const elements = reactive({})
   const observers = reactive({})
@@ -24,7 +24,7 @@ export function useQueryObserver(root = window.document) {
   const observerCallback = (selector) => {
     return () => {
       updateElements(selector)
-      if (hasElements(selector)) {
+      if (once && hasElements(selector)) {
         observers[selector].disconnect()
       }
     }
@@ -32,9 +32,13 @@ export function useQueryObserver(root = window.document) {
 
   const observe = (selector) => {
     updateElements(selector)
-    // Wait for the root ref to exist and only create the observer once by selector
-    if (rootRef.value && !hasObserver(selector)) {
+    // Create the observer once, even if the rootRef doesn't exist yet
+    if (!hasObserver(selector)) {
       observers[selector] = new MutationObserver(observerCallback(selector))
+    }
+    // Wait for the root ref to exist and only create the observer once by selector
+    if (rootRef.value) {
+      observers[selector].disconnect()
       observers[selector].observe(rootRef.value, { childList: true, subtree: true })
     }
     return observers[selector]
@@ -46,7 +50,7 @@ export function useQueryObserver(root = window.document) {
   }
 
   const querySelectorAll = (selector) => {
-    observe(selector)
+    watch(rootRef, () => observe(selector), { immediate: true })
     return computed(() => get(elements, selector, []))
   }
 
