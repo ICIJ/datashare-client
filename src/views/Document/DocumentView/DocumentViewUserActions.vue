@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject, onBeforeMount } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { get } from 'lodash'
 import bodybuilder from 'bodybuilder'
@@ -8,6 +8,7 @@ import { useCore } from '@/composables/core'
 import { useMode } from '@/composables/mode'
 import { useDocument } from '@/composables/document'
 import { useAuth } from '@/composables/auth'
+import { useQueryObserver } from '@/composables/query-observer'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
@@ -15,11 +16,13 @@ import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTag
 const store = useStore()
 const { core } = useCore()
 const { isServer } = useMode()
-const { document } = useDocument()
+const { document, injectDocumentViewFloatingId } = useDocument()
 const { username } = useAuth()
+const { querySelector } = useQueryObserver()
 
-const documentViewFloatingId = inject('documentViewFloatingId')
+const documentViewFloatingId = injectDocumentViewFloatingId()
 const documentViewFloatingSelector = `#${documentViewFloatingId}`
+const documentViewFloatingElement = querySelector(documentViewFloatingSelector)
 
 const showRecommendationsCard = ref(false)
 const showTagsCard = ref(false)
@@ -70,7 +73,7 @@ onBeforeMount(fetchAllTags)
     :recommendations="recommendedBy.length"
     @action="actionHandler"
   />
-  <teleport :to="documentViewFloatingSelector">
+  <teleport v-if="documentViewFloatingElement" :to="documentViewFloatingSelector">
     <document-user-recommendations
       v-model="showRecommendationsCard"
       v-model:recommended="recommended"
