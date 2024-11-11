@@ -36,7 +36,7 @@ const classList = computed(() => {
 })
 
 const sources = computed(() => {
-  return querySelectorAll('.image-mode-source').map((source) => source.__exposed__)
+  return querySelectorAll('.image-mode-source').value.map((source) => source.__exposed__)
 })
 
 const source = computed(() => {
