@@ -5,6 +5,7 @@ import DocumentEntriesTableBody from './DocumentEntriesTableBody'
 import DocumentEntriesTableHead from './DocumentEntriesTableHead'
 
 import AppModal from '@/components/AppModal/AppModal'
+import DocumentFloating from '@/components/Document/DocumentFloating'
 import PageTable from '@/components/PageTable/PageTable'
 import { useSearchSettings } from '@/composables/search-settings'
 import { useDocument } from '@/composables/document'
@@ -69,8 +70,17 @@ const showDocument = computed(() => !!documentRoute.value)
         :select-mode="selectMode"
       />
     </page-table>
-    <app-modal :model-value="showDocument" size="xl" hide-footer hide-header fullscreen @hide="refreshSearchRoute">
-      <slot />
+    <app-modal
+      :model-value="showDocument"
+      hide-footer
+      body-class="py-0 px-5"
+      hide-header
+      fullscreen
+      @hide="refreshSearchRoute"
+    >
+      <document-floating class="my-3">
+        <slot />
+      </document-floating>
     </app-modal>
   </div>
 </template>
