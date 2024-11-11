@@ -1,5 +1,5 @@
 <script setup>
-import { computed, provide, ref, watch, useId } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -13,11 +13,13 @@ import SearchNav from '@/views/Search/SearchNav'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook'
 import settings from '@/utils/settings'
+import { useDocument } from '@/composables/document'
 import { replaceUrlParam, useUrlPageFromWithStore, whenIsRoute } from '@/composables/url-params'
 import { useSearchFilter } from '@/composables/search-filter'
 import { useViews } from '@/composables/views'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
+const { provideDocumentViewFloatingId } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
 const store = useStore()
 const route = useRoute()
@@ -58,8 +60,7 @@ const page = useUrlPageFromWithStore({
   set: 'search/from'
 })
 
-const documentViewFloatingId = useId()
-provide('documentViewFloatingId', documentViewFloatingId)
+const documentViewFloatingId = provideDocumentViewFloatingId()
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
