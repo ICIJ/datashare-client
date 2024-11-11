@@ -168,18 +168,18 @@ export function datasharePlugin(Client) {
     return body
   }
 
-  Client.prototype.searchDocs = function (
+  Client.prototype.searchDocs = function ({
     index,
     query = '*',
     filters = [],
     from = 0,
-    size = 25,
+    perPage = 25,
     sort = { _score: { order: 'desc' } },
     fields = []
-  ) {
+  }) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    const builder = this._buildBody(from, size, filters, query, sort, fields)
+    const builder = this._buildBody(from, perPage, filters, query, sort, fields)
     const body = builder.rawOption('track_total_hits', true).build()
     return this._search({ index, body })
   }
