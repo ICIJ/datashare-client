@@ -11,7 +11,7 @@ describe('elasticsearch', () => {
 
   it('should return backend response to a POST request for searchDocs', async () => {
     const spy = vi.spyOn(elasticsearch, 'search').mockResolvedValue({ foo: 'bar' })
-    const response = await elasticsearch.searchDocs(index, '*')
+    const response = await elasticsearch.searchDocs({ index })
     expect(response).toEqual({ foo: 'bar' })
     spy.mockRestore()
   })
@@ -21,7 +21,7 @@ describe('elasticsearch', () => {
     const mockCallback = vi.fn()
     EventBus.on('http::error', mockCallback)
 
-    await expect(elasticsearch.searchDocs(index, '*')).rejects.toThrow('this is an error')
+    await expect(elasticsearch.searchDocs({ index })).rejects.toThrow('this is an error')
 
     expect(mockCallback.mock.calls).toHaveLength(1)
     expect(mockCallback.mock.calls[0][0].message).toEqual('this is an error')
@@ -168,7 +168,7 @@ describe('elasticsearch', () => {
 
     await letData(es).have(new IndexedDocument('document_03', index).withContent('this is another document')).commit()
 
-    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, 'titleNorm', [])
+    const response = await elasticsearch.searchDocs({ index, sort: 'titleNorm' })
     expect(response.hits.hits[0]._id).toEqual('document_01')
     expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
     expect(response.hits.hits[2]._id).toEqual('document_03')
@@ -183,7 +183,7 @@ describe('elasticsearch', () => {
 
     await letData(es).have(new IndexedDocument('document_03', index).withContent('this is another document')).commit()
 
-    const response = await elasticsearch.searchDocs(index, '*', [], 0, 25, [{ titleNorm: { order: 'desc' } }], [])
+    const response = await elasticsearch.searchDocs({ index, sort: [{ titleNorm: { order: 'desc' } }] })
     expect(response.hits.hits[0]._id).toEqual('document_03')
     expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
     expect(response.hits.hits[2]._id).toEqual('document_01')
