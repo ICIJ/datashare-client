@@ -1,8 +1,8 @@
-import get from 'lodash/get'
-import first from 'lodash/first'
-import { reactive } from 'vue'
+import { computed, reactive, toRef } from 'vue'
+import { first, get } from 'lodash'
 
-export function useQueryObserver(rootRef) {
+export function useQueryObserver(root = window.document) {
+  const rootRef = toRef(root)
   const elements = reactive({})
   const observers = reactive({})
 
@@ -15,8 +15,7 @@ export function useQueryObserver(rootRef) {
   }
 
   const updateElements = (selector) => {
-    // We search for the give selector until element are found
-    if (rootRef.value && !hasElements(selector)) {
+    if (rootRef.value) {
       elements[selector] = Array.from(rootRef.value.querySelectorAll(selector))
     }
     return elements[selector] ?? null
@@ -42,12 +41,13 @@ export function useQueryObserver(rootRef) {
   }
 
   const querySelector = (selector) => {
-    return first(querySelectorAll(selector))
+    const elements = querySelectorAll(selector)
+    return computed(() => first(elements.value))
   }
 
   const querySelectorAll = (selector) => {
     observe(selector)
-    return get(elements, selector, [])
+    return computed(() => get(elements, selector, []))
   }
 
   return {
