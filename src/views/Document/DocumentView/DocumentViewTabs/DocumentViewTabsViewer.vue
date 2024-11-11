@@ -59,7 +59,7 @@ const asyncPreviewComponent = computed(() => {
       <component :is="asyncPreviewComponent" :document="document" />
     </template>
     <template v-else>
-      <div class="p-3">
+      <div class="p-3 text-center flex-grow-1">
         {{ $t('document.notAvailable') }}
       </div>
     </template>
