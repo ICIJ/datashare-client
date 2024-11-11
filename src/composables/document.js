@@ -1,4 +1,4 @@
-import { computed, provide, useId, watch } from 'vue'
+import { computed, inject, provide, useId, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { matches, overSome } from 'lodash'
@@ -80,6 +80,10 @@ export const useDocument = function (element) {
     return id
   }
 
+  const injectDocumentViewFloatingId = () => {
+    return inject('documentViewFloatingId')
+  }
+
   const watchDocument = function (callback, options) {
     // We watch the document's router params as string to avoid deep watching the object
     // with unnecessary reactivity and unwanted side effects.
@@ -99,6 +103,7 @@ export const useDocument = function (element) {
     isActive,
     isRouteActive,
     provideDocumentViewFloatingId,
+    injectDocumentViewFloatingId,
     watchDocument
   }
 }
