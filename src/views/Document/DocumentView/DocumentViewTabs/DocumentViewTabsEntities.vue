@@ -45,7 +45,6 @@ const hitsAsCsv = (hits = []) => {
 }
 
 const categories = computed(() => store.getters['document/categories'])
-const indexingLink = computed(() => router.resolve({ name: 'task.entities.new' }).href)
 const getCategoryTotal = (category) => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
 const categoryIsNotEmpty = (category) => !!getCategoryTotal(category)
 const categoryHasNextPage = (category) => {
@@ -85,9 +84,15 @@ onMounted(getFirstPageInAllCategories)
     />
   </div>
 
-  <div v-if="mustExtractEntities" v-html="$t('document.namedEntitiesNotSearched', { indexingLink })"></div>
-  <div v-else-if="!hasEntities && !loadingNamedEntities">
-    {{ $t('document.namedEntitiesNotFound') }}
+  <div class="text-center">
+    <i18n-t v-if="mustExtractEntities" keypath="document.namedEntitiesNotSearched">
+      <template #link>
+        <router-link :to="{ name: 'task.entities.new' }">
+          {{ $t('document.namedEntitiesNotSearchedLink') }}
+        </router-link>
+      </template>
+    </i18n-t>
+    <i18n-t v-else-if="!hasEntities && !loadingNamedEntities" keypath="document.namedEntitiesNotFound" />
   </div>
 
   <div v-for="(hits, category) in namedEntitiesByCategories" :key="category" class="mb-5">
