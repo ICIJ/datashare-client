@@ -59,11 +59,9 @@ declare module 'vue' {
     BDropdown: typeof import('bootstrap-vue-next')['BDropdown']
     BDropdownDivider: typeof import('bootstrap-vue-next')['BDropdownDivider']
     BDropdownItem: typeof import('bootstrap-vue-next')['BDropdownItem']
-    BDropdownItemButton: typeof import('bootstrap-vue-next')['BDropdownItemButton']
     BForm: typeof import('bootstrap-vue-next')['BForm']
     BFormCheckbox: typeof import('bootstrap-vue-next')['BFormCheckbox']
     BFormCheckboxGroup: typeof import('bootstrap-vue-next')['BFormCheckboxGroup']
-    BFormFile: typeof import('bootstrap-vue-next')['BFormFile']
     BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     BFormInvalidFeedback: typeof import('bootstrap-vue-next')['BFormInvalidFeedback']
@@ -71,8 +69,6 @@ declare module 'vue' {
     BFormRadioGroup: typeof import('bootstrap-vue-next')['BFormRadioGroup']
     BFormSelect: typeof import('bootstrap-vue-next')['BFormSelect']
     BFormTextarea: typeof import('bootstrap-vue-next')['BFormTextarea']
-    BInputGroup: typeof import('bootstrap-vue-next')['BInputGroup']
-    BInputGroupText: typeof import('bootstrap-vue-next')['BInputGroupText']
     BLink: typeof import('bootstrap-vue-next')['BLink']
     BModal: typeof import('bootstrap-vue-next')['BModal']
     BNav: typeof import('bootstrap-vue-next')['BNav']
@@ -205,7 +201,6 @@ declare module 'vue' {
     DocumentSharePopover: typeof import('./src/components/Document/DocumentSharePopover/DocumentSharePopover.vue')['default']
     DocumentSharePopoverForm: typeof import('./src/components/Document/DocumentSharePopover/DocumentSharePopoverForm.vue')['default']
     DocumentSlicedName: typeof import('./src/components/DocumentSlicedName.vue')['default']
-    DocumentTagsForm: typeof import('./src/components/DocumentTagsForm.vue')['default']
     DocumentThread: typeof import('./src/components/Document/DocumentThread.vue')['default']
     DocumentThumbnail: typeof import('./src/components/Document/DocumentThumbnail.vue')['default']
     DocumentTranslation: typeof import('./src/components/Document/DocumentTranslation/DocumentTranslation.vue')['default']
@@ -225,7 +220,6 @@ declare module 'vue' {
     DocumentUserCommentsList: typeof import('./src/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsList.vue')['default']
     DocumentUserCommentsListEntry: typeof import('./src/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry.vue')['default']
     DocumentUserRecommendations: typeof import('./src/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations.vue')['default']
-    DocumentUserRecommendationsAction: typeof import('./src/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendationsAction.vue')['default']
     DocumentUserTags: typeof import('./src/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags.vue')['default']
     DocumentUserTagsAction: typeof import('./src/components/Document/DocumentUser/DocumentUserTags/DocumentUserTagsAction.vue')['default']
     DocumentViewerAudio: typeof import('./src/components/Document/DocumentViewer/DocumentViewerAudio.vue')['default']
@@ -327,7 +321,6 @@ declare module 'vue' {
     LocalesMenu: typeof import('./src/components/LocalesMenu.vue')['default']
     LoginImage: typeof import('./src/components/Login/LoginImage.vue')['default']
     LoginLocaleDropdownSelector: typeof import('./src/components/Login/LoginLocaleDropdownSelector.vue')['default']
-    NamedEntityInContext: typeof import('./src/components/NamedEntityInContext.vue')['default']
     NavigationBreadcrumb: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumb.vue')['default']
     NavigationBreadcrumbEntry: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumbEntry.vue')['default']
     NavigationBreadcrumbLink: typeof import('./src/components/NavigationBreadcrumb/NavigationBreadcrumbLink.vue')['default']
@@ -482,7 +475,6 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     vBModal: typeof import('bootstrap-vue-next')['vBModal']
-    vBToggle: typeof import('bootstrap-vue-next')['vBToggle']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }
