@@ -192,15 +192,15 @@ export const getters = {
     })
   },
   toSearchParams(state, getters) {
-    return [
-      state.indices.join(','),
-      state.query,
-      getters.instantiatedFilters,
-      state.from,
-      getters.perPage,
-      getters.sort,
-      getters.fields
-    ]
+    return {
+      index: state.indices.join(','),
+      query: state.query,
+      filters: getters.instantiatedFilters,
+      from: state.from,
+      perPage: getters.perPage,
+      sort: getters.sort,
+      fields: getters.fields
+    }
   },
   retrieveQueryTerms(state) {
     let terms = []
@@ -418,7 +418,7 @@ function actionsBuilder(api) {
       }
     },
     searchDocs({ getters }) {
-      return api.elasticsearch.searchDocs(...getters.toSearchParams)
+      return api.elasticsearch.searchDocs(getters.toSearchParams)
     },
     searchRoots({ state, commit, getters }, raw) {
       const indices = state.indices.join(',')
