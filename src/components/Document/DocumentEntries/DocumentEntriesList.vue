@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue'
+import { useTemplateRef } from 'vue'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
-import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
+import DocumentFloating from '@/components/Document/DocumentFloating'
 import { useSelection } from '@/composables/selection'
 import { useDocument } from '@/composables/document'
 
@@ -11,13 +11,9 @@ const { isRouteActive, watchDocument } = useDocument()
 const { selectionValues } = useSelection(selection)
 const elementRef = useTemplateRef('element')
 
-const props = defineProps({
+defineProps({
   entries: {
     type: Array
-  },
-  minWidth: {
-    type: Number,
-    default: 400
   },
   selectMode: {
     type: Boolean,
@@ -26,22 +22,6 @@ const props = defineProps({
   properties: {
     type: Array,
     default: () => ['title', 'thumbnail']
-  }
-})
-
-const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth)
-const separatorLineLeft = ref(450)
-
-const separatorLineStyle = computed(() => {
-  return {
-    left: `${separatorLineLeft.value}px`
-  }
-})
-
-const listStyle = computed(() => {
-  return {
-    maxWidth: `${separatorLineLeft.value}px`,
-    flex: `${separatorLineLeft.value}px 0 0`
   }
 })
 
@@ -56,96 +36,73 @@ watchDocument(scrollDocumentCardIntoView)
 </script>
 
 <template>
-  <div ref="element" class="document-entries-list">
-    <div class="document-entries-list__start" :style="listStyle">
-      <div class="document-entries-list__start__floating p-3 rounded bg-action-subtle">
-        <slot name="floating" />
+  <document-floating ref="element" class="document-entries-list">
+    <template #start>
+      <div class="document-entries-list__start">
+        <div class="document-entries-list__start__header">
+          <slot name="header" />
+        </div>
+        <div class="document-entries-list__start__list">
+          <document-card
+            v-for="entry in entries"
+            :key="entry.id"
+            v-model:selected="selectionValues[entry.id]"
+            :active="isRouteActive(entry)"
+            :document="entry"
+            :select-mode="selectMode"
+            :properties="properties"
+            :data-entry-id="entry.id"
+            :data-entry-index="entry.index"
+          />
+        </div>
       </div>
-      <div class="document-entries-list__start__header">
-        <slot name="header" />
-      </div>
-      <div class="document-entries-list__start__list">
-        <document-card
-          v-for="entry in entries"
-          :key="entry.id"
-          v-model:selected="selectionValues[entry.id]"
-          :active="isRouteActive(entry)"
-          :document="entry"
-          :select-mode="selectMode"
-          :properties="properties"
-          :data-entry-id="entry.id"
-          :data-entry-index="entry.index"
-        />
-      </div>
-    </div>
-    <separator-line
-      :style="separatorLineStyle"
-      :reduce-disabled="reachedMinWidth"
-      :min="minWidth"
-      @drag="separatorLineLeft = $event"
-      @reduce="separatorLineLeft = minWidth"
-      @expand="separatorLineLeft = $event"
-    />
+    </template>
     <div class="document-entries-list__end">
       <slot />
     </div>
-  </div>
+  </document-floating>
 </template>
 
 <style lang="scss" scoped>
 .document-entries-list {
-  position: relative;
-  display: flex;
-  max-width: 100%;
-  align-items: flex-start;
+  &:deep(.document-floating__separator-line) {
+    top: $spacer;
+    height: calc(100% - #{$spacer * 2});
+  }
 
-  &__separator-line {
-    transform: translateX(-50%);
+  &:deep(.document-floating__start__floating) {
+    margin-top: $spacer;
   }
 
   &__start {
-    max-height: 100vh;
-    margin: 0;
-    padding-bottom: $spacer;
-    display: flex;
-    flex-direction: column;
     position: sticky;
     top: 0;
-
-    &__floating {
-      position: sticky;
-      z-index: 100;
-      top: $spacer;
-      left: 0;
-      right: 0;
-      min-height: calc(100vh - #{2 * $spacer});
-      display: none;
-      box-shadow: 0 $spacer 0 0 var(--bs-body-bg);
-
-      &:has(*:not(:empty)) {
-        display: block;
-      }
-    }
+    display: flex;
+    max-height: 100vh;
+    flex-direction: column;
 
     &__header {
       min-width: 0;
       max-width: 100%;
       width: 100%;
       padding: $spacer;
+      flex-shrink: 1;
     }
 
     &__list {
       flex-grow: 1;
-      overflow: auto;
       display: flex;
       flex-direction: column;
       padding-right: $spacer;
       gap: $spacer;
+      overflow: auto;
+      flex-grow: 1;
     }
   }
 
   &__end {
     width: 100%;
+    overflow: auto;
     padding-left: $spacer-xl;
   }
 }
