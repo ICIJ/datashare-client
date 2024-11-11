@@ -37,7 +37,6 @@ const href = computed(() => {
 <template>
   <document-actions-group-entry
     icon="arrows-out-simple"
-    target="_blank"
     :href="href"
     :label="$t('documentActionsGroup.expand')"
     :tooltip-placement="tooltipPlacement"
