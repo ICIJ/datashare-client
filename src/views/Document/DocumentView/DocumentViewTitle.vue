@@ -11,8 +11,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="document-view-title d-flex align-items-baseline column-gap-3 row-gap-1 flex-wrap">
-    <h2 class="document-view-title__title m-0">
+  <div class="document-view-title d-flex align-items-center column-gap-3 row-gap-1">
+    <h2 class="document-view-title__title m-0 flex-grow-1">
       <document-sliced-name interactive-root :document="document" />
     </h2>
     <project-button :project="document.project" />
