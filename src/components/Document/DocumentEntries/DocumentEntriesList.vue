@@ -57,7 +57,7 @@ watchDocument(scrollDocumentCardIntoView)
         </div>
       </div>
     </template>
-    <div class="document-entries-list__end">
+    <div class="document-entries-list__end py-3">
       <slot />
     </div>
   </document-floating>

@@ -43,8 +43,17 @@ const showDocument = computed(() => !!documentRoute.value)
         />
       </div>
     </div>
-    <app-modal :model-value="showDocument" size="xl" hide-footer hide-header @hide="refreshSearchRoute">
-      <slot />
+    <app-modal
+      :model-value="showDocument"
+      hide-footer
+      body-class="py-0 px-5"
+      hide-header
+      fullscreen
+      @hide="refreshSearchRoute"
+    >
+      <document-floating class="my-3">
+        <slot />
+      </document-floating>
     </app-modal>
   </div>
 </template>

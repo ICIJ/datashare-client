@@ -122,7 +122,7 @@ watchProjects(refreshRoute)
               <div :id="documentViewFloatingId"></div>
             </template>
             <router-view v-slot="{ Component }">
-              <component :is="Component" class="py-3">
+              <component :is="Component">
                 <template #nav>
                   <search-nav :entries="entries" :page="page" :per-page="perPage" :total="total" />
                 </template>
