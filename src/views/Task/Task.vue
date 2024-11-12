@@ -1,5 +1,5 @@
 <script setup>
-import { toRef } from 'vue'
+import { toRef, watch } from 'vue'
 
 import { useTaskHeader } from './task-header'
 import { useTaskPolling } from './task-polling'
@@ -19,7 +19,8 @@ const props = defineProps({
 })
 const taskNames = toRef(props, 'taskFilter')
 const { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks } = useTaskPolling(taskNames)
-const { fields } = useTaskProperties(props.taskFilter)
+const { fields } = useTaskProperties(props.pageName)
+
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows } = useTaskHeader(
   props.pageName,
   true,
