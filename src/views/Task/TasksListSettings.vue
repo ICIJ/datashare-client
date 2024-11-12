@@ -1,105 +1,12 @@
 <script setup>
 import { noop } from 'lodash'
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
 
-import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useViewSettings } from '@/composables/view-settings'
-import { useTaskSettings } from '@/composables/task-settings'
+import { useTaskProperties } from '@/views/Task/task-properties'
 
-const store = useStore()
-
-const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } =
-  useViewSettings()
-const settingName = 'taskList'
-const perPage = ref({
-  label: perPageLabel('task.title'),
-  type: 'radio',
-  open: true,
-  modelValue: useUrlParamWithStore('perPage', {
-    transform: (value) => Math.max(10, parseInt(value)),
-    get: () => store.getters['app/getSettings'](settingName, 'perPage'),
-    set: (perPage) => store.commit('app/setSettings', { view: settingName, perPage })
-  }),
-  options: [
-    {
-      value: 10
-    },
-    {
-      value: 25
-    },
-    {
-      value: 50
-    },
-    {
-      value: 100
-    }
-  ]
-})
-
-const sortBy = ref({
-  label: sortByLabel,
-  type: 'radio',
-  open: true,
-  modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => store.getters['app/getSettings'](settingName, 'orderBy'),
-    set: (sort, order) => store.commit('app/setSettings', { view: settingName, orderBy: [sort, order] })
-  }),
-  options: [
-    {
-      value: ['name', 'asc'],
-      text: tSortByOption('name', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.ALPHA)
-    },
-    {
-      value: ['name', 'desc'],
-      text: tSortByOption('name', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.ALPHA)
-    },
-    {
-      value: ['id', 'asc'],
-      text: tSortByOption('id', SORT_ORDER_KEY.ASC)
-    },
-    {
-      value: ['id', 'desc'],
-      text: tSortByOption('id', SORT_ORDER_KEY.DESC)
-    },
-    {
-      value: ['progress', 'asc'],
-      text: tSortByOption('progress', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.QUANTITY)
-    },
-    {
-      value: ['progress', 'desc'],
-      text: tSortByOption('progress', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.QUANTITY)
-    },
-    {
-      value: ['creationDate', 'asc'],
-      text: tSortByOption('creationDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
-    },
-    {
-      value: ['creationDate', 'desc'],
-      text: tSortByOption('creationDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
-    }
-  ]
-})
-const { propertiesOrder, propertiesLabel, propertiesIcon } = useTaskSettings()
-
-const properties = ref({
-  label: visiblePropertiesLabel,
-  type: 'checkbox',
-  open: true,
-  modelValue: computed({
-    get: () => store.getters['app/getSettings']('settingName', 'properties'),
-    set: (properties) => store.commit('app/setSettings', { view: 'search', properties })
-  }),
-  options: computed(() => {
-    return propertiesOrder.map((value) => {
-      const text = propertiesLabel.value[value]
-      const icon = propertiesIcon[value]
-      return { value, icon, text }
-    })
-  })
-})
+const settingName = 'task'
+const { perPage, sortBy, properties } = useTaskProperties(settingName)
 
 defineProps({
   hide: {
