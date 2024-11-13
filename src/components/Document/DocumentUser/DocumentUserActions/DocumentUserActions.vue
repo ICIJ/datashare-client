@@ -98,7 +98,7 @@ const USER_ACTIONS = {
 }
 
 const icons = {
-  [USER_ACTIONS.TAGS]: 'tag',
+  [USER_ACTIONS.TAGS]: 'hash',
   [USER_ACTIONS.COMMENTS]: 'chats-teardrop',
   [USER_ACTIONS.RECOMMENDATIONS]: ['eyes', 'fill'],
   [USER_ACTIONS.FOLDERS]: 'folder',
