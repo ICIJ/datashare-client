@@ -1,4 +1,5 @@
 <script setup>
+import DisplayHighlights from '@/components/Display/DisplayHighlights'
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
 
 defineProps({
@@ -18,7 +19,7 @@ defineProps({
     :document="document"
     :property="property"
   >
-    <div v-html="document.highlights.join(' … ')"></div>
+    <display-highlights :value="document.highlights" />
   </document-card-properties-entry>
 </template>
 
