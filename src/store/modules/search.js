@@ -242,6 +242,9 @@ export const getters = {
     const fields = ['', 'content']
     return filterCollection(getters.retrieveQueryTerms, (item) => fields.includes(item.field))
   },
+  from(state) {
+    return state.from ?? 0
+  },
   perPage(state, getters, rootState, rootGetters) {
     return rootGetters['app/getSettings']('search', 'perPage')
   },
@@ -260,6 +263,9 @@ export const getters = {
   orderBy(state, getters, rootState, rootGetters) {
     const [, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? [null, 'desc']
     return order
+  },
+  hits(state) {
+    return get(state, 'response.hits', [])
   }
 }
 
@@ -326,7 +332,7 @@ export const mutations = {
     state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
   setResponse(state, { raw, parents = null, roots = null } = {}) {
-    state.response = new EsDocList(raw, parents, roots)
+    state.response = new EsDocList(raw, parents, roots, state.from)
   },
   addFilterValue(state, filter) {
     // We cast the new filter values to allow several new values at the same time
@@ -420,7 +426,7 @@ function actionsBuilder(api) {
     searchDocs({ getters }) {
       return api.elasticsearch.searchDocs(getters.toSearchParams)
     },
-    searchRoots({ state, commit, getters }, raw) {
+    searchRoots({ state }, raw) {
       const indices = state.indices.join(',')
       const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
       const ids = embedded.map((hit) => hit._source.rootDocument)
