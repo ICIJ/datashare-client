@@ -56,36 +56,40 @@ const to = computed(() => {
 </script>
 
 <template>
-  <div class="document-card-grid" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
-    <div class="d-flex align-items-start justify-content-center gap-2 px-3">
-      <router-link v-if="showThumbnail" :to="to" :target="target">
-        <document-thumbnail :document="document" size="md" crop clickable :active="hover" class="mx-auto" />
-      </router-link>
-      <document-actions-group
-        v-model:selected="selected"
-        :document="document"
-        :is-download-allowed="isDownloadAllowed"
-        :select-mode="selectMode"
-        name="checkbox"
-        tooltip-placement="right"
-        vertical
-      />
+  <div
+    class="document-card-grid border d-flex"
+    :class="classList"
+    @mouseenter="hover = true"
+    @mouseleave="hover = false"
+  >
+    <div class="d-flex flex-column gap-3 flex-grow-1">
+      <div class="d-flex align-items-start justify-content-center gap-2 px-3">
+        <router-link v-if="showThumbnail" :to="to" :target="target">
+          <document-thumbnail :document="document" size="md" crop clickable :active="hover" class="mx-auto" />
+        </router-link>
+      </div>
+      <div class="document-card-grid__properties">
+        <router-link v-if="showTitle" class="document-card-grid__properties__title" :to="to" :target="target">
+          {{ document.title }}
+        </router-link>
+        <document-card-properties :document="document" :properties="properties" />
+      </div>
     </div>
-    <div class="document-card-grid__properties">
-      <router-link v-if="showTitle" class="document-card-grid__properties__title" :to="to" :target="target">
-        {{ document.title }}
-      </router-link>
-      <document-card-properties :document="document" :properties="properties" />
-    </div>
+    <document-actions-group
+      v-model:selected="selected"
+      :document="document"
+      :is-download-allowed="isDownloadAllowed"
+      :select-mode="selectMode"
+      name="checkbox"
+      tooltip-placement="right"
+      vertical
+    />
   </div>
 </template>
 
 <style lang="scss">
 .document-card-grid {
-  display: flex;
-  flex-direction: column;
   padding: $spacer;
-  gap: $spacer;
   border-radius: var(--bs-border-radius);
 
   &:hover,
