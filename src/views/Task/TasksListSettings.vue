@@ -1,5 +1,6 @@
 <script setup>
 import { noop } from 'lodash'
+import { watch } from 'vue'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
@@ -7,7 +8,12 @@ import { useTaskProperties } from '@/views/Task/task-properties'
 
 const settingName = 'task'
 const { perPage, sortBy, properties } = useTaskProperties(settingName)
-
+watch(
+  () => properties.value.modelValue,
+  (val) => {
+    console.log('watch1', val)
+  }
+)
 defineProps({
   hide: {
     type: Function,

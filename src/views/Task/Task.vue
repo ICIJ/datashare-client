@@ -1,5 +1,5 @@
 <script setup>
-import { toRef, watch } from 'vue'
+import { computed, toRef } from 'vue'
 
 import { useTaskHeader } from './task-header'
 import { useTaskPolling } from './task-polling'
@@ -15,17 +15,31 @@ const props = defineProps({
   pageName: {
     type: String,
     required: true
+  },
+  showAdd: {
+    type: Boolean,
+    default: false
   }
 })
 const taskNames = toRef(props, 'taskFilter')
-const { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks } = useTaskPolling(taskNames)
-const { fields } = useTaskProperties(props.pageName)
-
+const {
+  tasks: pollingTasks,
+  hasPendingTasks,
+  hasDoneTasks,
+  stopPendingTasks,
+  deleteDoneTasks
+} = useTaskPolling(taskNames)
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows } = useTaskHeader(
   props.pageName,
-  true,
-  tasks
+  props.showAdd,
+  pollingTasks
 )
+
+const settingName = 'task'
+const { properties } = useTaskProperties(settingName)
+const shownProperties = computed(() => {
+  return properties.value.options.filter((p) => properties.value.modelValue.includes(p.value))
+})
 </script>
 
 <template>
@@ -50,6 +64,8 @@ const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTask
     </template>
   </page-header>
   <page-container fluid>
-    <task-list :tasks="displayedTasks" :task-fields="fields" :stoppable="true" />
+    <slot :tasks="displayedTasks" :columns="shownProperties">
+      <task-list :tasks="displayedTasks" :columns="shownProperties" :stoppable="true" />
+    </slot>
   </page-container>
 </template>
