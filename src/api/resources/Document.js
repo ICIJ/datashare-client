@@ -12,13 +12,15 @@ import types from '@/utils/types.json'
 
 const _parent = '_PARENT'
 const _root = '_ROOT'
+const _position = '_POSITION'
 const _separator = '/'
 
 export default class Document extends EsDoc {
-  constructor(raw, parent = null, root = null) {
+  constructor(raw, parent = null, root = null, position = 0) {
     super(raw)
     this.parent = parent
     this.root = root
+    this.position = position
   }
   nl2br(str) {
     return trim(str)
@@ -48,6 +50,12 @@ export default class Document extends EsDoc {
   }
   shortMetaName(name) {
     return name.replace('tika_metadata_', '')
+  }
+  set position(position) {
+    this[_position] = isNaN(position) ? null : position
+  }
+  get position() {
+    return this[_position]
   }
   set parent(parent) {
     this[_parent] = parent ? new Document(parent) : null
@@ -251,9 +259,6 @@ export default class Document extends EsDoc {
   }
   get humanSize() {
     return humanSize(this.contentLength, true)
-  }
-  get index() {
-    return this.raw._index
   }
   get routerParams() {
     return pick(this, ['index', 'id', 'routing'])
