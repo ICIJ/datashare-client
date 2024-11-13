@@ -1,4 +1,6 @@
 <script setup>
+import DisplayHighlights from '@/components/Display/DisplayHighlights'
+
 defineProps({
   document: {
     type: Object
@@ -8,6 +10,6 @@ defineProps({
 
 <template>
   <td class="text-beak">
-    <div v-html="document.highlights.join(' … ')"></div>
+    <display-highlights :value="document.highlights" />
   </td>
 </template>
