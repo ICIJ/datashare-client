@@ -33,9 +33,10 @@ const showDocument = computed(() => !!documentRoute.value)
     <div class="document-entries-grid__header py-3">
       <slot name="header" />
     </div>
-    <div class="document-entries-grid__list row g-3 px-0">
-      <div v-for="entry in entries" :key="entry.id" class="col-lg-3 col-md-4 col-sm-6">
+    <div class="document-entries-grid__list row g-5 px-0">
+      <div v-for="entry in entries" :key="entry.id" class="col-xl-3 col-lg-4 col-md-6">
         <document-card-grid
+          class="h-100"
           v-model:selected="selectionValues[entry.id]"
           :document="entry"
           :select-mode="selectMode"
@@ -49,9 +50,11 @@ const showDocument = computed(() => !!documentRoute.value)
       body-class="py-0 px-5"
       hide-header
       fullscreen
+      lazy
       @hide="refreshSearchRoute"
     >
       <document-floating class="my-3">
+        <slot name="carousel" />
         <slot />
       </document-floating>
     </app-modal>
