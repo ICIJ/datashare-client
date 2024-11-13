@@ -96,12 +96,8 @@ export function useTaskProperties(pageName) {
       })
     })
   })
-  const fields = computed(() => {
-    return [{ key: 'state' }]
-  })
 
   return {
-    fields,
     sortBy,
     properties,
     perPage

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 export function useTaskSettings() {
   const { t } = useI18n()
 
-  const propertiesOrder = ['id', 'name', 'createdAt', 'progress', 'result', 'state']
+  const propertiesOrder = ['state', 'name', 'id', 'progress', 'createdAt']
 
   const propertiesLabel = computed(() => {
     return {
