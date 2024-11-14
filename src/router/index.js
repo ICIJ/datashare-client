@@ -198,25 +198,14 @@ export const routes = [
           {
             name: 'task.batch-download',
             path: 'batch-download',
-            component: () => import('@/views/TaskBatchDownload'),
+            meta: { title: 'task.batch-download.title' },
             children: [
               {
                 name: 'task.batch-download.list',
                 path: '',
-                component: () => import('@/views/TaskBatchDownloadList'),
+                component: () => import('@/views/Task/BatchDownload/TaskBatchDownloadList'),
                 meta: {
-                  title: 'batchDownload.title',
-                  docs: [
-                    {
-                      title: 'Add documents to Datashare',
-                      path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
-                      mode: ['LOCAL', 'EMBEDDED']
-                    },
-                    {
-                      title: 'Analyse documents',
-                      path: 'all/analyze-documents'
-                    }
-                  ]
+                  breadcrumb: false
                 }
               }
             ]
@@ -224,24 +213,16 @@ export const routes = [
           {
             name: 'task.batch-search',
             path: 'batch-search',
-            components: {
-              default: () => import('@/views/TaskBatchSearch')
-            },
+            meta: { title: 'task.batch-search.title' },
             children: [
               {
                 path: '',
                 name: 'task.batch-search.list',
                 components: {
-                  default: () => import('@/views/TaskBatchSearchList')
+                  default: () => import('@/views/Task/BatchSearch/TaskBatchSearchList')
                 },
                 meta: {
-                  title: 'batchSearch.title',
-                  docs: [
-                    {
-                      title: 'How to use batch searches',
-                      path: 'all/batch-search-documents'
-                    }
-                  ]
+                  breadcrumb: false
                 }
               },
               {
