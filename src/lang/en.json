@@ -963,6 +963,25 @@
         "success":"Add document task is launched",
         "error":"An error occurred when creating the task: {error}"
       }
+    },
+    "batch-download": {
+      "title": "Batch downloads",
+      "list": {
+        "title":"All tasks",
+        "searchPlaceholder": "Search task",
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+      }
+    },
+    "batch-search": {
+      "title": "Batch searches",
+      "list": {
+        "title":"All tasks",
+        "searchPlaceholder": "Search task",
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+      },
+      "new": {
+        "title":"Run a new batch search"
+      }
     }
   },
   "batchSearch": {
