@@ -57,7 +57,7 @@ const fetchRouteDocument = ({ params } = route) => {
 }
 
 const redirectToDocumentStandalone = () => {
-  if (route.name === 'document') {
+  if (route.name.startsWith('document.')) {
     return router.replace({ name: 'document-standalone' })
   }
 }
