@@ -56,7 +56,7 @@ function actionsBuilder(api) {
     },
     async getTasks({ commit }, taskNames) {
       try {
-        if (taskNames.includes('ALL')) {
+        if (taskNames.length === 0) {
           const tasks = await api.getTasks()
           commit(UPDATE_TASKS, tasks)
         } else {
