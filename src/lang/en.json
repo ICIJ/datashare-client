@@ -255,7 +255,8 @@
     "star": "Star",
     "download": "Download",
     "share": "Share",
-    "expand": "Expand"
+    "expand": "Expand",
+    "reduce": "Reduce"
   },
   "documentLocalSearchOccurrences": {
     "label": "{activeIndex} on {occurrences}"
