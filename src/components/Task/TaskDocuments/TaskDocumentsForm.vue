@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, reactive } from 'vue'
+import { ref, computed, onMounted, reactive, watch } from 'vue'
 import { every, castArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
@@ -9,7 +9,6 @@ import { useCore } from '@/composables/core'
 import FormCreation from '@/components/Form/FormCreation'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 
-// Props
 const props = defineProps({
   disabled: {
     type: Boolean
@@ -30,22 +29,19 @@ const submitLabel = computed(() => t(`task.documents.form.submit`))
 
 const defaultProject = computed(() => core.config.get('defaultProject'))
 const defaultDataDir = computed(() => core.config.get('dataDir'))
+const currentProject = computed(() => core.findProject(selectedProject.value.name))
+
 const initialFormValues = computed(() => ({
-  path: defaultDataDir.value,
   language: null,
   extractOcr: false,
   skipIndexedDocuments: true,
   hasTesseract: true,
   project: props.projectName ?? defaultProject.value,
+  path: defaultDataDir.value,
   ...props.values
 }))
 
-function isPresent(value) {
-  return value?.trim()?.length > 0
-}
-
 const selectedProject = ref({ name: initialFormValues.value.project })
-const currentProject = computed(() => core.findProject(selectedProject.value))
 
 const sourcePath = computed(() => {
   const currentSourcePath = currentProject.value?.sourcePath?.split('file://').pop() ?? defaultDataDir.value
@@ -59,6 +55,7 @@ const extractOcr = ref(initialFormValues.value.extractOcr)
 const textLanguages = ref([])
 const ocrLanguages = ref([])
 const skipIndexedDocuments = ref(initialFormValues.value.skipIndexedDocuments)
+
 const form = reactive({
   defaultProject: selectedProject.value.name,
   language: computed(() => (language.value?.length ? language.value : null)),
@@ -98,7 +95,7 @@ async function submit() {
 }
 
 const valid = computed(() => {
-  return every([!props.disabled, isPresent(path.value)])
+  return every([!props.disabled, path.value?.trim()?.length > 0])
 })
 
 const showOcrMessage = computed(() => {
@@ -140,22 +137,24 @@ async function loadLanguages() {
   wait.end(waitOcrIdentifier)
 }
 
+function setProjectPath(project) {
+  path.value = project.sourcePath
+}
+
 onMounted(loadLanguages)
+watch(selectedProject, setProjectPath, { immediate: true })
 </script>
 
 <template>
   <form-creation class="task-documents-form" :valid="valid" :submit-label="submitLabel" @reset="reset" @submit="submit">
     <form-fieldset-i18n name="project-selector" translation-key="task.documents.form.projectSelector">
       <search-bar-input-dropdown-for-projects v-model="selectedProject" />
-      <input type="hidden" name="project" :value="selectedProject.name" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="source-path" translation-key="task.documents.form.path">
       <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
-      <input type="hidden" name="path" :value="path" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="extracting-language" translation-key="task.documents.form.extractingLanguage">
       <extracting-language-form-control v-model="language" />
-      <input type="hidden" name="language" :value="language" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.documents.form.extractOcr">
       <b-form-radio-group
