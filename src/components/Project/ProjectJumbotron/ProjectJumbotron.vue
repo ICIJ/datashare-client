@@ -67,7 +67,7 @@ const updateDate = computed(() => {
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
       <project-thumbnail v-if="!compact" :project="project" width="100px" rounded class="flex-shrink-0" />
       <div>
-        <p v-if="project.description" class="project-jumbotron__content__description">{{ project.description }}</p>
+        <p v-if="project.description" class="project-jumbotron__content__description m-0">{{ project.description }}</p>
         <footer class="project-jumbotron__content__footer d-md-flex gap-3">
           <div class="d-flex flex-wrap gap-3 text-secondary py-3">
             <span v-if="creationDate" class="text-nowrap">
@@ -97,12 +97,6 @@ const updateDate = computed(() => {
       margin: 0;
       font-size: 1.5rem;
       font-weight: 700;
-    }
-  }
-
-  &__content {
-    &__description {
-      margin-bottom: $spacer-xl;
     }
   }
 }
