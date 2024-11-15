@@ -44,7 +44,7 @@ const adjustedPosition = computed({
       v-model="adjustedPosition"
       :per-page="1"
       :total-rows="total"
-      class="mx-auto py-1"
+      class="document-carousel__pagination mx-auto py-1"
       row
     />
     <div class="document-carousel__content p-3">
@@ -77,11 +77,13 @@ const adjustedPosition = computed({
   justify-content: center;
   position: relative;
 
-  &:hover {
+  &:has(&__pagination:hover),
+  &:has(&__content:hover) {
     background: var(--bs-tertiary-bg-subtle);
   }
 
-  &:hover &__content {
+  &__pagination:hover ~ &__content,
+  &__content:hover {
     visibility: visible;
     opacity: 1;
     pointer-events: all;
