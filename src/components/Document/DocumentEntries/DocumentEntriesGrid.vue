@@ -36,8 +36,8 @@ const showDocument = computed(() => !!documentRoute.value)
     <div class="document-entries-grid__list row g-5 px-0">
       <div v-for="entry in entries" :key="entry.id" class="col-xl-3 col-lg-4 col-md-6">
         <document-card-grid
-          class="h-100"
           v-model:selected="selectionValues[entry.id]"
+          class="h-100"
           :document="entry"
           :select-mode="selectMode"
           :properties="properties"
