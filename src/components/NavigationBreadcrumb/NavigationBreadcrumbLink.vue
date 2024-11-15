@@ -4,6 +4,7 @@ import { capitalize, isFunction } from 'lodash'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+import { PhCaretRight } from '@phosphor-icons/vue'
 
 import { useCore } from '@/composables/core'
 
@@ -101,7 +102,7 @@ const classList = computed(() => {
       aria-hidden="true"
       class="navigation-breadcrumb-link__caret mx-2"
       size="1em"
-      name="caret-right"
+      :name="PhCaretRight"
     />
   </a>
 </template>
