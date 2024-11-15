@@ -50,6 +50,7 @@ const adjustedPosition = computed({
     <div class="document-carousel__content p-3">
       <document-carousel-nav
         icon="caret-left"
+        class="document-carousel__content__nav"
         :disabled="disabledPrevious"
         :label="$t('documentCarousel.previous')"
         @click="emit('previous')"
@@ -59,6 +60,7 @@ const adjustedPosition = computed({
       </div>
       <document-carousel-nav
         icon="caret-right"
+        class="document-carousel__content__nav"
         :disabled="disabledNext"
         :label="$t('documentCarousel.next')"
         @click="emit('next')"
@@ -94,11 +96,15 @@ const adjustedPosition = computed({
     left: 0;
     right: 0;
     visibility: hidden;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     width: 100%;
     opacity: 0;
     transition: $transition-fade;
+
+    &__nav {
+      margin-top: $spacer-xxl;
+    }
 
     &__entries {
       display: flex;
