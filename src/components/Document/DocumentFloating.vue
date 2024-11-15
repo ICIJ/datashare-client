@@ -14,7 +14,7 @@ const props = defineProps({
 
 const elementRef = useTemplateRef('element')
 const { querySelectorAll } = useQueryObserver(elementRef)
-const { provideDocumentViewFloatingId } = useDocument(elementRef)
+const { provideDocumentViewFloatingId } = useDocument()
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth)
