@@ -61,6 +61,7 @@ function initialFormValues() {
     sourceUrl: null,
     publisherName: null,
     maintainerName: null,
+    creationDate: new Date(),
     ...props.values
   }
 }
@@ -168,7 +169,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
         :disabled="disabled"
         :validated="isPresent(form.sourcePath)"
       >
-        <form-control-path v-model="form.sourcePath" />
+        <form-control-path v-model="form.sourcePath" class="p-0" />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--logo-url"
