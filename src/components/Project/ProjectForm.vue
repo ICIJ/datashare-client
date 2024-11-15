@@ -230,5 +230,8 @@ const submitLabel = computed(() => t('projectForm.submit'))
         />
       </form-fieldset>
     </div>
+    <template #submit-text>
+      <slot name="submit-text" />
+    </template>
   </form-creation>
 </template>
