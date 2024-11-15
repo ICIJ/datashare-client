@@ -59,9 +59,11 @@ declare module 'vue' {
     BDropdown: typeof import('bootstrap-vue-next')['BDropdown']
     BDropdownDivider: typeof import('bootstrap-vue-next')['BDropdownDivider']
     BDropdownItem: typeof import('bootstrap-vue-next')['BDropdownItem']
+    BDropdownItemButton: typeof import('bootstrap-vue-next')['BDropdownItemButton']
     BForm: typeof import('bootstrap-vue-next')['BForm']
     BFormCheckbox: typeof import('bootstrap-vue-next')['BFormCheckbox']
     BFormCheckboxGroup: typeof import('bootstrap-vue-next')['BFormCheckboxGroup']
+    BFormFile: typeof import('bootstrap-vue-next')['BFormFile']
     BFormGroup: typeof import('bootstrap-vue-next')['BFormGroup']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     BFormInvalidFeedback: typeof import('bootstrap-vue-next')['BFormInvalidFeedback']
@@ -119,6 +121,7 @@ declare module 'vue' {
     DisplayDatetimeRange: typeof import('./src/components/Display/DisplayDatetimeRange.vue')['default']
     DisplayDatetimeShort: typeof import('./src/components/Display/DisplayDatetimeShort.vue')['default']
     DisplayExtractionLevel: typeof import('./src/components/Display/DisplayExtractionLevel.vue')['default']
+    DisplayHighlights: typeof import('./src/components/Display/DisplayHighlights.vue')['default']
     DisplayLanguage: typeof import('./src/components/Display/DisplayLanguage.vue')['default']
     DisplayNumber: typeof import('./src/components/Display/DisplayNumber.vue')['default']
     DisplayNumberHuman: typeof import('./src/components/Display/DisplayNumberHuman.vue')['default']
@@ -168,6 +171,7 @@ declare module 'vue' {
     DocumentEntriesTable: typeof import('./src/components/Document/DocumentEntries/DocumentEntriesTable.vue')['default']
     DocumentEntriesTableBody: typeof import('./src/components/Document/DocumentEntries/DocumentEntriesTableBody.vue')['default']
     DocumentEntriesTableHead: typeof import('./src/components/Document/DocumentEntries/DocumentEntriesTableHead.vue')['default']
+    DocumentFloating: typeof import('./src/components/Document/DocumentFloating.vue')['default']
     DocumentGlobalSearchTerms: typeof import('./src/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms.vue')['default']
     DocumentGlobalSearchTermsEntry: typeof import('./src/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTermsEntry.vue')['default']
     DocumentInModal: typeof import('./src/components/DocumentInModal.vue')['default']
@@ -475,6 +479,7 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     vBModal: typeof import('bootstrap-vue-next')['vBModal']
+    vBToggle: typeof import('bootstrap-vue-next')['vBToggle']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }
 }

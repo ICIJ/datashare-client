@@ -68,17 +68,17 @@ export function useTaskProperties(pageName) {
         text: tSortByOption('progress', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.QUANTITY)
       },
       {
-        value: ['creationDate', 'asc'],
-        text: tSortByOption('creationDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
+        value: ['createdAt', 'asc'],
+        text: tSortByOption('createdAt', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
       },
       {
-        value: ['creationDate', 'desc'],
-        text: tSortByOption('creationDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
+        value: ['createdAt', 'desc'],
+        text: tSortByOption('createdAt', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
       }
     ]
   })
 
-  const { propertiesOrder, propertiesLabel, propertiesIcon } = useTaskSettings()
+  const { propertiesOrder, propertiesLabel, propertiesIcon } = useTaskSettings(pageName)
 
   const properties = ref({
     label: visiblePropertiesLabel,
@@ -97,9 +97,14 @@ export function useTaskProperties(pageName) {
     })
   })
 
+  const propertiesModelValueOptions = computed(() => {
+    return properties.value.options.filter((p) => properties.value.modelValue.includes(p.value))
+  })
+
   return {
     sortBy,
     properties,
+    propertiesModelValueOptions,
     perPage
   }
 }

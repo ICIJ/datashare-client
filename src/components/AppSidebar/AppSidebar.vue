@@ -147,6 +147,7 @@ const noAnalysis = computed(() => {
             icon="files"
             :to="{ name: 'task.documents.list' }"
             :action-to="{ name: 'task.documents.new' }"
+            :action-title="t('task.documents.new.title')"
           >
             {{ t('appSidebar.documents') }}
           </app-sidebar-section-entry>
@@ -155,6 +156,7 @@ const noAnalysis = computed(() => {
             icon="users-three"
             :to="{ name: 'task.entities.list' }"
             :action-to="{ name: 'task.entities.new' }"
+            :action-title="t('task.entities.new.title')"
           >
             {{ t('appSidebar.entities') }}
           </app-sidebar-section-entry>

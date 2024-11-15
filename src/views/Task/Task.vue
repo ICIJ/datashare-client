@@ -1,12 +1,12 @@
 <script setup>
-import { computed, toRef } from 'vue'
+import { toRef } from 'vue'
 
 import { useTaskHeader } from './task-header'
 import { useTaskPolling } from './task-polling'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskActions from '@/components/Task/TaskActions'
-import { useTaskProperties } from '@/views/Task/task-properties'
+import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 const props = defineProps({
   taskFilter: {
     type: Array,
@@ -29,17 +29,11 @@ const {
   stopPendingTasks,
   deleteDoneTasks
 } = useTaskPolling(taskNames)
-const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows } = useTaskHeader(
+const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy } = useTaskHeader(
   props.pageName,
   props.showAdd,
   pollingTasks
 )
-
-const settingName = 'task'
-const { properties } = useTaskProperties(settingName)
-const shownProperties = computed(() => {
-  return properties.value.options.filter((p) => properties.value.modelValue.includes(p.value))
-})
 </script>
 
 <template>
@@ -64,8 +58,7 @@ const shownProperties = computed(() => {
     </template>
   </page-header>
   <page-container fluid>
-    <slot :tasks="displayedTasks" :columns="shownProperties">
-      <task-list :tasks="displayedTasks" :columns="shownProperties" :stoppable="true" />
-    </slot>
+    <dismissable-alert variant="info">{{ $t(`task.${pageName}.list.info`) }}</dismissable-alert>
+    <slot :tasks="displayedTasks" :sort-by="sortBy"> </slot>
   </page-container>
 </template>
