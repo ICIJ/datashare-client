@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, toRef } from 'vue'
+import { get } from 'lodash'
 
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
@@ -21,7 +22,7 @@ const props = defineProps({
 })
 
 const { core } = useCore()
-const { waitFor } = useWait()
+const { waitFor, loaderId } = useWait()
 
 const params = computed(() => {
   return { name: props.name }
@@ -44,7 +45,8 @@ const pinned = computed({
   }
 })
 
-const loaderId = 'loader-project-view-overview'
+const hasDocuments = ref(false)
+const lastIndexingDate = ref(null)
 
 const fetchDocumentsCount = async () => {
   const { name: index } = props
@@ -52,17 +54,19 @@ const fetchDocumentsCount = async () => {
   return count
 }
 
-const fetchDocumentsCountWithLoader = waitFor(loaderId, fetchDocumentsCount)
+const fetchLastIndexingDate = async () => {
+  const query = { match: { type: 'Document' } }
+  const { name: index } = props
+  const { aggregations } = await core.api.elasticsearch.maxExtractionDateByProject(index, query)
+  return get(aggregations, 'index.buckets.0.maxExtractionDate.value', null)
+}
 
-const hasDocuments = ref(false)
+const fetch = waitFor(loaderId, async () => {
+  hasDocuments.value = !!(await fetchDocumentsCount())
+  lastIndexingDate.value = await fetchLastIndexingDate()
+})
 
-watch(
-  () => props.name,
-  async () => {
-    hasDocuments.value = !!(await fetchDocumentsCountWithLoader())
-  },
-  { immediate: true }
-)
+watch(toRef(props, 'name'), fetch, { immediate: true })
 </script>
 
 <template>
@@ -75,7 +79,7 @@ watch(
           </div>
         </template>
 
-        <project-jumbotron v-model:pinned="pinned" :project="project" />
+        <project-jumbotron v-model:pinned="pinned" :project="project" :last-indexing-date="lastIndexingDate" />
         <search-bar class="my-4 py-3 mx-3" size="lg" :indices="indices" hide-field-dropdown hide-projects-dropdown />
         <tab-group-navigation class="mx-3" nowrap>
           <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights', params }">
