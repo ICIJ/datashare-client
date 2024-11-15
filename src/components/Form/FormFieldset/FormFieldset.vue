@@ -33,23 +33,26 @@ const props = defineProps({
   labelFor: {
     type: String
   },
-  compact: { type: Boolean, default: false },
-  description: { type: String },
+  description: {
+    type: String
+  },
   required: {
+    type: Boolean
+  },
+  compact: {
     type: Boolean
   },
   compactAuto: {
     type: Boolean,
-    default: false
+    default: true
   },
   compactAutoBreakpoint: {
     type: String,
     default: SIZE.LG,
     validator: breakpointSizeValidator
   },
-  noDescription: {
-    type: Boolean,
-    default: false
+  withDescription: {
+    type: Boolean
   }
 })
 const { breakpointDown } = useBreakpoints()
@@ -69,7 +72,7 @@ const classList = computed(() => {
 
 <template>
   <b-form-group
-    class="form-fieldset"
+    class="form-fieldset container-fluid"
     :class="classList"
     :label-cols-sm="labelColsSm"
     :label-cols-md="labelColsMd"
@@ -86,14 +89,20 @@ const classList = computed(() => {
         </slot>
       </div>
     </template>
-    <template v-if="!isCompact && !noDescription">
-      <div class="col-4 form-fieldset__content">
-        <slot v-bind="{ isCompact }" />
+    <template v-if="!isCompact && (withDescription || description)">
+      <div class="d-flex align-items-center gap-3">
+        <div class="form-fieldset__content">
+          <slot v-bind="{ isCompact }" />
+        </div>
+        <div class="form-fieldset__description-side text-secondary-emphasis">
+          {{ description }}
+        </div>
       </div>
-      <span class="form-fieldset__description-side text-secondary-emphasis">{{ description }}</span>
     </template>
     <template v-else>
-      <slot v-bind="{ isCompact }" />
+      <div class="row">
+        <slot v-bind="{ isCompact }" />
+      </div>
     </template>
   </b-form-group>
 </template>
@@ -105,13 +114,15 @@ const classList = computed(() => {
   &--required &__label:after {
     content: ' *';
   }
-  & .col:has(.form-fieldset__description-side) {
-    display: flex;
-    gap: 1em;
-    align-items: center;
+
+  &__content {
+    flex: 280px 0 0;
   }
-  & .col:has(small) > div {
-    margin-bottom: $spacer-xxs;
+
+  .form-text {
+    display: block;
+    padding-top: $spacer-xs;
+    margin: 0;
   }
 }
 </style>
