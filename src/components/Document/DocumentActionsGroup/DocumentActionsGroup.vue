@@ -23,6 +23,7 @@
       />
       <document-actions-group-entry-expand
         :document="document"
+        :modal="modal"
         :tooltip-placement="tooltipPlacement"
         :vertical="vertical"
       />
@@ -66,6 +67,12 @@ const { vertical } = defineProps({
    * True if selectMode is allowed
    */
   selectMode: {
+    type: Boolean
+  },
+  /**
+   * True if the current document is displayed within a modal
+   */
+  modal: {
     type: Boolean
   }
 })

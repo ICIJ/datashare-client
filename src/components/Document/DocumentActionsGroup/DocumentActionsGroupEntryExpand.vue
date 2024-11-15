@@ -1,10 +1,12 @@
 <script setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
-const { document } = defineProps({
+import { useDocument } from '@/composables/document'
+
+const { document, modal } = defineProps({
   /**
    * The current document
    */
@@ -23,22 +25,45 @@ const { document } = defineProps({
    */
   vertical: {
     type: Boolean
+  },
+  /**
+   * The current document is in a modal view
+   */
+  modal: {
+    type: Boolean
   }
 })
 
-const router = useRouter()
+const { t } = useI18n()
+const { isRouteActive, documentParentRoute } = useDocument()
 
-const href = computed(() => {
-  const { href } = router.resolve({ name: 'document-standalone', params: document.routerParams })
-  return window.location.origin + href
+const documentRoute = computed(() => {
+  const params = document.routerParams
+  const name = modal ? 'document' : 'document-standalone'
+  return { name, params }
 })
+
+const activeDocumentParentRoute = computed(() => {
+  const { name } = documentParentRoute.value
+  return { name }
+})
+
+const to = computed(() => {
+  return active.value ? activeDocumentParentRoute.value : documentRoute.value
+})
+
+const active = computed(() => modal && isRouteActive(document))
+const target = computed(() => (!active.value ? '_blank' : '_self'))
+const icon = computed(() => (active.value ? 'arrows-in-simple' : 'arrows-out-simple'))
+const label = computed(() => (active.value ? t('documentActionsGroup.reduce') : t('documentActionsGroup.expand')))
 </script>
 
 <template>
   <document-actions-group-entry
-    icon="arrows-out-simple"
-    :href="href"
-    :label="$t('documentActionsGroup.expand')"
+    :target="target"
+    :icon="icon"
+    :to="to"
+    :label="label"
     :tooltip-placement="tooltipPlacement"
     :vertical="vertical"
   />
