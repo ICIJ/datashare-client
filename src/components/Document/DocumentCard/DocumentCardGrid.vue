@@ -63,11 +63,9 @@ const to = computed(() => {
     @mouseleave="hover = false"
   >
     <div class="d-flex flex-column gap-3 flex-grow-1">
-      <div class="d-flex align-items-start justify-content-center gap-2 px-3">
-        <router-link v-if="showThumbnail" :to="to" :target="target">
-          <document-thumbnail :document="document" size="md" crop clickable :active="hover" class="mx-auto" />
-        </router-link>
-      </div>
+      <router-link v-if="showThumbnail" :to="to" :target="target" class="d-block w-100 text-center">
+        <document-thumbnail :document="document" size="md" crop fit clickable :active="hover" class="mx-auto" />
+      </router-link>
       <div class="document-card-grid__properties">
         <router-link v-if="showTitle" class="document-card-grid__properties__title" :to="to" :target="target">
           {{ document.title }}
@@ -81,6 +79,7 @@ const to = computed(() => {
       :is-download-allowed="isDownloadAllowed"
       :select-mode="selectMode"
       name="checkbox"
+      class="flex-shrink-0 ms-auto"
       tooltip-placement="right"
       vertical
     />
