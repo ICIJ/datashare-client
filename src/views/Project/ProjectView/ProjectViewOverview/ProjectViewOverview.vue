@@ -23,6 +23,10 @@ const props = defineProps({
 const { core } = useCore()
 const { waitFor } = useWait()
 
+const params = computed(() => {
+  return { name: props.name }
+})
+
 const project = computed(() => {
   return core.findProject(props.name)
 })
@@ -74,19 +78,22 @@ watch(
         <project-jumbotron v-model:pinned="pinned" :project="project" />
         <search-bar class="my-4 py-3 mx-3" size="lg" :indices="indices" hide-field-dropdown hide-projects-dropdown />
         <tab-group-navigation class="mx-3" nowrap>
-          <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights' }">
+          <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights', params }">
             {{ $t('projectViewOverview.nav.insights') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="tree-structure" :to="{ name: 'project.view.overview.paths' }">
+          <tab-group-navigation-entry icon="tree-structure" :to="{ name: 'project.view.overview.paths', params }">
             {{ $t('projectViewOverview.nav.paths') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph' }">
+          <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph', params }">
             {{ $t('projectViewOverview.nav.graph') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="info" :to="{ name: 'project.view.overview.details' }">
+          <tab-group-navigation-entry icon="info" :to="{ name: 'project.view.overview.details', params }">
             {{ $t('projectViewOverview.nav.details') }}
           </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="clock-counter-clockwise" :to="{ name: 'project.view.overview.history' }">
+          <tab-group-navigation-entry
+            icon="clock-counter-clockwise"
+            :to="{ name: 'project.view.overview.history', params }"
+          >
             {{ $t('projectViewOverview.nav.history') }}
           </tab-group-navigation-entry>
         </tab-group-navigation>
@@ -97,7 +104,7 @@ watch(
           class="my-5"
           action-icon="plus"
           :action-label="$t('projectViewOverview.emptyStateAction')"
-          :action-to="{ name: 'task.documents.new', query: { project: project.name } }"
+          :action-to="{ name: 'task.documents.new', query: { projectName: project.name } }"
         />
       </v-wait>
     </page-container>
