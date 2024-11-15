@@ -32,7 +32,7 @@ const display = computed(() => modelValue.value ?? sourcePath.value)
       {{ $t('formControlPath.browse') }}
     </button-icon>
     <app-modal id="modal-form-control-path" lazy scrollable hide-header size="lg" @ok="modelValue = selectedPaths[0]">
-      <path-tree :path="dataDir" :selected-paths="selectedPaths" select-mode no-stats />
+      <path-tree v-model:selected-paths="selectedPaths" :path="dataDir" select-mode no-stats />
     </app-modal>
   </div>
 </template>
