@@ -4,15 +4,18 @@ import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
+import { useTaskProperties } from '@/views/Task/task-properties'
+const settingName = 'task'
+const { propertiesModelValueOptions } = useTaskProperties(settingName)
 </script>
 <template>
   <task
-    v-slot="{ tasks, columns }"
+    v-slot="{ tasks }"
     :task-filter="['org.icij.datashare.tasks.BatchSearchRunner']"
     page-name="batch-search"
     show-add
   >
-    <task-list :tasks="tasks" :columns="columns" :stoppable="true">
+    <task-list :tasks="tasks" :columns="propertiesModelValueOptions" :stoppable="true">
       <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
       <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>

@@ -900,9 +900,10 @@
     "entities": {
       "title": "Entities",
       "list": {
-        "title":"All tasks",
+        "info":"Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
         "searchPlaceholder": "Search task",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
+        "noResults": "No search results. Try adjusting the query or filters."
       },
       "new": {
         "title":"Find entities"
@@ -940,9 +941,10 @@
     "documents": {
       "title": "Documents",
       "list": {
-        "title":"All tasks",
+        "info": "Document additions are tasks that you run to ask Datashare to add new documents.",        ",searchPlaceholder": "Search task",
         "searchPlaceholder": "Search task",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
+        "noResults": "No search results. Try adjusting the query or filters."
       },
       "new": {
         "title":"Add documents"
@@ -969,7 +971,7 @@
     "batch-download": {
       "title": "Batch downloads",
       "list": {
-        "title":"All tasks",
+        "info": "Batch downloads are password-protected zip files containing all the documents from one of your specific search.",
         "searchPlaceholder": "Search task",
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
       }
@@ -977,9 +979,10 @@
     "batch-search": {
       "title": "Batch searches",
       "list": {
-        "title":"All tasks",
+        "info": "Batch searches allow to get the results of each query of a list, but all at once.",
         "searchPlaceholder": "Search task",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
+        "noResults": "No search results. Try adjusting the query or filters."
       },
       "new": {
         "title":"Run a new batch search"

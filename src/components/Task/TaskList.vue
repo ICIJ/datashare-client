@@ -1,5 +1,5 @@
 <template>
-  <page-table>
+  <page-table v-model:sort="sort" v-model:order="order">
     <template #thead>
       <page-table-th
         v-for="field in columns"
@@ -10,29 +10,16 @@
         :name="field.name"
       />
     </template>
+    <page-table-tr v-if="tasks.length === 0"
+      ><td :colspan="columns.length" class="text-center"><slot name="empty">No results found</slot></td>
+    </page-table-tr>
     <page-table-tr v-for="(item, index) in tasks" :key="index">
       <td v-for="(column, i) in columns" :key="i">
         <slot :name="`cell(${column.value})`" v-bind="{ item, column }">{{ item[column.value] }}</slot>
       </td>
 
       <page-table-td-actions>
-        <button-icon
-          variant="outline-secondary"
-          square
-          hide-label
-          size="sm"
-          icon-left="magnifying-glass"
-          class="border-0 me-1"
-        />
-        <button-icon
-          variant="outline-secondary"
-          square
-          hide-label
-          size="sm"
-          icon-left="arrow-clockwise"
-          class="border-0 me-1"
-        />
-        <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+        <slot name="cell(action)" v-bind="{ item }"></slot>
       </page-table-td-actions>
     </page-table-tr>
   </page-table>
@@ -75,9 +62,6 @@
              {{ humanSize(item.result.size, false, $tm('human.size')) }}
            </div>
          </template>
-         <template #table-colgroup="{ fields }">
-           <col v-for="{ key } in taskFields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }" />
-         </template>
        </b-table>
      </div>-->
 </template>
@@ -86,6 +70,12 @@
 import { sortBy } from 'lodash'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+
+import { getHumanTaskName } from '@/enums/taskNames'
+import DisplayDatetimeLong from '@/components/Display/DisplayDatetimeLong'
+import DisplayProgress from '@/components/Display/DisplayProgress'
+import DisplayStatus from '@/components/Display/DisplayStatus'
+import PageTable from '@/components/PageTable/PageTable'
 
 defineOptions({ name: 'TaskList' })
 defineProps({
@@ -107,6 +97,8 @@ defineProps({
   }
 })
 const store = useStore()
+const sort = defineModel('sort', { type: String, default: null })
+const order = defineModel('order', { type: String, default: 'desc' })
 const sortedTasks = computed(() => {
   // Move running tasks on top
   const states = ['RUNNING']
