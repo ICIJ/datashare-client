@@ -27,9 +27,11 @@ defineProps({
 
 const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   const selector = `.document-card[data-entry-id="${id}"][data-entry-index="${index}"]`
-  const card = elementRef.value.querySelector(selector)
-  // Use nullish coalescing operator to prevent error when document card is not found
-  card?.scrollIntoView({ behavior: 'auto', block: 'center' })
+  const card = elementRef?.value?.querySelector?.(selector)
+  if (card) {
+    // Use nullish coalescing operator to prevent error when document card is not found
+    card?.scrollIntoView({ behavior: 'auto', block: 'center' })
+  }
 }
 
 watchDocument(scrollDocumentCardIntoView)
@@ -95,6 +97,7 @@ watchDocument(scrollDocumentCardIntoView)
       flex-direction: column;
       padding-right: $spacer;
       gap: $spacer;
+      padding-bottom: $spacer;
       overflow: auto;
       flex-grow: 1;
     }
