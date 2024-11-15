@@ -76,9 +76,11 @@ const showDocument = computed(() => !!documentRoute.value)
       body-class="py-0 px-5"
       hide-header
       fullscreen
+      lazy
       @hide="refreshSearchRoute"
     >
       <document-floating class="my-3">
+        <slot name="carousel" />
         <slot />
       </document-floating>
     </app-modal>
