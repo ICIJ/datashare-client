@@ -8,9 +8,11 @@ import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
 import DocumentViewTitle from './DocumentViewTitle'
 import DocumentViewUserActions from './DocumentViewUserActions'
 
+import { useSearchNav } from '@/composables/search-nav'
 import { useDocument } from '@/composables/document'
 
 const elementRef = useTemplateRef('element')
+const { whenNoSearchEntries } = useSearchNav()
 const { document, documentRoute, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
 const props = defineProps({
@@ -26,6 +28,9 @@ const props = defineProps({
   q: {
     type: String,
     default: ''
+  },
+  modal: {
+    type: Boolean
   }
 })
 
@@ -51,6 +56,15 @@ const fetchRouteDocument = ({ params } = route) => {
   fetchDocumentOnce({ index, id, routing })
 }
 
+const redirectToDocumentStandalone = () => {
+  if (route.name === 'document') {
+    return router.replace({ name: 'document-standalone' })
+  }
+}
+
+// Ensure we do not display the document in the context of the search, when there is actually no search
+onBeforeMount(whenNoSearchEntries(redirectToDocumentStandalone))
+
 // Ensure the selected tab is always in sync with the route
 onBeforeMount(selectRouteTab)
 onBeforeRouteUpdate(selectRouteTab)
@@ -68,7 +82,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
 
     <div class="document-view__header d-flex justify-content-between align-items-center gap-2">
       <document-view-user-actions />
-      <document-view-actions :document="document" class="ms-auto" />
+      <document-view-actions :document="document" class="ms-auto" :modal="modal" />
       <slot name="nav" v-bind="{ document }">
         <router-view name="nav" />
       </slot>

@@ -9,6 +9,7 @@ import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import SearchSelection from '@/views/Search/SearchSelection'
+import SearchCarousel from '@/views/Search/SearchCarousel'
 import SearchNav from '@/views/Search/SearchNav'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook'
@@ -17,6 +18,7 @@ import { useDocument } from '@/composables/document'
 import { replaceUrlParam, useUrlPageFromWithStore, whenIsRoute } from '@/composables/url-params'
 import { useSearchFilter } from '@/composables/search-filter'
 import { useViews } from '@/composables/views'
+import { LAYOUTS } from '@/enums/layouts'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId } = useDocument()
@@ -43,6 +45,8 @@ const entries = computed(() => store.state.search.response.hits)
 const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
 const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
 const loading = computed(() => !store.state.search.isReady)
+const hasNav = computed(() => layout.value === LAYOUTS.LIST)
+const hasDocumentInModal = computed(() => layout.value !== LAYOUTS.LIST)
 
 const selection = ref([])
 const selectMode = ref(false)
@@ -110,8 +114,9 @@ watchProjects(refreshRoute)
             :per-page="perPage"
             :loading="loading"
           >
-            <template v-if="selectMode" #header="{ compact }">
+            <template #header="{ compact }">
               <search-selection
+                v-if="selectMode"
                 v-model:selection="selection"
                 :entries="entries"
                 :select-mode="selectMode"
@@ -121,10 +126,13 @@ watchProjects(refreshRoute)
             <template #floating>
               <div :id="documentViewFloatingId"></div>
             </template>
+            <template #carousel>
+              <search-carousel />
+            </template>
             <router-view v-slot="{ Component }">
-              <component :is="Component">
-                <template #nav>
-                  <search-nav :entries="entries" :page="page" :per-page="perPage" :total="total" />
+              <component :is="Component" :modal="hasDocumentInModal">
+                <template v-if="hasNav" #nav>
+                  <search-nav />
                 </template>
               </component>
             </router-view>
