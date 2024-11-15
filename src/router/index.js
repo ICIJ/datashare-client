@@ -6,26 +6,11 @@ export const routes = [
       {
         name: 'landing',
         path: '',
-        component: () => import('@/views/Landing'),
-        meta: {
-          docs: [
-            {
-              title: 'Add documents to Datashare',
-              path: '<%- os %>/add-documents-to-datashare-on-<%- os %>',
-              mode: ['LOCAL', 'EMBEDDED']
-            },
-            {
-              title: 'Analyse documents',
-              path: 'all/analyze-documents'
-            }
-          ]
-        },
-        beforeEnter: (to, from, next) => {
+        redirect: (to) => {
           if (to.query.index || to.query.indices) {
-            next({ name: 'search', query: to.query })
-          } else {
-            next()
+            return { name: 'search', query: to.query }
           }
+          return { name: 'project.list' }
         }
       },
       {
