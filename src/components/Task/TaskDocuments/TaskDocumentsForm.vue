@@ -86,14 +86,17 @@ function dispatchExtract() {
   }
   return core.api.index(form)
 }
+
 const successMessage = computed(() => t(`task.documents.form.success`))
 const errorMessage = (error) => t(`task.documents.form.error`, { error })
+
 async function submit() {
   try {
     await toastedPromise(dispatchExtract(), { successMessage, errorMessage })
   } catch (error) {}
   await core.router.push({ name: 'task.documents.list' })
 }
+
 const valid = computed(() => {
   return every([!props.disabled, isPresent(path.value)])
 })
@@ -101,6 +104,21 @@ const valid = computed(() => {
 const showOcrMessage = computed(() => {
   return !hasTesseract.value || !!extractOcr.value
 })
+
+const waitOcrIdentifier = uniqueId('documents-form-extract-ocr-control-')
+
+const isReady = computed(() => !wait.is(waitOcrIdentifier))
+
+const ocrOptions = computed(() => [
+  { text: t('task.documents.form.extractOcr.options.yes'), value: true },
+  { text: t('task.documents.form.extractOcr.options.no'), value: false }
+])
+
+const skipOptions = computed(() => [
+  { text: t('task.documents.form.skipIndexedDocuments.options.yes'), value: true },
+  { text: t('task.documents.form.skipIndexedDocuments.options.no'), value: false }
+])
+
 async function retrieveLanguages() {
   try {
     const [textLanguages, ocrLanguages] = await Promise.all([core.api.textLanguages(), core.api.ocrLanguages()])
@@ -113,10 +131,6 @@ async function retrieveLanguages() {
     }
   }
 }
-const waitOcrIdentifier = uniqueId('documents-form-extract-ocr-control-')
-onMounted(() => {
-  return loadLanguages()
-})
 
 async function loadLanguages() {
   wait.start(waitOcrIdentifier)
@@ -126,39 +140,24 @@ async function loadLanguages() {
   wait.end(waitOcrIdentifier)
 }
 
-const isReady = computed(() => {
-  return !wait.is(waitOcrIdentifier)
-})
-
-const ocrOptions = computed(() => [
-  { text: t('task.documents.form.extractOcr.options.yes'), value: true },
-  { text: t('task.documents.form.extractOcr.options.no'), value: false }
-])
-const skipOptions = computed(() => [
-  { text: t('task.documents.form.skipIndexedDocuments.options.yes'), value: true },
-  { text: t('task.documents.form.skipIndexedDocuments.options.no'), value: false }
-])
+onMounted(loadLanguages)
 </script>
 
 <template>
   <form-creation class="task-documents-form" :valid="valid" :submit-label="submitLabel" @reset="reset" @submit="submit">
-    <form-fieldset-i18n name="project-selector" translation-key="task.documents.form.projectSelector" compact-auto>
+    <form-fieldset-i18n name="project-selector" translation-key="task.documents.form.projectSelector">
       <search-bar-input-dropdown-for-projects v-model="selectedProject" />
       <input type="hidden" name="project" :value="selectedProject.name" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="source-path" translation-key="task.documents.form.path" compact-auto>
+    <form-fieldset-i18n name="source-path" translation-key="task.documents.form.path">
       <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
       <input type="hidden" name="path" :value="path" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n
-      name="extracting-language"
-      translation-key="task.documents.form.extractingLanguage"
-      compact-auto
-    >
+    <form-fieldset-i18n name="extracting-language" translation-key="task.documents.form.extractingLanguage">
       <extracting-language-form-control v-model="language" />
       <input type="hidden" name="language" :value="language" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.documents.form.extractOcr" compact-auto>
+    <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.documents.form.extractOcr">
       <b-form-radio-group
         v-model="extractOcr"
         name="extract-ocr"
@@ -166,21 +165,16 @@ const skipOptions = computed(() => [
         :options="ocrOptions"
         stacked
       />
-      <div v-show="showOcrMessage" class="">
-        <extracting-form-ocr-control
-          :iso-lang="language"
-          :text-languages="textLanguages"
-          :ocr-languages="ocrLanguages"
-          :has-tesseract="hasTesseract"
-          :is-ready="isReady"
-        />
-      </div>
     </form-fieldset-i18n>
-    <form-fieldset-i18n
-      name="skip-indexed-documents"
-      translation-key="task.documents.form.skipIndexedDocuments"
-      compact-auto
-    >
+    <extracting-form-ocr-control
+      v-show="showOcrMessage"
+      :iso-lang="language"
+      :text-languages="textLanguages"
+      :ocr-languages="ocrLanguages"
+      :has-tesseract="hasTesseract"
+      :is-ready="isReady"
+    />
+    <form-fieldset-i18n name="skip-indexed-documents" translation-key="task.documents.form.skipIndexedDocuments">
       <b-form-radio-group v-model="skipIndexedDocuments" name="skip-indexed-documents" :options="skipOptions" stacked />
     </form-fieldset-i18n>
   </form-creation>
