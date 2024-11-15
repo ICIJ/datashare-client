@@ -28,20 +28,21 @@ const thumbnailSize = computed(() => {
 const title = computed(() => {
   return props.document.title
 })
-
-const href = computed(() => {
-  return `#${props.document.route}`
-})
 </script>
 
 <template>
-  <a class="document-carousel-entry" :href="href" :class="classList" @click.prevent="emit('select', document)">
+  <router-link
+    class="document-carousel-entry"
+    :to="{ params: document.routerParams }"
+    :class="classList"
+    @click="emit('select', document)"
+  >
     <document-thumbnail :size="thumbnailSize" :document="document" crop hide-placeholder class="mb-2" />
     <component :is="document.contentTypeIcon" size="1.25em" class="mb-2" />
     <div class="document-carousel-entry__title">
       {{ title }}
     </div>
-  </a>
+  </router-link>
 </template>
 
 <style lang="scss" scoped>
@@ -52,17 +53,16 @@ const href = computed(() => {
   flex-direction: column;
   width: 130px;
   color: var(--bs-secondary-text-emphasis);
-  padding-top: 10px;
+  padding-top: 15px;
   cursor: pointer;
   border-radius: $border-radius;
 
   &:active,
   &:focus {
     outline: 0;
-    box-shadow: $focus-ring-box-shadow;
 
     &:deep(.document-thumbnail) {
-      border-color: var(--bs-primary);
+      box-shadow: $focus-ring-box-shadow;
     }
   }
 
@@ -75,7 +75,7 @@ const href = computed(() => {
   &--active {
     color: var(--bs-body-color);
     font-weight: 500;
-    padding-top: 0;
+    padding-top: 5px;
 
     &:deep(.document-thumbnail) {
       border-color: var(--bs-primary);
