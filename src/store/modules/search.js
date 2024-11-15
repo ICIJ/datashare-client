@@ -557,16 +557,11 @@ function actionsBuilder(api) {
       commit('query', lucene.toString(query))
       return dispatch('query')
     },
-    async runBatchDownload({ state, getters }, uri = null) {
-      // CD TODO: untested function
+    runBatchDownload({ state, getters }, uri = null) {
       const q = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
       const { indices: projectIds } = state
       const { query } = api.elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
-      return api.runBatchDownload({
-        projectIds,
-        query,
-        uri
-      })
+      return api.runBatchDownload({ projectIds, query, uri })
     },
     setTab({ state, commit }, tab) {
       if (state.tab !== tab) {
