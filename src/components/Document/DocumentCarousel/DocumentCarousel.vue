@@ -1,45 +1,67 @@
 <script setup>
+import { computed } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
 
 import DocumentCarouselNav from './DocumentCarouselNav'
 
+const position = defineModel('position', {
+  type: Number,
+  default: 0
+})
+
+const emit = defineEmits(['previous', 'next'])
+
 defineProps({
-  page: {
-    type: Number,
-    default: 1
-  },
-  totalRows: {
+  total: {
     type: Number,
     default: 0
+  },
+  backward: {
+    type: Boolean
+  },
+  disabledPrevious: {
+    type: Boolean
+  },
+  disabledNext: {
+    type: Boolean
   }
 })
 
-const emit = defineEmits(['update:page'])
+const adjustedPosition = computed({
+  get() {
+    return position.value + 1
+  },
+  set(value) {
+    position.value = value - 1
+  }
+})
 </script>
 
 <template>
   <div class="document-carousel">
     <tiny-pagination
-      row
-      class="mx-auto py-1"
+      :key="total"
+      v-model="adjustedPosition"
       :per-page="1"
-      :total-rows="totalRows"
-      :model-value="page"
-      @update:modelValue="emit('update:page', $event)"
+      :total-rows="total"
+      class="mx-auto py-1"
+      row
     />
     <div class="document-carousel__content p-3">
       <document-carousel-nav
         icon="caret-left"
+        :disabled="disabledPrevious"
         :label="$t('documentCarousel.previous')"
-        @click="emit('update:page', page - 1)"
+        @click="emit('previous')"
       />
       <div class="document-carousel__content__entries">
         <slot />
       </div>
       <document-carousel-nav
         icon="caret-right"
+        :disabled="disabledNext"
         :label="$t('documentCarousel.next')"
-        @click="emit('update:page', page + 1)"
+        @click="emit('next')"
       />
     </div>
   </div>
@@ -83,6 +105,8 @@ const emit = defineEmits(['update:page'])
       align-items: start;
       justify-content: center;
       flex-wrap: nowrap;
+      position: relative;
+      overflow: hidden;
 
       &::-webkit-scrollbar {
         display: none;
@@ -91,6 +115,28 @@ const emit = defineEmits(['update:page'])
       &:deep(.document-carousel-entry) {
         padding-inline: $spacer-xxs;
         margin-inline: $spacer-xxs;
+
+        &.sliding-backward,
+        &.sliding-forward {
+          &-move,
+          &-enter-active,
+          &-move-active {
+            transition: all 2s;
+          }
+
+          &-leave-active {
+            position: absolute;
+            visibility: hidden;
+          }
+        }
+
+        &.sliding-backward-enter-from {
+          transform: translateX(-100%);
+        }
+
+        &.sliding-forward-enter-from {
+          transform: translateX(100%);
+        }
       }
     }
   }
