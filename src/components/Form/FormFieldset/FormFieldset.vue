@@ -4,7 +4,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import { VARIANT_PLAIN, variantValidator } from '@/enums/variants'
 import { useCompact } from '@/composables/compact'
-import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const props = defineProps({
   label: {
