@@ -2,7 +2,7 @@
   <page-header no-toggle-settings />
   <div class="task-documents-new">
     <page-container fluid>
-      <task-documents-form :project-name="project" />
+      <task-documents-form :project-name="projectName" />
     </page-container>
   </div>
 </template>
@@ -11,6 +11,6 @@
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskDocumentsForm from '@/components/Task/TaskDocuments/TaskDocumentsForm'
-import { useUrlParam } from '@/composables/url-params'
-const project = useUrlParam('project', null)
+
+defineProps({ projectName: String })
 </script>
