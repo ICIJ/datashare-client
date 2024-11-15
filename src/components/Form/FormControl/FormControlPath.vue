@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 
 import AppModal from '@/components/AppModal/AppModal'
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -21,6 +21,8 @@ const dataDir = computed(() => core.config.get('dataDir'))
 const selectedPaths = ref([])
 const sourcePath = computed(() => props.path ?? dataDir.value)
 const display = computed(() => modelValue.value ?? sourcePath.value)
+
+watch(toRef(props, 'path'), (value) => (selectedPaths.value = [value]))
 </script>
 
 <template>
