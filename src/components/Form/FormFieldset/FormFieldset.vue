@@ -1,9 +1,9 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, useTemplateRef, toRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import { VARIANT_PLAIN, variantValidator } from '@/enums/variants'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useCompact } from '@/composables/compact'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const props = defineProps({
@@ -39,30 +39,18 @@ const props = defineProps({
   required: {
     type: Boolean
   },
-  compact: {
-    type: Boolean
-  },
-  compactAuto: {
-    type: Boolean,
-    default: true
-  },
-  compactAutoBreakpoint: {
-    type: String,
-    default: SIZE.LG,
-    validator: breakpointSizeValidator
+  compactThreshold: {
+    type: Number,
+    default: 990
   },
   withDescription: {
     type: Boolean
   }
 })
-const { breakpointDown } = useBreakpoints()
 
-const isCompact = computed(() => {
-  // If compactAuto is true, use the compactAutoBreakpoint value to determine if the
-  // form actions should be compact. This is done through the reactive breakpointDown value.
-  // Alternatively, if compactAuto is false, use the compact prop value.
-  return (props.compactAuto && breakpointDown.value[props.compactAutoBreakpoint]) || props.compact
-})
+const elementRef = useTemplateRef('element')
+const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
+
 const classList = computed(() => {
   return {
     'form-fieldset--required': props.required
@@ -72,6 +60,7 @@ const classList = computed(() => {
 
 <template>
   <b-form-group
+    ref="element"
     class="form-fieldset container-fluid"
     :class="classList"
     :label-cols-sm="labelColsSm"
@@ -79,7 +68,7 @@ const classList = computed(() => {
     :label-cols-lg="labelColsLg"
     :label="label"
     :label-for="labelFor"
-    :description="isCompact ? description : null"
+    :description="compact ? description : null"
   >
     <template #label>
       <div class="form-fieldset__label text-body-emphasis">
@@ -89,10 +78,10 @@ const classList = computed(() => {
         </slot>
       </div>
     </template>
-    <template v-if="!isCompact && (withDescription || description)">
+    <template v-if="!compact && (withDescription || description)">
       <div class="d-flex align-items-center gap-3">
         <div class="form-fieldset__content">
-          <slot v-bind="{ isCompact }" />
+          <slot v-bind="{ compact }" />
         </div>
         <div class="form-fieldset__description-side text-secondary-emphasis">
           {{ description }}
@@ -101,7 +90,7 @@ const classList = computed(() => {
     </template>
     <template v-else>
       <div class="row">
-        <slot v-bind="{ isCompact }" />
+        <slot v-bind="{ compact }" />
       </div>
     </template>
   </b-form-group>
@@ -116,7 +105,7 @@ const classList = computed(() => {
   }
 
   &__content {
-    flex: 280px 0 0;
+    flex: 300px 0 0;
   }
 
   .form-text {
