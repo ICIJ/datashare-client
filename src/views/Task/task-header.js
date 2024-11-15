@@ -56,6 +56,7 @@ export function useTaskHeader(pageName, hasAddButton, tasks) {
     perPage: perPage.value.modelValue,
     searchPlaceholder,
     displayedTasks,
-    totalRows
+    totalRows,
+    sortBy
   }
 }
