@@ -81,11 +81,13 @@ onBeforeRouteUpdate(fetchRouteDocument)
     </template>
 
     <div class="document-view__header d-flex justify-content-between align-items-center gap-2">
+      <slot name="header-start" v-bind="{ document }" />
       <document-view-user-actions />
       <document-view-actions :document="document" class="ms-auto" :modal="modal" />
       <slot name="nav" v-bind="{ document }">
         <router-view name="nav" />
       </slot>
+      <slot name="header-end" v-bind="{ document }" />
     </div>
 
     <document-view-title :document="document" />
