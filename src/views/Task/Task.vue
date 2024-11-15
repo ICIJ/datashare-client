@@ -10,7 +10,7 @@ import { useTaskProperties } from '@/views/Task/task-properties'
 const props = defineProps({
   taskFilter: {
     type: Array,
-    required: true
+    default: () => []
   },
   pageName: {
     type: String,
