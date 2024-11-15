@@ -142,10 +142,20 @@ const noAnalysis = computed(() => {
           <app-sidebar-section-entry icon="download-simple" :to="{ name: 'task.batch-download.list' }">
             {{ t('appSidebar.batchDownloads') }}
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry v-if="!noAnalysis" icon="files" :to="{ name: 'task.documents.list' }">
+          <app-sidebar-section-entry
+            v-if="!noAnalysis"
+            icon="files"
+            :to="{ name: 'task.documents.list' }"
+            :action-to="{ name: 'task.documents.new' }"
+          >
             {{ t('appSidebar.documents') }}
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry v-if="!noAnalysis" icon="users-three" :to="{ name: 'task.entities.list' }">
+          <app-sidebar-section-entry
+            v-if="!noAnalysis"
+            icon="users-three"
+            :to="{ name: 'task.entities.list' }"
+            :action-to="{ name: 'task.entities.new' }"
+          >
             {{ t('appSidebar.entities') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
