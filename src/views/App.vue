@@ -63,7 +63,7 @@ const showPageSettings = computed({
 })
 
 const hasFilters = computed(() => {
-  return route.matched.some((route) => 'filters' in route?.components)
+  return route.matched.some((route) => !!get(route, 'components.filters', false))
 })
 
 const FiltersComponent = computed(() => {
