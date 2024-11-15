@@ -161,9 +161,7 @@ export const routes = [
               {
                 name: 'task.documents.list',
                 path: '',
-                components: {
-                  default: () => import('@/views/Task/Documents/TaskDocumentsList')
-                },
+                component: () => import('@/views/Task/Documents/TaskDocumentsList'),
                 meta: {
                   breadcrumb: false
                 }
@@ -171,9 +169,8 @@ export const routes = [
               {
                 name: 'task.documents.new',
                 path: 'new',
-                components: {
-                  default: () => import('@/views/Task/Documents/TaskDocumentsNew')
-                },
+                component: () => import('@/views/Task/Documents/TaskDocumentsNew'),
+                props: (route) => route.query,
                 meta: {
                   title: 'task.documents.new.title'
                 }
