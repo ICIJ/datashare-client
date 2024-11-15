@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
 import { capitalize, flatten, get, mapValues, sumBy, pickBy, throttle } from 'lodash'
 
 import EntityButton from '@/components/Entity/EntityButton'
@@ -17,7 +16,6 @@ const { document, documentRoute } = useDocument()
 const { wait, waitFor, loaderId } = useWait()
 const { core } = useCore()
 const store = useStore()
-const router = useRouter()
 const filterToken = ref(null)
 
 const mustExtractEntities = computed(() => canManageDocuments.value && !hasNerTags.value)
