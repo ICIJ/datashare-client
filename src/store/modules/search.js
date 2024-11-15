@@ -245,8 +245,14 @@ export const getters = {
   from(state) {
     return state.from ?? 0
   },
+  page(state, getters) {
+    return Math.floor(getters.from / getters.perPage) + 1
+  },
+  total(state) {
+    return state?.response?.total ?? 0
+  },
   perPage(state, getters, rootState, rootGetters) {
-    return rootGetters['app/getSettings']('search', 'perPage')
+    return parseInt(rootGetters['app/getSettings']('search', 'perPage'))
   },
   sort(state, getters, rootState, rootGetters) {
     const [sort, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score', 'desc']
