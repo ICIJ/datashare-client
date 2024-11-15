@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="paginated-viewer paginated-viewer--not-available p-3">
+    <div v-else class="paginated-viewer paginated-viewer--not-available p-3 text-center">
       {{ $t('document.notAvailable') }}
     </div>
   </v-wait>
