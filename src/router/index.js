@@ -134,19 +134,16 @@ export const routes = [
               {
                 name: 'task.entities.list',
                 path: '',
-                components: {
-                  default: () => import('@/views/Task/Entities/TaskEntitiesList')
-                },
+                component: () => import('@/views/Task/Entities/TaskEntitiesList'),
                 meta: {
                   breadcrumb: false
                 }
               },
               {
                 name: 'task.entities.new',
+                props: ({ query }) => ({ projectName: query.projectName }),
                 path: 'new',
-                components: {
-                  default: () => import('@/views/Task/Entities/TaskEntitiesNew')
-                },
+                component: () => import('@/views/Task/Entities/TaskEntitiesNew'),
                 meta: {
                   title: 'task.entities.new.title'
                 }
@@ -170,7 +167,7 @@ export const routes = [
                 name: 'task.documents.new',
                 path: 'new',
                 component: () => import('@/views/Task/Documents/TaskDocumentsNew'),
-                props: (route) => route.query,
+                props: ({ query }) => ({ projectName: query.projectName }),
                 meta: {
                   title: 'task.documents.new.title'
                 }
@@ -200,9 +197,7 @@ export const routes = [
               {
                 path: '',
                 name: 'task.batch-search.list',
-                components: {
-                  default: () => import('@/views/Task/BatchSearch/TaskBatchSearchList')
-                },
+                component: () => import('@/views/Task/BatchSearch/TaskBatchSearchList'),
                 meta: {
                   breadcrumb: false
                 }
@@ -210,9 +205,7 @@ export const routes = [
               {
                 name: 'task.batch-search.new',
                 path: 'new',
-                components: {
-                  default: () => import('@/views/TaskBatchSearchNew')
-                },
+                component: () => import('@/views/TaskBatchSearchNew'),
                 meta: {
                   title: 'newBatchSearch.title',
                   docs: [
@@ -226,9 +219,7 @@ export const routes = [
               {
                 name: 'task.batch-search.view',
                 path: ':indices/:uuid',
-                components: {
-                  default: () => import('@/views/TaskBatchSearchView')
-                },
+                component: () => import('@/views/TaskBatchSearchView'),
                 props: true,
                 children: [
                   {
