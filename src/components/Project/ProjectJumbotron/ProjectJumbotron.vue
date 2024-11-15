@@ -51,23 +51,24 @@ const updateDate = computed(() => {
 
 <template>
   <section class="project-jumbotron">
-    <div class="project-jumbotron__header d-md-flex align-items-center justify-content-between flex-truncate">
+    <div class="project-jumbotron__header d-md-flex align-items-center justify-content-between flex-truncate gap-3">
       <h3 class="project-jumbotron__header__title">
         <project-label :project="project" :hide-thumbnail="!compact" />
       </h3>
+      <button-icon
+        class="ms-auto"
+        icon-left="pencil-simple"
+        variant="outline-secondary"
+        :to="toEdit"
+        :label="$t('projectJumbotron.edit')"
+      />
       <project-jumbotron-pin v-model:pinned="pinned" />
     </div>
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
       <project-thumbnail v-if="!compact" :project="project" width="100px" rounded class="flex-shrink-0" />
       <div>
         <p v-if="project.description" class="project-jumbotron__content__description">{{ project.description }}</p>
-        <footer class="project-jumbotron__content__footer d-md-flex gap-3 justify-content-between align-items-center">
-          <button-icon
-            icon-left="pencil-simple"
-            variant="outline-action"
-            :to="toEdit"
-            :label="$t('projectJumbotron.edit')"
-          />
+        <footer class="project-jumbotron__content__footer d-md-flex gap-3">
           <div class="d-flex flex-wrap gap-3 text-secondary py-3">
             <span v-if="creationDate" class="text-nowrap">
               <phosphor-icon name="calendar-blank" />
