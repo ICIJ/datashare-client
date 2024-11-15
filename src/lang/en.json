@@ -1141,8 +1141,8 @@
     "updateDate": "Updated:"
   },
   "projectJumbotronPin": {
-    "pin": "Pin project in the sidebar",
-    "unpin": "Unpin project in the sidebar"
+    "pin": "Pin",
+    "unpin": "Unpin"
   },
   "projectList": {
     "title": "Projects",
