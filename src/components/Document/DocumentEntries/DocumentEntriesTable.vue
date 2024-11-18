@@ -48,7 +48,7 @@ const showDocument = computed(() => !!documentRoute.value)
 
 <template>
   <div class="document-entries-table">
-    <div class="document-entries-table__header py-3">
+    <div class="document-entries-table__header">
       <slot name="header" />
     </div>
     <page-table v-model:sort="sort" v-model:order="order" :select-mode="selectMode">
