@@ -30,7 +30,7 @@ const showDocument = computed(() => !!documentRoute.value)
 
 <template>
   <div class="document-entries-grid">
-    <div class="document-entries-grid__header py-3">
+    <div class="document-entries-grid__header">
       <slot name="header" />
     </div>
     <div class="document-entries-grid__list row g-5 px-0">
@@ -69,7 +69,7 @@ const showDocument = computed(() => !!documentRoute.value)
     background: var(--bs-body-bg);
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     min-width: 0;
     max-width: 100%;
     width: 100%;

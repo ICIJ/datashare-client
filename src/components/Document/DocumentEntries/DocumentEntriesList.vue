@@ -87,8 +87,8 @@ watchDocument(scrollDocumentCardIntoView)
       min-width: 0;
       max-width: 100%;
       width: 100%;
-      padding: $spacer;
       flex-shrink: 1;
+      padding: 0 $spacer;
     }
 
     &__list {
