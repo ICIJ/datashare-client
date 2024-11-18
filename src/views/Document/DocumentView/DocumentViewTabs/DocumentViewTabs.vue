@@ -7,7 +7,7 @@ const { documentRoute } = useDocument()
 </script>
 
 <template>
-  <tab-group-navigation nowrap flush>
+  <tab-group-navigation nowrap>
     <tab-group-navigation-entry icon="text-align-left" :to="{ name: `${documentRoute.name}.text` }">
       {{ $t('documentViewTabs.text') }}
     </tab-group-navigation-entry>
