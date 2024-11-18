@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useModalController } from 'bootstrap-vue-next'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import ProjectJumbotronPin from './ProjectJumbotronPin'
@@ -12,6 +13,7 @@ import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 const { breakpointDown } = useBreakpoints()
+const modalController = useModalController()
 
 const pinned = defineModel('pinned', {
   type: Boolean,
@@ -28,6 +30,8 @@ const props = defineProps({
     default: null
   }
 })
+
+modalController.show({ component: ProjectLabel, props: { project: props.project } })
 
 const toEdit = computed(() => ({
   name: 'project.view.edit',

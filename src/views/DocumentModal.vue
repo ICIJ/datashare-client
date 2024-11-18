@@ -1,18 +1,15 @@
 <template>
   <div class="document-modal">
-    <document-navbar v-bind="$props" />
     <document-view v-bind="$props" />
   </div>
 </template>
 
 <script>
-import DocumentNavbar from '@/components/Document/DocumentNavbar'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
 
 export default {
   name: 'DocumentModal',
   components: {
-    DocumentNavbar,
     DocumentView
   },
   props: {
