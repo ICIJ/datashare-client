@@ -105,7 +105,6 @@ watchDocument(scrollDocumentCardIntoView)
 
   &__end {
     width: 100%;
-    overflow: auto;
     padding-left: $spacer-xl;
   }
 }
