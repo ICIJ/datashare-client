@@ -47,19 +47,6 @@
               />
               <span class="d-inline-block w-100 text-nowrap text-truncate">{{ name }}</span>
             </router-link>
-            <document-actions
-              :document="{
-                id: docId(uri),
-                route: uri,
-                index: projectName(uri),
-                routerParams: {
-                  id: docId(uri),
-                  index: projectName(uri),
-                  routing: docId(uri)
-                }
-              }"
-              class="user-history-document-list__list__item__actions d-flex"
-            />
           </div>
         </template>
         <template #cell(project)="{ item: { uri } }">
@@ -79,7 +66,6 @@ import { match } from 'path-to-regexp'
 
 import Document from '@/api/resources/Document'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
-import DocumentActions from '@/components/DocumentActions'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import ProjectLink from '@/components/Project/ProjectLink'
 import utils from '@/mixins/utils'
@@ -103,7 +89,6 @@ export default {
   name: 'UserHistoryDocumentList',
   components: {
     DocumentThumbnail,
-    DocumentActions,
     ColumnFilterDropdown,
     ProjectLink
   },
