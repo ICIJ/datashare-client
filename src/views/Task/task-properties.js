@@ -69,11 +69,11 @@ export function useTaskProperties(pageName) {
       },
       {
         value: ['createdAt', 'asc'],
-        text: tSortByOption('createdAt', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
+        text: tSortByOption('creationDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
       },
       {
         value: ['createdAt', 'desc'],
-        text: tSortByOption('createdAt', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
+        text: tSortByOption('creationDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
       }
     ]
   })
