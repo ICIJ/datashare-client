@@ -71,7 +71,6 @@ const hits = ref([])
 const store = useStore()
 const { core } = useCore()
 const { waitFor, loaderId } = useWait()
-const { isServer } = useMode()
 const infiniteScrollId = uniqueId('infinite-scroll-')
 
 const project = computed(() => store.state.insights.project)
