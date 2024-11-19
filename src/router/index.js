@@ -242,7 +242,7 @@ export const routes = [
         name: 'project',
         meta: {
           icon: 'circles-three-plus',
-          title: 'Projects'
+          title: 'projects.title'
         },
         components: {
           default: () => import('@/views/Project/Project'),
