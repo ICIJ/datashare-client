@@ -44,6 +44,10 @@
   "buttonDownloadDocuments": {
     "label": "Download documents"
   },
+  "buttonTogglePin": {
+    "pin": "Pin",
+    "unpin": "Unpin"
+  },
   "buttonToggleBatchMode": {
     "labelBatchMode": "Toggle batch mode",
     "labelSingleFlow": "Toggle single flow"
@@ -1159,10 +1163,6 @@
     "edit": "Edit",
     "creationDate": "Created:",
     "updateDate": "Updated:"
-  },
-  "projectJumbotronPin": {
-    "pin": "Pin",
-    "unpin": "Unpin"
   },
   "projectList": {
     "title": "Projects",
