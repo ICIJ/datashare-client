@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -21,8 +21,9 @@ import { useViews } from '@/composables/views'
 import { LAYOUTS } from '@/enums/layouts'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { provideDocumentViewFloatingId } = useDocument()
+const { provideDocumentViewFloatingId, watchDocument } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
+const entriesRef = useTemplateRef('entries')
 const store = useStore()
 const route = useRoute()
 
@@ -45,7 +46,7 @@ const entries = computed(() => store.state.search.response.hits)
 const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
 const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
 const loading = computed(() => !store.state.search.isReady)
-const hasNav = computed(() => layout.value === LAYOUTS.LIST)
+const hasNav = computed(() => toValue(layout) === LAYOUTS.LIST)
 const hasDocumentInModal = computed(() => layout.value !== LAYOUTS.LIST)
 
 const selection = ref([])
@@ -54,7 +55,7 @@ const selectMode = ref(false)
 const total = computed(() => parseInt(store.state.search.response.total))
 const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
 const page = useUrlPageFromWithStore({
-  perPage: perPage.value,
+  perPage: toValue(perPage),
   // The "from" query parameter is updated to reflect the current state
   // which while force the route to redirect to "search".
   to: 'search',
@@ -66,6 +67,14 @@ const page = useUrlPageFromWithStore({
 
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
+const resetEntriesListSize = () => toValue(entriesRef)?.resetListSize?.()
+const resetDocumentSize = () => toValue(entriesRef)?.resetDocumentSize?.()
+
+// The user might have resized the entries list or the document view. When the search is updated
+// or a new document is loaded, we need to reset original size to ensure that they are displayed.
+watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: true, immediate: true })
+watchDocument(resetDocumentSize)
+
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
 // can still be populated with the previous search results.
@@ -75,6 +84,7 @@ resetSearchResponse()
 // the most important one. It will trigger the search API call when the route query changes
 // which mean that only route change can trigger a search.
 watch(() => route.query, whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
+
 
 // Refresh route query when filter values change
 watch(() => store.state.search.values, refreshRoute, { deep: true })
@@ -104,6 +114,7 @@ watchProjects(refreshRoute)
         </div>
         <div class="search__main__results">
           <document-entries
+            ref="entries"
             v-model:page="page"
             v-model:select-mode="selectMode"
             :entries="entries"
