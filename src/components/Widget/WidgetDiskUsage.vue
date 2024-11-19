@@ -11,10 +11,10 @@
       class="widget widget--disk-usage"
       :size="size"
     />
+    <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer size="lg">
+      <path-tree v-model:path="path" :projects="[project]" elasticsearch-only />
+    </b-modal>
   </v-wait>
-  <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer size="lg">
-    <path-tree v-model:path="path" :projects="[project]" elasticsearch-only />
-  </b-modal>
 </template>
 
 <script>
