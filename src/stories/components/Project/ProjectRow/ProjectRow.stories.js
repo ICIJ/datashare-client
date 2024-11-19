@@ -14,10 +14,6 @@ const routes = [
     name: 'project.view.edit'
   },
   {
-    path: '/project/:name/delete',
-    name: 'project.view.delete'
-  },
-  {
     path: '/search',
     name: 'search'
   }
