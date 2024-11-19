@@ -189,6 +189,9 @@ defineProps({
           <template #image-source>
             <slot name="header-image-source" />
           </template>
+          <template #title>
+            <slot name="title" />
+          </template>
         </app-modal-header>
       </slot>
     </template>

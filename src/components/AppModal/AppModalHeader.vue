@@ -39,7 +39,11 @@ defineProps({
       </image-mode>
     </slot>
     <slot>
-      <h3 class="app-modal-header__title text-center mt-2 flex-grow-1">{{ title }}</h3>
+      <h3 class="app-modal-header__title text-center mt-2 flex-grow-1">
+        <slot name="title">
+          {{ title }}
+        </slot>
+      </h3>
     </slot>
   </div>
 </template>
