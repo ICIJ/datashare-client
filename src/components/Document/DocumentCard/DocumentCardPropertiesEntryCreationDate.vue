@@ -14,6 +14,6 @@ defineProps({
 
 <template>
   <document-card-properties-entry :document="document" :property="property">
-    <display-datetime :value="document.creationDate" />
+    <display-datetime v-if="document.creationDate" :value="document.creationDate" />
   </document-card-properties-entry>
 </template>
