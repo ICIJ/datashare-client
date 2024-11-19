@@ -1,3 +1,24 @@
+<script setup>
+import { computed, watch, onBeforeMount, toRef } from 'vue'
+import { useStore } from 'vuex'
+
+const props = defineProps({
+  name: {
+    type: String
+  }
+})
+
+const store = useStore()
+
+const instantiatedWidgets = computed(() => store.getters['insights/instantiatedWidgets'])
+
+watch(toRef(props, 'name'), (newName) => {
+  store.commit('insights/project', newName)
+})
+
+onBeforeMount(() => store.commit('insights/project', props.name))
+</script>
+
 <template>
   <div class="project-view-overview-insights">
     <div class="project-view-overview-insights__container">
@@ -11,37 +32,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapGetters } from 'vuex'
-
-import ProjectSelector from '@/components/ProjectSelector'
-import utils from '@/mixins/utils'
-
-export default {
-  name: 'ProjectViewInsights',
-  components: {
-    ProjectSelector
-  },
-  mixins: [utils],
-  props: {
-    name: {
-      type: String
-    }
-  },
-  computed: {
-    ...mapGetters('insights', ['instantiatedWidgets'])
-  },
-  watch: {
-    name() {
-      this.$store.commit('insights/project', this.name)
-    }
-  },
-  beforeMount() {
-    this.$store.commit('insights/project', this.name)
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .project-view-overview-insights {
