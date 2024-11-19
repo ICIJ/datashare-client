@@ -1,22 +1,24 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useProjectDeletionModal } from '@/composables/project'
+import { useProjectDeletionModal, useProjectPinned } from '@/composables/project'
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonTogglePin from '@/components/Button/ButtonTogglePin'
 
-const props = defineProps({
+const { project } = defineProps({
   project: {
     type: Object,
     required: true
   }
 })
 
-const { show: showProjectDeletionModal } = useProjectDeletionModal(props.project)
+const { show: showProjectDeletionModal } = useProjectDeletionModal(project)
+const { pinned } = useProjectPinned(project)
 
 const toProjectEdit = computed(() => ({
   name: 'project.view.edit',
   params: {
-    name: props.project.name
+    name: project.name
   }
 }))
 </script>
@@ -45,6 +47,7 @@ const toProjectEdit = computed(() => ({
           :label="$t('projectRowActions.delete')"
           @click="showProjectDeletionModal"
         />
+        <button-toggle-pin v-model:active="pinned" hide-label square size="sm" />
       </slot>
     </div>
   </td>
