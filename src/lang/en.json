@@ -896,6 +896,7 @@
   "task": {
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
+    "noResults": "No search results. Try adjusting the query or filters.",
     "settings": {
       "createdAt": "Created at",
       "name": "Name",
