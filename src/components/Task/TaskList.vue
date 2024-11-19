@@ -11,7 +11,9 @@
       />
     </template>
     <page-table-tr v-if="tasks.length === 0"
-      ><td :colspan="columns.length" class="text-center"><slot name="empty">No results found</slot></td>
+      ><td :colspan="columns.length" class="text-center">
+        <slot name="empty">{{ $t('task.noResults') }}</slot>
+      </td>
     </page-table-tr>
     <page-table-tr v-for="(item, index) in tasks" :key="index">
       <td v-for="(column, i) in columns" :key="i">
