@@ -7,7 +7,7 @@
         :label="field.text"
         sortable
         emphasis
-        :name="field.name"
+        :name="field.value"
       />
     </template>
     <page-table-tr v-if="tasks.length === 0"
@@ -68,7 +68,7 @@
 
 <script setup>
 import { sortBy } from 'lodash'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 import PageTable from '@/components/PageTable/PageTable'
@@ -98,6 +98,7 @@ defineProps({
 const store = useStore()
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
+
 const sortedTasks = computed(() => {
   // Move running tasks on top
   const states = ['RUNNING']
