@@ -1126,6 +1126,19 @@
   "columnFilterDropdown": {
     "apply": "Apply"
   },
+  "projectDeletionModal": {
+    "title": "Are you sure you want to delete the {project} project?",
+    "body": {
+      "all": "It will remove {documents} from your index, {tags} and {recommendations}.",
+      "documents": "0 documents | one document | {count} documents",
+      "tags": "0 tags | one tag | {count} tags",
+      "recommendations": "0 recommendations | one recommendation | {count} recommendations"
+    },
+    "notify": {
+      "succeed": "The project was deleted",
+      "failed": "Unable to delete the project"
+    }
+  },
   "projectEntriesTableHead": {
     "name": "Name of the project",
     "description": "Description" ,
@@ -1139,6 +1152,7 @@
     "delete": "Delete project"
   },
   "projectJumbotron": {
+    "delete": "Delete",
     "edit": "Edit",
     "creationDate": "Created:",
     "updateDate": "Updated:"
@@ -1181,12 +1195,6 @@
   "projectViewEdit":{
     "title": "Edit project",
     "notify": {
-      "delete": {
-        "succeed": "The project was deleted",
-        "succeedBody": "The documents in this project have been removed from Datashare.",
-        "failed": "Unable to delete the project",
-        "failedBody": "Something happened when trying to delete this project."
-      },
       "update":{
         "succeed": "The project was saved",
         "succeedBody": "Project saved.",
