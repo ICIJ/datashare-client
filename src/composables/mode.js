@@ -5,9 +5,10 @@ import { MODE_NAME } from '@/mode'
 
 export function useMode() {
   const { core } = useCore()
-  const isServer = computed(() => core.config.get('mode') === MODE_NAME.SERVER)
+  const mode = computed(() => core.mode)
+  const isServer = computed(() => mode.value === MODE_NAME.SERVER)
 
-  return { isServer }
+  return { mode, isServer }
 }
 
 export default useMode
