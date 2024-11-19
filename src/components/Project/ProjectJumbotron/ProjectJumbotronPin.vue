@@ -23,12 +23,5 @@ const togglePin = () => {
 </script>
 
 <template>
-  <button-icon
-    icon-left="push-pin"
-    :icon-left-weight="weight"
-    class="px-0 py-2"
-    variant="link"
-    :label="label"
-    @click="togglePin"
-  />
+  <button-icon icon-left="push-pin" :icon-left-weight="weight" variant="link" :label="label" @click="togglePin" />
 </template>
