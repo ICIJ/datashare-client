@@ -6,7 +6,8 @@ import PageTableThSort from './PageTableThSort'
 
 const props = defineProps({
   name: {
-    type: String
+    type: String,
+    required: true
   },
   label: {
     type: String,
@@ -39,7 +40,6 @@ const props = defineProps({
 })
 
 const sortBy = inject('sortBy')
-
 const isSorted = computed(() => {
   return props.sorted || (props.name && sortBy() === props.name)
 })
