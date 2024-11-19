@@ -1,4 +1,5 @@
 import types from '@/utils/types'
+import { MODE_NAME } from '@/mode'
 
 export { default as WidgetDiskUsage } from './WidgetDiskUsage'
 export { default as WidgetDocuments } from './WidgetDocuments'
@@ -87,7 +88,8 @@ const widgets = [
     order: 70,
     card: true,
     cols: 12,
-    type: 'WidgetRecommendedBy'
+    type: 'WidgetRecommendedBy',
+    modes: [MODE_NAME.SERVER]
   }
 ]
 
