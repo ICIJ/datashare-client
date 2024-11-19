@@ -1,5 +1,5 @@
 <script setup>
-import { toRef } from 'vue'
+import { computed, provide, toRef } from 'vue'
 
 import { useTaskHeader } from './task-header'
 import { useTaskPolling } from './task-polling'
@@ -39,6 +39,15 @@ const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTask
   props.showAdd,
   pollingTasks
 )
+const sort = computed({
+  get: () => sortBy.value.modelValue?.[0],
+  set: (value) => (sortBy.value.modelValue = [value, order.value])
+})
+
+const order = computed({
+  get: () => sortBy.value.modelValue?.[1],
+  set: (value) => (sortBy.value.modelValue = [sort.value, value])
+})
 </script>
 
 <template>
@@ -64,6 +73,13 @@ const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTask
   </page-header>
   <page-container fluid>
     <dismissable-alert variant="info">{{ $t(`task.${pageName}.list.info`) }}</dismissable-alert>
-    <slot :tasks="displayedTasks" :sort-by="sortBy"> </slot>
+    <slot
+      :tasks="displayedTasks"
+      :sort="sort"
+      :order="order"
+      :update-order="(v) => (order = v)"
+      :update-sort="(v) => (sort = v)"
+    >
+    </slot>
   </page-container>
 </template>
