@@ -28,9 +28,20 @@ export const draggable = {
       const target = bindingHandlers.get(el).target
       const max = target.parentNode.getBoundingClientRect().width
       const min = binding.value.min ?? 0
-      const x = clamp(startX + clientX - initialClientX, min, max - offset)
+      const reduceThreshold = binding.value.reduceThreshold ?? 100
+      const expandThreshold = binding.value.expandThreshold ?? 100
+      const position = startX + clientX - initialClientX
+      const x = clamp(position, min, max - offset)
       const detail = percent ? (x / max) * 100 : x
-      emitEvent({ name: 'drag', detail })
+
+      if (x - position >= reduceThreshold) {
+        emitEvent({ name: 'reduce', detail })
+      } else if (position >= max - expandThreshold) {
+        emitEvent({ name: 'expand', detail })
+      } else {
+        emitEvent({ name: 'drag', detail })
+      }
+
       return false
     }
 
