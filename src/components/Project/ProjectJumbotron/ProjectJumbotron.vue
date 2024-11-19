@@ -1,11 +1,12 @@
 <script setup>
 import { computed } from 'vue'
-import { useModalController } from 'bootstrap-vue-next'
+import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import ProjectJumbotronPin from './ProjectJumbotronPin'
 
 import { useBreakpoints } from '@/composables/breakpoints'
+import { useProjectDeletionModal } from '@/composables/project'
 import { SIZE } from '@/enums/sizes'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -13,7 +14,7 @@ import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 const { breakpointDown } = useBreakpoints()
-const modalController = useModalController()
+const router = useRouter()
 
 const pinned = defineModel('pinned', {
   type: Boolean,
@@ -31,7 +32,7 @@ const props = defineProps({
   }
 })
 
-modalController.show({ component: ProjectLabel, props: { project: props.project } })
+const { show: showProjectDeletionModal } = useProjectDeletionModal(props.project)
 
 const toEdit = computed(() => ({
   name: 'project.view.edit',
@@ -51,16 +52,31 @@ const creationDate = computed(() => {
 const updateDate = computed(() => {
   return props.lastIndexingDate ?? props.project.updateDate
 })
+
+const promptProjectDeletion = async () => {
+  const { trigger } = await showProjectDeletionModal()
+  // Only redirect if the user confirmed the deletion
+  // thought the "ok" button.
+  if (trigger === 'ok') {
+    router.push({ name: 'project.list' })
+  }
+}
 </script>
 
 <template>
   <section class="project-jumbotron">
-    <div class="project-jumbotron__header d-md-flex align-items-center justify-content-between flex-truncate gap-3">
+    <div class="project-jumbotron__header d-md-flex align-items-center justify-content-between flex-truncate gap-1">
       <h3 class="project-jumbotron__header__title">
         <project-label :project="project" :hide-thumbnail="!compact" />
       </h3>
       <button-icon
         class="ms-auto"
+        icon-left="trash"
+        variant="outline-secondary"
+        :label="$t('projectJumbotron.delete')"
+        @click="promptProjectDeletion"
+      />
+      <button-icon
         icon-left="pencil-simple"
         variant="outline-secondary"
         :to="toEdit"

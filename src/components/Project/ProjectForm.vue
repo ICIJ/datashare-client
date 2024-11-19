@@ -8,7 +8,6 @@ import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { slugger, isUrl } from '@/utils/strings'
 import { useCore } from '@/composables/core'
 
-// Props
 const props = defineProps({
   disabled: {
     type: Boolean
@@ -19,20 +18,17 @@ const props = defineProps({
   },
   edit: {
     type: Boolean
-  },
-  showDeleteButton: {
-    type: Boolean
   }
 })
 
-const emit = defineEmits(['submit', 'delete'])
+const emit = defineEmits(['submit'])
 
 const { core } = useCore()
 
 const form = ref(initialFormValues())
 
 function isReservedWord(value) {
-  const reserved = ['new', 'edit', 'delete']
+  const reserved = ['new', 'edit']
   return reserved.includes(value.toLowerCase())
 }
 
@@ -70,10 +66,6 @@ function reset() {
   form.value = initialFormValues()
 }
 
-function emitDelete() {
-  emit('delete', props.values.name)
-}
-
 const valid = computed(() => {
   return every([
     !props.disabled,
@@ -93,21 +85,15 @@ watch(
   }
 )
 const { t } = useI18n()
-const deleteConfirmation = computed(() => t('projectForm.deleteConfirmation'))
-const deleteLabel = computed(() => t('projectForm.delete'))
 const resetLabel = computed(() => t('projectForm.reset'))
 const submitLabel = computed(() => t('projectForm.submit'))
 </script>
 
 <template>
   <form-creation
-    :show-delete-button="showDeleteButton"
     :valid="valid"
     :reset-label="resetLabel"
-    :delete-label="deleteLabel"
     :submit-label="submitLabel"
-    :delete-confirmation="deleteConfirmation"
-    @delete="emitDelete"
     @reset="reset"
     @submit="submit"
   >
