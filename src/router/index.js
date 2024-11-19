@@ -280,7 +280,11 @@ export const routes = [
             meta: {
               icon: null,
               title({ route, core }) {
-                return core?.findProject(route.params.name).label
+                try {
+                  return core?.findProject(route.params.name).label
+                } catch (_) {
+                  return null
+                }
               }
             },
             children: [
@@ -367,14 +371,6 @@ export const routes = [
                   icon: 'pencil-simple',
                   title: 'Edit project',
                   allowedModes: ['LOCAL', 'EMBEDDED']
-                }
-              },
-              {
-                name: 'project.view.delete',
-                path: 'delete',
-                props: true,
-                redirect: {
-                  name: 'project.view.edit'
                 }
               }
             ]
