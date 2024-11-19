@@ -1,19 +1,12 @@
 <script setup>
 import { computed } from 'vue'
-import { capitalize, isFunction } from 'lodash'
+import { capitalize, isFunction, isString } from 'lodash'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import { PhCaretRight } from '@phosphor-icons/vue'
 
 import { useCore } from '@/composables/core'
-
-function castFunction(value) {
-  if (isFunction(value)) {
-    return value
-  }
-  return () => value
-}
 
 const props = defineProps({
   routeName: {
@@ -67,10 +60,17 @@ const routeHref = computed(() => {
 const { core } = useCore()
 const { t } = useI18n()
 
-const title = computed(() => {
-  const name = route.value?.name.split('.').pop()
-  const fn = castFunction(props.title ?? t(route.value?.meta?.title) ?? capitalize(name))
-  return fn({ route: route.value, core })
+const display = computed(() => {
+  return (
+    // Use the provided title from props
+    props.title ||
+    // Or use the title from the route meta as a function
+    (isFunction(route.value?.meta?.title) && route.value?.meta?.title({ route: route.value, core })) ||
+    // Or use the title from the route meta as a translation key
+    (isString(route.value?.meta?.title) && t(route.value?.meta?.title)) ||
+    // Or use the last part of the route name
+    capitalize(route.value?.name.split('.').pop())
+  )
 })
 
 const icon = computed(() => {
@@ -93,7 +93,7 @@ const classList = computed(() => {
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
-        <slot>{{ title }}</slot>
+        <slot>{{ display }}</slot>
       </span>
     </span>
     <phosphor-icon
