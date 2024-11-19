@@ -85,7 +85,6 @@ resetSearchResponse()
 // which mean that only route change can trigger a search.
 watch(() => route.query, whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
 
-
 // Refresh route query when filter values change
 watch(() => store.state.search.values, refreshRoute, { deep: true })
 // Refresh route query when reversed filters change
