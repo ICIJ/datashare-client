@@ -1,19 +1,34 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 import SeparatorLineDrag from './SeparatorLineDrag'
 import SeparatorLineReduce from './SeparatorLineReduce'
 import SeparatorLineExpand from './SeparatorLineExpand'
 
 import { draggable as vDraggable } from '@/directives/draggable'
+import { useResizeObserver } from '@/composables/resize-observer'
 
 const props = defineProps({
-  active: Boolean,
-  reduceDisabled: Boolean,
-  expandDisabled: Boolean,
+  active: {
+    type: Boolean
+  },
+  reduceDisabled: {
+    type: Boolean
+  },
+  expandDisabled: {
+    type: Boolean
+  },
   min: {
     type: Number,
-    default: 0
+    default: 400
+  },
+  reduceThreshold: {
+    type: Number,
+    default: 100
+  },
+  expandThreshold: {
+    type: Number,
+    default: 100
   }
 })
 
@@ -23,9 +38,11 @@ const classList = computed(() => {
   }
 })
 
-const target = ref(null)
+const target = useTemplateRef('target')
+const { state: targetState } = useResizeObserver(target)
+
 const emit = defineEmits(['reduce', 'expand', 'drag', 'dragstart', 'dragend'])
-const getMax = () => target.value.parentNode.getBoundingClientRect().width - target.value.getBoundingClientRect().width
+const getMax = () => target.value.parentNode.getBoundingClientRect().width - targetState.offsetWidth
 const reduce = () => emit('reduce', 0)
 const expand = () => emit('expand', getMax())
 </script>
@@ -34,14 +51,16 @@ const expand = () => emit('expand', getMax())
   <div ref="target" class="separator-line" :class="classList">
     <div class="separator-line__buttons">
       <slot>
-        <separator-line-reduce :disabled="reduceDisabled" @click="reduce()" />
+        <separator-line-reduce :disabled="reduceDisabled" @click="reduce" />
         <separator-line-drag
-          v-draggable.relative="{ target, min }"
+          v-draggable.relative="{ target, min, reduceThreshold, expandThreshold }"
+          @reduce="reduce"
+          @expand="expand"
           @drag="emit('drag', $event.detail)"
           @dragstart="emit('dragstart', $event.detail)"
           @dragend="emit('dragend', $event.detail)"
         />
-        <separator-line-expand :disabled="expandDisabled" @click="expand()" />
+        <separator-line-expand :disabled="expandDisabled" @click="expand" />
       </slot>
     </div>
   </div>
