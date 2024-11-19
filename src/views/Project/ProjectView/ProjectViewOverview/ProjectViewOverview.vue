@@ -4,6 +4,7 @@ import { get } from 'lodash'
 
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
+import { useProjectPinned } from '@/composables/project'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbotron'
@@ -32,19 +33,7 @@ const project = computed(() => {
   return core.findProject(props.name)
 })
 
-const pinned = computed({
-  get: () => {
-    return core.store.getters['app/isProjectPinned'](props.name)
-  },
-  set: (pinned) => {
-    if (pinned) {
-      core.store.commit('app/pinProject', props.name)
-    } else {
-      core.store.commit('app/unpinProject', props.name)
-    }
-  }
-})
-
+const { pinned } = useProjectPinned(project)
 const hasDocuments = ref(false)
 const lastIndexingDate = ref(null)
 

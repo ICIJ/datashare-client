@@ -1,4 +1,4 @@
-import { h } from 'vue'
+import { computed, h, toValue } from 'vue'
 import { useModalController } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/core'
@@ -29,7 +29,7 @@ export function useProjectDeletionModal(project) {
 
 export function useProjectMetrics(project) {
   const { core } = useCore()
-  const index = project.name
+  const { name: index } = toValue(project)
 
   async function fetchDocumentsCount(query = 'type:Document') {
     const size = 0
@@ -50,9 +50,29 @@ export function useProjectMetrics(project) {
   }
 
   async function fetchRecommendationsCount() {
-    const recommendations = await core.api.getRecommendationsByProject(project.name)
+    const recommendations = await core.api.getRecommendationsByProject(index)
     return recommendations?.totalCount || 0
   }
 
   return { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount }
+}
+
+export function useProjectPinned(project) {
+  const { core } = useCore()
+  const { name } = toValue(project)
+
+  const pinned = computed({
+    get() {
+      return core.store.getters['app/isProjectPinned'](name)
+    },
+    set(pinned) {
+      if (pinned) {
+        return core.store.commit('app/pinProject', name)
+      }
+
+      return core.store.commit('app/unpinProject', name)
+    }
+  })
+
+  return { pinned }
 }
