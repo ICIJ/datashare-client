@@ -22,7 +22,7 @@ import { LAYOUTS } from '@/enums/layouts'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId, watchDocument } = useDocument()
-const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
+const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchQuery, watchProjects } = useSearchFilter()
 const entriesRef = useTemplateRef('entries')
 const store = useStore()
 const route = useRoute()
@@ -72,7 +72,7 @@ const resetDocumentSize = () => toValue(entriesRef)?.resetDocumentSize?.()
 
 // The user might have resized the entries list or the document view. When the search is updated
 // or a new document is loaded, we need to reset original size to ensure that they are displayed.
-watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: true, immediate: true })
+watchQuery(whenIsRoute('search', resetEntriesListSize), { deep: true, immediate: true })
 watchDocument(resetDocumentSize)
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
@@ -83,7 +83,7 @@ resetSearchResponse()
 // Refresh search when route query changes. Among all the watcher of this view, it probably
 // the most important one. It will trigger the search API call when the route query changes
 // which mean that only route change can trigger a search.
-watch(() => route.query, whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
+watchQuery(whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
 
 // Refresh route query when filter values change
 watch(() => store.state.search.values, refreshRoute, { deep: true })
