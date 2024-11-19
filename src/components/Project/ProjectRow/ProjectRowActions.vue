@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import { useProjectDeletionModal } from '@/composables/project'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
@@ -10,15 +11,10 @@ const props = defineProps({
   }
 })
 
+const { show: showProjectDeletionModal } = useProjectDeletionModal(props.project)
+
 const toProjectEdit = computed(() => ({
   name: 'project.view.edit',
-  params: {
-    name: props.project.name
-  }
-}))
-
-const toProjetDelete = computed(() => ({
-  name: 'project.view.delete',
   params: {
     name: props.project.name
   }
@@ -40,7 +36,6 @@ const toProjetDelete = computed(() => ({
           :label="$t('projectRowActions.edit')"
         />
         <button-icon
-          :to="toProjetDelete"
           icon-left="trash"
           icon-left-hover-weight="bold"
           hide-label
@@ -48,6 +43,7 @@ const toProjetDelete = computed(() => ({
           size="sm"
           variant="outline-secondary"
           :label="$t('projectRowActions.delete')"
+          @click="showProjectDeletionModal"
         />
       </slot>
     </div>

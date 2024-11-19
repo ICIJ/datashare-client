@@ -141,11 +141,5 @@ describe('ProjectForm.vue', () => {
       await wrapper.find('input[name=label]').setValue('bar')
       expect(wrapper.find('.project-form__group--source-path').exists()).toBeFalsy()
     })
-
-    it('should show the delete button', async () => {
-      expect(wrapper.find('.form-creation__action--delete').exists()).toBe(false)
-      await wrapper.setProps({ showDeleteButton: true })
-      expect(wrapper.find('.form-creation__action--delete').exists()).toBe(true)
-    })
   })
 })
