@@ -90,13 +90,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
 </script>
 
 <template>
-  <form-creation
-    :valid="valid"
-    :reset-label="resetLabel"
-    :submit-label="submitLabel"
-    @reset="reset"
-    @submit="submit"
-  >
+  <form-creation :valid="valid" :reset-label="resetLabel" :submit-label="submitLabel" @reset="reset" @submit="submit">
     <div>
       <form-fieldset
         class="project-form__group project-form__group--label"
