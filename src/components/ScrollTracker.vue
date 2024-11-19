@@ -42,7 +42,9 @@ export default {
     },
     scrollToTarget() {
       this.hide()
-      VueScrollTo.scrollTo(this.target, 200, { offset: this.offset, container: this.container })
+      if (this.target) {
+        VueScrollTo.scrollTo(this.target, 200, { offset: this.offset, container: this.container })
+      }
     },
     toggle(toggler = !this.visible) {
       return toggler ? this.show() : this.hide()

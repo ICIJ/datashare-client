@@ -82,15 +82,24 @@ function expand(left) {
   }
 }
 
-function reset() {
-  if (reachedZeroWidth.value || reachedFullWidth.value) {
+function resetSize() {
+  resetStartSize()
+  resetEndSize()
+}
+
+function resetStartSize() {
+  if (reachedZeroWidth.value) {
     separatorLineLeft.value = props.minWidth
   }
 }
 
-defineExpose({
-  reset
-})
+function resetEndSize() {
+  if (reachedFullWidth.value) {
+    separatorLineLeft.value = props.minWidth
+  }
+}
+
+defineExpose({ resetSize, resetStartSize, resetEndSize })
 </script>
 
 <template>
