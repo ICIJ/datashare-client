@@ -4,7 +4,7 @@
       <phosphor-icon name="users-three" class="me-2" size="2em" />
       <h3 class="m-0 p-0 widget__header__title">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
-    <v-wait :for="loader" transition="fade">
+    <v-wait :for="loaderId" transition="fade">
       <template #waiting>
         <div class="widget__spinner text-center p-4">
           <phosphor-icon name="circle-notch" spin size="2em" />
@@ -21,7 +21,7 @@
         >
           <template #actions>
             <div class="d-flex flew-nowrap gap-3">
-              <display-user v-if="showUser" :value="user.id" />
+              <display-user :value="user.id" />
               <display-datetime :value="creationDate" format="fromNow" class="text-secondary-emphasis" />
             </div>
           </template>
@@ -39,135 +39,100 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import bodybuilder from 'bodybuilder'
 import { get, property, find, flatten, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { MODE_NAME } from '@/mode'
+import { useCore } from '@/composables/core'
+import { useWait } from '@/composables/wait'
+import { useMode } from '@/composables/mode'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
-/**
- * Widget to display a list of facets on the insights page.
- */
-export default {
-  name: 'WidgetRecommendedBy',
-  components: {
-    DocumentCard,
-    InfiniteLoading,
-    DisplayDatetime,
-    DisplayUser,
-    PhosphorIcon
+const props = defineProps({
+  widget: {
+    type: Object,
+    default: () => ({})
   },
-  props: {
-    /**
-     * The widget definition object.
-     */
-    widget: {
-      type: Object,
-      default: () => {}
-    },
-    pageSize: {
-      type: Number,
-      default: 50
-    }
-  },
-  data() {
-    return {
-      pages: [],
-      hits: [],
-      infiniteScrollId: uniqueId('infinite-scroll-')
-    }
-  },
-  computed: {
-    project() {
-      return this.$store.state.insights.project
-    },
-    items() {
-      return flatten(this.pages).map(this.recordToItem)
-    },
-    documents() {
-      return flatten(this.hits.map(property('hits')))
-    },
-    loader() {
-      return uniqueId('loading-recommended-by-')
-    },
-    offset() {
-      return this.pages.length * this.pageSize
-    },
-    nextOffset() {
-      return this.offset + this.pageSize
-    },
-    lastPage() {
-      return this.pages[this.pages.length - 1]
-    },
-    reachedTheEnd() {
-      return get(this, 'lastPage.length', 0) < this.pageSize
-    },
-    useInfiniteScroll() {
-      return this.offset > 0 && !this.reachedTheEnd
-    },
-    showUser() {
-      return this.$config?.get('mode') === MODE_NAME.SERVER
-    }
-  },
-  mounted() {
-    return this.loadFirstPage()
-  },
-  methods: {
-    clearPages() {
-      this.pages.splice(0, this.pages.length)
-      this.documents.splice(0, this.documents.length)
-    },
-    async loadFirstPage() {
-      this.clearPages()
-      await this.loadPageWithLoader()
-    },
-    async loadPageWithLoader() {
-      this.$wait.start(this.loader)
-      await this.loadPage()
-      this.$wait.end(this.loader)
-    },
-    async loadPage() {
-      const page = await this.$core.api.getDocumentUserRecommendations(this.offset, this.pageSize, this.project)
-      const hits = await this.getPageHits(page)
-      this.pages.push(page)
-      this.hits.push(hits)
-    },
-    async loadNextPage($infiniteLoadingState) {
-      await this.loadPage()
-      // Did we reach the end?
-      const method = this.reachedTheEnd ? 'complete' : 'loaded'
-      // Call the right method (with "noop" as safety net in case the method can't be found)
-      return get($infiniteLoadingState, method, noop)()
-    },
-    recordToItem({ user, document: { id }, creationDate }) {
-      const document = this.findDocument(id)
-      const params = document.routerParams
-      const to = { name: 'document-standalone', params }
-      return { document, to, user, creationDate }
-    },
-    async getPageHits(page) {
-      const preference = 'widget-recommended-by'
-      const body = this.getPageHitsBody(page)
-      const index = this.project
-      const response = await this.$core.api.elasticsearch.search({ index, body, preference })
-      return new EsDocList(response)
-    },
-    getPageHitsBody(page) {
-      const values = page.map((recommendation) => recommendation.document.id)
-      const excludes = ['content', 'content_translated']
-      return bodybuilder().size(values.length).rawOption('_source', { excludes }).query('ids', { values }).build()
-    },
-    findDocument(id) {
-      return find(this.documents, { id })
-    }
+  pageSize: {
+    type: Number,
+    default: 50
   }
+})
+
+const pages = ref([])
+const hits = ref([])
+const store = useStore()
+const { core } = useCore()
+const { waitFor, loaderId } = useWait()
+const { isServer } = useMode()
+const infiniteScrollId = uniqueId('infinite-scroll-')
+
+const project = computed(() => store.state.insights.project)
+const items = computed(() => flatten(pages.value).map(recordToItem))
+const documents = computed(() => flatten(hits.value.map(property('hits'))))
+const offset = computed(() => pages.value.length * props.pageSize)
+const lastPage = computed(() => pages.value[pages.value.length - 1])
+const reachedTheEnd = computed(() => get(lastPage.value, 'length', 0) < props.pageSize)
+const useInfiniteScroll = computed(() => offset.value > 0 && !reachedTheEnd.value)
+
+function clearPages() {
+  pages.value = []
+  hits.value = []
 }
+
+function loadFirstPage() {
+  clearPages()
+  return loadPageWithLoader()
+}
+
+async function loadPage() {
+  const page = await core.api.getDocumentUserRecommendations(offset.value, props.pageSize, project.value)
+  const pageHits = await getPageHits(page)
+  pages.value.push(page)
+  hits.value.push(pageHits)
+}
+
+const loadPageWithLoader = waitFor(loaderId, loadPage)
+
+async function loadNextPage($infiniteLoadingState) {
+  await loadPage()
+  const method = reachedTheEnd.value ? 'complete' : 'loaded'
+  get($infiniteLoadingState, method, noop)()
+}
+
+function recordToItem({ user, document: { id }, creationDate }) {
+  const document = findDocument(id)
+  const params = document.routerParams
+  const to = { name: 'document-standalone', params }
+  return { document, to, user, creationDate }
+}
+
+async function getPageHits(page) {
+  const preference = 'widget-recommended-by'
+  const body = getPageHitsBody(page)
+  const index = project.value
+  const response = await core.api.elasticsearch.search({ index, body, preference })
+  return new EsDocList(response)
+}
+
+function getPageHitsBody(page) {
+  const values = page.map((recommendation) => recommendation.document.id)
+  const excludes = ['content', 'content_translated']
+  return bodybuilder().size(values.length).rawOption('_source', { excludes }).query('ids', { values }).build()
+}
+
+function findDocument(id) {
+  return find(documents.value, { id })
+}
+
+onMounted(loadFirstPage)
 </script>
 
 <style lang="scss" scoped>
