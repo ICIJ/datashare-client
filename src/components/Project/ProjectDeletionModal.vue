@@ -29,7 +29,7 @@ const { waitFor, loaderId } = useWait()
 const { core, toast } = useCore()
 const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(project)
 
-async function confirmDeletion () {
+async function confirmDeletion() {
   try {
     await core.api.deleteProject(project.name)
     await core.deleteProject(project.name)
