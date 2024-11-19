@@ -1,5 +1,5 @@
 <script setup>
-import { useTemplateRef } from 'vue'
+import { toValue, useTemplateRef } from 'vue'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentFloating from '@/components/Document/DocumentFloating'
@@ -27,7 +27,7 @@ defineProps({
 
 const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   const selector = `.document-card[data-entry-id="${id}"][data-entry-index="${index}"]`
-  const card = elementRef?.value?.querySelector?.(selector)
+  const card = toValue(elementRef)?.querySelector?.(selector)
   if (card) {
     // Use nullish coalescing operator to prevent error when document card is not found
     card?.scrollIntoView({ behavior: 'auto', block: 'center' })
@@ -35,6 +35,18 @@ const scrollDocumentCardIntoView = function ({ id, index } = {}) {
 }
 
 watchDocument(scrollDocumentCardIntoView)
+
+defineExpose({
+  resetSize() {
+    return toValue(elementRef)?.resetSize?.()
+  },
+  resetListSize() {
+    return toValue(elementRef)?.resetStartSize?.()
+  },
+  resetDocumentSize() {
+    return toValue(elementRef)?.resetEndSize?.()
+  }
+})
 </script>
 
 <template>
