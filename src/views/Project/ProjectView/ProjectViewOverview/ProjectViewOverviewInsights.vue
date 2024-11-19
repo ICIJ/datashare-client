@@ -2,6 +2,8 @@
 import { computed, watch, onBeforeMount, toRef } from 'vue'
 import { useStore } from 'vuex'
 
+import { useMode } from '@/composables/mode'
+
 const props = defineProps({
   name: {
     type: String
@@ -9,8 +11,14 @@ const props = defineProps({
 })
 
 const store = useStore()
+const { mode } = useMode()
 
 const instantiatedWidgets = computed(() => store.getters['insights/instantiatedWidgets'])
+const widgets = computed(() => {
+  return instantiatedWidgets.value.filter(({ modes }) => {
+    return !modes || modes.includes(mode.value)
+  })
+})
 
 watch(toRef(props, 'name'), (newName) => {
   store.commit('insights/project', newName)
@@ -23,7 +31,7 @@ onBeforeMount(() => store.commit('insights/project', props.name))
   <div class="project-view-overview-insights">
     <div class="project-view-overview-insights__container">
       <b-row class="align-items-stretch">
-        <b-col v-for="(widget, index) in instantiatedWidgets" :key="index" :lg="widget.cols">
+        <b-col v-for="(widget, index) in widgets" :key="index" :lg="widget.cols">
           <div class="project-view-overview-insights__container__widget" :class="{ card: widget.card }">
             <component :is="widget.component" :widget="widget" class="flex-grow-1" />
           </div>
