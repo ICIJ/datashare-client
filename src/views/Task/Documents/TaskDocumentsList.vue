@@ -19,12 +19,13 @@ async function stopTask(name) {
 </script>
 <template>
   <task
-    v-slot="{ tasks, sort, order, updateSort, updateOrder }"
+    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
     :task-filter="['org.icij.datashare.tasks.EnqueueFromIndexTask', 'org.icij.datashare.tasks.ScanTask']"
     page-name="documents"
     show-add
   >
     <task-list
+      v-if="!empty"
       :tasks="tasks"
       :columns="propertiesModelValueOptions"
       :sort="sort"

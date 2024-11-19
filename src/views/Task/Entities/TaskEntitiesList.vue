@@ -11,12 +11,13 @@ const { propertiesModelValueOptions } = useTaskProperties(settingName)
 </script>
 <template>
   <task
-    v-slot="{ tasks, sort, order, updateSort, updateOrder }"
+    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
     :task-filter="['org.icij.datashare.tasks.ExtractNlpTask']"
     page-name="entities"
     show-add
   >
     <task-list
+      v-if="!empty"
       :tasks="tasks"
       :columns="propertiesModelValueOptions"
       :sort="sort"
