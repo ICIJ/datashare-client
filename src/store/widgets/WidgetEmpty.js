@@ -16,11 +16,12 @@ class WidgetEmpty {
    * [Bootstrap's grid system](https://bootstrap-vue.org/docs/components/layout#layout-and-grid-system)
    * @param order=0 {number} - Order to display among the others widgets
    */
-  constructor({ name = uniqueId('widget-'), card = true, cols = 12, order = 0 } = {}) {
+  constructor({ name = uniqueId('widget-'), card = true, cols = 12, order = 0, modes = null } = {}) {
     this.name = name
     this.card = card
     this.cols = cols
     this.order = order
+    this.modes = modes
   }
   bindState(state) {
     this[_STATE] = this[_STATE] || state
