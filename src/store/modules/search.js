@@ -168,17 +168,22 @@ export const getters = {
       )
     }
   },
-  toRouteQuery(state, getters) {
+  toBaseRouteQuery(state, getters) {
     return () => ({
       q: state.query,
+      indices: state.indices.join(','),
+      field: state.field,
+      ...getters.filterValuesAsRouteQuery()
+    })
+  },
+  toRouteQuery(state, getters) {
+    return () => ({
       from: `${state.from}`,
       perPage: `${getters.perPage}`,
       sort: getters.sortBy,
       order: getters.orderBy,
-      indices: state.indices.join(','),
-      field: state.field,
       tab: state.tab,
-      ...getters.filterValuesAsRouteQuery()
+      ...getters.toBaseRouteQuery()
     })
   },
   toRouteQueryWithStamp(state, getters) {
@@ -423,6 +428,7 @@ function actionsBuilder(api) {
         const raw = await dispatch('searchDocs')
         const roots = await dispatch('searchRoots', raw)
         commit('setResponse', { raw, roots })
+        dispatch('searchBreadcrumb/push', { query: getters.toBaseRouteQuery(), count: getters.total }, { root: true })
       } catch (error) {
         commit('error', error)
       } finally {
