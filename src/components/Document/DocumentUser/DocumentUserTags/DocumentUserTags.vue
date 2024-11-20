@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { matchesProperty, negate, property } from 'lodash'
 
+import ButtonTag from '@/components/Button/ButtonTag'
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
 import DocumentUserTagsAction from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTagsAction'
 

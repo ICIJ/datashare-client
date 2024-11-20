@@ -2,6 +2,8 @@
 import { range } from 'd3'
 import { computed } from 'vue'
 
+import FormControlRangeTicksEntry from './FormControlRangeTicksEntry'
+
 const props = defineProps({
   modelValue: {
     type: Number

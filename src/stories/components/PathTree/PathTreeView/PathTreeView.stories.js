@@ -26,7 +26,7 @@ export default {
     },
     setup: () => ({ args }),
     template: `
-      <path-view v-bind="args" @update:query="args.query = $event">
+      <path-tree-view v-bind="args" @update:query="args.query = $event">
         <path-tree-view-entry name="Flowera" :documents="9104" :directories="3" :size="2110000000">
           <template #name>
             <div class="text-truncate">
@@ -52,7 +52,7 @@ export default {
             <path-tree-view-entry name="2018" collapse />
           </path-tree-view-entry>
         </path-tree-view-entry>
-      </path-view>
+      </path-tree-view>
     `
   })
 }

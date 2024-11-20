@@ -71,11 +71,10 @@ import { sortBy } from 'lodash'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 
-import { getHumanTaskName } from '@/enums/taskNames'
-import DisplayDatetimeLong from '@/components/Display/DisplayDatetimeLong'
-import DisplayProgress from '@/components/Display/DisplayProgress'
-import DisplayStatus from '@/components/Display/DisplayStatus'
 import PageTable from '@/components/PageTable/PageTable'
+import PageTableTr from '@/components/PageTable/PageTableTr'
+import PageTableTh from '@/components/PageTable/PageTableTh'
+import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
 defineOptions({ name: 'TaskList' })
 defineProps({

@@ -4,9 +4,10 @@ import { filter, orderBy, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import includes from 'lodash/includes'
 
-import { useCore } from '@/composables/core'
 import FormCreation from '@/components/Form/FormCreation'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
+import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
+import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
 
 const props = defineProps({

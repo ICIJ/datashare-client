@@ -2,6 +2,7 @@
 import { computed, inject, ref } from 'vue'
 
 import PathTreeViewEntryName from './PathTreeViewEntryName'
+import PathTreeViewEntryStats from './PathTreeViewEntryStats'
 
 const collapse = defineModel('collapse', { type: Boolean })
 const selected = defineModel('selected', { type: Boolean })

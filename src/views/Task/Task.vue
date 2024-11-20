@@ -4,9 +4,11 @@ import { toRef } from 'vue'
 import { useTaskHeader } from './task-header'
 import { useTaskPolling } from './task-polling'
 
+import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskActions from '@/components/Task/TaskActions'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
+
 const props = defineProps({
   taskFilter: {
     type: Array,
@@ -21,7 +23,9 @@ const props = defineProps({
     default: false
   }
 })
+
 const taskNames = toRef(props, 'taskFilter')
+
 const {
   tasks: pollingTasks,
   hasPendingTasks,
@@ -29,6 +33,7 @@ const {
   stopPendingTasks,
   deleteDoneTasks
 } = useTaskPolling(taskNames)
+
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy } = useTaskHeader(
   props.pageName,
   props.showAdd,

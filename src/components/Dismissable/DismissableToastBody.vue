@@ -2,6 +2,8 @@
 import { computed, useSlots } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import ButtonIcon from '@/components/Button/ButtonIcon'
+
 const VARIANTS = {
   default: 'action',
   error: 'danger'
