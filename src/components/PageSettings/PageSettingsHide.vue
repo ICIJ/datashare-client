@@ -1,6 +1,8 @@
 <script setup>
 import { noop } from 'lodash'
 
+import ButtonIcon from '@/components/Button/ButtonIcon'
+
 defineProps({
   hide: {
     type: Function,

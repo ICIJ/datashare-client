@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 
+import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
+
 const props = defineProps({
   projects: {
     type: Array

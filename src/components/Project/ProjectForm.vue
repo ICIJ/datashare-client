@@ -3,6 +3,7 @@ import { ref, watch, computed } from 'vue'
 import { every, cloneDeep, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { slugger, isUrl } from '@/utils/strings'

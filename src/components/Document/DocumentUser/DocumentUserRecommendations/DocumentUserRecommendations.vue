@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import ButtonRecommendation from '@/components/Button/ButtonRecommendation'
 import ButtonToggleRecommendation from '@/components/Button/ButtonToggleRecommendation'
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
 

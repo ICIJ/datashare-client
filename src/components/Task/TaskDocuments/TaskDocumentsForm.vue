@@ -4,10 +4,13 @@ import { every, castArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
 
-import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import { useCore } from '@/composables/core'
+import ExtractingLanguageFormControl from '@/components/Task/TaskDocuments/ExtractingLanguageFormControl'
+import ExtractingFormOcrControl from '@/components/Task/TaskDocuments/ExtractingFormOcrControl'
 import FormCreation from '@/components/Form/FormCreation'
+import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
+import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 
 const props = defineProps({
   disabled: {

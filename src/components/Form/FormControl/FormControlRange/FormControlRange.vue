@@ -1,4 +1,7 @@
 <script setup>
+import FormControlRangeSlider from './FormControlRangeSlider'
+import FormControlRangeTicks from './FormControlRangeTicks'
+
 defineProps({
   modelValue: {
     type: Number,
