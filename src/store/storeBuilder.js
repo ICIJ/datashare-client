@@ -9,6 +9,7 @@ import { downloadsBuilder } from './modules/downloads'
 import { indexingStoreBuilder } from './modules/indexing'
 import { recommendedStoreBuilder } from './modules/recommended'
 import { searchStoreBuilder } from './modules/search'
+import { searchBreadcrumbStoreBuilder } from './modules/search-breadcrumb'
 import { settingsStoreBuilder } from './modules/settings'
 import { starredStoreBuilder } from './modules/starred'
 import app from './modules/app'
@@ -33,6 +34,7 @@ export function storeBuilder(api) {
       pipelines,
       recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api),
+      searchBreadcrumb: searchBreadcrumbStoreBuilder(),
       settings: settingsStoreBuilder(api),
       starred: starredStoreBuilder(api),
       treeView
