@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 
+import ProjectRowActions from './ProjectRowActions'
 import ProjectRowLabel from './ProjectRowLabel'
+import ProjectRowLinks from './ProjectRowLinks'
 import ProjectRowDescription from './ProjectRowDescription'
 import ProjectRowDocumentsCount from './ProjectRowDocumentsCount'
 import ProjectRowUpdateDate from './ProjectRowUpdateDate'

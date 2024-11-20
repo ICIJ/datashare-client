@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 
+import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler'
+import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch'
+
 const { sticky } = defineProps({
   noToggler: {
     type: Boolean,

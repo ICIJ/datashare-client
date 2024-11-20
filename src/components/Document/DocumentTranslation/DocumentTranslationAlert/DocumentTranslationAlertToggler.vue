@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import ButtonIcon from '@/components/Button/ButtonIcon'
+
 const active = defineModel('active', { type: Boolean, default: false })
 
 const { t } = useI18n()

@@ -1,6 +1,8 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
+
 const sort = defineModel('sort', { type: Object })
 
 defineProps({

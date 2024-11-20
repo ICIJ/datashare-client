@@ -34,6 +34,11 @@
 <script setup>
 import { computed } from 'vue'
 
+import DocumentActionsGroupEntryDownload from './DocumentActionsGroupEntryDownload'
+import DocumentActionsGroupEntryExpand from './DocumentActionsGroupEntryExpand'
+import DocumentActionsGroupEntryShare from './DocumentActionsGroupEntryShare'
+import DocumentActionsGroupEntryStar from './DocumentActionsGroupEntryStar'
+
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 /**

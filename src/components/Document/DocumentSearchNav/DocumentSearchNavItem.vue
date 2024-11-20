@@ -1,4 +1,6 @@
 <script setup>
+import ButtonIcon from '@/components/Button/ButtonIcon'
+
 defineProps({
   icon: {
     type: String,

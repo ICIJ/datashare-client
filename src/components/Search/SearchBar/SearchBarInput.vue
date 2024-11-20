@@ -41,7 +41,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
  */
 export default {
   name: 'SearchBarInput',
-  components: [FormControlSearch, ButtonIcon],
+  components: { FormControlSearch, ButtonIcon },
   props: {
     /**
      * Placeholder in the search bar.

@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import ProjectDetails from '@/components/Project/ProjectDetails'
 import { useCore } from '@/composables/core'
 
 const props = defineProps({
