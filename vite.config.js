@@ -2,7 +2,11 @@ import { defineConfig, loadEnv } from 'vite'
 import { resolve } from 'path'
 import * as childProcess from 'child_process'
 import Components from 'unplugin-vue-components/vite'
+import AutoImport from 'unplugin-auto-import/vite'
 import vue from '@vitejs/plugin-vue'
+
+import { PhosphorVuePreset }  from './bin/presets'
+import { PhosphorVueResolver } from './bin/resolvers'
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
 export default ({ mode }) => {
@@ -13,8 +17,27 @@ export default ({ mode }) => {
     base: mode === 'production' ? '/next/' :  '/',
     plugins: [
       vue(),
+      /**
+       * The "Components" plugin resolvers imports automaticaly component in vue
+       * templates For PhosphorVueResolver we use an homemade resolver
+       * that simply imports icons (example: `<ph-plus>`).
+       */
       Components({
-        resolvers: [BootstrapVueNextResolver()]
+        resolvers: [
+          BootstrapVueNextResolver(),
+          PhosphorVueResolver()
+        ]
+      }),
+      /**
+       * The "AutoImport" plugin offer a mechanism simimar to the "Components" plugins
+       * but it target javascript variable and references. This allows to imports component
+       * directly in `<script setup>` or in vue template ref (example: `<component :is="PhPlus" />`)
+       */
+      AutoImport({
+        vueTemplate: true,
+        imports: [
+          PhosphorVuePreset()
+        ]
       })
     ],
     resolve: {
