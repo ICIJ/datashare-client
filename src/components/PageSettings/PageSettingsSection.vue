@@ -12,6 +12,7 @@
         v-for="(option, index) in options"
         :key="index"
         :value="option.value"
+        :disabled="option.disabled"
         :name="name ?? defaultName"
         class="page-settings-section__input-group__input"
       >
