@@ -23,6 +23,7 @@ export default ({ mode }) => {
        * that simply imports icons (example: `<ph-plus>`).
        */
       Components({
+        dts: false,
         resolvers: [
           BootstrapVueNextResolver(),
           PhosphorVueResolver()
@@ -34,6 +35,7 @@ export default ({ mode }) => {
        * directly in `<script setup>` or in vue template ref (example: `<component :is="PhPlus" />`)
        */
       AutoImport({
+        dts: false,
         vueTemplate: true,
         imports: [
           PhosphorVuePreset()
