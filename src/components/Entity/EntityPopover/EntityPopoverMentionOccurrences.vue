@@ -25,7 +25,7 @@ const occurrences = computed(() => {
 })
 
 const nbProjects = computed(() => props.projects?.length ?? 0)
-const projectList = computed(() => t('entityPopoverMentionOccurrences.projects', { n: nbProjects }))
+const projectList = computed(() => t('entityPopoverMentionOccurrences.projects', { n: nbProjects.value }))
 const anyOccurences = computed(() => props.occurrences > 0 && nbProjects.value)
 </script>
 
