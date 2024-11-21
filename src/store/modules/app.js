@@ -25,27 +25,27 @@ export const state = () => ({
       task: {
         orderBy: ['name', 'desc'],
         perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'result', 'state']
+        properties: ['id', 'name', 'createdAt', 'progress', 'state']
       },
       entities: {
         orderBy: ['name', 'desc'],
         perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'result', 'state']
+        properties: ['state', 'id', 'name', 'createdAt', 'progress']
       },
       documents: {
         orderBy: ['name', 'desc'],
         perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'result', 'state']
+        properties: ['id', 'name', 'createdAt', 'progress', 'state']
       },
       'batch-download': {
         orderBy: ['name', 'desc'],
         perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'result', 'state']
+        properties: ['id', 'name', 'createdAt', 'progress', 'state']
       },
       'batch-search': {
         orderBy: ['name', 'desc'],
         perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'result', 'state']
+        properties: ['id', 'name', 'createdAt', 'progress', 'state']
       },
       documentView: {
         tab: 'text'
@@ -64,25 +64,6 @@ export const state = () => ({
 })
 
 export const mutations = {
-  taskSettingsCreated(
-    state,
-    {
-      name = 'task',
-      settings: {
-        orderBy = ['name', 'desc'],
-        perPage = 10,
-        properties = ['id', 'name', 'createdAt', 'progress', 'result', 'state']
-      }
-    }
-  ) {
-    if (!state.settings[name]) {
-      state.settings[name] = {
-        orderBy,
-        perPage,
-        properties
-      }
-    }
-  },
   sidebarCompact(state, compact) {
     state.sidebar.compact = compact
   },
@@ -119,11 +100,6 @@ export const getters = {
   getSettings(state) {
     return (view, name) => {
       return get(state.settings.views, [view, name].join('.'))
-    }
-  },
-  getTaskSettings(state) {
-    return (view, name) => {
-      return get(state.settings.views.task, [view, 'task', name].join('.'))
     }
   },
   isProjectPinned(state) {
