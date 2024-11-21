@@ -33,7 +33,8 @@ const {
   hasPendingTasks,
   hasDoneTasks,
   stopPendingTasks,
-  deleteDoneTasks
+  deleteDoneTasks,
+  isLoading
 } = useTaskPolling(taskNames)
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
   useTaskHeader(props.pageName, props.showAdd, pollingTasks)
@@ -71,23 +72,25 @@ const order = computed({
   </page-header>
   <page-container fluid>
     <dismissable-alert variant="info">{{ $t(`task.${pageName}.list.info`) }}</dismissable-alert>
-    <template v-if="noTasks">
-      <slot name="empty" :empty="noTasks">
-        <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
-          <template #label>
-            <span v-html="$t(`task.${pageName}.list.empty`)"></span>
-          </template>
-        </empty-state>
-      </slot>
-    </template>
-    <slot
-      :tasks="displayedTasks"
-      :sort="sort"
-      :order="order"
-      :update-order="(v) => (order = v)"
-      :update-sort="(v) => (sort = v)"
-      :empty="noTasks"
-    >
-    </slot>
+    <b-overlay rounded spinner-small opacity="0.6" :show="isLoading">
+      <template v-if="!isLoading && noTasks">
+        <slot name="empty" :empty="noTasks">
+          <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
+            <template #label>
+              <span v-html="$t(`task.${pageName}.list.empty`)"></span>
+            </template>
+          </empty-state>
+        </slot>
+      </template>
+      <slot
+        :tasks="displayedTasks"
+        :sort="sort"
+        :order="order"
+        :update-order="(v) => (order = v)"
+        :update-sort="(v) => (sort = v)"
+        :empty="noTasks"
+      >
+      </slot
+    ></b-overlay>
   </page-container>
 </template>

@@ -1,15 +1,17 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useViewSettings } from '@/composables/view-settings'
-import { useTaskSettings } from '@/composables/task-settings'
+import { useTaskProperties } from '@/composables/task-properties'
 
-export function useTaskProperties(pageName) {
+export function useTaskSettings(pageName) {
   const store = useStore()
+  const { t } = useI18n()
 
-  const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } =
-    useViewSettings()
+  const { SORT_ORDER_KEY, sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } = useViewSettings()
+
   const perPage = ref({
     label: perPageLabel('task.title'),
     type: 'radio',
@@ -34,6 +36,8 @@ export function useTaskProperties(pageName) {
       }
     ]
   })
+  const { propertyItems } = useTaskProperties()
+
   const sortBy = ref({
     label: sortByLabel,
     type: 'radio',
@@ -42,43 +46,17 @@ export function useTaskProperties(pageName) {
       get: () => store.getters['app/getSettings'](pageName, 'orderBy'),
       set: (sort, order) => store.commit('app/setSettings', { view: pageName, orderBy: [sort, order] })
     }),
-    options: [
-      {
-        value: ['name', 'asc'],
-        text: tSortByOption('name', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.ALPHA)
-      },
-      {
-        value: ['name', 'desc'],
-        text: tSortByOption('name', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.ALPHA)
-      },
-      {
-        value: ['id', 'asc'],
-        text: tSortByOption('id', SORT_ORDER_KEY.ASC)
-      },
-      {
-        value: ['id', 'desc'],
-        text: tSortByOption('id', SORT_ORDER_KEY.DESC)
-      },
-      {
-        value: ['progress', 'asc'],
-        text: tSortByOption('progress', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.QUANTITY)
-      },
-      {
-        value: ['progress', 'desc'],
-        text: tSortByOption('progress', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.QUANTITY)
-      },
-      {
-        value: ['createdAt', 'asc'],
-        text: tSortByOption('creationDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
-      },
-      {
-        value: ['createdAt', 'desc'],
-        text: tSortByOption('creationDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
+    options: propertyItems.reduce((acc, p) => {
+      if (p.sortable) {
+        const labelKey = p.sortingKey ?? p.key
+        acc.push(
+          { value: [p.key, SORT_ORDER_KEY.ASC], text: tSortByOption(labelKey, SORT_ORDER_KEY.ASC, p.sortType) },
+          { value: [p.key, SORT_ORDER_KEY.DESC], text: tSortByOption(labelKey, SORT_ORDER_KEY.DESC, p.sortType) }
+        )
       }
-    ]
+      return acc
+    }, [])
   })
-
-  const { propertiesOrder, propertiesLabel, propertiesIcon } = useTaskSettings(pageName)
 
   const properties = ref({
     label: visiblePropertiesLabel,
@@ -88,13 +66,12 @@ export function useTaskProperties(pageName) {
       get: () => store.getters['app/getSettings'](pageName, 'properties'),
       set: (properties) => store.commit('app/setSettings', { view: pageName, properties })
     }),
-    options: computed(() => {
-      return propertiesOrder.map((value) => {
-        const text = propertiesLabel.value[value]
-        const icon = propertiesIcon[value]
-        return { value, icon, text }
-      })
-    })
+    options: propertyItems.map((p) => ({
+      value: p.key,
+      icon: p.icon,
+      disabled: p.required,
+      text: computed(() => t(`task.${pageName}.list.properties.${p.key}`))
+    }))
   })
 
   const propertiesModelValueOptions = computed(() => {

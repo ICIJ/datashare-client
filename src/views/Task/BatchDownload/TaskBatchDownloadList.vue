@@ -4,9 +4,9 @@ import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import { useTaskProperties } from '@/views/Task/task-properties'
-const settingName = 'task'
-const { propertiesModelValueOptions } = useTaskProperties(settingName)
+import { useTaskSettings } from '@/views/Task/task-settings'
+const settingName = 'batch-download'
+const { propertiesModelValueOptions } = useTaskSettings(settingName)
 </script>
 <template>
   <task
