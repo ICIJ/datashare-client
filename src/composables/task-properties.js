@@ -46,10 +46,11 @@ export function useTaskProperties() {
     icon: 'image',
     key: 'state',
     type: SORT_TYPE_KEY.NUMBER,
-    sortable: false
+    sortable: false,
+    required: true
   })
 
-  const propertyItems = [propertyId, propertyName, propertyCreatedAt, propertyProgress, propertyState]
+  const propertyItems = [propertyState, propertyName, propertyId, propertyCreatedAt, propertyProgress]
 
   return { propertyItems }
 }
