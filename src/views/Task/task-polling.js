@@ -19,16 +19,20 @@ export function useTaskPolling(taskNames) {
   onMounted(async () => {
     return onShotTask()
   })
+  const loaderId = 'load task-list tasks'
   async function onShotTask() {
     try {
-      wait.start('load task-list tasks')
+      wait.start(loaderId)
       await startPollingTasks()
     } catch (e) {
       throw new Error('load task-list tasks')
     } finally {
-      wait.end('load task-list tasks')
+      wait.end(loaderId)
     }
   }
+  const isLoading = computed(() => {
+    return wait.waiting(loaderId)
+  })
   const hasDoneTasks = computed(() => {
     return store.getters['indexing/hasDoneTasks']
   })
@@ -64,5 +68,5 @@ export function useTaskPolling(taskNames) {
     // Execute the `getTasks` method immediately
     return fn()
   }
-  return { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks }
+  return { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
 }

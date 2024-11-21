@@ -908,7 +908,15 @@
         "info":"Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
         "searchPlaceholder": "Search task",
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
-        "noResults": "No search results. Try adjusting the query or filters."
+        "noResults": "No search results. Try adjusting the query or filters.",
+        "properties": {
+          "id": "Id",
+          "name":"Name",
+          "createdAt": "Creation date",
+          "progress":"Progress",
+          "result": "Result",
+          "state":"State"
+        }
       },
       "new": {
         "title":"Find entities"

@@ -5,14 +5,14 @@ import { orderBy as orderArrayBy, property } from 'lodash'
 
 import { useUtils } from '@/composables/utils'
 import { useUrlParam } from '@/composables/url-params'
-import { useTaskProperties } from '@/views/Task/task-properties'
+import { useTaskSettings } from '@/views/Task/task-settings'
 
 export function useTaskHeader(pageName, hasAddButton, tasks) {
   const { t } = useI18n()
 
   const { isServer } = useUtils()
   const settingKey = 'task'
-  const { perPage, sortBy } = useTaskProperties(settingKey)
+  const { perPage, sortBy } = useTaskSettings(settingKey)
 
   const toAddRoute = computed(() => {
     return !isServer.value && hasAddButton ? { name: `task.${pageName}.new` } : null

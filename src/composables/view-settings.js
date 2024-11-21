@@ -4,6 +4,7 @@ const SORT_ORDER_KEY = Object.freeze({
   ASC: 'asc',
   DESC: 'desc'
 })
+
 const SORT_TYPE_KEY = Object.freeze({
   DEFAULT: 'default',
   ALPHA: 'alpha',
