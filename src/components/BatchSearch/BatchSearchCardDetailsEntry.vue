@@ -1,9 +1,11 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
+
 defineOptions({ name: 'BatchSearchCardDetailsEntry' })
+
 defineProps({
   icon: {
-    type: String
+    type: [String, Object, Array],
   },
   label: {
     type: String

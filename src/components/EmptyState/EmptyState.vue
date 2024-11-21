@@ -27,7 +27,7 @@ const props = defineProps({
     type: String
   },
   actionIcon: {
-    type: String
+    type: [String, Object, Array],
   },
   actionHref: {
     type: String

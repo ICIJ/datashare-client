@@ -19,14 +19,14 @@ const props = defineProps({
     type: Object
   },
   actionIcon: {
-    type: String,
-    default: 'plus'
+    type: [String, Object, Array],
+    default: PhPlus
   },
   actionTitle: {
     type: String
   },
   icon: {
-    type: String
+    type: [String, Object, Array]
   },
   exactMatch: {
     type: Boolean

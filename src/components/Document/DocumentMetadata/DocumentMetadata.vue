@@ -7,8 +7,8 @@ const pinned = defineModel('pinned', { type: Boolean })
 
 defineProps({
   icon: {
-    type: String,
-    default: 'info'
+    type: [String, Object, Array],
+    default: PhInfo
   },
   name: {
     type: String,

@@ -4,12 +4,22 @@ import { computed } from 'vue'
 
 import ImageMode from '@/components/ImageMode/ImageMode'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
+
 const props = defineProps({
-  icon: { type: String },
-  label: { type: String },
-  thumbnail: { type: String },
-  active: { type: Boolean }
+  icon: { 
+    type: [String, Object, Array]
+  },
+  label: { 
+    type: String 
+  },
+  thumbnail: { 
+    type: String 
+  },
+  active: { 
+    type: Boolean
+   }
 })
+
 const imageClassList = computed(() => {
   return {
     'rounded-1 img-fluid': true,

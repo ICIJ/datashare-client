@@ -29,8 +29,8 @@ const props = defineProps({
     default: null
   },
   placeholderIcon: {
-    type: String,
-    default: 'hash'
+    type: [String, Object, Array],
+    default: PhHash
   },
   size: {
     type: String,

@@ -5,7 +5,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   icon: {
-    type: String,
+    type: [String, Object, Array],
     required: true
   },
   label: {

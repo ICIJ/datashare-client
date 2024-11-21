@@ -17,7 +17,7 @@ defineProps({
     :size="size"
     :label="label"
     class="form-control-tag-input-entry"
-    icon-right="x"
+    :icon-right="PhX"
     icon-right-variant="tertiary"
     icon-right-hover-weight="bold"
     variant="light"

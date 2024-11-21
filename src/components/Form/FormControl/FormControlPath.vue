@@ -28,10 +28,10 @@ watch(toRef(props, 'path'), (value) => (selectedPaths.value = [value]))
 
 <template>
   <div class="form-control-path d-flex no-wrap">
-    <button-icon v-b-modal.modal-form-control-path icon-left="folder-open" variant="outline-tertiary" class="me-3">
+    <button-icon v-b-modal.modal-form-control-path :icon-left="PhFolderOpen" variant="outline-tertiary" class="me-3">
       <path-tree-breadcrumb :model-value="display" datadir-label no-link />
     </button-icon>
-    <button-icon v-b-modal.modal-form-control-path icon-right="magnifying-glass" variant="action">
+    <button-icon v-b-modal.modal-form-control-path :icon-right="PhMagnifyingGlass" variant="action">
       {{ $t('formControlPath.browse') }}
     </button-icon>
     <app-modal id="modal-form-control-path" lazy scrollable hide-header size="lg" @ok="modelValue = selectedPaths[0]">

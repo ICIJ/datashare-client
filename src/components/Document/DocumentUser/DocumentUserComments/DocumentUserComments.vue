@@ -20,7 +20,7 @@ const props = defineProps({
 const { t } = useI18n()
 const title = computed(() => t('documentUserActions.comments', comments.value.length))
 const warning = t('documentUserComments.warning')
-const commentsIcon = 'chats-teardrop'
+const commentsIcon = PhChatsTeardrop
 
 function addComment(comment) {
   // TODO CD retrieve real url here
