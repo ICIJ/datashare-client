@@ -52,10 +52,10 @@ const mentionsLabel = computed(() => t('entityPopoverTabGroup.mentions'))
 
 <template>
   <tab-group v-model="tabIndex" class="entity-popover-tab-group">
-    <tab-group-entry icon="list-magnifying-glass" :count="props.offsets" :title="mentionsLabel">
+    <tab-group-entry :icon="PhListMagnifyingGlass" :count="props.offsets" :title="mentionsLabel">
       <entity-popover-mentions v-bind="mentionsBinding" v-model:offset="offset" />
     </tab-group-entry>
-    <tab-group-entry icon="info" :title="infoLabel">
+    <tab-group-entry :icon="PhInfo" :title="infoLabel">
       <entity-popover-info v-bind="infoBinding" />
     </tab-group-entry>
   </tab-group>

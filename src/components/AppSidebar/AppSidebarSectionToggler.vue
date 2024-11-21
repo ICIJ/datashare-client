@@ -11,7 +11,7 @@ const props = defineProps({
     type: String
   },
   icon: {
-    type: String
+    type: [String, Object, Array],
   },
   to: {
     type: Object

@@ -29,6 +29,7 @@ const props = defineProps({
   projects: { type: Array },
   description: { type: String }
 })
+
 const emit = defineEmits(['downloadDocuments', 'downloadQueries', 'downloadQueriesWithoutResults'])
 
 const { t } = useI18n()
@@ -39,7 +40,7 @@ const statusItem = computed(() => {
 
 const nbDocumentsItem = computed(() => {
   return {
-    icon: 'files',
+    icon: PhFiles,
     label: t('batchSearchCard.nbDocuments'),
     value: t('batchSearchCard.nbDocumentsLabel', humanNumber(props.nbResults))
   }
@@ -54,6 +55,7 @@ const noDocuments = computed(() => {
 const indices = computed(() => {
   return props.projects.join(',')
 })
+
 const to = { name: 'batch-tasks.view.results', params: { indices, uuid: props.uuid } }
 
 const downloadDocuments = () => {
@@ -61,61 +63,79 @@ const downloadDocuments = () => {
 }
 
 const downloadQueriesWithoutResultsLabel = t('batchSearchCard.downloadQueriesWithoutResultsLabel')
+
 const downloadQueriesWithoutResults = () => {
   emit('downloadQueriesWithoutResults')
 }
+
 const nbQueriesWithoutResultsItem = computed(() => {
   return {
-    icon: 'empty',
+    icon: PhEmpty,
     label: t('batchSearchCard.nbQueriesWithoutResults'),
     value: t('batchSearchCard.nbQueriesWithoutResultsLabel', humanNumber(props.nbQueriesWithoutResults))
   }
 })
+
 const noQueriesWithoutResults = computed(() => {
   return props.nbQueriesWithoutResults === 0
 })
+
 const nbQueriesItem = computed(() => {
   return {
-    icon: 'list-magnifying-glass',
+    icon: PhListMagnifyingGlass,
     label: t('batchSearchCard.nbQueries'),
     value: t('batchSearchCard.nbQueriesLabel', humanNumber(props.nbQueries))
   }
 })
+
 const downloadQueriesLabel = t('batchSearchCard.downloadQueriesLabel', { n: props.nbQueries })
+
 const downloadQueries = () => {
   emit('downloadQueries')
 }
-const noQueries = computed(() => {
-  return props.nbQueries === 0
-})
+
+const noQueries = computed(() => props.nbQueries === 0)
+
 const dateItem = computed(() => {
-  return { icon: 'calendar-blank', label: t('batchSearchCardDetails.date'), value: props.date }
+  return {
+    icon: PhCalendarBlank,
+    label: t('batchSearchCardDetails.date'),
+    value: props.date
+  }
 })
+
 const authorItem = computed(() => {
-  return { icon: 'user', label: t('batchSearchCardDetails.author'), value: props.author }
+  return {
+    icon: PhUser,
+    label: t('batchSearchCardDetails.author'),
+    value: props.author
+  }
 })
-const visibilityPrivate = 'eye-slash'
-const visibilityPublic = 'eye'
-const PRIVATE = false
+
 const visibilityIcon = computed(() => {
-  return props.visibility === PRIVATE ? visibilityPrivate : visibilityPublic
+  return !props.visibility ? PhEyeSlash : PhEye
 })
+
 const visibilityValue = computed(() => {
-  return props.visibility === PRIVATE
+  return !props.visibility
     ? t('batchSearchCardDetails.visibilityPrivate')
     : t('batchSearchCardDetails.visibilityShared')
 })
 const visibilityItem = computed(() => {
-  return { icon: visibilityIcon.value, label: t('batchSearchCardDetails.visibility'), value: visibilityValue.value }
+  return {
+    icon: visibilityIcon.value,
+    label: t('batchSearchCardDetails.visibility'),
+    value: visibilityValue.value
+  }
 })
 
-const phraseMatchIcon = 'quotes'
 const phraseMatchValue = computed(() => {
   return props.phraseMatch ? t('batchSearchCardDetails.phraseMatchOn') : t('batchSearchCardDetails.phraseMatchOff')
 })
+
 const phraseMatchItem = computed(() => {
   return {
-    icon: phraseMatchIcon,
+    icon: PhQuotes,
     label: t('batchSearchCardDetails.phraseMatch'),
     value: phraseMatchValue.value
   }
@@ -126,7 +146,7 @@ const fuzzinessValue = computed(() => {
 })
 const fuzzinnessItem = computed(() => {
   return {
-    icon: 'arrows-out-line-horizontal',
+    icon: PhArrowsOutLineHorizontal,
     label: t('batchSearchCardDetails.fuzziness'),
     value: fuzzinessValue.value
   }
@@ -136,7 +156,7 @@ const proximityValue = computed(() => {
 })
 const proximityItem = computed(() => {
   return {
-    icon: 'arrows-out-line-horizontal',
+    icon: PhArrowsOutLineHorizontal,
     label: t('batchSearchCardDetails.proximity'),
     value: proximityValue.value
   }
@@ -146,7 +166,11 @@ const variationItem = computed(() => {
 })
 
 const projectsItem = computed(() => {
-  return { icon: 'circles-three-plus', label: t('batchSearchCardDetails.projects'), value: props.projects }
+  return {
+    icon: PhCirclesThreePlus,
+    label: t('batchSearchCardDetails.projects'),
+    value: props.projects
+  }
 })
 </script>
 

@@ -3,5 +3,5 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 </script>
 
 <template>
-  <button-icon icon-left="download-simple" :label="$t('searchResultsActions.download')" />
+  <button-icon :icon-left="PhDownloadSimple" :label="$t('searchResultsActions.download')" />
 </template>

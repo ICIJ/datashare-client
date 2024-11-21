@@ -23,7 +23,7 @@ const label = computed(() => {
   <button-icon
     class="entity-section-actions-entry-more"
     variant="outline-primary"
-    icon-right="caret-right"
+    :icon-right="PhCaretRight"
     icon-right-variant="secondary"
   >
     {{ label }}

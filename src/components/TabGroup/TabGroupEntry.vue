@@ -3,7 +3,7 @@ import TabGroupTitle from '@/components/TabGroup/TabGroupTitle'
 
 defineProps({
   icon: {
-    type: String
+    type: [String, Object, Array]
   },
   count: {
     type: Number,
