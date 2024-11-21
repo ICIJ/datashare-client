@@ -6,7 +6,7 @@ defineProps({
     type: Boolean
   },
   icon: {
-    type: [String, Object, Array],
+    type: [String, Object, Array]
   },
   count: {
     type: Number,

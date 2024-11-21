@@ -6,18 +6,18 @@ import ImageMode from '@/components/ImageMode/ImageMode'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 
 const props = defineProps({
-  icon: { 
+  icon: {
     type: [String, Object, Array]
   },
-  label: { 
-    type: String 
+  label: {
+    type: String
   },
-  thumbnail: { 
-    type: String 
+  thumbnail: {
+    type: String
   },
-  active: { 
+  active: {
     type: Boolean
-   }
+  }
 })
 
 const imageClassList = computed(() => {
