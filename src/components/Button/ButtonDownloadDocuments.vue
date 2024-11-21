@@ -3,7 +3,6 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 import { ICON_WEIGHT } from '@/enums/iconWeights'
 
 const iconLeftHoverWeight = ICON_WEIGHT.BOLD
-const icon = 'download-simple'
 </script>
 
 <template>
@@ -12,7 +11,7 @@ const icon = 'download-simple'
     variant="link"
     :label="$t('buttonDownloadDocuments.label')"
     hide-label
-    :icon-left="icon"
+    :icon-left="PhDownloadSimple"
     :icon-left-hover-weight="iconLeftHoverWeight"
     :square="true"
   />

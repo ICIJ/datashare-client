@@ -37,7 +37,7 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
 <template>
   <button-icon
     v-if="directoriesLeft > 0"
-    icon-left="caret-down"
+    :icon-left="PhCaretDown"
     icon-left-variant="primary"
     class="shadow-lg text-nowrap"
     variant="outline-tertiary"

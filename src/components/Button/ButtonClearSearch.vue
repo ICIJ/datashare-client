@@ -7,6 +7,6 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     class="button-clear-search"
     variant="outline-light"
     :label="$t('buttonClearSearch.label')"
-    icon-left="eraser"
+    :icon-left="PhEraser"
   />
 </template>

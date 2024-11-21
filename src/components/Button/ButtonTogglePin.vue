@@ -17,8 +17,8 @@ defineProps({
     default: 'link'
   },
   icon: {
-    type: String,
-    default: 'push-pin'
+    type: [String, Object, Array],
+    default: PhPushPin
   }
 })
 

@@ -23,7 +23,7 @@ const label = computed(() => {
 <template>
   <button-icon
     variant="action"
-    icon-left="eyes"
+    :icon-left="PhEyes"
     icon-left-weight="fill"
     class="button-toggler-recommendation text-white"
     :label="label"
