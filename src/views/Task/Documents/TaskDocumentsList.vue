@@ -6,11 +6,11 @@ import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import { useTaskProperties } from '@/views/Task/task-properties'
 import { getHumanTaskName } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
-const settingName = 'task'
-const { propertiesModelValueOptions } = useTaskProperties(settingName)
+import { useTaskSettings } from '@/views/Task/task-settings'
+const settingName = 'documents'
+const { propertiesModelValueOptions } = useTaskSettings(settingName)
 const store = useStore()
 async function stopTask(name) {
   await store.dispatch('indexing/stopTask', name)

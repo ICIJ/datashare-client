@@ -1,12 +1,14 @@
 <script setup>
 import { noop } from 'lodash'
+import { useRouter } from 'vue-router'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useTaskProperties } from '@/views/Task/task-properties'
+import { useTaskSettings } from '@/views/Task/task-settings'
+const router = useRouter()
 
-const settingName = 'task'
-const { perPage, sortBy, properties } = useTaskProperties(settingName)
+const pageName = router.currentRoute.value.name.split('.')
+const { perPage, sortBy, properties } = useTaskSettings(pageName[1])
 
 defineProps({
   hide: {
