@@ -5,6 +5,7 @@
         v-for="field in columns"
         :key="field.name"
         :label="field.text"
+        :icon="field.icon"
         sortable
         emphasis
         :name="field.value"
