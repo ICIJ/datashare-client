@@ -5,7 +5,7 @@ defineOptions({ name: 'BatchSearchCardDetailsEntry' })
 
 defineProps({
   icon: {
-    type: [String, Object, Array],
+    type: [String, Object, Array]
   },
   label: {
     type: String

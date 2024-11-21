@@ -31,7 +31,7 @@ const props = defineProps({
     default: 0
   },
   icon: {
-    type: [String, Object, Array],
+    type: [String, Object, Array]
   },
   hideContextualize: {
     type: Boolean

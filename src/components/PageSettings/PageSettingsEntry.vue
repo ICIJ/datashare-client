@@ -13,7 +13,7 @@ defineOptions({
 })
 defineProps({
   icon: {
-    type: [String, Object, Array],
+    type: [String, Object, Array]
   },
   text: {
     type: String,

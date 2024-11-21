@@ -22,7 +22,7 @@ const props = defineProps({
     type: Boolean
   },
   icon: {
-    type: [String, Object, Array],
+    type: [String, Object, Array]
   },
   title: {
     type: String
