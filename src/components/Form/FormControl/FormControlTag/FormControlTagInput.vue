@@ -27,8 +27,8 @@ const props = defineProps({
     default: null
   },
   placeholderIcon: {
-    type: String,
-    default: 'tag'
+    type: [String, Object, Array],
+    default: PhHash
   },
   size: {
     type: String,

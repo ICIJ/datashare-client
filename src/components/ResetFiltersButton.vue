@@ -58,8 +58,8 @@ export default {
      * Default icon for the button
      */
     icon: {
-      type: String,
-      default: 'circle-xmark'
+      type: [String, Object, Array],
+      default: PhCircleXmark
     }
   },
   computed: {

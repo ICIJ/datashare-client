@@ -22,7 +22,7 @@ const props = defineProps({
     default: null
   },
   icon: {
-    type: String,
+    type: [String, Object, Array],
     default: null
   },
   size: {

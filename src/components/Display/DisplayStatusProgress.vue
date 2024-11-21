@@ -13,7 +13,7 @@ const props = defineProps({
     type: String
   },
   statusIcon: {
-    type: String
+    type: [String, Object, Array],
   },
   statusTitle: {
     type: String

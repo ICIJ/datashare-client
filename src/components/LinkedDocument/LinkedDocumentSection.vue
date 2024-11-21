@@ -12,7 +12,7 @@
         <slot name="document-list" v-bind="{ documents }">
           <linked-document-list :documents="documents" />
         </slot>
-        <button-icon icon-right="magnifying-glass" :label="searchLabel" @click="emitSearch" />
+        <button-icon :icon-right="PhMagnifyingGlass" :label="searchLabel" @click="emitSearch" />
       </div>
     </div>
   </section>
@@ -33,7 +33,7 @@ defineProps({
     required: true
   },
   icon: {
-    type: String,
+    type: [String, Object, Array],
     required: true
   },
   description: {

@@ -6,8 +6,8 @@ defineProps({
     type: String
   },
   icon: {
-    type: String,
-    default: 'tree-structure'
+    type: [String, Object, Array],
+    default: PhTreeStructure
   }
 })
 </script>

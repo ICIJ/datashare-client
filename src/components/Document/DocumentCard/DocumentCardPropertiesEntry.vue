@@ -16,7 +16,7 @@ defineProps({
     type: String
   },
   icon: {
-    type: String
+    type: [String, Object, Array],
   },
   hideIcon: {
     type: Boolean

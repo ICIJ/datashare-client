@@ -3,5 +3,5 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 </script>
 
 <template>
-  <button-icon icon-left="user-gear" :label="$t('searchResultsActions.recommend')" />
+  <button-icon :icon-left="PhUserGear" :label="$t('searchResultsActions.recommend')" />
 </template>

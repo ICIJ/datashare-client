@@ -97,7 +97,7 @@ const noAnalysis = computed(() => {
       <div class="py-4 d-flex flex-column gap-3">
         <app-sidebar-section :title="t('appSidebar.projects')" icon="circles-three-plus" :compact="compact">
           <app-sidebar-section-entry
-            icon="dots-nine"
+            :icon="PhDotsNine"
             exact-match
             :to="{ name: 'project.list' }"
             :action-to="toAddProject"
@@ -108,43 +108,43 @@ const noAnalysis = computed(() => {
           <app-sidebar-section-entry
             v-for="project in pinnedProjects"
             :key="project.name"
-            icon="push-pin"
+            :icon="PhPushPin"
             :to="{ name: 'project.view.overview.insights', params: { name: project.name } }"
           >
             <project-label :project="project" hide-thumbnail />
           </app-sidebar-section-entry>
         </app-sidebar-section>
-        <app-sidebar-section title="Explore" icon="magnifying-glass" :to="{ name: 'search' }" :compact="compact">
-          <app-sidebar-section-entry icon="magnifying-glass" :to="{ name: 'search' }" exact-match>
+        <app-sidebar-section title="Explore" :icon="PhMagnifyingGlass" :to="{ name: 'search' }" :compact="compact">
+          <app-sidebar-section-entry :icon="PhMagnifyingGlass" :to="{ name: 'search' }" exact-match>
             {{ t('appSidebar.search') }}
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry icon="clock-counter-clockwise" :to="{ name: 'user-history.document.list' }">
+          <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'user-history.document.list' }">
             {{ t('appSidebar.visitedDocuments') }}
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry icon="list-checks" :to="{ name: 'user-history.saved-search.list' }">
+          <app-sidebar-section-entry :icon="PhListChecks" :to="{ name: 'user-history.saved-search.list' }">
             {{ t('appSidebar.savedSearches') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
         <app-sidebar-section
           :title="t('appSidebar.tasks')"
-          icon="rocket-launch"
+          :icon="PhRocketLaunch"
           :to="{ name: 'search' }"
           :compact="compact"
         >
           <app-sidebar-section-entry
-            icon="list-magnifying-glass"
+            :icon="PhListMagnifyingGlass"
             :to="{ name: 'task.batch-search.list' }"
             :action-to="{ name: 'task.batch-search.new' }"
             :action-title="t('appSidebar.batchSearchesAction')"
           >
             {{ t('appSidebar.batchSearches') }}
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry icon="download-simple" :to="{ name: 'task.batch-download.list' }">
+          <app-sidebar-section-entry :icon="PhDownloadSimple" :to="{ name: 'task.batch-download.list' }">
             {{ t('appSidebar.batchDownloads') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             v-if="!noAnalysis"
-            icon="files"
+            :icon="PhFiles"
             :to="{ name: 'task.documents.list' }"
             :action-to="{ name: 'task.documents.new' }"
             :action-title="t('task.documents.new.title')"
@@ -153,7 +153,7 @@ const noAnalysis = computed(() => {
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             v-if="!noAnalysis"
-            icon="users-three"
+            :icon="PhUsersThree"
             :to="{ name: 'task.entities.list' }"
             :action-to="{ name: 'task.entities.new' }"
             :action-title="t('task.entities.new.title')"
