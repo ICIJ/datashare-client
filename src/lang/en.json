@@ -957,7 +957,15 @@
         "info": "Document additions are tasks that you run to ask Datashare to add new documents.",        ",searchPlaceholder": "Search task",
         "searchPlaceholder": "Search task",
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
-        "noResults": "No search results. Try adjusting the query or filters."
+        "noResults": "No search results. Try adjusting the query or filters.",
+        "properties": {
+          "id": "Id",
+          "name":"Name",
+          "createdAt": "Creation date",
+          "progress":"Progress",
+          "result": "Result",
+          "state":"State"
+        }
       },
       "new": {
         "title":"Add documents"
