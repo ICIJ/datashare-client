@@ -13,7 +13,7 @@ defineProps({
     :label="label ?? $t('buttonAdd.label')"
     class="button-add"
     hide-label
-    icon-left="plus"
+    :icon-left="PhPlus"
     pill
     square
     variant="action"

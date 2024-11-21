@@ -49,7 +49,7 @@ const adjustedPosition = computed({
     />
     <div class="document-carousel__content p-3">
       <document-carousel-nav
-        icon="caret-left"
+        :icon="PhCaretLeft"
         class="document-carousel__content__nav"
         :disabled="disabledPrevious"
         :label="$t('documentCarousel.previous')"
@@ -59,7 +59,7 @@ const adjustedPosition = computed({
         <slot />
       </div>
       <document-carousel-nav
-        icon="caret-right"
+        :icon="PhCaretRight"
         class="document-carousel__content__nav"
         :disabled="disabledNext"
         :label="$t('documentCarousel.next')"

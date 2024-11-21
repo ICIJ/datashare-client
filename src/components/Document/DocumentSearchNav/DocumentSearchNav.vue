@@ -19,14 +19,14 @@ defineProps({
   <div class="document-search-nav">
     <slot>
       <document-search-nav-item
-        icon="caret-left"
+        :icon="PhCaretLeft"
         :label="$t('documentSearchNavItem.previous')"
         :disabled="disabledPrevious"
         :tooltip-placement="tooltipPlacement"
         @click="$emit('previous')"
       />
       <document-search-nav-item
-        icon="caret-right"
+        :icon="PhCaretRight"
         :label="$t('documentSearchNavItem.next')"
         :disabled="disabledNext"
         :tooltip-placement="tooltipPlacement"

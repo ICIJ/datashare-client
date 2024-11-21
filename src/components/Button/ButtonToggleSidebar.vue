@@ -21,7 +21,7 @@ const weight = computed(() => {
 <template>
   <button-icon
     tooltip-placement="right"
-    icon-left="sidebar-simple"
+    :icon-left="PhSidebarSimple"
     :icon-left-weight="weight"
     square
     hide-label

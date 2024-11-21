@@ -16,10 +16,10 @@ const toggle = () => {
 
 <template>
   <button-icon
+    :icon-left="PhSlidersHorizontal"
     :label="$t('buttonToggleSettings.label')"
     class="button-toggle-settings border-0"
     hide-label
-    icon-left="sliders-horizontal"
     square
     variant="outline-secondary"
     @click="toggle"

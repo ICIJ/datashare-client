@@ -42,7 +42,7 @@ const compact = computed(() => {
     :square="compact"
     :variant="variant"
     class="button-toggle-advanced-search"
-    icon-right="eyeglasses"
+    :icon-right="PhEyeglasses"
     @click="toggle"
   />
 </template>
