@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
-import { SIZE, buttonSizeValidator } from '@/enums/sizes'
+import { buttonSizeValidator, SIZE } from '@/enums/sizes'
 import { toVariant, toVariantPhosphorIcon } from '@/utils/utils'
 
 const { t } = useI18n()
@@ -41,7 +41,7 @@ const valueIcon = computed(() => {
 })
 
 const valueTitle = computed(() => {
-  return t(`displayStatus.${props.value}`)
+  return t(`displayStatus.${valueVariant.value}`)
 })
 </script>
 
