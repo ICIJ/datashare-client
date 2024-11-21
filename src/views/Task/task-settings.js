@@ -36,7 +36,9 @@ export function useTaskSettings(pageName) {
       }
     ]
   })
-  const { propertyItems } = useTaskProperties()
+  const vals = store.getters['app/getSettings'](pageName, 'properties')
+  console.log('vals', vals)
+  const { items } = useTaskProperties(vals)
 
   const sortBy = ref({
     label: sortByLabel,
@@ -46,7 +48,7 @@ export function useTaskSettings(pageName) {
       get: () => store.getters['app/getSettings'](pageName, 'orderBy'),
       set: (sort, order) => store.commit('app/setSettings', { view: pageName, orderBy: [sort, order] })
     }),
-    options: propertyItems.reduce((acc, p) => {
+    options: items.reduce((acc, p) => {
       if (p.sortable) {
         const labelKey = p.sortingKey ?? p.key
         acc.push(
@@ -66,7 +68,7 @@ export function useTaskSettings(pageName) {
       get: () => store.getters['app/getSettings'](pageName, 'properties'),
       set: (properties) => store.commit('app/setSettings', { view: pageName, properties })
     }),
-    options: propertyItems.map((p) => ({
+    options: items.map((p) => ({
       value: p.key,
       icon: p.icon,
       disabled: p.required,
