@@ -59,7 +59,7 @@ export default {
      */
     icon: {
       type: [String, Object, Array],
-      default: PhCircleXmark
+      default: PhXCircle
     }
   },
   computed: {
