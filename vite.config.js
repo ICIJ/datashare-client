@@ -5,6 +5,7 @@ import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import vue from '@vitejs/plugin-vue'
 
+import { PhosphorVuePreset } from './bin/presets'
 import { PhosphorVueResolver } from './bin/resolvers'
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
@@ -37,6 +38,9 @@ export default ({ mode }) => {
       AutoImport({
         dts: false,
         vueTemplate: true,
+        imports: [
+          PhosphorVuePreset()
+        ],
         resolvers: [
           PhosphorVueResolver()
         ]

@@ -15,13 +15,13 @@ defineProps({
   <b-button-group>
     <document-local-search-nav-item
       :disabled="disabledPrevious"
-      icon="caret-up"
+      :icon="PhCaretUp"
       label="Find the previous occurrence"
       @click="$emit('previous')"
     />
     <document-local-search-nav-item
       :disabled="disabledNext"
-      icon="caret-down"
+      :icon="PhCaretDown"
       label="Find the next occurrence"
       @click="$emit('next')"
     />

@@ -36,7 +36,7 @@ const uninstallAddon = () => {
       :loading="loading"
       :disabled="loading"
       truncate
-      icon-left="cloud-arrow-down"
+      :icon-left="PhCloudArrowDown"
       variant="action"
       class="flex-grow-0"
       @click="installAddon"

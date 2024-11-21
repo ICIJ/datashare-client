@@ -35,7 +35,7 @@ const compact = computed(() => {
   <button-icon
     class="button-toggle-filters"
     :label="$t('buttonToggleFilters.label')"
-    icon-left="funnel"
+    :icon-left="PhFunnel"
     :square="compact"
     :hide-label="compact"
     :loading="loading"

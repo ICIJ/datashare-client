@@ -45,12 +45,12 @@ const iconLeftWeight = computed(() => {
     :counter-variant="counterVariant"
     :disabled="disabled"
     :icon-left-weight="iconLeftWeight"
+    :icon-left="PhPath"
     :label="$t('buttonToggleSearchBreadcrumb.label')"
     :loading="loading"
     :variant="variant"
     class="button-toggle-search-breadcrumb"
     hide-label
-    icon-left="path"
     square
     @click="toggle"
   />

@@ -13,7 +13,7 @@
       @update:model-value="(newValue) => (url = newValue)"
     /><button-icon
       variant="tertiary"
-      icon-left="cloud-arrow-down"
+      :icon-left="PhCloudArrowDown"
       class="ms-2 text-nowrap rounded-1"
       :disabled="!isFormValid || loading"
       :loading="loading"

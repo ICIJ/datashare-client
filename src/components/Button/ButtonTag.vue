@@ -17,7 +17,7 @@ const emit = defineEmits(['delete'])
 
 <template>
   <search-parameter
-    icon="hash"
+    :icon="PhHash"
     filter="tag"
     class="text-action-emphasis"
     :term="label"
