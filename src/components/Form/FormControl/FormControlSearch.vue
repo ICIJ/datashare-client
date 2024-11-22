@@ -128,7 +128,7 @@ defineExpose({
 </script>
 
 <template>
-  <form class="form-control-search" :class="classList" @submit.prevent="$emit('submit', modelValue)">
+  <form class="form-control-search" :class="classList" @submit.prevent="emit('submit', modelValue)">
     <div class="form-control-search__input-group input-group">
       <span
         class="form-control-search__start input-group-text border-end-0"
@@ -151,12 +151,12 @@ defineExpose({
           'form-control-search--rounded--end': rounded && !clearText
         }"
         :placeholder="placeholder"
-        @keydown.up="$emit('up', $event)"
-        @keydown.down="$emit('down', $event)"
-        @keydown.enter="$emit('enter', $event)"
+        @keydown.up="emit('up', $event)"
+        @keydown.down="emit('down', $event)"
+        @keydown.enter="emit('enter', $event)"
         @keydown.esc="$event.target.blur()"
         @update:modelValue="input"
-        @blur="$emit('blur', $event)"
+        @blur="emit('blur', $event)"
       />
       <span
         class="form-control-search__end input-group-text px-1 py-0 border-start-0"

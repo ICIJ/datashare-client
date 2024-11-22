@@ -8,7 +8,6 @@
     :clear-text="true"
     shadow
     @blur="onBlur"
-    @submit="onSubmit"
     @input="onInput"
     @focus="onFocus"
   >
@@ -97,17 +96,14 @@ export default {
     }
   },
   methods: {
-    onBlur() {
-      this.$emit('blur')
+    onBlur(e) {
+      this.$emit('blur', e)
     },
-    onSubmit() {
-      this.$emit('submit')
+    onInput(e) {
+      this.$emit('input', e)
     },
-    onInput() {
-      this.$emit('input')
-    },
-    onFocus() {
-      this.$emit('focus')
+    onFocus(e) {
+      this.$emit('focus', e)
     },
     focus() {
       this.$refs.input.focus()
