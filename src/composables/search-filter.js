@@ -148,7 +148,7 @@ export function useSearchFilter() {
   function refreshRoute() {
     const name = 'search'
     const query = store.getters['search/toRouteQuery']()
-    return router.push({ name, query }).catch(() => {})
+    return router.push({ name, query })
   }
 
   function refreshSearchFromRoute() {
