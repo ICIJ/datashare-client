@@ -6,8 +6,10 @@ const INFO = 'info'
 const SUCCESS = 'success'
 const WARNING = 'warning'
 const DANGER = 'danger'
+const LINK = 'link'
 const LIGHT = 'light'
 const DARK = 'dark'
+
 const OUTLINE_ACTION = 'outline-action'
 const OUTLINE_PRIMARY = 'outline-primary'
 const OUTLINE_SECONDARY = 'outline-secondary'
@@ -42,9 +44,11 @@ export const VARIANT_PLAIN = Object.freeze({
   INFO,
   SUCCESS,
   WARNING,
+  LINK,
   LIGHT,
   DARK
 })
+
 export const VARIANT = Object.freeze({
   ACTION,
   PRIMARY,
@@ -54,6 +58,7 @@ export const VARIANT = Object.freeze({
   INFO,
   SUCCESS,
   WARNING,
+  LINK,
   LIGHT,
   DARK,
   CATEGORY_BAN,
@@ -72,6 +77,7 @@ export const VARIANT = Object.freeze({
   OUTLINE_DARK,
   OUTLINE_LIGHT
 })
+
 export const VARIANTS_PLAIN = Object.values(VARIANT_PLAIN)
 export const variantPlainValidator = (v) => VARIANTS_PLAIN.includes(v)
 
