@@ -66,6 +66,5 @@ export function useTaskProperties(propertyList) {
     acc.push(propertyItems[p])
     return acc
   }, [])
-  console.log('propertyList', propertyList)
   return { items }
 }
