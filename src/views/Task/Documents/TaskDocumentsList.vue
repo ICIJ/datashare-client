@@ -20,7 +20,7 @@ async function stopTask(name) {
 <template>
   <task
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
-    :task-filter="['org.icij.datashare.tasks.EnqueueFromIndexTask', 'org.icij.datashare.tasks.ScanTask']"
+    :task-filter="['org.icij.datashare.tasks.IndexTask', 'org.icij.datashare.tasks.ScanTask']"
     page-name="documents"
     show-add
   >

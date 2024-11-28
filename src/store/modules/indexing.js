@@ -1,4 +1,4 @@
-import { filter, remove } from 'lodash'
+import { filter, flatten, remove } from 'lodash'
 
 import { TASK_STATUS } from '@/enums/taskStatus'
 
@@ -61,7 +61,7 @@ function actionsBuilder(api) {
           commit(UPDATE_TASKS, tasks)
         } else {
           const tasks = await Promise.all(taskNames.map((t) => api.getTasks(t)))
-          commit(UPDATE_TASKS, ...tasks)
+          commit(UPDATE_TASKS, flatten(tasks))
         }
       } catch (_) {
         commit(UPDATE_TASKS, [])
