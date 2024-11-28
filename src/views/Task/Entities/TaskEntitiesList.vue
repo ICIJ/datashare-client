@@ -12,7 +12,7 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
 <template>
   <task
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
-    :task-filter="['org.icij.datashare.tasks.ExtractNlpTask']"
+    :task-filter="['org.icij.datashare.tasks.ExtractNlpTask', 'org.icij.datashare.tasks.EnqueueFromIndexTask']"
     page-name="entities"
     show-add
   >
