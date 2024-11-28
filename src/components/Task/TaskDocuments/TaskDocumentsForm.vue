@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, reactive, watch } from 'vue'
+import { ref, computed, onMounted, reactive, watch, toRef } from 'vue'
 import { every, castArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
@@ -11,6 +11,7 @@ import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
+import { usePath } from '@/components/Task/path'
 
 const props = defineProps({
   disabled: {
@@ -29,27 +30,26 @@ const { toastedPromise, core, wait } = useCore()
 const { t } = useI18n()
 
 const submitLabel = computed(() => t(`task.documents.form.submit`))
+const { getProjectSourcePath, defaultProjectName } = usePath()
 
-const defaultProject = computed(() => core.config.get('defaultProject'))
-const defaultDataDir = computed(() => core.config.get('dataDir'))
-const currentProject = computed(() => core.findProject(selectedProject.value.name))
+const projectName = toRef(props, 'projectName')
+const currentProject = computed(() => core.findProject(projectName.value ?? defaultProjectName.value))
+const selectedProject = ref(currentProject.value)
 
+watch(toRef(props, 'projectName'), () => {
+  selectedProject.value = currentProject.value
+})
+
+const sourcePath = computed(() => getProjectSourcePath(currentProject.value))
 const initialFormValues = computed(() => ({
   language: null,
   extractOcr: false,
   skipIndexedDocuments: true,
   hasTesseract: true,
-  project: props.projectName ?? defaultProject.value,
-  path: defaultDataDir.value,
+  project: selectedProject.value.name,
+  path: sourcePath.value,
   ...props.values
 }))
-
-const selectedProject = ref({ name: initialFormValues.value.project })
-
-const sourcePath = computed(() => {
-  const currentSourcePath = currentProject.value?.sourcePath?.split('file://').pop() ?? defaultDataDir.value
-  return decodeURI(currentSourcePath)
-})
 
 const path = ref(initialFormValues.value.path)
 const language = ref(initialFormValues.value.language)
@@ -145,7 +145,14 @@ function setProjectPath(project) {
 }
 
 onMounted(loadLanguages)
-watch(selectedProject, setProjectPath, { immediate: true })
+watch(
+  () => selectedProject.value,
+  (p) => {
+    console.log('ici', p)
+    setProjectPath(p)
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
