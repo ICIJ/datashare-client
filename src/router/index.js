@@ -205,7 +205,7 @@ export const routes = [
               {
                 name: 'task.batch-search.new',
                 path: 'new',
-                component: () => import('@/views/TaskBatchSearchNew'),
+                component: () => import('@/views/Task/BatchSearch/TaskBatchSearchNew'),
                 meta: {
                   title: 'newBatchSearch.title',
                   docs: [
