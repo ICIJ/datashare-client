@@ -1,13 +1,12 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
+import { isArray } from 'lodash'
 
 import AppModal from '@/components/AppModal/AppModal'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
-import { useCore } from '@/composables/core'
-
-const { core } = useCore()
+import { usePath } from '@/components/Task/path'
 
 const modelValue = defineModel({ type: String })
 
@@ -15,27 +14,61 @@ const props = defineProps({
   path: {
     type: String,
     default: null
+  },
+  multiple: {
+    type: Boolean
+  },
+  elasticsearchOnly: {
+    type: Boolean,
+    default: false
+  },
+  projects: {
+    type: Array,
+    default: () => []
   }
 })
-
-const dataDir = computed(() => core.config.get('dataDir'))
+const { defaultDataDir } = usePath()
 const selectedPaths = ref([])
-const sourcePath = computed(() => props.path ?? dataDir.value)
+const sourcePath = computed(() => props.path ?? defaultDataDir.value)
 const display = computed(() => modelValue.value ?? sourcePath.value)
+watch(toRef(props, 'projects'), (value) => {
+  selectedPaths.value = []
+})
 
-watch(toRef(props, 'path'), (value) => (selectedPaths.value = [value]))
+watch(toRef(props, 'path'), (value) => {
+  if (props.multiple && isArray(value)) {
+    selectedPaths.value = value
+  } else {
+    selectedPaths.value = [value]
+  }
+})
+function onOk() {
+  if (props.multiple) {
+    modelValue.value = selectedPaths.value
+  } else {
+    modelValue.value = selectedPaths.value[0]
+  }
+}
 </script>
 
 <template>
-  <div class="form-control-path d-flex no-wrap">
-    <button-icon v-b-modal.modal-form-control-path :icon-left="PhFolderOpen" variant="outline-tertiary" class="me-3">
-      <path-tree-breadcrumb :model-value="display" datadir-label no-link />
-    </button-icon>
+  <div class="form-control-path d-flex no-wrap gap-3">
     <button-icon v-b-modal.modal-form-control-path :icon-right="PhMagnifyingGlass" variant="action">
       {{ $t('formControlPath.browse') }}
     </button-icon>
-    <app-modal id="modal-form-control-path" lazy scrollable hide-header size="lg" @ok="modelValue = selectedPaths[0]">
-      <path-tree v-model:selected-paths="selectedPaths" :path="dataDir" select-mode no-stats />
+    <button-icon v-b-modal.modal-form-control-path :icon-left="PhFolderOpen" variant="outline-tertiary">
+      <path-tree-breadcrumb :model-value="display" datadir-label no-link />
+    </button-icon>
+    <app-modal id="modal-form-control-path" lazy scrollable hide-header size="lg" @ok="onOk">
+      <path-tree
+        v-model:selected-paths="selectedPaths"
+        :path="defaultDataDir"
+        :projects="projects"
+        :multiple="multiple"
+        select-mode
+        no-stats
+        :elasticsearch-only="elasticsearchOnly"
+      />
     </app-modal>
   </div>
 </template>
