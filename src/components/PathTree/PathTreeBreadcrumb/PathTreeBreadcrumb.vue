@@ -2,6 +2,7 @@
 import { PhosphorIcon } from '@icij/murmur-next'
 import { basename } from 'path'
 import { computed } from 'vue'
+import { isArray } from 'lodash'
 
 import PathTreeBreadcrumbEntry from './PathTreeBreadcrumbEntry.vue'
 
@@ -44,7 +45,12 @@ const dataDir = computed(() => core.config.get('mountedDataDir') || core.config.
 
 const pathSeparator = computed(() => core.config.get('pathSeparator', '/'))
 
-const treeDirectories = computed(() => modelValue.value?.split(pathSeparator.value) ?? [])
+const treeDirectories = computed(() => {
+  if (isArray(modelValue.value)) {
+    return modelValue.value?.[0]?.split(pathSeparator.value) ?? []
+  }
+  return modelValue.value?.split(pathSeparator.value) ?? []
+})
 
 const fullTree = computed(() =>
   treeDirectories.value
