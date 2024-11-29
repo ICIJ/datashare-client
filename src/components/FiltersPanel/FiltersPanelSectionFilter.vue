@@ -111,7 +111,11 @@ const classList = computed(() => {
   border-radius: $border-radius;
   transition: $transition-base;
   padding: $spacer-xxs 0;
-  margin-bottom: $spacer-xxs;
+  margin-bottom: $spacer-xs;
+
+  &--collapsed {
+    margin-bottom: $spacer-xxs;
+  }
 
   &:not(&--collapsed),
   &:hover {
