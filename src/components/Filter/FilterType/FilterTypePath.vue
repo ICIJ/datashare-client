@@ -6,6 +6,7 @@ import { useSearchFilter } from '@/composables/search-filter'
 import { useCore } from '@/composables/core'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'
+import { usePath } from '@/components/Task/path'
 
 const { core } = useCore()
 const { state, getters } = useStore()
@@ -29,8 +30,8 @@ const props = defineProps({
 })
 
 const tree = useTemplateRef('tree')
-
-const path = computed(() => core.config.get('dataDir'))
+const { defaultDataDir } = usePath()
+const path = defaultDataDir
 const projects = computed(() => state.search.indices)
 const selected = computedFilterValues(props.filter)
 
