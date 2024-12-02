@@ -6,14 +6,14 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  previousOccurences: {
+  previousOccurrences: {
     type: Number,
     default: 0
   }
 })
 
 const lessOccurrences = computed(() => {
-  return Math.max(0, props.previousOccurences - props.occurrences)
+  return Math.max(0, props.previousOccurrences - props.occurrences)
 })
 </script>
 
@@ -21,9 +21,9 @@ const lessOccurrences = computed(() => {
   <div
     v-b-tooltip.top="{ offset: '0' }"
     class="search-breadcrumb-entry-occurrences d-inline-flex px-2"
-    :title="$t('searchBreadcrumbEntryOccurences.title', { lessOccurrences: $n(lessOccurrences) }, lessOccurrences)"
+    :title="$tc('searchBreadcrumbEntryOccurences.title', lessOccurrences, { lessOccurrences: $n(lessOccurrences) })"
   >
-    {{ $t('searchBreadcrumbEntryOccurences.label', { occurrences: $n(occurrences) }, occurrences) }}
+    {{ $tc('searchBreadcrumbEntryOccurences.label', occurrences, { occurrences: $n(occurrences) }) }}
   </div>
 </template>
 
