@@ -37,6 +37,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['click:x'])
+
 const classList = computed(() => {
   return {
     'search-parameter-query-term--negative': props.prefix === '-'
@@ -64,7 +66,7 @@ const showOperator = computed(() => {
     :icon-left="noIcon ? null : icon"
     :icon-right="noXIcon ? null : PhX"
     icon-right-hover-weight="bold"
-    @click:icon-right="$emit('click:x')"
+    @click:icon-right="emit('click:x')"
   >
     <template v-if="showOperator" #start>
       <span class="search-parameter-query-term__operator">
@@ -85,7 +87,12 @@ const showOperator = computed(() => {
   background: var(--bs-body-bg);
 
   &:hover {
+    cursor: default;
+  }
+
+  &:has(.button-icon__icon-right.phosphor-icon--hover) {
     border-style: solid;
+    cursor: pointer;
 
     &:deep(.button-icon__icon-right) {
       color: var(--bs-body-color);
