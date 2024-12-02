@@ -11,12 +11,12 @@ export default {
         type: 'boolean'
       }
     },
-    hideClearQueries: {
+    hideClearQuery: {
       control: {
         type: 'boolean'
       }
     },
-    hideClearFiltersAndQueries: {
+    hideClearFiltersAndQuery: {
       control: {
         type: 'boolean'
       }
@@ -34,8 +34,8 @@ export default {
   },
   args: {
     hideClearFilters: false,
-    hideClearQueries: false,
-    hideClearFiltersAndQueries: false,
+    hideClearQuery: false,
+    hideClearFiltersAndQuery: false,
     hideSaveSearch: false,
     hideCreateAlert: false
   }
