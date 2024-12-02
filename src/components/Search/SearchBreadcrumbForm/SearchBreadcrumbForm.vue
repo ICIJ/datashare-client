@@ -2,9 +2,9 @@
 import { PhosphorIcon } from '@icij/murmur-next'
 import { computed, useSlots } from 'vue'
 
-import SearchBreadcrumbToggler from './SearchBreadcrumbToggler'
-import SearchBreadcrumbEmpty from './SearchBreadcrumbEmpty'
-import SearchBreadcrumbFooter from './SearchBreadcrumbFooter'
+import SearchBreadcrumbFormToggler from './SearchBreadcrumbFormToggler'
+import SearchBreadcrumbFormEmpty from './SearchBreadcrumbFormEmpty'
+import SearchBreadcrumbFormFooter from './SearchBreadcrumbFormFooter'
 
 const visible = defineModel('visible', { type: Boolean })
 const slots = useSlots()
@@ -33,27 +33,27 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 </script>
 
 <template>
-  <b-collapse v-model="visible" class="search-breadcrumb p-3">
+  <b-collapse v-model="visible" class="search-breadcrumb-form p-3">
     <template v-if="isEmpty">
       <div class="d-flex align-items-center">
-        <search-breadcrumb-toggler class="order-1 align-self-start" @click="visible = false" />
-        <search-breadcrumb-empty class="flex-grow-1 me-3" />
+        <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
+        <search-breadcrumb-form-empty class="flex-grow-1 me-3" />
       </div>
     </template>
     <template v-else>
       <div class="d-flex mb-3">
-        <search-breadcrumb-toggler class="order-1 align-self-start" @click="visible = false" />
+        <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
         <div class="flex-grow-1">
           <div class="fw-medium text-action-emphasis text-nowrap me-2 mb-2">
             <phosphor-icon :name="PhPath" />
-            {{ $t('searchBreadcrumb.label') }}
+            {{ $t('searchBreadcrumbForm.label') }}
           </div>
-          <div class="search-breadcrumb__entries d-flex flex-wrap row-gap-2 column-gap-1 align-items-baseline">
+          <div class="search-breadcrumb-form__entries d-flex flex-wrap row-gap-2 column-gap-1 align-items-baseline">
             <slot />
           </div>
         </div>
       </div>
-      <search-breadcrumb-footer
+      <search-breadcrumb-form-footer
         :hide-clear-filters="hideClearFilters"
         :hide-clear-query="hideClearQuery"
         :hide-clear-filters-and-query="hideClearFiltersAndQuery"
@@ -70,7 +70,7 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 </template>
 
 <style lang="scss">
-.search-breadcrumb {
+.search-breadcrumb-form {
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
   border-radius: var(--bs-border-radius);

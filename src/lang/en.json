@@ -1635,24 +1635,24 @@
     "projectsCount": "No projects | 1 project | {count} projects",
     "noMatches": "No matches"
   },
-  "searchBreadcrumb": {
+  "searchBreadcrumbForm": {
     "label": "Your search:"
   },
-  "searchBreadcrumbEmpty": {
+  "searchBreadcrumbFormEmpty": {
     "label": "Your search has not started. Use the search bar or add filters."
   },
-  "searchBreadcrumbEntryOccurences": {
+  "searchBreadcrumbFormEntryOccurences": {
     "label": "0 documents | 1 document | {occurrences} documents",
     "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
   },
-  "searchBreadcrumbFooter": {
+  "searchBreadcrumbFormFooter": {
     "clearFilters": "Clear filters",
     "clearQuery": "Clear query",
     "clearFiltersAndQuery": "Clear  filters and query",
     "saveSearch": "Save search",
     "createAlert": "Create alert"
   },
-  "searchBreadcrumbToggler": {
+  "searchBreadcrumbFormToggler": {
     "close": "Close"
   },
   "searchSelection": {

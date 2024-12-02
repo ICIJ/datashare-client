@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import SearchBreadcrumbEntryOccurrences from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryOccurrences'
+import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
 
 const props = defineProps({
@@ -60,7 +60,7 @@ const showCaret = computed(() => {
 </script>
 
 <template>
-  <div class="search-breadcrumb-entry d-inline-flex flex-wrap">
+  <div class="search-breadcrumb-form-entry d-inline-flex flex-wrap">
     <search-parameter
       :color="color"
       :icon="icon"
@@ -73,9 +73,9 @@ const showCaret = computed(() => {
       @click:x="emit('click:x', $event)"
     />
     <div class="text-nowrap">
-      <search-breadcrumb-entry-occurrences
+      <search-breadcrumb-form-entry-occurrences
         v-if="showOccurences"
-        class="search-breadcrumb-entry__occurences"
+        class="search-breadcrumb-form-entry__occurences"
         :occurrences="occurrences"
         :previous-occurrences="previousOccurrences"
       />
@@ -83,7 +83,7 @@ const showCaret = computed(() => {
         v-if="showCaret"
         role="separator"
         aria-hidden="true"
-        class="search-breadcrumb-entry__caret"
+        class="search-breadcrumb-form-entry__caret"
         size="1em"
         weight="fill"
         :name="PhCaretRight"
@@ -93,7 +93,7 @@ const showCaret = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.search-breadcrumb-entry {
+.search-breadcrumb-form-entry {
   align-items: center;
   color: var(--bs-secondary);
 }
