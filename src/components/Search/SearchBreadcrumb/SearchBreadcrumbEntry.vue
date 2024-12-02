@@ -1,10 +1,11 @@
 <script setup>
+import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import SearchBreadcrumbEntryOccurrences from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbEntryOccurrences'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
 
-defineProps({
+const props = defineProps({
   filter: {
     type: String
   },
@@ -27,7 +28,11 @@ defineProps({
   },
   occurrences: {
     type: Number,
-    default: 0
+    default: null
+  },
+  previousOccurrences: {
+    type: Number,
+    default: null
   },
   noCaret: {
     type: Boolean
@@ -37,7 +42,20 @@ defineProps({
   },
   noIcon: {
     type: Boolean
+  },
+  noXIcon: {
+    type: Boolean
   }
+})
+
+const emit = defineEmits(['click:x'])
+
+const showOccurences = computed(() => {
+  return !props.noOccurrences && props.occurrences !== null
+})
+
+const showCaret = computed(() => {
+  return !props.noCaret && props.occurrences !== null
 })
 </script>
 
@@ -51,22 +69,24 @@ defineProps({
       :query="query"
       :size="size"
       :value="value"
+      :no-x-icon="noXIcon"
+      @click:x="emit('click:x', $event)"
     />
     <div class="text-nowrap">
       <search-breadcrumb-entry-occurrences
-        v-if="!noOccurrences"
+        v-if="showOccurences"
         class="search-breadcrumb-entry__occurences"
-        v-bind="entryAttributes"
         :occurrences="occurrences"
+        :previous-occurrences="previousOccurrences"
       />
       <phosphor-icon
-        v-if="!noCaret"
+        v-if="showCaret"
         role="separator"
         aria-hidden="true"
         class="search-breadcrumb-entry__caret"
         size="1em"
         weight="fill"
-        name="caret-right"
+        :name="PhCaretRight"
       />
     </div>
   </div>
