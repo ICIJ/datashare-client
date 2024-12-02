@@ -1647,8 +1647,8 @@
   },
   "searchBreadcrumbFooter": {
     "clearFilters": "Clear filters",
-    "clearQueries": "Clear queries",
-    "clearFiltersAndQueries": "Clear  filters and queries",
+    "clearQuery": "Clear query",
+    "clearFiltersAndQuery": "Clear  filters and query",
     "saveSearch": "Save search",
     "createAlert": "Create alert"
   },

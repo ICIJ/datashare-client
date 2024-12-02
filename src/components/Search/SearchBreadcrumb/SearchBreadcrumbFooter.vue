@@ -6,10 +6,10 @@ defineProps({
   hideClearFilters: {
     type: Boolean
   },
-  hideClearQueries: {
+  hideClearQuery: {
     type: Boolean
   },
-  hideClearFiltersAndQueries: {
+  hideClearFiltersAndQuery: {
     type: Boolean
   },
   hideSaveSearch: {
@@ -19,23 +19,25 @@ defineProps({
     type: Boolean
   }
 })
+
+const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:search', 'create:alert'])
 </script>
 
 <template>
   <form-actions class="search-breadcrumb-footer" variant="link" end>
-    <button-icon v-if="!hideClearFilters" icon-left="eraser">
+    <button-icon v-if="!hideClearFilters" icon-left="eraser" @click="emit('clear:filters')">
       {{ $t('searchBreadcrumbFooter.clearFilters') }}
     </button-icon>
-    <button-icon v-if="!hideClearQueries" icon-left="x-circle">
-      {{ $t('searchBreadcrumbFooter.clearQueries') }}
+    <button-icon v-if="!hideClearQuery" icon-left="x-circle" @click="emit('clear:query')">
+      {{ $t('searchBreadcrumbFooter.clearQuery') }}
     </button-icon>
-    <button-icon v-if="!hideClearFiltersAndQueries" icon-left="arrow-counter-clockwise">
-      {{ $t('searchBreadcrumbFooter.clearFiltersAndQueries') }}
+    <button-icon v-if="!hideClearFiltersAndQuery" icon-left="arrow-counter-clockwise" @click="emit('clear:all')">
+      {{ $t('searchBreadcrumbFooter.clearFiltersAndQuery') }}
     </button-icon>
-    <button-icon v-if="!hideSaveSearch" variant="outline-dark" icon-left="floppy-disk">
+    <button-icon v-if="!hideSaveSearch" variant="outline-dark" icon-left="floppy-disk" @click="emit('save:search')">
       {{ $t('searchBreadcrumbFooter.saveSearch') }}
     </button-icon>
-    <button-icon v-if="!hideCreateAlert" variant="outline-dark" icon-left="siren">
+    <button-icon v-if="!hideCreateAlert" variant="outline-dark" icon-left="siren" @click="emit('create:alert')">
       {{ $t('searchBreadcrumbFooter.createAlert') }}
     </button-icon>
   </form-actions>
