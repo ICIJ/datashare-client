@@ -26,6 +26,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['click:x'])
+
 const isLeft = computed(() => !!props.ast.left)
 const isRight = computed(() => !!props.ast.right)
 const isFilter = computed(() => props.ast.field !== '<implicit>' && !!props.ast.term)
@@ -34,7 +36,14 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
 
 <template>
   <span class="search-parameter-query-ast d-inline-flex flex-wrap flex-wrap column-gap-1 row-gap-2">
-    <search-parameter-query-ast v-if="isLeft" :ast="ast.left" :operator="operator" :no-icon="noIcon" :size="size" />
+    <search-parameter-query-ast
+      v-if="isLeft"
+      :ast="ast.left"
+      :operator="operator"
+      :no-icon="noIcon"
+      :size="size"
+      @click:x="emit('click:x', ast.left)"
+    />
     <search-parameter-query-term
       v-if="isTerm"
       :term="ast.term"
@@ -42,6 +51,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :prefix="ast.prefix"
       :no-icon="noIcon"
       :size="size"
+      @click:x="emit('click:x', ast)"
     />
     <search-parameter-filter
       v-if="isFilter"
@@ -51,6 +61,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :value="ast.term"
       :no-icon="noIcon"
       :size="size"
+      @click:x="emit('click:x', ast)"
     />
     <search-parameter-query-ast
       v-if="isRight"
@@ -58,6 +69,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :operator="ast.operator"
       :no-icon="noIcon"
       :size="size"
+      @click:x="emit('click:x', $event)"
     />
   </span>
 </template>
