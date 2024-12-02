@@ -130,7 +130,7 @@ const {
   watchFilterValues,
   watchFilterExcluded,
   watchQuery,
-  watchProjects,
+  watchIndices,
   watchValues,
   whenFilterContextualized
 } = useSearchFilter()
@@ -217,7 +217,7 @@ onBeforeMount(async () => {
   // Query value (in the search field) that trigger an update of the data
   watch(query, update)
   // General values that might trigger an update of the data
-  watchProjects(update)
+  watchIndices(update)
   // Filter values that trigger an update of the data
   watchFilterSort(filter, update)
   watchFilterContextualized(filter, update)

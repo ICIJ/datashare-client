@@ -22,7 +22,7 @@ import { LAYOUTS } from '@/enums/layouts'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId, watchDocument } = useDocument()
-const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchProjects } = useSearchFilter()
+const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices } = useSearchFilter()
 const entriesRef = useTemplateRef('entries')
 const store = useStore()
 const route = useRoute()
@@ -90,7 +90,7 @@ watch(() => store.state.search.values, refreshRoute, { deep: true })
 // Refresh route query when reversed filters change
 watch(() => store.state.search.excludeFilters, refreshRoute, { deep: true })
 // Refresh route query when projects change
-watchProjects(refreshRoute)
+watchIndices(refreshRoute)
 </script>
 
 <template>
