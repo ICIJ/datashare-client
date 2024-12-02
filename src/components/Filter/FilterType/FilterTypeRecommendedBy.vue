@@ -18,7 +18,7 @@ const props = defineProps({
 
 const { dispatch, state } = useStore()
 const { core } = useCore()
-const { computedFilterValues, watchProjects } = useSearchFilter()
+const { computedFilterValues, watchIndices } = useSearchFilter()
 
 const selected = computedFilterValues(props.filter)
 
@@ -38,7 +38,7 @@ async function fetch() {
 }
 
 onBeforeMount(fetch)
-watchProjects(fetch)
+watchIndices(fetch)
 </script>
 
 <template>

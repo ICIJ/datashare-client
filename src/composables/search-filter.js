@@ -241,7 +241,7 @@ export function useSearchFilter() {
     return watch(() => store.state.search.from, callback, options)
   }
 
-  function watchProjects(callback, options) {
+  function watchIndices(callback, options) {
     return watch(() => store.state.search.indices.join(','), callback, options)
   }
 
@@ -282,7 +282,7 @@ export function useSearchFilter() {
     watchFilterExcluded,
     watchFrom,
     watchQuery,
-    watchProjects,
+    watchIndices,
     watchValues,
     whenFilterContextualized
   }
