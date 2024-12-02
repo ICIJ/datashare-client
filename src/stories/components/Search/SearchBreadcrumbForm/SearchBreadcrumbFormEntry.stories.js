@@ -1,10 +1,10 @@
-import SearchBreadcrumbEntry from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbEntry'
+import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 
 export default {
   decorators: [],
-  title: 'Components/Search/SearchBreadcrumb/SearchBreadcrumbEntry',
+  title: 'Components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry',
   tags: ['autodocs'],
-  component: SearchBreadcrumbEntry,
+  component: SearchBreadcrumbFormEntry,
   args: {
     query: 'London AND Biden AND -JO',
     occurrences: 987

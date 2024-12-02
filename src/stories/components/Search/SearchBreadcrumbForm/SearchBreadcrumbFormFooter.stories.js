@@ -1,9 +1,9 @@
-import SearchBreadcrumbFooter from '@/components/Search/SearchBreadcrumb/SearchBreadcrumbFooter'
+import SearchBreadcrumbFormFooter from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormFooter'
 
 export default {
   decorators: [],
-  title: 'Components/Search/SearchBreadcrumb/SearchBreadcrumbFooter',
-  component: SearchBreadcrumbFooter,
+  title: 'Components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormFooter',
+  component: SearchBreadcrumbFormFooter,
   tags: ['autodocs'],
   argTypes: {
     hideClearFilters: {
