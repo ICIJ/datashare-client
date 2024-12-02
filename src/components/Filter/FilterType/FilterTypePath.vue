@@ -15,7 +15,7 @@ const {
   whenFilterContextualized,
   watchFilterContextualized,
   watchFilterExcluded,
-  watchProjects,
+  watchIndices,
   watchValues
 } = useSearchFilter()
 
@@ -51,7 +51,7 @@ watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadD
 // When filter values change and the filter is contextualized then reload the data
 watchValues(whenFilterContextualized(props.filter, reloadData))
 // When project changes, we reset the filter to avoid filtering by unknown paths
-watchProjects(() => (selected.value = []))
+watchIndices(() => (selected.value = []))
 </script>
 
 <template>
