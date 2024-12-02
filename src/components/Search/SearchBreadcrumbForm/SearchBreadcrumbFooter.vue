@@ -26,19 +26,19 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 <template>
   <form-actions class="search-breadcrumb-footer" variant="link" end>
     <button-icon v-if="!hideClearFilters" icon-left="eraser" @click="emit('clear:filters')">
-      {{ $t('searchBreadcrumbFooter.clearFilters') }}
+      {{ $t('searchBreadcrumbFormFooter.clearFilters') }}
     </button-icon>
     <button-icon v-if="!hideClearQuery" icon-left="x-circle" @click="emit('clear:query')">
-      {{ $t('searchBreadcrumbFooter.clearQuery') }}
+      {{ $t('searchBreadcrumbFormFooter.clearQuery') }}
     </button-icon>
     <button-icon v-if="!hideClearFiltersAndQuery" icon-left="arrow-counter-clockwise" @click="emit('clear:all')">
-      {{ $t('searchBreadcrumbFooter.clearFiltersAndQuery') }}
+      {{ $t('searchBreadcrumbFormFooter.clearFiltersAndQuery') }}
     </button-icon>
     <button-icon v-if="!hideSaveSearch" variant="outline-dark" icon-left="floppy-disk" @click="emit('save:search')">
-      {{ $t('searchBreadcrumbFooter.saveSearch') }}
+      {{ $t('searchBreadcrumbFormFooter.saveSearch') }}
     </button-icon>
     <button-icon v-if="!hideCreateAlert" variant="outline-dark" icon-left="siren" @click="emit('create:alert')">
-      {{ $t('searchBreadcrumbFooter.createAlert') }}
+      {{ $t('searchBreadcrumbFormFooter.createAlert') }}
     </button-icon>
   </form-actions>
 </template>

@@ -6,13 +6,13 @@ const emit = defineEmits(['close'])
 
 <template>
   <button-icon
-    class="search-breadcrumb-toggler"
+    class="search-breadcrumb-form-toggler flex-shrink-0"
     variant="action"
-    :label="$t('searchBreadcrumbToggler.close')"
+    :label="$t('searchBreadcrumbFormToggler.close')"
     hide-label
     icon-left="x"
     @click="emit('close')"
   >
-    <slot>{{ $t('searchBreadcrumbToggler.close') }}</slot>
+    <slot>{{ $t('searchBreadcrumbFormToggler.close') }}</slot>
   </button-icon>
 </template>

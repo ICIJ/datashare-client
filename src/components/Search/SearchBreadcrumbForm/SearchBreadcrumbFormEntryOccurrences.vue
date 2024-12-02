@@ -20,15 +20,15 @@ const lessOccurrences = computed(() => {
 <template>
   <div
     v-b-tooltip.top="{ offset: '0' }"
-    class="search-breadcrumb-entry-occurrences d-inline-flex px-2"
-    :title="$tc('searchBreadcrumbEntryOccurences.title', lessOccurrences, { lessOccurrences: $n(lessOccurrences) })"
+    class="search-breadcrumb-form-entry-occurrences d-inline-flex px-2"
+    :title="$tc('searchBreadcrumbFormEntryOccurences.title', lessOccurrences, { lessOccurrences: $n(lessOccurrences) })"
   >
-    {{ $tc('searchBreadcrumbEntryOccurences.label', occurrences, { occurrences: $n(occurrences) }) }}
+    {{ $tc('searchBreadcrumbFormEntryOccurences.label', occurrences, { occurrences: $n(occurrences) }) }}
   </div>
 </template>
 
 <style lang="scss" scoped>
-.search-breadcrumb-entry-occurrences:hover {
+.search-breadcrumb-form-entry-occurrences:hover {
   text-decoration: underline;
   color: var(--bs-body-color);
 }
