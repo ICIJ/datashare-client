@@ -20,6 +20,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['click:x'])
+
 const ast = computed(() => {
   try {
     return lucene.parse(props.query.replace('\\@', '@'))
@@ -30,7 +32,14 @@ const ast = computed(() => {
 </script>
 
 <template>
-  <search-parameter-query-ast v-if="ast" :ast="ast" :no-icon="noIcon" :no-x-icon="noXIcon" :size="size" />
+  <search-parameter-query-ast
+    v-if="ast"
+    :ast="ast"
+    :no-icon="noIcon"
+    :no-x-icon="noXIcon"
+    :size="size"
+    @click:x="emit('click:x', $event)"
+  />
   <search-parameter-query-term
     v-else
     :term="query"
@@ -41,5 +50,6 @@ const ast = computed(() => {
     color="var(--bs-danger)"
     prefix="-"
     icon="warning"
+    @click:x="emit('click:x', $event)"
   />
 </template>
