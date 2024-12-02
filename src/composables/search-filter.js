@@ -1,5 +1,5 @@
 import { computed, nextTick, watch } from 'vue'
-import { get, identity, last, toString } from 'lodash'
+import { get, identity, isObject, last, toString, without } from 'lodash'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -12,6 +12,7 @@ import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+import FilterText from '@/store/filters/FilterText.js'
 
 export function useSearchFilter() {
   const store = useStore()
@@ -43,6 +44,17 @@ export function useSearchFilter() {
     }
 
     return last(String(label).split('.'))
+  }
+
+  function castFilter(filter) {
+    if (filter instanceof FilterText) {
+      return filter
+    }
+    return store.getters['search/getFilter']({ name: filter })
+  }
+
+  function castFilterItem(value) {
+    return isObject(value) ? value : { key: value }
   }
 
   function computedFilterValues(filter, { get = null, set = null } = {}) {
@@ -94,11 +106,19 @@ export function useSearchFilter() {
   }
 
   function setFilterValue(filter, item) {
-    store.commit('search/setFilterValue', filter.itemParam(item))
+    store.commit('search/setFilterValue', filter.itemParam(castFilterItem(item)))
+  }
+
+  function setQuery(query) {
+    store.commit('search/query', query)
+  }
+
+  function setIndices(indices) {
+    store.commit('search/indices', indices)
   }
 
   const hasFilterValue = (filter, item) => {
-    const { value } = filter.itemParam(item)
+    const { value } = filter.itemParam(castFilterItem(item))
     return getFilterValues(filter).map(toString).includes(toString(value))
   }
 
@@ -107,13 +127,24 @@ export function useSearchFilter() {
   }
 
   const toggleFilterValue = (filter, item, checked) => {
-    const param = filter.itemParam(item)
-    const value = toString(param.value)
-
     if (checked) {
-      return store.commit('search/addFilterValue', { ...filter, value })
+      return addFilterValue(filter, item)
     }
-    return store.commit('search/removeFilterValue', { ...filter, value })
+    return removeFilterValue(filter, item)
+  }
+
+  const addFilterValue = (filter, item) => {
+    const instance = castFilter(filter)
+    const param = instance.itemParam(castFilterItem(item))
+    const value = toString(param.value)
+    return store.commit('search/addFilterValue', { ...instance, value })
+  }
+
+  const removeFilterValue = (filter, item) => {
+    const instance = castFilter(filter)
+    const param = instance.itemParam(castFilterItem(item))
+    const value = toString(param.value)
+    return store.commit('search/removeFilterValue', { ...instance, value })
   }
 
   const sortFilter = ({ name }, { sortBy, orderBy }) => {
@@ -132,8 +163,13 @@ export function useSearchFilter() {
     return computed({ get, set })
   }
 
-  function removeFilterValue({ name }) {
+  function removeFilter(filter) {
+    const { name } = castFilter(filter)
     store.commit('search/removeFilter', name)
+  }
+
+  function removeIndex(index) {
+    setIndices(without(store.state.search.indices, index))
   }
 
   function resetSearchResponse() {
@@ -269,13 +305,18 @@ export function useSearchFilter() {
     refreshRoute,
     refreshSearchFromRoute,
     refreshRouteAndSearch,
-    removeFilterValue,
     setFilterValue,
+    setQuery,
+    setIndices,
     sortFilter,
     toggleContextualizeFilter,
     toggleExcludeFilter,
     toggleFilterValue,
+    addFilterValue,
+    removeFilterValue,
+    removeFilter,
     refreshSearch,
+    removeIndex,
     watchFilterContextualized,
     watchFilterSort,
     watchFilterValues,
