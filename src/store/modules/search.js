@@ -1,14 +1,14 @@
 import {
   castArray,
-  concat,
-  compact,
   cloneDeep,
+  compact,
+  concat,
   each,
   endsWith,
-  flatten,
   filter as filterCollection,
   find,
   findIndex,
+  flatten,
   get,
   has,
   includes,
@@ -18,8 +18,8 @@ import {
   map,
   omit,
   orderBy,
-  range,
   random,
+  range,
   reduce,
   toString,
   uniq
@@ -27,8 +27,7 @@ import {
 import lucene from 'lucene'
 
 import EsDocList from '@/api/resources/EsDocList'
-import filters from '@/store/filters'
-import * as filterTypes from '@/store/filters'
+import filters, * as filterTypes from '@/store/filters'
 import { isNarrowScreen } from '@/utils/screen'
 import settings from '@/utils/settings'
 
@@ -354,8 +353,7 @@ export const mutations = {
     state.values[filter.name] = uniq(existingValuesAsString.concat(values))
   },
   setFilterValue(state, filter) {
-    const values = castArray(filter.value)
-    state.values[filter.name] = values
+    state.values[filter.name] = castArray(filter.value)
   },
   addFilterValues(state, { filter, values }) {
     const existingValues = get(state, ['values', filter.name], [])
