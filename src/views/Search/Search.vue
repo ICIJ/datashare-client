@@ -5,9 +5,11 @@ import { useRoute } from 'vue-router'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
+import ButtonToggleSearchBreadcrumb from '@/components/Button/ButtonToggleSearchBreadcrumb'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import SearchBreadcrumb from '@/views/Search/SearchBreadcrumb'
 import SearchSelection from '@/views/Search/SearchSelection'
 import SearchCarousel from '@/views/Search/SearchCarousel'
 import SearchNav from '@/views/Search/SearchNav'
@@ -17,12 +19,14 @@ import settings from '@/utils/settings'
 import { useDocument } from '@/composables/document'
 import { replaceUrlParam, useUrlPageFromWithStore, whenIsRoute } from '@/composables/url-params'
 import { useSearchFilter } from '@/composables/search-filter'
+import { useSearchBreadcrumb } from '@/composables/search-breadcrumb'
 import { useViews } from '@/composables/views'
 import { LAYOUTS } from '@/enums/layouts'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId, watchDocument } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices } = useSearchFilter()
+const { count: searchBreadcrumbCounter } = useSearchBreadcrumb()
 const entriesRef = useTemplateRef('entries')
 const store = useStore()
 const route = useRoute()
@@ -50,6 +54,7 @@ const hasNav = computed(() => toValue(layout) === LAYOUTS.LIST)
 const hasDocumentInModal = computed(() => layout.value !== LAYOUTS.LIST)
 
 const selection = ref([])
+const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
 
 const total = computed(() => parseInt(store.state.search.response.total))
@@ -106,11 +111,17 @@ watchIndices(refreshRoute)
             v-model:active="toggleFilters"
             class="search__main__toggle-filters"
           />
+          <button-toggle-search-breadcrumb
+            v-model:active="toggleSearchBreadcrumb"
+            :counter="searchBreadcrumbCounter"
+            class="search__main__toggle-search-breadcrumb"
+          />
           <div class="flex-grow-1">
             <search-bar class="search__main__search-bar" />
           </div>
           <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
         </div>
+        <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
         <div class="search__main__results">
           <document-entries
             ref="entries"
