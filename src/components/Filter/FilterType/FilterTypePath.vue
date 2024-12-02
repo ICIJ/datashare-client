@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import { useStore } from 'vuex'
 
 import { useSearchFilter } from '@/composables/search-filter'
@@ -20,6 +20,10 @@ const {
 } = useSearchFilter()
 
 const props = defineProps({
+  projects: {
+    type: Array,
+    default: null
+  },
   filter: {
     type: Object,
     required: true
@@ -32,7 +36,7 @@ const props = defineProps({
 const tree = useTemplateRef('tree')
 const { defaultDataDir } = usePath()
 const path = defaultDataDir
-const projects = computed(() => state.search.indices)
+const projects = computed(() => props.projects ?? state.search.indices)
 const selected = computedFilterValues(props.filter)
 
 const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
@@ -52,6 +56,12 @@ watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadD
 watchValues(whenFilterContextualized(props.filter, reloadData))
 // When project changes, we reset the filter to avoid filtering by unknown paths
 watchIndices(() => (selected.value = []))
+watch(
+  () => projects.value,
+  () => {
+    selected.value = []
+  }
+)
 </script>
 
 <template>
