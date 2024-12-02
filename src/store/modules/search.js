@@ -110,9 +110,6 @@ export const getters = {
         return name === item.name && values.indexOf(item.value) > -1
       })
   },
-  hasFilterValues(state, getters) {
-    return (name) => !!find(getters.instantiatedFilters, (filter) => filter.name === name && filter.values.length > 0)
-  },
   isFilterContextualized(state, getters) {
     return (name) => {
       return !!find(getters.instantiatedFilters, (filter) => {
@@ -423,18 +420,18 @@ function actionsBuilder(api) {
       commit('isReady', false)
       commit('error', null)
       try {
+        dispatch('searchBreadcrumb/push', getters.toBaseRouteQuery(), { root: true })
         const raw = await dispatch('searchDocs')
         const roots = await dispatch('searchRoots', raw)
         commit('setResponse', { raw, roots })
-        dispatch('searchBreadcrumb/push', { query: getters.toBaseRouteQuery(), count: getters.total }, { root: true })
       } catch (error) {
         commit('error', error)
       } finally {
         commit('isReady', true)
       }
     },
-    searchDocs({ getters }) {
-      return api.elasticsearch.searchDocs(getters.toSearchParams)
+    searchDocs({ getters }, searchParams) {
+      return api.elasticsearch.searchDocs(searchParams ?? getters.toSearchParams)
     },
     searchRoots({ state }, raw) {
       const indices = state.indices.join(',')
@@ -443,7 +440,7 @@ function actionsBuilder(api) {
       const source = ['contentType', 'contentLength', 'title', 'path']
       return api.elasticsearch.ids(indices, ids, source)
     },
-    updateFromRouteQuery({ commit, getters }, query, resetResponse = false) {
+    updateFromRouteQuery({ commit, getters }, routeQuery, resetResponse = false) {
       const excludedFromReset = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
       // The response can conditional be reseted to avoid flashing effect
       if (!resetResponse) excludedFromReset.push('response')
@@ -452,18 +449,18 @@ function actionsBuilder(api) {
       // This is all the key that can be found in the URL (apart from filters keys)
       const updatedKeys = ['q', 'index', 'indices', 'from', 'field']
       // Add the query to the state with a mutation to avoid triggering a search
-      updatedKeys.forEach((key) => key in query && commit(key, query[key]))
+      updatedKeys.forEach((key) => key in routeQuery && commit(key, routeQuery[key]))
       // Iterate over the list of filter
       each(getters.instantiatedFilters, (filter) => {
         // The filter key are formatted in the URL as follow.
         // See `query-string` for more info about query string format.
         each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, isReverse) => {
           // Add the data if the value exist
-          if (key in query) {
+          if (key in routeQuery) {
             // Because the values are grouped for each query parameter and because
             // the `addFilterValue` also accept an array of value, we can directly
             // use the query values.
-            commit('addFilterValue', filter.itemParam({ key: query[key] }))
+            commit('addFilterValue', filter.itemParam({ key: routeQuery[key] }))
             // Invert the filter if we are using the second key (for reverse filter)
             if (isReverse) {
               commit('excludeFilter', filter.name)
@@ -566,11 +563,6 @@ function actionsBuilder(api) {
       const { indices: projectIds } = state
       const { query } = api.elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
       return api.runBatchDownload({ projectIds, query, uri })
-    },
-    setTab({ state, commit }, tab) {
-      if (state.tab !== tab) {
-        commit('updateTab', tab)
-      }
     }
   }
 }

@@ -205,30 +205,6 @@ describe('SearchStore', () => {
     })
   })
 
-  describe('hasFilterValues', () => {
-    it('should take into account the given filter', async () => {
-      expect(store.getters['search/hasFilterValues']('contentType')).toBeFalsy()
-
-      await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
-      expect(store.getters['search/hasFilterValues']('contentType')).toBeTruthy()
-    })
-
-    it('should take into account the given filter but not an arbitrary one', async () => {
-      await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
-
-      expect(store.getters['search/hasFilterValues']('contentType')).toBeTruthy()
-      expect(store.getters['search/hasFilterValues']('bar')).toBeFalsy()
-    })
-
-    it('should take into account the given filter and its invert', async () => {
-      await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
-      expect(store.getters['search/hasFilterValues']('contentType')).toBeTruthy()
-      expect(store.getters['search/isFilterExcluded']('contentType')).toBeFalsy()
-      await store.dispatch('search/toggleFilter', 'contentType')
-      expect(store.getters['search/isFilterExcluded']('contentType')).toBeTruthy()
-    })
-  })
-
   it('should take into reverse a filter and not the others', async () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
     await store.dispatch('search/addFilterValue', { name: 'language', value: 'fr' })
