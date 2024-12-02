@@ -606,6 +606,7 @@
       "level10": "10th"
     },
     "tags": "Tags",
+    "excluded-tags": "Excluded Tags",
     "dateRange": {
       "from": "From {dateFormat}",
       "to": "To {dateFormat}",

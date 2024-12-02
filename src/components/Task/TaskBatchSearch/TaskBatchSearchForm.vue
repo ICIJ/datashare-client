@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, toRef } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
@@ -7,9 +7,11 @@ import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/Sea
 import FormCreation from '@/components/Form/FormCreation'
 import { useCore } from '@/composables/core'
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange'
-import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import { usePath } from '@/components/Task/path'
-import FormControlTagDropdown from '@/components/Form/FormControl/FormControlTag/FormControlTagDropdown'
+import * as filterTypes from '@/store/filters'
+import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
+import FilterType from '@/components/Filter/FilterType/FilterType'
+
 const props = defineProps({
   projects: {
     type: Array,
@@ -43,6 +45,61 @@ const paths = ref([])
 
 const projectNames = computed(() => {
   return selectedProjects.value.map((p) => p.name)
+})
+
+function instantiateFilter() {
+  return ({ type, options } = {}) => {
+    const Type = filterTypes[type]
+    return new Type(options)
+  }
+}
+const f = instantiateFilter()
+const filterPath = f({
+  type: 'FilterPath',
+  options: {
+    name: 'path',
+    key: 'byDirname',
+    icon: 'tree-structure',
+    order: 35,
+    section: 'batchSearch',
+    hideSearch: true,
+    fromElasticSearch: true,
+    preference: 'filter-path'
+  }
+})
+const filterTag = f({
+  type: 'FilterTag',
+  options: {
+    name: 'tags',
+    key: 'tags',
+    icon: 'tag',
+    order: 20,
+    section: 'batchSearch',
+    preference: 'filter-tags'
+  }
+})
+const filterTagExcluded = f({
+  type: 'FilterTag',
+  options: {
+    name: 'excluded-tags',
+    key: 'tags',
+    icon: 'tag',
+    order: 20,
+    section: 'batchSearch',
+    preference: 'filter-tags',
+    excluded: true
+  }
+})
+const filterContentType = f({
+  type: 'FilterContentType',
+  options: {
+    name: 'contentType',
+    key: 'contentType',
+    icon: 'file',
+    order: 40,
+    section: 'documentsInfo',
+    preference: 'filter-content-type'
+  }
 })
 const shared = ref(true)
 </script>
@@ -95,17 +152,16 @@ const shared = ref(true)
     </form-fieldset-i18n>
 
     <form-fieldset-i18n name="path" translation-key="task.batch-search.form.path">
-      <form-control-path
-        v-model="paths"
-        :path="defaultDataDir"
-        :projects="projectNames"
-        elasticsearch-only
-        hide-folder-icon
-        multiple
-      />
+      <filter-type-path :filter="filterPath" :projects="projectNames" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="tags" translation-key="task.batch-search.form.tags">
-      <form-control-tag- v-model="selectedTags" :items="tags" />
+    <form-fieldset-i18n name="tags-included" translation-key="task.batch-search.form.tag-included">
+      <filter-type :filter="filterTag" :projects="projectNames" />
+    </form-fieldset-i18n>
+    <form-fieldset-i18n name="tags-excluded" translation-key="task.batch-search.form.tags-excluded">
+      <filter-type :filter="filterTagExcluded" :projects="projectNames" />
+    </form-fieldset-i18n>
+    <form-fieldset-i18n name="content-types" translation-key="task.batch-search.form.content-types">
+      <filter-type :filter="filterContentType" :projects="projectNames" />
     </form-fieldset-i18n>
   </form-creation>
 </template>
