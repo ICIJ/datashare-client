@@ -49,7 +49,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
-import { useMode } from '@/composables/mode'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DisplayUser from '@/components/Display/DisplayUser'
