@@ -70,8 +70,6 @@
 </template>
 
 <script setup>
-import { sortBy } from 'lodash'
-import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 import PageTable from '@/components/PageTable/PageTable'
@@ -98,11 +96,11 @@ defineProps({
     type: Boolean
   }
 })
-const store = useStore()
+/* const store = useStore() */
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
 
-const sortedTasks = computed(() => {
+/* const sortedTasks = computed(() => {
   // Move running tasks on top
   const states = ['RUNNING']
   return sortBy(this.tasks, ({ state }) => -states.indexOf(state))
@@ -128,5 +126,5 @@ async function stopTask(name) {
 async function deleteDoneTasks() {
   await store.dispatch('indexing/deleteDoneTasks')
   await store.dispatch('indexing/getTasks')
-}
+} */
 </script>
