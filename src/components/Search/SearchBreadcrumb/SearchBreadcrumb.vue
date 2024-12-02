@@ -6,25 +6,46 @@ import SearchBreadcrumbToggler from './SearchBreadcrumbToggler'
 import SearchBreadcrumbEmpty from './SearchBreadcrumbEmpty'
 import SearchBreadcrumbFooter from './SearchBreadcrumbFooter'
 
-const emit = defineEmits(['close'])
+const visible = defineModel('visible', { type: Boolean })
 const slots = useSlots()
 const isEmpty = computed(() => !slots.default)
+
+defineProps({
+  hideClearFilters: {
+    type: Boolean
+  },
+  hideClearQuery: {
+    type: Boolean
+  },
+  hideClearFiltersAndQuery: {
+    type: Boolean
+  },
+  hideSaveSearch: {
+    type: Boolean
+  },
+  hideCreateAlert: {
+    type: Boolean,
+    default: true
+  }
+})
+
+const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:search', 'create:alert'])
 </script>
 
 <template>
-  <div class="search-breadcrumb p-3">
+  <b-collapse v-model="visible" class="search-breadcrumb p-3">
     <template v-if="isEmpty">
       <div class="d-flex align-items-center">
-        <search-breadcrumb-toggler class="order-1 align-self-start" @click="emit('close')" />
+        <search-breadcrumb-toggler class="order-1 align-self-start" @click="visible = false" />
         <search-breadcrumb-empty class="flex-grow-1 me-3" />
       </div>
     </template>
     <template v-else>
       <div class="d-flex mb-3">
-        <search-breadcrumb-toggler class="order-1 align-self-start" @click="emit('close')" />
+        <search-breadcrumb-toggler class="order-1 align-self-start" @click="visible = false" />
         <div class="flex-grow-1">
           <div class="fw-medium text-action-emphasis text-nowrap me-2 mb-2">
-            <phosphor-icon name="path" />
+            <phosphor-icon :name="PhPath" />
             {{ $t('searchBreadcrumb.label') }}
           </div>
           <div class="search-breadcrumb__entries d-flex flex-wrap row-gap-2 column-gap-1 align-items-baseline">
@@ -32,12 +53,23 @@ const isEmpty = computed(() => !slots.default)
           </div>
         </div>
       </div>
-      <search-breadcrumb-footer />
+      <search-breadcrumb-footer
+        :hide-clear-filters="hideClearFilters"
+        :hide-clear-query="hideClearQuery"
+        :hide-clear-filters-and-query="hideClearFiltersAndQuery"
+        :hide-save-search="hideSaveSearch"
+        :hide-create-alert="hideCreateAlert"
+        @clear:filters="emit('clear:filters')"
+        @clear:query="emit('clear:query')"
+        @clear:all="emit('clear:all')"
+        @save:search="emit('save:search')"
+        @create:alert="emit('create:alert')"
+      />
     </template>
-  </div>
+  </b-collapse>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .search-breadcrumb {
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
