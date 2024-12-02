@@ -55,7 +55,7 @@ watchIndices(() => (selected.value = []))
 </script>
 
 <template>
-  <filter-type :filter="filter" flush :modal="modal">
+  <filter-type :filter="filter" :modal="modal">
     <path-tree
       ref="tree"
       v-model:selected-paths="selected"
