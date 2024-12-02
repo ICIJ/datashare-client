@@ -60,13 +60,13 @@ export default class FilterNamedEntity extends FilterType {
   addParentIncludeFilter(body, param) {
     if (this.isSelfAffected(body)) {
       return body.query('terms', 'mentionNorm', param.values)
-    } else {
-      return body.query('has_parent', { parent_type: 'Document' }, (q) => {
-        return q.query('has_child', 'type', 'NamedEntity', {}, (r) => {
-          return r.query('terms', 'mentionNorm', param.values)
-        })
-      })
     }
+
+    return body.query('has_parent', { parent_type: 'Document' }, (q) => {
+      return q.query('has_child', 'type', 'NamedEntity', {}, (r) => {
+        return r.query('terms', 'mentionNorm', param.values)
+      })
+    })
   }
 
   addParentExcludeFilter(body, param) {
