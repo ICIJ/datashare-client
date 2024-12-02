@@ -20,7 +20,7 @@ const props = defineProps({
 })
 const { t } = useI18n()
 const { core } = useCore()
-const { defaultProject, defaultDataDir } = usePath()
+const { defaultProject } = usePath()
 
 const projects = toRef(props, 'projects')
 const projectList = computed(() => {
@@ -41,7 +41,7 @@ const phraseMatchOptions = computed(() => [
   { text: t('task.documents.form.extractOcr.options.no'), value: false }
 ])
 const phraseChanges = ref(2)
-const paths = ref([])
+/* const paths = ref([]) */
 
 const projectNames = computed(() => {
   return selectedProjects.value.map((p) => p.name)
@@ -101,7 +101,11 @@ const filterContentType = f({
     preference: 'filter-content-type'
   }
 })
-const shared = ref(true)
+const visibility = ref(true)
+const visibilityOptions = computed(() => [
+  { text: t('task.documents.form.visibility.options.shared'), value: true },
+  { text: t('task.documents.form.visibility.options.private'), value: false }
+])
 </script>
 
 <template>
@@ -162,6 +166,10 @@ const shared = ref(true)
     </form-fieldset-i18n>
     <form-fieldset-i18n name="content-types" translation-key="task.batch-search.form.content-types">
       <filter-type :filter="filterContentType" :projects="projectNames" />
+    </form-fieldset-i18n>
+
+    <form-fieldset-i18n name="visibility" translation-key="task.batch-search.form.visibility">
+      <b-form-radio-group v-model="visibility" name="visibility" :options="visibilityOptions" stacked />
     </form-fieldset-i18n>
   </form-creation>
 </template>
