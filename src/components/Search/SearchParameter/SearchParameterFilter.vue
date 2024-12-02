@@ -59,7 +59,7 @@ const term = computed(() => {
 })
 
 const icon = computed(() => {
-  return props.icon ?? filter.value?.options?.icon ?? 'magnifying-glass'
+  return props.icon ?? filter.value?.options?.icon ?? PhMagnifyingGlass
 })
 
 const color = computed(() => {
