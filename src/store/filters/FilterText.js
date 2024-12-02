@@ -41,12 +41,12 @@ export default class FilterText {
     this.forceExclude = forceExclude
   }
 
-  itemParam(item) {
-    return { name: this.name, value: item.key }
+  itemParam({ key }) {
+    return { name: this.name, value: key }
   }
 
-  itemLabel(item) {
-    return item.key || item.value
+  itemLabel({ key = null, value = null } = {}) {
+    return key || value
   }
 
   addChildIncludeFilter(body, param) {
