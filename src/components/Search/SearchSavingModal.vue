@@ -1,6 +1,7 @@
 <script setup>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { isEmpty } from 'lodash'
 
 import AppModal from '@/components/AppModal/AppModal'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
@@ -12,6 +13,9 @@ const form = reactive({ name: '' })
 const { toast } = useCore()
 const { save } = useSearchSaving()
 const { t } = useI18n()
+
+const validName = computed(() => !isEmpty(form.name))
+const valid = computed(() => validName.value)
 
 async function confirmSaving() {
   try {
@@ -28,6 +32,7 @@ async function confirmSaving() {
 <template>
   <app-modal
     :ok-title="$t('searchSavingModal.okTitle')"
+    :ok-disabled="!valid"
     :title="$t('searchSavingModal.title')"
     size="lg"
     @ok="confirmSaving"
@@ -36,7 +41,7 @@ async function confirmSaving() {
       <form @submit.prevent="confirmSaving().then(close)">
         <form-fieldset :label="$t('searchSavingModal.form.name')" :icon="PhTextAa">
           <div class="col">
-            <b-form-input v-model="form.name" name="name" type="text" required class="mb-3" />
+            <b-form-input v-model="form.name" name="name" type="text" autofocus required class="mb-3" />
             <i18n-t keypath="searchSavingModal.form.description" tag="p">
               <template #link>
                 <router-link :to="{ name: 'user-history.saved-search.list' }">
