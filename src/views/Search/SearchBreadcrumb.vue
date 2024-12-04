@@ -2,8 +2,10 @@
 import SearchBreadcrumbForm from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbForm'
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 import { useSearchBreadcrumb } from '@/composables/search-breadcrumb'
+import { useSearchSavingModal } from '@/composables/search-saving'
 
 const visible = defineModel('visible', { type: Boolean })
+
 const {
   entries,
   clearEntry,
@@ -14,6 +16,8 @@ const {
   hasFiltersEntries,
   hasQueryAndFiltersEntries
 } = useSearchBreadcrumb()
+
+const { show: showSearchSavingModal } = useSearchSavingModal()
 </script>
 
 <template>
@@ -25,6 +29,7 @@ const {
     @clear:filters="clearFiltersEntries"
     @clear:query="clearQueryEntries"
     @clear:all="clearAll"
+    @save:search="showSearchSavingModal"
   >
     <search-breadcrumb-form-entry
       v-for="({ query, filter, value, noXIcon }, i) in entries"
