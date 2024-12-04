@@ -210,7 +210,9 @@ defineProps({
         />
       </slot>
     </template>
-    <slot />
+    <template #default="{ cancel, close, hide, ok, visible }">
+      <slot v-bind="{ cancel, close, hide, ok, visible }" />
+    </template>
   </b-modal>
 </template>
 
