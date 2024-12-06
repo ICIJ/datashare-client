@@ -44,6 +44,9 @@ const props = defineProps({
   },
   withDescription: {
     type: Boolean
+  },
+  labelVisuallyHidden: {
+    type: Boolean
   }
 })
 
@@ -54,6 +57,16 @@ const classList = computed(() => {
   return {
     'form-fieldset--required': props.required
   }
+})
+
+const labelColsSm = computed(() => {
+  return props.labelVisuallyHidden ? null : props.labelColsSm
+})
+const labelColsMd = computed(() => {
+  return props.labelVisuallyHidden ? null : props.labelColsMd
+})
+const labelColsLg = computed(() => {
+  return props.labelVisuallyHidden ? null : props.labelColsLg
 })
 </script>
 
@@ -68,6 +81,7 @@ const classList = computed(() => {
     :label="label"
     :label-for="labelFor"
     :description="compact ? description : null"
+    :label-visually-hidden="labelVisuallyHidden"
   >
     <template #label>
       <div class="form-fieldset__label text-body-emphasis">
@@ -88,7 +102,7 @@ const classList = computed(() => {
       </div>
     </template>
     <template v-else>
-      <div class="row">
+      <div class="row gap-3">
         <slot v-bind="{ compact }" />
       </div>
     </template>

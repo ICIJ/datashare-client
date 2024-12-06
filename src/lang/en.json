@@ -1004,6 +1004,58 @@
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "noResults": "No search results. Try adjusting the query or filters."
       },
+      "form": {
+        "section": {
+          "general": "Name, project(s) and description",
+          "queries": "Queries",
+          "operators": "Search operators",
+          "filters": "Filters",
+          "visibility": "Visibility"
+        },
+        "name": {
+          "label": "Name",
+          "placeholder": "Batch search name"
+        },
+        "projects": {
+          "label": "Project(s)"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Specifics about the batch search"
+        },
+        "csvFile": {
+          "label": "Queries",
+          "placeholder": "Drop your CSV"
+        },
+        "phraseChanges": {
+          "label": "Sentence changes",
+          "description": "Also called Proximity searches. Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other."
+        },
+        "spellingChanges": {
+          "label": "Spelling changes",
+          "description": "Also called fuzziness. Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters."
+        },
+        "phraseMatch": {
+          "label": "Query variations",
+          "options": {
+            "yes": "Sentence changes (search exact query, operators are not applied)",
+            "no": "Word changes (search at query term level's, operators are applied)"
+          },
+          "description": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order."
+        },
+        "visibility": {
+          "label": "Visibility",
+          "options": {
+            "private": "Private to you",
+            "shared": "Shared with members of the selected project(s)"
+          },
+          "description": "This option can be changed later (either way)"
+        },
+        "submit": "Go",
+        "failedPipelines": "Failed to retrieve pipelines",
+        "defaultPipeline": "recommended",
+        "findEntitiesType": "Find"
+      },
       "new": {
         "title":"Run a new batch search"
       }
