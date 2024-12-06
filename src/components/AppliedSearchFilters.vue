@@ -34,7 +34,7 @@ export default {
             const date = new Date(parseInt(label))
             label = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
           }
-          filters.push({ name: filter.name, label, value, negation: filter.reverse })
+          filters.push({ name: filter.name, label, value, negation: filter.excluded })
         })
       })
       return filters

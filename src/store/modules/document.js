@@ -1,4 +1,4 @@
-import { compact, concat, findIndex, flattenDeep, get, keys, map, sortBy, sumBy, uniqBy, values } from 'lodash'
+import { compact, concat, findIndex, flattenDeep, get, keys, map, groupBy, sortBy, sumBy, uniqBy, values } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
 
@@ -7,8 +7,6 @@ export function initialState() {
     doc: null,
     idAndRouting: null,
     isContentLoaded: false,
-    isTranslatedContentLoaded: false,
-    isLoadingNamedEntities: false,
     isRecommended: false,
     namedEntitiesPaginatedByCategories: {
       PERSON: [],
@@ -19,7 +17,6 @@ export function initialState() {
     parentDocument: null,
     recommendedBy: [],
     rootDocument: null,
-    useContentTextLazyLoading: false,
     showTranslatedContent: true,
     tags: []
   }
@@ -62,8 +59,6 @@ export const mutations = {
     if (raw !== null) {
       state.doc = EsDocList.instantiate(raw)
       state.isContentLoaded = state.doc.hasContent
-      state.isTranslatedContentLoaded = state.doc.hasTranslatedContent
-      state.useContentTextLazyLoading = state.doc.hasBigContentTextLength
     } else {
       state.doc = null
     }
@@ -77,7 +72,6 @@ export const mutations = {
   translations(state, translations = []) {
     if (state.doc) {
       state.doc.translations = translations
-      state.isTranslatedContentLoaded = true
     }
   },
   tags(state, tags = []) {
@@ -115,14 +109,14 @@ export const mutations = {
   toggleShowTranslatedContent(state, toggle = null) {
     state.showTranslatedContent = toggle !== null ? toggle : !state.showTranslatedContent
   },
-  addTag(state, { tag, userId }) {
-    const tags = map(compact(tag.split(' ')), (tag) => {
-      return { label: tag, user: { id: userId }, creationDate: Date.now() }
-    })
+  addTag(state, { label, userId }) {
+    const user = { id: userId }
+    const creationDate = Date.now()
+    const tags = compact(label.split(' ')).map((label) => ({ label, user, creationDate }))
     state.tags = uniqBy(concat(state.tags, tags), 'label')
   },
-  deleteTag(state, tagToDelete) {
-    state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
+  deleteTag(state, label) {
+    state.tags.splice(findIndex(state.tags, { label }), 1)
   },
   isRecommended(state, isRecommended) {
     state.isRecommended = isRecommended
@@ -136,7 +130,7 @@ export const mutations = {
   unmarkAsRecommended(state, userId) {
     const index = state.recommendedBy.indexOf(userId)
     if (index > -1) {
-      delete state.recommendedBy[index]
+      state.recommendedBy.splice(index, 1)
     }
   }
 }
@@ -265,27 +259,32 @@ function actionBuilder(api) {
       }
       return state.tags
     },
-    async tag({ state, dispatch }, { documents, tag, userId }) {
-      const index = state.doc ? state.doc.index : get(documents, '0.index', null)
-      await api.tagDocuments(index, map(documents, 'id'), compact(tag.split(' ')))
-      if (documents.length === 1) dispatch('addTag', { tag, userId })
+    async addTag({ dispatch }, { documents, label }) {
+      await dispatch('addTags', { documents, labels: compact(label.split(' ')) })
     },
-    addTag({ state, commit }, { tag, userId }) {
-      commit('addTag', { tag, userId })
+    async addTags({ dispatch }, { documents, labels }) {
+      const grouped = groupBy(documents, 'index')
+      for (const [index, subset] of Object.entries(grouped)) {
+        await api.tagDocuments(index, map(subset, 'id'), labels)
+      }
+      await dispatch('getTags')
     },
-    async deleteTag({ state, commit }, { documents, tag }) {
-      await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
-      if (documents.length === 1) commit('deleteTag', tag)
+    async deleteTag({ dispatch }, { documents, label }) {
+      const grouped = groupBy(documents, 'index')
+      for (const [index, subset] of Object.entries(grouped)) {
+        await api.untagDocuments(index, map(subset, 'id'), [label])
+      }
+      await dispatch('getTags')
     },
-    async toggleAsRecommended({ state, commit }, userId) {
-      if (state.isRecommended) {
-        await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
-        commit('unmarkAsRecommended', userId)
-        commit('isRecommended', false)
-      } else {
-        await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
-        commit('markAsRecommended', userId)
-        commit('isRecommended', true)
+    async toggleAsRecommended({ state, dispatch }, userId) {
+      try {
+        if (state.isRecommended) {
+          await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
+        } else {
+          await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
+        }
+      } finally {
+        await dispatch('getRecommendationsByDocuments', userId)
       }
     },
     async getRecommendationsByDocuments({ state, commit }, userId) {
@@ -293,11 +292,10 @@ function actionBuilder(api) {
         const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
         commit('recommendedBy', map(sortBy(get(recommendedBy, 'aggregates', []), 'item.id'), 'item.id'))
         const index = state.recommendedBy.indexOf(userId)
-        if (index > -1) {
-          commit('isRecommended', true)
-        }
+        commit('isRecommended', index > -1)
       } catch (_) {
         commit('recommendedBy', [])
+        commit('isRecommended', false)
       }
       return state.recommendedBy
     }
