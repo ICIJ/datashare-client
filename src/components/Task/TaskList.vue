@@ -70,8 +70,6 @@
 </template>
 
 <script setup>
-import { useStore } from 'vuex'
-
 import PageTable from '@/components/PageTable/PageTable'
 import PageTableTr from '@/components/PageTable/PageTableTr'
 import PageTableTh from '@/components/PageTable/PageTableTh'

@@ -12,7 +12,10 @@ const props = defineProps({
   translationKey: {
     type: String
   },
-  descriptionSide: { type: Boolean, default: false }
+  descriptionSide: { type: Boolean, default: false },
+  labelVisuallyHidden: {
+    type: Boolean
+  }
 })
 
 const { te, t } = useI18n()
@@ -32,6 +35,7 @@ const description = computed(() =>
     :label-for="labelFor"
     :description="description"
     :description-side="descriptionSide"
+    :label-visually-hidden="labelVisuallyHidden"
   >
     <slot v-bind="{ name: labelFor, ...slotProps }"></slot>
   </form-fieldset>
