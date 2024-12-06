@@ -3,11 +3,8 @@ import { computed } from 'vue'
 
 import FormStepHeading from '@/components/Form/FormStep/FormStepHeading'
 import FormStepContent from '@/components/Form/FormStep/FormStepContent'
-
-const props = defineProps({
-  collapse: {
-    type: Boolean
-  },
+const collapse = defineModel('collapse', { type: Boolean, default: false })
+defineProps({
   title: {
     type: String,
     required: true
@@ -19,18 +16,13 @@ const props = defineProps({
 })
 
 const classList = computed(() => ({
-  'form-step--collapsed': props.collapse
+  'form-step--collapsed': collapse.value === true
 }))
 </script>
 
 <template>
   <div class="form-step bg-tertiary-subtle p-3 rounded-4" :class="classList">
-    <form-step-heading
-      :title="title"
-      :index="index"
-      :collapse="collapse"
-      @update:collapse="$emit('update:collapse', $event)"
-    >
+    <form-step-heading v-model:collapse="collapse" :title="title" :index="index">
       <template #title>
         <slot name="title" />
       </template>

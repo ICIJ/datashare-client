@@ -3,6 +3,8 @@ import FormStepHeadingIndex from './FormStepHeadingIndex'
 import FormStepHeadingTitle from './FormStepHeadingTitle'
 import FormStepHeadingToggler from './FormStepHeadingToggler'
 
+const collapse = defineModel('collapse', { type: Boolean, default: false })
+
 defineProps({
   title: {
     type: String,
@@ -11,9 +13,6 @@ defineProps({
   index: {
     type: Number,
     required: true
-  },
-  collapse: {
-    type: Boolean
   }
 })
 </script>
