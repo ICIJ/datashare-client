@@ -10,6 +10,9 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  contentClassList: {
+    type: String
+  },
   submitLabel: {
     type: String
   },
@@ -32,10 +35,10 @@ function submit(values) {
 
 <template>
   <b-form class="form-creation" novalidate @reset.stop.prevent="reset" @submit.stop.prevent="submit">
-    <div aria-description="form-content">
+    <div aria-description="form-content" :class="contentClassList">
       <slot></slot>
     </div>
-    <div class="d-flex justify-content-end" aria-description="form-footer">
+    <div class="d-flex justify-content-end mb-4" aria-description="form-footer">
       <span class="d-flex gap-2">
         <button-icon
           type="reset"

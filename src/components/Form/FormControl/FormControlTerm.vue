@@ -52,7 +52,14 @@ defineProps({
     @update:modelValue="$emit('update:modelValue', $event)"
   >
     <template #tag="{ tag, removeTag }">
-      <search-breadcrumb-form-entry class="p-0" :query="tag" :size="size" no-occurrences no-caret @click="removeTag(tag)" />
+      <search-breadcrumb-form-entry
+        class="p-0"
+        :query="tag"
+        :size="size"
+        no-occurrences
+        no-caret
+        @click="removeTag(tag)"
+      />
     </template>
   </form-control-tag>
 </template>
