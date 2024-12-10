@@ -16,11 +16,11 @@
                 <b-form-input v-model="url" :state="isFormValid" placeholder="URL" type="url" />
               </div>
               <div class="d-flex align-items-center">
-                <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
+                <b-form-invalid-feedback class="text-primary" :state="isFormValid">
                   {{ $t('global.enterCorrectUrl') }}
                 </b-form-invalid-feedback>
                 <b-button
-                  variant="primary"
+                  variant="action"
                   class="ms-auto text-nowrap"
                   :disabled="isFormValid !== true"
                   @click="installExtensionFromUrl"
@@ -32,7 +32,7 @@
           </b-modal>
         </div>
         <div class="extensions__search ms-auto">
-          <search-form-control v-model="searchTerm" :placeholder="$t('extensions.search')" @input="search" />
+          <form-control-search v-model="searchTerm" :placeholder="$t('extensions.search')" @input="search" />
         </div>
       </div>
       <b-overlay :show="isLoading">
@@ -67,7 +67,7 @@
                     <b-button
                       v-if="!extension.installed"
                       class="extensions__card__download-button mb-2"
-                      variant="primary"
+                      variant="action"
                       @click="installExtensionFromId(extension.id)"
                     >
                       <fa icon="cloud-arrow-down"></fa>
@@ -76,7 +76,7 @@
                     <b-button
                       v-if="hasAvailableUpdate(extension)"
                       class="extensions__card__update-button mb-2"
-                      variant="primary"
+                      variant="action"
                       size="sm"
                       @click="installExtensionFromId(extension.id)"
                     >
@@ -120,7 +120,7 @@
 <script>
 import { camelCase, find, get, startCase, uniqueId } from 'lodash'
 
-import SearchFormControl from '@/components/SearchFormControl'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { isUrl } from '@/utils/strings'
 
 /**
@@ -129,7 +129,7 @@ import { isUrl } from '@/utils/strings'
 export default {
   name: 'Extensions',
   components: {
-    SearchFormControl
+    FormControlSearch
   },
   data() {
     return {
@@ -144,7 +144,7 @@ export default {
       return this.url === '' ? null : isUrl(this.url)
     },
     loaderId() {
-      return uniqueId('extentions-loader-')
+      return uniqueId('extensions-loader-')
     },
     isLoading() {
       return this.$wait.is(this.loaderId)

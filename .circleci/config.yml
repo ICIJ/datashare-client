@@ -69,15 +69,18 @@ jobs:
     resource_class: large
     docker:
       - image: cimg/node:18.19
+        environment:
+          # This is required to run the tests
+          NODE_OPTIONS: --max_old_space_size=4096
       - image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
         environment:
-          - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
-          - "discovery.type=single-node"
-          - "cluster.name=datashare"
+          ES_JAVA_OPTS: -Xms256m -Xmx256m
+          discovery.type: single-node
+          cluster.name: datashare
           # CORS
-          - "http.cors.enabled=true"
-          - "http.cors.allow-origin=*"
-          - "http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE"
+          http.cors.enabled: "true"
+          http.cors.allow-origin: "*"
+          http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
         name: elasticsearch
     working_directory: ~/datashare-client
     steps:

@@ -85,7 +85,7 @@
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #cell(user.id)="{ item }">
-        <user-display v-if="item.hasUser" :username="item.userId" style="vertical-align: center" />
+        <display-user v-if="item.hasUser" :username="item.userId" style="vertical-align: center" />
       </template>
       <template #cell(nbResults)="{ item }">
         <span class="batch-search-table__item__results text-nowrap">
@@ -98,7 +98,7 @@
       <template #cell(projects)="{ item }">
         <span class="batch-search-table__item__projects">
           <span v-for="{ name } in item.projects" :key="name" class="batch-search-table__item__projects__link">
-            <project-link :project="name" class="btn btn-sm btn-light p-1 me-1 mb-1" />
+            <project-link :project="name" class="btn btn-sm btn-tertiary p-1 me-1 mb-1" />
           </span>
         </span>
       </template>
@@ -114,9 +114,9 @@ import { computed } from 'vue'
 
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import BatchSearchFilterDate from '@/components/BatchSearchFilterDate'
-import ProjectLink from '@/components/ProjectLink'
+import ProjectLink from '@/components/Project/ProjectLink'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
-import UserDisplay from '@/components/UserDisplay'
+import DisplayUser from '@/components/Display/DisplayUser'
 import settings from '@/utils/settings'
 import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
@@ -140,7 +140,7 @@ const BATCHSEARCH_STATUS = Object.freeze({
 
 export default {
   name: 'BatchSearchTable',
-  components: { ProjectLink, UserDisplay, BatchSearchStatus, BatchSearchFilterDate, ColumnFilterDropdown },
+  components: { ProjectLink, DisplayUser, BatchSearchStatus, BatchSearchFilterDate, ColumnFilterDropdown },
   mixins: [polling, utils],
   provide() {
     return {
