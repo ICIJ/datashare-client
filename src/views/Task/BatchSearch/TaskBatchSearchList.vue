@@ -24,6 +24,12 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
       @update:sort="updateSort"
       @update:order="updateOrder"
     >
+      <template #cell(id)="{ item }"
+        ><router-link
+          :to="{ name: 'task.batch-search.view.results', params: { indices: 'local-datashare', uuid: item.id } }"
+          >{{ item.id }}</router-link
+        ></template
+      >
       <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
       <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
