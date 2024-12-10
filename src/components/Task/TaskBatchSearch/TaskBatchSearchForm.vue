@@ -177,7 +177,7 @@ const sections = reactive({
           no-drop
           required
         ></b-form-file>
-        <div class="bg-tertiary-subtle rounded-2 p-3">
+        <div class="bg-tertiary-subtle rounded-2 mt-3 p-3">
           <ul class="m-0">
             <li>Only <abbr>CSV</abbr> format is accepted Export your spreadsheet as a CSV using encoding UTF-8</li>
             <li>Your <abbr>CSV</abbr> file should not contain more than 60,000 queries</li>

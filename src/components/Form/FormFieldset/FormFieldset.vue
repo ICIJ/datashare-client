@@ -102,7 +102,7 @@ const labelColsLg = computed(() => {
       </div>
     </template>
     <template v-else>
-      <div class="row gap-3">
+      <div class="gap-3">
         <slot v-bind="{ compact }" />
       </div>
     </template>

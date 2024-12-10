@@ -248,6 +248,7 @@ onBeforeMount(async () => {
     :count="count"
     :loading="wait.is(loaderId)"
     :modal="modal"
+    class="p-3"
   >
     <slot v-bind="{ entries, filter }">
       <filters-panel-section-filter-entry
