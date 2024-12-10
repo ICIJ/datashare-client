@@ -1010,7 +1010,7 @@
           "general": "Name, project(s) and description",
           "queries": "Queries",
           "operators": "Search operators",
-          "filters": "Filters",
+          "filters": "Advanced filters",
           "visibility": "Visibility"
         },
         "name": {
