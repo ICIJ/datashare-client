@@ -1029,19 +1029,20 @@
         },
         "phraseChanges": {
           "label": "Sentence changes",
-          "description": "Also called Proximity searches. Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other."
+          "description": "Also called proximity searches. Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other."
         },
         "spellingChanges": {
           "label": "Spelling changes",
           "description": "Also called fuzziness. Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters."
         },
         "phraseMatch": {
-          "label": "Query variations",
+          "label": "Do phrase matches",
           "options": {
-            "yes": "Sentence changes (search exact query, operators are not applied)",
-            "no": "Word changes (search at query term level's, operators are applied)"
-          },
-          "description": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order."
+            "yes": "Yes",
+            "no": "No",
+            "searchInDoubleQuotes": "Queries searched in double quotes",
+            "operatorsApplied": "Apply operators (AND, OR, NOT, etc.) in the queries"
+          }
         },
         "visibility": {
           "label": "Visibility",

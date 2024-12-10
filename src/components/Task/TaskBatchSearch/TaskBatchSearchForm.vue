@@ -37,15 +37,35 @@ const name = ref('')
 const description = ref('')
 const csvFile = ref(null)
 const phraseMatch = ref(true)
-const phraseMatchOptions = computed(() => [
-  { text: t('task.batch-search.form.phraseMatch.options.yes'), value: true },
-  { text: t('task.batch-search.form.phraseMatch.options.no'), value: false }
-])
-const phraseChanges = ref(2)
-/* const paths = ref([]) */
-const changesLevelKey = computed(() => {
-  return phraseMatch.value ? 'task.batch-search.form.phraseChanges' : 'task.batch-search.form.spellingChanges'
+const phraseMatchDescription = (option, { doubleQuotes, withOperators }) => {
+  const searchInDoubleQuotes = doubleQuotes ? t('global.yes') : t('global.no')
+  const operatorsApplied = withOperators ? t('global.yes') : t('global.no')
+  return `<div class="d-flex gap-3 "><div class="col-1">${option}</div><div class="fw-normal ">${t(
+    'task.batch-search.form.phraseMatch.options.searchInDoubleQuotes'
+  )}: ${searchInDoubleQuotes}.<br/>${t(
+    'task.batch-search.form.phraseMatch.options.operatorsApplied'
+  )}:&nbsp;${operatorsApplied}.</div></div>`
+}
+
+const phraseMatchNo = computed(() => {
+  return phraseMatchDescription(t('task.batch-search.form.phraseMatch.options.no'), {
+    doubleQuotes: false,
+    withOperators: true
+  })
 })
+const phraseMatchYes = computed(() => {
+  return phraseMatchDescription(t('task.batch-search.form.phraseMatch.options.yes'), {
+    doubleQuotes: true,
+    withOperators: false
+  })
+})
+const phraseMatchOptions = computed(() => [
+  { html: phraseMatchNo.value, value: false },
+  { html: phraseMatchYes.value, value: true }
+])
+const phraseChanges = ref(0)
+const spellingChanges = ref(0)
+/* const paths = ref([]) */
 const projectNames = computed(() => {
   return selectedProjects.value.map((p) => p.name)
 })
@@ -106,7 +126,7 @@ const filterContentType = f({
 })
 const visibility = ref(true)
 const visibilityOptions = computed(() => [
-  { text: t('task.batch-search.form.visibility.options.shared'), value: true },
+  { html: `<span class="text-nowrap">${t('task.batch-search.form.visibility.options.shared')}</span>`, value: true },
   { text: t('task.batch-search.form.visibility.options.private'), value: false }
 ])
 
@@ -142,6 +162,9 @@ const sections = reactive({
           :placeholder="t('task.batch-search.form.description.placeholder')"
         />
       </form-fieldset-i18n>
+      <form-fieldset-i18n name="visibility" translation-key="task.batch-search.form.visibility">
+        <b-form-radio-group v-model="visibility" name="visibility" :options="visibilityOptions" stacked />
+      </form-fieldset-i18n>
     </form-step>
     <form-step v-model:collapse="sections.queries.collapse" :title="sections.queries.title" index="2">
       <form-fieldset-i18n name="csvFile" translation-key="task.batch-search.form.csvFile">
@@ -170,10 +193,23 @@ const sections = reactive({
     </form-step>
     <form-step v-model:collapse="sections.search.collapse" :title="sections.search.title" index="3">
       <form-fieldset-i18n name="phraseMatch" translation-key="task.batch-search.form.phraseMatch">
-        <b-form-radio-group v-model="phraseMatch" name="phraseMatch" :options="phraseMatchOptions" stacked />
+        <b-form-radio-group
+          v-model="phraseMatch"
+          class="task-batch-search-form__phrase-match"
+          name="phraseMatch"
+          :options="phraseMatchOptions"
+          stacked
+        />
       </form-fieldset-i18n>
-      <form-fieldset-i18n name="phraseChanges" :translation-key="changesLevelKey">
+      <form-fieldset-i18n
+        v-if="phraseMatch"
+        name="phraseChanges"
+        translation-key="task.batch-search.form.phraseChanges"
+      >
         <form-control-range v-model="phraseChanges" :min="0" :max="3" :step="1" />
+      </form-fieldset-i18n>
+      <form-fieldset-i18n v-else name="spellingChanges" translation-key="task.batch-search.form.spellingChanges">
+        <form-control-range v-model="spellingChanges" :min="0" :max="5" :step="1" />
       </form-fieldset-i18n>
     </form-step>
     <form-step
@@ -215,15 +251,6 @@ const sections = reactive({
         <filter-type :filter="filterContentType" :projects="projectNames" />
       </form-fieldset-i18n>
     </form-step>
-    <form-step v-model:collapse="sections.visibility.collapse" :title="sections.visibility.title" index="5">
-      <form-fieldset-i18n label-visually-hidden name="visibility" translation-key="task.batch-search.form.visibility">
-        <b-form-radio-group
-          v-model="visibility"
-          name="visibility"
-          :options="visibilityOptions"
-          stacked
-        /> </form-fieldset-i18n
-    ></form-step>
   </form-creation>
 </template>
 <style lang="scss">
@@ -239,6 +266,9 @@ const sections = reactive({
     & .form-step-sub-content .filters-panel-section-filter {
       background: $white;
     }
+  }
+  &__phrase-match .form-check-label {
+    width: 100%;
   }
 }
 </style>
