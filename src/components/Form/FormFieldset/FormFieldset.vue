@@ -96,7 +96,7 @@ const labelColsLg = computed(() => {
         <div class="form-fieldset__content">
           <slot v-bind="{ compact }" />
         </div>
-        <div class="form-fieldset__description-side text-secondary-emphasis">
+        <div class="form-fieldset__description text-secondary-emphasis">
           {{ description }}
         </div>
       </div>
