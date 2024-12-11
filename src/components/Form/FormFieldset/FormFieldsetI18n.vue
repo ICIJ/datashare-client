@@ -12,7 +12,8 @@ const props = defineProps({
   translationKey: {
     type: String
   },
-  descriptionSide: { type: Boolean, default: false },
+  withDescription: { type: Boolean, default: false },
+  forceCompact: { type: Boolean },
   labelVisuallyHidden: {
     type: Boolean
   }
@@ -34,7 +35,8 @@ const description = computed(() =>
     :class="name"
     :label-for="labelFor"
     :description="description"
-    :description-side="descriptionSide"
+    :compact-threshold="forceCompact ? 10000 : null"
+    :with-description="withDescription"
     :label-visually-hidden="labelVisuallyHidden"
   >
     <slot v-bind="{ name: labelFor, ...slotProps }"></slot>
