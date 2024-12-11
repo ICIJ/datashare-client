@@ -1047,8 +1047,10 @@
         "visibility": {
           "label": "Visibility",
           "options": {
-            "private": "Private to you",
-            "shared": "Shared with members of the selected project(s)"
+            "private": "Private",
+            "privateDescription": "Only visible to you",
+            "shared": "Shared",
+            "sharedDescription": "Only visible to members of all the selected project(s)"
           },
           "description": "This option can be changed later (either way)"
         },

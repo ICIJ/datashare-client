@@ -37,14 +37,19 @@ const name = ref('')
 const description = ref('')
 const csvFile = ref(null)
 const phraseMatch = ref(true)
+
+function colRadiobutton({ option, description }) {
+  return `<div class="d-flex gap-3 "><div class="col-radio-button">${option}</div><div class="fw-normal ">${description}</div></div>`
+}
 const phraseMatchDescription = (option, { doubleQuotes, withOperators }) => {
   const searchInDoubleQuotes = doubleQuotes ? t('global.yes') : t('global.no')
   const operatorsApplied = withOperators ? t('global.yes') : t('global.no')
-  return `<div class="d-flex gap-3 "><div class="col-1">${option}</div><div class="fw-normal ">${t(
+  const description = `${t(
     'task.batch-search.form.phraseMatch.options.searchInDoubleQuotes'
   )}: ${searchInDoubleQuotes}.<br/>${t(
     'task.batch-search.form.phraseMatch.options.operatorsApplied'
-  )}:&nbsp;${operatorsApplied}.</div></div>`
+  )}:&nbsp;${operatorsApplied}.`
+  return colRadiobutton({ option, description })
 }
 
 const phraseMatchNo = computed(() => {
@@ -126,8 +131,20 @@ const filterContentType = f({
 })
 const visibility = ref(true)
 const visibilityOptions = computed(() => [
-  { html: `<span class="text-nowrap">${t('task.batch-search.form.visibility.options.shared')}</span>`, value: true },
-  { text: t('task.batch-search.form.visibility.options.private'), value: false }
+  {
+    html: colRadiobutton({
+      option: t('task.batch-search.form.visibility.options.shared'),
+      description: t('task.batch-search.form.visibility.options.sharedDescription')
+    }),
+    value: true
+  },
+  {
+    html: colRadiobutton({
+      option: t('task.batch-search.form.visibility.options.private'),
+      description: t('task.batch-search.form.visibility.options.privateDescription')
+    }),
+    value: false
+  }
 ])
 
 const sections = reactive({
@@ -162,8 +179,14 @@ const sections = reactive({
           :placeholder="t('task.batch-search.form.description.placeholder')"
         />
       </form-fieldset-i18n>
-      <form-fieldset-i18n name="visibility" translation-key="task.batch-search.form.visibility">
-        <b-form-radio-group v-model="visibility" name="visibility" :options="visibilityOptions" stacked />
+      <form-fieldset-i18n name="visibility" force-compact translation-key="task.batch-search.form.visibility">
+        <b-form-radio-group
+          v-model="visibility"
+          name="visibility"
+          class="radio-group-col-description"
+          :options="visibilityOptions"
+          stacked
+        />
       </form-fieldset-i18n>
     </form-step>
     <form-step v-model:collapse="sections.queries.collapse" :title="sections.queries.title" index="2">
@@ -195,7 +218,7 @@ const sections = reactive({
       <form-fieldset-i18n name="phraseMatch" translation-key="task.batch-search.form.phraseMatch">
         <b-form-radio-group
           v-model="phraseMatch"
-          class="task-batch-search-form__phrase-match"
+          class="radio-group-col-description"
           name="phraseMatch"
           :options="phraseMatchOptions"
           stacked
@@ -267,8 +290,14 @@ const sections = reactive({
       background: $white;
     }
   }
-  &__phrase-match .form-check-label {
-    width: 100%;
+
+  .radio-group-col-description {
+    .form-check-label {
+      width: 100%;
+    }
+    .col-radio-button {
+      flex-basis: 60px;
+    }
   }
 }
 </style>
