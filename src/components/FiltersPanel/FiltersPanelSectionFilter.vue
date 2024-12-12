@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import FiltersPanelSectionFilterTitle from '@/components/FiltersPanel/FiltersPanelSectionFilterTitle'
-import FiltersPanelSectionFilterFooter from '@/components/FiltersPanel/FiltersPanelSectionFilterFooter'
+import FiltersPanelSectionFilterActions from '@/components/FiltersPanel/FiltersPanelSectionFilterActions'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 const contextualize = defineModel('contextualize', { type: Boolean })
@@ -92,7 +92,7 @@ const classList = computed(() => {
         </div>
       </div>
       <slot name="footer">
-        <filters-panel-section-filter-footer
+        <filters-panel-section-filter-actions
           v-model:contextualize="contextualize"
           v-model:exclude="exclude"
           v-model:expand="expand"
