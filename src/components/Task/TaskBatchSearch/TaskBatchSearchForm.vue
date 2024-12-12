@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toRef, reactive } from 'vue'
+import { computed, ref, toRaw, toRef, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FormStep from '@/components/Form/FormStep/FormStep'
@@ -33,22 +33,71 @@ const projectList = computed(() => {
     return [defaultProject.value]
   }
 })
-const selectedProjects = ref(projectList.value)
 
-const name = ref('')
-const description = ref('')
-const csvFile = ref(null)
-const phraseMatch = ref(true)
+const initialValues = {
+  name: '',
+  projects: toRaw(projectList),
+  description: '',
+  visibility: false,
+  csvFile: null,
+  phraseMatch: false,
+  phraseChanges: 0,
+  spellingChanges: 0,
+  filters: {
+    paths: [],
+    tags: [],
+    tagsExcluded: [],
+    fileTypes: []
+  }
+}
+const name = ref(initialValues.name)
+const selectedProjects = ref(projectList.value)
+const description = ref(initialValues.description)
+const visibility = ref(initialValues.visibility)
+const csvFile = ref(initialValues.csvFile)
+const phraseMatch = ref(initialValues.phraseMatch)
+const phraseChanges = ref(initialValues.phraseChanges)
+const spellingChanges = ref(initialValues.spellingChanges)
+const paths = ref(initialValues.filters.paths)
+const tags = ref(initialValues.filters.tags)
+const tagsExcluded = ref(initialValues.filters.tagsExcluded)
+const fileTypes = ref(initialValues.filters.fileTypes)
+
+function reset() {
+  name.value = initialValues.name
+  selectedProjects.value = initialValues.projects
+  description.value = initialValues.description
+  visibility.value = initialValues.visibility
+  csvFile.value = initialValues.csvFile
+  phraseMatch.value = initialValues.phraseMatch
+  phraseChanges.value = initialValues.phraseChanges
+  spellingChanges.value = initialValues.spellingChanges
+  paths.value = initialValues.filters.paths
+  tags.value = initialValues.filters.tags
+  tagsExcluded.value = initialValues.filters.tagsExcluded
+  fileTypes.value = initialValues.filters.fileTypes
+}
+const valid = computed(() => {
+  return name.value.trim(' ').length > 0 && csvFile.value !== null
+})
+function submit(values) {
+  if (valid.value) {
+    console.log(values)
+    // $emit('submit')
+  } else {
+    console.log('not valid')
+  }
+}
 
 function colRadiobutton({ option, description }) {
-  return `<div class="d-flex gap-3 "><div class="col-radio-button">${option}</div><div class="fw-normal ">${description}</div></div>`
+  return `<div class="d-flex gap-3 "><div class="col-radio-button">${option}</div><div class="fw-normal">${description}</div></div>`
 }
 const phraseMatchDescription = (option, { doubleQuotes, withOperators }) => {
   const searchInDoubleQuotes = doubleQuotes ? t('global.yes') : t('global.no')
   const operatorsApplied = withOperators ? t('global.yes') : t('global.no')
   const description = `${t(
     'task.batch-search.form.phraseMatch.options.searchInDoubleQuotes'
-  )}: ${searchInDoubleQuotes}.<br/>${t(
+  )}:&nbsp;${searchInDoubleQuotes}.<br/>${t(
     'task.batch-search.form.phraseMatch.options.operatorsApplied'
   )}:&nbsp;${operatorsApplied}.`
   return colRadiobutton({ option, description })
@@ -70,9 +119,7 @@ const phraseMatchOptions = computed(() => [
   { html: phraseMatchNo.value, value: false },
   { html: phraseMatchYes.value, value: true }
 ])
-const phraseChanges = ref(0)
-const spellingChanges = ref(0)
-/* const paths = ref([]) */
+
 const projectNames = computed(() => {
   return selectedProjects.value.map((p) => p.name)
 })
@@ -131,21 +178,20 @@ const filterContentType = f({
     preference: 'filter-content-type'
   }
 })
-const visibility = ref(true)
 const visibilityOptions = computed(() => [
-  {
-    html: colRadiobutton({
-      option: t('task.batch-search.form.visibility.options.shared'),
-      description: t('task.batch-search.form.visibility.options.sharedDescription')
-    }),
-    value: true
-  },
   {
     html: colRadiobutton({
       option: t('task.batch-search.form.visibility.options.private'),
       description: t('task.batch-search.form.visibility.options.privateDescription')
     }),
     value: false
+  },
+  {
+    html: colRadiobutton({
+      option: t('task.batch-search.form.visibility.options.shared'),
+      description: t('task.batch-search.form.visibility.options.sharedDescription')
+    }),
+    value: true
   }
 ])
 
@@ -168,15 +214,17 @@ const sections = reactive({
     @submit="submit"
   >
     <form-step v-model:collapse="sections.general.collapse" :title="sections.general.title" index="1">
-      <form-fieldset-i18n name="name" translation-key="task.batch-search.form.name">
+      <form-fieldset-i18n required name="name" translation-key="task.batch-search.form.name">
         <b-form-input v-model="name" type="text" :placeholder="t('task.batch-search.form.name.placeholder')" />
       </form-fieldset-i18n>
       <form-fieldset-i18n name="projects" translation-key="task.batch-search.form.projects">
         <search-bar-input-dropdown-for-projects v-model="selectedProjects" />
+        <input type="hidden" name="projects" :value="projectNames" />
       </form-fieldset-i18n>
       <form-fieldset-i18n name="description" translation-key="task.batch-search.form.description">
         <b-form-textarea
           v-model="description"
+          name="description"
           type="text"
           :placeholder="t('task.batch-search.form.description.placeholder')"
         />
@@ -237,10 +285,10 @@ const sections = reactive({
         name="phraseChanges"
         translation-key="task.batch-search.form.phraseChanges"
       >
-        <form-control-range v-model="phraseChanges" :min="0" :max="3" :step="1" />
+        <form-control-range v-model="phraseChanges" name="phraseChanges" :min="0" :max="3" :step="1" />
       </form-fieldset-i18n>
       <form-fieldset-i18n v-else name="spellingChanges" translation-key="task.batch-search.form.spellingChanges">
-        <form-control-range v-model="spellingChanges" :min="0" :max="5" :step="1" />
+        <form-control-range v-model="spellingChanges" name="spellingChanges" :min="0" :max="5" :step="1" />
       </form-fieldset-i18n>
     </form-step>
     <form-step
@@ -318,8 +366,11 @@ const sections = reactive({
       background: none;
       padding: 0 !important;
     }
-    & .form-step-sub-content .filters-panel-section-filter {
-      background: $white;
+    & .form-step-sub-content {
+      padding: 0;
+      & .filters-panel-section-filter {
+        background: $white;
+      }
     }
   }
 
