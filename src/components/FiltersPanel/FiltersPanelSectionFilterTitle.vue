@@ -49,6 +49,8 @@ const classList = computed(() => {
         <phosphor-icon :name="icon" class="me-2" />
         {{ title }}
       </span>
+      <slot name="actions"></slot>
+
       <filters-panel-section-filter-title-sort v-if="showSort" v-model="sort" />
       <span @click="collapse = !collapse">
         <b-badge v-if="showCount" class="filters-panel-section-filter-title__count" pill variant="primary-subtle">
