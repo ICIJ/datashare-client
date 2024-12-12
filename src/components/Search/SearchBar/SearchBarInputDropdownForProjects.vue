@@ -1,9 +1,5 @@
 <template>
-  <project-dropdown-selector
-    :projects="projects"
-    :model-value="selectedProjects"
-    @update:model-value="selectedProjects = $event"
-  />
+  <project-dropdown-selector v-model="selectedProjects" :projects="projects" />
 </template>
 
 <script>
