@@ -255,7 +255,13 @@ const sections = reactive({
         name="path"
         translation-key="task.batch-search.form.path"
       >
-        <filter-type-path :filter="filterPath" :projects="projectNames" />
+        <filter-type-path
+          :filter="filterPath"
+          :projects="projectNames"
+          actions-position-title
+          hide-contextualize
+          hide-exclude
+        />
       </form-fieldset-i18n>
       <form-fieldset-i18n
         class="form-step-sub-content"
@@ -263,7 +269,13 @@ const sections = reactive({
         name="tags-included"
         translation-key="task.batch-search.form.tag-included"
       >
-        <filter-type :filter="filterTag" :projects="projectNames" />
+        <filter-type
+          :filter="filterTag"
+          :projects="projectNames"
+          actions-position-title
+          hide-contextualize
+          hide-exclude
+        />
       </form-fieldset-i18n>
       <form-fieldset-i18n
         label-visually-hidden
@@ -271,7 +283,13 @@ const sections = reactive({
         class="form-step-sub-content"
         translation-key="task.batch-search.form.tags-excluded"
       >
-        <filter-type :filter="filterTagExcluded" :projects="projectNames" />
+        <filter-type
+          :filter="filterTagExcluded"
+          :projects="projectNames"
+          actions-position-title
+          hide-contextualize
+          hide-exclude
+        />
       </form-fieldset-i18n>
       <form-fieldset-i18n
         label-visually-hidden
@@ -279,7 +297,13 @@ const sections = reactive({
         name="content-types"
         translation-key="task.batch-search.form.content-types"
       >
-        <filter-type :filter="filterContentType" :projects="projectNames" />
+        <filter-type
+          :filter="filterContentType"
+          :projects="projectNames"
+          actions-position-title
+          hide-contextualize
+          hide-exclude
+        />
       </form-fieldset-i18n>
     </form-step>
   </form-creation>
