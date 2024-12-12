@@ -38,8 +38,10 @@ const classList = computed(() => {
 
 <template>
   <div class="filters-panel-section-filter-actions" :class="classList">
-    <b-form-checkbox v-if="!hideContextualize" v-model="contextualize">Contextualize</b-form-checkbox>
-    <b-form-checkbox v-if="!hideExclude" v-model="exclude">Exclude</b-form-checkbox>
+    <span class="d-flex">
+      <b-form-checkbox v-if="!hideContextualize" v-model="contextualize">Contextualize</b-form-checkbox>
+      <b-form-checkbox v-if="!hideExclude" v-model="exclude">Exclude</b-form-checkbox>
+    </span>
     <button-icon
       v-if="!hideExpand"
       variant="link"
@@ -55,13 +57,10 @@ const classList = computed(() => {
 
 <style lang="scss" scoped>
 .filters-panel-section-filter-actions {
-  padding: $spacer-xxs 0 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   overflow: auto;
-  width: 100%;
-  flex: auto;
-
   &--empty {
     display: none;
   }
