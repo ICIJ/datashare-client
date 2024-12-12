@@ -1024,8 +1024,12 @@
           "placeholder": "Specifics about the batch search"
         },
         "csvFile": {
-          "label": "Queries",
+          "label": "Upload a CSV file",
           "placeholder": "Drop your CSV"
+        },
+        "listQueries": {
+          "label": "List of queries",
+          "placeholder": "New feature coming soon!"
         },
         "phraseChanges": {
           "label": "Sentence changes",
@@ -1040,7 +1044,7 @@
           "options": {
             "yes": "Yes",
             "no": "No",
-            "searchInDoubleQuotes": "Queries searched in double quotes",
+            "searchInDoubleQuotes": "Queries searched within double quotes",
             "operatorsApplied": "Apply operators (AND, OR, NOT, etc.) in the queries"
           }
         },
