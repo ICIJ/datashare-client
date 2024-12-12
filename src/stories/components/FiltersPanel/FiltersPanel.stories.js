@@ -4,7 +4,7 @@ import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 import FiltersPanelSectionTitle from '@/components/FiltersPanel/FiltersPanelSectionTitle'
 import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
-import FiltersPanelSectionFilterFooter from '@/components/FiltersPanel/FiltersPanelSectionFilterFooter'
+import FiltersPanelSectionFilterActions from '@/components/FiltersPanel/FiltersPanelSectionFilterActions'
 
 export default {
   title: 'Components/FiltersPanel',
@@ -22,7 +22,7 @@ export default {
       FiltersPanelSectionTitle,
       FiltersPanelSectionFilter,
       FiltersPanelSectionFilterEntry,
-      FiltersPanelSectionFilterFooter
+      FiltersPanelSectionFilterActions
     },
     data() {
       return {
