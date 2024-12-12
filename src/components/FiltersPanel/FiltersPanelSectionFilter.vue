@@ -53,6 +53,10 @@ const props = defineProps({
   },
   modal: {
     type: Boolean
+  },
+  actionsPositionTitle: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -77,7 +81,20 @@ const classList = computed(() => {
       :hide-sort="hideSort"
       :loading="loading"
       class="mx-2"
-    />
+    >
+      <template #actions>
+        <filters-panel-section-filter-actions
+          v-if="actionsPositionTitle"
+          v-model:contextualize="contextualize"
+          v-model:exclude="exclude"
+          v-model:expand="expand"
+          :hide-contextualize="hideContextualize"
+          :hide-exclude="hideExclude"
+          :hide-expand="modal || hideExpand"
+          class="filters-panel-section-filter__footer px-2"
+        />
+      </template>
+    </filters-panel-section-filter-title>
     <b-collapse :model-value="modal || !collapse">
       <div class="filters-panel-section-filter__content">
         <form-control-search
@@ -93,13 +110,14 @@ const classList = computed(() => {
       </div>
       <slot name="footer">
         <filters-panel-section-filter-actions
+          v-if="!actionsPositionTitle"
           v-model:contextualize="contextualize"
           v-model:exclude="exclude"
           v-model:expand="expand"
           :hide-contextualize="hideContextualize"
           :hide-exclude="hideExclude"
           :hide-expand="modal || hideExpand"
-          class="filters-panel-section-filter__footer ps-2 pe-2"
+          class="filters-panel-section-filter__footer px-2 pt-1"
         />
       </slot>
     </b-collapse>
