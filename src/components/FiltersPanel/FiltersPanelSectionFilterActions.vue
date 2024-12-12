@@ -28,16 +28,16 @@ const isEmpty = computed(() => {
 
 const classList = computed(() => {
   return {
-    'filters-panel-section-filter-footer--empty': isEmpty.value,
-    'filters-panel-section-filter-footer--hide-contextualize': props.hideContextualize,
-    'filters-panel-section-filter-footer--hide-exclude': props.hideExclude,
-    'filters-panel-section-filter-footer--hide-expand': props.hideShowMore
+    'filters-panel-section-filter-actions--empty': isEmpty.value,
+    'filters-panel-section-filter-actions--hide-contextualize': props.hideContextualize,
+    'filters-panel-section-filter-actions--hide-exclude': props.hideExclude,
+    'filters-panel-section-filter-actions--hide-expand': props.hideShowMore
   }
 })
 </script>
 
 <template>
-  <div class="filters-panel-section-filter-footer" :class="classList">
+  <div class="filters-panel-section-filter-actions" :class="classList">
     <b-form-checkbox v-if="!hideContextualize" v-model="contextualize">Contextualize</b-form-checkbox>
     <b-form-checkbox v-if="!hideExclude" v-model="exclude">Exclude</b-form-checkbox>
     <button-icon
@@ -54,7 +54,7 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
-.filters-panel-section-filter-footer {
+.filters-panel-section-filter-actions {
   padding: $spacer-xxs 0 0;
   display: flex;
   align-items: center;
