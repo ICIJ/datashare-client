@@ -15,14 +15,23 @@ defineProps({
     required: true
   }
 })
+const emit = defineEmits(['update:collapse'])
+function toggleCollapse() {
+  emit('update:collapse', !collapse.value)
+}
+function open() {
+  if (collapse.value === true) {
+    toggleCollapse()
+  }
+}
 </script>
 
 <template>
-  <div class="form-step-heading d-flex align-items-center gap-3" @click="$emit('update:collapse', !collapse)">
+  <div class="form-step-heading d-flex align-items-center gap-3" @click="open">
     <form-step-heading-index :index="index" :collapse="collapse" />
     <form-step-heading-title :title="title">
       <slot name="title" />
     </form-step-heading-title>
-    <form-step-heading-toggler :collapse="collapse" class="ms-auto" />
+    <form-step-heading-toggler :collapse="collapse" class="ms-auto" @click.stop="toggleCollapse" />
   </div>
 </template>
