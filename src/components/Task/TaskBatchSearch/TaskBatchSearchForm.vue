@@ -12,6 +12,8 @@ import { usePath } from '@/components/Task/path'
 import * as filterTypes from '@/store/filters'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterType from '@/components/Filter/FilterType/FilterType'
+import TabGroup from '@/components/TabGroup/TabGroup'
+import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
 
 const props = defineProps({
   projects: {
@@ -190,29 +192,35 @@ const sections = reactive({
       </form-fieldset-i18n>
     </form-step>
     <form-step v-model:collapse="sections.queries.collapse" :title="sections.queries.title" index="2">
-      <form-fieldset-i18n name="csvFile" translation-key="task.batch-search.form.csvFile">
-        <b-form-file
-          v-model="csvFile"
-          :placeholder="$t('task.batch-search.form.csvFile.placeholder')"
-          :state="!!csvFile"
-          accept=".csv"
-          class="text-truncate"
-          no-drop
-          required
-        ></b-form-file>
-        <div class="bg-tertiary-subtle rounded-2 mt-3 p-3">
-          <ul class="m-0">
-            <li>Only <abbr>CSV</abbr> format is accepted Export your spreadsheet as a CSV using encoding UTF-8</li>
-            <li>Your <abbr>CSV</abbr> file should not contain more than 60,000 queries</li>
-            <li>The first and only column should contain the terms to search No line break(s) in cells</li>
-            <li>
-              Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>,
-              <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or
-              Regexes (between 2 slashes).
-            </li>
-          </ul>
-        </div>
-      </form-fieldset-i18n>
+      <tab-group>
+        <tab-group-entry :title="$t('task.batch-search.form.csvFile.label')">
+          <b-form-file
+            v-model="csvFile"
+            :placeholder="$t('task.batch-search.form.csvFile.placeholder')"
+            :state="!!csvFile"
+            accept=".csv"
+            class="text-truncate"
+            name="csvFile"
+            no-drop
+            required
+          ></b-form-file>
+          <div class="bg-tertiary-subtle rounded-2 mt-3 p-3">
+            <ul class="m-0">
+              <li>Only <abbr>CSV</abbr> format is accepted Export your spreadsheet as a CSV using encoding UTF-8</li>
+              <li>Your <abbr>CSV</abbr> file should not contain more than 60,000 queries</li>
+              <li>The first and only column should contain the terms to search No line break(s) in cells</li>
+              <li>
+                Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>,
+                <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or
+                Regexes (between 2 slashes).
+              </li>
+            </ul>
+          </div>
+        </tab-group-entry>
+        <tab-group-entry :title="$t('task.batch-search.form.listQueries.label')">
+          {{ $t('task.batch-search.form.listQueries.placeholder') }}
+        </tab-group-entry>
+      </tab-group>
     </form-step>
     <form-step v-model:collapse="sections.search.collapse" :title="sections.search.title" index="3">
       <form-fieldset-i18n name="phraseMatch" translation-key="task.batch-search.form.phraseMatch">
