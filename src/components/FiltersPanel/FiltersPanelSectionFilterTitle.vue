@@ -49,7 +49,7 @@ const classList = computed(() => {
         <phosphor-icon :name="icon" class="me-2" />
         {{ title }}
       </span>
-      <slot name="actions"></slot>
+      <template v-if="!collapse"> <slot name="actions"></slot></template>
 
       <filters-panel-section-filter-title-sort v-if="showSort" v-model="sort" />
       <span @click="collapse = !collapse">
