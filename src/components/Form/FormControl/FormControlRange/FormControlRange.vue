@@ -31,6 +31,7 @@ defineProps({
     <div class="form-control-range__wrapper">
       <form-control-range-slider v-model="modelValue" class="mb-3" :min="min" :max="max" :step="step" />
       <form-control-range-ticks v-model="modelValue" :min="min" :max="max" :step="step" />
+      <input v-if="name" type="hidden" :name="name" :value="modelValue" />
     </div>
   </div>
 </template>
