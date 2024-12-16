@@ -1,10 +1,11 @@
 <script setup>
 import FormControlRangeSliderBullet from './FormControlRangeSliderBullet'
 
+const modelValue = defineModel({
+  type: Number
+})
+
 defineProps({
-  modelValue: {
-    type: Number
-  },
   step: {
     type: Number
   },
@@ -18,14 +19,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="form-control-range-slider" aria-hidden>
-    <form-control-range-slider-bullet
-      :model-value="modelValue"
-      :min="min"
-      :max="max"
-      :step="step"
-      @update:modelValue="$emit('update:modelValue', $event)"
-    />
+  <div class="form-control-range-slider" aria-hidden="true">
+    <form-control-range-slider-bullet v-model="modelValue" :min="min" :max="max" :step="step" />
   </div>
 </template>
 
