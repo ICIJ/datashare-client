@@ -3,11 +3,10 @@ import { range } from 'd3'
 import { computed, ref } from 'vue'
 
 import { draggable as vDraggable } from '@/directives/draggable'
-
+const modelValue = defineModel({
+  type: Number
+})
 const props = defineProps({
-  modelValue: {
-    type: Number
-  },
   step: {
     type: Number
   },
@@ -27,7 +26,7 @@ const steps = computed(() => {
 })
 
 const modelValueStep = computed(() => {
-  return steps.value.indexOf(props.modelValue)
+  return steps.value.indexOf(modelValue.value)
 })
 
 const style = computed(() => {
@@ -40,12 +39,10 @@ const style = computed(() => {
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
-
 const drag = ({ detail: x }) => {
   active.value = true
   const index = Math.round(steps.value.length * (x / 100))
-  emit('update:modelValue', steps.value[index])
+  modelValue.value = steps.value[index]
 }
 
 const dragend = () => {
@@ -66,7 +63,6 @@ const classList = computed(() => {
     class="form-control-range-slider-bullet"
     :class="classList"
     :style="style"
-    aria-live
     @drag="drag"
     @dragend="dragend"
   ></a>

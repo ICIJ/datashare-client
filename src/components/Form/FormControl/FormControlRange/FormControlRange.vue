@@ -2,10 +2,14 @@
 import FormControlRangeSlider from './FormControlRangeSlider'
 import FormControlRangeTicks from './FormControlRangeTicks'
 
+const modelValue = defineModel({
+  type: Number,
+  default: 0
+})
+
 defineProps({
-  modelValue: {
-    type: Number,
-    default: 0
+  name: {
+    type: String
   },
   min: {
     type: Number,
@@ -25,21 +29,8 @@ defineProps({
 <template>
   <div class="form-control-range d-inline-block">
     <div class="form-control-range__wrapper">
-      <form-control-range-slider
-        class="mb-3"
-        :model-value="modelValue"
-        :min="min"
-        :max="max"
-        :step="step"
-        @update:modelValue="$emit('update:modelValue', $event)"
-      />
-      <form-control-range-ticks
-        :model-value="modelValue"
-        :min="min"
-        :max="max"
-        :step="step"
-        @update:modelValue="$emit('update:modelValue', $event)"
-      />
+      <form-control-range-slider v-model="modelValue" class="mb-3" :min="min" :max="max" :step="step" />
+      <form-control-range-ticks v-model="modelValue" :min="min" :max="max" :step="step" />
     </div>
   </div>
 </template>
