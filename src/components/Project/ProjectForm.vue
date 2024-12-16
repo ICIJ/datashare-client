@@ -51,7 +51,7 @@ function initialFormValues() {
   return {
     name: null,
     label: null,
-    sourcePath: defaultDataDir,
+    sourcePath: defaultDataDir.value,
     allowFromMask: '*.*.*.*',
     description: null,
     logoUrl: null,
