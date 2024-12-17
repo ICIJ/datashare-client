@@ -203,7 +203,7 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/batch/search/project'),
+        url: Api.getFullUrl('/api/task/search/project'),
         method: 'POST',
         data
       })
@@ -315,7 +315,7 @@ describe('Datashare backend client', () => {
     const data = { description: 'copyDescription', name: 'copyName' }
     expect(json).toEqual({})
     expect(mockAxios.request).toBeCalledWith({
-      url: Api.getFullUrl('/api/batch/search/copy/12'),
+      url: Api.getFullUrl('/api/task/search/copy/12'),
       method: 'POST',
       data,
       responseType: 'text',
