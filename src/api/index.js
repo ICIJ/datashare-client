@@ -143,7 +143,7 @@ export class Api {
     map(paths, (path) => data.append('paths', path))
     data.append('published', published)
     data.append('query_template', queryTemplate)
-    return this.sendActionAsText(`/api/batch/search/${project}`, { method: Method.POST, data })
+    return this.sendActionAsText(`/api/task/search/${project}`, { method: Method.POST, data })
   }
   getBatchSearch(batchId) {
     return this.sendAction(`/api/batch/search/${batchId}`)
@@ -200,7 +200,7 @@ export class Api {
   }
   copyBatchSearch(batchId, name, description) {
     const data = { name, description }
-    return this.sendActionAsText(`/api/batch/search/copy/${batchId}`, { method: Method.POST, data })
+    return this.sendActionAsText(`/api/task/search/copy/${batchId}`, { method: Method.POST, data })
   }
   deleteBatchSearch(batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: Method.DELETE })
