@@ -1,6 +1,6 @@
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/widget/WidgetText'
+import Component from '@/components/Widget/WidgetText'
 
 /**
  * Widget to display text on the insights page

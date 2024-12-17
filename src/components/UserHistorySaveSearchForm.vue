@@ -9,7 +9,7 @@
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
-          <b-button type="submit" variant="primary">
+          <b-button type="submit" variant="action">
             {{ $t('userHistorySaveSearchForm.save') }}
           </b-button>
         </div>

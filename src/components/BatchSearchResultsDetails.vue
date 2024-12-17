@@ -17,13 +17,13 @@
               :key="name"
               class="batch-search-results-details__info__projects__link"
             >
-              <project-link :project="name" class="btn btn-sm btn-light p-1 me-1 mb-1" />
+              <project-link :project="name" class="btn btn-sm btn-tertiary p-1 me-1 mb-1" />
             </span>
           </dd>
         </div>
         <div v-if="isServer && isMyBatchSearch" class="batch-search-results-details__info__published">
           <dt>{{ $t('batchSearch.published') }}</dt>
-          <dd><b-form-checkbox :checked="batchSearch.published" switch @change="changePublished" /></dd>
+          <dd><b-form-checkbox v-model="published" switch /></dd>
         </div>
         <div>
           <dt>{{ $t('batchSearch.state') }}</dt>
@@ -82,7 +82,7 @@
             {{ $t('batchSearch.author') }}
           </dt>
           <dd>
-            <user-display :username="batchSearch.user.id" />
+            <display-user :username="batchSearch.user.id" />
           </dd>
         </div>
       </dl>
@@ -96,8 +96,8 @@ import { get } from 'lodash'
 import BatchSearchActions from '@/components/BatchSearchActions'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
-import UserDisplay from '@/components/UserDisplay'
-import ProjectLink from '@/components/ProjectLink'
+import DisplayUser from '@/components/Display/DisplayUser'
+import ProjectLink from '@/components/Project/ProjectLink'
 import humanSize from '@/utils/humanSize'
 import humanNumber from '@/utils/humanNumber'
 import { humanLongDate } from '@/utils/humanDate'
@@ -113,7 +113,7 @@ export default {
     ContentTypeBadge,
     ProjectLink,
     BatchSearchStatus,
-    UserDisplay
+    DisplayUser
   },
   mixins: [utils],
   props: {
@@ -130,6 +130,14 @@ export default {
     }
   },
   computed: {
+    published: {
+      get() {
+        return this.batchSearch.published
+      },
+      set(published) {
+        this.$emit('update:published', published)
+      }
+    },
     showProjects() {
       return this.isServer || this.$core.projects.length > 1
     },
@@ -180,9 +188,6 @@ export default {
     getDocumentSize(value) {
       const size = humanSize(value)
       return size === 'unknown' ? '-' : size
-    },
-    changePublished(published) {
-      this.$emit('update:published', published)
     },
     localeLongDate(date) {
       return humanLongDate(date, this.$i18n.locale)
@@ -236,7 +241,7 @@ export default {
           white-space: nowrap;
 
           &[aria-sort]:hover {
-            background-color: $lighter;
+            background-color: $light;
           }
         }
       }
