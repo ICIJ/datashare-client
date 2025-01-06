@@ -12,8 +12,9 @@ import { usePath } from '@/components/Task/path'
 import * as filterTypes from '@/store/filters'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterType from '@/components/Filter/FilterType/FilterType'
-import TabGroup from '@/components/TabGroup/TabGroup'
+import TableEditable from '@/components/TableEditable/TableEditable'
 import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
+import TabGroup from '@/components/TabGroup/TabGroup'
 
 const props = defineProps({
   projects: {
@@ -43,6 +44,7 @@ const initialValues = {
   phraseMatch: false,
   phraseChanges: 0,
   spellingChanges: 0,
+  queryList: undefined,
   filters: {
     paths: [],
     tags: [],
@@ -62,6 +64,7 @@ const paths = ref(initialValues.filters.paths)
 const tags = ref(initialValues.filters.tags)
 const tagsExcluded = ref(initialValues.filters.tagsExcluded)
 const fileTypes = ref(initialValues.filters.fileTypes)
+const queryList = ref(initialValues.queryList)
 
 function reset() {
   name.value = initialValues.name
@@ -80,10 +83,23 @@ function reset() {
 const valid = computed(() => {
   return name.value.trim(' ').length > 0 && csvFile.value !== null
 })
-function submit(values) {
+
+function submit(formData) {
   if (valid.value) {
-    console.log(values)
-    // $emit('submit')
+    const form = {
+      name: formData.get('name'),
+      csvFile: formData.get('csvFile'),
+      description: formData.get('description'),
+      projects: formData.get('projects').split(','),
+      phraseMatch: !!formData.get('phraseMatch'),
+      fuzziness:
+        formData.get('phraseMatch') === 'true' ? +formData.get('phraseChanges') : +formData.get('spellingChanges'),
+      fileTypes: formData.get('fileTypes').length ? formData.get('fileTypes').split(',') : [],
+      paths: formData.get('paths').length ? formData.get('paths').split(',') : [],
+      published: formData.get('visibility') === 'true',
+      queryTemplate: ''
+    }
+    console.log(form)
   } else {
     console.log('not valid')
   }
@@ -194,7 +210,6 @@ const visibilityOptions = computed(() => [
     value: true
   }
 ])
-
 const sections = reactive({
   general: { title: computed(() => t('task.batch-search.form.section.general')), collapse: false },
   queries: { title: computed(() => t('task.batch-search.form.section.queries')), collapse: false },
@@ -211,11 +226,17 @@ const sections = reactive({
     :valid="valid"
     :submit-label="submitLabel"
     @reset="reset"
-    @submit="submit"
+    @submit.prevent="submit"
+    @keydown.enter.prevent
   >
     <form-step v-model:collapse="sections.general.collapse" :title="sections.general.title" index="1">
       <form-fieldset-i18n required name="name" translation-key="task.batch-search.form.name">
-        <b-form-input v-model="name" type="text" :placeholder="t('task.batch-search.form.name.placeholder')" />
+        <b-form-input
+          v-model="name"
+          type="text"
+          name="name"
+          :placeholder="t('task.batch-search.form.name.placeholder')"
+        />
       </form-fieldset-i18n>
       <form-fieldset-i18n name="projects" translation-key="task.batch-search.form.projects">
         <search-bar-input-dropdown-for-projects v-model="selectedProjects" />
@@ -239,8 +260,8 @@ const sections = reactive({
         />
       </form-fieldset-i18n>
     </form-step>
-    <form-step v-model:collapse="sections.queries.collapse" :title="sections.queries.title" index="2">
-      <tab-group>
+    <form-step v-model:collapse="sections.queries.collapse" :title="sections.queries.title" index="2"
+      ><tab-group>
         <tab-group-entry :title="$t('task.batch-search.form.csvFile.label')">
           <b-form-file
             v-model="csvFile"
@@ -267,6 +288,7 @@ const sections = reactive({
         </tab-group-entry>
         <tab-group-entry :title="$t('task.batch-search.form.listQueries.label')">
           {{ $t('task.batch-search.form.listQueries.placeholder') }}
+          <!--          <table-editable v-model:items="queryList" class="col-6" />-->
         </tab-group-entry>
       </tab-group>
     </form-step>
@@ -310,6 +332,7 @@ const sections = reactive({
           hide-contextualize
           hide-exclude
         />
+        <input type="hidden" name="paths" :value="paths" />
       </form-fieldset-i18n>
       <form-fieldset-i18n
         class="form-step-sub-content"
@@ -324,6 +347,7 @@ const sections = reactive({
           hide-contextualize
           hide-exclude
         />
+        <input type="hidden" name="tags" :value="tags" />
       </form-fieldset-i18n>
       <form-fieldset-i18n
         label-visually-hidden
@@ -338,6 +362,8 @@ const sections = reactive({
           hide-contextualize
           hide-exclude
         />
+
+        <input type="hidden" name="tagsExcluded" :value="tagsExcluded" />
       </form-fieldset-i18n>
       <form-fieldset-i18n
         label-visually-hidden
@@ -352,6 +378,7 @@ const sections = reactive({
           hide-contextualize
           hide-exclude
         />
+        <input type="hidden" name="fileTypes" :value="fileTypes" />
       </form-fieldset-i18n>
     </form-step>
   </form-creation>
