@@ -67,7 +67,7 @@ watch(
 </script>
 
 <template>
-  <filter-type :filter="filter" :modal="modal">
+  <filter-type :filter="filter" :modal="modal" flush>
     <path-tree
       ref="tree"
       v-model:selected-paths="selected"
