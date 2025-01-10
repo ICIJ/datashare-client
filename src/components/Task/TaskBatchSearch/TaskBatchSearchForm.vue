@@ -190,26 +190,11 @@ const filterContentType = f({
     key: 'contentType',
     icon: 'file',
     order: 40,
-    section: 'documentsInfo',
+    section: 'batchSearch',
     preference: 'filter-content-type'
   }
 })
-const visibilityOptions = computed(() => [
-  {
-    html: colRadiobutton({
-      option: t('task.batch-search.form.visibility.options.private'),
-      description: t('task.batch-search.form.visibility.options.privateDescription')
-    }),
-    value: false
-  },
-  {
-    html: colRadiobutton({
-      option: t('task.batch-search.form.visibility.options.shared'),
-      description: t('task.batch-search.form.visibility.options.sharedDescription')
-    }),
-    value: true
-  }
-])
+const submitLabel = computed(() => t('task.batch-search.form.submit'))
 const sections = reactive({
   general: { title: computed(() => t('task.batch-search.form.section.general')), collapse: false },
   queries: { title: computed(() => t('task.batch-search.form.section.queries')), collapse: false },
@@ -226,7 +211,7 @@ const sections = reactive({
     :valid="valid"
     :submit-label="submitLabel"
     @reset="reset"
-    @submit.prevent="submit"
+    @submit="submit"
     @keydown.enter.prevent
   >
     <form-step v-model:collapse="sections.general.collapse" :title="sections.general.title" index="1">
@@ -331,6 +316,8 @@ const sections = reactive({
           actions-position-title
           hide-contextualize
           hide-exclude
+          class="p-3"
+          @update="updateFilter"
         />
         <input type="hidden" name="paths" :value="paths" />
       </form-fieldset-i18n>
@@ -346,6 +333,7 @@ const sections = reactive({
           actions-position-title
           hide-contextualize
           hide-exclude
+          class="p-3"
         />
         <input type="hidden" name="tags" :value="tags" />
       </form-fieldset-i18n>
@@ -361,6 +349,7 @@ const sections = reactive({
           actions-position-title
           hide-contextualize
           hide-exclude
+          class="p-3"
         />
 
         <input type="hidden" name="tagsExcluded" :value="tagsExcluded" />
@@ -377,6 +366,7 @@ const sections = reactive({
           actions-position-title
           hide-contextualize
           hide-exclude
+          class="p-3"
         />
         <input type="hidden" name="fileTypes" :value="fileTypes" />
       </form-fieldset-i18n>
@@ -406,7 +396,11 @@ const sections = reactive({
       width: 100%;
     }
     .col-radio-button {
+      flex-shrink: 0;
       flex-basis: 60px;
+      &__description {
+        text-wrap: pretty;
+      }
     }
   }
 }
