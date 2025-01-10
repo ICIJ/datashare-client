@@ -117,7 +117,7 @@ const classList = computed(() => {
           :hide-contextualize="hideContextualize"
           :hide-exclude="hideExclude"
           :hide-expand="modal || hideExpand"
-          class="filters-panel-section-filter__footer px-2 pt-1"
+          class="filters-panel-section-filter__footer px-2 pt-2"
         />
       </slot>
     </b-collapse>
