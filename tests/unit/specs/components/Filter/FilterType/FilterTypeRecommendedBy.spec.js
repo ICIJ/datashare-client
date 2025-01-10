@@ -45,6 +45,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
     core = CoreSetup.init(api).useAll().useRouter()
     core.store.commit('search/index', index)
+    window.datashare = core
 
     const filter = core.store.getters['search/getFilter']({ name: 'recommendedBy' })
     const props = { filter }
@@ -71,12 +72,12 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
   it('should sort options to have the current user first', async () => {
     await flushPromises()
-    expect(wrapper.findAllComponents(DisplayUser).at(0).text()).toBe('You')
-  })
+    expect(wrapper.findAllComponents(DisplayUser).at(0).text()).toBe('local (you)')
+  })  
 
   it('should sort options by decreasing order', async () => {
     await flushPromises()
-    expect(wrapper.findAllComponents(DisplayUser).at(0).text()).toBe('You')
+    expect(wrapper.findAllComponents(DisplayUser).at(0).text()).toBe('local (you)')
     expect(wrapper.findAllComponents(DisplayUser).at(1).text()).toBe('anita')
     expect(wrapper.findAllComponents(DisplayUser).at(2).text()).toBe('paul')
   })
