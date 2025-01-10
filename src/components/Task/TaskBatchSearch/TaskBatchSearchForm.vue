@@ -105,9 +105,27 @@ function submit(formData) {
   }
 }
 
+const visibilityOptions = computed(() => [
+  {
+    html: colRadiobutton({
+      option: t('task.batch-search.form.visibility.options.private'),
+      description: t('task.batch-search.form.visibility.options.privateDescription')
+    }),
+    value: false
+  },
+  {
+    html: colRadiobutton({
+      option: t('task.batch-search.form.visibility.options.shared'),
+      description: t('task.batch-search.form.visibility.options.sharedDescription')
+    }),
+    value: true
+  }
+])
+
 function colRadiobutton({ option, description }) {
-  return `<div class="d-flex gap-3 "><div class="col-radio-button">${option}</div><div class="fw-normal">${description}</div></div>`
+  return `<div class="d-flex gap-3 "><div class="col-radio-button">${option}</div><div class="col-radio-button__description fw-normal">${description}</div></div>`
 }
+
 const phraseMatchDescription = (option, { doubleQuotes, withOperators }) => {
   const searchInDoubleQuotes = doubleQuotes ? t('global.yes') : t('global.no')
   const operatorsApplied = withOperators ? t('global.yes') : t('global.no')
@@ -272,8 +290,12 @@ const sections = reactive({
           </div>
         </tab-group-entry>
         <tab-group-entry :title="$t('task.batch-search.form.listQueries.label')">
+          
           {{ $t('task.batch-search.form.listQueries.placeholder') }}
-          <!--          <table-editable v-model:items="queryList" class="col-6" />-->
+
+          <!--<div class="col-6">
+            <table-editable v-model:items="queryList" />
+          </div>-->
         </tab-group-entry>
       </tab-group>
     </form-step>
