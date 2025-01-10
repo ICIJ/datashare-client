@@ -1,9 +1,9 @@
 <template>
   <span class="column-filter-badge column-filter-badge" :class="{ 'column-filter-badge--inactive': !active }">
-    <b-badge v-if="counter" variant="secondary" class="column-filter-badge column-filter-badge__counter">
+    <b-badge v-if="counter" variant="primary" class="column-filter-badge column-filter-badge__counter">
       {{ humanNumber(counter) }}
     </b-badge>
-    <fa v-else-if="active" class="column-filter-badge__icon text-secondary" size="2xs" icon="circle" />
+    <fa v-else-if="active" class="column-filter-badge__icon text-primary" size="2xs" icon="circle" />
   </span>
 </template>
 

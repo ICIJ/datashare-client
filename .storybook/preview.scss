@@ -1,0 +1,65 @@
+@import '@/main.scss';
+
+.bg-striped {
+  background: repeating-linear-gradient(
+    45deg,
+    #dfdddd,
+    #dfdddd 10px,
+    #cfcccc 10px,
+    #cfcccc 20px
+  );
+  width: 500px;
+}
+
+@include color-mode(dark) {
+  .bg-striped {
+    background: repeating-linear-gradient(
+      45deg,
+      #222,
+      #333 10px,
+      #444 10px,
+      #444 20px
+    );
+  }
+}
+
+h1 {
+  font-family: var(--bs-font-sans-serif) !important;
+  font-weight: var(--bs-body-font-weight);
+  font-size: 2.5rem;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--bs-font-sans-serif);
+  font-weight: var(--bs-body-font-weight);
+}
+
+pre.prismjs {
+  padding: 0.75rem;
+  font-size: 0.90rem;
+}
+
+.docs-story {
+  background: var(--bs-body-bg)
+}
+
+.btn.pseudo-focus {
+  box-shadow: var(--bs-btn-active-shadow), var(--bs-btn-focus-box-shadow);
+}
+
+.btn.pseudo-hover {
+  color: var(--bs-btn-hover-color);
+  background-color: var(--bs-btn-hover-bg);
+  border-color: var(--bs-btn-hover-border-color);
+}
+
+.btn.pseudo-active {
+  color: var(--bs-btn-active-color);
+  background-color: var(--bs-btn-active-bg);
+  border-color: var(--bs-btn-active-border-color);
+  box-shadow: var(--bs-btn-active-shadow);
+}

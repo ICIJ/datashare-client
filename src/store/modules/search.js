@@ -1,14 +1,14 @@
 import {
   castArray,
-  concat,
-  compact,
   cloneDeep,
+  compact,
+  concat,
   each,
   endsWith,
-  flatten,
   filter as filterCollection,
   find,
   findIndex,
+  flatten,
   get,
   has,
   includes,
@@ -18,8 +18,8 @@ import {
   map,
   omit,
   orderBy,
-  range,
   random,
+  range,
   reduce,
   toString,
   uniq
@@ -27,8 +27,7 @@ import {
 import lucene from 'lucene'
 
 import EsDocList from '@/api/resources/EsDocList'
-import filters from '@/store/filters'
-import * as filterTypes from '@/store/filters'
+import filters, * as filterTypes from '@/store/filters'
 import { isNarrowScreen } from '@/utils/screen'
 import settings from '@/utils/settings'
 
@@ -50,11 +49,9 @@ export const RESET_KEYS = [
   'query',
   'response',
   'showFilters',
-  'reversedFilters',
-  'sortedFilters',
-  'contextualizedFilters',
-  'size',
-  'sort',
+  'excludeFilters',
+  'sortFilters',
+  'contextualizeFilters',
   'tab',
   'values'
 ]
@@ -72,12 +69,10 @@ export function initialState() {
     layout: isNarrowScreen() ? 'table' : 'list',
     query: '',
     response: EsDocList.none(),
-    reversedFilters: [],
-    contextualizedFilters: [],
-    sortedFilters: {},
+    excludeFilters: [],
+    contextualizeFilters: [],
+    sortFilters: {},
     showFilters: true,
-    size: 25,
-    sort: settings.defaultSearchSort,
     values: {},
     tab: TAB_NAME.EXTRACTED_TEXT
   })
@@ -115,9 +110,6 @@ export const getters = {
         return name === item.name && values.indexOf(item.value) > -1
       })
   },
-  hasFilterValues(state, getters) {
-    return (name) => !!find(getters.instantiatedFilters, (filter) => filter.name === name && filter.values.length > 0)
-  },
   isFilterContextualized(state, getters) {
     return (name) => {
       return !!find(getters.instantiatedFilters, (filter) => {
@@ -128,7 +120,7 @@ export const getters = {
   isFilterExcluded(state, getters) {
     return (name) => {
       return !!find(getters.instantiatedFilters, (filter) => {
-        return filter.name === name && filter.reverse
+        return filter.name === name && filter.excluded
       })
     }
   },
@@ -144,7 +136,7 @@ export const getters = {
   },
   filterSortedByOrder(state, getters) {
     return (name) => {
-      return getters.filterSorted(name).sortByOrder
+      return getters.filterSorted(name).orderBy
     }
   },
   activeFilters(state, getters) {
@@ -163,7 +155,7 @@ export const getters = {
           // We don't add filterValue that match with any existing filters
           // defined in the `aggregation` store.
           if (filter && filter.values.length > 0) {
-            const key = filter.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
+            const key = filter.excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
             memo[key] = compact(filter.values)
           }
           return memo
@@ -172,16 +164,22 @@ export const getters = {
       )
     }
   },
-  toRouteQuery(state, getters) {
+  toBaseRouteQuery(state, getters) {
     return () => ({
       q: state.query,
-      from: `${state.from}`,
-      size: `${state.size}`,
-      sort: state.sort,
       indices: state.indices.join(','),
       field: state.field,
-      tab: state.tab,
       ...getters.filterValuesAsRouteQuery()
+    })
+  },
+  toRouteQuery(state, getters) {
+    return () => ({
+      from: `${state.from}`,
+      perPage: `${getters.perPage}`,
+      sort: getters.sortBy,
+      order: getters.orderBy,
+      tab: state.tab,
+      ...getters.toBaseRouteQuery()
     })
   },
   toRouteQueryWithStamp(state, getters) {
@@ -193,6 +191,17 @@ export const getters = {
         range(6).map(() => random(97, 122))
       )
     })
+  },
+  toSearchParams(state, getters) {
+    return {
+      index: state.indices.join(','),
+      query: state.query,
+      filters: getters.instantiatedFilters,
+      from: state.from,
+      perPage: getters.perPage,
+      sort: getters.sort,
+      fields: getters.fields
+    }
   },
   retrieveQueryTerms(state) {
     let terms = []
@@ -234,13 +243,41 @@ export const getters = {
     const fields = ['', 'content']
     return filterCollection(getters.retrieveQueryTerms, (item) => fields.includes(item.field))
   },
-  sortBy(state) {
-    return find(settings.searchSortFields, { name: state.sort })
+  from(state) {
+    return state.from ?? 0
+  },
+  page(state, getters) {
+    return Math.floor(getters.from / getters.perPage) + 1
+  },
+  total(state) {
+    return state?.response?.total ?? 0
+  },
+  perPage(state, getters, rootState, rootGetters) {
+    return parseInt(rootGetters['app/getSettings']('search', 'perPage'))
+  },
+  sort(state, getters, rootState, rootGetters) {
+    const [sort, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score', 'desc']
+    // Find optional extra params
+    const { extraParams = {} } = find(settings.searchSortFields, { name: sort }) ?? {}
+    // We add a secondary path filter is the current sort is not the path itself
+    const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
+    return [{ [sort]: { order, ...extraParams } }, ...secondarySort]
+  },
+  sortBy(state, getters, rootState, rootGetters) {
+    const [sort] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score']
+    return sort
+  },
+  orderBy(state, getters, rootState, rootGetters) {
+    const [, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? [null, 'desc']
+    return order
+  },
+  hits(state) {
+    return get(state, 'response.hits', [])
   }
 }
 
 export const mutations = {
-  reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout', 'size', 'sort']) {
+  reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout']) {
     const s = initialState()
     RESET_KEYS.forEach((key) => {
       if (excludedKeys.indexOf(key) === -1) {
@@ -276,12 +313,6 @@ export const mutations = {
   from(state, from) {
     state.from = Number(from)
   },
-  size(state, size) {
-    state.size = Number(size)
-  },
-  sort(state, sort) {
-    state.sort = sort
-  },
   isReady(state, isReady = !state.isReady) {
     state.isReady = isReady
   },
@@ -307,8 +338,8 @@ export const mutations = {
     const fields = settings.searchFields.map((field) => field.key)
     state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
-  buildResponse(state, raw) {
-    state.response = new EsDocList(raw)
+  setResponse(state, { raw, parents = null, roots = null } = {}) {
+    state.response = new EsDocList(raw, parents, roots, state.from)
   },
   addFilterValue(state, filter) {
     // We cast the new filter values to allow several new values at the same time
@@ -319,8 +350,7 @@ export const mutations = {
     state.values[filter.name] = uniq(existingValuesAsString.concat(values))
   },
   setFilterValue(state, filter) {
-    const values = castArray(filter.value)
-    state.values[filter.name] = values
+    state.values[filter.name] = castArray(filter.value)
   },
   addFilterValues(state, { filter, values }) {
     const existingValues = get(state, ['values', filter.name], [])
@@ -348,46 +378,36 @@ export const mutations = {
       }
     }
   },
-  sortFilter(state, { name, sortBy = '_count', sortByOrder = 'desc' } = {}) {
-    state.sortedFilters[name] = { sortBy, sortByOrder }
+  sortFilter(state, { name, sortBy = '_count', orderBy = 'desc' } = {}) {
+    state.sortFilters[name] = { sortBy, orderBy }
   },
   unsortFilter(state, name) {
-    delete state.sortedFilters[name]
+    delete state.sortFilters[name]
   },
   contextualizeFilter(state, name) {
-    if (state.contextualizedFilters.indexOf(name) === -1) {
-      state.contextualizedFilters.push(name)
+    if (state.contextualizeFilters.indexOf(name) === -1) {
+      state.contextualizeFilters.push(name)
     }
   },
   decontextualizeFilter(state, name) {
-    delete state.contextualizedFilters[state.contextualizedFilters.indexOf(name)]
-  },
-  toggleContextualizedFilter(state, name) {
-    const i = state.contextualizedFilters.indexOf(name)
-    if (i === -1) {
-      state.contextualizedFilters.push(name)
-    } else {
-      delete state.contextualizedFilters[i]
-    }
+    delete state.contextualizeFilters[state.contextualizeFilters.indexOf(name)]
   },
   excludeFilter(state, name) {
-    if (state.reversedFilters.indexOf(name) === -1) {
-      state.reversedFilters.push(name)
+    if (state.excludeFilters.indexOf(name) === -1) {
+      state.excludeFilters.push(name)
     }
   },
   includeFilter(state, name) {
-    delete state.reversedFilters[state.reversedFilters.indexOf(name)]
+    const index = state.excludeFilters.indexOf(name)
+    delete state.excludeFilters[index]
   },
   toggleFilter(state, name) {
-    const i = state.reversedFilters.indexOf(name)
-    if (i === -1) {
-      state.reversedFilters.push(name)
-    } else if (i > -1) {
-      delete state.reversedFilters[i]
+    const index = state.excludeFilters.indexOf(name)
+    if (index === -1) {
+      state.excludeFilters.push(name)
+    } else {
+      delete state.excludeFilters[index]
     }
-  },
-  toggleFilters(state, toggler = !state.showFilters) {
-    state.showFilters = toggler
   },
   updateTab(state, tab) {
     state.tab = tab
@@ -396,46 +416,51 @@ export const mutations = {
 
 function actionsBuilder(api) {
   return {
-    async refresh({ state, commit, getters }, updateIsReady = true) {
-      commit('isReady', !updateIsReady)
+    async refresh({ state, commit, getters, dispatch }) {
+      commit('isReady', false)
       commit('error', null)
       try {
-        const indices = state.indices.join(',')
-        const raw = await api.elasticsearch.searchDocs(
-          indices,
-          state.query,
-          getters.instantiatedFilters,
-          state.from,
-          state.size,
-          state.sort,
-          getters.getFields()
-        )
-        commit('buildResponse', raw)
-        commit('isReady', true)
-        return raw
+        dispatch('searchBreadcrumb/push', getters.toBaseRouteQuery(), { root: true })
+        const raw = await dispatch('searchDocs')
+        const roots = await dispatch('searchRoots', raw)
+        commit('setResponse', { raw, roots })
       } catch (error) {
-        commit('isReady', true)
         commit('error', error)
-        throw error
+      } finally {
+        commit('isReady', true)
       }
     },
-    updateFromRouteQuery({ commit, getters }, query) {
-      const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
-      const updatedKeys = ['q', 'index', 'indices', 'from', 'size', 'sort', 'field']
-      commit('reset', excludedKeys)
+    searchDocs({ getters }, searchParams) {
+      return api.elasticsearch.searchDocs(searchParams ?? getters.toSearchParams)
+    },
+    searchRoots({ state }, raw) {
+      const indices = state.indices.join(',')
+      const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
+      const ids = embedded.map((hit) => hit._source.rootDocument)
+      const source = ['contentType', 'contentLength', 'title', 'path']
+      return api.elasticsearch.ids(indices, ids, source)
+    },
+    updateFromRouteQuery({ commit, getters }, routeQuery, resetResponse = false) {
+      const excludedFromReset = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
+      // The response can conditional be reseted to avoid flashing effect
+      if (!resetResponse) excludedFromReset.push('response')
+      // Reset the state except for the given keys
+      commit('reset', excludedFromReset)
+      // This is all the key that can be found in the URL (apart from filters keys)
+      const updatedKeys = ['q', 'index', 'indices', 'from', 'field']
       // Add the query to the state with a mutation to avoid triggering a search
-      updatedKeys.forEach((key) => (key in query ? commit(key, query[key]) : null))
+      updatedKeys.forEach((key) => key in routeQuery && commit(key, routeQuery[key]))
       // Iterate over the list of filter
       each(getters.instantiatedFilters, (filter) => {
         // The filter key are formatted in the URL as follow.
         // See `query-string` for more info about query string format.
         each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, isReverse) => {
           // Add the data if the value exist
-          if (key in query) {
+          if (key in routeQuery) {
             // Because the values are grouped for each query parameter and because
             // the `addFilterValue` also accept an array of value, we can directly
             // use the query values.
-            commit('addFilterValue', filter.itemParam({ key: query[key] }))
+            commit('addFilterValue', filter.itemParam({ key: routeQuery[key] }))
             // Invert the filter if we are using the second key (for reverse filter)
             if (isReverse) {
               commit('excludeFilter', filter.name)
@@ -451,8 +476,6 @@ function actionsBuilder(api) {
         indices: state.indices,
         query: state.query,
         from: state.from,
-        size: state.size,
-        sort: state.sort,
         field: state.field
       }
     ) {
@@ -462,30 +485,31 @@ function actionsBuilder(api) {
       } else if (isString(q)) {
         commit('query', q)
       }
+
       // Then mutates all values if they are in queryOrParams. The mutation
       // for "indices" must be after "index" since the two mutations are
       // updating concurent values.
-      ;['index', 'indices', 'from', 'size', 'sort', 'field'].forEach((key) => {
+      ;['index', 'indices', 'from', 'field'].forEach((key) => {
         if (has(q, key)) {
           commit(key, q[key])
         }
       })
-      return dispatch('refresh', true)
+      return dispatch('refresh')
     },
-    queryFilter({ state, getters }, params) {
-      return api.elasticsearch
-        .searchFilter(
-          state.indices.join(','),
-          getters.getFilter({ name: params.name }),
-          state.query,
-          getters.instantiatedFilters,
-          !getters.isFilterContextualized(params.name),
-          params.options,
-          getters.getFields(),
-          params.from,
-          params.size
-        )
-        .then((raw) => new EsDocList(raw))
+    async queryFilter({ state, getters }, { name, options, from, size }) {
+      const raw = await api.elasticsearch.searchFilter(
+        state.indices.join(','),
+        getters.getFilter({ name }),
+        state.query,
+        getters.instantiatedFilters,
+        getters.isFilterContextualized(name),
+        options,
+        getters.getFields(),
+        from,
+        size
+      )
+
+      return new EsDocList(raw)
     },
     setFilterValue({ commit, dispatch }, filter) {
       commit('setFilterValue', filter)
@@ -507,12 +531,12 @@ function actionsBuilder(api) {
       commit('toggleFilter', name)
       return dispatch('query')
     },
-    previousPage({ state, commit, dispatch }, name) {
-      commit('from', state.from - state.size)
+    previousPage({ state, commit, dispatch, getters }) {
+      commit('from', state.from - getters.perPage)
       return dispatch('query')
     },
-    nextPage({ state, commit, dispatch }, name) {
-      commit('from', state.from + state.size)
+    nextPage({ state, commit, dispatch, getters }) {
+      commit('from', state.from + getters.perPage)
       return dispatch('query')
     },
     deleteQueryTerm({ state, commit, dispatch }, term) {
@@ -534,21 +558,11 @@ function actionsBuilder(api) {
       commit('query', lucene.toString(query))
       return dispatch('query')
     },
-    async runBatchDownload({ state, getters }, uri = null) {
-      // CD TODO: untested function
+    runBatchDownload({ state, getters }, uri = null) {
       const q = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
       const { indices: projectIds } = state
       const { query } = api.elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
-      return api.runBatchDownload({
-        projectIds,
-        query,
-        uri
-      })
-    },
-    setTab({ state, commit }, tab) {
-      if (state.tab !== tab) {
-        commit('updateTab', tab)
-      }
+      return api.runBatchDownload({ projectIds, query, uri })
     }
   }
 }

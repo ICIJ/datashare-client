@@ -3,10 +3,12 @@ import moment from 'moment'
 
 import FilterDate from './FilterDate'
 
+import DisplayDatetimeRange from '@/components/Display/DisplayDatetimeRange'
+
 export default class FilterDateRange extends FilterDate {
   constructor({ interval = 'year', ...options }) {
     super(options)
-    this.component = 'FilterDateRange'
+    this.component = 'FilterTypeDateRange'
     this.interval = interval
   }
 
@@ -52,5 +54,9 @@ export default class FilterDateRange extends FilterDate {
 
   get values() {
     return uniq(super.values.map((v) => parseInt(v)))
+  }
+
+  static get display() {
+    return DisplayDatetimeRange
   }
 }

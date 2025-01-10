@@ -26,7 +26,7 @@ export const getters = {
 }
 
 export const mutations = {
-  register(state, { target, order, name, definition }) {
+  register(state, { target, order, name, definition = {} }) {
     const index = name ? findIndex(state.registered, { name }) : -1
     if (index === -1) {
       state.registered.push({
