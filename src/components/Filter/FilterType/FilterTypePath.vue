@@ -57,9 +57,11 @@ watchValues(whenFilterContextualized(props.filter, reloadData))
 // When project changes, we reset the filter to avoid filtering by unknown paths
 watchIndices(() => (selected.value = []))
 watch(
-  () => projects.value,
-  () => {
-    selected.value = []
+  () => props.projects,
+  (newProjectProps) => {
+    if (newProjectProps) {
+      selected.value = []
+    }
   }
 )
 </script>
