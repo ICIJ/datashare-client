@@ -1,47 +1,45 @@
 <template>
-  <div class="table-editable">
-    <b-table-simple small>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th><span class="mx-3">Query</span></th>
-          <th></th>
-        </tr>
-      </thead>
+  <b-table-simple small class="table-editable">
+    <b-thead>
+      <b-tr>
+        <b-th>#</b-th>
+        <b-th><span class="mx-3">Query</span></b-th>
+        <b-th></b-th>
+      </b-tr>
+    </b-thead>
 
-      <b-tbody class="overflow-y-auto h-auto">
-        <b-tr v-for="(item, index) in items" :key="index" class="">
-          <b-td class="table-editable__index text">{{ index + 1 }}</b-td>
-          <b-td>
-            <row-editable
-              v-model:focused="item.focused"
-              :model-value="item.name"
-              @keyup.up="focusPreviousItem(index)"
-              @keyup.down="focusNextItem(index)"
-              @update:model-value="updateCellValue(index, $event)"
-              @keydown.enter="onEnter($event, index)"
-              @keydown.tab.exact="addItem(index)"
-              @focusout.prevent="addItem(index)"
-            />
-          </b-td>
-          <b-td class="table-editable__action">
-            <button-icon
-              v-if="item.name?.length > 0"
-              icon-left="trash"
-              variant="outline-secondary"
-              square
-              hide-label
-              size="sm"
-              @click="removeItem(index)"
-              @keydown.tab.exact.prevent="focusNextItem(index)"
-              @keydown.enter.prevent="removeItem(index)"
-              @keydown.tab.shift.exact.prevent="focusCurrentItem(index)"
-            />
-          </b-td>
-        </b-tr>
-      </b-tbody>
-    </b-table-simple>
-  </div>
+    <b-tbody class="overflow-y-auto h-auto">
+      <b-tr v-for="(item, index) in items" :key="index" class="">
+        <b-td class="table-editable__index text">{{ index + 1 }}</b-td>
+        <b-td>
+          <row-editable
+            v-model:focused="item.focused"
+            :model-value="item.name"
+            @keyup.up="focusPreviousItem(index)"
+            @keyup.down="focusNextItem(index)"
+            @update:model-value="updateCellValue(index, $event)"
+            @keydown.enter="onEnter($event, index)"
+            @keydown.tab.exact="addItem(index)"
+            @focusout.prevent="addItem(index)"
+          />
+        </b-td>
+        <b-td class="table-editable__action">
+          <button-icon
+            v-if="item.name?.length > 0"
+            icon-left="trash"
+            variant="outline-secondary"
+            square
+            hide-label
+            size="sm"
+            @click="removeItem(index)"
+            @keydown.tab.exact.prevent="focusNextItem(index)"
+            @keydown.enter.prevent="removeItem(index)"
+            @keydown.tab.shift.exact.prevent="focusCurrentItem(index)"
+          />
+        </b-td>
+      </b-tr>
+    </b-tbody>
+  </b-table-simple>
 </template>
 
 <script setup>
