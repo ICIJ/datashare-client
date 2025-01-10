@@ -4,6 +4,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import DocumentViewTabsMetadata from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata'
+import { useDocument } from '@/composables/document'
 
 describe('DocumentViewTabsMetadata.vue', () => {
   const { index, es } = esConnectionHelper.build()
@@ -16,6 +17,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
   })
 
   afterEach(() => {
+    wrapper.unmount
     core.store.commit('document/reset')
     core.config.merge({ dataDir: null, mountedDataDir: null })
   })
@@ -25,12 +27,10 @@ describe('DocumentViewTabsMetadata.vue', () => {
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await core.store.dispatch('document/get', { id, index })
+
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -44,9 +44,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -64,10 +61,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc,
-        parentDocument: core.store.state.document.parentDocument
       }
     })
 
@@ -87,9 +80,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -102,9 +92,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -117,9 +104,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -132,9 +116,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -147,9 +128,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -162,9 +140,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -177,9 +152,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -194,9 +166,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
@@ -211,9 +180,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
         plugins: core.plugins
-      },
-      props: {
-        document: core.store.state.document.doc
       }
     })
 
