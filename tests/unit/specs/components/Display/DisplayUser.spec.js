@@ -10,6 +10,7 @@ describe('DisplayUser.vue', () => {
   beforeAll(() => {
     api = { getUser: vi.fn().mockResolvedValue({ uid: 'local' }) }
     core = CoreSetup.init(api).useAll().useRouter()
+    window.datashare = core
   })
 
   beforeEach(async () => {
@@ -35,10 +36,10 @@ describe('DisplayUser.vue', () => {
     expect(wrapper.find('.display-user__username').text()).toBe('bar')
   })
 
-  it('should display "you"', async () => {
+  it('should display "local (you)"', async () => {
     await wrapper.setProps({ value: 'local' })
     await flushPromises()
-    expect(wrapper.find('.display-user__username').text().toLowerCase()).toBe('you')
+    expect(wrapper.find('.display-user__username').text().toLowerCase()).toBe('local (you)')
   })
 
   it('should display "foo" in uppercase with a pipeline', async () => {
