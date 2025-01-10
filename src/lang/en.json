@@ -1058,10 +1058,7 @@
           },
           "description": "This option can be changed later (either way)"
         },
-        "submit": "Go",
-        "failedPipelines": "Failed to retrieve pipelines",
-        "defaultPipeline": "recommended",
-        "findEntitiesType": "Find"
+        "submit": "Launch"
       },
       "new": {
         "title":"Run a new batch search"
