@@ -102,7 +102,7 @@ describe('DocumentContent.vue', () => {
       const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
-      expect(wrapper.find('.document-content__body--rtl').exists()).toBeTruthy()
+      expect(wrapper.find('.document-content--rtl').exists()).toBeTruthy()
     })
 
     it('should NOT display the text right to left for english', async () => {
@@ -112,7 +112,7 @@ describe('DocumentContent.vue', () => {
       const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
-      expect(wrapper.find('.document-content__body--rtl').exists()).toBeFalsy()
+      expect(wrapper.find('.document-content--rtl').exists()).toBeFalsy()
     })
 
     it('should display "No content extracted for this document" and disable the search input when the extracted text is empty', async () => {
@@ -125,7 +125,7 @@ describe('DocumentContent.vue', () => {
       const element = wrapper.find('.document-content__body--no-content')
       expect(element.exists()).toBeTruthy()
       expect(element.text()).toBe('No content extracted for this document')
-      const input = wrapper.find('document-local-search-input-stub')
+      const input = wrapper.find('document-local-search-stub')
       expect(input.exists()).toBeTruthy()
       expect(input.attributes('disabled')).toBe('true')
     })
@@ -156,17 +156,10 @@ describe('DocumentContent.vue', () => {
         api.searchDocument.mockImplementation(async () => ({ count: 2, offsets: [10, 15] }))
         mockDocument = await mockDocumentContentSlice('this is a full full content')
         const { plugins } = core
-        const props = { document: mockDocument.document }
+        const props = { document: mockDocument.document, q: 'full' }
         wrapper = mount(DocumentContent, { props, global: { plugins } })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
-        // Use vm.$set method to set nested value reactively
-        wrapper.setData({ localSearchTerm: 'full' })
-        await flushPromises()
-      })
-
-      it('should sticky the toolbox by default', () => {
-        expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeTruthy()
       })
 
       it('should highlight the first occurrence of the searched term', async () => {
@@ -203,26 +196,9 @@ describe('DocumentContent.vue', () => {
           '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
         )
 
-        wrapper.vm.findNextLocalSearchTerm()
+        wrapper.vm.localSearchIndex = 2
         await flushPromises()
 
-        expect(wrapper.vm.localSearchIndex).toEqual(2)
-        expect(element.innerHTML).toEqual(
-          '<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>'
-        )
-
-        wrapper.vm.findPreviousLocalSearchTerm()
-        await flushPromises()
-
-        expect(wrapper.vm.localSearchIndex).toEqual(1)
-        expect(element.innerHTML).toEqual(
-          '<p>this is a <mark class="local-search-term local-search-term--active" data-offset="10">full</mark> <mark class="local-search-term" data-offset="15">full</mark> content</p>'
-        )
-
-        wrapper.vm.findNextLocalSearchTerm()
-        await flushPromises()
-
-        expect(wrapper.vm.localSearchIndex).toEqual(2)
         expect(element.innerHTML).toEqual(
           '<p>this is a <mark class="local-search-term" data-offset="10">full</mark> <mark class="local-search-term local-search-term--active" data-offset="15">full</mark> content</p>'
         )
@@ -237,7 +213,7 @@ describe('DocumentContent.vue', () => {
         const content = 'this is a full FulL content fuLL'
         const { document } = await mockDocumentContentSlice(content)
         const { plugins } = core
-        const props = { document }
+        const props = { document, q: 'full' }
         wrapper = mount(DocumentContent, { global: { plugins }, props })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
@@ -245,7 +221,6 @@ describe('DocumentContent.vue', () => {
 
       it('should be case insensitive', async () => {
         // Use vm.$set method to set nested value reactively
-        wrapper.setData({ localSearchTerm: 'full' })
         await flushPromises()
         expect(wrapper.vm.localSearchOccurrences).toEqual(3)
       })
