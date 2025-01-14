@@ -14,7 +14,7 @@ describe('SearchFilters', () => {
       expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
       store.commit('search/removeFilter', 'contentType')
       expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeUndefined()
-      store.commit('search/resetFiltersAndValues')
+      store.commit('search/resetFilters')
       expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
     })
 
