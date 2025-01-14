@@ -288,10 +288,6 @@ export const mutations = {
   resetFilters(state) {
     const { filters } = initialState()
     state.filters = filters
-  },
-  resetFiltersAndValues(state) {
-    const { filters } = initialState()
-    state.filters = filters
     state.values = {}
     state.from = 0
   },
@@ -351,10 +347,6 @@ export const mutations = {
   },
   setFilterValue(state, filter) {
     state.values[filter.name] = castArray(filter.value)
-  },
-  addFilterValues(state, { filter, values }) {
-    const existingValues = get(state, ['values', filter.name], [])
-    state.values[filter.name] = uniq(existingValues.concat(castArray(values)))
   },
   removeFilterValue(state, filter) {
     // Look for existing values for this name

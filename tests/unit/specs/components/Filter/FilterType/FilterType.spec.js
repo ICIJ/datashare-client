@@ -1,5 +1,5 @@
 import find from 'lodash/find'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -9,8 +9,8 @@ import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPan
 import FilterType from '@/components/Filter/FilterType/FilterType'
 
 describe('FilterType.vue', () => {
-  const { index, es } = esConnectionHelper.build()
-  const { index: anotherIndex } = esConnectionHelper.build()
+  const { index, es } = esConnectionHelper.build('filter-type-a-')
+  const { index: anotherIndex } = esConnectionHelper.build('filter-type-b-')
 
   let core, wrapper
 
@@ -41,6 +41,7 @@ describe('FilterType.vue', () => {
       wrapper.vm.$store.commit('search/decontextualizeFilter', name)
       wrapper.vm.$store.commit('search/index', index)
       wrapper.vm.$store.commit('search/reset')
+      wrapper.vm.$store.commit('search/resetFilters')
     })
 
     it('should display no items for the contentType filter', async () => {
@@ -74,7 +75,6 @@ describe('FilterType.vue', () => {
       wrapper.vm.$store.commit('search/contextualizeFilter', 'contentType')
       wrapper.vm.$store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
       await wrapper.vm.aggregate({ clearPages: true })
-
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
       expect(wrapper.vm.lastPage.total).toBe(1)
     })
@@ -94,7 +94,7 @@ describe('FilterType.vue', () => {
       expect(wrapper.vm.lastPage.total).toBe(7)
     })
 
-    it('should display 3 items for the contentType filter alphabeticaly', async () => {
+    it('should display 3 items for the contentType filter alphabetically', async () => {
       await letData(es).have(new IndexedDocument('document_01', index).withContentType('text/javascript')).commit()
       await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
