@@ -37,7 +37,7 @@ const compact = computed(() => {
 </script>
 
 <template>
-  <td class="project-row-actions">
+  <td class="project-row-links">
     <div class="d-flex gap-3">
       <slot>
         <button-icon
@@ -46,7 +46,7 @@ const compact = computed(() => {
           variant="outline-tertiary"
           truncate
           hide-label
-          class="project-row-actions__insights"
+          class="project-row-links__insights"
           :label="$t('projectCardFooter.insights')"
         />
         <button-icon
@@ -55,7 +55,7 @@ const compact = computed(() => {
           variant="outline-primary"
           truncate
           :hide-label="compact"
-          class="project-row-actions__search"
+          class="project-row-links__search"
           :label="$t('projectCardFooter.search')"
         />
       </slot>
@@ -64,7 +64,7 @@ const compact = computed(() => {
 </template>
 
 <style lang="scss">
-.project-row-actions {
+.project-row-links {
   &__insights,
   &__search {
     --bs-btn-font-weight: 500;
