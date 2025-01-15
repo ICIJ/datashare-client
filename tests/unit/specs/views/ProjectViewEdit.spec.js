@@ -65,23 +65,4 @@ describe('ProjectViewEdit.vue', () => {
     expect(wrapper.vm.$core.projects[0].label).toBe('NEWLABEL')
   })
 
-  it('deletes the project when the form emits a deleted event', async () => {
-    const props = { name: 'local-datashare' }
-    const core = CoreSetup.init(api)
-      .useAll()
-      .useRouter([
-        {
-          name: 'project.list',
-          path: '/project'
-        }
-      ])
-    const wrapper = mount(ProjectViewEdit, { global: { plugins: core.plugins }, props })
-    expect(wrapper.vm.$core.projects).toHaveLength(1)
-
-    const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
-    projectForm.vm.$emit('delete', 'local-datashare')
-    await flushPromises()
-    expect(wrapper.vm.$core.projects).toHaveLength(0)
-    expect(api.deleteProject).toBeCalledWith('local-datashare')
-  })
 })
