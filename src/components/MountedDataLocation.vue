@@ -66,6 +66,7 @@ export default {
     async deleteAllProjects() {
       try {
         await this.$store.dispatch('indexing/deleteAll')
+        this.$toast.info(this.$t('indexing.stoppingTasks'))
         this.$toast.success(this.$t('indexing.deleteSuccess'))
       } catch (error) {
         if (error && error.response && error.response.status !== 404) {
