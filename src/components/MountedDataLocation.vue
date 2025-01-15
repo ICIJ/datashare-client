@@ -91,6 +91,7 @@ export default {
       await this.$core.loadUser()
       this.$store.commit('search/index', this.$config.get('defaultProject'))
       this.$core.emit('index::delete::all')
+      this.$store.dispatch('indexing/getTasks')
     },
     showTreeView() {
       this.path = this.dataDir
