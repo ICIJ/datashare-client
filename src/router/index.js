@@ -153,7 +153,10 @@ export const routes = [
           {
             name: 'task.documents',
             path: 'documents',
-            meta: { title: 'task.documents.title' },
+            meta: {
+              title: 'task.documents.title',
+              allowedModes: ['LOCAL', 'EMBEDDED']
+            },
             children: [
               {
                 name: 'task.documents.list',
