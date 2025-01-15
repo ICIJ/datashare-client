@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div :id="versionNumberId" :ref="versionNumberId" class="version-number d-inline-block">v{{ serverVersion }}</div>
-    <b-tooltip v-if="versionNumberId" :target="versionNumberId" :placement="tooltipPlacement">
+    <div :id="versionNumberId" class="version-number d-inline-block">v{{ serverVersion }}</div>
+    <b-tooltip :target="versionNumberId" :placement="tooltipPlacement">
       <div class="version-number__tooltip text-nowrap text-start">
         <div class="d-flex align-items-baseline version-number__tooltip__client py-2">
           <div class="flex-grow-1 pe-5">
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, useTemplateRef } from 'vue'
+import { ref, onMounted } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { uniqueId } from 'lodash'
 
@@ -55,7 +55,7 @@ const serverVersion = ref(null)
 
 const clientHash = import.meta.env.VITE_GIT_HASH ?? ''
 const shortClientHash = ref(clientHash.substring(0, 7))
-const versionNumberId = useTemplateRef(uniqueId('version-number-'))
+const versionNumberId = uniqueId('version-number-')
 
 const { core } = useCore()
 
@@ -70,6 +70,11 @@ const setVersion = async () => {
 }
 
 onMounted(() => {
-  setVersion()
+  return setVersion()
 })
 </script>
+<style lang="scss" scoped>
+.version-number {
+  cursor: pointer;
+}
+</style>
