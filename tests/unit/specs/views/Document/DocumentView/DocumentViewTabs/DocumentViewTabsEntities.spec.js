@@ -1,10 +1,11 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, mount } from '@vue/test-utils'
 import { uniqueId } from 'lodash'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewTabsEntities from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities'
+import FormControlSearch from "@/components/Form/FormControl/FormControlSearch";
 
 describe('DocumentViewTabsEntities.vue', () => {
   const { index, es } = esConnectionHelper.build()
@@ -12,7 +13,7 @@ describe('DocumentViewTabsEntities.vue', () => {
   let core
 
   beforeEach(() => {
-    const routes = [{ path: '/', name: 'document' }]
+    const routes = [{ name: 'document.text' ,path:'/text'}, { path: '/', name: 'document' }]
     core = CoreSetup.init({ elasticsearch: es }).useAll().useRouter(routes)
     core.config.set('manageDocuments', true)
     core.store.commit('document/reset')
@@ -31,7 +32,7 @@ describe('DocumentViewTabsEntities.vue', () => {
 
     const document = await core.store.dispatch('document/get', { id, index })
     await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    const wrapper = shallowMount(DocumentViewTabsEntities, {
+    const wrapper = mount(DocumentViewTabsEntities, {
       global: {
         plugins: core.plugins,
         renderStubDefaultSlot: true
@@ -40,9 +41,12 @@ describe('DocumentViewTabsEntities.vue', () => {
     })
 
     const categories = wrapper.findAll('.document-view-tabs-entities__category')
-    /* expect(categories.at(0).text()).toBe('People mention_01')
-     expect(categories.at(1).text()).toBe('Organizations mention_02')
-     expect(categories.at(2).text()).toBe('Locations mention_03'):*/
+    expect(categories.at(0).text()).toContain('People')
+    expect(categories.at(0).text()).toContain('mention_01')
+    expect(categories.at(1).text()).toContain('Organizations')
+    expect(categories.at(1).text()).toContain('mention_02')
+    expect(categories.at(2).text()).toContain('Locations')
+    expect(categories.at(2).text()).toContain('mention_03')
   })
 
   it('should display filtered named entities', async () => {
@@ -66,8 +70,8 @@ describe('DocumentViewTabsEntities.vue', () => {
       props: { document }
     })
 
-    wrapper.setData({ filterToken: 'lou' })
-    await wrapper.vm.getFirstPageInAllCategories()
+    wrapper.findComponent(FormControlSearch).trigger('update:modelValue','lou')
+    //await wrapper.vm.getFirstPageInAllCategories()
 
     const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(1)
