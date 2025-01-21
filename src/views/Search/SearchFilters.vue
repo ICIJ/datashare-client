@@ -1,7 +1,9 @@
 <script setup>
-import { computed } from 'vue'
-import { uniq, groupBy } from 'lodash'
+import Fuse from 'fuse.js'
+import { computed, ref } from 'vue'
+import { uniq, groupBy, property } from 'lodash'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 import { useViews } from '@/composables/views'
 import { useSearchFilter } from '@/composables/search-filter'
@@ -11,15 +13,27 @@ import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 const { toggleFilters } = useViews()
 const store = useStore()
 const { getFilterComponent } = useSearchFilter()
+const { t } = useI18n()
 
+const q = ref('')
+const filters = computed(() => store.getters['search/instantiatedFilters'])
+const filtersTitles = computed(() => filters.value.map((filter) => ({ filter, title: t(`filter.${filter.name}`) })))
+const fuse = computed(() => new Fuse(filtersTitles.value, { distance: 100, shouldSort: true, keys: ['title'] }))
+const fuseFilters = computed(() => fuse.value.search(q.value).map(property('item.filter')))
+const displayedFilters = computed(() => (q.value ? fuseFilters.value : filters.value))
+const filtersBySection = computed(() => groupBy(displayedFilters.value, 'section'))
+const sections = computed(() => uniq(displayedFilters.value.map((filter) => filter.section)))
 const closeFilters = () => (toggleFilters.value = false)
-const filters = store.getters['search/instantiatedFilters']
-const filtersBySection = computed(() => groupBy(filters, 'section'))
-const sections = computed(() => uniq(filters.map((filter) => filter.section)))
 </script>
 
 <template>
-  <filters-panel v-show="toggleFilters" class="search-filters flex-shrink-0 me-5" sticky @close="closeFilters">
+  <filters-panel
+    v-show="toggleFilters"
+    v-model:q="q"
+    class="search-filters flex-shrink-0 me-5"
+    sticky
+    @close="closeFilters"
+  >
     <filters-panel-section v-for="section in sections" :key="section" :title="$t(`filter.sections.${section}`)">
       <component
         :is="getFilterComponent(filter)"
