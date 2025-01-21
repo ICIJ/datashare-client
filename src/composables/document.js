@@ -63,6 +63,7 @@ export const useDocument = function (element) {
   })
 
   const document = computed(() => {
+    console.trace(store.state.document)
     return store.state.document.doc
   })
 
