@@ -24,7 +24,7 @@ const icon = computed(() => {
 })
 
 const title = computed(() => {
-  return t(`entitySection.${props.category}.title`)
+  return t(`entitySection.${props.category.toLowerCase()}.title`)
 })
 </script>
 
