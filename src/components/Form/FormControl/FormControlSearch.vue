@@ -11,15 +11,15 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 defineOptions({
   name: 'FormControlSearch'
 })
+/**
+ * Input value
+ * @model
+ */
+const modelValue = defineModel({
+  type: [String, Number]
+})
 
 const props = defineProps({
-  /**
-   * Input value
-   * @model
-   */
-  modelValue: {
-    type: [String, Number]
-  },
   /**
    * Optional placeholder text
    */
@@ -90,14 +90,14 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['submit', 'up', 'down', 'input', 'update:modelValue', 'enter', 'blur'])
+const emit = defineEmits(['submit', 'up', 'down', 'input', 'enter', 'blur'])
 
 const showClearText = computed(() => {
   return props.modelValue?.length > 0
 })
 
 function input(value) {
-  emit('update:modelValue', value)
+  modelValue.value = value
 }
 
 const target = ref(null)
