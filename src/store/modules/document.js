@@ -220,10 +220,12 @@ function actionBuilder(api) {
       commit('namedEntitiesPagesInCategory', { category, pages: [] })
       return dispatch('getNextPageForNamedEntityInCategory', { category, filterToken })
     },
-    async getFirstPageForNamedEntityInAllCategories({ dispatch, getters }, { filterToken = null } = {}) {
-      for (const category of getters.categories) {
-        await dispatch('getFirstPageForNamedEntityInCategory', { filterToken, category })
-      }
+    getFirstPageForNamedEntityInAllCategories({ dispatch, getters }, { filterToken = null } = {}) {
+      return Promise.all(
+        getters.categories.map((category) =>
+          dispatch('getFirstPageForNamedEntityInCategory', { filterToken, category })
+        )
+      )
     },
     async getNextPageForNamedEntityInCategory({ state, getters, commit }, { category, filterToken = null } = {}) {
       try {
