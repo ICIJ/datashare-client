@@ -50,6 +50,7 @@ const occurrences = computed(() => {
     :class="classList"
     :style="style"
     :icon-left="icon"
+    :to="entity.to"
   >
     {{ entity.mention }}
     <entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
