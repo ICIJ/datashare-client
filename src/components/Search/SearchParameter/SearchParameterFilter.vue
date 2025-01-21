@@ -41,7 +41,7 @@ const props = defineProps({
 })
 
 const filter = computed(() => {
-  return filters.find((filter) => filter.options.name === props.name)
+  return filters.find((filter) => filter.options.name === field.value)
 })
 
 const prefix = computed(() => {
