@@ -290,7 +290,6 @@ const sections = reactive({
           </div>
         </tab-group-entry>
         <tab-group-entry :title="$t('task.batch-search.form.listQueries.label')">
-          
           {{ $t('task.batch-search.form.listQueries.placeholder') }}
 
           <!--<div class="col-6">
