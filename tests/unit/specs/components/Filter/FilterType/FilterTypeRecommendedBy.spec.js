@@ -73,7 +73,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
   it('should sort options to have the current user first', async () => {
     await flushPromises()
     expect(wrapper.findAllComponents(DisplayUser).at(0).text()).toBe('local (you)')
-  })  
+  })
 
   it('should sort options by decreasing order', async () => {
     await flushPromises()
