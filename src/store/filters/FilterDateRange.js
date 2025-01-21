@@ -23,12 +23,13 @@ export default class FilterDateRange extends FilterDate {
   }
 
   queryBuilder(body, param, func) {
-    return body.query('bool', (sub) => {
-      const gte = new Date(min(param.values))
-      const lte = new Date(max(param.values))
-      sub[func]('range', this.key, { gte, lte })
-      return sub
-    })
+    if (!param.values.length) return body
+
+    const [minValue, maxValue] = param.values[0].split(':').map(Number)
+    const gte = new Date(Math.min(minValue, maxValue))
+    const lte = new Date(Math.max(minValue, maxValue))
+
+    return body.query('bool', (sub) => sub[func]('range', this.key, { gte, lte }))
   }
 
   body(body, { interval = this.interval } = {}) {
