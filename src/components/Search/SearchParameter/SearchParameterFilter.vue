@@ -4,6 +4,7 @@ import { trimStart } from 'lodash'
 
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
+import * as types from '@/store/filters'
 import filters from '@/store/filters'
 
 const props = defineProps({
@@ -65,6 +66,10 @@ const icon = computed(() => {
 const color = computed(() => {
   return props.color ?? filter.value?.options?.color
 })
+
+const display = computed(() => {
+  return types[filter.value.type].display ?? null
+})
 </script>
 
 <template>
@@ -77,5 +82,7 @@ const color = computed(() => {
     :color="color"
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
-  />
+  >
+    <component :is="display" v-if="display" :value="term" />
+  </search-parameter-query-term>
 </template>

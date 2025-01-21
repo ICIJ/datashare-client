@@ -1,4 +1,4 @@
-import { isInteger, max, min, uniq } from 'lodash'
+import { isInteger, max, min } from 'lodash'
 import moment from 'moment'
 
 import FilterDate from './FilterDate'
@@ -50,10 +50,6 @@ export default class FilterDateRange extends FilterDate {
       default:
         return { interval: '1y', format: 'yyyy', missing: '1970' }
     }
-  }
-
-  get values() {
-    return uniq(super.values.map((v) => parseInt(v)))
   }
 
   static get display() {

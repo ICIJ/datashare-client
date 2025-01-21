@@ -1,4 +1,5 @@
 <script setup>
+import { isArray } from 'lodash'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -6,9 +7,9 @@ import DisplayDatetime from './DisplayDatetime'
 
 import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW, humanLongDate } from '@/utils/humanDate'
 
-const props = defineProps({
+const { value } = defineProps({
   value: {
-    type: Array
+    type: [Array, String]
   },
   format: {
     type: String,
@@ -18,11 +19,11 @@ const props = defineProps({
 })
 
 const start = computed(() => {
-  return props.value[0]
+  return isArray(value) ? value[0] : new Date(value.split(':').map(Number).shift())
 })
 
 const end = computed(() => {
-  return props.value[1]
+  return isArray(value) ? value[1] : new Date(value.split(':').map(Number).pop())
 })
 
 const { t, locale } = useI18n()

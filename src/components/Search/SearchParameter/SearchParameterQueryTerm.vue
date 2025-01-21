@@ -74,7 +74,7 @@ const showOperator = computed(() => {
       </span>
     </template>
     <span class="search-parameter-query-term__value">
-      {{ term }}
+      <slot>{{ term }}</slot>
     </span>
   </button-icon>
 </template>

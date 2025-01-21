@@ -23,15 +23,20 @@ const toEndOfDayTimestamp = (value) => toDate(value).setUTCHours(23, 59, 59, 999
 
 const selected = computed({
   get() {
+    // Only get the first value (for retro-compatibility, it used to be two values together)
+    const [value = null] = getFilterValues(props.filter)
+    // No value, no bounding dates
+    if (!value) return null
     // Convert values from filter to Date objects
-    const [start, end] = getFilterValues(props.filter).map(toInt).map(toDate)
+    const [start, end = start] = value.split(':').map(toInt).map(toDate)
     return { start, end }
   },
   set(values) {
     // Convert Date objects to timestamps
-    if (values) {
-      const [start, end] = Object.values(values).map(toTimestamp)
-      const key = [start, toEndOfDayTimestamp(end)]
+    if (values && values.start && values.end) {
+      const now = Date.now()
+      const [start = now, end = start] = Object.values(values).map(toTimestamp)
+      const key = [start, toEndOfDayTimestamp(end)].join(':')
       return setFilterValue(props.filter, { key })
     }
   }
