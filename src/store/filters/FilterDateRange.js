@@ -1,4 +1,4 @@
-import { isInteger, max, min } from 'lodash'
+import { isInteger } from 'lodash'
 import moment from 'moment'
 
 import FilterDate from './FilterDate'
@@ -23,9 +23,9 @@ export default class FilterDateRange extends FilterDate {
   }
 
   queryBuilder(body, param, func) {
-    if (!param.values.length) return body
+    if (!param?.values?.length) return body
 
-    const [minValue, maxValue] = param.values[0].split(':').map(Number)
+    const [minValue, maxValue = minValue] = param.values[0].split(':').map(Number)
     const gte = new Date(Math.min(minValue, maxValue))
     const lte = new Date(Math.max(minValue, maxValue))
 
