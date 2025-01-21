@@ -4,6 +4,8 @@ import { computed } from 'vue'
 import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler'
 import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch'
 
+const q = defineModel('q', { type: String, default: '' })
+
 const { sticky } = defineProps({
   noToggler: {
     type: Boolean,
@@ -26,7 +28,7 @@ const classList = computed(() => ({ 'filters-panel--sticky': sticky }))
 <template>
   <div class="filters-panel" :class="classList">
     <filters-panel-toggler v-if="!noToggler" @close="emit('close')" />
-    <filters-panel-search v-if="!noSearch" />
+    <filters-panel-search v-if="!noSearch" v-model="q" />
     <slot />
   </div>
 </template>
