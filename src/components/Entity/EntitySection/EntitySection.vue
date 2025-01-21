@@ -4,10 +4,13 @@ import EntitySectionList from './EntitySectionList'
 import EntitySectionMore from './EntitySectionMore'
 import EntitySectionTitle from './EntitySectionTitle'
 
+import { entityCategoryValidator } from '@/enums/entityCategories'
+
 defineProps({
   category: {
     type: String,
-    required: true
+    required: true,
+    validator: entityCategoryValidator
   },
   entries: {
     type: Array,
