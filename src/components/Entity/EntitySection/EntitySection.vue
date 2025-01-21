@@ -32,7 +32,7 @@ const emit = defineEmits(['copy', 'download', 'more'])
       <entity-section-actions :category="category" @copy="emit('copy', $event)" @download="emit('download', $event)" />
     </div>
     <entity-section-list :entries="entries">
-      <slot />
+      <slot v-bind="{ entries }" />
     </entity-section-list>
     <entity-section-more v-if="hasMore" :category="category" @click="emit('more', $event)" />
   </section>
