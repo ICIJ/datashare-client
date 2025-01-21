@@ -1,6 +1,6 @@
 import { computed, inject, provide, useId, watch } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
 
 import { useCore } from '@/composables/core'
@@ -48,9 +48,7 @@ export const useDocument = function (element) {
   const documentRoute = computed(() => {
     const { matched } = router.currentRoute.value ?? []
     const predicates = ['document', 'document-standalone'].map((name) => matches({ name }))
-    const predicate = overSome(predicates)
-    const routeLocationMatched = find(matched, predicate)
-    return routeLocationMatched
+    return find(matched, overSome(predicates))
   })
 
   const documentParentRoute = computed(() => {
