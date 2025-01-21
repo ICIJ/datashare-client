@@ -1,17 +1,13 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { capitalize, flatten, get, mapValues, sumBy, pickBy, throttle } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { flatten, get, mapValues, pickBy, sumBy, throttle } from 'lodash'
 
-import EntityButton from '@/components/Entity/EntityButton'
-import EntityOccurrences from '@/components/Entity/EntityOccurrences'
-import EntityInContext from '@/components/Entity/EntityInContext'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { useCore } from '@/composables/core'
 import { useDocument } from '@/composables/document'
 import { useWait } from '@/composables/wait'
-import { getCategoryIcon } from '@/utils/entity'
+import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 
 const { document, documentRoute } = useDocument()
 const { wait, waitFor, loaderId } = useWait()
@@ -30,7 +26,7 @@ const namedEntitiesByCategories = computed(() => {
   const namedEntitiesByCategories = mapValues(namedEntitiesPaginatedByCategories.value, (pages) => {
     return flatten(pages.map((page) => page.hits))
   })
-  return pickBy(namedEntitiesByCategories, (hits) => !!hits.length)
+  return pickBy(namedEntitiesByCategories, (hits, category) => !!hits.length && categoryIsNotEmpty(category))
 })
 
 const hitsAsCsv = (hits = []) => {
@@ -41,6 +37,9 @@ const hitsAsCsv = (hits = []) => {
     })
     .join('\n')
   return [csvHeader, csvBody].join('\n')
+}
+const hitsWithRoute = (hits) => {
+  return hits.map((hit) => ({ ...hit, to: { name: `${documentRoute.value.name}.text`, query: { q: hit.mention } } }))
 }
 
 const categories = computed(() => store.getters['document/categories'])
@@ -94,37 +93,15 @@ onMounted(getFirstPageInAllCategories)
       </i18n-t>
       <i18n-t v-else-if="!hasEntities && !loadingNamedEntities" keypath="document.namedEntitiesNotFound" />
     </div>
-
-    <div
+    <entity-section
       v-for="(hits, category) in namedEntitiesByCategories"
       :key="category"
-      class="document-view-tabs-entities__category mb-5"
-    >
-      <h3 v-if="categoryIsNotEmpty(category)" class="mb-3 d-flex align-items-center gap-2 h6 fw-normal">
-        <phosphor-icon :name="getCategoryIcon(category)" weight="bold" />
-        {{ $t('filter.namedEntity' + capitalize(category)) }}
-        <entity-occurrences :occurrences="getCategoryTotal(category)" />
-        <haptic-copy
-          variant="tertiary"
-          class="p-2 ms-auto"
-          hide-label
-          :label="$t('document.copyAsCsv')"
-          :text="hitsAsCsv(hits)"
-        />
-      </h3>
-      <div class="d-flex flex-wrap gap-2 mb-3">
-        <span v-for="(entity, index) in hits" :key="index" class="d-inline-block">
-          <entity-button
-            :id="`entity-${entity.id}`"
-            :entity="entity"
-            :to="{ name: `${documentRoute.name}.text`, query: { q: entity.mention } }"
-          />
-          <entity-in-context :entity="entity" :document="document" :target="`entity-${entity.id}`" />
-        </span>
-      </div>
-      <b-button v-if="categoryHasNextPage(category)" variant="outline-primary" @click="getNextPageInCategory(category)">
-        {{ $t('document.namedEntitiesShowMore.showMore' + capitalize(category)) }}
-      </b-button>
-    </div>
+      :category="category"
+      :count="getCategoryTotal(category)"
+      :entries="hitsWithRoute(hits)"
+      :has-more="categoryHasNextPage(category)"
+      @download="hitsAsCsv(hits)"
+      @more="getNextPageInCategory(category)"
+    />
   </div>
 </template>
