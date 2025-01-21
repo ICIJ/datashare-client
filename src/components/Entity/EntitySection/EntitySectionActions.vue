@@ -13,12 +13,12 @@ defineProps({
   <div class="entity-section-actions d-inline-flex gap-2">
     <slot>
       <entity-section-actions-entry
-        :label="$t('namedEntitySectionActions.copy')"
+        :label="$t('entitySectionActions.copy')"
         icon="clipboard"
         @click="$emit('copy', category)"
       />
       <entity-section-actions-entry
-        :label="$t('namedEntitySectionActions.download')"
+        :label="$t('entitySectionActions.download')"
         icon="download-simple"
         @click="$emit('download', category)"
       />
