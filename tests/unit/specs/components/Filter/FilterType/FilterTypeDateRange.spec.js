@@ -40,7 +40,7 @@ describe('FilterDateRange.vue', () => {
     await wrapper.findAll('input[type=text]').at(1).setValue(end.toDateString())
 
     const existingFilter = find(wrapper.vm.$store.getters['search/instantiatedFilters'], { name })
-    expect(existingFilter.values).toEqual([start.getTime(), end.setUTCHours(23, 59, 59, 999)])
+    expect(existingFilter.values).toEqual([`${start.getTime()}:${end.setUTCHours(23, 59, 59, 999)}`])
   })
 
   it('has two inputs containing the date range', () => {
