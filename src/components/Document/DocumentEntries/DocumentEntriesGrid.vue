@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 
+import AppModal from '@/components/AppModal/AppModal'
+import DocumentFloating from '@/components/Document/DocumentFloating'
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
 import { useDocument } from '@/composables/document'
 import { useSearchFilter } from '@/composables/search-filter'
