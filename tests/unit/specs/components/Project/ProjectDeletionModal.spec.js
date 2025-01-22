@@ -1,7 +1,6 @@
 import { mount, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-
 import ProjectDeletionModal from '@/components/Project/ProjectDeletionModal'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 
@@ -11,7 +10,7 @@ describe('ProjectDeletionModal.vue', () => {
   beforeEach(() => {
     const { index: name, es } = esConnectionHelper.build()
     project = { name }
-    api = { updateProject: vi.fn(), deleteProject: vi.fn() ,elasticsearch: es }
+    api = { updateProject: vi.fn(), deleteProject: vi.fn(), elasticsearch: es }
     const core = CoreSetup.init(api)
       .useAll()
       .useRouter([
