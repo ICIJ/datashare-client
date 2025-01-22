@@ -8,7 +8,7 @@ const { document } = defineProps({
   }
 })
 
-const to = computed(() => ({ name: 'document', params: document.routerParams }))
+const to = computed(() => ({ name: 'document-standalone', params: document.routerParams }))
 </script>
 
 <template>
