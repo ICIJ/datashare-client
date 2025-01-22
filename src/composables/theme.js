@@ -1,7 +1,9 @@
 import { reactive } from 'vue'
 
+import themeAuto from '@/assets/images/illustrations/theme-auto.png'
 import themeLight from '@/assets/images/illustrations/theme-light.png'
 import themeDark from '@/assets/images/illustrations/theme-dark.png'
+
 let eventAdded = false
 
 export function useTheme() {
@@ -30,7 +32,7 @@ export function useTheme() {
       icon: 'paint-roller',
       name: 'automatic',
       label: `Automatic`,
-      thumbnail: ''
+      thumbnail: themeAuto
     },
     {
       icon: 'sun',
