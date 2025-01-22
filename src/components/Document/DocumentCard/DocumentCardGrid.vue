@@ -127,6 +127,7 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
       font-weight: 500;
       margin-bottom: $spacer;
       color: inherit;
+      word-break: break-all;
     }
   }
 }
