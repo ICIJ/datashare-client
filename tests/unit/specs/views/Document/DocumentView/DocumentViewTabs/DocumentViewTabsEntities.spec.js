@@ -5,7 +5,7 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewTabsEntities from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities'
-import FormControlSearch from "@/components/Form/FormControl/FormControlSearch";
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 describe('DocumentViewTabsEntities.vue', () => {
   const { index, es } = esConnectionHelper.build()
@@ -13,7 +13,10 @@ describe('DocumentViewTabsEntities.vue', () => {
   let core
 
   beforeEach(() => {
-    const routes = [{ name: 'document.text' ,path:'/text'}, { path: '/', name: 'document' }]
+    const routes = [
+      { name: 'document.text', path: '/text' },
+      { path: '/', name: 'document' }
+    ]
     core = CoreSetup.init({ elasticsearch: es }).useAll().useRouter(routes)
     core.config.set('manageDocuments', true)
     core.store.commit('document/reset')
@@ -70,8 +73,8 @@ describe('DocumentViewTabsEntities.vue', () => {
       props: { document }
     })
 
-    wrapper.findComponent(FormControlSearch).trigger('update:modelValue','lou')
-    //await wrapper.vm.getFirstPageInAllCategories()
+    wrapper.findComponent(FormControlSearch).trigger('update:modelValue', 'lou')
+    // await wrapper.vm.getFirstPageInAllCategories()
 
     const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(1)
