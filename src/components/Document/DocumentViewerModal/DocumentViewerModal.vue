@@ -6,6 +6,7 @@ import DocumentViewerModalNav from './DocumentViewerModalNav'
 
 import AppModal from '@/components/AppModal/AppModal'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import useContrastVariant from '@/composables/contrast-variant'
 
 const props = defineProps({
   document: {
@@ -14,6 +15,7 @@ const props = defineProps({
   }
 })
 
+const { variant } = useContrastVariant({ dark: 'darker' })
 const document = ref(props.document)
 // Document ref must stay in sync with the prop
 watch(toRef(props, 'document'), () => (document.value = props.document))
@@ -25,9 +27,9 @@ const key = computed(() => [document.value.index, document.value.id])
   <app-modal
     class="document-viewer-modal"
     content-class="shadow-none"
-    body-bg-variant="light"
+    :body-bg-variant="variant"
     body-class="rounded-bottom"
-    header-variant="light"
+    :header-variant="variant"
     header-class="document-viewer-modal__header"
     hide-footer
     size="lg"
