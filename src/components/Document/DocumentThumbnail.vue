@@ -2,10 +2,10 @@
   <div v-b-tooltip.right class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle" :title="title">
     <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
     <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
-      <phosphor-icon :name="document.contentTypeIcon" :size="String(size)" :scale="1.5" />
+      <phosphor-icon :name="document.contentTypeIcon" :size="String(size)" />
     </span>
     <span class="document-thumbnail__overlay">
-      <phosphor-icon :name="overlayIcon" :size="String(size)" :scale="1.5" />
+      <phosphor-icon :name="overlayIcon" :size="String(size)" />
     </span>
   </div>
 </template>
@@ -222,7 +222,6 @@ export default {
   --height: var(--estimated-height, 0);
   --width: var(--height);
 
-  background: var(--bs-body-bg);
   color: var(--bs-secondary-color);
   min-width: var(--width);
   max-width: var(--width);
@@ -277,7 +276,7 @@ export default {
 
   &--fit {
     width: 100%;
-    max-width: var(--width);
+    max-width: 100%;
     min-width: auto;
 
     &.document-thumbnail--crop {

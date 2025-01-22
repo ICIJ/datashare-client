@@ -6,6 +6,7 @@ import DocumentCardCheckbox from './DocumentCardCheckbox'
 
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
+import { useDocumentViewerModal } from '@/composables/document'
 
 const props = defineProps({
   document: {
@@ -58,6 +59,8 @@ const showTitle = computed(() => {
 const to = computed(() => {
   return { name: 'document', params: props.document.routerParams }
 })
+
+const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
 </script>
 
 <template>
@@ -76,7 +79,7 @@ const to = computed(() => {
         crop
         clickable
         :active="hover"
-        @click="emit('preview')"
+        @click="showDocumentViewerModal"
       />
     </div>
     <div class="document-card__properties">

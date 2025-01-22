@@ -5,6 +5,7 @@ import DocumentCardProperties from './DocumentCardProperties'
 
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
+import { useDocumentViewerModal } from '@/composables/document'
 
 const selected = defineModel('selected', { type: Boolean })
 
@@ -53,6 +54,8 @@ const showTitle = computed(() => {
 const to = computed(() => {
   return { name: 'document', params: props.document.routerParams }
 })
+
+const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
 </script>
 
 <template>
@@ -63,9 +66,16 @@ const to = computed(() => {
     @mouseleave="hover = false"
   >
     <div class="d-flex flex-column gap-3 flex-grow-1">
-      <router-link v-if="showThumbnail" :to="to" :target="target" class="d-block w-100 text-center">
-        <document-thumbnail :document="document" size="md" crop fit clickable :active="hover" class="mx-auto" />
-      </router-link>
+      <document-thumbnail
+        v-if="showThumbnail"
+        :document="document"
+        size="md"
+        crop
+        clickable
+        :active="hover"
+        class="mx-auto"
+        @click="showDocumentViewerModal"
+      />
       <div class="document-card-grid__properties">
         <router-link v-if="showTitle" class="document-card-grid__properties__title" :to="to" :target="target">
           {{ document.title }}
