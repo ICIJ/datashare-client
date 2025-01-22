@@ -728,9 +728,10 @@ describe('SearchStore', () => {
   it('should set this value to the filter', () => {
     const name = 'creationDate'
     store.commit('search/setFilterValue', { name, value: '12' })
-    store.commit('search/setFilterValue', { name, value: '42' })
+    expect(find(store.getters['search/instantiatedFilters'], { name }).values).toEqual(['12'])
 
-    expect(find(store.getters['search/instantiatedFilters'], { name }).values).toEqual([42])
+    store.commit('search/setFilterValue', { name, value: '42' })
+    expect(find(store.getters['search/instantiatedFilters'], { name }).values).toEqual(['42'])
   })
 
   it('should order documents by path', async () => {
