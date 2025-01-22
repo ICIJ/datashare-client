@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue'
+import { computed, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { matches } from 'lodash'
@@ -7,11 +7,13 @@ import EsDocList from '@/api/resources/EsDocList'
 import { useCore } from '@/composables/core'
 import { useDocument } from '@/composables/document'
 
-export function useSearchNav() {
+export function useSearchNav(currentDocument = null) {
   const { core } = useCore()
-  const { document } = useDocument()
   const { commit, dispatch, getters } = useStore()
+  const { document: viewDocument } = useDocument()
   const router = useRouter()
+  const currentDocumentRef = toRef(currentDocument)
+  const document = computed(() => currentDocumentRef.value || viewDocument.value)
 
   const total = computed(() => getters['search/total'])
   const page = computed(() => getters['search/page'])
@@ -31,19 +33,13 @@ export function useSearchNav() {
   const disabledPrevious = computed(() => documentPosition.value === 0)
   const disabledNext = computed(() => documentPosition.value === total.value - 1)
 
-  const goToEntry = (entryIndex) => {
-    const { routerParams: params } = hits.value[entryIndex]
+  const atEntryIndex = (entryIndex) => {
+    return hits.value[entryIndex]
+  }
+
+  const goToEntry = (entry) => {
+    const { routerParams: params } = entry
     return router.push({ name: 'document', params })
-  }
-
-  const goToFirstEntryOfPreviousPage = async () => {
-    await dispatch('search/previousPage')
-    return goToEntry(hits.value.length - 1)
-  }
-
-  const goToFirstEntryOfNextPage = async () => {
-    await dispatch('search/nextPage')
-    return goToEntry(0)
   }
 
   const goToPosition = async (position) => {
@@ -57,18 +53,30 @@ export function useSearchNav() {
     }
   }
 
-  const previous = async () => {
-    if (isFirstInPage.value) {
-      return goToFirstEntryOfPreviousPage()
-    }
-    return goToEntry(documentPagePosition.value - 1)
+  const previous = () => {
+    return fetchPreviousDocument().then(goToEntry)
   }
 
   const next = () => {
-    if (isLastInPage.value) {
-      return goToFirstEntryOfNextPage()
+    return fetchNextDocument().then(goToEntry)
+  }
+
+  const fetchPreviousDocument = async () => {
+    if (isFirstInPage.value) {
+      await dispatch('search/previousPage')
+      return atEntryIndex(hits.value.length - 1)
     }
-    return goToEntry(documentPagePosition.value + 1)
+
+    return atEntryIndex(documentPagePosition.value - 1)
+  }
+
+  const fetchNextDocument = async () => {
+    if (isLastInPage.value) {
+      await dispatch('search/nextPage')
+      return atEntryIndex(0)
+    }
+
+    return atEntryIndex(documentPagePosition.value + 1)
   }
 
   async function fetchCarouselEntries(position, carouselSize = 5) {
@@ -130,6 +138,8 @@ export function useSearchNav() {
     isLastInPage,
     next,
     previous,
+    fetchNextDocument,
+    fetchPreviousDocument,
     searchFromPosition,
     searchAndGetFromPosition,
     watchPosition,
