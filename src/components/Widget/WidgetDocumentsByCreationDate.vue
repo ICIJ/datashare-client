@@ -339,7 +339,7 @@ export default {
       const indices = [this.project]
       const routeQueryField = 'f[creationDate]'
       const values = this.binToQueryValues(bin)
-      return { [routeQueryField]: values, indices }
+      return { [routeQueryField]: values.slice(0, 2).join(':'), indices }
     }
   }
 }
