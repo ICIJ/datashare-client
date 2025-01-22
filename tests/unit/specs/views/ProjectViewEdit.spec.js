@@ -64,5 +64,4 @@ describe('ProjectViewEdit.vue', () => {
     expect(api.updateProject).toBeCalledWith({ ...projectFormValues, label: 'NEWLABEL' })
     expect(wrapper.vm.$core.projects[0].label).toBe('NEWLABEL')
   })
-
 })
