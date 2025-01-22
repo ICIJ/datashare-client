@@ -1,10 +1,12 @@
-import { computed, inject, provide, useId, watch } from 'vue'
+import { computed, inject, provide, useId, watch, h } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
+import { useModalController } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
+import DocumentViewerModal from '@/components/Document/DocumentViewerModal/DocumentViewerModal'
 
 export const useDocument = function (element) {
   const store = useStore()
@@ -120,4 +122,27 @@ export const useDocument = function (element) {
     injectDocumentViewFloatingId,
     watchDocument
   }
+}
+
+export const useDocumentViewerModal = function (document) {
+  const modalController = useModalController()
+  const props = { document }
+
+  function show() {
+    return new Promise((resolve) => {
+      const component = h(DocumentViewerModal, {
+        onOk: resolve,
+        onClose: resolve,
+        onCancel: resolve
+      })
+
+      modalController.show({ component, props })
+    })
+  }
+
+  function hide() {
+    return modalController.hide()
+  }
+
+  return { show, hide }
 }

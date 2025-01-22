@@ -28,7 +28,7 @@ defineProps({
         hide-tooltip
         tooltip-placement="right"
         variant="outline-secondary"
-        class="app-modal-header__close ms-auto border-0"
+        class="app-modal-header__close ms-auto"
         :label="$t('appModalHeader.close')"
         @click="$emit('close')"
       />
@@ -39,7 +39,7 @@ defineProps({
       </image-mode>
     </slot>
     <slot>
-      <h3 class="app-modal-header__title text-center mt-2 flex-grow-1">
+      <h3 class="app-modal-header__title mt-2">
         <slot name="title">
           {{ title }}
         </slot>
@@ -51,24 +51,34 @@ defineProps({
 <style lang="scss">
 .app-modal-header {
   position: relative;
-  min-height: 2.5rem;
+  min-height: 3rem;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0 $spacer-xxl;
+  padding: 0;
 
   &__title {
     font-weight: 500;
     font-size: 1em;
+    width: 100%;
+    flex-grow: 1;
     color: var(--bs-emphasis-color);
+    text-align: center;
   }
 
   &__close {
     position: absolute;
     right: 0;
     top: 0;
+    border: 0;
+    border-radius: var(--bs-border-radius);
+
+    .text-bg-light & {
+      background: var(--bs-modal-bg);
+      border: 1px solid var(--bs-modal-border-color);
+    }
   }
 
   &__image {
