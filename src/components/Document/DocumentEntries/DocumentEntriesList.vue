@@ -132,7 +132,7 @@ defineExpose({
       max-width: 100%;
       width: 100%;
       flex-shrink: 1;
-      padding: 0 $spacer;
+      padding-right: $spacer;
     }
 
     &__list {
