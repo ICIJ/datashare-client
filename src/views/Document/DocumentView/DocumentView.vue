@@ -28,9 +28,6 @@ const props = defineProps({
   q: {
     type: String,
     default: ''
-  },
-  modal: {
-    type: Boolean
   }
 })
 
@@ -83,7 +80,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <div class="document-view__header d-flex justify-content-between align-items-center gap-2">
       <slot name="header-start" v-bind="{ document }" />
       <document-view-user-actions />
-      <document-view-actions :document="document" class="ms-auto" :modal="modal" />
+      <document-view-actions :document="document" class="ms-auto" />
       <slot name="nav" v-bind="{ document }">
         <router-view name="nav" />
       </slot>
