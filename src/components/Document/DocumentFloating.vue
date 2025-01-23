@@ -45,7 +45,7 @@ const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
 
 const separatorLineStyle = computed(() => {
   return {
-    left: `${separatorLineLeft.value}px`
+    left: reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
   }
 })
 
