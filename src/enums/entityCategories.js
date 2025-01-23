@@ -10,4 +10,4 @@ export const ENTITY_CATEGORY = Object.freeze({
   EMAIL
 })
 export const ENTITY_CATEGORIES = Object.values(ENTITY_CATEGORY)
-export const entityCategoryValidator = (v) => ENTITY_CATEGORIES.includes(v)
+export const entityCategoryValidator = (v) => ENTITY_CATEGORIES.includes(v.toLowerCase())
