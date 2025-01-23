@@ -220,7 +220,7 @@ function actionBuilder(api) {
       commit('namedEntitiesPagesInCategory', { category, pages: [] })
       return dispatch('getNextPageForNamedEntityInCategory', { category, filterToken })
     },
-    getFirstPageForNamedEntityInAllCategories({ dispatch, getters }, { filterToken = null } = {}) {
+    async getFirstPageForNamedEntityInAllCategories({ dispatch, getters }, { filterToken = null } = {}) {
       return Promise.all(
         getters.categories.map((category) =>
           dispatch('getFirstPageForNamedEntityInCategory', { filterToken, category })
@@ -244,13 +244,11 @@ function actionBuilder(api) {
         const page = new EsDocList(raw)
         if (from === 0) {
           const pages = [page]
-          return commit('namedEntitiesPagesInCategory', { category, pages })
+          commit('namedEntitiesPagesInCategory', { category, pages })
         } else {
-          return commit('namedEntitiesPageInCategory', { category, page })
+          commit('namedEntitiesPageInCategory', { category, page })
         }
-      } catch (_) {
-        return null
-      }
+      } catch (_) {}
     },
     async getTags({ state, commit }) {
       try {

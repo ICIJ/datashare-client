@@ -51,14 +51,14 @@ const categoryHasNextPage = (category) => {
   return getCategoryTotal(category) > store.getters['document/countNamedEntitiesInCategory'](category)
 }
 
-const getNextPageInCategory = (category) => {
+const getNextPageInCategory = async (category) => {
   if (!loadingNamedEntities.value) {
-    return store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken: filterToken.value })
+    await store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken: filterToken.value })
   }
 }
 
 const getFirstPageInAllCategories = waitFor(loaderId, async () => {
-  return store.dispatch('document/getFirstPageForNamedEntityInAllCategories', { filterToken: filterToken.value })
+  await store.dispatch('document/getFirstPageForNamedEntityInAllCategories', { filterToken: filterToken.value })
 })
 
 const getFirstPageInAllCategoriesWithThrottle = throttle(getFirstPageInAllCategories, 1000)
@@ -85,16 +85,24 @@ onMounted(getFirstPageInAllCategories)
       />
     </div>
 
-    <div class="document-view-tabs-entities__not-searched text-center">
-      <i18n-t v-if="mustExtractEntities" keypath="document.namedEntitiesNotSearched">
-        <template #link>
-          <router-link :to="{ name: 'task.entities.new' }">
-            {{ $t('document.namedEntitiesNotSearchedLink') }}
-          </router-link>
-        </template>
-      </i18n-t>
-      <i18n-t v-else-if="!hasEntities && !loadingNamedEntities" keypath="document.namedEntitiesNotFound" />
-    </div>
+    <i18n-t
+      v-if="mustExtractEntities"
+      tag="div"
+      keypath="document.namedEntitiesNotSearched"
+      class="document-view-tabs-entities__not-searched text-center"
+    >
+      <template #link>
+        <router-link :to="{ name: 'task.entities.new' }">
+          {{ $t('document.namedEntitiesNotSearchedLink') }}
+        </router-link>
+      </template>
+    </i18n-t>
+    <i18n-t
+      v-else-if="!hasEntities && !loadingNamedEntities"
+      tag="div"
+      keypath="document.namedEntitiesNotFound"
+      class="document-view-tabs-entities__not-found text-center"
+    />
     <entity-section
       v-for="(hits, category) in namedEntitiesByCategories"
       :key="category"
