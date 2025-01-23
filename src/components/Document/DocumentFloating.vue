@@ -112,7 +112,6 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       <slot name="floating" v-bind="{ documentViewFloatingId }">
         <div :id="documentViewFloatingId" class="document-floating__start__floating"></div>
       </slot>
-      {{ reachedFullWidth }}
       <slot name="start" />
     </div>
     <separator-line
