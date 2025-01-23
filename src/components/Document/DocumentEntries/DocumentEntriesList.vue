@@ -1,15 +1,12 @@
 <script setup>
-import { toValue, useTemplateRef } from 'vue'
+import { computed, toValue, useTemplateRef, ref, watch } from 'vue'
 
+import AppModal from '@/components/AppModal/AppModal'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentFloating from '@/components/Document/DocumentFloating'
 import { useSelection } from '@/composables/selection'
 import { useDocument } from '@/composables/document'
-
-const selection = defineModel('selection', { type: Array, default: () => [] })
-const { isRouteActive, watchDocument } = useDocument()
-const { selectionValues } = useSelection(selection)
-const elementRef = useTemplateRef('element')
+import { useSearchFilter } from '@/composables/search-filter'
 
 defineProps({
   entries: {
@@ -25,6 +22,13 @@ defineProps({
   }
 })
 
+const selection = defineModel('selection', { type: Array, default: () => [] })
+
+const { isRouteActive, watchDocument, documentRoute } = useDocument()
+const { selectionValues } = useSelection(selection)
+const { refreshRoute: refreshSearchRoute } = useSearchFilter()
+const elementRef = useTemplateRef('element')
+
 const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   const selector = `.document-card[data-entry-id="${id}"][data-entry-index="${index}"]`
   const card = toValue(elementRef)?.querySelector?.(selector)
@@ -34,7 +38,20 @@ const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   }
 }
 
+const showDocument = computed(() => !!documentRoute.value)
+
 watchDocument(scrollDocumentCardIntoView)
+
+const fullWidth = ref(null)
+
+watch(fullWidth, () => {
+  // Refresh the search route when the full width mode is enabled and a document is active.
+  // This is necessary to avoid the document's modal being displayed above the list view while
+  // the user is rezising the search list.
+  if (fullWidth.value && documentRoute.value) {
+    refreshSearchRoute()
+  }
+})
 
 defineExpose({
   resetSize() {
@@ -50,7 +67,7 @@ defineExpose({
 </script>
 
 <template>
-  <document-floating ref="element" class="document-entries-list">
+  <document-floating ref="element" class="document-entries-list" @update:fullWidth="fullWidth = $event">
     <template #start>
       <div class="document-entries-list__start">
         <div class="document-entries-list__start__header">
@@ -71,10 +88,25 @@ defineExpose({
         </div>
       </div>
     </template>
-    <div class="document-entries-list__end py-3">
+    <div v-if="!fullWidth" class="document-entries-list__end py-3">
       <slot />
     </div>
   </document-floating>
+  <app-modal
+    v-if="fullWidth"
+    :model-value="showDocument"
+    hide-footer
+    body-class="py-0 px-5"
+    hide-header
+    fullscreen
+    lazy
+    @hide="refreshSearchRoute"
+  >
+    <document-floating class="my-3">
+      <slot name="carousel" />
+      <slot />
+    </document-floating>
+  </app-modal>
 </template>
 
 <style lang="scss" scoped>
