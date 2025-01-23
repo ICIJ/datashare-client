@@ -51,7 +51,6 @@ const properties = computed(() => store.getters['app/getSettings']('search', 'pr
 const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
 const loading = computed(() => !store.state.search.isReady)
 const hasNav = computed(() => toValue(layout) === LAYOUTS.LIST)
-const hasDocumentInModal = computed(() => layout.value !== LAYOUTS.LIST)
 
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
@@ -151,7 +150,7 @@ watchIndices(refreshRoute)
               <search-carousel />
             </template>
             <router-view v-slot="{ Component }">
-              <component :is="Component" :modal="hasDocumentInModal">
+              <component :is="Component">
                 <template v-if="hasNav" #nav>
                   <search-nav />
                 </template>

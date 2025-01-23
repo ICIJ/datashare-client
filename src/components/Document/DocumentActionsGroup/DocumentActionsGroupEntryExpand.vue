@@ -1,12 +1,12 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import { useDocument } from '@/composables/document'
 
-const { document, modal } = defineProps({
+const { document } = defineProps({
   /**
    * The current document
    */
@@ -25,17 +25,12 @@ const { document, modal } = defineProps({
    */
   vertical: {
     type: Boolean
-  },
-  /**
-   * The current document is in a modal view
-   */
-  modal: {
-    type: Boolean
   }
 })
 
 const { t } = useI18n()
 const { isRouteActive, documentParentRoute } = useDocument()
+const modal = inject('modal', false)
 
 const documentRoute = computed(() => {
   const params = document.routerParams
