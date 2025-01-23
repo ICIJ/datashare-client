@@ -90,7 +90,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['submit', 'up', 'down', 'input', 'enter', 'blur'])
+const emit = defineEmits(['submit', 'up', 'down', 'update:modelValue', 'input', 'enter', 'blur'])
 
 const showClearText = computed(() => {
   return props.modelValue?.length > 0
@@ -98,6 +98,7 @@ const showClearText = computed(() => {
 
 function input(value) {
   modelValue.value = value
+  emit('input', value)
 }
 
 const target = ref(null)
