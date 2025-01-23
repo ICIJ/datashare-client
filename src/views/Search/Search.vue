@@ -24,7 +24,7 @@ import { useViews } from '@/composables/views'
 import { LAYOUTS } from '@/enums/layouts'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { provideDocumentViewFloatingId, watchDocument } = useDocument()
+const { provideDocumentViewFloatingId } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices } = useSearchFilter()
 const { count: searchBreadcrumbCounter } = useSearchBreadcrumb()
 const entriesRef = useTemplateRef('entries')
@@ -72,12 +72,9 @@ const page = useUrlPageFromWithStore({
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
 const resetEntriesListSize = () => toValue(entriesRef)?.resetListSize?.()
-const resetDocumentSize = () => toValue(entriesRef)?.resetDocumentSize?.()
-
 // The user might have resized the entries list or the document view. When the search is updated
 // or a new document is loaded, we need to reset original size to ensure that they are displayed.
 watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: true, immediate: true })
-watchDocument(resetDocumentSize)
 
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response

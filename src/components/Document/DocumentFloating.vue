@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, watch } from 'vue'
 
 import { useDocument } from '@/composables/document'
 import { useQueryObserver } from '@/composables/query-observer'
@@ -32,6 +32,10 @@ const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth)
 const reachedFullWidth = computed(() => separatorLineLeft.value > fullWidth.value - props.expandThreshold)
 const separatorLineLeft = ref(450)
+
+const emit = defineEmits(['update:full-width', 'update:zero-width'])
+watch(reachedFullWidth, (value) => emit('update:fullWidth', value), { immediate: true })
+watch(reachedZeroWidth, (value) => emit('update:zeroWidth', value), { immediate: true })
 
 const floatingChildren = querySelectorAll('.document-floating__start__floating > *')
 const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *')
@@ -108,6 +112,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       <slot name="floating" v-bind="{ documentViewFloatingId }">
         <div :id="documentViewFloatingId" class="document-floating__start__floating"></div>
       </slot>
+      {{ reachedFullWidth }}
       <slot name="start" />
     </div>
     <separator-line
