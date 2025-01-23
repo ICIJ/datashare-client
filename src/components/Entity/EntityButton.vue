@@ -17,7 +17,7 @@ const props = defineProps({
 })
 
 const category = computed(() => {
-  return props.entity.category.toLowerCase()
+  return props.entity.category?.toLowerCase()
 })
 
 const color = computed(() => {
