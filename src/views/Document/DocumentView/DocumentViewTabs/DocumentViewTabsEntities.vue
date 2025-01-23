@@ -38,9 +38,11 @@ const hitsAsCsv = (hits = []) => {
     .join('\n')
   return [csvHeader, csvBody].join('\n')
 }
-const hitsWithRoute = (hits) => {
-  return hits.map((hit) => ({ ...hit, to: { name: `${documentRoute.value.name}.text`, query: { q: hit.mention } } }))
-}
+const hitsWithRoute = (hits) =>
+  hits.map(({ source, mention }) => ({
+    ...source,
+    to: { name: `${documentRoute.value.name}.text`, query: { q: mention } }
+  }))
 
 const categories = computed(() => store.getters['document/categories'])
 const getCategoryTotal = (category) => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
