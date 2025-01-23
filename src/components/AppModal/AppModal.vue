@@ -1,8 +1,13 @@
 <script setup>
+import { provide } from 'vue'
+
 import AppModalHeader from './AppModalHeader'
 import AppModalFooter from './AppModalFooter'
 
 import { breakpointSizeValidator, buttonSizeValidator, SIZE } from '@/enums/sizes'
+
+// This tells every nested component they are in a modal
+provide('modal', true)
 
 defineProps({
   title: {
