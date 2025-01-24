@@ -6,7 +6,7 @@ import AppModal from '@/components/AppModal/AppModal'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
-import { usePath } from '@/components/Task/path'
+import { usePath } from '@/utils/path'
 
 const modelValue = defineModel({ type: String })
 

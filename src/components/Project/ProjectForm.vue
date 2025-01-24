@@ -7,7 +7,7 @@ import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { slugger, isUrl } from '@/utils/strings'
-import { usePath } from '@/components/Task/path'
+import { usePath } from '@/utils/path'
 
 const props = defineProps({
   disabled: {
