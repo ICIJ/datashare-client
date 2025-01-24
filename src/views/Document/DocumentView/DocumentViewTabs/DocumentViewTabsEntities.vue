@@ -30,7 +30,7 @@ const namedEntitiesByCategories = computed(() => {
 })
 
 const hitsAsCsv = (hits = []) => {
-  const csvHeader = ['named entity', 'occurences'].join(',')
+  const csvHeader = ['named entity', 'occurrences'].join(',')
   const csvBody = hits
     .map(({ source }) => {
       return [source.mentionNorm, source.offsets.length].join(',')
