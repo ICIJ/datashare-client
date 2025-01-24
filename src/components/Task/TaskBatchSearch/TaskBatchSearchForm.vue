@@ -8,7 +8,7 @@ import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/Sea
 import FormCreation from '@/components/Form/FormCreation'
 import { useCore } from '@/composables/core'
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange'
-import { usePath } from '@/components/Task/path'
+import { usePath } from '@/utils/path'
 import * as filterTypes from '@/store/filters'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterType from '@/components/Filter/FilterType/FilterType'
