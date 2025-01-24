@@ -25,7 +25,7 @@ const props = defineProps({
     type: Function
   },
   body: {
-    type: String
+    type: [String, Object]
   },
   title: {
     type: String
