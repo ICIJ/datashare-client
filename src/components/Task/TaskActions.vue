@@ -21,10 +21,10 @@ async function deleteDoneTasks() {
 </script>
 
 <template>
-  <b-button-group class="task-analysis-list__actions me-2">
+  <b-button-group class="task-actions me-2">
     <button-icon
       icon-left="hand"
-      class="task-analysis-list__actions__stop-pending-tasks"
+      class="task-actions__stop-pending-tasks"
       variant="outline-primary"
       :disabled="!hasPendingTasks"
       @click="stopPendingTasks"
@@ -33,7 +33,7 @@ async function deleteDoneTasks() {
     </button-icon>
     <button-icon
       icon-left="trash"
-      class="task-analysis-list__actions__delete-done-tasks"
+      class="task-actions__delete-done-tasks"
       variant="outline-primary"
       :disabled="!hasDoneTasks"
       @click="deleteDoneTasks"
@@ -42,5 +42,3 @@ async function deleteDoneTasks() {
     </button-icon>
   </b-button-group>
 </template>
-
-<style scoped lang="scss"></style>
