@@ -88,9 +88,13 @@ onBeforeRouteUpdate(fetchRouteDocument)
     </div>
 
     <document-view-title :document="document" />
-    <document-view-tabs :document="document" />
+    <document-view-tabs :document-route="documentRoute" />
 
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
   </v-wait>
 </template>
 
