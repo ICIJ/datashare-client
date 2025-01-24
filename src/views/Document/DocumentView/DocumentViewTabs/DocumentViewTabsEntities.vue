@@ -53,7 +53,7 @@ const categoryHasNextPage = (category) => {
 
 const getNextPageInCategory = async (category) => {
   if (!loadingNamedEntities.value) {
-    await store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken: filterToken.value })
+    return store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken: filterToken.value })
   }
 }
 
