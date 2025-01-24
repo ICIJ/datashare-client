@@ -6,7 +6,7 @@ import { useSearchFilter } from '@/composables/search-filter'
 import { useCore } from '@/composables/core'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'
-import { usePath } from '@/components/Task/path'
+import { usePath } from '@/utils/path'
 
 const { core } = useCore()
 const { state, getters } = useStore()

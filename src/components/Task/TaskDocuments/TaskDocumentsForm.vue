@@ -11,7 +11,7 @@ import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
-import { usePath } from '@/components/Task/path'
+import { usePath } from '@/utils/path'
 
 const props = defineProps({
   disabled: {
