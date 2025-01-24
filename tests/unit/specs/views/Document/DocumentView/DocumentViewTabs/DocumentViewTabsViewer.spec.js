@@ -12,7 +12,7 @@ describe('DocumentViewTabsViewer.vue', () => {
   let core
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core = CoreSetup.init({ elasticsearch: es }).useAll()
   })
 
   it('should call the DocumentViewerLegacySpreadsheet component for XLSX document', async () => {
@@ -24,6 +24,7 @@ describe('DocumentViewTabsViewer.vue', () => {
       )
       .commitAndGetLastDocument()
 
+    await core.store.dispatch('document/get', { id, index })
     const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
