@@ -148,7 +148,6 @@ onMounted(loadLanguages)
 watch(
   () => selectedProject.value,
   (p) => {
-    console.log('ici', p)
     setProjectPath(p)
   },
   { immediate: true }
