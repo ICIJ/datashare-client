@@ -56,11 +56,12 @@ function toVariant(string = '', defaultVariant = 'dark', prefix = '') {
 function toVariantPhosphorIcon(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
-    queued: 'clock-countdown',
-    success: 'check',
     danger: 'x',
-    warning: 'warning',
-    draft: 'floppy-disk-back'
+    draft: 'floppy-disk-back',
+    queued: 'clock-countdown',
+    info: 'info',
+    success: 'check',
+    warning: 'warning'
   }
   return icons[string] ?? icons[variant]
 }
