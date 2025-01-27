@@ -82,7 +82,7 @@ const order = computed({
         <slot name="empty" :empty="noTasks">
           <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
             <template #label>
-              <span v-html="$t(`task.${pageName}.list.empty`)"></span>
+              <span v-html="t(`task.${pageName}.list.empty`)"></span>
             </template>
           </empty-state>
         </slot>
