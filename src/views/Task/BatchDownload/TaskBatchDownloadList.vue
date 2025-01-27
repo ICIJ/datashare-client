@@ -1,18 +1,25 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
+
 import Task from '@/views/Task/Task'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { useTaskSettings } from '@/views/Task/task-settings'
+
+const { t } = useI18n()
+const store = useStore()
 const settingName = 'batch-download'
-const { propertiesModelValueOptions } = useTaskSettings(settingName)
-/*function isBatchDownloadEncrypted(item) {
+
+const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
+/* function isBatchDownloadEncrypted(item) {
   return item.name.includes('BatchDownload') && item.args.batchDownload.encrypted
 }
 function hasZipSize(item) {
   return item.name.includes('BatchDownload') && item.state !== 'ERROR' && item.result?.size !== undefined
-}*/
+} */
 </script>
 <template>
   <task

@@ -1,5 +1,7 @@
 <script setup>
 import { computed, toRef } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 
 import { useTaskHeader } from './task-header'
 import { useTaskPolling } from './task-polling'
@@ -11,7 +13,6 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
 import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
 import EmptyState from '@/components/EmptyState/EmptyState'
-
 const props = defineProps({
   taskFilter: {
     type: Array,
@@ -26,7 +27,8 @@ const props = defineProps({
     default: false
   }
 })
-
+const { t } = useI18n()
+const store = useStore()
 const taskNames = toRef(props, 'taskFilter')
 
 const {
@@ -37,10 +39,8 @@ const {
   deleteDoneTasks,
   isLoading
 } = useTaskPolling(taskNames)
-
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
-  useTaskHeader(props.pageName, props.showAdd, pollingTasks)
-
+  useTaskHeader(props.pageName, props.showAdd, pollingTasks, store, t)
 const sort = computed({
   get: () => sortBy.value.modelValue?.[0],
   set: (value) => (sortBy.value.modelValue = [value, order.value])
@@ -75,7 +75,7 @@ const order = computed({
   </page-header>
   <page-container fluid>
     <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
-      {{ $t(`task.${pageName}.list.info`) }}
+      {{ t(`task.${pageName}.list.info`) }}
     </dismissable-alert>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading">
       <template v-if="!isLoading && noTasks">

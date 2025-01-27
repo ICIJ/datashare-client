@@ -1,16 +1,11 @@
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
-import { useI18n } from 'vue-i18n'
 
 import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
-import { useViewSettings } from '@/composables/view-settings'
+import { useViewSettings, SORT_ORDER_KEY } from '@/composables/view-settings'
 import { useTaskProperties } from '@/composables/task-properties'
 
-export function useTaskSettings(pageName) {
-  const store = useStore()
-  const { t } = useI18n()
-
-  const { SORT_ORDER_KEY, sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } = useViewSettings()
+export function useTaskSettings(pageName, store, t) {
+  const { sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } = useViewSettings(t)
 
   const perPage = ref({
     label: perPageLabel('task.title'),
