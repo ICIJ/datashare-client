@@ -6,7 +6,7 @@ import { MODE_NAME } from '@/mode'
 export function useMode() {
   const { core } = useCore()
   const mode = computed(() => core.mode)
-  const isServer = computed(() => mode.value === MODE_NAME.SERVER)
+  const isServer = computed(() => mode.value.modeName === MODE_NAME.SERVER)
 
   return { mode, isServer }
 }

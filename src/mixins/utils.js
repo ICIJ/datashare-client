@@ -1,3 +1,5 @@
+import { MODE_NAME } from '@/mode'
+
 const utils = {
   data() {
     return {
@@ -6,7 +8,7 @@ const utils = {
   },
   computed: {
     isServer() {
-      return this.$config && this.$config.get('mode') === 'SERVER'
+      return this.$config && this.$config.get('mode') === MODE_NAME.SERVER
     }
   },
   methods: {
