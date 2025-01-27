@@ -1,5 +1,6 @@
 <script setup>
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 
 import Task from '@/views/Task/Task'
 import TaskList from '@/components/Task/TaskList'
@@ -9,9 +10,12 @@ import DisplayProgress from '@/components/Display/DisplayProgress'
 import { getHumanTaskName } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useTaskSettings } from '@/views/Task/task-settings'
-const settingName = 'documents'
-const { propertiesModelValueOptions } = useTaskSettings(settingName)
+
 const store = useStore()
+const { t } = useI18n()
+const settingName = 'documents'
+
+const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
 async function stopTask(name) {
   await store.dispatch('indexing/stopTask', name)
   await store.dispatch('indexing/getTasks')

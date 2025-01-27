@@ -1,4 +1,7 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
+
 import { getHumanTaskName } from '@/enums/taskNames'
 import Task from '@/views/Task/Task'
 import TaskList from '@/components/Task/TaskList'
@@ -6,8 +9,11 @@ import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayDatetimeLong from '@/components/Display/DisplayDatetimeLong'
 import { useTaskSettings } from '@/views/Task/task-settings'
+
+const { t } = useI18n()
+const store = useStore()
 const settingName = 'entities'
-const { propertiesModelValueOptions } = useTaskSettings(settingName)
+const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
 </script>
 <template>
   <task

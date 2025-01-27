@@ -1,4 +1,7 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
+
 import Task from '@/views/Task/Task'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
@@ -6,7 +9,10 @@ import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { useTaskSettings } from '@/views/Task/task-settings'
 const settingName = 'batch-search'
-const { propertiesModelValueOptions } = useTaskSettings(settingName)
+const { t } = useI18n()
+const store = useStore()
+
+const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
 </script>
 <template>
   <task

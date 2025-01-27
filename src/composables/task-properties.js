@@ -1,8 +1,6 @@
-import { useViewSettings } from '@/composables/view-settings'
+import { SORT_TYPE_KEY } from '@/composables/view-settings'
 
 export function useTaskProperties(propertyList) {
-  const { SORT_TYPE_KEY } = useViewSettings()
-
   const propertyItem = ({
     key,
     icon = null,

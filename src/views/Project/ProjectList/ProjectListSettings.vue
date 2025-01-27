@@ -1,15 +1,16 @@
 <script setup>
 import { noop } from 'lodash'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { LAYOUTS } from '@/enums/layouts'
 import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useViewSettings } from '@/composables/view-settings'
-
-const { SORT_ORDER_KEY, SORT_TYPE_KEY, sortByLabel, tSortByOption, tLayout, perPageLabel } = useViewSettings()
+import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY } from '@/composables/view-settings'
+const { t } = useI18n()
+const { sortByLabel, tSortByOption, tLayout, perPageLabel } = useViewSettings(t)
 const { core } = useCore()
 const layout = ref({
   label: tLayout.label,
