@@ -1405,8 +1405,7 @@
   "serverSettings": {
     "title": "Server Settings",
     "submitSuccess": "Modifications submitted.",
-    "submitError": "Unable to submit the settings.",
-    "noAccess": "You do not have access to that page in server mode."
+    "submitError": "Unable to submit the settings."
   },
   "viewSettings": {
     "perPage": "{title} per page",
