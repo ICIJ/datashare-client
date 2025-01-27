@@ -1,3 +1,4 @@
+import { MODE_NAME } from '@/mode/index'
 import { namedEntityCategoryTranslation } from '@/store/filters/FilterNamedEntity'
 
 export { default as FilterContentType } from './FilterContentType'
@@ -65,6 +66,7 @@ export default [
       name: 'recommendedBy',
       key: '_id',
       icon: 'users',
+      modes: [MODE_NAME.SERVER],
       order: 30,
       section: 'userData',
       hideSearch: true,
