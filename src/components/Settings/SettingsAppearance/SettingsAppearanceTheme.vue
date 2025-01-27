@@ -35,8 +35,10 @@ const imageClassList = computed(() => {
   >
     <span class="d-inline-flex gap-2">
       <phosphor-icon :name="icon" />
-      <span class="text-nowrap">{{ label }}</span></span
-    >
+      <span class="text-nowrap">
+        {{ label }}
+      </span>
+    </span>
     <image-mode :image-class="imageClassList">
       <image-mode-source :src="thumbnail" />
     </image-mode>
