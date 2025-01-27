@@ -117,6 +117,12 @@ export const routes = [
         },
         children: [
           {
+            path: '',
+            redirect: {
+              name: 'task.batch-search.list'
+            }
+          },
+          {
             path: 'indexing',
             redirect: {
               name: 'task.documents.list'
