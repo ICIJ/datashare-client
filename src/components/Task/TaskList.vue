@@ -11,8 +11,8 @@
         :name="field.value"
       />
     </template>
-    <page-table-tr v-if="tasks.length === 0"
-      ><td :colspan="columns.length" class="text-center">
+    <page-table-tr v-if="!tasks.length">
+      <td :colspan="columns.length" class="text-center">
         <slot name="empty">{{ $t('task.noResults') }}</slot>
       </td>
     </page-table-tr>
@@ -20,53 +20,11 @@
       <td v-for="(column, i) in columns" :key="i">
         <slot :name="`cell(${column.value})`" v-bind="{ item, column }">{{ item[column.value] }}</slot>
       </td>
-
       <page-table-td-actions>
         <slot name="cell(action)" v-bind="{ item }"></slot>
       </page-table-td-actions>
     </page-table-tr>
   </page-table>
-  <!--      <template #empty>
-           <slot name="empty">
-             <p class="text-center m-0" v-html="$t('tasksList.empty')"></p>
-           </slot>
-         </template>
-         <template #cell(state)="{ item }">
-           <slot name="status" v-bind="{ item }">
-             <ellipse-status :status="item.state" :progress="item.progress * 100" horizontal />
-           </slot>
-         </template>
-        <template #cell(name)="{ item }">
-           <div class="tasks-list__tasks__item__name m-0 fw-bold">
-             <slot v-bind="{ item }">
-               {{ item.name }}
-             </slot>
-           </div>
-           <div class="d-flex align-items-center">
-             <b-badge variant="tertiary" class="tasks-list__tasks__item__id my-1">
-               {{ item.id }}
-             </b-badge>
-             <template v-if="item.state === 'RUNNING' && stoppable">
-               <span class="px-1"> – </span>
-               <b-button
-                 variant="link"
-                 size="sm"
-                 class="tasks-list__tasks__item__stop text-danger p-0"
-                 @click="stopTask(item.id)"
-               >
-                 {{ $t('tasksList.stop') }}
-               </b-button>
-             </template>
-           </div>
-           <div v-if="isBatchDownloadEncrypted(item)" class="font-italic tasks-list__tasks__item__encrypted">
-             {{ $t('tasksList.encrypted') }}
-           </div>
-           <div v-if="hasZipSize(item)" class="tasks-list__tasks__item__size m-0 fw-bold">
-             {{ humanSize(item.result.size, false, $tm('human.size')) }}
-           </div>
-         </template>
-       </b-table>
-     </div>-->
 </template>
 
 <script setup>
