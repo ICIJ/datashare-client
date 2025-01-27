@@ -12,6 +12,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { useCore } from '@/composables/core'
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
 import AddonCard from '@/components/Addon/AddonCard'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import { ADDONS_TYPE, addonsTypeValidator } from '@/enums/addons'
 
@@ -58,6 +59,7 @@ const installAddonFromUrlFn = computed(() =>
     ? core.api.installExtensionFromUrl.bind(core.api)
     : core.api.installPluginFromUrl.bind(core.api)
 )
+
 const retrieveAddonsFn = computed(() =>
   props.addonsType === ADDONS_TYPE.EXTENSIONS
     ? core.api.getExtensions.bind(core.api)
@@ -75,6 +77,7 @@ async function loadAddons(searchTerm) {
     wait.end(loaderId)
   }
 }
+
 const fuse = computed(() => {
   const options = {
     includeScore: true,
@@ -83,9 +86,11 @@ const fuse = computed(() => {
   }
   return new Fuse(addons.value, options)
 })
+
 const noResults = computed(() => {
   return filteredAddons.value.length === 0
 })
+
 const filteredAddons = computed(() => {
   if (filterTerm.value.length > 0) {
     return fuse.value.search(filterTerm.value).map((r) => r.item)
@@ -93,6 +98,7 @@ const filteredAddons = computed(() => {
   return addons.value
 })
 </script>
+
 <template>
   <settings-view-layout :info-name="addonsType" :info-label="infoLabel" :no-results="noResults">
     <template #filter>
