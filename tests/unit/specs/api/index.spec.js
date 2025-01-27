@@ -13,13 +13,11 @@ describe('Datashare backend client', () => {
     mockAxios.request.mockClear()
     mockAxios.request.mockResolvedValue({ data: {} }) // TODO : it should be a given with response data not a before each
   })
-
-  it('should return backend response to index', async () => {
-    json = await api.index({})
-    expect(json).toEqual({})
+  it('should call indexPath with "example" as path', async () => {
+    json = await api.indexPath('example')
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        url: Api.getFullUrl('/api/task/batchUpdate/index/example'),
         method: 'POST',
         data: {
           options: {
@@ -30,10 +28,47 @@ describe('Datashare backend client', () => {
       })
     )
   })
+  it('should call trim "/" from path when calling indexPath with "/file/"', async () => {
+    json = await api.indexPath('/file/')
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file')
+      })
+    )
+  })
+  it('should call indexPath with ocr true', async () => {
+    json = await api.indexPath('file', { ocr: true })
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        method: 'POST',
+        data: {
+          options: {
+            ocr: true,
+            filter: true
+          }
+        }
+      })
+    )
+  })
+  it('should not skip already indexed file when calling indexPath ', async () => {
+    json = await api.indexPath('file', { filter: false })
+    expect(mockAxios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        method: 'POST',
+        data: {
+          options: {
+            filter: false,
+            ocr: false
+          }
+        }
+      })
+    )
+  })
 
-  it('should return backend response to index when language is specified', async () => {
-    json = await api.index({ language: 'fra' })
-    expect(json).toEqual({})
+  it('should indexPath with "fra" language ', async () => {
+    json = await api.indexPath('file', { language: 'fra' })
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
@@ -48,6 +83,22 @@ describe('Datashare backend client', () => {
         }
       })
     )
+  })
+
+  it('executes a default extract (/index) action by calling indexPath with "file" as default', async () => {
+    const spy = vi.spyOn(api, 'indexPath')
+    json = await api.index({})
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toBeCalledWith('file', {})
+  })
+
+  it('calls index with specified language', async () => {
+    const spy = vi.spyOn(api, 'indexPath')
+
+    json = await api.index({ language: 'fra' })
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toBeCalledWith('file', { language: 'fra' })
   })
 
   it('should return backend response to findNames', async () => {
