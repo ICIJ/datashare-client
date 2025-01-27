@@ -1,11 +1,10 @@
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-const SORT_ORDER_KEY = Object.freeze({
+export const SORT_ORDER_KEY = Object.freeze({
   ASC: 'asc',
   DESC: 'desc'
 })
 
-const SORT_TYPE_KEY = Object.freeze({
+export const SORT_TYPE_KEY = Object.freeze({
   DEFAULT: 'default',
   ALPHA: 'alpha',
   NUMBER: 'number',
@@ -13,8 +12,7 @@ const SORT_TYPE_KEY = Object.freeze({
   DATE: 'date'
 })
 
-export function useViewSettings() {
-  const { t } = useI18n()
+export function useViewSettings(t) {
   const sortByLabel = computed(() => t('viewSettings.sortBy.label'))
   const visiblePropertiesLabel = computed(() => t('viewSettings.properties'))
 
@@ -32,5 +30,5 @@ export function useViewSettings() {
     table: computed((_) => t('viewSettings.view.table'))
   }
   const perPageLabel = (titleKey) => computed((_) => t('viewSettings.perPage', { title: t(titleKey) }))
-  return { SORT_ORDER_KEY, SORT_TYPE_KEY, tSortByOption, sortByLabel, visiblePropertiesLabel, tLayout, perPageLabel }
+  return { tSortByOption, sortByLabel, visiblePropertiesLabel, tLayout, perPageLabel }
 }

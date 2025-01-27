@@ -1,5 +1,4 @@
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 import { orderBy as orderArrayBy, property } from 'lodash'
 
@@ -7,12 +6,10 @@ import { useUtils } from '@/composables/utils'
 import { useUrlParam } from '@/composables/url-params'
 import { useTaskSettings } from '@/views/Task/task-settings'
 
-export function useTaskHeader(pageName, hasAddButton, tasks) {
-  const { t } = useI18n()
-
+export function useTaskHeader(pageName, hasAddButton, tasks, store, t) {
   const { isServer } = useUtils()
   const settingKey = 'task'
-  const { perPage, sortBy } = useTaskSettings(settingKey)
+  const { perPage, sortBy } = useTaskSettings(settingKey, store, t)
 
   const toAddRoute = computed(() => {
     return !isServer.value && hasAddButton ? { name: `task.${pageName}.new` } : null
