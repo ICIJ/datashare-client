@@ -74,7 +74,7 @@ const classList = computed(() => {
       <router-link
         v-if="!noSettings"
         v-b-tooltip.body
-        :to="{ name: 'settings.general' }"
+        :to="{ name: 'settings.appearance' }"
         title="Settings"
         class="app-sidebar-footer__links__item"
       >
