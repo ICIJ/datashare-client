@@ -1,3 +1,5 @@
+import { MODE_NAME } from '@/mode'
+
 export const routes = [
   {
     path: '/',
@@ -155,7 +157,7 @@ export const routes = [
             path: 'documents',
             meta: {
               title: 'task.documents.title',
-              allowedModes: ['LOCAL', 'EMBEDDED']
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             },
             children: [
               {
@@ -272,7 +274,7 @@ export const routes = [
             meta: {
               icon: 'plus',
               title: 'Create project',
-              allowedModes: ['LOCAL', 'EMBEDDED']
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
           },
           {
@@ -373,7 +375,7 @@ export const routes = [
                 meta: {
                   icon: 'pencil-simple',
                   title: 'Edit project',
-                  allowedModes: ['LOCAL', 'EMBEDDED']
+                  allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
                 }
               }
             ]
@@ -425,7 +427,7 @@ export const routes = [
         children: [
           {
             path: '',
-            redirect: '/settings/general'
+            redirect: '/settings/appearance'
           },
           {
             name: 'settings.general',
@@ -433,7 +435,8 @@ export const routes = [
             component: () => import('@/views/Settings/SettingsView/SettingsViewGeneral'),
             meta: {
               title: 'settings.general.title',
-              breadcrumb: false
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
           },
           {
@@ -461,7 +464,8 @@ export const routes = [
             props: { addonsType: 'plugins' },
             meta: {
               title: 'settings.addons.extensions.title',
-              breadcrumb: false
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
           },
           {
@@ -471,7 +475,8 @@ export const routes = [
             props: { addonsType: 'extensions' },
             meta: {
               title: 'settings.addons.plugins.title',
-              breadcrumb: false
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
           }
         ]
