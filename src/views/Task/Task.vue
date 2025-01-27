@@ -11,6 +11,7 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
 import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
 import EmptyState from '@/components/EmptyState/EmptyState'
+
 const props = defineProps({
   taskFilter: {
     type: Array,
@@ -36,8 +37,10 @@ const {
   deleteDoneTasks,
   isLoading
 } = useTaskPolling(taskNames)
+
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
   useTaskHeader(props.pageName, props.showAdd, pollingTasks)
+
 const sort = computed({
   get: () => sortBy.value.modelValue?.[0],
   set: (value) => (sortBy.value.modelValue = [value, order.value])
@@ -71,7 +74,9 @@ const order = computed({
     </template>
   </page-header>
   <page-container fluid>
-    <dismissable-alert variant="info">{{ $t(`task.${pageName}.list.info`) }}</dismissable-alert>
+    <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
+      {{ $t(`task.${pageName}.list.info`) }}
+    </dismissable-alert>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading">
       <template v-if="!isLoading && noTasks">
         <slot name="empty" :empty="noTasks">
