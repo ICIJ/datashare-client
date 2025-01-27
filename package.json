@@ -138,6 +138,7 @@
       "plugin:storybook/recommended"
     ],
     "rules": {
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^(Ph[A-Z])|(_)" }],
       "vue/no-v-model-argument": "off",
       "vue/no-v-for-template-key": "off",
       "vue/no-custom-modifiers-on-v-model": "off",
