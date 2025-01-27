@@ -95,9 +95,9 @@ const filteredAddons = computed(() => {
 </script>
 <template>
   <settings-view-layout :info-name="addonsType" :info-label="infoLabel" :no-results="noResults">
-    <template #filter
-      ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
-    /></template>
+    <template #filter>
+      <form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text />
+    </template>
     <template #noResult>{{ noResultsLabel }}</template>
     <div class="col-12 col-xl-8">
       <addon-url-input v-model="url" :loading="isLoading" @install="installFromUrl" />
