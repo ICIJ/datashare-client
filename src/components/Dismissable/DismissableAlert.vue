@@ -57,7 +57,6 @@ const show = computed(() => dismissed.value === false)
 const dismiss = (persist) => {
   dismissed.value = true
   // Ensure that the state is persisted in local storage
-
   if (persist && props.name) {
     localStorage.setItem(localStorageKey, true)
   }
