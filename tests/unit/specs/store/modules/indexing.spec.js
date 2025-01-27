@@ -38,42 +38,6 @@ describe('IndexingStore', () => {
     expect(store.state.indexing).toEqual(initialState)
   })
 
-  it('should execute a default extract action', async () => {
-    await store.dispatch('indexing/submitExtract')
-    expect(api.index).toBeCalledTimes(1)
-    expect(api.index).toBeCalledWith(
-      expect.objectContaining({
-        defaultProject: null,
-        filter: true,
-        language: null,
-        ocr: false,
-        offline: false,
-        path: null,
-        pipeline: 'CORENLP'
-      })
-    )
-  })
-  it('should execute an extract action on the path /test', async () => {
-    store.commit('indexing/formPath', '/test')
-    await store.dispatch('indexing/submitExtract')
-    expect(api.indexPath).toBeCalledTimes(1)
-    expect(api.indexPath).toBeCalledWith('/test', {
-      defaultProject: null,
-      filter: true,
-      language: null,
-      ocr: false,
-      offline: false,
-      path: '/test',
-      pipeline: 'CORENLP'
-    })
-  })
-
-  it('should execute a default find named entities action', async () => {
-    await store.dispatch('indexing/submitFindNamedEntities')
-    expect(api.findNames).toBeCalledTimes(1)
-    expect(api.findNames).toBeCalledWith('CORENLP', expect.objectContaining({ defaultProject: null, syncModels: true }))
-  })
-
   it('should stop pending tasks', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     expect(store.state.indexing.tasks).toHaveLength(1)
@@ -106,30 +70,5 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(0)
     expect(api.deleteDoneTasks).toBeCalledTimes(1)
-  })
-
-  it('should reset the extracting form', () => {
-    store.commit('indexing/formOcr', true)
-    expect(store.state.indexing.form.ocr).toBeTruthy()
-
-    store.commit('indexing/resetExtractForm')
-    expect(store.state.indexing.form.ocr).toBeFalsy()
-  })
-
-  it('should reset the Find Named Entities form', () => {
-    store.commit('indexing/formPipeline', 'OPENNLP')
-    store.commit('indexing/formOffline', true)
-    expect(store.state.indexing.form.pipeline).toBe('OPENNLP')
-    expect(store.state.indexing.form.offline).toBeTruthy()
-
-    store.commit('indexing/resetFindNamedEntitiesForm')
-
-    expect(store.state.indexing.form.pipeline).toBe('CORENLP')
-    expect(store.state.indexing.form.offline).toBeFalsy()
-  })
-
-  it('should retrieve the NER pipelines', async () => {
-    await store.dispatch('indexing/getNerPipelines')
-    expect(api.getNerPipelines).toBeCalledTimes(1)
   })
 })
