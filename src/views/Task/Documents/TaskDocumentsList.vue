@@ -46,7 +46,8 @@ async function stopTask(name) {
           icon-left="trash"
           class="border-0"
           @click="stopTask(item.id)"
-      /></template>
+        />
+      </template>
     </task-list>
   </task>
 </template>
