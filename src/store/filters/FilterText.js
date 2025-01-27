@@ -22,7 +22,8 @@ export default class FilterText {
     section = null,
     fromElasticSearch = true,
     preference = '_local',
-    forceExclude = false
+    forceExclude = false,
+    modes = null
   } = {}) {
     this.name = name
     this.key = key
@@ -39,6 +40,7 @@ export default class FilterText {
     this.fromElasticSearch = fromElasticSearch
     this.preference = preference
     this.forceExclude = forceExclude
+    this.modes = modes
   }
 
   itemParam({ key }) {
