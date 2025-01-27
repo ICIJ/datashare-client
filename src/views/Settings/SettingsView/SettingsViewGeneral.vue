@@ -9,7 +9,6 @@ import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
-import { useUtils } from '@/composables/utils'
 import { useCore } from '@/composables/core'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
@@ -18,7 +17,6 @@ defineOptions({ name: 'SettingsViewGeneral' })
 const { core, toastedPromise, wait } = useCore()
 const store = useStore()
 const { t } = useI18n()
-const { isServer } = useUtils()
 
 const settings = reactive({})
 const filterTerm = ref('')
@@ -29,8 +27,6 @@ onBeforeMount(() => {
 
 const infoLabel = computed(() => t(`settings.general.info`))
 const searchPlaceholder = computed(() => t(`settings.general.searchPlaceholder`))
-
-const noAccessLabel = computed(() => t('serverSettings.noAccess'))
 const submitSuccessLabel = computed(() => t('serverSettings.submitSuccess'))
 const submitErrorLabel = computed(() => t('serverSettings.submitError'))
 const noResultsLabel = computed(() => t('settings.layout.noResults', { query: filterTerm.value }))
@@ -76,20 +72,15 @@ async function onSubmit(newSettings) {
 </script>
 <template>
   <settings-view-layout info-name="general" :info-label="infoLabel" :no-results="noResults">
-    <template #filter
-      ><form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text
-    /></template>
-    <template #noResult>{{ noResultsLabel }}</template>
-    <template v-if="!isServer">
-      <v-wait v-if="!noResults" :for="loaderId">
-        <template #waiting>
-          <phosphor-icon name="circle" spin size="lg" class="ms-auto"></phosphor-icon>
-        </template>
-        <settings-general :settings="filteredSettings" class="card border-0" @submit.prevent="onSubmit" />
-      </v-wait>
+    <template #filter>
+      <form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text />
     </template>
-    <div v-else>
-      <b-alert model-value variant="danger"> {{ noAccessLabel }} </b-alert>
-    </div>
+    <template #noResult>{{ noResultsLabel }}</template>
+    <v-wait v-if="!noResults" :for="loaderId">
+      <template #waiting>
+        <phosphor-icon name="circle" spin size="lg" class="ms-auto" />
+      </template>
+      <settings-general :settings="filteredSettings" class="card border-0" @submit.prevent="onSubmit" />
+    </v-wait>
   </settings-view-layout>
 </template>
