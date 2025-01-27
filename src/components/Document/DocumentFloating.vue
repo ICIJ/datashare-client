@@ -38,10 +38,12 @@ watch(reachedFullWidth, (value) => emit('update:fullWidth', value), { immediate:
 watch(reachedZeroWidth, (value) => emit('update:zeroWidth', value), { immediate: true })
 
 const floatingChildren = querySelectorAll('.document-floating__start__floating > *')
-const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *')
-
 const hasFloatingChildren = computed(() => !!floatingChildren.value.length)
+watch(hasFloatingChildren, (value) => value && resetStartSize())
+
+const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *')
 const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
+watch(hasFloatingSiblings, (value) => value && resetStartSize())
 
 const separatorLineStyle = computed(() => {
   return {
