@@ -6,17 +6,25 @@ import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 
 import { useViews } from '@/composables/views'
+import { useMode } from '@/composables/mode'
 import { useSearchFilter } from '@/composables/search-filter'
 import FiltersPanel from '@/components/FiltersPanel/FiltersPanel'
 import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 
 const { toggleFilters } = useViews()
 const store = useStore()
+const { isMode } = useMode()
 const { getFilterComponent } = useSearchFilter()
 const { t } = useI18n()
 
 const q = ref('')
-const filters = computed(() => store.getters['search/instantiatedFilters'])
+const filters = computed(() => {
+  return store.getters['search/instantiatedFilters'].filter((filter) => {
+    // We apply a first filter to remove filters that are not available in the current mode
+    return !filter.modes || filter.modes.some(isMode)
+  })
+})
+
 const filtersTitles = computed(() => filters.value.map((filter) => ({ filter, title: t(`filter.${filter.name}`) })))
 const fuse = computed(() => new Fuse(filtersTitles.value, { distance: 100, shouldSort: true, keys: ['title'] }))
 const fuseFilters = computed(() => fuse.value.search(q.value).map(property('item.filter')))
