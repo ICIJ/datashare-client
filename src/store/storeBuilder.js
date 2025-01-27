@@ -6,6 +6,7 @@ import { batchStoreBuilder } from './modules/batchSearch'
 import { documentNotesStoreBuilder } from './modules/documentNotes'
 import { documentStoreBuilder } from './modules/document'
 import { downloadsBuilder } from './modules/downloads'
+import { indexingStoreBuilder } from './modules/indexing'
 import { recommendedStoreBuilder } from './modules/recommended'
 import { searchStoreBuilder } from './modules/search'
 import { searchBreadcrumbStoreBuilder } from './modules/search-breadcrumb'
@@ -27,6 +28,7 @@ export function storeBuilder(api) {
       documentNotes: documentNotesStoreBuilder(api),
       downloads: downloadsBuilder(api),
       hooks,
+      indexing: indexingStoreBuilder(api),
       insights,
       player,
       pipelines,
