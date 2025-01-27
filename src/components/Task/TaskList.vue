@@ -34,6 +34,7 @@ import PageTableTh from '@/components/PageTable/PageTableTh'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
 defineOptions({ name: 'TaskList' })
+
 defineProps({
   /**
    * Object of tasks passed from the parent
@@ -52,35 +53,7 @@ defineProps({
     type: Boolean
   }
 })
-/* const store = useStore() */
+
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
-
-/* const sortedTasks = computed(() => {
-  // Move running tasks on top
-  const states = ['RUNNING']
-  return sortBy(this.tasks, ({ state }) => -states.indexOf(state))
-})
-const showTasksFields = computed(() => {
-  return this.tasks.length ? this.taskFields : []
-})
-
-function isBatchDownloadEncrypted(item) {
-  return item.name.includes('BatchDownload') && item.args.batchDownload.encrypted
-}
-function hasZipSize(item) {
-  return item.name.includes('BatchDownload') && item.state !== 'ERROR' && item.result?.size !== undefined
-}
-async function stopPendingTasks() {
-  await store.dispatch('indexing/stopPendingTasks')
-  await store.dispatch('indexing/getTasks')
-}
-async function stopTask(name) {
-  await store.dispatch('indexing/stopTask', name)
-  await store.dispatch('indexing/getTasks')
-}
-async function deleteDoneTasks() {
-  await store.dispatch('indexing/deleteDoneTasks')
-  await store.dispatch('indexing/getTasks')
-} */
 </script>
