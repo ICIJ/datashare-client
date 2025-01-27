@@ -1,22 +1,28 @@
 <script setup>
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
-defineProps({
+const props = defineProps({
   hasPendingTasks: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   hasDoneTasks: {
-    type: Boolean
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits(['stop-pending', 'delete-done'])
 
 async function stopPendingTasks() {
-  emit('stop-pending')
+  if (props.hasPendingTasks) {
+    emit('stop-pending')
+  }
 }
 
 async function deleteDoneTasks() {
-  emit('delete-done')
+  if (props.hasDoneTasks) {
+    emit('delete-done')
+  }
 }
 </script>
 
