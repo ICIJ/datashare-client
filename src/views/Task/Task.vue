@@ -68,8 +68,8 @@ const order = computed({
       <task-actions
         :has-done-tasks="hasDoneTasks"
         :has-pending-tasks="hasPendingTasks"
-        @stop-pending="stopPendingTasks"
-        @delete-done="deleteDoneTasks"
+        @stop-pending="() => stopPendingTasks()"
+        @delete-done="() => deleteDoneTasks()"
       />
     </template>
   </page-header>
