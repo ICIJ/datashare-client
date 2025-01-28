@@ -82,7 +82,6 @@ import Fuse from 'fuse.js'
 import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 
-import shortkeys from '@/mixins/shortkeys'
 import { getShortkeyOS } from '@/utils/utils'
 
 /**
@@ -94,7 +93,6 @@ export default {
     DynamicScroller,
     DynamicScrollerItem
   },
-  mixins: [shortkeys],
   props: {
     /**
      * The selected document
