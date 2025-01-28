@@ -1,5 +1,5 @@
 import find from 'lodash/find'
-import { flushPromises, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -12,7 +12,7 @@ describe('FilterType.vue', () => {
   const { index, es } = esConnectionHelper.build('filter-type-a-')
   const { index: anotherIndex } = esConnectionHelper.build('filter-type-b-')
 
-  let core, wrapper
+  let core, wrapper, store
 
   beforeAll(() => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
@@ -20,6 +20,7 @@ describe('FilterType.vue', () => {
 
   beforeEach(() => {
     core = CoreSetup.init({ elasticsearch: es }).useAll().useRouter()
+    store = core.store
   })
 
   afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
@@ -29,19 +30,20 @@ describe('FilterType.vue', () => {
       const name = 'contentType'
       const filter = core.store.getters['search/getFilter']({ name })
 
-      wrapper = mount(FilterType, {
+      wrapper = shallowMount(FilterType, {
         global: {
-          plugins: core.plugins
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
         },
         props: {
           filter
         }
       })
 
-      wrapper.vm.$store.commit('search/decontextualizeFilter', name)
-      wrapper.vm.$store.commit('search/index', index)
-      wrapper.vm.$store.commit('search/reset')
-      wrapper.vm.$store.commit('search/resetFilters')
+      store.commit('search/decontextualizeFilter', name)
+      store.commit('search/index', index)
+      store.commit('search/reset')
+      store.commit('search/resetFilters')
     })
 
     it('should display no items for the contentType filter', async () => {
@@ -72,10 +74,11 @@ describe('FilterType.vue', () => {
         .have(new IndexedDocument('document_02', index).withContentType('type_02').withLanguage('FRENCH'))
         .commit()
 
-      wrapper.vm.$store.commit('search/contextualizeFilter', 'contentType')
-      wrapper.vm.$store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
+      store.commit('search/contextualizeFilter', 'contentType')
+      store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
       await wrapper.vm.aggregate({ clearPages: true })
-      expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
+      const findAllComponents = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+      expect(findAllComponents).toHaveLength(1)
       expect(wrapper.vm.lastPage.total).toBe(1)
     })
 
@@ -99,15 +102,15 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
 
-      wrapper.vm.$store.commit('search/sortFilter', { name, sortBy: '_key', orderBy: 'asc' })
+      store.commit('search/sortFilter', { name, sortBy: '_key', orderBy: 'asc' })
       await wrapper.vm.aggregate({ clearPages: true })
 
-      expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(3)
+      const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+      expect(entries).toHaveLength(3)
 
-      expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(3)
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__label').at(0).text()).toEqual('HTML document')
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__label').at(1).text()).toEqual('text/javascript')
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__label').at(2).text()).toEqual('text/stylesheet')
+      expect(entries.at(0).attributes('label')).toEqual('HTML document')
+      expect(entries.at(1).attributes('label')).toEqual('text/javascript')
+      expect(entries.at(2).attributes('label')).toEqual('text/stylesheet')
     })
 
     it('should display X filter items after applying the relative search', async () => {
@@ -130,17 +133,17 @@ describe('FilterType.vue', () => {
         .have(new IndexedDocument('document_06', index).withContent('LIST').withContentType('text/stylesheet'))
         .commit()
 
-      wrapper.vm.$store.commit('search/query', 'SHOW')
-      wrapper.vm.$store.commit('search/decontextualizeFilter', 'contentType')
+      store.commit('search/query', 'SHOW')
+      store.commit('search/decontextualizeFilter', 'contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.vm.lastPage.total).toBe(6)
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(3)
 
-      wrapper.vm.$store.commit('search/contextualizeFilter', 'contentType')
+      store.commit('search/contextualizeFilter', 'contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
 
-      wrapper.vm.$store.commit('search/query', 'INDEX')
+      store.commit('search/query', 'INDEX')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
     })
@@ -153,17 +156,17 @@ describe('FilterType.vue', () => {
         .have(new IndexedDocument('document_02', index).withContent('Ipsum').withContentType('text/html'))
         .commit()
 
-      wrapper.vm.$store.commit('search/query', 'Lorem')
-      wrapper.vm.$store.commit('search/decontextualizeFilter', 'contentType')
+      store.commit('search/query', 'Lorem')
+      store.commit('search/decontextualizeFilter', 'contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(2)
 
-      wrapper.vm.$store.commit('search/contextualizeFilter', 'contentType')
+      store.commit('search/contextualizeFilter', 'contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
 
-      wrapper.vm.$store.commit('search/decontextualizeFilter', 'contentType')
+      store.commit('search/decontextualizeFilter', 'contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
     })
@@ -173,12 +176,12 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/javascript')).commit()
 
-      wrapper.vm.$store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
-      wrapper.vm.$store.commit('search/excludeFilter', 'contentType')
+      store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
+      store.commit('search/excludeFilter', 'contentType')
 
       await wrapper.vm.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(0).text()).toBe('2')
+      expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).attributes('count')).toBe('2')
       expect(wrapper.vm.lastPage.total).toBe(3)
     })
 
@@ -282,7 +285,7 @@ describe('FilterType.vue', () => {
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(2)
 
-      wrapper.vm.$store.commit('search/index', anotherIndex)
+      store.commit('search/index', anotherIndex)
       await wrapper.vm.aggregate({ clearPages: true })
 
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
@@ -295,18 +298,19 @@ describe('FilterType.vue', () => {
       const name = 'language'
       const filter = core.store.getters['search/getFilter']({ name })
 
-      wrapper = mount(FilterType, {
+      wrapper = shallowMount(FilterType, {
         global: {
-          plugins: core.plugins
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
         },
         props: {
           filter
         }
       })
 
-      wrapper.vm.$store.commit('search/decontextualizeFilter', name)
-      wrapper.vm.$store.commit('search/index', index)
-      wrapper.vm.$store.commit('search/reset')
+      store.commit('search/decontextualizeFilter', name)
+      store.commit('search/index', index)
+      store.commit('search/reset')
     })
 
     it('should display the language filter in French', async () => {
@@ -314,25 +318,21 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
       await wrapper.vm.aggregate({ clearPages: true })
 
-      expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__label').at(0).text()).toBe('Anglais')
+      const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+      expect(entries).toHaveLength(1)
+      expect(entries.at(0).attributes('label')).toBe('Anglais')
     })
 
     it('should translate any weird language', async () => {
       await core.loadI18Locale('fr')
-      wrapper = mount(FilterType, {
-        global: {
-          plugins: core.plugins
-        },
-        props: {
-          filter: wrapper.vm.$store.getters['search/getFilter']({ name: 'language' })
-        }
-      })
+      await wrapper.setProps({ filter: store.getters['search/getFilter']({ name: 'language' }) })
+
       await letData(es).have(new IndexedDocument('document_01', index).withLanguage('WELSH')).commit()
       await wrapper.vm.aggregate({ clearPages: true })
 
-      expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__label').at(0).text()).toBe('Gallois')
+      const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+      expect(entries).toHaveLength(1)
+      expect(entries.at(0).attributes('label')).toBe('Gallois')
     })
   })
 
@@ -341,22 +341,23 @@ describe('FilterType.vue', () => {
       const name = 'extractionLevel'
       const filter = core.store.getters['search/getFilter']({ name })
 
-      wrapper = mount(FilterType, {
+      wrapper = shallowMount(FilterType, {
         global: {
-          plugins: core.plugins
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
         },
         props: {
           filter
         }
       })
 
-      wrapper.vm.$store.commit('search/decontextualizeFilter', name)
-      wrapper.vm.$store.commit('search/index', index)
-      wrapper.vm.$store.commit('search/reset')
+      store.commit('search/decontextualizeFilter', name)
+      store.commit('search/index', index)
+      store.commit('search/reset')
     })
 
     it('should display the extraction level filter with correct labels', async () => {
-      wrapper.setProps({
+      await wrapper.setProps({
         filter: find(core.store.getters['search/instantiatedFilters'], { name: 'extractionLevel' })
       })
 
@@ -364,22 +365,24 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
       await wrapper.vm.aggregate({ clearPages: true })
 
-      expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__label').at(0).text()).toBe('File on disk')
+      const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+      expect(entries).toHaveLength(2)
+      expect(entries.at(0).attributes('label')).toBe('File on disk')
     })
 
     it('should display the extraction level filter with correct labels in French', async () => {
       await core.loadI18Locale('fr')
-      const filter = wrapper.vm.$store.getters['search/getFilter']({ name: 'extractionLevel' })
+      const filter = store.getters['search/getFilter']({ name: 'extractionLevel' })
 
-      wrapper = mount(FilterType, { global: { plugins: core.plugins }, props: { filter } })
+      await wrapper.setProps({ filter })
 
       await letData(es).have(new IndexedDocument('document_01', index)).commit()
       await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
       await wrapper.vm.aggregate({ clearPages: true })
 
-      expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
-      expect(wrapper.findAll('.filters-panel-section-filter-entry__label').at(0).text()).toBe('Fichier sur disque')
+      const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+      expect(entries).toHaveLength(2)
+      expect(entries.at(0).attributes('label')).toBe('Fichier sur disque')
     })
   })
 })
