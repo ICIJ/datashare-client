@@ -14,6 +14,9 @@ describe('DocumentViewTabsViewer.vue', () => {
   beforeEach(() => {
     core = CoreSetup.init({ elasticsearch: es }).useAll()
   })
+  afterEach(async () => {
+    await core.store.commit('document/reset')
+  })
 
   it('should call the DocumentViewerLegacySpreadsheet component for XLSX document', async () => {
     const document = await letData(es)
@@ -25,6 +28,7 @@ describe('DocumentViewTabsViewer.vue', () => {
       .commitAndGetLastDocument()
 
     await core.store.dispatch('document/get', { id, index })
+
     const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
         plugins: core.plugins,
@@ -39,6 +43,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType('text/csv'))
       .commitAndGetLastDocument()
+    await core.store.dispatch('document/get', { id, index })
 
     const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
@@ -54,6 +59,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType('application/pdf'))
       .commitAndGetLastDocument()
+    await core.store.dispatch('document/get', { id, index })
 
     const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
@@ -69,6 +75,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType('image/tiff'))
       .commitAndGetLastDocument()
+    await core.store.dispatch('document/get', { id, index })
 
     const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
@@ -84,6 +91,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType('audio/ogg'))
       .commitAndGetLastDocument()
+    await core.store.dispatch('document/get', { id, index })
 
     const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
@@ -100,6 +108,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType('video/mp4'))
       .commitAndGetLastDocument()
+    await core.store.dispatch('document/get', { id, index })
 
     const wrapper = shallowMount(DocumentViewTabsViewer, {
       global: {
