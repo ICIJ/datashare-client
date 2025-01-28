@@ -49,7 +49,7 @@ const iconLeftWeight = computed(() => {
     :label="$t('buttonToggleSearchBreadcrumb.label')"
     :loading="loading"
     :variant="variant"
-    class="button-toggle-search-breadcrumb"
+    class="button-toggle-search-breadcrumb flex-shrink-0"
     hide-label
     square
     @click="toggle"
