@@ -24,7 +24,7 @@ describe('IndexingStore', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    store.commit('indexing/reset')
+    store.commit('indexing/RESET')
   })
 
   it('should define a store module', () => {
@@ -33,13 +33,13 @@ describe('IndexingStore', () => {
 
   it('should reset the store state', async () => {
     const initialState = cloneDeep(store.state.indexing)
-    store.commit('indexing/reset')
+    store.commit('indexing/RESET')
 
     expect(store.state.indexing).toEqual(initialState)
   })
 
   it('should stop pending tasks', async () => {
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    store.commit('indexing/UPDATE_TASKS', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     expect(store.state.indexing.tasks).toHaveLength(1)
 
     await store.dispatch('indexing/stopPendingTasks')
@@ -49,7 +49,7 @@ describe('IndexingStore', () => {
   })
 
   it('should stop the task named 456', async () => {
-    store.commit('indexing/updateTasks', [
+    store.commit('indexing/UPDATE_TASKS', [
       { name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
       { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }
     ])
@@ -63,7 +63,7 @@ describe('IndexingStore', () => {
   })
 
   it('should delete done tasks', async () => {
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    store.commit('indexing/UPDATE_TASKS', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     expect(store.state.indexing.tasks).toHaveLength(1)
 
     await store.dispatch('indexing/deleteDoneTasks')

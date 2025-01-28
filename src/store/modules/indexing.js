@@ -24,16 +24,20 @@ const STOP_PENDING_TASKS = 'STOP_PENDING_TASKS'
 const STOP_TASK = 'STOP_TASK'
 const DELETE_DONE_TASKS = 'DELETE_DONE_TASKS'
 const UPDATE_TASKS = 'UPDATE_TASKS'
+const RESET = 'RESET'
 
 export const mutations = {
+  [RESET](state) {
+    Object.assign(state, initialState())
+  },
   [STOP_PENDING_TASKS](state) {
-    remove(state.tasks, (item) => item.state === TASK_STATUS.RUNNING)
+    remove(state.tasks, (item) => item.state.toLowerCase() === TASK_STATUS.RUNNING)
   },
   [STOP_TASK](state, name) {
     remove(state.tasks, (item) => item.name === name)
   },
   [DELETE_DONE_TASKS](state) {
-    remove(state.tasks, (item) => item.state === TASK_STATUS.DONE)
+    remove(state.tasks, (item) => item.state.toLowerCase() === TASK_STATUS.DONE)
   },
   [UPDATE_TASKS](state, tasks) {
     state.tasks = tasks
