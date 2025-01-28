@@ -20,6 +20,9 @@ const isPaginated = computed(() => {
 })
 
 const previewComponent = computed(() => {
+  if (!document.value) {
+    return null
+  }
   switch (true) {
     case document.value.isJson:
       return 'DocumentViewerJson'
