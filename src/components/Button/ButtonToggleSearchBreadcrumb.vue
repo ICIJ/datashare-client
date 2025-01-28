@@ -27,7 +27,7 @@ const nonzeroCounter = computed(() => {
 })
 
 const variant = computed(() => {
-  return active.value ? 'action' : 'outline-dark'
+  return active.value ? 'action' : 'outline-tertiary'
 })
 
 const counterVariant = computed(() => {
