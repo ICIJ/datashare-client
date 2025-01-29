@@ -1,13 +1,15 @@
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import { letTextContent } from '~tests/unit/api_mock'
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
+import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
+import DocumentTranslationAlert from '@/components/Document/DocumentTranslation/DocumentTranslationAlert/DocumentTranslationAlert'
+import DocumentContent from '@/components/Document/DocumentContent'
 
-describe('DocumentTranslatedContent.vue', () => {
+describe('DocumentTranslation.vue', () => {
   let core, api, plugins, store
   const { index, es } = esConnectionHelper.build()
 
@@ -61,38 +63,57 @@ describe('DocumentTranslatedContent.vue', () => {
     const mocked = mockedDocumentContentFactory('document-without-translation', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withNoContentTranslated()
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { global: { plugins }, props: { document } })
+    const wrapper = shallowMount(DocumentTranslation, { global: { plugins }, props: { document } })
     await wrapper.vm.loadAvailableTranslations()
-    await wrapper.vm.$refs.content.loadMaxOffset()
-    await wrapper.vm.$refs.content.loadContentSlice()
-    await wrapper.vm.$refs.content.cookAllContentSlices()
-    await flushPromises()
-    expect(wrapper.find('.document-content__body').text()).toBe('Premier')
+    expect(wrapper.vm.hasTranslations).toBe(false)
   })
 
   it("shouldn't show italian translation", async () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-italian', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('Primo', 'FRENCH', 'ITALIAN')
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { global: { plugins }, props: { document } })
+    const wrapper = shallowMount(DocumentTranslation, { global: { plugins }, props: { document } })
     await wrapper.vm.loadAvailableTranslations()
-    await wrapper.vm.$refs.content.loadMaxOffset()
-    await wrapper.vm.$refs.content.loadContentSlice()
-    await wrapper.vm.$refs.content.cookAllContentSlices()
-    await flushPromises()
-    expect(wrapper.find('.document-content__body').text()).toBe('Premier')
+    expect(wrapper.vm.hasTranslations).toBe(false)
   })
 
   it('should show english translation', async () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-english', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('First', 'FRENCH', 'ENGLISH')
     const { document } = await mocked.commit()
-    const wrapper = mount(DocumentTranslatedContent, { global: { plugins }, props: { document } })
+    const wrapper = shallowMount(DocumentTranslation, {
+      global: { plugins, renderStubDefaultSlot: true },
+      props: { document }
+    })
     await wrapper.vm.loadAvailableTranslations()
-    await wrapper.vm.$refs.content.loadMaxOffset()
-    await wrapper.vm.$refs.content.loadContentSlice()
-    await wrapper.vm.$refs.content.cookAllContentSlices()
+    expect(wrapper.vm.hasTranslations).toBe(true)
+    expect(wrapper.vm.sourceLanguage).toBe('FRENCH')
+    expect(wrapper.vm.targetLanguage).toBe('ENGLISH')
+    expect(wrapper.vm.detectedLanguage).toBe('FRENCH')
+    expect(wrapper.findComponent(DocumentContent).attributes('targetlanguage')).toBe('ENGLISH')
+  })
+  it('should show document translation alert and display english translation', async () => {
+    const mocked = mockedDocumentContentFactory('document-with-a-translation-in-english', 'Premier')
+    mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('First', 'FRENCH', 'ENGLISH')
+    const { document } = await mocked.commit()
+    const wrapper = mount(DocumentTranslation, {
+      global: { plugins, renderStubDefaultSlot: true },
+      props: { document }
+    })
+    await wrapper.vm.loadAvailableTranslations()
+    expect(wrapper.vm.hasTranslations).toBe(true)
     await flushPromises()
+    expect(wrapper.find('.document-translation-alert').exists()).toBe(true)
     expect(wrapper.find('.document-content__body').text()).toBe('First')
+  })
+  it('fallback on original content if translated is not provided', async () => {
+    const mocked = mockedDocumentContentFactory('document-with-a-translation-in-english', 'Premier')
+    mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('', 'FRENCH', 'ENGLISH')
+    const { document } = await mocked.commit()
+    const wrapper = mount(DocumentTranslation, { global: { plugins }, props: { document } })
+    await wrapper.vm.loadAvailableTranslations()
+    await flushPromises()
+    expect(wrapper.vm.hasTranslations).toBe(true)
+    expect(wrapper.find('.document-content__body').text()).toBe('Premier')
   })
 })
