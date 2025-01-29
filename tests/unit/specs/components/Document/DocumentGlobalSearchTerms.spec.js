@@ -4,7 +4,8 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms'
+import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
+import DocumentGlobalSearchTermsEntry from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTermsEntry'
 
 describe('DocumentGlobalSearchTerms.vue', () => {
   function mockedDocumentSearchFactory() {
@@ -78,61 +79,53 @@ describe('DocumentGlobalSearchTerms.vue', () => {
         .add({ term: 'other', count: 0 })
         .commit()
       const wrapper = await createView('document result test document test test', 'result test document other')
-
-      expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(4)
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('test')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('3')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toBe('document')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toBe('2')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(2).text()).toBe('result')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(2).text()).toBe('1')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(3).text()).toBe('other')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(3).text()).toBe('0')
+      const entries = wrapper.findAllComponents(DocumentGlobalSearchTermsEntry)
+      expect(entries).toHaveLength(4)
+      expect(entries.at(0).vm.term.label).toBe('test')
+      expect(entries.at(0).vm.term.count).toBe(3)
+      expect(entries.at(1).vm.term.label).toBe('document')
+      expect(entries.at(1).vm.term.count).toBe(2)
+      expect(entries.at(2).vm.term.label).toBe('result')
+      expect(entries.at(2).vm.term.count).toBe(1)
+      expect(entries.at(3).vm.term.label).toBe('other')
+      expect(entries.at(3).vm.term.count).toBe(0)
     })
 
     it('should display query terms in tags with specific message and in last position', async () => {
       mockedDocumentSearchFactory().add({ term: 'message', count: 1 }).add({ term: 'tag_01', count: 0 }).commit()
       const wrapper = await createView('message', 'message tag_01', '', ['tag_01', 'tag_02'])
-
-      expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(2)
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('message')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('1')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toBe('tag_01')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toBe('in tags')
+      const entries = wrapper.findAllComponents(DocumentGlobalSearchTermsEntry)
+      expect(entries).toHaveLength(2)
+      expect(entries.at(0).vm.term.label).toBe('message')
+      expect(entries.at(0).vm.term.count).toBe(1)
+      expect(entries.at(1).vm.term.label).toBe('tag_01')
+      expect(entries.at(1).vm.term.count).toBe(0)
     })
 
     it('should not display the query terms on a specific field but content', async () => {
       mockedDocumentSearchFactory().add({ term: 'term_01', count: 1 }).add({ term: 'term_02', count: 0 }).commit()
       const wrapper = await createView('term_01', 'content:term_01 field_name:term_02')
-
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('term_01')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('1')
+      const entries = wrapper.findAllComponents(DocumentGlobalSearchTermsEntry)
+      expect(entries).toHaveLength(1)
+      expect(entries.at(0).vm.term.label).toBe('term_01')
+      expect(entries.at(0).vm.term.count).toBe(1)
     })
 
     it('should not display the negative query terms', async () => {
       mockedDocumentSearchFactory().add({ term: 'term_01', count: 1 }).add({ term: 'term_02', count: 0 }).commit()
       const wrapper = await createView('term_01', 'term_01 -term_02')
-
-      expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(1)
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('term_01')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('1')
+      const entries = wrapper.findAllComponents(DocumentGlobalSearchTermsEntry)
+      expect(entries).toHaveLength(1)
+      expect(entries.at(0).vm.term.label).toBe('term_01')
+      expect(entries.at(0).vm.term.count).toBe(1)
     })
 
     it('should highlight the query terms with the same color than in the list', async () => {
       const wrapper = await createView('this is a full full content', 'full content')
-
-      expect(wrapper.findAll('.document-global-search-terms-tags__item--index-0')).toHaveLength(1)
-      expect(
-        wrapper
-          .find('.document-global-search-terms-tags__item--index-0 .document-global-search-terms-tags__item__label')
-          .text()
-      ).toBe('full')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item--index-1')).toHaveLength(1)
-      expect(
-        wrapper
-          .find('.document-global-search-terms-tags__item--index-1 .document-global-search-terms-tags__item__label')
-          .text()
-      ).toBe('content')
+      const entries = wrapper.findAllComponents(DocumentGlobalSearchTermsEntry)
+      expect(entries).toHaveLength(2)
+      expect(entries.at(0).vm.term.label).toBe('full')
+      expect(entries.at(1).vm.term.label).toBe('content')
     })
   })
 })
