@@ -40,9 +40,12 @@ const tab = computed({
   set: (tab) => store.commit('app/setSettings', { view: 'documentView', tab })
 })
 
-const selectRouteTab = ({ name, params, query } = route) => {
+const selectRouteTab = async ({ name, params, query } = route) => {
+  if (name === 'error') {
+    return
+  }
   if (name === documentRoute.value.name) {
-    router.replace({ name: `${documentRoute.value.name}.${tab.value}`, params, query })
+    await router.replace({ name: `${documentRoute.value.name}.${tab.value}`, params, query })
   } else {
     tab.value = name?.split('.').pop() ?? 'text'
   }
@@ -50,10 +53,11 @@ const selectRouteTab = ({ name, params, query } = route) => {
 
 const fetchRouteDocument = async ({ params } = route) => {
   const { index = props.index, id = props.id, routing = props.routing } = params ?? {}
-  try {
-    await fetchDocumentOnce({ index, id, routing })
-  } catch (error) {
-    await router.push({ name: 'error', state: { error } })
+  await fetchDocumentOnce({ index, id, routing })
+
+  // No document found, redirect to error page
+  if (!document.value) {
+    await router.push({ name: 'error' })
   }
 }
 
