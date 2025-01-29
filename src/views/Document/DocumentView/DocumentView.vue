@@ -48,9 +48,13 @@ const selectRouteTab = ({ name, params, query } = route) => {
   }
 }
 
-const fetchRouteDocument = ({ params } = route) => {
+const fetchRouteDocument = async ({ params } = route) => {
   const { index = props.index, id = props.id, routing = props.routing } = params ?? {}
-  fetchDocumentOnce({ index, id, routing })
+  try {
+    await fetchDocumentOnce({ index, id, routing })
+  } catch (error) {
+    await router.push({ name: 'error', state: { error } })
+  }
 }
 
 const redirectToDocumentStandalone = () => {

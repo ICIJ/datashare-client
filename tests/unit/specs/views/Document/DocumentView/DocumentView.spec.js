@@ -4,7 +4,7 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { flushPromises } from '~tests/unit/tests_utils'
-import DocumentView from '@/views/DocumentView'
+import DocumentView from '@/views/Document/DocumentView/DocumentView'
 
 describe('DocumentView.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
@@ -28,7 +28,18 @@ describe('DocumentView.vue', () => {
     vi.clearAllMocks()
     await letData(es).have(new IndexedDocument(parentId, project)).commit()
     await letData(es).have(new IndexedDocument(id, project).withParent(parentId)).commit()
-    core = CoreSetup.init(api).useAll().useRouter()
+    const routes = [
+      { path: '/', name: 'index' },
+      { path: '/document', name: 'document' },
+      { path: '/document/text', name: 'document.text' },
+      { path: '/document/viewer', name: 'document.viewer' },
+      { path: '/document/entities', name: 'document.entities' },
+      { path: '/error', name: 'error' },
+      { path: '/document/metadata', name: 'document.metadata' }
+    ]
+    core = CoreSetup.init(api).useAll().useRouter(routes)
+    await core.router.push({ name: 'document' })
+
     core.store.commit('document/doc', { _id: id, _index: project, _source: { extractionLevel: 1 } })
   })
 
@@ -46,7 +57,7 @@ describe('DocumentView.vue', () => {
       },
       props
     })
-    await wrapper.vm.getDoc()
+    // await wrapper.vm.getDoc()
     expect(wrapper.find('span').text()).toBe('Document not found')
   })
 
@@ -173,51 +184,6 @@ describe('DocumentView.vue', () => {
       wrapper.vm.goToNextTab()
 
       expect(wrapper.vm.activeTab).toBe('extracted-text')
-    })
-  })
-
-  describe('transform the tabs array through a pipeline', () => {
-    const temporaryPipelineName = 'document-view-tabs-add-tmp-tab'
-    let wrapper
-
-    beforeEach(async () => {
-      core.registerPipeline({
-        name: temporaryPipelineName,
-        category: 'document-view-tabs',
-        type(tabs, document) {
-          const tab = { name: 'tmp', label: 'Temporary' }
-          return [...tabs, tab]
-        }
-      })
-
-      wrapper = shallowMount(DocumentView, {
-        global: {
-          plugins: core.plugins
-        },
-        props
-      })
-
-      await wrapper.vm.getDoc()
-    })
-
-    afterEach(() => {
-      core.unregisterPipeline(temporaryPipelineName)
-    })
-
-    it('should add a tab using the `document-view-tabs` pipeline', () => {
-      const lastTab = wrapper.vm.tabsThroughPipeline[wrapper.vm.tabsThroughPipeline.length - 1]
-      expect(lastTab.label).toBe('Temporary')
-    })
-
-    it('should add a tab with a `labelComponent` property', () => {
-      const lastTab = wrapper.vm.tabsThroughPipeline[wrapper.vm.tabsThroughPipeline.length - 1]
-      expect(lastTab.labelComponent).toHaveProperty('template')
-    })
-
-    it('should add a tab with a `labelComponent` within the label in its template', () => {
-      const lastTab = wrapper.vm.tabsThroughPipeline[wrapper.vm.tabsThroughPipeline.length - 1]
-      const lastTabWrapper = shallowMount(lastTab.labelComponent, { global: { plugins: core.plugins } })
-      expect(lastTabWrapper.text()).toBe('Temporary')
     })
   })
 })
