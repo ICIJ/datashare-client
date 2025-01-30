@@ -1,9 +1,13 @@
 import { mount, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-
-describe('FindNamedEntitiesForm.vue', () => {
+import TaskEntitiesForm from '@/components/Task/TaskEntities/TaskEntitiesForm'
+vi.mock('@/composables/wait', () => ({
+  useWait: vi.fn(() => ({
+    waitFor: vi.fn().mockReturnValue(vi.fn())
+  }))
+}))
+describe('TaskEntitiesForm.vue', () => {
   let api
 
   beforeEach(() => {
@@ -11,22 +15,49 @@ describe('FindNamedEntitiesForm.vue', () => {
   })
 
   describe('on default project', () => {
-    let wrapper
-
-    beforeEach(() => {
-      const { config, plugins, store } = CoreSetup.init(api).useAll()
+    let wrapper, plugins
+    beforeAll(() => {
+      const core = CoreSetup.init(api).useAll().useRouter()
+      const config = core.config
+      plugins = core.plugins
       config.set('defaultProject', 'local-datashare')
-      config.set('projects', [{ name: 'local-datashare' }])
-      store.commit('indexing/reset')
-      wrapper = shallowMount(FindNamedEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      config.set('projects', [{ name: 'local-datashare' }, { name: 'banana-papers' }])
     })
 
+    it('should display selected project "local-datashare" by default', async () => {
+      wrapper = mount(TaskEntitiesForm, { global: { plugins } })
+      expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
+    })
+
+    it('reactively updates content when projectName changes', async () => {
+      const wrapper = mount(TaskEntitiesForm, {
+        global: { plugins },
+        props: {
+          projectName: 'banana-papers'
+        }
+      })
+      expect(wrapper.find('.search-bar__field--selected').text()).toBe('banana-papers')
+      await wrapper.setProps({ projectName: 'local-datashare' })
+      expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
+    })
+    it('should display default project "local-datashare"', () => {
+      wrapper = mount(TaskEntitiesForm, { global: { plugins } })
+      const projectSelection = wrapper.find('.search-bar__field--selected')
+      expect(projectSelection.text()).toBe('local-datashare')
+    })
+    it('should display "local-datashare"', () => {
+      wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      const projectSelection = wrapper.find('.search-bar__field--selected')
+      expect(projectSelection.text()).toBe('local-datashare')
+    })
     it('should load NER pipelines on component mounted', () => {
+      wrapper = shallowMount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+
       expect(api.getNerPipelines).toBeCalledTimes(1)
     })
 
     it('should call findNames action with CORENLP pipeline, by default', async () => {
-      await wrapper.vm.submitFindNamedEntities()
+      await wrapper.vm.submit()
       await expect(api.findNames).toBeCalledWith(
         'CORENLP',
         expect.objectContaining({
@@ -37,7 +68,7 @@ describe('FindNamedEntitiesForm.vue', () => {
 
     it('should call findNames action with ANOTHERNLP pipeline', async () => {
       await wrapper.vm.$store.commit('indexing/formPipeline', 'ANOTHERNLP')
-      await wrapper.vm.submitFindNamedEntities()
+      await wrapper.vm.submit()
       expect(api.findNames).toBeCalledWith(
         'ANOTHERNLP',
         expect.objectContaining({
@@ -77,7 +108,7 @@ describe('FindNamedEntitiesForm.vue', () => {
       config.set('defaultProject', 'foo')
       config.set('projects', [{ name: 'bar' }, { name: 'foo' }])
       store.commit('indexing/reset')
-      wrapper = mount(FindNamedEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
     })
 
     it('should show the project selector when there is several projects', async () => {
