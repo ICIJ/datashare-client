@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useTemplateRef, watch } from 'vue'
+import { computed, useTemplateRef, toRef, watch } from 'vue'
 import { useStore } from 'vuex'
 
 import { useSearchFilter } from '@/composables/search-filter'
@@ -47,21 +47,18 @@ const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
 
 const reloadData = () => tree.value.reloadData()
 
+const reset = () => {
+  selected.value = []
+}
+
 watchFilterContextualized(props.filter, reloadData)
 // When the filter is excluded/included and it's contextualized then reload the data with a spinner
 watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadData))
 // When filter values change and the filter is contextualized then reload the data
 watchValues(whenFilterContextualized(props.filter, reloadData))
 // When project changes, we reset the filter to avoid filtering by unknown paths
-watchIndices(() => (selected.value = []))
-watch(
-  () => props.projects,
-  (newProjectProps) => {
-    if (newProjectProps) {
-      selected.value = []
-    }
-  }
-)
+watchIndices(reset)
+watch(toRef(props, 'projects'), reset, { deep: true })
 </script>
 
 <template>
