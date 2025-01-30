@@ -2,49 +2,52 @@
   <project-dropdown-selector v-model="selectedProjects" :projects="projects" />
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
 import { isArray } from 'lodash'
 
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
+import { useCore } from '@/composables/core'
 
-export default {
-  name: 'SearchBarInputDropdownForProjects',
-  components: {
-    ProjectDropdownSelector
+const modelValue = defineModel({
+  type: [Array, Object],
+  default: () => []
+})
+// Props
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false
   },
-  props: {
-    /**
-     * List of selected projects or single project object
-     */
-    modelValue: {
-      type: [Array, Object],
-      default: () => []
-    },
-    /**
-     * The dropdown toggler must be disabled.
-     */
-    disabled: {
-      type: Boolean
-    }
-  },
-  computed: {
-    projects() {
-      return this.$core.projects
-    },
-    multiple() {
-      return isArray(this.modelValue)
-    },
-    selectedProjects: {
-      get() {
-        if (!this.multiple) {
-          return this.$core.findProject(this.modelValue?.name)
-        }
-        return this.modelValue.filter(({ name }) => !!this.$core.findProject(name))
-      },
-      set(value) {
-        this.$emit('update:modelValue', value)
-      }
-    }
+  fallbackDefault: {
+    type: Boolean,
+    default: false
   }
-}
+})
+
+const { core } = useCore()
+// Computed Properties
+const projects = computed(() => core.projects)
+
+const multiple = computed(() => isArray(modelValue.value))
+
+const selectedProjects = computed({
+  get: () => {
+    if (!multiple.value) {
+      const project = core.findProject(modelValue.value.name)
+      if (props.fallbackDefault && !project) {
+        return { name: core.getDefaultProject() }
+      }
+      return project
+    }
+    const filter = modelValue.value.filter(({ name }) => !!core.findProject(name))
+    if (props.fallbackDefault && !filter.length) {
+      return [{ name: core.getDefaultProject() }]
+    }
+    return filter
+  },
+  set: (value) => {
+    modelValue.value = value
+  }
+})
 </script>
