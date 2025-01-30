@@ -51,7 +51,6 @@ const lastCarouselEntry = computed(() => {
 const previous = async () => {
   const position = Math.max(0, firstCarouselEntry.value.position - size)
   carouselEntries.value = await fetchCarouselEntries(position, size)
-  console.log(position)
 }
 
 const next = async () => {
