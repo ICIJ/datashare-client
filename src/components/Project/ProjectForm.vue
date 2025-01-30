@@ -7,7 +7,7 @@ import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { slugger, isUrl } from '@/utils/strings'
-import { usePath } from '@/utils/path'
+import { useCore } from '@/composables/core'
 
 const props = defineProps({
   disabled: {
@@ -24,7 +24,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit'])
 
-const { defaultDataDir } = usePath()
+const { core } = useCore()
 
 const form = ref(initialFormValues())
 
@@ -51,7 +51,7 @@ function initialFormValues() {
   return {
     name: null,
     label: null,
-    sourcePath: defaultDataDir.value,
+    sourcePath: core.getDefaultDataDir(),
     allowFromMask: '*.*.*.*',
     description: null,
     logoUrl: null,

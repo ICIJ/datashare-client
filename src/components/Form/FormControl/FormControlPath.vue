@@ -6,7 +6,7 @@ import AppModal from '@/components/AppModal/AppModal'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
-import { usePath } from '@/utils/path'
+import { useCore } from '@/composables/core'
 
 const modelValue = defineModel({ type: String })
 
@@ -27,9 +27,9 @@ const props = defineProps({
     default: () => []
   }
 })
-const { defaultDataDir } = usePath()
+const { core } = useCore()
 const selectedPaths = ref([])
-const sourcePath = computed(() => props.path ?? defaultDataDir.value)
+const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())
 const display = computed(() => modelValue.value ?? sourcePath.value)
 watch(toRef(props, 'projects'), (value) => {
   selectedPaths.value = []
