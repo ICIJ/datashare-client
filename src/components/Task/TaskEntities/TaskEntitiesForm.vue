@@ -17,13 +17,6 @@ const props = defineProps({
   projectName: {
     type: String,
     default: null
-  },
-  /**
-   * Force hiding the project selector input
-   */
-  hideProjectSelector: {
-    type: Boolean,
-    default: false
   }
 })
 
