@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, toRef } from 'vue'
 import { filter, orderBy, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import includes from 'lodash/includes'
@@ -27,9 +27,10 @@ const props = defineProps({
   }
 })
 
-const { core, toastedPromise } = useCore()
+const { core, toastedPromise, wait } = useCore()
+
 const { t } = useI18n()
-const { wait, waitFor } = useWait()
+const { waitFor } = useWait()
 const defaultProject = core.getDefaultProject()
 const defaultPipeline = 'CORENLP'
 const emailPipeline = 'EMAIL'
@@ -44,6 +45,9 @@ const initialFormValues = computed(() => ({
   project: props.projectName ?? defaultProject
 }))
 
+watch(toRef(props, 'projectName'), (val) => {
+  reset()
+})
 const selectedProject = ref({ name: initialFormValues.value.project })
 const pipeline = ref(initialFormValues.value.pipeline)
 const pipelines = ref(initialFormValues.value.pipelines)
@@ -113,7 +117,7 @@ const successMessage = computed(() => t('task.entities.form.success'))
 const errorMessage = (error) => t(`task.entities.form.error`, { error })
 
 const valid = computed(() => {
-  return !wait.waiting(loaderPipelineId) && !wait.waiting(loaderLaunchTask) && !error.value
+  return !wait?.waiting(loaderPipelineId) && !wait?.waiting(loaderLaunchTask) && !error.value
 })
 
 function reset() {
@@ -125,13 +129,17 @@ function reset() {
 
 function findNamedEntities() {
   const options = { syncModels: !offline.value, defaultProject: selectedProject.value.name }
+  console.log('findNamedEntities')
   return core.api.findNames(pipeline.value, options)
 }
 const loaderLaunchTask = 'launch task'
 const launchTask = waitFor(loaderLaunchTask, findNamedEntities)
 async function submit() {
   try {
+    console.log('toastedPromise before')
+
     await toastedPromise(launchTask(), { successMessage, errorMessage })
+    console.log('toastedPromise after')
   } catch (error) {}
   await core.router.push({ name: 'task.entities.list' })
 }
