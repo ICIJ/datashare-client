@@ -13,7 +13,7 @@ const modelValue = defineModel({
   type: [Array, Object],
   default: () => []
 })
-// Props
+
 const props = defineProps({
   disabled: {
     type: Boolean,
