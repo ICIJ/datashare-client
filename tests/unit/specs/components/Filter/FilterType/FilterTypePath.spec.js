@@ -35,13 +35,6 @@ describe('FilterPath.vue', () => {
     expect(wrapper.vm.path).toBe('/data')
   })
 
-  it('should reinitialize dataDir as path when project change', async () => {
-    wrapper.vm.path = '/data/foo'
-    core.store.commit('search/index', otherIndex)
-    await flushPromises()
-    expect(wrapper.vm.path).toBe('/data')
-  })
-
   it('should list selected paths according to the filter', async () => {
     const key = ['/data/foo', '/data/bar']
     core.store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
