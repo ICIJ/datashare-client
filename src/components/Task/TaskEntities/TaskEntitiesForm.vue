@@ -30,8 +30,7 @@ const props = defineProps({
 const { core, toastedPromise } = useCore()
 const { t } = useI18n()
 const { wait, waitFor } = useWait()
-
-const defaultProject = core.config.get('defaultProject')
+const defaultProject = core.getDefaultProject()
 const defaultPipeline = 'CORENLP'
 const emailPipeline = 'EMAIL'
 const loaderPipelineId = 'load ner pipelines'

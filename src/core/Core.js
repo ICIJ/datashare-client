@@ -300,6 +300,10 @@ class Core extends Behaviors {
     return userProjects.indexOf(defaultProject) === -1 ? userProjects[0] : defaultProject
   }
 
+  getDefaultDataDir() {
+    return this.config.get('mountedDataDir') || this.config.get('dataDir')
+  }
+
   /**
    * Mount the instance's vue application
    * @param {String} [selector=#app] - Query selector to the mounting point
