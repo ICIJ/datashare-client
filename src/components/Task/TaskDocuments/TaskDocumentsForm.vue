@@ -11,7 +11,6 @@ import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
-import { usePath } from '@/utils/path'
 
 const props = defineProps({
   disabled: {
@@ -30,16 +29,18 @@ const { toastedPromise, core, wait } = useCore()
 const { t } = useI18n()
 
 const submitLabel = computed(() => t(`task.documents.form.submit`))
-const { getProjectSourcePath, defaultProjectName } = usePath()
 
 const projectName = toRef(props, 'projectName')
-const currentProject = computed(() => core.findProject(projectName.value ?? defaultProjectName.value))
+const currentProject = computed(() => core.findProject(projectName.value ?? core.getDefaultProject()))
 const selectedProject = ref(currentProject.value)
 
 watch(toRef(props, 'projectName'), () => {
   selectedProject.value = currentProject.value
 })
-
+function getProjectSourcePath(project) {
+  const currentSourcePath = project.value?.sourcePath?.split('file://').pop() ?? defaultDataDir.value
+  return decodeURI(currentSourcePath)
+}
 const sourcePath = computed(() => getProjectSourcePath(currentProject.value))
 const initialFormValues = computed(() => ({
   language: null,
