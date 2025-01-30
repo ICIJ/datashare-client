@@ -31,7 +31,7 @@ const { core } = useCore()
 const selectedPaths = ref([])
 const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())
 const display = computed(() => modelValue.value ?? sourcePath.value)
-watch(toRef(props, 'projects'), (value) => {
+watch(toRef(props, 'projects'), () => {
   selectedPaths.value = []
 })
 
