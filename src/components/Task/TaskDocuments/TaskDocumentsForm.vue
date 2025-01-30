@@ -38,7 +38,7 @@ watch(toRef(props, 'projectName'), () => {
   selectedProject.value = currentProject.value
 })
 function getProjectSourcePath(project) {
-  const currentSourcePath = project.value?.sourcePath?.split('file://').pop() ?? defaultDataDir.value
+  const currentSourcePath = project.value?.sourcePath?.split('file://').pop() ?? core.getDefaultDataDir()
   return decodeURI(currentSourcePath)
 }
 const sourcePath = computed(() => getProjectSourcePath(currentProject.value))
