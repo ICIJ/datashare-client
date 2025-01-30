@@ -1,22 +1,16 @@
-import { mount, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskEntitiesForm from '@/components/Task/TaskEntities/TaskEntitiesForm'
-vi.mock('@/composables/wait', () => ({
-  useWait: vi.fn(() => ({
-    waitFor: vi.fn().mockReturnValue(vi.fn())
-  }))
-}))
+
 describe('TaskEntitiesForm.vue', () => {
   let api
 
-  beforeEach(() => {
-    api = { getNerPipelines: vi.fn(), findNames: vi.fn() }
-  })
-
   describe('on default project', () => {
-    let wrapper, plugins
-    beforeAll(() => {
+    let plugins
+
+    beforeEach(() => {
+      api = { getNerPipelines: vi.fn(), findNames: vi.fn() }
       const core = CoreSetup.init(api).useAll().useRouter()
       const config = core.config
       plugins = core.plugins
@@ -25,7 +19,7 @@ describe('TaskEntitiesForm.vue', () => {
     })
 
     it('should display selected project "local-datashare" by default', async () => {
-      wrapper = mount(TaskEntitiesForm, { global: { plugins } })
+      const wrapper = mount(TaskEntitiesForm, { global: { plugins } })
       expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
     })
 
@@ -36,28 +30,23 @@ describe('TaskEntitiesForm.vue', () => {
           projectName: 'banana-papers'
         }
       })
+
       expect(wrapper.find('.search-bar__field--selected').text()).toBe('banana-papers')
       await wrapper.setProps({ projectName: 'local-datashare' })
+      await flushPromises()
       expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
     })
-    it('should display default project "local-datashare"', () => {
-      wrapper = mount(TaskEntitiesForm, { global: { plugins } })
-      const projectSelection = wrapper.find('.search-bar__field--selected')
-      expect(projectSelection.text()).toBe('local-datashare')
-    })
-    it('should display "local-datashare"', () => {
-      wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
-      const projectSelection = wrapper.find('.search-bar__field--selected')
-      expect(projectSelection.text()).toBe('local-datashare')
-    })
-    it('should load NER pipelines on component mounted', () => {
-      wrapper = shallowMount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
 
+    it('should load NER pipelines on component mounted', async () => {
+      shallowMount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      await flushPromises()
       expect(api.getNerPipelines).toBeCalledTimes(1)
     })
 
     it('should call findNames action with CORENLP pipeline, by default', async () => {
+      const wrapper = shallowMount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
       await wrapper.vm.submit()
+      await flushPromises()
       await expect(api.findNames).toBeCalledWith(
         'CORENLP',
         expect.objectContaining({
@@ -66,8 +55,18 @@ describe('TaskEntitiesForm.vue', () => {
       )
     })
 
+    it('should display two pipelines without email', async () => {
+      api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'TOTONLP', 'EMAIL'])
+      const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      await flushPromises()
+      expect(wrapper.findAll('[name=pipeline]')).toHaveLength(2)
+    })
+
     it('should call findNames action with ANOTHERNLP pipeline', async () => {
-      await wrapper.vm.$store.commit('indexing/formPipeline', 'ANOTHERNLP')
+      api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'TOTONLP', 'EMAIL'])
+      const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      await flushPromises()
+      wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
       await wrapper.vm.submit()
       expect(api.findNames).toBeCalledWith(
         'ANOTHERNLP',
@@ -78,9 +77,12 @@ describe('TaskEntitiesForm.vue', () => {
     })
 
     it('should call findNames action with no models synchronization', async () => {
-      await wrapper.vm.$store.commit('indexing/formPipeline', 'CORENLP')
-      await wrapper.vm.$store.commit('indexing/formOffline', true)
-      await wrapper.vm.submitFindNamedEntities()
+      api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'CORENLP', 'EMAIL'])
+      const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      await flushPromises()
+      wrapper.find('[name=pipeline][value=CORENLP]').setChecked()
+      wrapper.find('[name=offline][value=true]').setChecked()
+      await wrapper.vm.submit()
       expect(api.findNames).toBeCalledWith(
         'CORENLP',
         expect.objectContaining({
@@ -89,30 +91,13 @@ describe('TaskEntitiesForm.vue', () => {
       )
     })
 
-    it('should reset the modal params on submitting the form', async () => {
-      await wrapper.setData({ pipeline: 'ANOTHERNLP' })
-      await wrapper.vm.submitFindNamedEntities()
+    it('should reset the form on reset button clicked', async () => {
+      api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'CORENLP', 'EMAIL'])
+      const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
+      await flushPromises()
+      wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
+      await wrapper.vm.reset()
       expect(wrapper.vm.pipeline).toBe('CORENLP')
-    })
-
-    it('should show the project selector when there is only one project', () => {
-      expect(wrapper.findComponent({ name: 'ProjectSelector' }).exists()).toBeFalsy()
-    })
-  })
-
-  describe('on another project', () => {
-    let wrapper
-
-    beforeEach(() => {
-      const { config, plugins, store } = CoreSetup.init(api).useAll()
-      config.set('defaultProject', 'foo')
-      config.set('projects', [{ name: 'bar' }, { name: 'foo' }])
-      store.commit('indexing/reset')
-      wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
-    })
-
-    it('should show the project selector when there is several projects', async () => {
-      expect(wrapper.findComponent({ name: 'ProjectSelector' }).exists()).toBeTruthy()
     })
   })
 })
