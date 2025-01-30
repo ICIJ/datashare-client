@@ -45,9 +45,7 @@ const initialFormValues = computed(() => ({
   project: props.projectName ?? defaultProject
 }))
 
-watch(toRef(props, 'projectName'), (val) => {
-  reset()
-})
+watch(toRef(props, 'projectName'), reset)
 const selectedProject = ref({ name: initialFormValues.value.project })
 const pipeline = ref(initialFormValues.value.pipeline)
 const pipelines = ref(initialFormValues.value.pipelines)
@@ -69,11 +67,7 @@ onMounted(async () => {
 watch(
   () => findEntities.value,
   (entityType) => {
-    if (entityType === EMAILS) {
-      pipeline.value = emailPipeline
-    } else {
-      pipeline.value = defaultPipeline
-    }
+    pipeline.value = entityType === EMAILS ? emailPipeline : defaultPipeline
   }
 )
 const pipelinesNamedEntities = computed(() => filter(values(pipelines.value), (p) => p !== emailPipeline))
@@ -81,6 +75,7 @@ const hasPipelinesNamedEntities = computed(() => pipelinesNamedEntities.value.le
 const hasPipelineEmail = computed(() => includes(values(pipelines.value), emailPipeline))
 
 const isPipelineNamedEntities = computed(() => findEntities.value === NAMED_ENTITIES)
+
 const findEntitiesOptions = computed(() => {
   const options = []
   if (hasPipelinesNamedEntities.value) {
@@ -91,10 +86,12 @@ const findEntitiesOptions = computed(() => {
   }
   return options
 })
+
 const offlineOptions = computed(() => [
   { text: t('task.entities.form.offline.options.yes'), value: true },
   { text: t('task.entities.form.offline.options.no'), value: false }
 ])
+
 const pipelineOptions = computed(() => {
   return orderBy(
     pipelinesNamedEntities.value.map((pip) => {
@@ -129,18 +126,14 @@ function reset() {
 
 function findNamedEntities() {
   const options = { syncModels: !offline.value, defaultProject: selectedProject.value.name }
-  console.log('findNamedEntities')
   return core.api.findNames(pipeline.value, options)
 }
+
 const loaderLaunchTask = 'launch task'
 const launchTask = waitFor(loaderLaunchTask, findNamedEntities)
-async function submit() {
-  try {
-    console.log('toastedPromise before')
 
-    await toastedPromise(launchTask(), { successMessage, errorMessage })
-    console.log('toastedPromise after')
-  } catch (error) {}
+async function submit() {
+  await toastedPromise(launchTask(), { successMessage, errorMessage })
   await core.router.push({ name: 'task.entities.list' })
 }
 </script>
