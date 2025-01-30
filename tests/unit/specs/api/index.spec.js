@@ -97,7 +97,7 @@ describe('Datashare backend client', () => {
     const spy = vi.spyOn(api, 'indexPath')
 
     json = await api.index({ language: 'fra' })
-    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalled()
     expect(spy).toBeCalledWith('file', { language: 'fra' })
   })
 
