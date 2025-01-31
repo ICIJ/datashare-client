@@ -50,6 +50,24 @@ export function datasharePlugin(Client) {
     return this._search({ index, routing, body })
   }
 
+  Client.prototype.countDocuments = async function (index) {
+    const query = 'type:Document'
+    const body = { query: { query_string: { query } } }
+    const preference = 'project-documents-count'
+    const res = await this.count({ index, body, preference })
+    return res?.count || 0
+  }
+
+  Client.prototype.countTags = async function (index) {
+    const size = 0
+    const cardinality = { field: 'tags' }
+    const aggs = { count: { cardinality } }
+    const body = { size, aggs }
+    const preference = 'project-tags-count'
+    const res = await this.search({ index, body, preference })
+    return res?.aggregations?.count?.value || 0
+  }
+
   Client.prototype.getDocumentNamedEntitiesInCategory = async function (
     index,
     docId,
