@@ -126,7 +126,7 @@ async function retrieveLanguages() {
     textLanguages.value = castArray(textLanguages)
     ocrLanguages.value = castArray(ocrLanguages)
   } catch (e) {
-    hasTesseract.value = e.response.status !== 503
+    hasTesseract.value = e.response?.status !== 503
     if (hasTesseract.value) {
       throw e
     }
