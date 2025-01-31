@@ -77,7 +77,9 @@ export function addLocalSearchMarksClass(content = '<div></div>', localSearchTer
   const localSearchOccurrences = (content.match(regex) || []).length
   const localSearchIndex = Number(!!localSearchOccurrences)
   try {
-    if (localSearchOccurrences === 0) throw new Error()
+    if (localSearchOccurrences === 0) {
+      throw new Error('No local search occurrences')
+    }
     const needle = new RegExp(`(${escapedLocalSearchTermAsRegex})`, 'gims')
     const replacedContent = content.replace(needle, (m) => {
       const term = m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')
