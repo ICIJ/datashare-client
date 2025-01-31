@@ -28,7 +28,7 @@ const props = defineProps({
   }
 })
 
-const { t } = useI18n())
+const { t } = useI18n()
 const taskNames = toRef(props, 'taskFilter')
 
 const {
@@ -40,17 +40,8 @@ const {
   isLoading
 } = useTaskPolling(taskNames)
 
-const {
-  toAddRoute,
-  searchQuery,
-  page,
-  perPage,
-  searchPlaceholder,
-  displayedTasks,
-  totalRows,
-  sortBy,
-  noTasks
-} = useTaskHeader(props.pageName, props.showAdd, pollingTasks)
+const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
+  useTaskHeader(props.pageName, props.showAdd, pollingTasks)
 
 const sort = computed({
   get: () => sortBy.value.modelValue?.[0],
