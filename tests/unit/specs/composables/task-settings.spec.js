@@ -52,7 +52,7 @@ describe('useTaskSettings', () => {
       expect.arrayContaining([
         expect.objectContaining({ value: 'name' }),
         expect.objectContaining({ value: 'size' }),
-        expect.objectContaining({ value: 'docs' }),
+        //  expect.objectContaining({ value: 'docs' }),
         expect.objectContaining({ value: 'createdAt' }),
         expect.objectContaining({ value: 'state' })
       ])
