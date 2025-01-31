@@ -51,7 +51,7 @@ describe('Datashare backend client', () => {
       })
     )
   })
-  it('should not skip already indexed file when calling indexPath ', async () => {
+  it('should not skip already indexed file when calling indexPath', async () => {
     json = await api.indexPath('file', { filter: false })
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({
@@ -67,7 +67,7 @@ describe('Datashare backend client', () => {
     )
   })
 
-  it('should indexPath with "fra" language ', async () => {
+  it('should indexPath with "fra" language', async () => {
     json = await api.indexPath('file', { language: 'fra' })
     expect(mockAxios.request).toBeCalledWith(
       expect.objectContaining({

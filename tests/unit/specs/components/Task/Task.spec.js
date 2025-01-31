@@ -26,7 +26,7 @@ describe('Task.vue', () => {
     expect(api.getTasks).toHaveBeenCalledTimes(1)
   })
 
-  it('should call delete done tasks when the delete action is triggered ', async () => {
+  it('should call delete done tasks when the delete action is triggered', async () => {
     const api = { deleteDoneTasks: vi.fn(), getTasks: vi.fn().mockResolvedValue([]) }
     const { plugins } = CoreSetup.init(api).useAll().useRouter()
 
@@ -38,7 +38,7 @@ describe('Task.vue', () => {
 
     expect(spy).toHaveBeenCalledTimes(1)
   })
-  it('should stop pending tasks when the stop pending action is triggered ', async () => {
+  it('should stop pending tasks when the stop pending action is triggered', async () => {
     const api = { stopPendingTasks: vi.fn(), getTasks: vi.fn().mockResolvedValue([]) }
     const { plugins } = CoreSetup.init(api).useAll().useRouter()
 

@@ -20,7 +20,7 @@ describe('EntityButton.vue', () => {
     expect(wrapper.text()).toBe('Riri')
   })
 
-  it('should display show 2 entity occurrences ', () => {
+  it('should display show 2 entity occurrences', () => {
     const props = { entity: { category: 'PERSON', mention: 'Riri', offsets: ['2', '4'], to: {} } }
     const wrapper = shallowMount(EntityButton, {
       props,
