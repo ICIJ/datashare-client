@@ -15,7 +15,7 @@ const store = useStore()
 const { t } = useI18n()
 const settingName = 'documents'
 
-const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
+const { propertiesModelValueOptions } = useTaskSettings(settingName)
 async function stopTask(name) {
   await store.dispatch('indexing/stopTask', name)
   await store.dispatch('indexing/getTasks')

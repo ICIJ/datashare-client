@@ -6,10 +6,10 @@ import { useUtils } from '@/composables/utils'
 import { useUrlParam } from '@/composables/url-params'
 import { useTaskSettings } from '@/composables/task-settings'
 
-export function useTaskHeader(pageName, hasAddButton, tasks, store, t) {
+export function useTaskHeader(pageName, hasAddButton, tasks) {
   const { isServer } = useUtils()
   const settingKey = 'task'
-  const { perPage, sortBy } = useTaskSettings(settingKey, store, t)
+  const { perPage, sortBy } = useTaskSettings(settingKey)
 
   const toAddRoute = computed(() => {
     return !isServer.value && hasAddButton ? { name: `task.${pageName}.new` } : null

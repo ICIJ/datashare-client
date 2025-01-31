@@ -12,7 +12,7 @@ const settingName = 'batch-search'
 const { t } = useI18n()
 const store = useStore()
 
-const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
+const { propertiesModelValueOptions } = useTaskSettings(settingName)
 </script>
 <template>
   <task
