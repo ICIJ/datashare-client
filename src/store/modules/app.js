@@ -30,7 +30,7 @@ export const state = () => ({
       entities: {
         orderBy: ['name', 'desc'],
         perPage: 10,
-        properties: ['state', 'id', 'name', 'createdAt', 'progress']
+        properties: ['state', 'entities-to-find', 'pipeline', 'project', 'progress', 'createdAt']
       },
       documents: {
         orderBy: ['name', 'desc'],
