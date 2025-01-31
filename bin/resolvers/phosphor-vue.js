@@ -1,6 +1,8 @@
+import { nameMatch } from '../icons'
+
 export function PhosphorVueResolver() {
   return (name) => {
-    if (name.match(/^Ph[A-Z]/)) {
+    if (nameMatch(name)) {
       return { name, from: '@phosphor-icons/vue' }
     }
   }

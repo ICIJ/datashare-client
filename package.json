@@ -13,7 +13,7 @@
     "test": "yarn test:unit",
     "test:unit": "vitest --run",
     "test:unit:watch": "vitest",
-    "lint": "eslint --ext .js,.mjs,.vue --ignore-pattern storybook-static .",
+    "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets",
     "doc:dir": "mkdir -p dist/docs",
@@ -91,7 +91,7 @@
     "@vue/compiler-sfc": "^3.5.3",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.20",
-    "eslint-plugin-storybook": "^0.8.0",
+    "eslint-plugin-storybook": "^0.11.2",
     "eslint-plugin-vitest": "^0.5.4",
     "eslint-plugin-vitest-globals": "^1.5.0",
     "front-matter": "^4.0.2",
@@ -122,29 +122,5 @@
   "engines": {
     "node": ">= 16",
     "npm": ">= 8"
-  },
-  "eslintConfig": {
-    "env": {
-      "vitest-globals/env": true,
-      "browser": true,
-      "es2022": true
-    },
-    "plugins": [
-      "vitest",
-      "vitest-globals"
-    ],
-    "extends": [
-      "@icij/eslint-config-icij",
-      "plugin:storybook/recommended"
-    ],
-    "rules": {
-      "no-unused-vars": ["error", { "argsIgnorePattern": "^(Ph[A-Z])|(_)" }],
-      "vue/no-v-model-argument": "off",
-      "vue/no-v-for-template-key": "off",
-      "vue/no-custom-modifiers-on-v-model": "off",
-      "vue/no-multiple-template-root": "off",
-      "vue/valid-v-slot": "off",
-      "import/extensions": "off"
-    }
   }
 }
