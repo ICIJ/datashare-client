@@ -44,7 +44,7 @@ async function confirmDeletion() {
 const hasSomething = computed(() => documentsCount.value + tagsCount.value + recommendationsCount.value > 0)
 
 onBeforeMount(
-  waitFor(loaderId.value, async () => {
+  waitFor(loaderId, async () => {
     documentsCount.value = await fetchDocumentsCount()
     tagsCount.value = await fetchTagsCount()
     recommendationsCount.value = await fetchRecommendationsCount()
