@@ -39,7 +39,7 @@ const {
   isLoading
 } = useTaskPolling(taskNames)
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
-  useTaskHeader(props.pageName, props.showAdd, pollingTasks, store, t)
+  useTaskHeader(props.pageName, props.showAdd, pollingTasks)
 const sort = computed({
   get: () => sortBy.value.modelValue?.[0],
   set: (value) => (sortBy.value.modelValue = [value, order.value])

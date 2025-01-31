@@ -1,4 +1,6 @@
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 export const SORT_ORDER_KEY = Object.freeze({
   ASC: 'asc',
   DESC: 'desc'
@@ -12,7 +14,8 @@ export const SORT_TYPE_KEY = Object.freeze({
   DATE: 'date'
 })
 
-export function useViewSettings(t) {
+export function useViewSettings() {
+  const { t } = useI18n()
   const sortByLabel = computed(() => t('viewSettings.sortBy.label'))
   const visiblePropertiesLabel = computed(() => t('viewSettings.properties'))
 

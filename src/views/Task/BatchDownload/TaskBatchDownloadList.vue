@@ -13,7 +13,7 @@ const { t } = useI18n()
 const store = useStore()
 const settingName = 'batch-download'
 
-const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
+const { propertiesModelValueOptions } = useTaskSettings(settingName)
 /* function isBatchDownloadEncrypted(item) {
   return item.name.includes('BatchDownload') && item.args.batchDownload.encrypted
 }
