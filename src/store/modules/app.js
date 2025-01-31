@@ -40,7 +40,7 @@ export const state = () => ({
       'batch-download': {
         orderBy: ['name', 'desc'],
         perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'state']
+        properties: ['state', 'name', 'docs', 'size', 'createdAt']
       },
       'batch-search': {
         orderBy: ['name', 'desc'],
