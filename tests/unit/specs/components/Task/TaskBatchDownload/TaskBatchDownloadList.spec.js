@@ -1,6 +1,5 @@
 import { mount } from '@vue/test-utils'
 
-import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchDownloadList from '@/views/Task/BatchDownload/TaskBatchDownloadList'
 import { getMode, MODE_NAME } from '@/mode'
@@ -8,178 +7,141 @@ import { getMode, MODE_NAME } from '@/mode'
 describe('TaskBatchDownloadList.vue', () => {
   const BatchDownloadList = [
     {
-      id: 'BatchDownloadTask_01_id',
-      name: 'BatchDownloadTask_01_name',
+      id: '7d664d35-2c11-4f40-9cd5-a9fca9e2384e',
+      name: 'org.icij.datashare.tasks.BatchDownloadRunner',
+      state: 'DONE',
+      progress: 1.0,
       result: {
-        file: 'BatchDownloadTask_01_result',
-        size: 1024
-      },
-      progress: 1,
-      state: 'DONE',
-      user: {
-        id: 'test',
-        provider: 'test',
-        email: null,
-        name: null
+        '@type': 'UriResult',
+        uri: 'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip',
+        size: 78398589
       },
       args: {
         batchDownload: {
-          uuid: 'uuid_01',
+          '@type': 'org.icij.datashare.batch.BatchDownload',
+          uuid: '1fff1f1d-5881-4bb3-9d47-207a99878298',
+          projects: [
+            {
+              name: 'notnot',
+              sourcePath: 'file:///vault/notnot',
+              label: 'notnot',
+              description: null,
+              publisherName: null,
+              maintainerName: null,
+              logoUrl: null,
+              sourceUrl: null,
+              creationDate: null,
+              updateDate: null
+            }
+          ],
+          filename: 'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip',
+          query: {
+            query:
+              '{"bool":{"must":[{"match_all":{}},{"bool":{"should":[{"query_string":{"query":"*"}}]}},{"match":{"type":"Document"}}]}}'
+          },
+          uri: '/?q=&from=0&size=25&sort=relevance&indices=notnot&field=all&tab=extracted-text',
+          user: { id: 'local', name: null, email: null, provider: 'local' },
           encrypted: false,
-          filename: 'filename_01_2021-01-01T12_45_25.137Z',
-          query: 'query_01',
-          exists: true,
-          project: {
-            name: 'project',
-            sourcePath: 'source'
-          },
-          user: {
-            id: 'test',
-            provider: 'test',
-            email: null,
-            name: null
-          }
-        }
-      }
-    },
-    {
-      id: 'BatchDownloadTask_02_id',
-      name: 'BatchDownloadTask_02_name',
-      progress: 1,
-      state: 'DONE',
-      user: {
-        id: 'test',
-        provider: 'test',
-        email: null,
-        name: null
+          exists: true
+        },
+        user: {
+          '@type': 'org.icij.datashare.session.DatashareUser',
+          id: 'local',
+          name: null,
+          email: null,
+          provider: 'local'
+        },
+        group: { '@type': 'org.icij.datashare.asynctasks.Group', id: 'Java' }
       },
-      args: {
-        batchDownload: {
-          uuid: 'uuid_02',
-          encrypted: true,
-          exists: false,
-          filename: 'filename_02_2020-01-01T19_50_00.831Z',
-          query: 'query_02',
-          project: {
-            name: 'project',
-            sourcePath: 'source'
-          },
-          user: {
-            id: 'test',
-            provider: 'test',
-            email: null,
-            name: null
-          }
-        }
-      }
+      retriesLeft: 3,
+      createdAt: new Date()
     },
     {
-      id: 'BatchDownloadTask_03_id',
-      name: 'BatchDownloadTask_03_name',
-      progress: 0.5,
+      id: 'ac021709-2f55-4a9a-bd12-dddfd0c8e958',
+      name: 'org.icij.datashare.tasks.BatchDownloadRunner',
       state: 'RUNNING',
-      user: {
-        id: 'test',
-        provider: 'test',
-        email: null,
-        name: null
-      },
+      progress: 0.9696969696969697,
       args: {
         batchDownload: {
-          uuid: 'uuid_03',
-          encrypted: false,
-          filename: 'filename_03_2020-12-07T17_35_20.314Z',
-          query: 'query_03',
-          project: {
-            name: 'project',
-            sourcePath: 'source'
+          '@type': 'org.icij.datashare.batch.BatchDownload',
+          uuid: 'a6e98c34-4464-4399-b281-61d89b9198d6',
+          projects: [
+            {
+              name: 'notnot',
+              sourcePath: 'file:///vault/notnot',
+              label: 'notnot',
+              description: null,
+              publisherName: null,
+              maintainerName: null,
+              logoUrl: null,
+              sourceUrl: null,
+              creationDate: null,
+              updateDate: null
+            }
+          ],
+          filename: 'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T14_01_02.092Z%5BGMT%5D.zip',
+          query: {
+            query:
+              '{"bool":{"must":[{"match_all":{}},{"bool":{"should":[{"query_string":{"query":"*"}}]}},{"match":{"type":"Document"}}]}}'
           },
-          user: {
-            id: 'test',
-            provider: 'test',
-            email: null,
-            name: null
-          }
-        }
-      }
-    },
-    {
-      id: 'BatchDownloadTask_04_id',
-      name: 'BatchDownloadTask_04_name',
-      progress: 1,
-      state: 'DONE',
-      user: {
-        id: 'test',
-        provider: 'test',
-        email: null,
-        name: null
+          uri: '/?from=0&perPage=25&sort=_score&order=desc&tab=extracted-text&q=&indices=notnot&field=all',
+          user: { id: 'local', name: null, email: null, provider: 'local' },
+          encrypted: false,
+          exists: true
+        },
+        user: {
+          '@type': 'org.icij.datashare.session.DatashareUser',
+          id: 'local',
+          name: null,
+          email: null,
+          provider: 'local'
+        },
+        group: { '@type': 'org.icij.datashare.asynctasks.Group', id: 'Java' }
       },
-      args: {
-        batchDownload: {
-          uuid: 'uuid_04',
-          encrypted: false,
-          filename: 'filename_04_2024-05-02T18_13_45.61Z',
-          query: 'query_04',
-          project: {
-            name: 'project',
-            sourcePath: 'source'
-          },
-          user: {
-            id: 'test',
-            provider: 'test',
-            email: null,
-            name: null
-          }
-        }
-      }
+      retriesLeft: 3,
+      createdAt: '2023-01-31T14:01:02.092+00:00'
     }
   ]
 
-  let api, core, wrapper
+  let api, plugins
 
   beforeEach(async () => {
     api = {
       getTasks: vi.fn().mockResolvedValue(BatchDownloadList)
     }
-    core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll()
-    wrapper = mount(TaskBatchDownloadList, { global: { plugins: core.plugins } })
-    await flushPromises()
+    const core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll().useRouter()
+    plugins = core.plugins
   })
 
-  it('should get all batch download tasks', async () => {
-    await wrapper.vm.getDownloadTasks()
-
-    expect(api.getTasks).toBeCalledTimes(2) // 1 on mount and 1 in the getDownloadTasks
-    expect(api.getTasks).toBeCalledWith('BatchDownloadRunner')
+  it('renders correctly', async () => {
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    expect(wrapper.exists()).toBe(true)
+    expect(api.getTasks).toBeCalledTimes(1) // 1 on mount and 1 in the getDownloadTasks
+    expect(api.getTasks).toBeCalledWith('org.icij.datashare.tasks.BatchDownloadRunner')
   })
 
-  it('should display a list of batch download tasks', async () => {
-    expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(4)
+  it('should display 2 batch download tasks', async () => {
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    expect(wrapper.findAll('.task-list__row')).toHaveLength(2)
   })
 
-  it('should a message when zip is encrypted', async () => {
-    expect(
-      wrapper.find('.tasks-list__tasks__item:nth-child(4) .tasks-list__tasks__item__encrypted').exists()
-    ).toBeTruthy()
+  it('should display the correct values in the correct columns for row 1', async () => {
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    const firstRow = wrapper.find('.task-list__row')
+    const columns = firstRow.findAll('.task-list__row__column')
+    expect(columns.at(0).text()).toBe('DONE')
+    expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip')
+    expect(columns.at(2).text()).toBe('74.77 MB')
+    expect(columns.at(3).text()).toBe('a few seconds ago')
   })
 
-  it('should sort the list with pending tasks first then sort by datetime descending', async () => {
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(1)').text()).toContain('BatchDownloadTask_03_id')
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(2)').text()).toContain('BatchDownloadTask_04_id')
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3)').text()).toContain('BatchDownloadTask_01_id')
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(4)').text()).toContain('BatchDownloadTask_02_id')
-  })
-
-  it('should display the zip size if there is any', async () => {
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__size').exists()).toBeTruthy()
-    expect(wrapper.find('.tasks-list__tasks__item:nth-child(4) .tasks-list__tasks__item__size').exists()).toBeFalsy()
-  })
-
-  it('should disable the download when the file doesnt exist anymore', async () => {
-    const span = wrapper.find(
-      '#task-batch-download-list__item--uuid_02 .task-batch-download-list__item__link--disabled'
-    )
-    expect(span.exists()).toBeTruthy()
-    expect(span.attributes('data-original-title')).toEqual('The archive has expired.')
+  it('should display the correct batch download actions', async () => {
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    const firstRow = wrapper.find('.task-list__row')
+    const columns = firstRow.findAll('.task-list__row__column')
+    expect(columns.at(0).text()).toBe('DONE')
+    expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip')
+    expect(columns.at(2).text()).toBe('74.77 MB')
+    expect(columns.at(3).text()).toBe('a few seconds ago')
   })
 })
