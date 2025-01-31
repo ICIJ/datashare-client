@@ -13,7 +13,7 @@ import { useTaskSettings } from '@/composables/task-settings'
 const { t } = useI18n()
 const store = useStore()
 const settingName = 'entities'
-const { propertiesModelValueOptions } = useTaskSettings(settingName, store, t)
+const { propertiesModelValueOptions } = useTaskSettings(settingName)
 </script>
 <template>
   <task

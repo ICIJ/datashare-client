@@ -1,8 +1,6 @@
 <script setup>
 import { noop } from 'lodash'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
@@ -22,11 +20,9 @@ defineProps({
 })
 
 const router = useRouter()
-const { t } = useI18n()
-const store = useStore()
 
 const pageName = router.currentRoute.value.name.split('.')
-const { perPage, sortBy, properties } = useTaskSettings(pageName[1], store, t)
+const { perPage, sortBy, properties } = useTaskSettings(pageName[1])
 </script>
 
 <template>
