@@ -16,6 +16,7 @@ describe('BatchSearchCopyForm.vue', () => {
   })
 
   beforeEach(async () => {
+    api.copyBatchSearch.mockClear()
     await router.push({ name: 'task.batch-search.view.results', params: { indices: 'test', uuid: '12' } })
     const props = {
       batchSearch: {
