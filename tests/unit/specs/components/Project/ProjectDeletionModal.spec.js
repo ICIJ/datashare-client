@@ -7,6 +7,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 describe('ProjectDeletionModal.vue', () => {
   let api, plugins
   let project
+
   beforeEach(() => {
     const { index: name, es } = esConnectionHelper.build()
     project = { name }

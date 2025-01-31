@@ -1,6 +1,5 @@
 <script setup>
 import { useStore } from 'vuex'
-import { useI18n } from 'vue-i18n'
 
 import Task from '@/views/Task/Task'
 import TaskList from '@/components/Task/TaskList'
@@ -12,7 +11,6 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useTaskSettings } from '@/composables/task-settings'
 
 const store = useStore()
-const { t } = useI18n()
 const settingName = 'documents'
 
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
