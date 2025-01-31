@@ -1,7 +1,6 @@
 <script setup>
 import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
 
 import { useTaskHeader } from '@/composables/task-header'
 import { useTaskPolling } from '@/composables/task-polling'
