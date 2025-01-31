@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, reactive, watch, toRef } from 'vue'
-import { every, castArray } from 'lodash'
+import { castArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
 
@@ -13,15 +13,11 @@ import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 
 const props = defineProps({
-  disabled: {
-    type: Boolean
-  },
-  values: {
-    type: Object,
-    default: () => ({})
-  },
   projectName: {
     type: String
+  },
+  disabled: {
+    type: Boolean
   }
 })
 
@@ -34,22 +30,19 @@ const projectName = toRef(props, 'projectName')
 const currentProject = computed(() => core.findProject(projectName.value ?? core.getDefaultProject()))
 const selectedProject = ref(currentProject.value)
 
-watch(toRef(props, 'projectName'), () => {
-  selectedProject.value = currentProject.value
-})
 function getProjectSourcePath(project) {
   const currentSourcePath = project.value?.sourcePath?.split('file://').pop() ?? core.getDefaultDataDir()
   return decodeURI(currentSourcePath)
 }
 const sourcePath = computed(() => getProjectSourcePath(currentProject.value))
+
 const initialFormValues = computed(() => ({
   language: null,
   extractOcr: false,
   skipIndexedDocuments: true,
   hasTesseract: true,
   project: selectedProject.value.name,
-  path: sourcePath.value,
-  ...props.values
+  path: sourcePath.value
 }))
 
 const path = ref(initialFormValues.value.path)
@@ -98,10 +91,6 @@ async function submit() {
   await core.router.push({ name: 'task.documents.list' })
 }
 
-const valid = computed(() => {
-  return every([!props.disabled, path.value?.trim()?.length > 0])
-})
-
 const showOcrMessage = computed(() => {
   return !hasTesseract.value || !!extractOcr.value
 })
@@ -141,22 +130,21 @@ async function loadLanguages() {
   wait.end(waitOcrIdentifier)
 }
 
-function setProjectPath(project) {
-  path.value = project.sourcePath
-}
-
 onMounted(loadLanguages)
+watch(toRef(props, 'projectName'), () => {
+  selectedProject.value = currentProject.value
+})
 watch(
   () => selectedProject.value,
   (p) => {
-    setProjectPath(p)
+    path.value = getProjectSourcePath(p)
   },
   { immediate: true }
 )
 </script>
 
 <template>
-  <form-creation class="task-documents-form" :valid="valid" :submit-label="submitLabel" @reset="reset" @submit="submit">
+  <form-creation class="task-documents-form" :submit-label="submitLabel" @reset="reset" @submit="submit">
     <form-fieldset-i18n name="project-selector" translation-key="task.documents.form.projectSelector">
       <search-bar-input-dropdown-for-projects v-model="selectedProject" />
     </form-fieldset-i18n>
