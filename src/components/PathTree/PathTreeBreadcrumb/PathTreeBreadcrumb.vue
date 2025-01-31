@@ -41,7 +41,7 @@ const isRootEntry = (tree) => tree.length === 0
 
 const isWindowsPath = computed(() => pathSeparator.value === '\\')
 
-const dataDir = computed(() => core.config.get('mountedDataDir') || core.config.get('dataDir'))
+const dataDir = core.getDefaultDataDir()
 
 const pathSeparator = computed(() => core.config.get('pathSeparator', '/'))
 
@@ -60,7 +60,7 @@ const fullTree = computed(() =>
     .reduce(getNextTreeEntry, [])
 )
 
-const treeWithoutDataDir = computed(() => fullTree.value.filter((d) => d.length > dataDir.value.length))
+const treeWithoutDataDir = computed(() => fullTree.value.filter((d) => d.length > dataDir.length))
 
 const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithoutDataDir.value : fullTree.value))
 </script>
