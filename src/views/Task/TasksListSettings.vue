@@ -6,7 +6,7 @@ import { useStore } from 'vuex'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useTaskSettings } from '@/views/Task/task-settings'
+import { useTaskSettings } from '@/composables/task-settings'
 
 defineProps({
   hide: {

@@ -3,9 +3,8 @@ import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
-import { useTaskHeader } from './task-header'
-import { useTaskPolling } from './task-polling'
-
+import { useTaskHeader } from '@/composables/task-header'
+import { useTaskPolling } from '@/composables/task-polling'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskActions from '@/components/Task/TaskActions'

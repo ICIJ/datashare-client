@@ -4,7 +4,7 @@ import { orderBy as orderArrayBy, property } from 'lodash'
 
 import { useUtils } from '@/composables/utils'
 import { useUrlParam } from '@/composables/url-params'
-import { useTaskSettings } from '@/views/Task/task-settings'
+import { useTaskSettings } from '@/composables/task-settings'
 
 export function useTaskHeader(pageName, hasAddButton, tasks, store, t) {
   const { isServer } = useUtils()
