@@ -143,5 +143,4 @@ describe('DocumentView.vue', () => {
 
     expect(api.addUserHistoryEvent).toBeCalledTimes(1)
   })
-
 })
