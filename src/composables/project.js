@@ -31,22 +31,12 @@ export function useProjectMetrics(project) {
   const { core } = useCore()
   const { name: index } = toValue(project)
 
-  async function fetchDocumentsCount(query = 'type:Document') {
-    const size = 0
-    const body = { track_total_hits: true, query: { query_string: { query } } }
-    const preference = 'project-documents-count'
-    const res = await core.api.elasticsearch.search({ index, body, preference, size })
-    return res?.hits?.total?.value || 0
+  async function fetchDocumentsCount() {
+    return core.api.elasticsearch.countDocuments(index)
   }
 
   async function fetchTagsCount() {
-    const size = 0
-    const cardinality = { field: 'tags' }
-    const aggs = { count: { cardinality } }
-    const body = { size, aggs }
-    const preference = 'project-tags-count'
-    const res = await core.api.elasticsearch.search({ index, body, preference })
-    return res?.aggregations?.count?.value || 0
+    return core.api.elasticsearch.countTags(index)
   }
 
   async function fetchRecommendationsCount() {
