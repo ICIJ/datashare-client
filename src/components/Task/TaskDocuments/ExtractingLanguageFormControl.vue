@@ -35,6 +35,9 @@ export default {
     },
     isReady() {
       return !this.$wait.is(this.waitIdentifier)
+    },
+    hasTextLanguages() {
+      return !this.textLanguages.length
     }
   },
   async mounted() {
@@ -57,7 +60,7 @@ export default {
 <template>
   <b-overlay :show="!isReady" class="extracting-language-form-control" rounded spinner-small>
     <b-alert
-      v-if="isReady && !textLanguages.length"
+      v-if="isReady && hasTextLanguages"
       model-value
       variant="danger"
       class="extracting-language-form-control--no-language m-0"
