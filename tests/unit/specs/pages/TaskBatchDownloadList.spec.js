@@ -148,9 +148,8 @@ describe('TaskBatchDownloadList.vue', () => {
 
   it('should get all batch download tasks', async () => {
     await wrapper.vm.getDownloadTasks()
-
-    expect(api.getTasks).toBeCalledTimes(2) // 1 on mount and 1 in the getDownloadTasks
-    expect(api.getTasks).toBeCalledWith('BatchDownloadRunner')
+    expect(api.getTasks).toBeCalledTimes(2)
+    expect(api.getTasks).toBeCalledWith('org.icij.datashare.tasks.BatchDownloadRunner')
   })
 
   it('should display a list of batch download tasks', async () => {

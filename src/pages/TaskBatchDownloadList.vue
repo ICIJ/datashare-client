@@ -117,7 +117,7 @@ export default {
     },
     async getDownloadTasks() {
       try {
-        const tasks = await this.$core.api.getTasks('BatchDownloadRunner')
+        const tasks = await this.$core.api.getTasks('org.icij.datashare.tasks.BatchDownloadRunner')
         this.tasks = this.sortByDateTime(tasks)
       } catch (e) {
         // hot fix to prevent showing endless loading placeholders
