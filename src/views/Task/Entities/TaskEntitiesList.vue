@@ -1,20 +1,15 @@
 <script setup>
-import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
-
-import { getHumanTaskName } from '@/enums/taskNames'
 import Task from '@/views/Task/Task'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import DisplayDatetimeLong from '@/components/Display/DisplayDatetimeLong'
 import { useTaskSettings } from '@/composables/task-settings'
+import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 
-const { t } = useI18n()
-const store = useStore()
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
 </script>
+
 <template>
   <task
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
@@ -32,9 +27,11 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
       @update:order="updateOrder"
     >
       <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
-      <template #cell(createdAt)="{ item }"><display-datetime-long :value="item.createdAt" /></template>
+      <template #cell(entities-to-find)>NA</template>
+      <template #cell(pipeline)="{ item }">{{ item.args.nlpPipeline }}</template>
+      <template #cell(project)="{ item }">{{ item.args.defaultProject }}</template>
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
-      <template #cell(name)="{ item }">{{ getHumanTaskName(item.name) }}</template>
+      <template #cell(createdAt)="{ item }"> <display-datetime-from-now :value="item.createdAt" /> </template>
     </task-list>
   </task>
 </template>
