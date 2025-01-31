@@ -408,7 +408,7 @@ export const mutations = {
 
 function actionsBuilder(api) {
   return {
-    async refresh({ state, commit, getters, dispatch }) {
+    async refresh({ commit, getters, dispatch }) {
       commit('isReady', false)
       commit('error', null)
       try {

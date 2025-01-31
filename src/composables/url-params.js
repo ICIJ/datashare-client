@@ -129,7 +129,7 @@ export function onRouteUpdateCondition(condition, callback) {
  * @param {Function} callback - The callback function to execute.
  */
 export function onRouteUpdateMatch(name, callback) {
-  onRouteUpdateCondition((to, from) => name && to.name === name, callback)
+  onRouteUpdateCondition((to) => name && to.name === name, callback)
 }
 
 /**
@@ -139,7 +139,7 @@ export function onRouteUpdateMatch(name, callback) {
  * @param {Function} callback - The callback function to execute.
  */
 export function onRouteUpdateNotMatch(name, callback) {
-  onRouteUpdateCondition((to, from) => name && to.name !== name, callback)
+  onRouteUpdateCondition((to) => name && to.name !== name, callback)
 }
 
 /**
