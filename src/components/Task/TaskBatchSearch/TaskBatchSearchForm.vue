@@ -61,7 +61,6 @@ const paths = ref(initialValues.filters.paths)
 const tags = ref(initialValues.filters.tags)
 const tagsExcluded = ref(initialValues.filters.tagsExcluded)
 const fileTypes = ref(initialValues.filters.fileTypes)
-const queryList = ref(initialValues.queryList)
 
 function reset() {
   name.value = initialValues.name
@@ -77,9 +76,6 @@ function reset() {
   tagsExcluded.value = initialValues.filters.tagsExcluded
   fileTypes.value = initialValues.filters.fileTypes
 }
-const valid = computed(() => {
-  return name.value.trim(' ').length > 0 && csvFile.value !== null
-})
 
 function submit(formData) {
   if (valid.value) {
@@ -101,6 +97,10 @@ function submit(formData) {
     console.log('not valid')
   }
 }
+
+const valid = computed(() => {
+  return name.value.trim(' ').length > 0 && csvFile.value !== null
+})
 
 const visibilityOptions = computed(() => [
   {

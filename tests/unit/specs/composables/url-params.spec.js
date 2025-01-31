@@ -396,7 +396,7 @@ describe('replaceUrlParam', () => {
   })
 
   it('should not change query if "to" function returns null', async () => {
-    const to = (value) => null
+    const to = () => null
 
     const [, router] = withSetup({
       initialRoute: { path: '/', query: { oldParam: 'testValue' } },

@@ -6,7 +6,6 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
-import DocumentTranslationAlert from '@/components/Document/DocumentTranslation/DocumentTranslationAlert/DocumentTranslationAlert'
 import DocumentContent from '@/components/Document/DocumentContent'
 
 describe('DocumentTranslation.vue', () => {

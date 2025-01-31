@@ -1,4 +1,4 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import EntityButton from '@/components/Entity/EntityButton'
 import EntityOccurrences from '@/components/Entity/EntityOccurrences'
