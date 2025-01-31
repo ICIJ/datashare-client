@@ -1,12 +1,14 @@
 import { computed } from 'vue'
 import Fuse from 'fuse.js'
 import { orderBy as orderArrayBy, property } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import { useUtils } from '@/composables/utils'
 import { useUrlParam } from '@/composables/url-params'
 import { useTaskSettings } from '@/composables/task-settings'
 
 export function useTaskHeader(pageName, hasAddButton, tasks) {
+  const { t } = useI18n()
   const { isServer } = useUtils()
   const settingKey = 'task'
   const { perPage, sortBy } = useTaskSettings(settingKey)

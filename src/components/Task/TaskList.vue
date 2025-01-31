@@ -16,8 +16,13 @@
         <slot name="empty">{{ $t('task.noResults') }}</slot>
       </td>
     </page-table-tr>
-    <page-table-tr v-for="(item, index) in tasks" :key="index">
-      <td v-for="(column, i) in columns" :key="i">
+    <page-table-tr v-for="(item, index) in tasks" :key="index" class="task-list__row">
+      <td
+        v-for="(column, i) in columns"
+        :key="i"
+        class="task-list__row__column"
+        :class="[`task-list__row__column--${column.value}`]"
+      >
         <slot :name="`cell(${column.value})`" v-bind="{ item, column }">{{ item[column.value] }}</slot>
       </td>
       <page-table-td-actions>
