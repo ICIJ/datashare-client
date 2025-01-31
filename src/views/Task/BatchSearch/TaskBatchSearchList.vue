@@ -1,18 +1,12 @@
 <script setup>
-import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
-
 import Task from '@/views/Task/Task'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { useTaskSettings } from '@/composables/task-settings'
-const settingName = 'batch-search'
-const { t } = useI18n()
-const store = useStore()
 
-const { propertiesModelValueOptions } = useTaskSettings(settingName)
+const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 </script>
 <template>
   <task
@@ -30,15 +24,20 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
       @update:sort="updateSort"
       @update:order="updateOrder"
     >
-      <template #cell(id)="{ item }"
-        ><router-link
-          :to="{ name: 'task.batch-search.view.results', params: { indices: 'local-datashare', uuid: item.id } }"
-          >{{ item.id }}</router-link
-        ></template
-      >
-      <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
-      <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
-      <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
+      <template #cell(id)="{ item: { id: uuid } }">
+        <router-link :to="{ name: 'task.batch-search.view.results', params: { indices: 'local-datashare', uuid } }">
+          {{ uuid }}
+        </router-link>
+      </template>
+      <template #cell(state)="{ item }">
+        <display-status :value="item.state" />
+      </template>
+      <template #cell(createdAt)="{ item }">
+        <display-datetime-from-now :value="item.createdAt" />
+      </template>
+      <template #cell(progress)="{ item }">
+        <display-progress :value="item.progress" />
+      </template>
     </task-list>
   </task>
 </template>

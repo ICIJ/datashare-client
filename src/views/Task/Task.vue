@@ -12,6 +12,7 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
 import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
 import EmptyState from '@/components/EmptyState/EmptyState'
+
 const props = defineProps({
   taskFilter: {
     type: Array,
@@ -26,8 +27,8 @@ const props = defineProps({
     default: false
   }
 })
-const { t } = useI18n()
-const store = useStore()
+
+const { t } = useI18n())
 const taskNames = toRef(props, 'taskFilter')
 
 const {
@@ -38,8 +39,19 @@ const {
   deleteDoneTasks,
   isLoading
 } = useTaskPolling(taskNames)
-const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
-  useTaskHeader(props.pageName, props.showAdd, pollingTasks)
+
+const {
+  toAddRoute,
+  searchQuery,
+  page,
+  perPage,
+  searchPlaceholder,
+  displayedTasks,
+  totalRows,
+  sortBy,
+  noTasks
+} = useTaskHeader(props.pageName, props.showAdd, pollingTasks)
+
 const sort = computed({
   get: () => sortBy.value.modelValue?.[0],
   set: (value) => (sortBy.value.modelValue = [value, order.value])
@@ -93,8 +105,7 @@ const order = computed({
         :update-order="(v) => (order = v)"
         :update-sort="(v) => (sort = v)"
         :empty="noTasks"
-      >
-      </slot
-    ></b-overlay>
+      />
+    </b-overlay>
   </page-container>
 </template>
