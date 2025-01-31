@@ -16,7 +16,7 @@ export function useTheme() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   }
   if (!eventAdded) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
       if (getTheme() === AUTOMATIC) {
         setTheme(AUTOMATIC)
       }

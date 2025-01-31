@@ -63,7 +63,7 @@ export const getters = {
       throw new Error(`Cannot find widget type '${type}'`)
     }
   },
-  getWidget(state, getters) {
+  getWidget(state) {
     return (predicate) => find(state.widgets, predicate)
   },
   instantiateWidget(state, getters) {

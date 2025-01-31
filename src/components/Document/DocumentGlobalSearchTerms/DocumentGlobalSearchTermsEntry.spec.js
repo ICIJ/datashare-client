@@ -1,14 +1,16 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentGlobalSearchTermsEntry from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTermsEntry'
-import ButtonIcon from '@/components/Button/ButtonIcon'
+
 describe('DocumentGlobalSearchTermsEntry', () => {
   let plugins
+
   beforeEach(() => {
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
   })
+
   it('renders without crashing', () => {
     const props = { term: {} }
     const wrapper = shallowMount(DocumentGlobalSearchTermsEntry, {
@@ -26,6 +28,7 @@ describe('DocumentGlobalSearchTermsEntry', () => {
     })
     expect(wrapper.find('.document-global-search-terms-entry__label').text()).toBe('test')
   })
+
   it('shows in tags text when there is tags', async () => {
     const props = { term: { label: 'test', count: 0, tags: 0 } }
 
@@ -37,6 +40,7 @@ describe('DocumentGlobalSearchTermsEntry', () => {
     await wrapper.setProps({ term: { label: 'test', count: 0, tags: 1 } })
     expect(wrapper.find('.document-global-search-terms-entry__tags').exists()).toBe(true)
   })
+
   it('shows in metadata text when there is metadata', async () => {
     const props = { term: { label: 'test', count: 0, metadata: 0 } }
 

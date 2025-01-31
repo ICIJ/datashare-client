@@ -9,7 +9,7 @@ export const state = {
 }
 
 export const getters = {
-  instantiatePipeline(state) {
+  instantiatePipeline() {
     return ({ type = 'IdentityPipeline', ...options } = {}) => {
       // The given type is a class with a `apply` method
       if (type?.prototype?.apply) {
@@ -38,7 +38,7 @@ export const getters = {
   getPipelineByName(state) {
     return (name) => find(state.registered, { name })
   },
-  getPipelinesByCategory(state, getters) {
+  getPipelinesByCategory(state) {
     return (category = null) => {
       return orderBy(filter(state.registered, { category }), 'order', 'asc')
     }
