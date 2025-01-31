@@ -1,7 +1,7 @@
-import { components } from '../icons'
+import { names } from '../icons'
 
 export function PhosphorVuePreset() {
   return {
-    '@phosphor-icons/vue': components
+    '@phosphor-icons/vue': names
   }
 }
