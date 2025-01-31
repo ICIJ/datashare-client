@@ -97,7 +97,7 @@
     "front-matter": "^4.0.2",
     "handlebars": "^4.7.6",
     "jsdoc-to-markdown": "^8.0.3",
-    "jsdom": "^24.1.1",
+    "jsdom": "^26.0.0",
     "sass": "^1.79.3",
     "storybook": "^8.5.2",
     "storybook-addon-pseudo-states": "^4.0.2",
