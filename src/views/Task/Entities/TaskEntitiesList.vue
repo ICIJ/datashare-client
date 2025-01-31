@@ -8,7 +8,7 @@ import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayDatetimeLong from '@/components/Display/DisplayDatetimeLong'
-import { useTaskSettings } from '@/views/Task/task-settings'
+import { useTaskSettings } from '@/composables/task-settings'
 
 const { t } = useI18n()
 const store = useStore()

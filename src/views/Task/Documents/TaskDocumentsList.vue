@@ -9,7 +9,7 @@ import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { getHumanTaskName } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
-import { useTaskSettings } from '@/views/Task/task-settings'
+import { useTaskSettings } from '@/composables/task-settings'
 
 const store = useStore()
 const { t } = useI18n()
