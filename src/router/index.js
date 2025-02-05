@@ -109,8 +109,8 @@ export const routes = [
         name: 'tasks',
         path: 'tasks',
         components: {
-          default: () => import('@/views/Task/Tasks'),
-          settings: () => import('@/views/Task/TasksListSettings')
+          default: () => import('@/views/Task/Task'),
+          settings: () => import('@/views/Task/TaskListSettings')
         },
         meta: {
           title: 'task.title'
@@ -142,7 +142,7 @@ export const routes = [
               {
                 name: 'task.entities.list',
                 path: '',
-                component: () => import('@/views/Task/Entities/TaskEntitiesList'),
+                component: () => import('@/views/Task/TaskEntities/TaskEntitiesList'),
                 meta: {
                   breadcrumb: false
                 }
@@ -151,7 +151,7 @@ export const routes = [
                 name: 'task.entities.new',
                 props: ({ query }) => ({ projectName: query.projectName }),
                 path: 'new',
-                component: () => import('@/views/Task/Entities/TaskEntitiesNew'),
+                component: () => import('@/views/Task/TaskEntities/TaskEntitiesNew'),
                 meta: {
                   title: 'task.entities.new.title'
                 }
@@ -169,7 +169,7 @@ export const routes = [
               {
                 name: 'task.documents.list',
                 path: '',
-                component: () => import('@/views/Task/Documents/TaskDocumentsList'),
+                component: () => import('@/views/Task/TaskDocuments/TaskDocumentsList'),
                 meta: {
                   breadcrumb: false
                 }
@@ -177,7 +177,7 @@ export const routes = [
               {
                 name: 'task.documents.new',
                 path: 'new',
-                component: () => import('@/views/Task/Documents/TaskDocumentsNew'),
+                component: () => import('@/views/Task/TaskDocuments/TaskDocumentsNew'),
                 props: ({ query }) => ({ projectName: query.projectName }),
                 meta: {
                   title: 'task.documents.new.title'
@@ -193,7 +193,7 @@ export const routes = [
               {
                 name: 'task.batch-download.list',
                 path: '',
-                component: () => import('@/views/Task/BatchDownload/TaskBatchDownloadList'),
+                component: () => import('@/views/Task/TaskBatchDownload/TaskBatchDownloadList'),
                 meta: {
                   breadcrumb: false
                 }
@@ -208,7 +208,7 @@ export const routes = [
               {
                 path: '',
                 name: 'task.batch-search.list',
-                component: () => import('@/views/Task/BatchSearch/TaskBatchSearchList'),
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchList'),
                 meta: {
                   breadcrumb: false
                 }
@@ -216,7 +216,7 @@ export const routes = [
               {
                 name: 'task.batch-search.new',
                 path: 'new',
-                component: () => import('@/views/Task/BatchSearch/TaskBatchSearchNew'),
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchNew'),
                 meta: {
                   title: 'newBatchSearch.title',
                   docs: [

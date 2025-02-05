@@ -1,5 +1,5 @@
 <script setup>
-import Task from '@/views/Task/Task'
+import TaskPage from '@/views/Task/TaskPage'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayProgress from '@/components/Display/DisplayProgress'
@@ -11,7 +11,7 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
 </script>
 
 <template>
-  <task
+  <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
     :task-filter="['org.icij.datashare.tasks.ExtractNlpTask', 'org.icij.datashare.tasks.EnqueueFromIndexTask']"
     page-name="entities"
@@ -33,5 +33,5 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
       <template #cell(createdAt)="{ item }"> <display-datetime-from-now :value="item.createdAt" /> </template>
     </task-list>
-  </task>
+  </task-page>
 </template>

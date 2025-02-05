@@ -2,7 +2,7 @@
 import { basename } from 'path'
 import { PhDownload } from '@phosphor-icons/vue'
 
-import Task from '@/views/Task/Task'
+import TaskPage from '@/views/Task/TaskPage'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
@@ -27,7 +27,7 @@ function downloadResultsUrl(item) {
 }
 </script>
 <template>
-  <task
+  <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
     :task-filter="['org.icij.datashare.tasks.BatchDownloadRunner']"
     page-name="batch-download"
@@ -60,5 +60,5 @@ function downloadResultsUrl(item) {
         <display-content-length v-if="hasZipSize(item)" :value="item.result.size" />
       </template>
     </task-list>
-  </task>
+  </task-page>
 </template>

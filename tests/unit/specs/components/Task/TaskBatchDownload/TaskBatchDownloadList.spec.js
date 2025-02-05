@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import TaskBatchDownloadList from '@/views/Task/BatchDownload/TaskBatchDownloadList'
+import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownloadList'
 import { getMode, MODE_NAME } from '@/mode'
 
 describe('TaskBatchDownloadList.vue', () => {
