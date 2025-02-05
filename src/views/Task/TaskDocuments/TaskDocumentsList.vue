@@ -1,7 +1,7 @@
 <script setup>
 import { useStore } from 'vuex'
 
-import Task from '@/views/Task/Task'
+import TaskPage from '@/views/Task/TaskPage'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
@@ -20,7 +20,7 @@ async function stopTask(name) {
 }
 </script>
 <template>
-  <task
+  <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
     :task-filter="['org.icij.datashare.tasks.IndexTask', 'org.icij.datashare.tasks.ScanTask']"
     page-name="documents"
@@ -51,5 +51,5 @@ async function stopTask(name) {
         />
       </template>
     </task-list>
-  </task>
+  </task-page>
 </template>
