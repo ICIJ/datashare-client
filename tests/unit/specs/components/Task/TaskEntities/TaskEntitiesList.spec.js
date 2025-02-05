@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import TaskEntitiesList from '@/views/Task/Entities/TaskEntitiesList'
+import TaskEntitiesList from '@/views/Task/TaskEntities/TaskEntitiesList'
 
 describe('TaskEntitiesList.vue', () => {
   let api, plugins

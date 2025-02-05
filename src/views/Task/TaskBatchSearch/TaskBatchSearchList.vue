@@ -1,5 +1,5 @@
 <script setup>
-import Task from '@/views/Task/Task'
+import TaskPage from '@/views/Task/TaskPage'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
@@ -9,7 +9,7 @@ import { useTaskSettings } from '@/composables/task-settings'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 </script>
 <template>
-  <task
+  <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
     :task-filter="['org.icij.datashare.tasks.BatchSearchRunner']"
     page-name="batch-search"
@@ -39,5 +39,5 @@ const { propertiesModelValueOptions } = useTaskSettings('batch-search')
         <display-progress :value="item.progress" />
       </template>
     </task-list>
-  </task>
+  </task-page>
 </template>
