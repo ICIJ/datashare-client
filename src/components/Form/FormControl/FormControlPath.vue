@@ -62,7 +62,7 @@ function onOk() {
     <app-modal id="modal-form-control-path" lazy scrollable hide-header size="lg" @ok="onOk">
       <path-tree
         v-model:selected-paths="selectedPaths"
-        :path="defaultDataDir"
+        :path="sourcePath"
         :projects="projects"
         :multiple="multiple"
         select-mode
