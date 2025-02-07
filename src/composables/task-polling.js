@@ -5,7 +5,7 @@ import { useStore } from 'vuex'
 import { usePolling } from '@/composables/polling'
 import { useCore } from '@/composables/core'
 
-export function useTaskPolling(taskNames) {
+export function useTaskPolling(taskNames = []) {
   const { wait } = useCore()
   const store = useStore()
   const { registerPollOnce } = usePolling()
