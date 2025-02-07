@@ -24,7 +24,7 @@ const compact = computed(() => {
 
 <template>
   <page-table-th :label="t('projectEntriesTableHead.name')" :icon="PhCirclesThreePlus" emphasis sortable name="name" />
-  <page-table-th v-if="!compact" :label="t('projectEntriesTableHead.description')" />
+  <page-table-th v-if="!compact" :label="t('projectEntriesTableHead.description')" name="description" />
   <page-table-th
     :label="t('projectEntriesTableHead.documents')"
     :icon="PhFiles"
@@ -33,6 +33,6 @@ const compact = computed(() => {
     name="documentsCount"
   />
   <page-table-th :label="t('projectEntriesTableHead.updatedOn')" :icon="PhCalendarBlank" sortable name="updateDate" />
-  <page-table-th :label="t('projectEntriesTableHead.links')" hide-label />
-  <page-table-th :label="t('projectEntriesTableHead.actions')" hide-label />
+  <page-table-th :label="t('projectEntriesTableHead.links')" hide-label name="links" />
+  <page-table-th :label="t('projectEntriesTableHead.actions')" hide-label name="actions" />
 </template>
