@@ -26,16 +26,14 @@ const { t } = useI18n()
 
 const submitLabel = computed(() => t(`task.documents.form.submit`))
 
-const projectName = toRef(props, 'projectName')
-const currentProject = computed(() => core.findProject(projectName.value ?? core.getDefaultProject()))
+const currentProject = computed(() => core.findProject(props.projectName ?? core.getDefaultProject()))
 const selectedProject = ref(currentProject.value)
 
 function getProjectSourcePath(project) {
   const currentSourcePath = project.value?.sourcePath?.split('file://').pop() ?? core.getDefaultDataDir()
   return decodeURI(currentSourcePath)
 }
-const sourcePath = computed(() => getProjectSourcePath(currentProject.value))
-
+const sourcePath = computed(() => getProjectSourcePath(selectedProject))
 const initialFormValues = computed(() => ({
   language: null,
   extractOcr: false,
@@ -54,7 +52,7 @@ const ocrLanguages = ref([])
 const skipIndexedDocuments = ref(initialFormValues.value.skipIndexedDocuments)
 
 const form = reactive({
-  defaultProject: selectedProject.value.name,
+  defaultProject: computed(() => selectedProject.value.name),
   language: computed(() => (language.value?.length ? language.value : null)),
   hasTesseract,
   ocr: extractOcr,
@@ -131,15 +129,12 @@ async function loadLanguages() {
 }
 
 onMounted(loadLanguages)
-watch(toRef(props, 'projectName'), () => {
-  selectedProject.value = currentProject.value
-})
+watch(toRef(props, 'projectName'), () => (selectedProject.value = currentProject.value))
 watch(
   () => selectedProject.value,
   (p) => {
-    path.value = getProjectSourcePath(p)
-  },
-  { immediate: true }
+    path.value = getProjectSourcePath(toRef(p))
+  }
 )
 </script>
 
