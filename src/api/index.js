@@ -56,7 +56,7 @@ export class Api {
     return this.sendActionAsText(`/api/index/${index}`, { method: Method.PUT })
   }
   createProject(data) {
-    return this.sendActionAsText(`/api/project/`, { method: Method.POST, data })
+    return this.sendAction(`/api/project/`, { method: Method.POST, data })
   }
   updateProject(data) {
     const { name } = data
