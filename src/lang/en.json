@@ -1209,9 +1209,9 @@
     "title": "Are you sure you want to delete the {project} project?",
     "body": {
       "all": "It will remove {documents} from your index, {tags} and {recommendations}.",
-      "documents": "0 documents | one document | {count} documents",
-      "tags": "0 tags | one tag | {count} tags",
-      "recommendations": "0 recommendations | one recommendation | {count} recommendations"
+      "documents": "0 documents | 1 document | {count} documents",
+      "tags": "0 tags | 1 tag | {count} tags",
+      "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
     },
     "notify": {
       "succeed": "The project was deleted",
