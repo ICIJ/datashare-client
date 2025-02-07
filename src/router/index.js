@@ -268,7 +268,7 @@ export const routes = [
             },
             meta: {
               icon: 'dots-nine',
-              title: 'All projects'
+              title: 'appSidebar.allProjects'
             }
           },
           {
