@@ -11,7 +11,7 @@ import { useProjectMetrics } from '@/composables/project'
 import { useWait } from '@/composables/wait'
 import { useCore } from '@/composables/core'
 
-const { project } = defineProps({
+const props = defineProps({
   project: {
     type: Object,
     required: true
@@ -27,12 +27,12 @@ const recommendationsCount = ref(0)
 
 const { waitFor, loaderId } = useWait()
 const { core, toast } = useCore()
-const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(project)
+const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(props.project)
 
 async function confirmDeletion() {
   try {
-    await core.api.deleteProject(project.name)
-    await core.deleteProject(project.name)
+    await core.api.deleteProject(props.project.name)
+    await core.deleteProject(props.project.name)
     toast.success(t('projectDeletionModal.notify.succeed'))
     emit('success')
   } catch (error) {
