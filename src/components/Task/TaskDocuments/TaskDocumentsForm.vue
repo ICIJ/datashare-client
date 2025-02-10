@@ -109,9 +109,9 @@ const skipOptions = computed(() => [
 
 async function retrieveLanguages() {
   try {
-    const [textLanguages, ocrLanguages] = await Promise.all([core.api.textLanguages(), core.api.ocrLanguages()])
-    textLanguages.value = castArray(textLanguages)
-    ocrLanguages.value = castArray(ocrLanguages)
+    const [tL, ocrL] = await Promise.all([core.api.textLanguages(), core.api.ocrLanguages()])
+    textLanguages.value = castArray(tL)
+    ocrLanguages.value = castArray(ocrL)
   } catch (e) {
     hasTesseract.value = e.response?.status !== 503
     if (hasTesseract.value) {
