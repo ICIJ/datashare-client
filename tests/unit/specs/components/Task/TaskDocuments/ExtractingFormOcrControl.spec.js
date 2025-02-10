@@ -23,7 +23,7 @@ describe('ExtractingFormOcrControl.vue', () => {
   let wrapper
 
   describe('OCR for italian language is installed', () => {
-    it('should display an alert indicating that no ocr are installed', async () => {
+    it('should display an alert indicating that no OCR are installed', async () => {
       wrapper = mount(ExtractingFormOcrControl, {
         global: {
           plugins
@@ -36,8 +36,10 @@ describe('ExtractingFormOcrControl.vue', () => {
         }
       })
       await flushPromises()
-      expect(wrapper.find('.extracting_language_form_control__install_ocr_language').exists()).toBe(true)
-      expect(wrapper.find('.extracting_language_form_control').text()).not.toContain('Tesseract OCR is not installed.')
+      expect(wrapper.find('.extracting-language-form-ocr-control__install_ocr_language').exists()).toBe(true)
+      expect(wrapper.find('.extracting-language-form-ocr-control').text()).not.toContain(
+        'Tesseract OCR is not installed.'
+      )
     })
 
     it('should display an alert indicating that tesseract is not installed', async () => {
@@ -53,7 +55,7 @@ describe('ExtractingFormOcrControl.vue', () => {
         }
       })
       await flushPromises()
-      expect(wrapper.find('.extracting_language_form_control').text()).toContain('Tesseract OCR is not installed.')
+      expect(wrapper.find('.extracting-language-form-ocr-control').text()).toContain('Tesseract OCR is not installed.')
     })
   })
 })

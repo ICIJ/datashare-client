@@ -1,86 +1,76 @@
-<script>
+<script setup>
+import { computed } from 'vue'
 import { some, get, find } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
 
-/**
- * A form-control to select the extracting language.
- */
-export default {
-  name: 'ExtractingFormOcrControl',
-  props: {
-    /**
-     * Input value
-     * @model
-     */
-    isoLang: {
-      type: String
-    },
-    textLanguages: {
-      type: Array,
-      default: () => []
-    },
-    ocrLanguages: {
-      type: Array,
-      default: () => []
-    },
-    hasTesseract: {
-      type: Boolean,
-      default: true
-    },
-    isReady: {
-      type: Boolean
-    }
+const props = defineProps({
+  isoLang: String,
+  textLanguages: {
+    type: Array,
+    default: () => []
   },
-  computed: {
-    languageName() {
-      if (this.isoLang) {
-        const name = find(this.textLanguages, (language) => language.iso6392 === this.isoLang)?.name
-        return this.$t(`filter.lang.${name}`)
-      }
-      return 'default'
-    },
-    isLanguageAvailable() {
-      return some(this.ocrLanguages, ({ name, iso6392 }) => {
-        return this.sameLanguage(name) || this.sameLanguage(iso6392)
-      })
-    },
-    isOcrLanguage() {
-      return !this.isoLang || this.isLanguageAvailable
-    },
-    shouldDisplayLanguageMessage() {
-      return this.hasTesseract && !this.isOcrLanguage
-    }
+  ocrLanguages: {
+    type: Array,
+    default: () => []
   },
-  methods: {
-    toTesseractCode(name) {
-      return get(settings, ['iso6392', 'tesseract', name], name)
-    },
-    sameLanguage(nameOrIso6392) {
-      return this.toTesseractCode(nameOrIso6392) === this.toTesseractCode(this.isoLang)
-    }
+  hasTesseract: {
+    type: Boolean,
+    default: true
+  },
+  isReady: Boolean
+})
+
+const { t } = useI18n()
+
+const languageName = computed(() => {
+  if (props.isoLang) {
+    const name = find(props.textLanguages, (language) => language.iso6392 === props.isoLang)?.name
+    return t(`filter.lang.${name}`)
   }
+  return 'default'
+})
+
+const isLanguageAvailable = computed(() => {
+  return some(props.ocrLanguages, ({ name, iso6392 }) => {
+    return sameLanguage(name) || sameLanguage(iso6392)
+  })
+})
+
+const isOcrLanguage = computed(() => {
+  return !props.isoLang || isLanguageAvailable.value
+})
+
+const shouldDisplayLanguageMessage = computed(() => {
+  return props.hasTesseract && !isOcrLanguage.value
+})
+function toTesseractCode(name) {
+  return get(settings, ['iso6392', 'tesseract', name], name)
+}
+function sameLanguage(nameOrIso6392) {
+  return toTesseractCode(nameOrIso6392) === toTesseractCode(props.isoLang)
 }
 </script>
 
 <template>
-  <b-overlay :show="!isReady" class="extracting_language_form_control" rounded spinner-small>
+  <b-overlay :show="!isReady" class="extracting-language-form-ocr-control" rounded spinner-small>
     <b-alert
       :model-value="!hasTesseract"
       variant="warning"
-      class="extracting_language_form_control__tesseract_not_installed mt-3"
+      class="extracting-language-form-ocr-control__tesseract_not_installed mt-3"
     >
-      {{ $t('extractingFormOcrControl.tesseractNotInstalled') }}
+      {{ t('extractingFormOcrControl.tesseractNotInstalled') }}
     </b-alert>
     <b-alert
       :model-value="shouldDisplayLanguageMessage"
       variant="warning"
-      class="extracting_language_form_control__install_ocr_language mt-3"
+      class="extracting-language-form-ocr-control__install_ocr_language mt-3"
     >
-      {{ $t('extractingFormOcrControl.isMissing', { language: languageName }) }}
-      {{ $t('extractingFormOcrControl.useDefault') }}
+      {{ t('extractingFormOcrControl.isMissing', { language: languageName }) }}
+      {{ t('extractingFormOcrControl.useDefault') }}
       <a href="https://icij.gitbook.io/datashare/local-mode/add-more-languages" target="_blank">
-        {{ $t('extractingFormOcrControl.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
+        {{ t('extractingFormOcrControl.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
       </a>
     </b-alert>
   </b-overlay>
