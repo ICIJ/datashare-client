@@ -409,9 +409,7 @@ describe('Datashare backend client', () => {
     expect(mockAxios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/project/'),
       method: 'POST',
-      data,
-      responseType: 'text',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }
+      data
     })
   })
 
