@@ -841,6 +841,7 @@
     "savedSearches": "Saved searches",
     "tasks": "Tasks",
     "analyseAction": "Add documents",
+    "taskboard": "Task board",
     "batchSearches": "Batch searches",
     "batchSearchesAction": "Add batch searches",
     "batchDownloads": "Batch downloads",
@@ -900,6 +901,9 @@
       "createdAt": "Created at",
       "name": "Name",
       "state": "State"
+    },
+    "taskboard": {
+      "title": "Task board"
     },
     "entities": {
       "title": "Entities",
@@ -993,7 +997,14 @@
       "list": {
         "info": "Batch downloads are password-protected zip files containing all the documents from one of your specific search.",
         "searchPlaceholder": "Search task",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>"
+        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
+        "properties": {
+          "name":"Name",
+          "createdAt": "Creation date",
+          "progress":"Progress",
+          "size": "Size",
+          "state":"State"
+        }
       }
     },
     "batch-search": {
