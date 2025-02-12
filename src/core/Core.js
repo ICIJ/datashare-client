@@ -27,6 +27,7 @@ import { dispatch, EventBus } from '@/utils/event-bus'
 import { getMode, MODE_NAME } from '@/mode'
 import { routes } from '@/router'
 import { storeBuilder } from '@/store/storeBuilder'
+import { pinia } from '@/store/pinia'
 import Auth from '@/api/resources/Auth'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
 import Fa from '@/components/Fa'
@@ -89,6 +90,7 @@ class Core extends Behaviors {
    */
   useAll() {
     this.useVuex()
+    this.usePinia()
     this.useI18n()
     this.useBootstrapVue({
       directives: true,
@@ -175,6 +177,14 @@ class Core extends Behaviors {
    */
   useVuex() {
     this.use(this.store)
+    return this
+  }
+  /**
+   * Configure pinia
+   * @returns {Core} the current instance of Core
+   */
+  usePinia() {
+    this.use(this.pinia)
     return this
   }
   /**
@@ -461,6 +471,13 @@ class Core extends Behaviors {
    */
   get store() {
     return this._store
+  }
+  /**
+   * The Pinia instance
+   * @type {Pinia}
+   */
+  get pinia() {
+    return pinia
   }
   /**
    * The CorePlugin instance
