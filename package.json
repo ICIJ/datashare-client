@@ -51,6 +51,8 @@
     "mutationobserver-shim": "^0.3.7",
     "path-browserify": "^1.0.1",
     "path-to-regexp": "^7.1.0",
+    "pinia": "^3.0.0",
+    "pinia-plugin-persistedstate": "^4.2.0",
     "resize-observer-polyfill": "^1.5.1",
     "string-to-color": "^2.2.2",
     "tiff": "^6.1.1",
