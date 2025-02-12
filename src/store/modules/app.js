@@ -47,6 +47,7 @@ export const state = () => ({
         perPage: 10,
         properties: ['id', 'name', 'createdAt', 'progress', 'state']
       },
+      taskboard: {},
       documentView: {
         tab: 'text'
       },

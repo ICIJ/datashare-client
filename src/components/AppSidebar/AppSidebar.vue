@@ -131,6 +131,9 @@ const noAnalysis = computed(() => {
           :to="{ name: 'search' }"
           :compact="compact"
         >
+          <app-sidebar-section-entry :icon="PhDotsNine" :to="{ name: 'task.taskboard' }">
+            {{ t('appSidebar.taskboard') }}
+          </app-sidebar-section-entry>
           <app-sidebar-section-entry
             :icon="PhListMagnifyingGlass"
             :to="{ name: 'task.batch-search.list' }"

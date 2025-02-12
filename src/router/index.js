@@ -117,12 +117,6 @@ export const routes = [
         },
         children: [
           {
-            path: '',
-            redirect: {
-              name: 'task.batch-search.list'
-            }
-          },
-          {
             path: 'indexing',
             redirect: {
               name: 'task.documents.list'
@@ -133,6 +127,12 @@ export const routes = [
             redirect: {
               name: 'task.documents.list'
             }
+          },
+          {
+            name: 'task.taskboard',
+            path: 'taskboard',
+            meta: { title: 'task.taskboard.title' },
+            component: () => import('@/views/Task/Taskboard/Taskboard')
           },
           {
             name: 'task.entities',
