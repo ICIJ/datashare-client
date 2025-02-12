@@ -36,7 +36,7 @@ export function useTaskSettings(pageName) {
     ]
   })
 
-  const vals = store.getters['app/getSettings'](pageName, 'properties')
+  const vals = store.getters['app/getSettings'](pageName, 'properties') ?? []
   const { items } = useTaskProperties(vals)
 
   const sortBy = ref({

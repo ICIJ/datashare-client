@@ -1,11 +1,11 @@
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, watch, ref } from 'vue'
 import { random } from 'lodash'
 import { useStore } from 'vuex'
 
 import { usePolling } from '@/composables/polling'
 import { useCore } from '@/composables/core'
 
-export function useTaskPolling(taskNames = []) {
+export function useTaskPolling(taskNames = ref([])) {
   const { wait } = useCore()
   const store = useStore()
   const { registerPollOnce } = usePolling()

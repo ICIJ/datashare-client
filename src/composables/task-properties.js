@@ -58,7 +58,7 @@ export function useTaskProperties(propertyList) {
   const items = propertyList.reduce((acc, p) => {
     if (propertyItems[p] === undefined) {
       acc.push(propertyItem({ key: p }))
-      console.warn(`${p} does not exist`)
+      console.warn(`Task property '${p}' does not exist`)
       return acc
     }
     acc.push(propertyItems[p])
