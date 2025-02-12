@@ -1,19 +1,13 @@
-export const state = () => ({
-  autoplay: false,
-  loop: true
-})
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
 
-export const mutations = {
-  autoplay(state, autoplay) {
-    state.autoplay = autoplay
+export const usePlayerStore = defineStore(
+  'player',
+  () => {
+    const autoplay = ref(false)
+    const loop = ref(true)
+
+    return { autoplay, loop }
   },
-  loop(state, loop) {
-    state.loop = loop
-  }
-}
-
-export default {
-  namespaced: true,
-  mutations,
-  state
-}
+  { persist: true }
+)
