@@ -16,7 +16,6 @@ import app from './modules/app'
 import hooks from './modules/hooks'
 import insights from './modules/insights'
 import pipelines from './modules/pipelines'
-import player from './modules/player'
 import treeView from './modules/treeView'
 
 export function storeBuilder(api) {
@@ -30,7 +29,6 @@ export function storeBuilder(api) {
       hooks,
       indexing: indexingStoreBuilder(api),
       insights,
-      player,
       pipelines,
       recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api),
@@ -49,8 +47,6 @@ export function storeBuilder(api) {
           'app.filters',
           'app.pins.projects',
           'document.showTranslatedContent',
-          'player.autoplay',
-          'player.loop',
           'search.query',
           'search.values',
           'search.excludeFilters',

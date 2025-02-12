@@ -28,6 +28,10 @@
 </template>
 
 <script>
+import { mapWritableState } from 'pinia'
+
+import { usePlayerStore } from '@/store/modules/player'
+
 /**
  * Display a preview video of the document.
  */
@@ -51,22 +55,7 @@ export default {
     cardVariant() {
       return this.cannotPlayVideoFormat ? 'warning' : null
     },
-    autoplay: {
-      get() {
-        return this.$store.state.player.autoplay
-      },
-      set(autoplay) {
-        return this.$store.commit('player/autoplay', autoplay)
-      }
-    },
-    loop: {
-      get() {
-        return this.$store.state.player.loop
-      },
-      set(loop) {
-        return this.$store.commit('player/loop', loop)
-      }
-    }
+    ...mapWritableState(usePlayerStore, ['autoplay', 'loop'])
   }
 }
 </script>
