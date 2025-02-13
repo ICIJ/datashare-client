@@ -2,7 +2,6 @@
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
 import { property, orderBy } from 'lodash'
 
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
@@ -16,11 +15,12 @@ import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMet
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { useDocument } from '@/composables/document'
 import { useDebouncedRef } from '@/composables/debounce'
+import { useAppStore } from '@/store/modules/app'
 
 const { document, documentPath, documentDirname, parentDocument } = useDocument()
 const { t } = useI18n()
 const q = useDebouncedRef('')
-const store = useStore()
+const appStore = useAppStore()
 
 const canonicalItems = computed(() => [
   {
@@ -168,8 +168,8 @@ const items = computed(() => {
 const pinning = ref(0)
 
 const pinned = computed({
-  get: () => store.getters['app/getSettings']('documentViewMetadata', 'pinned'),
-  set: (pinned) => store.commit('app/setSettings', { view: 'documentViewMetadata', pinned })
+  get: () => appStore.getSettings('documentViewMetadata', 'pinned'),
+  set: (pinned) => appStore.setSettings({ view: 'documentViewMetadata', pinned })
 })
 
 const pin = async (name, value) => {
