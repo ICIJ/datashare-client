@@ -36,7 +36,7 @@ describe('useTaskSettings', () => {
   it('should initialize "app/entities" task settings per page is 10', () => {
     const { store, router, i18n } = CoreSetup.init().useAll().useRouter()
     const { perPage } = withSetup({ store, router, i18n, composable: () => useTaskSettings('entities') })
-    expect(perPage.value.modelValue).toEqual(10)
+    expect(perPage.value.modelValue).toEqual('10')
   })
 
   it('should initialize "app/batch-download" task settings propertiesModelValueOptions contains correct properties', () => {
