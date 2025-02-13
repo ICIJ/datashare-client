@@ -1,147 +1,119 @@
 import { get } from 'lodash'
+import { computed, ref, reactive } from 'vue'
+import { defineStore } from 'pinia'
 
 import { LAYOUTS } from '@/enums/layouts'
 
-export const state = () => ({
-  redirectAfterLogin: null,
-  sidebar: {
-    compact: false,
-    closed: false
-  },
-  settings: {
-    closed: true,
-    views: {
-      projectList: {
-        layout: LAYOUTS.TABLE,
-        orderBy: ['name', 'asc'],
-        perPage: 25
-      },
-      search: {
-        layout: LAYOUTS.LIST,
-        orderBy: ['_score', 'desc'],
-        perPage: 25,
-        properties: ['title', 'thumbnail', 'highlights', 'project']
-      },
-      task: {
-        orderBy: ['name', 'desc'],
-        perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'state']
-      },
-      entities: {
-        orderBy: ['name', 'desc'],
-        perPage: 10,
-        properties: ['state', 'entities-to-find', 'pipeline', 'project', 'progress', 'createdAt']
-      },
-      documents: {
-        orderBy: ['name', 'desc'],
-        perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'state']
-      },
-      'batch-download': {
-        orderBy: ['name', 'desc'],
-        perPage: 10,
-        properties: ['state', 'name', 'size', 'createdAt']
-      },
-      'batch-search': {
-        orderBy: ['name', 'desc'],
-        perPage: 10,
-        properties: ['id', 'name', 'createdAt', 'progress', 'state']
-      },
-      documentView: {
-        tab: 'text'
-      },
-      documentViewMetadata: {
-        pinned: {}
+export const useAppStore = defineStore(
+  'app',
+  () => {
+    const redirectAfterLogin = ref(null)
+    const filters = reactive({ close: true })
+    const pins = reactive({ projects: [] })
+    const sidebar = reactive({ compact: false, closed: false })
+    const settings = reactive({
+      closed: true,
+      views: {
+        projectList: {
+          layout: LAYOUTS.TABLE,
+          orderBy: ['name', 'asc'],
+          perPage: '25'
+        },
+        search: {
+          layout: LAYOUTS.LIST,
+          orderBy: ['_score', 'desc'],
+          perPage: '25',
+          properties: ['title', 'thumbnail', 'highlights', 'project']
+        },
+        task: {
+          orderBy: ['name', 'desc'],
+          perPage: '10',
+          properties: ['id', 'name', 'createdAt', 'progress', 'state']
+        },
+        entities: {
+          orderBy: ['name', 'desc'],
+          perPage: '10',
+          properties: ['state', 'entities-to-find', 'pipeline', 'project', 'progress', 'createdAt']
+        },
+        documents: {
+          orderBy: ['name', 'desc'],
+          perPage: '10',
+          properties: ['id', 'name', 'createdAt', 'progress', 'state']
+        },
+        'batch-download': {
+          orderBy: ['name', 'desc'],
+          perPage: '10',
+          properties: ['state', 'name', 'size', 'createdAt']
+        },
+        'batch-search': {
+          orderBy: ['name', 'desc'],
+          perPage: '10',
+          properties: ['id', 'name', 'createdAt', 'progress', 'state']
+        },
+        documentView: {
+          tab: 'text'
+        },
+        documentViewMetadata: {
+          pinned: {}
+        }
+      }
+    })
+
+    const getSettings = computed(() => {
+      return (view, name) => {
+        return get(settings.views, [view, name].join('.'))
+      }
+    })
+
+    const setSettings = ({ view, ...values }) => {
+      if (view in settings.views) {
+        settings.views[view] = { ...settings.views[view], ...values }
       }
     }
-  },
-  filters: {
-    close: true
-  },
-  pins: {
-    projects: []
-  }
-})
 
-export const mutations = {
-  sidebarCompact(state, compact) {
-    state.sidebar.compact = compact
-  },
-  sidebarClosed(state, closed) {
-    state.sidebar.closed = closed
-  },
-  settingsClosed(state, closed) {
-    state.settings.closed = closed
-  },
-  filtersClosed(state, closed) {
-    state.filters.closed = closed
-  },
-  setSettings(state, { view, ...settings }) {
-    if (view in state.settings.views) {
-      state.settings.views[view] = { ...state.settings.views[view], ...settings }
+    const setRedirectAfterLogin = (path = null) => {
+      if (!path || !path.startsWith('/login')) {
+        redirectAfterLogin.value = path
+      }
     }
-  },
-  setRedirectAfterLogin(state, path = null) {
-    if (!path || !path.startsWith('/login')) {
-      state.redirectAfterLogin = path
-    }
-  },
-  pinProject(state, name) {
-    if (!state.pins.projects.includes(name)) {
-      state.pins.projects.push(name)
-    }
-  },
-  unpinProject(state, name) {
-    state.pins.projects = state.pins.projects.filter((n) => n !== name)
-  }
-}
 
-export const getters = {
-  getSettings(state) {
-    return (view, name) => {
-      return get(state.settings.views, [view, name].join('.'))
+    const popRedirectAfterLogin = () => {
+      const path = redirectAfterLogin.value
+      setRedirectAfterLogin(null)
+      return path
     }
-  },
-  isProjectPinned(state) {
-    return (name) => state.pins.projects.includes(name)
-  }
-}
 
-export const actions = {
-  toggleSidebarCompact({ state, commit }, toggler = null) {
-    if (toggler === null) {
-      return commit('sidebarCompact', !state.sidebar.compact)
-    }
-    return commit('sidebarCompact', toggler)
-  },
-  toggleSidebarClosed({ state, commit }, toggler = null) {
-    if (toggler === null) {
-      return commit('sidebarClosed', !state.sidebar.closed)
-    }
-    return commit('sidebarClosed', toggler)
-  },
-  toggleSettingsClosed({ state, commit }, toggler = null) {
-    if (toggler === null) {
-      return commit('settingsClosed', !state.settings.closed)
-    }
-    return commit('settingsClosed', toggler)
-  },
-  toggleFiltersClosed({ state, commit }, toggler = null) {
-    if (toggler === null) {
-      return commit('filtersClosed', !state.filters.closed)
-    }
-    return commit('filtersClosed', toggler)
-  },
-  popRedirectAfterLogin({ state: { redirectAfterLogin }, commit }) {
-    commit('setRedirectAfterLogin', null)
-    return redirectAfterLogin
-  }
-}
+    const isProjectPinned = computed(() => {
+      return (name) => pins.projects.includes(name)
+    })
 
-export default {
-  namespaced: true,
-  getters,
-  actions,
-  mutations,
-  state
-}
+    const pinProject = (name) => {
+      if (!pins.projects.includes(name)) {
+        pins.projects.push(name)
+      }
+    }
+
+    const unpinProject = (name) => {
+      pins.projects = pins.projects.filter((n) => n !== name)
+    }
+
+    return {
+      redirectAfterLogin,
+      filters,
+      pins,
+      sidebar,
+      settings,
+      setSettings,
+      getSettings,
+      setRedirectAfterLogin,
+      popRedirectAfterLogin,
+      isProjectPinned,
+      pinProject,
+      unpinProject
+    }
+  },
+  {
+    persist: true,
+    picks: ['redirectAfterLogin', 'sidebar', 'settings', 'filters', 'pins.projects']
+  }
+)

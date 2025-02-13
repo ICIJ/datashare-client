@@ -12,7 +12,6 @@ import { searchStoreBuilder } from './modules/search'
 import { searchBreadcrumbStoreBuilder } from './modules/search-breadcrumb'
 import { settingsStoreBuilder } from './modules/settings'
 import { starredStoreBuilder } from './modules/starred'
-import app from './modules/app'
 import hooks from './modules/hooks'
 import insights from './modules/insights'
 import pipelines from './modules/pipelines'
@@ -21,7 +20,6 @@ import treeView from './modules/treeView'
 export function storeBuilder(api) {
   return createStore({
     modules: {
-      app,
       batchSearch: batchStoreBuilder(api),
       document: documentStoreBuilder(api),
       documentNotes: documentNotesStoreBuilder(api),
@@ -41,11 +39,6 @@ export function storeBuilder(api) {
     plugins: [
       createPersistedState({
         paths: [
-          'app.redirectAfterLogin',
-          'app.sidebar',
-          'app.settings',
-          'app.filters',
-          'app.pins.projects',
           'document.showTranslatedContent',
           'search.query',
           'search.values',
@@ -60,7 +53,7 @@ export function storeBuilder(api) {
         ],
         filter(mutation) {
           // Only for some mutations
-          return some(['search/', 'app/', 'doc/', 'player/'], (k) => mutation.type.indexOf(k) === 0)
+          return some(['search/', 'doc/', 'player/'], (k) => mutation.type.indexOf(k) === 0)
         }
       })
     ]
