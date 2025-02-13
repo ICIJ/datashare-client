@@ -3,6 +3,7 @@ import { useModalController } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/core'
 import ProjectDeletionModal from '@/components/Project/ProjectDeletionModal'
+import { useAppStore } from '@/store/modules/app'
 
 export function useProjectDeletionModal(project) {
   const modalController = useModalController()
@@ -48,19 +49,19 @@ export function useProjectMetrics(project) {
 }
 
 export function useProjectPinned(project) {
-  const { core } = useCore()
+  const appStore = useAppStore()
   const { name } = toValue(project)
 
   const pinned = computed({
     get() {
-      return core.store.getters['app/isProjectPinned'](name)
+      return appStore.isProjectPinned(name)
     },
     set(pinned) {
       if (pinned) {
-        return core.store.commit('app/pinProject', name)
+        return appStore.pinProject(name)
       }
 
-      return core.store.commit('app/unpinProject', name)
+      return appStore.unpinProject(name)
     }
   })
 
