@@ -1,28 +1,29 @@
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+
+import { useAppStore } from '@/store/modules/app'
 
 export function useViews() {
-  const store = useStore()
+  const appStore = useAppStore()
 
-  const isSidebarClosed = computed(() => store?.state.app.sidebar.closed)
+  const isSidebarClosed = computed(() => appStore.sidebar.closed)
 
   const toggleSidebar = computed({
     get: () => !isSidebarClosed.value,
-    set: (value) => store?.dispatch('app/toggleSidebarClosed', !value)
+    set: (value) => (appStore.sidebar.closed = !value)
   })
 
-  const isSettingsClosed = computed(() => store?.state.app.settings.closed)
+  const isSettingsClosed = computed(() => appStore.settings.closed)
 
   const toggleSettings = computed({
     get: () => !isSettingsClosed.value,
-    set: (value) => store?.dispatch('app/toggleSettingsClosed', !value)
+    set: (value) => (appStore.settings.closed = !value)
   })
 
-  const isFiltersClosed = computed(() => store?.state.app.filters.closed)
+  const isFiltersClosed = computed(() => appStore.filters.closed)
 
   const toggleFilters = computed({
     get: () => !isFiltersClosed.value,
-    set: (value) => store?.dispatch('app/toggleFiltersClosed', !value)
+    set: (value) => (appStore.filters.closed = !value)
   })
 
   return { isSidebarClosed, toggleSidebar, isSettingsClosed, toggleSettings, isFiltersClosed, toggleFilters }
