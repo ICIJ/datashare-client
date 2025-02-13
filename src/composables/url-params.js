@@ -180,35 +180,23 @@ export function onRouteLeaveNotMatch(name, callback) {
  * Synchronizes a single URL query parameter with Vuex store or a custom getter/setter.
  *
  * This function is designed for handling a single URL query parameter and keeping it
- * in sync with the Vuex store or custom getter/setter. It ensures bidirectional synchronization
+ * in sync with the store or custom getter/setter. It ensures bidirectional synchronization
  * between the URL and the store or reactive state.
  *
  * @param {string} queryParam - The query parameter to sync.
- * @param {string|Object} getOrGetters - Vuex getter string or custom getter/setter object.
- * @param {string|Function} setMutation - Vuex mutation string or custom setter function.
- * @param {Object} [options={}] - Optional configurations, e.g., a transform function to process the value.
+ * @param {Object} [options={}] - Configurations, e.g., a transform function to process the value.
+ * @param {Function} [options.get] - Getter function to retreive the value
+ * @param {Function} [options.set] - Setter function to update the value
  * @returns {ComputedRef} - A computed reference to the synchronized value.
  */
-export function useUrlParamWithStore(queryParam, getOrGetters, setMutation, options = {}) {
+export function useUrlParamWithStore(queryParam, options = {}) {
   const route = useRoute()
   const router = useRouter()
-  const store = useStore()
 
-  // Determine the getter function from Vuex or a custom getter
-  const getValue = isString(getOrGetters)
-    ? () => store.getters[getOrGetters]
-    : // Fallback to noop if no getter is provided
-      getOrGetters?.get ?? noop
-
-  // Determine the setter function from Vuex mutation or custom setter
-  const setValue = isString(setMutation)
-    ? (value) => store.commit(setMutation, value)
-    : // Do nothing if the setter is not set
-      (value) => getOrGetters?.set(value)
-
-  // Determine the transform function, defaulting to identity (no transformation)
-  const transform = isString(getOrGetters) ? options.transform || identity : getOrGetters.transform || identity
-  const to = isString(getOrGetters) ? options.to : getOrGetters.to
+  const getValue = options.get || noop
+  const setValue = options.set || noop
+  const transform = options.transform || identity
+  const to = options.to || null
 
   // Get and transform the route value
   const getRouteValue = () => {
@@ -252,33 +240,22 @@ export function useUrlParamWithStore(queryParam, getOrGetters, setMutation, opti
  * synchronization between the URL and the store or reactive state for multiple parameters.
  *
  * @param {string[]} queryParams - The query parameters to sync.
- * @param {string|Object} getOrGetters - Vuex getter string or custom getter/setter object.
- * @param {string|Function} setMutation - Vuex mutation string or custom setter function.
- * @param {Object} [options={}] - Optional configurations, e.g., a transform function to process the values.
+ * @param {Object} [options={}] - Configurations, e.g., a transform function to process the values.
+ * @param {Function} [options.get] - Getter function to retreive the values
+ * @param {Function} [options.set] - Setter function to update the values
  * @returns {ComputedRef} - A computed reference to the synchronized values.
  */
-export function useUrlParamsWithStore(queryParams, getOrGetters, setMutation, options = {}) {
+export function useUrlParamsWithStore(queryParams, options = {}) {
   const route = useRoute()
   const router = useRouter()
-  const store = useStore()
 
-  // Determine the getter function from Vuex or a custom getter
-  const getValue = isString(getOrGetters)
-    ? () => store.getters[getOrGetters]
-    : // Fallback to noop if no getter is provided
-      getOrGetters.get || noop
-
-  // Determine the setter function from Vuex mutation or custom setter
-  const setValue = isString(setMutation)
-    ? (values) => store.commit(setMutation, values)
-    : (values) => getOrGetters?.set(...values)
-
-  // Determine the transform function, defaulting to identity (no transformation)
-  const transform = isString(getOrGetters) ? options.transform || identity : getOrGetters.transform || identity
-  const to = isString(getOrGetters) ? options.to : getOrGetters.to
+  const getValue = options.get || noop
+  const setValue = options.set || noop
+  const transform = options.transform || identity
+  const to = options.to || null
 
   // Get and transform the route value
-  const getRouteValue = () => {
+  const getRouteValues = () => {
     const values = queryParams.map((param) => route.query[param])
     // If all query parameters exist in the URL, transform and return them, else return the values from the store
     return values.every(isUndefined) ? null : compact(values).map(transform)
@@ -287,10 +264,10 @@ export function useUrlParamsWithStore(queryParams, getOrGetters, setMutation, op
   // Create a computed property that synchronizes the query parameters with the Vuex store
   const param = computed({
     get() {
-      return getRouteValue() ?? getValue()
+      return getRouteValues() ?? getValue()
     },
     set(values) {
-      setValue(values)
+      setValue(...values)
       // Batch the update to multiple query parameters in the URL
       batchQueryParamUpdate(router, route, to, queryParams, values)
     }
@@ -305,8 +282,8 @@ export function useUrlParamsWithStore(queryParams, getOrGetters, setMutation, op
   )
 
   // Initialize the store value with the URL value if they are different
-  if (getRouteValue() && getRouteValue() !== getValue()) {
-    setValue(getRouteValue())
+  if (getRouteValues() && getRouteValues() !== getValue()) {
+    setValue(...getRouteValues())
   }
 
   return param
