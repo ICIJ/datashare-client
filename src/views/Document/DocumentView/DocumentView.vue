@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onBeforeMount, useTemplateRef } from 'vue'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
-import { useStore } from 'vuex'
 
 import DocumentViewActions from './DocumentViewActions'
 import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
@@ -10,6 +9,7 @@ import DocumentViewUserActions from './DocumentViewUserActions'
 
 import { useSearchNav } from '@/composables/search-nav'
 import { useDocument } from '@/composables/document'
+import { useAppStore } from '@/store/modules/app'
 
 const elementRef = useTemplateRef('element')
 const { whenNoSearchEntries } = useSearchNav()
@@ -33,11 +33,11 @@ const props = defineProps({
 
 const router = useRouter()
 const route = useRoute()
-const store = useStore()
+const appStore = useAppStore()
 
 const tab = computed({
-  get: () => store.getters['app/getSettings']('documentView', 'tab'),
-  set: (tab) => store.commit('app/setSettings', { view: 'documentView', tab })
+  get: () => appStore.getSettings('documentView', 'tab'),
+  set: (tab) => appStore.setSettings({ view: 'documentView', tab })
 })
 
 const selectRouteTab = async ({ name, params, query } = route) => {
