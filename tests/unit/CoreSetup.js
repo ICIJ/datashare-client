@@ -17,6 +17,7 @@ class CoreSetup extends Core {
       this.bootstrapVue,
       this.i18n,
       [this.murmur, { useI18n: false, useBootstrap: false }],
+      this.pinia,
       this.store,
       this.vueShortkey,
       this.vueScrollTo,
