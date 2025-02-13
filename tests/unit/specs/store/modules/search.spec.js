@@ -1,4 +1,5 @@
 import { cloneDeep, find, omit } from 'lodash'
+import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -6,13 +7,17 @@ import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
 import { storeBuilder } from '@/store/storeBuilder'
+import { useAppStore } from '@/store/modules/app'
 
 describe('SearchStore', () => {
   const { index: project, es } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
 
-  let store
+  let store, appStore
+
   beforeAll(() => {
+    setActivePinia(createPinia())
+    appStore = useAppStore()
     store = storeBuilder({ elasticsearch: es })
     store.commit('search/index', project)
   })
@@ -20,8 +25,8 @@ describe('SearchStore', () => {
   afterEach(() => {
     store.commit('search/index', project)
     store.commit('search/reset')
-    store.commit('app/setSettings', { view: 'search', perPage: 25 })
-    store.commit('app/setSettings', { view: 'search', orderBy: ['_score', 'desc'] })
+    appStore.setSettings({ view: 'search', perPage: 25 })
+    appStore.setSettings({ view: 'search', orderBy: ['_score', 'desc'] })
   })
 
   it('should define a store module', () => {
@@ -38,8 +43,8 @@ describe('SearchStore', () => {
   it('should reset to initial state', async () => {
     const initialState = cloneDeep(store.state.search)
 
-    store.commit('app/setSettings', { view: 'search', perPage: 12 })
-    store.commit('app/setSettings', { view: 'search', orderBy: ['randomOrder', 'asc'] })
+    appStore.setSettings({ view: 'search', perPage: 12 })
+    appStore.setSettings({ view: 'search', orderBy: ['randomOrder', 'asc'] })
 
     store.commit('search/indices', [anotherProject])
     store.commit('search/query', 'datashare')
@@ -53,7 +58,7 @@ describe('SearchStore', () => {
     expect(store.state.search.isReady).toBeTruthy()
     expect(find(store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
 
-    store.commit('app/setSettings', { view: 'search', perPage: 25 })
+    appStore.setSettings({ view: 'search', perPage: 25 })
   })
 
   it('should change the state after "query" mutation', async () => {
@@ -244,10 +249,10 @@ describe('SearchStore', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
       .commit()
 
-    store.commit('app/setSettings', { view: 'search', perPage: 2 })
+    appStore.setSettings({ view: 'search', perPage: 2 })
     await store.dispatch('search/query', { query: 'document', from: 0 })
     expect(store.state.search.response.hits).toHaveLength(2)
-    store.commit('app/setSettings', { view: 'search', perPage: 25 })
+    appStore.setSettings({ view: 'search', perPage: 25 })
   })
 
   it('should return 3 documents', async () => {
@@ -255,7 +260,7 @@ describe('SearchStore', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
       .commit()
 
-    store.commit('app/setSettings', { view: 'search', perPage: 3 })
+    appStore.setSettings({ view: 'search', perPage: 3 })
     await store.dispatch('search/query', { query: 'document', from: 0 })
     expect(store.state.search.response.hits).toHaveLength(3)
   })
@@ -265,7 +270,7 @@ describe('SearchStore', () => {
       .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(4))
       .commit()
 
-    store.commit('app/setSettings', { view: 'search', perPage: 3 })
+    appStore.setSettings({ view: 'search', perPage: 3 })
     await store.dispatch('search/query', { query: 'document', from: 3 })
     expect(store.state.search.response.hits).toHaveLength(1)
   })
@@ -282,7 +287,7 @@ describe('SearchStore', () => {
 
     await store.dispatch('search/query', { query: 'document', from: 0, perPage: 2 })
     expect(store.state.search.response.total).toBe(5)
-    store.commit('app/setSettings', { view: 'search', perPage: 25 })
+    appStore.setSettings({ view: 'search', perPage: 25 })
   })
 
   it('should return the default query parameters', () => {
@@ -296,8 +301,8 @@ describe('SearchStore', () => {
   })
 
   it('should return an advanced and filtered query parameters', () => {
-    store.commit('app/setSettings', { view: 'search', orderBy: ['randomOrder', 'asc'] })
-    store.commit('app/setSettings', { view: 'search', perPage: 12 })
+    appStore.setSettings({ view: 'search', orderBy: ['randomOrder', 'asc'] })
+    appStore.setSettings({ view: 'search', perPage: 12 })
 
     store.commit('search/indices', [project])
     store.commit('search/query', 'datashare')
@@ -312,7 +317,7 @@ describe('SearchStore', () => {
       'f[contentType]': ['TXT']
     })
 
-    store.commit('app/setSettings', { view: 'search', perPage: 25 })
+    appStore.setSettings({ view: 'search', perPage: 25 })
   })
 
   it('should reset the values of a filter', async () => {
