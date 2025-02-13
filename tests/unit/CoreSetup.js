@@ -45,6 +45,7 @@ class CoreSetup extends Core {
     return createVueWait({ useVuex: true })
   }
   useAll(store = null) {
+    this.usePinia()
     this.useVuex(store)
     this.useI18n()
     this.useBootstrapVue()
