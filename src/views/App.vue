@@ -36,8 +36,10 @@ import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/core'
 import { useResizeObserver } from '@/composables/resize-observer'
+import { useAppStore } from '@/store/modules/app'
 
 const { core } = useCore()
+const appStore = useAppStore()
 const { t } = useI18n()
 const route = useRoute()
 
@@ -59,8 +61,8 @@ const hasSettings = computed(() => {
 })
 
 const showPageSettings = computed({
-  get: () => hasSettings.value && !core.store.state.app.settings.closed,
-  set: (value) => core.store.dispatch('app/toggleSettingsClosed', !value)
+  get: () => hasSettings.value && !appStore.app.settings.closed,
+  set: (value) => (appStore.settings.closed = !value)
 })
 
 const hasFilters = computed(() => {
