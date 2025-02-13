@@ -1,13 +1,13 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
 
 import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useViewSettings, SORT_ORDER_KEY } from '@/composables/view-settings'
 import { useTaskProperties } from '@/composables/task-properties'
+import { useAppStore } from '@/store/modules/app'
 
 export function useTaskSettings(pageName) {
-  const store = useStore()
+  const appStore = useAppStore()
   const { t } = useI18n()
   const { sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } = useViewSettings()
 
@@ -17,8 +17,8 @@ export function useTaskSettings(pageName) {
     open: true,
     modelValue: useUrlParamWithStore('perPage', {
       transform: (value) => Math.max(10, parseInt(value)),
-      get: () => store.getters['app/getSettings'](pageName, 'perPage'),
-      set: (perPage) => store.commit('app/setSettings', { view: pageName, perPage })
+      get: () => appStore.getSettings(pageName, 'perPage'),
+      set: (perPage) => appStore.setSettings({ view: pageName, perPage })
     }),
     options: [
       {
@@ -36,7 +36,7 @@ export function useTaskSettings(pageName) {
     ]
   })
 
-  const vals = store.getters['app/getSettings'](pageName, 'properties')
+  const vals = appStore.getSettings(pageName, 'properties')
   const { items } = useTaskProperties(vals)
 
   const sortBy = ref({
@@ -44,8 +44,8 @@ export function useTaskSettings(pageName) {
     type: 'radio',
     open: true,
     modelValue: useUrlParamsWithStore(['sort', 'order'], {
-      get: () => store.getters['app/getSettings'](pageName, 'orderBy'),
-      set: (sort, order) => store.commit('app/setSettings', { view: pageName, orderBy: [sort, order] })
+      get: () => appStore.getSettings(pageName, 'orderBy'),
+      set: (sort, order) => appStore.setSettings({ view: pageName, orderBy: [sort, order] })
     }),
     options: items.reduce((acc, p) => {
       if (p.sortable) {
@@ -64,8 +64,8 @@ export function useTaskSettings(pageName) {
     type: 'checkbox',
     open: true,
     modelValue: computed({
-      get: () => store.getters['app/getSettings'](pageName, 'properties'),
-      set: (properties) => store.commit('app/setSettings', { view: pageName, properties })
+      get: () => appStore.getSettings(pageName, 'properties'),
+      set: (properties) => appStore.setSettings({ view: pageName, properties })
     }),
     options: items.map((p) => ({
       value: p.key,
