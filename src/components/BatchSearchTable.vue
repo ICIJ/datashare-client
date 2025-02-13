@@ -176,7 +176,7 @@ export default {
           formatNbQueries: this.$n(batchSearch.nbQueries),
           formatNbResults: this.$n(batchSearch.nbResults),
           isPublished: batchSearch.published ? this.$t('global.yes') : this.$t('global.no'),
-          projectsNames: this.getProjectsNamesList(batchSearch)
+          projectsNames: batchSearch.projects
         }
       })
     },
@@ -436,7 +436,7 @@ export default {
       const baseTo = {
         name: 'task.batch-search.view.results',
         params: {
-          indices: this.getProjectsNamesList(item).join(','),
+          indices: item.projects.join(','),
           uuid: item.uuid
         },
         query: {
@@ -450,12 +450,6 @@ export default {
         ...baseTo,
         ...(searchQueryExists && { query: { query: this.search } })
       }
-    },
-    getProjectsNamesList(item) {
-      return item.projects?.map((project) => project.name)
-    },
-    getProjectsNames(item) {
-      return this.getProjectsNamesList(item).join(', ') ?? ''
     },
     isSelected(item) {
       return item?.value === this.selectedStatus?.value
