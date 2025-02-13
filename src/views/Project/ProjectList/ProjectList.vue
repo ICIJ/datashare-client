@@ -9,10 +9,12 @@ import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useCore } from '@/composables/core'
 import { useUtils } from '@/composables/utils'
+import { useAppStore } from '@/store/modules/app'
 
 const { core } = useCore()
 const { isServer } = useUtils()
 const { t } = useI18n()
+const appStore = useAppStore()
 const searchQuery = useUrlParam('q', '')
 
 const page = useUrlParam('page', {
@@ -22,8 +24,8 @@ const page = useUrlParam('page', {
 
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
-  get: () => core?.store.getters['app/getSettings']('projectList', 'perPage'),
-  set: (value) => core?.store.commit('app/setSettings', { view: 'projectList', perPage: parseInt(value) })
+  get: () => appStore.getSettings('projectList', 'perPage'),
+  set: (value) => appStore.setSettings({ view: 'projectList', perPage: parseInt(value) })
 })
 
 const documentsCountByProject = ref({})
@@ -83,13 +85,13 @@ const projects = computed(() => {
 })
 
 const layout = useUrlParamWithStore('layout', {
-  get: () => core?.store.getters['app/getSettings']('projectList', 'layout'),
-  set: (layout) => core?.store.commit('app/setSettings', { view: 'projectList', layout })
+  get: () => appStore.getSettings('projectList', 'layout'),
+  set: (layout) => appStore.setSettings({ view: 'projectList', layout })
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
-  get: () => core?.store.getters['app/getSettings']('projectList', 'orderBy'),
-  set: (sort, order) => core?.store.commit('app/setSettings', { view: 'projectList', orderBy: [sort, order] })
+  get: () => appStore.getSettings('projectList', 'orderBy'),
+  set: (sort, order) => appStore.setSettings({ view: 'projectList', orderBy: [sort, order] })
 })
 
 const sort = computed({
