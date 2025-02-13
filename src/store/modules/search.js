@@ -29,6 +29,7 @@ import lucene from 'lucene'
 import EsDocList from '@/api/resources/EsDocList'
 import filters, * as filterTypes from '@/store/filters'
 import { isNarrowScreen } from '@/utils/screen'
+import { useAppStore } from '@/store/modules/app'
 import settings from '@/utils/settings'
 
 export const TAB_NAME = {
@@ -252,23 +253,27 @@ export const getters = {
   total(state) {
     return state?.response?.total ?? 0
   },
-  perPage(state, getters, rootState, rootGetters) {
-    return parseInt(rootGetters['app/getSettings']('search', 'perPage'))
+  perPage() {
+    const appStore = useAppStore()
+    return parseInt(appStore.getSettings('search', 'perPage'))
   },
-  sort(state, getters, rootState, rootGetters) {
-    const [sort, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score', 'desc']
+  sort() {
+    const appStore = useAppStore()
+    const [sort, order] = appStore.getSettings('search', 'orderBy') ?? ['_score', 'desc']
     // Find optional extra params
     const { extraParams = {} } = find(settings.searchSortFields, { name: sort }) ?? {}
     // We add a secondary path filter is the current sort is not the path itself
     const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
     return [{ [sort]: { order, ...extraParams } }, ...secondarySort]
   },
-  sortBy(state, getters, rootState, rootGetters) {
-    const [sort] = rootGetters['app/getSettings']('search', 'orderBy') ?? ['_score']
+  sortBy() {
+    const appStore = useAppStore()
+    const [sort] = appStore.getSettings('search', 'orderBy') ?? ['_score']
     return sort
   },
-  orderBy(state, getters, rootState, rootGetters) {
-    const [, order] = rootGetters['app/getSettings']('search', 'orderBy') ?? [null, 'desc']
+  orderBy() {
+    const appStore = useAppStore()
+    const [, order] = appStore.getSettings('search', 'orderBy') ?? [null, 'desc']
     return order
   },
   hits(state) {
