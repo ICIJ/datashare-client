@@ -13,9 +13,11 @@ import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import FilterText from '@/store/filters/FilterText.js'
+import { useAppStore } from '@/store/modules/app'
 
 export function useSearchFilter() {
   const store = useStore()
+  const appStore = useAppStore()
   const route = useRoute()
   const router = useRouter()
   const { t, te } = useI18n()
@@ -82,11 +84,11 @@ export function useSearchFilter() {
   }
 
   function getPerPage() {
-    return store.getters['app/getSettings']('search', 'perPage')
+    return appStore.getSettings('search', 'perPage')
   }
 
   function getOrderBy() {
-    return store.getters['app/getSettings']('search', 'orderBy')
+    return appStore.getSettings('search', 'orderBy')
   }
 
   function getSort() {
@@ -190,7 +192,7 @@ export function useSearchFilter() {
   function refreshSearchFromRoute() {
     // Extract the query parameters that must be saved in the app state
     const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
-    store.commit('app/setSettings', { view: 'search', perPage, orderBy: [sort, order] })
+    appStore.setSettings({ view: 'search', perPage, orderBy: [sort, order] })
     // Update the search store using the route query
     store.dispatch('search/updateFromRouteQuery', route.query)
     // And finally, refresh the search if t
