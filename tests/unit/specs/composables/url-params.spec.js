@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import { flushPromises } from '@vue/test-utils'
-import Vuex from 'vuex'
+import { createPinia } from 'pinia'
 
+import { useAppStore } from '@/store/modules/app'
 import {
   whenIsRoute,
   whenDifferentRoute,
@@ -22,7 +23,7 @@ vi.mock('lodash', async (importOriginal) => {
   }
 })
 
-export function withSetup({ composable, store, routes = [], initialRoute = null }) {
+export function withSetup({ composable, routes = [], initialRoute = null }) {
   let result
 
   // Create a Vue Router instance with memory history for test environment
@@ -47,10 +48,9 @@ export function withSetup({ composable, store, routes = [], initialRoute = null 
     }
   })
 
-  // Provide the Vuex store if it exists
-  if (store) {
-    app.use(store)
-  }
+  const pinia = createPinia()
+  // Setup Pinia
+  app.use(pinia)
 
   // Provide the Vue Router instance
   app.use(router)
@@ -179,111 +179,77 @@ describe('useUrlPageFrom', () => {
 })
 
 describe('useUrlParamWithStore', () => {
-  let store
+  let composable
 
   beforeEach(() => {
-    store = new Vuex.Store({
-      state: {
-        app: {
-          sort: 'date'
-        }
-      },
-      getters: {
-        'app/getSort': (state) => state.app.sort
-      },
-      mutations: {
-        'app/setSort': (state, value) => {
-          state.app.sort = value
-        }
-      }
-    })
+    composable = () => {
+      const appStore = useAppStore()
+
+      return useUrlParamWithStore('perPage', {
+        get: () => appStore.getSettings('search', 'perPage'),
+        set: (perPage) => appStore.setSettings({ view: 'search', perPage })
+      })
+    }
   })
 
-  it('should sync a single query parameter with Vuex store getter', async () => {
-    const [result, router] = withSetup({
-      store,
-      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
-    })
+  it('should sync a single query parameter with the store', async () => {
+    const [result, router] = withSetup({ composable })
 
-    await router.push({ query: { sort: 'name' } })
+    await router.push({ query: { perPage: '34' } })
     await flushPromises()
 
-    expect(result.value).toBe('name')
+    expect(result.value).toBe('34')
   })
 
-  it('should fallback to Vuex store value if query parameter is missing', async () => {
-    const [result, router] = withSetup({
-      store,
-      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
-    })
+  it('should fallback to store value if query parameter is missing', async () => {
+    const [result, router] = withSetup({ composable })
 
     await router.push({ query: {} })
     await flushPromises()
 
-    expect(result.value).toBe('date')
+    expect(result.value).toBe('25')
   })
 
-  it('should update Vuex store when query parameter changes', async () => {
-    const [result, router] = withSetup({
-      store,
-      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
-    })
+  it('should update store when query parameter changes', async () => {
+    const [result, router] = withSetup({ composable })
+    const appStore = useAppStore()
 
     await router.push({ query: {} })
     await flushPromises()
 
-    result.value = 'price'
+    result.value = '11'
     await flushPromises()
 
-    expect(store.state.app.sort).toBe('price')
+    expect(appStore.getSettings('search', 'perPage')).toBe('11')
   })
 
-  it('should update query parameter when Vuex store value changes', async () => {
-    const [, router] = withSetup({
-      store,
-      composable: () => useUrlParamWithStore('sort', 'app/getSort', 'app/setSort')
-    })
+  it('should update query parameter when store value changes', async () => {
+    const [, router] = withSetup({ composable })
+    const appStore = useAppStore()
 
-    store.commit('app/setSort', 'creationDate')
+    appStore.setSettings({ view: 'search', perPage: '66' })
     await flushPromises()
 
-    expect(router.currentRoute.value.query.sort).toBe('creationDate')
+    expect(router.currentRoute.value.query.perPage).toBe('66')
   })
 })
 
 describe('useUrlParamsWithStore', () => {
-  let store
+  let composable
 
   beforeEach(() => {
-    store = new Vuex.Store({
-      state: {
-        app: {
-          sort: 'date',
-          order: 'asc'
-        }
-      },
-      getters: {
-        'app/getSortOrder': (state) => [state.app.sort, state.app.order]
-      },
-      mutations: {
-        'app/setSortOrder': (state, { sort, order }) => {
-          state.app.sort = sort
-          state.app.order = order
-        }
-      }
-    })
+    composable = () => {
+      const appStore = useAppStore()
+
+      return useUrlParamsWithStore(['sort', 'order'], {
+        get: () => appStore.getSettings('search', 'orderBy'),
+        set: (sort, order) => appStore.setSettings({ view: 'search', orderBy: [sort, order] })
+      })
+    }
   })
 
-  it('should sync multiple query parameters with Vuex store getter', async () => {
-    const [result, router] = withSetup({
-      store,
-      composable: () => {
-        return useUrlParamsWithStore(['sort', 'order'], {
-          get: () => store.getters['app/getSortOrder'],
-          set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        })
-      }
-    })
+  it('should sync multiple query parameters with store getter', async () => {
+    const [result, router] = withSetup({ composable })
 
     await router.push({ query: { sort: 'name', order: 'desc' } })
     await flushPromises()
@@ -291,33 +257,18 @@ describe('useUrlParamsWithStore', () => {
     expect(result.value).toEqual(['name', 'desc'])
   })
 
-  it('should fallback to Vuex store values if query parameters are missing', async () => {
-    const [result, router] = withSetup({
-      store,
-      composable: () => {
-        return useUrlParamsWithStore(['sort', 'order'], {
-          get: () => store.getters['app/getSortOrder'],
-          set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        })
-      }
-    })
+  it('should fallback to store values if query parameters are missing', async () => {
+    const [result, router] = withSetup({ composable })
 
     await router.push({ query: {} })
     await flushPromises()
 
-    expect(result.value).toEqual(['date', 'asc'])
+    expect(result.value).toEqual(['_score', 'desc'])
   })
 
-  it('should update Vuex store when query parameters change', async () => {
-    const [result, router] = withSetup({
-      store,
-      composable: () => {
-        return useUrlParamsWithStore(['sort', 'order'], {
-          get: () => store.getters['app/getSortOrder'],
-          set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        })
-      }
-    })
+  it('should update store when query parameters change', async () => {
+    const [result, router] = withSetup({ composable })
+    const appStore = useAppStore()
 
     await router.push({ query: {} })
     await flushPromises()
@@ -325,22 +276,15 @@ describe('useUrlParamsWithStore', () => {
     result.value = ['name', 'desc']
     await flushPromises()
 
-    expect(store.state.app.sort).toBe('name')
-    expect(store.state.app.order).toBe('desc')
+    expect(appStore.settings.views.search.orderBy).toEqual(['name', 'desc'])
   })
 
-  it('should update query parameters when Vuex store values change', async () => {
-    const [, router] = withSetup({
-      store,
-      composable: () => {
-        return useUrlParamsWithStore(['sort', 'order'], {
-          get: () => store.getters['app/getSortOrder'],
-          set: (sort, order) => store.commit('app/setSortOrder', { sort, order })
-        })
-      }
-    })
+  it('should update query parameters when store values change', async () => {
+    const [, router] = withSetup({ composable })
 
-    store.commit('app/setSortOrder', { sort: 'creationDate', order: 'desc' })
+    const appStore = useAppStore()
+    appStore.settings.views.search.orderBy = ['creationDate', 'desc']
+
     await flushPromises()
 
     expect(router.currentRoute.value.query.sort).toBe('creationDate')
