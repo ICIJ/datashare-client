@@ -4,23 +4,23 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { LAYOUTS } from '@/enums/layouts'
-import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useSearchSettings } from '@/composables/search-settings'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import settings from '@/utils/settings'
+import { useAppStore } from '@/store/modules/app'
 
-const { core } = useCore()
 const { t } = useI18n()
+const appStore = useAppStore()
 
 const layout = ref({
   label: computed(() => t('search.layout.title')),
   type: 'radio',
   open: true,
   modelValue: computed({
-    get: () => core?.store.getters['app/getSettings']('search', 'layout'),
-    set: (layout) => core?.store.commit('app/setSettings', { view: 'search', layout })
+    get: () => appStore.getSettings('search', 'layout'),
+    set: (layout) => appStore.setSettings({ view: 'search', layout })
   }),
   options: [
     {
@@ -48,8 +48,8 @@ const perPage = ref({
   modelValue: useUrlParamWithStore('perPage', {
     to: 'search',
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => core?.store.getters['app/getSettings']('search', 'perPage'),
-    set: (perPage) => core?.store.commit('app/setSettings', { view: 'search', perPage })
+    get: () => appStore.getSettings('search', 'perPage'),
+    set: (perPage) => appStore.setSettings({ view: 'search', perPage })
   }),
   options: [
     {
@@ -73,8 +73,8 @@ const sortBy = ref({
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     to: 'search',
-    get: () => core?.store.getters['app/getSettings']('search', 'orderBy'),
-    set: (sort, order) => core?.store.commit('app/setSettings', { view: 'search', orderBy: [sort, order] })
+    get: () => appStore.getSettings('search', 'orderBy'),
+    set: (sort, order) => appStore.setSettings({ view: 'search', orderBy: [sort, order] })
   }),
   options: settings.searchSortFields.map(({ name, field, desc }) => {
     const value = [field, desc ? 'desc' : 'asc']
@@ -90,8 +90,8 @@ const properties = ref({
   type: 'checkbox',
   open: true,
   modelValue: computed({
-    get: () => core?.store.getters['app/getSettings']('search', 'properties'),
-    set: (properties) => core?.store.commit('app/setSettings', { view: 'search', properties })
+    get: () => appStore.getSettings('search', 'properties'),
+    set: (properties) => appStore.setSettings({ view: 'search', properties })
   }),
   options: computed(() => {
     return propertiesOrder.map((value) => {
