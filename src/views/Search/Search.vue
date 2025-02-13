@@ -22,6 +22,7 @@ import { useSearchFilter } from '@/composables/search-filter'
 import { useSearchBreadcrumb } from '@/composables/search-breadcrumb'
 import { useViews } from '@/composables/views'
 import { LAYOUTS } from '@/enums/layouts'
+import { useAppStore } from '@/store/modules/app'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId } = useDocument()
@@ -29,6 +30,7 @@ const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices 
 const { count: searchBreadcrumbCounter } = useSearchBreadcrumb()
 const entriesRef = useTemplateRef('entries')
 const store = useStore()
+const appStore = useAppStore()
 const route = useRoute()
 
 // The size query parameter is replaced by the perPage query parameter
@@ -47,8 +49,8 @@ replaceUrlParam({
 })
 
 const entries = computed(() => store.state.search.response.hits)
-const properties = computed(() => store.getters['app/getSettings']('search', 'properties'))
-const layout = computed(() => store.getters['app/getSettings']('search', 'layout'))
+const properties = computed(() => appStore.getSettings('search', 'properties'))
+const layout = computed(() => appStore.getSettings('search', 'layout'))
 const loading = computed(() => !store.state.search.isReady)
 const hasNav = computed(() => toValue(layout) === LAYOUTS.LIST)
 
@@ -57,7 +59,7 @@ const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
 
 const total = computed(() => parseInt(store.state.search.response.total))
-const perPage = computed(() => parseInt(store.getters['app/getSettings']('search', 'perPage')))
+const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
 const page = useUrlPageFromWithStore({
   perPage: toValue(perPage),
   // The "from" query parameter is updated to reflect the current state
