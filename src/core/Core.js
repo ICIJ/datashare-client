@@ -89,8 +89,8 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useAll() {
-    this.useVuex()
     this.usePinia()
+    this.useVuex()
     this.useI18n()
     this.useBootstrapVue({
       directives: true,
