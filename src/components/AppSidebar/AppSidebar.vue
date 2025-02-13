@@ -15,9 +15,11 @@ import { useUtils } from '@/composables/utils'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
 import { SIZE } from '@/enums/sizes'
+import { useAppStore } from '@/store/modules/app'
 import settings from '@/utils/settings'
 
 const { core } = useCore()
+const appStore = useAppStore()
 const { isServer } = useUtils()
 const { breakpointDown } = useBreakpoints()
 const { t } = useI18n()
@@ -27,18 +29,18 @@ const projects = computed(() => {
 })
 
 const pinnedProjects = computed(() => {
-  return projects.value.filter((project) => core.store.getters['app/isProjectPinned'](project.name))
+  return projects.value.filter((project) => appStore.isProjectPinned(project.name))
 })
 
 const compact = computed({
   // Compact mode is always disabled on screen smaller than MD
-  get: () => !breakpointDown.value[SIZE.MD] && core.store.state.app.sidebar.compact,
-  set: (value) => core.store.dispatch('app/toggleSidebarCompact', value)
+  get: () => !breakpointDown.value[SIZE.MD] && appStore.sidebar.compact,
+  set: (value) => (appStore.sidebar.compact = value)
 })
 
 const closed = computed({
-  get: () => core.store.state.app.sidebar.closed,
-  set: (value) => core.store.dispatch('app/toggleSidebarClosed', value)
+  get: () => appStore.sidebar.closed,
+  set: (value) => (appStore.sidebar.closed = value)
 })
 
 // Watch the current breadpoint state to
