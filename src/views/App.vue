@@ -61,7 +61,7 @@ const hasSettings = computed(() => {
 })
 
 const showPageSettings = computed({
-  get: () => hasSettings.value && !appStore.app.settings.closed,
+  get: () => hasSettings.value && !appStore.settings.closed,
   set: (value) => (appStore.settings.closed = !value)
 })
 
