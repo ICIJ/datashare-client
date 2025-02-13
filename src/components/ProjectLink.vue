@@ -59,7 +59,7 @@ export default {
       return { name: 'unknown', label: 'Unknown' }
     },
     resolvedProject() {
-      return this.$core.findProject(this.project.name ?? this.project) ?? this.unknownProject
+      return this.$core.findProject(this.project?.name ?? this.project) ?? this.unknownProject
     },
     showThumbnail() {
       return !this.hideThumbnail

@@ -9,7 +9,7 @@ const batchSearchMock = {
   items: [
     {
       uuid: '1',
-      projects: [{ name: 'project_01' }, { name: 'project_02' }],
+      projects: ['project_01', 'project_02'],
       name: 'name_01',
       description: 'description_01',
       date: '2019-01-01',
@@ -19,7 +19,7 @@ const batchSearchMock = {
     },
     {
       uuid: '2',
-      projects: [{ name: 'project_02' }],
+      projects: ['project_02'],
       name: 'name_02',
       description: 'description_02',
       date: '2019-01-01',
