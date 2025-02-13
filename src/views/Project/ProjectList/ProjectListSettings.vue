@@ -4,21 +4,23 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { LAYOUTS } from '@/enums/layouts'
-import { useCore } from '@/composables/core'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY } from '@/composables/view-settings'
+import { useAppStore } from '@/store/modules/app'
+
 const { t } = useI18n()
 const { sortByLabel, tSortByOption, tLayout, perPageLabel } = useViewSettings(t)
-const { core } = useCore()
+const appStore = useAppStore()
+
 const layout = ref({
   label: tLayout.label,
   type: 'radio',
   open: true,
   modelValue: useUrlParamWithStore('layout', {
-    get: () => core?.store.getters['app/getSettings']('projectList', 'layout'),
-    set: (layout) => core?.store.commit('app/setSettings', { view: 'projectList', layout })
+    get: () => appStore.getSettings('projectList', 'layout'),
+    set: (layout) => appStore.setSettings({ view: 'projectList', layout })
   }),
   options: [
     {
@@ -40,8 +42,8 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => core?.store.getters['app/getSettings']('projectList', 'perPage'),
-    set: (perPage) => core?.store.commit('app/setSettings', { view: 'projectList', perPage })
+    get: () => appStore.getSettings('projectList', 'perPage'),
+    set: (perPage) => appStore.setSettings({ view: 'projectList', perPage })
   }),
   options: [
     {
@@ -64,8 +66,8 @@ const sortBy = ref({
   type: 'radio',
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => core?.store.getters['app/getSettings']('projectList', 'orderBy'),
-    set: (sort, order) => core?.store.commit('app/setSettings', { view: 'projectList', orderBy: [sort, order] })
+    get: () => appStore.getSettings('projectList', 'orderBy'),
+    set: (sort, order) => appStore.setSettings({ view: 'projectList', orderBy: [sort, order] })
   }),
   options: [
     {
