@@ -3,7 +3,6 @@ import createPersistedState from 'vuex-persistedstate'
 import { createStore } from 'vuex'
 
 import { batchStoreBuilder } from './modules/batchSearch'
-import { documentNotesStoreBuilder } from './modules/documentNotes'
 import { documentStoreBuilder } from './modules/document'
 import { downloadsBuilder } from './modules/downloads'
 import { indexingStoreBuilder } from './modules/indexing'
@@ -22,7 +21,6 @@ export function storeBuilder(api) {
     modules: {
       batchSearch: batchStoreBuilder(api),
       document: documentStoreBuilder(api),
-      documentNotes: documentNotesStoreBuilder(api),
       downloads: downloadsBuilder(api),
       hooks,
       indexing: indexingStoreBuilder(api),

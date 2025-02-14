@@ -1,33 +1,28 @@
-import { storeBuilder } from '@/store/storeBuilder'
+import { setActivePinia, createPinia } from 'pinia'
+
+import { useDocumentNotes } from '@/store/modules/documentNotes'
 
 describe('DocumentNotesStore', () => {
   const project = 'projectName'
   let store, api
-  beforeAll(() => {
-    api = {
-      retrieveNotes: vi.fn()
-    }
-    store = storeBuilder(api)
-  })
 
   beforeEach(() => {
     vi.clearAllMocks()
-  })
-
-  afterEach(() => {
-    store.commit('documentNotes/reset')
+    setActivePinia(createPinia())
+    api = { retrieveNotes: vi.fn() }
+    store = useDocumentNotes(api)
   })
 
   it('should call the retrieveNotes url', async () => {
-    await store.dispatch('documentNotes/retrieveNotes', { project })
+    await store.fetchNotesOnce({ project })
 
     expect(api.retrieveNotes).toBeCalledTimes(1)
     expect(api.retrieveNotes).toBeCalledWith(project)
   })
 
   it('should call the API endpoint only once', async () => {
-    await store.dispatch('documentNotes/retrieveNotes', { project })
-    await store.dispatch('documentNotes/retrieveNotes', { project })
+    await store.fetchNotesOnce({ project })
+    await store.fetchNotesOnce({ project })
 
     expect(api.retrieveNotes).toBeCalledTimes(1)
     expect(api.retrieveNotes).toBeCalledWith(project)
@@ -36,7 +31,7 @@ describe('DocumentNotesStore', () => {
   it('should filter on document path', async () => {
     const note = 'note'
     const variant = 'variant'
-    store.commit('documentNotes/setNotes', {
+    store.set({
       project,
       notes: [
         { note, project, variant, path: '/this/is/a/' },
@@ -46,7 +41,7 @@ describe('DocumentNotesStore', () => {
       ]
     })
 
-    const notes = await store.dispatch('documentNotes/filterNotesByPath', {
+    const notes = await store.fetchNotesByPath({
       project,
       path: '/this/is/a/path/to/document.txt'
     })
