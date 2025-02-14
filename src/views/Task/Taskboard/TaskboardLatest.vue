@@ -6,10 +6,10 @@ import { useTaskPolling } from '@/composables/task-polling'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
-import ProjectLink from '@/components/Project/ProjectLink'
 import DisplayUser from '@/components/Display/DisplayUser'
+import ProjectLink from '@/components/Project/ProjectLink'
 
-const nbTasks = 10
+const nbTasks = ref(3)
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
 const columns = ref([
   {
@@ -51,7 +51,14 @@ const columns = ref([
 ])
 
 const displayedTasks = computed(() => {
-  return pollingTasks.value?.slice(0, nbTasks)
+  return pollingTasks.value?.slice(0, nbTasks.value)
+})
+const more = 3
+function showMore() {
+  nbTasks.value += more
+}
+const hideShowMore = computed(() => {
+  return !pollingTasks.value?.length || pollingTasks.value.length <= nbTasks.value
 })
 
 function getAuthor(task) {
@@ -64,14 +71,24 @@ function getProjects(task) {
   if (task.args.batchDownload) {
     return task.args.batchDownload.projects
   }
-  return [task.args.defaultProject]
+  if (task.name.indexOf('ScanTask') > -1) {
+    return [task.args.defaultProject]
+  }
+  if (task.name.indexOf('IndexTask') > -1) {
+    return [task.args.defaultProject]
+  }
+  if (task.args.batchRecord) {
+    return task.args.batchRecord?.projects
+  }
+  console.error('Unknown task', task)
+  return []
 }
 </script>
 
 <template>
   <b-card-body no-border class="task-all__latest no-border">
     <b-card-title class="pb-4"> <phosphor-icon name="rocket-launch" /> Latest tasks </b-card-title>
-    <b-overlay rounded spinner-small opacity="0.6" :show="isLoading">
+    <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
       <task-list :tasks="displayedTasks" :columns="columns">
         <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
         <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
@@ -83,6 +100,7 @@ function getProjects(task) {
         </template>
         <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template
       ></task-list>
+      <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto" @click="showMore">Show more</b-button>
     </b-overlay>
   </b-card-body>
 </template>
