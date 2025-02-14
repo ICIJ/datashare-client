@@ -3,8 +3,6 @@ import { mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayUser from '@/components/Display/DisplayUser'
 
-import { usePipelinesStore } from '@/store/modules/pipelines'
-
 describe('DisplayUser.vue', () => {
   const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
   let wrapper, api, core
