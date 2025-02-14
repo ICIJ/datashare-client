@@ -11,7 +11,7 @@
         :name="field.value"
       />
     </template>
-    <page-table-tr v-if="!tasks.length">
+    <page-table-tr v-if="!tasks?.length">
       <td :colspan="columns.length" class="task-list__no-result text-center">
         <slot name="empty">{{ $t('task.noResults') }}</slot>
       </td>
