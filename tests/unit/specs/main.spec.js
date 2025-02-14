@@ -1,26 +1,26 @@
 import { createCore } from '@/core'
+import { useHooksStore } from '@/store/modules/hooks'
 
 describe('main', () => {
-  let core = null
-  let vm = null
-  let api = null
+  let core, vm, api, hooksStore
+
+  function createContainer() {
+    const app = document.createElement('div')
+    app.setAttribute('id', 'app')
+    return app
+  }
 
   beforeAll(() => {
-    api = {
-      getUser: vi.fn(),
-      getSettings: vi.fn(),
-      getProject: vi.fn()
-    }
+    api = { getUser: vi.fn(), getSettings: vi.fn(), getProject: vi.fn() }
     api.getSettings.mockResolvedValue({})
     api.getProject.mockResolvedValue({})
   })
 
   beforeEach(async () => {
     api.getUser.mockClear()
-    const app = document.createElement('div')
-    app.setAttribute('id', 'app')
-    document.body.appendChild(app)
+    document.body.appendChild(createContainer())
     core = createCore(api)
+    hooksStore = useHooksStore()
     vm = await core.ready
     vm = vm.useRouter().mount()
   })
@@ -50,7 +50,7 @@ describe('main', () => {
     core.registerHook({ target: 'foo' })
     core.registerHook({ target: 'baz' })
     core.registerHook({ target: 'baz' })
-    expect(core.store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
+    expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(2)
   })
 
   it('should unregister all components on a hook', () => {
@@ -58,10 +58,10 @@ describe('main', () => {
     core.registerHook({ target: 'foo' })
     core.registerHook({ target: 'baz' })
     core.registerHook({ target: 'baz' })
-    expect(core.store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
-    expect(core.store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
+    expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(1)
+    expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(2)
     core.resetHook('baz')
-    expect(core.store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
-    expect(core.store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(0)
+    expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(1)
+    expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(0)
   })
 })
