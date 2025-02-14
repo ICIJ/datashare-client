@@ -2,7 +2,9 @@ import hasIn from 'lodash/hasIn'
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useDocumentNotes = (api) => {
+import { apiInstance } from '@/api/apiInstance'
+
+export const useDocumentNotes = (api = apiInstance) => {
   return defineStore('documentNotes', () => {
     const notes = reactive({})
 
