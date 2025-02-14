@@ -12,7 +12,7 @@ describe('DocumentNotes.vue', () => {
   const note2 = { note: 'This is a second note', project, path: '/this/is/', variant: 'error' }
 
   beforeAll(() => {
-    api = { retrieveNotes: vi.fn() }
+    api = { retrieveNotes: vi.fn().mockResolvedValue([]) }
     const core = CoreSetup.init(api).useAll()
 
     plugins = core.plugins
