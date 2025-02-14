@@ -8,9 +8,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
 
 import settings from '@/utils/settings'
+import { usePipelinesStore } from '@/store/modules/pipelines'
 
 /**
  * Widget to display text on the insights page.
@@ -31,7 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('pipelines', {
+    ...mapState(usePipelinesStore, {
       applyPipelineChain: 'applyPipelineChainByCategory'
     }),
     defaultContent() {

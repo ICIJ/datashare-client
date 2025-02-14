@@ -25,7 +25,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+
+import { usePipelinesStore } from '@/store/modules/pipelines'
 
 /**
  * Widget to display a list of items or links on the insights page.
@@ -55,7 +57,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('pipelines', {
+    ...mapState(usePipelinesStore, {
       applyPipelineChain: 'applyPipelineChainByCategory'
     })
   },

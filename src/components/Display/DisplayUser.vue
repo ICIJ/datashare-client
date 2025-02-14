@@ -1,6 +1,8 @@
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
 import { PhosphorIcon } from '@icij/murmur-next'
+
+import { usePipelinesStore } from '@/store/modules/pipelines'
 
 /**
  * A component to display usernames.
@@ -87,7 +89,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('pipelines', {
+    ...mapState(usePipelinesStore, {
+      registeredPipelines: 'registered',
       applyPipelineChain: 'applyPipelineChainByCategory'
     }),
     avatarAlt() {
@@ -126,14 +129,15 @@ export default {
   watch: {
     value() {
       return this.applyPipelines()
+    },
+    registeredPipelines: {
+      deep: true,
+      handler() {
+        return this.applyPipelines()
+      }
     }
   },
   created() {
-    this.$store.subscribe(({ type }) => {
-      if (type.startsWith('pipelines/')) {
-        return this.applyPipelines()
-      }
-    })
     return this.applyPipelinesWithLoader()
   },
   methods: {
