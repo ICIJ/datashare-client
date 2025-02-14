@@ -2,6 +2,7 @@ import { flushPromises, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentNotes from '@/components/Document/DocumentNotes'
+import { useDocumentNotes } from '@/store/modules/documentNotes'
 
 describe('DocumentNotes.vue', () => {
   let wrapper, plugins, api, store
@@ -9,6 +10,7 @@ describe('DocumentNotes.vue', () => {
   const project = 'banana-papers'
   const note1 = { note: 'This is a note', project, path: '/this/is/a/', variant: 'warning' }
   const note2 = { note: 'This is a second note', project, path: '/this/is/', variant: 'error' }
+
   beforeAll(() => {
     api = { retrieveNotes: vi.fn() }
     const core = CoreSetup.init(api).useAll()
@@ -17,8 +19,9 @@ describe('DocumentNotes.vue', () => {
     store = core.store
     store.commit('search/index', project)
   })
+
   beforeEach(() => {
-    store.state.documentNotes.notes = {}
+    useDocumentNotes(api).reset()
   })
 
   it('should NOT display note on document', () => {
