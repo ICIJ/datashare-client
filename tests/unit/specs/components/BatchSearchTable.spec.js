@@ -390,7 +390,9 @@ describe('BatchSearchTable.vue', () => {
       const projectsLinks = projects.findAllComponents({ name: 'ProjectLink' })
       expect(projectsLinks).toHaveLength(2)
       expect(projectsLinks.at(0).element.tagName).toBe('A')
+      expect(projectsLinks.at(0).text()).toContain('Project 01')
       expect(projectsLinks.at(1).element.tagName).toBe('A')
+      expect(projectsLinks.at(1).text()).toContain('Project 02')
     })
   })
 
