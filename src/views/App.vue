@@ -29,6 +29,7 @@ import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import { get, property } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 
 import AppSidebar from '@/components/AppSidebar/AppSidebar'
 import Hook from '@/components/Hook'
@@ -37,9 +38,12 @@ import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/core'
 import { useResizeObserver } from '@/composables/resize-observer'
 import { useAppStore } from '@/store/modules/app'
+import { useDownloadsStore } from '@/store/modules/downloads'
 
 const { core } = useCore()
+const store = useStore()
 const appStore = useAppStore()
+const downloadsStore = useDownloadsStore()
 const { t } = useI18n()
 const route = useRoute()
 
@@ -82,8 +86,10 @@ const style = computed(() => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
   core.on('http::error', handleHttpError)
+  // Check if "download" functionality is available for all the available indices
+  await downloadsStore.fetchIndicesStatus(store.state.search.indices)
 })
 
 onBeforeUnmount(() => {

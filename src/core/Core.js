@@ -287,9 +287,6 @@ class Core extends Behaviors {
       if (!this.store.state.search.indices.length) {
         this.store.commit('search/indices', [this.getDefaultProject()])
       }
-      // Check if "Download" functionality is available for the selected project
-      // Because otherwise, if the FilterPanel is closed, it is never called
-      await this.store.dispatch('downloads/fetchIndicesStatus')
       // Initialize current locale
       await this.initializeI18n()
       // Load theme
