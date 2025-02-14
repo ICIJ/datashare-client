@@ -1,5 +1,7 @@
 import { uniqueId, cloneDeep } from 'lodash'
 
+import { useHooksStore } from '@/store/modules/hooks'
+
 /**
   Mixin class extending the core to add helpers for hooks.
   @mixin HooksMixin
@@ -7,6 +9,9 @@ import { uniqueId, cloneDeep } from 'lodash'
 */
 const HooksMixin = (superclass) =>
   class extends superclass {
+    get hooksStore() {
+      return useHooksStore()
+    }
     /**
      * Register a hook
      * @memberof HooksMixin.prototype
@@ -17,7 +22,7 @@ const HooksMixin = (superclass) =>
      * @param {Object} args.definition - Options to pass to the hook constructor
      */
     registerHook(...args) {
-      this.store.commit('hooks/register', ...args)
+      this.hooksStore.register(...args)
     }
     /**
      * Unregister a specific hook
@@ -25,7 +30,7 @@ const HooksMixin = (superclass) =>
      * @param {String} name - Name of the hook
      */
     unregisterHook(...args) {
-      this.store.commit('hooks/unregister', ...args)
+      this.hooksStore.unregister(...args)
     }
     /**
      * Unregister all hooks from a target
@@ -33,14 +38,14 @@ const HooksMixin = (superclass) =>
      * @memberof HooksMixin.prototype
      */
     resetHook(name) {
-      this.store.commit('hooks/resetTarget', name)
+      this.hooksStore.resetTarget(name)
     }
     /**
      * Unregister all hooks, on every targets
      * @memberof HooksMixin.prototype
      */
     resetHooks() {
-      this.store.commit('hooks/reset')
+      this.hooksStore.reset()
     }
     /**
      * Register a hook for a specific project
