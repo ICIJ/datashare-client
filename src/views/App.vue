@@ -32,7 +32,7 @@ import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
 import AppSidebar from '@/components/AppSidebar/AppSidebar'
-import Hook from '@/components/Hook'
+import Hook from '@/components/Hook/Hook'
 import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/core'

@@ -8,7 +8,7 @@ import { useWait } from '@/composables/wait'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
-import Hook from '@/components/Hook'
+import Hook from '@/components/Hook/Hook'
 
 const props = defineProps({
   document: Object,
