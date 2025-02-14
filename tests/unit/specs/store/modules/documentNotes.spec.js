@@ -9,7 +9,7 @@ describe('DocumentNotesStore', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     setActivePinia(createPinia())
-    api = { retrieveNotes: vi.fn() }
+    api = { retrieveNotes: vi.fn().mockResolvedValue([]) }
     store = useDocumentNotes(api)
   })
 
