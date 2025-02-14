@@ -2,7 +2,8 @@ import { h, defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import Hook from '@/components/Hook'
+import Hook from '@/components/Hook/Hook'
+import { useHooksStore } from '@/store/modules/hooks'
 
 // Create a "hooked component" defintion with a render function.
 //
@@ -18,11 +19,13 @@ function hookedComponentDefinition(content = '') {
 }
 
 describe('Hook.vue', () => {
-  const { config, plugins, store } = CoreSetup.init().useAll()
+  const { config, plugins } = CoreSetup.init().useAll()
+  let hooksStore
 
   beforeEach(() => {
     config.merge({ hooksDebug: false })
-    store.commit('hooks/reset')
+    hooksStore = useHooksStore()
+    hooksStore.reset()
   })
 
   it('should be a Vue instance', () => {
@@ -32,15 +35,15 @@ describe('Hook.vue', () => {
 
   it('should have one component', () => {
     const definition = hookedComponentDefinition()
-    store.commit('hooks/register', { target: 'test-hook-one-component', definition })
+    hooksStore.register({ target: 'test-hook-one-component', definition })
     const props = { name: 'test-hook-one-component' }
     const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(1)
   })
 
   it('should have two components', () => {
-    store.commit('hooks/register', { target: 'test-hook-two-components', definition: hookedComponentDefinition('foo') })
-    store.commit('hooks/register', { target: 'test-hook-two-components', definition: hookedComponentDefinition('bar') })
+    hooksStore.register({ target: 'test-hook-two-components', definition: hookedComponentDefinition('foo') })
+    hooksStore.register({ target: 'test-hook-two-components', definition: hookedComponentDefinition('bar') })
     const props = { name: 'test-hook-two-components' }
     const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(2)
@@ -48,17 +51,17 @@ describe('Hook.vue', () => {
 
   it('should have one components, without the other', () => {
     const definition = hookedComponentDefinition()
-    store.commit('hooks/register', { target: 'test-hook-one-component-only', definition })
-    store.commit('hooks/register', { target: 'test-foo', definition })
-    store.commit('hooks/register', { target: 'test-bar', definition })
+    hooksStore.register({ target: 'test-hook-one-component-only', definition })
+    hooksStore.register({ target: 'test-foo', definition })
+    hooksStore.register({ target: 'test-bar', definition })
     const props = { name: 'test-hook-one-component-only' }
     const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component')).toHaveLength(1)
   })
 
   it('should have two ordered components', () => {
-    store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('0') })
-    store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
+    hooksStore.register({ target: 'test-ordered-components', definition: hookedComponentDefinition('0') })
+    hooksStore.register({ target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
     const props = { name: 'test-ordered-components' }
     const wrapper = mount(Hook, { global: { plugins }, props })
     expect(wrapper.findAll('.hooked-component').at(0).text()).toBe('0')
@@ -66,14 +69,12 @@ describe('Hook.vue', () => {
   })
 
   it('should have two components in reverse order', () => {
-    store.commit('hooks/register', {
-      target: 'test-ordered-components',
-      definition: hookedComponentDefinition('0'),
-      order: 1
-    })
-    store.commit('hooks/register', { target: 'test-ordered-components', definition: hookedComponentDefinition('1') })
-    const props = { name: 'test-ordered-components' }
+    const target = 'test-ordered-components'
+    hooksStore.register({ target, definition: hookedComponentDefinition('0'), order: 1 })
+    hooksStore.register({ target, definition: hookedComponentDefinition('1') })
+    const props = { name: target, xClass: 'hooked-component' }
     const wrapper = mount(Hook, { global: { plugins }, props })
+    expect(wrapper.findAll('.hooked-component')).toHaveLength(2)
     expect(wrapper.findAll('.hooked-component').at(0).text()).toBe('1')
     expect(wrapper.findAll('.hooked-component').at(1).text()).toBe('0')
   })
