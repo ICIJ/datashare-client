@@ -21,10 +21,6 @@ describe('store', () => {
     expect(store.state.document).toBeDefined()
   })
 
-  it('should define a downloads module', () => {
-    expect(store.state.downloads).toBeDefined()
-  })
-
   it('should define an indexing module', () => {
     expect(store.state.indexing).toBeDefined()
   })
