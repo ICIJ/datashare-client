@@ -96,7 +96,7 @@ describe('Core', () => {
       core.config.set('defaultProject', 'my_project')
       expect(core.getDefaultProject()).toEqual('')
     })
-    
+
     it('should install the internal `VueCore` plugin', () => {
       // Create and configure the core
       const vm = core.mount('#core')
