@@ -95,7 +95,6 @@ describe('BatchSearchTable.vue', () => {
           const actions = { getBatchSearches: vi.fn() }
           const storeOptions = { modules: { batchSearch: { namespaced: true, state, actions } } }
 
-          api = { getBatchSearches: vi.fn().mockResolvedValue(batchSearchMock) }
           const { plugins } = CoreSetup.init(api).useAll().useVuex(storeOptions).useRouterWithoutGuards()
 
           wrapper = mount(BatchSearchTable, { global: { plugins } })
@@ -361,7 +360,7 @@ describe('BatchSearchTable.vue', () => {
 
   describe('SERVER mode', () => {
     beforeEach(() => {
-      core.config.merge({ mode: 'SERVER' })
+      core.config.merge({ mode: 'SERVER', projects: [{ name: 'project_01' }, { name: 'project_02' }] })
     })
 
     it('should display 8 columns of info per row', () => {
