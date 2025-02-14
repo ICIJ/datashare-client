@@ -1,4 +1,3 @@
-import filter from 'lodash/filter'
 import hasIn from 'lodash/hasIn'
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
