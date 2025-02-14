@@ -12,7 +12,7 @@
       </router-view>
       <scroll-tracker />
     </div>
-    <page-offcanvas v-model="showPageSettings" no-header>
+    <page-offcanvas v-if="!forceHideSettings" v-model="showPageSettings" no-header>
       <template #default="{ visible, placement, hide }">
         <router-view v-slot="{ Component }" name="settings">
           <component :is="Component" :hide="hide" :visible="visible" :placement="placement" />
@@ -59,13 +59,13 @@ const handleHttpError = (err) => {
     core.toast.error(body, { href, linkLabel, autoClose: false })
   }
 }
-
+const forceHideSettings = computed(() => route.meta.noSettings)
 const hasSettings = computed(() => {
   return route.matched.some((route) => 'settings' in route.components)
 })
 
 const showPageSettings = computed({
-  get: () => hasSettings.value && !appStore.settings.closed,
+  get: () => !forceHideSettings.value && hasSettings.value && !appStore.settings.closed,
   set: (value) => (appStore.settings.closed = !value)
 })
 

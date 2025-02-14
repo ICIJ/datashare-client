@@ -5,7 +5,7 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 </script>
 
 <template>
-  <page-header></page-header>
+  <page-header no-toggle-settings></page-header>
   <page-container fluid>
     <taskboard-latest />
   </page-container>

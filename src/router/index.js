@@ -131,7 +131,7 @@ export const routes = [
           {
             name: 'task.taskboard',
             path: 'taskboard',
-            meta: { title: 'task.taskboard.title' },
+            meta: { title: 'task.taskboard.title', noSettings: true },
             component: () => import('@/views/Task/Taskboard/Taskboard')
           },
           {
