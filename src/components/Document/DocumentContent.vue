@@ -9,6 +9,7 @@ import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
+import { usePipelinesStore } from '@/store/modules/pipelines'
 
 const props = defineProps({
   document: Object,
@@ -27,6 +28,7 @@ const props = defineProps({
 })
 
 const store = useStore()
+const pipelinesStore = usePipelinesStore()
 const elementRef = useTemplateRef('element')
 const { waitFor } = useWait()
 
@@ -43,7 +45,7 @@ const maxOffsetTranslations = ref({})
 const globalSearchTerms = computed(() => store.getters['search/retrieveContentQueryTerms'])
 
 function getPipelineChain(category, ...pipelines) {
-  return store.getters['pipelines/applyPipelineChainByCategory'](category, ...pipelines)
+  return pipelinesStore.applyPipelineChainByCategory(category, ...pipelines)
 }
 
 function addLocalSearchMarks(content, { offset: delta = 0 } = {}) {
