@@ -11,7 +11,6 @@ import { searchBreadcrumbStoreBuilder } from './modules/search-breadcrumb'
 import { settingsStoreBuilder } from './modules/settings'
 import { starredStoreBuilder } from './modules/starred'
 import insights from './modules/insights'
-import pipelines from './modules/pipelines'
 import treeView from './modules/treeView'
 
 export function storeBuilder(api) {
@@ -21,7 +20,6 @@ export function storeBuilder(api) {
       document: documentStoreBuilder(api),
       indexing: indexingStoreBuilder(api),
       insights,
-      pipelines,
       recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api),
       searchBreadcrumb: searchBreadcrumbStoreBuilder(),
