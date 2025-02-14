@@ -1,55 +1,54 @@
+import { setActivePinia, createPinia } from 'pinia'
+
 import { storeBuilder } from '@/store/storeBuilder'
+import { useDownloadsStore } from '@/store/modules/downloads'
 
 describe('DownloadsStore', () => {
   const index = 'downloadStoreFoo'
   const anotherIndex = 'downloadStoreBar'
-  let store
-  beforeAll(() => {
+  let store, downloadsStore
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
     store = storeBuilder()
     store.commit('search/indices', index)
-  })
-  beforeEach(() => {
-    store.commit('downloads/clear')
+    downloadsStore = useDownloadsStore({ isDownloadAllowed: () => true })
   })
 
-  describe('state', () => {
-    it('should define a store module', () => {
-      expect(store.state.downloads).toBeDefined()
-    })
+  it('should set the download status for the given index', async () => {
+    expect(downloadsStore.isAllowed(index)).toBe(false)
+    downloadsStore.allow({ index, allowed: true })
+    expect(downloadsStore.isAllowed(index)).toBe(true)
   })
 
-  describe('mutations', () => {
-    it('should set the download status for the given index', async () => {
-      expect(store.state.downloads.allowedFor[index]).toBeUndefined()
-      store.commit('downloads/allowedFor', { index, allowed: true })
-      expect(store.state.downloads.allowedFor[index]).toBeDefined()
-    })
-
-    it('should set the download statuses for the two given indices', async () => {
-      expect(store.state.downloads.allowedFor[index]).toBeUndefined()
-      expect(store.state.downloads.allowedFor[anotherIndex]).toBeUndefined()
-      store.commit('downloads/allowedFor', { index, allowed: true })
-      store.commit('downloads/allowedFor', { index: anotherIndex, allowed: true })
-      expect(store.state.downloads.allowedFor[index]).toBeDefined()
-      expect(store.state.downloads.allowedFor[anotherIndex]).toBeDefined()
-    })
+  it('should set the download statuses for the two given indices', async () => {
+    expect(downloadsStore.isAllowed(index)).toBe(false)
+    expect(downloadsStore.isAllowed(anotherIndex)).toBe(false)
+    downloadsStore.allow({ index, allowed: true })
+    downloadsStore.allow({ index: anotherIndex, allowed: true })
+    expect(downloadsStore.isAllowed(index)).toBe(true)
+    expect(downloadsStore.isAllowed(anotherIndex)).toBe(true)
   })
 
-  describe('actions', () => {
-    it('should get the download status for the given index', async () => {
-      expect(store.state.downloads.allowedFor[index]).toBeUndefined()
-      store.commit('search/indices', index)
-      await store.dispatch('downloads/fetchIndicesStatus')
-      expect(store.state.downloads.allowedFor[index]).toBeDefined()
-    })
+  it('should get the download status for the given index', async () => {
+    expect(downloadsStore.isAllowed(index)).toBe(false)
+    await downloadsStore.fetchIndicesStatus(index)
+    expect(downloadsStore.isAllowed(index)).toBe(true)
+  })
 
-    it('should get the download statuses for the two given indices', async () => {
-      expect(store.state.downloads.allowedFor[index]).toBeUndefined()
-      expect(store.state.downloads.allowedFor[anotherIndex]).toBeUndefined()
-      store.commit('search/indices', [index, anotherIndex])
-      await store.dispatch('downloads/fetchIndicesStatus')
-      expect(store.state.downloads.allowedFor[index]).toBeDefined()
-      expect(store.state.downloads.allowedFor[anotherIndex]).toBeDefined()
-    })
+  it('should get the download statuses for the two given indices', async () => {
+    expect(downloadsStore.isAllowed(index)).toBe(false)
+    expect(downloadsStore.isAllowed(anotherIndex)).toBe(false)
+    await downloadsStore.fetchIndicesStatus(index, anotherIndex)
+    expect(downloadsStore.isAllowed(index)).toBe(true)
+    expect(downloadsStore.isAllowed(anotherIndex)).toBe(true)
+  })
+
+  it('should get the download statuses for the two given indices in an array', async () => {
+    expect(downloadsStore.isAllowed(index)).toBe(false)
+    expect(downloadsStore.isAllowed(anotherIndex)).toBe(false)
+    await downloadsStore.fetchIndicesStatus([index, anotherIndex])
+    expect(downloadsStore.isAllowed(index)).toBe(true)
+    expect(downloadsStore.isAllowed(anotherIndex)).toBe(true)
   })
 })
