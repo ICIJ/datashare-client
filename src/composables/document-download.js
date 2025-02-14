@@ -3,11 +3,13 @@ import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
 import { useCore } from '@/composables/core'
+import { useDownloadsStore } from '@/store/modules/downloads'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'
 
 export function useDocumentDownload(document) {
   const store = useStore()
+  const downloadsStore = useDownloadsStore()
   const { core } = useCore()
   const { locale, t } = useI18n()
 
@@ -63,7 +65,7 @@ export function useDocumentDownload(document) {
 
   const isDownloadAllowed = computed(() => {
     // Use nullish coalescing operator to allow download if the store/getter is undefined
-    return store?.getters['downloads/isDownloadAllowed'](documentRef.value) ?? true
+    return downloadsStore.isAllowed(documentRef.value.index) ?? true
   })
 
   const rootContentLength = computed(() => {
