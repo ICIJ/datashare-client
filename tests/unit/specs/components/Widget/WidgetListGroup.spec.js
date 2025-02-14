@@ -4,10 +4,10 @@ import WidgetListGroup from '@/components/Widget/WidgetListGroup'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('WidgetListGroup.vue', () => {
-  let plugins, store
+  let core, plugins, store
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core = CoreSetup.init().useAll()
     store = core.store
     plugins = core.plugins
     store.commit('insights/reset')
@@ -72,7 +72,7 @@ describe('WidgetListGroup.vue', () => {
 
   it('should reverse the list using a pipeline', async () => {
     const pipeline = 'widget-list-group-test-reverse'
-    store.commit('pipelines/register', { category: pipeline, type: (items) => items.reverse() })
+    core.registerPipeline({ category: pipeline, type: (items) => items.reverse() })
     const items = [
       { label: 'foo', href: 'https://www.icij.org' },
       { label: 'bar', href: 'https://www.icij.org' }
@@ -87,7 +87,7 @@ describe('WidgetListGroup.vue', () => {
 
   it('should feed the list using a pipeline', async () => {
     const pipeline = 'widget-list-group-test-feed'
-    store.commit('pipelines/register', {
+    core.registerPipeline({
       category: pipeline,
       type: () => [{ label: 'foo' }, { label: 'bar' }]
     })

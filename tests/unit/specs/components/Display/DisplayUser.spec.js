@@ -3,6 +3,8 @@ import { mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayUser from '@/components/Display/DisplayUser'
 
+import { usePipelinesStore } from '@/store/modules/pipelines'
+
 describe('DisplayUser.vue', () => {
   const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
   let wrapper, api, core
@@ -21,9 +23,9 @@ describe('DisplayUser.vue', () => {
   })
 
   afterEach(() => {
-    core.store.commit('pipelines/unregister', 'username-to-uppercase')
-    core.store.commit('pipelines/unregister', 'avatar-from-username')
-    core.store.commit('pipelines/unregister', 'username-icij-link')
+    core.unregisterPipeline('username-to-uppercase')
+    core.unregisterPipeline('avatar-from-username')
+    core.unregisterPipeline('username-icij-link')
   })
 
   it('should display "foo"', async () => {
@@ -43,7 +45,7 @@ describe('DisplayUser.vue', () => {
   })
 
   it('should display "foo" in uppercase with a pipeline', async () => {
-    core.store.commit('pipelines/register', {
+    core.registerPipeline({
       name: 'username-to-uppercase',
       category: wrapper.vm.usernamePipeline,
       type: (username) => username.toUpperCase()
@@ -57,7 +59,7 @@ describe('DisplayUser.vue', () => {
   })
 
   it('should display an avatar with an URL based on the username', async () => {
-    core.store.commit('pipelines/register', {
+    core.registerPipeline({
       name: 'avatar-from-username',
       category: wrapper.vm.avatarPipeline,
       type: (username) => `http://datashare.icij.org/${username}.png`
@@ -79,7 +81,7 @@ describe('DisplayUser.vue', () => {
   })
 
   it('should display a link to the user profile based on the username', async () => {
-    core.store.commit('pipelines/register', {
+    core.registerPipeline({
       name: 'username-icij-link',
       category: wrapper.vm.linkPipeline,
       type: (_, username) => `http://datashare.icij.org/${username}.html`
@@ -92,7 +94,7 @@ describe('DisplayUser.vue', () => {
 
   it('should not display a link if the `hideLink` property is set', async () => {
     wrapper.setProps({ hideLink: true })
-    core.store.commit('pipelines/register', {
+    core.registerPipeline({
       name: 'username-icij-link',
       category: wrapper.vm.linkPipeline,
       type: (_, username) => `http://datashare.icij.org/${username}.html`
