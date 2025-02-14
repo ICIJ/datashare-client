@@ -1,47 +1,52 @@
-import store from '@/store'
+import { setActivePinia, createPinia } from 'pinia'
+
+import { useHooksStore } from '@/store/modules/hooks'
 import { HookedComponent } from '@/store/hooks'
 
 describe('HooksStore', () => {
+  let hooksStore
+
   beforeEach(() => {
-    store.commit('hooks/reset')
+    setActivePinia(createPinia())
+    hooksStore = useHooksStore()
   })
 
   it('should register hooked components', () => {
-    store.commit('hooks/register', { target: 'foo' })
-    store.commit('hooks/register', { target: 'bar' })
-    expect(store.state.hooks.registered).toHaveLength(2)
-    store.commit('hooks/register', { target: 'baz' })
-    expect(store.state.hooks.registered).toHaveLength(3)
+    hooksStore.register({ target: 'foo' })
+    hooksStore.register({ target: 'bar' })
+    expect(hooksStore.registered).toHaveLength(2)
+    hooksStore.register({ target: 'baz' })
+    expect(hooksStore.registered).toHaveLength(3)
   })
 
   it('should register a hooked component', () => {
-    store.commit('hooks/register', { target: 'foo' })
-    expect(store.getters['hooks/hookedComponents']()).toHaveLength(1)
-    expect(store.getters['hooks/hookedComponents']()[0] instanceof HookedComponent).toBeTruthy()
+    hooksStore.register({ target: 'foo' })
+    expect(hooksStore.components).toHaveLength(1)
+    expect(hooksStore.components[0] instanceof HookedComponent).toBeTruthy()
   })
 
   it('should find a hooked component by its target name', () => {
-    store.commit('hooks/register', { target: 'foo' })
-    store.commit('hooks/register', { target: 'bar' })
-    expect(store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
+    hooksStore.register({ target: 'foo' })
+    hooksStore.register({ target: 'bar' })
+    expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(1)
   })
 
   it('should find several hooked components by their target name', () => {
-    store.commit('hooks/register', { target: 'foo' })
-    store.commit('hooks/register', { target: 'bar' })
-    store.commit('hooks/register', { target: 'baz' })
-    store.commit('hooks/register', { target: 'baz' })
-    expect(store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
+    hooksStore.register({ target: 'foo' })
+    hooksStore.register({ target: 'bar' })
+    hooksStore.register({ target: 'baz' })
+    hooksStore.register({ target: 'baz' })
+    expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(2)
   })
 
   it('should unregister all components on a hook', () => {
-    store.commit('hooks/register', { target: 'foo' })
-    store.commit('hooks/register', { target: 'baz' })
-    store.commit('hooks/register', { target: 'baz' })
-    expect(store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
-    expect(store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
-    store.commit('hooks/resetTarget', 'baz')
-    expect(store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
-    expect(store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(0)
+    hooksStore.register({ target: 'foo' })
+    hooksStore.register({ target: 'baz' })
+    hooksStore.register({ target: 'baz' })
+    expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(1)
+    expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(2)
+    hooksStore.resetTarget('baz')
+    expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(1)
+    expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(0)
   })
 })
