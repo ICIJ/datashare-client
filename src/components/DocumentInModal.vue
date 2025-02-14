@@ -1,19 +1,6 @@
 <template>
   <b-modal id="document-modal" v-model="showModal" size="xl" lazy hide-header hide-footer body-class="p-0">
     <div v-if="documentInModal" :key="documentInModalIndex">
-      <document-navbar :id="documentInModal.id" :index="documentInModal.index" :routing="documentInModal.routing">
-        <template #back>
-          <a role="button" class="small text-white" @click="hideModal">
-            <fa icon="circle-chevron-left"></fa>
-            <span class="ms-2">
-              {{ $t('batchSearchResults.backToResults') }}
-            </span>
-          </a>
-        </template>
-        <template #nav>
-          <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems" />
-        </template>
-      </document-navbar>
       <document-view
         :id="documentInModal.id"
         :index="documentInModal.index"
@@ -27,17 +14,13 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 
-import DocumentNavbar from '@/components/document/DocumentNavbar'
-import DocumentView from '@/pages/DocumentView'
-import QuickItemNav from '@/components/QuickItemNav'
+import DocumentView from '@/views/Document/DocumentView/DocumentView'
 import settings from '@/utils/settings'
 
 export default {
   name: 'DocumentInModal',
   components: {
-    DocumentNavbar,
-    DocumentView,
-    QuickItemNav
+    DocumentView
   },
   props: {
     pageIndex: {

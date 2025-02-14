@@ -84,7 +84,7 @@ export default {
     content: attr(aria-hook) ' → ' attr(aria-count);
     font-size: 0.8rem;
     font-weight: bold;
-    color: $tertiary;
+    color: $secondary;
     text-shadow: 0 0 0.5em black;
     background: rgba(black, 0.7);
     font-family: $font-family-monospace;

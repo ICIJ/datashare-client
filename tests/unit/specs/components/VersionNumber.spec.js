@@ -35,7 +35,7 @@ describe('VersionNumber.vue', () => {
 
   it('should display server git sha1 and version', async () => {
     await wrapper.vm.setVersion()
-    expect(wrapper.find('.version-number').text()).toBe('Version X.Y.Z')
+    expect(wrapper.find('.version-number').text()).toBe('vX.Y.Z')
     expect(wrapper.find('.version-number__tooltip__server__value').text()).toBe('sha1_abbrev')
   })
 })

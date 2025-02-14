@@ -2,6 +2,8 @@
 import { uniqueId } from 'lodash'
 
 import { toVariant, toVariantIcon, toVariantColor } from '@/utils/utils'
+import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
+import { TASK_STATUS, taskStatusValidator } from '@/enums/taskStatus'
 
 /**
  * Draw a badge depending on the status with an ellipse progress diagram.
@@ -14,10 +16,11 @@ export default {
      */
     status: {
       type: String,
-      default: 'warning'
+      default: TASK_STATUS.WARNING,
+      validator: taskStatusValidator
     },
     /**
-     * Progress percentage. If none is specificed while the status is
+     * Progress percentage. If none is specified while the status is
      * "running", the components passes to a "loading" state.
      */
     progress: {
@@ -25,7 +28,7 @@ export default {
       default: null
     },
     /**
-     * Dispaly the badge and the progress horizontaly.
+     * Display the badge and the progress horizontally.
      */
     horizontal: {
       type: Boolean
@@ -69,8 +72,8 @@ export default {
      */
     errorModalSize: {
       type: String,
-      default: 'lg',
-      validator: (size) => ['sm', 'md', 'lg', 'xl'].includes(size)
+      default: SIZE.LG,
+      validator: breakpointSizeValidator
     }
   },
   computed: {

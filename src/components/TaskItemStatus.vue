@@ -27,9 +27,6 @@
 </template>
 
 <script>
-import { capitalize } from 'lodash'
-
-import { toVariant } from '@/utils/utils'
 import EllipseStatus from '@/components/EllipseStatus'
 import JsonFormatter from '@/components/JsonFormatter'
 
@@ -41,10 +38,6 @@ export default {
   components: {
     EllipseStatus,
     JsonFormatter
-  },
-  filters: {
-    capitalize,
-    toVariant
   },
   props: {
     /**
@@ -94,7 +87,7 @@ export default {
       font-size: $font-size-lg;
 
       &:deep(code) {
-        background-color: $light;
+        background-color: $tertiary;
         border: 1px gray solid;
         border-radius: 3px;
         margin-right: 0.2rem;

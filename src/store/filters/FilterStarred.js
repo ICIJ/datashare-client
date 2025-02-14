@@ -2,17 +2,19 @@ import { get, map } from 'lodash'
 
 import FilterText from './FilterText'
 
+import DisplayBoolean from '@/components/Display/DisplayBoolean'
+
 export default class FilterStarred extends FilterText {
   constructor(options) {
     super(options)
-    this.component = 'FilterStarred'
+    this.component = 'FilterTypeStarred'
   }
-  addChildIncludeFilter(body, param) {
-    if (param.values[0]) {
+  addChildIncludeFilter(body, { values }) {
+    if (values[0]) {
       return body.addFilter('terms', this.key, this.starredDocumentIds)
-    } else {
-      return body.notFilter('terms', this.key, this.starredDocumentIds)
     }
+
+    return body.notFilter('terms', this.key, this.starredDocumentIds)
   }
   itemLabel(item) {
     return get(FilterStarred.starredLabels, item.key, item.key)
@@ -29,5 +31,8 @@ export default class FilterStarred extends FilterText {
       true: 'filter.starred',
       false: 'filter.notStarred'
     }
+  }
+  static get display() {
+    return DisplayBoolean
   }
 }

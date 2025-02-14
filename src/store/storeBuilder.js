@@ -9,13 +9,13 @@ import { downloadsBuilder } from './modules/downloads'
 import { indexingStoreBuilder } from './modules/indexing'
 import { recommendedStoreBuilder } from './modules/recommended'
 import { searchStoreBuilder } from './modules/search'
+import { searchBreadcrumbStoreBuilder } from './modules/search-breadcrumb'
 import { settingsStoreBuilder } from './modules/settings'
 import { starredStoreBuilder } from './modules/starred'
 import app from './modules/app'
 import hooks from './modules/hooks'
 import insights from './modules/insights'
 import pipelines from './modules/pipelines'
-import player from './modules/player'
 import treeView from './modules/treeView'
 
 export function storeBuilder(api) {
@@ -29,10 +29,10 @@ export function storeBuilder(api) {
       hooks,
       indexing: indexingStoreBuilder(api),
       insights,
-      player,
       pipelines,
       recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api),
+      searchBreadcrumb: searchBreadcrumbStoreBuilder(),
       settings: settingsStoreBuilder(api),
       starred: starredStoreBuilder(api),
       treeView
@@ -42,16 +42,16 @@ export function storeBuilder(api) {
       createPersistedState({
         paths: [
           'app.redirectAfterLogin',
+          'app.sidebar',
+          'app.settings',
+          'app.filters',
+          'app.pins.projects',
           'document.showTranslatedContent',
-          'player.autoplay',
-          'player.loop',
           'search.query',
-          'search.size',
           'search.values',
-          'search.reversedFilters',
-          'search.contextualizedFilters',
-          'search.sortedFilters',
-          'search.sort',
+          'search.excludeFilters',
+          'search.contextualizeFilters',
+          'search.sortFilters',
           'search.field',
           'search.index',
           'search.indices',

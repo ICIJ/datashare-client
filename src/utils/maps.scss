@@ -1,0 +1,57 @@
+$utilities-colors: map-merge($utilities-colors, $theme-colors-rgb);
+$utilities-text-colors: map-loop($utilities-colors, rgba-css-var, "$key", "text");
+$utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
+$utilities-bg-subtle: map-merge((
+  "action-subtle": var(--bs-action-bg-subtle),
+  "tertiary-subtle": var(--bs-tertiary-bg-subtle),
+), $utilities-bg-subtle);
+
+$utilities-border-subtle: map-merge((
+  "action-subtle": var(--bs-action-border-subtle),
+  "tertiary-subtle": var(--bs-tertiary-border-subtle),
+), $utilities-border-subtle);
+
+$theme-colors-text: map-merge((
+  "action": $action-text-emphasis,
+), $theme-colors-text);
+
+$theme-colors-bg-subtle: map-merge((
+  "action": $action-bg-subtle,
+  "tertiary": $tertiary-bg-subtle,
+), $theme-colors-bg-subtle);
+
+$theme-colors-bg-subtle-dark: map-merge((
+  "action": $action-bg-subtle-dark,
+  "tertiary": $tertiary-bg-subtle-dark,
+), $theme-colors-bg-subtle-dark);
+
+$theme-colors-border-subtle: map-merge((
+  "action": $action-border-subtle,
+  "tertiary": $tertiary-border-subtle,
+), $theme-colors-border-subtle);
+
+$theme-colors-border-subtle-dark: map-merge((
+  "action": $action-border-subtle-dark,
+  "tertiary": $tertiary-border-subtle-dark,
+), $theme-colors-border-subtle-dark);
+
+$theme-colors-text-dark: map-merge((
+  "action": $action-text-emphasis-dark,
+  "tertiary": $tertiary-text-emphasis-dark,
+), $theme-colors-text-dark);
+
+$utilities-text: map-merge($utilities-text, ("action": to-rgb($action)));
+$utilities-text-colors: map-loop($utilities-text, rgba-css-var, "$key", "text");
+
+$utilities-text-emphasis-colors: map-merge((
+  "action-emphasis": var(--#{$prefix}action-text-emphasis),
+), $utilities-text-emphasis-colors);
+
+$utilities-bg-subtle: map-merge((
+  "action-subtle": var(--#{$prefix}action-bg-subtle),
+  "tertiary-subtle": var(--#{$prefix}tertiary-bg-subtle),
+), $utilities-bg-subtle);
+
+$utilities-border-subtle: map-merge((
+  "action-subtle": var(--#{$prefix}action-border-subtle),
+), $utilities-border-subtle);

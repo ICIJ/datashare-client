@@ -1,0 +1,24 @@
+import { Canvas, Meta } from '@storybook/blocks'
+
+import * as LoginImage from './LoginImage.stories'
+
+<Meta of={LoginImage} />
+
+# LoginImage
+
+The `LoginImage` is providing an image for the login page. The image is already configured to offer a variant
+in dark mode. The component expose a `shake` function that triggers a shaking animation on the Datashare logo
+inside the image.
+
+For instance:
+
+```html
+<div class="text-center">
+  <login-image ref="image" class="my-5" />
+  <button-icon label="Shake it!" icon-left="disco-ball" icon-left-weight="fill" @click="image.shake()" />
+</div>
+```
+
+Will result to:
+
+<Canvas of={LoginImage.Default} sourceState='none' />

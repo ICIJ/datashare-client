@@ -1,12 +1,14 @@
-import { isInteger, max, min, uniq } from 'lodash'
+import { isInteger } from 'lodash'
 import moment from 'moment'
 
 import FilterDate from './FilterDate'
 
+import DisplayDatetimeRange from '@/components/Display/DisplayDatetimeRange'
+
 export default class FilterDateRange extends FilterDate {
   constructor({ interval = 'year', ...options }) {
     super(options)
-    this.component = 'FilterDateRange'
+    this.component = 'FilterTypeDateRange'
     this.interval = interval
   }
 
@@ -21,12 +23,13 @@ export default class FilterDateRange extends FilterDate {
   }
 
   queryBuilder(body, param, func) {
-    return body.query('bool', (sub) => {
-      const gte = new Date(min(param.values))
-      const lte = new Date(max(param.values))
-      sub[func]('range', this.key, { gte, lte })
-      return sub
-    })
+    if (!param?.values?.length) return body
+
+    const [minValue, maxValue = minValue] = param.values[0].split(':').map(Number)
+    const gte = new Date(Math.min(minValue, maxValue))
+    const lte = new Date(Math.max(minValue, maxValue))
+
+    return body.query('bool', (sub) => sub[func]('range', this.key, { gte, lte }))
   }
 
   body(body, { interval = this.interval } = {}) {
@@ -50,7 +53,7 @@ export default class FilterDateRange extends FilterDate {
     }
   }
 
-  get values() {
-    return uniq(super.values.map((v) => parseInt(v)))
+  static get display() {
+    return DisplayDatetimeRange
   }
 }

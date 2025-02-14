@@ -1,6 +1,9 @@
 run:
 		yarn serve
 
+storybook:
+		yarn storybook
+
 clean:
 		rm -Rf ./dist
 

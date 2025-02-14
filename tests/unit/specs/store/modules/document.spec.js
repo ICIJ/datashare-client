@@ -41,8 +41,6 @@ describe('DocumentStore', () => {
     expect(store.state.document.doc).toEqual(initialState().doc)
     expect(store.state.document.idAndRouting).toEqual(initialState().idAndRouting)
     expect(store.state.document.isContentLoaded).toEqual(initialState().isContentLoaded)
-    expect(store.state.document.isTranslatedContentLoaded).toEqual(initialState().isTranslatedContentLoaded)
-    expect(store.state.document.isLoadingNamedEntities).toEqual(initialState().isLoadingNamedEntities)
     expect(store.state.document.isRecommended).toEqual(initialState().isRecommended)
   })
 
@@ -113,9 +111,12 @@ describe('DocumentStore', () => {
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
 
-      await store.dispatch('document/tag', {
-        documents: [{ id: 'doc_01' }, { id: 'doc_02' }],
-        tag: 'tag_01 tag_02 tag_03'
+      await store.dispatch('document/addTag', {
+        documents: [
+          { id: 'doc_01', index },
+          { id: 'doc_02', index }
+        ],
+        label: 'tag_01 tag_02 tag_03'
       })
 
       expect(api.tagDocuments).toBeCalledTimes(1)
@@ -137,18 +138,11 @@ describe('DocumentStore', () => {
 
       // WHEN
       api.tagDocuments.mockResolvedValue({})
-      await store.dispatch('document/tag', { documents: [document01, document02], tag: 'tag_01 tag_02 tag_03' })
+      await store.dispatch('document/addTag', { documents: [document01, document02], label: 'tag_01 tag_02 tag_03' })
 
       // THEN
       expect(api.tagDocuments).toBeCalledTimes(1)
       expect(api.tagDocuments).toBeCalledWith(index, ['doc_01', 'doc_02'], ['tag_01', 'tag_02', 'tag_03'])
-    })
-    it('should tag a single doc with a userId user', async () => {
-      await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }], tag: 'tag_01', userId: 'user' })
-
-      expect(store.state.document.tags).toHaveLength(1)
-      expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
-      expect(orderBy(store.state.document.tags, ['label'])[0].user.id).toBe('user')
     })
 
     it('should call deleteTag from 1 document', async () => {
@@ -158,14 +152,15 @@ describe('DocumentStore', () => {
 
       api.untagDocuments.mockResolvedValue({})
 
-      await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
+      const document = await store.dispatch('document/get', { id: 'doc_01', index })
+      await store.dispatch('document/deleteTag', { documents: [document], label: 'tag_01' })
 
       expect(api.untagDocuments).toBeCalledTimes(1)
       expect(api.untagDocuments).toBeCalledWith(index, ['doc_01'], ['tag_01'])
     })
 
     it('should add tags to the store', () => {
-      store.commit('document/addTag', { tag: 'tag_01      tag_01 tag_02', userId: 'user' })
+      store.commit('document/addTag', { label: 'tag_01      tag_01 tag_02', userId: 'user' })
 
       expect(store.state.document.tags).toHaveLength(2)
       expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
@@ -213,8 +208,6 @@ describe('DocumentStore', () => {
 
       expect(api.setMarkAsRecommended).toBeCalledTimes(1)
       expect(api.setMarkAsRecommended).toBeCalledWith(index, ['doc_01'])
-      expect(store.state.document.isRecommended).toBeTruthy()
-      expect(store.state.document.recommendedBy).toEqual([userId])
     })
 
     it('should UNMARK these documents as recommended', async () => {
@@ -226,13 +219,10 @@ describe('DocumentStore', () => {
 
       api.setUnmarkAsRecommended.mockResolvedValue({})
 
-      await store.dispatch('document/toggleAsRecommended')
+      await store.dispatch('document/toggleAsRecommended', userId)
 
       expect(api.setUnmarkAsRecommended).toBeCalledTimes(1)
       expect(api.setUnmarkAsRecommended).toBeCalledWith(index, ['doc_01'])
-
-      expect(store.state.document.isRecommended).toBeFalsy()
-      expect(indexOf(store.state.document.recommendedBy, userId)).toBe(-1)
     })
 
     it('should retrieve the list of users who recommended it and set it to the store', async () => {

@@ -4,10 +4,16 @@ import Document from '@/api/resources/Document'
 import NamedEntity from '@/api/resources/NamedEntity'
 
 const _raw = '_RAW'
+const _parents = '_PARENTS'
+const _roots = '_ROOTS'
+const _from = '_FROM'
 
 export default class EsDocList {
-  constructor(raw) {
+  constructor(raw, parents = null, roots = null, from = 0) {
     this[_raw] = isEmpty(raw) ? EsDocList.emptyRaw : raw
+    this[_parents] = isEmpty(parents) ? EsDocList.emptyRaw : parents
+    this[_roots] = isEmpty(roots) ? EsDocList.emptyRaw : roots
+    this[_from] = isNaN(from) ? null : from
   }
   get(path, defaultValue) {
     return get(this[_raw], path, defaultValue)
@@ -38,9 +44,21 @@ export default class EsDocList {
     const response = new EsDocList(raw)
     response.hits.forEach((hit) => this.push('hits.hits', hit))
   }
+  findParent(id) {
+    return find(this[_parents].hits.hits, ({ _id }) => _id === id)
+  }
+  findRoot(id) {
+    return find(this[_roots].hits.hits, ({ _id }) => _id === id)
+  }
+  get from() {
+    return this[_from]
+  }
   get hits() {
-    return map(this.get('hits.hits', []), (hit) => {
-      return EsDocList.instantiate(hit)
+    return map(this.get('hits.hits', []), (hit, i) => {
+      const parent = this.findParent(hit._source.parentDocument)
+      const root = this.findRoot(hit._source.rootDocument)
+      const position = this.from + i
+      return EsDocList.instantiate(hit, parent, root, position)
     })
   }
   get aggregations() {
@@ -49,9 +67,9 @@ export default class EsDocList {
   get total() {
     return this[_raw].hits.total.value
   }
-  static instantiate(hit) {
+  static instantiate(hit, parent = null, root = null, position = 0) {
     const Type = find(EsDocList.types, (Type) => Type.match(hit))
-    return new Type(hit)
+    return new Type(hit, parent, root, position)
   }
   static none() {
     return new EsDocList(EsDocList.emptyRaw)

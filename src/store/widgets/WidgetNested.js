@@ -2,7 +2,7 @@ import { castArray } from 'lodash'
 
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/widget/WidgetNested'
+import Component from '@/components/Widget/WidgetNested'
 
 /**
  * Widget to display nested widgets

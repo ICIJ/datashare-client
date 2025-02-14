@@ -50,6 +50,7 @@ export const getters = {
     return state.batchSearchResultsPagination?.total ?? 0
   }
 }
+
 export const mutations = {
   [RESET](state) {
     Object.assign(state, initialState())
@@ -163,7 +164,7 @@ export function actionBuilder(api) {
       }
     },
     async onSubmit(
-      { commit, dispatch },
+      { dispatch },
       { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published, queryTemplate }
     ) {
       // send the new batch search

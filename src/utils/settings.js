@@ -1,4 +1,5 @@
 export default {
+  cleanableContentTypes: ['application/pdf', 'application/msword'],
   contentPlaceholder: {
     rows: [
       {
@@ -127,12 +128,14 @@ export default {
     {
       name: 'creationDateNewest',
       field: 'metadata.tika_metadata_dcterms_created',
-      desc: true
+      desc: true,
+      extraParams: { unmapped_type: 'date' }
     },
     {
       name: 'creationDateOldest',
       field: 'metadata.tika_metadata_dcterms_created',
-      desc: false
+      desc: false,
+      extraParams: { unmapped_type: 'date' }
     },
     {
       name: 'dateNewest',
@@ -208,6 +211,7 @@ export default {
     info: 'info',
     pending: 'info',
     queued: 'info',
+    draft: 'warning',
     running: 'info',
     warning: 'warning',
     cancelled: 'warning',
@@ -220,12 +224,12 @@ export default {
   filter: {
     bucketSize: 25,
     sortBy: '_count',
-    sortByOrder: 'desc',
+    orderBy: 'desc',
     sortByOptions: [
-      { sortBy: '_count', sortByOrder: 'asc' },
-      { sortBy: '_count', sortByOrder: 'desc' },
-      { sortBy: '_key', sortByOrder: 'asc' },
-      { sortBy: '_key', sortByOrder: 'desc' }
+      { sortBy: '_count', orderBy: 'asc' },
+      { sortBy: '_count', orderBy: 'desc' },
+      { sortBy: '_key', orderBy: 'asc' },
+      { sortBy: '_key', orderBy: 'desc' }
     ]
   },
   helpLink: 'https://icij.gitbook.io/datashare/ask-for-help',

@@ -1,6 +1,6 @@
 import WidgetText from './WidgetText'
 
-import Component from '@/components/widget/WidgetDuplicates'
+import Component from '@/components/Widget/WidgetDuplicates'
 
 /**
  * Widget for the insights page indicating the proportion of duplicates in the data.

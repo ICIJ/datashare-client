@@ -95,7 +95,7 @@ export default {
 
 <style lang="scss" scoped>
 .shortkeys-modal__shortkey {
-  border-bottom: 1px solid lighten($text-muted, 40);
+  border-bottom: 1px solid color.adjust($text-muted, $lightness: 40%);
 
   &:last-child {
     border-bottom: none;

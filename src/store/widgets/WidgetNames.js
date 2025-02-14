@@ -1,6 +1,6 @@
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/widget/WidgetNames'
+import Component from '@/components/Widget/WidgetNames'
 
 /**
  * Widget to display names
