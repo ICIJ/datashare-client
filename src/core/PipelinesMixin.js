@@ -1,5 +1,7 @@
 import { findIndex, uniqueId, cloneDeep } from 'lodash'
 
+import { usePipelinesStore } from '@/store/modules/pipelines'
+
 /**
   Mixin class extending the core to add helpers for pipelines.
   @mixin PipelinesMixin
@@ -7,6 +9,9 @@ import { findIndex, uniqueId, cloneDeep } from 'lodash'
 */
 const PipelinesMixin = (superclass) =>
   class extends superclass {
+    get pipelinesStore() {
+      return usePipelinesStore()
+    }
     /**
      * Register a pipeline
      * @memberof PipelinesMixin.prototype
@@ -16,7 +21,7 @@ const PipelinesMixin = (superclass) =>
      * @param {String} category - The pipeline to target
      */
     registerPipeline(...args) {
-      this.store.commit('pipelines/register', ...args)
+      this.pipelinesStore.register(...args)
     }
     /**
      * Unregister a pipeline
@@ -24,7 +29,7 @@ const PipelinesMixin = (superclass) =>
      * @memberof PipelinesMixin.prototype
      */
     unregisterPipeline(name) {
-      this.store.commit('pipelines/unregister', name)
+      this.pipelinesStore.unregister(name)
     }
     /**
      * Register a pipeline for a specific project
@@ -53,7 +58,7 @@ const PipelinesMixin = (superclass) =>
      * @param {String} name - Name of the pipeline
      */
     unregisterPipelineForProject(project, name) {
-      const pipelines = this.store.state.pipelines.registered
+      const pipelines = this.pipelinesStore.registered
       const position = findIndex(pipelines, ({ options }) => options.name === name)
       const pipeline = pipelines[position]
       // Watch store mutations
