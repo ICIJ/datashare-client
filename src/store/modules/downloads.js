@@ -1,68 +1,77 @@
-import { has } from 'lodash'
+import { has, flatten } from 'lodash'
+import { reactive, computed } from 'vue'
+import { defineStore } from 'pinia'
 
-export const state = {
-  allowedFor: {}
-}
+import { apiInstance } from '@/api/apiInstance'
 
-export const mutations = {
-  clear(state) {
-    state.allowedFor = {}
-  },
-  allowedFor(state, { index, allowed }) {
-    state.allowedFor[index] = allowed
-  }
-}
+export const useDownloadsStore = (api = apiInstance) => {
+  return defineStore('downloads', () => {
+    const allowedFor = reactive({})
 
-function actionBuilder(api) {
-  const getIndexStatus = async ({ state }, index) => {
-    try {
-      if (!has(state.allowedFor, index)) {
-        // Not allowed index will throw an error
-        await api.isDownloadAllowed(index)
+    /**
+     * Allow download for a given index
+     *
+     * @param {Object} options
+     * @param {number} options.index - The index to allow
+     * @param {boolean} options.allowed - The allowed status
+     */
+    const allow = ({ index, allowed }) => {
+      allowedFor[index] = !!allowed
+    }
+
+    /**
+     * Get the download status for a given index
+     *
+     * @param {number} index - The index to check
+     * @returns {boolean} The download status
+     */
+    const getIndexStatus = async (index) => {
+      try {
+        if (!has(allowedFor, index)) {
+          // Not allowed index will throw an error
+          await api.isDownloadAllowed(index)
+        }
+        return true
+      } catch (_) {
+        return false
       }
-      return true
-    } catch (_) {
-      return false
     }
-  }
-  const fetchIndexStatus = async ({ commit, state }, index) => {
-    const allowed = await getIndexStatus({ state }, index)
-    commit('allowedFor', {
-      index,
-      allowed
+
+    /**
+     * Fetch the download status for a given index
+     *
+     * @param {number} index - The index to fetch
+     * @returns {void}
+     */
+    const fetchIndexStatus = async (index) => {
+      const allowed = await getIndexStatus(index)
+      allow({ index, allowed })
+    }
+
+    /**
+     * Fetch the download status for all indices
+     * @param {Array<number>} indices - The indices to fetch
+     * @returns {void}
+     */
+    const fetchIndicesStatus = async (...indices) => {
+      for (const index of flatten(indices)) {
+        await fetchIndexStatus(index)
+      }
+    }
+
+    /**
+     * Check if download is allowed for a given index
+     *
+     * @returns {Function<boolean>} The function to check if download is allowed
+     */
+    const isAllowed = computed(() => {
+      return (index) => {
+        // Stricktly equal to true so download is allowed by default
+        // even if the index' status is not loaded.
+        return allowedFor[index] === true
+      }
     })
-  }
-  const fetchIndicesStatus = async ({ commit, rootState, state }) => {
-    const promises = []
-    for (const index of rootState.search.indices) {
-      promises.push(fetchIndexStatus({ commit, state }, index))
-    }
-    return Promise.all(promises)
-  }
-  return {
-    getIndexStatus,
-    fetchIndexStatus,
-    fetchIndicesStatus
-  }
-}
 
-export const getters = {
-  isDownloadAllowed(state) {
-    return ({ index }) => {
-      // Stricktly equal to true so download is allowed by default
-      // even if the index' status is not loaded.
-      return state.allowedFor[index] === true
-    }
-  }
-}
-
-export function downloadsBuilder(api) {
-  const actions = actionBuilder(api)
-  return {
-    namespaced: true,
-    state,
-    mutations,
-    getters,
-    actions
-  }
+    return { allow, getIndexStatus, fetchIndexStatus, fetchIndicesStatus, isAllowed }
+  })()
 }
