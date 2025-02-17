@@ -6,22 +6,17 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
+import { useRecommendedStore } from '@/store/modules/recommended'
+import { apiInstance } from '@/api/apiInstance'
 
-describe('FilterTypeRecommendedBy.vue', () => {
-  const { index, es: elasticsearch } = esConnectionHelper.build()
-  let core, wrapper, api
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
 
-  beforeAll(async () => {
-    await letData(elasticsearch).have(new IndexedDocument('01', index)).commit()
-    await letData(elasticsearch).have(new IndexedDocument('02', index)).commit()
-    await letData(elasticsearch).have(new IndexedDocument('03', index)).commit()
-  })
-
-  beforeEach(async () => {
-    vi.clearAllMocks()
-
-    api = {
-      elasticsearch,
+  return {
+    apiInstance: {
+      ...apiInstance,
+      getDocumentsRecommendedBy: vi.fn(),
+      getUser: vi.fn().mockResolvedValue({ uid: 'local' }),
       getRecommendationsByProject: vi.fn().mockResolvedValue({
         totalCount: 42,
         aggregates: [
@@ -38,12 +33,24 @@ describe('FilterTypeRecommendedBy.vue', () => {
             count: 3
           }
         ]
-      }),
-      getDocumentsRecommendedBy: vi.fn(),
-      getUser: vi.fn().mockResolvedValue({ uid: 'local' })
+      })
     }
+  }
+})
 
-    core = CoreSetup.init(api).useAll().useRouter()
+describe('FilterTypeRecommendedBy.vue', () => {
+  const { index, es } = esConnectionHelper.build()
+  let core, wrapper, recommendedStore
+
+  beforeAll(async () => {
+    await letData(es).have(new IndexedDocument('01', index)).commit()
+    await letData(es).have(new IndexedDocument('02', index)).commit()
+    await letData(es).have(new IndexedDocument('03', index)).commit()
+  })
+
+  beforeEach(async () => {
+    core = CoreSetup.init().useAll().useRouter()
+    recommendedStore = useRecommendedStore()
     core.store.commit('search/index', index)
     window.datashare = core
 
@@ -62,8 +69,8 @@ describe('FilterTypeRecommendedBy.vue', () => {
   })
 
   it('should load users who recommended documents in this project', () => {
-    expect(api.getRecommendationsByProject).toBeCalledWith(index)
-    expect(wrapper.vm.state.recommended.byUsers).toEqual([
+    expect(apiInstance.getRecommendationsByProject).toBeCalledWith(index)
+    expect(recommendedStore.byUsers).toEqual([
       { user: 'paul', count: 2 },
       { user: 'local', count: 1 },
       { user: 'anita', count: 3 }
@@ -85,7 +92,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
   it('should select no users', async () => {
     core.store.commit('search/addFilterValue', { name: 'recommendedBy', value: [] })
     await flushPromises()
-    expect(api.getDocumentsRecommendedBy).toBeCalledTimes(0)
-    expect(core.store.state.recommended.documents).toEqual([])
+    expect(apiInstance.getDocumentsRecommendedBy).toBeCalledTimes(0)
+    expect(recommendedStore.documents).toEqual([])
   })
 })
