@@ -3,29 +3,28 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import { useStarredStore } from '@/store/modules/starred'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('FilterTypeStarred.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  let api, core, wrapper
+  let api, core, starredStore, wrapper
 
   beforeAll(() => {
     api = { getStarredDocuments: vi.fn().mockResolvedValue([]), elasticsearch: es }
     core = CoreSetup.init(api).useAll().useRouter()
+    starredStore = useStarredStore(api)
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
     const filter = core.store.getters['search/getFilter']({ name: 'starred' })
+    const props = { filter }
+    const global = { plugins: core.plugins }
     core.store.commit('search/index', index)
-    wrapper = mount(FilterTypeStarred, {
-      props: { filter },
-      global: {
-        plugins: core.plugins
-      }
-    })
+    wrapper = mount(FilterTypeStarred, { props, global })
   })
 
   afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
@@ -56,7 +55,8 @@ describe('FilterTypeStarred.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
     await letData(es).have(new IndexedDocument('document_03', index)).commit()
-    core.store.commit('starred/documents', [
+    
+    starredStore.setDocuments([
       {
         index,
         id: 'document_01'
