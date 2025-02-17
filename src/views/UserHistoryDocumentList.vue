@@ -107,7 +107,6 @@ export default {
   },
   data() {
     return {
-      foo: [],
       fields: [
         {
           key: MODIFICATION_DATE,
@@ -175,7 +174,11 @@ export default {
     const starredStore = useStarredStore()
     // No need to request starred docs once the state has already been filled
     if (!starredStore.documents?.length) {
-      await starredStore.fetchIndicesStarredDocuments(this.$core.projectIds)
+      try {
+        await starredStore.fetchIndicesStarredDocuments(this.$core.projectIds)
+      } catch(error) {
+        console.warning('Unable to fetch starred documents', error)
+      }
     }
   },
   methods: {
