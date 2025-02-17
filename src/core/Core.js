@@ -23,6 +23,7 @@ import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
 import WidgetsMixin from './WidgetsMixin'
 
+import { apiInstance } from '@/api/apiInstance'
 import { dispatch, EventBus } from '@/utils/event-bus'
 import { getMode, MODE_NAME } from '@/mode'
 import { routes } from '@/router'
@@ -64,7 +65,7 @@ class Core extends Behaviors {
    * @param api - Datashare api interface
    * @param mode - mode of authentication ('local' or 'server'
    */
-  constructor(api = null, mode = getMode(MODE_NAME.LOCAL)) {
+  constructor(api = apiInstance, mode = getMode(MODE_NAME.LOCAL)) {
     super()
     const Root = defineComponent({ name: 'Root', template: '<router-view></router-view>' })
     this._vue = createApp(Root)
