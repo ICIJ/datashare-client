@@ -30,6 +30,7 @@ import EsDocList from '@/api/resources/EsDocList'
 import filters, * as filterTypes from '@/store/filters'
 import { isNarrowScreen } from '@/utils/screen'
 import { useAppStore } from '@/store/modules/app'
+import { useSearchBreadcrumbStore } from '@/store/modules/search-breadcrumb'
 import settings from '@/utils/settings'
 
 export const TAB_NAME = {
@@ -417,9 +418,10 @@ function actionsBuilder(api) {
       commit('isReady', false)
       commit('error', null)
       try {
-        dispatch('searchBreadcrumb/push', getters.toBaseRouteQuery(), { root: true })
+        const searchBreadcrumbStore = useSearchBreadcrumbStore()
         const raw = await dispatch('searchDocs')
         const roots = await dispatch('searchRoots', raw)
+        searchBreadcrumbStore.push(getters.toBaseRouteQuery())
         commit('setResponse', { raw, roots })
       } catch (error) {
         commit('error', error)

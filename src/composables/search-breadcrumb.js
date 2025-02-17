@@ -4,10 +4,12 @@ import { castArray, compact, flatten, map, omit, orderBy, unset } from 'lodash'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/search-filter'
+import { useSearchBreadcrumbStore } from '@/store/modules/search-breadcrumb'
 import findPath from '@/utils/find-path'
 
 export function useSearchBreadcrumb() {
   const store = useStore()
+  const searchBreadcrumbStore = useSearchBreadcrumbStore()
   const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
 
   const count = computed(() => entries.value.length)
@@ -31,7 +33,7 @@ export function useSearchBreadcrumb() {
       map(filters, (values, param) => {
         const filter = param.split('[').pop().split(']').shift()
         return castArray(values).map((value) => {
-          const lastIndex = store.getters['searchBreadcrumb/paramLastIndex'](param, value)
+          const lastIndex = searchBreadcrumbStore.paramLastIndex(param, value)
           return { filter, value, lastIndex }
         })
       })
