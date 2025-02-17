@@ -1,10 +1,10 @@
 <script setup>
 import { computed, onBeforeMount } from 'vue'
-import { useStore } from 'vuex'
 import { sortBy } from 'lodash'
 
 import { useCore } from '@/composables/core'
 import { useSearchFilter } from '@/composables/search-filter'
+import { useRecommendedStore } from '@/store/modules/recommended'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
@@ -16,25 +16,22 @@ const props = defineProps({
   }
 })
 
-const { dispatch, state } = useStore()
+const recommendedStore = useRecommendedStore()
 const { core } = useCore()
-const { computedFilterValues, watchIndices } = useSearchFilter()
+const { computedFilterValues, watchIndices, indices } = useSearchFilter()
 
 const selected = computedFilterValues(props.filter)
-
-const currentUserId = computed(() => {
-  return core.config.get('uid', 'local')
-})
+const currentUserId = computed(() => core.config.get('uid', 'local'))
 
 const entries = computed(() => {
   // We ensure that the current user is always first
-  return sortBy(state.recommended.byUsers, ({ user, count }) => {
+  return sortBy(recommendedStore.byUsers, ({ user, count }) => {
     return user === currentUserId.value ? -1e9 : -count
   })
 })
 
-async function fetch() {
-  await dispatch('recommended/fetchIndicesRecommendations')
+function fetch() {
+  return recommendedStore.fetchIndicesRecommendations(indices.value)
 }
 
 onBeforeMount(fetch)
