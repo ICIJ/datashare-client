@@ -1,10 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { property } from 'lodash'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/core'
+import { useStarredStore } from '@/store/modules/starred'
 import { useSelection } from '@/composables/selection'
 import { useBreakpoints } from '@/composables/breakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
@@ -48,18 +48,18 @@ const selected = computed({
 const { breakpointDown } = useBreakpoints()
 const isCompact = computed(() => breakpointDown.value[props.compactAutoBreakpoint] || props.compact)
 
-const store = useStore()
+const starredStore = useStarredStore()
 const { toastedPromise } = useCore()
 const { t } = useI18n()
 
 const starSelection = async () => {
   const successMessage = t('document.starred')
-  return toastedPromise(store.dispatch('starred/starDocuments', selectionEntries.value), { successMessage })
+  return toastedPromise(starredStore.starDocuments(selectionEntries.value), { successMessage })
 }
 
 const unstarSelection = async () => {
   const successMessage = t('document.unstarred')
-  return toastedPromise(store.dispatch('starred/unstarDocuments', selectionEntries.value), { successMessage })
+  return toastedPromise(starredStore.unstarDocuments(selectionEntries.value), { successMessage })
 }
 </script>
 
