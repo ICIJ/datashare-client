@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
+import { useStarredStore } from '@/store/modules/starred'
 
 const { document } = defineProps({
   /**
@@ -26,14 +26,14 @@ const { document } = defineProps({
   }
 })
 
-const store = useStore()
+const starredStore = useStarredStore()
 
 const isStarred = computed(() => {
-  return store?.getters['starred/isStarred'](document)
+  return starredStore.isStarred(document)
 })
 
 const toggleStar = () => {
-  store?.dispatch('starred/toggleStarDocument', document)
+  return starredStore.toggleStarDocument(document)
 }
 </script>
 
