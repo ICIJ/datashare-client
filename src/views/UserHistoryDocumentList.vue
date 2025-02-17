@@ -69,6 +69,7 @@ import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import ProjectLink from '@/components/Project/ProjectLink'
 import utils from '@/mixins/utils'
+import { useStarredStore } from '@/store/modules/starred'
 import { humanTime } from '@/utils/humanTime'
 import { humanDate } from '@/utils/humanDate'
 
@@ -170,11 +171,11 @@ export default {
       return match('/ds/:index/:id{/:routing}')
     }
   },
-  mounted() {
+  async created() {
+    const starredStore = useStarredStore()
     // No need to request starred docs once the state has already been filled
-    const starredDocs = this.$store?.state?.starred?.documents
-    if (starredDocs && !starredDocs.length) {
-      return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+    if (!starredStore.documents?.length) {
+      await starredStore.fetchIndicesStarredDocuments(this.$core.projectIds)
     }
   },
   methods: {
