@@ -4,6 +4,12 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import Document from '@/api/resources/Document'
 import UserHistoryDocumentList from '@/views/UserHistoryDocumentList'
 
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    getStarredDocuments: vi.fn().mockResolvedValue([])
+  }
+})
+
 describe('UserHistoryDocumentList.vue', () => {
   const props = {
     events: [
