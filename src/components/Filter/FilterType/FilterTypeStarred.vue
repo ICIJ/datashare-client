@@ -35,7 +35,9 @@ const selected = computed({
     return getFilterValues(props.filter).map(isTruthy)
   },
   set(values) {
-    const key = castArray(values).slice(-1).map((bool) => isTruthy(bool).toString())
+    const key = castArray(values)
+      .slice(-1)
+      .map((bool) => isTruthy(bool).toString())
     setFilterValue(props.filter, { key })
   }
 })
