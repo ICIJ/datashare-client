@@ -8,7 +8,6 @@ import { indexingStoreBuilder } from './modules/indexing'
 import { recommendedStoreBuilder } from './modules/recommended'
 import { searchStoreBuilder } from './modules/search'
 import { searchBreadcrumbStoreBuilder } from './modules/search-breadcrumb'
-import { settingsStoreBuilder } from './modules/settings'
 import { starredStoreBuilder } from './modules/starred'
 import insights from './modules/insights'
 
@@ -21,8 +20,7 @@ export function storeBuilder(api) {
       insights,
       recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api),
-      searchBreadcrumb: searchBreadcrumbStoreBuilder(),
-      settings: settingsStoreBuilder(api),
+      searchBredcrumb: searchBreadcrumbStoreBuilder(),
       starred: starredStoreBuilder(api)
     },
     strict: import.meta.env.MODE === 'development',

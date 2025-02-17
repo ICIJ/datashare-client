@@ -1,10 +1,6 @@
 <script setup>
-/**
- * A list of settings for the backend (only available in local mode).
- */
 import { computed, onBeforeMount, reactive, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 
@@ -12,33 +8,33 @@ import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGener
 import { useCore } from '@/composables/core'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
+/**
+ * A list of settings for the backend (only available in local mode).
+ */
 defineOptions({ name: 'SettingsViewGeneral' })
 
 const { core, toastedPromise, wait } = useCore()
-const store = useStore()
 const { t } = useI18n()
 
 const settings = reactive({})
 const filterTerm = ref('')
 
-onBeforeMount(() => {
-  return loadSettings()
-})
-
 const infoLabel = computed(() => t(`settings.general.info`))
 const searchPlaceholder = computed(() => t(`settings.general.searchPlaceholder`))
-const submitSuccessLabel = computed(() => t('serverSettings.submitSuccess'))
-const submitErrorLabel = computed(() => t('serverSettings.submitError'))
 const noResultsLabel = computed(() => t('settings.layout.noResults', { query: filterTerm.value }))
 
 const loaderId = 'load server settings'
 
 async function loadSettings() {
   wait.start(loaderId)
-  Object.assign(settings, await store.dispatch('settings/getSettings'))
+  Object.assign(settings, await core.api.getSettings())
   wait.end(loaderId)
 }
-const settingsArray = computed(() => Object.keys(settings).map((s) => ({ key: s, value: settings[s] })))
+
+const settingsArray = computed(() => {
+  return Object.entries(settings).map(([key, value]) => ({ key, value })) 
+})
+
 const fuse = computed(() => {
   const options = {
     keys: ['key', 'value'],
@@ -47,6 +43,7 @@ const fuse = computed(() => {
   }
   return new Fuse(settingsArray.value, options)
 })
+
 const filteredSettings = computed(() => {
   if (filterTerm.value.length > 0) {
     return fuse.value.search(filterTerm.value).reduce((acc, curr) => {
@@ -56,20 +53,22 @@ const filteredSettings = computed(() => {
   }
   return settings
 })
+
 const noResults = computed(() => {
   return Object.keys(filteredSettings.value).length === 0
 })
+
 async function onSubmit(newSettings) {
-  try {
-    await toastedPromise(store.dispatch('settings/onSubmit', newSettings), {
-      successMessage: submitSuccessLabel.value,
-      errorMessage: submitErrorLabel.value
-    })
-    core.config.merge(newSettings)
-    Object.assign(settings, newSettings)
-  } catch (_) {}
+  const successMessage = t('serverSettings.submitSuccess')
+  const errorMessage = t('serverSettings.submitError')
+  await toastedPromise(core.api.setSettings(newSettings), { successMessage, errorMessage })
+  core.config.merge(newSettings)
+  Object.assign(settings, newSettings)
 }
+
+onBeforeMount(loadSettings)
 </script>
+
 <template>
   <settings-view-layout info-name="general" :info-label="infoLabel" :no-results="noResults">
     <template #filter>
