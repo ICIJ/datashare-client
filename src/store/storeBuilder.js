@@ -19,7 +19,7 @@ export function storeBuilder(api) {
       insights,
       recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api),
-      searchBredcrumb: searchBreadcrumbStoreBuilder(),
+      searchBredcrumb: searchBreadcrumbStoreBuilder()
     },
     strict: import.meta.env.MODE === 'development',
     plugins: [

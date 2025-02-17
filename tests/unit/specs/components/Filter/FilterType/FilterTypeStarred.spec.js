@@ -55,7 +55,7 @@ describe('FilterTypeStarred.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
     await letData(es).have(new IndexedDocument('document_03', index)).commit()
-    
+
     starredStore.setDocuments([
       {
         index,
