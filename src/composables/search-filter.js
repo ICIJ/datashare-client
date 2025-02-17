@@ -14,10 +14,12 @@ import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRe
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import FilterText from '@/store/filters/FilterText.js'
 import { useAppStore } from '@/store/modules/app'
+import { useRecommendedStore } from '@/store/modules/recommended'
 
 export function useSearchFilter() {
   const store = useStore()
   const appStore = useAppStore()
+  const recommendedStore = useRecommendedStore()
   const route = useRoute()
   const router = useRouter()
   const { t, te } = useI18n()
@@ -31,6 +33,8 @@ export function useSearchFilter() {
     FilterTypePath,
     FilterTypeProject
   }
+
+  const indices = computed(() => store.state.search.indices)
 
   function getFilterComponent({ component }) {
     return filterTypes[component]
@@ -66,7 +70,7 @@ export function useSearchFilter() {
   }
 
   function computedProjects({ get = null, set = null } = {}) {
-    get ??= () => store.state.search.indices
+    get ??= () => indices.value
     set ??= (indices) => store.commit('search/indices', indices)
     return computed({ get, set })
   }
@@ -100,7 +104,7 @@ export function useSearchFilter() {
   }
 
   async function getTotal({ query = 'type:Document' } = {}) {
-    const index = store.state.search.indices
+    const index = indices.value
     const body = { track_total_hits: true, query: { query_string: { query } } }
     const preference = 'search-filter-total'
     const res = await core.api.elasticsearch.search({ index, body, preference, size: 0 })
@@ -171,7 +175,7 @@ export function useSearchFilter() {
   }
 
   function removeIndex(index) {
-    setIndices(without(store.state.search.indices, index))
+    setIndices(without(indices.value, index))
   }
 
   function resetSearchResponse() {
@@ -201,7 +205,7 @@ export function useSearchFilter() {
 
   function refreshRecommendedBy() {
     const users = getFilterValues({ name: 'recommendedBy' })
-    return store.dispatch('recommended/getDocumentsRecommendedBy', users)
+    return recommendedStore.getDocumentsRecommendedBy(indices.value, users)
   }
 
   async function refreshSearch() {
@@ -280,7 +284,7 @@ export function useSearchFilter() {
   }
 
   function watchIndices(callback, options) {
-    return watch(() => store.state.search.indices.join(','), callback, options)
+    return watch(() => indices.value.join(','), callback, options)
   }
 
   function watchValues(callback, options = { deep: true }) {
@@ -288,6 +292,7 @@ export function useSearchFilter() {
   }
 
   return {
+    indices,
     computedSortFilter,
     computedFilterValues,
     computedExcludeFilter,
