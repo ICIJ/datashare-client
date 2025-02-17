@@ -5,7 +5,6 @@ import { createStore } from 'vuex'
 import { batchStoreBuilder } from './modules/batchSearch'
 import { documentStoreBuilder } from './modules/document'
 import { indexingStoreBuilder } from './modules/indexing'
-import { recommendedStoreBuilder } from './modules/recommended'
 import { searchStoreBuilder } from './modules/search'
 import insights from './modules/insights'
 
@@ -16,7 +15,6 @@ export function storeBuilder(api) {
       document: documentStoreBuilder(api),
       indexing: indexingStoreBuilder(api),
       insights,
-      recommended: recommendedStoreBuilder(api),
       search: searchStoreBuilder(api)
     },
     strict: import.meta.env.MODE === 'development',
