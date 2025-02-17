@@ -1,6 +1,7 @@
 import FilterText from './FilterText'
 
 import DisplayUser from '@/components/Display/DisplayUser'
+import { useRecommendedStore } from '@/store/modules/recommended'
 
 export default class FilterRecommendedBy extends FilterText {
   constructor(options) {
@@ -9,11 +10,11 @@ export default class FilterRecommendedBy extends FilterText {
   }
 
   addChildIncludeFilter(body) {
-    return body.addFilter('terms', this.key, this.rootState.recommended.documents)
+    return body.addFilter('terms', this.key, useRecommendedStore().documents)
   }
 
   addChildExcludeFilter(body) {
-    return body.notFilter('terms', this.key, this.rootState.recommended.documents)
+    return body.notFilter('terms', this.key, useRecommendedStore().documents)
   }
 
   applyTo(body) {
