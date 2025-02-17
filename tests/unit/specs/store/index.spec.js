@@ -32,8 +32,4 @@ describe('store', () => {
   it('should define a search module', () => {
     expect(store.state.search).toBeDefined()
   })
-
-  it('should define a treeView module', () => {
-    expect(store.state.treeView).toBeDefined()
-  })
 })
