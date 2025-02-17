@@ -1,3 +1,4 @@
+import { setActivePinia, createPinia } from 'pinia'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { storeBuilder } from '@/store/storeBuilder'
@@ -5,8 +6,9 @@ import { storeBuilder } from '@/store/storeBuilder'
 describe('SearchFilters', () => {
   const { index: project, es } = esConnectionHelper.build()
   const store = storeBuilder({ elasticsearch: es })
-  beforeAll(() => store.commit('search/index', project))
 
+  beforeAll(() => store.commit('search/index', project))
+  beforeEach(() => setActivePinia(createPinia()))
   afterEach(() => store.commit('search/reset'))
 
   describe('Common filter', () => {
