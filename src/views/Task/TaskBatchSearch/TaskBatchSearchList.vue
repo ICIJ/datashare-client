@@ -5,13 +5,17 @@ import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { useTaskSettings } from '@/composables/task-settings'
-
+import { TASK_NAME } from '@/enums/taskNames'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
+
+function getBatchSearchName(task) {
+  return task.batchRecord.name
+}
 </script>
 <template>
   <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
-    :task-filter="['org.icij.datashare.tasks.BatchSearchRunner']"
+    :task-filter="[TASK_NAME.BATCH_SEARCH]"
     page-name="batch-search"
     show-add
   >
@@ -31,6 +35,9 @@ const { propertiesModelValueOptions } = useTaskSettings('batch-search')
       </template>
       <template #cell(state)="{ item }">
         <display-status :value="item.state" />
+      </template>
+      <template #cell(name)="{ item }">
+        {{ getBatchSearchName(item) }}
       </template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />

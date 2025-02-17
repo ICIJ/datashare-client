@@ -1,11 +1,12 @@
 import { startCase } from 'lodash'
+const prefix = 'org.icij.datashare.tasks'
+const BATCH_SEARCH = `${prefix}.BatchSearchRunner`
+const BATCH_DOWNLOAD = `${prefix}.BatchDownloadRunner`
+const SCAN = `${prefix}.ScanTask`
+const INDEX = `${prefix}.IndexTask`
+const EXTRACT_NLP = `${prefix}.ExtractNlpTask`
+const ENQUEUE_FROM_INDEX = `${prefix}.EnqueueFromIndexTask`
 
-const BATCH_SEARCH = 'BatchSearchRunner'
-const BATCH_DOWNLOAD = 'BatchDownloadRunner'
-const SCAN = 'ScanTask'
-const INDEX = 'IndexTask'
-const EXTRACT_NLP = 'ExtractNlpTask'
-const ENQUEUE_FROM_INDEX = 'EnqueueFromIndexTask'
 export const TASK_NAME = Object.freeze({
   BATCH_SEARCH,
   BATCH_DOWNLOAD,
@@ -13,6 +14,15 @@ export const TASK_NAME = Object.freeze({
   INDEX,
   EXTRACT_NLP,
   ENQUEUE_FROM_INDEX
+})
+
+export const TASK_NAME_ICON = Object.freeze({
+  BATCH_SEARCH: 'list-magnifying-glass',
+  BATCH_DOWNLOAD: 'download-simple',
+  SCAN: 'files',
+  INDEX: 'files',
+  EXTRACT_NLP: 'users',
+  ENQUEUE_FROM_INDEX: 'files'
 })
 export const HUMAN_TASK_NAME = Object.freeze({
   [BATCH_SEARCH]: 'Batch search',
