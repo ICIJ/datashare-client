@@ -176,7 +176,7 @@ export default {
     if (!starredStore.documents?.length) {
       try {
         await starredStore.fetchIndicesStarredDocuments(this.$core.projectIds)
-      } catch(error) {
+      } catch (error) {
         console.warning('Unable to fetch starred documents', error)
       }
     }
