@@ -15,7 +15,7 @@ describe('StarredStore', () => {
     store = storeBuilder(api)
     starredStore = useStarredStore(api)
     // Get the starred filter from the search store to test the interaction between the two stores
-    filter = store.getters['search/getFilter']({ name: 'starred' })    
+    filter = store.getters['search/getFilter']({ name: 'starred' })
   })
 
   it('should not reset the starredDocuments from the filter', async () => {
@@ -61,7 +61,10 @@ describe('StarredStore', () => {
   })
 
   it('should remove a documentId from the list of the starredDocuments', () => {
-    starredStore.setDocuments([{ index, id: 12 }, { index, id: 42 }])
+    starredStore.setDocuments([
+      { index, id: 12 },
+      { index, id: 42 }
+    ])
     starredStore.removeDocuments([{ index, id: 42 }])
     expect(starredStore.documents).toEqual([{ index, id: 12 }])
   })
@@ -69,7 +72,10 @@ describe('StarredStore', () => {
   it('should push a documentId from the list of the starredDocuments', () => {
     starredStore.setDocuments([{ index, id: 12 }])
     starredStore.pushDocuments([{ index, id: 42 }])
-    expect(starredStore.documents).toEqual([{ index, id: 12 }, { index, id: 42 }])
+    expect(starredStore.documents).toEqual([
+      { index, id: 12 },
+      { index, id: 42 }
+    ])
   })
 
   it('should push a documentId from the list of the starredDocuments only if it does not exist', () => {
@@ -118,8 +124,14 @@ describe('StarredStore', () => {
     await letData(es).have(new IndexedDocument('doc_02', index).withNer('ner_02')).commit()
     await letData(es).have(new IndexedDocument('doc_03', index).withNer('test')).commit()
 
-    await starredStore.starDocuments([{ index, id: 'doc_01' }, { index, id: 'doc_03' }])
-    expect(starredStore.documents).toEqual([{ index, id: 'doc_01' }, { index, id: 'doc_03' }])
+    await starredStore.starDocuments([
+      { index, id: 'doc_01' },
+      { index, id: 'doc_03' }
+    ])
+    expect(starredStore.documents).toEqual([
+      { index, id: 'doc_01' },
+      { index, id: 'doc_03' }
+    ])
   })
 
   it('should unstar a batch of documents', async () => {
@@ -127,7 +139,10 @@ describe('StarredStore', () => {
     await letData(es).have(new IndexedDocument('doc_02', index).withNer('ner_02')).commit()
     await letData(es).have(new IndexedDocument('doc_03', index).withNer('test')).commit()
 
-    await starredStore.starDocuments([{ index, id: 'doc_01' }, { index, id: 'doc_03' }])
+    await starredStore.starDocuments([
+      { index, id: 'doc_01' },
+      { index, id: 'doc_03' }
+    ])
     await starredStore.unstarDocuments([{ index, id: 'doc_01' }])
 
     expect(starredStore.documents).toEqual([{ index, id: 'doc_03' }])
