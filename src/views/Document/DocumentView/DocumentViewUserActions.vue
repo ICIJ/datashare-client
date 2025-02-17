@@ -12,8 +12,10 @@ import { useQueryObserver } from '@/composables/query-observer'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
+import { useRecommendedStore } from '@/store/modules/recommended'
 
 const store = useStore()
+const recommendedStore = useRecommendedStore()
 const { core } = useCore()
 const { isServer } = useMode()
 const { document, injectDocumentViewFloatingId } = useDocument()
@@ -42,7 +44,7 @@ const recommended = computed({
   },
   async set() {
     await store.dispatch('document/toggleAsRecommended', await core.auth.getUsername())
-    await store.dispatch('recommended/fetchIndicesRecommendations')
+    await recommendedStore.fetchIndexRecommendations(store.state.document.index)
   }
 })
 
