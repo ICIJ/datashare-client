@@ -32,7 +32,7 @@ async function loadSettings() {
 }
 
 const settingsArray = computed(() => {
-  return Object.entries(settings).map(([key, value]) => ({ key, value })) 
+  return Object.entries(settings).map(([key, value]) => ({ key, value }))
 })
 
 const fuse = computed(() => {
