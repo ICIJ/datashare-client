@@ -3,6 +3,7 @@ import { get, map } from 'lodash'
 import FilterText from './FilterText'
 
 import DisplayBoolean from '@/components/Display/DisplayBoolean'
+import { useStarredStore } from '@/store/modules/starred'
 
 export default class FilterStarred extends FilterText {
   constructor(options) {
@@ -20,7 +21,7 @@ export default class FilterStarred extends FilterText {
     return get(FilterStarred.starredLabels, item.key, item.key)
   }
   get starredDocuments() {
-    return this.rootState.starred.documents
+    return useStarredStore().documents
   }
   get starredDocumentIds() {
     return map(this.starredDocuments, 'id')
