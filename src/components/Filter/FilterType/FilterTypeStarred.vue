@@ -24,7 +24,6 @@ const starredDocumentsCount = computed(() => props.filter.starredDocuments.lengt
 const notStarredDocumentsCount = computed(() => total.value - starredDocumentsCount.value)
 
 async function fetch() {
-  console.log(store.state.search.indices)
   await starredStore.fetchIndicesStarredDocuments(store.state.search.indices)
   total.value = await getTotal()
 }
