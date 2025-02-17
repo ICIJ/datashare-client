@@ -9,7 +9,7 @@ import BatchSearchResultsDetails from '@/components/BatchSearchResultsDetails'
 describe('BatchSearchResultsDetails.vue', () => {
   const batchSearch = {
     uuid: '12',
-    projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
+    projects: ['projectA', 'projectB'],
     name: 'BatchSearch Test',
     description: 'This is the description of the batch search',
     state: 'SUCCESS',
@@ -91,7 +91,10 @@ describe('BatchSearchResultsDetails.vue', () => {
 
       it('should display project names as clickable links', () => {
         const projects = wrapper.find('.batch-search-results-details__info__projects')
-        expect(projects.findAllComponents({ name: 'ProjectLink' })).toHaveLength(2)
+        const projectLinks = projects.findAllComponents({ name: 'ProjectLink' })
+        expect(projectLinks).toHaveLength(2)
+        expect(projectLinks.at(0).attributes('project')).toBe('projectA')
+        expect(projectLinks.at(1).attributes('project')).toBe('projectB')
       })
     })
   })

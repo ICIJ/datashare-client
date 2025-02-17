@@ -13,7 +13,7 @@
           <dt>{{ $t('batchSearch.projects') }}</dt>
           <dd class="batch-search-results-details__info__projects">
             <span
-              v-for="{ name } in batchSearch.projects"
+              v-for="name in batchSearch.projects"
               :key="name"
               class="batch-search-results-details__info__projects__link"
             >
@@ -136,35 +136,11 @@ export default {
     hasDescription() {
       return this.batchSearch?.description?.trim().length > 0
     },
-    isLoaded() {
-      return !!Object.keys(this.batchSearch).length
-    },
-    projectField() {
-      return this.hasMultipleProjects
-        ? {
-            key: 'project.name',
-            label: this.$t('batchSearchResults.project'),
-            sortable: true,
-            name: 'prj_id'
-          }
-        : null
-    },
-    generateTo() {
-      const baseTo = { name: 'task.batch-search' }
-      const searchQueryExists = this.$route.query.query
-      return {
-        ...baseTo,
-        ...(searchQueryExists && { query: { query: this.$route.query.query } })
-      }
-    },
     fuzzinessLabel() {
       if (this.batchSearch.phraseMatches) {
         return this.$t('batchSearch.proximitySearches')
       }
       return this.$t('batchSearch.fuzziness')
-    },
-    hasMultipleProjects() {
-      return this.batchSearch.projects.length > 1
     }
   },
   created() {
@@ -175,11 +151,6 @@ export default {
     async setIsMyBatchSearch() {
       const username = await this.$core.auth.getUsername()
       this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
-    },
-
-    getDocumentSize(value) {
-      const size = humanSize(value)
-      return size === 'unknown' ? '-' : size
     },
     changePublished(published) {
       this.$emit('update:published', published)
