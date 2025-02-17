@@ -6,7 +6,7 @@ import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import { getHumanTaskName } from '@/enums/taskNames'
+import { getHumanTaskName, TASK_NAME } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useTaskSettings } from '@/composables/task-settings'
 
@@ -22,7 +22,7 @@ async function stopTask(name) {
 <template>
   <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
-    :task-filter="['org.icij.datashare.tasks.IndexTask', 'org.icij.datashare.tasks.ScanTask']"
+    :task-filter="[TASK_NAME.INDEX, TASK_NAME.SCAN]"
     page-name="documents"
     show-add
   >

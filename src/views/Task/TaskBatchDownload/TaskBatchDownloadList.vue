@@ -8,6 +8,7 @@ import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import { useTaskSettings } from '@/composables/task-settings'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
+import { TASK_NAME } from '@/enums/taskNames'
 
 const settingName = 'batch-download'
 
@@ -29,7 +30,7 @@ function downloadResultsUrl(item) {
 <template>
   <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
-    :task-filter="['org.icij.datashare.tasks.BatchDownloadRunner']"
+    :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
     page-name="batch-download"
   >
     <task-list

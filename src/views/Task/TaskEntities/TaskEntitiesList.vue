@@ -5,6 +5,7 @@ import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { useTaskSettings } from '@/composables/task-settings'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
+import { TASK_NAME } from '@/enums/taskNames'
 
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
@@ -13,7 +14,7 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
 <template>
   <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
-    :task-filter="['org.icij.datashare.tasks.ExtractNlpTask', 'org.icij.datashare.tasks.EnqueueFromIndexTask']"
+    :task-filter="[TASK_NAME.EXTRACT_NLP, TASK_NAME.ENQUEUE_FROM_INDEX]"
     page-name="entities"
     show-add
   >
