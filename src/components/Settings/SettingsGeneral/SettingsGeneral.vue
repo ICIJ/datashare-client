@@ -1,10 +1,16 @@
 <template>
   <b-form class="d-flex flex-column gap-1">
-    <b-form-group v-for="(_, name) in settings" :key="name" label-cols-xs="12" label-cols-sm="4" label-cols-lg="3">
+    <b-form-group 
+      v-for="(_, name) in settings" 
+      :key="name"
+      :label-cols="12"
+      :label-cols-sm="4"
+      :label-cols-lg="3" 
+      :label-for="`input-settings-${name}`">
       <template #label>
         <settings-general-label :name="name" :field-changed="fieldChanged(name)" @restore="restore" />
       </template>
-      <b-form-input v-model="replica[name]" />
+      <b-form-input v-model="replica[name]" :id="`input-settings-${name}`" />
     </b-form-group>
     <div class="d-flex gap-3 justify-content-end">
       <b-button type="reset" variant="outline-tertiary" :disabled="hasNotChanged" @click="reset">
