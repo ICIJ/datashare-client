@@ -11,11 +11,15 @@ export default class FilterStarred extends FilterText {
     this.component = 'FilterTypeStarred'
   }
   addChildIncludeFilter(body, { values }) {
-    if (values[0]) {
+    if (values[0] === 'true' || values[0] === true) {
       return body.addFilter('terms', this.key, this.starredDocumentIds)
     }
 
-    return body.notFilter('terms', this.key, this.starredDocumentIds)
+    if (values[0] === 'false' || values[0] === false) {
+      return body.notFilter('terms', this.key, this.starredDocumentIds)
+    }
+
+    return body
   }
   itemLabel(item) {
     return get(FilterStarred.starredLabels, item.key, item.key)
