@@ -13,10 +13,6 @@ describe('store', () => {
     expect(store.state.batchSearch).toBeDefined()
   })
 
-  it('should define a settings module', () => {
-    expect(store.state.settings).toBeDefined()
-  })
-
   it('should define a document module', () => {
     expect(store.state.document).toBeDefined()
   })
