@@ -11,7 +11,6 @@ import { searchBreadcrumbStoreBuilder } from './modules/search-breadcrumb'
 import { settingsStoreBuilder } from './modules/settings'
 import { starredStoreBuilder } from './modules/starred'
 import insights from './modules/insights'
-import treeView from './modules/treeView'
 
 export function storeBuilder(api) {
   return createStore({
@@ -24,8 +23,7 @@ export function storeBuilder(api) {
       search: searchStoreBuilder(api),
       searchBreadcrumb: searchBreadcrumbStoreBuilder(),
       settings: settingsStoreBuilder(api),
-      starred: starredStoreBuilder(api),
-      treeView
+      starred: starredStoreBuilder(api)
     },
     strict: import.meta.env.MODE === 'development',
     plugins: [
