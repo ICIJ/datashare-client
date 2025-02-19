@@ -59,6 +59,10 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
+  project: {
+    type: String,
+    default: null
+  },
   pageSize: {
     type: Number,
     default: 50
