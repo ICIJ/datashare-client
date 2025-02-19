@@ -17,12 +17,12 @@ export const TASK_NAME = Object.freeze({
 })
 
 export const TASK_NAME_ICON = Object.freeze({
-  BATCH_SEARCH: 'list-magnifying-glass',
-  BATCH_DOWNLOAD: 'download-simple',
-  SCAN: 'files',
-  INDEX: 'files',
-  EXTRACT_NLP: 'users',
-  ENQUEUE_FROM_INDEX: 'files'
+  [BATCH_SEARCH]: 'list-magnifying-glass',
+  [BATCH_DOWNLOAD]: 'download-simple',
+  [SCAN]: 'files',
+  [INDEX]: 'files',
+  [EXTRACT_NLP]: 'users',
+  [ENQUEUE_FROM_INDEX]: 'files'
 })
 export const HUMAN_TASK_NAME = Object.freeze({
   [BATCH_SEARCH]: 'Batch search',
