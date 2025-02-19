@@ -6,7 +6,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetFieldFacets from '@/components/Widget/WidgetFieldFacets'
 
-const { index: project, es: elasticsearch } = esConnectionHelper.build()
+const { es: elasticsearch } = esConnectionHelper.build()
 
 describe('WidgetFieldFacets.vue', () => {
   let wrapper
@@ -31,8 +31,7 @@ describe('WidgetFieldFacets.vue', () => {
   })
 
   beforeEach(async () => {
-    const { plugins, store } = CoreSetup.init({ elasticsearch }).useAll().useRouter()
-    store.commit('insights/project', project)
+    const { plugins } = CoreSetup.init({ elasticsearch }).useAll().useRouter()
 
     wrapper = shallowMount(WidgetFieldFacets, {
       global: {
