@@ -2,8 +2,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import uniqueId from 'lodash/uniqueId'
 
 import { useInsightsStore } from '@/store/modules/insights'
-import { WidgetEmpty, WidgetText } from '@/store/widgets'
-import widgetsDefs from '@/store/widgets'
+import widgetsDefs, { WidgetEmpty, WidgetText } from '@/store/widgets'
 
 describe('InsightsStore', () => {
   let store
