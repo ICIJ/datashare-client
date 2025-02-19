@@ -6,9 +6,10 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetFieldFacets from '@/components/Widget/WidgetFieldFacets'
 
-const { es: elasticsearch } = esConnectionHelper.build()
 
 describe('WidgetFieldFacets.vue', () => {
+  const { es: elasticsearch, index: project } = esConnectionHelper.build()
+
   let wrapper
 
   beforeAll(() => {
@@ -38,6 +39,7 @@ describe('WidgetFieldFacets.vue', () => {
         plugins
       },
       props: {
+        project,
         widget: new widgets.WidgetFieldFacets({
           title: 'Test Widget',
           card: true,

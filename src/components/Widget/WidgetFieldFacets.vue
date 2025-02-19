@@ -41,7 +41,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
 
-import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display a list of facets on the insights page.
@@ -61,6 +60,16 @@ export default {
       type: Object,
       default: () => {}
     },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
+    },
+    /**
+     * Size of the aggregaction bucket
+     */
     bucketsSize: {
       type: Number,
       default: 50
@@ -73,9 +82,6 @@ export default {
     }
   },
   computed: {
-    project() {
-      return useInsightsStore().project
-    },
     // The items list is just a concatenation of all pages
     buckets() {
       return flatten(this.pages.map(iteratee('aggregations.facets.buckets')))
