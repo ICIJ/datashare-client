@@ -1,5 +1,5 @@
 <template>
-  <widget-documents-by-creation-date ref="widgetDocumentsByCreationDate" :widget="widget">
+  <widget-documents-by-creation-date ref="widgetDocumentsByCreationDate" :widget="widget" :project="project">
     <template #selector="{ selectedPath, setSelectedPath }">
       <span
         v-if="selectedPath"
@@ -66,6 +66,13 @@ export default {
      */
     widget: {
       type: Object
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
     }
   },
   data() {
