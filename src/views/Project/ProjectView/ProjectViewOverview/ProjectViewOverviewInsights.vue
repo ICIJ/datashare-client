@@ -4,17 +4,12 @@ import { computed, watch, onBeforeMount, toRef } from 'vue'
 import { useMode } from '@/composables/mode'
 import { useInsightsStore } from '@/store/modules/insights'
 
-const props = defineProps({
-  name: {
-    type: String
-  }
-})
-
+const props = defineProps({ name:  String })
 const insightsStore = useInsightsStore()
 const { mode } = useMode()
 
 const widgets = computed(() => {
-  return insightsStore.instantiatedWidgets.value.filter(({ modes }) => {
+  return insightsStore.instantiatedWidgets.filter(({ modes }) => {
     return !modes || modes.includes(mode.value)
   })
 })
@@ -29,7 +24,7 @@ onBeforeMount(() => insightsStore.setProject(props.name))
       <b-row class="align-items-stretch">
         <b-col v-for="(widget, index) in widgets" :key="index" :lg="widget.cols">
           <div class="project-view-overview-insights__container__widget" :class="{ card: widget.card }">
-            <component :is="widget.component" :widget="widget" class="flex-grow-1" />
+            <component :is="widget.component" :widget="widget" :project="name" class="flex-grow-1" />
           </div>
         </b-col>
       </b-row>
