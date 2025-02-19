@@ -42,7 +42,6 @@ import { MODE_NAME } from '@/mode'
 import { getCategoryIcon, getCategoryVariant } from '@/utils/entity'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 import ButtonIcon from '@/components/Button/ButtonIcon'
-import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display a summary of entities
@@ -59,6 +58,13 @@ export default {
      */
     widget: {
       type: Object
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -72,9 +78,6 @@ export default {
     }
   },
   computed: {
-    project() {
-      return useInsightsStore().project
-    },
     total() {
       return sum(values(this.entities))
     },
