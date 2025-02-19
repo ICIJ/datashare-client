@@ -4,7 +4,7 @@
       <b-row class="align-items-stretch flex-grow-1">
         <b-col v-for="(w, index) in instantiatedWidgets" :key="index" :lg="w.cols">
           <div class="widget__container__widget" :class="{ card: w.card }">
-            <component :is="w.component" :widget="w" class="flex-grow-1" />
+            <component :is="w.component" :project="project" :widget="w" class="flex-grow-1" />
           </div>
         </b-col>
       </b-row>
@@ -28,6 +28,13 @@ export default {
      */
     widget: {
       type: Object,
+      required: true
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
       required: true
     }
   },
