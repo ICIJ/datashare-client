@@ -6,7 +6,6 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetFieldFacets from '@/components/Widget/WidgetFieldFacets'
 
-
 describe('WidgetFieldFacets.vue', () => {
   const { es: elasticsearch, index: project } = esConnectionHelper.build()
 

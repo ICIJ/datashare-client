@@ -41,7 +41,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
 
-
 /**
  * Widget to display a list of facets on the insights page.
  */

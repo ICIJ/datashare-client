@@ -4,7 +4,7 @@ import { computed, watch, onBeforeMount, toRef } from 'vue'
 import { useMode } from '@/composables/mode'
 import { useInsightsStore } from '@/store/modules/insights'
 
-const props = defineProps({ name:  String })
+const props = defineProps({ name: String })
 const insightsStore = useInsightsStore()
 const { mode } = useMode()
 
