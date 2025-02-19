@@ -2,15 +2,12 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetListGroup from '@/components/Widget/WidgetListGroup'
-import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetListGroup.vue', () => {
-  let core, plugins, store
+  let core, plugins
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
-    store = useInsightsStore()
-    store.reset()
     plugins = core.plugins
   })
 
