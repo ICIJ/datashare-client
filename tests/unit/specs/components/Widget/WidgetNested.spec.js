@@ -4,15 +4,16 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import * as widgets from '@/store/widgets'
 import WidgetNested from '@/components/Widget/WidgetNested'
 import CoreSetup from '~tests/unit/CoreSetup'
-
-const { index } = esConnectionHelper.build()
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetNested.vue', () => {
   let wrapper
 
   beforeAll(() => {
-    const { store, plugins } = CoreSetup.init().useAll()
-    store.commit('insights/project', index)
+    const { index } = esConnectionHelper.build()
+    const { plugins } = CoreSetup.init().useAll()
+    const insightsStore = useInsightsStore()
+    insightsStore.setProject(index)
 
     wrapper = mount(WidgetNested, {
       global: {
