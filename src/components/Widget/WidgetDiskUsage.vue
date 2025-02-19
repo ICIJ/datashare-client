@@ -20,11 +20,11 @@
 <script>
 import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
-import { mapState } from 'vuex'
 
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
 import PathTree from '@/components/PathTree/PathTree'
+import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display the disk space occupied by indexed files on the insights page.
@@ -51,7 +51,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('insights', ['project']),
+    project() {
+      return useInsightsStore().project
+    },
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
@@ -65,16 +67,9 @@ export default {
     this.path = this.dataDir
     await this.loadData()
   },
-  mounted() {
-    this.$store.subscribe(async ({ type }) => {
-      if (type === 'insights/project') {
-        await this.loadData()
-      }
-    })
-  },
   methods: {
     async sumSize() {
-      const index = this.$store.state.insights.project
+      const index = this.project
       const body = bodybuilder()
         .andQuery('match', 'type', 'Document')
         .andQuery('match', 'extractionLevel', 0)
