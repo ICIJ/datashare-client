@@ -22,7 +22,6 @@ import bodybuilder from 'bodybuilder'
 
 import humanNumber from '@/utils/humanNumber'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
-import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display a summary of names
@@ -35,6 +34,13 @@ export default {
      */
     widget: {
       type: Object
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -47,9 +53,6 @@ export default {
     }
   },
   computed: {
-    project() {
-      return useInsightsStore().project
-    },
     total() {
       return sum(values(this.entities))
     },
