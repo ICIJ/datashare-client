@@ -29,6 +29,7 @@
 import moment from 'moment'
 import { isFunction, kebabCase } from 'lodash'
 
+import { useInsightsStore } from '@/store/modules/insights'
 /**
  * A placeholder widget for the insights page. This widget is not intended to be used directly.
  */
@@ -87,6 +88,10 @@ export default {
     }
   },
   computed: {
+    project() {
+      const { project } = useInsightsStore()
+      return this.$core.findProject(project)
+    },
     metadata() {
       return this.fields.map((field) => {
         const rawValue = this.project[field.key]
@@ -96,12 +101,6 @@ export default {
         const key = kebabCase(field.key)
         return { ...field, key, label, href, rawValue, value }
       })
-    },
-    projectName() {
-      return this.$store.state.insights.project
-    },
-    project() {
-      return this.$core.findProject(this.projectName)
     }
   }
 }
