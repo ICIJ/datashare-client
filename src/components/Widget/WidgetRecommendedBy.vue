@@ -92,7 +92,7 @@ function loadFirstPage() {
 }
 
 async function loadPage() {
-  const page = await core.api.getDocumentUserRecommendations(offset.value, props.pageSize, project.value)
+  const page = await core.api.getDocumentUserRecommendations(offset.value, props.pageSize, props.project)
   const pageHits = await getPageHits(page)
   pages.value.push(page)
   hits.value.push(pageHits)
@@ -116,7 +116,7 @@ function recordToItem({ user, document: { id }, creationDate }) {
 async function getPageHits(page) {
   const preference = 'widget-recommended-by'
   const body = getPageHitsBody(page)
-  const index = project.value
+  const index = props.project
   const response = await core.api.elasticsearch.search({ index, body, preference })
   return new EsDocList(response)
 }
