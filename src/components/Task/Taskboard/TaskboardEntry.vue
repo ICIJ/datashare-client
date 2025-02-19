@@ -23,7 +23,7 @@ const compact = computed(() => {
 </script>
 
 <template>
-  <b-card no-body class="taskboard-entry border-0" style="max-width: 540px">
+  <b-card no-body class="taskboard-entry border-0">
     <b-row no-gutters class="d-flex flex-grow-1">
       <b-col md="2">
         <div class="p-2">
