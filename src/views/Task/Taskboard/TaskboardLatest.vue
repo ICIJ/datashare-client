@@ -70,7 +70,7 @@ const hideShowMore = computed(() => {
 })
 
 function getAuthor(item) {
-  if (task.args?.batchDownload) {
+  if (item.args?.batchDownload) {
     return item.args?.batchDownload.user.id
   }
   return item.args?.user.id
