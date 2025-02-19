@@ -1,5 +1,7 @@
 import { uniqueId, cloneDeep } from 'lodash'
 
+import { useInsightsStore } from '@/store/modules/insights'
+
 /**
   Mixin class extending the core to add helpers for widgets.
   @mixin WidgetsMixin
@@ -7,6 +9,16 @@ import { uniqueId, cloneDeep } from 'lodash'
 */
 const WidgetsMixin = (superclass) =>
   class extends superclass {
+    /**
+     * Get the insights store
+     *
+     * @memberof WidgetsMixin.prototype
+     * @type {Object}
+     * @readonly
+     */
+    get insightsStore() {
+      return useInsightsStore()
+    }
     /**
      * Register a widget
      * @memberof WidgetsMixin.prototype
@@ -17,7 +29,7 @@ const WidgetsMixin = (superclass) =>
      * @param {String} [args.type=WidgetEmpty] - Type of the widget
      */
     registerWidget(...args) {
-      this.store.commit('insights/addWidget', ...args)
+      this.insightsStore.addWidget(...args)
     }
     /**
      * Unregister a widget
@@ -25,14 +37,32 @@ const WidgetsMixin = (superclass) =>
      * @param {String} name - Name of the widget to unregister
      */
     unregisterWidget(...args) {
-      this.store.commit('insights/removeWidget', ...args)
+      this.insightsStore.removeWidget(...args)
     }
     /**
      * Unregister all widgets
      * @memberof WidgetsMixin.prototype
      */
     clearWidgets() {
-      this.store.commit('insights/clearWidgets')
+      this.insightsStore.clearWidgets()
+    }
+    /**
+     * Call a function when a project is selected in the insights store.
+     *
+     * @memberof WidgetsMixin.prototype
+     * @param {Object} options - Options
+     * @param {String} options.project - Name of the project
+     * @param {Function} options.withFn - Function to call when the project is selected
+     * @param {Function} options.withoutFn - Function to call when the project is unselected
+     */
+    toggleForInsightsProject({ project, withFn, withoutFn }) {
+      const toggle = (value) => (value === project ? withFn(value) : withoutFn(value))
+      // Toggle once
+      toggle(this.insightsStore.project)
+      // Watch store actions
+      return this.insightsStore.$onAction(({ name, args, after }) => {
+        return name === 'setProject' && after(() => toggle(args[0]))
+      })
     }
     /**
      * Register a widget for a specific project
@@ -47,12 +77,9 @@ const WidgetsMixin = (superclass) =>
     registerWidgetForProject(project, options) {
       options = cloneDeep(options)
       const name = options.name || uniqueId('core:insight-')
-      // Watch store mutations
-      return this.toggleForProject({
+      // Watch store actions
+      return this.toggleForInsightsProject({
         project,
-        // Widgets are bound to the insights module, not the search module
-        mutationType: 'insights/project',
-        storePath: 'insights.project',
         // Conditional callbacks
         withFn: () => this.registerWidget({ ...options, name }),
         withoutFn: () => this.unregisterWidget(name)
@@ -95,13 +122,10 @@ const WidgetsMixin = (superclass) =>
      */
     replaceWidgetForProject(project, name, options) {
       // Save the initial option of the existing widget
-      const initialOptions = this.store.getters['insights/getWidget']({ name })
+      const initialOptions = this.insightsStore.getWidget({ name })
       // Watch store mutations
-      return this.toggleForProject({
+      return this.toggleForInsightsProject({
         project,
-        // Widgets are bound to the insights module, not the search module
-        mutationType: 'insights/project',
-        storePath: 'insights.project',
         // Conditional callbacks
         withFn: () => this.replaceWidget(name, options),
         withoutFn: () => this.replaceWidget(name, initialOptions)
