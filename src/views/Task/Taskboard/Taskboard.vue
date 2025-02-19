@@ -7,7 +7,7 @@ import TaskboardEntryList from '@/views/Task/Taskboard/TaskboardEntryList'
 
 <template>
   <page-header no-toggle-settings />
-  <page-container fluid class="d-flex flex-column gap-3">
+  <page-container fluid class="d-flex flex-column gap-5">
     <taskboard-latest />
     <taskboard-entry-list />
   </page-container>

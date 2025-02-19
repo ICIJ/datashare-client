@@ -86,11 +86,12 @@ function getProjects(task) {
 </script>
 
 <template>
-  <b-card-body no-border class="task-all__latest no-border">
+  <b-card-body no-border class="task-all__latest no-border mx-3">
     <b-card-title class="pb-4"> <phosphor-icon name="rocket-launch" /> Latest tasks </b-card-title>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
       <task-list :tasks="displayedTasks" :columns="columns">
-        <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
+        <template #cell(name)="{ item }">{{ getTaskName(item) }}</template>
+        <template #cell(state)="{ item }"><display-TaskboardEntryList.vuestatus :value="item.state" /></template>
         <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
         <template #cell(author)="{ item }"><display-user :value="getAuthor(item)" /></template>
         <template #cell(projects)="{ item }">

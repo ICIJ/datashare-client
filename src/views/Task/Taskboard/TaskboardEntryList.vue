@@ -2,7 +2,8 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import TaskboardEntry from '@/views/Task/Taskboard/TaskboardEntry'
+import TaskboardEntry from '@/components/Task/Taskboard/TaskboardEntry'
+import { TASK_NAME_ICON } from '@/enums/taskNames'
 const batchSearchesPublic = ref(13)
 const batchSearchesPrivate = ref(0)
 const batchDownloads = ref(45)
@@ -12,7 +13,7 @@ const { t } = useI18n()
 const taskEntries = [
   {
     key: 'task.taskboard.entries.batch-search',
-    icon: 'list-magnifying-glass',
+    icon: TASK_NAME_ICON.BATCH_SEARCH,
     infoComp: computed(() => {
       const nbPublic = t('task.taskboard.entries.batch-search.nbPublic', batchSearchesPublic.value)
       const nbPrivate = t('task.taskboard.entries.batch-search.nbPrivate', batchSearchesPrivate.value)
@@ -23,20 +24,20 @@ const taskEntries = [
   },
   {
     key: 'task.taskboard.entries.batch-download',
-    icon: 'download-simple',
+    icon: TASK_NAME_ICON.BATCH_DOWNLOAD,
     listLink: { name: 'task.batch-download.list' },
     info: batchDownloads.value
   },
   {
     key: 'task.taskboard.entries.entity-recognition',
-    icon: 'users',
+    icon: TASK_NAME_ICON.EXTRACT_NLP,
     info: findEntities.value,
     listLink: { name: 'task.entities.list' },
     actionLink: { name: 'task.entities.new' }
   },
   {
     key: 'task.taskboard.entries.document-addition',
-    icon: 'files',
+    icon: TASK_NAME_ICON.INDEX,
     info: documentAdditions.value,
     listLink: { name: 'task.documents.list' },
     actionLink: { name: 'task.documents.new' }
@@ -46,8 +47,8 @@ const taskEntries = [
 
 <template>
   <div class="taskboard-entry-list container-fluid bg-tertiary-subtle py-4">
-    <div class="row g-3 justify-content-around flex-grow-1">
-      <div v-for="(task, index) in taskEntries" :key="index" class="col-12 col-xl-5">
+    <div class="row justify-content-around g-5 mx-2">
+      <div v-for="(task, index) in taskEntries" :key="index" class="col-12 col-xl-6">
         <taskboard-entry
           :icon="task.icon"
           :title="t(`${task.key}.title`)"
