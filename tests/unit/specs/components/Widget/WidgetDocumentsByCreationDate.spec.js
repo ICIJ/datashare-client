@@ -4,24 +4,22 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
-  const { index: project, es: elasticsearch } = esConnectionHelper.build()
+  const { index: project } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
   const props = { widget: { title: 'Hello world' } }
-  let wrapper
+
+  let store, wrapper
 
   describe('with one valid creation date', () => {
     beforeEach(() => {
-      const { store, plugins } = CoreSetup.init({ elasticsearch }).useAll()
-      store.commit('insights/project', project)
-      wrapper = shallowMount(WidgetDocumentsByCreationDate, {
-        global: {
-          plugins,
-          renderStubDefaultSlot: true
-        },
-        props
-      })
+      const { plugins } = CoreSetup.init().useAll()
+      const global = { plugins, renderStubDefaultSlot: true }
+      store = useInsightsStore()
+      store.setProject(project)
+      wrapper = shallowMount(WidgetDocumentsByCreationDate, { props, global })
     })
 
     it('should be a Vue instance', () => {
@@ -30,10 +28,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
     it('should rerun init on project change', async () => {
       const init = vi.spyOn(wrapper.vm, 'init').mockImplementationOnce(vi.fn())
-      wrapper.vm.$store.commit('insights/project', anotherProject)
+      store.setProject(anotherProject)
       await flushPromises()
       expect(init).toBeCalledTimes(1)
-      wrapper.vm.$store.commit('insights/project', project)
+      store.setProject(project)
       await flushPromises()
       expect(init).toBeCalledTimes(2)
     })
@@ -64,15 +62,11 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
   describe('with 3 valid creation date', () => {
     beforeEach(() => {
-      const { store, plugins } = CoreSetup.init({ elasticsearch }).useAll()
-      store.commit('insights/project', anotherProject)
-      wrapper = shallowMount(WidgetDocumentsByCreationDate, {
-        global: {
-          plugins,
-          renderStubDefaultSlot: true
-        },
-        props
-      })
+      const { plugins } = CoreSetup.init().useAll()
+      const global = { plugins, renderStubDefaultSlot: true }
+      const store = useInsightsStore()
+      store.setProject(anotherProject)
+      wrapper = shallowMount(WidgetDocumentsByCreationDate, { global, props })
     })
 
     it('should display 2 selectors', () => {

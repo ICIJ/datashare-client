@@ -67,11 +67,11 @@
 <script>
 import bodybuilder from 'bodybuilder'
 import { clamp, get, uniqueId } from 'lodash'
-import { mapState } from 'vuex'
 import * as d3 from 'd3'
 
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterDate from '@/store/filters/FilterDate'
+import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display the number of file by creation date on the insights page.
@@ -124,7 +124,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('insights', ['project']),
+    project() {
+      return useInsightsStore().project
+    },
     chartWidth() {
       if (this.mounted) {
         return this.$el.querySelector('.widget__content__chart')?.offsetWidth || 0
