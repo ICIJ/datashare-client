@@ -69,47 +69,44 @@ const hideShowMore = computed(() => {
   return !pollingTasks.value?.length || pollingTasks.value.length <= nbTasks.value
 })
 
-function getAuthor(task) {
+function getAuthor(item) {
   if (task.args?.batchDownload) {
-    return task.args?.batchDownload.user.id
+    return item.args?.batchDownload.user.id
   }
-  return task.args?.user.id
+  return item.args?.user.id
 }
-function getProjects(task) {
-  if (task.args?.batchDownload) {
-    return task.args?.batchDownload.projects
+function getProjects(item) {
+  switch (item.name) {
+    case TASK_NAME.BATCH_DOWNLOAD:
+      return item.args?.batchDownload.projects
+    case TASK_NAME.BATCH_SEARCH:
+      return item.args?.batchRecord?.projects
+    case TASK_NAME.SCAN:
+    case TASK_NAME.INDEX:
+      return [item.args?.defaultProject]
+    default:
+      console.error('Unknown task', item)
+      return []
   }
-  if (task.name === TASK_NAME.SCAN) {
-    return [task.args?.defaultProject]
-  }
-  if (task.name === TASK_NAME.INDEX) {
-    return [task.args?.defaultProject]
-  }
-  if (task.name === TASK_NAME.BATCH_SEARCH) {
-    return task.args?.batchRecord?.projects
-  }
-  console.error('Unknown task', task)
-  return []
 }
-function getTitle(task) {
-  console.log(task.name)
-  if (task.args?.batchDownload) {
-    return task.args?.batchDownload?.name
+
+function getTitle(item) {
+  switch (item.name) {
+    case TASK_NAME.BATCH_DOWNLOAD:
+      return item.args?.batchDownload?.name
+    case TASK_NAME.BATCH_SEARCH:
+      return item.args?.batchRecord?.name
+    case TASK_NAME.SCAN:
+      return 'Adding documents (SCAN)'
+    case TASK_NAME.INDEX:
+      return 'Adding documents (INDEX)'
+    default:
+      console.error('Unknown task', item)
+      return []
   }
-  if (task.name === TASK_NAME.SCAN) {
-    return 'Adding documents (SCAN)'
-  }
-  if (task.name === TASK_NAME.INDEX) {
-    return 'Adding documents (INDEX)'
-  }
-  if (task.name === TASK_NAME.BATCH_SEARCH) {
-    return task.args?.batchRecord?.name
-  }
-  console.error('Unknown task', task)
-  return []
 }
-function getTaskIcon(task) {
-  return TASK_NAME_ICON[task.name]
+function getTaskIcon(item) {
+  return TASK_NAME_ICON[item.name]
 }
 </script>
 
