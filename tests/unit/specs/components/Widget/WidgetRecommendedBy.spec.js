@@ -5,48 +5,43 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetRecommendedBy from '@/components/Widget/WidgetRecommendedBy'
-
-const { index, es: elasticsearch } = esConnectionHelper.build()
-const getDocumentUserRecommendations = vi.fn()
-const api = { elasticsearch, getDocumentUserRecommendations }
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetRecommendedBy.vue', () => {
+  const { index, es: elasticsearch } = esConnectionHelper.build()
+  const getDocumentUserRecommendations = vi.fn()
+  const api = { elasticsearch, getDocumentUserRecommendations }
+  const user = { id: 'jdoe' }
+  const bar = { id: 'bar', index }
+  const foo = { id: 'foo', index }
+  const recommendations = [
+    { user, document: bar },
+    { user, document: foo }
+  ]
+
   let wrapper
 
   beforeAll(() => {
     // Mock list of recommendation
-    api.getDocumentUserRecommendations.mockImplementation(async () => {
-      const user = { id: 'jdoe' }
-      return [
-        { document: { id: 'bar' }, user },
-        { document: { id: 'foo' }, user }
-      ]
-    })
+    api.getDocumentUserRecommendations.mockResolvedValue(recommendations)
     // Mock all elasticsearch search calls using a mock
-    elasticsearch.search = vi.fn().mockImplementation(() => {
-      return Promise.resolve({
-        hits: {
-          hits: [
-            { _id: 'bar', _source: { title: 'Bar' }, _index: index },
-            { _id: 'foo', _source: { title: 'Foo' }, _index: index }
-          ]
-        }
-      })
+    elasticsearch.search = vi.fn().mockResolvedValue({
+      hits: {
+        hits: [
+          { _id: bar.id, _source: { title: 'Bar' }, _index: index },
+          { _id: foo.id, _source: { title: 'Foo' }, _index: index }
+        ]
+      }
     })
   })
 
   beforeEach(async () => {
-    const { store, plugins } = CoreSetup.init(api).useAll().useRouter()
-    store.commit('insights/project', index)
-    wrapper = shallowMount(WidgetRecommendedBy, {
-      global: {
-        plugins
-      },
-      props: {
-        widget: new widgets.WidgetRecommendedBy({ card: true })
-      }
-    })
-    // Wait for the loading of the first page
+    const { plugins } = CoreSetup.init(api).useAll().useRouter()
+    const global = { plugins }
+    const props = new widgets.WidgetRecommendedBy({ card: true })
+    const store = useInsightsStore()
+    store.setProject(index)
+    wrapper = shallowMount(WidgetRecommendedBy, { global, props })
     await flushPromises()
   })
 
@@ -62,8 +57,8 @@ describe('WidgetRecommendedBy.vue', () => {
     expect(wrapper.vm.items[0]).toEqual(
       expect.objectContaining({
         to: expect.objectContaining({ name: 'document-standalone' }),
-        document: expect.objectContaining({ title: 'Bar' }),
-        user: expect.objectContaining({ id: 'jdoe' })
+        document: expect.objectContaining(bar),
+        user: expect.objectContaining(user)
       })
     )
   })
