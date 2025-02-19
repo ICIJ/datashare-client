@@ -4,13 +4,11 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetText from '@/components/Widget/WidgetText'
 
 describe('WidgetText.vue', () => {
-  let plugins, store
+  let plugins
 
   beforeEach(() => {
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
-    store = core.store
-    store.commit('insights/reset')
   })
 
   it('should be a Vue instance', () => {
