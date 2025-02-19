@@ -12,19 +12,19 @@ import DisplayUser from '@/components/Display/DisplayUser'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 
 function getProjects(item) {
-  return item.args.batchRecord.projects ?? []
+  return item.args?.batchRecord.projects ?? []
 }
 function getLink(item) {
   return {
     name: 'task.batch-search.view',
-    params: { uuid: item.args.batchRecord?.uuid, indices: getProjects(item).join(',') }
+    params: { uuid: item.args?.batchRecord.uuid, indices: getProjects(item).join(',') }
   }
 }
 function accessIcon(item) {
-  return item.args.batchRecord?.published ? 'eye' : 'eye-slash'
+  return item.args?.batchRecord.published ? 'eye' : 'eye-slash'
 }
 function accessText(item) {
-  return item.args.batchRecord?.published ? 'Shared' : 'Private to you'
+  return item.args?.batchRecord.published ? 'Shared' : 'Private to you'
 }
 </script>
 <template>
@@ -50,17 +50,17 @@ function accessText(item) {
         <phosphor-icon :title="accessText(item)" :name="accessIcon(item)" />
       </template>
       <template #cell(name)="{ item }">
-        <router-link :to="getLink(item)"> {{ item.args.batchRecord?.name }}</router-link>
+        <router-link :to="getLink(item)"> {{ item.args?.batchRecord.name }}</router-link>
       </template>
-      <template #cell(queries)="{ item }"> <display-number :value="item.args.batchRecord.nbQueries" /> </template>
-      <template #cell(documents)="{ item }"> <display-number :value="item.args.batchRecord.nbResults" /> </template>
+      <template #cell(queries)="{ item }"> <display-number :value="item.args?.batchRecord.nbQueries" /> </template>
+      <template #cell(documents)="{ item }"> <display-number :value="item.args?.batchRecord.nbResults" /> </template>
       <template #cell(projects)="{ item }">
         <div class="d-flex gap-2">
           <project-link v-for="project in getProjects(item)" :key="project.name" :project="project" />
         </div>
       </template>
 
-      <template #cell(author)="{ item }"><display-user :value="item.args.batchRecord?.user.id" /></template>
+      <template #cell(author)="{ item }"><display-user :value="item.args?.batchRecord.user.id" /></template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />
       </template>

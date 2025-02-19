@@ -70,30 +70,30 @@ const hideShowMore = computed(() => {
 })
 
 function getAuthor(task) {
-  if (task.args.batchDownload) {
-    return task.args.batchDownload.user.id
+  if (task.args?.batchDownload) {
+    return task.args?.batchDownload.user.id
   }
-  return task.args.user.id
+  return task.args?.user.id
 }
 function getProjects(task) {
-  if (task.args.batchDownload) {
-    return task.args.batchDownload.projects
+  if (task.args?.batchDownload) {
+    return task.args?.batchDownload.projects
   }
   if (task.name === TASK_NAME.SCAN) {
-    return [task.args.defaultProject]
+    return [task.args?.defaultProject]
   }
   if (task.name === TASK_NAME.INDEX) {
-    return [task.args.defaultProject]
+    return [task.args?.defaultProject]
   }
   if (task.name === TASK_NAME.BATCH_SEARCH) {
-    return task.args.batchRecord?.projects
+    return task.args?.batchRecord?.projects
   }
   console.error('Unknown task', task)
   return []
 }
 function getTitle(task) {
   console.log(task.name)
-  if (task.args.batchDownload) {
+  if (task.args?.batchDownload) {
     return task.args?.batchDownload?.name
   }
   if (task.name === TASK_NAME.SCAN) {
