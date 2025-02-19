@@ -48,7 +48,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
-import { useInsightsStore } from '@/store/modules/insights'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DisplayUser from '@/components/Display/DisplayUser'
@@ -71,12 +70,10 @@ const props = defineProps({
 
 const pages = ref([])
 const hits = ref([])
-const insightsStore = useInsightsStore()
 const { core } = useCore()
 const { waitFor, loaderId } = useWait()
 const infiniteScrollId = uniqueId('infinite-scroll-')
 
-const project = computed(() => insightsStore.project)
 const items = computed(() => flatten(pages.value).map(recordToItem))
 const documents = computed(() => flatten(hits.value.map(property('hits'))))
 const offset = computed(() => pages.value.length * props.pageSize)
