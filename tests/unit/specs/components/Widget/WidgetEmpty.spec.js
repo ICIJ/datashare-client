@@ -9,7 +9,6 @@ describe('WidgetEmpty.vue', () => {
   beforeEach(() => {
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
-    core.store.commit('insights/reset')
   })
 
   it('should be a Vue instance', () => {
