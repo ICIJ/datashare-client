@@ -4,21 +4,18 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
-import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
   const { index: project } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
-  const props = { widget: { title: 'Hello world' } }
+  const props = { project, widget: { title: 'Hello world' } }
 
-  let store, wrapper
+  let wrapper
 
   describe('with one valid creation date', () => {
     beforeEach(() => {
       const { plugins } = CoreSetup.init().useAll()
       const global = { plugins, renderStubDefaultSlot: true }
-      store = useInsightsStore()
-      store.setProject(project)
       wrapper = shallowMount(WidgetDocumentsByCreationDate, { props, global })
     })
 
@@ -28,10 +25,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
     it('should rerun init on project change', async () => {
       const init = vi.spyOn(wrapper.vm, 'init').mockImplementationOnce(vi.fn())
-      store.setProject(anotherProject)
+      wrapper.setProps({ project: anotherProject })
       await flushPromises()
       expect(init).toBeCalledTimes(1)
-      store.setProject(project)
+      wrapper.setProps({ project })
       await flushPromises()
       expect(init).toBeCalledTimes(2)
     })
@@ -64,9 +61,8 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     beforeEach(() => {
       const { plugins } = CoreSetup.init().useAll()
       const global = { plugins, renderStubDefaultSlot: true }
-      const store = useInsightsStore()
-      store.setProject(anotherProject)
       wrapper = shallowMount(WidgetDocumentsByCreationDate, { global, props })
+      wrapper.setProps({ project: anotherProject })
     })
 
     it('should display 2 selectors', () => {
