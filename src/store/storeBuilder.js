@@ -6,7 +6,6 @@ import { batchStoreBuilder } from './modules/batchSearch'
 import { documentStoreBuilder } from './modules/document'
 import { indexingStoreBuilder } from './modules/indexing'
 import { searchStoreBuilder } from './modules/search'
-import insights from './modules/insights'
 
 export function storeBuilder(api) {
   return createStore({
@@ -14,7 +13,6 @@ export function storeBuilder(api) {
       batchSearch: batchStoreBuilder(api),
       document: documentStoreBuilder(api),
       indexing: indexingStoreBuilder(api),
-      insights,
       search: searchStoreBuilder(api)
     },
     strict: import.meta.env.MODE === 'development',
