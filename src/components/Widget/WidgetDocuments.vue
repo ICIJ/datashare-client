@@ -20,8 +20,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import WidgetBarometerDocuments from './WidgetBarometerDocuments'
 
-import { useInsightsStore } from '@/store/modules/insights'
-
 /**
  * Widget to display the number of indexed files on the insights page.
  */
@@ -37,6 +35,13 @@ export default {
      */
     widget: {
       type: Object
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -46,9 +51,6 @@ export default {
     }
   },
   computed: {
-    project() {
-      return useInsightsStore().project
-    },
     searchOnDiskRoute() {
       const indices = [this.project]
       const query = { 'f[extractionLevel]': 0, indices }
