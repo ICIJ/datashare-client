@@ -18,10 +18,10 @@ function hasZipSize(item) {
   return item.state !== 'ERROR' && item.result?.size !== undefined
 }
 function filename(item) {
-  return basename(item.args.batchDownload.filename)
+  return item.args?.batchDownload ? basename(item.args?.batchDownload?.filename) : ''
 }
 function batchDownloadExists(item) {
-  return item.args.batchDownload.exists
+  return item.args?.batchDownload?.exists ?? 'test'
 }
 function downloadResultsUrl(item) {
   return `/api/task/${item.id}/result`
