@@ -24,7 +24,6 @@ import { waitFor } from 'vue-wait'
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
 import PathTree from '@/components/PathTree/PathTree'
-import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display the disk space occupied by indexed files on the insights page.
@@ -41,6 +40,13 @@ export default {
      */
     widget: {
       type: Object
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -51,9 +57,6 @@ export default {
     }
   },
   computed: {
-    project() {
-      return useInsightsStore().project
-    },
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
