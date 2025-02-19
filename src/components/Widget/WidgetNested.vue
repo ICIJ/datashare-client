@@ -15,6 +15,8 @@
 <script>
 import { sortBy } from 'lodash'
 
+import { useInsightsStore } from '@/store/modules/insights'
+
 /**
  * A widget to include nested widget
  */
@@ -33,13 +35,11 @@ export default {
     instantiatedWidgets() {
       return sortBy(this.widgets.map(this.instantiateWidget), 'order')
     },
+    instantiateWidget() {
+      return useInsightsStore().instantiateWidget
+    },
     widgets() {
       return this.widget.widgets ?? []
-    }
-  },
-  methods: {
-    instantiateWidget(widget) {
-      return this.$store.getters['insights/instantiateWidget'](widget)
     }
   }
 }
