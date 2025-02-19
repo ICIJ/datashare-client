@@ -12,5 +12,3 @@ import TaskboardEntryList from '@/views/Task/Taskboard/TaskboardEntryList'
     <taskboard-entry-list />
   </page-container>
 </template>
-
-<style scoped lang="scss"></style>

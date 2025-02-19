@@ -903,7 +903,38 @@
       "state": "State"
     },
     "taskboard": {
-      "title": "Task board"
+      "title": "Task board",
+      "entries": {
+        "seeAll": "See all",
+        "batch-search": {
+          "title": "Batch search",
+          "description":
+          "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
+          "nbPublic": "No shared batch searches | 1 shared batch search | %{n} shared batch searches",
+          "nbPrivate": "no private batch searches | 1 shared batch search | %{n} private batch search",
+          "info": "%{nbPublic}, %{nbPrivate}",
+          "actionText": "Create a batch search"
+        },
+        "batch-download": {
+          "title": "Batch download",
+          "description": "When your query has results, you can download all of them in a password-protected file.",
+          "info": "%{n} batch downloads"
+        },
+        "entity-recognition": {
+          "title": "Entity recognition",
+          "description":
+          "Know quickly what’s in your files by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
+          "info": "%{n} entity recognitions",
+          "actionText": "Find entities"
+        },
+        "document-addition": {
+          "title": "Document addition",
+          "description":
+          "Index documents that are on your computer or on a drive so you can search them in Datashare. Datashare can index all type of documents.",
+          "info": "%{n} document additions",
+          "actionText": "Add documents"
+        }
+      }
     },
     "entities": {
       "title": "Entities",
