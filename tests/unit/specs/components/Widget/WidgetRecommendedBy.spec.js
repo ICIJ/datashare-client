@@ -5,7 +5,6 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetRecommendedBy from '@/components/Widget/WidgetRecommendedBy'
-import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetRecommendedBy.vue', () => {
   const { index, es: elasticsearch } = esConnectionHelper.build()
@@ -38,9 +37,8 @@ describe('WidgetRecommendedBy.vue', () => {
   beforeEach(async () => {
     const { plugins } = CoreSetup.init(api).useAll().useRouter()
     const global = { plugins }
-    const props = new widgets.WidgetRecommendedBy({ card: true })
-    const store = useInsightsStore()
-    store.setProject(index)
+    const widget = new widgets.WidgetRecommendedBy({ card: true })
+    const props = { widget, project: index }
     wrapper = shallowMount(WidgetRecommendedBy, { global, props })
     await flushPromises()
   })
