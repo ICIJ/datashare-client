@@ -48,7 +48,12 @@ export const useAppStore = defineStore(
         'batch-search': {
           orderBy: ['name', 'desc'],
           perPage: '10',
-          properties: ['id', 'name', 'createdAt', 'progress', 'state']
+          properties: ['state', 'access', 'name', 'queries', 'documents', 'projects', 'author', 'createdAt', 'progress']
+        },
+        'batch-search-detail': {
+          orderBy: ['name', 'desc'],
+          perPage: '10',
+          properties: ['state', 'access', 'name', 'queries', 'documents', 'projects', 'author', 'createdAt', 'progress']
         },
         taskboard: {},
         documentView: {

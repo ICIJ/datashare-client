@@ -1046,7 +1046,11 @@
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "noResults": "No search results. Try adjusting the query or filters.",
         "properties": {
-          "id":"Id",
+          "access":"Access",
+          "queries":"Queries",
+          "documents":"Documents",
+          "projects":"Projects",
+          "author":"Author",
           "name":"Name",
           "createdAt": "Creation date",
           "progress":"Progress",
