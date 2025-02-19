@@ -1,8 +1,8 @@
 <script setup>
 import { computed, watch, onBeforeMount, toRef } from 'vue'
-import { useStore } from 'vuex'
 
 import { useMode } from '@/composables/mode'
+import { useInsightsStore } from '@/store/modules/insights'
 
 const props = defineProps({
   name: {
@@ -10,21 +10,17 @@ const props = defineProps({
   }
 })
 
-const store = useStore()
+const insightsStore = useInsightsStore()
 const { mode } = useMode()
 
-const instantiatedWidgets = computed(() => store.getters['insights/instantiatedWidgets'])
 const widgets = computed(() => {
-  return instantiatedWidgets.value.filter(({ modes }) => {
+  return insightsStore.instantiatedWidgets.value.filter(({ modes }) => {
     return !modes || modes.includes(mode.value)
   })
 })
 
-watch(toRef(props, 'name'), (newName) => {
-  store.commit('insights/project', newName)
-})
-
-onBeforeMount(() => store.commit('insights/project', props.name))
+watch(toRef(props, 'name'), insightsStore.setProject)
+onBeforeMount(() => insightsStore.setProject(props.name))
 </script>
 
 <template>
