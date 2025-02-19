@@ -2,8 +2,6 @@ import uniqueId from 'lodash/uniqueId'
 
 import Component from '@/components/Widget/WidgetEmpty'
 
-const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
-
 /**
  * Class representing the Empty widget. This widget is not intended to be used directly.
  */
@@ -22,12 +20,6 @@ class WidgetEmpty {
     this.cols = cols
     this.order = order
     this.modes = modes
-  }
-  bindState(state) {
-    this[_STATE] = this[_STATE] || state
-  }
-  get state() {
-    return this[_STATE]
   }
   get component() {
     return Component
