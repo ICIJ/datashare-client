@@ -8,6 +8,7 @@
 import { castArray } from 'lodash'
 
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display a search bar
@@ -27,7 +28,7 @@ export default {
   },
   computed: {
     indices() {
-      return castArray(this.$store.state.insights.project)
+      return castArray(useInsightsStore().project)
     }
   }
 }
