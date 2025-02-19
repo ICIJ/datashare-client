@@ -94,6 +94,13 @@ export default {
     minColumnWidth: {
       type: Number,
       default: 45
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -124,9 +131,6 @@ export default {
     }
   },
   computed: {
-    project() {
-      return useInsightsStore().project
-    },
     chartWidth() {
       if (this.mounted) {
         return this.$el.querySelector('.widget__content__chart')?.offsetWidth || 0
