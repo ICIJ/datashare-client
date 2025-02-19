@@ -68,14 +68,6 @@ export default {
   async created() {
     await this.loadData()
   },
-  mounted() {
-    this.$store.subscribe(async ({ type }) => {
-      // The project changed
-      if (type === 'insights/project') {
-        await this.loadData()
-      }
-    })
-  },
   methods: {
     async count(query) {
       const index = this.$store.state.insights.project
