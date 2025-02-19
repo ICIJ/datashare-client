@@ -4,17 +4,18 @@ import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocuments from '@/components/Widget/WidgetDocuments'
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetDocuments.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
-  const api = { elasticsearch: es }
   const props = { widget: { title: 'Hello world' } }
   let wrapper = null
 
   beforeEach(() => {
-    const { store, plugins } = CoreSetup.init(api).useAll()
-    store.commit('insights/reset')
-    store.commit('insights/project', project)
+    const { plugins } = CoreSetup.init().useAll()
+    const store = useInsightsStore()
+    store.reset()
+    store.setProject(project)
     wrapper = mount(WidgetDocuments, { global: { plugins }, props })
   })
 

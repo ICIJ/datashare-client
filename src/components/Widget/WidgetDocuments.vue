@@ -20,6 +20,8 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import WidgetBarometerDocuments from './WidgetBarometerDocuments'
 
+import { useInsightsStore } from '@/store/modules/insights'
+
 /**
  * Widget to display the number of indexed files on the insights page.
  */
@@ -44,8 +46,11 @@ export default {
     }
   },
   computed: {
+    project() {
+      return useInsightsStore().project
+    },
     searchOnDiskRoute() {
-      const indices = [this.$store.state.insights.project]
+      const indices = [this.project]
       const query = { 'f[extractionLevel]': 0, indices }
       return { name: 'search', query }
     }
@@ -53,17 +58,9 @@ export default {
   async created() {
     await this.loadData()
   },
-  mounted() {
-    this.$store.subscribe(async ({ type }) => {
-      // The project changed
-      if (type === 'insights/project') {
-        await this.loadData()
-      }
-    })
-  },
   methods: {
     async count(query) {
-      const index = this.$store.state.insights.project
+      const index = this.project
       const body = { track_total_hits: true, query: { query_string: { query } } }
       const preference = 'widget-file-barometer'
       const res = await this.$core.api.elasticsearch.search({ index, body, preference, size: 0 })
