@@ -71,7 +71,6 @@ import * as d3 from 'd3'
 
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterDate from '@/store/filters/FilterDate'
-import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display the number of file by creation date on the insights page.
