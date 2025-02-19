@@ -17,7 +17,7 @@ describe('WidgetProject.vue', () => {
 
   beforeEach(() => {
     const { config, plugins } = CoreSetup.init().useAll()
-    const props = { project: foo.name } 
+    const props = { project: foo.name }
     config.set('projects', projects)
     wrapper = shallowMount(WidgetProject, { global: { plugins }, props })
   })
