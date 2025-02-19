@@ -9,6 +9,12 @@ import { usePipelinesStore } from '@/store/modules/pipelines'
 */
 const PipelinesMixin = (superclass) =>
   class extends superclass {
+    /**
+     * Get the pipelines store
+     * @memberof PipelinesMixin.prototype
+     * @type {Object}
+     * @readonly
+     */
     get pipelinesStore() {
       return usePipelinesStore()
     }
