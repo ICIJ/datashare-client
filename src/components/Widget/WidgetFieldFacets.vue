@@ -36,11 +36,12 @@
 <script>
 import bodybuilder from 'bodybuilder'
 import { get, flatten, camelCase, iteratee, noop, uniqueId } from 'lodash'
-import { mapState } from 'vuex'
 import InfiniteLoading from 'v3-infinite-loading'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
+
+import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display a list of facets on the insights page.
@@ -72,7 +73,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('insights', ['project']),
+    project() {
+      return useInsightsStore().project
+    },
     // The items list is just a concatenation of all pages
     buckets() {
       return flatten(this.pages.map(iteratee('aggregations.facets.buckets')))
