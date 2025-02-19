@@ -44,8 +44,8 @@
 
 <script>
 import { castArray, trimEnd } from 'lodash'
-import { mapState } from 'vuex'
 
+import { useInsightsStore } from '@/store/modules/insights'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import PathTree from '@/components/PathTree/PathTree'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
@@ -74,7 +74,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('insights', ['project']),
+    project() {
+      return useInsightsStore().project
+    },
     dataDir() {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     },

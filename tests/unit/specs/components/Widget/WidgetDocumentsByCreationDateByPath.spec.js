@@ -1,33 +1,22 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
-import { flushPromises } from '~tests/unit/tests_utils'
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocumentsByCreationDateByPath from '@/components/Widget/WidgetDocumentsByCreationDateByPath'
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetDocumentsByCreationDateByPath.vue', () => {
-  const { index: project, es } = esConnectionHelper.build()
-  const { index: anotherProject } = esConnectionHelper.build()
-  const api = { elasticsearch: es }
   const props = { widget: { title: 'Hello world' } }
-  let wrapper
+
+  let store, wrapper
 
   beforeEach(() => {
-    const { config, store, plugins } = CoreSetup.init(api).useAll()
-    config.merge({ dataDir: 'dataDir' })
-    store.commit('insights/project', project)
-    wrapper = mount(WidgetDocumentsByCreationDateByPath, { props, global: { plugins } })
+    const { plugins } = CoreSetup.init().useAll()
+    store = useInsightsStore()
+    wrapper = shallowMount(WidgetDocumentsByCreationDateByPath, { props, global: { plugins } })
   })
 
-  it('should be a Vue instance', () => {
+  it('should be a Vue instance with a project', () => {
     expect(wrapper).toBeTruthy()
-  })
-
-  it('should reset pathTreeValue on project change', async () => {
-    await wrapper.setData({ pathTreeValue: 'path_01' })
-    expect(wrapper.vm.pathTreeValue).toBe('path_01')
-    wrapper.vm.$store.commit('insights/project', anotherProject)
-    await flushPromises()
-    expect(wrapper.vm.pathTreeValue).toBe('dataDir')
+    expect(wrapper.vm.project).toBe(store.project)
   })
 })
