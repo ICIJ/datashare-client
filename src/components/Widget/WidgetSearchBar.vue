@@ -5,10 +5,7 @@
 </template>
 
 <script>
-import { castArray } from 'lodash'
-
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
-import { useInsightsStore } from '@/store/modules/insights'
 
 /**
  * Widget to display a search bar
@@ -24,11 +21,18 @@ export default {
      */
     widget: {
       type: Object
+    },
+    /**
+     * The project name.
+     */
+    project: {
+      type: String,
+      required: true
     }
   },
   computed: {
     indices() {
-      return castArray(useInsightsStore().project)
+      return [this.project]
     }
   }
 }
