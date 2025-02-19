@@ -1,14 +1,24 @@
 <script setup>
+import { computed } from 'vue'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import { useBreakpoints } from '@/composables/breakpoints'
+import { SIZE } from '@/enums/sizes'
 
 defineProps({
   title: { type: String, default: '' },
-  icon: { type: String, default: '' },
+  icon: { type: String },
   description: { type: String, default: '' },
-  info: { type: String, default: '' },
-  listLink: { type: String, default: '' },
-  actionLink: { type: String, default: '' },
-  actionText: { type: String, default: '' }
+  info: { type: String },
+  listLink: { type: String },
+  actionLink: { type: String },
+  actionText: { type: String }
+})
+
+const { breakpointDown } = useBreakpoints()
+
+const compact = computed(() => {
+  return breakpointDown.value[SIZE.XL]
 })
 </script>
 
@@ -21,7 +31,7 @@ defineProps({
         </div>
       </b-col>
       <b-col md="10" class="d-flex">
-        <b-card-body class="d-flex flex-column">
+        <b-card-body class="d-flex flex-column overflow-auto">
           <template #title
             ><h3 class="text-action-emphasis">{{ title }}</h3></template
           >
@@ -30,15 +40,25 @@ defineProps({
               <slot name="description" v-bind="{ description }">{{ description }}</slot>
             </p>
             <span v-if="info" class="d-flex justify-content-end text-secondary-emphasis">
-              <slot name="info" v-bind="{ info }">{{ info }}</slot>
+              <slot name="info" v-bind="{ info }"
+                ><span class="taskboard-entry__info"><phosphor-icon :name="icon" /> {{ info }}</span></slot
+              >
             </span>
           </b-card-text>
-          <b-card-text class="d-flex justify-content-between">
+          <b-card-text class="d-flex justify-content-between gap-2 flex-row row-wrap">
             <slot name="actions" v-bind="{ listLink, actionLink }">
-              <button-icon icon-left="list" variant="outline-tertiary" :to="listLink">See all</button-icon>
-              <button-icon v-if="actionLink" icon-left="plus" variant="outline-action" :to="actionLink">{{
-                actionText
+              <button-icon icon-left="list" variant="outline-tertiary" :to="listLink" class="text-nowrap">{{
+                $t(`task.taskboard.entries.seeAll`)
               }}</button-icon>
+              <button-icon
+                v-if="actionLink"
+                :hide-label="compact"
+                :label="actionText"
+                icon-left="plus"
+                variant="outline-action"
+                :to="actionLink"
+                :title="actionText"
+              />
             </slot>
           </b-card-text>
         </b-card-body>
@@ -47,4 +67,10 @@ defineProps({
   </b-card>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.taskboard-entry {
+  &__info {
+    text-wrap: pretty;
+  }
+}
+</style>
