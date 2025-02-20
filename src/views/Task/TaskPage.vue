@@ -1,5 +1,5 @@
 <script setup>
-import { computed, toRef } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useTaskHeader } from '@/composables/task-header'
@@ -28,19 +28,13 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const taskNames = toRef(props, 'taskFilter')
 
-const {
-  tasks: pollingTasks,
-  hasPendingTasks,
-  hasDoneTasks,
-  stopPendingTasks,
-  deleteDoneTasks,
-  isLoading
-} = useTaskPolling(taskNames)
+const { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading } = useTaskPolling(
+  props.taskFilter
+)
 
 const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
-  useTaskHeader(props.pageName, props.showAdd, pollingTasks)
+  useTaskHeader(props.pageName, props.showAdd, tasks)
 
 const sort = computed({
   get: () => sortBy.value.modelValue?.[0],
