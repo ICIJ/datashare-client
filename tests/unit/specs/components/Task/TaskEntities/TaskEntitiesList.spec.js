@@ -2,28 +2,33 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskEntitiesList from '@/views/Task/TaskEntities/TaskEntitiesList'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    getTasks: vi.fn().mockResolvedValue([])
+  }
+})
 
 describe('TaskEntitiesList.vue', () => {
-  let api, plugins
+  let plugins
 
   beforeEach(() => {
-    api = {
-      getTasks: vi.fn().mockImplementation((name) => {
-        return [
-          {
-            name,
-            id: '6a32bb59-8a23-491c-a441-8447ff7517dc',
-            state: 'RUNNING',
-            progress: 0,
-            args: {
-              defaultProject: 'local-datashare',
-              nlpPipeline: 'EMAIL'
-            },
-            createdAt: new Date()
-          }
-        ]
-      })
-    }
+    api.getTasks.mockImplementation((name) => {
+      return [
+        {
+          name,
+          id: '6a32bb59-8a23-491c-a441-8447ff7517dc',
+          state: 'RUNNING',
+          progress: 0,
+          args: {
+            defaultProject: 'local-datashare',
+            nlpPipeline: 'EMAIL'
+          },
+          createdAt: new Date()
+        }
+      ]
+    })
 
     const core = CoreSetup.init(api).useAll().useRouter()
     plugins = core.plugins
