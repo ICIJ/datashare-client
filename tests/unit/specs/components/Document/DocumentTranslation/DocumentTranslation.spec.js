@@ -7,9 +7,22 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import DocumentContent from '@/components/Document/DocumentContent'
+import { useDocumentStore } from '@/store/modules/document'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      getDocumentSlice: vi.fn()
+    }
+  }
+})
 
 describe('DocumentTranslation.vue', () => {
-  let core, api, plugins, store
+  let core, plugins, documentStore
   const { index, es } = esConnectionHelper.build()
 
   function mockedDocumentContentFactory(id, content = '') {
@@ -34,8 +47,8 @@ describe('DocumentTranslation.vue', () => {
         // Index the document
         await letData(es).have(this.indexedDocument).commit()
         // Get the document from the store
-        await store.dispatch('document/get', { id, index })
-        const document = store.state.document.doc
+        await documentStore.getDocument({ id, index })
+        const document = documentStore.doc
         // Finally flush all promises and return all necessary values
         await flushPromises()
         return { content, contentSlice, document, id }
@@ -44,18 +57,17 @@ describe('DocumentTranslation.vue', () => {
   }
 
   beforeEach(() => {
-    api = { getDocumentSlice: vi.fn(), elasticsearch: es }
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init().useAll()
     plugins = core.plugins
-    store = core.store
-    store.commit('document/toggleShowTranslatedContent', true)
+    documentStore = useDocumentStore()
+    documentStore.toggleShowTranslatedContent(true)
   })
 
   afterEach(async () => {
     // Ensure all promise are flushed...
     await flushPromises()
     // Remove document
-    store.commit('document/reset')
+    documentStore.reset()
   })
 
   it('should show no translations', async () => {
@@ -91,6 +103,7 @@ describe('DocumentTranslation.vue', () => {
     expect(wrapper.vm.detectedLanguage).toBe('FRENCH')
     expect(wrapper.findComponent(DocumentContent).attributes('targetlanguage')).toBe('ENGLISH')
   })
+
   it('should show document translation alert and display english translation', async () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-english', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('First', 'FRENCH', 'ENGLISH')
@@ -105,6 +118,7 @@ describe('DocumentTranslation.vue', () => {
     expect(wrapper.find('.document-translation-alert').exists()).toBe(true)
     expect(wrapper.find('.document-content__body').text()).toBe('First')
   })
+
   it('fallback on original content if translated is not provided', async () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-english', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('', 'FRENCH', 'ENGLISH')
