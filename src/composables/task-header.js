@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, toValue } from 'vue'
 import Fuse from 'fuse.js'
 import { orderBy as orderArrayBy, property } from 'lodash'
 import { useI18n } from 'vue-i18n'
@@ -16,7 +16,9 @@ export function useTaskHeader(pageName, hasAddButton, tasks) {
   const toAddRoute = computed(() => {
     return !isServer.value && hasAddButton ? { name: `task.${pageName}.new` } : null
   })
+
   const searchQuery = useUrlParam('q', '')
+
   const page = useUrlParam('page', {
     transform: (value) => parseInt(value),
     initialValue: 1
@@ -27,29 +29,34 @@ export function useTaskHeader(pageName, hasAddButton, tasks) {
   const fuse = computed(() => {
     const keys = ['name', 'id']
     const options = { shouldSort: false, keys }
-    return new Fuse(tasks.value, options)
+    return new Fuse(toValue(tasks), options)
   })
+
   const filteredTasks = computed(() => {
     if (searchQuery.value) {
       return fuse.value.search(searchQuery.value).map(property('item'))
     }
-    return tasks.value
+    return toValue(tasks)
   })
+
   const totalRows = computed(() => {
-    return filteredTasks.value.length
+    return toValue(filteredTasks).length
   })
+
   const sortedTasks = computed(() => {
-    const [sort, order] = sortBy.value.modelValue
-    return orderArrayBy(filteredTasks.value, sort, order)
+    const [sort, order] = toValue(sortBy).modelValue
+    return orderArrayBy(toValue(filteredTasks), sort, order)
   })
 
   const displayedTasks = computed(() => {
-    const start = (page.value - 1) * perPage.value.modelValue
-    return sortedTasks.value?.slice(start, start + perPage.value.modelValue)
+    const start = (page.value - 1) * toValue(perPage).modelValue
+    return sortedTasks.value?.slice(start, start + toValue(perPage).modelValue)
   })
+
   const noTasks = computed(() => {
-    return tasks.value.length === 0
+    return toValue(tasks).length === 0
   })
+
   return {
     toAddRoute,
     searchQuery,
