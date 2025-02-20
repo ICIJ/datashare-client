@@ -1,10 +1,30 @@
 import { shallowMount } from '@vue/test-utils'
 
-import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import CoreSetup from '~tests/unit/CoreSetup'
+import { apiInstance as api } from '@/api/apiInstance'
 import { flushPromises } from '~tests/unit/tests_utils'
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import CoreSetup from '~tests/unit/CoreSetup'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
+import { useDocumentStore } from '@/store/modules/document'
+
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      getUser: vi.fn(),
+      addUserHistoryEvent: vi.fn(),
+      getRecommendationsByDocuments: vi.fn(),
+      getTags: vi.fn(),
+      elasticsearch: {
+        ...apiInstance.elasticsearch,
+        getDocumentWithoutContent: vi.fn()
+      }
+    }
+  }
+})
 
 describe('DocumentView.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
@@ -12,10 +32,10 @@ describe('DocumentView.vue', () => {
   const parentId = 'parent_document'
   const props = { index: project, id, routing: parentId }
 
-  let core, api, getDocumentWithoutContent
+  let core, documentStore
 
   beforeEach(async () => {
-    getDocumentWithoutContent = vi.fn().mockResolvedValue({
+    api.elasticsearch.getDocumentWithoutContent.mockResolvedValue({
       _id: id,
       _index: project,
       _source: {
@@ -24,14 +44,6 @@ describe('DocumentView.vue', () => {
         rootDocument: null
       }
     })
-
-    api = {
-      getUser: vi.fn(),
-      addUserHistoryEvent: vi.fn(),
-      getRecommendationsByDocuments: vi.fn(),
-      getTags: vi.fn(),
-      elasticsearch: { ...es, getDocumentWithoutContent }
-    }
 
     await letData(es).have(new IndexedDocument(parentId, project)).commit()
     await letData(es).have(new IndexedDocument(id, project).withParent(parentId)).commit()
@@ -47,29 +59,23 @@ describe('DocumentView.vue', () => {
       { path: '/document/metadata', name: 'document.metadata' }
     ]
 
-    core = CoreSetup.init(api).useAll().useRouter(routes)
+    core = CoreSetup.init().useAll().useRouter(routes)
+    documentStore = useDocumentStore()
     await core.router.push({ name: 'document' })
   })
 
   afterEach(() => {
-    core.store.commit('document/reset')
-    core.config.merge({ dataDir: null, mountedDataDir: null })
     vi.clearAllMocks()
+    documentStore.reset()
+    core.config.merge({ dataDir: null, mountedDataDir: null })
   })
 
   it('should display an error message if document is not found', async () => {
     const props = { id: 'notfound', index: project }
+    const global = { plugins: core.plugins, renderStubDefaultSlot: true }
     const spy = vi.spyOn(core.router, 'push')
-    getDocumentWithoutContent.mockRejectedValue(new Error('Not found'))
-
-    shallowMount(DocumentView, {
-      global: {
-        plugins: core.plugins,
-        renderStubDefaultSlot: true
-      },
-      props
-    })
-
+    api.elasticsearch.getDocumentWithoutContent.mockRejectedValue(new Error('Not found'))
+    shallowMount(DocumentView, { global, props })
     await flushPromises()
     expect(spy).toHaveBeenCalledWith(expect.objectContaining({ name: 'error' }))
   })
@@ -83,9 +89,9 @@ describe('DocumentView.vue', () => {
     })
     await flushPromises()
     // Find doc
-    expect(getDocumentWithoutContent).toBeCalledWith(project, id, parentId)
+    expect(api.elasticsearch.getDocumentWithoutContent).toBeCalledWith(project, id, parentId)
     // Find its parent
-    expect(getDocumentWithoutContent).toBeCalledWith(project, parentId, null)
+    expect(api.elasticsearch.getDocumentWithoutContent).toBeCalledWith(project, parentId, null)
   })
 
   it('should call the API to retrieve document tags', async () => {
