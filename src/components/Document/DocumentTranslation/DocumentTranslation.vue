@@ -1,11 +1,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useStore } from 'vuex'
 import { find, join } from 'lodash'
 
 import DocumentTranslationAlert from './DocumentTranslationAlert/DocumentTranslationAlert'
 
 import { useCore } from '@/composables/core'
+import { useDocumentStore } from '@/store/modules/document'
 import DocumentContent from '@/components/Document/DocumentContent'
 
 const props = defineProps({
@@ -24,7 +24,7 @@ const props = defineProps({
 })
 
 const { core } = useCore()
-const store = useStore()
+const documentStore = useDocumentStore()
 const translations = ref([])
 
 const selectedTargetLanguage = computed(() => {
@@ -43,8 +43,8 @@ const detectedLanguage = computed(() => {
 })
 
 const showTranslatedContent = computed({
-  get: () => store.state.document.showTranslatedContent,
-  set: (value) => store.commit('document/toggleShowTranslatedContent', value)
+  get: () => documentStore.showTranslatedContent,
+  set: (value) => documentStore.toggleShowTranslatedContent(value)
 })
 
 const translation = computed(() => {
