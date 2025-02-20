@@ -1,5 +1,4 @@
 import { computed, inject, provide, useId, watch, h } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
 import { useModalController } from 'bootstrap-vue-next'
@@ -7,9 +6,10 @@ import { useModalController } from 'bootstrap-vue-next'
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
 import DocumentViewerModal from '@/components/Document/DocumentViewerModal/DocumentViewerModal'
+import { useDocumentStore } from '@/store/modules/document'
 
 export const useDocument = function (element) {
-  const store = useStore()
+  const documentStore = useDocumentStore()
   const route = useRoute()
   const router = useRouter()
   const { core } = useCore()
@@ -17,11 +17,11 @@ export const useDocument = function (element) {
   const loaderId = useId()
 
   const fetchDocument = waitFor(loaderId, async function ({ index, id, routing } = {}) {
-    await store.dispatch('document/get', { index, id, routing })
-    await store.dispatch('document/getParent')
-    await store.dispatch('document/getRoot')
-    await store.dispatch('document/getTags')
-    await store.dispatch('document/getRecommendationsByDocuments', await core.auth.getUsername())
+    await documentStore.getDocument({ index, id, routing })
+    await documentStore.getParent()
+    await documentStore.getRoot()
+    await documentStore.getTags()
+    await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())
 
     if (document.value) {
       const { route, slicedNameToString } = document.value
@@ -33,7 +33,7 @@ export const useDocument = function (element) {
 
   const fetchDocumentOnce = ({ index, id, routing } = {}) => {
     // This function only fetch document if the index and id are
-    // different from the current document in the store.
+    // different from the current document in the documentStore.
     if (document.value?.index !== index || document.value?.id !== id) {
       return fetchDocument({ index, id, routing })
     }
@@ -65,11 +65,11 @@ export const useDocument = function (element) {
   })
 
   const document = computed(() => {
-    return store.state.document.doc
+    return documentStore.doc
   })
 
   const parent = computed(() => {
-    return store.state.document.parentDocument
+    return documentStore.parentDocument
   })
 
   const documentPath = computed(() => {
