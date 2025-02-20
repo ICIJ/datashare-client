@@ -1,61 +1,42 @@
-import { computed, onMounted, watch } from 'vue'
+import { computed, toValue, toRef, onMounted, watch, useId } from 'vue'
 import { random } from 'lodash'
-import { useStore } from 'vuex'
 
 import { usePolling } from '@/composables/polling'
 import { useCore } from '@/composables/core'
+import { useTaskStore } from '@/store/modules/task'
 
 export function useTaskPolling(taskNames = []) {
+  const taskStore = useTaskStore()
+  const loaderId = useId()
   const { wait } = useCore()
-  const store = useStore()
   const { registerPollOnce } = usePolling()
 
-  watch(
-    () => taskNames.value,
-    () => {
-      return onShotTask()
-    }
-  )
-  onMounted(async () => {
-    return onShotTask()
-  })
-  const loaderId = 'load task-list tasks'
   async function onShotTask() {
     try {
       wait.start(loaderId)
       await startPollingTasks()
-    } catch (e) {
-      throw new Error('load task-list tasks')
     } finally {
       wait.end(loaderId)
     }
   }
-  const isLoading = computed(() => {
-    return wait.waiting(loaderId)
-  })
-  const hasDoneTasks = computed(() => {
-    return store.getters['indexing/hasDoneTasks']
-  })
-  const hasPendingTasks = computed(() => {
-    return store.getters['indexing/hasPendingTasks']
-  })
+
+  const isLoading = computed(() => wait.waiting(loaderId))
+  const hasDoneTasks = computed(() => taskStore.hasDoneTasks)
+  const hasPendingTasks = computed(() => taskStore.hasPendingTasks)
+  const tasks = computed(() => taskStore.tasks)
 
   async function stopPendingTasks() {
-    await store.dispatch('indexing/stopPendingTasks')
-    await store.dispatch('indexing/getTasks', taskNames.value)
+    await taskStore.stopPendingTasks()
+    await taskStore.getTasks(toValue(taskNames))
   }
 
   async function deleteDoneTasks() {
-    await store.dispatch('indexing/deleteDoneTasks')
-    await store.dispatch('indexing/getTasks', taskNames.value)
+    await taskStore.deleteDoneTasks()
+    await taskStore.getTasks(toValue(taskNames))
   }
 
-  const tasks = computed(() => {
-    return store.state.indexing.tasks
-  })
-
   async function getTasks() {
-    await store.dispatch('indexing/getTasks', taskNames.value)
+    await taskStore.getTasks(toValue(taskNames))
     // Continue to poll task if they are pending ones
     return hasPendingTasks.value
   }
@@ -63,10 +44,13 @@ export function useTaskPolling(taskNames = []) {
   function startPollingTasks() {
     const fn = getTasks
     const timeout = () => random(1000, 4000)
-    // Register the `getTasks` for later
-    registerPollOnce({ fn, timeout })
     // Execute the `getTasks` method immediately
-    return fn()
+    // and if it's true, register a poll
+    return fn() && registerPollOnce({ fn, timeout })
   }
+
+  watch(toRef(taskNames), onShotTask)
+  onMounted(onShotTask)
+
   return { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
 }
