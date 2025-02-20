@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, onBeforeMount } from 'vue'
-import { useStore } from 'vuex'
 import { get } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
@@ -13,9 +12,10 @@ import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUser
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
 import { useRecommendedStore } from '@/store/modules/recommended'
+import { useDocumentStore } from '@/store/modules/document'
 
-const store = useStore()
 const recommendedStore = useRecommendedStore()
+const documentStore = useDocumentStore()
 const { core } = useCore()
 const { isServer } = useMode()
 const { document, injectDocumentViewFloatingId } = useDocument()
@@ -34,26 +34,26 @@ const actionHandler = ({ name }) => {
   showRecommendationsCard.value = name === 'recommendations' && !showRecommendationsCard.value
 }
 
-const tags = computed(() => store.state.document.tags)
+const tags = computed(() => documentStore.tags)
 const allTags = ref([])
-const recommendedBy = computed(() => store.state.document.recommendedBy)
+const recommendedBy = computed(() => documentStore.recommendedBy)
 
 const recommended = computed({
   get() {
-    return store.state.document.isRecommended
+    return documentStore.isRecommended
   },
   async set() {
-    await store.dispatch('document/toggleAsRecommended', await core.auth.getUsername())
-    await recommendedStore.fetchIndexRecommendations(store.state.document.index)
+    await documentStore.toggleAsRecommended(await core.auth.getUsername())
+    await recommendedStore.fetchIndexRecommendations(documentStore.index)
   }
 })
 
 const deleteTag = (label) => {
-  return store.dispatch('document/deleteTag', { documents: [document.value], label })
+  return documentStore.deleteTag({ documents: [document.value], label })
 }
 
 const addTags = (labels) => {
-  return store.dispatch('document/addTags', { documents: [document.value], labels })
+  return documentStore.addTags({ documents: [document.value], labels })
 }
 
 const fetchAllTags = async () => {
