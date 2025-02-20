@@ -17,10 +17,6 @@ describe('store', () => {
     expect(store.state.document).toBeDefined()
   })
 
-  it('should define an indexing module', () => {
-    expect(store.state.indexing).toBeDefined()
-  })
-
   it('should define a search module', () => {
     expect(store.state.search).toBeDefined()
   })
