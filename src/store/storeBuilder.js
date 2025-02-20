@@ -3,14 +3,12 @@ import createPersistedState from 'vuex-persistedstate'
 import { createStore } from 'vuex'
 
 import { batchStoreBuilder } from './modules/batchSearch'
-import { documentStoreBuilder } from './modules/document'
 import { searchStoreBuilder } from './modules/search'
 
 export function storeBuilder(api) {
   return createStore({
     modules: {
       batchSearch: batchStoreBuilder(api),
-      document: documentStoreBuilder(api),
       search: searchStoreBuilder(api)
     },
     strict: import.meta.env.MODE === 'development',
