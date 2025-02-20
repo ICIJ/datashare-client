@@ -1,10 +1,10 @@
 <script setup>
-import { useStore } from 'vuex'
 import { trim } from 'lodash'
 import { computed, onBeforeMount } from 'vue'
 
 import { useWait } from '@/composables/wait'
 import EntityPopover from '@/components/Entity/EntityPopover/EntityPopover'
+import { useDocumentStore } from '@/store/modules/document'
 import { Highlight } from '@/utils/highlight'
 
 const offset = defineModel('offset', { type: Number, default: 0 })
@@ -28,15 +28,15 @@ const props = defineProps({
   }
 })
 
-const store = useStore()
+const documentStore = useDocumentStore()
 const { waitFor, loaderId } = useWait()
 
 const hasBigContentTextLength = computed(() => props.document.hasBigContentTextLength)
-const isContentLoaded = computed(() => store.state.document.isContentLoaded)
+const isContentLoaded = computed(() => documentStore.isContentLoaded)
 
 const fetch = waitFor(loaderId, async () => {
   if (!isContentLoaded.value && !hasBigContentTextLength.value) {
-    await store.dispatch('document/getContent')
+    await documentStore.getContent()
   }
 })
 
