@@ -103,7 +103,9 @@ describe('DocumentStore', () => {
     it("should get the document's tags", async () => {
       const tags = [{ label: 'tag_01' }, { label: 'tag_02' }]
       api.getTags.mockResolvedValue(tags)
-      await letData(es).have(new IndexedDocument(id, index).withTags(['tag_01', 'tag_02'])).commit()
+      await letData(es)
+        .have(new IndexedDocument(id, index).withTags(['tag_01', 'tag_02']))
+        .commit()
       await store.getDocument({ id, index })
       await store.getTags()
       expect(store.tags).toEqual(tags)
