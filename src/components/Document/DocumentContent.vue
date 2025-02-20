@@ -10,6 +10,7 @@ import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearc
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
 import { usePipelinesStore } from '@/store/modules/pipelines'
+import { useDocumentStore } from '@/store/modules/document'
 
 const props = defineProps({
   document: Object,
@@ -28,6 +29,7 @@ const props = defineProps({
 })
 
 const store = useStore()
+const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const elementRef = useTemplateRef('element')
 const { waitFor } = useWait()
@@ -151,7 +153,7 @@ onMounted(async () => {
 
 const loadMaxOffset = waitFor('document-content-max-offset', async function (targetLanguage = props.targetLanguage) {
   const key = targetLanguage ?? 'original'
-  const offset = await store.dispatch('document/getContentMaxOffset', { targetLanguage })
+  const offset = await documentStore.getContentMaxOffset({ targetLanguage })
   maxOffsetTranslations.value[key] = offset
   return offset
 })
@@ -205,7 +207,7 @@ function hasContentSlice({ offset = 0, targetLanguage = props.targetLanguage } =
 async function loadContentSlice({ offset = 0, targetLanguage = props.targetLanguage } = {}) {
   const endOffset = offset + props.pageSize
   const limit = Math.max(Math.min(endOffset, maxOffset.value) - offset, 0)
-  const { content } = await store.dispatch('document/getContentSlice', { offset, limit, targetLanguage })
+  const { content } = await documentStore.getContentSlice({ offset, limit, targetLanguage })
   return setContentSlice({ offset, targetLanguage, content })
 }
 
@@ -233,7 +235,7 @@ async function retrieveTotalOccurrences() {
     }
     const query = localSearchTerm.value
     const targetLanguage = props.targetLanguage
-    const { count, offsets } = await store.dispatch('document/searchOccurrences', { query, targetLanguage })
+    const { count, offsets } = await documentStore.searchOccurrences({ query, targetLanguage })
     localSearchIndexes.value = offsets
     localSearchOccurrences.value = count
     localSearchIndex.value = Number(!!count)

@@ -6,6 +6,8 @@ import { letTextContent } from '~tests/unit/api_mock'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/Document/DocumentContent'
+import { apiInstance as api } from '@/api/apiInstance'
+import { useDocumentStore } from '@/store/modules/document'
 
 // Disable lodash throttle to avoid side-effect
 vi.mock('lodash', async (importOriginal) => {
@@ -23,17 +25,29 @@ vi.mock('@/utils/style', () => {
   }
 })
 
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      getDocumentSlice: vi.fn(),
+      searchDocument: vi.fn()
+    }
+  }
+})
+
 window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 describe('DocumentContent.vue', () => {
-  let core, api
+  let core, documentStore
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
 
   beforeEach(() => {
     vi.clearAllMocks()
-    api = { getDocumentSlice: vi.fn(), searchDocument: vi.fn(), elasticsearch: es }
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init().useAll()
+    documentStore = useDocumentStore()
   })
 
   async function mockDocumentContentSlice(content = '', { language = 'ENGLISH' } = {}) {
@@ -47,8 +61,8 @@ describe('DocumentContent.vue', () => {
       return { ...contentSlice, content, offset, limit }
     })
     // Get the document from the store
-    await core.store.dispatch('document/get', { id, index })
-    const document = core.store.state.document.doc
+    await documentStore.getDocument({ id, index })
+    const document = documentStore.doc
     // Finally flush all promises and return all necessary values
     await flushPromises()
     return { content, contentSlice, document }
@@ -58,11 +72,7 @@ describe('DocumentContent.vue', () => {
     // Ensure all promise are flushed...
     await flushPromises()
     // Remove document
-    core.store.commit('document/reset')
-  })
-
-  afterAll(() => {
-    vi.mock('@/utils/style')
+    documentStore.reset()
   })
 
   describe('the extracted text content', () => {
