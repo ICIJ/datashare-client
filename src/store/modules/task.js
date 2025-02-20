@@ -32,16 +32,15 @@ export const useTaskStore = defineStore('task', () => {
 
   const getTasks = async (names = []) => {
     if (names.length) {
-      // Execute the `getTasks` method for each name (we use .bind to keep the context)
-      const tasksArray = await Promise.all(names.map(api.getTasks.bind(api)))
-      // Since we have an array of arrays, we need to flatten it
-      return setTasks(tasksArray.flat())
+      // Execute the `getTasks` method for each task name
+      const all = await Promise.all(names.map((name) => api.getTasks(name)))
+      return setTasks(all.flat())
     }
     return setTasks(await api.getTasks())
   }
 
-  const setTasks = (newTasks) => {
-    tasks.value = newTasks
+  const setTasks = (value = []) => {
+    tasks.value = value
     return tasks.value
   }
 
