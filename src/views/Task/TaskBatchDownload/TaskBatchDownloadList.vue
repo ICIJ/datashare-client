@@ -2,31 +2,33 @@
 import { basename } from 'path'
 import { PhDownload } from '@phosphor-icons/vue'
 
-import TaskPage from '@/views/Task/TaskPage'
+import { useTaskSettings } from '@/composables/task-settings'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
-import { useTaskSettings } from '@/composables/task-settings'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import { TASK_NAME } from '@/enums/taskNames'
+import TaskPage from '@/views/Task/TaskPage'
 
-const settingName = 'batch-download'
-
-const { propertiesModelValueOptions } = useTaskSettings(settingName)
+const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 
 function hasZipSize(item) {
   return item.state !== 'ERROR' && item.result?.size !== undefined
 }
+
 function filename(item) {
   return item.args?.batchDownload ? basename(item.args?.batchDownload?.filename) : ''
 }
+
 function batchDownloadExists(item) {
   return item.args?.batchDownload?.exists ?? 'test'
 }
+
 function downloadResultsUrl(item) {
   return `/api/task/${item.id}/result`
 }
 </script>
+
 <template>
   <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
