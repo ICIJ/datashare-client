@@ -4,16 +4,16 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentThread from '@/components/Document/DocumentThread'
+import { useDocumentStore } from '@/store/modules/document'
 
 describe('DocumentThread.vue', () => {
   const { index, es } = esConnectionHelper.build()
 
-  let core, store, wrapper
+  let core, wrapper, documentStore
 
   beforeEach(() => {
-    const api = { elasticsearch: es }
-    core = CoreSetup.init(api).useAll()
-    store = core.store
+    core = CoreSetup.init().useAll()
+    documentStore = useDocumentStore()
   })
 
   describe('getThread', () => {
@@ -49,14 +49,14 @@ describe('DocumentThread.vue', () => {
             .withContentType('application/pdf')
         )
         .commit()
-      await store.dispatch('document/get', { id: 'document_01', index })
+      await documentStore.getDocument({ id: 'document_01', index })
 
       wrapper = shallowMount(DocumentThread, {
         global: {
           plugins: core.plugins
         },
         props: {
-          document: store.state.document.doc
+          document: documentStore.doc
         }
       })
 
@@ -104,13 +104,13 @@ describe('DocumentThread.vue', () => {
             .withContentType('application/vnd.ms-outlook')
         )
         .commit()
-      await store.dispatch('document/get', { id: 'document_01', index })
+      await documentStore.getDocument({ id: 'document_01', index })
       wrapper = shallowMount(DocumentThread, {
         global: {
           plugins: core.plugins
         },
         props: {
-          document: store.state.document.doc
+          document: documentStore.doc
         }
       })
 
