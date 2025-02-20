@@ -1,24 +1,25 @@
 <script setup>
-import { useStore } from 'vuex'
-
 import TaskPage from '@/views/Task/TaskPage'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { getHumanTaskName, TASK_NAME } from '@/enums/taskNames'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useTaskSettings } from '@/composables/task-settings'
+import { useTaskStore } from '@/store/modules/task'
 
-const store = useStore()
+const taskStore = useTaskStore()
 const settingName = 'documents'
 
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
+
 async function stopTask(name) {
-  await store.dispatch('indexing/stopTask', name)
-  await store.dispatch('indexing/getTasks')
+  await taskStore.stopTask(name)
+  await taskStore.getTasks()
 }
 </script>
+
 <template>
   <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
