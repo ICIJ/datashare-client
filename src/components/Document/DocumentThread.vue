@@ -1,7 +1,6 @@
 <script setup>
 import { reactive, ref, computed, onMounted, nextTick, useTemplateRef } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
-import { useStore } from 'vuex'
 import { findIndex, reduce } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
 import bodybuilder from 'bodybuilder'
@@ -11,6 +10,7 @@ import { useWait } from '@/composables/wait'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import EmailString from '@/components/EmailString'
+import { useDocumentStore } from '@/store/modules/document'
 
 const props = defineProps({
   document: {
@@ -23,7 +23,7 @@ const props = defineProps({
 })
 
 const elementRef = useTemplateRef('element')
-const store = useStore()
+const documentStore = useDocumentStore()
 const { core } = useCore()
 const { waitFor, loaderId } = useWait()
 
@@ -116,9 +116,11 @@ async function getThread() {
 }
 
 onMounted(() => {
-  store.subscribe(({ type, payload }) => {
-    if (type === 'document/content') {
-      thread.value.hits[documentIndex.value].content = payload
+  documentStore.$onAction(({ name, after }) => {
+    if (name === 'getContentSlice') {
+      after(({ content }) => {
+        thread.value.hits[documentIndex.value].content = content
+      })
     }
   })
 
