@@ -1,14 +1,14 @@
 import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
 
 import { useCore } from '@/composables/core'
 import { useDownloadsStore } from '@/store/modules/downloads'
+import { useDocumentStore } from '@/store/modules/document'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'
 
 export function useDocumentDownload(document) {
-  const store = useStore()
+  const documentStore = useDocumentStore()
   const downloadsStore = useDownloadsStore()
   const { core } = useCore()
   const { locale, t } = useI18n()
@@ -78,7 +78,7 @@ export function useDocumentDownload(document) {
 
   const downloadTextContent = async function () {
     if (!documentRef.value.content) {
-      await store?.dispatch('document/getContent')
+      await documentStore.getContent()
     }
 
     const { content, title } = documentRef.value
