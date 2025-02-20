@@ -4,25 +4,26 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import DocumentViewTabsMetadata from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata'
+import { useDocumentStore } from '@/store/modules/document'
 
 describe('DocumentViewTabsMetadata.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  let wrapper, core
+  let wrapper, core, documentStore
 
   beforeAll(() => {
-    const api = { elasticsearch: es }
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init().useAll()
+    documentStore = useDocumentStore()
   })
 
   afterEach(() => {
     wrapper.unmount()
-    core.store.commit('document/reset')
+    documentStore.reset()
   })
 
   it('should display document with 7 metadata', async () => {
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id, index)).commit()
-    await core.store.dispatch('document/get', { id, index })
+    await documentStore.getDocument({ id, index })
 
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
@@ -38,7 +39,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
     const id = '/home/datashare/data/foo.txt'
     const document = new IndexedDocument(id, index).withLanguage('FRENCH')
     await letData(es).have(document).commit()
-    await core.store.dispatch('document/get', { id, index })
+    await documentStore.getDocument({ id, index })
 
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
@@ -55,7 +56,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
     const id = '/home/datashare/data/foo.txt'
     const document = new IndexedDocument(id, index)
     await letData(es).have(document).commit()
-    await core.store.dispatch('document/get', { id, index })
+    await documentStore.getDocument({ id, index })
 
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
