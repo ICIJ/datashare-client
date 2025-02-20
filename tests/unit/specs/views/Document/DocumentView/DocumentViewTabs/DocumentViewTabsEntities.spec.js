@@ -1,4 +1,4 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { flushPromises, shallowMount, mount } from '@vue/test-utils'
 import { uniqueId } from 'lodash'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -7,6 +7,8 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewTabsEntities from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import EntityButton from '@/components/Entity/EntityButton'
+import { useDocumentStore } from '@/store/modules/document'
+import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
@@ -19,8 +21,7 @@ vi.mock('lodash', async (importOriginal) => {
 describe('DocumentViewTabsEntities.vue', () => {
   const { index, es: elasticsearch } = esConnectionHelper.build()
   const id = uniqueId('document-')
-  const api = { elasticsearch }
-  let core, wrapper, spy
+  let core, documentStore, wrapper, spy
 
   beforeEach(() => {
     const routes = [
@@ -32,7 +33,7 @@ describe('DocumentViewTabsEntities.vue', () => {
     spy = vi.spyOn(api.elasticsearch, 'getDocumentNamedEntitiesInCategory')
     core = CoreSetup.init(api).useAll().useRouter(routes)
     core.config.set('manageDocuments', true)
-    core.store.commit('document/reset')
+    documentStore = useDocumentStore()
   })
 
   afterEach(() => {
@@ -50,15 +51,15 @@ describe('DocumentViewTabsEntities.vue', () => {
       )
       .commit()
 
-    await core.store.dispatch('document/get', { id, index })
-    await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+    await documentStore.getDocument({ id, index })
+    await documentStore.getFirstPageForNamedEntityInAllCategories()
 
     wrapper = mount(DocumentViewTabsEntities, {
       global: { plugins: core.plugins, renderStubDefaultSlot: true }
     })
 
     expect(wrapper.findAllComponents(EntityButton)).toHaveLength(3)
-    await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories', { filterToken: 'lou' })
+    await documentStore.getFirstPageForNamedEntityInAllCategories({ filterToken: 'lou' })
     const people = wrapper.findAllComponents(EntityButton)
     expect(people).toHaveLength(1)
   })
@@ -74,8 +75,9 @@ describe('DocumentViewTabsEntities.vue', () => {
       )
       .commit()
 
-    await core.store.dispatch('document/get', { id, index })
-    await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+    await documentStore.getDocument({ id, index })
+    await documentStore.getFirstPageForNamedEntityInAllCategories()
+
     wrapper = mount(DocumentViewTabsEntities, {
       global: { plugins: core.plugins }
     })
@@ -93,8 +95,8 @@ describe('DocumentViewTabsEntities.vue', () => {
   it('should contains a specific text when no NER task has been run on that document', async () => {
     await letData(elasticsearch).have(new IndexedDocument(id, index)).commit()
 
-    await core.store.dispatch('document/get', { id, index })
-    await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+    await documentStore.getDocument({ id, index })
+    await documentStore.getFirstPageForNamedEntityInAllCategories()
 
     wrapper = shallowMount(DocumentViewTabsEntities, {
       global: {
@@ -111,8 +113,8 @@ describe('DocumentViewTabsEntities.vue', () => {
   it('should display an error message if no named entities has been found after names finding task', async () => {
     await letData(elasticsearch).have(new IndexedDocument(id, index).withPipeline('CORENLP')).commit()
 
-    await core.store.dispatch('document/get', { id, index })
-    await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+    await documentStore.getDocument({ id, index })
+    await documentStore.getFirstPageForNamedEntityInAllCategories()
 
     wrapper = shallowMount(DocumentViewTabsEntities, {
       global: {
@@ -126,7 +128,7 @@ describe('DocumentViewTabsEntities.vue', () => {
     )
   })
 
-  describe('without mocking the API', () => {
+  describe('with mocking the API', () => {
     beforeEach(() => {
       spy.mockResolvedValue({
         hits: {
@@ -175,14 +177,16 @@ describe('DocumentViewTabsEntities.vue', () => {
         )
         .commit()
 
-      await core.store.dispatch('document/get', { id, index })
-      await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await documentStore.getDocument({ id, index })
+      await documentStore.getFirstPageForNamedEntityInAllCategories()
 
       spy.mockClear()
 
       wrapper = shallowMount(DocumentViewTabsEntities, {
         global: { plugins: core.plugins, renderStubDefaultSlot: true }
       })
+
+      await flushPromises()
 
       const categories = wrapper.findAllComponents(EntitySection)
       expect(spy).toBeCalledTimes(4)
@@ -200,8 +204,8 @@ describe('DocumentViewTabsEntities.vue', () => {
         )
         .commit()
 
-      await core.store.dispatch('document/get', { id, index })
-      await core.store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await documentStore.getDocument({ id, index })
+      await documentStore.getFirstPageForNamedEntityInAllCategories()
 
       spy.mockClear()
 

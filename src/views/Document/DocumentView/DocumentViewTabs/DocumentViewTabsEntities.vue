@@ -1,6 +1,5 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 import { flatten, get, mapValues, pickBy, sumBy, throttle } from 'lodash'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
@@ -8,11 +7,12 @@ import { useCore } from '@/composables/core'
 import { useDocument } from '@/composables/document'
 import { useWait } from '@/composables/wait'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
+import useDocumentStore from '@/store/modules/document'
 
 const { document, documentRoute } = useDocument()
 const { wait, waitFor, loaderId } = useWait()
 const { core } = useCore()
-const store = useStore()
+const documentStore = useDocumentStore()
 const filterToken = ref(null)
 
 const mustExtractEntities = computed(() => canManageDocuments.value && !hasNerTags.value)
@@ -21,7 +21,7 @@ const loadingNamedEntities = computed(() => wait.is(loaderId))
 const hasNerTags = computed(() => document.value.hasNerTags)
 const hasEntities = computed(() => sumBy(categories.value, getCategoryTotal))
 
-const namedEntitiesPaginatedByCategories = computed(() => store.state.document.namedEntitiesPaginatedByCategories)
+const namedEntitiesPaginatedByCategories = computed(() => documentStore.namedEntitiesPaginatedByCategories)
 const namedEntitiesByCategories = computed(() => {
   const namedEntitiesByCategories = mapValues(namedEntitiesPaginatedByCategories.value, (pages) => {
     return flatten(pages.map((page) => page.hits))
@@ -46,21 +46,21 @@ const hitsWithRoute = (hits) => {
   }))
 }
 
-const categories = computed(() => store.getters['document/categories'])
+const categories = computed(() => documentStore.categories)
 const getCategoryTotal = (category) => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
 const categoryIsNotEmpty = (category) => !!getCategoryTotal(category)
 const categoryHasNextPage = (category) => {
-  return getCategoryTotal(category) > store.getters['document/countNamedEntitiesInCategory'](category)
+  return getCategoryTotal(category) > documentStore.countNamedEntitiesInCategory(category)
 }
 
 const getNextPageInCategory = async (category) => {
   if (!loadingNamedEntities.value) {
-    return store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken: filterToken.value })
+    return documentStore.getNextPageForNamedEntityInCategory({ category, filterToken: filterToken.value })
   }
 }
 
 const getFirstPageInAllCategories = waitFor(loaderId, async () => {
-  await store.dispatch('document/getFirstPageForNamedEntityInAllCategories', { filterToken: filterToken.value })
+  await documentStore.getFirstPageForNamedEntityInAllCategories({ filterToken: filterToken.value })
 })
 
 const getFirstPageInAllCategoriesWithThrottle = throttle(getFirstPageInAllCategories, 1000)
