@@ -1,314 +1,583 @@
-import { compact, concat, findIndex, flattenDeep, get, keys, map, groupBy, sortBy, sumBy, uniqBy, values } from 'lodash'
+import { defineStore } from 'pinia'
+import { ref, reactive, computed } from 'vue'
+import { compact, findIndex, flattenDeep, get, map, groupBy, sortBy, sumBy, uniqBy } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
+import { apiInstance as api } from '@/api/apiInstance'
 
-export function initialState() {
-  return {
-    doc: null,
-    idAndRouting: null,
-    isContentLoaded: false,
-    isRecommended: false,
-    namedEntitiesPaginatedByCategories: {
-      PERSON: [],
-      ORGANIZATION: [],
-      LOCATION: [],
-      EMAIL: []
-    },
-    parentDocument: null,
-    recommendedBy: [],
-    rootDocument: null,
-    showTranslatedContent: true,
-    tags: []
+/**
+ * Document store for managing document data, content, tags, named entities,
+ * and recommendations.
+ */
+export const useDocumentStore = defineStore('documentStore', () => {
+  // The current document.
+  const doc = ref(null)
+  // Document identification and routing information.
+  const idAndRouting = ref(null)
+  // Indicates whether the document content is loaded.
+  const isContentLoaded = ref(false)
+  // Indicates whether the document is recommended.
+  const isRecommended = ref(false)
+  // Named entities paginated by categories.
+  const namedEntitiesPaginatedByCategories = reactive({
+    PERSON: [],
+    ORGANIZATION: [],
+    LOCATION: [],
+    EMAIL: []
+  })
+  // The parent document.
+  const parentDocument = ref(null)
+  // Array of user IDs who recommended the document.
+  const recommendedBy = ref([])
+  // The root document.
+  const rootDocument = ref(null)
+  // Flag indicating whether to show translated content.
+  const showTranslatedContent = ref(true)
+  // Array of tags.
+  const tags = ref([])
+
+  /**
+   * Returns the total count of named entities in a given category.
+   * @param {string} category - The entity category.
+   * @returns {number} The total count.
+   */
+  const countNamedEntitiesInCategory = (category) => {
+    const pages = get(namedEntitiesPaginatedByCategories, [category], [])
+    return sumBy(pages, (page) => get(page, 'hits.length', 0))
   }
-}
 
-export const state = initialState()
-
-export const getters = {
-  countNamedEntitiesInCategory(state) {
-    return (category) => {
-      const pages = get(state, ['namedEntitiesPaginatedByCategories', category], [])
-      // Sum up all page size
-      return sumBy(pages, (page) => get(page, 'hits.length', 0))
-    }
-  },
-  namedEntities(state) {
-    const categoriesPages = values(state.namedEntitiesPaginatedByCategories)
+  /**
+   * Returns a flat array of all named entities across categories.
+   * @returns {Array} An array of named entities.
+   */
+  const namedEntities = computed(() => {
+    const categoriesPages = Object.values(namedEntitiesPaginatedByCategories)
     const hits = categoriesPages.map((pages) => pages.map((page) => page.hits))
     return flattenDeep(hits)
-  },
-  categories(state) {
-    return keys(state.namedEntitiesPaginatedByCategories)
-  }
-}
+  })
 
-export const mutations = {
-  reset(state) {
-    const s = initialState()
-    const persistedFields = ['showTranslatedContent']
-    persistedFields.forEach((key) => delete s[key])
-    Object.keys(s).forEach((key) => {
-      state[key] = s[key]
-    })
-  },
-  idAndRouting(state, idAndRouting) {
-    mutations.reset(state)
-    state.idAndRouting = idAndRouting
-  },
-  doc(state, raw) {
+  /**
+   * Returns the list of named entity categories.
+   * @returns {Array<string>} An array of category names.
+   */
+  const categories = computed(() => Object.keys(namedEntitiesPaginatedByCategories))
+
+  /**
+   * Resets the store state to its initial values (except persisted fields).
+   */
+  function reset() {
+    doc.value = null
+    idAndRouting.value = null
+    isContentLoaded.value = false
+    isRecommended.value = false
+    namedEntitiesPaginatedByCategories.PERSON = []
+    namedEntitiesPaginatedByCategories.ORGANIZATION = []
+    namedEntitiesPaginatedByCategories.LOCATION = []
+    namedEntitiesPaginatedByCategories.EMAIL = []
+    parentDocument.value = null
+    recommendedBy.value = []
+    rootDocument.value = null
+    tags.value = []
+  }
+
+  /**
+   * Sets the document identification and routing, then resets the state.
+   * @param {object} data - The document id and routing info.
+   */
+  function setIdAndRouting(data) {
+    reset()
+    idAndRouting.value = data
+  }
+
+  /**
+   * Sets the document by instantiating it from raw data.
+   * @param {object|null} raw - The raw document data.
+   */
+  function setDoc(raw) {
     if (raw !== null) {
-      state.doc = EsDocList.instantiate(raw)
-      state.isContentLoaded = state.doc.hasContent
+      doc.value = EsDocList.instantiate(raw)
+      isContentLoaded.value = doc.value.hasContent
     } else {
-      state.doc = null
+      doc.value = null
     }
-  },
-  content(state, content = null) {
-    if (state.doc) {
-      state.doc.content = content
-      state.isContentLoaded = true
+  }
+
+  /**
+   * Sets the document content.
+   * @param {string|null} content - The document content.
+   */
+  function setContent(content = null) {
+    if (doc.value) {
+      doc.value.content = content
+      isContentLoaded.value = true
     }
-  },
-  translations(state, translations = []) {
-    if (state.doc) {
-      state.doc.translations = translations
+  }
+
+  /**
+   * Sets the document translations.
+   * @param {Array} translations - The translations array.
+   */
+  function setTranslations(translations = []) {
+    if (doc.value) {
+      doc.value.translations = translations
     }
-  },
-  tags(state, tags = []) {
-    state.tags = tags
-  },
-  namedEntities(state, raw) {
-    state.namedEntities = new EsDocList(raw).hits
-  },
-  namedEntitiesPageInCategory(state, { category, page }) {
-    if (state.namedEntitiesPaginatedByCategories[category]) {
-      state.namedEntitiesPaginatedByCategories[category].push(page)
+  }
+
+  /**
+   * Sets the document tags.
+   * @param {Array} newTags - The new tags array.
+   */
+  function setTags(newTags = []) {
+    tags.value = newTags
+  }
+
+  /**
+   * Adds a page to the named entities for a specified category.
+   * @param {object} payload
+   * @param {string} payload.category - The category name.
+   * @param {object} payload.page - The page to add.
+   */
+  function addNamedEntitiesPage({ category, page }) {
+    if (namedEntitiesPaginatedByCategories[category]) {
+      namedEntitiesPaginatedByCategories[category].push(page)
     }
-  },
-  namedEntitiesPagesInCategory(state, { category, pages = [] } = {}) {
-    state.namedEntitiesPaginatedByCategories[category] = pages
-  },
-  parentDocument(state, raw) {
+  }
+
+  /**
+   * Replaces the pages for named entities in a category.
+   * @param {object} payload
+   * @param {string} payload.category - The category name.
+   * @param {Array} [payload.pages=[]] - The new pages.
+   */
+  function setNamedEntitiesPages({ category, pages = [] } = {}) {
+    namedEntitiesPaginatedByCategories[category] = pages
+  }
+
+  /**
+   * Sets the parent document by instantiating it from raw data.
+   * @param {object|null} raw - The raw parent document data.
+   * @returns {object|null} The instantiated parent document.
+   */
+  function setParentDocument(raw) {
     if (raw !== null) {
-      state.parentDocument = EsDocList.instantiate(raw)
-      state.doc.parent = raw
+      parentDocument.value = EsDocList.instantiate(raw)
+      if (doc.value) doc.value.parent = raw
     } else {
-      state.parentDocument = null
+      parentDocument.value = null
     }
-    return state.parentDocument
-  },
-  rootDocument(state, raw) {
+    return parentDocument.value
+  }
+
+  /**
+   * Sets the root document by instantiating it from raw data.
+   * @param {object|null} raw - The raw root document data.
+   * @returns {object|null} The instantiated root document.
+   */
+  function setRootDocument(raw) {
     if (raw !== null) {
-      state.rootDocument = EsDocList.instantiate(raw)
-      state.doc.root = raw
+      rootDocument.value = EsDocList.instantiate(raw)
+      if (doc.value) doc.value.root = raw
     } else {
-      state.rootDocument = null
+      rootDocument.value = null
     }
-    return state.rootDocument
-  },
-  toggleShowTranslatedContent(state, toggle = null) {
-    state.showTranslatedContent = toggle !== null ? toggle : !state.showTranslatedContent
-  },
-  addTag(state, { label, userId }) {
+    return rootDocument.value
+  }
+
+  /**
+   * Toggles the showTranslatedContent flag.
+   * @param {boolean|null} toggle - If provided, sets the flag to this value; otherwise toggles it.
+   */
+  function toggleShowTranslatedContent(toggle = null) {
+    showTranslatedContent.value = toggle !== null ? toggle : !showTranslatedContent.value
+  }
+
+  /**
+   * Adds a tag to the document.
+   * @param {object} payload
+   * @param {string} payload.label - The tag label (space separated).
+   * @param {string|number} payload.userId - The user ID.
+   */
+  function addTag({ label, userId }) {
     const user = { id: userId }
     const creationDate = Date.now()
-    const tags = compact(label.split(' ')).map((label) => ({ label, user, creationDate }))
-    state.tags = uniqBy(concat(state.tags, tags), 'label')
-  },
-  deleteTag(state, label) {
-    state.tags.splice(findIndex(state.tags, { label }), 1)
-  },
-  isRecommended(state, isRecommended) {
-    state.isRecommended = isRecommended
-  },
-  recommendedBy(state, recommendedBy = []) {
-    state.recommendedBy = recommendedBy
-  },
-  markAsRecommended(state, userId) {
-    state.recommendedBy.push(userId)
-  },
-  unmarkAsRecommended(state, userId) {
-    const index = state.recommendedBy.indexOf(userId)
-    if (index > -1) {
-      state.recommendedBy.splice(index, 1)
+    const words = compact(label.split(' '))
+    const newTags = words.map((label) => ({ label, user, creationDate }))
+    tags.value = uniqBy(tags.value.concat(newTags), 'label')
+  }
+
+  /**
+   * Deletes a tag from the document.
+   * @param {string} label - The tag label to remove.
+   */
+  function deleteTag(label) {
+    const idx = findIndex(tags.value, { label })
+    if (idx > -1) {
+      tags.value.splice(idx, 1)
     }
   }
-}
 
-function actionBuilder(api) {
-  return {
-    async get({ commit, state }, idAndRouting) {
+  /**
+   * Sets the recommendation status.
+   * @param {boolean} value - True if recommended, false otherwise.
+   */
+  function recommend(value) {
+    isRecommended.value = value
+  }
+
+  /**
+   * Sets the list of users who recommended the document.
+   * @param {Array} arr - An array of user IDs.
+   */
+  function recommendBy(arr = []) {
+    recommendedBy.value = arr
+  }
+
+  /**
+   * Marks the document as recommended by a user.
+   * @param {string|number} userId - The user ID.
+   */
+  function markAsRecommended(userId) {
+    recommendedBy.value.push(userId)
+  }
+
+  /**
+   * Unmarks the document as recommended for a user.
+   * @param {string|number} userId - The user ID.
+   */
+  function unmarkAsRecommended(userId) {
+    const idx = recommendedBy.value.indexOf(userId)
+    if (idx > -1) {
+      recommendedBy.value.splice(idx, 1)
+    }
+  }
+
+  /**
+   * Fetches a document without content and updates the store.
+   * @param {object} data - The document id and routing info.
+   * @param {string} data.id - The document ID.
+   * @param {string} data.index - The document index.
+   * @param {string} data.routing - The document routing.
+   * @returns {Promise<object|null>} The fetched document.
+   */
+  async function getDocument({ id, index, routing }) {
+    try {
+      const fetchedDoc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
+      setIdAndRouting({ id, index, routing })
+      setDoc(fetchedDoc)
+    } catch (error) {
+      setDoc(null)
+    }
+    return doc.value
+  }
+
+  /**
+   * Fetches the document content and updates the store.
+   * @returns {Promise<string|undefined>} The fetched content.
+   */
+  async function getContent() {
+    if (doc.value !== null) {
+      const { id, routing } = idAndRouting.value
+      const { index } = doc.value
+      const fetched = await api.elasticsearch.getDocumentWithContent(index, id, routing)
+      const translations = get(fetched, '_source.content_translated')
+      const content = get(fetched, '_source.content')
+      setTranslations(translations)
+      setContent(content)
+      return content
+    }
+  }
+
+  /**
+   * Retrieves a slice of the document content.
+   * @param {object} options
+   * @param {number} options.offset - The content offset.
+   * @param {number} options.limit - The content limit.
+   * @param {string} options.targetLanguage - The target language.
+   * @returns {Promise<object>} The document slice.
+   */
+  function getContentSlice({ offset, limit, targetLanguage }) {
+    if (doc.value !== null) {
+      const { id, routing } = idAndRouting.value
+      const { index } = doc.value
+      const o = offset ?? 0
+      const l = limit ?? 0
+      return api.getDocumentSlice(index, id, o, l, targetLanguage, routing)
+    }
+  }
+
+  /**
+   * Updates the document content.
+   * @param {string} content - The new content.
+   * @returns {Promise<void>}
+   */
+  async function setDocumentContent(content) {
+    if (doc.value !== null) {
+      setContent(content)
+    }
+  }
+
+  /**
+   * Fetches the maximum content offset for the document.
+   * @param {object} options
+   * @param {string} options.targetLanguage - The target language.
+   * @returns {Promise<number>} The maximum offset.
+   */
+  async function getContentMaxOffset({ targetLanguage }) {
+    if (doc.value !== null) {
+      const { id, routing } = idAndRouting.value
+      const { index } = doc.value
+      const slice = await api.getDocumentSlice(index, id, 0, 0, targetLanguage, routing)
+      return slice.maxOffset
+    }
+  }
+
+  /**
+   * Searches for occurrences of a query in the document.
+   * @param {object} options
+   * @param {string} options.query - The search query.
+   * @param {string} options.targetLanguage - The target language.
+   * @returns {Promise<object>} The search result.
+   */
+  async function searchOccurrences({ query, targetLanguage }) {
+    if (doc.value !== null) {
+      const { id, routing } = idAndRouting.value
+      const { index } = doc.value
+      return api.searchDocument(index, id, query, targetLanguage, routing)
+    }
+    return { count: 0, offsets: [] }
+  }
+
+  /**
+   * Fetches the parent document (if applicable) and updates the store.
+   * @returns {Promise<object|null>} The parent document.
+   */
+  async function getParent() {
+    if (doc.value !== null && doc.value.raw._source.extractionLevel > 0) {
       try {
-        const { id, index, routing } = idAndRouting
-        const doc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
-        commit('idAndRouting', idAndRouting)
-        commit('doc', doc)
-      } catch (_) {
-        commit('doc', null)
+        const { index } = doc.value
+        const { parentDocument: id, rootDocument: routing } = doc.value.raw._source
+        const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
+        setParentDocument(fetched)
+      } catch (error) {
+        setParentDocument(null)
       }
-      return state.doc
-    },
-    async getContent({ commit, state }) {
-      if (state.doc !== null) {
-        const { id, routing } = state.idAndRouting
-        const { index } = state.doc
-        const doc = await api.elasticsearch.getDocumentWithContent(index, id, routing)
-        const translations = get(doc, '_source.content_translated')
-        const content = get(doc, '_source.content')
-        commit('translations', translations)
-        commit('content', content)
-        return content
+    }
+    return parentDocument.value
+  }
+
+  /**
+   * Fetches the root document (if applicable) and updates the store.
+   * @returns {Promise<object|null>} The root document.
+   */
+  async function getRoot() {
+    if (doc.value !== null && doc.value.raw._source.extractionLevel > 0) {
+      try {
+        const { index } = doc.value
+        const { rootDocument: id } = doc.value.raw._source
+        const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, id)
+        setRootDocument(fetched)
+      } catch (error) {
+        setRootDocument(null)
       }
-    },
-    getContentSlice({ state }, { offset, limit, targetLanguage }) {
-      if (state.doc !== null) {
-        const { id, routing } = state.idAndRouting
-        const { index } = state.doc
-        const o = offset ?? 0
-        const l = limit ?? 0
-        return api.getDocumentSlice(index, id, o, l, targetLanguage, routing)
-      }
-    },
-    async setContent({ commit, state }, content) {
-      if (state.doc !== null) {
-        commit('content', content)
-      }
-    },
-    async getContentMaxOffset({ state }, { targetLanguage }) {
-      if (state.doc !== null) {
-        const { id, routing } = state.idAndRouting
-        const { index } = state.doc
-        const slice = await api.getDocumentSlice(index, id, 0, 0, targetLanguage, routing)
-        return slice.maxOffset
-      }
-    },
-    async searchOccurrences({ state }, { query, targetLanguage }) {
-      if (state.doc !== null) {
-        const { id, routing } = state.idAndRouting
-        const { index } = state.doc
-        return api.searchDocument(index, id, query, targetLanguage, routing)
-      }
-      return { count: 0, offsets: [] }
-    },
-    async getParent({ commit, state }) {
-      if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
-        try {
-          const { index } = state.doc
-          const { parentDocument: id, rootDocument: routing } = state.doc.raw._source
-          const doc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
-          commit('parentDocument', doc)
-        } catch (_) {
-          commit('parentDocument', null)
-        }
-      }
-      return state.parentDocument
-    },
-    async getRoot({ commit, state }) {
-      if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
-        try {
-          const { index } = state.doc
-          const { rootDocument: id } = state.doc.raw._source
-          const doc = await api.elasticsearch.getDocumentWithoutContent(index, id, id)
-          commit('rootDocument', doc)
-        } catch (_) {
-          commit('rootDocument', null)
-        }
-      }
-      return state.rootDocument
-    },
-    getFirstPageForNamedEntityInCategory({ dispatch, commit }, { category, filterToken = null } = {}) {
-      commit('namedEntitiesPagesInCategory', { category, pages: [] })
-      return dispatch('getNextPageForNamedEntityInCategory', { category, filterToken })
-    },
-    async getFirstPageForNamedEntityInAllCategories({ dispatch, getters }, { filterToken = null } = {}) {
-      return Promise.all(
-        getters.categories.map((category) =>
-          dispatch('getFirstPageForNamedEntityInCategory', { filterToken, category })
-        )
+    }
+    return rootDocument.value
+  }
+
+  /**
+   * Fetches the first page of named entities for a specified category.
+   * @param {object} options
+   * @param {string} options.category - The category name.
+   * @param {string|null} [options.filterToken=null] - An optional filter token.
+   * @returns {Promise<object>} The first page result.
+   */
+  async function getFirstPageForNamedEntityInCategory({ category, filterToken = null } = {}) {
+    setNamedEntitiesPages({ category, pages: [] })
+    return getNextPageForNamedEntityInCategory({ category, filterToken })
+  }
+
+  /**
+   * Fetches the first page of named entities for all categories.
+   * @param {object} options
+   * @param {string|null} [options.filterToken=null] - An optional filter token.
+   * @returns {Promise<Array>} An array of first page results for each category.
+   */
+  async function getFirstPageForNamedEntityInAllCategories({ filterToken = null } = {}) {
+    return Promise.all(
+      categories.value.map((category) => getFirstPageForNamedEntityInCategory({ filterToken, category }))
+    )
+  }
+
+  /**
+   * Fetches the next page of named entities for a given category.
+   * @param {object} options
+   * @param {string} options.category - The category name.
+   * @param {string|null} [options.filterToken=null] - An optional filter token.
+   * @returns {Promise<void>}
+   */
+  async function getNextPageForNamedEntityInCategory({ category, filterToken = null } = {}) {
+    try {
+      const from = countNamedEntitiesInCategory(category)
+      const index = doc.value.index
+      const { id, routing } = doc.value
+      const raw = await api.elasticsearch.getDocumentNamedEntitiesInCategory(
+        index,
+        id,
+        routing,
+        from,
+        50,
+        category,
+        filterToken
       )
-    },
-    async getNextPageForNamedEntityInCategory({ state, getters, commit }, { category, filterToken = null } = {}) {
-      try {
-        const from = getters.countNamedEntitiesInCategory(category)
-        const index = state.doc.index
-        const { id, routing } = state.doc
-        const raw = await api.elasticsearch.getDocumentNamedEntitiesInCategory(
-          index,
-          id,
-          routing,
-          from,
-          50,
-          category,
-          filterToken
-        )
-        const page = new EsDocList(raw)
-        if (from === 0) {
-          const pages = [page]
-          commit('namedEntitiesPagesInCategory', { category, pages })
-        } else {
-          commit('namedEntitiesPageInCategory', { category, page })
-        }
-      } catch (_) {}
-    },
-    async getTags({ state, commit }) {
-      try {
-        const tags = await api.getTags(state.doc.index, state.doc.id)
-        commit('tags', tags)
-      } catch (_) {
-        commit('tags')
+      const page = new EsDocList(raw)
+      if (from === 0) {
+        setNamedEntitiesPages({ category, pages: [page] })
+      } else {
+        addNamedEntitiesPage({ category, page })
       }
-      return state.tags
-    },
-    async addTag({ dispatch }, { documents, label }) {
-      await dispatch('addTags', { documents, labels: compact(label.split(' ')) })
-    },
-    async addTags({ dispatch }, { documents, labels }) {
-      const grouped = groupBy(documents, 'index')
-      for (const [index, subset] of Object.entries(grouped)) {
-        await api.tagDocuments(index, map(subset, 'id'), labels)
-      }
-      await dispatch('getTags')
-    },
-    async deleteTag({ dispatch }, { documents, label }) {
-      const grouped = groupBy(documents, 'index')
-      for (const [index, subset] of Object.entries(grouped)) {
-        await api.untagDocuments(index, map(subset, 'id'), [label])
-      }
-      await dispatch('getTags')
-    },
-    async toggleAsRecommended({ state, dispatch }, userId) {
-      try {
-        if (state.isRecommended) {
-          await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
-        } else {
-          await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
-        }
-      } finally {
-        await dispatch('getRecommendationsByDocuments', userId)
-      }
-    },
-    async getRecommendationsByDocuments({ state, commit }, userId) {
-      try {
-        const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
-        commit('recommendedBy', map(sortBy(get(recommendedBy, 'aggregates', []), 'item.id'), 'item.id'))
-        const index = state.recommendedBy.indexOf(userId)
-        commit('isRecommended', index > -1)
-      } catch (_) {
-        commit('recommendedBy', [])
-        commit('isRecommended', false)
-      }
-      return state.recommendedBy
+    } catch (error) {
+      // Fail silently on error
     }
   }
-}
 
-export const documentStoreBuilder = function (api) {
-  const actions = actionBuilder(api)
-  return {
-    namespaced: true,
-    getters,
-    state,
-    mutations,
-    actions
+  /**
+   * Fetches tags for the document and updates the store.
+   * @returns {Promise<Array>} The array of tags.
+   */
+  async function getTags() {
+    try {
+      setTags(await api.getTags(doc.value.index, doc.value.id))
+    } catch (error) {
+      setTags([])
+    }
+    return tags.value
   }
-}
+
+  /**
+   * Adds a tag to the document (dispatches multiple tag additions).
+   * @param {object} payload
+   * @param {Array} payload.documents - An array of documents.
+   * @param {string} payload.label - The tag label.
+   */
+  async function addTagAction({ documents, label }) {
+    await addTagsAction({ documents, labels: compact(label.split(' ')) })
+  }
+
+  /**
+   * Adds multiple tags to documents.
+   * @param {object} payload
+   * @param {Array} payload.documents - An array of documents.
+   * @param {Array} payload.labels - An array of tag labels.
+   */
+  async function addTagsAction({ documents, labels }) {
+    const grouped = groupBy(documents, 'index')
+    for (const [index, subset] of Object.entries(grouped)) {
+      await api.tagDocuments(index, map(subset, 'id'), labels)
+    }
+    await getTags()
+  }
+
+  /**
+   * Deletes a tag from documents.
+   * @param {object} payload
+   * @param {Array} payload.documents - An array of documents.
+   * @param {string} payload.label - The tag label to delete.
+   */
+  async function deleteTagAction({ documents, label }) {
+    const grouped = groupBy(documents, 'index')
+    for (const [index, subset] of Object.entries(grouped)) {
+      await api.untagDocuments(index, map(subset, 'id'), [label])
+    }
+    await getTags()
+  }
+
+  /**
+   * Toggles the recommended status of the document.
+   * @param {string|number} userId - The user ID.
+   * @returns {Promise<void>}
+   */
+  async function toggleAsRecommended(userId) {
+    try {
+      if (isRecommended.value) {
+        await api.setUnmarkAsRecommended(doc.value.index, [doc.value.id])
+      } else {
+        await api.setMarkAsRecommended(doc.value.index, [doc.value.id])
+      }
+    } finally {
+      await getRecommendationsByDocuments(userId)
+    }
+  }
+
+  /**
+   * Fetches recommendations for the document and updates the store.
+   * @param {string|number} userId - The user ID.
+   * @returns {Promise<Array>} An array of recommended user IDs.
+   */
+  async function getRecommendationsByDocuments(userId) {
+    try {
+      const recommendedData = await api.getRecommendationsByDocuments(doc.value.index, doc.value.id)
+      const sorted = sortBy(get(recommendedData, 'aggregates', []), 'item.id')
+      recommendBy(map(sorted, 'item.id'))
+      const idx = recommendedBy.value.indexOf(userId)
+      recommend(idx > -1)
+    } catch (error) {
+      recommendBy([])
+      recommend(false)
+    }
+    return recommendedBy.value
+  }
+
+  return {
+    // Expose state variables
+    doc,
+    idAndRouting,
+    isContentLoaded,
+    isRecommended,
+    namedEntitiesPaginatedByCategories,
+    parentDocument,
+    recommendedBy,
+    rootDocument,
+    showTranslatedContent,
+    tags,
+    // Expose getters
+    countNamedEntitiesInCategory,
+    namedEntities,
+    categories,
+    // Expose actions
+    reset,
+    setIdAndRouting,
+    setDoc,
+    setContent,
+    setTranslations,
+    setTags,
+    addNamedEntitiesPage,
+    setNamedEntitiesPages,
+    setParentDocument,
+    setRootDocument,
+    toggleShowTranslatedContent,
+    addTag,
+    deleteTag,
+    recommend,
+    recommendBy,
+    markAsRecommended,
+    unmarkAsRecommended,
+    getDocument,
+    getContent,
+    getContentSlice,
+    setDocumentContent,
+    getContentMaxOffset,
+    searchOccurrences,
+    getParent,
+    getRoot,
+    getFirstPageForNamedEntityInCategory,
+    getFirstPageForNamedEntityInAllCategories,
+    getNextPageForNamedEntityInCategory,
+    getTags,
+    addTagAction,
+    addTagsAction,
+    deleteTagAction,
+    toggleAsRecommended,
+    getRecommendationsByDocuments
+  }
+})
+
+export default useDocumentStore
