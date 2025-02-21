@@ -1,27 +1,38 @@
 import { flushPromises, shallowMount } from '@vue/test-utils'
+import { beforeAll } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentNotes from '@/components/Document/DocumentNotes'
-import { useDocumentNotes } from '@/store/modules/documentNotes'
+import { useDocumentStore, useDocumentNotesStore, useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    retrieveNotes: vi.fn()
+  }
+})
 
 describe('DocumentNotes.vue', () => {
-  let wrapper, plugins, api, store
   const path = '/this/is/a/'
   const project = 'banana-papers'
   const note1 = { note: 'This is a note', project, path: '/this/is/a/', variant: 'warning' }
   const note2 = { note: 'This is a second note', project, path: '/this/is/', variant: 'error' }
 
-  beforeAll(() => {
-    api = { retrieveNotes: vi.fn().mockResolvedValue([]) }
-    const core = CoreSetup.init(api).useAll()
+  let core, wrapper, plugins, documentStore, documentNotesStore, searchStore
 
-    plugins = core.plugins
-    store = core.store
-    store.commit('search/index', project)
+  beforeAll(() => {
+    api.retrieveNotes.mockResolvedValue([])
   })
 
   beforeEach(() => {
-    useDocumentNotes(api).reset()
+    core = CoreSetup.init().useAll()
+    plugins = core.plugins
+    searchStore = useSearchStore()
+    searchStore.setIndex(project)
+    documentNotesStore = useDocumentNotesStore()
+    documentNotesStore.reset()
+    documentStore = useDocumentStore()
+    documentStore.setDocument({ _id: 'foo', _index: 'bar' })
   })
 
   it('should NOT display note on document', () => {
