@@ -27,10 +27,10 @@ export const useDocumentStore = defineStore('documentStore', () => {
   })
   // The parent document.
   const parentDocument = ref(null)
-  // Array of user IDs who recommended the document.
-  const recommendedBy = ref([])
   // The root document.
   const rootDocument = ref(null)
+  // Array of user IDs who recommended the document.
+  const recommendedBy = ref([])
   // Flag indicating whether to show translated content.
   const showTranslatedContent = ref(true)
   // Array of tags.
@@ -75,8 +75,8 @@ export const useDocumentStore = defineStore('documentStore', () => {
     namedEntitiesPaginatedByCategories.LOCATION = []
     namedEntitiesPaginatedByCategories.EMAIL = []
     parentDocument.value = null
-    recommendedBy.value = []
     rootDocument.value = null
+    recommendedBy.value = []
     tags.value = []
   }
 
