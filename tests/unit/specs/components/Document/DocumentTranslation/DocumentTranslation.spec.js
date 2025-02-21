@@ -60,7 +60,7 @@ describe('DocumentTranslation.vue', () => {
     core = CoreSetup.init().useAll()
     plugins = core.plugins
     documentStore = useDocumentStore()
-    documentStore.toggleShowTranslatedContent(true)
+    documentStore.toggleTranslatedContent(true)
   })
 
   afterEach(async () => {
