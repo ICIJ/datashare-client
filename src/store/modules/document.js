@@ -11,7 +11,7 @@ import { apiInstance as api } from '@/api/apiInstance'
  */
 export const useDocumentStore = defineStore('documentStore', () => {
   // The current document.
-  const doc = ref(null)
+  const document = ref(null)
   // Document identification and routing information.
   const idAndRouting = ref(null)
   // Indicates whether the document content is loaded.
@@ -66,7 +66,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * Resets the store state to its initial values (except persisted fields).
    */
   function reset() {
-    doc.value = null
+    document.value = null
     idAndRouting.value = null
     isContentLoaded.value = false
     isRecommended.value = false
@@ -95,10 +95,10 @@ export const useDocumentStore = defineStore('documentStore', () => {
    */
   function setDoc(raw) {
     if (raw !== null) {
-      doc.value = EsDocList.instantiate(raw)
-      isContentLoaded.value = doc.value.hasContent
+      document.value = EsDocList.instantiate(raw)
+      isContentLoaded.value = document.value.hasContent
     } else {
-      doc.value = null
+      document.value = null
     }
   }
 
@@ -107,8 +107,8 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @param {string|null} content - The document content.
    */
   function setContent(content = null) {
-    if (doc.value) {
-      doc.value.content = content
+    if (document.value) {
+      document.value.content = content
       isContentLoaded.value = true
     }
   }
@@ -118,8 +118,8 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @param {Array} translations - The translations array.
    */
   function setTranslations(translations = []) {
-    if (doc.value) {
-      doc.value.translations = translations
+    if (document.value) {
+      document.value.translations = translations
     }
   }
 
@@ -161,7 +161,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
   function setParentDocument(raw) {
     if (raw !== null) {
       parentDocument.value = EsDocList.instantiate(raw)
-      if (doc.value) doc.value.parent = raw
+      if (document.value) document.value.parent = raw
     } else {
       parentDocument.value = null
     }
@@ -176,7 +176,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
   function setRootDocument(raw) {
     if (raw !== null) {
       rootDocument.value = EsDocList.instantiate(raw)
-      if (doc.value) doc.value.root = raw
+      if (document.value) document.value.root = raw
     } else {
       rootDocument.value = null
     }
@@ -267,7 +267,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
     } catch (error) {
       setDoc(null)
     }
-    return doc.value
+    return document.value
   }
 
   /**
@@ -275,9 +275,9 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @returns {Promise<string|undefined>} The fetched content.
    */
   async function getContent() {
-    if (doc.value !== null) {
+    if (document.value !== null) {
       const { id, routing } = idAndRouting.value
-      const { index } = doc.value
+      const { index } = document.value
       const fetched = await api.elasticsearch.getDocumentWithContent(index, id, routing)
       const translations = get(fetched, '_source.content_translated')
       const content = get(fetched, '_source.content')
@@ -296,9 +296,9 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @returns {Promise<object>} The document slice.
    */
   function getContentSlice({ offset, limit, targetLanguage }) {
-    if (doc.value !== null) {
+    if (document.value !== null) {
       const { id, routing } = idAndRouting.value
-      const { index } = doc.value
+      const { index } = document.value
       const o = offset ?? 0
       const l = limit ?? 0
       return api.getDocumentSlice(index, id, o, l, targetLanguage, routing)
@@ -311,7 +311,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @returns {Promise<void>}
    */
   async function setDocumentContent(content) {
-    if (doc.value !== null) {
+    if (document.value !== null) {
       setContent(content)
     }
   }
@@ -323,9 +323,9 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @returns {Promise<number>} The maximum offset.
    */
   async function getContentMaxOffset({ targetLanguage }) {
-    if (doc.value !== null) {
+    if (document.value !== null) {
       const { id, routing } = idAndRouting.value
-      const { index } = doc.value
+      const { index } = document.value
       const slice = await api.getDocumentSlice(index, id, 0, 0, targetLanguage, routing)
       return slice.maxOffset
     }
@@ -339,9 +339,9 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @returns {Promise<object>} The search result.
    */
   async function searchOccurrences({ query, targetLanguage }) {
-    if (doc.value !== null) {
+    if (document.value !== null) {
       const { id, routing } = idAndRouting.value
-      const { index } = doc.value
+      const { index } = document.value
       return api.searchDocument(index, id, query, targetLanguage, routing)
     }
     return { count: 0, offsets: [] }
@@ -352,10 +352,10 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @returns {Promise<object|null>} The parent document.
    */
   async function getParent() {
-    if (doc.value !== null && doc.value.raw._source.extractionLevel > 0) {
+    if (document.value !== null && document.value.raw._source.extractionLevel > 0) {
       try {
-        const { index } = doc.value
-        const { parentDocument: id, rootDocument: routing } = doc.value.raw._source
+        const { index } = document.value
+        const { parentDocument: id, rootDocument: routing } = document.value.raw._source
         const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
         setParentDocument(fetched)
       } catch (error) {
@@ -370,10 +370,10 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @returns {Promise<object|null>} The root document.
    */
   async function getRoot() {
-    if (doc.value !== null && doc.value.raw._source.extractionLevel > 0) {
+    if (document.value !== null && document.value.raw._source.extractionLevel > 0) {
       try {
-        const { index } = doc.value
-        const { rootDocument: id } = doc.value.raw._source
+        const { index } = document.value
+        const { rootDocument: id } = document.value.raw._source
         const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, id)
         setRootDocument(fetched)
       } catch (error) {
@@ -417,8 +417,8 @@ export const useDocumentStore = defineStore('documentStore', () => {
   async function getNextPageForNamedEntityInCategory({ category, filterToken = null } = {}) {
     try {
       const from = countNamedEntitiesInCategory(category)
-      const index = doc.value.index
-      const { id, routing } = doc.value
+      const index = document.value.index
+      const { id, routing } = document.value
       const raw = await api.elasticsearch.getDocumentNamedEntitiesInCategory(
         index,
         id,
@@ -445,7 +445,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    */
   async function getTags() {
     try {
-      setTags(await api.getTags(doc.value.index, doc.value.id))
+      setTags(await api.getTags(document.value.index, document.value.id))
     } catch (error) {
       setTags([])
     }
@@ -498,9 +498,9 @@ export const useDocumentStore = defineStore('documentStore', () => {
   async function toggleAsRecommended(userId) {
     try {
       if (isRecommended.value) {
-        await api.setUnmarkAsRecommended(doc.value.index, [doc.value.id])
+        await api.setUnmarkAsRecommended(document.value.index, [document.value.id])
       } else {
-        await api.setMarkAsRecommended(doc.value.index, [doc.value.id])
+        await api.setMarkAsRecommended(document.value.index, [document.value.id])
       }
     } finally {
       await getRecommendationsByDocuments(userId)
@@ -514,7 +514,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    */
   async function getRecommendationsByDocuments(userId) {
     try {
-      const recommendedData = await api.getRecommendationsByDocuments(doc.value.index, doc.value.id)
+      const recommendedData = await api.getRecommendationsByDocuments(document.value.index, document.value.id)
       const sorted = sortBy(get(recommendedData, 'aggregates', []), 'item.id')
       recommendBy(map(sorted, 'item.id'))
       const idx = recommendedBy.value.indexOf(userId)
@@ -528,7 +528,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
 
   return {
     // Expose state variables
-    doc,
+    document,
     idAndRouting,
     isContentLoaded,
     isRecommended,

@@ -56,7 +56,7 @@ describe('DocumentThread.vue', () => {
           plugins: core.plugins
         },
         props: {
-          document: documentStore.doc
+          document: documentStore.document
         }
       })
 
@@ -110,7 +110,7 @@ describe('DocumentThread.vue', () => {
           plugins: core.plugins
         },
         props: {
-          document: documentStore.doc
+          document: documentStore.document
         }
       })
 

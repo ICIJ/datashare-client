@@ -35,14 +35,14 @@ describe('DocumentStore', () => {
 
   it('should define a store module', () => {
     expect(documentStore).toBeDefined()
-    expect(documentStore.doc).toBeDefined()
+    expect(documentStore.document).toBeDefined()
   })
 
   it('should reset the store state', () => {
     documentStore.recommend(true)
     documentStore.reset()
 
-    expect(documentStore.doc).toEqual(null)
+    expect(documentStore.document).toEqual(null)
     expect(documentStore.idAndRouting).toEqual(null)
     expect(documentStore.isContentLoaded).toEqual(false)
     expect(documentStore.isRecommended).toEqual(false)
@@ -52,7 +52,7 @@ describe('DocumentStore', () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await documentStore.getDocument({ id, index })
 
-    expect(documentStore.doc.id).toBe(id)
+    expect(documentStore.document.id).toBe(id)
   })
 
   it('should get the parent document', async () => {
@@ -134,9 +134,9 @@ describe('DocumentStore', () => {
 
       // Retrieve documents
       await documentStore.getDocument({ id: 'doc_01', index })
-      const document01 = documentStore.doc
+      const document01 = documentStore.document
       await documentStore.getDocument({ id: 'doc_02', index })
-      const document02 = documentStore.doc
+      const document02 = documentStore.document
 
       // no document is selected
       documentStore.reset()

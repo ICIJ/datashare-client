@@ -51,7 +51,7 @@ describe('DocumentGlobalSearchTerms.vue', () => {
     core.store.commit('search/query', query)
     const { plugins } = core
     const global = { plugins, renderStubDefaultSlot: true }
-    const props = { document: documentStore.doc }
+    const props = { document: documentStore.document }
     const wrapper = shallowMount(DocumentGlobalSearchTerms, { global, props })
     await flushPromises()
     return wrapper
