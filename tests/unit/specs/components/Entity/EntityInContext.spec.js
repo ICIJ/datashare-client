@@ -5,12 +5,12 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import EntityInContext from '@/components/Entity/EntityInContext'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore, useSearchStore } from '@/store/modules'
 
 describe('EntityInContext.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const api = { elasticsearch: es }
-  let core, documentStore
+  let core, documentStore, searchStore
 
   // A quick function to generate the default props for most tests
   const defaultPropsData = async function ({ mention = 'Lea', excerptLength = 16 } = {}) {
@@ -35,7 +35,8 @@ describe('EntityInContext.vue', () => {
 
   beforeEach(() => {
     core = CoreSetup.init(api).useAll()
-    core.store.commit('search/index', index)
+    searchStore = useSearchStore()
+    searchStore.setIndex(index)
     documentStore = useDocumentStore()
   })
 
