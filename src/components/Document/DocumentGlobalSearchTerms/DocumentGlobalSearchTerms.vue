@@ -1,11 +1,11 @@
 <script setup>
 import { toRef, ref, computed, watch, onBeforeMount } from 'vue'
-import { useStore } from 'vuex'
 import { get, keys, orderBy } from 'lodash'
 
 import DocumentGlobalSearchTermsEntry from './DocumentGlobalSearchTermsEntry'
 
 import { useCore } from '@/composables/core'
+import { useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   document: Object,
@@ -19,10 +19,10 @@ const emit = defineEmits(['select'])
 
 const terms = ref([])
 
-const store = useStore()
+const searchStore = useSearchStore()
 const { core } = useCore()
 
-const queryTerms = computed(() => store.getters['search/retrieveContentQueryTerms'])
+const queryTerms = computed(() => searchStore.retrieveContentQueryTerms)
 const queryTermsWithoutNegation = computed(() => queryTerms.value.filter(({ negation }) => !negation))
 const sortedTerms = computed(() => orderBy(terms.value, ['count', 'metadata', 'tags'], ['desc', 'desc', 'desc']))
 const metadataFields = computed(() => [
