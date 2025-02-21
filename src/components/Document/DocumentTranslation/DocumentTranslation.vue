@@ -44,7 +44,7 @@ const detectedLanguage = computed(() => {
 
 const showTranslatedContent = computed({
   get: () => documentStore.showTranslatedContent,
-  set: (value) => documentStore.toggleShowTranslatedContent(value)
+  set: (value) => documentStore.toggleTranslatedContent(value)
 })
 
 const translation = computed(() => {

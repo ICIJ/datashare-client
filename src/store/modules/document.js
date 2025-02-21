@@ -215,7 +215,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * Toggles the showTranslatedContent flag.
    * @param {boolean|null} toggle - If provided, sets the flag to this value; otherwise toggles it.
    */
-  function toggleShowTranslatedContent(toggle = null) {
+  function toggleTranslatedContent(toggle = null) {
     showTranslatedContent.value = toggle !== null ? toggle : !showTranslatedContent.value
   }
 
@@ -558,7 +558,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
     setNamedEntitiesPages,
     setParentDocument,
     setRootDocument,
-    toggleShowTranslatedContent,
+    toggleTranslatedContent,
     recommend,
     recommendBy,
     markAsRecommended,
