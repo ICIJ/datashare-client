@@ -1,18 +1,18 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { storeBuilder } from '@/store/storeBuilder'
-import { useDownloadsStore } from '@/store/modules/downloads'
+import { useDownloadsStore, useSearchStore } from '@/store/modules'
 
 describe('DownloadsStore', () => {
   const index = 'downloadStoreFoo'
   const anotherIndex = 'downloadStoreBar'
-  let store, downloadsStore
+  let downloadsStore, searchStore
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    store = storeBuilder()
-    store.commit('search/indices', index)
     downloadsStore = useDownloadsStore({ isDownloadAllowed: () => true })
+    searchStore = useSearchStore()
+    searchStore = useSearchStore()
+    searchStore.setIndex(index)
   })
 
   it('should set the download status for the given index', async () => {
