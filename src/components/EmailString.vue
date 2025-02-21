@@ -1,8 +1,9 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
-import { useStore } from 'vuex'
 import { PhosphorIcon } from '@icij/murmur-next'
 import trim from 'lodash/trim'
+
+import { useSearchStore } from '@/store/modules'
 
 const EMAIL_REGEX = /(.+)\<(.+)\>/i
 
@@ -30,9 +31,9 @@ const nameOrRawEmail = computed(() => {
   return nameWithoutEmail.value || props.email
 })
 
-const store = useStore()
+const searchStore = useSearchStore()
 
-const indices = computed(() => store.state.search.indices)
+const indices = computed(() => searchStore.indices)
 
 const qReceived = computed(() => {
   const field = 'metadata.tika_metadata_message_to'
