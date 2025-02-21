@@ -4,6 +4,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import PathTree from '@/components/PathTree/PathTree'
+import { useSearchStore } from '@/store/modules'
 
 const HOME_TREE = {
   name: '/home/foo',
@@ -37,12 +38,13 @@ describe('PathTree.vue', () => {
   describe('Posix', () => {
     const { index, es } = esConnectionHelper.build()
     const api = { tree: vi.fn(), elasticsearch: es }
-    let wrapper, core
+    let wrapper, core, searchStore
 
     beforeEach(() => {
       core = CoreSetup.init(api).useAll()
-      core.store.commit('search/index', index)
       core.config.set('dataDir', '/home/foo')
+      searchStore = useSearchStore()
+      searchStore.setIndex(index)
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE)
 
@@ -153,11 +155,12 @@ describe('PathTree.vue', () => {
   describe('Windows', () => {
     const { index, es } = esConnectionHelper.build('spec', true)
     const api = { tree: vi.fn(), elasticsearch: es }
-    let wrapper, core
+    let wrapper, core, searchStore
 
     beforeEach(() => {
       core = CoreSetup.init(api).useAll()
-      core.store.commit('search/index', index)
+      searchStore = useSearchStore()
+      searchStore.setIndex(index)
       core.config.set('dataDir', 'C:\\home\\foo')
       core.config.set('pathSeparator', '\\')
 
