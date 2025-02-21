@@ -18,7 +18,7 @@ export const useDocument = function (element) {
 
   const fetchDocument = waitFor(loaderId, async function ({ index, id, routing } = {}) {
     await documentStore.getDocument({ index, id, routing })
-    await documentStore.getParent()
+    await documentStore.getParentDocument()
     await documentStore.getRootDocument()
     await documentStore.getTags()
     await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())

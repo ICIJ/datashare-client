@@ -354,7 +354,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * Fetches the parent document (if applicable) and updates the store.
    * @returns {Promise<object|null>} The parent document.
    */
-  async function getParent() {
+  async function getParentDocument() {
     if (document.value !== null && document.value.raw._source.extractionLevel > 0) {
       try {
         const { index } = document.value
