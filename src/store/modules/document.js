@@ -93,7 +93,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * Sets the document by instantiating it from raw data.
    * @param {object|null} raw - The raw document data.
    */
-  function setDoc(raw) {
+  function setDocument(raw) {
     if (raw !== null) {
       document.value = EsDocList.instantiate(raw)
       isContentLoaded.value = document.value.hasContent
@@ -263,9 +263,9 @@ export const useDocumentStore = defineStore('documentStore', () => {
     try {
       const fetchedDoc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
       setIdAndRouting({ id, index, routing })
-      setDoc(fetchedDoc)
+      setDocument(fetchedDoc)
     } catch (error) {
-      setDoc(null)
+      setDocument(null)
     }
     return document.value
   }
