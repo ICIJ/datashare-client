@@ -4,7 +4,7 @@ import { sortBy } from 'lodash'
 
 import { useCore } from '@/composables/core'
 import { useSearchFilter } from '@/composables/search-filter'
-import { useRecommendedStore } from '@/store/modules/recommended'
+import { useRecommendedStore } from '@/store/modules'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'

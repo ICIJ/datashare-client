@@ -1,4 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -6,8 +7,8 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
-import { useRecommendedStore } from '@/store/modules/recommended'
-import { apiInstance } from '@/api/apiInstance'
+import { useSearchStore, useRecommendedStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -40,7 +41,7 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 
 describe('FilterTypeRecommendedBy.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  let core, wrapper, recommendedStore
+  let core, wrapper, recommendedStore, searchStore
 
   beforeAll(async () => {
     await letData(es).have(new IndexedDocument('01', index)).commit()
@@ -49,18 +50,21 @@ describe('FilterTypeRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
+    setActivePinia(createPinia())
     core = CoreSetup.init().useAll().useRouter()
     recommendedStore = useRecommendedStore()
-    core.store.commit('search/index', index)
+    searchStore = useSearchStore()
+    searchStore.setIndex(index)
+
     window.datashare = core
 
-    const filter = core.store.getters['search/getFilter']({ name: 'recommendedBy' })
+    const filter = searchStore.getFilter({ name: 'recommendedBy' })
     const props = { filter }
     wrapper = await mount(FilterTypeRecommendedBy, { global: { plugins: core.plugins }, props })
     await wrapper.findComponent(FilterType).vm.aggregate()
   })
 
-  afterEach(() => {
+  afterAll(() => {
     vi.clearAllMocks()
   })
 
@@ -69,7 +73,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
   })
 
   it('should load users who recommended documents in this project', () => {
-    expect(apiInstance.getRecommendationsByProject).toBeCalledWith(index)
+    expect(api.getRecommendationsByProject).toBeCalledWith(index)
     expect(recommendedStore.byUsers).toEqual([
       { user: 'paul', count: 2 },
       { user: 'local', count: 1 },
@@ -90,9 +94,9 @@ describe('FilterTypeRecommendedBy.vue', () => {
   })
 
   it('should select no users', async () => {
-    core.store.commit('search/addFilterValue', { name: 'recommendedBy', value: [] })
+    searchStore.addFilterValue({ name: 'recommendedBy', value: [] })
     await flushPromises()
-    expect(apiInstance.getDocumentsRecommendedBy).toBeCalledTimes(0)
+    expect(api.getDocumentsRecommendedBy).toBeCalledTimes(0)
     expect(recommendedStore.documents).toEqual([])
   })
 })
