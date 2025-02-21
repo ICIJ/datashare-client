@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetText from '@/components/Widget/WidgetText'
@@ -29,7 +29,7 @@ describe('WidgetText.vue', () => {
     const widget = { content: 'Hello world' }
     const props = { widget }
     const wrapper = shallowMount(WidgetText, { global: { plugins }, props })
-    await new Promise((resolve) => setImmediate(resolve))
+    await flushPromises()
     expect(wrapper.find('.widget__content').text()).toBe('Hello world')
   })
 
