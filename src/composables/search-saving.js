@@ -1,10 +1,10 @@
 import { computed, h } from 'vue'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { useModalController } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/core'
 import SearchSavingModal from '@/components/Search/SearchSavingModal'
+import { useSearchStore } from '@/store/modules'
 
 export function useSearchSavingModal(project) {
   const modalController = useModalController()
@@ -30,14 +30,14 @@ export function useSearchSavingModal(project) {
 }
 
 export function useSearchSaving() {
-  const store = useStore()
-  const indices = computed(() => store.state.search.indices)
+  const searchStore = useSearchStore()
+  const indices = computed(() => searchStore.indices)
   const { core } = useCore()
   const { resolve } = useRouter()
 
   const searchRoute = computed(() => {
     const from = 0
-    const routeQuery = store.getters['search/toRouteQuery']()
+    const routeQuery = searchStore.toRouteQuery
     const query = { ...routeQuery, from }
     return resolve({ name: 'search', query })
   })
