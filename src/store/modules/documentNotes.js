@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 
 import { apiInstance } from '@/api/apiInstance'
 
-export const useDocumentNotes = (api = apiInstance) => {
+export const useDocumentNotesStore = (api = apiInstance) => {
   return defineStore('documentNotes', () => {
     const notes = reactive({})
 
