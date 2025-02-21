@@ -1,11 +1,11 @@
 <script setup>
-import { useStore } from 'vuex'
 import { computed, ref } from 'vue'
 
 import DocumentCarousel from '@/components/Document/DocumentCarousel/DocumentCarousel'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
 import { useDocument } from '@/composables/document'
 import { useSearchNav } from '@/composables/search-nav'
+import { useSearchStore } from '@/store/modules'
 
 const { size } = defineProps({
   size: {
@@ -26,8 +26,8 @@ const {
 
 const { isActive, document, watchDocument } = useDocument()
 
-const store = useStore()
-const total = computed(() => store.getters['search/total'])
+const searchStore = useSearchStore()
+const total = computed(() => searchStore.total)
 const carouselEntries = ref([])
 const backward = ref(false)
 
