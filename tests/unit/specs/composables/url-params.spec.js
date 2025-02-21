@@ -3,7 +3,7 @@ import { createRouter, createMemoryHistory } from 'vue-router'
 import { flushPromises } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 import {
   whenIsRoute,
   whenDifferentRoute,
