@@ -84,6 +84,7 @@
 import { castArray, concat, escapeRegExp, each, get, iteratee, last, orderBy, some, throttle, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
+import { mapStores } from 'pinia'
 
 import ShortkeysModal from '@/components/ShortkeysModal'
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
@@ -91,6 +92,7 @@ import SearchBarInputDropdownForField from '@/components/Search/SearchBar/Search
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
+import { useSearchStore } from '@/store/modules'
 
 function escapeLuceneChars(str) {
   const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']
@@ -153,23 +155,26 @@ export default {
   },
   emits: ['submit'],
   data() {
+    const searchStore = useSearchStore()
+
     return {
-      field: this.$store.state.search.field,
+      field: searchStore.field,
       focused: false,
-      query: this.$store.state.search.query,
+      query: searchStore.q,
       suggestions: [],
       currentQuery: { key: '', current: true }
     }
   },
   computed: {
+    ...mapStores(useSearchStore),
     selectedProjects: {
       get() {
-        const indices = this.indices ?? this.$store.state.search.indices
+        const indices = this.indices ?? this.searchStore.indices
         return indices.filter((index) => !!this.$core.findProject(index)).map((name) => ({ name }))
       },
       set(projects) {
         const indices = projects.map(iteratee('name'))
-        this.$store.commit('search/indices', indices)
+        this.searchStore.setIndices(indices)
       }
     },
     formIndices() {
@@ -196,7 +201,7 @@ export default {
         this.query = mutation.payload
       }
       if (mutation.type === 'search/reset') {
-        this.field = this.$store.state.search.field
+        this.field = this.searchStore.field
       }
     })
   },
@@ -204,11 +209,11 @@ export default {
     submit() {
       this.hideSuggestions()
       // Change the route after update the store with the new query
-      this.$store.commit('search/indices', this.formIndices)
-      this.$store.commit('search/field', this.field)
-      this.$store.commit('search/query', this.query)
-      this.$store.commit('search/from', 0)
-      const query = this.$store.getters['search/toRouteQueryWithStamp']()
+      this.searchStore.setIndices(this.formIndices)
+      this.searchStore.setField(this.field)
+      this.searchStore.setQuery(this.query)
+      this.searchStore.setFrom(0)
+      const query = this.searchStore.toRouteQueryWithStamp
       this.$router.push({ name: 'search', query })
     },
     async suggestTerms(candidates) {
