@@ -6,7 +6,7 @@ import { useModalController } from 'bootstrap-vue-next'
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
 import DocumentViewerModal from '@/components/Document/DocumentViewerModal/DocumentViewerModal'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 
 export const useDocument = function (element) {
   const documentStore = useDocumentStore()

@@ -15,7 +15,7 @@
 <script>
 import { sortBy } from 'lodash'
 
-import { useInsightsStore } from '@/store/modules/insights'
+import { useInsightsStore } from '@/store/modules'
 
 /**
  * A widget to include nested widget

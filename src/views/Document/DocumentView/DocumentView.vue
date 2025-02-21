@@ -9,7 +9,7 @@ import DocumentViewUserActions from './DocumentViewUserActions'
 
 import { useSearchNav } from '@/composables/search-nav'
 import { useDocument } from '@/composables/document'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 const elementRef = useTemplateRef('element')
 const { whenNoSearchEntries } = useSearchNav()

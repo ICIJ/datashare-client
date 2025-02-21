@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useHooksStore } from '@/store/modules/hooks'
+import { useHooksStore } from '@/store/modules'
 import { HookedComponent } from '@/store/hooks'
 
 describe('HooksStore', () => {

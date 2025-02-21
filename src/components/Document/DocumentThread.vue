@@ -10,7 +10,7 @@ import { useWait } from '@/composables/wait'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import EmailString from '@/components/EmailString'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 
 const props = defineProps({
   document: {

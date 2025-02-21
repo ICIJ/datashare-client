@@ -3,7 +3,7 @@ import { get, map } from 'lodash'
 import FilterText from './FilterText'
 
 import DisplayBoolean from '@/components/Display/DisplayBoolean'
-import { useStarredStore } from '@/store/modules/starred'
+import { useStarredStore } from '@/store/modules'
 
 export default class FilterStarred extends FilterText {
   constructor(options) {

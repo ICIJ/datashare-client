@@ -6,7 +6,7 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentGlobalSearchTermsEntry from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTermsEntry'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
@@ -48,7 +48,7 @@ describe('DocumentGlobalSearchTerms.vue', () => {
       .commit(es)
     const { id } = indexedDocument.document
     await documentStore.getDocument({ id, index })
-    core.store.commit('search/query', query)
+    searchStore.setQuery(query)
     const { plugins } = core
     const global = { plugins, renderStubDefaultSlot: true }
     const props = { document: documentStore.document }
@@ -58,11 +58,12 @@ describe('DocumentGlobalSearchTerms.vue', () => {
   }
 
   const { index, es } = esConnectionHelper.build()
-  let core, documentStore
+  let core, documentStore, searchStore
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
     documentStore = useDocumentStore()
+    searchStore = useSearchStore()
   })
 
   afterEach(async () => {
@@ -73,7 +74,7 @@ describe('DocumentGlobalSearchTerms.vue', () => {
     // Remove document
     documentStore.reset()
     // Reset search query
-    core.store.commit('search/reset')
+    searchStore.reset()
   })
 
   describe('lists the query terms but the ones about specific field other than "content"', () => {

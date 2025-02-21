@@ -8,7 +8,7 @@ import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-p
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY } from '@/composables/view-settings'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const { sortByLabel, tSortByOption, tLayout, perPageLabel } = useViewSettings(t)

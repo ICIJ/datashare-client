@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia'
 import uniqueId from 'lodash/uniqueId'
 
-import { useInsightsStore } from '@/store/modules/insights'
+import { useInsightsStore } from '@/store/modules'
 import widgetsDefs, { WidgetEmpty, WidgetText } from '@/store/widgets'
 
 describe('InsightsStore', () => {

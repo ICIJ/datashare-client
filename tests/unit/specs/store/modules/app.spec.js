@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 describe('AppStore', () => {
   let store

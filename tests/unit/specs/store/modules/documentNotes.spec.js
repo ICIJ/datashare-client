@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useDocumentNotes } from '@/store/modules/documentNotes'
+import { useDocumentNotesStore } from '@/store/modules'
 
 describe('DocumentNotesStore', () => {
   const project = 'projectName'
@@ -10,7 +10,7 @@ describe('DocumentNotesStore', () => {
     vi.clearAllMocks()
     setActivePinia(createPinia())
     api = { retrieveNotes: vi.fn().mockResolvedValue([]) }
-    store = useDocumentNotes(api)
+    store = useDocumentNotesStore(api)
   })
 
   it('should call the retrieveNotes url', async () => {

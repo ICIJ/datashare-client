@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { usePlayerStore } from '@/store/modules/player'
+import { usePlayerStore } from '@/store/modules'
 
 describe('PlayerStore', () => {
   let store

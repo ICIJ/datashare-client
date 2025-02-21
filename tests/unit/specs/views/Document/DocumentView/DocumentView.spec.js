@@ -6,7 +6,7 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()

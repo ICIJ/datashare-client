@@ -1,5 +1,5 @@
 import { createCore } from '@/core'
-import { useHooksStore } from '@/store/modules/hooks'
+import { useHooksStore } from '@/store/modules'
 
 describe('main', () => {
   let core, vm, api, hooksStore

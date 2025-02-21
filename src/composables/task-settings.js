@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useViewSettings, SORT_ORDER_KEY } from '@/composables/view-settings'
 import { useTaskProperties } from '@/composables/task-properties'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 export function useTaskSettings(pageName) {
   const appStore = useAppStore()

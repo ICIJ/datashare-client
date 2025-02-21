@@ -69,7 +69,7 @@ import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import ColumnFilterDropdown from '@/components/ColumnFilterDropdown'
 import ProjectLink from '@/components/Project/ProjectLink'
 import utils from '@/mixins/utils'
-import { useStarredStore } from '@/store/modules/starred'
+import { useStarredStore } from '@/store/modules'
 import { humanTime } from '@/utils/humanTime'
 import { humanDate } from '@/utils/humanDate'
 

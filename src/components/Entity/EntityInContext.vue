@@ -4,7 +4,7 @@ import { computed, onBeforeMount } from 'vue'
 
 import { useWait } from '@/composables/wait'
 import EntityPopover from '@/components/Entity/EntityPopover/EntityPopover'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 import { Highlight } from '@/utils/highlight'
 
 const offset = defineModel('offset', { type: Number, default: 0 })

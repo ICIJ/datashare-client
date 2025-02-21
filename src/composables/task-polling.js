@@ -3,7 +3,7 @@ import { random } from 'lodash'
 
 import { usePolling } from '@/composables/polling'
 import { useCore } from '@/composables/core'
-import { useTaskStore } from '@/store/modules/task'
+import { useTaskStore } from '@/store/modules'
 
 export function useTaskPolling(taskNames = []) {
   const taskStore = useTaskStore()
