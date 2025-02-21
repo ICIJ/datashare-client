@@ -548,7 +548,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
     // Expose actions
     reset,
     setIdAndRouting,
-    setDoc,
+    setDocument,
     setContent,
     setTranslations,
     setTags,
