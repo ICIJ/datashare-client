@@ -1,7 +1,8 @@
 import { Core } from '@/core'
+import { useSearchStore } from '@/store/modules'
 
 describe('FiltersMixin', () => {
-  let api, core
+  let api, core, searchStore
 
   beforeEach(() => {
     api = {
@@ -11,10 +12,12 @@ describe('FiltersMixin', () => {
       getSettings: vi.fn().mockResolvedValue({}),
       getProject: vi.fn().mockResolvedValue({})
     }
+
+    core = Core.init(api).useAll()
+    searchStore = useSearchStore()
   })
 
   it('register an email mixin', () => {
-    core = Core.init(api).useAll()
     core.registerFilter({
       type: 'FilterNamedEntity',
       options: {
@@ -25,7 +28,7 @@ describe('FiltersMixin', () => {
       }
     })
 
-    const filter = core.store.getters['search/getFilter']({ name: 'namedEntityEmail' })
+    const filter = searchStore.getFilter({ name: 'namedEntityEmail' })
     expect(filter).toBeDefined()
   })
 
@@ -44,7 +47,7 @@ describe('FiltersMixin', () => {
           }
         })
 
-        const filter = core.store.getters['search/getFilter']({ name: 'namedEntityEmail' })
+        const filter = searchStore.getFilter({ name: 'namedEntityEmail' })
         expect(filter).toBeDefined()
         resolve()
       }
