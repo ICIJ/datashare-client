@@ -8,17 +8,16 @@
 
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-import { useStore } from 'vuex'
 
-import { useDocumentNotes } from '@/store/modules/documentNotes'
+import { useDocumentNotesStore, useDocumentStore } from '@/store/modules'
 
 const props = defineProps({ path: String })
 const notes = ref([])
-const store = useStore()
-const documentNotesStore = useDocumentNotes()
+const documentStore = useDocumentStore()
+const documentNotesStore = useDocumentNotesStore()
 
 onBeforeMount(async () => {
-  const project = store.state.search.index
+  const { project } = documentStore.document
   const path = props.path
   notes.value = await documentNotesStore.fetchNotesByPath({ project, path })
 })
