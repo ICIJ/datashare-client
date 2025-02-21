@@ -7,7 +7,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewTabsEntities from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import EntityButton from '@/components/Entity/EntityButton'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('lodash', async (importOriginal) => {

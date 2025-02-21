@@ -9,7 +9,7 @@ import { useSearchSettings } from '@/composables/search-settings'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import settings from '@/utils/settings'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const appStore = useAppStore()

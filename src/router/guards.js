@@ -1,7 +1,7 @@
 import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 export default ({ router, auth, config, i18n, setPageTitle }) => {
   async function checkUserAuthentication(to, from, next) {

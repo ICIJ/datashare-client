@@ -7,7 +7,7 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/Document/DocumentContent'
 import { apiInstance as api } from '@/api/apiInstance'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 
 // Disable lodash throttle to avoid side-effect
 vi.mock('lodash', async (importOriginal) => {

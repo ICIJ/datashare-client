@@ -7,7 +7,7 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import DocumentContent from '@/components/Document/DocumentContent'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {

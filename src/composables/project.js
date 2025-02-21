@@ -3,7 +3,7 @@ import { useModalController } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/core'
 import ProjectDeletionModal from '@/components/Project/ProjectDeletionModal'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 export function useProjectDeletionModal(project) {
   const modalController = useModalController()

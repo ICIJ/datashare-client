@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { beforeEach } from 'vitest'
 
-import { usePipelinesStore } from '@/store/modules/pipelines'
+import { usePipelinesStore } from '@/store/modules'
 import { SimplePipeline, IdentityPipeline, AddLineBreaksPipeline } from '@/store/pipelines'
 
 describe('PipelinesStore', () => {

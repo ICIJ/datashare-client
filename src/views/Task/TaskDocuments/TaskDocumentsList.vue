@@ -7,7 +7,7 @@ import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { getHumanTaskName, TASK_NAME } from '@/enums/taskNames'
 import { useTaskSettings } from '@/composables/task-settings'
-import { useTaskStore } from '@/store/modules/task'
+import { useTaskStore } from '@/store/modules'
 
 const taskStore = useTaskStore()
 const settingName = 'documents'

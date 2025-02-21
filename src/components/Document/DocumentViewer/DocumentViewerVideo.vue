@@ -30,7 +30,7 @@
 <script>
 import { mapWritableState } from 'pinia'
 
-import { usePlayerStore } from '@/store/modules/player'
+import { usePlayerStore } from '@/store/modules'
 
 /**
  * Display a preview video of the document.

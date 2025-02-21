@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
-import { useStarredStore } from '@/store/modules/starred'
+import { useStarredStore } from '@/store/modules'
 
 const { document } = defineProps({
   /**

@@ -15,7 +15,7 @@ import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMet
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { useDocument } from '@/composables/document'
 import { useDebouncedRef } from '@/composables/debounce'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 const { document, documentPath, documentDirname, parentDocument } = useDocument()
 const { t } = useI18n()

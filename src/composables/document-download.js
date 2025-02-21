@@ -2,8 +2,7 @@ import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/core'
-import { useDownloadsStore } from '@/store/modules/downloads'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDownloadsStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'
 

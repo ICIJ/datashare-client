@@ -3,7 +3,7 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {

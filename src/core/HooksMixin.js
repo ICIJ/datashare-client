@@ -1,6 +1,6 @@
 import { uniqueId, cloneDeep } from 'lodash'
 
-import { useHooksStore } from '@/store/modules/hooks'
+import { useHooksStore } from '@/store/modules'
 
 /**
   Mixin class extending the core to add helpers for hooks.

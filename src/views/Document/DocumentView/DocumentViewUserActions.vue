@@ -11,8 +11,7 @@ import { useQueryObserver } from '@/composables/query-observer'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
-import { useRecommendedStore } from '@/store/modules/recommended'
-import { useDocumentStore } from '@/store/modules/document'
+import { useRecommendedStore, useDocumentStore } from '@/store/modules'
 
 const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()

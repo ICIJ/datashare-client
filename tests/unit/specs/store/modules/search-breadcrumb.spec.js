@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, beforeEach } from 'vitest'
 
-import { useSearchBreadcrumbStore } from '@/store/modules/search-breadcrumb'
+import { useSearchBreadcrumbStore } from '@/store/modules'
 
 describe('SearchBreadcrumbStore', () => {
   let store

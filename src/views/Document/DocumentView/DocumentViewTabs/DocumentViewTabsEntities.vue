@@ -7,7 +7,7 @@ import { useCore } from '@/composables/core'
 import { useDocument } from '@/composables/document'
 import { useWait } from '@/composables/wait'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
-import useDocumentStore from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 
 const { document, documentRoute } = useDocument()
 const { wait, waitFor, loaderId } = useWait()

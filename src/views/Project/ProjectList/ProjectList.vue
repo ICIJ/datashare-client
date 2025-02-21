@@ -9,7 +9,7 @@ import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useCore } from '@/composables/core'
 import { useUtils } from '@/composables/utils'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore } from '@/store/modules'
 
 const { core } = useCore()
 const { isServer } = useUtils()

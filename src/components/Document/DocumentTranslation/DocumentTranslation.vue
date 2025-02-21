@@ -5,7 +5,7 @@ import { find, join } from 'lodash'
 import DocumentTranslationAlert from './DocumentTranslationAlert/DocumentTranslationAlert'
 
 import { useCore } from '@/composables/core'
-import { useDocumentStore } from '@/store/modules/document'
+import { useDocumentStore } from '@/store/modules'
 import DocumentContent from '@/components/Document/DocumentContent'
 
 const props = defineProps({

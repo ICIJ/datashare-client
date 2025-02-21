@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia'
 
 import { apiInstance as api } from '@/api/apiInstance'
-import { useTaskStore } from '@/store/modules/task'
+import { useTaskStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {

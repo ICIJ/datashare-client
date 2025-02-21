@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { useRecommendedStore } from '@/store/modules/recommended'
+import { useRecommendedStore } from '@/store/modules'
 
 describe('RecommendedStore', () => {
   let api, recommendedStore

@@ -1,6 +1,6 @@
 import { findIndex, uniqueId, cloneDeep } from 'lodash'
 
-import { usePipelinesStore } from '@/store/modules/pipelines'
+import { usePipelinesStore } from '@/store/modules'
 
 /**
   Mixin class extending the core to add helpers for pipelines.

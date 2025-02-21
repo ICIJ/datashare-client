@@ -1,6 +1,6 @@
 import WidgetEmpty from '@/store/widgets/WidgetEmpty'
 import { Core } from '@/core'
-import { useInsightsStore } from '@/store/modules/insights'
+import { useInsightsStore } from '@/store/modules'
 
 describe('WidgetsMixin', () => {
   let core, store

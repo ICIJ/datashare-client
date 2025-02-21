@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Hook from '@/components/Hook/Hook'
-import { useHooksStore } from '@/store/modules/hooks'
+import { useHooksStore } from '@/store/modules'
 
 // Create a "hooked component" defintion with a render function.
 //

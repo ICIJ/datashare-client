@@ -1,6 +1,6 @@
 import { uniqueId, cloneDeep } from 'lodash'
 
-import { useInsightsStore } from '@/store/modules/insights'
+import { useInsightsStore } from '@/store/modules'
 
 /**
   Mixin class extending the core to add helpers for widgets.

@@ -4,7 +4,7 @@ import { property } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/core'
-import { useStarredStore } from '@/store/modules/starred'
+import { useStarredStore } from '@/store/modules'
 import { useSelection } from '@/composables/selection'
 import { useBreakpoints } from '@/composables/breakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
