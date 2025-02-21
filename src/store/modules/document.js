@@ -372,7 +372,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * Fetches the root document (if applicable) and updates the store.
    * @returns {Promise<object|null>} The root document.
    */
-  async function getRoot() {
+  async function getRootDocument() {
     if (document.value !== null && document.value.raw._source.extractionLevel > 0) {
       try {
         const { index } = document.value
