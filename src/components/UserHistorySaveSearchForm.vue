@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { useSearchStore } from '@/store/modules'
+
 /**
  * A form to save the search in user history
  */
@@ -53,7 +55,7 @@ export default {
   methods: {
     async getUriFromStore() {
       const from = 0
-      const query = { ...this.$store.getters['search/toRouteQuery'](), from }
+      const query = { ...useSearchStore().toRouteQuery, from }
       const { fullPath } = await this.$router.resolve({ name: 'search', query })
       return fullPath
     },
