@@ -1,24 +1,24 @@
 import { computed, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import { matches } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
 import { useCore } from '@/composables/core'
 import { useDocument } from '@/composables/document'
+import { useSearchStore } from '@/store/modules'
 
 export function useSearchNav(currentDocument = null) {
   const { core } = useCore()
-  const { commit, dispatch, getters } = useStore()
   const { document: viewDocument } = useDocument()
   const router = useRouter()
+  const searchStore = useSearchStore()
   const currentDocumentRef = toRef(currentDocument)
   const document = computed(() => currentDocumentRef.value || viewDocument.value)
 
-  const total = computed(() => getters['search/total'])
-  const page = computed(() => getters['search/page'])
-  const perPage = computed(() => getters['search/perPage'])
-  const hits = computed(() => getters['search/hits'])
+  const total = computed(() => searchStore.total)
+  const page = computed(() => searchStore.page)
+  const perPage = computed(() => searchStore.perPage)
+  const hits = computed(() => searchStore.hits)
 
   // Position of the document in the hits array
   const documentPagePosition = computed(() => (document.value ? hits.value.findIndex(document.value.eq) : -1))
@@ -63,7 +63,7 @@ export function useSearchNav(currentDocument = null) {
 
   const fetchPreviousDocument = async () => {
     if (isFirstInPage.value) {
-      await dispatch('search/previousPage')
+      await searchStore.queryPreviousPage()
       return atEntryIndex(hits.value.length - 1)
     }
 
@@ -72,7 +72,7 @@ export function useSearchNav(currentDocument = null) {
 
   const fetchNextDocument = async () => {
     if (isLastInPage.value) {
-      await dispatch('search/nextPage')
+      await searchStore.queryNextPage()
       return atEntryIndex(0)
     }
 
@@ -80,7 +80,7 @@ export function useSearchNav(currentDocument = null) {
   }
 
   async function fetchCarouselEntries(position, carouselSize = 5) {
-    const params = getters['search/toSearchParams']
+    const params = searchStore.toSearchParams
     const from = Math.min(Math.max(0, position - Math.floor(carouselSize / 2)), total.value - carouselSize)
     const raw = await core.api.elasticsearch.searchDocs({ ...params, from, perPage: carouselSize })
     const response = new EsDocList(raw, null, null, from)
@@ -88,13 +88,13 @@ export function useSearchNav(currentDocument = null) {
   }
 
   async function searchFromPosition(position) {
-    const perPage = getters['search/perPage']
+    const perPage = searchStore.perPage
     const page = Math.ceil((position + 1) / perPage)
     const from = (page - 1) * perPage
     // Only search from the position if the position is on a different page
-    if (from !== getters['search/from']) {
-      commit('search/from', from)
-      return dispatch('search/query')
+    if (from !== searchStore.from) {
+      searchStore.setFrom(from)
+      return searchStore.query()
     }
   }
 
