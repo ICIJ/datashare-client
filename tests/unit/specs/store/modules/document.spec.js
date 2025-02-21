@@ -61,7 +61,7 @@ describe('DocumentStore', () => {
     await letData(es).have(new IndexedDocument(routing, index)).commit()
     await letData(es).have(new IndexedDocument(id, index).withParent(routing)).commit()
     await documentStore.getDocument({ id, routing, index })
-    await documentStore.getParent()
+    await documentStore.getParentDocument()
 
     expect(documentStore.parentDocument.id).toBe(routing)
   })
