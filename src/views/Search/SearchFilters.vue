@@ -2,7 +2,6 @@
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
 import { uniq, groupBy, property } from 'lodash'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 
 import { useViews } from '@/composables/views'
@@ -10,16 +9,17 @@ import { useMode } from '@/composables/mode'
 import { useSearchFilter } from '@/composables/search-filter'
 import FiltersPanel from '@/components/FiltersPanel/FiltersPanel'
 import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
+import { useSearchStore } from '@/store/modules'
 
 const { toggleFilters } = useViews()
-const store = useStore()
+const searchStore = useSearchStore()
 const { isMode } = useMode()
 const { getFilterComponent } = useSearchFilter()
 const { t } = useI18n()
 
 const q = ref('')
 const filters = computed(() => {
-  return store.getters['search/instantiatedFilters'].filter((filter) => {
+  return searchStore.instantiatedFilters.filter((filter) => {
     // We apply a first filter to remove filters that are not available in the current mode
     return !filter.modes || filter.modes.some(isMode)
   })
