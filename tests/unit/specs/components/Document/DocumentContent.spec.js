@@ -62,7 +62,7 @@ describe('DocumentContent.vue', () => {
     })
     // Get the document from the store
     await documentStore.getDocument({ id, index })
-    const document = documentStore.doc
+    const document = documentStore.document
     // Finally flush all promises and return all necessary values
     await flushPromises()
     return { content, contentSlice, document }

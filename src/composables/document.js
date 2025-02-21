@@ -65,7 +65,7 @@ export const useDocument = function (element) {
   })
 
   const document = computed(() => {
-    return documentStore.doc
+    return documentStore.document
   })
 
   const parent = computed(() => {
