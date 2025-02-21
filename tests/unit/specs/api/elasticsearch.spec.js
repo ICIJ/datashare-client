@@ -1,4 +1,5 @@
 import bodybuilder from 'bodybuilder'
+import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -8,6 +9,10 @@ import { EventBus } from '@/utils/event-bus'
 
 describe('elasticsearch', () => {
   const { index, es } = esConnectionHelper.build()
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
 
   it('should return backend response to a POST request for searchDocs', async () => {
     const spy = vi.spyOn(elasticsearch, 'search').mockResolvedValue({ foo: 'bar' })
