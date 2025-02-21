@@ -1,33 +1,32 @@
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 import { castArray, compact, flatten, map, omit, orderBy, unset } from 'lodash'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/search-filter'
-import { useSearchBreadcrumbStore } from '@/store/modules/search-breadcrumb'
+import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import findPath from '@/utils/find-path'
 
 export function useSearchBreadcrumb() {
-  const store = useStore()
+  const searchStore = useSearchStore()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
   const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
 
   const count = computed(() => entries.value.length)
 
   const indicesEntries = computed(() => {
-    const indices = store.getters['search/toBaseRouteQuery']().indices.split(',')
+    const indices = searchStore.toBaseRouteQuery.indices.split(',')
     const noXIcon = indices.length === 1
     const filter = 'project'
     return indices.map((value) => ({ filter, value, noXIcon }))
   })
 
   const queryEntries = computed(() => {
-    const { q: query = null } = store.getters['search/toBaseRouteQuery']()
+    const { q: query = null } = searchStore.toBaseRouteQuery
     return query ? [{ query }] : []
   })
 
   const filtersEntries = computed(() => {
-    const filters = omit(store.getters['search/toBaseRouteQuery'](), ['q', 'field', 'indices'])
+    const filters = omit(searchStore.toBaseRouteQuery, ['q', 'field', 'indices'])
     return flatten(
       // Each filter can have several values
       map(filters, (values, param) => {
@@ -68,18 +67,18 @@ export function useSearchBreadcrumb() {
   }
 
   const clearFiltersEntries = () => {
-    store.commit('search/resetFilterValues')
+    searchStore.resetFilterValues()
     return refreshRoute()
   }
 
   const clearQueryEntries = () => {
-    store.commit('search/resetQuery')
+    searchStore.resetQuery()
     return refreshRoute()
   }
 
   const clearAll = () => {
-    store.commit('search/resetFilterValues')
-    store.commit('search/resetQuery')
+    searchStore.resetFilterValues()
+    searchStore.resetQuery()
     return refreshRoute()
   }
 
