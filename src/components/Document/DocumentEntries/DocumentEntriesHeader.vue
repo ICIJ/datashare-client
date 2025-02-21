@@ -2,7 +2,6 @@
 import { computed, toRef, useTemplateRef, watch } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 import { useCompact } from '@/composables/compact'
@@ -11,6 +10,7 @@ import ButtonToggleBatchMode from '@/components/Button/ButtonToggleBatchMode'
 import ButtonDownloadDocuments from '@/components/Button/ButtonDownloadDocuments'
 import byteSize from '@/utils/byteSize'
 import humanSize from '@/utils/humanSize'
+import { useSearchStore } from '@/store/modules'
 
 const selectMode = defineModel('selectMode', { type: Boolean, default: false })
 const page = defineModel('page', { type: Number, default: 1 })
@@ -37,7 +37,7 @@ const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 const { core, toast } = useCore()
 const { t, tm, n } = useI18n()
-const { dispatch, getters } = useStore()
+const searchStore = useSearchStore()
 const router = useRouter()
 
 const batchDownloadDocumentsLabel = computed(() => {
@@ -55,14 +55,14 @@ const batchDownloadDocumentsLabel = computed(() => {
 
 const batchDownloadDocumentsUri = computed(() => {
   const from = 0
-  const query = { ...getters['search/toRouteQuery'](), from }
+  const query = { ...searchStore.toRouteQuery, from }
   const { fullPath } = router.resolve({ name: 'search', query })
   return fullPath
 })
 
 const runBatchDownload = async () => {
   try {
-    await dispatch('search/runBatchDownload', batchDownloadDocumentsUri.value)
+    await searchStore.runBatchDownload(batchDownloadDocumentsUri.value)
     const { href } = router.resolve({ name: 'task.batch-download.list' })
     const body = t('documentEntriesHeader.batchDownloadCreated')
     const linkLabel = t('documentEntriesHeader.batchDownloadLink')
