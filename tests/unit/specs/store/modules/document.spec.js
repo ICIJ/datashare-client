@@ -116,7 +116,7 @@ describe('DocumentStore', () => {
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await documentStore.getDocument({ id: 'doc_01', index })
 
-      await documentStore.addTagAction({
+      await documentStore.addTag({
         documents: [
           { id: 'doc_01', index },
           { id: 'doc_02', index }
@@ -143,7 +143,7 @@ describe('DocumentStore', () => {
 
       // WHEN
       api.tagDocuments.mockResolvedValue({})
-      await documentStore.addTagAction({ documents: [document01, document02], label: 'tag_01 tag_02 tag_03' })
+      await documentStore.addTag({ documents: [document01, document02], label: 'tag_01 tag_02 tag_03' })
 
       // THEN
       expect(api.tagDocuments).toBeCalledTimes(1)
@@ -158,7 +158,7 @@ describe('DocumentStore', () => {
       api.untagDocuments.mockResolvedValue({})
 
       const document = await documentStore.getDocument({ id: 'doc_01', index })
-      await documentStore.deleteTagAction({ documents: [document], label: 'tag_01' })
+      await documentStore.deleteTag({ documents: [document], label: 'tag_01' })
 
       expect(api.untagDocuments).toBeCalledTimes(1)
       expect(api.untagDocuments).toBeCalledWith(index, ['doc_01'], ['tag_01'])
@@ -170,7 +170,7 @@ describe('DocumentStore', () => {
 
       const tags = [{ label: 'tag_01' }, { label: 'tag_02' }]
       api.getTags.mockResolvedValue(tags)
-      await documentStore.addTagAction({ label: 'tag_01      tag_01 tag_02', userId: 'user' })
+      await documentStore.addTag({ label: 'tag_01      tag_01 tag_02', userId: 'user' })
 
       expect(documentStore.tags).toHaveLength(2)
       expect(orderBy(documentStore.tags, ['label'])[0].label).toBe('tag_01')

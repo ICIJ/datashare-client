@@ -135,6 +135,31 @@ export const useDocumentStore = defineStore('documentStore', () => {
   }
 
   /**
+   * Adds a tag to the document.
+   * @param {object} payload
+   * @param {string} payload.label - The tag label (space separated).
+   * @param {string|number} payload.userId - The user ID.
+   */
+  function pushTag({ label, userId }) {
+    const user = { id: userId }
+    const creationDate = Date.now()
+    const words = compact(label.split(' '))
+    const newTags = words.map((label) => ({ label, user, creationDate }))
+    tags.value = uniqBy(tags.value.concat(newTags), 'label')
+  }
+
+  /**
+   * Deletes a tag from the document.
+   * @param {string} label - The tag label to remove.
+   */
+  function sliceTag(label) {
+    const idx = findIndex(tags.value, { label })
+    if (idx > -1) {
+      tags.value.splice(idx, 1)
+    }
+  }
+
+  /**
    * Adds a page to the named entities for a specified category.
    * @param {object} payload
    * @param {string} payload.category - The category name.
@@ -192,31 +217,6 @@ export const useDocumentStore = defineStore('documentStore', () => {
    */
   function toggleShowTranslatedContent(toggle = null) {
     showTranslatedContent.value = toggle !== null ? toggle : !showTranslatedContent.value
-  }
-
-  /**
-   * Adds a tag to the document.
-   * @param {object} payload
-   * @param {string} payload.label - The tag label (space separated).
-   * @param {string|number} payload.userId - The user ID.
-   */
-  function addTag({ label, userId }) {
-    const user = { id: userId }
-    const creationDate = Date.now()
-    const words = compact(label.split(' '))
-    const newTags = words.map((label) => ({ label, user, creationDate }))
-    tags.value = uniqBy(tags.value.concat(newTags), 'label')
-  }
-
-  /**
-   * Deletes a tag from the document.
-   * @param {string} label - The tag label to remove.
-   */
-  function deleteTag(label) {
-    const idx = findIndex(tags.value, { label })
-    if (idx > -1) {
-      tags.value.splice(idx, 1)
-    }
   }
 
   /**
@@ -461,8 +461,8 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @param {Array} payload.documents - An array of documents.
    * @param {string} payload.label - The tag label.
    */
-  async function addTagAction({ documents, label }) {
-    await addTagsAction({ documents, labels: compact(label.split(' ')) })
+  async function addTag({ documents, label }) {
+    await addTags({ documents, labels: compact(label.split(' ')) })
   }
 
   /**
@@ -471,7 +471,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @param {Array} payload.documents - An array of documents.
    * @param {Array} payload.labels - An array of tag labels.
    */
-  async function addTagsAction({ documents, labels }) {
+  async function addTags({ documents, labels }) {
     const grouped = groupBy(documents, 'index')
     for (const [index, subset] of Object.entries(grouped)) {
       await api.tagDocuments(index, map(subset, 'id'), labels)
@@ -485,7 +485,7 @@ export const useDocumentStore = defineStore('documentStore', () => {
    * @param {Array} payload.documents - An array of documents.
    * @param {string} payload.label - The tag label to delete.
    */
-  async function deleteTagAction({ documents, label }) {
+  async function deleteTag({ documents, label }) {
     const grouped = groupBy(documents, 'index')
     for (const [index, subset] of Object.entries(grouped)) {
       await api.untagDocuments(index, map(subset, 'id'), [label])
@@ -552,13 +552,13 @@ export const useDocumentStore = defineStore('documentStore', () => {
     setContent,
     setTranslations,
     setTags,
+    pushTag,
+    sliceTag,
     addNamedEntitiesPage,
     setNamedEntitiesPages,
     setParentDocument,
     setRootDocument,
     toggleShowTranslatedContent,
-    addTag,
-    deleteTag,
     recommend,
     recommendBy,
     markAsRecommended,
@@ -575,9 +575,9 @@ export const useDocumentStore = defineStore('documentStore', () => {
     getFirstPageForNamedEntityInAllCategories,
     getNextPageForNamedEntityInCategory,
     getTags,
-    addTagAction,
-    addTagsAction,
-    deleteTagAction,
+    addTag,
+    addTags,
+    deleteTag,
     toggleAsRecommended,
     getRecommendationsByDocuments
   }
