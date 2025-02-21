@@ -2,20 +2,19 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { storeBuilder } from '@/store/storeBuilder'
-import { useStarredStore } from '@/store/modules/starred'
+import { useStarredStore, useSearchStore } from '@/store/modules'
 
 describe('StarredStore', () => {
   const { index, es } = esConnectionHelper.build()
-  let store, starredStore, filter, api
+  let starredStore, searchStore, filter, api
 
   beforeEach(() => {
     setActivePinia(createPinia())
     api = { getStarredDocuments: vi.fn(), starDocuments: vi.fn(), unstarDocuments: vi.fn() }
-    store = storeBuilder(api)
     starredStore = useStarredStore(api)
+    searchStore = useSearchStore()
     // Get the starred filter from the search store to test the interaction between the two stores
-    filter = store.getters['search/getFilter']({ name: 'starred' })
+    filter = searchStore.getFilter({ name: 'starred' })
   })
 
   it('should not reset the starredDocuments from the filter', async () => {
@@ -45,7 +44,7 @@ describe('StarredStore', () => {
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
-    store.dispatch('search/updateFromRouteQuery', {})
+    searchStore.updateFromRouteQuery({})
     expect(starredStore.documents).toEqual([
       { index, id: 'document_01' },
       { index, id: 'document_02' }
