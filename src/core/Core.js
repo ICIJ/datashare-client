@@ -36,6 +36,7 @@ import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
 import { useTheme } from '@/composables/theme'
+import { useSearchStore } from '@/store/modules'
 
 class Base {}
 const Behaviors = compose(
@@ -284,9 +285,11 @@ class Core extends Behaviors {
         }
       }
       this._auth = new Auth(this.mode)
-      // Set the default project
-      if (!this.store.state.search.indices.length) {
-        this.store.commit('search/indices', [this.getDefaultProject()])
+      // Instantiate the search store
+      const searchStore = useSearchStore()
+      // Set the default project only if none is already selected
+      if (!searchStore.indices.length) {
+        searchStore.setIndex(this.getDefaultProject())
       }
       // Initialize current locale
       await this.initializeI18n()
