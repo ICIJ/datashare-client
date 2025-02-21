@@ -2,10 +2,11 @@ import compact from 'lodash/compact'
 import get from 'lodash/get'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
+import noop from 'lodash/noop'
 
 // Private properties keys
 const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
-const _ROOT_STATE = typeof Symbol === 'function' ? Symbol('_ROOT_state') : '_ROOT_state'
+const _USE_STORE = typeof Symbol === 'function' ? Symbol('_use_store') : '_user_store'
 
 export default class FilterText {
   constructor({
@@ -111,20 +112,17 @@ export default class FilterText {
     return this.addFilter(body)
   }
 
-  bindRootState(rootState) {
-    this[_ROOT_STATE] = this[_ROOT_STATE] || rootState
+  bindStore(useStore) {
+    this[_USE_STORE] = useStore
+    return this
   }
 
-  get rootState() {
-    return this[_ROOT_STATE]
-  }
-
-  get state() {
-    return this?.rootState?.search
+  get store() {
+    return get(this, _USE_STORE, noop)()
   }
 
   get values() {
-    return compact(this[_VALUES] || get(this, ['state', 'values', this.name], []))
+    return compact(this[_VALUES] || this.store.values[this.name] || [])
   }
 
   set values(values) {
@@ -137,18 +135,22 @@ export default class FilterText {
   }
 
   get excluded() {
-    return get(this, ['state', 'excludeFilters'], []).indexOf(this.name) > -1
+    return this.store?.excludeFilters.indexOf(this.name) > -1
   }
 
   get contextualized() {
-    return get(this, ['state', 'contextualizeFilters'], []).indexOf(this.name) > -1
+    return this.store?.contextualizeFilters.indexOf(this.name) > -1
+  }
+
+  get sort() {
+    return this.store?.sortFilters[this.name]
   }
 
   get sortBy() {
-    return get(this, ['state', 'sortFilters', this.name, 'sortBy'], '_count')
+    return get(this.sort, 'sortBy', '_count')
   }
 
   get orderBy() {
-    return get(this, ['state', 'sortFilters', this.name, 'orderBy'], 'desc')
+    return get(this.sort, 'orderBy', 'desc')
   }
 }
