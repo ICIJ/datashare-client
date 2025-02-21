@@ -1,6 +1,5 @@
 <script setup>
 import { toRef, ref, reactive, computed, watch, onMounted, nextTick, useTemplateRef } from 'vue'
-import { useStore } from 'vuex'
 import { clamp, findLastIndex, entries, isEmpty, get, range, throttle } from 'lodash'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
@@ -9,8 +8,7 @@ import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
-import { usePipelinesStore } from '@/store/modules/pipelines'
-import { useDocumentStore } from '@/store/modules/document'
+import { usePipelinesStore, useDocumentStore, useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   document: Object,
@@ -28,9 +26,9 @@ const props = defineProps({
   }
 })
 
-const store = useStore()
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
+const searchStore = useSearchStore()
 const elementRef = useTemplateRef('element')
 const { waitFor } = useWait()
 
@@ -44,7 +42,7 @@ const localSearchTerm = ref(props.q)
 const rightToLeftLanguages = ['ARABIC', 'HEBREW', 'PERSIAN']
 const maxOffsetTranslations = ref({})
 
-const globalSearchTerms = computed(() => store.getters['search/retrieveContentQueryTerms'])
+const globalSearchTerms = computed(() => searchStore.retrieveContentQueryTerms)
 
 function getPipelineChain(category, ...pipelines) {
   return pipelinesStore.applyPipelineChainByCategory(category, ...pipelines)
