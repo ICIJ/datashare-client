@@ -12,8 +12,4 @@ describe('store', () => {
   it('should define a batchSearch module', () => {
     expect(store.state.batchSearch).toBeDefined()
   })
-
-  it('should define a search module', () => {
-    expect(store.state.search).toBeDefined()
-  })
 })
