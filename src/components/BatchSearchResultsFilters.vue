@@ -79,6 +79,7 @@ import { compact, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+import { useSearchStore } from '@/store/modules'
 
 /**
  * Form to filter a batch search results by query
@@ -172,7 +173,7 @@ export default {
       }
     },
     searchQuery(q) {
-      this.$store.commit('search/reset')
+      useSearchStore().reset()
       const queries = this.selectedQueries
       const indices = this.indices
       const query = { queries, q, indices }
