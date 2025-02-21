@@ -1,15 +1,17 @@
 import toLower from 'lodash/toLower'
 
 import { Core } from '@/core'
+import { useSearchStore } from '@/store/modules'
 
 describe('ProjectsMixin', () => {
   const project = toLower('ProjectsMixin')
   const anotherProject = toLower('AnotherProjectsMixin')
-  let core
+  let core, searchStore
 
   beforeEach(() => {
     core = Core.init().useAll()
-    core.store.commit('search/indices', [anotherProject])
+    searchStore = useSearchStore()
+    searchStore.setIndex(anotherProject)
   })
 
   it('should call a function when a project is selected', async () => {
@@ -17,7 +19,7 @@ describe('ProjectsMixin', () => {
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch to the project
-    core.store.commit('search/indices', [project])
+    searchStore.setIndex(project)
     // And check the function has been called
     expect(withFn).toBeCalled()
   })
@@ -27,7 +29,7 @@ describe('ProjectsMixin', () => {
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch to the project
-    core.store.commit('search/indices', [project, anotherProject])
+    searchStore.setIndices([project, anotherProject])
     // And check the function has been called
     expect(withFn).toBeCalled()
   })
@@ -37,9 +39,9 @@ describe('ProjectsMixin', () => {
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch between projects
-    core.store.commit('search/indices', [project])
-    core.store.commit('search/indices', [anotherProject])
-    core.store.commit('search/indices', [project])
+    searchStore.setIndex(project)
+    searchStore.setIndex(anotherProject)
+    searchStore.setIndex(project)
     // And check the function has been called
     expect(withFn).toBeCalledTimes(2)
   })
@@ -49,9 +51,9 @@ describe('ProjectsMixin', () => {
     // Bind the function to the project
     core.toggleForProject({ project, withFn })
     // Switch between projects
-    core.store.commit('search/indices', [project, anotherProject])
-    core.store.commit('search/indices', [anotherProject])
-    core.store.commit('search/indices', [project, anotherProject])
+    searchStore.setIndices([project, anotherProject])
+    searchStore.setIndices([anotherProject])
+    searchStore.setIndices([project, anotherProject])
     // And check the function has been called
     expect(withFn).toBeCalledTimes(2)
   })
@@ -61,7 +63,7 @@ describe('ProjectsMixin', () => {
     // Bind the function to the project
     core.toggleForProject({ project, withoutFn })
     // Switch to the project
-    core.store.commit('search/indices', [anotherProject])
+    searchStore.setIndices([anotherProject])
     // And check the function has been called
     expect(withoutFn).toBeCalled()
   })
@@ -71,9 +73,9 @@ describe('ProjectsMixin', () => {
     // Bind the function to the project
     core.toggleForProject({ project, withoutFn })
     // Switch between projects
-    core.store.commit('search/indices', [anotherProject])
-    core.store.commit('search/indices', [project])
-    core.store.commit('search/indices', [anotherProject])
+    searchStore.setIndices([anotherProject])
+    searchStore.setIndices([project])
+    searchStore.setIndices([anotherProject])
     // And check the function has been called
     expect(withoutFn).toBeCalledTimes(3)
   })
@@ -84,13 +86,13 @@ describe('ProjectsMixin', () => {
     // Bind the function to the project
     core.toggleForProject({ project, withFn, withoutFn })
     // Switch between projects
-    core.store.commit('search/indices', [project])
+    searchStore.setIndices([project])
     expect(withFn).toBeCalledTimes(1)
     expect(withoutFn).toBeCalledTimes(1)
-    core.store.commit('search/indices', [anotherProject])
+    searchStore.setIndices([anotherProject])
     expect(withFn).toBeCalledTimes(1)
     expect(withoutFn).toBeCalledTimes(2)
-    core.store.commit('search/indices', [project])
+    searchStore.setIndices([project])
     expect(withFn).toBeCalledTimes(2)
     expect(withoutFn).toBeCalledTimes(2)
   })
