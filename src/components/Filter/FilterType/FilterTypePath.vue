@@ -1,14 +1,14 @@
 <script setup>
 import { computed, useTemplateRef, toRef, watch } from 'vue'
-import { useStore } from 'vuex'
 
 import { useSearchFilter } from '@/composables/search-filter'
 import { useCore } from '@/composables/core'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'
+import { useSearchStore } from '@/store/modules'
 
 const { core } = useCore()
-const { state, getters } = useStore()
+const searchStore = useSearchStore()
 const {
   computedFilterValues,
   whenFilterContextualized,
@@ -34,22 +34,19 @@ const props = defineProps({
 
 const tree = useTemplateRef('tree')
 const path = core.getDefaultDataDir()
-const projects = computed(() => props.projects ?? state.search.indices)
+const projects = computed(() => props.projects ?? searchStore.indices)
 const selected = computedFilterValues(props.filter)
 
 const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
   // Add every filter to the search body
-  getters['search/instantiatedFilters'].forEach((filter) => filter.addFilter(body))
+  searchStore.instantiatedFilters.forEach((filter) => filter.addFilter(body))
   // Add query to the search body
-  core.api.elasticsearch.addQueryToFilter(state.search.query || '*', body)
+  core.api.elasticsearch.addQueryToFilter(searchStore.q || '*', body)
   return body
 })
 
 const reloadData = () => tree.value.reloadData()
-
-const reset = () => {
-  selected.value = []
-}
+const reset = () => (selected.value = [])
 
 watchFilterContextualized(props.filter, reloadData)
 // When the filter is excluded/included and it's contextualized then reload the data with a spinner

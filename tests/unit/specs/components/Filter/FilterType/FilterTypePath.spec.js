@@ -4,21 +4,25 @@ import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/Filter/FilterType/FilterTypePath'
 import CoreSetup from '~tests/unit/CoreSetup'
+import { useSearchStore } from '@/store/modules'
 
-describe('FilterPath.vue', () => {
+describe('FilterTypePath.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const { otherIndex } = esConnectionHelper.build()
 
-  let api, core, wrapper
+  let api, core, searchStore, wrapper
 
   beforeEach(() => {
     api = { tree: vi.fn(), elasticsearch: es }
-    core = CoreSetup.init(api).useAll().useRouter()
-    const filter = core.store.getters['search/getFilter']({ name: 'path' })
 
-    core.store.commit('search/index', index)
-    core.store.commit('search/reset')
+    core = CoreSetup.init(api).useAll().useRouter()
     core.config.set('dataDir', '/data')
+
+    searchStore = useSearchStore()
+    searchStore.setIndex(index)
+    searchStore.reset()
+
+    const filter = searchStore.getFilter({ name: 'path' })
 
     wrapper = mount(FilterPath, {
       global: {
@@ -37,7 +41,7 @@ describe('FilterPath.vue', () => {
 
   it('should list selected paths according to the filter', async () => {
     const key = ['/data/foo', '/data/bar']
-    core.store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
+    searchStore.setFilterValue(wrapper.vm.filter.itemParam({ key }))
     await flushPromises()
     expect(wrapper.vm.selected).toContain('/data/foo')
     expect(wrapper.vm.selected).toContain('/data/bar')
@@ -45,10 +49,10 @@ describe('FilterPath.vue', () => {
 
   it('should reset the selected paths when project change', async () => {
     const key = ['/data/foo', '/data/bar']
-    core.store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
+    searchStore.setFilterValue(wrapper.vm.filter.itemParam({ key }))
     await flushPromises()
     expect(wrapper.vm.selected).toHaveLength(2)
-    core.store.commit('search/index', otherIndex)
+    searchStore.setIndex(otherIndex)
     await flushPromises()
     expect(wrapper.vm.selected).toHaveLength(0)
   })
