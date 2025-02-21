@@ -247,6 +247,7 @@ import VueMultiselect from 'vue-multiselect'
 import PathTree from '@/components/PathTree/PathTree'
 import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
+import { useSearchStore } from '@/store/modules'
 import { FilterText, FilterPath } from '@/store/filters'
 
 const TEMPLATE_VALUE = Object.freeze({
@@ -337,7 +338,7 @@ export default {
       return filter(this.projectOptions, ({ name }) => {
         // In case the store is not initialized yet,
         // all project are selected by default
-        return get(this, '$store.state.search.indices', [name]).includes(name)
+        return useSearchStore().indices.includes(name)
       })
     },
     projects: {
