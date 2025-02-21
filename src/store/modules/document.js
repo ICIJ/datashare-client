@@ -83,10 +83,13 @@ export const useDocumentStore = defineStore('documentStore', () => {
   /**
    * Sets the document identification and routing, then resets the state.
    * @param {object} data - The document id and routing info.
+   * @param {object} data.id - The document ID.
+   * @param {object} data.index - The document index.
+   * @param {object} data.routing - The document routing.
    */
-  function setIdAndRouting(data) {
+  function setIdAndRouting({ id, index, routing }) {
     reset()
-    idAndRouting.value = data
+    idAndRouting.value = { id, index, routing }
   }
 
   /**
