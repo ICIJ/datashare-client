@@ -49,11 +49,11 @@ const recommended = computed({
 })
 
 const deleteTag = (label) => {
-  return documentStore.deleteTagAction({ documents: [document.value], label })
+  return documentStore.deleteTag({ documents: [document.value], label })
 }
 
 const addTags = (labels) => {
-  return documentStore.addTagsAction({ documents: [document.value], labels })
+  return documentStore.addTags({ documents: [document.value], labels })
 }
 
 const fetchAllTags = async () => {
