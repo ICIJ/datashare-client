@@ -1,10 +1,9 @@
 <script setup>
 import { computed, ref, onBeforeMount } from 'vue'
 import { castArray } from 'lodash'
-import { useStore } from 'vuex'
 
 import { useSearchFilter } from '@/composables/search-filter'
-import { useStarredStore } from '@/store/modules/starred'
+import { useStarredStore, useSearchStore } from '@/store/modules'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 
@@ -15,8 +14,8 @@ const props = defineProps({
   }
 })
 
-const store = useStore()
 const starredStore = useStarredStore()
+const searchStore = useSearchStore()
 const { getTotal, getFilterValues, setFilterValue, watchIndices } = useSearchFilter()
 
 const total = ref(0)
@@ -24,7 +23,7 @@ const starredDocumentsCount = computed(() => props.filter.starredDocuments.lengt
 const notStarredDocumentsCount = computed(() => total.value - starredDocumentsCount.value)
 
 async function fetch() {
-  await starredStore.fetchIndicesStarredDocuments(store.state.search.indices)
+  await starredStore.fetchIndicesStarredDocuments(searchStore.indices)
   total.value = await getTotal()
 }
 
