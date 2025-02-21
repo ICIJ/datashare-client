@@ -2,27 +2,30 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { storeBuilder } from '@/store/storeBuilder'
+import { useSearchStore } from '@/store/modules'
 
 describe('SearchFilters', () => {
-  const { index: project, es } = esConnectionHelper.build()
-  const store = storeBuilder({ elasticsearch: es })
+  const { index, es } = esConnectionHelper.build()
 
-  beforeAll(() => store.commit('search/index', project))
-  beforeEach(() => setActivePinia(createPinia()))
-  afterEach(() => store.commit('search/reset'))
+  let searchStore
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    searchStore = useSearchStore()
+    searchStore.setIndex(index)
+  })
 
   describe('Common filter', () => {
     it('should reset the store state', () => {
-      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
-      store.commit('search/removeFilter', 'contentType')
-      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeUndefined()
-      store.commit('search/resetFilters')
-      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
+      expect(searchStore.getFilter({ name: 'contentType' })).toBeDefined()
+      searchStore.removeFilter('contentType')
+      expect(searchStore.getFilter({ name: 'contentType' })).toBeUndefined()
+      searchStore.resetFilters()
+      expect(searchStore.getFilter({ name: 'contentType' })).toBeDefined()
     })
 
     it('should define a "language" filter correctly (name, key and type)', () => {
-      const filter = store.getters['search/getFilter']({ name: 'language' })
+      const filter = searchStore.getFilter({ name: 'language' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('language')
@@ -30,19 +33,19 @@ describe('SearchFilters', () => {
     })
 
     it('should not find a "yolo-type" filter', () => {
-      expect(store.getters['search/getFilter']({ name: 'yo-type' })).toBeUndefined()
+      expect(searchStore.getFilter({ name: 'yo-type' })).toBeUndefined()
     })
 
     it('should add a filter', () => {
-      const length = store.getters['search/instantiatedFilters'].length
-      store.commit('search/addFilter', { type: 'FilterText', options: ['test', 'key', true, null] })
-      expect(store.getters['search/instantiatedFilters']).toHaveLength(length + 1)
+      const length = searchStore.instantiatedFilters.length
+      searchStore.addFilter({ type: 'FilterText', options: ['test', 'key', true, null] })
+      expect(searchStore.instantiatedFilters).toHaveLength(length + 1)
     })
   })
 
   describe('Content type filter', () => {
     it('should define a "contentType" filter correctly (name, key and type)', () => {
-      const filter = store.getters['search/getFilter']({ name: 'contentType' })
+      const filter = searchStore.getFilter({ name: 'contentType' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('contentType')
@@ -50,18 +53,18 @@ describe('SearchFilters', () => {
     })
 
     it('should find a "contentType" filter using object', () => {
-      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
+      expect(searchStore.getFilter({ name: 'contentType' })).toBeDefined()
     })
 
     it('should find a "contentType" filter using function', () => {
-      expect(store.getters['search/getFilter']((f) => f.name === 'contentType')).toBeDefined()
+      expect(searchStore.getFilter((f) => f.name === 'contentType')).toBeDefined()
     })
 
     it('should count 2 documents of type "type_01"', async () => {
-      await letData(es).have(new IndexedDocument('document_01', project).withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', project).withContentType('type_01')).commit()
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withContentType('type_01')).commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
+      const response = await searchStore.queryFilter({ name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(1)
       expect(response.aggregations.contentType.buckets[0].doc_count).toBe(2)
@@ -69,20 +72,20 @@ describe('SearchFilters', () => {
 
     it('should use contentType (without charset)', async () => {
       await letData(es)
-        .have(new IndexedDocument('document', project).withContentType('text/plain; charset=UTF-8'))
+        .have(new IndexedDocument('document', index).withContentType('text/plain; charset=UTF-8'))
         .commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
+      const response = await searchStore.queryFilter({ name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets[0].key).toBe('text/plain')
     })
 
     it('should count 2 documents of "type_01" and 1 document of "type_02"', async () => {
-      await letData(es).have(new IndexedDocument('document_01', project).withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', project).withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('document_03', project).withContentType('type_02')).commit()
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withContentType('type_01')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index).withContentType('type_02')).commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
+      const response = await searchStore.queryFilter({ name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(2)
       expect(response.aggregations.contentType.buckets[0].doc_count).toBe(2)
@@ -90,35 +93,35 @@ describe('SearchFilters', () => {
     })
 
     it('should count 2 pdf but have no hits', async () => {
-      await letData(es).have(new IndexedDocument('document_01', project).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('document_02', project).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withContentType('application/pdf')).commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
+      const response = await searchStore.queryFilter({ name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets[0].doc_count).toBe(2)
       expect(response.hits).toHaveLength(0)
     })
 
     it('should create 3 buckets from 3 documents', async () => {
-      await letData(es).have(new IndexedDocument('Api.js', project).withContentType('text/javascript')).commit()
-      await letData(es).have(new IndexedDocument('index.html', project).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('index.css', project).withContentType('text/css')).commit()
+      await letData(es).have(new IndexedDocument('Api.js', index).withContentType('text/javascript')).commit()
+      await letData(es).have(new IndexedDocument('index.html', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('index.css', index).withContentType('text/css')).commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
+      const response = await searchStore.queryFilter({ name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(3)
     })
 
     it('should create 3 buckets from 7 documents', async () => {
-      await letData(es).have(new IndexedDocument('Api.js', project).withContentType('text/javascript')).commit()
-      await letData(es).have(new IndexedDocument('list.js', project).withContentType('text/javascript')).commit()
-      await letData(es).have(new IndexedDocument('show.js', project).withContentType('text/javascript')).commit()
-      await letData(es).have(new IndexedDocument('index.html', project).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('list.html', project).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('index.css', project).withContentType('text/css')).commit()
-      await letData(es).have(new IndexedDocument('list.css', project).withContentType('text/css')).commit()
+      await letData(es).have(new IndexedDocument('Api.js', index).withContentType('text/javascript')).commit()
+      await letData(es).have(new IndexedDocument('list.js', index).withContentType('text/javascript')).commit()
+      await letData(es).have(new IndexedDocument('show.js', index).withContentType('text/javascript')).commit()
+      await letData(es).have(new IndexedDocument('index.html', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('list.html', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('index.css', index).withContentType('text/css')).commit()
+      await letData(es).have(new IndexedDocument('list.css', index).withContentType('text/css')).commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
+      const response = await searchStore.queryFilter({ name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(3)
     })
@@ -126,7 +129,7 @@ describe('SearchFilters', () => {
 
   describe('Path filter', () => {
     it('should define a `path` filter correctly (name, key and type)', () => {
-      const filter = store.getters['search/getFilter']({ name: 'path' })
+      const filter = searchStore.getFilter({ name: 'path' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byDirname')
@@ -138,7 +141,7 @@ describe('SearchFilters', () => {
     const name = 'indexingDate'
 
     it('should define an `indexing date` filter correctly (name, key and type)', () => {
-      const filter = store.getters['search/getFilter']({ name })
+      const filter = searchStore.getFilter({ name })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('extractionDate')
@@ -147,16 +150,16 @@ describe('SearchFilters', () => {
 
     it('should return the indexing date buckets', async () => {
       await letData(es)
-        .have(new IndexedDocument('doc_01.txt', project).withIndexingDate('2018-04-04T20:20:20.001Z'))
+        .have(new IndexedDocument('doc_01.txt', index).withIndexingDate('2018-04-04T20:20:20.001Z'))
         .commit()
       await letData(es)
-        .have(new IndexedDocument('doc_02.txt', project).withIndexingDate('2018-04-06T20:20:20.001Z'))
+        .have(new IndexedDocument('doc_02.txt', index).withIndexingDate('2018-04-06T20:20:20.001Z'))
         .commit()
       await letData(es)
-        .have(new IndexedDocument('doc_03.txt', project).withIndexingDate('2018-05-04T20:20:20.001Z'))
+        .have(new IndexedDocument('doc_03.txt', index).withIndexingDate('2018-05-04T20:20:20.001Z'))
         .commit()
 
-      const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
+      const response = await searchStore.queryFilter({ name, options: { size: 8 } })
 
       expect(response.aggregations.extractionDate.buckets).toHaveLength(2)
       expect(response.aggregations.extractionDate.buckets[0].key).toBe(1525132800000)
@@ -168,7 +171,7 @@ describe('SearchFilters', () => {
 
   describe('Named entities filter', () => {
     it('should define a `named-entity` filter correctly (name, key, type and PERSON category)', () => {
-      const filter = store.getters['search/getFilter']({ name: 'namedEntityPerson' })
+      const filter = searchStore.getFilter({ name: 'namedEntityPerson' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byMentions')
@@ -178,19 +181,17 @@ describe('SearchFilters', () => {
 
     it('should aggregate only the not hidden named entities for PERSON category', async () => {
       await letData(es)
-        .have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'PERSON', false))
+        .have(new IndexedDocument('doc_01.csv', index).withNer('entity_01', 42, 'PERSON', false))
         .commit()
       await letData(es)
-        .have(new IndexedDocument('doc_02.csv', project).withNer('entity_01', 43, 'PERSON', false))
+        .have(new IndexedDocument('doc_02.csv', index).withNer('entity_01', 43, 'PERSON', false))
         .commit()
+      await letData(es).have(new IndexedDocument('doc_03.csv', index).withNer('entity_02', 44, 'PERSON', true)).commit()
       await letData(es)
-        .have(new IndexedDocument('doc_03.csv', project).withNer('entity_02', 44, 'PERSON', true))
-        .commit()
-      await letData(es)
-        .have(new IndexedDocument('doc_04.csv', project).withNer('entity_03', 45, 'PERSON', false))
+        .have(new IndexedDocument('doc_04.csv', index).withNer('entity_03', 45, 'PERSON', false))
         .commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'namedEntityPerson' })
+      const response = await searchStore.queryFilter({ name: 'namedEntityPerson' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
       expect(response.aggregations.byMentions.buckets[0].key).toBe('entity_01')
@@ -201,32 +202,30 @@ describe('SearchFilters', () => {
 
     it('should aggregate named entities for LOCATION category', async () => {
       await letData(es)
-        .have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'LOCATION', false))
+        .have(new IndexedDocument('doc_01.csv', index).withNer('entity_01', 42, 'LOCATION', false))
         .commit()
       await letData(es)
-        .have(new IndexedDocument('doc_02.csv', project).withNer('entity_02', 43, 'LOCATION', false))
+        .have(new IndexedDocument('doc_02.csv', index).withNer('entity_02', 43, 'LOCATION', false))
         .commit()
       await letData(es)
-        .have(new IndexedDocument('doc_03.csv', project).withNer('entity_03', 44, 'ORGANIZATION', true))
+        .have(new IndexedDocument('doc_03.csv', index).withNer('entity_03', 44, 'ORGANIZATION', true))
         .commit()
 
-      const response = await store.dispatch('search/queryFilter', { name: 'namedEntityLocation', category: 'LOCATION' })
+      const response = await searchStore.queryFilter({ name: 'namedEntityLocation', category: 'LOCATION' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
     })
 
     it('should aggregate named entities for ORGANIZATION category', async () => {
       await letData(es)
-        .have(new IndexedDocument('doc_01.csv', project).withNer('entity_01', 42, 'ORGANIZATION', false))
+        .have(new IndexedDocument('doc_01.csv', index).withNer('entity_01', 42, 'ORGANIZATION', false))
         .commit()
       await letData(es)
-        .have(new IndexedDocument('doc_02.csv', project).withNer('entity_02', 43, 'ORGANIZATION', false))
+        .have(new IndexedDocument('doc_02.csv', index).withNer('entity_02', 43, 'ORGANIZATION', false))
         .commit()
-      await letData(es)
-        .have(new IndexedDocument('doc_03.csv', project).withNer('entity_03', 44, 'PERSON', true))
-        .commit()
+      await letData(es).have(new IndexedDocument('doc_03.csv', index).withNer('entity_03', 44, 'PERSON', true)).commit()
 
-      const response = await store.dispatch('search/queryFilter', {
+      const response = await searchStore.queryFilter({
         name: 'namedEntityOrganization',
         category: 'ORGANIZATION'
       })
@@ -239,16 +238,12 @@ describe('SearchFilters', () => {
     const name = 'creationDate'
 
     it('should merge all missing data', async () => {
-      await letData(es)
-        .have(new IndexedDocument('doc_01', project).withCreationDate('2018-04-01T00:00:00.001Z'))
-        .commit()
-      await letData(es)
-        .have(new IndexedDocument('doc_02', project).withCreationDate('2018-05-01T00:00:00.001Z'))
-        .commit()
-      await letData(es).have(new IndexedDocument('doc_03', project)).commit()
-      await letData(es).have(new IndexedDocument('doc_04', project)).commit()
+      await letData(es).have(new IndexedDocument('doc_01', index).withCreationDate('2018-04-01T00:00:00.001Z')).commit()
+      await letData(es).have(new IndexedDocument('doc_02', index).withCreationDate('2018-05-01T00:00:00.001Z')).commit()
+      await letData(es).have(new IndexedDocument('doc_03', index)).commit()
+      await letData(es).have(new IndexedDocument('doc_04', index)).commit()
 
-      const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
+      const response = await searchStore.queryFilter({ name, options: { size: 8 } })
 
       expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets).toHaveLength(2)
       expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets[0].key).toBe(0)
@@ -259,10 +254,10 @@ describe('SearchFilters', () => {
 
     it('should count only Document types and not the NamedEntities', async () => {
       await letData(es)
-        .have(new IndexedDocument('doc_01', project).withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01'))
+        .have(new IndexedDocument('doc_01', index).withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01'))
         .commit()
 
-      const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
+      const response = await searchStore.queryFilter({ name, options: { size: 8 } })
 
       expect(response.aggregations['metadata.tika_metadata_dcterms_created'].buckets).toHaveLength(1)
     })
@@ -270,7 +265,7 @@ describe('SearchFilters', () => {
 
   describe('Starred filter', () => {
     it('should define a `starred` filter correctly (name, key, type and starredDocuments)', () => {
-      const filter = store.getters['search/getFilter']({ name: 'starred' })
+      const filter = searchStore.getFilter({ name: 'starred' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('_id')
