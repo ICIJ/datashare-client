@@ -1,12 +1,13 @@
 import { Core } from '@/core'
-import { useHooksStore } from '@/store/modules/hooks'
+import { useHooksStore, useSearchStore } from '@/store/modules'
 
 describe('HooksMixin', () => {
-  let core, hooksStore
+  let core, hooksStore, searchStore
 
   beforeEach(async () => {
     core = Core.init().useAll()
     hooksStore = useHooksStore()
+    searchStore = useSearchStore()
   })
 
   afterEach(() => {
@@ -34,15 +35,15 @@ describe('HooksMixin', () => {
   it('should find one hooked components by its target name on the current project', async () => {
     core.registerHookForProject('first-index', { target: 'foo' })
     expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(0)
-    core.store.commit('search/indices', 'first-index')
+    searchStore.setIndex('first-index')
     expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(1)
   })
 
   it('should find no hooked components on the current project', async () => {
     core.registerHookForProject('first-index', { target: 'baz' })
-    core.store.commit('search/indices', 'first-index')
+    searchStore.setIndex('first-index')
     expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(1)
-    core.store.commit('search/indices', 'second-index')
+    searchStore.setIndex('second-index')
     expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(0)
   })
 
