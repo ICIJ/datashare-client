@@ -4,20 +4,20 @@ import { mount } from '@vue/test-utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import FilterDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
+import { useSearchStore } from '@/store/modules'
 
-describe('FilterDateRange.vue', () => {
-  const { index, es } = esConnectionHelper.build()
-  const api = { elasticsearch: es }
+describe('FilterTypeDateRange.vue', () => {
+  const { index } = esConnectionHelper.build()
   const name = 'creationDate'
 
-  let wrapper
+  let wrapper, searchStore
 
   beforeEach(() => {
-    const { store, plugins } = CoreSetup.init(api).useAll().useRouter()
-    const filter = store.getters['search/getFilter']({ name })
-
-    store.commit('search/decontextualizeFilter', name)
-    store.commit('search/index', index)
+    const { plugins } = CoreSetup.init().useAll().useRouter()
+    searchStore = useSearchStore()
+    searchStore.reset()
+    searchStore.decontextualizeFilter(name)
+    searchStore.setIndex(index)
 
     wrapper = mount(FilterDateRange, {
       global: {
@@ -25,12 +25,10 @@ describe('FilterDateRange.vue', () => {
         renderStubDefaultSlot: true
       },
       props: {
-        filter
+        filter: searchStore.getFilter({ name })
       }
     })
   })
-
-  afterEach(() => wrapper.vm.$store.commit('search/reset'))
 
   it('should add selected value to dedicated filter', async () => {
     const start = new Date('2019-08-19')
@@ -39,7 +37,7 @@ describe('FilterDateRange.vue', () => {
     await wrapper.findAll('input[type=text]').at(0).setValue(start.toDateString())
     await wrapper.findAll('input[type=text]').at(1).setValue(end.toDateString())
 
-    const existingFilter = find(wrapper.vm.$store.getters['search/instantiatedFilters'], { name })
+    const existingFilter = find(searchStore.instantiatedFilters, { name })
     expect(existingFilter.values).toEqual([`${start.getTime()}:${end.setUTCHours(23, 59, 59, 999)}`])
   })
 
