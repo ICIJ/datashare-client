@@ -2,17 +2,19 @@ import find from 'lodash/find'
 import { mount, shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 import CoreSetup from '~tests/unit/CoreSetup'
+import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
+import { useSearchStore } from '@/store/modules'
 
 describe('AppliedSearchFiltersItem.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const api = { elasticsearch: es }
-  let core
+  let core, searchStore
 
   beforeEach(() => {
     core = CoreSetup.init(api).useAll().useRouter()
-    core.store.commit('search/index', index)
+    searchStore = useSearchStore()
+    searchStore.setIndex(index)
   })
 
   describe('displays applied filter', () => {
@@ -55,14 +57,14 @@ describe('AppliedSearchFiltersItem.vue', () => {
     })
 
     it('should delete a filter term', async () => {
-      core.store.commit('search/addFilterValue', { name: 'contentType', value: 'term_01' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'term_01' })
       const props = { filter: { name: 'contentType', value: 'term_01', negation: false } }
       const { plugins } = core
       const wrapper = mount(AppliedSearchFiltersItem, { global: { plugins }, props })
 
       await wrapper.find('.applied-search-filters-item').trigger('click')
 
-      expect(find(core.store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
+      expect(find(searchStore.instantiatedFilters, { name: 'contentType' }).values).toHaveLength(0)
     })
   })
 })

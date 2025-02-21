@@ -34,8 +34,10 @@
 
 <script>
 import { uniqueId } from 'lodash'
+import { mapStores } from 'pinia'
 
 import displayUser from '@/utils/displayUser'
+import { useSearchStore } from '@/store/modules'
 
 /**
  * The filter applied to the search.
@@ -73,6 +75,7 @@ export default {
     }
   },
   computed: {
+    ...mapStores(useSearchStore),
     appliedSearchFiltersItemId() {
       return uniqueId('applied-search-filters-item-')
     },
@@ -110,12 +113,12 @@ export default {
         return
       }
       if (this.isQueryTerm) {
-        await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
+        await this.searchStore.queryDeleteQueryTerm(this.filter.value)
       } else {
-        await this.$store.dispatch('search/removeFilterValue', this.filter)
+        this.searchStore.removeFilterValue(this.filter)
       }
 
-      const query = this.$store.getters['search/toRouteQuery']()
+      const query = this.searchStore.toRouteQuery
       return this.$router.push({ name: 'search', query }).catch(() => {})
     }
   }
