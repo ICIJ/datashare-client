@@ -5,13 +5,14 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import { useSearchStore } from '@/store/modules'
 
 describe('SearchBar.vue', function () {
   const { index, es } = esConnectionHelper.build('search-bar')
   const { index: indexFoo } = esConnectionHelper.build('search-bar-foo')
-  const { plugins, config, store } = CoreSetup.init({ elasticsearch: es }).useAll().useRouter()
+  const { plugins, config } = CoreSetup.init().useAll().useRouter()
 
-  let wrapper = null
+  let wrapper, searchStore
 
   const shallowMountFactory = (props = {}) => {
     return shallowMount(SearchBar, {
@@ -35,6 +36,7 @@ describe('SearchBar.vue', function () {
   }
 
   beforeAll(() => {
+    searchStore = useSearchStore()
     config.set('projects', [
       { name: index, label: 'default' },
       { name: indexFoo, label: 'foo' }
@@ -42,12 +44,12 @@ describe('SearchBar.vue', function () {
   })
 
   beforeEach(() => {
-    store.commit('search/index', index)
-    store.commit('search/reset')
+    searchStore.setIndex(index)
+    searchStore.reset()
   })
 
   afterAll(() => {
-    store.commit('search/reset')
+    searchStore.reset()
   })
 
   it('should display search bar', () => {
@@ -110,25 +112,25 @@ describe('SearchBar.vue', function () {
     wrapper = shallowMountFactory()
     wrapper.setData({ query: 'foo' })
     wrapper.vm.submit()
-    expect(wrapper.vm.$store.state.search.query).toBe('foo')
+    expect(searchStore.q).toBe('foo')
 
     wrapper.setData({ query: 'bar' })
     wrapper.vm.submit()
-    expect(wrapper.vm.$store.state.search.query).toBe('bar')
+    expect(searchStore.q).toBe('bar')
   })
 
   it('should reset the from search parameter to 0', () => {
     wrapper = shallowMountFactory()
-    store.commit('search/from', 12)
+    searchStore.setFrom(12)
     wrapper.vm.submit()
 
-    expect(store.state.search.from).toBe(0)
+    expect(searchStore.from).toBe(0)
   })
 
   it('should submit the from with a different index', () => {
     wrapper = shallowMountFactory({ indices: [indexFoo] })
     wrapper.vm.submit()
-    expect(store.state.search.indices).toContain(indexFoo)
+    expect(searchStore.indices).toContain(indexFoo)
   })
 
   describe('search suggestions', () => {
