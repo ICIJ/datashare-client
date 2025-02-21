@@ -1,6 +1,5 @@
 import { computed, nextTick, watch } from 'vue'
 import { get, identity, isObject, last, toString, without } from 'lodash'
-import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -13,12 +12,11 @@ import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import FilterText from '@/store/filters/FilterText.js'
-import { useAppStore } from '@/store/modules/app'
-import { useRecommendedStore } from '@/store/modules/recommended'
+import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 
 export function useSearchFilter() {
-  const store = useStore()
   const appStore = useAppStore()
+  const searchStore = useSearchStore()
   const recommendedStore = useRecommendedStore()
   const route = useRoute()
   const router = useRouter()
@@ -34,7 +32,7 @@ export function useSearchFilter() {
     FilterTypeProject
   }
 
-  const indices = computed(() => store.state.search.indices)
+  const indices = computed(() => searchStore.indices)
 
   function getFilterComponent({ component }) {
     return filterTypes[component]
@@ -56,7 +54,7 @@ export function useSearchFilter() {
     if (filter instanceof FilterText) {
       return filter
     }
-    return store.getters['search/getFilter']({ name: filter })
+    return searchStore.getFilter({ name: filter })
   }
 
   function castFilterItem(value) {
@@ -71,16 +69,16 @@ export function useSearchFilter() {
 
   function computedProjects({ get = null, set = null } = {}) {
     get ??= () => indices.value
-    set ??= (indices) => store.commit('search/indices', indices)
+    set ??= (indices) => searchStore.setIndices(indices)
     return computed({ get, set })
   }
 
   function getFilterByName(name) {
-    return store.getters['search/getFilter']({ name })
+    return searchStore.getFilter({ name })
   }
 
   function getFilterValuesByName(name) {
-    return get(store.state, `search.values.${name}`, [])
+    return get(searchStore, `values.${name}`, [])
   }
 
   function getFilterValues({ name }) {
@@ -112,15 +110,15 @@ export function useSearchFilter() {
   }
 
   function setFilterValue(filter, item) {
-    store.commit('search/setFilterValue', filter.itemParam(castFilterItem(item)))
+    searchStore.setFilterValue(filter.itemParam(castFilterItem(item)))
   }
 
   function setQuery(query) {
-    store.commit('search/query', query)
+    searchStore.setQuery(query)
   }
 
   function setIndices(indices) {
-    store.commit('search/indices', indices)
+    searchStore.setIndices(indices)
   }
 
   const hasFilterValue = (filter, item) => {
@@ -143,18 +141,18 @@ export function useSearchFilter() {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
-    return store.commit('search/addFilterValue', { ...instance, value })
+    return searchStore.addFilterValue({ ...instance, value })
   }
 
   const removeFilterValue = (filter, item) => {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
-    return store.commit('search/removeFilterValue', { ...instance, value })
+    return searchStore.removeFilterValue({ ...instance, value })
   }
 
   const sortFilter = ({ name }, { sortBy, orderBy }) => {
-    store.commit('search/sortFilter', { name, sortBy, orderBy })
+    searchStore.sortFilter({ name, sortBy, orderBy })
   }
 
   function computedSortFilter(filter, { get = null, set = null } = {}) {
@@ -171,7 +169,7 @@ export function useSearchFilter() {
 
   function removeFilter(filter) {
     const { name } = castFilter(filter)
-    store.commit('search/removeFilter', name)
+    searchStore.removeFilter(name)
   }
 
   function removeIndex(index) {
@@ -179,7 +177,7 @@ export function useSearchFilter() {
   }
 
   function resetSearchResponse() {
-    store.commit('search/setResponse')
+    searchStore.setResponse()
   }
 
   async function refreshRouteAndSearch() {
@@ -189,7 +187,7 @@ export function useSearchFilter() {
 
   function refreshRoute() {
     const name = 'search'
-    const query = store.getters['search/toRouteQuery']()
+    const query = searchStore.toRouteQuery
     return router.push({ name, query })
   }
 
@@ -198,7 +196,7 @@ export function useSearchFilter() {
     const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
     appStore.setSettings({ view: 'search', perPage, orderBy: [sort, order] })
     // Update the search store using the route query
-    store.dispatch('search/updateFromRouteQuery', route.query)
+    searchStore.updateFromRouteQuery(route.query)
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -210,18 +208,18 @@ export function useSearchFilter() {
 
   async function refreshSearch() {
     await refreshRecommendedBy()
-    return store.dispatch('search/query')
+    return searchStore.query()
   }
 
   function toggleExcludeFilter({ name }, checked) {
     if (checked) {
-      return store.commit('search/excludeFilter', name)
+      return searchStore.excludeFilter(name)
     }
-    return store.commit('search/includeFilter', name)
+    return searchStore.includeFilter(name)
   }
 
   function isFilterExcluded({ name }) {
-    return store.getters['search/isFilterExcluded'](name)
+    return searchStore.isFilterExcluded(name)
   }
 
   function computedExcludeFilter(filter, { get = null, set = null } = {}) {
@@ -232,13 +230,13 @@ export function useSearchFilter() {
 
   function toggleContextualizeFilter({ name }, checked) {
     if (checked) {
-      return store.commit('search/contextualizeFilter', name)
+      return searchStore.contextualizeFilter(name)
     }
-    return store.commit('search/decontextualizeFilter', name)
+    return searchStore.decontextualizeFilter(name)
   }
 
   function isFilterContextualized({ name }) {
-    return store.getters['search/isFilterContextualized'](name)
+    return searchStore.isFilterContextualized(name)
   }
 
   function computedContextualizeFilter(filter, { get = null, set = null } = {}) {
@@ -276,19 +274,19 @@ export function useSearchFilter() {
   }
 
   function watchQuery(callback, options) {
-    return watch(() => store.state.search.query, callback, options)
+    return watch(() => searchStore.query, callback, options)
   }
 
   function watchFrom(callback, options) {
-    return watch(() => store.state.search.from, callback, options)
+    return watch(() => searchStore.from, callback, options)
   }
 
-  function watchIndices(callback, options) {
+  function watchIndices(callback, options = { deep: true }) {
     return watch(() => indices.value.join(','), callback, options)
   }
 
   function watchValues(callback, options = { deep: true }) {
-    return watch(() => store.state.search.values, callback, options)
+    return watch(() => searchStore.values, callback, options)
   }
 
   return {
