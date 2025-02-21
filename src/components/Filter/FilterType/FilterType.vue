@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, reactive, onBeforeMount, watch } from 'vue'
-import { useStore } from 'vuex'
 import { concat, compact, escapeRegExp, flatten, get, noop, uniqueId, setWith } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 
@@ -10,6 +9,7 @@ import FilterModal from '@/components/Filter/FilterModal/FilterModal'
 import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import settings from '@/utils/settings'
+import { useSearchStore } from '@/store/modules'
 
 const { filter, modal } = defineProps({
   filter: {
@@ -29,7 +29,7 @@ const collapse = ref(true)
 const expand = ref(false)
 
 const { wait } = useWait()
-const store = useStore()
+const searchStore = useSearchStore()
 
 const aggregateWithLoading = async ({ clearPages = false } = {}) => {
   wait.start(loaderId.value)
@@ -61,7 +61,7 @@ const aggregate = async ({ clearPages = false } = {}) => {
   const name = filter.name
   const from = clearPages ? 0 : offset.value
   const options = aggregationOptions.value
-  const page = await store.dispatch('search/queryFilter', { name, from, options, size: size.value })
+  const page = await searchStore.queryFilter({ name, from, options, size: size.value })
 
   // Wait for the page to be loaded to clear pages to avoid flickering
   if (clearPages) {

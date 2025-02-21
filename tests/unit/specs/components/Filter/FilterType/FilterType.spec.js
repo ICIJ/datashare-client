@@ -7,20 +7,21 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
+import { useSearchStore } from '@/store/modules'
 
 describe('FilterType.vue', () => {
   const { index, es } = esConnectionHelper.build('filter-type-a-')
   const { index: anotherIndex } = esConnectionHelper.build('filter-type-b-')
 
-  let core, wrapper, store
+  let core, wrapper, searchStore
 
   beforeAll(() => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
-    core = CoreSetup.init({ elasticsearch: es }).useAll().useRouter()
-    store = core.store
+    core = CoreSetup.init().useAll()
+    searchStore = useSearchStore()
   })
 
   afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
@@ -28,7 +29,7 @@ describe('FilterType.vue', () => {
   describe('contentType', () => {
     beforeEach(() => {
       const name = 'contentType'
-      const filter = core.store.getters['search/getFilter']({ name })
+      const filter = searchStore.getFilter({ name })
 
       wrapper = shallowMount(FilterType, {
         global: {
@@ -40,10 +41,10 @@ describe('FilterType.vue', () => {
         }
       })
 
-      store.commit('search/decontextualizeFilter', name)
-      store.commit('search/index', index)
-      store.commit('search/reset')
-      store.commit('search/resetFilters')
+      searchStore.decontextualizeFilter(name)
+      searchStore.setIndex(index)
+      searchStore.reset()
+      searchStore.resetFilters()
     })
 
     it('should display no items for the contentType filter', async () => {
@@ -74,8 +75,8 @@ describe('FilterType.vue', () => {
         .have(new IndexedDocument('document_02', index).withContentType('type_02').withLanguage('FRENCH'))
         .commit()
 
-      store.commit('search/contextualizeFilter', 'contentType')
-      store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
+      searchStore.contextualizeFilter('contentType')
+      searchStore.setFilterValue({ name: 'language', value: 'ENGLISH' })
       await wrapper.vm.aggregate({ clearPages: true })
       const findAllComponents = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(findAllComponents).toHaveLength(1)
@@ -102,7 +103,7 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
 
-      store.commit('search/sortFilter', { name, sortBy: '_key', orderBy: 'asc' })
+      searchStore.sortFilter({ name, sortBy: '_key', orderBy: 'asc' })
       await wrapper.vm.aggregate({ clearPages: true })
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
@@ -133,17 +134,17 @@ describe('FilterType.vue', () => {
         .have(new IndexedDocument('document_06', index).withContent('LIST').withContentType('text/stylesheet'))
         .commit()
 
-      store.commit('search/query', 'SHOW')
-      store.commit('search/decontextualizeFilter', 'contentType')
+      searchStore.setQuery('SHOW')
+      searchStore.decontextualizeFilter('contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.vm.lastPage.total).toBe(6)
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(3)
 
-      store.commit('search/contextualizeFilter', 'contentType')
+      searchStore.contextualizeFilter('contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
 
-      store.commit('search/query', 'INDEX')
+      searchStore.setQuery('INDEX')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
     })
@@ -156,17 +157,17 @@ describe('FilterType.vue', () => {
         .have(new IndexedDocument('document_02', index).withContent('Ipsum').withContentType('text/html'))
         .commit()
 
-      store.commit('search/query', 'Lorem')
-      store.commit('search/decontextualizeFilter', 'contentType')
+      searchStore.setQuery('Lorem')
+      searchStore.decontextualizeFilter('contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(2)
 
-      store.commit('search/contextualizeFilter', 'contentType')
+      searchStore.contextualizeFilter('contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
 
-      store.commit('search/decontextualizeFilter', 'contentType')
+      searchStore.decontextualizeFilter('contentType')
       await wrapper.vm.aggregate({ clearPages: true })
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
     })
@@ -176,8 +177,8 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/javascript')).commit()
 
-      store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
-      store.commit('search/excludeFilter', 'contentType')
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/javascript' })
+      searchStore.excludeFilter('contentType')
 
       await wrapper.vm.aggregate({ clearPages: true })
 
@@ -285,7 +286,7 @@ describe('FilterType.vue', () => {
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(2)
 
-      store.commit('search/index', anotherIndex)
+      searchStore.setIndex(anotherIndex)
       await wrapper.vm.aggregate({ clearPages: true })
 
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
@@ -296,7 +297,7 @@ describe('FilterType.vue', () => {
   describe('language', () => {
     beforeEach(() => {
       const name = 'language'
-      const filter = core.store.getters['search/getFilter']({ name })
+      const filter = searchStore.getFilter({ name })
 
       wrapper = shallowMount(FilterType, {
         global: {
@@ -308,16 +309,15 @@ describe('FilterType.vue', () => {
         }
       })
 
-      store.commit('search/decontextualizeFilter', name)
-      store.commit('search/index', index)
-      store.commit('search/reset')
+      searchStore.decontextualizeFilter(name)
+      searchStore.setIndex(index)
+      searchStore.reset()
     })
 
     it('should display the language filter in French', async () => {
       await core.loadI18Locale('fr')
       await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
       await wrapper.vm.aggregate({ clearPages: true })
-
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(1)
       expect(entries.at(0).attributes('label')).toBe('Anglais')
@@ -325,7 +325,7 @@ describe('FilterType.vue', () => {
 
     it('should translate any weird language', async () => {
       await core.loadI18Locale('fr')
-      await wrapper.setProps({ filter: store.getters['search/getFilter']({ name: 'language' }) })
+      await wrapper.setProps({ filter: searchStore.getFilter({ name: 'language' }) })
 
       await letData(es).have(new IndexedDocument('document_01', index).withLanguage('WELSH')).commit()
       await wrapper.vm.aggregate({ clearPages: true })
@@ -339,7 +339,7 @@ describe('FilterType.vue', () => {
   describe('extractionLevel', () => {
     beforeEach(() => {
       const name = 'extractionLevel'
-      const filter = core.store.getters['search/getFilter']({ name })
+      const filter = searchStore.getFilter({ name })
 
       wrapper = shallowMount(FilterType, {
         global: {
@@ -351,15 +351,14 @@ describe('FilterType.vue', () => {
         }
       })
 
-      store.commit('search/decontextualizeFilter', name)
-      store.commit('search/index', index)
-      store.commit('search/reset')
+      searchStore.decontextualizeFilter(name)
+      searchStore.setIndex(index)
+      searchStore.reset()
     })
 
     it('should display the extraction level filter with correct labels', async () => {
-      await wrapper.setProps({
-        filter: find(core.store.getters['search/instantiatedFilters'], { name: 'extractionLevel' })
-      })
+      const filter = find(searchStore.instantiatedFilters, { name: 'extractionLevel' })
+      await wrapper.setProps({ filter })
 
       await letData(es).have(new IndexedDocument('document_01', index)).commit()
       await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
@@ -372,7 +371,7 @@ describe('FilterType.vue', () => {
 
     it('should display the extraction level filter with correct labels in French', async () => {
       await core.loadI18Locale('fr')
-      const filter = store.getters['search/getFilter']({ name: 'extractionLevel' })
+      const filter = searchStore.getFilter({ name: 'extractionLevel' })
 
       await wrapper.setProps({ filter })
 
