@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
@@ -22,15 +21,15 @@ import { useSearchFilter } from '@/composables/search-filter'
 import { useSearchBreadcrumb } from '@/composables/search-breadcrumb'
 import { useViews } from '@/composables/views'
 import { LAYOUTS } from '@/enums/layouts'
-import { useAppStore } from '@/store/modules/app'
+import { useAppStore, useSearchStore } from '@/store/modules'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices } = useSearchFilter()
 const { count: searchBreadcrumbCounter } = useSearchBreadcrumb()
 const entriesRef = useTemplateRef('entries')
-const store = useStore()
 const appStore = useAppStore()
+const searchStore = useSearchStore()
 const route = useRoute()
 
 // The size query parameter is replaced by the perPage query parameter
@@ -48,17 +47,17 @@ replaceUrlParam({
   }
 })
 
-const entries = computed(() => store.state.search.response.hits)
+const entries = computed(() => searchStore.response.hits)
 const properties = computed(() => appStore.getSettings('search', 'properties'))
 const layout = computed(() => appStore.getSettings('search', 'layout'))
-const loading = computed(() => !store.state.search.isReady)
+const loading = computed(() => !searchStore.isReady)
 const hasNav = computed(() => toValue(layout) === LAYOUTS.LIST)
 
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
 
-const total = computed(() => parseInt(store.state.search.response.total))
+const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
 const page = useUrlPageFromWithStore({
   perPage: toValue(perPage),
@@ -66,7 +65,7 @@ const page = useUrlPageFromWithStore({
   // which while force the route to redirect to "search".
   to: 'search',
   // The value of the "from" query parameter is directly taken from the store state
-  get: () => store.state.search.from,
+  get: () => searchStore.from,
   // The value of the "from" query parameter is mutated with the store commit "search/from"
   set: 'search/from'
 })
@@ -89,9 +88,9 @@ resetSearchResponse()
 watch(() => route.query, whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
 
 // Refresh route query when filter values change
-watch(() => store.state.search.values, refreshRoute, { deep: true })
+watch(() => searchStore.values, refreshRoute, { deep: true })
 // Refresh route query when reversed filters change
-watch(() => store.state.search.excludeFilters, refreshRoute, { deep: true })
+watch(() => searchStore.excludeFilters, refreshRoute, { deep: true })
 // Refresh route query when projects change
 watchIndices(refreshRoute)
 </script>
