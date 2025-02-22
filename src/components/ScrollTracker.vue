@@ -86,7 +86,7 @@ export default {
       }
       if (this.target.nodeType > 0) {
         return this.target.getBoundingClientRect()
-      } 
+      }
       return { top: this.target.y, left: this.target.x, bottom: 0, right: 0 }
     }
   }
