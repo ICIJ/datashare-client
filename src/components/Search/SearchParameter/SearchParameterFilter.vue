@@ -5,7 +5,7 @@ import { trimStart } from 'lodash'
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
 import * as types from '@/store/filters'
-import filters from '@/store/filters'
+import filtersDefs from '@/store/filters'
 
 const props = defineProps({
   name: {
@@ -41,7 +41,7 @@ const props = defineProps({
 })
 
 const filter = computed(() => {
-  return filters.find((filter) => filter.options.name === field.value)
+  return filtersDefs.find((filter) => filter.options.name === field.value)
 })
 
 const prefix = computed(() => {
@@ -68,7 +68,7 @@ const color = computed(() => {
 })
 
 const display = computed(() => {
-  return types[filter.value.type].display ?? null
+  return filter.value ? types[filter.value.type].display ?? null : null
 })
 </script>
 
