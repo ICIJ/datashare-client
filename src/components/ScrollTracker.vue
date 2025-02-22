@@ -81,11 +81,13 @@ export default {
       return top > (window.innerHeight || document.documentElement.clientHeight)
     },
     targetBoundingClientRect() {
+      if (!this.target) {
+        return { top: 0, left: 0, bottom: 0, right: 0 }
+      }
       if (this.target.nodeType > 0) {
         return this.target.getBoundingClientRect()
-      } else {
-        return { top: this.target.y, left: this.target.x, bottom: 0, right: 0 }
-      }
+      } 
+      return { top: this.target.y, left: this.target.x, bottom: 0, right: 0 }
     }
   }
 }
