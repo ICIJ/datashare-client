@@ -4,17 +4,11 @@ import CoreSetup from '~tests/unit/CoreSetup'
 
 import AppSidebar from '@/components/AppSidebar/AppSidebar'
 
-vi.mock('@/api/resources/Auth', async (importOriginal) => {
-  const { default: Auth } = await importOriginal()
-
-  return {
-    default: class extends Auth {
-      async getUsername() {
-        return 'test'
-      }
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    getUser: vi.fn().mockResolvedValue({ uid: 'local' })
   }
-})
+}))
 
 describe('AppSidebar.vue', () => {
   const { config, plugins, router } = CoreSetup.init().useAll().useRouter()
