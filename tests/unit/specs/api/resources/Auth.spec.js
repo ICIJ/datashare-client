@@ -1,17 +1,23 @@
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
-import { getMode } from '@/mode'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    getUser: vi.fn(),
+    setSettings: vi.fn()
+  }
+})
 
 describe('auth backend client', () => {
   let auth
-  let api
 
   beforeAll(() => {
-    api = { getUser: vi.fn(), setSettings: vi.fn() }
-    const core = Core.init(api, getMode()).useAll()
+    const core = Core.init().useAll()
     auth = core.auth
   })
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
