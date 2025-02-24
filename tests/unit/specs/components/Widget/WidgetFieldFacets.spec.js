@@ -31,7 +31,7 @@ describe('WidgetFieldFacets.vue', () => {
   })
 
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init({ elasticsearch }).useAll().useRouter()
+    const { plugins } = CoreSetup.init({ elasticsearch }).useAll().useRouterWithoutGuards()
 
     wrapper = shallowMount(WidgetFieldFacets, {
       global: {
