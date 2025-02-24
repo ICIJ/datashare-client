@@ -2,19 +2,24 @@ import { shallowMount } from '@vue/test-utils'
 
 import VersionNumber from '@/components/VersionNumber'
 import { Core } from '@/core'
-import { getMode, MODE_NAME } from '@/mode'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    getVersion: vi.fn()
+  }
+})
 
 describe('VersionNumber.vue', () => {
   let core, wrapper
 
   beforeAll(() => {
-    const api = {
-      getVersion: vi.fn().mockResolvedValue({
-        'git.tag': 'X.Y.Z',
-        'git.commit.id.abbrev': 'sha1_abbrev'
-      })
-    }
-    core = Core.init(api, getMode(MODE_NAME.SERVER)).useAll()
+    api.getVersion.mockResolvedValue({
+      'git.tag': 'X.Y.Z',
+      'git.commit.id.abbrev': 'sha1_abbrev'
+    })
+
+    core = Core.init().useAll()
   })
 
   beforeEach(() => {
