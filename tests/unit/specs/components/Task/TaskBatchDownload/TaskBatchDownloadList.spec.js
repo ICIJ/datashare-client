@@ -112,7 +112,7 @@ describe('TaskBatchDownloadList.vue', () => {
       }
     ])
 
-    const core = CoreSetup.init().useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
   })
 
