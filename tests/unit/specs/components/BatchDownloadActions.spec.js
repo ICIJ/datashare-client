@@ -1,13 +1,21 @@
 import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import BatchDownloadActions from '@/components/BatchDownloadActions'
 import CoreSetup from '~tests/unit/CoreSetup'
+import BatchDownloadActions from '@/components/BatchDownloadActions'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    runBatchDownload: vi.fn(),
+    deleteTask: vi.fn()
+  }
+})
 
 describe('BatchDownloadActions.vue', () => {
-  const api = { runBatchDownload: vi.fn(), deleteTask: vi.fn() }
   const projects = [{ name: 'project' }]
   let plugins
+
   function mockRunBatchDownload(id = 'id', name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
     const data = {
       id,
@@ -29,10 +37,12 @@ describe('BatchDownloadActions.vue', () => {
     api.deleteTask.mockRejectedValue(new Error(''))
     return { value: batchDownload, id, name, state }
   }
+
   beforeAll(() => {
-    const core = CoreSetup.init(api).useAll()
+    const core = CoreSetup.init().useAll()
     plugins = [core.plugin, core.i18n]
   })
+
   beforeEach(async () => {
     await flushPromises()
     vi.clearAllMocks()
