@@ -3,13 +3,20 @@ import { mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayUser from '@/components/Display/DisplayUser'
 
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getUser: vi.fn().mockResolvedValue({ uid: 'local' })
+    }
+  }
+})
+
 describe('DisplayUser.vue', () => {
   const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
-  let wrapper, api, core
+  let wrapper, core
 
   beforeAll(() => {
-    api = { getUser: vi.fn().mockResolvedValue({ uid: 'local' }) }
-    core = CoreSetup.init(api).useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouter()
     window.datashare = core
   })
 
