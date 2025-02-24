@@ -6,7 +6,7 @@ import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/Sea
 describe('SearchBarInputDropdownForProjects', () => {
   let plugins
   beforeAll(() => {
-    const core = CoreSetup.init().useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     const config = core.config
     plugins = core.plugins
     config.set('defaultProject', 'default-project')
