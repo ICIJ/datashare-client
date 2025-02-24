@@ -5,6 +5,16 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import BatchSearchResultsTable from '@/components/BatchSearchResultsTable'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    getBatchSearchQueries: vi.fn(),
+    getBatchSearchResults: vi.fn(),
+    getBatchSearch: vi.fn(),
+    copyBatchSearch: vi.fn()
+  }
+})
 
 describe('BatchSearchResultsTable.vue', () => {
   const routes = [
@@ -26,8 +36,8 @@ describe('BatchSearchResultsTable.vue', () => {
   let wrapper, core
 
   beforeEach(async () => {
-    const api = vi.fn()
     api.getBatchSearchQueries = vi.fn()
+
     api.getBatchSearchResults = vi.fn().mockResolvedValue({
       items: [
         {
@@ -63,6 +73,7 @@ describe('BatchSearchResultsTable.vue', () => {
       ],
       pagination: { total: 3 }
     })
+
     api.getBatchSearch = vi.fn().mockResolvedValue({
       uuid: '12',
       projects: [{ name: project }, { name: anotherProject }],
@@ -85,8 +96,10 @@ describe('BatchSearchResultsTable.vue', () => {
         id: 'test'
       }
     })
+
     api.copyBatchSearch = vi.fn()
-    core = CoreSetup.init(api).useAll().useRouter(routes)
+
+    core = CoreSetup.init().useAll().useRouter(routes)
     core.config.merge({ mode: 'SERVER', projects: [{ name: project }, { name: anotherProject }] })
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
