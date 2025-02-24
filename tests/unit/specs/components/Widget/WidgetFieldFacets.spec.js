@@ -6,32 +6,35 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetFieldFacets from '@/components/Widget/WidgetFieldFacets'
 
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      elasticsearch: {
+        search: vi.fn().mockResolvedValue({
+          aggregations: {
+            facets: {
+              buckets: [
+                { key: 'foo', doc_count: 10 },
+                { key: 'bar', doc_count: 20 }
+              ]
+            }
+          },
+          hits: {
+            total: { value: 30 }
+          }
+        })
+      }
+    }
+  }
+})
+
 describe('WidgetFieldFacets.vue', () => {
-  const { es: elasticsearch, index: project } = esConnectionHelper.build()
+  const { index: project } = esConnectionHelper.build()
 
   let wrapper
 
-  beforeAll(() => {
-    // Mock all elasticsearch search calls using a mock
-    elasticsearch.search = vi.fn().mockImplementation(() => {
-      return Promise.resolve({
-        aggregations: {
-          facets: {
-            buckets: [
-              { key: 'foo', doc_count: 10 },
-              { key: 'bar', doc_count: 20 }
-            ]
-          }
-        },
-        hits: {
-          total: { value: 30 }
-        }
-      })
-    })
-  })
-
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init({ elasticsearch }).useAll().useRouterWithoutGuards()
+    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
     wrapper = shallowMount(WidgetFieldFacets, {
       global: {
