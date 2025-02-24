@@ -447,7 +447,7 @@ export const useSearchStore = defineStore('search', () => {
     withRouteQuery('field', setField)
     // Iterate over the list of filter
     instantiatedFilters.value.forEach((filter) => {
-      // The filter key are formatted in the URL as follow: f[filterName] or f[-filterName] for inexcluded filters
+      // The filter key are formatted in the URL as follow: f[filterName] or f[-filterName] for excluded filters
       withRouteQuery(`f[${filter.name}]`, (key) => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, (key) => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
