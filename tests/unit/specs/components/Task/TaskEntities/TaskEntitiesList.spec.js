@@ -30,7 +30,7 @@ describe('TaskEntitiesList.vue', () => {
       ]
     })
 
-    const core = CoreSetup.init(api).useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouter()
     plugins = core.plugins
   })
 
