@@ -14,7 +14,7 @@ describe('Search.vue', () => {
   let core, wrapper
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
 
     wrapper = shallowMount(Search, {
       global: {
