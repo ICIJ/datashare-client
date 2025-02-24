@@ -3,15 +3,18 @@ import { mount, shallowMount } from '@vue/test-utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Extensions from '@/components/Extensions'
+import { apiInstance as api } from '@/api/apiInstance'
 
-describe('Extensions.vue', () => {
-  const api = {
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
     getExtensions: vi.fn(),
     installExtensionFromId: vi.fn(),
     installExtensionFromUrl: vi.fn(),
     uninstallExtension: vi.fn()
   }
+})
 
+describe('Extensions.vue', () => {
   const mockedExtensions = [
     {
       id: 'extension_01_id',
@@ -65,11 +68,11 @@ describe('Extensions.vue', () => {
     }
   ]
 
-  const core = CoreSetup.init(api).useAll()
-  let wrapper
+  let core, wrapper
 
   beforeEach(async () => {
     vi.clearAllMocks()
+    core = CoreSetup.init().useAll()
     api.getExtensions.mockResolvedValue(mockedExtensions)
     wrapper = shallowMount(Extensions, {
       global: {
