@@ -7,12 +7,11 @@ import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 import { useSearchStore } from '@/store/modules'
 
 describe('AppliedSearchFiltersItem.vue', () => {
-  const { index, es } = esConnectionHelper.build()
-  const api = { elasticsearch: es }
+  const { index } = esConnectionHelper.build()
   let core, searchStore
 
   beforeEach(() => {
-    core = CoreSetup.init(api).useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouter()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
   })
