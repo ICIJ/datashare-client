@@ -8,14 +8,24 @@ import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import CoreSetup from '~tests/unit/CoreSetup'
 
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      getStarredDocuments: vi.fn().mockResolvedValue([])
+    }
+  }
+})
+
 describe('FilterTypeStarred.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  let api, core, starredStore, searchStore, wrapper
+  let core, starredStore, searchStore, wrapper
 
   beforeAll(() => {
-    api = { getStarredDocuments: vi.fn().mockResolvedValue([]), elasticsearch: es }
-    core = CoreSetup.init(api).useAll().useRouter()
-    starredStore = useStarredStore(api)
+    core = CoreSetup.init().useAll().useRouter()
+    starredStore = useStarredStore()
     searchStore = useSearchStore()
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
