@@ -3,13 +3,22 @@ import { shallowMount, mount } from '@vue/test-utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      updateProject: vi.fn(),
+      deleteProject: vi.fn()
+    }
+  }
+})
 
 describe('ProjectViewEdit.vue', () => {
-  let api, core
+  let core
 
   beforeEach(() => {
-    api = { updateProject: vi.fn(), deleteProject: vi.fn() }
-    core = CoreSetup.init(api).useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouter()
     // Ensure the local-datashare project can be found
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
