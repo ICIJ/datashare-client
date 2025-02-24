@@ -1,24 +1,26 @@
 import { shallowMount } from '@vue/test-utils'
-import { vi } from 'vitest'
 
-import AppSidebar from '@/components/AppSidebar/AppSidebar'
 import CoreSetup from '~tests/unit/CoreSetup'
 
-vi.mock('@/utils/utils', () => {
+import AppSidebar from '@/components/AppSidebar/AppSidebar'
+
+vi.mock('@/api/resources/Auth', async (importOriginal) => {
+  const { default: Auth } = await importOriginal()
+
   return {
-    getOS: vi.fn(),
-    isAuthenticated: vi.fn()
+    default: class extends Auth {
+      async getUsername() {
+        return 'test'
+      }
+    }
   }
 })
 
 describe('AppSidebar.vue', () => {
-  const api = {
-    getVersion: vi.fn().mockResolvedValue({ version: { 'git.commit.id.abbrev': '', 'git.build.version': '' } })
-  }
-
-  const { config, plugins, router } = CoreSetup.init(api).useAll().useRouter()
-  let wrapper = null
+  const { config, plugins, router } = CoreSetup.init().useAll().useRouter()
   const options = { global: { plugins, renderStubDefaultSlot: true, stubs: { LocalesMenu: false } }, router }
+
+  let wrapper
 
   function setServerMode() {
     config.merge({ mode: 'SERVER' })
@@ -33,10 +35,6 @@ describe('AppSidebar.vue', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
     wrapper = setLocalMode()
-  })
-
-  afterAll(() => {
-    vi.unmock('@/utils/utils')
   })
 
   describe('the logout link', () => {
