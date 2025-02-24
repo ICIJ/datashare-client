@@ -36,7 +36,7 @@ describe('BatchSearchResultsDetails.vue', () => {
 
     beforeEach(async () => {
       const props = { batchSearch }
-      const core = CoreSetup.init().useAll().useRouter()
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
       core.config.merge({ mode: 'SERVER' })
       core.auth.getUsername = vi.fn().mockResolvedValue('test')
       plugins = core.plugins
@@ -101,7 +101,7 @@ describe('BatchSearchResultsDetails.vue', () => {
 
     beforeEach(async () => {
       const props = { batchSearch }
-      const core = CoreSetup.init().useAll().useRouter()
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
       core.config.merge({ mode: 'SERVER' })
       core.auth.getUsername = vi.fn().mockResolvedValue('test')
       plugins = core.plugins
