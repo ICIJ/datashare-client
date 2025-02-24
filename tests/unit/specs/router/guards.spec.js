@@ -5,6 +5,19 @@ import { expect } from 'vitest'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 
+vi.mock('@/api/resources/Auth', async (importOriginal) => {
+  const { default: Auth } = await importOriginal()
+
+  return {
+    default: class extends Auth {
+      async getUsername() {
+        return 'test'
+      }
+    }
+  }
+})
+
+
 describe('guards', () => {
   const { router, plugins, config } = CoreSetup.init().useAll().useRouter()
 
