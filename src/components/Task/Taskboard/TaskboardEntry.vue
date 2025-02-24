@@ -9,9 +9,9 @@ defineProps({
   title: { type: String, default: '' },
   icon: { type: String },
   description: { type: String, default: '' },
-  info: { type: String },
-  listLink: { type: String },
-  actionLink: { type: String },
+  info: { type: [String, Object] },
+  listLink: { type: [String, Object] },
+  actionLink: { type: [String, Object] },
   actionText: { type: String }
 })
 

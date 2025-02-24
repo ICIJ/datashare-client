@@ -9,6 +9,7 @@ import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
+import DisplayProjectList from '@/components/Display/DisplayProjectList'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 
@@ -55,13 +56,16 @@ function downloadResultsUrl(item) {
         </a>
       </template>
 
+      <template #cell(projects)="{ item }">
+        <display-project-list :values="item.args.batchDownload.projects" />
+      </template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />
       </template>
-
       <template #cell(size)="{ item }">
         <display-content-length v-if="hasZipSize(item)" :value="item.result.size" />
       </template>
+      <template #cell(action)="{ item }"> Delete + Open Close </template>
     </task-list>
   </task-page>
 </template>

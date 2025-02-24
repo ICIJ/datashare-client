@@ -8,6 +8,8 @@ import DisplayProgress from '@/components/Display/DisplayProgress'
 import { getHumanTaskName, TASK_NAME } from '@/enums/taskNames'
 import { useTaskSettings } from '@/composables/task-settings'
 import { useTaskStore } from '@/store/modules'
+import DisplayNumber from '@/components/Display/DisplayNumber'
+import DisplayProjectList from '@/components/Display/DisplayProjectList'
 
 const taskStore = useTaskStore()
 const settingName = 'documents'
@@ -17,6 +19,9 @@ const { propertiesModelValueOptions } = useTaskSettings(settingName)
 async function stopTask(name) {
   await taskStore.stopTask(name)
   await taskStore.getTasks()
+}
+function getProject(item) {
+  return item.args.defaultProject
 }
 </script>
 
@@ -37,9 +42,11 @@ async function stopTask(name) {
       @update:order="updateOrder"
     >
       <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
-      <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
-      <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
       <template #cell(name)="{ item }">{{ getHumanTaskName(item.name) }}</template>
+      <template #cell(documents)="{ item }"><display-number :value="item.result[1]" /></template>
+      <template #cell(project)="{ item }"> <display-project-list :values="getProject(item)" /></template>
+      <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
+      <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
       <template #cell(action)="{ item }">
         <button-icon
           variant="outline-secondary"
