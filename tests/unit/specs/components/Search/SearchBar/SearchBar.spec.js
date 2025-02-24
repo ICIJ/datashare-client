@@ -10,7 +10,7 @@ import { useSearchStore } from '@/store/modules'
 describe('SearchBar.vue', function () {
   const { index, es } = esConnectionHelper.build('search-bar')
   const { index: indexFoo } = esConnectionHelper.build('search-bar-foo')
-  const { plugins, config } = CoreSetup.init().useAll().useRouter()
+  const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
   let wrapper, searchStore
 
