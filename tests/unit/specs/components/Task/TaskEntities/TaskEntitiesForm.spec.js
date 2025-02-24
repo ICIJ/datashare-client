@@ -2,13 +2,23 @@ import { flushPromises, mount, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskEntitiesForm from '@/components/Task/TaskEntities/TaskEntitiesForm'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getNerPipelines: vi.fn().mockResolvedValue(['CORENLP', 'ANOTHERNLP', 'TOTONLP', 'EMAIL']),
+      findNames: vi.fn()
+    }
+  }
+})
 
 describe('TaskEntitiesForm.vue', () => {
-  let api, plugins
+  let plugins
 
   beforeEach(() => {
-    api = { getNerPipelines: vi.fn(), findNames: vi.fn() }
-    const core = CoreSetup.init(api).useAll().useRouter()
+    vi.clearAllMocks()
+    const core = CoreSetup.init().useAll().useRouter()
     const config = core.config
     plugins = core.plugins
     config.set('defaultProject', 'local-datashare')
@@ -52,15 +62,13 @@ describe('TaskEntitiesForm.vue', () => {
     )
   })
 
-  it('should display two pipelines without email', async () => {
-    api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'TOTONLP', 'EMAIL'])
+  it('should display three pipelines without email', async () => {
     const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
     await flushPromises()
-    expect(wrapper.findAll('[name=pipeline]')).toHaveLength(2)
+    expect(wrapper.findAll('[name=pipeline]')).toHaveLength(3)
   })
 
   it('should call findNames action with ANOTHERNLP pipeline', async () => {
-    api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'TOTONLP', 'EMAIL'])
     const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
     await flushPromises()
     wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
@@ -74,14 +82,13 @@ describe('TaskEntitiesForm.vue', () => {
   })
 
   it('should call findNames action with no models synchronization', async () => {
-    api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'CORENLP', 'EMAIL'])
     const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
     await flushPromises()
-    wrapper.find('[name=pipeline][value=CORENLP]').setChecked()
+    wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
     wrapper.find('[name=offline][value=true]').setChecked()
     await wrapper.vm.submit()
     expect(api.findNames).toBeCalledWith(
-      'CORENLP',
+      'ANOTHERNLP',
       expect.objectContaining({
         syncModels: false
       })
@@ -89,7 +96,6 @@ describe('TaskEntitiesForm.vue', () => {
   })
 
   it('should reset the form on reset button clicked', async () => {
-    api.getNerPipelines.mockResolvedValue(['ANOTHERNLP', 'CORENLP', 'EMAIL'])
     const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
     await flushPromises()
     wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
