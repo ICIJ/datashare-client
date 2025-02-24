@@ -1,12 +1,10 @@
 import { flushPromises } from '~tests/unit/tests_utils'
 import { storeBuilder } from '@/store/storeBuilder'
+import { apiInstance as api } from '@/api/apiInstance'
 
-describe('BatchSearchStore', () => {
-  let api
-  let store
-
-  beforeAll(() => {
-    api = {
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
       getBatchSearchQueries: vi.fn(),
       getBatchSearch: vi.fn(),
       getBatchSearchResults: vi.fn(),
@@ -15,7 +13,11 @@ describe('BatchSearchStore', () => {
       deleteBatchSearch: vi.fn(),
       deleteBatchSearches: vi.fn()
     }
-  })
+  }
+})
+
+describe('BatchSearchStore', () => {
+  let store
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -185,18 +187,10 @@ describe('BatchSearchStore', () => {
 })
 
 describe('without using api', () => {
-  let store, api
+  let store
 
-  beforeAll(() => {
-    api = {
-      getBatchSearches: vi.fn(),
-      deleteBatchSearch: vi.fn(),
-      batchSearch: vi.fn()
-    }
-
-    store = storeBuilder(api)
-  })
   beforeEach(() => {
+    store = storeBuilder(api)
     store.state.batchSearch.nbBatchSearches = 0
     store.state.batchSearch.total = 0
     store.state.batchSearch.batchSearches = {}
