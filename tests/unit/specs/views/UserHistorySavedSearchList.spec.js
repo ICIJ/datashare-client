@@ -2,6 +2,15 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import UserHistorySavedSearchList from '@/views/UserHistorySavedSearchList'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      deleteUserHistoryEvent: vi.fn().mockResolvedValue({})
+    }
+  }
+})
 
 const props = {
   events: [
@@ -37,11 +46,10 @@ const props = {
 }
 
 describe('UserHistorySavedSearchList.vue', () => {
-  let api, wrapper
+  let wrapper
 
   beforeEach(async () => {
-    api = { deleteUserHistoryEvent: vi.fn().mockResolvedValue({}) }
-    const { plugins } = CoreSetup.init(api).useAll()
+    const { plugins } = CoreSetup.init().useAll()
     wrapper = await shallowMount(UserHistorySavedSearchList, { global: { plugins }, props })
   })
 
