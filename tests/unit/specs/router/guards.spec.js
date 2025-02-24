@@ -16,7 +16,6 @@ describe('guards', () => {
   const { auth, router, plugins, config } = CoreSetup.init().useAll().useRouter()
 
   describe('checkUserAuthentication', () => {
-
     beforeEach(async () => {
       vi.clearAllMocks()
       config.set('mode', 'SERVER')
@@ -59,7 +58,6 @@ describe('guards', () => {
         expect(router.currentRoute.value.name).toBe('login')
       })
     })
-
   })
 
   describe('checkMode', () => {
