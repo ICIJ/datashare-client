@@ -24,7 +24,7 @@ describe('FilterTypePath.vue', () => {
   let core, searchStore, wrapper
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     core.config.set('dataDir', '/data')
 
     searchStore = useSearchStore()
