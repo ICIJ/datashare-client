@@ -24,7 +24,7 @@ describe('FilterTypeStarred.vue', () => {
   let core, starredStore, searchStore, wrapper
 
   beforeAll(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     starredStore = useStarredStore()
     searchStore = useSearchStore()
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
