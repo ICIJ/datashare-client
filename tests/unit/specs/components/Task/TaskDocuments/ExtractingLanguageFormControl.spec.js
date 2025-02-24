@@ -3,28 +3,28 @@ import { mount } from '@vue/test-utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ExtractingLanguageFormControl from '@/components/Task/TaskDocuments/ExtractingLanguageFormControl'
+import { apiInstance as api } from '@/api/apiInstance'
 
-const TEXT_LANGUAGES = [
-  { name: 'CHINESE', iso6392: 'zho' },
-  { name: 'ENGLISH', iso6392: 'eng' },
-  { name: 'FRENCH', iso6392: 'fra' },
-  { name: 'SPANISH', iso6392: 'spa' },
-  { name: 'ITALIAN', iso6392: 'ita' }
-]
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      textLanguages: vi.fn().mockResolvedValue([
+        { name: 'CHINESE', iso6392: 'zho' },
+        { name: 'ENGLISH', iso6392: 'eng' },
+        { name: 'FRENCH', iso6392: 'fra' },
+        { name: 'SPANISH', iso6392: 'spa' },
+        { name: 'ITALIAN', iso6392: 'ita' }
+      ])
+    }
+  }
+})
 
 describe('ExtractingLanguageFormControl.vue', () => {
-  let api
-
-  beforeEach(async () => {
-    api = { textLanguages: vi.fn() }
-  })
-
   describe('Has languages available', () => {
     let wrapper
 
     beforeEach(async () => {
-      api.textLanguages.mockResolvedValue(TEXT_LANGUAGES)
-      const { plugins } = CoreSetup.init(api).useAll()
+      const { plugins } = CoreSetup.init().useAll()
       wrapper = mount(ExtractingLanguageFormControl, { global: { plugins } })
       await flushPromises()
     })
@@ -55,7 +55,7 @@ describe('ExtractingLanguageFormControl.vue', () => {
 
     beforeEach(async () => {
       api.textLanguages.mockRejectedValue({})
-      const { plugins } = CoreSetup.init(api).useAll()
+      const { plugins } = CoreSetup.init().useAll()
       wrapper = mount(ExtractingLanguageFormControl, { global: { plugins } })
       await flushPromises()
     })
