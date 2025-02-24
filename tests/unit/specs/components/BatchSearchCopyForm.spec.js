@@ -1,14 +1,20 @@
 import { shallowMount } from '@vue/test-utils'
 
-import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
 import CoreSetup from '~tests/unit/CoreSetup'
+import BatchSearchCopyForm from '@/components/BatchSearchCopyForm'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    copyBatchSearch: vi.fn()
+  }
+})
 
 describe('BatchSearchCopyForm.vue', () => {
   let wrapper, plugins, router, store
-  const api = { copyBatchSearch: vi.fn() }
 
   beforeAll(() => {
-    const core = CoreSetup.init(api).useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouter()
     core.config.set('mode', 'SERVER')
     router = core.router
     store = core.store
