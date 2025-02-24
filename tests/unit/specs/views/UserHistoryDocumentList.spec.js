@@ -47,7 +47,7 @@ describe('UserHistoryDocumentList.vue', () => {
   let core
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     core.config.set('projects', [{ name: 'server-project1' }, { name: 'server-project2' }])
   })
 
