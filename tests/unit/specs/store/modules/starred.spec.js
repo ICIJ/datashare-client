@@ -3,15 +3,25 @@ import { setActivePinia, createPinia } from 'pinia'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { useStarredStore, useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getStarredDocuments: vi.fn(),
+      starDocuments: vi.fn(),
+      unstarDocuments: vi.fn()
+    }
+  }
+})
 
 describe('StarredStore', () => {
   const { index, es } = esConnectionHelper.build()
-  let starredStore, searchStore, filter, api
+  let starredStore, searchStore, filter
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    api = { getStarredDocuments: vi.fn(), starDocuments: vi.fn(), unstarDocuments: vi.fn() }
-    starredStore = useStarredStore(api)
+    starredStore = useStarredStore()
     searchStore = useSearchStore()
     // Get the starred filter from the search store to test the interaction between the two stores
     filter = searchStore.getFilter({ name: 'starred' })
