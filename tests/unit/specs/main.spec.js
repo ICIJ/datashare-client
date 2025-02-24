@@ -27,7 +27,7 @@ describe('main', () => {
   beforeEach(async () => {
     api.getUser.mockClear()
     document.body.appendChild(createContainer())
-    core = createCore(api)
+    core = createCore()
     hooksStore = useHooksStore()
     vm = await core.ready
     vm = vm.useRouter().mount()
@@ -45,7 +45,7 @@ describe('main', () => {
     const app = document.createElement('div')
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
-    core = createCore(api)
+    core = createCore()
     vm = await core.ready
     vm = await vm.useRouter().mount()
     expect(vm.config.globalProperties.$config).toBeDefined()
