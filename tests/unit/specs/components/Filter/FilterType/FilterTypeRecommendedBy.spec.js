@@ -51,7 +51,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
   beforeEach(async () => {
     setActivePinia(createPinia())
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     recommendedStore = useRecommendedStore()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
