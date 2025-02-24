@@ -6,16 +6,25 @@ import FilterPath from '@/components/Filter/FilterType/FilterTypePath'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchStore } from '@/store/modules'
 
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      tree: vi.fn()
+    }
+  }
+})
+
 describe('FilterTypePath.vue', () => {
-  const { index, es } = esConnectionHelper.build()
+  const { index } = esConnectionHelper.build()
   const { otherIndex } = esConnectionHelper.build()
 
-  let api, core, searchStore, wrapper
+  let core, searchStore, wrapper
 
   beforeEach(() => {
-    api = { tree: vi.fn(), elasticsearch: es }
-
-    core = CoreSetup.init(api).useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouter()
     core.config.set('dataDir', '/data')
 
     searchStore = useSearchStore()
