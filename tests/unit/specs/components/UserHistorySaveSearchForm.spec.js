@@ -5,7 +5,7 @@ import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 
 describe('UserHistorySaveSearchForm.vue', () => {
   it('should call "saveSearch" method on click on submit button', async () => {
-    const { plugins, config } = CoreSetup.init().useAll().useRouter()
+    const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const propsData = {
       index: 'project',
       uri: 'uri'
