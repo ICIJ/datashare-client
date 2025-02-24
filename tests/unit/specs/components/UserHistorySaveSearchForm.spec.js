@@ -12,7 +12,6 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('UserHistorySaveSearchForm.vue', () => {
-
   it('should call "saveSearch" method on click on submit button', async () => {
     const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const propsData = {
