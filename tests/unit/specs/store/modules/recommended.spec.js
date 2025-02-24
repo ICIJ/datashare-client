@@ -2,15 +2,25 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { useRecommendedStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getRecommendationsByProject: vi.fn(),
+      getDocumentsRecommendedBy: vi.fn()
+    }
+  }
+})
 
 describe('RecommendedStore', () => {
-  let api, recommendedStore
+  let recommendedStore
   const { index } = esConnectionHelper.build()
 
   beforeEach(() => {
+    vi.clearAllMocks()
     setActivePinia(createPinia())
-    api = { getRecommendationsByProject: vi.fn(), getDocumentsRecommendedBy: vi.fn() }
-    recommendedStore = useRecommendedStore(api)
+    recommendedStore = useRecommendedStore()
   })
 
   it('should init documents to an empty array', () => {
