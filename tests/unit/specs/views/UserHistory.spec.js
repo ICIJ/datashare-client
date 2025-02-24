@@ -3,6 +3,16 @@ import { shallowMount } from '@vue/test-utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import UserHistory from '@/views/UserHistory'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getUserHistory: vi.fn(),
+      deleteUserHistory: vi.fn()
+    }
+  }
+})
 
 describe('UserHistory.vue', () => {
   const routes = [
@@ -16,14 +26,10 @@ describe('UserHistory.vue', () => {
     }
   ]
 
-  let api, core
+  let core
 
   beforeEach(() => {
-    api = {
-      getUserHistory: vi.fn(),
-      deleteUserHistory: vi.fn()
-    }
-    core = CoreSetup.init(api).useAll().useRouter(routes)
+    core = CoreSetup.init().useAll().useRouter(routes)
   })
 
   it('should load the history page', async () => {
