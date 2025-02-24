@@ -3,21 +3,29 @@ import { shallowMount, mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskDocumentsForm from '@/components/Task/TaskDocuments/TaskDocumentsForm'
 import ExtractingLanguageFormControl from '@/components/Task/TaskDocuments/ExtractingLanguageFormControl'
-// TODO file renamed but the tests have to be rewritten
-describe('TaskDocumentsForm.vue', () => {
-  let api, plugins
+import { apiInstance as api } from '@/api/apiInstance'
 
-  beforeEach(async () => {
-    api = {
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      index: vi.fn(),
+      indexPath: vi.fn(),
+      ocrLanguages: vi.fn().mockResolvedValue([{ name: 'ENGLISH', iso6392: 'eng' }]),
       textLanguages: vi.fn().mockResolvedValue([
         { name: 'ENGLISH', iso6392: 'eng' },
         { name: 'FRENCH', iso6392: 'fra' }
-      ]),
-      ocrLanguages: vi.fn().mockResolvedValue([{ name: 'ENGLISH', iso6392: 'eng' }]),
-      index: vi.fn(),
-      indexPath: vi.fn()
+      ])
     }
-    const core = CoreSetup.init(api).useAll().useRouter()
+  }
+})
+
+// @todo file renamed but the tests have to be rewritten
+describe('TaskDocumentsForm.vue', () => {
+  let plugins
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    const core = CoreSetup.init().useAll().useRouter()
     plugins = core.plugins
     await core.config.set('defaultProject', 'local-datashare')
     await core.config.set('dataDir', '/data')
@@ -93,7 +101,4 @@ describe('TaskDocumentsForm.vue', () => {
     expect(projectSelector.exists()).toBeTruthy()
     expect(projectSelector.props('modelValue')).toEqual({ name: 'local-datashare' })
   })
-  // test to add: show conditionnaly message about ocr
-
-  // test to add: show conditionnaly message about ocr
 })
