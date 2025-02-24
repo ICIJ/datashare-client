@@ -1,8 +1,17 @@
 import { createCore } from '@/core'
 import { useHooksStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    getUser: vi.fn(),
+    getSettings: vi.fn(),
+    getProject: vi.fn()
+  }
+})
 
 describe('main', () => {
-  let core, vm, api, hooksStore
+  let core, vm, hooksStore
 
   function createContainer() {
     const app = document.createElement('div')
@@ -11,7 +20,6 @@ describe('main', () => {
   }
 
   beforeAll(() => {
-    api = { getUser: vi.fn(), getSettings: vi.fn(), getProject: vi.fn() }
     api.getSettings.mockResolvedValue({})
     api.getProject.mockResolvedValue({})
   })
