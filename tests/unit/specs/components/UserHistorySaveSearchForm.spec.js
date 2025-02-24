@@ -3,7 +3,16 @@ import { shallowMount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      renameSavedSearch: vi.fn()
+    }
+  }
+})
+
 describe('UserHistorySaveSearchForm.vue', () => {
+
   it('should call "saveSearch" method on click on submit button', async () => {
     const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const propsData = {
