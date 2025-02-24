@@ -1,16 +1,20 @@
 import { shallowMount } from '@vue/test-utils'
 
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Search from '@/views/Search/Search'
 
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    updateProject: vi.fn(),
+    deleteProject: vi.fn()
+  }
+})
+
 describe('Search.vue', () => {
-  const { es: elasticsearch } = esConnectionHelper.build()
-  let api, core, wrapper
+  let core, wrapper
 
   beforeEach(() => {
-    api = { elasticsearch, updateProject: vi.fn(), deleteProject: vi.fn() }
-    core = CoreSetup.init(api).useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouter()
 
     wrapper = shallowMount(Search, {
       global: {
