@@ -5,11 +5,23 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetRecommendedBy from '@/components/Widget/WidgetRecommendedBy'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const {
+    apiInstance: { elasticsearch }
+  } = await importOriginal()
+
+  return {
+    apiInstance: {
+      elasticsearch,
+      getDocumentUserRecommendations: vi.fn()
+    }
+  }
+})
 
 describe('WidgetRecommendedBy.vue', () => {
-  const { index, es: elasticsearch } = esConnectionHelper.build()
-  const getDocumentUserRecommendations = vi.fn()
-  const api = { elasticsearch, getDocumentUserRecommendations }
+  const { index } = esConnectionHelper.build()
   const user = { id: 'jdoe' }
   const bar = { id: 'bar', index }
   const foo = { id: 'foo', index }
@@ -24,7 +36,7 @@ describe('WidgetRecommendedBy.vue', () => {
     // Mock list of recommendation
     api.getDocumentUserRecommendations.mockResolvedValue(recommendations)
     // Mock all elasticsearch search calls using a mock
-    elasticsearch.search = vi.fn().mockResolvedValue({
+    api.elasticsearch.search = vi.fn().mockResolvedValue({
       hits: {
         hits: [
           { _id: bar.id, _source: { title: 'Bar' }, _index: index },
@@ -35,7 +47,7 @@ describe('WidgetRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init(api).useAll().useRouter()
+    const { plugins } = CoreSetup.init().useAll().useRouter()
     const global = { plugins }
     const widget = new widgets.WidgetRecommendedBy({ card: true })
     const props = { widget, project: index }
