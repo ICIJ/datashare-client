@@ -13,7 +13,7 @@ describe('FilterTypeDateRange.vue', () => {
   let wrapper, searchStore
 
   beforeEach(() => {
-    const { plugins } = CoreSetup.init().useAll().useRouter()
+    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
     searchStore = useSearchStore()
     searchStore.reset()
     searchStore.decontextualizeFilter(name)
