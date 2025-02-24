@@ -6,25 +6,9 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchSearchViewResults from '@/views/TaskBatchSearchViewResults'
 
-describe('TaskBatchSearchViewResults.vue', () => {
-  const routes = [
-    {
-      name: 'task.batch-search.view.results',
-      path: '/batch-search/:indices/:uuid'
-    },
-    {
-      name: 'document-standalone',
-      path: '/ds/:indices/:id/:routing?'
-    }
-  ]
-  const { index: project, es } = esConnectionHelper.build()
-  const { index: anotherProject } = esConnectionHelper.build()
-  const props = { uuid: '12', indices: project.concat(',', anotherProject) }
-
-  let core, wrapper
-
-  beforeEach(async () => {
-    const api = {
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
       copyBatchSearch: vi.fn(),
       getBatchSearch: vi.fn().mockResolvedValue({
         uuid: '12',
@@ -49,7 +33,28 @@ describe('TaskBatchSearchViewResults.vue', () => {
         }
       })
     }
-    core = CoreSetup.init(api).useAll().useRouter(routes)
+  }
+})
+
+describe('TaskBatchSearchViewResults.vue', () => {
+  const routes = [
+    {
+      name: 'task.batch-search.view.results',
+      path: '/batch-search/:indices/:uuid'
+    },
+    {
+      name: 'document-standalone',
+      path: '/ds/:indices/:id/:routing?'
+    }
+  ]
+  const { index: project, es } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
+  const props = { uuid: '12', indices: project.concat(',', anotherProject) }
+
+  let core, wrapper
+
+  beforeEach(async () => {
+    core = CoreSetup.init().useAll().useRouter(routes)
     core.config.merge({ mode: 'SERVER' })
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
