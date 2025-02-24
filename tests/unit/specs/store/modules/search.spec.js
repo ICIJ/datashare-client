@@ -61,7 +61,6 @@ describe('SearchStore', () => {
   })
 
   describe('Search response', () => {
-
     it('should build a EsDocList object from raw value', () => {
       const raw = {
         hits: {
@@ -429,7 +428,6 @@ describe('SearchStore', () => {
   })
 
   describe('Delete query terms', () => {
-
     it("should not delete the term from the query if it doesn't exist", async () => {
       searchStore.setQuery('*')
       await searchStore.queryDeleteQueryTerm('term')
@@ -692,7 +690,6 @@ describe('SearchStore', () => {
   })
 
   describe('Query within NamedEntity', () => {
-
     it('should find document on querying the NamedEntity', async () => {
       const document = new IndexedDocument('doc_01', index)
       document.withNer('test')
