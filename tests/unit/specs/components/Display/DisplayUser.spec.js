@@ -16,7 +16,7 @@ describe('DisplayUser.vue', () => {
   let wrapper, core
 
   beforeAll(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     window.datashare = core
   })
 
