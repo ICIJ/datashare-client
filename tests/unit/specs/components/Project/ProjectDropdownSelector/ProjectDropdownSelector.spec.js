@@ -4,7 +4,7 @@ import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelecto
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('ProjectDropdownSelector.vue', function () {
-  const { plugins } = CoreSetup.init().useAll().useRouter()
+  const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
   const projects = [
     { name: 'local-datashare', label: 'Default' },
     { name: 'foo', label: 'Foo' },
