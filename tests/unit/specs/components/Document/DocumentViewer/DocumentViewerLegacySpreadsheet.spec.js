@@ -4,12 +4,19 @@ import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~test
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerLegacySpreadsheet from '@/components/Document/DocumentViewer/DocumentViewerLegacySpreadsheet'
 
+vi.mock('@/api/apiInstance', async () => {
+  return {
+    apiInstance: {
+      getSource: vi.fn(({ url }) => mockArrayBuffer(url, false))
+    }
+  }
+})
+
 describe('DocumentViewerLegacySpreadsheet.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    const api = { getSource: vi.fn(({ url }) => mockArrayBuffer(url, false)) }
-    const { plugins } = CoreSetup.init(api).useAll()
+    const { plugins } = CoreSetup.init().useAll()
     wrapper = mount(DocumentViewerLegacySpreadsheet, { global: { plugins, renderStubDefaultSlot: true } })
   })
 
