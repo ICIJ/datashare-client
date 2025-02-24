@@ -2,23 +2,26 @@ import Murmur from '@icij/murmur-next'
 import Vuex from 'vuex'
 
 import { Core } from '@/core'
+import { apiInstance as api } from '@/api/apiInstance'
 
-describe('Core', () => {
-  let api, core
-
-  beforeAll(() => {
-    api = {
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
       createProject: vi.fn(),
       isDownloadAllowed: vi.fn(),
       getUser: vi.fn(),
       getSettings: vi.fn(),
       getProject: vi.fn()
     }
-  })
+  }
+})
+
+describe('Core', () => {
+  let core
 
   beforeEach(() => {
     vi.clearAllMocks()
-    core = Core.init(api)
+    core = Core.init()
 
     const app = document.createElement('div')
     app.setAttribute('id', 'core')
