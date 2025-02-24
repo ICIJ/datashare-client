@@ -18,7 +18,7 @@ describe('ProjectViewEdit.vue', () => {
   let core
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     // Ensure the local-datashare project can be found
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
