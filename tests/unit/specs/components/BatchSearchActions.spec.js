@@ -3,11 +3,17 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import BatchSearchActions from '@/components/BatchSearchActions'
-import { getMode, MODE_NAME } from '@/mode'
 import CoreSetup from '~tests/unit/CoreSetup'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', {
+  apiInstance: {
+    deleteBatchSearch: vi.fn()
+  }
+})
 
 describe('BatchSearchActions.vue', () => {
-  let wrapper, plugins, router, api, store
+  let wrapper, plugins, router, store
 
   const props = {
     batchSearch: {
@@ -34,8 +40,7 @@ describe('BatchSearchActions.vue', () => {
   }
 
   beforeAll(() => {
-    api = { deleteBatchSearch: vi.fn() }
-    const core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouter()
     router = core.router
     plugins = core.plugins
     store = core.store
