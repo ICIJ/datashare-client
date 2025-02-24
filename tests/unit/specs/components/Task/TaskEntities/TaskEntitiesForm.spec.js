@@ -18,7 +18,7 @@ describe('TaskEntitiesForm.vue', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    const core = CoreSetup.init().useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     const config = core.config
     plugins = core.plugins
     config.set('defaultProject', 'local-datashare')
