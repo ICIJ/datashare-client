@@ -25,7 +25,7 @@ describe('TaskDocumentsForm.vue', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks()
-    const core = CoreSetup.init().useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     await core.config.set('defaultProject', 'local-datashare')
     await core.config.set('dataDir', '/data')
