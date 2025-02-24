@@ -2,7 +2,6 @@ import { mount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownloadList'
-import { getMode, MODE_NAME } from '@/mode'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', {
@@ -113,7 +112,7 @@ describe('TaskBatchDownloadList.vue', () => {
       }
     ])
 
-    const core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouter()
     plugins = core.plugins
   })
 
