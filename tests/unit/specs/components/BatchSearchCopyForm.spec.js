@@ -14,7 +14,7 @@ describe('BatchSearchCopyForm.vue', () => {
   let wrapper, plugins, router, store
 
   beforeAll(() => {
-    const core = CoreSetup.init().useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     core.config.set('mode', 'SERVER')
     router = core.router
     store = core.store
