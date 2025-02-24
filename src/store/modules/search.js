@@ -51,54 +51,12 @@ export const useSearchStore = defineStore('search', () => {
   const appStore = useAppStore()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
 
-  const instantiateFilter = computed(() => {
-    return ({ type = 'FilterText', options } = {}) => {
-      const Type = filterTypes[type]
-      const filter = new Type(options)
-      // Bind current state to the filter be able to retrieve its values
-      return filter.bindStore(useSearchStore)
-    }
-  })
-
-  const instantiatedFilters = computed(() => {
-    const instantiated = filters.value.map(instantiateFilter.value)
-    return orderArray(instantiated, 'order', 'asc')
-  })
-
   const fields = computed(() => {
     return find(settings.searchFields, { key: field.value }).fields
   })
 
-  const hasFilterValue = computed(() => {
-    return (item) => {
-      return !!instantiatedFilters.value.find(({ name, values }) => {
-        return name === item.name && values.indexOf(item.value) > -1
-      })
-    }
-  })
-
-  const isFilterContextualized = computed(() => {
-    return (name) => {
-      return !!instantiatedFilters.value.find((filter) => {
-        return filter.name === name && filter.contextualized
-      })
-    }
-  })
-
-  const isFilterExcluded = computed(() => {
-    return (name) => {
-      return !!find(instantiatedFilters.value, (filter) => {
-        return filter.name === name && filter.excluded
-      })
-    }
-  })
-
-  const filterSortedBy = computed(() => {
-    return (name) => getFilter({ name }).sortBy
-  })
-
-  const filterSortedByOrder = computed(() => {
-    return (name) => getFilter({ name }).orderBy
+  const instantiatedFilters = computed(() => {
+    return orderArray(filters.value.map(instantiateFilter), 'order', 'asc')
   })
 
   const activeFilters = computed(() => {
@@ -331,6 +289,39 @@ export const useSearchStore = defineStore('search', () => {
     response.value = new EsDocList(raw, parents, roots, from.value)
   }
 
+  function instantiateFilter({ type = 'FilterText', options } = {}) {
+    const Type = filterTypes[type]
+    const filter = new Type(options)
+    // Bind current state to the filter be able to retrieve its values
+    return filter.bindStore(useSearchStore)
+  }
+
+  function hasFilterValue(item) {
+    return !!instantiatedFilters.value.find(({ name, values }) => {
+      return name === item.name && values.indexOf(item.value) > -1
+    })
+  }
+
+  function isFilterContextualized(name) {
+    return !!instantiatedFilters.value.find((filter) => {
+      return filter.name === name && filter.contextualized
+    })
+  }
+
+  function isFilterExcluded(name) {
+    return !!find(instantiatedFilters.value, (filter) => {
+      return filter.name === name && filter.excluded
+    })
+  }
+
+  function filterSortedBy(name) {
+    return getFilter({ name }).sortBy
+  }
+
+  function filterSortedByOrder(name) {
+    return getFilter({ name }).orderBy
+  }
+
   function addFilterValue({ name, value }) {
     // We cast the new filter values to allow several new values at the same time
     const newValues = castArray(value)
@@ -486,7 +477,7 @@ export const useSearchStore = defineStore('search', () => {
       getFilter({ name }),
       q.value,
       instantiatedFilters.value,
-      isFilterContextualized.value(name),
+      isFilterContextualized(name),
       options,
       fields.value,
       from,
