@@ -11,7 +11,7 @@ describe('AppliedSearchFiltersItem.vue', () => {
   let core, searchStore
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
   })
