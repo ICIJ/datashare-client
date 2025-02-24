@@ -2,6 +2,15 @@ import toLower from 'lodash/toLower'
 
 import { Core } from '@/core'
 import { useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      createProject: vi.fn()
+    }
+  }
+})
 
 describe('ProjectsMixin', () => {
   const project = toLower('ProjectsMixin')
@@ -98,8 +107,7 @@ describe('ProjectsMixin', () => {
   })
 
   it('should create the default project', async () => {
-    const api = { createProject: vi.fn() }
-    core = Core.init(api).useAll()
+    core = Core.init().useAll()
     const name = 'default-project'
     core.config.set('defaultProject', name)
     await core.createDefaultProject()
