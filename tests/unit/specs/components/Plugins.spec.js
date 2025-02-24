@@ -3,6 +3,18 @@ import { mount, shallowMount } from '@vue/test-utils'
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Plugins from '@/components/Plugins'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getPlugins: vi.fn(),
+      installPluginFromId: vi.fn(),
+      installPluginFromUrl: vi.fn(),
+      uninstallPlugin: vi.fn()
+    }
+  }
+})
 
 describe('Plugins.vue', () => {
   const pluginsMock = [
@@ -58,19 +70,12 @@ describe('Plugins.vue', () => {
     }
   ]
 
-  const api = {
-    getPlugins: vi.fn(),
-    installPluginFromId: vi.fn(),
-    installPluginFromUrl: vi.fn(),
-    uninstallPlugin: vi.fn()
-  }
-
   let wrapper
 
   beforeEach(async () => {
     vi.clearAllMocks()
     api.getPlugins.mockResolvedValue(pluginsMock)
-    const { plugins } = CoreSetup.init(api).useAll()
+    const { plugins } = CoreSetup.init().useAll()
     wrapper = shallowMount(Plugins, {
       global: {
         plugins,
@@ -104,7 +109,7 @@ describe('Plugins.vue', () => {
     let wrapper
 
     beforeEach(async () => {
-      const { plugins } = CoreSetup.init(api).useAll()
+      const { plugins } = CoreSetup.init().useAll()
       wrapper = mount(Plugins, {
         global: {
           plugins
@@ -253,7 +258,7 @@ describe('Plugins.vue', () => {
   })
 
   it('should call for plugin installation from pluginUrl', () => {
-    const { plugins } = CoreSetup.init(api).useAll()
+    const { plugins } = CoreSetup.init().useAll()
     wrapper = mount(Plugins, {
       global: {
         plugins
