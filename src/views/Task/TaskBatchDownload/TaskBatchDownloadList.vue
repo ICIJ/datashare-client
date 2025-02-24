@@ -65,7 +65,6 @@ function downloadResultsUrl(item) {
       <template #cell(size)="{ item }">
         <display-content-length v-if="hasZipSize(item)" :value="item.result.size" />
       </template>
-      <template #cell(action)="{ item }"> Delete + Open Close </template>
     </task-list>
   </task-page>
 </template>
