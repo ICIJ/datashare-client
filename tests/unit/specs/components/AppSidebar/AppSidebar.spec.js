@@ -10,7 +10,7 @@ vi.mock('@/api/apiInstance', () => ({
 }))
 
 describe('AppSidebar.vue', () => {
-  const { config, plugins, router } = CoreSetup.init().useAll().useRouter()
+  const { config, plugins, router } = CoreSetup.init().useAll().useRouterWithoutGuards()
   const options = { global: { plugins, renderStubDefaultSlot: true, stubs: { LocalesMenu: false } }, router }
 
   let wrapper
