@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { EventBus } from '@/utils/event-bus'
 import { Api } from '@/api'
-import { apiInstance as api} from '@/api/apiInstance'
+import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('axios', {
   request: vi.fn()
