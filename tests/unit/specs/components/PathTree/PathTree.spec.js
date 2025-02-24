@@ -5,6 +5,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import PathTree from '@/components/PathTree/PathTree'
 import { useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
 
 const HOME_TREE = {
   name: '/home/foo',
@@ -34,14 +35,24 @@ const HOME_TREE_WIN = {
   ]
 }
 
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      tree: vi.fn()
+    }
+  }
+})
+
 describe('PathTree.vue', () => {
   describe('Posix', () => {
     const { index, es } = esConnectionHelper.build()
-    const api = { tree: vi.fn(), elasticsearch: es }
     let wrapper, core, searchStore
 
     beforeEach(() => {
-      core = CoreSetup.init(api).useAll()
+      core = CoreSetup.init().useAll()
       core.config.set('dataDir', '/home/foo')
       searchStore = useSearchStore()
       searchStore.setIndex(index)
@@ -154,11 +165,10 @@ describe('PathTree.vue', () => {
 
   describe('Windows', () => {
     const { index, es } = esConnectionHelper.build('spec', true)
-    const api = { tree: vi.fn(), elasticsearch: es }
     let wrapper, core, searchStore
 
     beforeEach(() => {
-      core = CoreSetup.init(api).useAll()
+      core = CoreSetup.init().useAll()
       searchStore = useSearchStore()
       searchStore.setIndex(index)
       core.config.set('dataDir', 'C:\\home\\foo')
