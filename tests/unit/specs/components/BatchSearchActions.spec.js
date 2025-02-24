@@ -40,7 +40,7 @@ describe('BatchSearchActions.vue', () => {
   }
 
   beforeAll(() => {
-    const core = CoreSetup.init().useAll().useRouter()
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     router = core.router
     plugins = core.plugins
     store = core.store
