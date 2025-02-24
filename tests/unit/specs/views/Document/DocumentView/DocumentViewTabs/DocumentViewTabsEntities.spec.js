@@ -31,7 +31,7 @@ describe('DocumentViewTabsEntities.vue', () => {
     ]
 
     spy = vi.spyOn(api.elasticsearch, 'getDocumentNamedEntitiesInCategory')
-    core = CoreSetup.init(api).useAll().useRouter(routes)
+    core = CoreSetup.init().useAll().useRouter(routes)
     core.config.set('manageDocuments', true)
     documentStore = useDocumentStore()
   })
