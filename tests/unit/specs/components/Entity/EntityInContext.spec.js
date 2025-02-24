@@ -9,7 +9,6 @@ import { useDocumentStore, useSearchStore } from '@/store/modules'
 
 describe('EntityInContext.vue', () => {
   const { index, es } = esConnectionHelper.build()
-  const api = { elasticsearch: es }
   let core, documentStore, searchStore
 
   // A quick function to generate the default props for most tests
@@ -34,7 +33,7 @@ describe('EntityInContext.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init(api).useAll()
+    core = CoreSetup.init().useAll()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
     documentStore = useDocumentStore()
