@@ -1,7 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-
 import AppSidebar from '@/components/AppSidebar/AppSidebar'
 
 vi.mock('@/api/apiInstance', () => ({
