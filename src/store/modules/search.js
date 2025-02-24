@@ -412,8 +412,8 @@ export const useSearchStore = defineStore('search', () => {
     setError(null)
 
     try {
-      const raw = await searchDocs()
-      const roots = await searchRoots(raw)
+      const raw = await searchDocuments()
+      const roots = await searchRootDocuments(raw)
       searchBreadcrumbStore.push(toBaseRouteQuery.value)
       setResponse({ raw, roots })
     } catch (error) {
@@ -423,11 +423,11 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
 
-  function searchDocs(searchParams = toSearchParams.value) {
+  function searchDocuments(searchParams = toSearchParams.value) {
     return api.elasticsearch.searchDocs(searchParams)
   }
 
-  function searchRoots(raw) {
+  function searchRootDocuments(raw) {
     const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
     const ids = embedded.map((hit) => hit._source.rootDocument)
     const source = ['contentType', 'contentLength', 'title', 'path']
@@ -616,8 +616,8 @@ export const useSearchStore = defineStore('search', () => {
     toggleFilter,
     updateTab,
     refresh,
-    searchDocs,
-    searchRoots,
+    searchDocuments,
+    searchRootDocuments,
     updateFromRouteQuery,
     query,
     queryFilter,
