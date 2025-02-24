@@ -7,9 +7,9 @@ import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayUser from '@/components/Display/DisplayUser'
-import ProjectLink from '@/components/Project/ProjectLink'
 import { getHumanTaskName, TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import DisplayProjectList from '@/components/Display/DisplayProjectList'
 
 const nbTasks = ref(3)
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
@@ -29,7 +29,7 @@ const columns = ref([
   {
     name: 'title',
     value: 'title',
-    text: 'Title',
+    text: 'Name',
     icon: ''
   },
   {
@@ -81,6 +81,8 @@ function getProjects(item) {
       return item.args?.batchDownload.projects
     case TASK_NAME.BATCH_SEARCH:
       return item.args?.batchRecord?.projects
+    case TASK_NAME.EXTRACT_NLP:
+    case TASK_NAME.ENQUEUE_FROM_INDEX:
     case TASK_NAME.SCAN:
     case TASK_NAME.INDEX:
       return [item.args?.defaultProject]
@@ -93,16 +95,20 @@ function getProjects(item) {
 function getTitle(item) {
   switch (item.name) {
     case TASK_NAME.BATCH_DOWNLOAD:
-      return item.args?.batchDownload?.name
+      return 'Batch download' // item.args?.batchDownload?.name ?? 'Batch download'
     case TASK_NAME.BATCH_SEARCH:
       return item.args?.batchRecord?.name
     case TASK_NAME.SCAN:
       return 'Adding documents (SCAN)'
     case TASK_NAME.INDEX:
       return 'Adding documents (INDEX)'
+    case TASK_NAME.ENQUEUE_FROM_INDEX:
+      return 'Enqueue documents'
+    case TASK_NAME.EXTRACT_NLP:
+      return 'Find entities'
     default:
       console.error('Unknown task', item)
-      return []
+      return 'Unknown Task'
   }
 }
 function getTaskIcon(item) {
@@ -129,9 +135,7 @@ function getTaskIcon(item) {
         <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
         <template #cell(author)="{ item }"><display-user :value="getAuthor(item)" /></template>
         <template #cell(projects)="{ item }">
-          <div class="d-flex gap-2">
-            <project-link v-for="project in getProjects(item)" :key="project.name" :project="project" />
-          </div>
+          <display-project-list :values="getProjects(item)" />
         </template>
         <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template
       ></task-list>

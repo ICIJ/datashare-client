@@ -38,22 +38,42 @@ export const useAppStore = defineStore(
         documents: {
           orderBy: ['name', 'desc'],
           perPage: '10',
-          properties: ['id', 'name', 'createdAt', 'progress', 'state']
+          properties: ['state', 'name', 'documents', 'project', 'progress', 'createdAt']
         },
         'batch-download': {
           orderBy: ['name', 'desc'],
           perPage: '10',
-          properties: ['state', 'name', 'size', 'createdAt']
+          properties: ['state', 'name', 'size', 'projects', 'createdAt']
         },
         'batch-search': {
           orderBy: ['name', 'desc'],
           perPage: '10',
-          properties: ['state', 'access', 'name', 'queries', 'documents', 'projects', 'author', 'createdAt', 'progress']
+          properties: [
+            'state',
+            'privacy',
+            'name',
+            'queries',
+            'documents',
+            'projects',
+            'author',
+            'createdAt',
+            'progress'
+          ]
         },
         'batch-search-detail': {
           orderBy: ['name', 'desc'],
           perPage: '10',
-          properties: ['state', 'access', 'name', 'queries', 'documents', 'projects', 'author', 'createdAt', 'progress']
+          properties: [
+            'state',
+            'privacy',
+            'name',
+            'queries',
+            'documents',
+            'projects',
+            'author',
+            'createdAt',
+            'progress'
+          ]
         },
         taskboard: {},
         documentView: {

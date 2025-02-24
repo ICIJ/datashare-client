@@ -5,6 +5,7 @@ import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-p
 import { useViewSettings, SORT_ORDER_KEY } from '@/composables/view-settings'
 import { useTaskProperties } from '@/composables/task-properties'
 import { useAppStore } from '@/store/modules'
+import useMode from '@/composables/mode'
 
 export function useTaskSettings(pageName) {
   const appStore = useAppStore()
@@ -35,9 +36,10 @@ export function useTaskSettings(pageName) {
       }
     ]
   })
+  const { isServer } = useMode()
 
-  const { items } = useTaskProperties(appStore.getSettings(pageName, 'properties'))
-
+  const props = useTaskProperties(appStore.getSettings(pageName, 'properties'))
+  const items = props.items.filter((p) => isServer.value || p.key !== 'author')
   const sortBy = ref({
     label: sortByLabel,
     type: 'radio',

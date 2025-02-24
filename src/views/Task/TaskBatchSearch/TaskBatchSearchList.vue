@@ -7,24 +7,25 @@ import DisplayProgress from '@/components/Display/DisplayProgress'
 import { useTaskSettings } from '@/composables/task-settings'
 import { TASK_NAME } from '@/enums/taskNames'
 import DisplayNumber from '@/components/Display/DisplayNumber'
-import ProjectLink from '@/components/Project/ProjectLink'
 import DisplayUser from '@/components/Display/DisplayUser'
+import DisplayVisibility from '@/components/Display/DisplayVisibility'
+import DisplayProjectList from '@/components/Display/DisplayProjectList'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 
 function getProjects(item) {
-  return item.args?.batchRecord.projects ?? []
+  return item.args?.batchRecord?.projects ?? []
 }
 function getLink(item) {
   return {
     name: 'task.batch-search.view',
-    params: { uuid: item.args?.batchRecord.uuid, indices: getProjects(item).join(',') }
+    params: { uuid: item.args?.batchRecord?.uuid, indices: getProjects(item).join(',') }
   }
 }
-function accessIcon(item) {
-  return item.args?.batchRecord.published ? 'eye' : 'eye-slash'
+function accessValue(item) {
+  return item.args?.batchRecord?.published
 }
 function accessText(item) {
-  return item.args?.batchRecord.published ? 'Shared' : 'Private to you'
+  return item.args?.batchRecord?.published ? 'Shared' : 'Private to you'
 }
 </script>
 <template>
@@ -46,21 +47,19 @@ function accessText(item) {
       <template #cell(state)="{ item }">
         <display-status :value="item.state" />
       </template>
-      <template #cell(access)="{ item }">
-        <phosphor-icon :title="accessText(item)" :name="accessIcon(item)" />
+      <template #cell(privacy)="{ item }">
+        <display-visibility :title="accessText(item)" :value="accessValue(item)" />
       </template>
       <template #cell(name)="{ item }">
-        <router-link :to="getLink(item)"> {{ item.args?.batchRecord.name }}</router-link>
+        <router-link :to="getLink(item)"> {{ item.args?.batchRecord?.name }}</router-link>
       </template>
-      <template #cell(queries)="{ item }"> <display-number :value="item.args?.batchRecord.nbQueries" /> </template>
-      <template #cell(documents)="{ item }"> <display-number :value="item.args?.batchRecord.nbResults" /> </template>
+      <template #cell(queries)="{ item }"> <display-number :value="item.args?.batchRecord?.nbQueries" /> </template>
+      <template #cell(documents)="{ item }"> <display-number :value="item.args?.batchRecord?.nbResults" /> </template>
       <template #cell(projects)="{ item }">
-        <div class="d-flex gap-2">
-          <project-link v-for="project in getProjects(item)" :key="project.name" :project="project" />
-        </div>
+        <display-project-list :values="getProjects(item)" />
       </template>
 
-      <template #cell(author)="{ item }"><display-user :value="item.args?.batchRecord.user.id" /></template>
+      <template #cell(author)="{ item }"><display-user :value="item.args?.batchRecord?.user.id" /></template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />
       </template>

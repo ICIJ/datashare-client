@@ -946,6 +946,9 @@
         "properties": {
           "id": "Id",
           "name":"Name",
+          "entities-to-find": "Entities to find",
+          "pipeline": "Model",
+          "project": "Project",
           "createdAt": "Creation date",
           "progress":"Progress",
           "result": "Result",
@@ -995,6 +998,8 @@
         "properties": {
           "id": "Id",
           "name":"Name",
+          "documents":"Documents",
+          "project":"Project",
           "createdAt": "Creation date",
           "progress":"Progress",
           "result": "Result",
@@ -1032,9 +1037,11 @@
         "properties": {
           "name":"Name",
           "createdAt": "Creation date",
+          "projects":"Projects",
           "progress":"Progress",
           "size": "Size",
-          "state":"State"
+          "state":"State",
+          "id":"Id"
         }
       }
     },
@@ -1046,7 +1053,7 @@
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "noResults": "No search results. Try adjusting the query or filters.",
         "properties": {
-          "access":"Access",
+          "privacy":"Privacy",
           "queries":"Queries",
           "documents":"Documents",
           "projects":"Projects",
