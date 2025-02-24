@@ -47,7 +47,7 @@ describe('WidgetRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init().useAll().useRouter()
+    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const global = { plugins }
     const widget = new widgets.WidgetRecommendedBy({ card: true })
     const props = { widget, project: index }
