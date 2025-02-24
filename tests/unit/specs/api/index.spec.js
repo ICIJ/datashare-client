@@ -1,21 +1,24 @@
+import axios from 'axios'
+
 import { EventBus } from '@/utils/event-bus'
 import { Api } from '@/api'
+import { apiInstance as api} from '@/api/apiInstance'
+
+vi.mock('axios', {
+  request: vi.fn()
+})
 
 describe('Datashare backend client', () => {
   let json = null
-  let api
-  const mockAxios = { request: vi.fn() }
-  beforeAll(() => {
-    api = new Api(mockAxios, EventBus)
-  })
 
   beforeEach(() => {
-    mockAxios.request.mockClear()
-    mockAxios.request.mockResolvedValue({ data: {} }) // TODO : it should be a given with response data not a before each
+    axios.request.mockClear()
+    axios.request.mockResolvedValue({ data: {} }) // TODO : it should be a given with response data not a before each
   })
+
   it('should call indexPath with "example" as path', async () => {
     json = await api.indexPath('example')
-    expect(mockAxios.request).toBeCalledWith(
+    expect(axios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/task/batchUpdate/index/example'),
         method: 'POST',
@@ -30,7 +33,7 @@ describe('Datashare backend client', () => {
   })
   it('should call trim "/" from path when calling indexPath with "/file/"', async () => {
     json = await api.indexPath('/file/')
-    expect(mockAxios.request).toBeCalledWith(
+    expect(axios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/task/batchUpdate/index/file')
       })
@@ -38,7 +41,7 @@ describe('Datashare backend client', () => {
   })
   it('should call indexPath with ocr true', async () => {
     json = await api.indexPath('file', { ocr: true })
-    expect(mockAxios.request).toBeCalledWith(
+    expect(axios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
         method: 'POST',
@@ -53,7 +56,7 @@ describe('Datashare backend client', () => {
   })
   it('should not skip already indexed file when calling indexPath', async () => {
     json = await api.indexPath('file', { filter: false })
-    expect(mockAxios.request).toBeCalledWith(
+    expect(axios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
         method: 'POST',
@@ -69,7 +72,7 @@ describe('Datashare backend client', () => {
 
   it('should indexPath with "fra" language', async () => {
     json = await api.indexPath('file', { language: 'fra' })
-    expect(mockAxios.request).toBeCalledWith(
+    expect(axios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
         method: 'POST',
@@ -147,7 +150,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should throw a 401 if getSettings return a error', async () => {
-    mockAxios.request.mockRejectedValue({ response: { status: 401 } })
+    axios.request.mockRejectedValue({ response: { status: 401 } })
     const mockCallback = vi.fn()
     EventBus.on('http::error', mockCallback)
     try {
@@ -155,11 +158,11 @@ describe('Datashare backend client', () => {
     } catch (error) {
       expect(error.response.status).toBe(401)
     }
-    expect(mockAxios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledTimes(1)
     expect(mockCallback).toBeCalledTimes(1)
-    expect(mockAxios.request).toBeCalledWith({ url: Api.getFullUrl('/settings') })
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/settings') })
 
-    mockAxios.request.mockResolvedValue({ data: {} })
+    axios.request.mockResolvedValue({ data: {} })
   })
 
   it('should return backend response to setSettings', async () => {
@@ -252,7 +255,7 @@ describe('Datashare backend client', () => {
     data.append('published', published)
     data.append('query_template', queryTemplate)
     expect(json).toEqual({})
-    expect(mockAxios.request).toBeCalledWith(
+    expect(axios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search/project'),
         method: 'POST',
@@ -365,7 +368,7 @@ describe('Datashare backend client', () => {
     json = await api.copyBatchSearch('12', 'copyName', 'copyDescription')
     const data = { description: 'copyDescription', name: 'copyName' }
     expect(json).toEqual({})
-    expect(mockAxios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/batch/search/copy/12'),
       method: 'POST',
       data,
@@ -383,7 +386,7 @@ describe('Datashare backend client', () => {
     json = await api.addUserHistoryEvent(['project1', 'project2'], 'DOCUMENT', 'docName', 'docUri')
     const data = { projectIds: ['project1', 'project2'], type: 'DOCUMENT', name: 'docName', uri: 'docUri' }
     expect(json).toEqual({})
-    expect(mockAxios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/users/me/history'),
       method: 'PUT',
       data,
@@ -406,7 +409,7 @@ describe('Datashare backend client', () => {
     const data = {}
     json = await api.createProject(data)
     expect(json).toEqual({})
-    expect(mockAxios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/project/'),
       method: 'POST',
       data
@@ -417,7 +420,7 @@ describe('Datashare backend client', () => {
     const data = { name: 'hello' }
     json = await api.updateProject(data)
     expect(json).toEqual({})
-    expect(mockAxios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/project/hello'),
       method: 'PUT',
       data,
@@ -430,7 +433,7 @@ describe('Datashare backend client', () => {
     const name = 'hello'
     json = await api.deleteProject(name)
     expect(json).toEqual({})
-    expect(mockAxios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/project/hello'),
       method: 'DELETE',
       responseType: 'text',
@@ -443,7 +446,7 @@ describe('Datashare backend client', () => {
     const fields = ['title', 'title2']
     json = await api.getMappingsByFields(projectIds, fields)
     expect(json).toEqual({})
-    expect(mockAxios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith({
       url: Api.getFullUrl(`/api/index/search/prj1,prj2/_mapping/field/title,title2`),
       method: 'GET',
       responseType: 'text',
@@ -453,7 +456,7 @@ describe('Datashare backend client', () => {
 
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
-    mockAxios.request.mockReturnValue(Promise.reject(error))
+    axios.request.mockReturnValue(Promise.reject(error))
     const mockCallback = vi.fn()
     EventBus.on('http::error', mockCallback)
 
