@@ -2,6 +2,14 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { useDownloadsStore, useSearchStore } from '@/store/modules'
 
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      isDownloadAllowed: vi.fn()
+    }
+  }
+})
+
 describe('DownloadsStore', () => {
   const index = 'downloadStoreFoo'
   const anotherIndex = 'downloadStoreBar'
@@ -9,7 +17,7 @@ describe('DownloadsStore', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    downloadsStore = useDownloadsStore({ isDownloadAllowed: () => true })
+    downloadsStore = useDownloadsStore()
     searchStore = useSearchStore()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
