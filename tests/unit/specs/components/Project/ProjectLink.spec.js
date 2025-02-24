@@ -4,7 +4,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectLink from '@/components/Project/ProjectLink'
 
 describe('ProjectLink.vue', () => {
-  const { plugins, config } = CoreSetup.init().useAll().useRouter()
+  const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
   beforeAll(() => {
     config.set('projects', [{ name: 'local-datashare', label: 'Default' }])
