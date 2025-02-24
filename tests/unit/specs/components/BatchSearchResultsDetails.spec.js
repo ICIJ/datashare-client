@@ -35,9 +35,8 @@ describe('BatchSearchResultsDetails.vue', () => {
     let plugins, store
 
     beforeEach(async () => {
-      const api = vi.fn()
       const props = { batchSearch }
-      const core = CoreSetup.init(api).useAll().useRouter()
+      const core = CoreSetup.init().useAll().useRouter()
       core.config.merge({ mode: 'SERVER' })
       core.auth.getUsername = vi.fn().mockResolvedValue('test')
       plugins = core.plugins
