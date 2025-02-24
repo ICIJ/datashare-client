@@ -8,7 +8,6 @@ import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import { TASK_NAME } from '@/enums/taskNames'
 import EntityButton from '@/components/Entity/EntityButton'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
-import ProjectLink from '@/components/Project/ProjectLink'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 
 const settingName = 'entities'
