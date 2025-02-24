@@ -4,7 +4,7 @@ import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInput
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('SearchBarInputDropdown.vue', function () {
-  const { plugins, config } = CoreSetup.init().useAll().useRouter()
+  const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
   let wrapper
 
   beforeAll(() => {
