@@ -3,14 +3,21 @@ import { shallowMount } from '@vue/test-utils'
 import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerTiff from '@/components/Document/DocumentViewer/DocumentViewerTiff'
-import { getMode, MODE_NAME } from '@/mode'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getSource: vi.fn(({ url }) => mockArrayBuffer(url))
+    }
+  }
+})
 
 describe('DocumentViewerTiff.vue', () => {
-  let core, api
+  let core
 
-  beforeAll(async () => {
-    api = { getSource: vi.fn() }
-    core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll()
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
   })
 
   // This entire test unit is deactivated unly we can support
@@ -20,13 +27,11 @@ describe('DocumentViewerTiff.vue', () => {
     let wrapper = null
 
     beforeEach(async () => {
-      api.getSource.mockClear()
-      api.getSource.mockImplementation(({ url }) => mockArrayBuffer(url))
-
       wrapper = shallowMount(DocumentViewerTiff, {
         global: { plugins: core.plugins },
         props: { document: { url: 'image.tiff' } }
       })
+
       await flushPromises()
     })
 
@@ -44,9 +49,9 @@ describe('DocumentViewerTiff.vue', () => {
     it('should display an error message if the document does not exist', async () => {
       // given
       api.getSource.mockClear()
-      api.getSource = () => {
+      api.getSource.mockImplementation(() => {
         throw new Error('File not found')
-      }
+      })
       // when
       const wrapper = shallowMount(DocumentViewerTiff, {
         global: { plugins: core.plugins },
