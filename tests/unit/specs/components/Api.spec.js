@@ -1,21 +1,27 @@
 import { flushPromises, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import ApiPage from '@/components/Api'
-import { getMode, MODE_NAME } from '@/mode'
 import CoreSetup from '~tests/unit/CoreSetup'
+import ApiPage from '@/components/Api'
+import { MODE_NAME } from '@/mode'
+import { apiInstance as api } from '@/api/apiInstance'
 
-describe('Api.vue', () => {
-  let plugins, api
-
-  beforeEach(() => {
-    api = {
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
       createApiKey: vi.fn(),
-      getApiKey: vi.fn().mockResolvedValue({ hashedKey: null }),
+      getApiKey: vi.fn(),
       deleteApiKey: vi.fn()
     }
+  }
+})
 
-    const core = CoreSetup.init(api, getMode(MODE_NAME.SERVER)).useAll()
+describe('Api.vue', () => {
+  let plugins
+
+  beforeEach(() => {
+    api.getApiKey.mockResolvedValue({ hashedKey: null })
+    const core = CoreSetup.init().useAll()
     plugins = core.plugins
 
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
