@@ -9,7 +9,7 @@ import { defineStore } from 'pinia'
  * @param {string} suffix - The suffix to append to the store id
  * @returns {string}
  */
-export const storeSuffix = (id, suffix) => (suffix ? camelCase(`${id}-${suffix}`) : id)
+export const storeSuffix = (id, suffix) => camelCase(suffix ? `${id}-${suffix}` : id)
 
 /**
  * Creates a `useStore` function that retrieves the store instance with the

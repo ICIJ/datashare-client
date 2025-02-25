@@ -155,4 +155,14 @@ describe('store/suffixed', () => {
     await flushPromises()
     expect(wrapper.text()).toEqual('1')
   })
+
+  it('should camelCase the store id', () => {
+    const useFooBarStore = defineSuffixedStore('foo bar', {})
+    expect(useFooBarStore.$id).toBe('fooBar')
+  })
+
+  it('should camelCase the suffixed store id', () => {
+    const useFooBarBazQuxStore = defineSuffixedStore('foo bar', {}).bind('baz qux')
+    expect(useFooBarBazQuxStore.$id).toBe('fooBarBazQux')
+  })
 })
