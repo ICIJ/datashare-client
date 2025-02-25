@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, reactive, onBeforeMount, watch } from 'vue'
+import { computed, inject, ref, reactive, onBeforeMount, watch } from 'vue'
 import { concat, compact, escapeRegExp, flatten, get, noop, uniqueId, setWith } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 
@@ -29,7 +29,7 @@ const collapse = ref(true)
 const expand = ref(false)
 
 const { wait } = useWait()
-const searchStore = useSearchStore()
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 
 const aggregateWithLoading = async ({ clearPages = false } = {}) => {
   wait.start(loaderId.value)
