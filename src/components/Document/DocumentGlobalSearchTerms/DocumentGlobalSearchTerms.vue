@@ -1,5 +1,5 @@
 <script setup>
-import { toRef, ref, computed, watch, onBeforeMount } from 'vue'
+import { toRef, inject, ref, computed, watch, onBeforeMount } from 'vue'
 import { get, keys, orderBy } from 'lodash'
 
 import DocumentGlobalSearchTermsEntry from './DocumentGlobalSearchTermsEntry'
@@ -19,7 +19,7 @@ const emit = defineEmits(['select'])
 
 const terms = ref([])
 
-const searchStore = useSearchStore()
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 const { core } = useCore()
 
 const queryTerms = computed(() => searchStore.retrieveContentQueryTerms)
