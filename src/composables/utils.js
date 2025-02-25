@@ -4,8 +4,6 @@ import { useCore } from '@/composables/core'
 import { MODE_NAME } from '@/mode'
 
 export function useUtils() {
-  const { core } = useCore()
-
   const termIndexColors = ['#ECFC7A', '#CDFD94', '#A8FDAC', '#52FDEA']
   function getTermIndexColor(index) {
     return termIndexColors[index % termIndexColors.length]
@@ -20,12 +18,7 @@ export function useUtils() {
     return index < arrayLength - 1
   }
 
-  const isServer = computed(() => {
-    return core.config?.get('mode') === MODE_NAME.SERVER
-  })
-
   return {
-    isServer,
     getTermIndexColor,
     getTermIndexBorderColor,
     getTermIndexBackgroundColor,

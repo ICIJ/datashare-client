@@ -11,16 +11,16 @@ import AppSidebarClose from './AppSidebarClose'
 import { Api } from '@/api'
 import { useBreakpoints } from '@/composables/breakpoints'
 import { useCore } from '@/composables/core'
-import { useUtils } from '@/composables/utils'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
 import { SIZE } from '@/enums/sizes'
 import { useAppStore } from '@/store/modules'
 import settings from '@/utils/settings'
+import useMode from '@/composables/mode'
 
 const { core } = useCore()
 const appStore = useAppStore()
-const { isServer } = useUtils()
+const { isServer } = useMode()
 const { breakpointDown } = useBreakpoints()
 const { t } = useI18n()
 

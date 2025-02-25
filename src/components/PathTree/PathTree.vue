@@ -8,7 +8,7 @@ import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEn
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
 import { useCore } from '@/composables/core'
 import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
-import { MODE_NAME } from '@/mode'
+import useMode from '@/composables/mode'
 
 const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })
@@ -360,16 +360,16 @@ const loadTree = async () => {
   }
 }
 
+const { isServer } = useMode()
 const shouldLoadTree = computed(() => {
   // The /tree API is disabled in server so we ensure
   // the mode is correct before running it.
-  const isServer = core.config.get('mode') === MODE_NAME.SERVER
   // Only load the tree if we clear out the pages
   // and entirely load the folder. This way we avoid
   // load directories from the /tree API when they are
   // already present in next result page of the
   // ElasticSearch aggregation.
-  return reachedTheEnd.value && !isServer && !props.elasticsearchOnly
+  return reachedTheEnd.value && !isServer.value && !props.elasticsearchOnly
 })
 
 const clearPagesAndLoadTree = async () => {
