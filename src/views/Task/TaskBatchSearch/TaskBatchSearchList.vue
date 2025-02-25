@@ -1,4 +1,6 @@
 <script setup>
+import get from 'lodash/get'
+
 import TaskPage from '@/views/Task/TaskPage'
 import TaskList from '@/components/Task/TaskList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
@@ -10,22 +12,22 @@ import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import { useCore } from '@/composables/core'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
+const { core } = useCore()
 
 function getProjects(item) {
-  return item.args?.batchRecord?.projects ?? []
+  return getRecord(item, 'projects') ?? [core.getDefaultProject()]
+}
+
+function getRecord(item, key) {
+  return get(item, `args.batchRecord.${key}`)
 }
 function getLink(item) {
   return {
     name: 'task.batch-search.view',
-    params: { uuid: item.args?.batchRecord?.uuid, indices: getProjects(item).join(',') }
+    params: { uuid: getRecord(item, 'uuid'), indices: getProjects(item).join(',') }
   }
-}
-function accessValue(item) {
-  return item.args?.batchRecord?.published
-}
-function accessText(item) {
-  return item.args?.batchRecord?.published ? 'Shared' : 'Private to you'
 }
 </script>
 <template>
@@ -48,18 +50,24 @@ function accessText(item) {
         <display-status :value="item.state" />
       </template>
       <template #cell(privacy)="{ item }">
-        <display-visibility :title="accessText(item)" :value="accessValue(item)" />
+        <display-visibility :value="getRecord(item, 'published')" />
       </template>
       <template #cell(name)="{ item }">
-        <router-link :to="getLink(item)"> {{ item.args?.batchRecord?.name }}</router-link>
+        <router-link v-if="!!item.args?.batchRecord?.uuid" :to="getLink(item)">
+          {{ getRecord(item, 'name') }}</router-link
+        >
       </template>
-      <template #cell(queries)="{ item }"> <display-number :value="item.args?.batchRecord?.nbQueries" /> </template>
-      <template #cell(documents)="{ item }"> <display-number :value="item.args?.batchRecord?.nbResults" /> </template>
+      <template #cell(queries)="{ item }">
+        <display-number :value="getRecord(item, 'nbQueries')" />
+      </template>
+      <template #cell(documents)="{ item }">
+        <display-number :value="getRecord(item, 'nbResults')" />
+      </template>
       <template #cell(projects)="{ item }">
         <display-project-list :values="getProjects(item)" />
       </template>
 
-      <template #cell(author)="{ item }"><display-user :value="item.args?.batchRecord?.user.id" /></template>
+      <template #cell(author)="{ item }"><display-user :value="getRecord(item, 'user.id')" /></template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />
       </template>
