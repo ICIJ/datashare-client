@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useTemplateRef, toRef, watch } from 'vue'
+import { computed, inject, useTemplateRef, toRef, watch } from 'vue'
 
 import { useSearchFilter } from '@/composables/search-filter'
 import { useCore } from '@/composables/core'
@@ -8,7 +8,7 @@ import PathTree from '@/components/PathTree/PathTree'
 import { useSearchStore } from '@/store/modules'
 
 const { core } = useCore()
-const searchStore = useSearchStore()
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 const {
   computedFilterValues,
   whenFilterContextualized,
