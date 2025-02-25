@@ -214,7 +214,7 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useWait() {
-    this._wait = createVueWait({ useVuex: true })
+    this._wait = createVueWait()
     this.use(this.wait)
     return this
   }

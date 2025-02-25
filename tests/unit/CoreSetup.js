@@ -43,7 +43,7 @@ class CoreSetup extends Core {
     return VCalendar
   }
   get wait() {
-    return createVueWait({ useVuex: true })
+    return createVueWait()
   }
   useAll(store = null) {
     this.usePinia()
