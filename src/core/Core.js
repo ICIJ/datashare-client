@@ -68,7 +68,7 @@ class Core extends Behaviors {
    */
   constructor(api = apiInstance, mode = getMode(MODE_NAME.LOCAL)) {
     super()
-    const Root = defineComponent({ name: 'Root', template: '<router-view></router-view>' })
+    const Root = defineComponent({ name: 'Datashare', template: '<router-view></router-view>' })
     this._vue = createApp(Root)
     this._api = api
     this._store = storeBuilder(api)
