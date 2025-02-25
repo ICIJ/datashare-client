@@ -50,7 +50,7 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * @param {string} suffix - The suffix to append to the store id.
    * @returns {function} - A function that creates a new store with the given suffix.
    */
-  useSuffixedStore.bind = (suffix) => {
+  useSuffixedStore.withSuffix = (suffix) => {
     const suffixedId = storeSuffix(useSuffixedStore.$id, suffix)
     const useStore = createSuffixedStore(suffix)
     return Object.assign(useStore, { $id: suffixedId })
@@ -63,8 +63,8 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * @param {string} suffix - The suffix to append to the store id.
    * @returns {Store} - The unique store instance.
    */
-  useSuffixedStore.call = (suffix) => {
-    return useSuffixedStore.bind(suffix).call()
+  useSuffixedStore.instantiate = (suffix) => {
+    return useSuffixedStore.withSuffix(suffix).call()
   }
 
   return useSuffixedStore
