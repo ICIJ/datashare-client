@@ -180,11 +180,6 @@ export function useSearchFilter() {
     searchStore.setResponse()
   }
 
-  async function refreshRouteAndSearch() {
-    await refreshRoute()
-    await refreshSearch()
-  }
-
   function refreshRoute() {
     const name = 'search'
     const query = searchStore.toRouteQuery
@@ -309,7 +304,6 @@ export function useSearchFilter() {
     resetSearchResponse,
     refreshRoute,
     refreshSearchFromRoute,
-    refreshRouteAndSearch,
     setFilterValue,
     setQuery,
     setIndices,
