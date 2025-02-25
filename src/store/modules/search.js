@@ -16,12 +16,12 @@ import {
 } from 'lodash'
 import lucene from 'lucene'
 import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
 
 import EsDocList from '@/api/resources/EsDocList'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
+import { defineSuffixedStore } from '@/store/suffixed'
 import settings from '@/utils/settings'
 
 export const TAB_NAME = {
@@ -31,7 +31,7 @@ export const TAB_NAME = {
   NAMED_ENTITIES: 'named-entities'
 }
 
-export const useSearchStore = defineStore('search', () => {
+export const useSearchStore = defineSuffixedStore('search', () => {
   const error = ref(null)
   const field = ref(settings.defaultSearchField)
   const filters = ref([...filterDefs])
