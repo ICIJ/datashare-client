@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import DocumentCarousel from '@/components/Document/DocumentCarousel/DocumentCarousel'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
@@ -26,7 +26,7 @@ const {
 
 const { isActive, document, watchDocument } = useDocument()
 
-const searchStore = useSearchStore()
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 const total = computed(() => searchStore.total)
 const carouselEntries = ref([])
 const backward = ref(false)
