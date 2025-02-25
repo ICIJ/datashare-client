@@ -31,29 +31,29 @@ describe('store/suffixed', () => {
     expect(store.$id).toBe('foo')
   })
 
-  it('should return the same store when call has no params', () => {
-    const sameStore = useFooStore.call()
+  it('should return the same store when `instantiate` has no params', () => {
+    const sameStore = useFooStore.instantiate()
     expect(sameStore).toBe(store)
   })
 
-  it('should return the same store when bind has no params', () => {
-    const useStore = useFooStore.bind()
+  it('should return the same store when `withSuffix` has no params', () => {
+    const useStore = useFooStore.withSuffix()
     const sameStore = useStore()
     expect(sameStore).toBe(store)
   })
 
   it('should create a store with a defined id', () => {
-    const anotherStore = useFooStore.call('bar')
+    const anotherStore = useFooStore.instantiate('bar')
     expect(anotherStore.$id).toBeDefined()
   })
 
   it('should create a store with a different id than the default search store', () => {
-    const anotherStore = useFooStore.call('bar')
+    const anotherStore = useFooStore.instantiate('bar')
     expect(anotherStore.$id).not.toBe('foo')
   })
 
   it('should create a store with a different state', () => {
-    const anotherStore = useFooStore.call('bar')
+    const anotherStore = useFooStore.instantiate('bar')
     expect(anotherStore.count).toBe(0)
     expect(store.count).toBe(0)
     anotherStore.increment()
@@ -65,8 +65,8 @@ describe('store/suffixed', () => {
   })
 
   it('should create twice the same store with an id different than the default search store', () => {
-    const barStore = useFooStore.call('bar')
-    const barStoreAgain = useFooStore.call('bar')
+    const barStore = useFooStore.instantiate('bar')
+    const barStoreAgain = useFooStore.instantiate('bar')
     expect(barStore).not.toBe(store)
     expect(barStore.$id).not.toBe(store.$id)
     expect(barStore).toBe(barStoreAgain)
@@ -74,8 +74,8 @@ describe('store/suffixed', () => {
   })
 
   it('should create twice the same store with an id different than the default search store and share the state', () => {
-    const barStore = useFooStore.call('bar')
-    const barStoreAgain = useFooStore.call('bar')
+    const barStore = useFooStore.instantiate('bar')
+    const barStoreAgain = useFooStore.instantiate('bar')
 
     expect(barStore.count).toBe(0)
     expect(barStoreAgain.count).toBe(0)
@@ -89,7 +89,7 @@ describe('store/suffixed', () => {
   })
 
   it('should create a store with a closure function', () => {
-    const useBarStore = useFooStore.bind('bar')
+    const useBarStore = useFooStore.withSuffix('bar')
     const barStore = useBarStore()
     expect(barStore).not.toBe(store)
     expect(barStore.$id).not.toBe(store.$id)
@@ -112,16 +112,16 @@ describe('store/suffixed', () => {
   })
 
   it('should create a store factory with a suffix that can be used with `mapStores`', () => {
-    const stores = mapStores(useFooStore.bind('bar'))
+    const stores = mapStores(useFooStore.withSuffix('bar'))
     expect(stores).toHaveProperty('fooBarStore')
   })
 
   it('should create a store factory with a suffix that can be used with `mapStores` in a component', async () => {
-    const computed = mapStores(useFooStore.bind('bar'))
+    const computed = mapStores(useFooStore.withSuffix('bar'))
     const component = { computed, template: '{{ fooBarStore.count }}' }
     const wrapper = shallowMount(component)
     expect(wrapper.text()).toEqual('0')
-    useFooStore.call('bar').increment()
+    useFooStore.instantiate('bar').increment()
     await flushPromises()
     expect(wrapper.text()).toEqual('1')
   })
@@ -142,16 +142,16 @@ describe('store/suffixed', () => {
   })
 
   it('should create a store with a suffix factory that can be used with `mapState`', () => {
-    const state = mapState(useFooStore.bind('bar'), ['count'])
+    const state = mapState(useFooStore.withSuffix('bar'), ['count'])
     expect(state).toHaveProperty('count')
   })
 
   it('should create a store with a suffix factory that can be used with `mapState` in a component', async () => {
-    const computed = mapState(useFooStore.bind('bar'), ['count'])
+    const computed = mapState(useFooStore.withSuffix('bar'), ['count'])
     const component = { computed, template: '{{ count }}' }
     const wrapper = shallowMount(component)
     expect(wrapper.text()).toEqual('0')
-    useFooStore.call('bar').increment()
+    useFooStore.instantiate('bar').increment()
     await flushPromises()
     expect(wrapper.text()).toEqual('1')
   })
@@ -162,7 +162,7 @@ describe('store/suffixed', () => {
   })
 
   it('should camelCase the suffixed store id', () => {
-    const useFooBarBazQuxStore = defineSuffixedStore('foo bar', {}).bind('baz qux')
+    const useFooBarBazQuxStore = defineSuffixedStore('foo bar', {}).withSuffix('baz qux')
     expect(useFooBarBazQuxStore.$id).toBe('fooBarBazQux')
   })
 })
