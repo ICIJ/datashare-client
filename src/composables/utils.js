@@ -1,8 +1,3 @@
-import { computed } from 'vue'
-
-import { useCore } from '@/composables/core'
-import { MODE_NAME } from '@/mode'
-
 export function useUtils() {
   const termIndexColors = ['#ECFC7A', '#CDFD94', '#A8FDAC', '#52FDEA']
   function getTermIndexColor(index) {
