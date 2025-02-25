@@ -8,11 +8,11 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useCore } from '@/composables/core'
-import { useUtils } from '@/composables/utils'
 import { useAppStore } from '@/store/modules'
+import useMode from '@/composables/mode'
 
 const { core } = useCore()
-const { isServer } = useUtils()
+const { isServer } = useMode()
 const { t } = useI18n()
 const appStore = useAppStore()
 const searchQuery = useUrlParam('q', '')
