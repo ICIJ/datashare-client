@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskEntitiesList from '@/views/Task/TaskEntities/TaskEntitiesList'
@@ -49,11 +49,12 @@ describe('TaskEntitiesList.vue', () => {
 
   it('should display the correct values in the correct columns for row 1', async () => {
     const wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    await flushPromises()
     const firstRow = wrapper.find('.task-list__row')
     const columns = firstRow.findAll('.task-list__row__column')
     expect(columns.at(0).text()).toBe('RUNNING')
     expect(columns.at(2).text()).toBe('EMAIL')
-    expect(columns.at(3).text()).toBe('local-datashare')
+    expect(columns.at(3).text()).toContain('Local Datashare')
     expect(columns.at(4).text()).toBe('0%')
     expect(columns.at(5).text()).toBe('a few seconds ago')
   })
