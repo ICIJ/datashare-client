@@ -1,4 +1,3 @@
-import { startCase } from 'lodash'
 const prefix = 'org.icij.datashare.tasks'
 const BATCH_SEARCH = `${prefix}.BatchSearchRunner`
 const BATCH_DOWNLOAD = `${prefix}.BatchDownloadRunner`
@@ -27,10 +26,11 @@ export const TASK_NAME_ICON = Object.freeze({
 export const HUMAN_TASK_NAME = Object.freeze({
   [BATCH_SEARCH]: 'Batch search',
   [BATCH_DOWNLOAD]: 'Batch download',
-  [SCAN]: 'Scan',
-  [INDEX]: 'Index',
-  [EXTRACT_NLP]: 'Extract entities',
-  [ENQUEUE_FROM_INDEX]: 'Enqueue from index'
+  [SCAN]: 'Scan folders',
+  [INDEX]: 'Index documents',
+  [EXTRACT_NLP]: 'Find entities',
+  [ENQUEUE_FROM_INDEX]: 'Enqueue from index',
+  UNKNOWN_TASK: 'Unknown Task'
 })
 export const TASK_NAME_LIST = Object.values(TASK_NAME)
 
@@ -40,6 +40,5 @@ export function getTaskName(longName) {
   return longName.split('.').pop()
 }
 export function getHumanTaskName(longName) {
-  const taskName = getTaskName(longName)
-  return taskNameValidator(taskName) ? HUMAN_TASK_NAME[taskName] : startCase(taskName)
+  return taskNameValidator(longName) ? HUMAN_TASK_NAME[longName] : HUMAN_TASK_NAME.UNKNOWN_TASK
 }

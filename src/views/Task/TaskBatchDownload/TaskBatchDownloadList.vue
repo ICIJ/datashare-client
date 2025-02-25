@@ -1,6 +1,4 @@
 <script setup>
-import { basename } from 'path'
-import { PhDownload } from '@phosphor-icons/vue'
 import get from 'lodash/get'
 
 import { useTaskSettings } from '@/composables/task-settings'
@@ -11,6 +9,7 @@ import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import TaskBatchDownloadLink from '@/components/Task/TaskBatchDownload/TaskBatchDownloadLink'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 
@@ -18,19 +17,8 @@ function hasZipSize(item) {
   return item.state !== 'ERROR' && item.result?.size !== undefined
 }
 
-function filename(item) {
-  const base = basename(getRecord(item, 'filename', ''))
-  return decodeURI(base)
-}
 function getRecord(item, key, defaultValue = undefined) {
   return get(item, `args.batchDownload.${key}`, defaultValue)
-}
-function batchDownloadExists(item) {
-  return getRecord(item, 'exists', false)
-}
-
-function downloadResultsUrl(item) {
-  return `/api/task/${item.id}/result`
 }
 </script>
 
@@ -53,15 +41,10 @@ function downloadResultsUrl(item) {
         <display-status :value="item.state" />
       </template>
 
-      <template #cell(name)="{ item }">
-        <a v-if="batchDownloadExists(item)" :href="downloadResultsUrl(item)" target="_blank" class="text-nowrap">
-          <ph-download fixed-width />
-          {{ filename(item) }}
-        </a>
-      </template>
+      <template #cell(name)="{ item }"> <task-batch-download-link :item="item" /> </template>
 
       <template #cell(projects)="{ item }">
-        <display-project-list :values="item.args.batchDownload.projects" />
+        <display-project-list :values="getRecord(item, 'projects')" />
       </template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />

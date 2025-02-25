@@ -13,6 +13,7 @@ import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import { useCore } from '@/composables/core'
+import TaskBatchSearchLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchLink'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
 
@@ -22,12 +23,6 @@ function getProjects(item) {
 
 function getRecord(item, key) {
   return get(item, `args.batchRecord.${key}`)
-}
-function getLink(item) {
-  return {
-    name: 'task.batch-search.view',
-    params: { uuid: getRecord(item, 'uuid'), indices: getProjects(item).join(',') }
-  }
 }
 </script>
 <template>
@@ -53,9 +48,7 @@ function getLink(item) {
         <display-visibility :value="getRecord(item, 'published')" />
       </template>
       <template #cell(name)="{ item }">
-        <router-link v-if="!!item.args?.batchRecord?.uuid" :to="getLink(item)">
-          {{ getRecord(item, 'name') }}</router-link
-        >
+        <task-batch-search-link :item="item" />
       </template>
       <template #cell(queries)="{ item }">
         <display-number :value="getRecord(item, 'nbQueries')" />

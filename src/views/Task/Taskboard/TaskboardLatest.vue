@@ -11,6 +11,8 @@ import { getHumanTaskName, TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import useMode from '@/composables/mode'
+import TaskBatchDownloadLink from '@/components/Task/TaskBatchDownload/TaskBatchDownloadLink'
+import TaskBatchSearchLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchLink'
 
 const nbTasks = ref(3)
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
@@ -98,21 +100,32 @@ function getProjects(item) {
 
 function getTitle(item) {
   switch (item.name) {
-    case TASK_NAME.BATCH_DOWNLOAD:
-      return 'Batch download' // item.args?.batchDownload?.name ?? 'Batch download'
     case TASK_NAME.BATCH_SEARCH:
       return item.args?.batchRecord?.name
+    case TASK_NAME.BATCH_DOWNLOAD:
+      return item.args?.batchDownload?.filename
     case TASK_NAME.SCAN:
-      return 'Adding documents (SCAN)'
     case TASK_NAME.INDEX:
-      return 'Adding documents (INDEX)'
     case TASK_NAME.ENQUEUE_FROM_INDEX:
-      return 'Enqueue documents'
     case TASK_NAME.EXTRACT_NLP:
-      return 'Find entities'
     default:
-      console.error('Unknown task', item)
-      return 'Unknown Task'
+      return getHumanTaskName(item.name)
+  }
+}
+function getTaskLinkTitle(item) {
+  switch (item.name) {
+    case TASK_NAME.BATCH_SEARCH:
+      return 'Batch search task'
+    case TASK_NAME.BATCH_DOWNLOAD:
+      return 'Batch download task'
+    case TASK_NAME.INDEX:
+    case TASK_NAME.SCAN:
+      return 'Document task'
+    case TASK_NAME.ENQUEUE_FROM_INDEX:
+    case TASK_NAME.EXTRACT_NLP:
+      return 'Entity task'
+    default:
+      return 'Unknown task'
   }
 }
 function getTaskIcon(item) {
@@ -131,11 +144,15 @@ function getTaskIcon(item) {
             size="sm"
             :icon-left="getTaskIcon(item)"
             variant="outline-tertiary"
-            :label="getHumanTaskName(item.name)"
+            :label="getTaskLinkTitle(item)"
             hide-label
         /></template>
         <template #cell(state)="{ item }"><display-status size="sm" :value="item.state" /></template>
-        <template #cell(title)="{ item }">{{ getTitle(item) }}</template>
+        <template #cell(title)="{ item }">
+          <task-batch-download-link v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
+          <task-batch-search-link v-else-if="item.name === TASK_NAME.BATCH_SEARCH" :item="item" />
+          <span v-else> {{ getTitle(item) }}</span>
+        </template>
         <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
         <template #cell(author)="{ item }"><display-user :value="getAuthor(item)" /></template>
         <template #cell(projects)="{ item }">
