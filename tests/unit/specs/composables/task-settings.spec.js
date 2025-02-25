@@ -1,9 +1,17 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createApp } from 'vue'
+import { vi } from 'vitest'
 
 import { useTaskSettings } from '@/composables/task-settings'
 import CoreSetup from '~tests/unit/CoreSetup'
-
+import useMode from '@/composables/mode'
+vi.mock('@/composables/core', () => ({
+  useCore: vi.fn(() => ({
+    core: {
+      mode: { modeName: 'SERVER' }
+    }
+  }))
+}))
 describe('useTaskSettings', () => {
   function withSetup({ composable, store, i18n, routes = [] }) {
     let result
@@ -17,7 +25,6 @@ describe('useTaskSettings', () => {
         return () => {}
       }
     })
-
     app.use(store)
     app.use(router)
     app.use(i18n)
@@ -40,7 +47,7 @@ describe('useTaskSettings', () => {
   })
 
   it('should initialize "app/batch-download" task settings propertiesModelValueOptions contains correct properties', () => {
-    const { store, router, i18n } = CoreSetup.init().useAll().useRouterWithoutGuards()
+    const { store, router, i18n, mode } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const { propertiesModelValueOptions } = withSetup({
       store,
       router,
