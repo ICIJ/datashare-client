@@ -26,6 +26,7 @@ import { useSearchStore } from '@/store/modules'
  */
 export default {
   name: 'UserHistorySaveSearchForm',
+  inject: ['searchStoreSuffix'],
   props: {
     /**
      * The indices of the current item.
@@ -55,7 +56,7 @@ export default {
   methods: {
     async getUriFromStore() {
       const from = 0
-      const query = { ...useSearchStore().toRouteQuery, from }
+      const query = { ...useSearchStore.instantiate(this.searchStoreSuffix).toRouteQuery, from }
       const { fullPath } = await this.$router.resolve({ name: 'search', query })
       return fullPath
     },
