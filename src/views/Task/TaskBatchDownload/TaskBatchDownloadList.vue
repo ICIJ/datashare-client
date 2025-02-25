@@ -1,6 +1,7 @@
 <script setup>
 import { basename } from 'path'
 import { PhDownload } from '@phosphor-icons/vue'
+import get from 'lodash/get'
 
 import { useTaskSettings } from '@/composables/task-settings'
 import TaskList from '@/components/Task/TaskList'
@@ -18,11 +19,14 @@ function hasZipSize(item) {
 }
 
 function filename(item) {
-  return item.args?.batchDownload ? basename(item.args?.batchDownload?.filename) : ''
+  const base = basename(getRecord(item, 'filename', ''))
+  return decodeURI(base)
 }
-
+function getRecord(item, key, defaultValue = undefined) {
+  return get(item, `args.batchDownload.${key}`, defaultValue)
+}
 function batchDownloadExists(item) {
-  return item.args?.batchDownload?.exists ?? 'test'
+  return getRecord(item, 'exists', false)
 }
 
 function downloadResultsUrl(item) {
@@ -50,7 +54,7 @@ function downloadResultsUrl(item) {
       </template>
 
       <template #cell(name)="{ item }">
-        <a v-if="batchDownloadExists(item)" :href="downloadResultsUrl(item)" target="_blank">
+        <a v-if="batchDownloadExists(item)" :href="downloadResultsUrl(item)" target="_blank" class="text-nowrap">
           <ph-download fixed-width />
           {{ filename(item) }}
         </a>
@@ -63,7 +67,7 @@ function downloadResultsUrl(item) {
         <display-datetime-from-now :value="item.createdAt" />
       </template>
       <template #cell(size)="{ item }">
-        <display-content-length v-if="hasZipSize(item)" :value="item.result.size" />
+        <display-content-length v-if="hasZipSize(item)" :value="item.result.size" class="text-nowrap" />
       </template>
     </task-list>
   </task-page>
