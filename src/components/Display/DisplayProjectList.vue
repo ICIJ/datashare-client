@@ -15,7 +15,12 @@ const projectList = computed(() => {
 </script>
 
 <template>
-  <div class="d-flex gap-3">
-    <project-link v-for="(project, index) in projectList" :key="index" :project="project" />
+  <div class="d-flex gap-2">
+    <project-link
+      v-for="(project, index) in projectList"
+      :key="index"
+      :project="project"
+      class="btn btn-sm btn-outline-tertiary p-2"
+    />
   </div>
 </template>
