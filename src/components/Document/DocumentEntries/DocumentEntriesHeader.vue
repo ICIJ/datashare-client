@@ -1,5 +1,5 @@
 <script setup>
-import { computed, toRef, useTemplateRef, watch } from 'vue'
+import { computed, inject, toRef, useTemplateRef, watch } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -37,7 +37,7 @@ const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 const { core, toast } = useCore()
 const { t, tm, n } = useI18n()
-const searchStore = useSearchStore()
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 const router = useRouter()
 
 const batchDownloadDocumentsLabel = computed(() => {
