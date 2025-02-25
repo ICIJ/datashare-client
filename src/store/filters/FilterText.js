@@ -1,5 +1,4 @@
 import compact from 'lodash/compact'
-import get from 'lodash/get'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
 
@@ -117,7 +116,7 @@ export default class FilterText {
   }
 
   get store() {
-    return get(this, _STORE, {})
+    return this[_STORE] ?? null
   }
 
   get values() {
@@ -146,10 +145,10 @@ export default class FilterText {
   }
 
   get sortBy() {
-    return get(this.sort, 'sortBy', '_count')
+    return this.sort?.sortBy ?? '_count'
   }
 
   get orderBy() {
-    return get(this.sort, 'orderBy', 'desc')
+    return this.sort?.orderBy ?? 'desc'
   }
 }
