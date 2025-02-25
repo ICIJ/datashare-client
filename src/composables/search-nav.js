@@ -1,4 +1,4 @@
-import { computed, toRef, watch } from 'vue'
+import { computed, inject, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { matches } from 'lodash'
 
@@ -11,7 +11,7 @@ export function useSearchNav(currentDocument = null) {
   const { core } = useCore()
   const { document: viewDocument } = useDocument()
   const router = useRouter()
-  const searchStore = useSearchStore()
+  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
   const currentDocumentRef = toRef(currentDocument)
   const document = computed(() => currentDocumentRef.value || viewDocument.value)
 
