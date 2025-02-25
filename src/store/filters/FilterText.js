@@ -6,7 +6,7 @@ import noop from 'lodash/noop'
 
 // Private properties keys
 const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
-const _USE_STORE = typeof Symbol === 'function' ? Symbol('_use_store') : '_user_store'
+const _STORE = typeof Symbol === 'function' ? Symbol('_store') : '_store'
 
 export default class FilterText {
   constructor({
@@ -112,13 +112,13 @@ export default class FilterText {
     return this.addFilter(body)
   }
 
-  bindStore(useStore) {
-    this[_USE_STORE] = useStore
+  bindStore({ values, excludeFilters, contextualizeFilters, sortFilters }) {
+    this[_STORE] = { values, excludeFilters, contextualizeFilters, sortFilters }
     return this
   }
 
   get store() {
-    return get(this, _USE_STORE, noop)()
+    return get(this, _STORE, {})
   }
 
   get values() {
