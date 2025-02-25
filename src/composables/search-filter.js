@@ -1,4 +1,4 @@
-import { computed, nextTick, watch } from 'vue'
+import { computed, inject, nextTick, watch } from 'vue'
 import { get, identity, isObject, last, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -16,7 +16,7 @@ import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/module
 
 export function useSearchFilter() {
   const appStore = useAppStore()
-  const searchStore = useSearchStore()
+  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
   const recommendedStore = useRecommendedStore()
   const route = useRoute()
   const router = useRouter()
