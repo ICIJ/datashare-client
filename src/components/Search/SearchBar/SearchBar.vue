@@ -111,6 +111,7 @@ export default {
     SearchBarInputDropdownForField,
     SearchBarInputDropdownForProjects
   },
+  inject: ['searchStoreSuffix'],
   props: {
     /**
      * Placeholder in the search bar.
@@ -155,7 +156,7 @@ export default {
   },
   emits: ['submit'],
   data() {
-    const searchStore = useSearchStore()
+    const searchStore = useSearchStore.instantiate(this.searchStoreSuffix)
 
     return {
       field: searchStore.field,
