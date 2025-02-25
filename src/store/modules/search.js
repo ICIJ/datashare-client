@@ -292,8 +292,22 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   function instantiateFilter({ type = 'FilterText', options } = {}) {
     const Type = filterTypes[type]
     const filter = new Type(options)
-    // Bind current state to the filter be able to retrieve its values
-    return filter.bindStore(useSearchStore)
+    // Bind current state to the filter be able to retrieve its values. Here we wrap
+    // the state in a getters to ensure the filter can access those values transparently.
+    return filter.bindStore({
+      get values() {
+        return values.value
+      },
+      get excludeFilters() {
+        return excludeFilters.value
+      },
+      get contextualizeFilters() {
+        return contextualizeFilters.value
+      },
+      get sortFilters() {
+        return sortFilters.value
+      }
+    })
   }
 
   function hasFilterValue(item) {
