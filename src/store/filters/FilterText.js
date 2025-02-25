@@ -2,7 +2,6 @@ import compact from 'lodash/compact'
 import get from 'lodash/get'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
-import noop from 'lodash/noop'
 
 // Private properties keys
 const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
