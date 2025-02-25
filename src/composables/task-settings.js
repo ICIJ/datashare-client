@@ -9,6 +9,7 @@ import useMode from '@/composables/mode'
 
 export function useTaskSettings(pageName) {
   const appStore = useAppStore()
+  const { isServer } = useMode()
   const { t } = useI18n()
   const { sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } = useViewSettings()
 
@@ -36,7 +37,6 @@ export function useTaskSettings(pageName) {
       }
     ]
   })
-  const { isServer } = useMode()
 
   const props = useTaskProperties(appStore.getSettings(pageName, 'properties'))
   const items = props.items.filter((p) => isServer.value || p.key !== 'author')
