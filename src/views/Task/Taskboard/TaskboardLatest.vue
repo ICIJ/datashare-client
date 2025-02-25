@@ -10,10 +10,13 @@ import DisplayUser from '@/components/Display/DisplayUser'
 import { getHumanTaskName, TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import useMode from '@/composables/mode'
 
 const nbTasks = ref(3)
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
-const columns = ref([
+const { isServer } = useMode()
+
+const allColumns = ref([
   {
     name: 'name',
     value: 'name',
@@ -57,6 +60,7 @@ const columns = ref([
     icon: 'user'
   }
 ])
+const columns = computed(() => allColumns.value.filter((p) => isServer.value || p.name !== 'author'))
 
 const displayedTasks = computed(() => {
   return pollingTasks.value?.slice(0, nbTasks.value)
