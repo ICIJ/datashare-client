@@ -1,4 +1,4 @@
-import { computed, h } from 'vue'
+import { computed, inject, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { useModalController } from 'bootstrap-vue-next'
 
@@ -30,7 +30,7 @@ export function useSearchSavingModal(project) {
 }
 
 export function useSearchSaving() {
-  const searchStore = useSearchStore()
+  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
   const indices = computed(() => searchStore.indices)
   const { core } = useCore()
   const { resolve } = useRouter()
