@@ -1,6 +1,6 @@
 <script setup>
 import Fuse from 'fuse.js'
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { uniq, groupBy, property } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
@@ -12,7 +12,7 @@ import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 import { useSearchStore } from '@/store/modules'
 
 const { toggleFilters } = useViews()
-const searchStore = useSearchStore()
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 const { isMode } = useMode()
 const { getFilterComponent } = useSearchFilter()
 const { t } = useI18n()
