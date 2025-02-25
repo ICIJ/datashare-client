@@ -1,5 +1,5 @@
 <script setup>
-import { toRef, ref, reactive, computed, watch, onMounted, nextTick, useTemplateRef } from 'vue'
+import { toRef, inject, ref, reactive, computed, watch, onMounted, nextTick, useTemplateRef } from 'vue'
 import { clamp, findLastIndex, entries, isEmpty, get, range, throttle } from 'lodash'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
@@ -28,7 +28,7 @@ const props = defineProps({
 
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
-const searchStore = useSearchStore()
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 const elementRef = useTemplateRef('element')
 const { waitFor } = useWait()
 
