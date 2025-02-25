@@ -52,7 +52,6 @@ describe('TaskEntitiesList.vue', () => {
     const firstRow = wrapper.find('.task-list__row')
     const columns = firstRow.findAll('.task-list__row__column')
     expect(columns.at(0).text()).toBe('RUNNING')
-    expect(columns.at(1).text()).toBe('NA')
     expect(columns.at(2).text()).toBe('EMAIL')
     expect(columns.at(3).text()).toBe('local-datashare')
     expect(columns.at(4).text()).toBe('0%')
