@@ -3,6 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownloadList'
 import { apiInstance as api } from '@/api/apiInstance'
+import BatchDownloadActions from '@/components/BatchDownloadActions'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
@@ -135,19 +136,16 @@ describe('TaskBatchDownloadList.vue', () => {
     const firstRow = wrapper.find('.task-list__row')
     const columns = firstRow.findAll('.task-list__row__column')
     expect(columns.at(0).text()).toBe('DONE')
-    expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip')
+    expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z[GMT].zip')
     expect(columns.at(2).text()).toBe('74.77 MB')
-    expect(columns.at(3).text()).toBe('a few seconds ago')
+    expect(columns.at(3).text()).toContain('notnot')
+    expect(columns.at(4).text()).toBe('a few seconds ago')
   })
 
-  it('should display the correct batch download actions', async () => {
+  it('should display batch download actions', async () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     await flushPromises()
     const firstRow = wrapper.find('.task-list__row')
-    const columns = firstRow.findAll('.task-list__row__column')
-    expect(columns.at(0).text()).toBe('DONE')
-    expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip')
-    expect(columns.at(2).text()).toBe('74.77 MB')
-    expect(columns.at(3).text()).toBe('a few seconds ago')
+    expect(firstRow.findComponent(BatchDownloadActions).exists()).toBe(true)
   })
 })

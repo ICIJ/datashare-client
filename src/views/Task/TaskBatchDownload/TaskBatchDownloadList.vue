@@ -10,6 +10,7 @@ import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import TaskBatchDownloadLink from '@/components/Task/TaskBatchDownload/TaskBatchDownloadLink'
+import BatchDownloadActions from '@/components/BatchDownloadActions'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 
@@ -18,7 +19,10 @@ function hasZipSize(item) {
 }
 
 function getRecord(item, key, defaultValue = undefined) {
-  return get(item, `args.batchDownload.${key}`, defaultValue)
+  if (key) {
+    return get(item, `args.batchDownload.${key}`, defaultValue)
+  }
+  return get(item, `args.batchDownload`, defaultValue)
 }
 </script>
 
@@ -51,6 +55,9 @@ function getRecord(item, key, defaultValue = undefined) {
       </template>
       <template #cell(size)="{ item }">
         <display-content-length v-if="hasZipSize(item)" :value="item.result.size" class="text-nowrap" />
+      </template>
+      <template #cell(action)="{ item }">
+        <batch-download-actions :id="item.id" :name="item.name" :state="item.state" :value="getRecord(item)" />
       </template>
     </task-list>
   </task-page>
