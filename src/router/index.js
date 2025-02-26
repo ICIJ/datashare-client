@@ -227,7 +227,7 @@ export const routes = [
                   ]
                 }
               },
-              {
+              /* {
                 name: 'task.batch-search.view',
                 path: ':indices/:uuid',
                 component: () => import('@/views/TaskBatchSearchView'),
@@ -238,10 +238,25 @@ export const routes = [
                     path: '',
                     props: true,
                     component: () => import('@/views/TaskBatchSearchViewResults')
+                  },
+                  {
+                    name: 'task.batch-search.view.queries',
+                    path: 'queries',
+                    props: true,
+                    component: () => import('@/views/TaskBatchSearchViewResults')
                   }
                 ],
                 meta: {
                   title: 'batchSearchResults.title'
+                }
+              }, */
+              {
+                name: 'task.batch-search.view',
+                path: ':indices/:uuid',
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryList.vue'),
+                props: true,
+                meta: {
+                  title: 'batchSearchQueries.title'
                 }
               }
             ]

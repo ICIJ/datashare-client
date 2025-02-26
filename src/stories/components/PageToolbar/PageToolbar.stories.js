@@ -1,6 +1,6 @@
 import { vueRouter } from 'storybook-vue3-router'
 
-import PageHeader from '@/components/PageHeader/PageHeader'
+import PageToolbar from '@/components/PageToolbar/PageToolbar'
 
 const routes = [
   {
@@ -36,14 +36,17 @@ const routes = [
 ]
 
 export default {
-  title: 'Components/PageHeader/PageHeader',
+  title: 'Components/PageHeader/PageToolbar',
   tags: ['autodocs'],
   decorators: [vueRouter(routes, { initialRoute: '/tasks/batch-searches' })],
-  component: PageHeader,
+  component: PageToolbar,
   args: {
-    noBreadcrumb: false,
-    noToggleSidebar: false,
-    noToggleSettings: false
+    searchable: true,
+    filterable: true,
+    paginable: true,
+    totalRows: 100,
+    pageRow: false,
+    page: 1
   }
 }
 
