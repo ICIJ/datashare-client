@@ -24,7 +24,7 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
 </script>
 
 <template>
-  <b-modal v-if="hasExpandModal" v-model="modelValue" size="lg" hide-footer title-class="flex-grow-1">
+  <b-modal v-if="hasExpandModal" lazy v-model="modelValue" size="lg" hide-footer title-class="flex-grow-1">
     <template #title>
       <filter-modal-title v-model:sort="sort" :filter="filter" />
     </template>
