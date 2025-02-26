@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 
-import TaskList from '@/components/Task/TaskList'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { useTaskPolling } from '@/composables/task-polling'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayStatus from '@/components/Display/DisplayStatus'
@@ -137,7 +137,7 @@ function getTaskIcon(item) {
   <b-card-body no-border class="task-all__latest no-border mx-3">
     <b-card-title class="pb-4"> <phosphor-icon name="rocket-launch" /> Latest tasks </b-card-title>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
-      <task-list :tasks="displayedTasks" :columns="columns">
+      <page-table-generic :items="displayedTasks" :columns="columns">
         <template #cell(name)="{ item }"
           ><button-icon
             square
@@ -159,7 +159,7 @@ function getTaskIcon(item) {
           <display-project-list :values="getProjects(item)" />
         </template>
         <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template
-      ></task-list>
+      ></page-table-generic>
       <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto" @click="showMore">Show more</b-button>
     </b-overlay>
   </b-card-body>

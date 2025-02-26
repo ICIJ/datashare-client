@@ -2,7 +2,7 @@
 import get from 'lodash/get'
 
 import { useTaskSettings } from '@/composables/task-settings'
-import TaskList from '@/components/Task/TaskList'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
@@ -32,9 +32,9 @@ function getRecord(item, key, defaultValue = undefined) {
     :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
     page-name="batch-download"
   >
-    <task-list
+    <page-table-generic
       v-if="!empty"
-      :tasks="tasks"
+      :items="tasks"
       :columns="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
@@ -59,6 +59,6 @@ function getRecord(item, key, defaultValue = undefined) {
       <template #cell(action)="{ item }">
         <batch-download-actions :id="item.id" :name="item.name" :state="item.state" :value="getRecord(item)" />
       </template>
-    </task-list>
+    </page-table-generic>
   </task-page>
 </template>
