@@ -384,7 +384,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   function decontextualizeFilter(name) {
     const i = contextualizeFilters.value.indexOf(name)
-    delete contextualizeFilters.value[i]
+    contextualizeFilters.value.splice(i, 1)
   }
 
   function excludeFilter(name) {
@@ -395,16 +395,13 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   function includeFilter(name) {
     const i = excludeFilters.value.indexOf(name)
-    delete excludeFilters.value[i]
+    if (i > -1) {
+      excludeFilters.value.splice(i, 1)
+    }
   }
 
   function toggleFilter(name) {
-    const i = excludeFilters.value.indexOf(name)
-    if (i === -1) {
-      excludeFilters.value.push(name)
-    } else {
-      delete excludeFilters.value[i]
-    }
+    return isFilterExcluded(name) ? includeFilter(name) : excludeFilter(name)
   }
 
   async function refresh() {
