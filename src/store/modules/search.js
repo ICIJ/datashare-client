@@ -24,13 +24,6 @@ import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/suffixed'
 import settings from '@/utils/settings'
 
-export const TAB_NAME = {
-  EXTRACTED_TEXT: 'extracted-text',
-  PREVIEW: 'preview',
-  DETAILS: 'details',
-  NAMED_ENTITIES: 'named-entities'
-}
-
 export const useSearchStore = defineSuffixedStore('search', () => {
   const error = ref(null)
   const field = ref(settings.defaultSearchField)
@@ -46,7 +39,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const sortFilters = ref({})
   const showFilters = ref(true)
   const values = ref({})
-  const tab = ref(TAB_NAME.EXTRACTED_TEXT)
 
   const appStore = useAppStore()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
@@ -95,7 +87,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       perPage: `${perPage.value}`,
       sort: sortBy.value,
       order: orderBy.value,
-      tab: tab.value,
       ...toBaseRouteQuery.value
     }
   })
@@ -216,7 +207,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     excludeFilters.value = []
     sortFilters.value = {}
     contextualizeFilters.value = []
-    tab.value = TAB_NAME.EXTRACTED_TEXT
     values.value = {}
   }
 
@@ -417,10 +407,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
   }
 
-  function updateTab(value) {
-    tab.value = value
-  }
-
   async function refresh() {
     setIsReady(false)
     setError(null)
@@ -577,7 +563,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     sortFilters,
     showFilters,
     values,
-    tab,
     // Getters
     instantiatedFilters,
     activeFilters,
@@ -628,7 +613,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     excludeFilter,
     includeFilter,
     toggleFilter,
-    updateTab,
     refresh,
     searchDocuments,
     searchRootDocuments,
