@@ -11,6 +11,7 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
 import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
 import EmptyState from '@/components/EmptyState/EmptyState'
+import PageToolbar from '@/components/PageToolbar/PageToolbar'
 
 const props = defineProps({
   taskFilter: {
@@ -48,13 +49,13 @@ const order = computed({
 </script>
 
 <template>
-  <page-header
+  <page-header :to-add="toAddRoute" />
+  <page-toolbar
     :key="totalRows"
     v-model:searchQuery="searchQuery"
     v-model:page="page"
     :per-page="perPage"
     :total-rows="totalRows"
-    :to-add="toAddRoute"
     searchable
     paginable
     :search-placeholder="searchPlaceholder"
@@ -65,9 +66,8 @@ const order = computed({
         :has-pending-tasks="hasPendingTasks"
         @stop-pending="() => stopPendingTasks()"
         @delete-done="() => deleteDoneTasks()"
-      />
-    </template>
-  </page-header>
+      /> </template
+  ></page-toolbar>
   <page-container fluid>
     <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
       {{ t(`task.${pageName}.list.info`) }}

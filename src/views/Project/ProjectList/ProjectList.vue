@@ -10,6 +10,7 @@ import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/comp
 import { useCore } from '@/composables/core'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/mode'
+import PageToolbar from '@/components/PageToolbar/PageToolbar'
 
 const { core } = useCore()
 const { isServer } = useMode()
@@ -113,12 +114,12 @@ const searchPlaceholder = computed(() => t('projectList.searchPlaceholder'))
 
 <template>
   <div class="project-list">
-    <page-header
+    <page-header :to-add="toAddRoute"> </page-header>
+    <page-toolbar
       v-model:searchQuery="searchQuery"
       v-model:page="page"
       :per-page="perPage"
       :total-rows="filteredProjects.length"
-      :to-add="toAddRoute"
       searchable
       paginable
       :search-placeholder="searchPlaceholder"
