@@ -268,6 +268,12 @@ export function useSearchFilter() {
     return watch(values, callback, options)
   }
 
+  function watchFilters(callback) {
+    // We stringify the values to avoid deep watching the object
+    // with unnecessary reactivity and unwanted side effects.
+    return watch(() => JSON.stringify([searchStore.values, searchStore.excludeFilters]), callback)
+  }
+
   function watchQuery(callback, options) {
     return watch(() => searchStore.query, callback, options)
   }
@@ -276,12 +282,12 @@ export function useSearchFilter() {
     return watch(() => searchStore.from, callback, options)
   }
 
-  function watchIndices(callback, options = { deep: true }) {
+  function watchIndices(callback, options = { deep: false }) {
     return watch(() => indices.value.join(','), callback, options)
   }
 
-  function watchValues(callback, options = { deep: true }) {
-    return watch(() => searchStore.values, callback, options)
+  function watchValues(callback, options = { deep: false }) {
+    return watch(() => JSON.stringify(searchStore.values), callback, options)
   }
 
   return {
@@ -320,6 +326,7 @@ export function useSearchFilter() {
     watchFilterSort,
     watchFilterValues,
     watchFilterExcluded,
+    watchFilters,
     watchFrom,
     watchQuery,
     watchIndices,
