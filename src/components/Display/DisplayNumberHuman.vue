@@ -10,10 +10,10 @@ const props = defineProps({
   }
 })
 
-const { tm } = useI18n()
+const { tm, n } = useI18n()
 
 const humanValue = computed(() => {
-  return humanNumber(props.value, tm('human.number'))
+  return humanNumber(props.value, tm('human.number'), n)
 })
 </script>
 
