@@ -1592,8 +1592,7 @@
     },
     "barometer": {
       "document": "no documents | {n} document | {n} documents",
-      "amongWhich": "among which",
-      "onDisk": "on disk"
+      "amongWhichOnDisk": "among which {n} on disk"
     },
     "diskUsage": {
       "details": "See disk usage",

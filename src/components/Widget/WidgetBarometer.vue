@@ -9,7 +9,10 @@
   >
     <phosphor-icon :variant="variant" size="2rem" :name="icon" />
     <div class="widget-barometer__value fw-bold text-truncate w-100">
-      <slot>{{ humanValue }}</slot>
+      <slot>
+        <display-number-human v-if="isNumber" :value="value" />
+        <template v-else>{{ value }}</template>
+      </slot>
     </div>
     <div class="widget-barometer__label text-truncate w-100">
       <slot name="label">{{ label }}</slot>
@@ -23,7 +26,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import humanNumber from '@/utils/humanNumber'
+import DisplayNumberHuman from '@/components/Display/DisplayNumberHuman'
 import { variantValidator } from '@/enums/variants'
 
 const props = defineProps({
@@ -36,14 +39,9 @@ const props = defineProps({
   borderVariant: { type: String, validator: variantValidator, default: null }
 })
 
-const humanValue = computed(() => {
-  if (typeof props.value === 'number') {
-    return humanNumber(props.value)
-  }
-  return props.value
-})
-
 const router = useRouter()
+
+const isNumber = computed(() => typeof props.value === 'number')
 
 const href = computed(() => {
   if (isString(props.to)) {
