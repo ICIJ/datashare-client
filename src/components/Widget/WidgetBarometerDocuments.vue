@@ -2,13 +2,13 @@
   <widget-barometer class="widget-barometer-documents" icon="files" :label="label">
     <i18n-t keypath="widget.barometer.document" :plural="nbDocuments">
       <template #n>
-        <display-number-human :value="nbDocuments" :title="$n(nbDocuments)" v-b-tooltip />
+        <display-number-human v-b-tooltip :value="nbDocuments" :title="$n(nbDocuments)" />
       </template>
     </i18n-t>
     <template #label>
       <i18n-t keypath="widget.barometer.amongWhichOnDisk" :plural="nbDocumentsOnDisks">
         <template #n>
-          <display-number-human :value="nbDocumentsOnDisks" :title="$n(nbDocumentsOnDisks)" v-b-tooltip />
+          <display-number-human v-b-tooltip :value="nbDocumentsOnDisks" :title="$n(nbDocumentsOnDisks)" />
         </template>
       </i18n-t>
     </template>
