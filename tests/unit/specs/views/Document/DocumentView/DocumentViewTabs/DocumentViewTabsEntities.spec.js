@@ -36,7 +36,8 @@ describe('DocumentViewTabsEntities.vue', () => {
     documentStore = useDocumentStore()
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    await flushPromises()
     wrapper.unmount()
   })
 
