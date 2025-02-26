@@ -3,7 +3,6 @@ import { TinyPagination } from '@icij/murmur-next'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
-import PageContainer from '@/components/PageContainer/PageContainer'
 
 const searchQuery = defineModel('searchQuery', { type: String })
 const page = defineModel('page', { type: Number, default: 1 })
@@ -42,7 +41,7 @@ defineProps({
 </script>
 
 <template>
-  <page-container fluid class="page-toolbar d-flex justify-content-between flex-wrap gap-3">
+  <div class="page-toolbar d-flex justify-content-between flex-wrap gap-3">
     <slot name="toggle-filters">
       <button-toggle-filters
         v-if="filterable"
@@ -66,7 +65,7 @@ defineProps({
       />
     </slot>
     <slot name="end"></slot>
-  </page-container>
+  </div>
 </template>
 
 <style scoped lang="scss">
