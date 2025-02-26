@@ -39,7 +39,7 @@ const showToggleSidebar = computed(() => {
 </script>
 
 <template>
-  <page-container fluid class="page-header d-flex justify-content-between gap-4 py-3">
+  <div class="page-header d-flex justify-content-between gap-4 pt-3">
     <slot name="toggle-sidebar">
       <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
     </slot>
@@ -52,7 +52,7 @@ const showToggleSidebar = computed(() => {
         <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
       </slot>
     </div>
-  </page-container>
+  </div>
 </template>
 
 <style lang="scss" scoped>

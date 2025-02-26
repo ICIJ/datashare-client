@@ -12,6 +12,10 @@ const props = defineProps({
     type: String,
     default: SIZE.MD,
     validator: breakpointSizeValidator
+  },
+  top: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -24,7 +28,8 @@ const compact = computed(() => {
 const classList = computed(() => {
   return {
     'page-container--fluid': props.fluid,
-    'page-container--compact': compact.value
+    'page-container--compact': compact.value,
+    'd-flex flex-column gap-4': props.top
   }
 })
 </script>

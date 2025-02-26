@@ -49,8 +49,8 @@ const entries = [
 </script>
 
 <template>
-  <page-header no-toggle-settings />
-  <page-container fluid class="d-flex flex-column gap-5">
+  <page-container fluid top class="taskboard">
+    <page-header no-toggle-settings />
     <taskboard-latest />
     <taskboard-entry-list :entries="entries" />
   </page-container>

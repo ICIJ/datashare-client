@@ -60,51 +60,49 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
 
 <template>
   <div class="project-view-overview">
-    <page-container fluid>
-      <v-wait class="bg-tertiary-subtle rounded-1 p-4" :for="loaderId">
-        <template #waiting>
-          <div class="text-center py-5">
-            <phosphor-icon name="circle-notch" spin size="2em" />
-          </div>
-        </template>
+    <v-wait class="bg-tertiary-subtle rounded-1 p-4" :for="loaderId">
+      <template #waiting>
+        <div class="text-center py-5">
+          <phosphor-icon name="circle-notch" spin size="2em" />
+        </div>
+      </template>
 
-        <project-jumbotron
-          v-model:pinned="pinned"
-          class="mx-3"
-          :project="project"
-          :last-indexing-date="lastIndexingDate"
-        />
-        <search-bar class="my-4 py-3 mx-3" size="lg" :indices="indices" hide-field-dropdown hide-projects-dropdown />
-        <tab-group-navigation class="mx-3" nowrap>
-          <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights', params }">
-            {{ $t('projectViewOverview.nav.insights') }}
-          </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="tree-structure" :to="{ name: 'project.view.overview.paths', params }">
-            {{ $t('projectViewOverview.nav.paths') }}
-          </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph', params }">
-            {{ $t('projectViewOverview.nav.graph') }}
-          </tab-group-navigation-entry>
-          <tab-group-navigation-entry icon="info" :to="{ name: 'project.view.overview.details', params }">
-            {{ $t('projectViewOverview.nav.details') }}
-          </tab-group-navigation-entry>
-          <tab-group-navigation-entry
-            icon="clock-counter-clockwise"
-            :to="{ name: 'project.view.overview.history', params }"
-          >
-            {{ $t('projectViewOverview.nav.history') }}
-          </tab-group-navigation-entry>
-        </tab-group-navigation>
-        <router-view v-if="hasDocuments" :key="name" />
-        <empty-state
-          v-else
-          :label="$t('projectViewOverview.emptyStateLabel')"
-          class="my-5"
-          action-icon="plus"
-          :action-label="$t('projectViewOverview.emptyStateAction')"
-          :action-to="{ name: 'task.documents.new', query: { projectName: project.name } }"
-        />
-      </v-wait>
-    </page-container>
+      <project-jumbotron
+        v-model:pinned="pinned"
+        class="mx-3"
+        :project="project"
+        :last-indexing-date="lastIndexingDate"
+      />
+      <search-bar class="my-4 py-3 mx-3" size="lg" :indices="indices" hide-field-dropdown hide-projects-dropdown />
+      <tab-group-navigation class="mx-3" nowrap>
+        <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights', params }">
+          {{ $t('projectViewOverview.nav.insights') }}
+        </tab-group-navigation-entry>
+        <tab-group-navigation-entry icon="tree-structure" :to="{ name: 'project.view.overview.paths', params }">
+          {{ $t('projectViewOverview.nav.paths') }}
+        </tab-group-navigation-entry>
+        <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph', params }">
+          {{ $t('projectViewOverview.nav.graph') }}
+        </tab-group-navigation-entry>
+        <tab-group-navigation-entry icon="info" :to="{ name: 'project.view.overview.details', params }">
+          {{ $t('projectViewOverview.nav.details') }}
+        </tab-group-navigation-entry>
+        <tab-group-navigation-entry
+          icon="clock-counter-clockwise"
+          :to="{ name: 'project.view.overview.history', params }"
+        >
+          {{ $t('projectViewOverview.nav.history') }}
+        </tab-group-navigation-entry>
+      </tab-group-navigation>
+      <router-view v-if="hasDocuments" :key="name" />
+      <empty-state
+        v-else
+        :label="$t('projectViewOverview.emptyStateLabel')"
+        class="my-5"
+        action-icon="plus"
+        :action-label="$t('projectViewOverview.emptyStateAction')"
+        :action-to="{ name: 'task.documents.new', query: { projectName: project.name } }"
+      />
+    </v-wait>
   </div>
 </template>

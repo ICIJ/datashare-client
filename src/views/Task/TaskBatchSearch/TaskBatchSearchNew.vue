@@ -12,10 +12,8 @@ defineProps({
 </script>
 
 <template>
-  <page-header no-toggle-settings />
-  <div class="task-documents-new">
-    <page-container fluid>
-      <task-batch-search-form :name="projectName" />
-    </page-container>
-  </div>
+  <page-container fluid top class="task-documents-new">
+    <page-header no-toggle-settings />
+    <task-batch-search-form :name="projectName" />
+  </page-container>
 </template>

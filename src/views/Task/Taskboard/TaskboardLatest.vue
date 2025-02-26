@@ -134,7 +134,7 @@ function getTaskIcon(item) {
 </script>
 
 <template>
-  <b-card-body no-border class="task-all__latest no-border mx-3">
+  <b-card-body no-border class="task-all__latest no-border">
     <b-card-title class="pb-4"> <phosphor-icon name="rocket-launch" /> Latest tasks </b-card-title>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
       <page-table-generic :items="displayedTasks" :columns="columns">

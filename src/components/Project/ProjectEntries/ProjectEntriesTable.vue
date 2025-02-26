@@ -4,7 +4,6 @@ import { computed } from 'vue'
 import ProjectEntriesTableHead from './ProjectEntriesTableHead'
 import ProjectEntriesTableBody from './ProjectEntriesTableBody'
 
-import PageContainer from '@/components/PageContainer/PageContainer'
 import PageTable from '@/components/PageTable/PageTable'
 import { useBreakpoints } from '@/composables/breakpoints'
 
@@ -28,7 +27,7 @@ const compact = computed(() => {
 </script>
 
 <template>
-  <page-container fluid class="project-entries-table">
+  <div class="project-entries-table">
     <page-table v-model:sort="sort" v-model:order="order">
       <template #colgroup>
         <col style="min-width: 200px" />
@@ -39,5 +38,5 @@ const compact = computed(() => {
       </template>
       <project-entries-table-body :compact-breakpoint="compactBreakpoint" :projects="projects" />
     </page-table>
-  </page-container>
+  </div>
 </template>

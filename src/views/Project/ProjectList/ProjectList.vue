@@ -11,6 +11,7 @@ import { useCore } from '@/composables/core'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/mode'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageContainer from '@/components/PageContainer/PageContainer'
 
 const { core } = useCore()
 const { isServer } = useMode()
@@ -113,7 +114,7 @@ const searchPlaceholder = computed(() => t('projectList.searchPlaceholder'))
 </script>
 
 <template>
-  <div class="project-list">
+  <page-container fluid top class="project-list">
     <page-header :to-add="toAddRoute"> </page-header>
     <page-toolbar
       v-model:searchQuery="searchQuery"
@@ -125,5 +126,5 @@ const searchPlaceholder = computed(() => t('projectList.searchPlaceholder'))
       :search-placeholder="searchPlaceholder"
     />
     <project-entries v-model:sort="sort" v-model:order="order" :projects="projects" :layout="layout" />
-  </div>
+  </page-container>
 </template>

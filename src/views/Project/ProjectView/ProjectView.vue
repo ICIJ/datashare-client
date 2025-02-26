@@ -1,5 +1,6 @@
 <script setup>
 import PageHeader from '@/components/PageHeader/PageHeader'
+import PageContainer from '@/components/PageContainer/PageContainer'
 
 defineProps({
   name: {
@@ -9,8 +10,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="project-view">
+  <page-container fluid top class="project-view">
     <page-header no-toggle-settings />
     <router-view />
-  </div>
+  </page-container>
 </template>

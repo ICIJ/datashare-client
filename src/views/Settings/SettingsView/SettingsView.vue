@@ -49,24 +49,22 @@ const displayTabs = computed(() => tabs.value.filter((tab) => tab.modes.some(isM
 </script>
 
 <template>
-  <div class="settings-view">
+  <page-container fluid top class="settings-view">
     <page-header no-toggle-settings />
-    <page-container fluid>
-      <div class="bg-tertiary-subtle rounded-1 p-4">
-        <tab-group-navigation class="mx-3" nowrap>
-          <tab-group-navigation-entry
-            v-for="tab in displayTabs"
-            :key="tab.name"
-            :icon="tab.icon"
-            :to="{ name: tab.name }"
-          >
-            {{ tab.title }}
-          </tab-group-navigation-entry>
-        </tab-group-navigation>
-        <router-view />
-      </div>
-    </page-container>
-  </div>
+    <div class="bg-tertiary-subtle rounded-1 p-4">
+      <tab-group-navigation class="mx-3" nowrap>
+        <tab-group-navigation-entry
+          v-for="tab in displayTabs"
+          :key="tab.name"
+          :icon="tab.icon"
+          :to="{ name: tab.name }"
+        >
+          {{ tab.title }}
+        </tab-group-navigation-entry>
+      </tab-group-navigation>
+      <router-view />
+    </div>
+  </page-container>
 </template>
 
 <style scoped lang="scss"></style>
