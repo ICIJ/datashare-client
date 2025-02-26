@@ -48,15 +48,6 @@ const route = computed(() => {
   }
 })
 
-const routeLocation = computed(() => {
-  const { name, params, query } = route.value ?? {}
-  return { name, params, query }
-})
-
-const routeHref = computed(() => {
-  return router.resolve(routeLocation.value).href
-})
-
 const { core } = useCore()
 const { t } = useI18n()
 
@@ -89,7 +80,7 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <a v-if="route" :href="routeHref" class="navigation-breadcrumb-link" :class="classList">
+  <router-link v-if="route" :to="route" class="navigation-breadcrumb-link" :class="classList">
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
@@ -104,7 +95,7 @@ const classList = computed(() => {
       size="1em"
       :name="PhCaretRight"
     />
-  </a>
+  </router-link>
 </template>
 
 <style lang="scss" scoped>
