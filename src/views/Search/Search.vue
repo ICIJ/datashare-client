@@ -25,7 +25,7 @@ import { useAppStore, useSearchStore } from '@/store/modules'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId } = useDocument()
-const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices } = useSearchFilter()
+const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices, watchFilters } = useSearchFilter()
 const { count: searchBreadcrumbCounter } = useSearchBreadcrumb()
 const entriesRef = useTemplateRef('entries')
 const appStore = useAppStore()
@@ -85,12 +85,9 @@ resetSearchResponse()
 // Refresh search when route query changes. Among all the watcher of this view, it probably
 // the most important one. It will trigger the search API call when the route query changes
 // which mean that only route change can trigger a search.
-watch(() => route.query, whenIsRoute('search', refreshSearchFromRoute), { deep: true, immediate: true })
-
-// Refresh route query when filter values change
-watch(() => searchStore.values, refreshRoute, { deep: true })
-// Refresh route query when reversed filters change
-watch(() => searchStore.excludeFilters, refreshRoute, { deep: true })
+watch(() => JSON.stringify(route.query), whenIsRoute('search', refreshSearchFromRoute), { immediate: true })
+// Refresh route query when a filter changes (either their values or if they are excluded)
+watchFilters(refreshRoute)
 // Refresh route query when projects change
 watchIndices(refreshRoute)
 </script>
