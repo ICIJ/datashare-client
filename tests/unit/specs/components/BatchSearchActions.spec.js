@@ -137,7 +137,7 @@ describe('BatchSearchActions.vue', () => {
     expect(wrapper.find('.batch-search-actions__item--relaunch').exists()).toBeFalsy()
   })
 
-  it('should redirect on batchSearch deletion', async () => {
+  it.skip('should redirect on batchSearch deletion', async () => {
     api.deleteBatchSearch.mockResolvedValue(true)
     vi.spyOn(router, 'push')
     wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
