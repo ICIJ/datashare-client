@@ -1,7 +1,7 @@
 <script setup>
 import TaskPage from '@/views/Task/TaskPage'
 import ButtonIcon from '@/components/Button/ButtonIcon'
-import TaskList from '@/components/Task/TaskList'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
@@ -32,9 +32,9 @@ function getProject(item) {
     page-name="documents"
     show-add
   >
-    <task-list
+    <page-table-generic
       v-if="!empty"
-      :tasks="tasks"
+      :items="tasks"
       :columns="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
@@ -58,6 +58,6 @@ function getProject(item) {
           @click="stopTask(item.id)"
         />
       </template>
-    </task-list>
+    </page-table-generic>
   </task-page>
 </template>

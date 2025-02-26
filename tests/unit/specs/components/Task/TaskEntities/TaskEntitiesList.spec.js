@@ -44,14 +44,14 @@ describe('TaskEntitiesList.vue', () => {
 
   it('should display 1 ExtractNlpTask and 1 EnqueueFromIndexTask task', () => {
     const wrapper = mount(TaskEntitiesList, { global: { plugins } })
-    expect(wrapper.findAll('.task-list__row')).toHaveLength(2)
+    expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
   it('should display the correct values in the correct columns for row 1', async () => {
     const wrapper = mount(TaskEntitiesList, { global: { plugins } })
     await flushPromises()
-    const firstRow = wrapper.find('.task-list__row')
-    const columns = firstRow.findAll('.task-list__row__column')
+    const firstRow = wrapper.find('.page-table-generic__row')
+    const columns = firstRow.findAll('.page-table-generic__row__column')
     expect(columns.at(0).text()).toBe('RUNNING')
     expect(columns.at(2).text()).toBe('EMAIL')
     expect(columns.at(3).text()).toContain('Local Datashare')

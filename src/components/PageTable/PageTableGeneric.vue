@@ -11,17 +11,17 @@
         :name="field.value"
       />
     </template>
-    <page-table-tr v-if="!tasks?.length">
-      <td :colspan="columns.length" class="task-list__no-result text-center">
+    <page-table-tr v-if="!items?.length">
+      <td :colspan="columns.length" class="page-table-generic__no-result text-center">
         <slot name="empty">{{ $t('task.noResults') }}</slot>
       </td>
     </page-table-tr>
-    <page-table-tr v-for="(item, index) in tasks" :key="index" class="task-list__row">
+    <page-table-tr v-for="(item, index) in items" :key="index" class="page-table-generic__row">
       <td
         v-for="(column, i) in columns"
         :key="i"
-        class="task-list__row__column"
-        :class="[`task-list__row__column--${column.value}`]"
+        class="page-table-generic__row__column"
+        :class="[`page-table-generic__row__column--${column.value}`]"
       >
         <slot :name="`cell(${column.value})`" v-bind="{ item, column }">{{ item[column.value] }}</slot>
       </td>
@@ -38,13 +38,13 @@ import PageTableTr from '@/components/PageTable/PageTableTr'
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
-defineOptions({ name: 'TaskList' })
+defineOptions({ name: 'GenericTable' })
 
 defineProps({
   /**
-   * Object of tasks passed from the parent
+   * Object of items passed from the parent
    */
-  tasks: {
+  items: {
     type: Array,
     default: () => []
   },

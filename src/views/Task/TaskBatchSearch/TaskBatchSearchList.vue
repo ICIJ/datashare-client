@@ -2,7 +2,7 @@
 import get from 'lodash/get'
 
 import TaskPage from '@/views/Task/TaskPage'
-import TaskList from '@/components/Task/TaskList'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
@@ -32,9 +32,9 @@ function getRecord(item, key) {
     page-name="batch-search"
     show-add
   >
-    <task-list
+    <page-table-generic
       v-if="!empty"
-      :tasks="tasks"
+      :items="tasks"
       :columns="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
@@ -67,6 +67,6 @@ function getRecord(item, key) {
       <template #cell(progress)="{ item }">
         <display-progress :value="item.progress" />
       </template>
-    </task-list>
+    </page-table-generic>
   </task-page>
 </template>

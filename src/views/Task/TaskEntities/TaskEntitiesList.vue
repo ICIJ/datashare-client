@@ -1,6 +1,6 @@
 <script setup>
 import TaskPage from '@/views/Task/TaskPage'
-import TaskList from '@/components/Task/TaskList'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import { useTaskSettings } from '@/composables/task-settings'
@@ -27,9 +27,9 @@ function getProject(item) {
     page-name="entities"
     show-add
   >
-    <task-list
+    <page-table-generic
       v-if="!empty"
-      :tasks="tasks"
+      :items="tasks"
       :columns="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
@@ -50,6 +50,6 @@ function getProject(item) {
       <template #cell(project)="{ item }"> <display-project-list :values="getProject(item)" /> </template>
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
       <template #cell(createdAt)="{ item }"> <display-datetime-from-now :value="item.createdAt" /> </template>
-    </task-list>
+    </page-table-generic>
   </task-page>
 </template>

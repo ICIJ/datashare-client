@@ -127,14 +127,14 @@ describe('TaskBatchDownloadList.vue', () => {
   it('should display 2 batch download tasks', async () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     await flushPromises()
-    expect(wrapper.findAll('.task-list__row')).toHaveLength(2)
+    expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
   it('should display the correct values in the correct columns for row 1', async () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     await flushPromises()
-    const firstRow = wrapper.find('.task-list__row')
-    const columns = firstRow.findAll('.task-list__row__column')
+    const firstRow = wrapper.find('.page-table-generic__row')
+    const columns = firstRow.findAll('.page-table-generic__row__column')
     expect(columns.at(0).text()).toBe('DONE')
     expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z[GMT].zip')
     expect(columns.at(2).text()).toBe('74.77 MB')
@@ -145,7 +145,7 @@ describe('TaskBatchDownloadList.vue', () => {
   it('should display batch download actions', async () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     await flushPromises()
-    const firstRow = wrapper.find('.task-list__row')
+    const firstRow = wrapper.find('.page-table-generic__row')
     expect(firstRow.findComponent(BatchDownloadActions).exists()).toBe(true)
   })
 })

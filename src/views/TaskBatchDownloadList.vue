@@ -6,7 +6,7 @@
           <content-placeholder v-for="index in 3" :key="index" class="py-2 px-3" />
         </div>
       </template>
-      <task-list :tasks="tasks">
+      <page-table-generic :items="tasks">
         <template #status="{ item: { args, state, error } }">
           <task-item-status
             :task-item="{
@@ -54,7 +54,7 @@
         <template #empty>
           <p class="text-center m-0" v-html="$t('batchDownload.empty')"></p>
         </template>
-      </task-list>
+      </page-table-generic>
       <p class="text-center m-0 text-muted" v-html="$t('batchDownload.limitations', batchDownloadLimitations)"></p>
     </v-wait>
   </div>
@@ -65,7 +65,7 @@ import { some, random } from 'lodash'
 
 import TaskItemStatus from '@/components/TaskItemStatus'
 import BatchDownloadActions from '@/components/BatchDownloadActions'
-import TaskList from '@/components/Task/TaskList'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import features from '@/mixins/features'
 import polling from '@/mixins/polling'
 
@@ -76,9 +76,9 @@ function extractDateFromTask(task) {
 export default {
   name: 'TaskBatchDownloadList',
   components: {
+    PageTableGeneric,
     BatchDownloadActions,
-    TaskItemStatus,
-    TaskList
+    TaskItemStatus
   },
   mixins: [features, polling],
   data() {
