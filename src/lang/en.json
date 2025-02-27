@@ -1751,7 +1751,7 @@
     "projectsCount": "No projects | 1 project | {count} projects",
     "noMatches": "No matches"
   },
-  "searchBreadcrumbForm": {
+  "searchBreadcrumbFormList": {
     "label": "Your search:"
   },
   "searchBreadcrumbFormEmpty": {
