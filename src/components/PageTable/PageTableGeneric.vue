@@ -18,7 +18,7 @@
       </td>
     </page-table-tr>
 
-    <template v-for="(item, index) in items" :key="index">
+    <template v-for="(item, index) in items" :key="primaryKey ? item[primaryKey] ?? index : index">
       <page-table-tr class="page-table-generic__row">
         <td
           v-for="(field, i) in fields"
@@ -78,6 +78,12 @@ const props = defineProps({
   showRowDetails: {
     type: Boolean,
     default: false
+  },
+  /**
+   * Primary key of the items (can be used to track changes)
+   */
+  primaryKey: {
+    type: String
   }
 })
 
