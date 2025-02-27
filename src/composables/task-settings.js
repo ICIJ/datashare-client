@@ -71,7 +71,9 @@ export function useTaskSettings(pageName) {
     options: items.map((p) => ({
       value: p.key,
       icon: p.icon,
-      disabled: p.required,
+      disabled: !!p.required,
+      sortable: !!p.sortable,
+      emphasis: !!p.emphasis,
       text: computed(() => t(`task.${pageName}.list.properties.${p.key}`))
     }))
   })
