@@ -106,9 +106,9 @@ function rowDetailsShowing(item) {
   return isTableItem(item) && !!detailsMap.value.get(item)
 }
 
-function toggleRowDetails(item) {
+function toggleRowDetails(item, toggler) {
   if (isTableItem(item)) {
-    item._showDetails = !rowDetailsShowing(item)
+    item._showDetails = toggler ?? !rowDetailsShowing(item)
   }
 }
 
@@ -116,7 +116,10 @@ function callItemBinding(item, slotName) {
   return {
     item,
     slotName,
-    detailsShowing: rowDetailsShowing(item),
+    detailsShowing: computed({
+      get: () => rowDetailsShowing(item),
+      set: (value) => toggleRowDetails(item, value)
+    }),
     toggleDetails: () => toggleRowDetails(item)
   }
 }
