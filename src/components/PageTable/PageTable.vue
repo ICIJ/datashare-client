@@ -84,7 +84,7 @@ provide('orderBy', orderBy)
     &:has(.page-table-th:nth-of-type(#{$n}).page-table-th--emphasis) {
       &:deep(td:nth-of-type(#{$n})) {
         font-size: $font-size-base;
-        color: var(--bs-body-font-size);
+        color: var(--bs-body-color);
         min-width: 100px;
       }
 
