@@ -11,28 +11,47 @@
         :name="field.value"
       />
     </template>
+
     <page-table-tr v-if="!items?.length">
       <td :colspan="columns.length" class="page-table-generic__no-result text-center">
         <slot name="empty">{{ $t('task.noResults') }}</slot>
       </td>
     </page-table-tr>
-    <page-table-tr v-for="(item, index) in items" :key="index" class="page-table-generic__row">
-      <td
-        v-for="(column, i) in columns"
-        :key="i"
-        class="page-table-generic__row__column"
-        :class="[`page-table-generic__row__column--${column.value}`]"
-      >
-        <slot :name="`cell(${column.value})`" v-bind="{ item, column }">{{ item[column.value] }}</slot>
-      </td>
-      <page-table-td-actions>
-        <slot name="cell(action)" v-bind="{ item }"></slot>
-      </page-table-td-actions>
-    </page-table-tr>
+
+    <template v-for="(item, index) in items" :key="index">
+
+      <page-table-tr class="page-table-generic__row">
+        <td
+          v-for="(column, i) in columns"
+          :key="i"
+          class="page-table-generic__row__column"
+          :class="[`page-table-generic__row__column--${column.value}`]"
+        >
+          <slot :name="`cell(${column.value})`" v-bind="callItemBinding(item, column.value)" :column="column">
+            {{ item[column.value] }}
+          </slot>
+        </td>
+        <page-table-td-actions>
+          <slot name="cell(action)" v-bind="callItemBinding(item, 'row-actions')" />
+        </page-table-td-actions>
+      </page-table-tr>     
+      
+      <template v-if="hasRowDetailsSlot && areRowDetailsVisible(item)">
+        <tr class="d-none" aria-hidden="true" role="presentation" />
+        <page-table-tr class="page-table-generic__row-details">
+          <td :colspan="columns.length + 1">
+            <slot name="row-details" v-bind="callItemBinding(item, 'row-details')" />
+          </td>
+        </page-table-tr>
+      </template>     
+
+    </template>
   </page-table>
 </template>
 
 <script setup>
+import { computed, ref, toRef, useSlots, watch } from 'vue'
+
 import PageTable from '@/components/PageTable/PageTable'
 import PageTableTr from '@/components/PageTable/PageTableTr'
 import PageTableTh from '@/components/PageTable/PageTableTh'
@@ -40,7 +59,7 @@ import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
 defineOptions({ name: 'GenericTable' })
 
-defineProps({
+const props = defineProps({
   /**
    * Object of items passed from the parent
    */
@@ -54,6 +73,51 @@ defineProps({
   }
 })
 
+
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
+
+const slots = useSlots()
+
+const detailsMap = ref(new WeakMap())
+
+// Initialize and sync the item details map
+watch(toRef(props, 'items'), (items) => {
+  items.filter(isTableItem).forEach((item) => {
+    detailsMap.value.set(item, item._showDetails)
+  })
+}, { deep: true, immediate: true })
+
+function isTableItem(value) {
+  return typeof value === 'object' && value !== null
+}
+
+function areRowDetailsVisible(item) {
+  return isTableItem(item) && detailsMap.value.get(item)
+}
+
+function toggleRowDetails(item) {
+  if (isTableItem(item)) {
+    item._showDetails = !areRowDetailsVisible(item)
+  }
+}
+
+function callItemBinding(item, slotName) {
+  return {
+    item,
+    slotName,
+    toggleDetails: () => toggleRowDetails(item)
+  }
+}
+
+const hasRowDetailsSlot = computed(() => 'row-details' in slots)
 </script>
+
+<style lang="scss" scoped>
+// Add hover effect to the row details and its corresponding row
+.table > tbody > tr:hover + tr + tr.page-table-generic__row-details,
+.table > tbody > tr:has(+ tr + tr.page-table-generic__row-details:hover) > * {
+  --bs-table-color-state: var(--bs-table-striped-color);
+  --bs-table-bg-state: var(--bs-table-hover-bg);
+}
+</style>
