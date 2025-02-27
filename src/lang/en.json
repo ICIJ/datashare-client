@@ -252,6 +252,13 @@
   "searchSaved": {
     "title": "Saved searches"
   },
+  "searchSavedEntries": {
+    "fields": {
+      "creationDate": "Creation date",
+      "name": "Name of the saved search",
+      "author": "Author"
+    }
+  },
   "pagination": {
     "firstPage": "Go to first page",
     "previousPage": "Go to previous page",
@@ -1778,7 +1785,7 @@
     "form": {
       "name": "Name",
       "description": "You can retrieve all your saved searches in {link}.",
-      "link": "Explore › Saved searches."
+      "link": "Saved searches"
     }
   },
   "searchSelection": {
