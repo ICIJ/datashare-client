@@ -21,9 +21,9 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => appStore.getSettings('searchSaved', 'perPage'),
+    get: () => appStore.getSettings('searchSavedList', 'perPage'),
     set: (perPage) => {
-      appStore.setSettings({ view: 'searchSaved', perPage })
+      appStore.setSettings({ view: 'searchSavedList', perPage })
       page.value = 1
     }
   }),
@@ -48,9 +48,9 @@ const sortBy = ref({
   type: 'radio',
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => appStore.getSettings('searchSaved', 'orderBy'),
+    get: () => appStore.getSettings('searchSavedList', 'orderBy'),
     set: (sort, order) => {
-      appStore.setSettings({ view: 'searchSaved', orderBy: [sort, order] })
+      appStore.setSettings({ view: 'searchSavedList', orderBy: [sort, order] })
       page.value = 1
     }
   }),

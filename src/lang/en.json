@@ -253,7 +253,7 @@
   "searchFormControl": {
     "submitLabel": "Search"
   },
-  "searchSaved": {
+  "searchSavedList": {
     "title": "Saved searches"
   },
   "searchSavedEntries": {
