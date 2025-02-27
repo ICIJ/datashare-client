@@ -51,30 +51,7 @@
         </template>
       </search-bar-input>
       <div v-if="settings" class="ps-2">
-        <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
-        <b-button
-          v-b-tooltip.hover.bottomleft
-          :title="$t('userHistory.saveSearch')"
-          class="text-dark"
-          size="md"
-          variant="transparent"
-          @click="$refs['user-history-save-search-form'].show()"
-        >
-          <fa icon="floppy-disk" />
-          <b-modal
-            ref="user-history-save-search-form"
-            body-class="p-0"
-            hide-footer
-            size="md"
-            :title="$t('userHistory.saveSearch')"
-          >
-            <user-history-save-search-form
-              :indices="formIndices"
-              :uri="uri"
-              @submit="$refs['user-history-save-search-form'].hide()"
-            />
-          </b-modal>
-        </b-button>
+        <shortkeys-modal class="d-none d-md-inline" />
       </div>
     </div>
   </div>
@@ -90,7 +67,6 @@ import ShortkeysModal from '@/components/ShortkeysModal'
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
 import SearchBarInputDropdownForField from '@/components/Search/SearchBar/SearchBarInputDropdownForField'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
-import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
 import { useSearchStore } from '@/store/modules'
 
@@ -107,7 +83,6 @@ export default {
   components: {
     SearchBarInput,
     ShortkeysModal,
-    UserHistorySaveSearchForm,
     SearchBarInputDropdownForField,
     SearchBarInputDropdownForProjects
   },
