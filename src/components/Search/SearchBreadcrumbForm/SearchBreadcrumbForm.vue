@@ -1,10 +1,10 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
 import { computed, useSlots } from 'vue'
 
 import SearchBreadcrumbFormToggler from './SearchBreadcrumbFormToggler'
 import SearchBreadcrumbFormEmpty from './SearchBreadcrumbFormEmpty'
 import SearchBreadcrumbFormFooter from './SearchBreadcrumbFormFooter'
+import SearchBreadcrumbFormList from './SearchBreadcrumbFormList'
 
 const visible = defineModel('visible', { type: Boolean })
 const slots = useSlots()
@@ -43,15 +43,9 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
     <template v-else>
       <div class="d-flex mb-3">
         <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
-        <div class="flex-grow-1">
-          <div class="fw-medium text-action-emphasis text-nowrap me-2 mb-2">
-            <phosphor-icon :name="PhPath" />
-            {{ $t('searchBreadcrumbForm.label') }}
-          </div>
-          <div class="search-breadcrumb-form__entries d-flex flex-wrap row-gap-2 column-gap-1 align-items-baseline">
-            <slot />
-          </div>
-        </div>
+        <search-breadcrumb-form-list class="flex-grow-1">
+          <slot />
+        </search-breadcrumb-form-list>
       </div>
       <search-breadcrumb-form-footer
         :hide-clear-filters="hideClearFilters"
