@@ -13,20 +13,27 @@ export function useSearchBreadcrumb() {
 
   const count = computed(() => entries.value.length)
 
-  const indicesEntries = computed(() => {
-    const indices = searchStore.toBaseRouteQuery.indices.split(',')
+  function parseIndicesEntries(routeQuery) {
+    const indices = routeQuery.indices.split(',')
     const noXIcon = indices.length === 1
     const filter = 'project'
     return indices.map((value) => ({ filter, value, noXIcon }))
+  }
+
+  const indicesEntries = computed(() => {
+    return parseIndicesEntries(searchStore.toBaseRouteQuery)
   })
+
+  function parseQueryEntries({ q: query = null }) {
+    return query ? [{ query }] : []
+  }
 
   const queryEntries = computed(() => {
-    const { q: query = null } = searchStore.toBaseRouteQuery
-    return query ? [{ query }] : []
+    return parseQueryEntries(searchStore.toBaseRouteQuery)
   })
 
-  const filtersEntries = computed(() => {
-    const filters = omit(searchStore.toBaseRouteQuery, ['q', 'field', 'indices'])
+  function parseFiltersEntries(routeQuery) {
+    const filters = omit(routeQuery, ['q', 'field', 'indices'])
     return flatten(
       // Each filter can have several values
       map(filters, (values, param) => {
@@ -37,7 +44,19 @@ export function useSearchBreadcrumb() {
         })
       })
     )
+  }
+
+  const filtersEntries = computed(() => {
+    return parseFiltersEntries(searchStore.toBaseRouteQuery)
   })
+
+  function parseEntries(routeQuery) {
+    return compact(flatten([
+      parseIndicesEntries(routeQuery),
+      parseQueryEntries(routeQuery),
+      parseFiltersEntries(routeQuery)
+    ]))
+  }
 
   const entries = computed(() => {
     return compact(flatten([indicesEntries.value, queryEntries.value, orderBy(filtersEntries.value, ['lastIndex'])]))
@@ -84,6 +103,7 @@ export function useSearchBreadcrumb() {
 
   return {
     entries,
+    parseEntries,
     clearEntry,
     clearFiltersEntries,
     clearQueryEntries,
