@@ -53,12 +53,3 @@ const showToggleSidebar = computed(() => {
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.page-header {
-  position: sticky;
-  top: 0;
-  z-index: $zindex-sticky;
-  background: var(--bs-body-bg);
-}
-</style>
