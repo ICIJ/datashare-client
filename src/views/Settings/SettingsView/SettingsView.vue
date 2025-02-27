@@ -49,7 +49,7 @@ const displayTabs = computed(() => tabs.value.filter((tab) => tab.modes.some(isM
 </script>
 
 <template>
-  <page-container fluid top class="settings-view">
+  <page-container fluid deck class="settings-view">
     <page-header no-toggle-settings />
     <div class="bg-tertiary-subtle rounded-1 p-4">
       <tab-group-navigation class="mx-3" nowrap>

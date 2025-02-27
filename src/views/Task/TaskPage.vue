@@ -49,7 +49,7 @@ const order = computed({
 </script>
 
 <template>
-  <page-container fluid top class="task-page">
+  <page-container fluid deck class="task-page">
     <page-header :to-add="toAddRoute" />
     <page-toolbar
       :key="totalRows"

@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <page-container fluid top class="project-view">
+  <page-container fluid deck class="project-view">
     <page-header no-toggle-settings />
     <router-view />
   </page-container>

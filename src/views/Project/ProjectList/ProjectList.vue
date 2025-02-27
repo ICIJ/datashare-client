@@ -110,7 +110,7 @@ const toAddRoute = computed(() => {
 </script>
 
 <template>
-  <page-container fluid top class="project-list">
+  <page-container fluid deck class="project-list">
     <page-header :to-add="toAddRoute" />
     <page-toolbar
       v-model:searchQuery="searchQuery"
