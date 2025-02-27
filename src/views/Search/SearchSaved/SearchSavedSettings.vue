@@ -56,6 +56,14 @@ const sortBy = ref({
   }),
   options: [
     {
+      value: ['name', 'asc'],
+      text: tSortByOption('name', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.ALPHA)
+    },
+    {
+      value: ['name', 'desc'],
+      text: tSortByOption('name', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.ALPHA)
+    },
+    {
       value: ['creation_date', 'asc'],
       text: tSortByOption('creationDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
     },
