@@ -25,6 +25,7 @@ export function useTaskProperties(propertyList) {
     icon: 'image',
     key: 'name',
     sortable: true,
+    emphasis: true,
     required: true
   })
   const createdAt = propertyItem({

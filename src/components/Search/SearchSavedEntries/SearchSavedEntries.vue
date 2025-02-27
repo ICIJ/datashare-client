@@ -16,7 +16,9 @@ defineProps({
 const fields = [
   {
     value: 'name',
-    text: 'name'
+    text: 'name',
+    sortable: true,
+    emphasis: true
   },
   {
     value: 'user',
@@ -24,7 +26,8 @@ const fields = [
   },
   {
     value: 'creation_date',
-    text: 'creationDate'
+    text: 'creationDate',
+    sortable: true
   }
 ]
 

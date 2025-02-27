@@ -35,6 +35,7 @@ const allFields = ref([
     name: 'title',
     value: 'title',
     text: 'Name',
+    emphasis: true,
     icon: ''
   },
   {
