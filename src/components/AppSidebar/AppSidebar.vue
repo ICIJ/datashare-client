@@ -123,7 +123,7 @@ const noAnalysis = computed(() => {
           <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'user-history.document.list' }">
             {{ t('appSidebar.visitedDocuments') }}
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry :icon="PhListChecks" :to="{ name: 'user-history.saved-search.list' }">
+          <app-sidebar-section-entry :icon="PhListChecks" :to="{ name: 'search.saved' }">
             {{ t('appSidebar.savedSearches') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
