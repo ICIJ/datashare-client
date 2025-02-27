@@ -70,11 +70,6 @@ defineProps({
 
 <style scoped lang="scss">
 .page-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: $zindex-sticky;
-  background: var(--bs-body-bg);
-
   @include media-breakpoint-down(md) {
     &__pagination {
       order: 1;
