@@ -25,7 +25,7 @@ export const useAppStore = defineStore(
           perPage: '25',
           properties: ['title', 'thumbnail', 'highlights', 'project']
         },
-        searchSaved: {
+        searchSavedList: {
           orderBy: ['creation_date', 'desc'],
           perPage: '2'
         },

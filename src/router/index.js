@@ -95,15 +95,15 @@ export const routes = [
         ]
       },
       {
-        name: 'search.saved',
+        name: 'search.saved.list',
         path: 'search/saved',
         meta: {
           icon: 'list-checks',
-          title: 'Saved searches'
+          title: 'searchSavedList.title'
         },
         components: {
-          default: () => import('@/views/Search/SearchSaved/SearchSaved'),
-          settings: () => import('@/views/Search/SearchSaved/SearchSavedSettings')
+          default: () => import('@/views/Search/SearchSaved/SearchSavedList/SearchSavedList'),
+          settings: () => import('@/views/Search/SearchSaved/SearchSavedList/SearchSavedListSettings')
         }
       },
       {

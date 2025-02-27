@@ -61,12 +61,12 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 </script>
 
 <template>
-  <div class="search-saved">
+  <div class="search-saved-list">
     <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
           <navigation-breadcrumb-link route-name="search" />
-          <navigation-breadcrumb-link route-name="search.saved" no-caret />
+          <navigation-breadcrumb-link route-name="search.saved.list" no-caret />
         </template>
       </page-header>
       <page-toolbar
