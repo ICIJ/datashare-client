@@ -73,6 +73,13 @@ const props = defineProps({
   fields: {
     type: Array,
     default: () => []
+  },
+  /**
+   * Show row details by default
+   */
+  showRowDetails: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -87,7 +94,7 @@ const detailsMap = ref(new WeakMap())
 // Initialize and sync the item details map
 watch(toRef(props, 'items'), (items) => {
   items.filter(isTableItem).forEach((item) => {
-    detailsMap.value.set(item, item._showDetails)
+    detailsMap.value.set(item, item._showDetails ?? props.showRowDetails)
   })
 }, { deep: true, immediate: true })
 
@@ -96,7 +103,7 @@ function isTableItem(value) {
 }
 
 function rowDetailsShowing(item) {
-  return isTableItem(item) && detailsMap.value.get(item)
+  return isTableItem(item) && !!detailsMap.value.get(item)
 }
 
 function toggleRowDetails(item) {
