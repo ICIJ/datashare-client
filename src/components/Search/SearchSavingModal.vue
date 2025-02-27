@@ -3,6 +3,9 @@ import { computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { isEmpty } from 'lodash'
 
+import image from '@/assets/images/illustrations/app-modal-saved-search-naming-light.svg'
+import imageDark from '@/assets/images/illustrations/app-modal-saved-search-naming-dark.svg'
+
 import AppModal from '@/components/AppModal/AppModal'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { useCore } from '@/composables/core'
@@ -40,6 +43,9 @@ async function confirmSaving() {
   <app-modal
     :ok-title="$t('searchSavingModal.okTitle')"
     :ok-disabled="!valid"
+    :image="image" 
+    :image-dark="imageDark"
+    :image-width="110"
     :title="$t('searchSavingModal.title')"
     size="410px"
     @ok="confirmSaving"
@@ -62,3 +68,4 @@ async function confirmSaving() {
     </template>
   </app-modal>
 </template>
+7

@@ -17,7 +17,13 @@ const attrs = useAttrs()
 </script>
 
 <template>
-  <app-modal v-bind="attrs" :image="image" :image-dark="imageDark" :title="$t('appModalConfirm.title')" size="410px">
+  <app-modal 
+    v-bind="attrs" 
+    :image="image" 
+    :image-dark="imageDark" 
+    :image-width="60" 
+    :title="$t('appModalConfirm.title')" size="410px"
+  >
     <slot>
       {{ description || $t('appModalConfirm.description') }}
     </slot>
