@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
+import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
 import { useUrlPageParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
@@ -61,18 +62,21 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 
 <template>
   <div class="search-saved">
-    <page-header
-      :key="pagination?.total"
-      v-model:page="page"
-      paginable
-      :per-page="perPage"
-      :total-rows="pagination.total"
-    >
-      <template #breadcrumb>
-        <navigation-breadcrumb-link route-name="search" />
-        <navigation-breadcrumb-link route-name="search.saved" no-caret />
-      </template>
-    </page-header>
+    <page-container fluid deck>
+      <page-header>
+        <template #breadcrumb>
+          <navigation-breadcrumb-link route-name="search" />
+          <navigation-breadcrumb-link route-name="search.saved" no-caret />
+        </template>
+      </page-header>
+      <page-toolbar
+        :key="pagination?.total"
+        v-model:page="page"
+        paginable
+        :per-page="perPage"
+        :total-rows="pagination.total"
+      />
+    </page-container>
     <page-container fluid>
       <search-saved-entries v-model:sort="sort" v-model:order="order" :events="events" />
     </page-container>
