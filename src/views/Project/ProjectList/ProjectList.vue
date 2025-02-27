@@ -111,7 +111,7 @@ const toAddRoute = computed(() => {
 
 <template>
   <page-container fluid top class="project-list">
-    <page-header :to-add="toAddRoute"> </page-header>
+    <page-header :to-add="toAddRoute" />
     <page-toolbar
       v-model:searchQuery="searchQuery"
       v-model:page="page"
