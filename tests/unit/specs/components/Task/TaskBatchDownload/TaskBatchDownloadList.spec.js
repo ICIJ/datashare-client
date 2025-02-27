@@ -134,7 +134,7 @@ describe('TaskBatchDownloadList.vue', () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
-    const columns = firstRow.findAll('.page-table-generic__row__column')
+    const columns = firstRow.findAll('.page-table-generic__row__field')
     expect(columns.at(0).text()).toBe('DONE')
     expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z[GMT].zip')
     expect(columns.at(2).text()).toBe('74.77 MB')

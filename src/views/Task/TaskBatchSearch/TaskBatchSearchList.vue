@@ -35,7 +35,7 @@ function getRecord(item, key) {
     <page-table-generic
       v-if="!empty"
       :items="tasks"
-      :columns="propertiesModelValueOptions"
+      :fields="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
       @update:sort="updateSort"

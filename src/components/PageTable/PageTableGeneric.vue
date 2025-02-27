@@ -2,7 +2,7 @@
   <page-table v-model:sort="sort" v-model:order="order">
     <template #thead>
       <page-table-th
-        v-for="field in columns"
+        v-for="field in fields"
         :key="field.name"
         :label="field.text"
         :icon="field.icon"
@@ -13,7 +13,7 @@
     </template>
 
     <page-table-tr v-if="!items?.length">
-      <td :colspan="columns.length" class="page-table-generic__no-result text-center">
+      <td :colspan="fields.length" class="page-table-generic__no-result text-center">
         <slot name="empty">{{ $t('task.noResults') }}</slot>
       </td>
     </page-table-tr>
@@ -22,13 +22,13 @@
 
       <page-table-tr class="page-table-generic__row">
         <td
-          v-for="(column, i) in columns"
+          v-for="(field, i) in fields"
           :key="i"
-          class="page-table-generic__row__column"
-          :class="[`page-table-generic__row__column--${column.value}`]"
+          class="page-table-generic__row__field"
+          :class="[`page-table-generic__row__field--${field.value}`]"
         >
-          <slot :name="`cell(${column.value})`" v-bind="callItemBinding(item, column.value)" :column="column">
-            {{ item[column.value] }}
+          <slot :name="`cell(${field.value})`" v-bind="callItemBinding(item, field.value)" :field="field">
+            {{ item[field.value] }}
           </slot>
         </td>
         <page-table-td-actions>
@@ -39,7 +39,7 @@
       <template v-if="hasRowDetailsSlot && areRowDetailsVisible(item)">
         <tr class="d-none" aria-hidden="true" role="presentation" />
         <page-table-tr class="page-table-generic__row-details">
-          <td :colspan="columns.length + 1">
+          <td :colspan="fields.length + 1">
             <slot name="row-details" v-bind="callItemBinding(item, 'row-details')" />
           </td>
         </page-table-tr>
@@ -67,7 +67,10 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  columns: {
+  /**
+   * Array of fields to display in the table
+  */
+  fields: {
     type: Array,
     default: () => []
   }
