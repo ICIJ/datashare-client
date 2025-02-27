@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { useModalController } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/core'
+import { useConfirmModal } from '@/composables/confirm'
 import SearchSavingModal from '@/components/Search/SearchSavingModal'
 import { useSearchStore } from '@/store/modules'
 
@@ -20,6 +21,24 @@ export function useSearchSavingModal() {
 
       modalController.show({ component, props })
     })
+  }
+
+  function hide() {
+    return modalController.hide()
+  }
+
+  return { show, hide }
+}
+
+export function useRemoveSavedSearchModal() {
+  const modalController = useModalController()
+  const { remove } = useSearchSaving()
+  const { confirm: showConfirmModal } = useConfirmModal()
+
+  async function show({ id }, props) {
+    if (await showConfirmModal(props)) {
+      return remove(id)
+    }
   }
 
   function hide() {
@@ -48,8 +67,12 @@ export function useSearchSaving() {
     }
     return core.api.addUserHistoryEvent(indices.value, 'SEARCH', name, searchRoute.value.fullPath)
   }
-  
-  return { save }
+
+  function remove(id) {
+    return core.api.deleteUserHistoryEvent(id)
+  }
+
+  return { remove, save }
 }
 
 export default useSearchSaving
