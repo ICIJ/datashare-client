@@ -6,12 +6,12 @@ import { useCore } from '@/composables/core'
 import SearchSavingModal from '@/components/Search/SearchSavingModal'
 import { useSearchStore } from '@/store/modules'
 
-export function useSearchSavingModal(project) {
+export function useSearchSavingModal() {
   const modalController = useModalController()
-  const props = { project }
-
-  function show() {
+  
+  function show(event = null) {
     return new Promise((resolve) => {
+      const props = { event }
       const component = h(SearchSavingModal, {
         onOk: resolve,
         onClose: resolve,
