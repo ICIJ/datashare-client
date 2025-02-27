@@ -8,8 +8,15 @@ import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { useCore } from '@/composables/core'
 import { useSearchSaving } from '@/composables/search-saving'
 
+const { event } = defineProps({
+  event: {
+    type: Object,
+    default: null
+  }
+})
+
 const emit = defineEmits(['success', 'error'])
-const form = reactive({ name: '' })
+const form = reactive({ name: event.name ?? '' })
 const { toast } = useCore()
 const { save } = useSearchSaving()
 const { t } = useI18n()
@@ -19,7 +26,7 @@ const valid = computed(() => validName.value)
 
 async function confirmSaving() {
   try {
-    await save(form)
+    await save({ ...event, ...form })
     toast.success(t('searchSavingModal.success'))
     emit('success')
   } catch (_) {
