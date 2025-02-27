@@ -123,10 +123,7 @@ function callItemBinding(item, slotName) {
   return {
     item,
     slotName,
-    detailsShowing: computed({
-      get: () => rowDetailsShowing(item),
-      set: (value) => toggleRowDetails(item, value)
-    }),
+    detailsShowing: rowDetailsShowing(item),
     toggleDetails: () => toggleRowDetails(item)
   }
 }
