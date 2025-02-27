@@ -249,6 +249,9 @@
   "searchFormControl": {
     "submitLabel": "Search"
   },
+  "searchSaved": {
+    "title": "Saved searches"
+  },
   "pagination": {
     "firstPage": "Go to first page",
     "previousPage": "Go to previous page",

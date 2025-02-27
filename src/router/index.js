@@ -20,6 +20,7 @@ export const routes = [
         path: '',
         meta: {
           title: 'search.title',
+          icon: 'list-magnifying-glass',
           docs: [
             {
               title: 'Search documents',
@@ -92,6 +93,18 @@ export const routes = [
             ]
           }
         ]
+      },
+      {
+        name: 'search.saved',
+        path: 'saved',
+        meta: {
+          icon: 'list-checks',
+          title: 'Saved searches'
+        },
+        components: {
+          default: () => import('@/views/Search/SearchSaved/SearchSaved'),
+          settings: () => import('@/views/Search/SearchSaved/SearchSavedSettings')
+        },
       },
       {
         path: 'batch-search',
