@@ -3,8 +3,17 @@ import { shallowMount, mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageTableTr from '@/components/PageTable/PageTableTr'
+import { it } from 'vitest'
 
 describe('PageTableGeneric.vue', () => {
+  const slots = {
+    'row-details': `
+      <template #row-details="{ item }">
+        Detail for {{ item.name }}
+      </template>
+    `
+  }
+
   let plugins
 
   beforeEach(() => {
@@ -74,5 +83,79 @@ describe('PageTableGeneric.vue', () => {
     const newRows = wrapper.findAllComponents(PageTableTr)
     expect(newRows.at(0).text()).toContain('id1')
     expect(newRows.at(0).text()).toContain('task1')
+  })
+
+  it('should show row details for the first item but not the second', () => {
+    const props = {
+      items: [
+        { id: 'id1', name: 'task1', _showDetails: true },
+        { id: 'id2', name: 'task2' }
+      ],
+      fields: [
+        { value: 'id' },
+        { value: 'name' }
+      ]
+    }
+
+    const wrapper = mount(PageTableGeneric, { props, slots, global: { plugins, renderSlotDefaultStub: true } })
+    const rowDetails = wrapper.findAll('.page-table-generic__row-details')
+    expect(rowDetails.at(0).text().trim()).toBe('Detail for task1')
+    expect(rowDetails).toHaveLength(1)
+  })
+
+  it('should show row details for the second item but not the first', () => {
+    const props = {
+      items: [
+        { id: 'id1', name: 'task1' },
+        { id: 'id2', name: 'task2', _showDetails: true }
+      ],
+      fields: [
+        { value: 'id' },
+        { value: 'name' }
+      ]
+    }
+
+    const wrapper = mount(PageTableGeneric, { props, slots, global: { plugins, renderSlotDefaultStub: true } })
+    const rowDetails = wrapper.findAll('.page-table-generic__row-details')
+    expect(rowDetails.at(0).text().trim()).toBe('Detail for task2')
+    expect(rowDetails).toHaveLength(1)
+  })
+
+
+  it('should not show any row details', () => {
+    const props = {
+      items: [
+        { id: 'id1', name: 'task1' },
+        { id: 'id2', name: 'task2' }
+      ],
+      fields: [
+        { value: 'id' },
+        { value: 'name' }
+      ]
+    }
+
+    const wrapper = mount(PageTableGeneric, { props, slots, global: { plugins, renderSlotDefaultStub: true } })
+    const rowDetails = wrapper.findAll('.page-table-generic__row-details')
+    expect(rowDetails).toHaveLength(0)
+  })
+
+  it('should show all rows details', () => {
+    const props = {
+      items: [
+        { id: 'id1', name: 'task1' },
+        { id: 'id2', name: 'task2' }
+      ],
+      fields: [
+        { value: 'id' },
+        { value: 'name' }
+      ],
+      showRowDetails: true
+    }
+
+    const wrapper = mount(PageTableGeneric, { props, slots, global: { plugins, renderSlotDefaultStub: true } })
+    const rowDetails = wrapper.findAll('.page-table-generic__row-details')
+    expect(rowDetails).toHaveLength(2)
+    expect(rowDetails.at(0).text().trim()).toBe('Detail for task1')
+    expect(rowDetails.at(1).text().trim()).toBe('Detail for task2')
   })
 })
