@@ -18,7 +18,7 @@ const nbTasks = ref(3)
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
 const { isServer } = useMode()
 
-const allColumns = ref([
+const allFields = ref([
   {
     name: 'name',
     value: 'name',
@@ -62,7 +62,7 @@ const allColumns = ref([
     icon: 'user'
   }
 ])
-const columns = computed(() => allColumns.value.filter((p) => isServer.value || p.name !== 'author'))
+const fields = computed(() => allFields.value.filter((p) => isServer.value || p.name !== 'author'))
 
 const displayedTasks = computed(() => {
   return pollingTasks.value?.slice(0, nbTasks.value)
@@ -137,7 +137,7 @@ function getTaskIcon(item) {
   <b-card-body no-border class="task-all__latest no-border">
     <b-card-title class="pb-4"> <phosphor-icon name="rocket-launch" /> Latest tasks </b-card-title>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
-      <page-table-generic :items="displayedTasks" :columns="columns">
+      <page-table-generic :items="displayedTasks" :fields="fields">
         <template #cell(name)="{ item }"
           ><button-icon
             square

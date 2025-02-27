@@ -35,7 +35,7 @@ function getProject(item) {
     <page-table-generic
       v-if="!empty"
       :items="tasks"
-      :columns="propertiesModelValueOptions"
+      :fields="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
       @update:sort="updateSort"
