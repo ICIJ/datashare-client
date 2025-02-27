@@ -35,7 +35,7 @@ describe('PageTableGeneric.vue', () => {
         { id: 1, name: 'task1' },
         { id: 2, name: 'task2' }
       ],
-      columns: [{ value: 'name' }]
+      fields: [{ value: 'name' }]
     }
     const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
     expect(wrapper.find('.page-table-generic__no-result').exists()).toBe(false)
@@ -51,7 +51,7 @@ describe('PageTableGeneric.vue', () => {
         { id: 'id1', name: 'task1' },
         { id: 'id2', name: 'task2' }
       ],
-      columns: [{ value: 'id' }, { value: 'name' }]
+      fields: [{ value: 'id' }, { value: 'name' }]
     }
     const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
     const rows = wrapper.findAllComponents(PageTableTr)
@@ -62,14 +62,14 @@ describe('PageTableGeneric.vue', () => {
   it('updates visible columns', async () => {
     const props = {
       items: [{ id: 'id1', name: 'task1' }],
-      columns: [{ value: 'id' }]
+      fields: [{ value: 'id' }]
     }
     const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
     const rows = wrapper.findAllComponents(PageTableTr)
     expect(rows.at(0).text()).toContain('id1')
     expect(rows.at(0).text()).not.toContain('task1')
     await wrapper.setProps({
-      columns: [{ value: 'id' }, { value: 'name' }]
+      fields: [{ value: 'id' }, { value: 'name' }]
     })
     const newRows = wrapper.findAllComponents(PageTableTr)
     expect(newRows.at(0).text()).toContain('id1')
