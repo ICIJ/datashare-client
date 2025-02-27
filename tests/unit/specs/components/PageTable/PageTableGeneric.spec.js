@@ -4,7 +4,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageTableTr from '@/components/PageTable/PageTableTr'
 
-describe('GenericTable.vue', () => {
+describe('PageTableGeneric.vue', () => {
   let plugins
 
   beforeEach(() => {
