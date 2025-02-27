@@ -130,7 +130,6 @@ describe('PageTableGeneric.vue', () => {
     expect(headers.at(1).props('emphasis')).toBe(false)
   })
 
-
   it('should show row details for the first item but not the second', () => {
     const props = {
       items: [
