@@ -51,7 +51,7 @@ function getRecord(item, key) {
         <display-project-list :values="getProjects(item)" />
       </template>
 
-      <template #cell(actions)="{ item }"> Actions ! {{ item }} </template>
+      <template #row-actions="{ item }"> Actions ! {{ item }} </template>
     </page-table-generic>
     <card-panel title="test">hello</card-panel></page-container
   >

@@ -47,7 +47,7 @@ function getProject(item) {
       <template #cell(project)="{ item }"> <display-project-list :values="getProject(item)" /></template>
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
       <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
-      <template #cell(actions)="{ item }">
+      <template #row-actions="{ item }">
         <button-icon
           variant="outline-secondary"
           square

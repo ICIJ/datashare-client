@@ -32,7 +32,7 @@
           </slot>
         </td>
         <page-table-td-actions>
-          <slot name="cell(actions)" v-bind="callItemBinding(item, 'row-actions')" />
+          <slot name="row-actions" v-bind="callItemBinding(item, 'row-actions')" />
         </page-table-td-actions>
       </page-table-tr>     
       
