@@ -10,6 +10,7 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import CardPanel from '@/components/Card/CardPanel'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
+
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
 
@@ -30,7 +31,6 @@ function getRecord(item, key) {
     :per-page="perPage"
     :total-rows="totalRows"
   />
-
   <page-container class="d-flex">
     <page-table-generic
       v-if="!empty"
@@ -53,6 +53,6 @@ function getRecord(item, key) {
 
       <template #row-actions="{ item }"> Actions ! {{ item }} </template>
     </page-table-generic>
-    <card-panel title="test">hello</card-panel></page-container
-  >
+    <card-panel title="test">hello</card-panel>
+  </page-container>
 </template>
