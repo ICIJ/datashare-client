@@ -35,6 +35,7 @@ const toProjectEdit = computed(() => ({
           square
           size="sm"
           variant="outline-secondary"
+          class="border-0"
           :label="$t('projectRowActions.edit')"
         />
         <button-icon
@@ -44,6 +45,7 @@ const toProjectEdit = computed(() => ({
           square
           size="sm"
           variant="outline-secondary"
+          class="border-0"
           :label="$t('projectRowActions.delete')"
           @click="showProjectDeletionModal"
         />
