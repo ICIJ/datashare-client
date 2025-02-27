@@ -56,7 +56,7 @@ function getRecord(item, key, defaultValue = undefined) {
       <template #cell(size)="{ item }">
         <display-content-length v-if="hasZipSize(item)" :value="item.result.size" class="text-nowrap" />
       </template>
-      <template #cell(actions)="{ item }">
+      <template #row-actions="{ item }">
         <batch-download-actions :id="item.id" :name="item.name" :state="item.state" :value="getRecord(item)" />
       </template>
     </page-table-generic>
