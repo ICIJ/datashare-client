@@ -104,7 +104,7 @@ export const routes = [
         components: {
           default: () => import('@/views/Search/SearchSaved/SearchSaved'),
           settings: () => import('@/views/Search/SearchSaved/SearchSavedSettings')
-        },
+        }
       },
       {
         path: 'batch-search',

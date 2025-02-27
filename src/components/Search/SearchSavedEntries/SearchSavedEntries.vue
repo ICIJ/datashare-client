@@ -38,13 +38,7 @@ function searchParamsQuery(uri) {
 </script>
 
 <template>
-  <page-table-generic 
-    v-model:sort="sort"
-    v-model:order="order"
-    :items="events" 
-    :fields="fields"
-    show-row-details
-  >
+  <page-table-generic v-model:sort="sort" v-model:order="order" :items="events" :fields="fields" show-row-details>
     <template #cell(name)="{ item }">
       <router-link :to="{ name: 'search', query: searchParamsQuery(item.uri) }">
         {{ item.name }}

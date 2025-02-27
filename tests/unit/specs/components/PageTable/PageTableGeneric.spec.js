@@ -1,9 +1,9 @@
 import { shallowMount, mount } from '@vue/test-utils'
+import { it } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageTableTr from '@/components/PageTable/PageTableTr'
-import { it } from 'vitest'
 
 describe('PageTableGeneric.vue', () => {
   const slots = {
@@ -91,10 +91,7 @@ describe('PageTableGeneric.vue', () => {
         { id: 'id1', name: 'task1', _showDetails: true },
         { id: 'id2', name: 'task2' }
       ],
-      fields: [
-        { value: 'id' },
-        { value: 'name' }
-      ]
+      fields: [{ value: 'id' }, { value: 'name' }]
     }
 
     const wrapper = mount(PageTableGeneric, { props, slots, global: { plugins, renderSlotDefaultStub: true } })
@@ -109,10 +106,7 @@ describe('PageTableGeneric.vue', () => {
         { id: 'id1', name: 'task1' },
         { id: 'id2', name: 'task2', _showDetails: true }
       ],
-      fields: [
-        { value: 'id' },
-        { value: 'name' }
-      ]
+      fields: [{ value: 'id' }, { value: 'name' }]
     }
 
     const wrapper = mount(PageTableGeneric, { props, slots, global: { plugins, renderSlotDefaultStub: true } })
@@ -121,17 +115,13 @@ describe('PageTableGeneric.vue', () => {
     expect(rowDetails).toHaveLength(1)
   })
 
-
   it('should not show any row details', () => {
     const props = {
       items: [
         { id: 'id1', name: 'task1' },
         { id: 'id2', name: 'task2' }
       ],
-      fields: [
-        { value: 'id' },
-        { value: 'name' }
-      ]
+      fields: [{ value: 'id' }, { value: 'name' }]
     }
 
     const wrapper = mount(PageTableGeneric, { props, slots, global: { plugins, renderSlotDefaultStub: true } })
@@ -145,10 +135,7 @@ describe('PageTableGeneric.vue', () => {
         { id: 'id1', name: 'task1' },
         { id: 'id2', name: 'task2' }
       ],
-      fields: [
-        { value: 'id' },
-        { value: 'name' }
-      ],
+      fields: [{ value: 'id' }, { value: 'name' }],
       showRowDetails: true
     }
 
