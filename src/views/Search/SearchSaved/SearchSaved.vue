@@ -78,7 +78,12 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       />
     </page-container>
     <page-container fluid>
-      <search-saved-entries v-model:sort="sort" v-model:order="order" :events="events" />
+      <search-saved-entries 
+        v-model:sort="sort" 
+        v-model:order="order" 
+        :events="events"
+        @reload="fetch"
+      />
     </page-container>
   </div>
 </template>
