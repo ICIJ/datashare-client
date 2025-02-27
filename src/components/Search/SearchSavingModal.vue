@@ -41,7 +41,7 @@ async function confirmSaving() {
     :ok-title="$t('searchSavingModal.okTitle')"
     :ok-disabled="!valid"
     :title="$t('searchSavingModal.title')"
-    size="lg"
+    size="410px"
     @ok="confirmSaving"
   >
     <template #default="{ close }">

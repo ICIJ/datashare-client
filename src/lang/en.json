@@ -1782,8 +1782,8 @@
     "close": "Close"
   },
   "searchSavingModal": {
-    "title": "Save search",
-    "okTitle": "Save",
+    "title": "Name your saved search",
+    "okTitle": "Save search",
     "success": "Your search has been saved.",
     "error": "Something went wrong, unable to save your search.",
     "form": {
