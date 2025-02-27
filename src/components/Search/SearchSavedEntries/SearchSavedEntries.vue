@@ -10,13 +10,16 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
-const { t } = useI18n()
 
 defineProps({
   events: {
     type: Array
   }
 })
+
+const emit = defineEmits(['reload'])
+
+const { t } = useI18n()
 
 const fields = [
   {
@@ -62,7 +65,13 @@ function searchParamsQuery(uri) {
       <display-datetime :value="item.creationDate" />
     </template>
     <template #row-actions="{ item, detailsShowing, toggleDetails }">
-      <search-saved-entries-row-actions :details-showing="detailsShowing" @toggle="toggleDetails" :event="item" />
+      <search-saved-entries-row-actions 
+        :details-showing="detailsShowing" 
+        :event="item"
+        @toggle="toggleDetails" 
+        @edited="emit('reload')"
+        @removed="emit('reload')"
+      />
     </template>
     <template #row-details="{ item }">
       <search-saved-entries-row-details :event="item" />
