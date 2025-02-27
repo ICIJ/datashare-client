@@ -96,7 +96,7 @@ export const routes = [
       },
       {
         name: 'search.saved',
-        path: 'saved',
+        path: 'search/saved',
         meta: {
           icon: 'list-checks',
           title: 'Saved searches'
