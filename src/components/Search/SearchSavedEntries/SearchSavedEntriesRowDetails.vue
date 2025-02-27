@@ -16,7 +16,25 @@ const { event } = defineProps({
 const { parseEntries } = useSearchBreadcrumb()
 
 const eventSearchStore = useSearchStore.instantiate(`event-${event.id}`)
-const eventRouteQuery = computed(() => Object.fromEntries(new URLSearchParams(event.uri.split('?').pop())))
+
+const eventRouteQuery = computed(() => {
+  const query = event.uri.split('?').pop()
+  const searchParams = new URLSearchParams(query)
+  const searchParamsEntries = Array.from(searchParams.entries())
+
+  return searchParamsEntries.reduce((acc, [key, value]) => {
+    // If the key already exists, make sure its value is an array and append the new value.
+    if (key in acc) {
+      acc[key] = Array.isArray(acc[key]) ? acc[key] : [acc[key]]
+      acc[key].push(value)
+    } else {
+      acc[key] = value
+    }
+
+    return acc
+  }, {})
+})
+
 const eventEntries = computed(() => parseEntries(eventSearchStore.toBaseRouteQuery))
 
 eventSearchStore.updateFromRouteQuery(eventRouteQuery.value)
