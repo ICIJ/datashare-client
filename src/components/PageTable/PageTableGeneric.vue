@@ -6,8 +6,8 @@
         :key="field.name"
         :label="field.text"
         :icon="field.icon"
-        sortable
-        emphasis
+        :sortable="!!field.sortable"
+        :emphasis="!!field.emphasis"
         :name="field.value"
       />
     </template>

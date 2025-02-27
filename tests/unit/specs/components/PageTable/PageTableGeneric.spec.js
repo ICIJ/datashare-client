@@ -4,6 +4,7 @@ import { it } from 'vitest'
 import CoreSetup from '~tests/unit/CoreSetup'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageTableTr from '@/components/PageTable/PageTableTr'
+import PageTableTh from '@/components/PageTable/PageTableTh'
 
 describe('PageTableGeneric.vue', () => {
   const slots = {
@@ -21,24 +22,24 @@ describe('PageTableGeneric.vue', () => {
     plugins = core.plugins
   })
 
-  it('renders correctly', () => {
+  it('should render correctly', () => {
     const wrapper = shallowMount(PageTableGeneric, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)
   })
 
-  it('shows empty table', () => {
+  it('should show empty table', () => {
     const wrapper = mount(PageTableGeneric, { global: { plugins } })
     expect(wrapper.find('.page-table-generic__no-result').exists()).toBe(true)
   })
 
-  it('shows table with 2 tasks', () => {
+  it('should show table with 2 tasks', () => {
     const props = { items: [{ id: 1 }, { id: 2 }] }
     const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
     expect(wrapper.find('.page-table-generic__no-result').exists()).toBe(false)
     expect(wrapper.findAllComponents(PageTableTr)).toHaveLength(2)
   })
 
-  it('shows table with 2 tasks and one column "name"', () => {
+  it('should show table with 2 tasks and one column "name"', () => {
     const props = {
       items: [
         { id: 1, name: 'task1' },
@@ -54,7 +55,7 @@ describe('PageTableGeneric.vue', () => {
     expect(rows.at(1).text()).toBe('task2')
   })
 
-  it('shows table with 2 tasks and columns "id" and "name"', () => {
+  it('should show table with 2 tasks and columns "id" and "name"', () => {
     const props = {
       items: [
         { id: 'id1', name: 'task1' },
@@ -68,7 +69,7 @@ describe('PageTableGeneric.vue', () => {
     expect(rows.at(0).text()).toContain('task1')
   })
 
-  it('updates visible columns', async () => {
+  it('should updates visible columns', async () => {
     const props = {
       items: [{ id: 'id1', name: 'task1' }],
       fields: [{ value: 'id' }]
@@ -84,6 +85,51 @@ describe('PageTableGeneric.vue', () => {
     expect(newRows.at(0).text()).toContain('id1')
     expect(newRows.at(0).text()).toContain('task1')
   })
+
+  it('should not have sortable headers', () => {
+    const props = {
+      fields: [{ value: 'id' }, { value: 'name' }]
+    }
+    const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
+    const headers = wrapper.findAllComponents(PageTableTh)
+    expect(headers).toHaveLength(2)
+    expect(headers.at(0).props('sortable')).toBe(false)
+    expect(headers.at(1).props('sortable')).toBe(false)
+  })
+
+  it('should have one sortable header', () => {
+    const props = {
+      fields: [{ value: 'id', sortable: true }, { value: 'name' }]
+    }
+    const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
+    const headers = wrapper.findAllComponents(PageTableTh)
+    expect(headers).toHaveLength(2)
+    expect(headers.at(0).props('sortable')).toBe(true)
+    expect(headers.at(1).props('sortable')).toBe(false)
+  })
+
+  it('should not have emphasis headers', () => {
+    const props = {
+      fields: [{ value: 'id' }, { value: 'name' }]
+    }
+    const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
+    const headers = wrapper.findAllComponents(PageTableTh)
+    expect(headers).toHaveLength(2)
+    expect(headers.at(0).props('emphasis')).toBe(false)
+    expect(headers.at(1).props('emphasis')).toBe(false)
+  })
+
+  it('should have one emphasis header', () => {
+    const props = {
+      fields: [{ value: 'id', emphasis: true }, { value: 'name' }]
+    }
+    const wrapper = mount(PageTableGeneric, { props, global: { plugins, renderSlotDefaultStub: true } })
+    const headers = wrapper.findAllComponents(PageTableTh)
+    expect(headers).toHaveLength(2)
+    expect(headers.at(0).props('emphasis')).toBe(true)
+    expect(headers.at(1).props('emphasis')).toBe(false)
+  })
+
 
   it('should show row details for the first item but not the second', () => {
     const props = {
