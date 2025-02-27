@@ -32,11 +32,11 @@
           </slot>
         </td>
         <page-table-td-actions>
-          <slot name="cell(action)" v-bind="callItemBinding(item, 'row-actions')" />
+          <slot name="cell(actions)" v-bind="callItemBinding(item, 'row-actions')" />
         </page-table-td-actions>
       </page-table-tr>     
       
-      <template v-if="hasRowDetailsSlot && areRowDetailsVisible(item)">
+      <template v-if="hasRowDetailsSlot && rowDetailsShowing(item)">
         <tr class="d-none" aria-hidden="true" role="presentation" />
         <page-table-tr class="page-table-generic__row-details">
           <td :colspan="fields.length + 1">
@@ -95,13 +95,13 @@ function isTableItem(value) {
   return typeof value === 'object' && value !== null
 }
 
-function areRowDetailsVisible(item) {
+function rowDetailsShowing(item) {
   return isTableItem(item) && detailsMap.value.get(item)
 }
 
 function toggleRowDetails(item) {
   if (isTableItem(item)) {
-    item._showDetails = !areRowDetailsVisible(item)
+    item._showDetails = !rowDetailsShowing(item)
   }
 }
 
@@ -109,6 +109,7 @@ function callItemBinding(item, slotName) {
   return {
     item,
     slotName,
+    detailsShowing: rowDetailsShowing(item),
     toggleDetails: () => toggleRowDetails(item)
   }
 }
