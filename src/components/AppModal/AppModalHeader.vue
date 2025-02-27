@@ -66,6 +66,7 @@ defineProps({
     flex-grow: 1;
     color: var(--bs-emphasis-color);
     text-align: center;
+    text-wrap: balance;
   }
 
   &__close {
