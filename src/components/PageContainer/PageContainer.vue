@@ -13,7 +13,7 @@ const props = defineProps({
     default: SIZE.MD,
     validator: breakpointSizeValidator
   },
-  column: {
+  deck: {
     type: Boolean,
     default: false
   }
