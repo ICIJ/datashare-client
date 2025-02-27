@@ -434,20 +434,6 @@ export const routes = [
             meta: {
               title: 'userHistory.heading'
             }
-          },
-          {
-            path: 'search',
-            redirect: {
-              name: 'user-history.saved-search.list'
-            }
-          },
-          {
-            name: 'user-history.saved-search.list',
-            path: 'saved-search',
-            component: () => import('@/views/UserHistorySavedSearchList'),
-            meta: {
-              title: 'userHistory.heading'
-            }
           }
         ]
       },
