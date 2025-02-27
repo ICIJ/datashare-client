@@ -62,9 +62,9 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 <template>
   <div class="search-saved">
     <page-header
+      :key="pagination?.total"
       v-model:page="page"
       paginable
-      :key="pagination?.total"
       :per-page="perPage"
       :total-rows="pagination.total"
     >
@@ -74,11 +74,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       </template>
     </page-header>
     <page-container fluid>
-      <search-saved-entries 
-        v-model:sort="sort"
-        v-model:order="order"
-        :events="events" 
-      />
+      <search-saved-entries v-model:sort="sort" v-model:order="order" :events="events" />
     </page-container>
   </div>
 </template>

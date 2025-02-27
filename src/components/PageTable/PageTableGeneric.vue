@@ -19,7 +19,6 @@
     </page-table-tr>
 
     <template v-for="(item, index) in items" :key="index">
-
       <page-table-tr class="page-table-generic__row">
         <td
           v-for="(field, i) in fields"
@@ -34,8 +33,8 @@
         <page-table-td-actions>
           <slot name="row-actions" v-bind="callItemBinding(item, 'row-actions')" />
         </page-table-td-actions>
-      </page-table-tr>     
-      
+      </page-table-tr>
+
       <template v-if="hasRowDetailsSlot && rowDetailsShowing(item)">
         <tr class="d-none" aria-hidden="true" role="presentation" />
         <page-table-tr class="page-table-generic__row-details">
@@ -43,8 +42,7 @@
             <slot name="row-details" v-bind="callItemBinding(item, 'row-details')" />
           </td>
         </page-table-tr>
-      </template>     
-
+      </template>
     </template>
   </page-table>
 </template>
@@ -69,7 +67,7 @@ const props = defineProps({
   },
   /**
    * Array of fields to display in the table
-  */
+   */
   fields: {
     type: Array,
     default: () => []
@@ -83,7 +81,6 @@ const props = defineProps({
   }
 })
 
-
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
 
@@ -92,11 +89,15 @@ const slots = useSlots()
 const detailsMap = ref(new WeakMap())
 
 // Initialize and sync the item details map
-watch(toRef(props, 'items'), (items) => {
-  items.filter(isTableItem).forEach((item) => {
-    detailsMap.value.set(item, item._showDetails ?? props.showRowDetails)
-  })
-}, { deep: true, immediate: true })
+watch(
+  toRef(props, 'items'),
+  (items) => {
+    items.filter(isTableItem).forEach((item) => {
+      detailsMap.value.set(item, item._showDetails ?? props.showRowDetails)
+    })
+  },
+  { deep: true, immediate: true }
+)
 
 function isTableItem(value) {
   return typeof value === 'object' && value !== null
