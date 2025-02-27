@@ -263,6 +263,9 @@
       "author": "Author"
     }
   },
+  "searchSavedEntriesRowActions": {
+    "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?"
+  },
   "pagination": {
     "firstPage": "Go to first page",
     "previousPage": "Go to previous page",
