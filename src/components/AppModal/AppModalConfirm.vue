@@ -3,7 +3,6 @@ import { useAttrs } from 'vue'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
-
 import AppModal from '@/components/AppModal/AppModal'
 
 defineProps({
@@ -17,12 +16,13 @@ const attrs = useAttrs()
 </script>
 
 <template>
-  <app-modal 
-    v-bind="attrs" 
-    :image="image" 
-    :image-dark="imageDark" 
-    :image-width="60" 
-    :title="$t('appModalConfirm.title')" size="410px"
+  <app-modal
+    v-bind="attrs"
+    :image="image"
+    :image-dark="imageDark"
+    :image-width="60"
+    :title="$t('appModalConfirm.title')"
+    size="410px"
   >
     <slot>
       {{ description || $t('appModalConfirm.description') }}

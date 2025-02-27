@@ -51,11 +51,9 @@ export function useSearchBreadcrumb() {
   })
 
   function parseEntries(routeQuery) {
-    return compact(flatten([
-      parseIndicesEntries(routeQuery),
-      parseQueryEntries(routeQuery),
-      parseFiltersEntries(routeQuery)
-    ]))
+    return compact(
+      flatten([parseIndicesEntries(routeQuery), parseQueryEntries(routeQuery), parseFiltersEntries(routeQuery)])
+    )
   }
 
   const entries = computed(() => {

@@ -5,7 +5,7 @@ import AppModalConfirm from '@/components/AppModal/AppModalConfirm'
 
 export const useConfirmModal = () => {
   const modalController = useModalController()
-  
+
   function show(props = {}) {
     return new Promise((resolve) => {
       const component = h(AppModalConfirm, {

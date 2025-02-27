@@ -1,13 +1,13 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useSearchSavingModal, useRemoveSavedSearchModal } from '@/composables/search-saving'
 
 const { event } = defineProps({
-  detailsShowing: { 
-    type: Boolean, 
-    default: false 
+  detailsShowing: {
+    type: Boolean,
+    default: false
   },
   event: {
     type: Object,
