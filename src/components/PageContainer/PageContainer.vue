@@ -13,7 +13,7 @@ const props = defineProps({
     default: SIZE.MD,
     validator: breakpointSizeValidator
   },
-  top: {
+  column: {
     type: Boolean,
     default: false
   }
@@ -29,7 +29,7 @@ const classList = computed(() => {
   return {
     'page-container--fluid': props.fluid,
     'page-container--compact': compact.value,
-    'd-flex flex-column gap-4': props.top
+    'page-container--deck': props.deck
   }
 })
 </script>
@@ -43,6 +43,12 @@ const classList = computed(() => {
 <style lang="scss" scoped>
 .page-container {
   @include make-container($spacer * 4);
+
+  &--deck {
+    display: flex;
+    flex-direction: column;
+    gap: $spacer-lg;
+  }
 
   &--fluid {
     max-width: calc(100vw - var(--app-sidebar-width));

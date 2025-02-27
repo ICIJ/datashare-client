@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <page-container fluid top class="task-documents-new">
+  <page-container fluid deck class="task-documents-new">
     <page-header no-toggle-settings />
     <task-documents-form :project-name="projectName" />
   </page-container>
