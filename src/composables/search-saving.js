@@ -9,7 +9,7 @@ import { useSearchStore } from '@/store/modules'
 
 export function useSearchSavingModal() {
   const modalController = useModalController()
-  
+
   function show(event = null) {
     return new Promise((resolve) => {
       const props = { event }

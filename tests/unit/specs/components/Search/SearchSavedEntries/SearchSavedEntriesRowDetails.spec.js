@@ -13,7 +13,6 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   })
 
   describe('a boolean query on one index', () => {
-
     beforeEach(() => {
       const uri = '/?q=foo%20AND%20bar&from=0&size=25&sort=relevance&index=project&custom=baz'
       const event = { id: 'id_02', uri }
@@ -39,7 +38,6 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   })
 
   describe('a simple query on two indices', () => {
-
     beforeEach(() => {
       const uri = '/?q=foo&from=0&size=25&index=banana,apple'
       const event = { id: 'id_02', uri }
@@ -57,8 +55,7 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
       expect(entries.at(0).props('filter')).toBe('project')
       expect(entries.at(0).props('value')).toBe('banana')
     })
-    
-    
+
     it('should parse the "apple" index and show it second', () => {
       const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
       expect(entries.at(1).props('filter')).toBe('project')
@@ -73,7 +70,6 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   })
 
   describe('a simple query on two indices with a filter on contentType', () => {
-
     beforeEach(() => {
       const uri = '/?q=foo&from=0&size=25&index=banana,apple&f[contentType]=application/pdf'
       const event = { id: 'id_02', uri }
@@ -91,7 +87,6 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
       expect(entries.at(0).props('filter')).toBe('project')
       expect(entries.at(0).props('value')).toBe('banana')
     })
-
 
     it('should parse the "apple" index and show it second', () => {
       const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
@@ -113,7 +108,6 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   })
 
   describe('a simple query on one index with 2 filters on contentType', () => {
-
     beforeEach(() => {
       const uri = '/?q=bar&index=cherry&f[contentType]=application/pdf&f[contentType]=image/png'
       const event = { id: 'id_02', uri }

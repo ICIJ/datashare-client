@@ -32,7 +32,7 @@ const fields = [
   {
     value: 'user',
     icon: 'user-circle',
-    text: computed(() => t('searchSavedEntries.fields.author')),
+    text: computed(() => t('searchSavedEntries.fields.author'))
   },
   {
     value: 'creation_date',
@@ -52,7 +52,14 @@ function searchParamsQuery(uri) {
 </script>
 
 <template>
-  <page-table-generic primary-key="id" v-model:sort="sort" v-model:order="order" :items="events" :fields="fields" show-row-details>
+  <page-table-generic
+    v-model:sort="sort"
+    v-model:order="order"
+    primary-key="id"
+    :items="events"
+    :fields="fields"
+    show-row-details
+  >
     <template #cell(name)="{ item }">
       <router-link :to="{ name: 'search', query: searchParamsQuery(item.uri) }" class="fw-medium">
         {{ item.name }}
@@ -65,10 +72,10 @@ function searchParamsQuery(uri) {
       <display-datetime :value="item.creationDate" />
     </template>
     <template #row-actions="{ item, detailsShowing, toggleDetails }">
-      <search-saved-entries-row-actions 
-        :details-showing="detailsShowing" 
+      <search-saved-entries-row-actions
+        :details-showing="detailsShowing"
         :event="item"
-        @toggle="toggleDetails" 
+        @toggle="toggleDetails"
         @edited="emit('reload')"
         @removed="emit('reload')"
       />
