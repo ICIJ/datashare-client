@@ -16,6 +16,10 @@ const props = defineProps({
   deck: {
     type: Boolean,
     default: false
+  },
+  sticky: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -29,6 +33,7 @@ const classList = computed(() => {
   return {
     'page-container--fluid': props.fluid,
     'page-container--compact': compact.value,
+    'page-container--sticky': props.sticky,
     'page-container--deck': props.deck
   }
 })
@@ -48,6 +53,15 @@ const classList = computed(() => {
     display: flex;
     flex-direction: column;
     gap: $spacer-lg;
+    padding-bottom: $spacer-lg;
+  }
+
+  &--sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: var(--bs-body-bg);
+    z-index: $zindex-sticky;
   }
 
   &--fluid {
