@@ -14,7 +14,7 @@ const to = computed(() => {
 
 <template>
   <td>
-    <router-link :to="to" class="fw-medium">
+    <router-link :to="to" class="document-row-title fw-medium">
       {{ document.title }}
     </router-link>
   </td>
