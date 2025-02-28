@@ -29,6 +29,10 @@ export const useAppStore = defineStore(
           orderBy: ['creation_date', 'desc'],
           perPage: '25'
         },
+        searchVisitedDocumentsList: {
+          orderBy: ['creation_date', 'desc'],
+          perPage: '25'
+        },
         task: {
           orderBy: ['name', 'desc'],
           perPage: '10',
