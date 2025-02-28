@@ -891,28 +891,6 @@
   "pageHeader": {
     "searchPlaceholder": "Search in this page"
   },
-  "userHistory": {
-    "heading": "Your history",
-    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
-    "empty": "Your history is empty",
-    "clear": "Clear history",
-    "document": "Documents",
-    "search": "Saved searches",
-    "name": "Name",
-    "saveSearch": "Save this search",
-    "submitSuccess": "Your search has been saved.",
-    "submitError": "Something went wrong, unable to save your search.",
-    "delete": "Delete",
-    "deleted": "The saved search have been deleted.",
-    "confirmDelete": "Are you sure you want to delete this saved search?",
-    "deleteError": "Something went wrong, unable to delete the record.",
-    "renameSavedSearch": "Rename saved search",
-    "renameSavedSearchShort": "Rename"
-  },
-  "userHistorySaveSearchForm": {
-    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>.",
-    "save": "Save"
-  },
   "task": {
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
