@@ -1,7 +1,7 @@
-import CardPanel from '@/components/Card/CardPanel'
+import CardPanel from '@/components/CardPanel/CardPanel'
 
 export default {
-  title: 'Components/Card/CardPanel',
+  title: 'Components/CardPanel/CardPanel',
   tags: ['autodocs'],
   component: CardPanel,
   parameters: {
