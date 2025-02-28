@@ -9,7 +9,7 @@ vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
       deleteHistoryEvent: vi.fn().mockResolvedValue({}),
-      getUserHistory: vi.fn().mockResolvedValue({
+      getHistoryEvents: vi.fn().mockResolvedValue({
         pagination: {
           total: 2,
           page: 1,
@@ -70,8 +70,8 @@ describe('Search/SearchSaved/SearchSavedList.vue', () => {
   })
 
   it('should display load next page', async () => {
-    expect(api.getUserHistory).toBeCalledTimes(1)
+    expect(api.getHistoryEvents).toBeCalledTimes(1)
     await router.push({ name: 'search.saved.list', query: { page: '2' } })
-    expect(api.getUserHistory).toBeCalledTimes(2)
+    expect(api.getHistoryEvents).toBeCalledTimes(2)
   })
 })

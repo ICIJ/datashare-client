@@ -14,7 +14,7 @@ vi.mock('@/api/apiInstance', () => {
       },
       deleteHistoryEvent: vi.fn().mockResolvedValue({}),
       getStarredDocuments: vi.fn().mockResolvedValue([]),
-      getUserHistory: vi.fn().mockResolvedValue({
+      getHistoryEvents: vi.fn().mockResolvedValue({
         pagination: {
           total: 0,
           page: 1,
@@ -55,7 +55,7 @@ describe('SearchVisitedDocumentsList.vue', () => {
       }
     })
 
-    api.getUserHistory.mockResolvedValue({
+    api.getHistoryEvents.mockResolvedValue({
       pagination: {
         total: 2,
         page: 1,
