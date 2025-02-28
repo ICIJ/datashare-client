@@ -19,7 +19,7 @@ const emit = defineEmits(['select'])
 
 const terms = ref([])
 
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
 const { core } = useCore()
 
 const queryTerms = computed(() => searchStore.retrieveContentQueryTerms)

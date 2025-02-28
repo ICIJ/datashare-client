@@ -29,7 +29,7 @@ const collapse = ref(true)
 const expand = ref(false)
 
 const { wait } = useWait()
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
 
 const aggregateWithLoading = async ({ clearPages = false } = {}) => {
   wait.start(loaderId.value)

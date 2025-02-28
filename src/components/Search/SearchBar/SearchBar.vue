@@ -86,7 +86,11 @@ export default {
     SearchBarInputDropdownForField,
     SearchBarInputDropdownForProjects
   },
-  inject: ['searchStoreSuffix'],
+  inject: {
+    searchStoreSuffix: {
+      default: null
+    }
+  },
   props: {
     /**
      * Placeholder in the search bar.

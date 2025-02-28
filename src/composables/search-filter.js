@@ -16,7 +16,7 @@ import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/module
 
 export function useSearchFilter() {
   const appStore = useAppStore()
-  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
   const recommendedStore = useRecommendedStore()
   const route = useRoute()
   const router = useRouter()
