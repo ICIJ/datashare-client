@@ -27,7 +27,7 @@ export const useAppStore = defineStore(
         },
         searchSavedList: {
           orderBy: ['creation_date', 'desc'],
-          perPage: '2'
+          perPage: '25'
         },
         task: {
           orderBy: ['name', 'desc'],
