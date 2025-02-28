@@ -21,7 +21,7 @@ describe('UserHistory.vue', () => {
       path: '/user-history',
       children: [
         { name: 'user-history.document.list', path: 'document' },
-        { name: 'user-history.saved-search.list', path: 'search' }
+        { name: 'search.saved.list', path: 'search' }
       ]
     }
   ]

@@ -112,7 +112,7 @@ export default {
       }
     },
     tabRoutes() {
-      return ['user-history.document.list', 'user-history.saved-search.list']
+      return ['user-history.document.list', 'search.saved.list']
     },
     loader() {
       return uniqueId('user-history-load-events-')
@@ -192,7 +192,7 @@ export default {
         'user-history.document': 'document',
         'user-history.document.list': 'document',
         'user-history.saved-search': 'search',
-        'user-history.saved-search.list': 'search'
+        'search.saved.list': 'search'
       }
       return typeRouteMapping[this.$route.name] ?? this.defaultType
     }
