@@ -114,8 +114,12 @@ export const routes = [
           title: 'searchVisitedDocumentsList.title'
         },
         components: {
-          default: () => import('@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsList'),
-          settings: () => import('@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsListSettings')
+          default: () =>
+            import('@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsList'),
+          settings: () =>
+            import(
+              '@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsListSettings'
+            )
         }
       },
       {
@@ -247,7 +251,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryList'),
                 meta: {
                   title: 'batchSearchQueries.title'
-                },
+                }
               },
               {
                 name: 'task.batch-search.view.results',
