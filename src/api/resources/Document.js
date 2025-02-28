@@ -235,7 +235,7 @@ export default class Document extends EsDoc {
     return this.subject && this.subject !== this.title
   }
   get creationDate() {
-    const creationDate = this.source.metadata.tika_metadata_dcterms_created
+    const creationDate = this.source?.metadata?.tika_metadata_dcterms_created
     if (creationDate && !isNaN(Date.parse(creationDate))) {
       return new Date(creationDate)
     } else {
