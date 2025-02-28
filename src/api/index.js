@@ -231,7 +231,7 @@ export class Api {
     const params = { type, from, size, sort, desc, projects }
     return this.sendAction('/api/users/me/history', { method: Method.GET, params })
   }
-  addUserHistoryEvent(projectIds, type, name, uri) {
+  addHistoryEvent(projectIds, type, name, uri) {
     const data = { projectIds, type, name, uri }
     return this.sendActionAsText('/api/users/me/history', { method: Method.PUT, data })
   }

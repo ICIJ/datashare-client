@@ -25,7 +25,7 @@ export const useDocument = function (element) {
 
     if (document.value) {
       const { route, slicedNameToString } = document.value
-      await core.api.addUserHistoryEvent([index], 'DOCUMENT', slicedNameToString, route)
+      await core.api.addHistoryEvent([index], 'DOCUMENT', slicedNameToString, route)
       const container = window.document.body
       core.emit('scroll-tracker:request', { element, container, offset: 0 })
     }
