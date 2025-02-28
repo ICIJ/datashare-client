@@ -18,7 +18,7 @@ const { event } = defineProps({
 })
 
 const emit = defineEmits(['success', 'error'])
-const form = reactive({ name: event.name ?? '' })
+const form = reactive({ name: event?.name ?? '' })
 const { toast } = useCore()
 const { save } = useSearchSaving()
 const { t } = useI18n()
@@ -56,7 +56,7 @@ async function confirmSaving() {
             <b-form-input v-model="form.name" name="name" type="text" autofocus required class="mb-3" />
             <i18n-t keypath="searchSavingModal.form.description" tag="p">
               <template #link>
-                <router-link :to="{ name: 'user-history.saved-search.list' }">
+                <router-link :to="{ name: 'search.saved.list' }">
                   <i18n-t keypath="searchSavingModal.form.link" />
                 </router-link>
               </template>
