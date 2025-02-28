@@ -45,6 +45,9 @@
   "buttonClearSearch": {
     "label": "Clear search"
   },
+  "buttonClearHistory": {
+    "label": "Clear history"
+  },
   "buttonDownloadDocuments": {
     "label": "Download documents"
   },
