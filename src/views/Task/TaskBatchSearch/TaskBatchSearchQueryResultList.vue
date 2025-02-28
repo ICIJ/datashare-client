@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref, onBeforeMount } from 'vue'
 
+import NavigationBreadcrumbEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbEntry'
+import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageContainer from '@/components/PageContainer/PageContainer'
@@ -103,7 +105,18 @@ const empty = computed(() => hits.value.length === 0)
 </script>
 <template>
   <page-container fluid deck class="task-batch-search-query-list">
-    <page-header />
+    <page-header>
+
+      <template #breadcrumb>
+        <navigation-breadcrumb-link route-name="task" />
+        <navigation-breadcrumb-link route-name="task.batch-search.list" />
+        <navigation-breadcrumb-link route-name="task.batch-search.view" />
+        <navigation-breadcrumb-link route-name="task.batch-search.view.results" />
+        <navigation-breadcrumb-entry>
+          "{{ query }}"
+        </navigation-breadcrumb-entry>
+      </template>
+    </page-header>
 
     <page-toolbar
       v-model:searchQuery="searchQuery"
