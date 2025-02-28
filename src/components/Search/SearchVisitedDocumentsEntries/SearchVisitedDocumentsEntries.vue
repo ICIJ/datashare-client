@@ -26,15 +26,16 @@ const hits = ref([])
 const eventsIds = computed(() => events.map(eventParams).map(property('id')))
 
 const entries = computed(() => {
-  return hits
-    .value
-    // This create a list of tuples where the first element is the document and the second is the event.
-    .map((document) => {
-      const event = events.find((event) => eventParams(event).id === document.id)
-      return [document, event]
-    })
-    // This filter out the documents that don't have a corresponding event.
-    .filter(([document, event]) => !!event)
+  return (
+    hits.value
+      // This create a list of tuples where the first element is the document and the second is the event.
+      .map((document) => {
+        const event = events.find((event) => eventParams(event).id === document.id)
+        return [document, event]
+      })
+      // This filter out the documents that don't have a corresponding event.
+      .filter(([, event]) => !!event)
+  )
 })
 
 const groupedEntries = computed(() => {
@@ -62,10 +63,10 @@ function buildEventsBody() {
     .size(values.length)
     .rawOption('_source', { excludes })
     .query('ids', { values })
-    .sort("_script", {
-      type: "number",
+    .sort('_script', {
+      type: 'number',
       script: {
-        source: "params.order.indexOf(doc._id.value)",
+        source: 'params.order.indexOf(doc._id.value)',
         params: { order: values }
       }
     })
@@ -79,14 +80,14 @@ async function fetch() {
   const index = indices.join(',')
   const response = await core.api.elasticsearch.search({ index, body, preference })
   await starredStore.fetchIndicesStarredDocuments(indices)
-  hits.value = (new EsDocList(response)).hits
+  hits.value = new EsDocList(response).hits
 }
 
-watch(() => (eventsIds.value), fetch, { deep: true, immediate: true })
+watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
 </script>
 
 <template>
-  <b-collapse visible v-for="(entry, key) of groupedEntries" :key="key">
+  <b-collapse v-for="(entry, key) of groupedEntries" :key="key" visible>
     <template #header="{ visible, toggle }">
       <div class="text-center mb-3">
         <button-toggle-day :date="key" :active="visible" @click="toggle" />
@@ -95,8 +96,8 @@ watch(() => (eventsIds.value), fetch, { deep: true, immediate: true })
     <div class="d-flex flex-column gap-3 mb-3">
       <document-card
         v-for="([document, event], i) in entry"
-        route-name="document-standalone"
         :key="i"
+        route-name="document-standalone"
         :document="document"
         :properties="['title', 'thumbnail', 'path', 'creationDate']"
       >
@@ -108,5 +109,5 @@ watch(() => (eventsIds.value), fetch, { deep: true, immediate: true })
         </template>
       </document-card>
     </div>
-  </b-collapse>    
+  </b-collapse>
 </template>
