@@ -32,6 +32,10 @@ const props = defineProps({
   },
   isDownloadAllowed: {
     type: Boolean
+  },
+  routeName: {
+    type: String,
+    default: 'document'
   }
 })
 
@@ -57,7 +61,9 @@ const showTitle = computed(() => {
 })
 
 const to = computed(() => {
-  return { name: 'document', params: props.document.routerParams }
+  const { routeName: name } = props
+  const { routerParams: params } = props.document
+  return { name, params }
 })
 
 const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
