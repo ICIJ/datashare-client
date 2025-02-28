@@ -69,7 +69,7 @@ export function useSearchSaving() {
   }
 
   function remove(id) {
-    return core.api.deleteUserHistoryEvent(id)
+    return core.api.deleteHistoryEvent(id)
   }
 
   return { remove, save }

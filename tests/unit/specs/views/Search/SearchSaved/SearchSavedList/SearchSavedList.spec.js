@@ -8,7 +8,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
-      deleteUserHistoryEvent: vi.fn().mockResolvedValue({}),
+      deleteHistoryEvent: vi.fn().mockResolvedValue({}),
       getUserHistory: vi.fn().mockResolvedValue({
         pagination: {
           total: 2,
