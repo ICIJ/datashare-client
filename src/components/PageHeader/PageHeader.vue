@@ -45,8 +45,8 @@ const showToggleSidebar = computed(() => {
     <navigation-breadcrumb v-if="!noBreadcrumb" class="page-header__breadcrumb me-auto">
       <slot name="breadcrumb" />
     </navigation-breadcrumb>
-    <div class="page-header__actions d-flex gap-4 ms-4">
-      <slot name="action">
+    <div class="page-header__actions d-flex gap-4 ms-4 align-items-center">
+      <slot name="actions">
         <button-add v-if="toAdd" :to="toAdd" />
         <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
       </slot>
