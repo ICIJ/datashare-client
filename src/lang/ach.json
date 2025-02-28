@@ -627,7 +627,7 @@
     "deleted": "crwdns2827:0crwdne2827:0",
     "confirmDelete": "crwdns2535:0crwdne2535:0",
     "deleteError": "crwdns2693:0crwdne2693:0",
-    "renameSavedSearch": "crwdns2940:0crwdne2940:0"
+    "renameHistoryEvent": "crwdns2940:0crwdne2940:0"
   },
   "userHistorySaveSearchForm": {
     "description": "crwdns2675:0{searchHistoryPath}crwdne2675:0",

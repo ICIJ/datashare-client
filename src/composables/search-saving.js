@@ -63,7 +63,7 @@ export function useSearchSaving() {
 
   function save({ name, id = null }) {
     if (id) {
-      return core.api.renameSavedSearch(id, name)
+      return core.api.renameHistoryEvent(id, name)
     }
     return core.api.addUserHistoryEvent(indices.value, 'SEARCH', name, searchRoute.value.fullPath)
   }
