@@ -28,8 +28,6 @@ const perPage = useUrlParamWithStore('perPage', {
 })
 
 const offset = computed(() => {
-  console.log(perPage.value)
-
   return (page.value - 1) * perPage.value
 })
 
