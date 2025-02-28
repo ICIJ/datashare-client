@@ -235,7 +235,7 @@ export class Api {
     const data = { projectIds, type, name, uri }
     return this.sendActionAsText('/api/users/me/history', { method: Method.PUT, data })
   }
-  renameSavedSearch(eventId, newName) {
+  renameHistoryEvent(eventId, newName) {
     return this.sendAction('/api/users/me/history', {
       method: Method.PUT,
       data: { eventId, name: newName, type: 'SEARCH' }

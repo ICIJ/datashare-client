@@ -627,7 +627,7 @@
     "deleted": "La recherche sauvegardée a été supprimée.",
     "confirmDelete": "Êtes-vous sûr(e) de vouloir supprimer cette recherche sauvegardée ?",
     "deleteError": "Une erreur s'est produite, impossible de supprimer l'enregistrement.",
-    "renameSavedSearch": "Rename saved search"
+    "renameHistoryEvent": "Rename saved search"
   },
   "userHistorySaveSearchForm": {
     "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches</a>.",

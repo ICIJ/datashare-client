@@ -627,7 +627,7 @@
     "deleted": "The saved search have been deleted.",
     "confirmDelete": "¿Estás seguro que quieres eliminar esta búsqueda guardada?",
     "deleteError": "Something went wrong, unable to delete the record.",
-    "renameSavedSearch": "Rename saved search"
+    "renameHistoryEvent": "Rename saved search"
   },
   "userHistorySaveSearchForm": {
     "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>.",
