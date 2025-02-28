@@ -1,6 +1,4 @@
 <script setup>
-import { computed, ref, onBeforeMount, onMounted } from 'vue'
-
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import BatchSearchCard from '@/components/BatchSearch/BatchSearchCard'
