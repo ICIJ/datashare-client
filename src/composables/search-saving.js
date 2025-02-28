@@ -49,7 +49,7 @@ export function useRemoveSavedSearchModal() {
 }
 
 export function useSearchSaving() {
-  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
   const indices = computed(() => searchStore.indices)
   const { core } = useCore()
   const { resolve } = useRouter()

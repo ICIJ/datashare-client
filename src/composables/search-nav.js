@@ -11,7 +11,7 @@ export function useSearchNav(currentDocument = null) {
   const { core } = useCore()
   const { document: viewDocument } = useDocument()
   const router = useRouter()
-  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
   const currentDocumentRef = toRef(currentDocument)
   const document = computed(() => currentDocumentRef.value || viewDocument.value)
 

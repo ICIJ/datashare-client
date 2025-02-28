@@ -37,7 +37,7 @@ const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 const { core, toast } = useCore()
 const { t, tm, n } = useI18n()
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
 const router = useRouter()
 
 const batchDownloadDocumentsLabel = computed(() => {

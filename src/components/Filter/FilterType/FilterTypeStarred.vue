@@ -15,7 +15,7 @@ const props = defineProps({
 })
 
 const starredStore = useStarredStore()
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
 const { getTotal, getFilterValues, setFilterValue, watchIndices } = useSearchFilter()
 
 const total = ref(0)

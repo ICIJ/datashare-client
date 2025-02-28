@@ -26,7 +26,7 @@ const {
 
 const { isActive, document, watchDocument } = useDocument()
 
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
 const total = computed(() => searchStore.total)
 const carouselEntries = ref([])
 const backward = ref(false)

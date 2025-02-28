@@ -28,7 +28,7 @@ const props = defineProps({
 
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
 const elementRef = useTemplateRef('element')
 const { waitFor } = useWait()
 

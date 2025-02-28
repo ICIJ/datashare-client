@@ -12,7 +12,7 @@ import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 import { useSearchStore } from '@/store/modules'
 
 const { toggleFilters } = useViews()
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
 const { isMode } = useMode()
 const { getFilterComponent } = useSearchFilter()
 const { t } = useI18n()
