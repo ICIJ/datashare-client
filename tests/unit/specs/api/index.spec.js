@@ -377,8 +377,8 @@ describe('Datashare backend client', () => {
     })
   })
 
-  it('should return backend response to getUserHistory', async () => {
-    json = await api.getUserHistory()
+  it('should return backend response to getHistoryEvents', async () => {
+    json = await api.getHistoryEvents()
     expect(json).toEqual({})
   })
 

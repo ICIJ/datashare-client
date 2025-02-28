@@ -225,7 +225,7 @@ export class Api {
   getUser() {
     return this.sendAction('/api/users/me')
   }
-  getUserHistory(type, from, size, sort, desc, projects) {
+  getHistoryEvents(type, from, size, sort, desc, projects) {
     sort = sort ?? 'modification_date'
     desc = desc ?? true
     const params = { type, from, size, sort, desc, projects }
