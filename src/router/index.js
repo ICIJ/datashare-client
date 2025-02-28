@@ -107,19 +107,19 @@ export const routes = [
         }
       },
       {
-        path: 'batch-search',
-        redirect: {
-          name: 'task.batch-search.list'
+        name: 'search.visited-documents.list',
+        path: 'search/visited-documents',
+        meta: {
+          icon: 'clock-counter-clockwise',
+          title: 'searchVisitedDocumentsList.title'
+        },
+        components: {
+          default: () => import('@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsList'),
+          settings: () => import('@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsListSettings')
         }
       },
       {
-        path: 'batch-search/:index/:uuid',
-        redirect: {
-          name: 'task.batch-search.view.results'
-        }
-      },
-      {
-        name: 'tasks',
+        name: 'task',
         path: 'tasks',
         components: {
           default: () => import('@/views/Task/Task'),
@@ -243,26 +243,20 @@ export const routes = [
               {
                 path: ':indices/:uuid',
                 props: true,
-                children: [
-                  {
-                    name: 'task.batch-search.view.results',
-                    path: 'r/:query',
-                    props: true,
-                    component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryResultList'),
-                    meta: {
-                      title: 'batchSearchResults.title'
-                    }
-                  },
-                  {
-                    props: true,
-                    path: '',
-                    name: 'task.batch-search.view',
-                    component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryList'),
-                    meta: {
-                      title: 'batchSearchQueries.title'
-                    }
-                  }
-                ]
+                name: 'task.batch-search.view',
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryList'),
+                meta: {
+                  title: 'batchSearchQueries.title'
+                },
+              },
+              {
+                name: 'task.batch-search.view.results',
+                path: ':indices/:uuid/:query',
+                props: true,
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryResultList'),
+                meta: {
+                  title: 'batchSearchResults.title'
+                }
               }
             ]
           }
@@ -405,27 +399,6 @@ export const routes = [
                 }
               }
             ]
-          }
-        ]
-      },
-      {
-        name: 'user-history',
-        path: 'user-history',
-        component: () => import('@/views/UserHistory'),
-        redirect: {
-          name: 'user-history.document.list'
-        },
-        meta: {
-          title: 'userHistory.heading'
-        },
-        children: [
-          {
-            name: 'user-history.document.list',
-            path: 'document',
-            component: () => import('@/views/UserHistoryDocumentList'),
-            meta: {
-              title: 'userHistory.heading'
-            }
           }
         ]
       },
