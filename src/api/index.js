@@ -235,10 +235,10 @@ export class Api {
     const data = { projectIds, type, name, uri }
     return this.sendActionAsText('/api/users/me/history', { method: Method.PUT, data })
   }
-  renameHistoryEvent(eventId, newName) {
+  renameHistoryEvent(eventId, name, type = 'SEARCH') {
     return this.sendAction('/api/users/me/history', {
       method: Method.PUT,
-      data: { eventId, name: newName, type: 'SEARCH' }
+      data: { eventId, name, type }
     })
   }
   deleteUserHistory(type) {
