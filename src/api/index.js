@@ -241,7 +241,7 @@ export class Api {
       data: { eventId, name, type }
     })
   }
-  deleteUserHistory(type) {
+  deleteHistoryEvents(type) {
     return this.sendAction('/api/users/me/history', { method: Method.DELETE, params: { type } })
   }
   deleteUserHistoryEvent(id) {
