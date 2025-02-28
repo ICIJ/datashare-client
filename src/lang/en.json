@@ -1519,6 +1519,7 @@
       "name": "Name",
       "creationDate": "Creation date",
       "updateDate": "Latest update",
+      "visitDate": "Last visit",
       "documentsCount": "Documents count",
       "taskStatus": "Task status",
       "progress": "Progress",
@@ -1543,8 +1544,8 @@
         "desc": "high"
       },
       "date": {
-        "asc":"recent",
-        "desc": "old"
+        "asc":"recent first",
+        "desc": "old first"
       }
     }
   },
