@@ -266,6 +266,9 @@
   "searchSavedEntriesRowActions": {
     "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?"
   },
+  "searchVisitedDocumentsList": {
+    "title": "Visited documents"
+  },
   "pagination": {
     "firstPage": "Go to first page",
     "previousPage": "Go to previous page",
