@@ -17,24 +17,26 @@ const pagination = ref({})
 const appStore = useAppStore()
 const page = useUrlPageParam()
 const route = useRoute()
-
+const view = 'searchSavedList'
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
-  get: () => appStore.getSettings('searchSaved', 'perPage'),
+  get: () => appStore.getSettings(view, 'perPage'),
   set: (value) => {
-    appStore.setSettings({ view: 'searchSaved', perPage: parseInt(value) })
+    appStore.setSettings({ view, perPage: parseInt(value) })
     page.value = 1
   }
 })
 
 const offset = computed(() => {
+  console.log(perPage.value)
+
   return (page.value - 1) * perPage.value
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
-  get: () => appStore.getSettings('searchSaved', 'orderBy'),
+  get: () => appStore.getSettings(view, 'orderBy'),
   set: (sort, order) => {
-    appStore.setSettings({ view: 'searchSaved', orderBy: [sort, order] })
+    appStore.setSettings({ view, orderBy: [sort, order] })
     page.value = 1
   }
 })
