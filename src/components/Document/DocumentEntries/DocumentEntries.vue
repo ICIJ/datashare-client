@@ -36,6 +36,10 @@ const props = defineProps({
   },
   loading: {
     type: Boolean
+  },
+  hideHeader: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -79,7 +83,7 @@ defineExpose({
     class="document-entries"
   >
     <slot />
-    <template #header>
+    <template #header v-if="!hideHeader">
       <document-entries-header
         v-model:select-mode="selectMode"
         v-model:page="page"
