@@ -1,7 +1,7 @@
 <script setup>
 import DocumentUserActionsCardInfo from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCardInfo'
 import DocumentUserActionsCardList from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCardList'
-import CardPanel from '@/components/Card/CardPanel'
+import CardPanel from '@/components/CardPanel/CardPanel'
 import { ICON_WEIGHTS } from '@/enums/iconWeights'
 
 defineOptions({ name: 'DocumentUserActionsCard' })

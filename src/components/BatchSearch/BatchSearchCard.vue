@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import CardPanel from '@/components/Card/CardPanel'
+import CardPanel from '@/components/CardPanel/CardPanel'
 import BatchSearchCardActions from '@/components/BatchSearch/BatchSearchCardActions'
 import BatchSearchCardDetails from '@/components/BatchSearch/BatchSearchCardDetails'
 import TextTruncate from '@/components/Text/TextTruncate'
