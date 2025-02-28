@@ -400,8 +400,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return a backend response to deleteUserHistoryEvent', async () => {
-    json = await api.deleteUserHistoryEvent('event-id')
+  it('should return a backend response to deleteHistoryEvent', async () => {
+    json = await api.deleteHistoryEvent('event-id')
     expect(json).toEqual({})
   })
 

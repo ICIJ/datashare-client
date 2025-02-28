@@ -244,7 +244,7 @@ export class Api {
   deleteHistoryEvents(type) {
     return this.sendAction('/api/users/me/history', { method: Method.DELETE, params: { type } })
   }
-  deleteUserHistoryEvent(id) {
+  deleteHistoryEvent(id) {
     return this.sendAction('/api/users/me/history/event', { method: Method.DELETE, params: { id } })
   }
   setMarkAsRecommended(project, data) {
