@@ -12,6 +12,7 @@ import { useAppStore } from '@/store/modules'
 const { t } = useI18n()
 const { sortByLabel, tSortByOption, perPageLabel } = useViewSettings(t)
 const appStore = useAppStore()
+const view = 'searchSavedList'
 
 const page = useUrlPageParam()
 
@@ -21,9 +22,9 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => appStore.getSettings('searchSavedList', 'perPage'),
+    get: () => appStore.getSettings(view, 'perPage'),
     set: (perPage) => {
-      appStore.setSettings({ view: 'searchSavedList', perPage })
+      appStore.setSettings({ view, perPage })
       page.value = 1
     }
   }),
@@ -48,9 +49,9 @@ const sortBy = ref({
   type: 'radio',
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => appStore.getSettings('searchSavedList', 'orderBy'),
+    get: () => appStore.getSettings(view, 'orderBy'),
     set: (sort, order) => {
-      appStore.setSettings({ view: 'searchSavedList', orderBy: [sort, order] })
+      appStore.setSettings({ view, orderBy: [sort, order] })
       page.value = 1
     }
   }),
