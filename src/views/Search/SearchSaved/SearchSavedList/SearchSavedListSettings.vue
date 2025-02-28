@@ -17,7 +17,7 @@ const view = 'searchSavedList'
 const page = useUrlPageParam()
 
 const perPage = ref({
-  label: perPageLabel('searchSaved.title'),
+  label: perPageLabel('searchSavedList.title'),
   type: 'radio',
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
