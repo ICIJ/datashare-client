@@ -83,7 +83,7 @@ defineExpose({
     class="document-entries"
   >
     <slot />
-    <template #header v-if="!hideHeader">
+    <template v-if="!hideHeader" #header>
       <document-entries-header
         v-model:select-mode="selectMode"
         v-model:page="page"
