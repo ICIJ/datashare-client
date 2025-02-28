@@ -19,8 +19,8 @@ const props = defineProps({
   nbResults: { type: Number },
   nbQueriesWithoutResults: { type: Number },
   nbQueries: { type: Number },
-  status: { type: String },
-  date: { type: Date },
+  state: { type: String },
+  date: { type: [Date, String] },
   author: { type: String },
   visibility: { type: Boolean },
   phraseMatch: { type: Boolean },
@@ -35,7 +35,7 @@ const emit = defineEmits(['downloadDocuments', 'downloadQueries', 'downloadQueri
 const { t } = useI18n()
 
 const statusItem = computed(() => {
-  return { label: t('batchSearchCardDetails.status'), value: capitalize(props.status) }
+  return { label: t('batchSearchCardDetails.status'), value: capitalize(props.state) }
 })
 
 const nbDocumentsItem = computed(() => {
@@ -56,7 +56,7 @@ const indices = computed(() => {
   return props.projects.join(',')
 })
 
-const to = { name: 'batch-tasks.view.results', params: { indices, uuid: props.uuid } }
+const to = { name: 'task.batch-search.view.results', params: { indices, uuid: props.uuid, query: 'a' } }
 
 const downloadDocuments = () => {
   emit('downloadDocuments')
@@ -179,7 +179,7 @@ const projectsItem = computed(() => {
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="statusItem.label">
-          <display-status class="display-status" size="sm" :value="status" /> {{ statusItem.value }}
+          <display-status class="display-status" size="sm" :value="state" /> {{ statusItem.value }}
         </batch-search-card-details-entry>
       </li>
       <li>

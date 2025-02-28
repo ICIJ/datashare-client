@@ -21,7 +21,7 @@ const descriptionLabel = t('batchSearchCardDetails.description')
     <batch-search-card-actions
       :uuid="batchSearch.uuid"
       :nb-results="batchSearch.nbResults"
-      :projects="batchSearch.projects"
+      projects="batchSearch.projects"
     />
 
     <batch-search-card-details v-bind="batchSearch" />
