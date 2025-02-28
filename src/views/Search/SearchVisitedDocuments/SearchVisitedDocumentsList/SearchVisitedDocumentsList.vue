@@ -7,7 +7,6 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import SearchVisitedDocumentsEntries from '@/components/Search/SearchVisitedDocumentsEntries/SearchVisitedDocumentsEntries'
-
 import { useUrlPageParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useAppStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
