@@ -1,11 +1,12 @@
 <script setup>
 import { noop } from 'lodash'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useTaskSettings } from '@/composables/task-settings'
-
 defineProps({
   hide: {
     type: Function,
@@ -21,12 +22,19 @@ defineProps({
 
 const router = useRouter()
 
-const pageName = router.currentRoute.value.name.split('.')
-const { perPage, sortBy, properties } = useTaskSettings(pageName[1])
+const pageName = computed(() => router.currentRoute.value.name.split('.'))
+const pageTitleKey = computed(() => router.currentRoute.value.meta.title)
+const { perPage, sortBy, properties } = useTaskSettings(pageName.value[1])
+const { t } = useI18n()
+const title = computed(() => {
+  const page = t(pageTitleKey.value)
+
+  return t(`task.settingTitle`, { page })
+})
 </script>
 
 <template>
-  <page-settings title="Page settings" :hide="hide" :visible="visible" :placement="placement">
+  <page-settings :title="title" :hide="hide" :visible="visible" :placement="placement">
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"
