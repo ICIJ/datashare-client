@@ -24,7 +24,7 @@ defineProps({
     type: Boolean
   },
   perPage: {
-    type: Number,
+    type: [Number, String],
     default: 25
   },
   totalRows: {
@@ -52,7 +52,7 @@ defineProps({
     </slot>
     <slot name="pagination">
       <div v-if="paginable" class="page-toolbar__pagination">
-        <tiny-pagination v-model="page" :row="pageRow" :total-rows="totalRows" :per-page="perPage" />
+        <tiny-pagination v-model="page" :row="pageRow" :total-rows="totalRows" :per-page="Number(perPage)" />
       </div>
     </slot>
     <slot name="search">
