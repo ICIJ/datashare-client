@@ -15,7 +15,7 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
     apiInstance: {
       ...apiInstance,
       getUser: vi.fn(),
-      addUserHistoryEvent: vi.fn(),
+      addHistoryEvent: vi.fn(),
       getRecommendationsByDocuments: vi.fn(),
       getTags: vi.fn(),
       elasticsearch: {
@@ -147,6 +147,6 @@ describe('DocumentView.vue', () => {
 
     await flushPromises()
 
-    expect(api.addUserHistoryEvent).toBeCalledTimes(1)
+    expect(api.addHistoryEvent).toBeCalledTimes(1)
   })
 })
