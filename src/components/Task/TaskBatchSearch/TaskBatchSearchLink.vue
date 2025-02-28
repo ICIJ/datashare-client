@@ -9,7 +9,7 @@ function getRecord(key, defaultValue = undefined) {
 }
 const to = computed(() => {
   return {
-    name: 'task.batch-search.view.results',
+    name: 'task.batch-search.view',
     params: { uuid: getRecord('uuid'), indices: getRecord('projects').join(',') }
   }
 })

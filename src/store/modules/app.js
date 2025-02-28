@@ -64,20 +64,16 @@ export const useAppStore = defineStore(
             'progress'
           ]
         },
-        'batch-search-detail': {
+        'batch-search-queries': {
           orderBy: ['name', 'desc'],
           perPage: '10',
-          properties: [
-            'state',
-            'privacy',
-            'name',
-            'queries',
-            'documents',
-            'projects',
-            'author',
-            'createdAt',
-            'progress'
-          ]
+          properties: ['query', 'nbHits']
+        },
+        'batch-search-queries-results': {
+          orderBy: ['name', 'desc'],
+          perPage: '10',
+          contentType: [],
+          properties: ['rank', 'documentName', 'contentLength', 'contentType', 'project']
         },
         taskboard: {},
         documentView: {

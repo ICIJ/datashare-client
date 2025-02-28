@@ -1140,6 +1140,25 @@
       "new": {
         "title":"Run a new batch search"
       }
+    },
+    "batch-search-queries": {
+      "list": {
+        "properties": {
+          "query": "Query",
+          "nbHits":"Hits"
+        }
+      }
+    },
+    "batch-search-queries-results": {
+      "list": {
+        "properties": {
+          "rank": "Hit rank",
+          "documentName":"Document",
+          "contentLength": "Content length",
+          "contentType":"Content type",
+          "project": "Project"
+        }
+      }
     }
   },
   "batchSearch": {
