@@ -106,15 +106,12 @@ const empty = computed(() => hits.value.length === 0)
 <template>
   <page-container fluid deck class="task-batch-search-query-list">
     <page-header>
-
       <template #breadcrumb>
         <navigation-breadcrumb-link route-name="task" />
         <navigation-breadcrumb-link route-name="task.batch-search.list" />
         <navigation-breadcrumb-link route-name="task.batch-search.view" />
         <navigation-breadcrumb-link route-name="task.batch-search.view.results" />
-        <navigation-breadcrumb-entry>
-          "{{ query }}"
-        </navigation-breadcrumb-entry>
+        <navigation-breadcrumb-entry> "{{ query }}" </navigation-breadcrumb-entry>
       </template>
     </page-header>
 
