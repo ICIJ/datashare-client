@@ -2,10 +2,10 @@ import { computed, inject, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { useModalController } from 'bootstrap-vue-next'
 
-import { useCore } from '@/composables/core'
 import { useConfirmModal } from '@/composables/confirm'
 import SearchSavingModal from '@/components/Search/SearchSavingModal'
 import { useSearchStore } from '@/store/modules'
+import { useHistoryEvents } from '@/composables/history-events'
 
 export function useSearchSavingModal() {
   const modalController = useModalController()
@@ -32,12 +32,12 @@ export function useSearchSavingModal() {
 
 export function useRemoveSavedSearchModal() {
   const modalController = useModalController()
-  const { remove } = useSearchSaving()
+  const { remove } = useHistoryEvents('SEARCH')
   const { confirm: showConfirmModal } = useConfirmModal()
 
   async function show({ id }, props) {
     if (await showConfirmModal(props)) {
-      return remove(id)
+      return remove({ id })
     }
   }
 
@@ -50,8 +50,7 @@ export function useRemoveSavedSearchModal() {
 
 export function useSearchSaving() {
   const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
-  const indices = computed(() => searchStore.indices)
-  const { core } = useCore()
+  const { save: saveSearchEvent, removeAll: removeAllSearchEvents } = useHistoryEvents('SEARCH')
   const { resolve } = useRouter()
 
   const searchRoute = computed(() => {
@@ -62,17 +61,17 @@ export function useSearchSaving() {
   })
 
   function save({ name, id = null }) {
-    if (id) {
-      return core.api.renameHistoryEvent(id, name)
-    }
-    return core.api.addHistoryEvent(indices.value, 'SEARCH', name, searchRoute.value.fullPath)
+    const projectIds = searchStore.indices
+    const uri = searchRoute.value.fullPath
+    const type = 'SEARCH'
+    return saveSearchEvent({ id, projectIds, type, name, uri })
   }
 
-  function remove(id) {
-    return core.api.deleteHistoryEvent(id)
+  function removeAll() {
+    return removeAllSearchEvents()
   }
 
-  return { remove, save }
+  return { save, removeAll }
 }
 
 export default useSearchSaving
