@@ -264,7 +264,8 @@
       "creationDate": "Creation date",
       "name": "Name of the saved search",
       "author": "Author"
-    }
+    },
+    "empty": "No saved searches found."
   },
   "searchSavedEntriesRowActions": {
     "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?"
