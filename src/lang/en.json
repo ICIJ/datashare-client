@@ -257,7 +257,8 @@
     "submitLabel": "Search"
   },
   "searchSavedList": {
-    "title": "Saved searches"
+    "title": "Saved searches",
+    "allRemoved": "All saved searches have been removed."
   },
   "searchSavedEntries": {
     "fields": {
@@ -271,7 +272,9 @@
     "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?"
   },
   "searchVisitedDocumentsList": {
-    "title": "Visited documents"
+    "title": "Visited documents",
+    "empty": "No visited documents found.",
+    "allRemoved": "History of all visited documents have been removed."
   },
   "pagination": {
     "firstPage": "Go to first page",
