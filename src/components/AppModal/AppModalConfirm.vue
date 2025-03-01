@@ -25,7 +25,9 @@ const attrs = useAttrs()
     size="410px"
   >
     <slot>
-      {{ description || $t('appModalConfirm.description') }}
+      <div class="text-center text-secondary">
+        {{ description || $t('appModalConfirm.description') }}
+      </div>
     </slot>
   </app-modal>
 </template>
