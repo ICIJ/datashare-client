@@ -3,7 +3,7 @@ import { useCore } from '@/composables/core'
 export const useHistoryEvents = (type) => {
   const { core } = useCore()
 
-  function save({ id = null, projectIds, name, uri, }) {
+  function save({ id = null, projectIds, name, uri }) {
     if (id) {
       return rename({ id, name })
     }
