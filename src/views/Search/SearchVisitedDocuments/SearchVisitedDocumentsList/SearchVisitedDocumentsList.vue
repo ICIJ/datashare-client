@@ -1,12 +1,17 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+import ButtonClearHistory from '@/components/Button/ButtonClearHistory'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import SearchVisitedDocumentsEntries from '@/components/Search/SearchVisitedDocumentsEntries/SearchVisitedDocumentsEntries'
+import { useConfirmModal } from '@/composables/confirm'
+import { useCore } from '@/composables/core'
+import { useHistoryEvents } from '@/composables/history-events'
 import { useUrlPageParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useAppStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -17,6 +22,10 @@ const pagination = ref({})
 const appStore = useAppStore()
 const page = useUrlPageParam()
 const route = useRoute()
+const { t } = useI18n()
+const { toast } = useCore()
+const { confirm: showConfirmModal } = useConfirmModal()
+const { removeAll } = useHistoryEvents('DOCUMENT')
 const view = 'searchVisitedDocumentsList'
 
 const perPage = useUrlParamWithStore('perPage', {
@@ -53,9 +62,17 @@ const order = computed({
 const orderDesc = computed(() => order.value === 'desc')
 
 async function fetch() {
-  const result = await api.getUserHistory('document', offset.value, perPage.value, sort.value, orderDesc.value)
+  const result = await api.getHistoryEvents('DOCUMENT', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result.items.map((item) => ({ ...item }))
   pagination.value = result.pagination
+}
+
+async function showRemoveAllModal() {
+  if (await showConfirmModal()) {
+    await removeAll()
+    await fetch()
+    toast.success(t('searchVisitedDocumentsList.allRemoved'))
+  }
 }
 
 watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
@@ -69,6 +86,9 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
           <navigation-breadcrumb-link route-name="search" />
           <navigation-breadcrumb-link route-name="search.visited-documents.list" no-caret />
         </template>
+        <template #actions>
+          <button-clear-history @click="showRemoveAllModal" />
+        </template>
       </page-header>
       <page-toolbar
         :key="pagination?.total"
@@ -80,6 +100,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     </page-container>
     <page-container fluid>
       <search-visited-documents-entries v-if="events.length" :events="events" />
+      <div v-else class="text-center text-secondary">{{ t('searchVisitedDocumentsList.empty') }}</div>
     </page-container>
   </div>
 </template>

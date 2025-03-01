@@ -184,7 +184,6 @@ export class Api {
     }
     return this.sendAction('/api/batch/search?' + searchParams, { method: Method.GET })
   }
-
   getBatchSearchResults(
     batchId,
     from = 0,
