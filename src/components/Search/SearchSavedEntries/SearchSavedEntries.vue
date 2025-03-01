@@ -83,5 +83,8 @@ function searchParamsQuery(uri) {
     <template #row-details="{ item }">
       <search-saved-entries-row-details :event="item" />
     </template>
+    <template #empty>
+      {{ $t('searchSavedEntries.empty') }}
+    </template>
   </page-table-generic>
 </template>
