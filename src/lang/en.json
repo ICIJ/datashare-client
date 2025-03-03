@@ -868,7 +868,7 @@
     "savedSearches": "Saved searches",
     "tasks": "Tasks",
     "analyseAction": "Add documents",
-    "taskboard": "Task board",
+    "taskboard": "Taskboard",
     "batchSearches": "Batch searches",
     "batchSearchesAction": "Add batch searches",
     "batchDownloads": "Batch downloads",
@@ -909,7 +909,7 @@
       "state": "State"
     },
     "taskboard": {
-      "title": "Task board",
+      "title": "Taskboard",
       "entries": {
         "seeAll": "See all",
         "batch-search": {
