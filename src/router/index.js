@@ -531,7 +531,7 @@ export const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/Login'),
+    component: () => import('@/views/Login/Login'),
     meta: {
       skipsAuth: true,
       title: 'Login'

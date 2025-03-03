@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import Login from '@/views/Login'
+import Login from '@/views/Login/Login'
 import I18nLocaleDropdown from '@/components/I18n/I18nLocaleDropdown'
 
 describe('Login.vue', () => {
