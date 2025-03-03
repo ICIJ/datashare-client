@@ -1133,18 +1133,18 @@
     },
     "batch-search-queries": {
       "list": {
-        "title": "Batch search queries",
+        "title": "Queries",
         "properties": {
           "query": "Query",
-          "nbHits":"Hits"
+          "nbHits":"Documents"
         }
       }
     },
-    "batch-search-queries-results": {
+    "batch-search-results": {
       "list": {
-        "title": "Batch search results",
+        "title": "UUID",
         "properties": {
-          "rank": "Hit rank",
+          "rank": "Result rank",
           "documentName":"Document",
           "contentLength": "Content length",
           "contentType":"Content type",

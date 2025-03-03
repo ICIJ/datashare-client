@@ -15,14 +15,15 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDocumentLink from '@/components/Display/DisplayDocumentLink'
+import TaskBatchSearchQueryLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchQueryLink'
 const props = defineProps({
   uuid: { type: String, required: true },
   indices: { type: [String, Object], required: true },
-  query: { type: String, required: true }
+  query: { type: String, default: null }
 })
 
 const appStore = useAppStore()
-const settingView = 'batch-search-queries-results'
+const settingView = 'batch-search-results'
 const searchQuery = useUrlParam('q', '')
 const page = useUrlParam('page', {
   transform: (value) => parseInt(value),
@@ -51,8 +52,18 @@ const contentType = useUrlParamsWithStore(['contentType'], {
   get: () => appStore.getSettings(settingView, 'contentType'),
   set: (value) => appStore.setSettings({ view: settingView, contentTypes: value.join(',') })
 })
-const settings = useTaskSettings(settingView)
+const { properties, propertiesModelValueOptions } = useTaskSettings(settingView)
 
+const fields = computed(() => {
+  // hide query column if there is a query in the url
+  const queryIndex = properties.value.modelValue.indexOf('query')
+  if (props.query === null && queryIndex < 0) {
+    properties.value.modelValue.unshift('query')
+  } else if (props.query !== null && queryIndex > -1) {
+    properties.value.modelValue.splice(queryIndex, 1)
+  }
+  return propertiesModelValueOptions.value
+})
 const { core } = useCore()
 const emptyHits = computed(() => ({
   items: [],
@@ -72,12 +83,12 @@ async function getBatchSearch(batchId) {
     batchSearch.value = null
   }
 }
-
+const queries = props.query ? [props.query] : []
 const payload = {
   batchId: props.uuid,
   from: page.value,
   size: perPage.value,
-  queries: [props.query],
+  queries,
   queriesExcluded: false,
   sort: sort.value,
   order: order.value,
@@ -99,6 +110,9 @@ async function getBatchSearchResults() {
     hits.value = emptyHits.value
   }
 }
+const title = computed(() => {
+  return batchSearch.value?.name ?? props.uuid.split('-')[0]
+})
 
 const empty = computed(() => hits.value.length === 0)
 </script>
@@ -108,9 +122,9 @@ const empty = computed(() => hits.value.length === 0)
       <template #breadcrumb>
         <navigation-breadcrumb-link route-name="task" />
         <navigation-breadcrumb-link route-name="task.batch-search.list" />
-        <navigation-breadcrumb-link route-name="task.batch-search-queries" />
-        <navigation-breadcrumb-link route-name="task.batch-search-queries-results.list" />
-        <navigation-breadcrumb-entry> "{{ query }}" </navigation-breadcrumb-entry>
+        <navigation-breadcrumb-link route-name="task.batch-search-results.list" :title="title" />
+        <navigation-breadcrumb-link v-if="query" route-name="task.batch-search-queries.list" />
+        <navigation-breadcrumb-link v-if="query" route-name="task.batch-search-queries-results.list" :title="query" />
       </template>
     </page-header>
 
@@ -122,13 +136,12 @@ const empty = computed(() => hits.value.length === 0)
       searchable
       paginable
     />
-    <page-table-generic
-      v-if="!empty"
-      :items="hits.items"
-      :fields="settings.propertiesModelValueOptions.value"
-      :sort="sort"
-      :order="order"
-    >
+    <page-table-generic v-if="!empty" :items="hits.items" :fields="fields" :sort="sort" :order="order">
+      <template #cell(query)="{ item }">
+        <task-batch-search-query-link :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">{{
+          item.query
+        }}</task-batch-search-query-link></template
+      >
       <template #cell(rank)="{ item }"> {{ item.documentNumber }}</template>
       <template #cell(documentName)="{ item }"> <display-document-link :value="item" /></template>
       <template #cell(contentLength)="{ item }"><display-content-length :value="item.contentLength" /> </template>

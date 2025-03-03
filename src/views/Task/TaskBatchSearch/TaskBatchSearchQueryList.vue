@@ -11,6 +11,7 @@ import { useAppStore } from '@/store/modules'
 import { useCore } from '@/composables/core'
 import TaskBatchSearchQueryLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchQueryLink'
 import { useTaskSettings } from '@/composables/task-settings'
+import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 const props = defineProps({
   uuid: { type: String, required: true },
   indices: { type: [String, Object], required: true }
@@ -46,6 +47,7 @@ const order = computed({
 const { core } = useCore()
 const queries = ref([])
 const batchSearch = ref(null)
+const nbQueriesWithoutResults = ref(0)
 onBeforeMount(() => {
   getBatchSearchQueries(props.uuid)
   getBatchSearch(props.uuid)
@@ -53,7 +55,7 @@ onBeforeMount(() => {
 
 async function getBatchSearch(batchId) {
   try {
-    batchSearch.value = await core.api.getBatchSearch(batchId)
+    batchSearch.value = { ...(await core.api.getBatchSearch(batchId)), nbQueriesWithoutResults }
   } catch (error) {
     batchSearch.value = null
   }
@@ -62,15 +64,31 @@ async function getBatchSearchQueries(batchId) {
   try {
     const queriesObjects = await core.api.getBatchSearchQueries(batchId)
     queries.value = Object.keys(queriesObjects).map((k) => ({ query: k, nbHits: queriesObjects[k] }))
+    nbQueriesWithoutResults.value = getNbQueriesWithoutResults()
   } catch (error) {
     queries.value = []
+    nbQueriesWithoutResults.value = 0
   }
 }
+function getNbQueriesWithoutResults() {
+  return queries.value.filter((q) => q.nbHits === 0).length
+}
+const title = computed(() => {
+  return batchSearch.value?.name ?? props.uuid.split('-')[0]
+})
 const empty = computed(() => queries.value.length === 0)
 </script>
 <template>
   <page-container fluid deck class="task-batch-search-query-list">
-    <page-header />
+    <page-header>
+      <template #breadcrumb>
+        <navigation-breadcrumb-link route-name="task" />
+        <navigation-breadcrumb-link route-name="task.batch-search.list" />
+        <navigation-breadcrumb-link route-name="task.batch-search-results.list" :title="title" />
+        <navigation-breadcrumb-link route-name="task.batch-search-queries.list" />
+        <navigation-breadcrumb-link route-name="task.batch-search-queries-results.list" />
+      </template>
+    </page-header>
     <b-row fluid class="gap-3">
       <b-col cols="8">
         <page-toolbar

@@ -46,7 +46,15 @@ const nbDocumentsItem = computed(() => {
   }
 })
 
-const downloadDocumentsLabel = t('batchSearchCard.downloadResultsLabel', { n: props.nbResults })
+const seeAllDocumentsLabel = computed(() => t('batchSearchCard.seeAllDocuments'))
+
+const indices = props.projects.join(',')
+const to = {
+  name: 'task.batch-search-results.list',
+  params: { indices, uuid: props.uuid }
+}
+
+const downloadDocumentsLabel = computed(() => t('batchSearchCard.downloadResultsLabel'))
 const noDocuments = computed(() => {
   return props.nbResults === 0
 })
@@ -55,7 +63,7 @@ const downloadDocuments = () => {
   emit('downloadDocuments')
 }
 
-const downloadQueriesWithoutResultsLabel = t('batchSearchCard.downloadQueriesWithoutResultsLabel')
+const downloadQueriesWithoutResultsLabel = computed(() => t('batchSearchCard.downloadQueriesWithoutResultsLabel'))
 
 const downloadQueriesWithoutResults = () => {
   emit('downloadQueriesWithoutResults')
@@ -184,6 +192,16 @@ const projectsItem = computed(() => {
       </li>
       <li>
         <button-icon
+          icon-left="list"
+          icon-right="caret-right"
+          variant="action"
+          class="batch-search-card-actions__see-all flex-shrink-1"
+          :to="to"
+          >{{ seeAllDocumentsLabel }}</button-icon
+        >
+      </li>
+      <li>
+        <button-icon
           :disabled="noDocuments"
           icon-left="download-simple"
           variant="outline-primary"
@@ -228,7 +246,7 @@ const projectsItem = computed(() => {
       </li>
       <li>
         <batch-search-card-details-entry :label="authorItem.label" :icon="authorItem.icon">
-          <display-user :value="authorItem.value" />
+          <display-user hide-avatar :value="authorItem.value" />
         </batch-search-card-details-entry>
       </li>
       <li>
