@@ -12,6 +12,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 
 const { breakpointDown } = useBreakpoints()
 const router = useRouter()
@@ -69,19 +70,21 @@ const promptProjectDeletion = async () => {
       <h3 class="project-jumbotron__header__title">
         <project-label :project="project" :hide-thumbnail="!compact" />
       </h3>
-      <button-icon
-        class="ms-auto"
-        icon-left="trash"
-        variant="outline-secondary"
-        :label="$t('projectJumbotron.delete')"
-        @click="promptProjectDeletion"
-      />
-      <button-icon
-        icon-left="pencil-simple"
-        variant="outline-secondary"
-        :to="toEdit"
-        :label="$t('projectJumbotron.edit')"
-      />
+      <mode-local-only>
+        <button-icon
+          class="ms-auto"
+          icon-left="trash"
+          variant="outline-secondary"
+          :label="$t('projectJumbotron.delete')"
+          @click="promptProjectDeletion"
+        />
+        <button-icon
+          icon-left="pencil-simple"
+          variant="outline-secondary"
+          :to="toEdit"
+          :label="$t('projectJumbotron.edit')"
+        />
+      </mode-local-only>
       <project-jumbotron-pin v-model:pinned="pinned" />
     </div>
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
