@@ -876,10 +876,9 @@
     "documents": "Documents",
     "entities": "Entities"
   },
-  "footer": {
-    "homedir": "Move files to this directory in order to analyze them",
-    "clientVersion": "Client",
-    "serverVersion": "Server"
+  "versionNumber": {
+    "client": "Client",
+    "server": "Server"
   },
   "login": {
     "welcome": "Welcome to Datashare",
