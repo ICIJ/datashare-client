@@ -97,7 +97,12 @@ const noAnalysis = computed(() => {
         <app-sidebar-close v-if="!compact" v-model:active="closed" />
       </div>
       <div class="py-4 d-flex flex-column gap-3">
-        <app-sidebar-section :title="t('appSidebar.projects')" :icon="PhCirclesThreePlus" :to="{ name: 'project.list' }" :compact="compact">
+        <app-sidebar-section
+          :title="t('appSidebar.projects')"
+          :icon="PhCirclesThreePlus"
+          :to="{ name: 'project.list' }"
+          :compact="compact"
+        >
           <app-sidebar-section-entry
             :icon="PhDotsNine"
             exact-match
