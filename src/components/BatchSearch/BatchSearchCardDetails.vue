@@ -46,17 +46,10 @@ const nbDocumentsItem = computed(() => {
   }
 })
 
-const seeAllDocumentsLabel = t('batchSearchCard.seeAllDocuments')
 const downloadDocumentsLabel = t('batchSearchCard.downloadResultsLabel', { n: props.nbResults })
 const noDocuments = computed(() => {
   return props.nbResults === 0
 })
-
-const indices = computed(() => {
-  return props.projects.join(',')
-})
-
-const to = { name: 'task.batch-search.view.results', params: { indices, uuid: props.uuid, query: 'a' } }
 
 const downloadDocuments = () => {
   emit('downloadDocuments')
@@ -188,16 +181,6 @@ const projectsItem = computed(() => {
           :icon="nbDocumentsItem.icon"
           :value="nbDocumentsItem.value"
         />
-      </li>
-      <li>
-        <button-icon
-          icon-left="list"
-          icon-right="caret-right"
-          variant="action"
-          class="batch-search-card-actions__see-all flex-shrink-1"
-          :to="to"
-          >{{ seeAllDocumentsLabel }}</button-icon
-        >
       </li>
       <li>
         <button-icon
