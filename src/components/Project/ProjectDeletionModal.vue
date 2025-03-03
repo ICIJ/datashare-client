@@ -31,8 +31,8 @@ const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = usePr
 
 async function confirmDeletion() {
   try {
-    await core.api.deleteProject(props.project.name)
-    await core.deleteProject(props.project.name)
+    await core.api.removeProject(props.project.name)
+    await core.removeProject(props.project.name)
     toast.success(t('projectDeletionModal.notify.succeed'))
     emit('success')
   } catch (error) {

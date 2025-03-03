@@ -9,7 +9,7 @@ vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
       updateProject: vi.fn(),
-      deleteProject: vi.fn()
+      removeProject: vi.fn()
     }
   }
 })

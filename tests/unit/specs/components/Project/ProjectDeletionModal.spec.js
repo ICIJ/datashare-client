@@ -8,7 +8,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
-      deleteProject: vi.fn(),
+      removeProject: vi.fn(),
       getRecommendationsByProject: vi.fn(),
       elasticsearch: {
         countDocuments: vi.fn().mockResolvedValue(50),
@@ -37,7 +37,7 @@ describe('ProjectDeletionModal.vue', () => {
     const wrapper = shallowMount(ProjectDeletionModal, { global: { plugins }, props })
     expect(wrapper.vm.$core.projects).toHaveLength(1)
     await wrapper.trigger('ok')
-    expect(api.deleteProject).toBeCalledWith(project.name)
+    expect(api.removeProject).toBeCalledWith(project.name)
     expect(wrapper.vm.$core.projects).toHaveLength(0)
   })
 })
