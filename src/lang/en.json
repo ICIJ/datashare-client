@@ -1144,6 +1144,7 @@
       "list": {
         "title": "UUID",
         "properties": {
+          "query": "Query",
           "rank": "Result rank",
           "documentName":"Document",
           "contentLength": "Content length",

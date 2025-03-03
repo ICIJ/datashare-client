@@ -394,7 +394,7 @@ export default {
       contentTypes = contentTypes ?? null
 
       return {
-        name: 'task.batch-search-queries-results.list',
+        name: 'task.batch-search-results.list',
         query: this.removeEmptySearchParams({
           page: page.toString(),
           queries,
