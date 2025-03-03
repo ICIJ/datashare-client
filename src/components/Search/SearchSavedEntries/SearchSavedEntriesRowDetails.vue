@@ -43,7 +43,7 @@ onUnmounted(eventSearchStore.$dispose)
 </script>
 
 <template>
-  <search-breadcrumb-form-list>
+  <search-breadcrumb-form-list no-label class="ps-5">
     <search-breadcrumb-form-entry v-for="(entry, i) in eventEntries" :key="i" v-bind="entry" no-x-icon />
   </search-breadcrumb-form-list>
 </template>
