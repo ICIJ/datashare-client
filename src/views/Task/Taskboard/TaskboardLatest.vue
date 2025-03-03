@@ -63,15 +63,17 @@ const allFields = ref([
     icon: 'user'
   }
 ])
+
 const fields = computed(() => allFields.value.filter((p) => isServer.value || p.name !== 'author'))
 
-const displayedTasks = computed(() => {
-  return pollingTasks.value?.slice(0, nbTasks.value)
-})
 const more = 3
+
 function showMore() {
   nbTasks.value += more
 }
+
+const displayedTasks = computed(() => pollingTasks.value?.slice(0, nbTasks.value))
+
 const hideShowMore = computed(() => {
   return !pollingTasks.value?.length || pollingTasks.value.length <= nbTasks.value
 })
@@ -82,6 +84,7 @@ function getAuthor(item) {
   }
   return item.args?.user.id
 }
+
 function getProjects(item) {
   switch (item.name) {
     case TASK_NAME.BATCH_DOWNLOAD:
@@ -113,6 +116,7 @@ function getTitle(item) {
       return getHumanTaskName(item.name)
   }
 }
+
 function getTaskLinkTitle(item) {
   switch (item.name) {
     case TASK_NAME.BATCH_SEARCH:
@@ -129,6 +133,24 @@ function getTaskLinkTitle(item) {
       return 'Unknown task'
   }
 }
+
+function getTaskLinkRoute(item) {
+  switch (item.name) {
+    case TASK_NAME.BATCH_SEARCH:
+      return { name: 'task.batch-search.list' }
+    case TASK_NAME.BATCH_DOWNLOAD:
+      return { name: 'task.batch-download.list' }
+    case TASK_NAME.INDEX:
+    case TASK_NAME.SCAN:
+      return { name: 'task.documents.list' }
+    case TASK_NAME.ENQUEUE_FROM_INDEX:
+    case TASK_NAME.EXTRACT_NLP:
+      return { name: 'task.entities.list' }
+    default:
+      return null
+  }
+}
+
 function getTaskIcon(item) {
   return TASK_NAME_ICON[item.name]
 }
@@ -136,31 +158,44 @@ function getTaskIcon(item) {
 
 <template>
   <b-card-body no-border class="task-all__latest no-border">
-    <b-card-title class="pb-4"> <phosphor-icon name="rocket-launch" /> Latest tasks </b-card-title>
+    <b-card-title class="pb-4">
+      <phosphor-icon name="rocket-launch" />
+      Latest tasks
+    </b-card-title>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
       <page-table-generic :items="displayedTasks" :fields="fields">
-        <template #cell(name)="{ item }"
-          ><button-icon
-            square
-            size="sm"
+        <template #cell(name)="{ item }">
+          <button-icon
             :icon-left="getTaskIcon(item)"
-            variant="outline-tertiary"
             :label="getTaskLinkTitle(item)"
+            :to="getTaskLinkRoute(item)"
             hide-label
-        /></template>
-        <template #cell(state)="{ item }"><display-status size="sm" :value="item.state" /></template>
+            size="sm"
+            square
+            variant="outline-tertiary"
+          />
+        </template>
+        <template #cell(state)="{ item }">
+          <display-status size="sm" :value="item.state" />
+        </template>
         <template #cell(title)="{ item }">
           <task-batch-download-link v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
           <task-batch-search-link v-else-if="item.name === TASK_NAME.BATCH_SEARCH" :item="item" />
           <span v-else> {{ getTitle(item) }}</span>
         </template>
-        <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
-        <template #cell(author)="{ item }"><display-user :value="getAuthor(item)" /></template>
+        <template #cell(createdAt)="{ item }">
+          <display-datetime-from-now :value="item.createdAt" />
+        </template>
+        <template #cell(author)="{ item }">
+          <display-user :value="getAuthor(item)" />
+        </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getProjects(item)" />
         </template>
-        <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template
-      ></page-table-generic>
+        <template #cell(progress)="{ item }">
+          <display-progress :value="item.progress" />
+        </template>
+      </page-table-generic>
       <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto" @click="showMore">Show more</b-button>
     </b-overlay>
   </b-card-body>
