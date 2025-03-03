@@ -4,6 +4,17 @@ import { setCookie, removeCookie } from 'tiny-cookie'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Error from '@/views/Error/Error'
 
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getVersion: vi.fn().mockResolvedValue({
+        'git.tag': 'X.Y.Z',
+        'git.commit.id.abbrev': 'sha1_abbrev'
+      })
+    }
+  }
+})
+
 describe('Error.vue local mode', () => {
   let plugins
   let core
