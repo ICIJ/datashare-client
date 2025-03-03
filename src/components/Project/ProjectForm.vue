@@ -123,6 +123,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
           type="text"
           :placeholder="$t('projectForm.form.name.placeholder')"
           required
+          disabled
           readonly
         />
       </form-fieldset>
