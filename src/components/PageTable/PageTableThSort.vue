@@ -23,7 +23,7 @@ const classList = computed(() => {
 })
 
 const icon = computed(() => {
-  return props.order === 'desc' ? PhSortDescending : PhSortAscending
+  return props.order === 'desc' ? PhSortAscending : PhSortDescending
 })
 
 const toggleOrder = () => {
