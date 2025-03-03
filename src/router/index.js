@@ -540,7 +540,7 @@ export const routes = [
   {
     name: 'error',
     path: '/:pathMatch(.*)*',
-    component: () => import('@/views/Error'),
+    component: () => import('@/views/Error/Error'),
     props: true,
     meta: {
       skipsAuth: true,
