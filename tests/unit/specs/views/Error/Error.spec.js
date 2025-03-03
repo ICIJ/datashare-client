@@ -1,9 +1,7 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
-import Auth from '@/api/resources/Auth'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { getMode } from '@/mode'
 import Error from '@/views/Error/Error'
 
 describe('Error.vue local mode', () => {
