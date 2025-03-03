@@ -1,5 +1,6 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
+import { isNumber } from 'lodash'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -21,7 +22,7 @@ const humanDocumentsCount = computed(() => {
 
 <template>
   <div
-    v-if="project.documentsCount"
+    v-if="isNumber(project.documentsCount)"
     v-b-tooltip.body
     class="project-card-documents-count text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap"
     :title="$n(project.documentsCount)"
