@@ -1,5 +1,4 @@
 import { MODE_NAME } from '@/mode'
-import { icon } from '@fortawesome/fontawesome-svg-core'
 
 export const routes = [
   {
@@ -142,7 +141,7 @@ export const routes = [
           {
             name: 'task.taskboard',
             path: 'taskboard',
-            meta: { 
+            meta: {
               title: 'task.taskboard.title',
               icon: 'dots-nine',
               settings: false
@@ -152,7 +151,7 @@ export const routes = [
           {
             name: 'task.entities',
             path: 'entities',
-            meta: { 
+            meta: {
               title: 'task.entities.title',
               icon: 'users-three'
             },
@@ -209,7 +208,7 @@ export const routes = [
           {
             name: 'task.batch-download',
             path: 'batch-download',
-            meta: { 
+            meta: {
               title: 'task.batch-download.title',
               icon: 'download-simple'
             },
@@ -227,7 +226,7 @@ export const routes = [
           {
             name: 'task.batch-search',
             path: 'batch-search',
-            meta: { 
+            meta: {
               title: 'task.batch-search.title',
               icon: 'list-magnifying-glass'
             },
