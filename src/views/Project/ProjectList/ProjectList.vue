@@ -55,7 +55,7 @@ onBeforeMount(fetchMaxExtractionDateByProject)
 
 const extendedProjects = computed(() => {
   return core.projects.map((project) => {
-    const documentsCount = documentsCountByProject.value?.[project.name]
+    const documentsCount = documentsCountByProject.value?.[project.name] ?? 0
     const updateDate = maxExtractionDateByProject.value?.[project.name]
     return { ...project, documentsCount, updateDate }
   })
