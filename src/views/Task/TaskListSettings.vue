@@ -31,7 +31,6 @@ watch(
   (newRoute) => {
     pageName.value = newRoute.name.split('.')
     const taskSettings = useTaskSettings(pageName.value[1])
-    console.log(taskSettings.perPage.value)
     perPage.value = taskSettings.perPage.value
     sortBy.value = taskSettings.sortBy.value
 
