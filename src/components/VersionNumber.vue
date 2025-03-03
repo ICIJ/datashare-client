@@ -6,7 +6,7 @@
         <div class="d-flex align-items-baseline version-number__tooltip__client py-2">
           <div class="flex-grow-1 pe-5">
             <phosphor-icon name="desktop" class="me-1" />
-            {{ $t('footer.clientVersion') }}
+            {{ $t('versionNumber.client') }}
           </div>
           <div class="font-monospace version-number__tooltip__client__value">
             {{ shortClientHash }}
@@ -15,7 +15,7 @@
         <div class="d-flex align-items-baseline version-number__tooltip__server py-2">
           <div class="flex-grow-1 pe-5">
             <phosphor-icon name="hard-drives" class="me-1" />
-            {{ $t('footer.serverVersion') }}
+            {{ $t('versionNumber.server') }}
           </div>
           <div class="font-monospace version-number__tooltip__server__value">
             {{ serverHash }}
