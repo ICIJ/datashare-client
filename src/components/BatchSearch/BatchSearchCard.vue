@@ -23,7 +23,21 @@ const descriptionLabel = t('batchSearchCardDetails.description')
       :nb-results="batchSearch.nbResults"
       projects="batchSearch.projects"
     />
-
-    <batch-search-card-details v-bind="batchSearch" />
+    <batch-search-card-details
+      :uuid="batchSearch.uuid"
+      :name="batchSearch.name"
+      :nb-results="batchSearch.nbResults"
+      :nb-queries-without-results="batchSearch.nbQueriesWithoutResults"
+      :nb-queries="batchSearch.nbQueries"
+      :state="batchSearch.state"
+      :date="batchSearch.date"
+      :author="batchSearch.user.id"
+      :visibility="batchSearch.published"
+      :phrase-match="batchSearch.phraseMatches"
+      :proximity="batchSearch.fuzziness"
+      :fuzziness="batchSearch.fuzziness"
+      :projects="batchSearch.projects"
+      :description="batchSearch.description"
+    />
   </card-panel>
 </template>

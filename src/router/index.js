@@ -258,7 +258,16 @@ export const routes = [
               {
                 path: ':indices/:uuid',
                 props: true,
-                name: 'task.batch-search-queries',
+                name: 'task.batch-search-results.list',
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchResultList'),
+                meta: {
+                  title: 'task.batch-search-results.list.title'
+                }
+              },
+              {
+                path: ':indices/:uuid/queries',
+                props: true,
+                name: 'task.batch-search-queries.list',
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryList'),
                 meta: {
                   title: 'task.batch-search-queries.list.title'
@@ -266,11 +275,11 @@ export const routes = [
               },
               {
                 name: 'task.batch-search-queries-results.list',
-                path: ':indices/:uuid/:query',
+                path: ':indices/:uuid/queries/:query',
                 props: true,
-                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryResultList'),
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchResultList'),
                 meta: {
-                  title: 'task.batch-search-queries-results.list.title'
+                  title: 'task.batch-search-results.list.title'
                 }
               }
             ]
