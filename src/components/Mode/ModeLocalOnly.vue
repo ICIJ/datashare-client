@@ -1,11 +1,12 @@
 <script setup>
 import { computed } from 'vue'
+
 import { useMode } from '@/composables/mode'
 
 const { strict } = defineProps({
   /**
    * Whether the component should be visible only in local mode and excluding embedded mode.
-   * 
+   *
    * @default false
    */
   strict: {
