@@ -1,10 +1,17 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
+
+defineProps({
+  noLabel: {
+    type: Boolean,
+    default: false
+  }
+})
 </script>
 
 <template>
   <div class="search-breadcrumb-form-list">
-    <div class="fw-medium text-action-emphasis text-nowrap me-2 mb-2">
+    <div class="fw-medium text-action-emphasis text-nowrap me-2 mb-2" v-if="!noLabel">
       <phosphor-icon :name="PhPath" />
       {{ $t('searchBreadcrumbFormList.label') }}
     </div>
