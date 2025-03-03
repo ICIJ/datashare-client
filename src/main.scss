@@ -48,11 +48,8 @@
   border-color: $input-hover-border-color;
 }
 
-html {
-  font-size: 1rem;
-}
-
 body {
+  font-size: 1rem;
   overflow: auto;
 
   // Disable overflow scrollbar when the sidebar is in full width and not closed
@@ -93,7 +90,7 @@ body {
 
     &__spinner {
       border-radius: $spacer;
-      display: flex;
+      display: inline-flex;
       height: 130px;
       margin-bottom: $spacer;
       overflow: hidden;
@@ -101,7 +98,7 @@ body {
       width: 130px;
 
       &:before {
-        animation: rotateLogo 4s linear infinite;
+        animation: rotateLogo 1s linear infinite;
         background-image: linear-gradient(#48C2FC, #48C2FC),
           linear-gradient($primary, $primary),
           linear-gradient(#48C2FC, #48C2FC),
