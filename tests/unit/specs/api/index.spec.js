@@ -134,8 +134,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to deleteAll', async () => {
-    json = await api.deleteAll()
+  it('should return backend response to removeProjects', async () => {
+    json = await api.removeProjects()
     expect(json).toEqual({})
   })
 
@@ -431,7 +431,7 @@ describe('Datashare backend client', () => {
 
   it('should return a backend response to deleteProject', async () => {
     const name = 'hello'
-    json = await api.deleteProject(name)
+    json = await api.removeProject(name)
     expect(json).toEqual({})
     expect(axios.request).toBeCalledWith({
       url: Api.getFullUrl('/api/project/hello'),
