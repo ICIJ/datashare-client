@@ -4,14 +4,15 @@ import { useI18n } from 'vue-i18n'
 
 import { useTaskHeader } from '@/composables/task-header'
 import { useTaskPolling } from '@/composables/task-polling'
+import DismissableAlert from '@/components/Dismissable/DismissableAlert'
+import EmptyState from '@/components/EmptyState/EmptyState'
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
+import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import TaskActions from '@/components/Task/TaskActions'
-import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
 import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
-import EmptyState from '@/components/EmptyState/EmptyState'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
 
 const props = defineProps({
   taskFilter: {
@@ -62,13 +63,16 @@ const order = computed({
       :search-placeholder="searchPlaceholder"
     >
       <template #end>
-        <task-actions
-          :has-done-tasks="hasDoneTasks"
-          :has-pending-tasks="hasPendingTasks"
-          @stop-pending="() => stopPendingTasks()"
-          @delete-done="() => deleteDoneTasks()"
-        /> </template
-    ></page-toolbar>
+        <mode-local-only>
+          <task-actions
+            :has-done-tasks="hasDoneTasks"
+            :has-pending-tasks="hasPendingTasks"
+            @stop-pending="() => stopPendingTasks()"
+            @delete-done="() => deleteDoneTasks()"
+          />
+        </mode-local-only>
+      </template>
+    </page-toolbar>
     <div>
       <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
         {{ t(`task.${pageName}.list.info`) }}
