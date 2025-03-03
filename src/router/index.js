@@ -1,4 +1,5 @@
 import { MODE_NAME } from '@/mode'
+import { icon } from '@fortawesome/fontawesome-svg-core'
 
 export const routes = [
   {
@@ -130,7 +131,8 @@ export const routes = [
           settings: () => import('@/views/Task/TaskListSettings')
         },
         meta: {
-          title: 'task.title'
+          title: 'task.title',
+          icon: 'rocket-launch'
         },
         children: [
           {
@@ -140,13 +142,20 @@ export const routes = [
           {
             name: 'task.taskboard',
             path: 'taskboard',
-            meta: { title: 'task.taskboard.title', noSettings: true },
+            meta: { 
+              title: 'task.taskboard.title',
+              icon: 'dots-nine',
+              noSettings: true 
+            },
             component: () => import('@/views/Task/Taskboard/Taskboard')
           },
           {
             name: 'task.entities',
             path: 'entities',
-            meta: { title: 'task.entities.title' },
+            meta: { 
+              title: 'task.entities.title',
+              icon: 'users-three'
+            },
             children: [
               {
                 name: 'task.entities.list',
@@ -162,7 +171,8 @@ export const routes = [
                 path: 'new',
                 component: () => import('@/views/Task/TaskEntities/TaskEntitiesNew'),
                 meta: {
-                  title: 'task.entities.new.title'
+                  title: 'task.entities.new.title',
+                  icon: 'plus'
                 }
               }
             ]
@@ -172,6 +182,7 @@ export const routes = [
             path: 'documents',
             meta: {
               title: 'task.documents.title',
+              icon: 'files',
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             },
             children: [
@@ -189,7 +200,8 @@ export const routes = [
                 component: () => import('@/views/Task/TaskDocuments/TaskDocumentsNew'),
                 props: ({ query }) => ({ projectName: query.projectName }),
                 meta: {
-                  title: 'task.documents.new.title'
+                  title: 'task.documents.new.title',
+                  icon: 'plus'
                 }
               }
             ]
@@ -197,7 +209,10 @@ export const routes = [
           {
             name: 'task.batch-download',
             path: 'batch-download',
-            meta: { title: 'task.batch-download.title' },
+            meta: { 
+              title: 'task.batch-download.title',
+              icon: 'download-simple'
+            },
             children: [
               {
                 name: 'task.batch-download.list',
@@ -212,14 +227,18 @@ export const routes = [
           {
             name: 'task.batch-search',
             path: 'batch-search',
-            meta: { title: 'task.batch-search.title' },
+            meta: { 
+              title: 'task.batch-search.title',
+              icon: 'list-magnifying-glass'
+            },
             children: [
               {
                 path: '',
                 name: 'task.batch-search.list',
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchList'),
                 meta: {
-                  breadcrumb: false
+                  breadcrumb: false,
+                  icon: 'dots-nine'
                 }
               },
               {
@@ -228,6 +247,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchNew'),
                 meta: {
                   title: 'newBatchSearch.title',
+                  icon: 'plus',
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -402,7 +422,8 @@ export const routes = [
         name: 'settings',
         path: '/settings',
         meta: {
-          title: 'settings.title'
+          title: 'settings.title',
+          icon: 'gear'
         },
         component: () => import('@/views/Settings/SettingsView/SettingsView'),
         children: [
