@@ -143,7 +143,11 @@
     "title": "Something's wrong here",
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
     "noProjects": "Your project list is empty. Please contact your administrator.",
-    "notFound": "Page not found."
+    "notFound": "Page not found.",
+    "logout": "Log out",
+    "faq": "FAQ",
+    "userGuides": "User guides",
+    "help": "Ask for help"
   },
   "searchResultsActions": {
     "deselectAll": "Unselect {count} documents",

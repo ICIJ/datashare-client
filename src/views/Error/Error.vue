@@ -1,9 +1,10 @@
 <script>
-import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import { Api } from '@/api'
+import ButtonIcon from '@/components/Button/ButtonIcon'
+import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import VersionNumber from '@/components/VersionNumber'
-import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
 /**
@@ -12,10 +13,11 @@ import settings from '@/utils/settings'
 export default {
   name: 'Error',
   components: {
-    FontAwesomeLayers,
+    ButtonIcon,
+    ModeServerOnly,
+    PhosphorIcon,
     VersionNumber
   },
-  mixins: [utils],
   props: {
     /**
      * An Error object or the error message directly.
@@ -67,8 +69,8 @@ export default {
     documentationLink() {
       return this.$config.get('documentationLink', settings.documentationLink)
     },
-    showHeader() {
-      return this.isServer && !!this.username
+    isAuthenticated() {
+      return !!this.username
     },
     logoutLink() {
       return Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
@@ -82,25 +84,11 @@ export default {
 
 <template>
   <div class="error d-flex flex-column">
-    <div v-if="showHeader" class="error__header p-3 text-end">
-      <a
-        v-b-tooltip.html
-        class="btn btn-outline-tertiary btn-sm"
-        :href="logoutLink"
-        :title="$t('menu.connectedAs', { username })"
-      >
-        <fa icon="right-from-bracket" fixed-width></fa>
-        {{ $t('menu.logout') }}
-      </a>
-    </div>
     <div class="flex-grow-1 d-flex align-items-center justify-content-center">
       <div class="error__container container">
         <h1 class="mb-3 error__container__heading">
           <span class="error__container__heading__code me-3">
-            <font-awesome-layers class="fa-sm error__container__heading__code__icon">
-              <fa icon="circle"></fa>
-              <fa icon="face-sad-tear" class="text-primary" transform="shrink-6"></fa>
-            </font-awesome-layers>
+            <phosphor-icon :name="PhSmileySad" class="text-primary" />
             <span class="px-2 error__container__heading__code__value">
               {{ code }}
             </span>
@@ -113,25 +101,33 @@ export default {
         <ul class="error__container__links list-inline text-capitalize">
           <li class="list-inline-item error__container__links__item">
             <a :href="faqLink" target="_blank">
-              <fa icon="question" fixed-width class="error__container__links__item__icon me-1"></fa>
-              {{ $t('menu.faq') }}
+              <phosphor-icon weight="duotone" :name="PhQuestion" class="error__container__links__item__icon me-1" />
+              {{ $t('error.faq') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="documentationLink" target="_blank">
-              <fa icon="book" fixed-width class="error__container__links__item__icon me-1"></fa>
-              {{ $t('menu.userGuides') }}
+              <phosphor-icon weight="duotone" :name="PhBook" class="error__container__links__item__icon me-1" />
+              {{ $t('error.userGuides') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="helpLink" target="_blank">
-              <fa icon="truck-medical" fixed-width class="error__container__links__item__icon me-1"></fa>
-              {{ $t('menu.help') }}
+              <phosphor-icon weight="duotone" :name="PhAmbulance" class="error__container__links__item__icon me-1" />
+              {{ $t('error.help') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
-            <version-number tooltip-placement="top" class="d-inline"></version-number>
+            <version-number tooltip-placement="top" class="d-inline" />
           </li>
+          <mode-server-only v-if="isAuthenticated" >
+            <li class="list-inline-item error__container__links__item error__container__links__item--logout">
+              <a :href="logoutLink" target="_blank">
+                <phosphor-icon weight="duotone" :name="PhSignOut" class="error__container__links__item__icon me-1" />
+                {{ $t('error.logout') }}
+              </a>
+            </li>
+          </mode-server-only>
         </ul>
       </div>
     </div>
