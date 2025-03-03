@@ -134,16 +134,8 @@ export const routes = [
         },
         children: [
           {
-            path: 'indexing',
-            redirect: {
-              name: 'task.documents.list'
-            }
-          },
-          {
-            path: 'analysis',
-            redirect: {
-              name: 'task.documents.list'
-            }
+            path: '',
+            redirect: '/tasks/taskboard'
           },
           {
             name: 'task.taskboard',
