@@ -73,7 +73,7 @@ const ProjectsMixin = (superclass) =>
      * @param {String} name Name of the project to retrieve
      * @returns {Promise:Integer} Index of the project deleted or -1 if project does not exist
      */
-    async deleteProject(name) {
+    async removeProject(name) {
       // Create a new projects list so we avoid mutating object
       const projects = [...this.projects]
       const index = findIndex(projects, { name })
