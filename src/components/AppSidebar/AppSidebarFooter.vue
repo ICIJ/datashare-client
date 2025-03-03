@@ -1,6 +1,12 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
+
+import { useConfirmModal } from '@/composables/confirm'
+import { useRemoveAll } from '@/composables/remove-all'
+import { useCore } from '@/composables/core'
 
 const props = defineProps({
   compact: {
@@ -29,10 +35,25 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['removeAll'])
+const { t } = useI18n()
+const { toastedPromise } = useCore()
+const { confirm } = useConfirmModal()
+const { removeAll } = useRemoveAll()
+const router = useRouter()
 
-const emitRemoveAll = () => {
-  emit('remove-all')
+const removeAllAndRedirect = async () => {
+  await removeAll()
+  await router.push({ name: 'project.list' })
+}
+
+const confirmRemoveAll = async () => {
+  const title = t('appSidebarFooter.removeAll.title')
+  const description = t('appSidebarFooter.removeAll.description')
+  if (await confirm({ title, description })) {
+    const successMessage = t('appSidebarFooter.removeAll.success')
+    const errorMessage = t('appSidebarFooter.removeAll.error')
+    await toastedPromise(removeAllAndRedirect(), { successMessage, errorMessage })
+  }
 }
 
 const classList = computed(() => {
@@ -97,7 +118,7 @@ const classList = computed(() => {
         v-b-tooltip.body
         title="Remove all"
         class="app-sidebar-footer__links__item"
-        @click="emitRemoveAll"
+        @click="confirmRemoveAll"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="trash" hover-weight="bold" />
         <span class="visually-hidden">Remove all</span>
