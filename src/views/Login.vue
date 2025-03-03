@@ -4,7 +4,6 @@
       <login-image ref="image" style="width: 240px" />
       <h3>{{ welcomeLabel }}</h3>
       <p>{{ taglineLabel }}</p>
-
       <button-icon
         :label="loginLabel"
         :to="signinRoute"
@@ -24,8 +23,10 @@
         @click="image.shake()"
       />
       <div class="login__assistance__locale d-flex align-items-center gap-2">
-        <span>{{ switchLanguageLabel }}</span
-        ><i18n-locale-dropdown class="px-2" />
+        <span>
+          {{ switchLanguageLabel }}
+        </span>
+        <i18n-locale-dropdown class="px-2" />
       </div>
     </div>
   </div>
