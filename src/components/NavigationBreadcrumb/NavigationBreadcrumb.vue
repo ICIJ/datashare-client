@@ -23,10 +23,8 @@ const currentRoute = computed(() => {
 })
 
 const matchedRoutes = computed(() => {
-  if (currentRoute.value) {
-    return currentRoute.value?.matched ?? []
-  }
-  return []
+  // We get all matching routes, including parent routes
+  return currentRoute?.value?.matched ?? []
 })
 
 const visibleRoutes = computed(() => {
