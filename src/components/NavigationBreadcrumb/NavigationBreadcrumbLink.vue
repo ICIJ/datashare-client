@@ -40,9 +40,25 @@ const currentRoute = computed(() => {
   }
 })
 
+const resolved = computed(() => {
+  try {
+    const name = props.routeName
+    return router.resolve({ name })
+  } catch {
+    return null
+  }
+})
+
 const route = computed(() => {
   try {
-    return router.resolve({ name: props.routeName })
+    // Find all the children routes (if any) of the given route
+    const { children = [] } = resolved.value.matched[resolved.value.matched.length - 1]
+    // Then we replace the current route by the first child route
+    // that has an empty path (which is the direct child of the current route)
+    // in order to display the correct breadcrumb link.
+    //
+    // If no child route has an empty path, we keep the current route.
+    return children.find((child) => child.path === '') ?? resolved
   } catch {
     return null
   }
@@ -56,20 +72,20 @@ const display = computed(() => {
     // Use the provided title from props
     props.title ||
     // Or use the title from the route meta as a function
-    (isFunction(route.value?.meta?.title) && route.value?.meta?.title({ route: route.value, core })) ||
+    (isFunction(resolved.value?.meta?.title) && resolved.value?.meta?.title({ route: resolved.value, core })) ||
     // Or use the title from the route meta as a translation key
-    (isString(route.value?.meta?.title) && t(route.value?.meta?.title)) ||
+    (isString(resolved.value?.meta?.title) && t(resolved.value?.meta?.title)) ||
     // Or use the last part of the route name
-    capitalize(route.value?.name.split('.').pop())
+    capitalize(resolved.value?.name.split('.').pop())
   )
 })
 
 const icon = computed(() => {
-  return props.icon ?? route.value?.meta?.icon
+  return props.icon ?? resolved.value?.meta?.icon
 })
 
 const isActive = computed(() => {
-  return props.active || route.value.name === currentRoute.value?.name
+  return props.active || resolved.value.name === currentRoute.value?.name
 })
 
 const classList = computed(() => {
@@ -80,7 +96,7 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <router-link v-if="route" :to="route" class="navigation-breadcrumb-link" :class="classList">
+  <a v-if="route" :href="resolved.href" class="navigation-breadcrumb-link" :class="classList">
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
@@ -95,7 +111,7 @@ const classList = computed(() => {
       size="1em"
       :name="PhCaretRight"
     />
-  </router-link>
+  </a>
 </template>
 
 <style lang="scss" scoped>
