@@ -1,4 +1,5 @@
 <script setup>
+import { castArray } from 'lodash'
 import { onUnmounted, computed } from 'vue'
 
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
@@ -21,17 +22,12 @@ const eventRouteQuery = computed(() => {
   const query = event.uri.split('?').pop()
   const searchParams = new URLSearchParams(query)
   const searchParamsEntries = Array.from(searchParams.entries())
-
-  return searchParamsEntries.reduce((acc, [key, value]) => {
+  // Convert the search params entries into an object. We cannot use Object.fromEntries directly
+  // because we need to handle the case where a key is repeated. For instance, multiple values
+  // for a given filter (e.g. "f[contentType]=application/pdf&f[contentType]=image/png").
+  return searchParamsEntries.reduce((params, [key, value]) => {
     // If the key already exists, make sure its value is an array and append the new value.
-    if (key in acc) {
-      acc[key] = Array.isArray(acc[key]) ? acc[key] : [acc[key]]
-      acc[key].push(value)
-    } else {
-      acc[key] = value
-    }
-
-    return acc
+    return Object.assign(params, { [key]: key in params ? castArray(params[key]).concat([value]) : value })
   }, {})
 })
 
