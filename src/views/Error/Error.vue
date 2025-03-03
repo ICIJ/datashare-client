@@ -1,86 +1,65 @@
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import { Api } from '@/api'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import VersionNumber from '@/components/VersionNumber'
 import settings from '@/utils/settings'
+import { useCore } from '@/composables/core'
 
-/**
- * This page display error.
- */
-export default {
-  name: 'Error',
-  components: {
-    ButtonIcon,
-    ModeServerOnly,
-    PhosphorIcon,
-    VersionNumber
+const { core } = useCore()
+
+const props = defineProps({
+  /**
+   * An Error object or the error message directly.
+   */
+  error: {
+    type: [String, Error],
+    default: null
   },
-  props: {
-    /**
-     * An Error object or the error message directly.
-     */
-    error: {
-      type: [String, Error],
-      default: null
-    },
-    /**
-     * Title of the error page.
-     */
-    title: {
-      type: String,
-      default: null
-    },
-    /**
-     * Description (bellow the title) of the error page.
-     */
-    description: {
-      type: String,
-      default: null
-    },
-    /**
-     * HTTP error code (if appliable).
-     */
-    code: {
-      type: Number,
-      default: null
-    }
+  /**
+   * Title of the error page.
+   */
+  title: {
+    type: String,
+    default: null
   },
-  data() {
-    return {
-      username: null
-    }
+  /**
+   * Description (bellow the title) of the error page.
+   */
+  description: {
+    type: String,
+    default: null
   },
-  computed: {
-    titleAsString() {
-      if (!this.title) {
-        return this.error instanceof Error ? this.error.message : this.error
-      }
-      return this.title
-    },
-    helpLink() {
-      return this.$config.get('helpLink', settings.helpLink)
-    },
-    faqLink() {
-      return this.$config.get('faqLink', settings.faqLink)
-    },
-    documentationLink() {
-      return this.$config.get('documentationLink', settings.documentationLink)
-    },
-    isAuthenticated() {
-      return !!this.username
-    },
-    logoutLink() {
-      return Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
-    }
-  },
-  async mounted() {
-    this.username = await this.$core.auth.getUsername()
+  /**
+   * HTTP error code (if appliable).
+   */
+  code: {
+    type: Number,
+    default: null
   }
-}
+})
+
+const username = ref(null)
+
+const titleAsString = computed(() => {
+  if (!props.title) {
+    return props.error instanceof Error ? props.error.message : props.error
+  }
+  return props.title
+})
+
+const helpLink = computed(() => core.config.get('helpLink', settings.helpLink))
+const faqLink = computed(() => core.config.get('faqLink', settings.faqLink))
+const documentationLink = computed(() => core.config.get('documentationLink', settings.documentationLink))
+
+const isAuthenticated = computed(() => !!username.value)
+const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT))
+
+onMounted(async () => (username.value = await core.auth.getUsername()))
 </script>
+
 
 <template>
   <div class="error d-flex flex-column">
