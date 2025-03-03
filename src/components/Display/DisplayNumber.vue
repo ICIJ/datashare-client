@@ -1,10 +1,12 @@
 <script setup>
+import { isNumber } from 'lodash'
 import { computed } from 'vue'
 import round from 'lodash/round'
 
 const props = defineProps({
   value: {
-    type: Number
+    type: Number,
+    default: null
   },
   precision: {
     type: Number,
@@ -21,5 +23,5 @@ const roundedValue = computed(() => {
 </script>
 
 <template>
-  <span>{{ $n(roundedValue) }}</span>
+  <span v-if="isNumber(roundedValue)">{{ $n(roundedValue) }}</span>
 </template>
