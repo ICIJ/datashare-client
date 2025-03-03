@@ -1,9 +1,9 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { describe } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { MODE_NAME } from '@/mode'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
-import { describe } from 'vitest'
 
 describe('ModeServerOnly.vue', () => {
   let wrapper, core
@@ -13,7 +13,6 @@ describe('ModeServerOnly.vue', () => {
   })
 
   describe('when the initial mode is `SERVER`', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.SERVER)
       const slots = { default: 'foo' }
@@ -35,11 +34,10 @@ describe('ModeServerOnly.vue', () => {
       core.config.set('mode', MODE_NAME.EMBEDDED)
       await flushPromises()
       expect(wrapper.text()).not.toBe('foo')
-    })    
+    })
   })
 
   describe('when the initial mode is `LOCAL`', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.LOCAL)
       const slots = { default: 'foo' }
@@ -59,7 +57,6 @@ describe('ModeServerOnly.vue', () => {
   })
 
   describe('when the initial mode is `EMBEDDED`', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.EMBEDDED)
       const slots = { default: 'foo' }

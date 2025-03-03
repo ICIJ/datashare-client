@@ -1,9 +1,9 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { describe } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { MODE_NAME } from '@/mode'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
-import { describe } from 'vitest'
 
 describe('ModeLocalOnly.vue', () => {
   let wrapper, core
@@ -13,7 +13,6 @@ describe('ModeLocalOnly.vue', () => {
   })
 
   describe('when the initial mode is `LOCAL`', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.LOCAL)
       const slots = { default: 'foo' }
@@ -38,9 +37,7 @@ describe('ModeLocalOnly.vue', () => {
     })
   })
 
-
   describe('when the initial mode is `LOCAL` and props strict is true', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.LOCAL)
       const slots = { default: 'foo' }
@@ -64,11 +61,9 @@ describe('ModeLocalOnly.vue', () => {
       await flushPromises()
       expect(wrapper.text()).not.toBe('foo')
     })
-
   })
 
   describe('when the initial mode is `EMBEDDED`', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.EMBEDDED)
       const slots = { default: 'foo' }
@@ -88,7 +83,6 @@ describe('ModeLocalOnly.vue', () => {
   })
 
   describe('when the initial mode is `SERVER`', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.SERVER)
       const slots = { default: 'foo' }
@@ -108,7 +102,6 @@ describe('ModeLocalOnly.vue', () => {
   })
 
   describe('when the initial mode is `EMBEDDED`', () => {
-
     beforeEach(async () => {
       core.config.set('mode', MODE_NAME.EMBEDDED)
       const slots = { default: 'foo' }
