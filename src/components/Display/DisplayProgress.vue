@@ -44,7 +44,7 @@ const classList = computed(() => {
   --display-progress-label-width: 3em;
   --display-progress-bg: var(--bs-secondary-bg-subtle);
   --display-progress-bar-bg: var(--bs-primary);
-  --display-progress-bar-height: 0.25em;
+  --display-progress-bar-height: 4px;
   --display-progress-bar-width: 100px;
 
   display: inline-flex;
