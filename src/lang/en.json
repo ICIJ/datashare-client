@@ -1543,8 +1543,8 @@
         "desc": "high"
       },
       "date": {
-        "asc":"recent first",
-        "desc": "old first"
+        "asc":"old first",
+        "desc": "recent first"
       }
     }
   },
