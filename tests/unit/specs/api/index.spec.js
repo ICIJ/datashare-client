@@ -279,8 +279,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to deleteBatchSearches', async () => {
-    json = await api.deleteBatchSearches()
+  it('should return backend response to removeBatchSearches', async () => {
+    json = await api.removeBatchSearches()
     expect(json).toEqual({})
   })
 
