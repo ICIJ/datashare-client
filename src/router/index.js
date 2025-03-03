@@ -145,7 +145,7 @@ export const routes = [
             meta: { 
               title: 'task.taskboard.title',
               icon: 'dots-nine',
-              noSettings: true 
+              settings: false
             },
             component: () => import('@/views/Task/Taskboard/Taskboard')
           },
