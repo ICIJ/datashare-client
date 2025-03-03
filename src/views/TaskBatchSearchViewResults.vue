@@ -31,7 +31,7 @@
         />
         <batch-search-clear-filters
           class="batch-search__clear-filter-btn m-1"
-          route-name="task.batch-search.view.results"
+          route-name="task.batch-search-queries-results.list"
           :local-search-params="params"
         />
       </div>
@@ -212,7 +212,7 @@ export default {
       order = this.order
     ) {
       return {
-        name: 'task.batch-search.view.results',
+        name: 'task.batch-search-queries-results.list',
         params: {
           indices: this.indices,
           uuid: this.uuid

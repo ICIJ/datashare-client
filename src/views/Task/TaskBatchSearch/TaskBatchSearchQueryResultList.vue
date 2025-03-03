@@ -95,7 +95,6 @@ async function getBatchSearchResults() {
       payload.contentTypes,
       payload.queriesExcluded
     )
-    console.log('test ')
   } catch (e) {
     hits.value = emptyHits.value
   }
@@ -109,8 +108,8 @@ const empty = computed(() => hits.value.length === 0)
       <template #breadcrumb>
         <navigation-breadcrumb-link route-name="task" />
         <navigation-breadcrumb-link route-name="task.batch-search.list" />
-        <navigation-breadcrumb-link route-name="task.batch-search.view" />
-        <navigation-breadcrumb-link route-name="task.batch-search.view.results" />
+        <navigation-breadcrumb-link route-name="task.batch-search-queries" />
+        <navigation-breadcrumb-link route-name="task.batch-search-queries-results.list" />
         <navigation-breadcrumb-entry> "{{ query }}" </navigation-breadcrumb-entry>
       </template>
     </page-header>

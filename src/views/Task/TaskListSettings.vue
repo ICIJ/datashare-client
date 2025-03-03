@@ -1,8 +1,8 @@
 <script setup>
 import { noop } from 'lodash'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
+import { computed, watch, ref } from 'vue'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
@@ -20,15 +20,28 @@ defineProps({
   }
 })
 
-const router = useRouter()
+const route = useRoute()
 
-const pageName = computed(() => router.currentRoute.value.name.split('.'))
-const pageTitleKey = computed(() => router.currentRoute.value.meta.title)
+const pageTitleKey = computed(() => route.meta.title)
+const pageName = ref(route.name.split('.'))
+
 const { perPage, sortBy, properties } = useTaskSettings(pageName.value[1])
+watch(
+  () => route,
+  (newRoute) => {
+    pageName.value = newRoute.name.split('.')
+    const taskSettings = useTaskSettings(pageName.value[1])
+    console.log(taskSettings.perPage.value)
+    perPage.value = taskSettings.perPage.value
+    sortBy.value = taskSettings.sortBy.value
+
+    properties.value = taskSettings.properties.value
+  },
+  { immediate: true }
+)
 const { t } = useI18n()
 const title = computed(() => {
   const page = t(pageTitleKey.value)
-
   return t(`task.settingTitle`, { page })
 })
 </script>
