@@ -45,9 +45,7 @@ const compact = computed(() => {
             </p>
             <span v-if="info" class="d-flex justify-content-end text-secondary-emphasis">
               <slot name="info" v-bind="{ info }">
-                <span class="taskboard-entry__info">
-                  <phosphor-icon :name="icon" /> {{ info }}
-                </span>
+                <span class="taskboard-entry__info"><phosphor-icon :name="icon" /> {{ info }}</span>
               </slot>
             </span>
           </b-card-text>
