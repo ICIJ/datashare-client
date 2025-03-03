@@ -4,9 +4,14 @@ import VersionNumber from '@/components/VersionNumber'
 import { Core } from '@/core'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', {
-  apiInstance: {
-    getVersion: vi.fn()
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getVersion: vi.fn().mockResolvedValue({
+        'git.tag': 'X.Y.Z',
+        'git.commit.id.abbrev': 'sha1_abbrev'
+      })
+    }
   }
 })
 
@@ -14,11 +19,6 @@ describe('VersionNumber.vue', () => {
   let core, wrapper
 
   beforeAll(() => {
-    api.getVersion.mockResolvedValue({
-      'git.tag': 'X.Y.Z',
-      'git.commit.id.abbrev': 'sha1_abbrev'
-    })
-
     core = Core.init().useAll()
   })
 
