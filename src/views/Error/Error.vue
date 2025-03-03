@@ -60,7 +60,6 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 onMounted(async () => (username.value = await core.auth.getUsername()))
 </script>
 
-
 <template>
   <div class="error d-flex flex-column">
     <div class="flex-grow-1 d-flex align-items-center justify-content-center">
@@ -99,7 +98,7 @@ onMounted(async () => (username.value = await core.auth.getUsername()))
           <li class="list-inline-item error__container__links__item">
             <version-number tooltip-placement="top" class="d-inline" />
           </li>
-          <mode-server-only v-if="isAuthenticated" >
+          <mode-server-only v-if="isAuthenticated">
             <li class="list-inline-item error__container__links__item error__container__links__item--logout">
               <a :href="logoutLink" target="_blank">
                 <phosphor-icon weight="duotone" :name="PhSignOut" class="error__container__links__item__icon me-1" />
