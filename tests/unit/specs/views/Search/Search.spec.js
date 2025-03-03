@@ -6,7 +6,7 @@ import Search from '@/views/Search/Search'
 vi.mock('@/api/apiInstance', {
   apiInstance: {
     updateProject: vi.fn(),
-    deleteProject: vi.fn()
+    removeProject: vi.fn()
   }
 })
 

@@ -89,7 +89,7 @@ const ProjectsMixin = (superclass) =>
       }
 
       // Ensure there is no conflict with existing search
-      this.deleteProjectFromSearch(name)
+      this.removeProjectFromSearch(name)
 
       return index
     }
@@ -97,7 +97,7 @@ const ProjectsMixin = (superclass) =>
      * Delete a project from the search store
      * @param {String} name Name of the project to delete fropm the store
      */
-    deleteProjectFromSearch(name) {
+    removeProjectFromSearch(name) {
       // Delete the project only if it's already
       // used by the search store. We use a safe accessor
       // to ensure this method won't throw an error when

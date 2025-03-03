@@ -429,7 +429,7 @@ describe('Datashare backend client', () => {
     })
   })
 
-  it('should return a backend response to deleteProject', async () => {
+  it('should return a backend response to removeProject', async () => {
     const name = 'hello'
     json = await api.removeProject(name)
     expect(json).toEqual({})
