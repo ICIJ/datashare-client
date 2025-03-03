@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { isNumber } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import humanNumber from '@/utils/humanNumber'
@@ -21,7 +22,7 @@ const humanDocumentsCount = computed(() => {
 <template>
   <td class="project-row-documents-count text-end">
     <span
-      v-if="project.documentsCount"
+      v-if="isNumber(project.documentsCount)"
       v-b-tooltip.body
       class="text-secondary-emphasis"
       :title="$n(project.documentsCount)"
