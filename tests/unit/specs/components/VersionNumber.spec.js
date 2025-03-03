@@ -2,7 +2,6 @@ import { shallowMount } from '@vue/test-utils'
 
 import VersionNumber from '@/components/VersionNumber'
 import { Core } from '@/core'
-import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
   return {
