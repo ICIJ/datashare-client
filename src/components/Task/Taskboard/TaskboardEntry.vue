@@ -23,15 +23,15 @@ const compact = computed(() => {
 </script>
 
 <template>
-  <b-card no-body class="taskboard-entry border-0">
+  <b-card no-body class="taskboard-entry border-0 p-4">
     <b-row no-gutters class="d-flex flex-grow-1">
       <b-col md="2">
-        <router-link :to="listLink" class="d-block p-2">
+        <router-link :to="listLink" class="d-block">
           <phosphor-icon :name="icon" size="100%" class="bg-action-subtle" />
         </router-link>
       </b-col>
       <b-col md="10" class="d-flex">
-        <b-card-body class="d-flex flex-column overflow-auto">
+        <b-card-body class="d-flex flex-column overflow-auto py-0">
           <template #title>
             <h3>
               <router-link :to="listLink">
