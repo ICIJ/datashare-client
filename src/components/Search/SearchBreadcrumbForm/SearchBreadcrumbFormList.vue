@@ -11,7 +11,7 @@ defineProps({
 
 <template>
   <div class="search-breadcrumb-form-list">
-    <div class="fw-medium text-action-emphasis text-nowrap me-2 mb-2" v-if="!noLabel">
+    <div v-if="!noLabel" class="fw-medium text-action-emphasis text-nowrap me-2 mb-2">
       <phosphor-icon :name="PhPath" />
       {{ $t('searchBreadcrumbFormList.label') }}
     </div>
