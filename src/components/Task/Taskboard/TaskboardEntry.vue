@@ -26,30 +26,36 @@ const compact = computed(() => {
   <b-card no-body class="taskboard-entry border-0">
     <b-row no-gutters class="d-flex flex-grow-1">
       <b-col md="2">
-        <div class="p-2">
-          <phosphor-icon :name="icon" size="100%" class="text-action-emphasis bg-action-subtle" />
-        </div>
+        <router-link :to="listLink" class="d-block p-2">
+          <phosphor-icon :name="icon" size="100%" class="bg-action-subtle" />
+        </router-link>
       </b-col>
       <b-col md="10" class="d-flex">
         <b-card-body class="d-flex flex-column overflow-auto">
-          <template #title
-            ><h3 class="text-action-emphasis">{{ title }}</h3></template
-          >
+          <template #title>
+            <h3>
+              <router-link :to="listLink">
+                {{ title }}
+              </router-link>
+            </h3>
+          </template>
           <b-card-text class="d-flex flex-column flex-grow-1">
             <p>
               <slot name="description" v-bind="{ description }">{{ description }}</slot>
             </p>
             <span v-if="info" class="d-flex justify-content-end text-secondary-emphasis">
-              <slot name="info" v-bind="{ info }"
-                ><span class="taskboard-entry__info"><phosphor-icon :name="icon" /> {{ info }}</span></slot
-              >
+              <slot name="info" v-bind="{ info }">
+                <span class="taskboard-entry__info">
+                  <phosphor-icon :name="icon" /> {{ info }}
+                </span>
+              </slot>
             </span>
           </b-card-text>
           <b-card-text class="d-flex justify-content-between gap-2 flex-row row-wrap">
             <slot name="actions" v-bind="{ listLink, actionLink }">
-              <button-icon icon-left="list" variant="outline-tertiary" :to="listLink" class="text-nowrap">{{
-                $t(`task.taskboard.entries.seeAll`)
-              }}</button-icon>
+              <button-icon icon-left="list" variant="outline-tertiary" :to="listLink" class="text-nowrap">
+                {{ $t(`task.taskboard.entries.seeAll`) }}
+              </button-icon>
               <button-icon
                 v-if="actionLink"
                 :hide-label="compact"
