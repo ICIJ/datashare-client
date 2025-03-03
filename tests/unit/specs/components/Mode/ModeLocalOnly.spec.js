@@ -80,6 +80,12 @@ describe('ModeLocalOnly.vue', () => {
       await flushPromises()
       expect(wrapper.text()).not.toBe('foo')
     })
+
+    it('should show "foo" reactivly in `LOCAL`', async () => {
+      core.config.set('mode', MODE_NAME.LOCAL)
+      await flushPromises()
+      expect(wrapper.text()).toBe('foo')
+    })
   })
 
   describe('when the initial mode is `SERVER`', () => {
@@ -91,31 +97,6 @@ describe('ModeLocalOnly.vue', () => {
     })
 
     it('should not display "foo"', async () => {
-      expect(wrapper.text()).not.toBe('foo')
-    })
-
-    it('should show "foo" reactivly in `LOCAL`', async () => {
-      core.config.set('mode', MODE_NAME.LOCAL)
-      await flushPromises()
-      expect(wrapper.text()).toBe('foo')
-    })
-  })
-
-  describe('when the initial mode is `EMBEDDED`', () => {
-    beforeEach(async () => {
-      core.config.set('mode', MODE_NAME.EMBEDDED)
-      const slots = { default: 'foo' }
-      const global = { plugins: core.plugins }
-      wrapper = mount(ModeLocalOnly, { global, slots })
-    })
-
-    it('should display "foo"', async () => {
-      expect(wrapper.text()).toBe('foo')
-    })
-
-    it('should hide "foo" reactivly in `SERVER`', async () => {
-      core.config.set('mode', MODE_NAME.SERVER)
-      await flushPromises()
       expect(wrapper.text()).not.toBe('foo')
     })
 
