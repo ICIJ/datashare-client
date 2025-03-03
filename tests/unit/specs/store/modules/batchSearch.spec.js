@@ -11,7 +11,7 @@ vi.mock('@/api/apiInstance', () => {
       getBatchSearches: vi.fn(),
       batchSearch: vi.fn(),
       deleteBatchSearch: vi.fn(),
-      deleteBatchSearches: vi.fn()
+      removeBatchSearches: vi.fn()
     }
   }
 })
@@ -178,9 +178,9 @@ describe('BatchSearchStore', () => {
         { uuid: 'batchSearch_03' }
       ]
 
-      await store.dispatch('batchSearch/deleteBatchSearches')
+      await store.dispatch('batchSearch/removeBatchSearches')
 
-      expect(api.deleteBatchSearches).toBeCalledTimes(1)
+      expect(api.removeBatchSearches).toBeCalledTimes(1)
       expect(store.state.batchSearch.batchSearches).toEqual([])
     })
   })

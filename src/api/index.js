@@ -204,7 +204,7 @@ export class Api {
   deleteBatchSearch(batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: Method.DELETE })
   }
-  deleteBatchSearches() {
+  removeBatchSearches() {
     return this.sendActionAsText('/api/batch/search', { method: Method.DELETE })
   }
   updateBatchSearch(batchId, published) {

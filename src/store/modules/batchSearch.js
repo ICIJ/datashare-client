@@ -223,9 +223,9 @@ export function actionBuilder(api) {
         // TODO do something
       }
     },
-    async deleteBatchSearches({ commit }) {
+    async removeBatchSearches({ commit }) {
       try {
-        await api.deleteBatchSearches()
+        await api.removeBatchSearches()
         commit(CLEAR_BATCH_SEARCH)
         return {}
       } finally {
