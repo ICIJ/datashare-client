@@ -1132,6 +1132,7 @@
     },
     "batch-search-queries": {
       "list": {
+        "title": "Batch search queries",
         "properties": {
           "query": "Query",
           "nbHits":"Hits"
@@ -1140,6 +1141,7 @@
     },
     "batch-search-queries-results": {
       "list": {
+        "title": "Batch search results",
         "properties": {
           "rank": "Hit rank",
           "documentName":"Document",

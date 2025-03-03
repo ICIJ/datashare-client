@@ -247,19 +247,19 @@ export const routes = [
               {
                 path: ':indices/:uuid',
                 props: true,
-                name: 'task.batch-search.view',
+                name: 'task.batch-search-queries',
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryList'),
                 meta: {
-                  title: 'batchSearchQueries.title'
+                  title: 'task.batch-search-queries.list.title'
                 }
               },
               {
-                name: 'task.batch-search.view.results',
+                name: 'task.batch-search-queries-results.list',
                 path: ':indices/:uuid/:query',
                 props: true,
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryResultList'),
                 meta: {
-                  title: 'batchSearchResults.title'
+                  title: 'task.batch-search-queries-results.list.title'
                 }
               }
             ]

@@ -25,7 +25,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   beforeEach(async () => {
     const routes = [
       {
-        name: 'task.batch-search.view.results',
+        name: 'task.batch-search-queries-results.list',
         path: '/batch-search/:indices/:uuid'
       },
       {
@@ -149,7 +149,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
       expect(wrapper.vm.$router.push).toBeCalledTimes(1)
       expect(wrapper.vm.$router.push).toBeCalledWith({
-        name: 'task.batch-search.view.results',
+        name: 'task.batch-search-queries-results.list',
         query: { order: undefined, page: undefined, queriesSort: 'default', sort: undefined }
       })
     })
@@ -168,7 +168,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
       expect(wrapper.vm.$router.push).toBeCalledTimes(1)
       expect(wrapper.vm.$router.push).toBeCalledWith({
-        name: 'task.batch-search.view.results',
+        name: 'task.batch-search-queries-results.list',
         query: { queriesExcluded: true }
       })
     })

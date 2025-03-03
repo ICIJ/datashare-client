@@ -152,7 +152,7 @@ export default {
       },
       set(queriesExcluded) {
         const query = { ...this.routeQuery, queriesExcluded }
-        this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
+        this.$router.push({ name: 'task.batch-search-queries-results.list', query }).catch(() => {})
       }
     }
   },
@@ -169,7 +169,7 @@ export default {
       const queries = compact(map(this.selectedQueries, 'label'))
       if (!isEqual(this.routeQuery.queries || [], queries)) {
         const query = { ...this.routeQuery, queries }
-        return this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
+        return this.$router.push({ name: 'task.batch-search-queries-results.list', query }).catch(() => {})
       }
     },
     searchQuery(q) {
@@ -181,7 +181,7 @@ export default {
     },
     sort(queriesSort) {
       const query = { ...this.routeQuery, queriesSort }
-      this.$router.push({ name: 'task.batch-search.view.results', query }).catch(() => {})
+      this.$router.push({ name: 'task.batch-search-queries-results.list', query }).catch(() => {})
     }
   }
 }

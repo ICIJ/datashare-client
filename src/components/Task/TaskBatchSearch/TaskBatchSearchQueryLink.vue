@@ -5,7 +5,7 @@ const props = defineProps({
   query: { type: String, required: true }
 })
 const to = {
-  name: 'task.batch-search.view.results',
+  name: 'task.batch-search-queries-results.list',
   params: { uuid: props.uuid, indices: props.indices, query: props.query }
 }
 </script>
