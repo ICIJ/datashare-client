@@ -49,7 +49,7 @@ describe.skip('BatchSearchActions.vue', () => {
   beforeEach(async () => {
     api.deleteBatchSearch.mockClear()
     await router.push({
-      name: 'task.batch-search-queries-results.list',
+      name: 'task.batch-search-results.list',
       params: {
         indices: 'test',
         uuid: 'uuid'

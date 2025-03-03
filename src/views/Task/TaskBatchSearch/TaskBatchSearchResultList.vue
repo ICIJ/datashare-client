@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, onBeforeMount } from 'vue'
 
-import NavigationBreadcrumbEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbEntry'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageHeader from '@/components/PageHeader/PageHeader'
@@ -15,11 +14,10 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDocumentLink from '@/components/Display/DisplayDocumentLink'
-import TaskBatchSearchQueryLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchQueryLink'
+import SearchLink from '@/components/Task/TaskBatchSearch/SearchLink'
 const props = defineProps({
   uuid: { type: String, required: true },
-  indices: { type: [String, Object], required: true },
-  query: { type: String, default: null }
+  indices: { type: [String, Object], required: true }
 })
 
 const appStore = useAppStore()
@@ -52,18 +50,8 @@ const contentType = useUrlParamsWithStore(['contentType'], {
   get: () => appStore.getSettings(settingView, 'contentType'),
   set: (value) => appStore.setSettings({ view: settingView, contentTypes: value.join(',') })
 })
-const { properties, propertiesModelValueOptions } = useTaskSettings(settingView)
+const { propertiesModelValueOptions } = useTaskSettings(settingView)
 
-const fields = computed(() => {
-  // hide query column if there is a query in the url
-  const queryIndex = properties.value.modelValue.indexOf('query')
-  if (props.query === null && queryIndex < 0) {
-    properties.value.modelValue.unshift('query')
-  } else if (props.query !== null && queryIndex > -1) {
-    properties.value.modelValue.splice(queryIndex, 1)
-  }
-  return propertiesModelValueOptions.value
-})
 const { core } = useCore()
 const emptyHits = computed(() => ({
   items: [],
@@ -83,12 +71,11 @@ async function getBatchSearch(batchId) {
     batchSearch.value = null
   }
 }
-const queries = props.query ? [props.query] : []
 const payload = {
   batchId: props.uuid,
   from: page.value,
   size: perPage.value,
-  queries,
+  queries: [],
   queriesExcluded: false,
   sort: sort.value,
   order: order.value,
@@ -122,9 +109,8 @@ const empty = computed(() => hits.value.length === 0)
       <template #breadcrumb>
         <navigation-breadcrumb-link route-name="task" />
         <navigation-breadcrumb-link route-name="task.batch-search.list" />
-        <navigation-breadcrumb-link route-name="task.batch-search-results.list" :title="title" />
-        <navigation-breadcrumb-link v-if="query" route-name="task.batch-search-queries.list" />
-        <navigation-breadcrumb-link v-if="query" route-name="task.batch-search-queries-results.list" :title="query" />
+        <navigation-breadcrumb-link route-name="task.batch-search-queries.list" :title="title" />
+        <navigation-breadcrumb-link route-name="task.batch-search-results.list" title="All documents" />
       </template>
     </page-header>
 
@@ -136,11 +122,17 @@ const empty = computed(() => hits.value.length === 0)
       searchable
       paginable
     />
-    <page-table-generic v-if="!empty" :items="hits.items" :fields="fields" :sort="sort" :order="order">
+    <page-table-generic
+      v-if="!empty"
+      :items="hits.items"
+      :fields="propertiesModelValueOptions"
+      :sort="sort"
+      :order="order"
+    >
       <template #cell(query)="{ item }">
-        <task-batch-search-query-link :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">{{
+        <search-link :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">{{
           item.query
-        }}</task-batch-search-query-link></template
+        }}</search-link></template
       >
       <template #cell(rank)="{ item }"> {{ item.documentNumber }}</template>
       <template #cell(documentName)="{ item }"> <display-document-link :value="item" /></template>

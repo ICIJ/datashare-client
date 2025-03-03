@@ -1,12 +1,12 @@
 <script setup>
 const props = defineProps({
-  uuid: { type: String, required: true },
   indices: { type: String, required: true },
   query: { type: String, required: true }
 })
+const query = { q: props.query, indices: props.indices }
 const to = {
-  name: 'task.batch-search-queries-results.list',
-  params: { uuid: props.uuid, indices: props.indices, query: props.query }
+  name: 'search',
+  query
 }
 </script>
 <template>

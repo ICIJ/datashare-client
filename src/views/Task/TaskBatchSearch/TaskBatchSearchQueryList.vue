@@ -9,7 +9,7 @@ import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useAppStore } from '@/store/modules'
 import { useCore } from '@/composables/core'
-import TaskBatchSearchQueryLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchQueryLink'
+import SearchLink from '@/components/Task/TaskBatchSearch/SearchLink'
 import { useTaskSettings } from '@/composables/task-settings'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 const props = defineProps({
@@ -84,9 +84,7 @@ const empty = computed(() => queries.value.length === 0)
       <template #breadcrumb>
         <navigation-breadcrumb-link route-name="task" />
         <navigation-breadcrumb-link route-name="task.batch-search.list" />
-        <navigation-breadcrumb-link route-name="task.batch-search-results.list" :title="title" />
-        <navigation-breadcrumb-link route-name="task.batch-search-queries.list" />
-        <navigation-breadcrumb-link route-name="task.batch-search-queries-results.list" />
+        <navigation-breadcrumb-link route-name="task.batch-search-queries.list" :title="title" />
       </template>
     </page-header>
     <b-row fluid class="gap-3">
@@ -99,7 +97,6 @@ const empty = computed(() => queries.value.length === 0)
           searchable
           paginable
         />
-
         <page-table-generic
           v-if="!empty"
           :items="queries"
@@ -108,9 +105,7 @@ const empty = computed(() => queries.value.length === 0)
           :order="order"
         >
           <template #cell(query)="{ item }">
-            <task-batch-search-query-link :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">{{
-              item.query
-            }}</task-batch-search-query-link>
+            <search-link :indices="indices" :query="item.query">{{ item.query }}</search-link>
           </template>
           <template #cell(documents)="{ item }"> {{ item.nbHits }} </template>
 

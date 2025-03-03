@@ -39,7 +39,7 @@ vi.mock('@/api/apiInstance', () => {
 describe('TaskBatchSearchViewResults.vue', () => {
   const routes = [
     {
-      name: 'task.batch-search-queries-results.list',
+      name: 'task.batch-search-results.list',
       path: '/batch-search/:indices/:uuid'
     },
     {
@@ -75,7 +75,7 @@ describe('TaskBatchSearchViewResults.vue', () => {
     expect(wrapper.find('.task-batch-search-view-results__applied-search-filters__queries').exists()).toBeFalsy()
 
     await core.router.push({
-      name: 'task.batch-search-queries-results.list',
+      name: 'task.batch-search-results.list',
       params: { indices: 'toto', uuid: 'test' },
       query: { queries: 'query_01, query_02' }
     })
@@ -86,7 +86,7 @@ describe('TaskBatchSearchViewResults.vue', () => {
     expect(wrapper.find('.task-batch-search-view-results__applied-search-filters__content-types').exists()).toBeFalsy()
 
     await core.router.push({
-      name: 'task.batch-search-queries-results.list',
+      name: 'task.batch-search-results.list',
       params: { indices: 'toto', uuid: 'test' },
       query: { contentTypes: 'type_01, type_02' }
     })

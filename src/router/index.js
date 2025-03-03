@@ -272,15 +272,6 @@ export const routes = [
                 meta: {
                   title: 'task.batch-search-queries.list.title'
                 }
-              },
-              {
-                name: 'task.batch-search-queries-results.list',
-                path: ':indices/:uuid/queries/:query',
-                props: true,
-                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchResultList'),
-                meta: {
-                  title: 'task.batch-search-results.list.title'
-                }
               }
             ]
           }

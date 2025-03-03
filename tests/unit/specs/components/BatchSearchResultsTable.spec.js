@@ -19,7 +19,7 @@ vi.mock('@/api/apiInstance', {
 describe('BatchSearchResultsTable.vue', () => {
   const routes = [
     {
-      name: 'task.batch-search-queries-results.list',
+      name: 'task.batch-search-results.list',
       path: '/batch-search/:indices/:uuid'
     },
     {
@@ -125,7 +125,7 @@ describe('BatchSearchResultsTable.vue', () => {
     wrapper.vm.sortChanged({ key: 'contentType', order: true })
 
     expect(core.router.push).toBeCalledWith({
-      name: 'task.batch-search-queries-results.list',
+      name: 'task.batch-search-results.list',
       params: { indices, uuid: '12' },
       query: { page: '1', sort: 'content_type', order: 'desc' }
     })
@@ -149,7 +149,7 @@ describe('BatchSearchResultsTable.vue', () => {
     wrapper = mount(BatchSearchResultsTable, { global: { plugins: core.plugins }, props })
     await core.router
       .push({
-        name: 'task.batch-search-queries-results.list',
+        name: 'task.batch-search-results.list',
         params: { indices, uuid: '12' },
         query: { page: 1 }
       })
@@ -166,7 +166,7 @@ describe('BatchSearchResultsTable.vue', () => {
   it('should cast queries and contentTypes param into array from the url', async () => {
     wrapper = shallowMount(BatchSearchResultsTable, { global: { plugins: core.plugins }, props })
     await wrapper.vm.$router.push({
-      name: 'task.batch-search-queries-results.list',
+      name: 'task.batch-search-results.list',
       params: { indices, uuid: '12' },
       query: {
         queries: 'simple_text',
