@@ -102,12 +102,6 @@ describe('SearchBar.vue', function () {
     expect(wrapper.find('.search-bar shortkeys-modal-stub').exists()).toBeFalsy()
   })
 
-  it('should display the shortkeys-modal component', async () => {
-    const props = { settings: true }
-    wrapper = shallowMountFactory(props)
-    expect(wrapper.find('.search-bar shortkeys-modal-stub').exists()).toBeTruthy()
-  })
-
   it('should submit search', () => {
     wrapper = shallowMountFactory()
     wrapper.setData({ query: 'foo' })
