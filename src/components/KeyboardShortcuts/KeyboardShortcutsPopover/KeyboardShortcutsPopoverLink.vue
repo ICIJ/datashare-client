@@ -8,6 +8,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     variant="outline-action"
     class="keyboard-shortcuts-popover-link"
     :icon-right="PhCaretRight"
+    :to="{ name: 'shortcuts' }"
     icon-right-variant="secondary"
     icon-right-hover-variant="inherit"
   >
