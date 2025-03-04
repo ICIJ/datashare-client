@@ -136,17 +136,17 @@ export const routes = [
         children: [
           {
             path: '',
-            redirect: '/tasks/taskboard'
+            redirect: '/tasks/task-board'
           },
           {
-            name: 'task.taskboard',
-            path: 'taskboard',
+            name: 'task.task-board',
+            path: 'task-board',
             meta: {
-              title: 'task.taskboard.title',
+              title: 'task.task-board.title',
               icon: 'dots-nine',
               settings: false
             },
-            component: () => import('@/views/Task/Taskboard/Taskboard')
+            component: () => import('@/views/Task/TaskBoard/TaskBoard')
           },
           {
             name: 'task.entities',

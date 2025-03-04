@@ -23,7 +23,7 @@ const compact = computed(() => {
 </script>
 
 <template>
-  <b-card no-body class="taskboard-entry border-0 p-4">
+  <b-card no-body class="task-board-entry border-0 p-4">
     <b-row no-gutters class="d-flex flex-grow-1">
       <b-col md="2">
         <router-link :to="listLink" class="d-block">
@@ -45,14 +45,14 @@ const compact = computed(() => {
             </p>
             <span v-if="info" class="d-flex justify-content-end text-secondary-emphasis">
               <slot name="info" v-bind="{ info }">
-                <span class="taskboard-entry__info"><phosphor-icon :name="icon" /> {{ info }}</span>
+                <span class="task-board-entry__info"><phosphor-icon :name="icon" /> {{ info }}</span>
               </slot>
             </span>
           </b-card-text>
           <b-card-text class="d-flex justify-content-between gap-2 flex-row row-wrap">
             <slot name="actions" v-bind="{ listLink, actionLink }">
               <button-icon icon-left="list" variant="outline-tertiary" :to="listLink" class="text-nowrap">
-                {{ $t(`task.taskboard.entries.seeAll`) }}
+                {{ $t(`task.task-board.entries.seeAll`) }}
               </button-icon>
               <button-icon
                 v-if="actionLink"
@@ -72,7 +72,7 @@ const compact = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.taskboard-entry {
+.task-board-entry {
   &__info {
     text-wrap: pretty;
   }

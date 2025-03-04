@@ -135,11 +135,11 @@ const noAnalysis = computed(() => {
         <app-sidebar-section
           :title="t('appSidebar.tasks')"
           :icon="PhRocketLaunch"
-          :to="{ name: 'task.taskboard' }"
+          :to="{ name: 'task.task-board' }"
           :compact="compact"
         >
-          <app-sidebar-section-entry :icon="PhDotsNine" :to="{ name: 'task.taskboard' }">
-            {{ t('appSidebar.taskboard') }}
+          <app-sidebar-section-entry :icon="PhDotsNine" :to="{ name: 'task.task-board' }">
+            {{ t('appSidebar.task-board') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             :icon="PhListMagnifyingGlass"

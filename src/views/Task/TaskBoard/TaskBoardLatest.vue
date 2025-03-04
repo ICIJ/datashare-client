@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { useTaskPolling } from '@/composables/task-polling'
@@ -13,58 +14,22 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import useMode from '@/composables/mode'
 import TaskBatchDownloadLink from '@/components/Task/TaskBatchDownload/TaskBatchDownloadLink'
 import TaskBatchSearchLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchLink'
-
+import { useTaskProperties } from '@/composables/task-properties'
+const { t } = useI18n()
 const nbTasks = ref(3)
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
 const { isServer } = useMode()
-
-const allFields = ref([
-  {
-    name: 'name',
-    value: 'name',
-    text: 'Task',
-    icon: 'rocket-launch'
-  },
-  {
-    name: 'state',
-    value: 'state',
-    text: 'State',
-    icon: ''
-  },
-  {
-    name: 'title',
-    value: 'title',
-    text: 'Name',
-    emphasis: true,
-    icon: ''
-  },
-  {
-    name: 'projects',
-    value: 'projects',
-    text: 'Projects',
-    icon: 'circles-three-plus'
-  },
-  {
-    name: 'author',
-    value: 'author',
-    text: 'Author',
-    icon: 'user'
-  },
-  {
-    name: 'createdAt',
-    value: 'createdAt',
-    text: 'Creation date',
-    icon: 'user'
-  },
-  {
-    name: 'progress',
-    value: 'progress',
-    text: 'Progress',
-    icon: 'user'
+const propertyList = ['taskType', 'state', 'name', 'projects', 'author', 'createdAt', 'progress']
+const { items } = useTaskProperties(propertyList)
+const allFields = items.map((item) => {
+  return {
+    ...item,
+    value: item.key,
+    text: computed(() => t(`task.task-board.latest.properties.${item.key}`))
   }
-])
+})
 
-const fields = computed(() => allFields.value.filter((p) => isServer.value || p.name !== 'author'))
+const fields = computed(() => allFields.filter((p) => isServer.value || p.name !== 'author'))
 
 const more = 3
 
@@ -164,7 +129,7 @@ function getTaskIcon(item) {
     </b-card-title>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
       <page-table-generic :items="displayedTasks" :fields="fields">
-        <template #cell(name)="{ item }">
+        <template #cell(taskType)="{ item }">
           <button-icon
             :icon-left="getTaskIcon(item)"
             :label="getTaskLinkTitle(item)"
@@ -178,7 +143,7 @@ function getTaskIcon(item) {
         <template #cell(state)="{ item }">
           <display-status size="sm" :value="item.state" />
         </template>
-        <template #cell(title)="{ item }">
+        <template #cell(name)="{ item }">
           <task-batch-download-link v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
           <task-batch-search-link v-else-if="item.name === TASK_NAME.BATCH_SEARCH" :item="item" />
           <span v-else> {{ getTitle(item) }}</span>

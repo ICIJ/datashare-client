@@ -37,7 +37,7 @@ function getProject(item) {
       @update:order="updateOrder"
     >
       <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
-      <template #cell(entities-to-find)="{ item }">
+      <template #cell(entitiesToFind)="{ item }">
         <div v-if="isPipelineEmail(item)" class="d-flex gap-2">
           <entity-button :entity="{ mention: 'Email', category: ENTITY_CATEGORY.EMAIL }" />
         </div>
