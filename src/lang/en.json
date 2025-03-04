@@ -1531,6 +1531,9 @@
       "taskStatus": "Task status",
       "progress": "Progress",
       "project": "Project",
+      "privacy": "Privacy",
+      "pipeline": "Model",
+      "entitiesToFind": "Entities to find",
       "id": "Id"
     },
     "order": {

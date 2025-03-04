@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import { computed, ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
@@ -11,7 +11,7 @@ export const useAppStore = defineStore(
     const filters = reactive({ close: true })
     const pins = reactive({ projects: [] })
     const sidebar = reactive({ compact: false, closed: false })
-    const settings = reactive({
+    const settingsInit = {
       closed: true,
       views: {
         projectList: {
@@ -87,8 +87,13 @@ export const useAppStore = defineStore(
           pinned: {}
         }
       }
+    }
+    const settings = reactive(cloneDeep(settingsInit))
+    const getSettingsInit = computed(() => {
+      return (view, name) => {
+        return get(settingsInit.views, [view, name].join('.'))
+      }
     })
-
     const getSettings = computed(() => {
       return (view, name) => {
         return get(settings.views, [view, name].join('.'))
@@ -132,6 +137,8 @@ export const useAppStore = defineStore(
       filters,
       pins,
       sidebar,
+      settingsInit,
+      getSettingsInit,
       settings,
       setSettings,
       getSettings,
