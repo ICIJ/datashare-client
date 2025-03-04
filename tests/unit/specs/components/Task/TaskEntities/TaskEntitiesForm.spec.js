@@ -30,16 +30,16 @@ describe('TaskEntitiesForm.vue', () => {
     expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
   })
 
-  it('reactively updates content when projectName changes', async () => {
+  it('reactively updates content when project changes', async () => {
     const wrapper = mount(TaskEntitiesForm, {
       global: { plugins },
       props: {
-        projectName: 'banana-papers'
+        project: 'banana-papers'
       }
     })
 
     expect(wrapper.find('.search-bar__field--selected').text()).toBe('banana-papers')
-    await wrapper.setProps({ projectName: 'local-datashare' })
+    await wrapper.setProps({ project: 'local-datashare' })
     await flushPromises()
     expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
   })
