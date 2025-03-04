@@ -4,6 +4,7 @@ import { vi } from 'vitest'
 
 import { useTaskSettings } from '@/composables/task-settings'
 import CoreSetup from '~tests/unit/CoreSetup'
+
 vi.mock('@/composables/core', () => ({
   useCore: vi.fn(() => ({
     core: {
@@ -11,6 +12,7 @@ vi.mock('@/composables/core', () => ({
     }
   }))
 }))
+
 describe('useTaskSettings', () => {
   function withSetup({ composable, store, i18n, routes = [] }) {
     let result
@@ -58,7 +60,6 @@ describe('useTaskSettings', () => {
       expect.arrayContaining([
         expect.objectContaining({ value: 'name' }),
         expect.objectContaining({ value: 'size' }),
-        //  expect.objectContaining({ value: 'docs' }),
         expect.objectContaining({ value: 'createdAt' }),
         expect.objectContaining({ value: 'state' })
       ])
