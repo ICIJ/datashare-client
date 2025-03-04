@@ -102,7 +102,13 @@ const filteredAddons = computed(() => {
 <template>
   <settings-view-layout :info-name="addonsType" :info-label="infoLabel" :no-results="noResults">
     <template #filter>
-      <form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text />
+      <form-control-search 
+        v-model="filterTerm" 
+        autofocus
+        clear-text
+        shadow 
+        :placeholder="searchPlaceholder" 
+      />
     </template>
     <template #noResult>{{ noResultsLabel }}</template>
     <div class="col-12 col-xl-8">
