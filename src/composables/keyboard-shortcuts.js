@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { compact } from 'lodash'
 
@@ -15,5 +15,7 @@ export const useKeyboardShortcuts = () => {
     return allShortcuts.filter(({ route = null }) => !route || matchedRoutes.value.includes(route))
   })
 
-  return { routeShortcuts }
+  const shortcuts = toRef(allShortcuts)
+
+  return { routeShortcuts, shortcuts }
 }
