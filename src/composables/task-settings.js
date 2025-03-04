@@ -37,8 +37,7 @@ export function useTaskSettings(pageName) {
       }
     ]
   })
-
-  const props = useTaskProperties(appStore.getSettings(pageName, 'properties'))
+  const props = useTaskProperties(appStore.getSettingsInit(pageName, 'properties'))
   const items = props.items.filter((p) => isServer.value || p.key !== 'author')
   const sortBy = ref({
     label: sortByLabel,
