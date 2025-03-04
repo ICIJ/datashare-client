@@ -54,8 +54,9 @@ const groupedShortcuts = computed(() => groupBy(filteredShotcuts.value, 'route')
     <div class="bg-tertiary-subtle rounded-1 py-4 px-5 d-flex flex-column gap-4">
       <form-control-search
         v-model="searchQuery"
-        shadow
         autofocus
+        clear-text
+        shadow
         :placeholder="$t('shortcutsView.searchPlaceholder')"
       />
       <keyboard-shortcuts-section
