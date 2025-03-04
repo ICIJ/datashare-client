@@ -905,6 +905,15 @@
   "pageHeader": {
     "searchPlaceholder": "Search in this page"
   },
+  "taskNames": {
+    "batchSearch": "Batch search",
+    "batchDownload": "Batch download",
+    "scan": "Scan folders",
+    "index": "Index documents",
+    "extractNLP": "Find entities",
+    "enqueueFromIndex": "Enqueue from index",
+    "unknown": "Unknown task"
+  },
   "task": {
     "settingTitle":"{page} settings",
     "title": "Tasks",
@@ -918,6 +927,14 @@
     "task-board": {
       "title": "Task Board",
       "latest": {
+        "title": "Latest tasks",
+        "linkTitle": {
+          "batchSearch": "Batch search task",
+          "batchDownload": "Batch download task",
+          "documentTask": "Document task",
+          "entityTask": "Entity task",
+          "unknownTask": "Unknown task"
+        },
         "properties": {
           "taskType": "Task",
           "name": "Name",
@@ -934,21 +951,21 @@
           "title": "Batch search",
           "description":
           "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
-          "nbPublic": "No shared batch searches | 1 shared batch search | %{n} shared batch searches",
-          "nbPrivate": "no private batch searches | 1 shared batch search | %{n} private batch search",
-          "info": "%{nbPublic}, %{nbPrivate}",
+          "nbPublic": "No shared batch searches | 1 shared batch search | {n} shared batch searches",
+          "nbPrivate": "no private batch searches | 1 shared batch search | {n} private batch search",
+          "info": "{nbPublic}, {nbPrivate}",
           "actionText": "Create a batch search"
         },
         "batch-download": {
           "title": "Batch download",
           "description": "When your query has results, you can download all of them in a password-protected file.",
-          "info": "%{n} batch downloads"
+          "info": "{n} batch downloads"
         },
         "entity-recognition": {
           "title": "Entity recognition",
           "description":
           "Know quickly what’s in your files by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
-          "info": "%{n} entity recognitions",
+          "info": "{n} entity recognitions",
           "actionText": "Find entities"
         },
         "document-addition": {
@@ -1159,7 +1176,7 @@
     },
     "batch-search-results": {
       "list": {
-        "title": "UUID",
+        "title": "All documents",
         "properties": {
           "query": "Query",
           "rank": "Result rank",

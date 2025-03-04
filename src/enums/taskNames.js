@@ -24,13 +24,13 @@ export const TASK_NAME_ICON = Object.freeze({
   [ENQUEUE_FROM_INDEX]: 'files'
 })
 export const HUMAN_TASK_NAME = Object.freeze({
-  [BATCH_SEARCH]: 'Batch search',
-  [BATCH_DOWNLOAD]: 'Batch download',
-  [SCAN]: 'Scan folders',
-  [INDEX]: 'Index documents',
-  [EXTRACT_NLP]: 'Find entities',
-  [ENQUEUE_FROM_INDEX]: 'Enqueue from index',
-  UNKNOWN_TASK: 'Unknown Task'
+  [BATCH_SEARCH]: 'taskNames.batchSearch',
+  [BATCH_DOWNLOAD]: 'taskNames.batchDownload',
+  [SCAN]: 'taskNames.scan',
+  [INDEX]: 'taskNames.index',
+  [EXTRACT_NLP]: 'taskNames.extractNLP',
+  [ENQUEUE_FROM_INDEX]: 'taskNames.enqueueFromIndex',
+  UNKNOWN_TASK: 'taskNames.unknown'
 })
 export const TASK_NAME_LIST = Object.values(TASK_NAME)
 

@@ -61,7 +61,6 @@ const title = computed(() => {
       :options="perPage.options"
       :label="perPage.label"
     />
-
     <page-settings-section
       v-model="properties.modelValue"
       v-model:open="properties.open"
