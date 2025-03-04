@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import TaskPage from '@/views/Task/TaskPage'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -15,7 +17,7 @@ const taskStore = useTaskStore()
 const settingName = 'documents'
 
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
-
+const { t } = useI18n()
 async function stopTask(name) {
   await taskStore.stopTask(name)
   await taskStore.getTasks()
@@ -42,7 +44,7 @@ function getProject(item) {
       @update:order="updateOrder"
     >
       <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
-      <template #cell(name)="{ item }">{{ getHumanTaskName(item.name) }}</template>
+      <template #cell(name)="{ item }">{{ t(getHumanTaskName(item.name)) }}</template>
       <template #cell(documents)="{ item }"><display-number :value="item.result[1]" /></template>
       <template #cell(project)="{ item }"> <display-project-list :values="getProject(item)" /></template>
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>

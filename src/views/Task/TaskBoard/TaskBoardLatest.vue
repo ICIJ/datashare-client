@@ -83,19 +83,20 @@ function getTitle(item) {
 }
 
 function getTaskLinkTitle(item) {
+  const path = 'task.task-board.latest.linkTitle'
   switch (item.name) {
     case TASK_NAME.BATCH_SEARCH:
-      return 'Batch search task'
+      return `${path}.batchSearch`
     case TASK_NAME.BATCH_DOWNLOAD:
-      return 'Batch download task'
+      return `${path}.batchDownload`
     case TASK_NAME.INDEX:
     case TASK_NAME.SCAN:
-      return 'Document task'
+      return `${path}.documentTask`
     case TASK_NAME.ENQUEUE_FROM_INDEX:
     case TASK_NAME.EXTRACT_NLP:
-      return 'Entity task'
+      return `${path}.entityTask`
     default:
-      return 'Unknown task'
+      return `${path}.unknownTask`
   }
 }
 
@@ -125,14 +126,14 @@ function getTaskIcon(item) {
   <b-card-body no-border class="task-all__latest no-border">
     <b-card-title class="pb-4">
       <phosphor-icon name="rocket-launch" />
-      Latest tasks
+      {{ t('task.task-board.latest.title') }}
     </b-card-title>
     <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
       <page-table-generic :items="displayedTasks" :fields="fields">
         <template #cell(taskType)="{ item }">
           <button-icon
             :icon-left="getTaskIcon(item)"
-            :label="getTaskLinkTitle(item)"
+            :label="t(getTaskLinkTitle(item))"
             :to="getTaskLinkRoute(item)"
             hide-label
             size="sm"
@@ -146,7 +147,7 @@ function getTaskIcon(item) {
         <template #cell(name)="{ item }">
           <task-batch-download-link v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
           <task-batch-search-link v-else-if="item.name === TASK_NAME.BATCH_SEARCH" :item="item" />
-          <span v-else> {{ getTitle(item) }}</span>
+          <span v-else> {{ t(getTitle(item)) }}</span>
         </template>
         <template #cell(createdAt)="{ item }">
           <display-datetime-from-now :value="item.createdAt" />
