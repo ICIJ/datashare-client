@@ -8,6 +8,8 @@ import { useConfirmModal } from '@/composables/confirm'
 import { useRemoveAll } from '@/composables/remove-all'
 import { useCore } from '@/composables/core'
 
+import AppSidebarKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarKeyboardShortcutsPopover'
+
 const props = defineProps({
   compact: {
     type: Boolean
@@ -72,26 +74,32 @@ const classList = computed(() => {
       <div class="app-sidebar-footer__lead__version">
         <slot />
       </div>
-      <a
-        v-if="!noKeyboardShortcuts && !compact"
-        v-b-tooltip.body
-        title="Keyboard Shortcuts"
-        class="app-sidebar-footer__links__item ms-auto"
-      >
-        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
-        <span class="visually-hidden">Keyboard Shortcut</span>
-      </a>
+      <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && !compact" :offset="36">
+        <template #target>
+          <a
+            v-b-tooltip.body
+            title="Keyboard Shortcuts"
+            class="app-sidebar-footer__links__item ms-auto"
+          >
+            <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
+            <span class="visually-hidden">Keyboard Shortcut</span>
+          </a>
+        </template>
+      </app-sidebar-keyboard-shortcuts-popover>
     </div>
     <div class="app-sidebar-footer__links">
-      <a
-        v-if="!noKeyboardShortcuts && compact"
-        v-b-tooltip.body
-        title="Keyboard Shortcuts"
-        class="app-sidebar-footer__links__item"
-      >
-        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
-        <span class="visually-hidden">Keyboard Shortcut</span>
-      </a>
+      <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && compact" :offset="48">
+        <template #target>
+          <a
+            v-b-tooltip.body
+            title="Keyboard Shortcuts"
+            class="app-sidebar-footer__links__item"
+          >
+            <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
+            <span class="visually-hidden">Keyboard Shortcut</span>
+          </a>
+        </template>
+      </app-sidebar-keyboard-shortcuts-popover>
       <router-link
         v-if="!noSettings"
         v-b-tooltip.body
