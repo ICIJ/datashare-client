@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import TaskboardEntry from '@/components/Task/Taskboard/TaskboardEntry'
+import TaskBoardEntry from '@/components/Task/TaskBoard/TaskBoardEntry'
 
 defineProps({
   entries: { type: Array, default: () => [] }
@@ -10,10 +10,10 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="taskboard-entry-list container-fluid bg-tertiary-subtle py-4">
+  <div class="task-board-entry-list container-fluid bg-tertiary-subtle py-4">
     <div class="row justify-content-around g-5 mx-2">
       <div v-for="(task, index) in entries" :key="index" class="col-12 col-xl-6">
-        <taskboard-entry
+        <task-board-entry
           :icon="task.icon"
           :title="t(`${task.key}.title`)"
           :description="t(`${task.key}.description`)"
@@ -23,7 +23,7 @@ const { t } = useI18n()
           :action-text="t(`${task.key}.actionText`)"
           class="h-100 d-flex flex-column"
         >
-        </taskboard-entry>
+        </task-board-entry>
       </div>
     </div>
   </div>

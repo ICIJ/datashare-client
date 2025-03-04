@@ -41,7 +41,7 @@ export const useAppStore = defineStore(
         entities: {
           orderBy: ['name', 'desc'],
           perPage: '10',
-          properties: ['state', 'entities-to-find', 'pipeline', 'project', 'progress', 'createdAt']
+          properties: ['state', 'entitiesToFind', 'pipeline', 'project', 'progress', 'createdAt']
         },
         documents: {
           orderBy: ['name', 'desc'],
@@ -79,7 +79,7 @@ export const useAppStore = defineStore(
           contentType: [],
           properties: ['query', 'rank', 'documentName', 'contentLength', 'contentType', 'project']
         },
-        taskboard: {},
+        'task-board': {},
         documentView: {
           tab: 'text'
         },
