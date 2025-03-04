@@ -9,7 +9,7 @@ import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
 import EsDocList from '@/api/resources/EsDocList'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
-import EmailString from '@/components/EmailString'
+import DisplayEmail from '@/components/Display/DisplayEmail'
 import { useDocumentStore } from '@/store/modules'
 
 const props = defineProps({
@@ -146,7 +146,7 @@ onBeforeRouteUpdate(init)
           <router-link :to="{ name: 'document', params: email.routerParams }" class="p-3 d-block">
             <div class="d-flex text-nowrap gap-3">
               <div class="document-thread__list__email__from flex-grow-1">
-                <email-string :email="email.messageFrom" tag="strong" />
+                <display-email :value="email.messageFrom" tag="strong" />
               </div>
               <abbr
                 v-if="email.creationDate"
@@ -162,7 +162,7 @@ onBeforeRouteUpdate(init)
                 {{ $t('email.to') }}
                 <ul class="list-inline d-inline">
                   <li v-for="to in email.messageTo.split(',')" :key="to" class="list-inline-item">
-                    <email-string :email="to" />
+                    <display-email :value="to" />
                   </li>
                 </ul>
               </span>
