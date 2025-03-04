@@ -22,13 +22,21 @@ const icon = computed(() => {
     case 'option':
       return 'option'
     case '→':
-      return 'arrow-fat-right'
+      return 'arrow-right'
+    case 'arrowright':
+      return 'arrow-right'
     case '←':
-      return 'arrow-fat-left'
+      return 'arrow-left'
+    case 'arrowleft':
+      return 'arrow-left'
     case '↑':
-      return 'arrow-fat-up'
+      return 'arrow-up'
+    case 'arrowup':
+      return 'arrow-up'
     case '↓':
-      return 'arrow-fat-down'
+      return 'arrow-down'
+    case 'arrowdown':
+      return 'arrow-down'
     case 'shift':
       return 'arrow-fat-up'
     case '⌃':
