@@ -65,7 +65,6 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
           <phosphor-icon name="circle-notch" spin size="2em" />
         </div>
       </template>
-
       <project-jumbotron
         v-model:pinned="pinned"
         class="mx-3"
@@ -100,7 +99,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         class="my-5"
         action-icon="plus"
         :action-label="$t('projectViewOverview.emptyStateAction')"
-        :action-to="{ name: 'task.documents.new', query: { projectName: project.name } }"
+        :action-to="{ name: 'task.documents.new', query: { project: project.name } }"
       />
     </v-wait>
   </div>

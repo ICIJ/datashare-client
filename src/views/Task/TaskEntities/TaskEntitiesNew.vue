@@ -4,7 +4,7 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskEntitiesForm from '@/components/Task/TaskEntities/TaskEntitiesForm'
 
 defineProps({
-  projectName: {
+  project: {
     type: String,
     default: null
   }
@@ -14,6 +14,6 @@ defineProps({
 <template>
   <page-container fluid deck class="task-entities-new">
     <page-header no-toggle-settings />
-    <task-entities-form :project-name="projectName" />
+    <task-entities-form :project="project" />
   </page-container>
 </template>

@@ -13,7 +13,7 @@ import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 
 const props = defineProps({
-  projectName: {
+  project: {
     type: String
   },
   disabled: {
@@ -26,7 +26,7 @@ const { t } = useI18n()
 
 const submitLabel = computed(() => t(`task.documents.form.submit`))
 
-const currentProject = computed(() => core.findProject(props.projectName ?? core.getDefaultProject()))
+const currentProject = computed(() => core.findProject(props.project ?? core.getDefaultProject()))
 const selectedProject = ref(currentProject.value)
 
 function getProjectSourcePath(project) {
@@ -129,7 +129,7 @@ async function loadLanguages() {
 }
 
 onMounted(loadLanguages)
-watch(toRef(props, 'projectName'), () => (selectedProject.value = currentProject.value))
+watch(toRef(props, 'project'), () => (selectedProject.value = currentProject.value))
 watch(
   () => selectedProject.value,
   (p) => {

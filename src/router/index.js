@@ -166,7 +166,7 @@ export const routes = [
               },
               {
                 name: 'task.entities.new',
-                props: ({ query }) => ({ projectName: query.projectName }),
+                props: ({ query }) => ({ project: query.project }),
                 path: 'new',
                 component: () => import('@/views/Task/TaskEntities/TaskEntitiesNew'),
                 meta: {
@@ -197,7 +197,7 @@ export const routes = [
                 name: 'task.documents.new',
                 path: 'new',
                 component: () => import('@/views/Task/TaskDocuments/TaskDocumentsNew'),
-                props: ({ query }) => ({ projectName: query.projectName }),
+                props: ({ query }) => ({ project: query.project }),
                 meta: {
                   title: 'task.documents.new.title',
                   icon: 'plus'
