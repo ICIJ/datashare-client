@@ -51,7 +51,7 @@ const groupedShortcuts = computed(() => groupBy(filteredShotcuts.value, 'route')
     </page-header>
   </page-container>
   <page-container fluid>
-    <div class="bg-tertiary-subtle rounded-1 py-4 px-5 d-flex flex-column gap-4">
+    <div class="bg-tertiary-subtle rounded-1 pt-4 pb-5 px-5 d-flex flex-column gap-4">
       <form-control-search
         v-model="searchQuery"
         autofocus
