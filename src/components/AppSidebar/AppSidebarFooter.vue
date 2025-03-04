@@ -7,7 +7,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { useConfirmModal } from '@/composables/confirm'
 import { useRemoveAll } from '@/composables/remove-all'
 import { useCore } from '@/composables/core'
-
 import AppSidebarKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarKeyboardShortcutsPopover'
 
 const props = defineProps({
@@ -76,11 +75,7 @@ const classList = computed(() => {
       </div>
       <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && !compact" :offset="36">
         <template #target>
-          <a
-            v-b-tooltip.body
-            title="Keyboard Shortcuts"
-            class="app-sidebar-footer__links__item ms-auto"
-          >
+          <a v-b-tooltip.body title="Keyboard Shortcuts" class="app-sidebar-footer__links__item ms-auto">
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
             <span class="visually-hidden">Keyboard Shortcut</span>
           </a>
@@ -90,11 +85,7 @@ const classList = computed(() => {
     <div class="app-sidebar-footer__links">
       <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && compact" :offset="48">
         <template #target>
-          <a
-            v-b-tooltip.body
-            title="Keyboard Shortcuts"
-            class="app-sidebar-footer__links__item"
-          >
+          <a v-b-tooltip.body title="Keyboard Shortcuts" class="app-sidebar-footer__links__item">
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
             <span class="visually-hidden">Keyboard Shortcut</span>
           </a>
