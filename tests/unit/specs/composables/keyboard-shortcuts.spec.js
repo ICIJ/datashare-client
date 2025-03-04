@@ -3,7 +3,6 @@ import { createApp } from 'vue'
 
 import allShortcuts from '@/utils/keyboard-shortcuts.json'
 import { useKeyboardShortcuts } from '@/composables/keyboard-shortcuts'
-import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('useKeyboardShortcuts', () => {
   function withSetup({ composable }) {
@@ -17,7 +16,7 @@ describe('useKeyboardShortcuts', () => {
       setup() {
         result = composable()
         // Return a dummy render function
-        return () => { }
+        return () => {}
       }
     })
 
