@@ -1,18 +1,18 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import EmailString from '@/components/EmailString'
+import DisplayEmail from '@/components/Display/DisplayEmail'
 
-describe('EmailString.vue', () => {
+describe('DisplayEmail.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
 
   it('is a Vue instance', () => {
-    const wrapper = shallowMount(EmailString, {
+    const wrapper = shallowMount(DisplayEmail, {
       global: {
         plugins
       },
       props: {
-        email: 'ICIJ <contact@icij.org>'
+        value: 'ICIJ <contact@icij.org>'
       }
     })
 
@@ -20,12 +20,12 @@ describe('EmailString.vue', () => {
   })
 
   it('renders the email address only', () => {
-    const wrapper = shallowMount(EmailString, {
+    const wrapper = shallowMount(DisplayEmail, {
       global: {
         plugins
       },
       props: {
-        email: 'contact@icij.org'
+        value: 'contact@icij.org'
       }
     })
 
@@ -33,12 +33,12 @@ describe('EmailString.vue', () => {
   })
 
   it('renders the name of the sender only', () => {
-    const wrapper = shallowMount(EmailString, {
+    const wrapper = shallowMount(DisplayEmail, {
       global: {
         plugins
       },
       props: {
-        email: 'ICIJ <contact@icij.org>'
+        value: 'ICIJ <contact@icij.org>'
       }
     })
 
@@ -46,12 +46,12 @@ describe('EmailString.vue', () => {
   })
 
   it('renders the firstname and lastname of the sender only', () => {
-    const wrapper = shallowMount(EmailString, {
+    const wrapper = shallowMount(DisplayEmail, {
       global: {
         plugins
       },
       props: {
-        email: 'Pierre Romera <contact@icij.org>'
+        value: 'Pierre Romera <contact@icij.org>'
       }
     })
 
