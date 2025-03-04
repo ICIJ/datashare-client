@@ -85,7 +85,7 @@ const icon = computed(() => {
 })
 
 const isActive = computed(() => {
-  return props.active || resolved.value.name === currentRoute.value?.name
+  return props.active ?? resolved.value.name === currentRoute.value?.name
 })
 
 const classList = computed(() => {
