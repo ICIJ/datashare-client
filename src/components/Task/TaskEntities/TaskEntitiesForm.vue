@@ -14,7 +14,7 @@ const props = defineProps({
   /**
    * Project name to select in the input instead of default project
    */
-  projectName: {
+  project: {
     type: String,
     default: null
   }
@@ -35,10 +35,10 @@ const initialFormValues = computed(() => ({
   pipeline: defaultPipeline,
   pipelines: {},
   offline: false,
-  project: props.projectName ?? defaultProject
+  project: props.project ?? defaultProject
 }))
 
-watch(toRef(props, 'projectName'), reset)
+watch(toRef(props, 'project'), reset)
 const selectedProject = ref({ name: initialFormValues.value.project })
 const pipeline = ref(initialFormValues.value.pipeline)
 const pipelines = ref(initialFormValues.value.pipelines)
