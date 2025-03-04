@@ -50,9 +50,6 @@
           </selectable-dropdown>
         </template>
       </search-bar-input>
-      <div v-if="settings" class="ps-2">
-        <shortkeys-modal class="d-none d-md-inline" />
-      </div>
     </div>
   </div>
 </template>
@@ -63,7 +60,6 @@ import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 import { mapStores } from 'pinia'
 
-import ShortkeysModal from '@/components/ShortkeysModal'
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
 import SearchBarInputDropdownForField from '@/components/Search/SearchBar/SearchBarInputDropdownForField'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
@@ -82,7 +78,6 @@ export default {
   name: 'SearchBar',
   components: {
     SearchBarInput,
-    ShortkeysModal,
     SearchBarInputDropdownForField,
     SearchBarInputDropdownForProjects
   },
