@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayEmail from '@/components/Display/DisplayEmail'
@@ -7,7 +7,7 @@ describe('DisplayEmail.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
 
   it('is a Vue instance', () => {
-    const wrapper = shallowMount(DisplayEmail, {
+    const wrapper = mount(DisplayEmail, {
       global: {
         plugins
       },
@@ -20,7 +20,7 @@ describe('DisplayEmail.vue', () => {
   })
 
   it('renders the email address only', () => {
-    const wrapper = shallowMount(DisplayEmail, {
+    const wrapper = mount(DisplayEmail, {
       global: {
         plugins
       },
@@ -33,7 +33,7 @@ describe('DisplayEmail.vue', () => {
   })
 
   it('renders the name of the sender only', () => {
-    const wrapper = shallowMount(DisplayEmail, {
+    const wrapper = mount(DisplayEmail, {
       global: {
         plugins
       },
@@ -46,7 +46,7 @@ describe('DisplayEmail.vue', () => {
   })
 
   it('renders the firstname and lastname of the sender only', () => {
-    const wrapper = shallowMount(DisplayEmail, {
+    const wrapper = mount(DisplayEmail, {
       global: {
         plugins
       },
