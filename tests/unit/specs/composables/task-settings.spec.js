@@ -1,6 +1,5 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createApp } from 'vue'
-import { vi } from 'vitest'
 
 import { useTaskSettings } from '@/composables/task-settings'
 import CoreSetup from '~tests/unit/CoreSetup'

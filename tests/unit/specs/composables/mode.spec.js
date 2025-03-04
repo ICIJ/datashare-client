@@ -1,5 +1,3 @@
-import { vi } from 'vitest'
-
 import useMode from '@/composables/mode'
 import { MODE_NAME } from '@/mode'
 
@@ -11,6 +9,7 @@ vi.mock('@/composables/core', () => ({
     }
   }))
 }))
+
 describe('useMode', () => {
   it('should return correct computed values', () => {
     const { mode, isServer, isMode } = useMode()
