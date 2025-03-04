@@ -73,13 +73,7 @@ onBeforeMount(loadSettings)
 <template>
   <settings-view-layout info-name="general" :info-label="infoLabel" :no-results="noResults">
     <template #filter>
-      <form-control-search 
-        v-model="filterTerm" 
-        autofocus
-        clear-text 
-        shadow         
-        :placeholder="searchPlaceholder" 
-      />
+      <form-control-search v-model="filterTerm" autofocus clear-text shadow :placeholder="searchPlaceholder" />
     </template>
     <template #noResult>{{ noResultsLabel }}</template>
     <v-wait v-if="!noResults" :for="loaderId">
