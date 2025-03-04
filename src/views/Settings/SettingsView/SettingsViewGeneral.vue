@@ -4,6 +4,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
 import { useCore } from '@/composables/core'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
@@ -72,7 +73,13 @@ onBeforeMount(loadSettings)
 <template>
   <settings-view-layout info-name="general" :info-label="infoLabel" :no-results="noResults">
     <template #filter>
-      <form-control-search v-model="filterTerm" :placeholder="searchPlaceholder" clear-text />
+      <form-control-search 
+        v-model="filterTerm" 
+        autofocus
+        clear-text 
+        shadow         
+        :placeholder="searchPlaceholder" 
+      />
     </template>
     <template #noResult>{{ noResultsLabel }}</template>
     <v-wait v-if="!noResults" :for="loaderId">
