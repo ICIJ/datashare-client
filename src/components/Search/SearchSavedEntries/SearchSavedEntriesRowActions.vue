@@ -3,12 +3,9 @@ import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useSearchSavingModal, useRemoveSavedSearchModal } from '@/composables/search-saving'
-
+import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
+const detailsShowing = defineModel('toggle', { type: Boolean })
 const { event } = defineProps({
-  detailsShowing: {
-    type: Boolean,
-    default: false
-  },
   event: {
     type: Object,
     required: true
@@ -34,7 +31,7 @@ const confirmRemovalModal = async () => {
 </script>
 
 <template>
-  <div class="d-flex gap-2 ms-auto">
+  <div class="d-flex gap-2">
     <button-icon
       :icon-left="PhPencilSimple"
       icon-left-hover-weight="bold"
@@ -57,16 +54,6 @@ const confirmRemovalModal = async () => {
       class="border-0"
       @click="confirmRemovalModal"
     />
-    <button-icon
-      :icon-left="detailsShowing ? PhCaretUp : PhCaretDown"
-      icon-left-hover-weight="bold"
-      hide-label
-      square
-      size="sm"
-      variant="outline-secondary"
-      label="Toggle details"
-      class="border-0"
-      @click="$emit('toggle', !detailsShowing)"
-    />
+    <page-table-toggle-details-button v-model="detailsShowing" />
   </div>
 </template>
