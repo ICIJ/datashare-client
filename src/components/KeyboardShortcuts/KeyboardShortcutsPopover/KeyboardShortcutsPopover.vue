@@ -4,8 +4,7 @@ import KeyboardShortcutsPopoverTitle from './KeyboardShortcutsPopoverTitle'
 
 defineProps({
   target: {
-    type: [String, Object],
-    required: true
+    type: [String, Object]
   },
   placement: {
     type: String,
@@ -25,19 +24,21 @@ defineProps({
     <div class="keyboard-shortcuts-popover__content">
       <slot />
     </div>
+    <template #target="{ show, hide, toggle, visible }">
+      <slot name="target" v-bind="{ show, hide, toggle, visible }" />
+    </template>
   </b-popover>
 </template>
 
 <style lang="scss">
 .keyboard-shortcuts-popover {
-  --bs-popover-max-width: 560px;
+  --bs-popover-max-width: 580px;
   --bs-popover-body-padding-y: #{$spacer-lg};
   --bs-popover-body-padding-x: #{$spacer-lg};
 
   width: 100%;
 
   .popover-body {
-    max-height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
