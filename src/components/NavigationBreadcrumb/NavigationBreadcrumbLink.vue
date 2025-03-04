@@ -1,12 +1,10 @@
 <script setup>
 import { computed } from 'vue'
-import { capitalize, isFunction, isString } from 'lodash'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { useI18n } from 'vue-i18n'
 import { PhCaretRight } from '@phosphor-icons/vue'
 
-import { useCore } from '@/composables/core'
+import DisplayRoute from '@/components/Display/DisplayRoute'
 
 const props = defineProps({
   routeName: {
@@ -19,7 +17,8 @@ const props = defineProps({
     type: Boolean
   },
   active: {
-    type: Boolean
+    type: Boolean,
+    default: null
   },
   icon: {
     type: [String, Object, Array]
@@ -64,22 +63,6 @@ const route = computed(() => {
   }
 })
 
-const { core } = useCore()
-const { t } = useI18n()
-
-const display = computed(() => {
-  return (
-    // Use the provided title from props
-    props.title ||
-    // Or use the title from the route meta as a function
-    (isFunction(resolved.value?.meta?.title) && resolved.value?.meta?.title({ route: resolved.value, core })) ||
-    // Or use the title from the route meta as a translation key
-    (isString(resolved.value?.meta?.title) && t(resolved.value?.meta?.title)) ||
-    // Or use the last part of the route name
-    capitalize(resolved.value?.name.split('.').pop())
-  )
-})
-
 const icon = computed(() => {
   return props.icon ?? resolved.value?.meta?.icon
 })
@@ -100,7 +83,7 @@ const classList = computed(() => {
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
-        <slot>{{ display }}</slot>
+        <slot><display-route :value="routeName" :title="title" /></slot>
       </span>
     </span>
     <phosphor-icon
