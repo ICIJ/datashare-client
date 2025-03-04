@@ -1,52 +1,3 @@
-<template>
-  <page-table v-model:sort="sort" v-model:order="order">
-    <template #thead>
-      <page-table-th
-        v-for="field in fields"
-        :key="field.name"
-        :label="field.text"
-        :icon="field.icon"
-        :sortable="!!field.sortable"
-        :emphasis="!!field.emphasis"
-        :name="field.value"
-      />
-    </template>
-
-    <page-table-tr v-if="!items?.length">
-      <td :colspan="fields.length" class="page-table-generic__no-result text-center">
-        <slot name="empty">{{ $t('task.noResults') }}</slot>
-      </td>
-    </page-table-tr>
-
-    <template v-for="(item, index) in items" :key="primaryKey ? item[primaryKey] ?? index : index">
-      <page-table-tr class="page-table-generic__row">
-        <td
-          v-for="(field, i) in fields"
-          :key="i"
-          class="page-table-generic__row__field"
-          :class="[`page-table-generic__row__field--${field.value}`]"
-        >
-          <slot :name="`cell(${field.value})`" v-bind="callItemBinding(item, field.value)" :field="field">
-            {{ item[field.value] }}
-          </slot>
-        </td>
-        <page-table-td-actions>
-          <slot name="row-actions" v-bind="callItemBinding(item, 'row-actions')" />
-        </page-table-td-actions>
-      </page-table-tr>
-
-      <template v-if="hasRowDetailsSlot && rowDetailsShowing(item)">
-        <tr class="d-none" aria-hidden="true" role="presentation" />
-        <page-table-tr class="page-table-generic__row-details">
-          <td :colspan="fields.length + 1">
-            <slot name="row-details" v-bind="callItemBinding(item, 'row-details')" />
-          </td>
-        </page-table-tr>
-      </template>
-    </template>
-  </page-table>
-</template>
-
 <script setup>
 import { computed, ref, toRef, useSlots, watch } from 'vue'
 
@@ -130,6 +81,55 @@ function callItemBinding(item, slotName) {
 
 const hasRowDetailsSlot = computed(() => 'row-details' in slots)
 </script>
+
+<template>
+  <page-table v-model:sort="sort" v-model:order="order">
+    <template #thead>
+      <page-table-th
+        v-for="field in fields"
+        :key="field.name"
+        :label="field.text"
+        :icon="field.icon"
+        :sortable="!!field.sortable"
+        :emphasis="!!field.emphasis"
+        :name="field.value"
+      />
+    </template>
+
+    <page-table-tr v-if="!items?.length">
+      <td :colspan="fields.length" class="page-table-generic__no-result text-center">
+        <slot name="empty">{{ $t('task.noResults') }}</slot>
+      </td>
+    </page-table-tr>
+
+    <template v-for="(item, index) in items" :key="primaryKey ? item[primaryKey] ?? index : index">
+      <page-table-tr class="page-table-generic__row">
+        <td
+          v-for="(field, i) in fields"
+          :key="i"
+          class="page-table-generic__row__field"
+          :class="[`page-table-generic__row__field--${field.value}`]"
+        >
+          <slot :name="`cell(${field.value})`" v-bind="callItemBinding(item, field.value)" :field="field">
+            {{ item[field.value] }}
+          </slot>
+        </td>
+        <page-table-td-actions>
+          <slot name="row-actions" v-bind="callItemBinding(item, 'row-actions')" />
+        </page-table-td-actions>
+      </page-table-tr>
+
+      <template v-if="hasRowDetailsSlot && rowDetailsShowing(item)">
+        <tr class="d-none" aria-hidden="true" role="presentation" />
+        <page-table-tr class="page-table-generic__row-details">
+          <td :colspan="fields.length + 1">
+            <slot name="row-details" v-bind="callItemBinding(item, 'row-details')" />
+          </td>
+        </page-table-tr>
+      </template>
+    </template>
+  </page-table>
+</template>
 
 <style lang="scss" scoped>
 // Add hover effect to the row details and its corresponding row
