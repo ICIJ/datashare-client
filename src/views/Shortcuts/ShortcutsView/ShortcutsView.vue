@@ -1,0 +1,79 @@
+<script setup>
+import { computed } from 'vue'
+import { groupBy, property } from 'lodash'
+import { useI18n } from 'vue-i18n'
+import Fuse from 'fuse.js'
+
+import DisplayRoute from '@/components/Display/DisplayRoute'
+import PageHeader from '@/components/PageHeader/PageHeader'
+import PageContainer from '@/components/PageContainer/PageContainer'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+import KeyboardShortcutsSection from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSection'
+import KeyboardShortcutsSectionEntry from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry'
+import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
+import { useKeyboardShortcuts } from '@/composables/keyboard-shortcuts'
+import { useUrlParam } from '@/composables/url-params'
+
+const searchQuery = useUrlParam('q', '')
+const { t, te } = useI18n()
+
+const { shortcuts } = useKeyboardShortcuts()
+
+const extendedShortcuts = computed(() => {
+  return shortcuts.value.map((shortcut) => {
+    const labelI18n = te(shortcut.label) ? t(shortcut.label) : shortcut.label
+    return { ...shortcut, labelI18n }
+  })
+})
+
+const fuse = computed(() => {
+  const keys = ['action', 'labelI18n']
+  const options = { shouldSort: false, threshold: 0.1, keys }
+  return new Fuse(extendedShortcuts.value, options)
+})
+
+const filteredShotcuts = computed(() => {
+  if (searchQuery.value) {
+    return fuse.value.search(searchQuery.value).map(property('item'))
+  }
+  return extendedShortcuts.value
+})
+
+const groupedShortcuts = computed(() => groupBy(filteredShotcuts.value, 'route'))
+</script>
+
+<template>
+  <page-container fluid deck>
+    <page-header no-toggle-settings>
+      <template #breadcrumb>
+        <navigation-breadcrumb-link route-name="shortcuts" :active="false" />
+      </template>
+    </page-header>
+  </page-container>
+  <page-container fluid>
+    <div class="bg-tertiary-subtle rounded-1 py-4 px-5 d-flex flex-column gap-4">
+      <form-control-search
+        v-model="searchQuery"
+        shadow
+        autofocus
+        :placeholder="$t('shortcutsView.searchPlaceholder')"
+      />
+      <keyboard-shortcuts-section
+        v-for="(sectionShortcuts, route) in groupedShortcuts"
+        :key="route"
+        class="bg-body rounded p-4"
+      >
+        <template #title>
+          <display-route :value="route" />
+        </template>
+        <keyboard-shortcuts-section-entry
+          v-for="(shortcut, i) in sectionShortcuts"
+          :key="i"
+          :keys="shortcut.keys.default"
+          :mac-keys="shortcut.keys.mac"
+          :label="$t(shortcut.label)"
+        />
+      </keyboard-shortcuts-section>
+    </div>
+  </page-container>
+</template>

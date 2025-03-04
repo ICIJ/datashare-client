@@ -483,6 +483,15 @@ export const routes = [
         ]
       },
       {
+        name: 'shortcuts',
+        path: '/shortcuts',
+        component: () => import('@/views/Shortcuts/ShortcutsView/ShortcutsView'),
+        meta: {
+          title: 'shortcutsView.title',
+          icon: 'keyboard'
+        }
+      },
+      {
         name: 'document-standalone',
         path: '/ds/:index/:id/:routing?',
         component: () => import('@/views/Document/DocumentStandalone'),
