@@ -1,14 +1,15 @@
 <script setup>
 defineProps({
   title: {
-    type: String,
-    required: true
+    type: String
   }
 })
 </script>
 
 <template>
-  <h4 class="keyboard-shortcuts-section-title">{{ title }}</h4>
+  <h4 class="keyboard-shortcuts-section-title">
+    <slot>{{ title }}</slot>
+  </h4>
 </template>
 
 <style lang="scss" scoped>
