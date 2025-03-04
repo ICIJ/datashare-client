@@ -51,7 +51,7 @@ const displayTabs = computed(() => tabs.value.filter((tab) => tab.modes.some(isM
 <template>
   <page-container fluid deck class="settings-view">
     <page-header no-toggle-settings />
-    <div class="bg-tertiary-subtle rounded-1 p-4">
+    <div class="bg-tertiary-subtle rounded-1 py-4 px-5">
       <tab-group-navigation class="mx-3" nowrap>
         <tab-group-navigation-entry
           v-for="tab in displayTabs"
