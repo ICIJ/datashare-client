@@ -28,7 +28,6 @@ const searchBreadcrumbURIStore = useSearchStore.disposable(`search-breadcrumb-${
 
 const breadcrumbRouteQuery = computed(() => {
   const query = props.uri.split('?').pop()
-  console.log('query', query)
   const searchParams = new URLSearchParams(query)
   const searchParamsEntries = Array.from(searchParams.entries())
   // Convert the search params entries into an object. We cannot use Object.fromEntries directly
