@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      icon: PhArrowFatLinesUp,
+      icon: PhArrowFatUp,
       offset: 0,
       timeoutHolder: null,
       target: null,
@@ -52,7 +52,7 @@ export default {
       return toggler ? this.show() : this.hide()
     },
     show() {
-      this.icon = this.isTargetAbove() ? PhArrowFatLinesDown : PhArrowFatLinesUp
+      this.icon = this.isTargetAbove() ? PhArrowFatDown : PhArrowFatUp
       this.visible = true
       this.setTimeout()
       // Hide the tracker on scroll
@@ -98,7 +98,7 @@ export default {
 <template>
   <transition name="fade">
     <a v-show="visible" class="scroll-tracker" tabindex="0" @click="scrollToTarget">
-      <phosphor-icon :name="icon" />
+      <phosphor-icon :name="icon" weight="fill" />
     </a>
   </transition>
 </template>
