@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :id="versionNumberId" class="version-number d-inline-block">v{{ serverVersion }}</div>
-    <b-tooltip :target="versionNumberId" :placement="tooltipPlacement">
+    <b-tooltip :target="versionNumberId" :placement="tooltipPlacement" teleport-to="body">
       <div class="version-number__tooltip text-nowrap text-start">
         <div class="d-flex align-items-baseline version-number__tooltip__client py-2">
           <div class="flex-grow-1 pe-5">
