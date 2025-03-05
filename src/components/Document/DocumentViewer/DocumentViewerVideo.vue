@@ -29,7 +29,7 @@
 
 <script>
 import { mapWritableState } from 'pinia'
-import { PhosphorIcon  } from '@icij/murmur-next'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import { usePlayerStore } from '@/store/modules'
 
@@ -38,6 +38,9 @@ import { usePlayerStore } from '@/store/modules'
  */
 export default {
   name: 'DocumentViewerVideo',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * The selected document

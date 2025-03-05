@@ -24,7 +24,7 @@
 
 <script>
 import { mapWritableState } from 'pinia'
-import { PhosphorIcon  } from '@icij/murmur-next'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import { usePlayerStore } from '@/store/modules/player'
 
