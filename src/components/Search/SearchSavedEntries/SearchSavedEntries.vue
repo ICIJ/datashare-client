@@ -76,8 +76,8 @@ function searchParamsQuery(uri) {
         :toggle="detailsShowing"
         :event="item"
         @update:toggle="toggleDetails"
-        @edited="emit('reload')"
-        @removed="emit('reload')"
+        @edit="emit('reload')"
+        @remove="emit('reload')"
       />
     </template>
     <template #row-details="{ item }">
