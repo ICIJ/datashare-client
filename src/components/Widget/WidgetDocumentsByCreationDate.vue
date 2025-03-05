@@ -23,8 +23,8 @@
     <div class="widget__content">
       <v-wait :for="loader">
         <template #waiting>
-          <div class="widget__content_spinner">
-            <fa icon="circle-notch" spin size="2x"></fa>
+          <div class="widget__content_spinner text-secondary text-center p-5">
+            <phosphor-icon :name="PhCircleNotch" spin size="2em" />
           </div>
         </template>
         <div v-if="data.length > 0" class="widget__content__chart align-items-center">
@@ -67,6 +67,7 @@
 <script>
 import bodybuilder from 'bodybuilder'
 import { clamp, get, uniqueId } from 'lodash'
+import { PhosphorIcon } from '@icij/murmur-next'
 import * as d3 from 'd3'
 
 import ColumnChartPicker from '@/components/ColumnChartPicker'
