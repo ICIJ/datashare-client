@@ -72,7 +72,7 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * Create a new store with a unique suffix. This is useful when you want
    * to create a store that is disposed when the component is unmounted. This
    * function is a composable and can be used outside a setup function.
-   * 
+   *
    * @param {string} provideKey - The optional key to provide the suffix in the component.
    * @returns {Store} - The unique store instance.
    */
