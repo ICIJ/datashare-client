@@ -5,7 +5,6 @@ import { useI18n } from 'vue-i18n'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
 import SearchSavedEntriesRowActions from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowActions'
-import SearchSavedEntriesRowDetails from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowDetails'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 
