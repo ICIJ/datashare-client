@@ -14,6 +14,7 @@ import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import { useCore } from '@/composables/core'
 import TaskBatchSearchLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchLink'
+import BatchSearchCardActions from '@/components/BatchSearch/BatchSearchCardActions'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
 
@@ -67,6 +68,7 @@ function getRecord(item, key) {
       <template #cell(progress)="{ item }">
         <display-progress :value="item.progress" />
       </template>
+      <template #row-actions><batch-search-card-actions /></template>
     </page-table-generic>
   </task-page>
 </template>
