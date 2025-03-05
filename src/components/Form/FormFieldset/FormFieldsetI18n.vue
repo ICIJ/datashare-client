@@ -12,15 +12,19 @@ const props = defineProps({
   translationKey: {
     type: String
   },
-  forceCompact: { type: Boolean }
+  descriptionKey: {
+    type: String
+  },
+  forceCompact: {
+    type: Boolean
+  }
 })
 const { required, 'label-visually-hidden': labelVisuallyHidden, 'with-description': withDescription } = useAttrs()
 const { te, t } = useI18n()
 const id = uniqueId(props.name)
 const labelFor = `input-${props.name}`
-const description = computed(() =>
-  te(`${props.translationKey}.description`) ? t(`${props.translationKey}.description`) : null
-)
+const descriptionKey = props.descriptionKey ?? `${props.translationKey}.description`
+const description = computed(() => (te(descriptionKey) ? t(descriptionKey) : null))
 </script>
 
 <template>
@@ -33,11 +37,11 @@ const description = computed(() =>
     :class="name"
     :label-for="labelFor"
     :description="description"
-    :compact-threshold="forceCompact ? 10000 : undefined"
+    :compact-threshold="forceCompact ? 10000 : 0"
     :with-description="withDescription"
     :label-visually-hidden="labelVisuallyHidden"
     :required="required"
   >
-    <slot v-bind="{ name: labelFor, ...slotProps }"></slot>
+    <slot v-bind="{ name: labelFor, ...slotProps }" />
   </form-fieldset>
 </template>
