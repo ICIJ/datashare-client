@@ -45,7 +45,6 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['loop', 'autoplay']),
     cannotPlayAudioFormat() {
       return !this.canPlayAudioFormat
     },
@@ -54,7 +53,8 @@ export default {
     },
     cardVariant() {
       return this.cannotPlayAudioFormat ? 'warning' : null
-    }
+    },
+    ...mapWritableState(usePlayerStore, ['loop', 'autoplay'])
   }
 }
 </script>

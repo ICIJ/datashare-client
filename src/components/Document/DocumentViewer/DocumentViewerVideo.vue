@@ -18,8 +18,8 @@
             {{ $t('document.player.loop') }}
           </b-form-checkbox>
         </div>
-        <b-alert :show="cannotPlayVideoFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
-          <fa icon="triangle-exclamation" class="me-2" />
+        <b-alert :model-value="cannotPlayVideoFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
+          <phosphor-icon :name="PhWarning" class="me-2" />
           {{ $t('document.player.video.unknownFormat') }}
         </b-alert>
       </div>
@@ -29,6 +29,7 @@
 
 <script>
 import { mapWritableState } from 'pinia'
+import { PhosphorIcon  } from '@icij/murmur-next'
 
 import { usePlayerStore } from '@/store/modules'
 
