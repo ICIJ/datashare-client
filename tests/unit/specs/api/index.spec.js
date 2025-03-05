@@ -257,7 +257,7 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/batch/search/project'),
+        url: Api.getFullUrl('/api/task/batchSearch/project'),
         method: 'POST',
         data
       })
