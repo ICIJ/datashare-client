@@ -1,26 +1,25 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonRowAction from '@/components/Button/ButtonRowAction'
 
 defineOptions({ name: 'BatchSearchCardActions' })
-
 const { t } = useI18n()
 
 const actions = {
   relaunchAction: {
     event: 'relaunch',
-    label: t('batchSearchCardActions.relaunch'),
+    label: 'batchSearchCardActions.relaunch',
     icon: 'arrow-clockwise'
   },
   editAction: {
     event: 'edit',
-    label: t('batchSearchCardActions.edit'),
+    label: 'batchSearchCardActions.edit',
     icon: 'pencil-simple'
   },
   deleteAction: {
     event: 'delete',
-    label: t('batchSearchCardActions.delete'),
+    label: 'batchSearchCardActions.delete',
     icon: 'trash'
   }
 }
@@ -28,14 +27,11 @@ const actions = {
 
 <template>
   <div class="batch-search-card-actions flex-wrap d-flex gap-2">
-    <button-icon
+    <button-row-action
       v-for="(action, index) in actions"
       :key="index"
-      :icon-left="action.icon"
-      :label="action.label"
-      size="sm"
-      variant="outline-secondary"
-      class="border-0"
+      :icon="action.icon"
+      :label="t(action.label)"
       @click="$emit(action.event, { uuid })"
     />
   </div>
