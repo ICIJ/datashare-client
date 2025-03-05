@@ -1,4 +1,4 @@
-import { get, isNull, join, map, omitBy, replace, toLower, trim } from 'lodash'
+import { get, isNull, join, omitBy, replace, toLower, trim } from 'lodash'
 
 import settings from '@/utils/settings'
 
@@ -132,18 +132,16 @@ export class Api {
     const params = { query, routing, targetLanguage }
     return this.sendAction(`/api/${project}/documents/searchContent/${documentId}`, { method: Method.GET, params })
   }
-  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published, queryTemplate) {
+  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, published, queryTemplate) {
     const data = new FormData()
     data.append('name', name)
     data.append('csvFile', csvFile)
     data.append('description', description)
     data.append('phrase_matches', phraseMatch)
     data.append('fuzziness', fuzziness)
-    map(fileTypes, (fileType) => data.append('fileTypes', fileType.mime))
-    map(paths, (path) => data.append('paths', path))
     data.append('published', published)
     data.append('query_template', queryTemplate)
-    return this.sendActionAsText(`/api/batch/search/${project}`, { method: Method.POST, data })
+    return this.sendActionAsText(`/api/task/batchSearch/${project}`, { method: Method.POST, data })
   }
   getBatchSearch(batchId) {
     return this.sendAction(`/api/batch/search/${batchId}`)
