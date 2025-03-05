@@ -82,7 +82,9 @@ async function scrollToActive() {
   await nextTick()
   // For the first email, we go to the top of the page
   const activeElementSelector = '.document-thread__list__email:not(:first-of-type).document-thread__list__email--active'
-  const element = elementRef.value.$el.querySelector(activeElementSelector) ?? elementRef.value.$el
+  const element = elementRef.value.$el.querySelector(activeElementSelector)
+  // Do not scroll if the active element is not found
+  if (!element) return
   // We assume the closest container is the one with overflow-auto class
   const container = element.closest('.overflow-auto') ?? window.document.body
   // Use the scroll-tracker component
@@ -95,8 +97,6 @@ const init = waitFor(loaderId, async function () {
   thread.value.push('hits.hits', props.document.raw)
   thread.value.removeDuplicates()
   thread.value.orderBy('creationDate', ['asc'])
-  // Scroll to the active email
-  await scrollToActive()
 })
 
 async function getThread() {
@@ -124,7 +124,7 @@ onMounted(() => {
     }
   })
 
-  init()
+  init().then(scrollToActive)
 })
 
 onBeforeRouteUpdate(init)
