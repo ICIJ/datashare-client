@@ -4,7 +4,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
-import { toVariant, toVariantPhosphorIcon } from '@/utils/utils'
+import { toVariant, toVariantIcon } from '@/utils/utils'
 
 const { t } = useI18n()
 
@@ -37,7 +37,7 @@ const valueVariant = computed(() => {
 })
 
 const valueIcon = computed(() => {
-  return toVariantPhosphorIcon(props.value)
+  return toVariantIcon(props.value)
 })
 
 const valueTitle = computed(() => {
