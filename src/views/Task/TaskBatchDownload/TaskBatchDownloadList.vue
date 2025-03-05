@@ -10,7 +10,8 @@ import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import TaskBatchDownloadLink from '@/components/Task/TaskBatchDownload/TaskBatchDownloadLink'
-import BatchDownloadActions from '@/components/BatchDownloadActions'
+import TaskBatchDownloadActions from '@/components/Task/TaskBatchDownload/TaskBatchDownloadActions'
+import SearchBreadcrumbUri from '@/views/Search/SearchBreadcrumbUri'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 
@@ -56,8 +57,20 @@ function getRecord(item, key, defaultValue = undefined) {
       <template #cell(size)="{ item }">
         <display-content-length v-if="hasZipSize(item)" :value="item.result.size" class="text-nowrap" />
       </template>
-      <template #row-actions="{ item }">
-        <batch-download-actions :id="item.id" :name="item.name" :state="item.state" :value="getRecord(item)" />
+
+      <template #row-actions="{ item, detailsShowing, toggleDetails }">
+        <task-batch-download-actions
+          :id="item.id"
+          :name="item.name"
+          :state="item.state"
+          :value="getRecord(item)"
+          :toggle="detailsShowing"
+          @update:toggle="toggleDetails"
+        />
+      </template>
+
+      <template #row-details="{ item }">
+        <search-breadcrumb-uri uri="item.uri" :name="`batch-download-${item.uuid}`" no-label />
       </template>
     </page-table-generic>
   </task-page>
