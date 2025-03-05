@@ -52,7 +52,7 @@
 <script>
 import { Image } from 'image-js'
 import * as tiff from 'tiff'
-import { PhosphorIcon  } from '@icij/murmur-next'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
@@ -61,10 +61,10 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
  */
 export default {
   name: 'DocumentViewerTiff',
-  mixins: [datashareSourceMixin],
   components: {
     PhosphorIcon
   },
+  mixins: [datashareSourceMixin],
   props: {
     /**
      * The selected document
