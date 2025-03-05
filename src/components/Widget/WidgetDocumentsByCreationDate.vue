@@ -79,7 +79,8 @@ import FilterDate from '@/store/filters/FilterDate'
 export default {
   name: 'WidgetDocumentsByCreationDate',
   components: {
-    ColumnChartPicker
+    ColumnChartPicker,
+    PhosphorIcon
   },
   props: {
     /**
