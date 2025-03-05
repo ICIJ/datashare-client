@@ -8,7 +8,7 @@ defineProps({
 
 <template>
   <b-collapse :model-value="!collapse">
-    <div class="form-step-content p-3 mt-3 rounded-4">
+    <div class="form-step-content rounded-4">
       <slot />
     </div>
   </b-collapse>
@@ -17,5 +17,7 @@ defineProps({
 <style lang="scss" scoped>
 .form-step-content {
   background-color: var(--bs-body-bg);
+  padding: $spacer;
+  margin-top: $spacer;
 }
 </style>
