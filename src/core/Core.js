@@ -6,7 +6,6 @@ import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
-import VueEllipseProgress from 'vue-ellipse-progress'
 import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { createVueWait } from 'vue-wait'
@@ -201,7 +200,6 @@ class Core extends Behaviors {
     this.use(Vue3Toastify, { clearOnUrlChange: false, hideProgressBar: false, autoClose: 5000 })
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
-    this.use(VueEllipseProgress)
     this.vue.component('Fa', Fa)
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
