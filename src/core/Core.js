@@ -30,7 +30,6 @@ import { storeBuilder } from '@/store/storeBuilder'
 import { pinia } from '@/store/pinia'
 import Auth from '@/api/resources/Auth'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
-import Fa from '@/components/Fa'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
@@ -200,7 +199,6 @@ class Core extends Behaviors {
     this.use(Vue3Toastify, { clearOnUrlChange: false, hideProgressBar: false, autoClose: 5000 })
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
-    this.vue.component('Fa', Fa)
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437

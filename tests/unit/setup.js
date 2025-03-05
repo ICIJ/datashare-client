@@ -1,11 +1,4 @@
 import 'whatwg-fetch'
-import { fas as fasIcons } from '@fortawesome/free-solid-svg-icons'
-import { far as farIcons } from '@fortawesome/free-regular-svg-icons'
-import { library as fortawesome } from '@fortawesome/fontawesome-svg-core'
-
-// Register all icons
-fortawesome.add(...Object.values(fasIcons))
-fortawesome.add(...Object.values(farIcons))
 
 // This is a temporary workaround to avoid the following console.log
 // that are printed during the tests by vue-wait and vue3-shortkey.
