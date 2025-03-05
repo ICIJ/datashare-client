@@ -73,8 +73,8 @@ function searchParamsQuery(uri) {
     </template>
     <template #row-actions="{ item, detailsShowing, toggleDetails }">
       <search-saved-entries-row-actions
-        :toggle="detailsShowing"
         :event="item"
+        :toggle="detailsShowing"
         @update:toggle="toggleDetails"
         @edit="emit('reload')"
         @remove="emit('reload')"
