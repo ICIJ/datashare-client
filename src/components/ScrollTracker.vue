@@ -1,7 +1,6 @@
 <script>
 import { toRef } from 'vue'
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
-import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
+import { PhosphorIcon } from '@icij/murmur-next'
 import VueScrollTo from 'vue-scrollto'
 
 /**
@@ -9,6 +8,9 @@ import VueScrollTo from 'vue-scrollto'
  */
 export default {
   name: 'ScrollTracker',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * Hide the scroll tracker after this delay.
@@ -20,7 +22,7 @@ export default {
   },
   data() {
     return {
-      icon: faArrowUp,
+      icon: PhArrowFatLinesUp,
       offset: 0,
       timeoutHolder: null,
       target: null,
@@ -50,7 +52,7 @@ export default {
       return toggler ? this.show() : this.hide()
     },
     show() {
-      this.icon = this.isTargetAbove() ? faArrowDown : faArrowUp
+      this.icon = this.isTargetAbove() ? PhArrowFatLinesDown : PhArrowFatLinesUp
       this.visible = true
       this.setTimeout()
       // Hide the tracker on scroll
@@ -96,7 +98,7 @@ export default {
 <template>
   <transition name="fade">
     <a v-show="visible" class="scroll-tracker" tabindex="0" @click="scrollToTarget">
-      <fa :icon="icon"></fa>
+      <phosphor-icon :name="icon" />
     </a>
   </transition>
 </template>
