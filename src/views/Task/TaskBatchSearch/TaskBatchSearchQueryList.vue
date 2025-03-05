@@ -88,7 +88,7 @@ const empty = computed(() => queries.value.length === 0)
       </template>
     </page-header>
     <b-row fluid class="gap-3">
-      <b-col cols="8">
+      <b-col lg="8" cols="12">
         <page-toolbar
           v-model:searchQuery="searchQuery"
           v-model:page="page"
