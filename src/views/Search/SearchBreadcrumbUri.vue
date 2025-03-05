@@ -9,7 +9,7 @@ import { useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   name: {
-    type: Object,
+    type: String,
     required: true
   },
   uri: {
@@ -24,10 +24,11 @@ const props = defineProps({
 
 const { parseEntries } = useSearchBreadcrumb()
 
-const searchBreadcrumbURIStore = useSearchStore.dispose(`search-breadcrumb-${props.name}`)
+const searchBreadcrumbURIStore = useSearchStore.disposable(`search-breadcrumb-${props.name}`)
 
-const eventRouteQuery = computed(() => {
+const breadcrumbRouteQuery = computed(() => {
   const query = props.uri.split('?').pop()
+  console.log('query', query)
   const searchParams = new URLSearchParams(query)
   const searchParamsEntries = Array.from(searchParams.entries())
   // Convert the search params entries into an object. We cannot use Object.fromEntries directly
@@ -41,7 +42,7 @@ const eventRouteQuery = computed(() => {
 
 const entries = computed(() => parseEntries(searchBreadcrumbURIStore.toBaseRouteQuery))
 
-searchBreadcrumbURIStore.updateFromRouteQuery(eventRouteQuery.value)
+searchBreadcrumbURIStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
 </script>
 
 <template>
