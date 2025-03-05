@@ -7,6 +7,7 @@ import DisplayUser from '@/components/Display/DisplayUser'
 import SearchSavedEntriesRowActions from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowActions'
 import SearchSavedEntriesRowDetails from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowDetails'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
+import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
@@ -81,7 +82,7 @@ function searchParamsQuery(uri) {
       />
     </template>
     <template #row-details="{ item }">
-      <search-saved-entries-row-details :event="item" />
+      <search-breadcrumb-uri :uri="item.uri" no-label class="ps-5" />
     </template>
     <template #empty>
       {{ $t('searchSavedEntries.empty') }}

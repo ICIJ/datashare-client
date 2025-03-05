@@ -7,21 +7,23 @@ import SearchBreadcrumbFormList from '@/components/Search/SearchBreadcrumbForm/S
 import { useSearchBreadcrumb } from '@/composables/search-breadcrumb'
 import { useSearchStore } from '@/store/modules'
 
-const { event } = defineProps({
-  event: {
-    type: Object,
+const props = defineProps({
+  uri: {
+    type: String,
     required: true
+  },
+  noLabel: {
+    type: Boolean,
+    default: false
   }
 })
 
 const { parseEntries } = useSearchBreadcrumb()
 
-// Create a disposable search store that will be used to parse the route query.
-// When the component is unmounted, the store will be disposed automatically.
-const eventSearchStore = useSearchStore.disposable()
+const searchBreadcrumbURIStore = useSearchStore.disposable()
 
-const eventRouteQuery = computed(() => {
-  const query = event.uri.split('?').pop()
+const breadcrumbRouteQuery = computed(() => {
+  const query = props.uri.split('?').pop()
   const searchParams = new URLSearchParams(query)
   const searchParamsEntries = Array.from(searchParams.entries())
   // Convert the search params entries into an object. We cannot use Object.fromEntries directly
@@ -33,14 +35,13 @@ const eventRouteQuery = computed(() => {
   }, {})
 })
 
-const eventEntries = computed(() => parseEntries(eventSearchStore.toBaseRouteQuery))
+const entries = computed(() => parseEntries(searchBreadcrumbURIStore.toBaseRouteQuery))
 
-// This is necessary to update the search store with the route query when the component is mounted.
-eventSearchStore.updateFromRouteQuery(eventRouteQuery.value)
+searchBreadcrumbURIStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
 </script>
 
 <template>
-  <search-breadcrumb-form-list no-label class="ps-5">
-    <search-breadcrumb-form-entry v-for="(entry, i) in eventEntries" :key="i" v-bind="entry" no-x-icon />
+  <search-breadcrumb-form-list :no-label="noLabel">
+    <search-breadcrumb-form-entry v-for="(entry, i) in entries" :key="i" v-bind="entry" no-x-icon />
   </search-breadcrumb-form-list>
 </template>
