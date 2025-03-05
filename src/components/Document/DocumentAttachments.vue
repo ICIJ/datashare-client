@@ -7,7 +7,7 @@
           :to="{ name: 'document', params: attachment.routerParams }"
           class="document-attachments__list__item__link d-flex-inline"
         >
-          <fa :icon="attachment.contentTypeIcon" fixed-width class="me-1 mt-1" />
+          <phosphor-icon :name="document.contentTypeIcon" class="me-1 mt-1" />
           <span>{{ attachment.slicedName.pop() }}</span>
         </router-link>
       </li>
@@ -20,6 +20,7 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
+import { PhosphorIcon } from '@icij/murmur-next'
 import { flatten, get, sum } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -29,6 +30,9 @@ import EsDocList from '@/api/resources/EsDocList'
  */
 export default {
   name: 'DocumentAttachments',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * The selected document
