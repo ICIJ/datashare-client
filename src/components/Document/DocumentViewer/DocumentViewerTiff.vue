@@ -13,10 +13,10 @@
         <div class="tiff-viewer__header__pagination__actions flex-grow-1 text-end">
           <div class="btn-group">
             <button class="btn btn-outline-tertiary" @click="rotateActivePage(active, -1)">
-              <fa icon="arrow-rotate-left" class="float-end" />
+              <phosphor-icon :name="PhArrowCounterClockwise" class="float-end" />
             </button>
             <button class="btn btn-outline-tertiary" @click="rotateActivePage(active, 1)">
-              <fa icon="arrow-rotate-right" class="float-end" />
+              <phosphor-icon :name="PhArrowClockwise" class="float-end" />
             </button>
           </div>
         </div>
@@ -52,6 +52,7 @@
 <script>
 import { Image } from 'image-js'
 import * as tiff from 'tiff'
+import { PhosphorIcon  } from '@icij/murmur-next'
 
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
@@ -61,6 +62,9 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 export default {
   name: 'DocumentViewerTiff',
   mixins: [datashareSourceMixin],
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * The selected document
