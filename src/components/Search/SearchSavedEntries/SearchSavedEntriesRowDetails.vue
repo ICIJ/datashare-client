@@ -1,6 +1,6 @@
 <script setup>
 import { castArray } from 'lodash'
-import { onUnmounted, computed } from 'vue'
+import { computed } from 'vue'
 
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 import SearchBreadcrumbFormList from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormList'
@@ -16,7 +16,9 @@ const { event } = defineProps({
 
 const { parseEntries } = useSearchBreadcrumb()
 
-const eventSearchStore = useSearchStore.instantiate(`event-${event.id}`)
+// Create a disposable search store that will be used to parse the route query.
+// When the component is unmounted, the store will be disposed automatically.
+const eventSearchStore = useSearchStore.disposable()
 
 const eventRouteQuery = computed(() => {
   const query = event.uri.split('?').pop()
@@ -33,9 +35,8 @@ const eventRouteQuery = computed(() => {
 
 const eventEntries = computed(() => parseEntries(eventSearchStore.toBaseRouteQuery))
 
+// This is necessary to update the search store with the route query when the component is mounted.
 eventSearchStore.updateFromRouteQuery(eventRouteQuery.value)
-
-onUnmounted(eventSearchStore.$dispose)
 </script>
 
 <template>
