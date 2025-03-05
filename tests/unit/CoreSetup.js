@@ -1,6 +1,5 @@
 import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
-import VueEllipseProgress from 'vue-ellipse-progress'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import { createVueWait } from 'vue-wait'
@@ -35,9 +34,6 @@ class CoreSetup extends Core {
   }
   get vueScrollTo() {
     return VueScrollTo
-  }
-  get vueEllipseProgress() {
-    return VueEllipseProgress
   }
   get vCalendar() {
     return VCalendar
