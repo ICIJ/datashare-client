@@ -1,4 +1,4 @@
-import { setActivePinia, createPinia, mapStores, mapState } from 'pinia'
+import { setActivePinia, getActivePinia, createPinia, mapStores, mapState } from 'pinia'
 import { flushPromises, shallowMount } from '@vue/test-utils'
 
 import { defineSuffixedStore } from '@/store/suffixed'
@@ -94,6 +94,27 @@ describe('store/suffixed', () => {
     expect(barStore).not.toBe(store)
     expect(barStore.$id).not.toBe(store.$id)
     expect(barStore.$id).toBeDefined()
+  })
+
+  it('should create a store that is persisted in pinia registry', () => {
+    useFooStore.instantiate('bar')
+    expect(getActivePinia()._s.has('fooBar')).toBe(true)
+  })
+
+  it('should create a store that is persisted in pinia registry even after component is unmounted', () => {
+    const setup = () => ({ storeId: useFooStore.instantiate('bar').$id })
+    const wrapper = shallowMount({ setup })
+    expect(getActivePinia()._s.has(wrapper.vm.storeId)).toBe(true)
+    wrapper.unmount()
+    expect(getActivePinia()._s.has(wrapper.vm.storeId)).toBe(true)
+  })
+
+  it('should create a disposable store that is not persisted in pinia registry after component is unmounted', async () => {
+    const setup = () => ({ storeId: useFooStore.disposable('bar').$id })
+    const wrapper = shallowMount({ setup })
+    expect(getActivePinia()._s.has(wrapper.vm.storeId)).toBe(true)
+    await wrapper.unmount()
+    expect(getActivePinia()._s.has(wrapper.vm.storeId)).toBe(false)
   })
 
   it('should create a store factory that can be used with `mapStores`', () => {
