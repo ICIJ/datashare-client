@@ -1,7 +1,4 @@
 import { get } from 'lodash'
-import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
-import { faExclamation } from '@fortawesome/free-solid-svg-icons/faExclamation'
-import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 
 import settings from '@/utils/settings'
 import { slugger } from '@/utils/strings'
@@ -66,16 +63,6 @@ function toVariantPhosphorIcon(string = '', defaultVariant = 'dark') {
   return icons[string] ?? icons[variant]
 }
 
-function toVariantIcon(string = '', defaultVariant = 'dark') {
-  const variant = toVariant(string, defaultVariant)
-  const icons = {
-    success: faCheck,
-    danger: faTimes,
-    warning: faExclamation
-  }
-  return icons[variant]
-}
-
 function toVariantColor(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const style = getComputedStyle(document.body)
@@ -94,7 +81,6 @@ export {
   getShortkeyOS,
   objectIncludes,
   toVariant,
-  toVariantIcon,
   toVariantColor,
   toVariantPhosphorIcon,
   SORT_ORDER
