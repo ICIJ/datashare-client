@@ -53,7 +53,7 @@ const filterContentType = formSearchStore.getFilter({ name: 'contentType' })
     gap: 1rem;
     margin: 0;
     padding-inline: 0;
-    padding-bottom: 0
+    padding-bottom: 0;
   }
 
   &:deep(.filters-panel-section-filter) {

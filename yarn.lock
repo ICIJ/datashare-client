@@ -8431,11 +8431,6 @@ vue-docgen-api@^4.75.1:
     ts-map "^1.0.3"
     vue-inbrowser-compiler-independent-utils "^4.69.0"
 
-vue-ellipse-progress@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/vue-ellipse-progress/-/vue-ellipse-progress-2.1.2.tgz#f5356150ce64ce8679722a438b10a60a83ead945"
-  integrity sha512-CQl2DMx7uvWyD+1vFd8cNjLQ0l1d6ZD3pTVZaUgsPev1S/9Jo8LGKX7TXxeTyf18y7ckMmeFt/cQY4Rt4CoEsg==
-
 vue-eslint-parser@^9.4.2:
   version "9.4.2"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-9.4.2.tgz#02ffcce82042b082292f2d1672514615f0d95b6d"

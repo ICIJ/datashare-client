@@ -36,7 +36,12 @@ const allProjects = computed(() => core.projects)
         :placeholder="$t('task.batch-search.form.description.placeholder')"
       />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="visibility" force-compact translation-key="task.batch-search.form.visibility" :icon="PhQuotes">
+    <form-fieldset-i18n
+      name="visibility"
+      force-compact
+      translation-key="task.batch-search.form.visibility"
+      :icon="PhQuotes"
+    >
       <b-form-radio-group v-model="visibility" stacked>
         <b-form-radio name="visibility" :value="false">
           {{ $t('task.batch-search.form.visibility.options.private') }}
