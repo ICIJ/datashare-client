@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <component :is="tag" v-ellipsis-tooltip="{ title: label }" class="form-step-heading-title text-truncate">
+  <component :is="tag" v-ellipsis-tooltip="{ title }" class="form-step-heading-title text-truncate">
     <slot>{{ title }}</slot>
   </component>
 </template>
