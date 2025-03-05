@@ -13,8 +13,8 @@
             {{ $t('document.player.loop') }}
           </b-form-checkbox>
         </div>
-        <b-alert :show="cannotPlayAudioFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
-          <fa icon="triangle-exclamation" class="me-2" />
+        <b-alert :model-value="cannotPlayAudioFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
+          <phosphor-icon :name="PhWarning" class="me-2" />
           {{ $t('document.player.audio.unknownFormat') }}
         </b-alert>
       </div>
@@ -24,6 +24,8 @@
 
 <script>
 import { mapWritableState } from 'pinia'
+import { PhosphorIcon  } from '@icij/murmur-next'
+
 import { usePlayerStore } from '@/store/modules/player'
 
 /**
@@ -31,6 +33,9 @@ import { usePlayerStore } from '@/store/modules/player'
  */
 export default {
   name: 'DocumentViewerAudio',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * The selected document
