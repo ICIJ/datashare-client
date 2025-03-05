@@ -62,7 +62,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
     <v-wait class="bg-tertiary-subtle rounded-1 p-4" :for="loaderId">
       <template #waiting>
         <div class="text-center py-5">
-          <phosphor-icon name="circle-notch" spin size="2em" />
+          <phosphor-icon :name="PhCircleNotch" spin size="2em" />
         </div>
       </template>
       <project-jumbotron

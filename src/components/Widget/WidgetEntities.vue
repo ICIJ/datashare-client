@@ -2,7 +2,7 @@
   <v-wait :for="loader" transition="fade">
     <template #waiting>
       <div class="m-5 text-center h-100">
-        <phosphor-icon name="circle-notch" spin size="2em" />
+        <phosphor-icon :name="PhCircleNotch" spin size="2em" />
       </div>
     </template>
     <div class="widget widget--entities d-flex h-100 w-100">
