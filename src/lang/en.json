@@ -637,7 +637,7 @@
       "level10": "10th"
     },
     "tags": "Tags",
-    "excluded-tags": "Excluded Tags",
+    "tags-excluded": "Tags to exclude",
     "dateRange": {
       "from": "From {dateFormat}",
       "to": "To {dateFormat}",
@@ -1107,30 +1107,37 @@
         }
       },
       "form": {
-        "section": {
+        "sections": {
           "general": "Name, project(s) and description",
           "queries": "Queries",
           "operators": "Search operators",
-          "filters": "Advanced filters",
-          "visibility": "Visibility"
+          "filters": "Filters"
         },
         "name": {
           "label": "Name",
-          "placeholder": "Batch search name"
+          "placeholder": "Type the name of your batch search"
         },
         "projects": {
           "label": "Project(s)"
         },
         "description": {
           "label": "Description",
-          "placeholder": "Specifics about the batch search"
+          "placeholder": ""
+        },
+        "visibility": {
+          "label": "Visibility",
+          "options": {
+            "private": "Private - Only you will see your batch search",
+            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
+          },
+          "description": "This option can be changed later (either way)"
         },
         "csvFile": {
-          "label": "Upload a CSV file",
+          "label": "Use a CSV",
           "placeholder": "Drop your CSV"
         },
         "listQueries": {
-          "label": "List of queries",
+          "label": "Or type your queries",
           "placeholder": "New feature coming soon!"
         },
         "phraseChanges": {
@@ -1144,26 +1151,16 @@
         "phraseMatch": {
           "label": "Do phrase matches",
           "options": {
-            "yes": "Yes",
-            "no": "No",
-            "searchInDoubleQuotes": "Queries searched within double quotes",
-            "operatorsApplied": "Apply operators (AND, OR, NOT, etc.) in the queries"
+            "yes": "Yes - Queries searched within double quotes",
+            "no": "No - Apply operators (AND, OR, NOT, etc.) in the queries"
           }
         },
-        "visibility": {
-          "label": "Visibility",
-          "options": {
-            "private": "Private",
-            "privateDescription": "Only visible to you",
-            "shared": "Shared",
-            "sharedDescription": "Only visible to members of all the selected project(s)"
-          },
-          "description": "This option can be changed later (either way)"
-        },
-        "submit": "Launch"
+        "submit": "Launch",
+        "submitError": "Something went wrong, unable to run the batch search.",
+        "submitSuccess": "Batch search created successfully."
       },
       "new": {
-        "title":"Run a new batch search"
+        "title":"Start a new batch search"
       }
     },
     "batch-search-queries": {
