@@ -70,7 +70,7 @@ function getRecord(item, key, defaultValue = undefined) {
       </template>
 
       <template #row-details="{ item }">
-        <search-breadcrumb-uri uri="item.uri" :name="`batch-download-${item.uuid}`" no-label />
+        <search-breadcrumb-uri :uri="getRecord(item).uri" :name="`batch-download-${item.uuid}`" no-label />
       </template>
     </page-table-generic>
   </task-page>
