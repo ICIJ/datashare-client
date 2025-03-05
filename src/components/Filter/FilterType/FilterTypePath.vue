@@ -19,10 +19,6 @@ const {
 } = useSearchFilter()
 
 const props = defineProps({
-  projects: {
-    type: Array,
-    default: null
-  },
   filter: {
     type: Object,
     required: true
@@ -34,7 +30,7 @@ const props = defineProps({
 
 const tree = useTemplateRef('tree')
 const path = core.getDefaultDataDir()
-const projects = computed(() => props.projects ?? searchStore.indices)
+const projects = computed(() => searchStore.indices)
 const selected = computedFilterValues(props.filter)
 
 const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
@@ -55,7 +51,6 @@ watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadD
 watchValues(whenFilterContextualized(props.filter, reloadData))
 // When project changes, we reset the filter to avoid filtering by unknown paths
 watchIndices(reset)
-watch(toRef(props, 'projects'), reset, { deep: true })
 </script>
 
 <template>
