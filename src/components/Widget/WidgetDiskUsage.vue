@@ -2,7 +2,7 @@
   <v-wait for="disk usage" class="flex-grow-1" transition="fade">
     <template #waiting>
       <div class="m-5 text-center h-100">
-        <phosphor-icon name="circle-notch" spin size="2em" />
+        <phosphor-icon :name="PhCircleNotch" spin size="2em" />
       </div>
     </template>
     <widget-barometer-disk-usage

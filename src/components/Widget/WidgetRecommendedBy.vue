@@ -7,7 +7,7 @@
     <v-wait :for="loaderId" transition="fade">
       <template #waiting>
         <div class="widget__spinner text-center p-4">
-          <phosphor-icon name="circle-notch" spin size="2em" />
+          <phosphor-icon :name="PhCircleNotch" spin size="2em" />
         </div>
       </template>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">

@@ -133,7 +133,7 @@ onBeforeRouteUpdate(init)
 <template>
   <v-wait ref="element" :for="loaderId">
     <template #waiting>
-      <phosphor-icon name="circle-notch" spin class="d-flex mx-auto my-5" />
+      <phosphor-icon :name="PhCircleNotch" spin class="d-flex mx-auto my-5" />
     </template>
     <div class="document-thread">
       <ul class="list-unstyled document-thread__list m-0">
