@@ -1,4 +1,5 @@
-import { camelCase } from 'lodash'
+import { camelCase, uniqueId } from 'lodash'
+import { provide, onUnmounted } from 'vue'
 import { defineStore } from 'pinia'
 
 /**
@@ -65,6 +66,27 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    */
   useSuffixedStore.instantiate = (suffix) => {
     return useSuffixedStore.withSuffix(suffix).call()
+  }
+
+  /**
+   * Create a new store with a unique suffix. This is useful when you want
+   * to create a store that is disposed when the component is unmounted. This
+   * function is a composable and can be used outside a setup function.
+   * 
+   * @param {string} provideKey - The optional key to provide the suffix in the component.
+   * @returns {Store} - The unique store instance.
+   */
+  useSuffixedStore.disposable = (provideKey = null) => {
+    const suffix = uniqueId('disposable')
+    const store = useSuffixedStore.instantiate(suffix)
+    // Dispose the store when the component is unmounted.
+    onUnmounted(store.$dispose)
+    // Provide the suffix in the component to allow other components
+    // to use the same store instance.
+    if (provideKey) {
+      provide(provideKey, suffix)
+    }
+    return store
   }
 
   return useSuffixedStore
