@@ -1,20 +1,14 @@
 <script setup>
 import { PhCaretDown, PhCaretUp } from '@phosphor-icons/vue'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonRowAction from '@/components/Button/ButtonRowAction'
 const showDetails = defineModel({ type: Boolean, default: false })
 </script>
 
 <template>
-  <button-icon
-    :icon-left="showDetails ? PhCaretUp : PhCaretDown"
-    icon-left-hover-weight="bold"
-    hide-label
-    square
-    size="sm"
-    variant="outline-secondary"
+  <button-row-action
+    :icon="showDetails ? PhCaretUp : PhCaretDown"
     label="Toggle details"
-    class="border-0"
     @click="showDetails = !showDetails"
   />
 </template>
