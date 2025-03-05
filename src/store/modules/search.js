@@ -498,11 +498,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return query()
   }
 
-  function queryResetFilterValues(name) {
-    resetFilterValues(name)
-    return query()
-  }
-
   function queryToggleFilter(name) {
     toggleFilter(name)
     return query()
@@ -619,7 +614,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     querySetFilterValue,
     queryAddFilterValue,
     queryRemoveFilterValue,
-    queryResetFilterValues,
     queryToggleFilter,
     queryPreviousPage,
     queryNextPage,
