@@ -2,9 +2,9 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
-import SearchSavedEntriesRowDetails from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowDetails'
+import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 
-describe('SearchSavedEntriesRowDetails.vue', () => {
+describe('SearchBreadcrumbUri.vue', () => {
   let core, global, wrapper
 
   beforeEach(async () => {
@@ -15,12 +15,11 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   describe('a boolean query on one index', () => {
     beforeEach(() => {
       const uri = '/?q=foo%20AND%20bar&from=0&size=25&sort=relevance&index=project&custom=baz'
-      const event = { id: 'id_02', uri }
-      const props = { event }
-      wrapper = mount(SearchSavedEntriesRowDetails, { global, props })
+      const props = { uri }
+      wrapper = mount(SearchBreadcrumbUri, { global, props })
     })
 
-    it('should parse all fields from the event URI', () => {
+    it('should parse all fields from the URI', () => {
       const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
       expect(entries).toHaveLength(2)
     })
@@ -40,12 +39,11 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   describe('a simple query on two indices', () => {
     beforeEach(() => {
       const uri = '/?q=foo&from=0&size=25&index=banana,apple'
-      const event = { id: 'id_02', uri }
-      const props = { event }
-      wrapper = mount(SearchSavedEntriesRowDetails, { global, props })
+      const props = { uri }
+      wrapper = mount(SearchBreadcrumbUri, { global, props })
     })
 
-    it('should parse all fields from the event URI', () => {
+    it('should parse all fields from the URI', () => {
       const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
       expect(entries).toHaveLength(3)
     })
@@ -72,12 +70,11 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   describe('a simple query on two indices with a filter on contentType', () => {
     beforeEach(() => {
       const uri = '/?q=foo&from=0&size=25&index=banana,apple&f[contentType]=application/pdf'
-      const event = { id: 'id_02', uri }
-      const props = { event }
-      wrapper = mount(SearchSavedEntriesRowDetails, { global, props })
+      const props = { uri }
+      wrapper = mount(SearchBreadcrumbUri, { global, props })
     })
 
-    it('should parse all fields from the event URI', () => {
+    it('should parse all fields from the URI', () => {
       const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
       expect(entries).toHaveLength(4)
     })
@@ -110,12 +107,11 @@ describe('SearchSavedEntriesRowDetails.vue', () => {
   describe('a simple query on one index with 2 filters on contentType', () => {
     beforeEach(() => {
       const uri = '/?q=bar&index=cherry&f[contentType]=application/pdf&f[contentType]=image/png'
-      const event = { id: 'id_02', uri }
-      const props = { event }
-      wrapper = mount(SearchSavedEntriesRowDetails, { global, props })
+      const props = { uri }
+      wrapper = mount(SearchBreadcrumbUri, { global, props })
     })
 
-    it('should parse all fields from the event URI', () => {
+    it('should parse all fields from the URI', () => {
       const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
       expect(entries).toHaveLength(4)
     })

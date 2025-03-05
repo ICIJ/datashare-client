@@ -11,7 +11,7 @@ import TaskPage from '@/views/Task/TaskPage'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import TaskBatchDownloadLink from '@/components/Task/TaskBatchDownload/TaskBatchDownloadLink'
 import TaskBatchDownloadActions from '@/components/Task/TaskBatchDownload/TaskBatchDownloadActions'
-import SearchBreadcrumbUri from '@/views/Search/SearchBreadcrumbUri'
+import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 
@@ -70,7 +70,7 @@ function getRecord(item, key, defaultValue = undefined) {
       </template>
 
       <template #row-details="{ item }">
-        <search-breadcrumb-uri :uri="getRecord(item).uri" :name="`batch-download-${item.uuid}`" no-label />
+        <search-breadcrumb-uri :uri="getRecord(item).uri" no-label />
       </template>
     </page-table-generic>
   </task-page>
