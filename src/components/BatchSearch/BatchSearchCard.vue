@@ -17,7 +17,12 @@ const descriptionLabel = t('batchSearchCardDetails.description')
 
 <template>
   <card-panel class="batch-search-card" content-class="gap-2" :title="batchSearch.name" no-x-icon>
-    <text-truncate class="text-secondary-emphasis" :text="batchSearch.description" :aria-label="descriptionLabel" />
+    <text-truncate
+      v-if="batchSearch.description"
+      class="text-secondary-emphasis"
+      :text="batchSearch.description"
+      :aria-label="descriptionLabel"
+    />
     <batch-search-card-actions
       :uuid="batchSearch.uuid"
       :nb-results="batchSearch.nbResults"
