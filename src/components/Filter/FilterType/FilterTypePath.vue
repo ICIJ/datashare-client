@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, useTemplateRef, toRef, watch } from 'vue'
+import { computed, inject, useTemplateRef } from 'vue'
 
 import { useSearchFilter } from '@/composables/search-filter'
 import { useCore } from '@/composables/core'
