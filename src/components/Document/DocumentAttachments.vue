@@ -12,7 +12,7 @@
         </router-link>
       </li>
     </ul>
-    <a v-if="total && attachments.length < total" href="#" class="document-attachments__more" @click.prevent="loadMore">      
+    <a v-if="total && attachments.length < total" href="#" class="document-attachments__more" @click.prevent="loadMore">
       {{ $t('document.attachments.more') }}
     </a>
   </div>
