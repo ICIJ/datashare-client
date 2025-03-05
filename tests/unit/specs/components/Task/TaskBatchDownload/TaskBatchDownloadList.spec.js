@@ -3,7 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownloadList'
 import { apiInstance as api } from '@/api/apiInstance'
-import BatchDownloadActions from '@/components/BatchDownloadActions'
+import TaskBatchDownloadActions from '@/components/Task/TaskBatchDownload/TaskBatchDownloadActions'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
@@ -146,6 +146,6 @@ describe('TaskBatchDownloadList.vue', () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
-    expect(firstRow.findComponent(BatchDownloadActions).exists()).toBe(true)
+    expect(firstRow.findComponent(TaskBatchDownloadActions).exists()).toBe(true)
   })
 })
