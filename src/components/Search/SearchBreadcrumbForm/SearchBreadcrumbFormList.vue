@@ -15,7 +15,7 @@ defineProps({
       <phosphor-icon :name="PhPath" />
       {{ $t('searchBreadcrumbFormList.label') }}
     </div>
-    <div class="search-breadcrumb-form__entries d-flex flex-wrap row-gap-2 column-gap-1 align-items-baseline">
+    <div class="search-breadcrumb-form__entries d-flex flex-wrap row-gap-2 column-gap-2 align-items-baseline">
       <slot />
     </div>
   </div>
