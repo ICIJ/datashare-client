@@ -31,7 +31,7 @@ export function useNProgress(currentProgress = null, options = {}) {
 
   const start = nprogress.start
   const done = nprogress.done
-  const toggle = (load = !isLoading.value) => load ? start() : done()
+  const toggle = (value = !isLoading.value) => value ? start() : done()
 
   const isLoading = computed({
     set: toggle,
