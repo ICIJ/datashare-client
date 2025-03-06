@@ -24,7 +24,12 @@ const compact = computed(() => {
 
 <template>
   <page-table-th :label="t('projectEntriesTableHead.name')" :icon="PhCirclesThreePlus" emphasis sortable name="name" />
-  <page-table-th v-if="!compact" :label="t('projectEntriesTableHead.description')" :icon="PhTextAlignLeft" name="description" />
+  <page-table-th
+    v-if="!compact"
+    :label="t('projectEntriesTableHead.description')"
+    :icon="PhTextAlignLeft"
+    name="description"
+  />
   <page-table-th
     :label="t('projectEntriesTableHead.documents')"
     :icon="PhFiles"

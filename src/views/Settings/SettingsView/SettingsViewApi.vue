@@ -8,9 +8,7 @@ import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout
 import PageTable from '@/components/PageTable/PageTable'
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
-
 import { useCore } from '@/composables/core'
-
 
 /**
  * A page to manage user's API keys.
@@ -53,7 +51,7 @@ onMounted(getHashedApiKey)
         <phosphor-icon :name="PhKey" size="3em" />
       </div>
       <p v-html="$t('settings.api.key.why')" />
-      <button-icon variant="action" @click="createApiKey" :icon-left="PhPlus">
+      <button-icon variant="action" :icon-left="PhPlus" @click="createApiKey">
         {{ $t('settings.api.newApiKey') }}
       </button-icon>
     </div>
@@ -76,7 +74,6 @@ onMounted(getHashedApiKey)
           </td>
           <page-table-td-actions>
             <button-icon
-              @click.prevent="createApiKey"
               :icon-left="PhArrowClockwise"
               icon-left-hover-weight="bold"
               hide-label
@@ -85,9 +82,9 @@ onMounted(getHashedApiKey)
               variant="outline-secondary"
               class="border-0"
               :label="$t('settings.api.key.regenerate')"
+              @click.prevent="createApiKey"
             />
             <button-icon
-              @click.prevent="deleteApiKey"
               :icon-left="PhTrash"
               icon-left-hover-weight="bold"
               hide-label
@@ -96,11 +93,12 @@ onMounted(getHashedApiKey)
               variant="outline-secondary"
               class="border-0"
               :label="$t('settings.api.key.delete.button')"
+              @click.prevent="deleteApiKey"
             />
           </page-table-td-actions>
         </tr>
       </page-table>
-    </div>    
+    </div>
     <app-modal
       size="md"
       :title="$t('settings.api.key.created')"
