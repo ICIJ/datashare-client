@@ -7,14 +7,14 @@ export function useTaskProperties(propertyList) {
     sortable = false,
     emphasis = false,
     sortingKey = null,
-    sortingType = SORT_TYPE_KEY.ALPHA,
+    type = SORT_TYPE_KEY.ALPHA,
     required = false
   }) => {
     return {
       key,
       icon,
       sortingKey,
-      sortingType,
+      type,
       emphasis,
       sortable,
       required
@@ -36,14 +36,14 @@ export function useTaskProperties(propertyList) {
     icon: 'calendar-blank',
     key: 'createdAt',
     sortingKey: 'creationDate',
-    sortingType: SORT_TYPE_KEY.DATE,
+    type: SORT_TYPE_KEY.DATE,
     sortable: true
   })
 
   const progress = propertyItem({
     icon: 'clock-countdown',
     key: 'progress',
-    sortingType: SORT_TYPE_KEY.NUMBER,
+    type: SORT_TYPE_KEY.NUMBER,
     sortable: true
   })
   const state = propertyItem({
