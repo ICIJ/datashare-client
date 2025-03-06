@@ -196,7 +196,7 @@ class Core extends Behaviors {
     // to avoid adding them twice to the Vue instance.
     this.use(Murmur, { useI18n: false, useBootstrap: false })
     // Common plugins
-    this.use(Vue3Toastify, { clearOnUrlChange: false, hideProgressBar: false, autoClose: 5000 })
+    this.use(Vue3Toastify, { clearOnUrlChange: false, hideProgressBar: true, autoClose: false })
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
     // Setup VCalendar manually since Webpack is not compatible with
