@@ -1546,8 +1546,8 @@
   "viewSettings": {
     "perPage": "{title} per page",
     "properties":"Visible properties",
-    "view" : {
-      "label":"View",
+    "layout" : {
+      "label":"Layout",
       "grid" : "Grid",
       "table" : "Table"
     },
