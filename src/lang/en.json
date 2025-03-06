@@ -1551,6 +1551,8 @@
       "privacy": "Privacy",
       "pipeline": "Model",
       "entitiesToFind": "Entities to find",
+      "queries": "Queries",
+      "documents": "Documents",
       "size": "Size",
       "id": "Id"
     },
