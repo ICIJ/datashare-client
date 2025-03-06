@@ -159,12 +159,6 @@
   },
   "search": {
     "title": "Search",
-    "layout": {
-      "title": "View",
-      "grid": "Grid",
-      "list": "List",
-      "table": "Table"
-    },
     "errors": {
       "badRequest": "Your search query is wrong",
       "internalError": "The server encountered a problem",
@@ -1550,7 +1544,8 @@
     "layout" : {
       "label":"Layout",
       "grid" : "Grid",
-      "table" : "Table"
+      "table" : "Table",
+      "list" : "List"
     },
     "sortBy" : {
       "label":"Sort by",
