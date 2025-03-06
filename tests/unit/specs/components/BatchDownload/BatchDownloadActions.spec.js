@@ -62,9 +62,9 @@ describe('BatchDownloadActions.vue', () => {
       const query = { query: '{ }' }
       const props = mockRunBatchDownload('id', 'task', { projects, query })
       const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
-      expect(wrapper.emitted().relaunched).toBeUndefined()
+      expect(wrapper.emitted().relaunch).toBeUndefined()
       await wrapper.vm.relaunchTask()
-      expect(wrapper.emitted().relaunched).toBeDefined()
+      expect(wrapper.emitted().relaunch).toBeDefined()
     })
 
     it('should call the API with a parsed query', async () => {
@@ -96,9 +96,9 @@ describe('BatchDownloadActions.vue', () => {
     it('should emit a success when the delete', async () => {
       const props = mockDeleteBatchDownload('id', 'successful')
       const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
-      expect(wrapper.emitted().deleted).toBeUndefined()
+      expect(wrapper.emitted().delete).toBeUndefined()
       await wrapper.vm.deleteTask()
-      expect(wrapper.emitted().deleted).toBeDefined()
+      expect(wrapper.emitted().delete).toBeDefined()
     })
   })
 })
