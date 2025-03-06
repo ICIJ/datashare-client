@@ -19,7 +19,7 @@
         v-if="showSubmit"
         icon-left="magnifying-glass"
         variant="action"
-        class="search-bar-input__submit"
+        class="search-bar-input__submit me-1"
         type="submit"
         :disabled="disableSubmit"
       >
@@ -71,7 +71,7 @@ export default {
       default: false
     },
     /**
-     * Hide the submit button icon in the input bar
+     * Show submit button
      */
     showSubmit: {
       type: Boolean,
