@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { afterEach, beforeEach } from 'vitest'
 
 import { useNProgress } from '@/composables/nprogress'
+import { flushPromises } from '@vue/test-utils'
 
 describe('nprogress', () => {
   let result
@@ -26,7 +27,8 @@ describe('nprogress', () => {
     withSetup()
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    await flushPromises()
     result.done().remove()
   })
 
