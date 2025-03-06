@@ -1,14 +1,16 @@
 <script setup>
 import { PhCaretDown, PhCaretUp } from '@phosphor-icons/vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonRowAction from '@/components/Button/ButtonRowAction'
 const showDetails = defineModel({ type: Boolean, default: false })
+const { t } = useI18n()
 </script>
 
 <template>
   <button-row-action
     :icon="showDetails ? PhCaretUp : PhCaretDown"
-    label="Toggle details"
+    :label="t('pageTable.toggleDetails')"
     @click="showDetails = !showDetails"
   />
 </template>
