@@ -71,7 +71,7 @@ const classList = {
 </script>
 
 <template>
-  <b-alert :variant="variant" :model-value="show" class="ps-3 pe-0 py-2 dismissable-alert" :class="classList">
+  <b-alert :variant="variant" :model-value="show" class="px-3 py-2 dismissable-alert" :class="classList">
     <toast-body
       :toast-props="{ type: variant }"
       :icon="icon"
