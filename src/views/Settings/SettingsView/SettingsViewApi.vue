@@ -1,14 +1,14 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { PhosphorIcon, HapticCopy } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import AppModal from '@/components/AppModal/AppModal'
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import DisplayHash from '@/components/Display/DisplayHash'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
-import PageTable from '@/components/PageTable/PageTable'
-import PageTableTh from '@/components/PageTable/PageTableTh'
-import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 import { useCore } from '@/composables/core'
+import { useConfirmModal } from '@/composables/confirm'
 
 /**
  * A page to manage user's API keys.
@@ -18,6 +18,8 @@ defineOptions({ name: 'SettingsViewApi' })
 const hashedKey = ref(null)
 const apiKey = ref(null)
 const { core } = useCore()
+const { confirm } = useConfirmModal()
+const { t } = useI18n()
 
 const hasHashedKey = computed(() => !!hashedKey.value)
 const showModal = computed(() => !!apiKey.value)
@@ -41,63 +43,72 @@ async function deleteApiKey() {
   hashedKey.value = null
 }
 
+async function confirmDeleteApiKey() {
+  const description = t('settings.api.key.delete.description')
+
+  if (await confirm({ description })) {
+    deleteApiKey()
+  }
+}
+
 onMounted(getHashedApiKey)
 </script>
 
 <template>
   <settings-view-layout class="settings-view-api">
-    <div v-if="!hasHashedKey" class="settings-view-api__create-key">
+    <div v-if="!hasHashedKey" class="settings-view-api__create">
       <div class="mb-3">
         <phosphor-icon :name="PhKey" size="3em" />
       </div>
-      <p v-html="$t('settings.api.key.why')" />
-      <button-icon variant="action" :icon-left="PhPlus" @click="createApiKey">
+      <p v-html="$t('settings.api.description')" />
+      <button-icon variant="action" :icon-left="PhPlus" @click="createApiKey"  class="settings-view-api__create__button">
         {{ $t('settings.api.newApiKey') }}
       </button-icon>
     </div>
-    <div v-else>
-      <p v-html="$t('settings.api.key.description')" />
-      <page-table>
-        <template #thead>
-          <page-table-th label="Key" emphasis name="key" :icon="PhKey" />
-          <page-table-th label="Description" hide-label name="description" />
-          <page-table-th label="Actions" hide-label name="actions" />
-        </template>
-        <tr>
-          <td>
-            <span class="font-monospace">
-              {{ hashedKey.slice(0, 7) }}
-            </span>
-          </td>
-          <td class="text-secondary font-italic">
+    <div v-else class="settings-view-api__show">
+      <p v-html="$t('settings.api.description')" />
+      <div class="d-flex border rounded align-items-center">
+        <div class="d-inline-flex flex-column align-items-center gap-1 p-3">
+          <phosphor-icon :name="PhKey" />
+          <b-badge variant="dark">
+            {{ $t('settings.api.key.badge') }}
+          </b-badge>
+        </div>
+        <div class="flex-grow-1 p-3">
+          <i18n-t keypath="settings.api.key.hash">
+            <template #hash>
+              <display-hash class="settings-view-api__show__hash" :value="hashedKey" />
+            </template>
+          </i18n-t>
+          <p class="text-secondary-emphasis m-0">
             {{ $t('settings.api.key.unavailable') }}
-          </td>
-          <page-table-td-actions>
-            <button-icon
-              :icon-left="PhArrowClockwise"
-              icon-left-hover-weight="bold"
-              hide-label
-              square
-              size="sm"
-              variant="outline-secondary"
-              class="border-0"
-              :label="$t('settings.api.key.regenerate')"
-              @click.prevent="createApiKey"
-            />
-            <button-icon
-              :icon-left="PhTrash"
-              icon-left-hover-weight="bold"
-              hide-label
-              square
-              size="sm"
-              variant="outline-secondary"
-              class="border-0"
-              :label="$t('settings.api.key.delete.button')"
-              @click.prevent="deleteApiKey"
-            />
-          </page-table-td-actions>
-        </tr>
-      </page-table>
+          </p>
+        </div>
+        <div class="d-flex justify-content-end gap-1 p-3">
+          <button-icon
+            :icon-left="PhArrowClockwise"
+            icon-left-hover-weight="bold"
+            hide-label
+            square
+            size="sm"
+            variant="outline-secondary"
+            class="border-0"
+            :label="$t('settings.api.key.regenerate')"
+            @click="createApiKey"
+          />
+          <button-icon
+            :icon-left="PhTrash"
+            icon-left-hover-weight="bold"
+            hide-label
+            square
+            size="sm"
+            variant="outline-secondary"
+            class="settings-view-api__show__delete border-0"
+            :label="$t('settings.api.key.delete.button')"
+            @click="confirmDeleteApiKey"
+          />
+        </div>
+      </div>
     </div>
     <app-modal
       size="md"
