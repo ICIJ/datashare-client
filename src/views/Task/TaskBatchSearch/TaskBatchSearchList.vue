@@ -1,5 +1,6 @@
 <script setup>
 import get from 'lodash/get'
+import { ref, onBeforeMount } from 'vue'
 
 import TaskPage from '@/views/Task/TaskPage'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -16,7 +17,7 @@ import { useCore } from '@/composables/core'
 import BatchSearchLink from '@/components/BatchSearch/BatchSearchLink'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
-const { core, toastedPromise } = useCore()
+const { core } = useCore()
 
 function getProjects(item) {
   return getRecord(item, 'projects') ?? [core.getDefaultProject()]
@@ -25,14 +26,12 @@ function getProjects(item) {
 function getRecord(item, key) {
   return get(item, `args.batchRecord.${key}`)
 }
-function deleteBatchSearch(uuid) {
-  return toastedPromise(core.api.deleteBatchSearch(uuid), { successMessage: 'ouais!', errorMessage: 'boouh' })
-}
-function relaunchBatchSearch(uuid) {
-  console.log('relaunchBatchSearch', uuid)
-}
-function editBatchSearch(uuid) {
-  console.log('editBatchSearch', uuid)
+const me = ref({})
+onBeforeMount(async () => {
+  me.value = await core.auth.getUsername()
+})
+function userIsAuthorized(item) {
+  return me.value === getRecord(item, 'user.id')
 }
 </script>
 <template>
@@ -78,11 +77,7 @@ function editBatchSearch(uuid) {
         <display-progress :value="item.progress" />
       </template>
       <template #row-actions="{ item }"
-        ><batch-search-actions
-          :uuid="item.id"
-          @edit="editBatchSearch"
-          @relaunch="relaunchBatchSearch"
-          @delete="deleteBatchSearch"
+        ><batch-search-actions v-if="userIsAuthorized(item)" :uuid="item.id"
       /></template>
     </page-table-generic>
   </task-page>
