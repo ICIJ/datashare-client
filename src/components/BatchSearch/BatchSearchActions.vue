@@ -10,17 +10,21 @@ const props = defineProps({
   uuid: { type: String, required: true },
   showLabels: { type: Boolean, default: false }
 })
+const emit = defineEmits(['delete', 'relaunch', 'edit'])
 const { t } = useI18n()
 const { confirm: showConfirmModal } = useConfirmModal()
-const { core, toastedPromise } = useCore()
 
-async function showRemoveModal() {
+const successMessage = t('batchSearchActions.remove.success')
+const errorMessage = t('batchSearchActions.remove.error')
+const { core, toastedPromise } = useCore()
+function deleteBatchSearch() {
+  return toastedPromise(core.api.deleteBatchSearch(props.uuid), { successMessage, errorMessage })
+}
+async function onDelete() {
   if (await showConfirmModal()) {
     await deleteBatchSearch()
+    emit(deleteAction.event, props.uuid)
   }
-}
-function deleteBatchSearch() {
-  return toastedPromise(core.api.deleteBatchSearch(props.uuid), { successMessage: 'ouais!', errorMessage: 'boouh' })
 }
 
 const relaunchAction = {
@@ -48,10 +52,6 @@ const deleteAction = {
       @click="$emit(relaunchAction.event, uuid)"
     />
     <button-row-action :icon="editAction.icon" :label="t(editAction.label)" @click="$emit(editAction.event, uuid)" />
-    <button-row-action
-      :icon="deleteAction.icon"
-      :label="t(deleteAction.label)"
-      @click="$emit(deleteAction.event, uuid)"
-    />
+    <button-row-action :icon="deleteAction.icon" :label="t(deleteAction.label)" @click="onDelete" />
   </div>
 </template>
