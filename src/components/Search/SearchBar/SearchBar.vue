@@ -7,6 +7,7 @@
         class="search-bar__input w-100"
         :placeholder="localizedPlaceholder"
         :size="size"
+        :show-submit="showSubmit"
         autofocus
         @blur="onBlur"
         @submit="onSubmit"
@@ -127,6 +128,13 @@ export default {
     indices: {
       type: Array,
       default: null
+    },
+    /**
+     * Display the submit button
+     */
+    showSubmit: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['submit'],
