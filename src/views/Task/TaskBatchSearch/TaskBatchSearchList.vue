@@ -14,7 +14,7 @@ import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import { useCore } from '@/composables/core'
-import BatchSearchLink from '@/components/BatchSearch/BatchSearchLink'
+import LinkBatchSearch from '@/components/Link/LinkBatchSearch'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
@@ -57,7 +57,7 @@ function userIsAuthorized(item) {
         <display-visibility :value="getRecord(item, 'published')" />
       </template>
       <template #cell(name)="{ item }">
-        <batch-search-link :item="item" />
+        <link-batch-search :item="item" />
       </template>
       <template #cell(queries)="{ item }">
         <display-number :value="getRecord(item, 'nbQueries')" />
