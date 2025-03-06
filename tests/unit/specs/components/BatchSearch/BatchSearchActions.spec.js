@@ -1,5 +1,4 @@
-import { mount, shallowMount } from '@vue/test-utils'
-import { setCookie } from 'tiny-cookie'
+import { shallowMount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
@@ -13,11 +12,10 @@ vi.mock('@/api/apiInstance', {
 })
 
 describe('BatchSearchActions.vue', () => {
-  let wrapper, plugins, router
+  let wrapper, plugins
 
   beforeAll(() => {
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    router = core.router
     plugins = core.plugins
   })
 

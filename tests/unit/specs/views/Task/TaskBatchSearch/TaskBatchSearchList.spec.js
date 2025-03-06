@@ -1,5 +1,5 @@
 import { setCookie } from 'tiny-cookie'
-import { flushPromises, mount, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
