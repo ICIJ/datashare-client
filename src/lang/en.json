@@ -191,9 +191,7 @@
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Results settings",
-      "resultsPerPage": "Documents per page",
-      "sortBy": "Sort by",
-      "properties": "Visible properties"
+      "resultsPerPage": "Documents per page"
     },
     "results": {
       "match": "match in doc",
@@ -1540,7 +1538,7 @@
   },
   "viewSettings": {
     "perPage": "{title} per page",
-    "properties":"Visible properties",
+    "properties":"Properties",
     "layout" : {
       "label":"Layout",
       "grid" : "Grid",
