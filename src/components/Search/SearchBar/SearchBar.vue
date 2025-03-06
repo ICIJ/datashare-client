@@ -7,6 +7,7 @@
         class="search-bar__input w-100"
         :placeholder="localizedPlaceholder"
         :size="size"
+        autofocus
         @blur="onBlur"
         @submit="onSubmit"
         @input="onInput"
