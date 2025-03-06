@@ -6,6 +6,7 @@
     :to="to"
     class="button-icon"
     :class="classList"
+    :aria-label="tooltipText"
     @mousenter="currentHover = true"
     @mouseleave="currentHover = false"
   >
