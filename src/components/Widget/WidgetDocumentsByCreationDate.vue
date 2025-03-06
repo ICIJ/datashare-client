@@ -389,7 +389,7 @@ export default {
     cursor: pointer;
 
     &:hover {
-      fill: var(--bs-action)
+      fill: var(--bs-action);
     }
   }
 
