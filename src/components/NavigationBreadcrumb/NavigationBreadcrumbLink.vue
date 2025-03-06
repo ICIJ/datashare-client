@@ -86,15 +86,15 @@ const classList = computed(() => {
         <slot><display-route :value="routeName" :title="title" /></slot>
       </span>
     </span>
-    <phosphor-icon
-      v-if="!noCaret"
-      role="separator"
-      aria-hidden="true"
-      class="navigation-breadcrumb-link__caret mx-2"
-      size="1em"
-      :name="PhCaretRight"
-    />
   </a>
+  <phosphor-icon
+    v-if="!noCaret"
+    role="separator"
+    aria-hidden="true"
+    class="navigation-breadcrumb-link__caret mx-2"
+    size="1em"
+    :name="PhCaretRight"
+  />
 </template>
 
 <style lang="scss" scoped>
