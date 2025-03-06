@@ -10,6 +10,7 @@ const emit = defineEmits(['close'])
     variant="action"
     :label="$t('searchBreadcrumbFormToggler.close')"
     hide-label
+    square
     icon-left="x"
     @click="emit('close')"
   >
