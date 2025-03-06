@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
+import { afterEach, beforeEach } from 'vitest'
 
 import { useNProgress } from '@/composables/nprogress'
-import { afterEach, beforeEach } from 'vitest'
 
 describe('nprogress', () => {
   let result
@@ -17,7 +17,7 @@ describe('nprogress', () => {
       setup() {
         result = useNProgress({ trickle: false })
         // Return a dummy render function
-        return () => { }
+        return () => {}
       }
     })
 
@@ -32,7 +32,7 @@ describe('nprogress', () => {
     result.done().remove()
   })
 
-  it('should not create a progress bar by default', () => {  
+  it('should not create a progress bar by default', () => {
     expect(document.body.querySelector('#nprogress')).toBeNull()
   })
 
@@ -60,7 +60,7 @@ describe('nprogress', () => {
     expect(result.isLoading.value).toBe(false)
   })
 
-  it('should not be in loading state after `done` is called', async () => {
+  it('should not be in loading state after `remove` is called', async () => {
     result.start()
     result.remove()
     expect(result.isLoading.value).toBe(false)

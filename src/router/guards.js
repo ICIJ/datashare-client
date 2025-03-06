@@ -3,10 +3,8 @@ import isFunction from 'lodash/isFunction'
 
 import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/nprogress'
-import { remove } from 'lodash'
 
 export default ({ router, auth, config, i18n, setPageTitle }) => {
-  
   async function checkUserAuthentication(to, from, next) {
     const appStore = useAppStore()
     try {

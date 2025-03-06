@@ -11,14 +11,14 @@ export function useNProgress(currentProgress = null, options = {}) {
   nprogress.set = (n) => {
     progress.value = n
     return setProgress.call(nprogress, n)
-  } 
+  }
 
   watchEffect(() => {
     if (typeof progress.value === 'number') {
       setProgress.call(nprogress, progress.value)
     }
-  }) 
-  
+  })
+
   // Disable the spinner by default
   nprogress.configure({ showSpinner: false, ...options })
 
@@ -31,11 +31,11 @@ export function useNProgress(currentProgress = null, options = {}) {
 
   const start = nprogress.start
   const done = nprogress.done
-  const toggle = (value = !isLoading.value) => value ? start() : done()
+  const toggle = (value = !isLoading.value) => (value ? start() : done())
 
   const isLoading = computed({
     set: toggle,
-    get: () => typeof progress.value === 'number' && progress.value < 1,
+    get: () => typeof progress.value === 'number' && progress.value < 1
   })
 
   const remove = () => {
