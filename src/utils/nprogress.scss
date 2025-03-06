@@ -1,0 +1,15 @@
+@import 'nprogress/nprogress.css';
+
+#nprogress {
+  position: fixed;
+  z-index: $zindex-toast + 10;
+}
+
+#nprogress .bar { 
+  height: 3px;
+  background: var(--bs-primary);
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--bs-primary), 0 0 5px var(--bs-primary);
+}
