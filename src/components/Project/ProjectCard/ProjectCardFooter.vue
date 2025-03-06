@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 
+import ProjectCardUpdateDate from './ProjectCardUpdateDate'
+import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
@@ -9,13 +12,6 @@ const props = defineProps({
     required: true
   }
 })
-
-const toProjectInsights = computed(() => ({
-  name: 'project.view.overview.insights',
-  params: {
-    name: props.project.name
-  }
-}))
 
 const toProjectSearch = computed(() => ({
   name: 'search',
@@ -26,22 +22,22 @@ const toProjectSearch = computed(() => ({
 </script>
 
 <template>
-  <div class="project-card-footer d-flex flex-lg-row flex-column gap-3 align-items-start justify-content-between">
+  <div class="project-card-footer d-flex flex-column flex-xl-row gap-3">
     <slot>
-      <button-icon
-        :to="toProjectInsights"
-        icon-left="chart-bar"
-        variant="outline-tertiary"
-        truncate
-        class="project-card-footer__insights"
-        :label="$t('projectCardFooter.insights')"
-      />
+      <div class="d-flex flex-column lh-lg-1 mt-auto flex-grow-1 align-items-start">
+        <project-card-update-date :project="project">
+          <slot name="update-date" />
+        </project-card-update-date>
+        <project-card-documents-count :project="project">
+          <slot name="documents-count" />
+        </project-card-documents-count>
+      </div>
       <button-icon
         :to="toProjectSearch"
         icon-left="magnifying-glass"
         variant="outline-primary"
         truncate
-        class="project-card-footer__search"
+        class="project-card-footer__search align-self-start"
         :label="$t('projectCardFooter.search')"
       />
     </slot>

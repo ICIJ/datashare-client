@@ -1,36 +1,26 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
-import { isNumber } from 'lodash'
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { isNumber } from 'lodash'
+import { PhosphorIcon } from '@icij/murmur-next'
 
-import humanNumber from '@/utils/humanNumber'
+import DisplayNumber from '@/components/Display/DisplayNumber.vue'
 
-const props = defineProps({
+const { project } = defineProps({
   project: {
     type: Object,
     required: true
   }
 })
 
-const { tm } = useI18n()
-
-const humanDocumentsCount = computed(() => {
-  return humanNumber(props.project.documentsCount, tm('human.number'))
-})
+const hasDocuments = computed(() => isNumber(project.documentsCount) && project.documentsCount > 0)
 </script>
 
 <template>
-  <div
-    v-if="isNumber(project.documentsCount)"
-    v-b-tooltip.body
-    class="project-card-documents-count text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap"
-    :title="$n(project.documentsCount)"
-    :key="project.documentsCount"
-  >
+  <div class="project-card-documents-count text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap">
     <slot>
-      <phosphor-icon name="files" class="me-1" />
-      {{ $tc('projectCardDocumentsCount.label', project.documentsCount, { humanDocumentsCount }) }}
+      <phosphor-icon name="files" />
+      <display-number v-if="hasDocuments" :value="project.documentsCount" />
+      <span v-else>{{ $t('projectCardDocumentsCount.noDocuments') }}</span>
     </slot>
   </div>
 </template>

@@ -19,7 +19,7 @@
         v-if="showSubmit"
         icon-left="magnifying-glass"
         variant="action"
-        class="search-bar-input__submit me-1"
+        class="search-bar-input__submit"
         type="submit"
         :disabled="disableSubmit"
       >
@@ -111,3 +111,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.search-bar-input:deep(.form-control-lg) {
+  font-size: 1rem;
+}
+</style>
