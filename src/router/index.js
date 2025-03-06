@@ -479,6 +479,16 @@ export const routes = [
               breadcrumb: false,
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
+          },
+          {
+            name: 'settings.api',
+            path: 'api',
+            component: () => import('@/views/Settings/SettingsView/SettingsViewApi'),
+            meta: {
+              title: 'settings.api.title',
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.SERVER]
+            }
           }
         ]
       },
