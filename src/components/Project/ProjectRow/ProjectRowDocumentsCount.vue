@@ -1,9 +1,5 @@
 <script setup>
-import { computed } from 'vue'
-import { isNumber } from 'lodash'
-import { useI18n } from 'vue-i18n'
-
-import humanNumber from '@/utils/humanNumber'
+import DisplayNumber from '@/components/Display/DisplayNumber'
 
 const props = defineProps({
   project: {
@@ -11,25 +7,12 @@ const props = defineProps({
     required: true
   }
 })
-
-const { tm } = useI18n()
-
-const humanDocumentsCount = computed(() => {
-  return humanNumber(props.project.documentsCount, tm('human.number'))
-})
 </script>
 
 <template>
   <td class="project-row-documents-count text-end">
-    <span
-      v-if="isNumber(project.documentsCount)"
-      v-b-tooltip.body
-      class="text-secondary-emphasis"
-      :title="$n(project.documentsCount)"
-    >
-      <slot>
-        {{ humanDocumentsCount }}
-      </slot>
-    </span>
+    <slot>
+      <display-number :value="project.documentsCount" />
+    </slot>
   </td>
 </template>
