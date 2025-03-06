@@ -14,12 +14,13 @@ import { useCore } from '@/composables/core'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
 import { SIZE } from '@/enums/sizes'
-import { useAppStore } from '@/store/modules'
+import { useAppStore, useSearchStore } from '@/store/modules'
 import settings from '@/utils/settings'
 import useMode from '@/composables/mode'
 
 const { core } = useCore()
 const appStore = useAppStore()
+const searchStore = useSearchStore()
 const { isServer } = useMode()
 const { breakpointDown } = useBreakpoints()
 const { t } = useI18n()
@@ -66,6 +67,11 @@ const classList = computed(() => {
 
 const toAddProject = computed(() => {
   return isServer.value ? null : { name: 'project.new' }
+})
+
+const searchRoute = computed(() => {
+  const { toRouteQuery: query } = searchStore
+  return { name: 'search', query }
 })
 
 const signOutLink = computed(() => {
@@ -121,8 +127,8 @@ const noAnalysis = computed(() => {
             <project-label :project="project" hide-thumbnail />
           </app-sidebar-section-entry>
         </app-sidebar-section>
-        <app-sidebar-section title="Explore" :icon="PhMagnifyingGlass" :to="{ name: 'search' }" :compact="compact">
-          <app-sidebar-section-entry :icon="PhMagnifyingGlass" :to="{ name: 'search' }" exact-match>
+        <app-sidebar-section title="Explore" :icon="PhMagnifyingGlass" :to="searchRoute" :compact="compact">
+          <app-sidebar-section-entry :icon="PhMagnifyingGlass" :to="searchRoute" exact-match>
             {{ t('appSidebar.search') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.visited-documents.list' }">
