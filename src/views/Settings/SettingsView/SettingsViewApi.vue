@@ -61,7 +61,7 @@ onMounted(getHashedApiKey)
         <phosphor-icon :name="PhKey" size="3em" />
       </div>
       <p v-html="$t('settings.api.description')" />
-      <button-icon variant="action" :icon-left="PhPlus" @click="createApiKey"  class="settings-view-api__create__button">
+      <button-icon variant="action" :icon-left="PhPlus" class="settings-view-api__create__button" @click="createApiKey">
         {{ $t('settings.api.newApiKey') }}
       </button-icon>
     </div>
