@@ -59,14 +59,14 @@ const example = {
   options: [
     { text: 'Most relevant', value: 'most-relevant' },
     { text: 'Less relevant', value: 'less-relevant' },
-    { text: 'Creation date (new)', value: 'creation-date-new' },
-    { text: 'Creation date (old)', value: 'creation-date-old' },
+    { text: 'Creation date (recent first)', value: 'creation-date-new' },
+    { text: 'Creation date (old first)', value: 'creation-date-old' },
     { text: 'Size (decreasing)', value: 'size-decreasing' },
     { text: 'Size (increasing)', value: 'size-increasing' },
     { text: 'File path (A to Z)', value: 'file-path' },
     { text: 'File path (Z to A)', value: 'file-path' },
-    { text: 'Indexing date (new)', value: 'indexing-date-new' },
-    { text: 'Indexing date (old)', value: 'indexing-date-old' }
+    { text: 'Indexing date (recent first)', value: 'indexing-date-new' },
+    { text: 'Indexing date (old first)', value: 'indexing-date-old' }
   ]
 }
 const props2 = {
