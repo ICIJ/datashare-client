@@ -44,8 +44,8 @@ const tabs = computed(() => [
     modes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
   },
   {
-    icon: 'database',
-    title: t('settings.addons.api.title'),
+    icon: 'key',
+    title: t('settings.api.title'),
     name: 'settings.api',
     modes: [MODE_NAME.SERVER]
   }

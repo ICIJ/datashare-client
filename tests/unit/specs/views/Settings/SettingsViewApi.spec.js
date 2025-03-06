@@ -2,7 +2,7 @@ import { flushPromises, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import ApiPage from '@/components/Api'
+import SettingsViewApi from '@/components/Settings/SettingsViewApi'
 import { MODE_NAME } from '@/mode'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -35,20 +35,20 @@ describe('Api.vue', () => {
   })
 
   it('should display a button to generate the API key by default', () => {
-    const wrapper = shallowMount(ApiPage, { global: { plugins } })
-    expect(wrapper.find('.api .api__create-key b-button-stub').exists()).toBeTruthy()
+    const wrapper = shallowMount(SettingsViewApi, { global: { plugins } })
+    expect(wrapper.find('.settings-view-api__create-key b-button-stub').exists()).toBeTruthy()
   })
 
   it('should display no rows by default', () => {
-    const wrapper = shallowMount(ApiPage, { global: { plugins } })
-    expect(wrapper.findAll('.api__key')).toHaveLength(0)
+    const wrapper = shallowMount(SettingsViewApi, { global: { plugins } })
+    expect(wrapper.findAll('.settings-view-api__key')).toHaveLength(0)
   })
 
   it('should request the creation of the API key', async () => {
-    const wrapper = shallowMount(ApiPage, { global: { plugins } })
+    const wrapper = shallowMount(SettingsViewApi, { global: { plugins } })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
-    await wrapper.find('.api .api__create-key b-button-stub').trigger('click')
+    await wrapper.find('.settings-view-api__create-key b-button-stub').trigger('click')
     await flushPromises()
 
     expect(api.getApiKey).toBeCalledTimes(2)
@@ -61,14 +61,14 @@ describe('Api.vue', () => {
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.deleteApiKey.mockResolvedValue({})
-    const wrapper = shallowMount(ApiPage, { global: { plugins } })
-    expect(wrapper.findAll('.api__key')).toHaveLength(0)
+    const wrapper = shallowMount(SettingsViewApi, { global: { plugins } })
+    expect(wrapper.findAll('.settings-view-api__key')).toHaveLength(0)
 
     await wrapper.vm.createApiKey()
-    expect(wrapper.findAll('.api__key')).toHaveLength(1)
+    expect(wrapper.findAll('.settings-view-api__key')).toHaveLength(1)
 
     await wrapper.vm.deleteApiKey()
-    expect(wrapper.findAll('.api__key')).toHaveLength(0)
+    expect(wrapper.findAll('.settings-view-api__key')).toHaveLength(0)
 
     expect(api.deleteApiKey).toBeCalledTimes(1)
     expect(api.deleteApiKey).toBeCalledWith('doe')
