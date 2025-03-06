@@ -183,7 +183,7 @@ export default [
     options: {
       name: 'indexingDate',
       key: 'extractionDate',
-      icon: 'calendar-blank',
+      icon: 'calendar-plus',
       hideSearch: true,
       order: 120,
       section: 'documentsInfo'
