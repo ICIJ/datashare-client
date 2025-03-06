@@ -26,6 +26,7 @@ const humanDocumentsCount = computed(() => {
     v-b-tooltip.body
     class="project-card-documents-count text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap"
     :title="$n(project.documentsCount)"
+    :key="project.documentsCount"
   >
     <slot>
       <phosphor-icon name="files" class="me-1" />
