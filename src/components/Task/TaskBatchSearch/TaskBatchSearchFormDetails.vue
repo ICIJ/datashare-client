@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import FormStep from '@/components/Form/FormStep/FormStep'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
+import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import { useCore } from '@/composables/core'
 
 const name = defineModel('name', { type: String, required: true })
@@ -36,20 +37,22 @@ const allProjects = computed(() => core.projects)
         :placeholder="$t('task.batch-search.form.description.placeholder')"
       />
     </form-fieldset-i18n>
-    <form-fieldset-i18n
-      name="visibility"
-      force-compact
-      translation-key="task.batch-search.form.visibility"
-      :icon="PhQuotes"
-    >
-      <b-form-radio-group v-model="visibility" stacked>
-        <b-form-radio name="visibility" :value="false">
-          {{ $t('task.batch-search.form.visibility.options.private') }}
-        </b-form-radio>
-        <b-form-radio name="visibility" :value="true">
-          {{ $t('task.batch-search.form.visibility.options.shared') }}
-        </b-form-radio>
-      </b-form-radio-group>
-    </form-fieldset-i18n>
+    <mode-server-only>
+      <form-fieldset-i18n
+        name="visibility"
+        force-compact
+        translation-key="task.batch-search.form.visibility"
+        :icon="PhQuotes"
+      >
+        <b-form-radio-group v-model="visibility" stacked>
+          <b-form-radio name="visibility" :value="false">
+            {{ $t('task.batch-search.form.visibility.options.private') }}
+          </b-form-radio>
+          <b-form-radio name="visibility" :value="true">
+            {{ $t('task.batch-search.form.visibility.options.shared') }}
+          </b-form-radio>
+        </b-form-radio-group>
+      </form-fieldset-i18n>
+    </mode-server-only>
   </form-step>
 </template>
