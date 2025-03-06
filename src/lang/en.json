@@ -1504,7 +1504,7 @@
     },
     "languages": {
       "title": "Languages",
-      "info": "Translations are <a href='%{href}' >maintained on Crowdin</a>."
+      "info": "Translations are <a href='%{href}' class='alert-link'>maintained on Crowdin</a>."
     },
     "addons": {
       "installFromUrl": "Install from a URL",
