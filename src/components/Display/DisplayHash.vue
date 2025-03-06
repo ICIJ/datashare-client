@@ -4,7 +4,7 @@ import { computed } from 'vue'
 const { value } = defineProps({
   value: {
     type: String,
-    required: true,
+    required: true
   }
 })
 
