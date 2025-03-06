@@ -2,7 +2,7 @@ import { mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { flushPromises } from '~tests/unit/tests_utils'
-import BatchSearchActions from '@/components/BatchSearch/BatchSearchCardActions'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
 

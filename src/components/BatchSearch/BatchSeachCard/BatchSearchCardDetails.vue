@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { capitalize } from 'lodash'
 
 import DisplayStatus from '@/components/Display/DisplayStatus'
-import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSearchCardDetailsEntry'
+import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
 import ProjectLink from '@/components/Project/ProjectLink'

@@ -2,17 +2,27 @@
 import { useI18n } from 'vue-i18n'
 
 import CardPanel from '@/components/CardPanel/CardPanel'
-import BatchSearchCardActions from '@/components/BatchSearch/BatchSearchCardActions'
-import BatchSearchCardDetails from '@/components/BatchSearch/BatchSearchCardDetails'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
+import BatchSearchCardDetails from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetails'
 import TextTruncate from '@/components/Text/TextTruncate'
+import { useCore } from '@/composables/core'
 defineOptions({ name: 'BatchSearchDetails' })
 defineProps({
   batchSearch: { type: Object, required: true }
 })
-
+const { core, toastedPromise } = useCore()
 const { t } = useI18n()
 
 const descriptionLabel = t('batchSearchCardDetails.description')
+function deleteBatchSearch(uuid) {
+  return toastedPromise(core.api.deleteBatchSearch(uuid))
+}
+function relaunchBatchSearch(uuid) {
+  console.log('relaunchBatchSearch', uuid)
+}
+function editBatchSearch(uuid) {
+  console.log('editBatchSearch', uuid)
+}
 </script>
 
 <template>
@@ -23,10 +33,11 @@ const descriptionLabel = t('batchSearchCardDetails.description')
       :text="batchSearch.description"
       :aria-label="descriptionLabel"
     />
-    <batch-search-card-actions
+    <batch-search-actions
       :uuid="batchSearch.uuid"
-      :nb-results="batchSearch.nbResults"
-      projects="batchSearch.projects"
+      @edit="editBatchSearch"
+      @relaunch="relaunchBatchSearch"
+      @delete="deleteBatchSearch"
     />
     <batch-search-card-details
       :uuid="batchSearch.uuid"

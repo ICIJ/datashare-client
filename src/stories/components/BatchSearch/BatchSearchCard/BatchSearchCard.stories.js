@@ -1,6 +1,6 @@
 import { vueRouter } from 'storybook-vue3-router'
 
-import BatchSearchCard from '@/components/BatchSearch/BatchSearchCard'
+import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
 import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
 const routes = [
   {

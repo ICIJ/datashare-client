@@ -9,8 +9,8 @@ import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
-import TaskBatchDownloadLink from '@/components/Task/TaskBatchDownload/TaskBatchDownloadLink'
-import TaskBatchDownloadActions from '@/components/Task/TaskBatchDownload/TaskBatchDownloadActions'
+import BatchDownloadLink from '@/components/BatchDownload/BatchDownloadLink'
+import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
@@ -46,7 +46,7 @@ function getRecord(item, key, defaultValue = undefined) {
         <display-status :value="item.state" />
       </template>
 
-      <template #cell(name)="{ item }"> <task-batch-download-link :item="item" /> </template>
+      <template #cell(name)="{ item }"> <batch-download-link :item="item" /> </template>
 
       <template #cell(projects)="{ item }">
         <display-project-list :values="getRecord(item, 'projects')" />
@@ -59,7 +59,7 @@ function getRecord(item, key, defaultValue = undefined) {
       </template>
 
       <template #row-actions="{ item, detailsShowing, toggleDetails }">
-        <task-batch-download-actions
+        <batch-download-actions
           :id="item.id"
           :name="item.name"
           :state="item.state"

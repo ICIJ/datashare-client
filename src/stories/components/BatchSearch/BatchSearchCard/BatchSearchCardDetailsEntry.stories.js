@@ -1,4 +1,4 @@
-import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSearchCardDetailsEntry'
+import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 
 export default {
   title: 'Components/BatchSearch/BatchSearchCardDetailsEntry',
