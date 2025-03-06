@@ -22,7 +22,7 @@ const dismissLabel = computed(() => props.infoDismissLabel ?? t('settings.layout
 </script>
 <template>
   <div class="settings-view-layout d-flex flex-column gap-4 px-2 py-4">
-    <slot name="info" v-bind="{ infoDismissLabel, infoLabel, infoName }">
+    <slot v-if="infoLabel" name="info" v-bind="{ infoDismissLabel, infoLabel, infoName }">
       <dismissable-alert variant="info" class="m-0" persist :name="infoName" :link-label="dismissLabel">
         <span v-html="infoLabel" />
       </dismissable-alert>
