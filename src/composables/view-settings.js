@@ -30,7 +30,8 @@ export function useViewSettings() {
   const tLayout = {
     label: computed((_) => t('viewSettings.layout.label')),
     grid: computed((_) => t('viewSettings.layout.grid')),
-    table: computed((_) => t('viewSettings.layout.table'))
+    table: computed((_) => t('viewSettings.layout.table')),
+    list: computed((_) => t('viewSettings.layout.list'))
   }
   const perPageLabel = (titleKey) => computed((_) => t('viewSettings.perPage', { title: t(titleKey) }))
   return { tSortByOption, sortByLabel, visiblePropertiesLabel, tLayout, perPageLabel }

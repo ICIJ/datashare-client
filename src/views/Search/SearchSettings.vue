@@ -10,12 +10,14 @@ import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import settings from '@/utils/settings'
 import { useAppStore } from '@/store/modules'
+import { useViewSettings } from '@/composables/view-settings'
 
 const { t } = useI18n()
 const appStore = useAppStore()
+const { tLayout } = useViewSettings(t)
 
 const layout = ref({
-  label: computed(() => t('search.layout.title')),
+  label: tLayout.label,
   type: 'radio',
   open: true,
   modelValue: computed({
@@ -25,17 +27,17 @@ const layout = ref({
   options: [
     {
       value: LAYOUTS.LIST,
-      text: computed(() => t('search.layout.list')),
+      text: tLayout.list,
       icon: 'list'
     },
     {
       value: LAYOUTS.GRID,
-      text: computed(() => t('search.layout.grid')),
+      text: tLayout.grid,
       icon: 'dots-nine'
     },
     {
       value: LAYOUTS.TABLE,
-      text: computed(() => t('search.layout.table')),
+      text: tLayout.table,
       icon: 'table'
     }
   ]
