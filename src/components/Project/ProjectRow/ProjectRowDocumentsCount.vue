@@ -1,7 +1,7 @@
 <script setup>
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
-const props = defineProps({
+defineProps({
   project: {
     type: Object,
     required: true

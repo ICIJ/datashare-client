@@ -1,7 +1,5 @@
 <script setup>
-import ProjectCardUpdateDate from './ProjectCardUpdateDate'
 import ProjectCardDescription from './ProjectCardDescription'
-import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
 import ProjectCardFooter from './ProjectCardFooter'
 import ProjectCardLabel from './ProjectCardLabel'
 import ProjectCardThumbnail from './ProjectCardThumbnail'
@@ -27,14 +25,6 @@ defineProps({
         <project-card-description :project="project">
           <slot name="description" />
         </project-card-description>
-      </div>
-      <div class="d-flex flex-lg-row flex-column lh-lg-1 mt-auto">
-        <project-card-update-date :project="project">
-          <slot name="update-date" />
-        </project-card-update-date>
-        <project-card-documents-count :project="project" class="ms-lg-auto">
-          <slot name="documents-count" />
-        </project-card-documents-count>
       </div>
       <project-card-footer :project="project">
         <slot name="footer" />

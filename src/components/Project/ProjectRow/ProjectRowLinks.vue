@@ -17,13 +17,6 @@ const props = defineProps({
   }
 })
 
-const toProjectInsights = computed(() => ({
-  name: 'project.view.overview.insights',
-  params: {
-    name: props.project.name
-  }
-}))
-
 const toProjectSearch = computed(() => ({
   name: 'search',
   query: {
@@ -40,15 +33,6 @@ const compact = computed(() => {
   <td class="project-row-links">
     <div class="d-flex gap-3">
       <slot>
-        <button-icon
-          :to="toProjectInsights"
-          icon-left="chart-bar"
-          variant="outline-tertiary"
-          truncate
-          hide-label
-          class="project-row-links__insights"
-          :label="$t('projectCardFooter.insights')"
-        />
         <button-icon
           :to="toProjectSearch"
           icon-left="magnifying-glass"

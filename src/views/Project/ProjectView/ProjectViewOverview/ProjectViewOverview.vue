@@ -70,8 +70,15 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         class="mx-3"
         :project="project"
         :last-indexing-date="lastIndexingDate"
-      />      
-      <search-bar class="my-4 py-3 mx-3" size="lg" show-submit :indices="indices" hide-field-dropdown hide-projects-dropdown  />
+      />
+      <search-bar
+        :indices="indices"
+        class="my-4 py-3 mx-3"
+        hide-field-dropdown
+        hide-projects-dropdown
+        show-submit
+        size="lg"
+      />
       <tab-group-navigation class="mx-3" nowrap>
         <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights', params }">
           {{ $t('projectViewOverview.nav.insights') }}
