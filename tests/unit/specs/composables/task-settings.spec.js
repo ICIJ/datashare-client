@@ -21,8 +21,6 @@ describe('useTaskSettings', () => {
     const app = createApp({
       setup() {
         result = composable()
-        // Return a dummy render function
-        return () => {}
       }
     })
     app.use(store)

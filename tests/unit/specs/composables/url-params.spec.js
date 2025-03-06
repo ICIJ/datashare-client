@@ -43,8 +43,6 @@ export function withSetup({ composable, routes = [], initialRoute = null }) {
   const app = createApp({
     setup() {
       result = composable()
-      // Return a dummy render function
-      return () => {}
     }
   })
 

@@ -15,8 +15,6 @@ describe('useKeyboardShortcuts', () => {
     const app = createApp({
       setup() {
         result = composable()
-        // Return a dummy render function
-        return () => {}
       }
     })
 
