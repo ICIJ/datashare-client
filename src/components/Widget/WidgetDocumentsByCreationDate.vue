@@ -387,6 +387,10 @@ export default {
   &:deep(.column-chart__columns__item) {
     fill: var(--bs-secondary-bg-subtle);
     cursor: pointer;
+
+    &:hover {
+      fill: var(--bs-action)
+    }
   }
 
   &:deep(.column-chart__axis .tick line) {
