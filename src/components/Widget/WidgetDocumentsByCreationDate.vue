@@ -12,7 +12,7 @@
               'btn-action': selectedInterval === interval,
               'btn-outline-light': selectedInterval !== interval
             }"
-            class="btn py-1 px-3 widget__header__selectors__selector"
+            class="btn btn-sm px-3 widget__header__selectors__selector"
             @click="setSelectedInterval(interval)"
           >
             {{ $t('widget.creationDate.intervals.' + interval) }}
