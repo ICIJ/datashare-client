@@ -9,7 +9,7 @@ import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
-import BatchDownloadLink from '@/components/BatchDownload/BatchDownloadLink'
+import LinkBatchDownload from '@/components/Link/LinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 
@@ -46,7 +46,7 @@ function getRecord(item, key, defaultValue = undefined) {
         <display-status :value="item.state" />
       </template>
 
-      <template #cell(name)="{ item }"> <batch-download-link :item="item" /> </template>
+      <template #cell(name)="{ item }"> <link-batch-download :item="item" /> </template>
 
       <template #cell(projects)="{ item }">
         <display-project-list :values="getRecord(item, 'projects')" />

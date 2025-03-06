@@ -13,8 +13,8 @@ import { useTaskSettings } from '@/composables/task-settings'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
-import DisplayDocumentLink from '@/components/Display/DisplayDocumentLink'
-import SearchLink from '@/components/Search/SearchLink'
+import LinkDocument from '@/components/Link/LinkDocument'
+import LinkSearch from '@/components/Link/LinkSearch'
 const props = defineProps({
   uuid: { type: String, required: true },
   indices: { type: [String, Object], required: true }
@@ -130,12 +130,12 @@ const empty = computed(() => hits.value.length === 0)
       :order="order"
     >
       <template #cell(query)="{ item }">
-        <search-link :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">{{
+        <link-search :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">{{
           item.query
-        }}</search-link></template
+        }}</link-search></template
       >
       <template #cell(rank)="{ item }"> {{ item.documentNumber }}</template>
-      <template #cell(documentName)="{ item }"> <display-document-link :value="item" /></template>
+      <template #cell(documentName)="{ item }"> <link-document :value="item" /></template>
       <template #cell(contentLength)="{ item }"><display-content-length :value="item.contentLength" /> </template>
       <template #cell(contentType)="{ item }"> <display-content-type :value="item.contentType" /></template>
       <template #cell(project)="{ item }"><display-project-list :values="item.project" /></template>
