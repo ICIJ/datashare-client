@@ -16,8 +16,6 @@ describe('nprogress', () => {
     const app = createApp({
       setup() {
         result = useNProgress({ trickle: false })
-        // Return a dummy render function
-        return () => {}
       }
     })
 
