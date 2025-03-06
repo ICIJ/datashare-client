@@ -1,10 +1,13 @@
 <template>
   <widget-documents-by-creation-date ref="widgetDocumentsByCreationDate" :widget="widget" :project="project">
     <template #selector="{ selectedPath, setSelectedPath }">
-      <span
+      <button-icon
         v-if="selectedPath"
         v-b-modal.modal-widget-select-path
-        class="me-3 btn btn-outline-action btn-sm d-inline-flex"
+        size="sm"
+        variant="outline-action"
+        :icon-left="PhTreeStructure"
+        class="me-3 d-inline-flex"
       >
         <path-tree-breadcrumb
           datadir-icon="filter"
@@ -14,9 +17,9 @@
           no-link
         />
         <span v-if="isDataDir(selectedPath)">
-          {{ $t('widget.creationDate.filterFolder') }}
+          {{ $t('widget.creationDate.filterPath') }}
         </span>
-      </span>
+      </button-icon>
       <b-modal
         id="modal-widget-select-path"
         cancel-variant="outline-action"
@@ -24,7 +27,7 @@
         hide-header
         lazy
         ok-variant="action"
-        :ok-title="$t('widget.creationDate.selectFolder')"
+        :ok-title="$t('widget.creationDate.selectPath')"
         :ok-disabled="!pathTreeValues.length"
         scrollable
         size="lg"
@@ -47,6 +50,7 @@ import { castArray, trimEnd } from 'lodash'
 
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import PathTree from '@/components/PathTree/PathTree'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
 
 /**
@@ -55,6 +59,7 @@ import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsBy
 export default {
   name: 'WidgetDocumentsByCreationDateByPath',
   components: {
+    ButtonIcon,
     PathTreeBreadcrumb,
     PathTree,
     WidgetDocumentsByCreationDate

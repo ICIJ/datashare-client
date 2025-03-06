@@ -1223,7 +1223,7 @@
     "learnMore": "Learn more",
     "author": "Author",
     "advancedFilters": "Advanced filters",
-    "selectFolder": "Select folder",
+    "selectPath": "Select folder",
     "errorTitle": "Batch search task <code class=\"fw-bold\">{taskId}</code> is in error.",
     "errorQuery": "You have an error on your query <code>{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
@@ -1674,12 +1674,11 @@
     },
     "diskUsage": {
       "details": "See disk usage",
-      "queryPlaceholder": "Filter directories...",
       "warning": "The number of documents only counts parent documents here (files on disk), not attachments (embedded documents)."
     },
     "creationDate": {
-      "filterFolder": "All folders",
-      "selectFolder": "Select folder",
+      "filterPath": "Select path",
+      "selectPath": "Select path",
       "intervals": {
         "year": "Year",
         "month": "Month",
