@@ -17,6 +17,7 @@
 // Must be after bootstrap
 @import './utils/alerts.scss';
 @import './utils/buttons.scss';
+@import './utils/nprogress.scss';
 
 .dropdown-item {
   border-radius: var(--bs-border-radius);
