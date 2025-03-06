@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { useProjectDeletionModal, useProjectPinned } from '@/composables/project'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import ButtonTogglePin from '@/components/Button/ButtonTogglePin'
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 
 const { project } = defineProps({
   project: {
@@ -27,28 +28,30 @@ const toProjectEdit = computed(() => ({
   <td class="project-row-actions">
     <div class="d-flex gap-2">
       <slot>
-        <button-icon
-          :to="toProjectEdit"
-          icon-left="pencil"
-          icon-left-hover-weight="bold"
-          hide-label
-          square
-          size="sm"
-          variant="outline-secondary"
-          class="border-0"
-          :label="$t('projectRowActions.edit')"
-        />
-        <button-icon
-          icon-left="trash"
-          icon-left-hover-weight="bold"
-          hide-label
-          square
-          size="sm"
-          variant="outline-secondary"
-          class="border-0"
-          :label="$t('projectRowActions.delete')"
-          @click="showProjectDeletionModal"
-        />
+        <mode-local-only>
+          <button-icon
+            :to="toProjectEdit"
+            icon-left="pencil"
+            icon-left-hover-weight="bold"
+            hide-label
+            square
+            size="sm"
+            variant="outline-secondary"
+            class="border-0"
+            :label="$t('projectRowActions.edit')"
+          />
+          <button-icon
+            icon-left="trash"
+            icon-left-hover-weight="bold"
+            hide-label
+            square
+            size="sm"
+            variant="outline-secondary"
+            class="border-0"
+            :label="$t('projectRowActions.delete')"
+            @click="showProjectDeletionModal"
+          />
+        </mode-local-only>
         <button-toggle-pin v-model:active="pinned" hide-label square size="sm" />
       </slot>
     </div>
