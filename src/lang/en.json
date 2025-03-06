@@ -52,7 +52,7 @@
     "label": "Download documents"
   },
   "buttonTogglePin": {
-    "pin": "Pin",
+    "pin": "Pin to menu",
     "unpin": "Unpin"
   },
   "buttonToggleBatchMode": {
@@ -1496,10 +1496,8 @@
       "info": "Don’t change these settings if you don’t know what you are doing.",
       "searchPlaceholder": "Search settings"
     },
-    "appearance":
-    {
-      "title": "Appearance" ,
-      "info": "Choosing the dark or the light mode can improve your visual comfort."
+    "appearance": {
+      "title": "Appearance"
     },
     "languages": {
       "title": "Languages",

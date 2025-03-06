@@ -22,7 +22,7 @@ watch(
 </script>
 
 <template>
-  <settings-view-layout info-name="appearance" :info-label="infoLabel">
+  <settings-view-layout>
     <settings-appearance-radio-group v-model="selectedTheme" :options="themes" />
   </settings-view-layout>
 </template>
