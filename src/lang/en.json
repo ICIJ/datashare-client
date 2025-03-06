@@ -1517,7 +1517,7 @@
       "newApiKey": "Create API key",
       "apiKey": "API key",
       "noAccess": "You do not have access to that page in local mode.",
-      "description": "An API key allows you interact with Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
+      "description": "An API key allows you interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
       "key": {
         "badge": "Key",
         "hash": "Hash: {hash}",
