@@ -14,7 +14,7 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDocumentLink from '@/components/Display/DisplayDocumentLink'
-import SearchLink from '@/components/Task/TaskBatchSearch/SearchLink'
+import SearchLink from '@/components/Search/SearchLink'
 const props = defineProps({
   uuid: { type: String, required: true },
   indices: { type: [String, Object], required: true }

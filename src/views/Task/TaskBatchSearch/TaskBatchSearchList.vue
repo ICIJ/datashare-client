@@ -13,10 +13,10 @@ import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import { useCore } from '@/composables/core'
-import TaskBatchSearchLink from '@/components/Task/TaskBatchSearch/TaskBatchSearchLink'
-import BatchSearchCardActions from '@/components/BatchSearch/BatchSearchCardActions'
+import BatchSearchLink from '@/components/BatchSearch/BatchSearchLink'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
-const { core } = useCore()
+const { core, toastedPromise } = useCore()
 
 function getProjects(item) {
   return getRecord(item, 'projects') ?? [core.getDefaultProject()]
@@ -24,6 +24,15 @@ function getProjects(item) {
 
 function getRecord(item, key) {
   return get(item, `args.batchRecord.${key}`)
+}
+function deleteBatchSearch(uuid) {
+  return toastedPromise(core.api.deleteBatchSearch(uuid), { successMessage: 'ouais!', errorMessage: 'boouh' })
+}
+function relaunchBatchSearch(uuid) {
+  console.log('relaunchBatchSearch', uuid)
+}
+function editBatchSearch(uuid) {
+  console.log('editBatchSearch', uuid)
 }
 </script>
 <template>
@@ -49,7 +58,7 @@ function getRecord(item, key) {
         <display-visibility :value="getRecord(item, 'published')" />
       </template>
       <template #cell(name)="{ item }">
-        <task-batch-search-link :item="item" />
+        <batch-search-link :item="item" />
       </template>
       <template #cell(queries)="{ item }">
         <display-number :value="getRecord(item, 'nbQueries')" />
@@ -68,7 +77,13 @@ function getRecord(item, key) {
       <template #cell(progress)="{ item }">
         <display-progress :value="item.progress" />
       </template>
-      <template #row-actions><batch-search-card-actions /></template>
+      <template #row-actions="{ item }"
+        ><batch-search-actions
+          :uuid="item.id"
+          @edit="editBatchSearch"
+          @relaunch="relaunchBatchSearch"
+          @delete="deleteBatchSearch"
+      /></template>
     </page-table-generic>
   </task-page>
 </template>
