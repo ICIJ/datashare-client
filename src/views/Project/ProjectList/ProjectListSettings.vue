@@ -79,12 +79,12 @@ const sortBy = ref({
       text: tSortByOption('name', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.ALPHA)
     },
     {
-      value: ['updateDate', 'asc'],
-      text: tSortByOption('updateDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
-    },
-    {
       value: ['updateDate', 'desc'],
       text: tSortByOption('updateDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
+    },
+    {
+      value: ['updateDate', 'asc'],
+      text: tSortByOption('updateDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
     },
     {
       value: ['documentsCount', 'asc'],
