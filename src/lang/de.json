@@ -682,7 +682,7 @@
     "learnMore": "Weitere Informationen",
     "author": "Autor",
     "advancedFilters": "Erweiterte Filter",
-    "selectFolder": "Ordner auswählen",
+    "selectPath": "Ordner auswählen",
     "errorTitle": "Fehler in der Abfrage",
     "errorQuery": "Sie haben einen Fehler auf Ihrer Abfrage <code>{query}</code>.",
     "errorMessage": "Das System ist auf ein Problem gestoßen. Es kann ein Syntaxfehler in der CSV-Datei sein oder ein anderer Fehler. Bitte lesen Sie <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">auf dieser Hilfeseite</a>, auf der die häufigsten Fehler beschrieben werden.",
@@ -941,8 +941,8 @@
       "warning": "Die Anzahl der Dokumente zählt hier nur übergeordnete Dokumente (Dateien auf der Festplatte), nicht Anhänge (eingebettete Dokumente)."
     },
     "creationDate": {
-      "filterFolder": "Nach Ordner filtern",
-      "selectFolder": "Ordner auswählen",
+      "filterPath": "Nach Ordner filtern",
+      "selectPath": "Ordner auswählen",
       "intervals": {
         "year": "Jahr",
         "month": "Monat",

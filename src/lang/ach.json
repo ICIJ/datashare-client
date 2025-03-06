@@ -682,7 +682,7 @@
     "learnMore": "crwdns1206:0crwdne1206:0",
     "author": "crwdns1248:0crwdne1248:0",
     "advancedFilters": "crwdns1250:0crwdne1250:0",
-    "selectFolder": "crwdns2060:0crwdne2060:0",
+    "selectPath": "crwdns2060:0crwdne2060:0",
     "errorTitle": "crwdns2278:0crwdne2278:0",
     "errorQuery": "crwdns2284:0{query}crwdne2284:0",
     "errorMessage": "crwdns2432:0crwdne2432:0",
@@ -941,8 +941,8 @@
       "warning": "crwdns2426:0crwdne2426:0"
     },
     "creationDate": {
-      "filterFolder": "crwdns2032:0crwdne2032:0",
-      "selectFolder": "crwdns2034:0crwdne2034:0",
+      "filterPath": "crwdns2032:0crwdne2032:0",
+      "selectPath": "crwdns2034:0crwdne2034:0",
       "intervals": {
         "year": "crwdns2038:0crwdne2038:0",
         "month": "crwdns2040:0crwdne2040:0",

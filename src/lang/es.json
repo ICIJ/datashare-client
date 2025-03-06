@@ -682,7 +682,7 @@
     "learnMore": "Leer más",
     "author": "Autor·a",
     "advancedFilters": "Filtros avanzados",
-    "selectFolder": "Seleccionar directorio",
+    "selectPath": "Seleccionar directorio",
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>{query}</code>.",
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
@@ -941,8 +941,8 @@
       "warning": "El número de documentos sólo cuenta documentos padre aquí (archivos en disco), no archivos adjuntos (documentos incrustados)."
     },
     "creationDate": {
-      "filterFolder": "Filtrar por carpeta",
-      "selectFolder": "Seleccionar carpeta",
+      "filterPath": "Filtrar por carpeta",
+      "selectPath": "Seleccionar carpeta",
       "intervals": {
         "year": "Año",
         "month": "Mes",

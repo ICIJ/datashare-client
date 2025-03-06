@@ -682,7 +682,7 @@
     "learnMore": "En savoir plus",
     "author": "Auteur·e",
     "advancedFilters": "Filtres avancés",
-    "selectFolder": "Sélectionner un dossier",
+    "selectPath": "Sélectionner un dossier",
     "errorTitle": "Erreur dans la requête",
     "errorQuery": "Vous avez une erreur sur votre requête <code>{query}</code>.",
     "errorMessage": "Le système a rencontré une erreur. Il peut s'agir d'une erreur de syntaxe que vous avez écrite dans votre CSV ou d'une autre erreur. Veuillez vous référer à <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">cette page d'aide</a> où les erreurs les plus courantes sont expliquées.",
@@ -962,8 +962,8 @@
       "warning": "Le nombre de documents ne compte que les documents parents (fichiers sur disque), et non les pièces jointes (documents attachés ou enfants)."
     },
     "creationDate": {
-      "filterFolder": "Filtrer par dossier",
-      "selectFolder": "Sélectionner un dossier",
+      "filterPath": "Filtrer par dossier",
+      "selectPath": "Sélectionner un dossier",
       "intervals": {
         "year": "Année",
         "month": "Mois",
