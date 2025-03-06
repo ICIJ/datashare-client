@@ -51,8 +51,8 @@ export function useTaskSettings(pageName) {
       if (p.sortable) {
         const labelKey = p.sortingKey ?? p.key
         acc.push(
-          { value: [p.key, SORT_ORDER_KEY.ASC], text: tSortByOption(labelKey, SORT_ORDER_KEY.ASC, p.sortType) },
-          { value: [p.key, SORT_ORDER_KEY.DESC], text: tSortByOption(labelKey, SORT_ORDER_KEY.DESC, p.sortType) }
+          { value: [p.key, SORT_ORDER_KEY.ASC], text: tSortByOption(labelKey, SORT_ORDER_KEY.ASC, p.type) },
+          { value: [p.key, SORT_ORDER_KEY.DESC], text: tSortByOption(labelKey, SORT_ORDER_KEY.DESC, p.type) }
         )
       }
       return acc
