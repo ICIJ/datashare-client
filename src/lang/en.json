@@ -1485,7 +1485,7 @@
   },
   "settings": {
     "layout": {
-      "infoDismiss": "Got it, don't show again!",
+      "infoDismiss": "Got it, don't show again",
       "searchPlaceholder": "Filter the list",
       "noResults": "No matching result for the query '%{query}'"
     },
