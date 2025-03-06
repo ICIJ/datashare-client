@@ -70,7 +70,7 @@ const perPage = ref({
 })
 
 const sortBy = ref({
-  label: computed(() => t('search.settings.sortBy')),
+  label: computed(() => t('viewSettings.sortBy.label')),
   type: 'radio',
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
@@ -88,7 +88,7 @@ const sortBy = ref({
 const { propertiesOrder, propertiesLabel, propertiesIcon } = useSearchSettings()
 
 const properties = ref({
-  label: computed(() => t('search.settings.properties')),
+  label: computed(() => t('viewSettings.properties')),
   type: 'checkbox',
   open: true,
   modelValue: computed({
