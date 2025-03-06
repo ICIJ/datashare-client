@@ -114,7 +114,7 @@ function notifyDeleteFailed(error) {
 
 <template>
   <div class="batch-download-actions d-flex gap-2">
-    <button-row-action icon="arrow-clockwise" :label="$t('batchDownloadActions.relaunch')" @click="relaunchTask()" />
+    <button-row-action icon="arrow-clockwise" :label="t('batchDownloadActions.relaunch')" @click="relaunchTask" />
     <button-row-action
       icon="magnifying-glass"
       :disabled="!uri"
