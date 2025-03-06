@@ -2,8 +2,11 @@ import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
 import { useAppStore } from '@/store/modules'
+import { useNProgress } from '@/composables/nprogress'
+import { remove } from 'lodash'
 
 export default ({ router, auth, config, i18n, setPageTitle }) => {
+  
   async function checkUserAuthentication(to, from, next) {
     const appStore = useAppStore()
     try {
@@ -63,8 +66,20 @@ export default ({ router, auth, config, i18n, setPageTitle }) => {
     }
   }
 
+  function startProgress() {
+    const { start } = useNProgress()
+    start()
+  }
+
+  function endProgress() {
+    const { done } = useNProgress()
+    setTimeout(done, 200)
+  }
+
   router.beforeEach(checkMode)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
   router.beforeEach(setPageTitleFromMeta)
+  router.beforeEach(startProgress)
+  router.afterEach(endProgress)
 }
