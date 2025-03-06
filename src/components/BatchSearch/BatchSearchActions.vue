@@ -55,13 +55,3 @@ const deleteAction = {
     />
   </div>
 </template>
-<style lang="scss">
-.batch-search-card-actions {
-  &__see-all {
-    justify-content: space-between;
-  }
-  &__download {
-    justify-content: center;
-  }
-}
-</style>
