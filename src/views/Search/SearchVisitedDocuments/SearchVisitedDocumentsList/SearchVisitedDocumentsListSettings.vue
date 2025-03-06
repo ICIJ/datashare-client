@@ -65,12 +65,12 @@ const sortBy = ref({
       text: tSortByOption('name', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.ALPHA)
     },
     {
-      value: ['modification_date', 'asc'],
-      text: tSortByOption('visitDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
-    },
-    {
       value: ['modification_date', 'desc'],
       text: tSortByOption('visitDate', SORT_ORDER_KEY.DESC, SORT_TYPE_KEY.DATE)
+    },
+    {
+      value: ['modification_date', 'asc'],
+      text: tSortByOption('visitDate', SORT_ORDER_KEY.ASC, SORT_TYPE_KEY.DATE)
     }
   ]
 })
