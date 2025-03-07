@@ -1,7 +1,6 @@
 <script setup>
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import ImageMode from '@/components/ImageMode/ImageMode'
-
 defineProps({
   title: {
     type: String
@@ -13,8 +12,7 @@ defineProps({
     type: String
   },
   imageWidth: {
-    type: String,
-    default: '60px'
+    type: [Number, String]
   }
 })
 </script>

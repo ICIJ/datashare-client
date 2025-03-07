@@ -20,7 +20,7 @@ defineProps({
     type: String
   },
   imageWidth: {
-    type: String,
+    type: [Number, String],
     default: '60px'
   },
   autofocus: {
