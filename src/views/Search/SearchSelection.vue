@@ -66,13 +66,13 @@ const unstarSelection = async () => {
 <template>
   <form-actions class="search-selection px-3 flex-shrink-1" variant="outline-tertiary" :compact="compact" compact-auto>
     <template #start>
-      <b-form-checkbox 
-        v-model="selected" 
-        v-model:indeterminate="indeterminate" 
+      <b-form-checkbox
+        v-model="selected"
+        v-model:indeterminate="indeterminate"
         :wrapper-attrs="{ class: 'search-selection__form-checkbox' }"
       >
-      {{ $tc('searchSelection.count', count, { count: $n(count) }) }}
-    </b-form-checkbox>
+        {{ $tc('searchSelection.count', count, { count: $n(count) }) }}
+      </b-form-checkbox>
     </template>
     <template #compact>
       <button-icon
@@ -103,7 +103,7 @@ const unstarSelection = async () => {
     &:deep(.form-check-input) {
       margin-right: 0.5rem;
     }
-    
+
     &:deep(.form-check-label) {
       flex-shrink: 1;
       overflow: hidden;
