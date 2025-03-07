@@ -12,7 +12,7 @@
     @focus="onFocus"
   >
     <template #input-end>
-      <div class="d-flex flew-nowrap gap-1">
+      <div v-if="!compact" class="d-flex flew-nowrap gap-1">
         <slot name="addons"></slot>
       </div>
       <b-button
@@ -72,6 +72,13 @@ export default {
      * Show submit button
      */
     showSubmit: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Search input is compact (addons are hidden)
+     */
+    compact: {
       type: Boolean,
       default: false
     }
