@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
 
 import { useContrastVariant } from '@/composables/contrast-variant'
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 
 const { contrastVariant: contrastOverlayVariant, variant: overlayVariant } = useContrastVariant()
 
@@ -26,7 +26,7 @@ const size = computed(() => (spinnerSmall ? 'md' : 'xl'))
 <template>
   <b-overlay :opacity="0.7" :variant="overlayVariant ?? variant">
     <template #overlay>
-      <phosphor-icon spin :size="size" :name="PhCircleNotch" :variant="spinnerVariant ?? contrastOverlayVariant" />
+      <app-spinner :size="size" :variant="spinnerVariant ?? contrastOverlayVariant" />
     </template>
     <slot />
   </b-overlay>
