@@ -20,6 +20,7 @@
             v-if="!hideFieldDropdown"
             v-model="field"
             :disabled="!!indices"
+            :offset="6"
             @changed="focusOnSearchInput"
           />
           <search-bar-input-dropdown-for-projects
@@ -27,6 +28,7 @@
             v-model="selectedProjects"
             :disabled="!!indices"
             :no-caret="!!indices"
+            :offset="6"
             multiple
             @changed="focusOnSearchInput"
           />
