@@ -1,57 +1,43 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import ButtonRowAction from '@/components/Button/ButtonRowAction'
-import { useConfirmModal } from '@/composables/confirm'
+import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import { useCore } from '@/composables/core'
-
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
+import { useTaskStore } from '@/store/modules'
+import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowActionStop'
+import BatchSearchActionRelaunch from '@/components/BatchSearch/BatchSearchAction/BatchSearchActionRelaunch'
+import BatchSearchActionEdit from '@/components/BatchSearch/BatchSearchAction/BatchSearchActionEdit'
 defineOptions({ name: 'BatchSearchActions' })
 const props = defineProps({
   uuid: { type: String, required: true },
   showLabels: { type: Boolean, default: false }
 })
-const emit = defineEmits(['delete', 'relaunch', 'edit'])
+const emit = defineEmits(['edit'])
 const { t } = useI18n()
-const { confirm: showConfirmModal } = useConfirmModal()
 
 const successMessage = t('batchSearchActions.remove.success')
 const errorMessage = t('batchSearchActions.remove.error')
-const { core, toastedPromise } = useCore()
+const { toastedPromise } = useCore()
+const taskStore = useTaskStore()
 function deleteBatchSearch() {
-  return toastedPromise(core.api.deleteBatchSearch(props.uuid), { successMessage, errorMessage })
+  return toastedPromise(taskStore.deleteBatchSearch(props.uuid), { successMessage, errorMessage })
 }
-async function onDelete() {
-  if (await showConfirmModal()) {
-    await deleteBatchSearch()
-    emit(deleteAction.event, props.uuid)
-  }
+function copyBatchSearch({ title, description }) {
+  return toastedPromise(taskStore.copyBatchSearch(props.uuid, title, description), { successMessage, errorMessage })
 }
 
-const relaunchAction = {
-  event: 'relaunch',
-  label: 'batchSearchCardActions.relaunch',
-  icon: 'arrow-clockwise'
-}
-const editAction = {
-  event: 'edit',
-  label: 'batchSearchCardActions.edit',
-  icon: 'pencil-simple'
-}
-const deleteAction = {
-  event: 'delete',
-  label: 'batchSearchCardActions.delete',
-  icon: 'trash'
+function editBatchSearch({ title, description }) {
+  // Todo to be implemented
+  console.info('Not implemented: editBatchSearch with ', title, ' ', description)
 }
 </script>
 
 <template>
   <div class="batch-search-actions flex-wrap d-flex gap-2">
-    <button-row-action
-      :icon="relaunchAction.icon"
-      :label="t(relaunchAction.label)"
-      @click="$emit(relaunchAction.event, uuid)"
-    />
-    <button-row-action :icon="editAction.icon" :label="t(editAction.label)" @click="$emit(editAction.event, uuid)" />
-    <button-row-action :icon="deleteAction.icon" :label="t(deleteAction.label)" @click="onDelete" />
+    <batch-search-action-edit :uuid="uuid" @edit="editBatchSearch" />
+    <batch-search-action-relaunch @relaunch="copyBatchSearch" />
+    <button-row-action-stop :disabled="!taskStore.isRunning(uuid)" @stop="() => taskStore.stopTask(uuid)" />
+    <button-row-action-delete @delete="deleteBatchSearch" />
   </div>
 </template>
