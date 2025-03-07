@@ -2,7 +2,6 @@
 import { reactive, ref, computed, onMounted, nextTick, useTemplateRef } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { findIndex, reduce } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
 import bodybuilder from 'bodybuilder'
 
 import { useCore } from '@/composables/core'
