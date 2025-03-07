@@ -1,12 +1,14 @@
 <script setup>
+import { computed } from 'vue'
+
 const props = defineProps({
-  indices: { 
-    type: String, 
-    required: true 
+  indices: {
+    type: String,
+    required: true
   },
-  query: { 
-    type: String, 
-    required: true 
+  query: {
+    type: String,
+    required: true
   }
 })
 
