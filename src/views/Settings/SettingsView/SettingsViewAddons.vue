@@ -1,22 +1,17 @@
 <script setup>
-/**
- * A list of extensions for the frontend.
- */
-
 import { computed, onBeforeMount, ref } from 'vue'
 import { uniqueId } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { useCore } from '@/composables/core'
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
 import AddonCard from '@/components/Addon/AddonCard'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
+import { useCore } from '@/composables/core'
 import { ADDONS_TYPE, addonsTypeValidator } from '@/enums/addons'
+import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
-defineOptions({ name: 'SettingsViewAddons' })
 const props = defineProps({ addonsType: { type: String, validator: addonsTypeValidator } })
 
 const { toastedPromise, core, wait } = useCore()
@@ -30,9 +25,7 @@ const isLoading = ref(false)
 const error = ref(true)
 const filterTerm = ref('')
 
-onBeforeMount(() => {
-  return loadAddons()
-})
+onBeforeMount(loadAddons)
 
 async function installFromUrl(urlToInstall) {
   isLoading.value = true
@@ -49,6 +42,7 @@ async function installFromUrl(urlToInstall) {
     url.value = ''
   }
 }
+
 const infoLabel = computed(() => t(`settings.addons.${props.addonsType}.info`))
 const errorLabel = computed(() => t(`settings.addons.${props.addonsType}.errorLabel`))
 const searchPlaceholder = computed(() => t(`settings.addons.${props.addonsType}.searchPlaceholder`))
