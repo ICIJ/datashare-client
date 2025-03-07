@@ -15,16 +15,15 @@
       <div class="d-flex flew-nowrap gap-1">
         <slot name="addons"></slot>
       </div>
-      <button-icon
+      <b-button
         v-if="showSubmit"
-        icon-left="magnifying-glass"
         variant="action"
         class="search-bar-input__submit"
         type="submit"
         :disabled="disableSubmit"
       >
         {{ $t('search.buttonLabel') }}
-      </button-icon>
+      </b-button>
       <slot name="suggestions"></slot>
     </template>
   </form-control-search>
