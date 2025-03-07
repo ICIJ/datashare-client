@@ -20,17 +20,13 @@ const { spinnerSmall } = defineProps({
   }
 })
 
-const size = computed(() => spinnerSmall ? 'md' : 'xl')
+const size = computed(() => (spinnerSmall ? 'md' : 'xl'))
 </script>
 
 <template>
   <b-overlay :opacity="0.7" :variant="overlayVariant ?? variant">
     <template #overlay>
-      <phosphor-icon 
-        spin 
-        :size="size"
-        :name="PhCircleNotch" 
-        :variant="spinnerVariant ?? contrastOverlayVariant" />
+      <phosphor-icon spin :size="size" :name="PhCircleNotch" :variant="spinnerVariant ?? contrastOverlayVariant" />
     </template>
     <slot />
   </b-overlay>
