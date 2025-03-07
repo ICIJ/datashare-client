@@ -38,7 +38,7 @@ const closeFilters = () => (toggleFilters.value = false)
   <filters-panel
     v-show="toggleFilters"
     v-model:q="q"
-    class="search-filters flex-shrink-0 me-5"
+    class="search-filters flex-shrink-0 me-3"
     sticky
     @close="closeFilters"
   >
