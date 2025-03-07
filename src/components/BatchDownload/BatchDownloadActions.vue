@@ -4,7 +4,9 @@ import { useI18n } from 'vue-i18n'
 
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
 import { useCore } from '@/composables/core'
-import ButtonRowAction from '@/components/Button/ButtonRowAction'
+import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
+import { TASK_STATUS } from '@/enums/taskStatus'
 const showSearch = defineModel('toggle', { type: Boolean })
 
 const props = defineProps({
@@ -40,14 +42,18 @@ const { core, toast } = useCore()
 const { t } = useI18n()
 const emit = defineEmits(['relaunch', 'relaunchFailed', 'delete', 'deleteFailed'])
 const isTaskRunning = computed(() => {
-  return props.state.toUpperCase() === 'RUNNING'
+  return props.state.toLowerCase() === TASK_STATUS.RUNNING
 })
 
 const projects = computed(() => {
   return props.value?.projects?.map((p) => p.name) || []
 })
 const uri = computed(() => {
-  return props.value?.uri || null
+  let uri = props.value?.uri
+  if (uri && uri.startsWith('/')) {
+    uri = uri.startsWith('/') ? uri.substring(1) : uri
+  }
+  return uri
 })
 
 async function deleteTask() {
@@ -117,16 +123,13 @@ function notifyDeleteFailed(error) {
     <button-row-action icon="arrow-clockwise" :label="t('batchDownloadActions.relaunch')" @click="relaunchTask" />
     <button-row-action
       icon="magnifying-glass"
+      tag="router-link"
       :disabled="!uri"
-      :to="{ path: uri }"
+      :to="{ hash: uri, name: 'search' }"
       :label="t('batchDownloadActions.search')"
     />
-    <button-row-action
-      icon="trash"
-      :disabled="isTaskRunning"
-      :label="t('batchDownloadActions.delete')"
-      @click="deleteTask"
-    />
+
+    <button-row-action-delete :disabled="isTaskRunning" @delete="deleteTask" />
     <page-table-toggle-details-button v-model="showSearch" />
   </div>
 </template>
