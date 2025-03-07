@@ -104,7 +104,7 @@ watch(
 .form-actions {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   column-gap: $spacer;
   row-gap: $spacer-sm;
 
