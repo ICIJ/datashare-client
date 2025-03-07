@@ -15,12 +15,15 @@ import useMode from '@/composables/mode'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
 import { useTaskProperties } from '@/composables/task-properties'
-const { t } = useI18n()
+
 const nbTasks = ref(3)
+
+const { t } = useI18n()
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
 const { isServer } = useMode()
 const propertyList = ['taskType', 'state', 'name', 'projects', 'author', 'createdAt', 'progress']
 const { items } = useTaskProperties(propertyList)
+
 const allFields = items.map((item) => {
   return {
     ...item,
