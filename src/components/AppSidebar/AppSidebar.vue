@@ -199,7 +199,7 @@ const noAnalysis = computed(() => {
   background: var(--bs-tertiary-bg-subtle);
   flex: 0 0 $app-sidebar-width;
   width: 100%;
-  max-width: $app-sidebar-width;
+  max-width: min($app-sidebar-width, 100vw);
   min-height: 100%;
   max-height: 100vh;
   overflow: auto;
@@ -211,7 +211,7 @@ const noAnalysis = computed(() => {
   flex-direction: column;
 
   &--compact {
-    max-width: $app-sidebar-compact-width;
+    max-width: min($app-sidebar-compact-width, 100vw);
   }
 
   &--closed {
@@ -219,7 +219,7 @@ const noAnalysis = computed(() => {
   }
 
   &--full-width {
-    max-width: 100%;
+    max-width: min(100%, 100vw);
     width: 100%;
     position: fixed;
     right: 0;
