@@ -9,7 +9,7 @@ import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useAppStore } from '@/store/modules'
 import { useCore } from '@/composables/core'
-import LinkSearch from '@/components/Link/LinkSearch'
+import RouterLinkSearch from '@/components/RouterLink/RouterLinkSearch'
 import { useTaskSettings } from '@/composables/task-settings'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 const props = defineProps({
@@ -105,7 +105,7 @@ const empty = computed(() => queries.value.length === 0)
           :order="order"
         >
           <template #cell(query)="{ item }">
-            <link-search :indices="indices" :query="item.query">{{ item.query }}</link-search>
+            <router-link-search :indices="indices" :query="item.query">{{ item.query }}</router-link-search>
           </template>
           <template #cell(documents)="{ item }"> {{ item.nbHits }} </template>
 
