@@ -2,7 +2,7 @@
   <v-wait for="barometer counters" class="flex-grow-1" transition="fade">
     <template #waiting>
       <div class="m-5 text-center h-100">
-        <phosphor-icon :name="PhCircleNotch" spin size="2em" />
+        <app-spinner size="2em" />
       </div>
     </template>
     <widget-barometer-documents
@@ -16,7 +16,8 @@
 
 <script>
 import { waitFor } from 'vue-wait'
-import { PhosphorIcon } from '@icij/murmur-next'
+
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 
 import WidgetBarometerDocuments from './WidgetBarometerDocuments'
 
@@ -26,7 +27,7 @@ import WidgetBarometerDocuments from './WidgetBarometerDocuments'
 export default {
   name: 'WidgetFileBarometer',
   components: {
-    PhosphorIcon,
+    AppSpinner,
     WidgetBarometerDocuments
   },
   props: {
