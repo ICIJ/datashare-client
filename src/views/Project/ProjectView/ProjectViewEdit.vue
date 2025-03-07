@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { get, uniqueId } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectForm from '@/components/Project/ProjectForm'
 import { useCore } from '@/composables/core'
@@ -55,13 +56,13 @@ function redirectToProject({ name }) {
 <template>
   <div class="project-view-edit">
     <page-container fluid>
-      <b-overlay rounded="sm" opacity="0.6" :show="$wait.is('creating')">
+      <app-overlay rounded="sm" :show="$wait.is('creating')">
         <project-form class="my-4" edit card :disabled="$wait.is(loaderId)" :values="project" @submit="submit">
           <template #submit-text>
             {{ $t('projectViewEdit.submit') }}
           </template>
         </project-form>
-      </b-overlay>
+      </app-overlay>
     </page-container>
   </div>
 </template>
