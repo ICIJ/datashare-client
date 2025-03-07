@@ -43,9 +43,3 @@ const compact = computed(() => {
     @click="toggle"
   />
 </template>
-
-<style lang="scss" scoped>
-.button-toggle-filters.btn-outline-tertiary {
-  --bs-btn-color: var(--bs-link-color);
-}
-</style>
