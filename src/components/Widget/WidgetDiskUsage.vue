@@ -21,10 +21,10 @@
 import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
 
+import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
+
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import PathTree from '@/components/PathTree/PathTree'
-
-import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
 /**
  * Widget to display the disk space occupied by indexed files on the insights page.
