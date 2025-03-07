@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useTaskHeader } from '@/composables/task-header'
 import { useTaskPolling } from '@/composables/task-polling'
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
@@ -77,7 +78,7 @@ const order = computed({
       <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
         {{ t(`task.${pageName}.list.info`) }}
       </dismissable-alert>
-      <b-overlay rounded spinner-small opacity="0.6" :show="isLoading">
+      <app-overlay rounded :show="isLoading">
         <template v-if="!isLoading && noTasks">
           <slot name="empty" :empty="noTasks">
             <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
@@ -95,7 +96,7 @@ const order = computed({
           :update-sort="(v) => (sort = v)"
           :empty="noTasks"
         />
-      </b-overlay>
+      </app-overlay>
     </div>
   </page-container>
 </template>
