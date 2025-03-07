@@ -3,6 +3,9 @@ import { computed } from 'vue'
 
 import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler'
 import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch'
+import { useBreakpoints } from '@/composables/breakpoints'
+import { SIZE } from '@/enums/sizes'
+import { useAppStore } from '@/store/modules'
 
 const q = defineModel('q', { type: String, default: '' })
 
@@ -22,7 +25,22 @@ const { sticky } = defineProps({
 })
 
 const emit = defineEmits(['close'])
-const classList = computed(() => ({ 'filters-panel--sticky': sticky }))
+
+const appStore = useAppStore()
+const { breakpointDown } = useBreakpoints()
+
+const closed = computed({
+  get: () => appStore.filters.closed,
+  set: (value) => (appStore.filters.closed = value)
+})
+
+const classList = computed(() => {
+  return {
+    'filters-panel--sticky': sticky,
+    'filters-panel--closed': closed.value,
+    'filters-panel--full-width': breakpointDown.value[SIZE.MD]
+  }
+})
 </script>
 
 <template>
@@ -49,6 +67,16 @@ const classList = computed(() => ({ 'filters-panel--sticky': sticky }))
     top: 0;
     overflow: auto;
     height: 100vh;
+  }
+
+  &--full-width {
+    max-width: min(100%, 100vw);
+    width: 100%;
+    position: fixed;
+    z-index: $zindex-sticky;
+    right: 0;
+    left: 0;
+    bottom: 0;
   }
 }
 </style>
