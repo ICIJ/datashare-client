@@ -35,8 +35,8 @@ const showDocument = computed(() => !!documentRoute.value)
     <div class="document-entries-grid__header">
       <slot name="header" />
     </div>
-    <div class="document-entries-grid__list row px-0 pb-3 g-3">
-      <div v-for="entry in entries" :key="entry.id" class="col-xl-3 col-lg-4 col-md-6">
+    <div class="document-entries-grid__list">
+      <div v-for="entry in entries" :key="entry.id" class="document-entries-grid__list__item">
         <document-card-grid
           v-model:selected="selectionValues[entry.id]"
           class="h-100"
@@ -75,6 +75,13 @@ const showDocument = computed(() => !!documentRoute.value)
     min-width: 0;
     max-width: 100%;
     width: 100%;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: $spacer-xl;
+    min-width: 0;
   }
 }
 </style>
