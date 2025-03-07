@@ -32,14 +32,13 @@
 <script>
 import settings from '@/utils/settings'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
  * The general search input group with field options.
  */
 export default {
   name: 'SearchBarInput',
-  components: { FormControlSearch, ButtonIcon },
+  components: { FormControlSearch,  },
   props: {
     /**
      * Placeholder in the search bar.
