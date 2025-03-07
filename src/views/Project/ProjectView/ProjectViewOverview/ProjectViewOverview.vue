@@ -5,6 +5,7 @@ import { get } from 'lodash'
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
 import { useProjectPinned } from '@/composables/project'
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbotron'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
@@ -62,7 +63,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
     <v-wait class="bg-tertiary-subtle rounded-1 p-4" :for="loaderId">
       <template #waiting>
         <div class="text-center py-5">
-          <phosphor-icon :name="PhCircleNotch" spin size="2em" />
+          <app-spinner size="2em" />
         </div>
       </template>
       <project-jumbotron
