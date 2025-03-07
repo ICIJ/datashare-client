@@ -26,7 +26,7 @@ const weight = computed(() => {
     square
     hide-label
     variant="primary"
-    class="button-toggler-sidebar text-white"
+    class="button-toggler-sidebar text-white flex-shrink-0"
     :title="title"
     @click="toggle"
   >
