@@ -1,14 +1,6 @@
 <template>
   <div class="legacy-spreadsheet-viewer w-100">
-    <b-overlay
-      :show="$wait.is(loaderId)"
-      opacity="0.6"
-      spinner-small
-      class="sticky-top"
-      rounded
-      variant="light"
-      :blur="null"
-    >
+    <app-overlay :show="$wait.is(loaderId)" spinner-small class="sticky-top" rounded>
       <div class="legacy-spreadsheet-viewer__header bg-tertiary-subtle p-3 rounded">
         <b-form-select
           v-model="activeSheetName"
@@ -17,7 +9,7 @@
           :options="sheetNames"
         />
       </div>
-    </b-overlay>
+    </app-overlay>
     <template v-if="activeSheetName">
       <div class="legacy-spreadsheet-viewer__content mt-3">
         <div class="table-responsive" v-html="activeSheetHTML" />
@@ -30,6 +22,7 @@
 import { read, utils } from 'xlsx'
 import { uniqueId } from 'lodash'
 
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**
@@ -37,6 +30,9 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
  */
 export default {
   name: 'DocumentViewerLegacySpreadsheet',
+  components: {
+    AppOverlay
+  },
   mixins: [datashareSourceMixin],
   props: {
     /**
