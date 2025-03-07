@@ -15,12 +15,8 @@ const props = defineProps({
   description: { type: String },
   installed: { type: Boolean, default: false },
   deliverableFromRegistry: { type: Object, default: () => {} }
-  /* id: 'plugin_01_id',
-    name: 'Plugin 01 Registry Name',
-    version: 'plugin_01_version',
-    description: 'plugin_01_registry_description',
-    homepage: 'plugin_01_registry_homepage' */
 })
+
 const emit = defineEmits(['installed', 'uninstalled'])
 const { t } = useI18n()
 const { toastedPromise, core } = useCore()
@@ -40,12 +36,15 @@ const formattedName = computed(() => {
   }
   return startCase(camelCase(props.name))
 })
+
 const addonDescription = computed(() =>
   isFromRegistry.value ? props.deliverableFromRegistry?.description : props.description
 )
+
 const recommendedVersion = computed(() => {
   return isFromRegistry.value ? props.deliverableFromRegistry?.version : props.version
 })
+
 const homepage = computed(() => props.deliverableFromRegistry?.homepage ?? null)
 
 const addonInstallFn = computed(() => {
@@ -54,6 +53,7 @@ const addonInstallFn = computed(() => {
 const addonUninstallFn = computed(() => {
   return props.addonType === ADDON_TYPE.EXTENSION ? core.api.uninstallExtension : core.api.uninstallPlugin
 })
+
 async function install() {
   const toast = {
     successMessage: submitSuccess.value,
