@@ -48,7 +48,7 @@ const availableProperties = computed(() => {
 </script>
 
 <template>
-  <div class="document-card-properties">
+  <div class="document-card-properties text-break">
     <component
       :is="entryComponents[property]"
       v-for="property in availableProperties"
