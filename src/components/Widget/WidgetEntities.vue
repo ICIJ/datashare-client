@@ -2,7 +2,7 @@
   <v-wait :for="loader" transition="fade">
     <template #waiting>
       <div class="m-5 text-center h-100">
-        <phosphor-icon :name="PhCircleNotch" spin size="2em" />
+        <app-spinner size="2em" />
       </div>
     </template>
     <div class="widget widget--entities d-flex h-100 w-100">
@@ -37,11 +37,11 @@ import { sum, uniqueId, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import WidgetBarometer from './WidgetBarometer'
-
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import { MODE_NAME } from '@/mode'
 import { getCategoryIcon, getCategoryVariant } from '@/utils/entity'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
  * Widget to display a summary of entities
@@ -49,6 +49,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 export default {
   name: 'WidgetEntities',
   components: {
+    AppSpinner,
     ButtonIcon,
     WidgetBarometer
   },
