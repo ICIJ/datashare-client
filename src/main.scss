@@ -53,8 +53,9 @@ body {
   font-size: 1rem;
   overflow: auto;
 
-  // Disable overflow scrollbar when the sidebar is in full width and not closed
-  &:has(.app-sidebar--full-width:not(.app-sidebar--closed)) {
+  // Disable overflow scrollbar when the sidebar or the filters panel are in full width and not closed
+  &:has(.app-sidebar--full-width:not(.app-sidebar--closed)),
+  &:has(.filters-panel--full-width:not(.filters-panel--closed)) {
     overflow: hidden;
   }
 }
