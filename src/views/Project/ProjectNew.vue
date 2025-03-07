@@ -2,6 +2,7 @@
 import { get } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectForm from '@/components/Project/ProjectForm'
@@ -45,8 +46,8 @@ function redirectToProject({ name }) {
 <template>
   <page-container fluid deck class="project-new">
     <page-header no-toggle-settings />
-    <b-overlay rounded="sm" opacity="0.6" :show="$wait.is('creating')">
+    <app-overlay rounded="sm" :show="$wait.is('creating')">
       <project-form class="mb-4" card :disabled="$wait.is('creating')" @submit="submit" />
-    </b-overlay>
+    </app-overlay>
   </page-container>
 </template>
