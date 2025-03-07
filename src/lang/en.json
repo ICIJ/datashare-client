@@ -1258,8 +1258,13 @@
   },
   "batchSearchCardActions": {
     "edit": "Edit",
-    "relaunch":"Relaunch",
-    "delete": "Delete"
+    "relaunch":"Relaunch"
+  },
+  "buttonRowAction": {
+    "relaunch":"Relaunch task",
+    "stop":"Stop",
+    "delete":"Delete",
+    "edit":"Edit"
   },
   "textTruncate": {
     "seeLess": "See less",

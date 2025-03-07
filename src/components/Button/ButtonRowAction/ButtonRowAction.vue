@@ -5,12 +5,14 @@ defineProps({
   icon: { type: [String, Object], required: true },
   size: { type: String, validator: buttonSizeValidator, default: SIZE.SM },
   label: { type: String },
-  disabled: { type: Boolean, default: false }
+  disabled: { type: Boolean, default: false },
+  to: { type: Object }
 })
 </script>
 
 <template>
   <button-icon
+    :to="to"
     :icon-left="icon"
     icon-left-hover-weight="bold"
     hide-label

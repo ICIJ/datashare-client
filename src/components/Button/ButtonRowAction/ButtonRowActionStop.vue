@@ -15,5 +15,5 @@ async function onStop() {
 </script>
 
 <template>
-  <button-row-action icon="stop" :disabled="disabled" :label="$t('buttonRowAction.stop')" @click="onStop" />
+  <button-row-action icon="stop-circle" :disabled="disabled" :label="$t('buttonRowAction.stop')" @click="onStop" />
 </template>
