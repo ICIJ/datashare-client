@@ -20,7 +20,7 @@ const attrs = useAttrs()
     v-bind="attrs"
     :image="image"
     :image-dark="imageDark"
-    :image-width="60"
+    image-width="60px"
     :title="$t('appModalConfirm.title')"
     size="410px"
   >
