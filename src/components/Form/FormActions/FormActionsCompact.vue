@@ -52,6 +52,12 @@ const classList = computed(() => {
 </template>
 
 <style lang="scss" scoped>
+@include color-mode(dark) {
+  .form-actions-compact {
+    --form-actions-compact-bg: transparent;
+  }
+}
+
 .form-actions-compact {
   --form-actions-compact-bg: transparent;
   --form-actions-compact-color: var(--bs-body-color);
@@ -62,6 +68,7 @@ const classList = computed(() => {
   border-radius: var(--bs-border-radius);
   background: var(--form-actions-compact-bg);
   color: var(--form-actions-compact-color);
+  
 
   &__group {
     position: relative;
