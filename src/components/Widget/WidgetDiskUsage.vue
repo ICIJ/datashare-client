@@ -2,7 +2,7 @@
   <v-wait for="disk usage" class="flex-grow-1" transition="fade">
     <template #waiting>
       <div class="m-5 text-center h-100">
-        <phosphor-icon :name="PhCircleNotch" spin size="2em" />
+        <app-spinner size="2em" />
       </div>
     </template>
     <widget-barometer-disk-usage
@@ -21,9 +21,10 @@
 import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
 
-import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
-
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import PathTree from '@/components/PathTree/PathTree'
+
+import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
 /**
  * Widget to display the disk space occupied by indexed files on the insights page.
@@ -31,6 +32,7 @@ import PathTree from '@/components/PathTree/PathTree'
 export default {
   name: 'WidgetDiskUsage',
   components: {
+    AppSpinner,
     PathTree,
     WidgetBarometerDiskUsage
   },
