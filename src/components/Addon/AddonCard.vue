@@ -98,5 +98,5 @@ async function uninstall() {
     :version="version"
     @install="install"
     @uninstall="uninstall"
-  ></addon-card-view>
+  />
 </template>
