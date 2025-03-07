@@ -20,6 +20,7 @@
             v-model="field"
             :disabled="!!indices"
             @changed="focusOnSearchInput"
+            class="d-none d-none d-lg-block"
           />
           <search-bar-input-dropdown-for-projects
             v-if="!hideProjectsDropdown"
@@ -28,6 +29,7 @@
             :no-caret="!!indices"
             multiple
             @changed="focusOnSearchInput"
+            class="d-none d-lg-block"
           />
         </template>
         <template #suggestions>
