@@ -47,7 +47,7 @@ const classList = computed(() => {
 
 <style lang="scss" scoped>
 .page-container {
-  @include make-container($spacer * 4);
+  @include make-container($spacer * 2);
 
   &--deck {
     display: flex;
