@@ -8,6 +8,7 @@ import bodybuilder from 'bodybuilder'
 import { useCore } from '@/composables/core'
 import { useWait } from '@/composables/wait'
 import EsDocList from '@/api/resources/EsDocList'
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import DisplayEmail from '@/components/Display/DisplayEmail'
 import { useDocumentStore } from '@/store/modules'
@@ -133,7 +134,7 @@ onBeforeRouteUpdate(init)
 <template>
   <v-wait ref="element" :for="loaderId">
     <template #waiting>
-      <phosphor-icon :name="PhCircleNotch" spin class="d-flex mx-auto my-5" />
+      <app-spinner class="d-flex mx-auto my-5" />
     </template>
     <div class="document-thread">
       <ul class="list-unstyled document-thread__list m-0">
