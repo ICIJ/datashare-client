@@ -1,11 +1,16 @@
 <script>
 import { uniqueId } from 'lodash'
 
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
+
 /**
  * A form-control to select the extracting language.
  */
 export default {
   name: 'ExtractingLanguageFormControl',
+  components: {
+    AppOverlay
+  },
   props: {
     /**
      * Input value
@@ -58,7 +63,7 @@ export default {
 </script>
 
 <template>
-  <b-overlay :show="!isReady" class="extracting-language-form-control" rounded spinner-small>
+  <app-overlay :show="!isReady" class="extracting-language-form-control" rounded spinner-small>
     <b-alert
       v-if="isReady && hasTextLanguages"
       model-value
@@ -73,6 +78,7 @@ export default {
         :options="[nullOption, ...options]"
         class="extracting-language-form-control__ocr-options p-3"
         @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
-    /></b-form-group>
-  </b-overlay>
+      />
+    </b-form-group>
+  </app-overlay>
 </template>
