@@ -1,4 +1,4 @@
-import ButtonRowAction from '@/components/Button/ButtonRowAction'
+import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 
 export default {
   tags: ['autodocs'],
