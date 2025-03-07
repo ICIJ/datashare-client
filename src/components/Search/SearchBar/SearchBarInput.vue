@@ -38,7 +38,7 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
  */
 export default {
   name: 'SearchBarInput',
-  components: { FormControlSearch,  },
+  components: { FormControlSearch },
   props: {
     /**
      * Placeholder in the search bar.
