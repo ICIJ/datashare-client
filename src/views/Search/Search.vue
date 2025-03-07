@@ -97,7 +97,7 @@ watchIndices(refreshRoute)
     <hook name="search:before" />
     <div class="search__main d-flex">
       <slot name="filters" />
-      <div class="search__main__content flex-grow-1">
+      <div class="search__main__content flex-grow-1 flex-truncate">
         <div class="d-flex gap-3 py-3 align-items-start">
           <button-toggle-sidebar v-if="!toggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
           <button-toggle-filters
