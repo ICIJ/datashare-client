@@ -3,9 +3,9 @@ import { computed } from 'vue'
 import get from 'lodash/get'
 
 const props = defineProps({
-  item: { 
-    type: Object, 
-    required: true 
+  item: {
+    type: Object,
+    required: true
   }
 })
 
@@ -16,9 +16,9 @@ function getRecord(key, defaultValue = undefined) {
 const to = computed(() => {
   return {
     name: 'task.batch-search-queries.list',
-    params: { 
-      uuid: getRecord('uuid'), 
-      indices: getRecord('projects').join(',') 
+    params: {
+      uuid: getRecord('uuid'),
+      indices: getRecord('projects').join(',')
     }
   }
 })
