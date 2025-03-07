@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { useTaskPolling } from '@/composables/task-polling'
 import DisplayProgress from '@/components/Display/DisplayProgress'
@@ -131,7 +132,7 @@ function getTaskIcon(item) {
       <phosphor-icon name="rocket-launch" />
       {{ t('task.task-board.latest.title') }}
     </b-card-title>
-    <b-overlay rounded spinner-small opacity="0.6" :show="isLoading" class="d-flex flex-column justify-content-center">
+    <app-overlay rounded :show="isLoading" class="d-flex flex-column justify-content-center">
       <page-table-generic :items="displayedTasks" :fields="fields">
         <template #cell(taskType)="{ item }">
           <button-icon
@@ -166,7 +167,7 @@ function getTaskIcon(item) {
         </template>
       </page-table-generic>
       <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto" @click="showMore">Show more</b-button>
-    </b-overlay>
+    </app-overlay>
   </b-card-body>
 </template>
 
