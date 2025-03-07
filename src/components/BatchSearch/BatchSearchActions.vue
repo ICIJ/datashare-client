@@ -1,7 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import { useCore } from '@/composables/core'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import { useTaskStore } from '@/store/modules'
@@ -13,7 +12,6 @@ const props = defineProps({
   uuid: { type: String, required: true },
   showLabels: { type: Boolean, default: false }
 })
-const emit = defineEmits(['edit'])
 const { t } = useI18n()
 
 const successMessage = t('batchSearchActions.remove.success')

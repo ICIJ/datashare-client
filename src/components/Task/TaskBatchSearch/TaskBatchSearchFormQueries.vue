@@ -1,6 +1,4 @@
 <script setup>
-import { ref } from 'vue'
-
 import FormStep from '@/components/Form/FormStep/FormStep'
 import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
 import TabGroup from '@/components/TabGroup/TabGroup'
