@@ -26,6 +26,5 @@ defineProps({
 <style scoped>
 .document-card-properties-entry-highlights {
   white-space: wrap;
-  word-break: break-all;
 }
 </style>
