@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
 import { afterEach, beforeEach } from 'vitest'
+import { flushPromises } from '@vue/test-utils'
 
 import { useNProgress } from '@/composables/nprogress'
-import { flushPromises } from '@vue/test-utils'
 
 describe('nprogress', () => {
   let result
