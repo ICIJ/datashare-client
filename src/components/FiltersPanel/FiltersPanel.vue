@@ -45,8 +45,8 @@ const classList = computed(() => {
 
 <template>
   <div class="filters-panel" :class="classList">
-    <filters-panel-toggler v-if="!noToggler" @close="emit('close')" />
-    <filters-panel-search v-if="!noSearch" v-model="q" />
+    <filters-panel-toggler v-if="!noToggler" class="filters-panel__toggler" @close="emit('close')" />
+    <filters-panel-search v-if="!noSearch" v-model="q" class="filters-panel__search" />
     <slot />
   </div>
 </template>
@@ -77,6 +77,10 @@ const classList = computed(() => {
     right: 0;
     left: 0;
     bottom: 0;
+
+    .filters-panel__search {
+      width: 100%;
+    }
   }
 }
 </style>
