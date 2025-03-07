@@ -3,14 +3,10 @@ import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
-import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
-import ButtonToggleSearchBreadcrumb from '@/components/Button/ButtonToggleSearchBreadcrumb'
-import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
-import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
-import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
 import SearchBreadcrumb from '@/views/Search/SearchBreadcrumb'
-import SearchSelection from '@/views/Search/SearchSelection'
 import SearchCarousel from '@/views/Search/SearchCarousel'
+import SearchSelection from '@/views/Search/SearchSelection'
 import SearchNav from '@/views/Search/SearchNav'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook/Hook'
@@ -98,23 +94,14 @@ watchIndices(refreshRoute)
     <div class="search__main d-flex">
       <slot name="filters" />
       <div class="search__main__content flex-grow-1 flex-truncate">
-        <div class="d-flex gap-3 py-3 align-items-start">
-          <button-toggle-sidebar v-if="!toggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
-          <button-toggle-filters
-            v-if="isFiltersClosed"
-            v-model:active="toggleFilters"
-            class="search__main__toggle-filters"
-          />
-          <button-toggle-search-breadcrumb
-            v-model:active="toggleSearchBreadcrumb"
-            :counter="searchBreadcrumbCounter"
-            class="search__main__toggle-search-breadcrumb"
-          />
-          <div class="flex-grow-1">
-            <search-bar class="search__main__search-bar" />
-          </div>
-          <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
-        </div>
+        <search-toolbar
+          v-model:toggleSidebar="toggleSidebar"
+          v-model:toggleFilters="toggleFilters"
+          v-model:toggleSearchBreadcrumb="toggleSearchBreadcrumb"
+          v-model:toggleSettings="toggleSettings"
+          v-model:isFiltersClosed="isFiltersClosed"
+          :search-breadcrumb-counter="searchBreadcrumbCounter"
+        />
         <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
         <div class="search__main__results">
           <document-entries
