@@ -56,7 +56,7 @@ onMounted(getHashedApiKey)
 
 <template>
   <settings-view-layout class="settings-view-api">
-    <div v-if="!hasHashedKey" class="settings-view-api__create">
+    <div v-if="!hasHashedKey" class="settings-view-api__create text-center">
       <div class="mb-3">
         <phosphor-icon :name="PhKey" size="3em" />
       </div>
