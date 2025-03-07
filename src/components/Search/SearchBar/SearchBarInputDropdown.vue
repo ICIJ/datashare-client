@@ -14,6 +14,7 @@
     toggle-class="d-inline-flex align-items-center p-2"
     boundary="viewport"
     :teleport-to="teleportTo"
+    :offset="6"
     :teleport-disabled="teleportDisabled"
     variant="outline-tertiary"
   >
