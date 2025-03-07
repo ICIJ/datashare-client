@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useSearchSavingModal, useRemoveSavedSearchModal } from '@/composables/search-saving'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
-import ButtonRowAction from '@/components/Button/ButtonRowAction'
+import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 const detailsShowing = defineModel('toggle', { type: Boolean })
 const { event } = defineProps({
   event: {

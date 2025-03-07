@@ -2,7 +2,6 @@
 import { useI18n } from 'vue-i18n'
 
 import TaskPage from '@/views/Task/TaskPage'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
@@ -12,18 +11,24 @@ import { useTaskSettings } from '@/composables/task-settings'
 import { useTaskStore } from '@/store/modules'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
+import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowActionStop'
+import { TASK_STATUS } from '@/enums/taskStatus'
 
 const taskStore = useTaskStore()
 const settingName = 'documents'
 
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
 const { t } = useI18n()
-async function stopTask(name) {
-  await taskStore.stopTask(name)
-  await taskStore.getTasks()
+
+async function stopTask(uuid) {
+  return taskStore.stopTask(uuid)
 }
 function getProject(item) {
   return item.args.defaultProject
+}
+function isRunning(item) {
+  return item.state === TASK_STATUS.RUNNING
 }
 </script>
 
@@ -45,20 +50,15 @@ function getProject(item) {
     >
       <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
       <template #cell(name)="{ item }">{{ t(getHumanTaskName(item.name)) }}</template>
-      <template #cell(documents)="{ item }"><display-number :value="item.result[1]" /></template>
+      <template #cell(documents)="{ item }"
+        ><display-number v-if="item.result && item.result[1]" :value="item.result[1]"
+      /></template>
       <template #cell(project)="{ item }"> <display-project-list :values="getProject(item)" /></template>
       <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
       <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
       <template #row-actions="{ item }">
-        <button-icon
-          variant="outline-secondary"
-          square
-          hide-label
-          size="sm"
-          icon-left="trash"
-          class="border-0"
-          @click="stopTask(item.id)"
-        />
+        <button-row-action-stop :disabled="!isRunning(item)" @stop="stopTask(item.id)" />
+        <button-row-action-delete @delete="taskStore.deleteTask(item.id)" />
       </template>
     </page-table-generic>
   </task-page>
