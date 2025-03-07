@@ -7,6 +7,7 @@
         class="search-bar__input w-100"
         :placeholder="localizedPlaceholder"
         :size="size"
+        :compact="compact"
         :show-submit="showSubmit"
         autofocus
         @blur="onBlur"
@@ -20,7 +21,6 @@
             v-model="field"
             :disabled="!!indices"
             @changed="focusOnSearchInput"
-            class="d-none d-none d-lg-block"
           />
           <search-bar-input-dropdown-for-projects
             v-if="!hideProjectsDropdown"
@@ -29,7 +29,6 @@
             :no-caret="!!indices"
             multiple
             @changed="focusOnSearchInput"
-            class="d-none d-lg-block"
           />
         </template>
         <template #suggestions>
@@ -135,6 +134,13 @@ export default {
      * Display the submit button
      */
     showSubmit: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Hide addons
+     */
+    compact: {
       type: Boolean,
       default: false
     }
