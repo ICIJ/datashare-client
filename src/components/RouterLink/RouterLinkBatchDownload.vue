@@ -5,9 +5,9 @@ import { computed } from 'vue'
 import get from 'lodash/get'
 
 const props = defineProps({
-  item: { 
-    type: Object, 
-    required: true 
+  item: {
+    type: Object,
+    required: true
   }
 })
 
