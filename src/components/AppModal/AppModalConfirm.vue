@@ -22,7 +22,7 @@ const attrs = useAttrs()
     :image-dark="imageDark"
     image-width="60px"
     :title="$t('appModalConfirm.title')"
-    size="410px"
+    size="md"
   >
     <slot>
       <div class="text-center text-secondary">
