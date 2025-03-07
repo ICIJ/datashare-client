@@ -1,6 +1,6 @@
 <template>
   <div class="tiff-viewer w-100">
-    <b-overlay :show="isLoading" opacity="0.6" rounded spinner-small variant="light" :blur="null">
+    <app-overlay :show="isLoading" rounded spinner-small>
       <div class="tiff-viewer__header bg-tertiary-subtle d-flex algin-items-center rounded p-3">
         <div v-if="hasPages" class="tiff-viewer__header__pagination text-muted">
           <span class="badge text-bg-dark">
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-    </b-overlay>
+    </app-overlay>
     <div v-if="!isLoading" class="d-flex my-3">
       <div v-if="hasPages" class="tiff-viewer__thumbnails ms-3">
         <div
@@ -54,6 +54,7 @@ import { Image } from 'image-js'
 import * as tiff from 'tiff'
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**
@@ -62,6 +63,7 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 export default {
   name: 'DocumentViewerTiff',
   components: {
+    AppOverlay,
     PhosphorIcon
   },
   mixins: [datashareSourceMixin],
