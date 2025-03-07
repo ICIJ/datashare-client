@@ -1,6 +1,7 @@
 <script setup>
 import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 
 import AppSidebarFooter from './AppSidebarFooter'
 import AppSidebarSection from './AppSidebarSection'
@@ -44,6 +45,8 @@ const closed = computed({
   set: (value) => (appStore.sidebar.closed = value)
 })
 
+const fullWith = computed(() => breakpointDown.value[SIZE.MD])
+
 // Watch the current breadpoint state to
 // automaticaly close the sidebar if it's
 // not closed already on screens smaller than MD
@@ -61,7 +64,7 @@ const classList = computed(() => {
   return {
     'app-sidebar--compact': compact.value,
     'app-sidebar--closed': closed.value,
-    'app-sidebar--full-width': breakpointDown.value[SIZE.MD]
+    'app-sidebar--full-width': fullWith.value
   }
 })
 
@@ -93,6 +96,15 @@ const noSignOut = computed(() => {
 const noAnalysis = computed(() => {
   return isServer.value
 })
+
+function autoClose() {
+  if (fullWith.value && !closed.value) {
+    closed.value = true
+  }
+}
+
+onBeforeRouteUpdate(autoClose)
+onBeforeRouteLeave(autoClose)
 </script>
 
 <template>
