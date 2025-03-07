@@ -37,6 +37,7 @@ import { sum, uniqueId, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import WidgetBarometer from './WidgetBarometer'
+
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { MODE_NAME } from '@/mode'
