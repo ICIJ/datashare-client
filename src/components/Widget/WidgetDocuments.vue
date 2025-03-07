@@ -17,9 +17,9 @@
 <script>
 import { waitFor } from 'vue-wait'
 
-import AppSpinner from '@/components/AppSpinner/AppSpinner'
-
 import WidgetBarometerDocuments from './WidgetBarometerDocuments'
+
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 
 /**
  * Widget to display the number of indexed files on the insights page.
