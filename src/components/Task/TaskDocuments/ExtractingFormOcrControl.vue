@@ -4,6 +4,7 @@ import { some, get, find } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 
 const props = defineProps({
   isoLang: String,
@@ -54,7 +55,7 @@ function sameLanguage(nameOrIso6392) {
 </script>
 
 <template>
-  <b-overlay :show="!isReady" class="extracting-language-form-ocr-control" rounded spinner-small>
+  <app-overlay :show="!isReady" class="extracting-language-form-ocr-control" spinner-small>
     <b-alert
       :model-value="!hasTesseract"
       variant="warning"
@@ -73,5 +74,5 @@ function sameLanguage(nameOrIso6392) {
         {{ t('extractingFormOcrControl.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
       </a>
     </b-alert>
-  </b-overlay>
+  </app-overlay>
 </template>
