@@ -12,8 +12,8 @@ import { getHumanTaskName, TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import useMode from '@/composables/mode'
-import LinkBatchDownload from '@/components/Link/LinkBatchDownload'
-import LinkBatchSearch from '@/components/Link/LinkBatchSearch'
+import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
+import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
 import { useTaskProperties } from '@/composables/task-properties'
 const { t } = useI18n()
 const nbTasks = ref(3)
@@ -145,8 +145,8 @@ function getTaskIcon(item) {
           <display-status size="sm" :value="item.state" />
         </template>
         <template #cell(name)="{ item }">
-          <link-batch-download v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
-          <link-batch-search v-else-if="item.name === TASK_NAME.BATCH_SEARCH" :item="item" />
+          <router-link-batch-download v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
+          <router-link-batch-search v-else-if="item.name === TASK_NAME.BATCH_SEARCH" :item="item" />
           <span v-else> {{ t(getTitle(item)) }}</span>
         </template>
         <template #cell(createdAt)="{ item }">
