@@ -15,7 +15,7 @@ import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import { useCore } from '@/composables/core'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
-import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
 
