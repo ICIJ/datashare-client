@@ -3,6 +3,7 @@ import AppModalPrompt from '@/components/AppModal/AppModalPrompt'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
+
 export default {
   components: { AppModalPrompt },
   title: 'Components/AppModal/AppModalPrompt',
@@ -34,7 +35,6 @@ export default {
           <template #header-image-source>
             <image-mode-source :src="args.imageDark" color-mode="dark" />
           </template>
-          {{ args.default }}
         </app-modal-prompt>
       `
     }
