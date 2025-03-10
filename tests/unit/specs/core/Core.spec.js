@@ -1,5 +1,4 @@
 import Murmur from '@icij/murmur-next'
-import Vuex from 'vuex'
 
 import { Core } from '@/core'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -54,10 +53,6 @@ describe('Core', () => {
 
     it('should expose the VueI18n', () => {
       expect(core.i18n).toBeInstanceOf(Object)
-    })
-
-    it('should expose the store', () => {
-      expect(core.store).toBeInstanceOf(Vuex.Store)
     })
 
     it('should expose the config from Murmur', () => {

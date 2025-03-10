@@ -3,7 +3,6 @@ import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import { createVueWait } from 'vue-wait'
-import { createStore } from 'vuex'
 import { createWebHashHistory, createRouter } from 'vue-router'
 
 import { Core } from '@/core/Core'
