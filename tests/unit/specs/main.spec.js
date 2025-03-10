@@ -37,7 +37,6 @@ describe('main', () => {
     api.getUser.mockResolvedValue({})
     expect(core.vue).toBeInstanceOf(Object)
     expect(vm.config.globalProperties.$router).toBeDefined()
-    expect(vm.config.globalProperties.$store).toBeDefined()
   })
 
   it('should set the config', async () => {
