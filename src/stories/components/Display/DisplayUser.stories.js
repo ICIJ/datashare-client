@@ -1,9 +1,9 @@
 import DisplayUser from '@/components/Display/DisplayUser'
-import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
+import { withPinia } from '~storybook/decorators/pinia'
 
 export default {
   title: 'Components/Display/DisplayUser',
-  decorators: [storeDecoratorPipelineChainByCategory],
+  decorators: [withPinia()],
   tags: ['autodocs'],
   component: DisplayUser,
   args: {
