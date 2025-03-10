@@ -63,7 +63,7 @@ const orderDesc = computed(() => order.value === 'desc')
 async function fetch() {
   const result = await api.getHistoryEvents('search', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result?.items?.map((item) => ({ ...item })) ?? []
-  pagination.value = result.pagination
+  pagination.value = result?.pagination
 }
 
 async function showRemoveAllModal() {
