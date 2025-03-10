@@ -1,4 +1,4 @@
-import { computed, toValue, toRef, onMounted, watch, useId, onBeforeUnmount } from 'vue'
+import { computed, toValue, toRef, watch, useId, onBeforeUnmount } from 'vue'
 import { random } from 'lodash'
 
 import { usePolling } from '@/composables/polling'
@@ -49,10 +49,8 @@ export function useTaskPolling(taskNames = []) {
     return fn() && registerPollOnce({ fn, timeout })
   }
 
-  watch(toRef(taskNames), onShotTask)
-  onMounted(onShotTask)
-  onBeforeUnmount(() => {
-    taskStore.reset()
-  })
-  return { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
+  watch(toRef(taskNames), onShotTask, { immediate: true})
+  onBeforeUnmount(taskStore.reset)
+
+  return { tasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
 }
