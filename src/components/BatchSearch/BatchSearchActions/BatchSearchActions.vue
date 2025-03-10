@@ -22,6 +22,8 @@ const { uuid } = defineProps({
   }
 })
 
+const emit = defineEmits(['refresh'])
+
 const { t } = useI18n()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { prompt: showEditModal } = usePromptModal(BatchSearchActionsEditModal)
@@ -33,26 +35,29 @@ const batchSearch = computed(() => taskStore.getBatchSearchRecord(uuid))
 const isOver = computed(() => taskStore.isOver(uuid))
 const isRunning = computed(() => taskStore.isRunning(uuid))
 
-function remove() {
+async function remove() {
   const successMessage = t('batchSearchActions.remove.success')
   const errorMessage = t('batchSearchActions.remove.error')
-  return toastedPromise(taskStore.deleteBatchSearch(uuid), { successMessage, errorMessage })
+  await toastedPromise(taskStore.deleteBatchSearch(uuid), { successMessage, errorMessage })
+  emit('refresh')
 }
 
 async function stop() {
   const successMessage = t('batchSearchActions.stop.success')
   const errorMessage = t('batchSearchActions.stop.error')
   await toastedPromise(taskStore.stopTask(uuid), { successMessage, errorMessage })
+  emit('refresh')
 }
 
-async function relaunch({ title, description, deleteAfterRelaunch }) {
+async function relaunch({ name, description, deleteAfterRelaunch }) {
   const successMessage = t('batchSearchActions.relaunch.success')
   const errorMessage = t('batchSearchActions.relaunch.error')
-  await toastedPromise(taskStore.relaunchBatchSearch(uuid, title, description), { successMessage, errorMessage })
+  await toastedPromise(taskStore.relaunchBatchSearch(uuid, name, description), { successMessage, errorMessage })
   // Remove the current batch search if the user has selected the option.
   if (deleteAfterRelaunch) {
     await taskStore.deleteBatchSearch(uuid)
   }
+  emit('refresh')
 }
 
 async function edit() {
@@ -61,7 +66,7 @@ async function edit() {
 
 async function removeConfirmModal() {
   if (await showConfirmModal()) {
-    return remove()
+    await remove()
   }
 }
 
@@ -70,7 +75,7 @@ async function relaunchPromptModal() {
   const values = await showRelaunchModal({ name, description })
   // Only a valid submit returns value. Cancel or modal hide returns null.
   if (values) {
-    return relaunch(values)
+    await relaunch(values)
   }
 }
 
