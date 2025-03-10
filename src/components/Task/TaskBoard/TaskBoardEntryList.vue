@@ -1,12 +1,12 @@
 <script setup>
-import { useI18n } from 'vue-i18n'
-
 import TaskBoardEntry from '@/components/Task/TaskBoard/TaskBoardEntry'
 
 defineProps({
-  entries: { type: Array, default: () => [] }
+  entries: { 
+    type: Array, 
+    default: () => [] 
+  }
 })
-const { t } = useI18n()
 </script>
 
 <template>
@@ -15,12 +15,12 @@ const { t } = useI18n()
       <div v-for="(task, index) in entries" :key="index" class="col-12 col-xl-6">
         <task-board-entry
           :icon="task.icon"
-          :title="t(`${task.key}.title`)"
-          :description="t(`${task.key}.description`)"
-          :info="task.infoComp ?? t(`${task.key}.info`, task.info)"
+          :title="$t(`${task.key}.title`)"
+          :description="$t(`${task.key}.description`)"
+          :info="task.infoComp ?? $t(`${task.key}.info`, task.info)"
           :list-link="task.listLink"
           :action-link="task.actionLink"
-          :action-text="t(`${task.key}.actionText`)"
+          :action-text="$t(`${task.key}.actionText`)"
           class="h-100 d-flex flex-column"
         >
         </task-board-entry>
