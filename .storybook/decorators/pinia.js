@@ -10,7 +10,7 @@ export const withPinia = () => {
       app.use(pinia)
       // We unregister all pipelines to avoid conflicts
       const pipelinesStore = usePipelinesStore()
-      pipelinesStore.reset()
+      pipelinesStore.unregister('username-is-you')
     },
     template: '<story />'
   })
