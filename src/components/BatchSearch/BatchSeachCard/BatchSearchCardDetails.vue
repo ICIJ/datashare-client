@@ -7,7 +7,7 @@ import DisplayStatus from '@/components/Display/DisplayStatus'
 import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
-import ProjectLink from '@/components/Project/ProjectLink'
+import ProjectButton from '@/components/Project/ProjectButton'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import humanNumber from '@/utils/humanNumber'
 
@@ -211,8 +211,8 @@ const projectsItem = computed(() => {
         >
       </li>
       <li class="my-0">
-        <batch-search-card-details-entry v-bind="nbQueriesWithoutResultsItem"
-          ><template #end>
+        <batch-search-card-details-entry v-bind="nbQueriesWithoutResultsItem">
+          <template #end>
             <button-icon
               :disabled="noQueriesWithoutResults"
               icon-left="download-simple"
@@ -220,15 +220,17 @@ const projectsItem = computed(() => {
               square
               hide-label
               :label="downloadQueriesWithoutResultsLabel"
-              @click="downloadQueriesWithoutResults" /></template
-        ></batch-search-card-details-entry>
+              @click="downloadQueriesWithoutResults" 
+            />
+          </template>
+        </batch-search-card-details-entry>
       </li>
     </ul>
     <hr class="my-1" />
     <ul class="batch-search-card-details__list list-unstyled">
       <li class="my-0">
-        <batch-search-card-details-entry v-bind="nbQueriesItem"
-          ><template #end>
+        <batch-search-card-details-entry v-bind="nbQueriesItem">
+          <template #end>
             <button-icon
               :disabled="noQueries"
               icon-left="download-simple"
@@ -236,8 +238,10 @@ const projectsItem = computed(() => {
               square
               hide-label
               :label="downloadQueriesLabel"
-              @click="downloadQueries" /></template
-        ></batch-search-card-details-entry>
+              @click="downloadQueries" 
+            />
+          </template>
+        </batch-search-card-details-entry>
       </li>
       <li class="mt-2">
         <batch-search-card-details-entry :label="dateItem.label" :icon="dateItem.icon">
@@ -260,7 +264,7 @@ const projectsItem = computed(() => {
       </li>
       <li>
         <batch-search-card-details-entry :label="projectsItem.label" :icon="projectsItem.icon">
-          <project-link v-for="(project, index) in projectsItem.value" :key="index" :project="project" />
+          <project-button v-for="(project, index) in projectsItem.value" :key="index" :project="project" />
         </batch-search-card-details-entry>
       </li>
     </ul>
