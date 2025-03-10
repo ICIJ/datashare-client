@@ -2,41 +2,47 @@
 import get from 'lodash/get'
 import { ref, onBeforeMount } from 'vue'
 
-import TaskPage from '@/views/Task/TaskPage'
-import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
-import DisplayStatus from '@/components/Display/DisplayStatus'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
-import DisplayProgress from '@/components/Display/DisplayProgress'
-import { useTaskSettings } from '@/composables/task-settings'
-import { TASK_NAME } from '@/enums/taskNames'
 import DisplayNumber from '@/components/Display/DisplayNumber'
+import DisplayProgress from '@/components/Display/DisplayProgress'
+import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
-import { useCore } from '@/composables/core'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
-import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
+import { useTaskSettings } from '@/composables/task-settings'
+import { useCore } from '@/composables/core'
+import { TASK_NAME } from '@/enums/taskNames'
+import TaskPage from '@/views/Task/TaskPage'
+
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
 
-function getProjects(item) {
-  return getRecord(item, 'projects') ?? [core.getDefaultProject()]
+function getBatchSearchRecord(item, key) {
+  return get(item, ['args', 'batchRecord', key].join('.'))
 }
 
-function getRecord(item, key) {
-  return get(item, `args.batchRecord.${key}`)
+function getBatchSearchProjects(item) {
+  return getBatchSearchRecord(item, 'project') ?? [core.getDefaultProject()]
 }
-const me = ref({})
-onBeforeMount(async () => {
+
+function canManageBatchSearch(item) {
+  return getBatchSearchRecord(item, 'user.id') == me.value
+}
+
+const me = ref('')
+
+async function fetchMe() {
   me.value = await core.auth.getUsername()
-})
-function userIsAuthorized(item) {
-  return me.value === getRecord(item, 'user.id')
 }
+
+onBeforeMount(fetchMe)
 </script>
 <template>
   <task-page
-    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
+    v-slot="{ tasks, sort, order, updateSort, updateOrder, refresh, empty }"
     :task-filter="[TASK_NAME.BATCH_SEARCH]"
     page-name="batch-search"
     show-add
@@ -56,31 +62,32 @@ function userIsAuthorized(item) {
         <display-status :value="item.state" />
       </template>
       <template #cell(privacy)="{ item }">
-        <display-visibility :value="getRecord(item, 'published')" />
+        <display-visibility :value="getBatchSearchRecord(item, 'published')" />
       </template>
       <template #cell(name)="{ item }">
         <router-link-batch-search :item="item" />
       </template>
       <template #cell(queries)="{ item }">
-        <display-number :value="getRecord(item, 'nbQueries')" />
+        <display-number :value="getBatchSearchRecord(item, 'nbQueries')" />
       </template>
       <template #cell(documents)="{ item }">
-        <display-number :value="getRecord(item, 'nbResults')" />
+        <display-number :value="getBatchSearchRecord(item, 'nbResults')" />
       </template>
       <template #cell(projects)="{ item }">
-        <display-project-list :values="getProjects(item)" />
+        <display-project-list :values="getBatchSearchProjects(item)" />
       </template>
-
-      <template #cell(author)="{ item }"><display-user :value="getRecord(item, 'user.id')" /></template>
+      <template #cell(author)="{ item }">
+        <display-user :value="getBatchSearchRecord(item, 'user.id')" />
+      </template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />
       </template>
       <template #cell(progress)="{ item }">
         <display-progress :value="item.progress" />
       </template>
-      <template #row-actions="{ item }"
-        ><batch-search-actions v-if="userIsAuthorized(item)" :uuid="item.id"
-      /></template>
+      <template #row-actions="{ item }">
+        <batch-search-actions v-if="canManageBatchSearch(item)" :uuid="item.id" @refresh="refresh" />
+      </template>
     </page-table-generic>
   </task-page>
 </template>
