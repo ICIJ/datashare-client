@@ -3,8 +3,8 @@ import { ref } from 'vue'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
-import TaskBoardEntry from '@/components/Task/TaskBoard/TaskBoardEntry'
-import TaskBoardEntryList from '@/components/Task/TaskBoard/TaskBoardEntryList'
+import TaskBoardList from '@/components/Task/TaskBoard/TaskBoardList'
+import TaskBoardListEntry from '@/components/Task/TaskBoard/TaskBoardListEntry'
 import TaskBoardLatest from '@/views/Task/TaskBoard/TaskBoardLatest'
 
 import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
@@ -20,8 +20,8 @@ const documentAdditions = ref(4)
   <page-container fluid deck class="task-board">
     <page-header no-toggle-settings />
     <task-board-latest />
-    <task-board-entry-list class="px-5">
-      <task-board-entry
+    <task-board-list class="px-5">
+      <task-board-list-entry
         :icon="TASK_NAME_ICON[TASK_NAME.BATCH_SEARCH]"
         :title="$t('task.task-board.entries.batch-search.title')"
         :description="$t(`task.task-board.entries.batch-search.description`)"
@@ -38,15 +38,15 @@ const documentAdditions = ref(4)
             </template>
           </i18n-t>
         </template>
-      </task-board-entry>
-      <task-board-entry
+      </task-board-list-entry>
+      <task-board-list-entry
         :icon="TASK_NAME_ICON[TASK_NAME.BATCH_DOWNLOAD]"
         :title="$t('task.task-board.entries.batch-download.title')"
         :description="$t('task.task-board.entries.batch-download.description')"
         :info="$tc('task.task-board.entries.batch-download.info', batchDownloads)"
         :list-link="{ name: 'task.batch-download.list' }"
       />
-      <task-board-entry
+      <task-board-list-entry
         :icon="TASK_NAME_ICON[TASK_NAME.EXTRACT_NLP]"
         :title="$t('task.task-board.entries.entity-recognition.title')"
         :description="$t('task.task-board.entries.entity-recognition.description')"
@@ -55,7 +55,7 @@ const documentAdditions = ref(4)
         :action-link="{ name: 'task.entities.new' }"
         :action-text="$t('task.task-board.entries.entity-recognition.actionText')"
       />
-      <task-board-entry
+      <task-board-list-entry
         :icon="TASK_NAME_ICON[TASK_NAME.INDEX]"
         :title="$t('task.task-board.entries.document-addition.title')"
         :description="$t('task.task-board.entries.document-addition.description')"
@@ -64,6 +64,6 @@ const documentAdditions = ref(4)
         :action-link="{ name: 'task.documents.new' }"
         :action-text="$t('task.task-board.entries.document-addition.actionText')"
       />
-    </task-board-entry-list>
+    </task-board-list>
   </page-container>
 </template>

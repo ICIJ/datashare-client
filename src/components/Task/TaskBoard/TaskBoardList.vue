@@ -1,11 +1,11 @@
 <template>
-  <div class="task-board-entry-list container-fluid bg-tertiary-subtle py-4">
+  <div class="task-board-list container-fluid bg-tertiary-subtle py-4">
     <slot />
   </div>
 </template>
 
 <style scoped lang="scss">
-.task-board-entry-list {
+.task-board-list {
   display: grid;
   gap: $spacer-xxl;
   grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
