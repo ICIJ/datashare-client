@@ -1,7 +1,6 @@
 import { computed, watch } from 'vue'
 import { useRoute, useRouter, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router'
-import { useStore } from 'vuex'
-import { compact, debounce, identity, noop, isEqual, isString, isObject, isUndefined, toNumber } from 'lodash'
+import { compact, debounce, identity, noop, isEqual, isObject, isUndefined, toNumber } from 'lodash'
 
 /**
  * Global object to store batched updates
@@ -411,16 +410,13 @@ export function useUrlPageFrom({ initialValue = 1, perPage = 25, to = null } = {
  * @param {Object} [options] - Configuration options.
  * @param {number} [options.perPage=25] - The number of items per page.
  * @param {Function|null} [options.to=null] - An optional function to transform the value when updating the URL parameter.
- * @param {string|Function} [options.get] - A Vuex getter name or a custom getter function to get the value.
- * @param {string|Function} [options.set] - A Vuex mutation name or a custom setter function to set the value.
+ * @param {Function} [options.get] - Getter function to get the value.
+ * @param {Function} [options.set] - Setter function to set the value.
  * @returns {ComputedRef<number>} - A computed reactive reference to the current page number.
  */
 export function useUrlPageFromWithStore({ perPage = 25, to = null, get, set, ...options } = {}) {
-  const store = useStore()
   const transform = toNumber
-  const getOrGetter = isString(get) ? () => store.getter[get] : get
-  const setOrSetter = isString(set) ? (value) => store.commit(set, value) : set
-  const from = useUrlParamWithStore('from', { get: getOrGetter, set: setOrSetter, to, transform, ...options })
+  const from = useUrlParamWithStore('from', { get, set, to, transform, ...options })
   return computed({
     set: (value) => setNumberRef(from, (value - 1) * perPage),
     get: () => Math.floor(from.value / perPage) + 1
