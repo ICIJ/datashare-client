@@ -189,16 +189,6 @@ export default {
       return this.placeholder ?? this.$t('search.placeholder')
     }
   },
-  mounted() {
-    this.$store.subscribe((mutation) => {
-      if (mutation.type === 'search/query') {
-        this.query = mutation.payload
-      }
-      if (mutation.type === 'search/reset') {
-        this.field = this.searchStore.field
-      }
-    })
-  },
   methods: {
     submit() {
       this.hideSuggestions()
