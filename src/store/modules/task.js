@@ -4,7 +4,6 @@ import { find, property } from 'lodash'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { TASK_STATUS } from '@/enums/taskStatus'
-import { TASK_NAME } from '@/enums/taskNames'
 
 export const useTaskStore = defineStore('task', () => {
   const tasks = ref([])

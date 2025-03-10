@@ -49,7 +49,7 @@ export function useTaskPolling(taskNames = []) {
     return fn() && registerPollOnce({ fn, timeout })
   }
 
-  watch(toRef(taskNames), onShotTask, { immediate: true})
+  watch(toRef(taskNames), onShotTask, { immediate: true })
   onBeforeUnmount(taskStore.reset)
 
   return { tasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
