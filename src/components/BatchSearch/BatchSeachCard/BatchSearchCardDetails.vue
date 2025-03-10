@@ -220,7 +220,7 @@ const projectsItem = computed(() => {
               square
               hide-label
               :label="downloadQueriesWithoutResultsLabel"
-              @click="downloadQueriesWithoutResults" 
+              @click="downloadQueriesWithoutResults"
             />
           </template>
         </batch-search-card-details-entry>
@@ -238,7 +238,7 @@ const projectsItem = computed(() => {
               square
               hide-label
               :label="downloadQueriesLabel"
-              @click="downloadQueries" 
+              @click="downloadQueries"
             />
           </template>
         </batch-search-card-details-entry>
