@@ -40,22 +40,46 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const { tasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading } = useTaskPolling(
-  props.taskFilter
-)
+const { 
+  tasks,
+  getTasks,
+  hasPendingTasks, 
+  hasDoneTasks, 
+  stopPendingTasks, 
+  deleteDoneTasks, 
+  isLoading 
+} = useTaskPolling(props.taskFilter)
 
-const { toAddRoute, searchQuery, page, perPage, searchPlaceholder, displayedTasks, totalRows, sortBy, noTasks } =
-  useTaskHeader(props.pageName, props.showAdd, tasks)
+const { 
+  toAddRoute, 
+  searchQuery, 
+  page, 
+  perPage, 
+  sortBy,
+  searchPlaceholder, 
+  displayedTasks, 
+  totalRows, 
+  noTasks 
+} = useTaskHeader(props.pageName, props.showAdd, tasks)
+
+const setSort = (value) => (sort.value = value)
 
 const sort = computed({
   get: () => sortBy.value.modelValue?.[0],
   set: (value) => (sortBy.value.modelValue = [value, order.value])
 })
 
+const setOrder = (value) => (order.value = value)
+
 const order = computed({
   get: () => sortBy.value.modelValue?.[1],
   set: (value) => (sortBy.value.modelValue = [sort.value, value])
 })
+
+
+function refresh() {
+  return getTasks()
+}
 </script>
 
 <template>
@@ -66,10 +90,10 @@ const order = computed({
       v-model:searchQuery="searchQuery"
       v-model:page="page"
       :per-page="perPage"
-      :total-rows="totalRows"
-      searchable
-      paginable
       :search-placeholder="searchPlaceholder"
+      :total-rows="totalRows"
+      paginable
+      searchable
     >
       <template #end>
         <mode-local-only>
@@ -102,9 +126,10 @@ const order = computed({
           :tasks="displayedTasks"
           :sort="sort"
           :order="order"
-          :update-order="(v) => (order = v)"
-          :update-sort="(v) => (sort = v)"
+          :update-order="setOrder"
+          :update-sort="setSort"
           :empty="noTasks"
+          :refresh="refresh"
         />
       </app-overlay>
     </div>
