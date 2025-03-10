@@ -1,9 +1,12 @@
 <script setup>
-import { nextTick, ref, useAttrs, useSlots, watch } from 'vue'
+import { pickBy } from 'lodash'
+import { ref, useAttrs, useSlots } from 'vue'
 
 import AppModal from './AppModal'
-const inputValue = defineModel('inputValue', { type: String, required: true })
-const modelValue = defineModel({ type: Boolean, required: true })
+
+const inputValue = defineModel('inputValue', { type: String, default: '' })
+const modelValue = defineModel({ type: Boolean })
+
 const props = defineProps({
   inputType: {
     type: String,
@@ -12,9 +15,6 @@ const props = defineProps({
   inputPlaceholder: {
     type: String,
     default: null
-  },
-  description: {
-    type: String
   },
   inputState: {
     type: Boolean,
@@ -29,39 +29,28 @@ const props = defineProps({
   inputAutofocus: {
     type: Boolean,
     default: false
-  }
+  },
+  description: {
+    type: String
+  },
 })
+
 const inputModal = ref(null)
-// Retrieve all slots passed to AppModalPrompt to pass them to AppModal
+
+const attrs = useAttrs()
 const slots = useSlots()
-const slots_ = Object.fromEntries(Object.entries(slots).filter(([name]) => name !== 'default'))
-const attrs = useAttrs() // This will forward any props passed to AppModalPrompt to AppModal
+const otherSlots = pickBy(slots, (_, name) => name !== 'default')
 
 const emit = defineEmits(['submit'])
-const onOk = () => {
-  emit('submit', { value: inputValue.value })
-}
-watch(modelValue, (show) => {
-  if (props.inputAutofocus === true && show === true) {
-    focusInput()
-  }
-})
-const focusInput = () => {
-  if (inputModal.value) {
-    nextTick(() => {
-      inputModal.value.focus()
-    })
-  }
-}
+const submit = () => emit('submit', { value: inputValue.value, trigger: 'submit' })
 </script>
 
 <template>
-  <app-modal v-bind="attrs" v-model="modelValue" @ok="onOk">
-    <template v-for="(slotFn, slotName) in slots_" :slot="slotName" :key="slotName">
-      <!-- Dynamically render named slots -->
-      <component :is="slotFn" />
-    </template>
-    <template v-if="slots.default">
+  <app-modal v-bind="attrs" v-model="modelValue" @ok="submit">
+    <div v-for="(fn, name) in otherSlots" :slot="name" :key="name">
+      <component :is="fn" />
+    </div>
+    <slot>
       <div class="d-flex flex-column gap-3">
         <b-form-group
           :label="inputHiddenLabel"
@@ -75,13 +64,16 @@ const focusInput = () => {
             ref="inputModal"
             v-model="inputValue"
             :type="inputType"
+            :autofocus="inputAutofocus"
             :placeholder="inputPlaceholder"
           />
         </b-form-group>
         <p class="text-secondary-emphasis">
-          <slot name="description">{{ description }}</slot>
+          <slot name="description">
+            {{ description }}
+          </slot>
         </p>
       </div>
-    </template>
+    </slot>
   </app-modal>
 </template>
