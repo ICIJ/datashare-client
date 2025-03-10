@@ -24,6 +24,7 @@ export function useTaskPolling(taskNames = []) {
   const hasDoneTasks = computed(() => taskStore.hasDoneTasks)
   const hasPendingTasks = computed(() => taskStore.hasPendingTasks)
   const tasks = computed(() => taskStore.tasks)
+  const noTasks = computed(() => !toValue(tasks).length)
 
   async function stopPendingTasks() {
     await taskStore.stopPendingTasks()
@@ -52,5 +53,5 @@ export function useTaskPolling(taskNames = []) {
   watch(toRef(taskNames), onShotTask, { immediate: true })
   onBeforeUnmount(taskStore.reset)
 
-  return { tasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
+  return { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
 }
