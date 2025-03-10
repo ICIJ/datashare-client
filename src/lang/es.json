@@ -701,7 +701,7 @@
       "description": "Descripción"
     }
   },
-  "newBatchSearch": {
+  "taskBatchSearchNew": {
     "title": "Start a new batch search"
   },
   "batchSearchResults": {
