@@ -23,11 +23,11 @@ const compact = computed(() => {
 </script>
 
 <template>
-  <b-card no-body class="task-board-entry border-0 p-4">
+  <b-card no-body class="task-board-list-entry border-0 p-4">
     <b-row class="d-flex flex-grow-1 g-3">
       <b-col md="2">
         <router-link :to="listLink" class="d-block">
-          <phosphor-icon :name="icon" size="100%" class="task-board-entry__icon bg-action-subtle" />
+          <phosphor-icon :name="icon" size="100%" class="task-board-list-entry__icon bg-action-subtle" />
         </router-link>
       </b-col>
       <b-col md="10" class="d-flex">
@@ -45,7 +45,7 @@ const compact = computed(() => {
             </slot>
             <span class="d-flex justify-content-end text-secondary-emphasis">
               <slot name="info" v-bind="{ info }">
-                <span class="task-board-entry__info">
+                <span class="task-board-list-entry__info">
                   <phosphor-icon :name="icon" />
                   {{ info }}
                 </span>
@@ -75,7 +75,7 @@ const compact = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.task-board-entry {
+.task-board-list-entry {
   &__icon {
     max-width: 6rem;
     width: 100%;
