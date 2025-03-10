@@ -6,8 +6,7 @@
     :multiple="multiple"
     flush-items
     :class="{
-      'project-dropdown-selector--multiple': hasMultipleProjects,
-      'project-dropdown-selector--sliced': hasSlicedProjects
+      'project-dropdown-selector--multiple': hasMultipleProjects
     }"
     :disabled="disabled"
     :no-caret="noCaret"
@@ -31,7 +30,11 @@
       <project-dropdown-selector-all v-if="hasMatches && multiple" v-model="selectAll" @click.stop />
     </template>
     <template #button-content>
-      <project-dropdown-selector-button-content :projects="slicedProjects" />
+      <project-dropdown-selector-button-content 
+        :slice-size="sliceSize"
+        :selected-projects="selectedProjects" 
+        :projects="projects"
+      />
     </template>
     <template #dropdown-item="{ option, index, hasValue, toggleUniqueValue, toggleValue }">
       <project-dropdown-selector-entry
@@ -153,9 +156,6 @@ export default {
         this.$emit('update:modelValue', value)
       }
     },
-    slicedProjects() {
-      return this.selectedProjects.slice(0, this.sliceSize + 1)
-    },
     options() {
       return this.projects.filter(({ label = '', name = '' } = {}) => {
         return iwildcardMatch(label, this.wildcardQuery) || iwildcardMatch(name, this.wildcardQuery)
@@ -163,9 +163,6 @@ export default {
     },
     hasMultipleProjects() {
       return this.selectedProjects?.length > 1
-    },
-    hasSlicedProjects() {
-      return this.selectedProjects?.length > this.sliceSize
     },
     selectAll: {
       get() {
