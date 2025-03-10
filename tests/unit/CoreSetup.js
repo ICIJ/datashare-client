@@ -52,7 +52,6 @@ class CoreSetup extends Core {
   }
   useVuex(options = null) {
     if (options) {
-      this._store = createStore(options)
       this.use(this.store)
       return this
     }
