@@ -26,7 +26,6 @@ import { apiInstance } from '@/api/apiInstance'
 import { dispatch, EventBus } from '@/utils/event-bus'
 import { getMode, MODE_NAME } from '@/mode'
 import { routes } from '@/router'
-import { storeBuilder } from '@/store/storeBuilder'
 import { pinia } from '@/store/pinia'
 import Auth from '@/api/resources/Auth'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
@@ -69,7 +68,6 @@ class Core extends Behaviors {
     const Root = defineComponent({ name: 'Datashare', template: '<router-view></router-view>' })
     this._vue = createApp(Root)
     this._api = api
-    this._store = storeBuilder(api)
     this._auth = new Auth(mode, this._api)
     // Setup deferred state
     this.defer()
@@ -90,7 +88,6 @@ class Core extends Behaviors {
    */
   useAll() {
     this.usePinia()
-    this.useVuex()
     this.useI18n()
     this.useBootstrapVue({
       directives: true,
@@ -169,14 +166,6 @@ class Core extends Behaviors {
     this._router = createRouter({ routes, history })
     this.use(this.router)
     guards(this)
-    return this
-  }
-  /**
-   * Configure vuex plugin
-   * @returns {Core} the current instance of Core
-   */
-  useVuex() {
-    this.use(this.store)
     return this
   }
   /**
@@ -461,13 +450,6 @@ class Core extends Behaviors {
    */
   get router() {
     return this._router
-  }
-  /**
-   * The Vuex instance
-   * @type {Vuex.Store}
-   */
-  get store() {
-    return this._store
   }
   /**
    * The Pinia instance
