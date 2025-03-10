@@ -364,12 +364,12 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should send a post JSON for copyBatchSearch', async () => {
-    json = await api.copyBatchSearch('12', 'copyName', 'copyDescription')
+  it('should send a post JSON for relaunchBatchSearch', async () => {
+    json = await api.relaunchBatchSearch('12', 'copyName', 'copyDescription')
     const data = { description: 'copyDescription', name: 'copyName' }
     expect(json).toEqual({})
     expect(axios.request).toBeCalledWith({
-      url: Api.getFullUrl('/api/batch/search/copy/12'),
+      url: Api.getFullUrl('/api/task/batchSearch/copy/12'),
       method: 'POST',
       data,
       responseType: 'text',
