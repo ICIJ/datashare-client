@@ -195,9 +195,9 @@ export class Api {
     const data = { from, size, queries, sort, order, contentTypes, queriesExcluded }
     return this.sendAction(`/api/batch/search/result/${batchId}`, { method: Method.POST, data })
   }
-  copyBatchSearch(batchId, name, description) {
+  relaunchBatchSearch(batchId, name, description) {
     const data = { name, description }
-    return this.sendActionAsText(`/api/batch/search/copy/${batchId}`, { method: Method.POST, data })
+    return this.sendActionAsText(`/api/task/batchSearch/copy/${batchId}`, { method: Method.POST, data })
   }
   deleteBatchSearch(batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: Method.DELETE })
@@ -206,7 +206,8 @@ export class Api {
     return this.sendActionAsText('/api/batch/search', { method: Method.DELETE })
   }
   updateBatchSearch(batchId, published) {
-    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data: { published } } })
+    const data = { published }
+    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data } })
   }
   static getFullUrl(path) {
     const base = import.meta.env.VITE_DS_HOST || `${window.location.protocol}//${window.location.host}`

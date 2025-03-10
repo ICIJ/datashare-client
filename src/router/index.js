@@ -245,7 +245,7 @@ export const routes = [
                 path: 'new',
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchNew'),
                 meta: {
-                  title: 'newBatchSearch.title',
+                  title: 'taskBatchSearchNew.title',
                   icon: 'plus',
                   docs: [
                     {
