@@ -54,12 +54,15 @@ describe('Search/SearchSaved/SearchSavedList.vue', () => {
   let wrapper, router
 
   beforeEach(async () => {
-    vi.clearAllMocks()
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     const global = { plugins: core.plugins }
     router = core.router
     wrapper = mount(SearchSavedList, { global })
     await flushPromises()
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
   })
 
   it('should display a list of 2 saved search', () => {
