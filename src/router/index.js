@@ -537,17 +537,6 @@ export const routes = [
     ]
   },
   {
-    name: 'document-modal',
-    path: '/dm/:index/:id/:routing',
-    meta: {
-      title: 'Document'
-    },
-    props(route) {
-      return { ...route.params, ...route.query }
-    },
-    component: () => import('@/views/DocumentModal')
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/Login/Login'),
