@@ -40,6 +40,7 @@ async function fetchMe() {
 
 onBeforeMount(fetchMe)
 </script>
+
 <template>
   <task-page
     v-slot="{ tasks, sort, order, updateSort, updateOrder, refresh, empty }"
