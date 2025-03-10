@@ -1,9 +1,9 @@
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
-import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
+import { withPinia } from '~storybook/decorators/pinia'
 
 export default {
   title: 'Components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry',
-  decorators: [storeDecoratorPipelineChainByCategory],
+  decorators: [withPinia()],
   tags: ['autodocs'],
   component: DocumentUserCommentsListEntry,
   args: {

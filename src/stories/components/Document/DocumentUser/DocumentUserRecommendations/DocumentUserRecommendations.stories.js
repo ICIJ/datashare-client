@@ -1,10 +1,10 @@
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
-import { storeDecoratorPipelineChainByCategory } from '~storybook/decorators/vuex'
+import { withPinia } from '~storybook/decorators/pinia'
 
 export default {
   title: 'Components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations',
   tags: ['autodocs'],
-  decorators: [storeDecoratorPipelineChainByCategory],
+  decorators: [withPinia()],
   component: DocumentUserRecommendations,
   args: {
     modelValue: [],

@@ -10,6 +10,14 @@ export const usePipelinesStore = defineStore('pipelines', () => {
   const registered = reactive(cloneDeep({ pipelines }).pipelines)
 
   /**
+   * Reset the registered pipelines
+   * @returns {void}
+   */
+  const reset = () => {
+    registered.splice(0, registered.length)
+  }
+
+  /**
    * Register a pipeline
    *
    * @param {Object} options
@@ -147,6 +155,7 @@ export const usePipelinesStore = defineStore('pipelines', () => {
   return {
     registered,
     register,
+    reset,
     unregister,
     instantiatePipeline,
     instantiatedPipelines,

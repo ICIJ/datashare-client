@@ -1,25 +1,8 @@
-import { identity } from 'lodash'
-
-import { withVuex } from '~storybook/decorators/vuex'
 import BadgeFilter from '@/components/Badge/BadgeFilter'
-
-const storeDecorator = withVuex({
-  modules: {
-    pipelines: {
-      namespaced: true,
-      getters: {
-        applyPipelineChainByCategory() {
-          return () => {
-            return identity
-          }
-        }
-      }
-    }
-  }
-})
+import { withPinia } from '~storybook/decorators/pinia'
 
 export default {
-  decorators: [storeDecorator],
+  decorators: [withPinia()],
   title: 'Components/Badge/BadgeFilter',
   component: BadgeFilter,
   tags: ['autodocs'],
