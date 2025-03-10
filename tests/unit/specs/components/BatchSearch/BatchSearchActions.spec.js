@@ -1,74 +1,72 @@
 import { shallowMount } from '@vue/test-utils'
 
-import { flushPromises } from '~tests/unit/tests_utils'
-import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { apiInstance as api } from '@/api/apiInstance'
+import BatchSearchActionEdit from '@/components/BatchSearch/BatchSearchAction/BatchSearchActionEdit'
+import BatchSearchActionRelaunch from '@/components/BatchSearch/BatchSearchAction/BatchSearchActionRelaunch'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
+import { useTaskStore } from '@/store/modules/task'
 
-vi.mock('@/api/apiInstance', {
-  apiInstance: {
-    deleteBatchSearch: vi.fn()
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      getTasks: vi.fn().mockResolvedValue([
+        {
+          id: '12',
+          state: 'SUCCESS'
+        },
+        {
+          id: '46',
+          state: 'QUEUED'
+        }
+      ])
+    }
   }
 })
 
 describe('BatchSearchActions.vue', () => {
-  let wrapper, plugins
+  let plugins
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    const taskStore = useTaskStore()
     plugins = core.plugins
+    await taskStore.getTasks()
   })
 
-  beforeEach(async () => {
-    api.deleteBatchSearch.mockClear()
+  describe('with a successful task', () => {
+    let wrapper
+
+    beforeEach(() => {
+      const props = { uuid: '12' }
+      wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
+    })
+
+    it('should display a non-disabled button to relaunch the batchSearch', async () => {
+      expect(wrapper.findComponent(BatchSearchActionRelaunch).exists()).toBe(true)
+      expect(wrapper.findComponent(BatchSearchActionRelaunch).props('disabled')).toBe(false)
+    })
+
+    it('should display a button to edit the batchSearch', async () => {
+      expect(wrapper.findComponent(BatchSearchActionEdit).exists()).toBe(true)
+    })
+
+    it('should display a button to delete the batchSearch', async () => {
+      expect(wrapper.findComponent(ButtonRowActionDelete).exists()).toBe(true)
+    })
   })
 
-  it('should display a button to relaunch the batchSearch', async () => {
-    const props = {
-      uuid: '12'
-    }
-    wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
-    expect(wrapper.find('button-row-action-stub[label="Relaunch"]').exists()).toBe(true)
-  })
-  it('should display a button to edit the batchSearch', async () => {
-    const props = {
-      uuid: '12'
-    }
-    wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
-    expect(wrapper.find('button-row-action-stub[label="Edit"]').exists()).toBe(true)
-  })
-  it('should display a button to delete the batchSearch', async () => {
-    const props = {
-      uuid: '12'
-    }
-    wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
-    expect(wrapper.find('button-row-action-stub[label="Delete"]').exists()).toBe(true)
-  })
+  describe('with a queued task', () => {
+    let wrapper
 
-  it.skip('should NOT display a button to relaunch the BS if BS status is failure', async () => {
-    const props = {
-      batchSearch: {
-        uuid: '155',
-        projects: [
-          {
-            name: 'BatchSearchActions'
-          }
-        ],
-        description: 'This is the description of the batch search',
-        state: 'QUEUED',
-        date: '2019-07-18T14:45:34.869+0000',
-        nbResults: 333,
-        phraseMatch: 1,
-        fuzziness: 1,
-        fileTypes: [],
-        paths: [],
-        published: true,
-        user: { id: 'test' }
-      }
-    }
+    beforeEach(() => {
+      const props = { uuid: '46' }
+      wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
+    })
 
-    wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
-    await flushPromises()
-    expect(wrapper.find('.batch-search-actions__item--relaunch').exists()).toBeFalsy()
+    it('should display a disabled button to relaunch the batchSearch is queued', async () => {
+      expect(wrapper.findComponent(BatchSearchActionRelaunch).exists()).toBe(true)
+      expect(wrapper.findComponent(BatchSearchActionRelaunch).props('disabled')).toBe(true)
+    })
   })
 })
