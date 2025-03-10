@@ -25,7 +25,7 @@ function getBatchSearchRecord(item, key) {
 }
 
 function getBatchSearchProjects(item) {
-  return getBatchSearchRecord(item, 'project') ?? [core.getDefaultProject()]
+  return getBatchSearchRecord(item, 'projects', [])
 }
 
 function canManageBatchSearch(item) {
