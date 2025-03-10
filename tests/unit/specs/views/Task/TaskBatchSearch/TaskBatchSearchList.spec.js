@@ -2,7 +2,6 @@ import { setCookie } from 'tiny-cookie'
 import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import TaskPage from '@/views/Task/TaskPage'
 import TaskBatchSearchList from '@/views/Task/TaskBatchSearch/TaskBatchSearchList'
 
 vi.mock('@/api/apiInstance', () => {
@@ -105,7 +104,7 @@ describe('TaskBatchSearchList', () => {
     const rows = wrapper.findAll('.page-table-generic__row')
     expect(rows).toHaveLength(2)
   })
-  
+
   it('should not display actions if I m not the owner of the batch search', async () => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'local' }, JSON.stringify)
     const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
