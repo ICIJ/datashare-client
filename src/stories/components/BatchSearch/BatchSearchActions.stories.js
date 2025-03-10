@@ -1,4 +1,4 @@
-import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 
 export default {
   title: 'Components/BatchSearch/BatchSearchActions',
