@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue'
+import { useTemplateRef } from 'vue'
 
 import LoginImage from '@/components/Login/LoginImage'
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -11,7 +11,6 @@ const { core } = useCore()
 
 const image = useTemplateRef('image')
 const signinUrl = import.meta.env.VITE_DS_AUTH_SIGNIN
-const signinRoute = computed(() => ({ path: signinUrl }))
 const helpLink = core.vue.config.globalProperties.$config.get('helpLink', settings.helpLink)
 </script>
 
@@ -23,7 +22,7 @@ const helpLink = core.vue.config.globalProperties.$config.get('helpLink', settin
       <p>{{ $t('login.tagline') }}</p>
       <button-icon
         :label="$t('login.account')"
-        :to="signinRoute"
+        :href="signinUrl"
         class="login__enter_link mt-4"
         icon-left="user"
         variant="action"
