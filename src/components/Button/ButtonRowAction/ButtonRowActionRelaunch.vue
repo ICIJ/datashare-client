@@ -1,10 +1,18 @@
 <script setup>
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import { useConfirmModal } from '@/composables/confirm'
+
 const { withModal } = defineProps({
-  withModal: { type: Boolean, default: false },
-  disabled: { type: Boolean }
+  withModal: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 })
+
 const emit = defineEmits(['delete'])
 const { confirm: showConfirmModal } = useConfirmModal()
 
