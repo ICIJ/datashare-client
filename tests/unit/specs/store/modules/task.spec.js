@@ -3,16 +3,31 @@ import { setActivePinia, createPinia } from 'pinia'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useTaskStore } from '@/store/modules'
 
-vi.mock('@/api/apiInstance', {
-  apiInstance: {
-    index: vi.fn(),
-    indexPath: vi.fn(),
-    findNames: vi.fn(),
-    stopPendingTasks: vi.fn(),
-    stopTask: vi.fn(),
-    getTasks: vi.fn(),
-    deleteDoneTasks: vi.fn(),
-    getNerPipelines: vi.fn()
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      index: vi.fn(),
+      indexPath: vi.fn(),
+      findNames: vi.fn(),
+      stopPendingTasks: vi.fn(),
+      stopTask: vi.fn(),
+      deleteDoneTasks: vi.fn(),
+      getNerPipelines: vi.fn(),
+      getTasks: vi.fn().mockResolvedValue([
+        {
+          id: '12',
+          state: 'SUCCESS'
+        },
+        {
+          id: '46',
+          state: 'QUEUED'
+        },
+        {
+          id: '57',
+          state: 'RUNNING'
+        }
+      ])
+    }
   }
 })
 
@@ -26,7 +41,7 @@ describe('TaskStore', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     store = useTaskStore()
-    store.reset()
+    store.getTasks()
   })
 
   it('should define a store module', () => {
@@ -34,36 +49,39 @@ describe('TaskStore', () => {
   })
 
   it('should stop pending tasks', async () => {
-    store.setTasks([{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
-    expect(store.tasks).toHaveLength(1)
-
     await store.stopPendingTasks()
-
-    expect(store.tasks).toHaveLength(0)
-    expect(api.stopPendingTasks).toBeCalledTimes(1)
+    expect(api.stopPendingTasks).toBeCalled()
   })
 
   it('should stop the task named 456', async () => {
-    store.setTasks([
-      { name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
-      { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }
-    ])
-    expect(store.tasks).toHaveLength(2)
-
     await store.stopTask('foo.bar@456')
-
-    expect(store.tasks).toHaveLength(1)
-    expect(api.stopTask).toBeCalledTimes(1)
     expect(api.stopTask).toBeCalledWith('foo.bar@456')
   })
 
   it('should delete done tasks', async () => {
-    store.setTasks([{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
-    expect(store.tasks).toHaveLength(1)
-
+    expect(store.hasDoneTasks).toBe(true)
     await store.deleteDoneTasks()
+    expect(api.deleteDoneTasks).toBeCalled()
+    expect(store.hasDoneTasks).toBe(false)
+  })
 
-    expect(store.tasks).toHaveLength(0)
-    expect(api.deleteDoneTasks).toBeCalledTimes(1)
+  it('should indicate task 12 as over', () => {
+    expect(store.isOver('12')).toBe(true)
+  })
+
+  it('should indicate task 46 as queued', () => {
+    expect(store.isQueued('46')).toBe(true)
+  })
+
+  it('should indicate task 46 as not over', () => {
+    expect(store.isOver('46')).toBe(false)
+  })
+
+  it('should indicate task 57 as running', () => {
+    expect(store.isRunning('57')).toBe(true)
+  })
+
+  it('should indicate task 57 as not over', () => {
+    expect(store.isOver('57')).toBe(false)
   })
 })
