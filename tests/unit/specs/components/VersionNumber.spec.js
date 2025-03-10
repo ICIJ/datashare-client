@@ -24,7 +24,7 @@ describe('VersionNumber.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(VersionNumber, {
       global: {
-        plugins: [core.plugin, core.store, core.i18n],
+        plugins: [core.plugin, core.i18n],
         renderStubDefaultSlot: true
       }
     })
