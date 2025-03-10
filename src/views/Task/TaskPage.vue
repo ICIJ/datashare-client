@@ -40,27 +40,12 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const { 
-  tasks,
-  getTasks,
-  hasPendingTasks, 
-  hasDoneTasks, 
-  stopPendingTasks, 
-  deleteDoneTasks, 
-  isLoading 
-} = useTaskPolling(props.taskFilter)
+const { tasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading } = useTaskPolling(
+  props.taskFilter
+)
 
-const { 
-  toAddRoute, 
-  searchQuery, 
-  page, 
-  perPage, 
-  sortBy,
-  searchPlaceholder, 
-  displayedTasks, 
-  totalRows, 
-  noTasks 
-} = useTaskHeader(props.pageName, props.showAdd, tasks)
+const { toAddRoute, searchQuery, page, perPage, sortBy, searchPlaceholder, displayedTasks, totalRows, noTasks } =
+  useTaskHeader(props.pageName, props.showAdd, tasks)
 
 const setSort = (value) => (sort.value = value)
 
@@ -75,7 +60,6 @@ const order = computed({
   get: () => sortBy.value.modelValue?.[1],
   set: (value) => (sortBy.value.modelValue = [sort.value, value])
 })
-
 
 function refresh() {
   return getTasks()

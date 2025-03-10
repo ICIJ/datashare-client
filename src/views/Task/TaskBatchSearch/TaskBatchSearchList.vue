@@ -29,7 +29,7 @@ function getBatchSearchProjects(item) {
 }
 
 function canManageBatchSearch(item) {
-  return getBatchSearchRecord(item, 'user.id') == me.value
+  return getBatchSearchRecord(item, 'user.id') === me.value
 }
 
 const me = ref('')

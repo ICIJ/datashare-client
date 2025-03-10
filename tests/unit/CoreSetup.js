@@ -40,7 +40,7 @@ class CoreSetup extends Core {
   get wait() {
     return createVueWait()
   }
-  useAll(store = null) {
+  useAll() {
     this.usePinia()
     this.useI18n()
     this.useBootstrapVue()

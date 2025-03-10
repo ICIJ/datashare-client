@@ -37,20 +37,20 @@ async function deleteDoneTasks() {
 <template>
   <b-button-group class="task-actions me-2">
     <button-icon
+      v-if="!hideStopPending"
       icon-left="hand"
       class="task-actions__stop-pending-tasks"
       variant="outline-primary"
-      v-if="!hideStopPending"
       :disabled="!hasPendingTasks"
       @click="stopPendingTasks"
     >
       {{ $t('indexing.stopPendingTasks') }}
     </button-icon>
     <button-icon
+      v-if="!hideClearDone"
       icon-left="trash"
       class="task-actions__delete-done-tasks"
       variant="outline-primary"
-      v-if="!hideClearDone"
       :disabled="!hasDoneTasks"
       @click="deleteDoneTasks"
     >
