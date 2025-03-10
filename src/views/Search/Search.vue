@@ -60,10 +60,10 @@ const page = useUrlPageFromWithStore({
   // The "from" query parameter is updated to reflect the current state
   // which while force the route to redirect to "search".
   to: 'search',
-  // The value of the "from" query parameter is directly taken from the store state
+  // The value of the "from" query parameter is directly taken from the store 
   get: () => searchStore.from,
-  // The value of the "from" query parameter is mutated with the store commit "search/from"
-  set: 'search/from'
+  // The value of the "from" query parameter is mutated with the store 
+  set: (value) => searchStore.from = value
 })
 
 const documentViewFloatingId = provideDocumentViewFloatingId()
