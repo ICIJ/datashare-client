@@ -6,7 +6,6 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskBoardList from '@/components/Task/TaskBoard/TaskBoardList'
 import TaskBoardListEntry from '@/components/Task/TaskBoard/TaskBoardListEntry'
 import TaskBoardLatest from '@/views/Task/TaskBoard/TaskBoardLatest'
-
 import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 
 const batchSearchesPublic = ref(13)
@@ -27,7 +26,8 @@ const documentAdditions = ref(4)
         :description="$t(`task.task-board.entries.batch-search.description`)"
         :list-link="{ name: 'task.batch-search.list' }"
         :action-link="{ name: 'task.batch-search.new' }"
-        :action-text="$t('task.task-board.entries.batch-search.actionText')">
+        :action-text="$t('task.task-board.entries.batch-search.actionText')"
+      >
         <template #info>
           <i18n-t keypath="task.task-board.entries.batch-search.info">
             <template #nbPublic>

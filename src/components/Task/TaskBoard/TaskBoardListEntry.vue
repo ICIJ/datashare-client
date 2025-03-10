@@ -39,7 +39,7 @@ const compact = computed(() => {
               </router-link>
             </h3>
           </template>
-          <b-card-text class="d-flex flex-column flex-grow-1">          
+          <b-card-text class="d-flex flex-column flex-grow-1">
             <slot name="description" v-bind="{ description }">
               <p>{{ description }}</p>
             </slot>

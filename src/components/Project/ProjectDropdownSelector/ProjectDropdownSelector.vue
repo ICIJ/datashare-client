@@ -30,9 +30,9 @@
       <project-dropdown-selector-all v-if="hasMatches && multiple" v-model="selectAll" @click.stop />
     </template>
     <template #button-content>
-      <project-dropdown-selector-button-content 
+      <project-dropdown-selector-button-content
         :slice-size="sliceSize"
-        :selected-projects="selectedProjects" 
+        :selected-projects="selectedProjects"
         :projects="projects"
       />
     </template>
