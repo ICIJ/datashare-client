@@ -42,20 +42,12 @@ class CoreSetup extends Core {
   }
   useAll(store = null) {
     this.usePinia()
-    this.useVuex(store)
     this.useI18n()
     this.useBootstrapVue()
     this.useCommons()
     this.useWait()
     this.useCore()
     return this
-  }
-  useVuex(options = null) {
-    if (options) {
-      this.use(this.store)
-      return this
-    }
-    return super.useVuex()
   }
   useRouter(routes = null) {
     if (routes) {
