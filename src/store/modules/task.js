@@ -27,7 +27,6 @@ export const useTaskStore = defineStore('task', () => {
 
   const relaunchBatchSearch = async (id, title, description) => {
     await api.relaunchBatchSearch(id, title, description)
-    await getTasks([TASK_NAME.BATCH_SEARCH])
   }
 
   const deleteTask = async (id) => {
