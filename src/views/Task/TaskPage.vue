@@ -27,6 +27,14 @@ const props = defineProps({
   showAdd: {
     type: Boolean,
     default: false
+  },
+  hideStopPending: {
+    type: Boolean,
+    default: false
+  },
+  hideClearDone: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -68,8 +76,10 @@ const order = computed({
           <task-actions
             :has-done-tasks="hasDoneTasks"
             :has-pending-tasks="hasPendingTasks"
-            @stop-pending="() => stopPendingTasks()"
-            @delete-done="() => deleteDoneTasks()"
+            :hide-clear-done="hideClearDone"
+            :hide-stop-pending="hideStopPending"
+            @stop-pending="stopPendingTasks()"
+            @delete-done="deleteDoneTasks()"
           />
         </mode-local-only>
       </template>
