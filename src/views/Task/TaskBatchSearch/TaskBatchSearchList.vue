@@ -40,6 +40,8 @@ function userIsAuthorized(item) {
     :task-filter="[TASK_NAME.BATCH_SEARCH]"
     page-name="batch-search"
     show-add
+    hide-clear-done
+    hide-stop-pending
   >
     <page-table-generic
       v-if="!empty"
