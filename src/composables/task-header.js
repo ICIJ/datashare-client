@@ -53,10 +53,6 @@ export function useTaskHeader(pageName, hasAddButton, tasks) {
     return sortedTasks.value?.slice(start, start + toValue(perPage).modelValue)
   })
 
-  const noTasks = computed(() => {
-    return toValue(tasks).length === 0
-  })
-
   return {
     toAddRoute,
     searchQuery,
@@ -64,7 +60,6 @@ export function useTaskHeader(pageName, hasAddButton, tasks) {
     perPage: perPage.value.modelValue,
     searchPlaceholder,
     displayedTasks,
-    noTasks,
     totalRows,
     sortBy
   }
