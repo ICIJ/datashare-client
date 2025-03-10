@@ -33,5 +33,6 @@ export const TASK_STATUS = Object.freeze({
   CANCELLED,
   CREATED
 })
+
 export const TASK_STATUS_LIST = Object.values(TASK_STATUS)
 export const taskStatusValidator = (v) => TASK_STATUS_LIST.includes(v.toLowerCase())
