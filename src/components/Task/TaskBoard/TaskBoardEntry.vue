@@ -24,14 +24,14 @@ const compact = computed(() => {
 
 <template>
   <b-card no-body class="task-board-entry border-0 p-4">
-    <b-row no-gutters class="d-flex flex-grow-1">
+    <b-row class="d-flex flex-grow-1 g-3">
       <b-col md="2">
         <router-link :to="listLink" class="d-block">
-          <phosphor-icon :name="icon" size="100%" class="bg-action-subtle" />
+          <phosphor-icon :name="icon" size="100%" class="task-board-entry__icon bg-action-subtle" />
         </router-link>
       </b-col>
       <b-col md="10" class="d-flex">
-        <b-card-body class="d-flex flex-column overflow-auto py-0">
+        <b-card-body class="d-flex flex-column overflow-auto p-0">
           <template #title>
             <h3>
               <router-link :to="listLink">
@@ -39,13 +39,16 @@ const compact = computed(() => {
               </router-link>
             </h3>
           </template>
-          <b-card-text class="d-flex flex-column flex-grow-1">
-            <p>
-              <slot name="description" v-bind="{ description }">{{ description }}</slot>
-            </p>
-            <span v-if="info" class="d-flex justify-content-end text-secondary-emphasis">
+          <b-card-text class="d-flex flex-column flex-grow-1">          
+            <slot name="description" v-bind="{ description }">
+              <p>{{ description }}</p>
+            </slot>
+            <span class="d-flex justify-content-end text-secondary-emphasis">
               <slot name="info" v-bind="{ info }">
-                <span class="task-board-entry__info"><phosphor-icon :name="icon" /> {{ info }}</span>
+                <span class="task-board-entry__info">
+                  <phosphor-icon :name="icon" />
+                  {{ info }}
+                </span>
               </slot>
             </span>
           </b-card-text>
@@ -73,6 +76,11 @@ const compact = computed(() => {
 
 <style scoped lang="scss">
 .task-board-entry {
+  &__icon {
+    max-width: 6rem;
+    width: 100%;
+  }
+
   &__info {
     text-wrap: pretty;
   }
