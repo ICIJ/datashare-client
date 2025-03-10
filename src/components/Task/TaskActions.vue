@@ -9,6 +9,14 @@ const props = defineProps({
   hasDoneTasks: {
     type: Boolean,
     default: false
+  },
+  hideClearDone: {
+    type: Boolean,
+    default: false
+  },
+  hideStopPending: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits(['stop-pending', 'delete-done'])
@@ -32,6 +40,7 @@ async function deleteDoneTasks() {
       icon-left="hand"
       class="task-actions__stop-pending-tasks"
       variant="outline-primary"
+      v-if="!hideStopPending"
       :disabled="!hasPendingTasks"
       @click="stopPendingTasks"
     >
@@ -41,6 +50,7 @@ async function deleteDoneTasks() {
       icon-left="trash"
       class="task-actions__delete-done-tasks"
       variant="outline-primary"
+      v-if="!hideClearDone"
       :disabled="!hasDoneTasks"
       @click="deleteDoneTasks"
     >
