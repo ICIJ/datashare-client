@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import BatchSearchActionEdit from '@/components/BatchSearch/BatchSearchAction/BatchSearchActionEdit'
 import BatchSearchActionRelaunch from '@/components/BatchSearch/BatchSearchAction/BatchSearchActionRelaunch'
-import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import { useTaskStore } from '@/store/modules/task'
 
