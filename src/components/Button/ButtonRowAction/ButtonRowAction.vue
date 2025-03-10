@@ -3,24 +3,24 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 import { SIZE, buttonSizeValidator } from '@/enums/sizes'
 
 defineProps({
-  icon: { 
-    type: [String, Object], 
-    required: true 
+  icon: {
+    type: [String, Object],
+    required: true
   },
-  size: { 
-    type: String, 
-    validator: buttonSizeValidator, 
-    default: SIZE.SM 
+  size: {
+    type: String,
+    validator: buttonSizeValidator,
+    default: SIZE.SM
   },
-  label: { 
-    type: String 
+  label: {
+    type: String
   },
-  disabled: { 
-    type: Boolean, 
-    default: false 
+  disabled: {
+    type: Boolean,
+    default: false
   },
-  to: { 
-    type: Object 
+  to: {
+    type: Object
   }
 })
 </script>

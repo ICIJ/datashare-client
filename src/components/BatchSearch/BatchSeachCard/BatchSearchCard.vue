@@ -7,9 +7,9 @@ import BatchSearchCardDetails from '@/components/BatchSearch/BatchSeachCard/Batc
 import TextTruncate from '@/components/Text/TextTruncate'
 
 defineProps({
-  batchSearch: { 
-    type: Object, 
-    required: true 
+  batchSearch: {
+    type: Object,
+    required: true
   }
 })
 

@@ -1,12 +1,5 @@
 <script setup>
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
-
-const { withModal } = defineProps({
-  withModal: {
-    type: Boolean,
-    default: false
-  }
-})
 </script>
 
 <template>
