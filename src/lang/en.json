@@ -1178,71 +1178,6 @@
       }
     }
   },
-  "batchSearch": {
-    "lead": "Search multiple terms and documents at once.",
-    "title": "Batch searches",
-    "empty": "You have not yet started a batch search. <a href=\"{howToLink}\">Read more.</a>",
-    "emptyWithFilter": "The filtered search doesn't have results",
-    "heading": "New batch search",
-    "fileLabel": "CSV file",
-    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
-    "filePlaceholder": "Choose a file...",
-    "submit": "Launch",
-    "success": "Your batch search is now running.",
-    "error": "Something went wrong, unable to start your batch search.",
-    "submitSuccess": "Your batch search has been added.",
-    "submitError": "Something went wrong, unable to add your batch search.",
-    "submitQueryLimitError": "Error in CSV, your CSV exceed 60.000 queries.",
-    "projects": "Projects",
-    "name": "Name",
-    "description": "Description",
-    "fuzziness": "Fuzziness",
-    "fuzzinessDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
-    "proximitySearches": "Proximity searches",
-    "proximitySearchesDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
-    "fileTypes": "File types",
-    "tags": "Tags",
-    "path": "Path",
-    "queries": "Queries",
-    "state": "State",
-    "seeError": "See error",
-    "date": "Date",
-    "nbResults": "Results",
-    "query": "no queries | 1 query | {count} queries",
-    "clearFilters": "Clear filters",
-    "delete": "Delete batch search",
-    "deleted": "The batch search have been deleted.",
-    "deleteError": "Something went wrong, unable to delete the batch search.",
-    "published": "Published",
-    "notPublished": "Not published",
-    "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
-    "phraseMatch": "Do phrase matches",
-    "excludeTags": "Exclude Tags",
-    "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order.",
-    "phraseMatchDescriptionOperators" : "Do not insert operators in your queries",
-    "learnMore": "Learn more",
-    "author": "Author",
-    "advancedFilters": "Advanced filters",
-    "selectPath": "Select folder",
-    "errorTitle": "Batch search task <code class=\"fw-bold\">{taskId}</code> is in error.",
-    "errorQuery": "You have an error on your query <code>{query}</code>.",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
-    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
-    "unableToRetrieveTags": "Unable to retrieve tags from selected project | Failed to retrieve tags from selected projects",
-    "placeholder": "Search in batch searches...",
-    "status": {
-      "failure": "failure",
-      "queued": "queued",
-      "running": "running",
-      "success": "success"
-    },
-    "field": {
-      "all": "All fields",
-      "name": "Name",
-      "user_id": "Author",
-      "description": "Description"
-    }
-  },
   "batchSearchCard": {
     "status": "Status",
     "seeAllDocuments": "See all documents",
@@ -1256,12 +1191,53 @@
     "nbQueriesWithoutResultsLabel": "{n} zero-result queries | {n} zero-result query | {n} zero-result queries",
     "downloadQueriesWithoutResultsLabel": "Download zero-result queries"
   },
-  "batchSearchCardActions": {
-    "edit": "Edit",
-    "relaunch":"Relaunch"
+  "batchSearchCardDetails": {
+    "status": "Status",
+    "date": "Creation date",
+    "author": "Author",
+    "visibilityPrivate": "Private",
+    "visibilityShared": "Shared",
+    "visibility": "Visibility",
+    "phraseMatchOn": "Do phrase match: yes",
+    "phraseMatchOff": "Do phrase match: no",
+    "phraseMatch": "Phrase match",
+    "proximity": "Proximity - Sentence changes",
+    "proximityValue": "Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
+    "fuzziness": "Fuzziness - Spelling changes",
+    "fuzzinessValue": "Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
+    "projects": "Projects",
+    "description": "Description"
+  },
+  "batchSearchActions": {
+    "remove": {
+      "success": "The batch search was removed",
+      "error": "Unable to remove the batch search"
+    },
+    "stop": {
+      "success": "The batch search was stopped",
+      "error": "Unable to stop the batch search"
+    },
+    "relaunch": {
+      "success": "The batch search was relaunched",
+      "error": "Unable to relaunch the batch search"
+    }
+  },
+  "batchSearchActionsEditModal": {
+    "title": "Edit batch search",
+    "name": "Name",
+    "description": "Description"
+  },
+  "batchSearchActionsRelaunchModal": {
+    "title": "Relaunch batch search",
+    "name": "Name",
+    "description": "Description",
+    "deleteAfterRelaunch": "Delete current batch search after relaunch"
+  },
+  "taskBatchSearchNew": {
+    "title": "Start a new batch search"
   },
   "buttonRowAction": {
-    "relaunch":"Relaunch task",
+    "relaunch":"Relaunch",
     "stop":"Stop",
     "delete":"Delete",
     "edit":"Edit"
@@ -1269,56 +1245,6 @@
   "textTruncate": {
     "seeLess": "See less",
     "seeMore":"See more"
-  },
-
-  "batchSearchCardDetails": {
-    "status": "Status",
-    "date":"Creation date",
-    "author": "Author",
-    "visibilityPrivate":"Private",
-    "visibilityShared": "Shared",
-    "visibility":"Visibility",
-    "phraseMatchOn": "Do phrase match: yes",
-    "phraseMatchOff":"Do phrase match: no",
-    "phraseMatch": "Phrase match",
-    "proximity": "Proximity - Sentence changes",
-    "proximityValue":"Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
-    "fuzziness": "Fuzziness - Spelling changes",
-    "fuzzinessValue":"Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
-    "projects":"Projects",
-    "description": "Description"
-  },
-  "newBatchSearch": {
-    "title": "Start a new batch search"
-  },
-  "batchSearchResults": {
-    "title": "Batch search results",
-    "rank": "Rank",
-    "query": "Query",
-    "documentPath": "Document Path",
-    "creationDate": "Creation Date",
-    "project": "Project",
-    "contentType": "Content Type",
-    "size": "Size",
-    "downloadResults": "Download results",
-    "downloadQueries": "Download queries",
-    "downloadQueriesWithoutResults": "Download queries without results",
-    "downloadQueriesTooltip": "Download as CSV",
-    "relaunch": "Relaunch",
-    "relaunchTitle": "Relaunch batch search",
-    "deleteAfterRelaunch" : "Delete current batch search after relaunch",
-    "backToResults" : "Back to results",
-    "empty": "No results",
-    "queriesFilter": "1 query | {n} queries"
-  },
-  "batchSearchResultsFilters": {
-    "filterQueries": "Filter queries...",
-    "queries": {
-      "heading": "Filter by queries"
-    }
-  },
-  "columnFilterDropdown": {
-    "apply": "Apply"
   },
   "pageTable":{
     "toggleDetails": "Toggle details"
