@@ -32,6 +32,8 @@ function getRecord(item, key, defaultValue = undefined) {
     v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
     :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
     page-name="batch-download"
+    hide-clear-done
+    hide-stop-pending
   >
     <page-table-generic
       v-if="!empty"
