@@ -1,57 +1,69 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 
-import TaskBoardLatest from '@/views/Task/TaskBoard/TaskBoardLatest'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
+import TaskBoardEntry from '@/components/Task/TaskBoard/TaskBoardEntry'
 import TaskBoardEntryList from '@/components/Task/TaskBoard/TaskBoardEntryList'
+import TaskBoardLatest from '@/views/Task/TaskBoard/TaskBoardLatest'
+
 import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
-const { t } = useI18n()
+
 const batchSearchesPublic = ref(13)
 const batchSearchesPrivate = ref(0)
 const batchDownloads = ref(45)
 const findEntities = ref(3)
 const documentAdditions = ref(4)
-const entries = [
-  {
-    key: 'task.task-board.entries.batch-search',
-    icon: TASK_NAME_ICON[TASK_NAME.BATCH_SEARCH],
-    infoComp: computed(() => {
-      const nbPublic = t('task.task-board.entries.batch-search.nbPublic', batchSearchesPublic.value)
-      const nbPrivate = t('task.task-board.entries.batch-search.nbPrivate', batchSearchesPrivate.value)
-      return t('task.task-board.entries.batch-search.info', { nbPublic, nbPrivate })
-    }),
-    listLink: { name: 'task.batch-search.list' },
-    actionLink: { name: 'task.batch-search.new' }
-  },
-  {
-    key: 'task.task-board.entries.batch-download',
-    icon: TASK_NAME_ICON[TASK_NAME.BATCH_DOWNLOAD],
-    listLink: { name: 'task.batch-download.list' },
-    info: batchDownloads.value
-  },
-  {
-    key: 'task.task-board.entries.entity-recognition',
-    icon: TASK_NAME_ICON[TASK_NAME.EXTRACT_NLP],
-    info: findEntities.value,
-    listLink: { name: 'task.entities.list' },
-    actionLink: { name: 'task.entities.new' }
-  },
-  {
-    key: 'task.task-board.entries.document-addition',
-    icon: TASK_NAME_ICON[TASK_NAME.INDEX],
-    info: documentAdditions.value,
-    listLink: { name: 'task.documents.list' },
-    actionLink: { name: 'task.documents.new' }
-  }
-]
 </script>
 
 <template>
   <page-container fluid deck class="task-board">
     <page-header no-toggle-settings />
     <task-board-latest />
-    <task-board-entry-list :entries="entries" />
+    <task-board-entry-list class="px-5">
+      <task-board-entry
+        :icon="TASK_NAME_ICON[TASK_NAME.BATCH_SEARCH]"
+        :title="$t('task.task-board.entries.batch-search.title')"
+        :description="$t(`task.task-board.entries.batch-search.description`)"
+        :list-link="{ name: 'task.batch-search.list' }"
+        :action-link="{ name: 'task.batch-search.new' }"
+        :action-text="$t('task.task-board.entries.batch-search.actionText')">
+        <template #info>
+          <i18n-t keypath="task.task-board.entries.batch-search.info">
+            <template #nbPublic>
+              {{ $tc('task.task-board.entries.batch-search.nbPublic', batchSearchesPublic) }}
+            </template>
+            <template #nbPrivate>
+              {{ $tc('task.task-board.entries.batch-search.nbPrivate', batchSearchesPrivate) }}
+            </template>
+          </i18n-t>
+        </template>
+      </task-board-entry>
+      <task-board-entry
+        :icon="TASK_NAME_ICON[TASK_NAME.BATCH_DOWNLOAD]"
+        :title="$t('task.task-board.entries.batch-download.title')"
+        :description="$t('task.task-board.entries.batch-download.description')"
+        :info="$tc('task.task-board.entries.batch-download.info', batchDownloads)"
+        :list-link="{ name: 'task.batch-download.list' }"
+      />
+      <task-board-entry
+        :icon="TASK_NAME_ICON[TASK_NAME.EXTRACT_NLP]"
+        :title="$t('task.task-board.entries.entity-recognition.title')"
+        :description="$t('task.task-board.entries.entity-recognition.description')"
+        :info="$tc('task.task-board.entries.entity-recognition.info', findEntities)"
+        :list-link="{ name: 'task.entities.list' }"
+        :action-link="{ name: 'task.entities.new' }"
+        :action-text="$t('task.task-board.entries.entity-recognition.actionText')"
+      />
+      <task-board-entry
+        :icon="TASK_NAME_ICON[TASK_NAME.INDEX]"
+        :title="$t('task.task-board.entries.document-addition.title')"
+        :description="$t('task.task-board.entries.document-addition.description')"
+        :info="$tc('task.task-board.entries.document-addition.info', documentAdditions)"
+        :list-link="{ name: 'task.documents.list' }"
+        :action-link="{ name: 'task.documents.new' }"
+        :action-text="$t('task.task-board.entries.document-addition.actionText')"
+      />
+    </task-board-entry-list>
   </page-container>
 </template>
