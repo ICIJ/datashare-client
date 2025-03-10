@@ -7,7 +7,7 @@ import AppModal from './AppModal'
 const inputValue = defineModel('inputValue', { type: String, default: '' })
 const modelValue = defineModel({ type: Boolean })
 
-const props = defineProps({
+defineProps({
   inputType: {
     type: String,
     default: 'text'
@@ -32,7 +32,7 @@ const props = defineProps({
   },
   description: {
     type: String
-  },
+  }
 })
 
 const inputModal = ref(null)

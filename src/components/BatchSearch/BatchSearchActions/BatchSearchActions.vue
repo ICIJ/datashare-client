@@ -9,7 +9,6 @@ import BatchSearchActionsEditModal from '@/components/BatchSearch/BatchSearchAct
 import BatchSearchActionsStop from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsStop'
 import BatchSearchActionsRelaunch from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsRelaunch'
 import BatchSearchActionsRelaunchModal from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsRelaunchModal'
-
 import { useConfirmModal } from '@/composables/confirm'
 import { usePromptModal } from '@/composables/prompt'
 import { useTaskStore } from '@/store/modules'
@@ -53,13 +52,12 @@ async function relaunch({ title, description, deleteAfterRelaunch }) {
   // Remove the current batch search if the user has selected the option.
   if (deleteAfterRelaunch) {
     await taskStore.deleteBatchSearch(uuid)
-  } 
+  }
 }
 
 async function edit() {
   console.log('Not implemented yet')
 }
-
 
 async function removeConfirmModal() {
   if (await showConfirmModal()) {
@@ -88,7 +86,7 @@ async function editPromptModal() {
 
 <template>
   <div class="batch-search-actions flex-wrap d-flex gap-2">
-    <batch-search-actions-edit @click="editPromptModal()" v-show="false" />
+    <batch-search-actions-edit v-show="false" @click="editPromptModal()" />
     <batch-search-actions-relaunch :disabled="!isOver" @click="relaunchPromptModal()" />
     <batch-search-actions-stop :disabled="!isRunning" @click="stop()" />
     <batch-search-actions-delete @click="removeConfirmModal()" />

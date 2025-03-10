@@ -7,16 +7,16 @@ const description = defineModel('description', { type: String, default: '' })
 const emit = defineEmits(['submit'])
 
 const submit = () => {
-  emit('submit', { 
-    trigger: 'submit', 
-    name: name.value, 
+  emit('submit', {
+    trigger: 'submit',
+    name: name.value,
     description: description.value
   })
 }
 </script>
 
 <template>
-  <app-modal-prompt @submit="submit" :title="$t('batchSearchActionsEditModal.title')">
+  <app-modal-prompt :title="$t('batchSearchActionsEditModal.title')" @submit="submit">
     <div class="d-flex flex-column gap-3">
       <b-form-group :label="$t('batchSearchActionsEditModal.name')" label-for="input-name">
         <b-form-input id="input-name" ref="inputModal" v-model="name" type="text" />

@@ -8,9 +8,9 @@ const deleteAfterRelaunch = defineModel('deleteAfterRelaunch', { type: Boolean, 
 const emit = defineEmits(['submit'])
 
 const submit = () => {
-  emit('submit', { 
-    trigger: 'submit', 
-    name: name.value, 
+  emit('submit', {
+    trigger: 'submit',
+    name: name.value,
     description: description.value,
     deleteAfterRelaunch: deleteAfterRelaunch.value
   })
@@ -18,7 +18,7 @@ const submit = () => {
 </script>
 
 <template>
-  <app-modal-prompt @submit="submit" :title="$t('batchSearchActionsRelaunchModal.title')">
+  <app-modal-prompt :title="$t('batchSearchActionsRelaunchModal.title')" @submit="submit">
     <div class="d-flex flex-column gap-3">
       <b-form-group :label="$t('batchSearchActionsRelaunchModal.name')" label-for="input-name">
         <b-form-input id="input-name" ref="inputModal" v-model="name" type="text" />
@@ -29,7 +29,7 @@ const submit = () => {
       <b-form-group>
         <b-form-checkbox id="input-delete-after-relaunch" v-model="deleteAfterRelaunch">
           {{ $t('batchSearchActionsRelaunchModal.deleteAfterRelaunch') }}
-        </b-form-checkbox> 
+        </b-form-checkbox>
       </b-form-group>
     </div>
   </app-modal-prompt>
