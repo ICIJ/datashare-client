@@ -2,24 +2,29 @@
 import { useI18n } from 'vue-i18n'
 
 import CardPanel from '@/components/CardPanel/CardPanel'
-import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 import BatchSearchCardDetails from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetails'
 import TextTruncate from '@/components/Text/TextTruncate'
-import { useCore } from '@/composables/core'
-defineOptions({ name: 'BatchSearchDetails' })
+
 defineProps({
-  batchSearch: { type: Object, required: true }
+  batchSearch: { 
+    type: Object, 
+    required: true 
+  }
 })
-const { core, toastedPromise } = useCore()
+
 const { t } = useI18n()
 
 const descriptionLabel = t('batchSearchCardDetails.description')
+
 function deleteBatchSearch(uuid) {
-  return toastedPromise(core.api.deleteBatchSearch(uuid))
+  console.log('deleteBatchSearch', uuid)
 }
+
 function relaunchBatchSearch(uuid) {
   console.log('relaunchBatchSearch', uuid)
 }
+
 function editBatchSearch(uuid) {
   console.log('editBatchSearch', uuid)
 }
