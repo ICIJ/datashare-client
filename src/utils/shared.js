@@ -7,6 +7,5 @@
 // with Vite we use the https://github.com/crcong/vite-plugin-externals to replace the Vue dependencies with
 // the global __VUE_SHARED__ object.
 import * as __VUE_SHARED__ from 'vue'
-import * as __VUEX_SHARED__ from 'vuex'
 
-Object.assign(window, { __VUE_SHARED__, __VUEX_SHARED__ })
+Object.assign(window, { __VUE_SHARED__ })
