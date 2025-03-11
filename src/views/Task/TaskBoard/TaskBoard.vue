@@ -6,6 +6,7 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskBoardList from '@/components/Task/TaskBoard/TaskBoardList'
 import TaskBoardListEntry from '@/components/Task/TaskBoard/TaskBoardListEntry'
 import TaskBoardLatest from '@/views/Task/TaskBoard/TaskBoardLatest'
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 
 const batchSearchesPublic = ref(13)
@@ -46,24 +47,26 @@ const documentAdditions = ref(4)
         :info="$tc('task.task-board.entries.batch-download.info', batchDownloads)"
         :list-link="{ name: 'task.batch-download.list' }"
       />
-      <task-board-list-entry
-        :icon="TASK_NAME_ICON[TASK_NAME.EXTRACT_NLP]"
-        :title="$t('task.task-board.entries.entity-recognition.title')"
-        :description="$t('task.task-board.entries.entity-recognition.description')"
-        :info="$tc('task.task-board.entries.entity-recognition.info', findEntities)"
-        :list-link="{ name: 'task.entities.list' }"
-        :action-link="{ name: 'task.entities.new' }"
-        :action-text="$t('task.task-board.entries.entity-recognition.actionText')"
-      />
-      <task-board-list-entry
-        :icon="TASK_NAME_ICON[TASK_NAME.INDEX]"
-        :title="$t('task.task-board.entries.document-addition.title')"
-        :description="$t('task.task-board.entries.document-addition.description')"
-        :info="$tc('task.task-board.entries.document-addition.info', documentAdditions)"
-        :list-link="{ name: 'task.documents.list' }"
-        :action-link="{ name: 'task.documents.new' }"
-        :action-text="$t('task.task-board.entries.document-addition.actionText')"
-      />
+      <mode-local-only>
+        <task-board-list-entry
+          :icon="TASK_NAME_ICON[TASK_NAME.EXTRACT_NLP]"
+          :title="$t('task.task-board.entries.entity-recognition.title')"
+          :description="$t('task.task-board.entries.entity-recognition.description')"
+          :info="$tc('task.task-board.entries.entity-recognition.info', findEntities)"
+          :list-link="{ name: 'task.entities.list' }"
+          :action-link="{ name: 'task.entities.new' }"
+          :action-text="$t('task.task-board.entries.entity-recognition.actionText')"
+        />
+        <task-board-list-entry
+          :icon="TASK_NAME_ICON[TASK_NAME.INDEX]"
+          :title="$t('task.task-board.entries.document-addition.title')"
+          :description="$t('task.task-board.entries.document-addition.description')"
+          :info="$tc('task.task-board.entries.document-addition.info', documentAdditions)"
+          :list-link="{ name: 'task.documents.list' }"
+          :action-link="{ name: 'task.documents.new' }"
+          :action-text="$t('task.task-board.entries.document-addition.actionText')"
+        />
+      </mode-local-only>
     </task-board-list>
   </page-container>
 </template>
