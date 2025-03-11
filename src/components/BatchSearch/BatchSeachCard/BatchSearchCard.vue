@@ -1,6 +1,4 @@
 <script setup>
-import { useI18n } from 'vue-i18n'
-
 import CardPanel from '@/components/CardPanel/CardPanel'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 import BatchSearchCardDetails from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetails'
@@ -12,22 +10,6 @@ defineProps({
     required: true
   }
 })
-
-const { t } = useI18n()
-
-const descriptionLabel = t('batchSearchCardDetails.description')
-
-function deleteBatchSearch(uuid) {
-  console.log('deleteBatchSearch', uuid)
-}
-
-function relaunchBatchSearch(uuid) {
-  console.log('relaunchBatchSearch', uuid)
-}
-
-function editBatchSearch(uuid) {
-  console.log('editBatchSearch', uuid)
-}
 </script>
 
 <template>
@@ -36,14 +18,9 @@ function editBatchSearch(uuid) {
       v-if="batchSearch.description"
       class="text-secondary-emphasis"
       :text="batchSearch.description"
-      :aria-label="descriptionLabel"
+      :aria-label="$t('batchSearchCardDetails.description')"
     />
-    <batch-search-actions
-      :uuid="batchSearch.uuid"
-      @edit="editBatchSearch"
-      @relaunch="relaunchBatchSearch"
-      @delete="deleteBatchSearch"
-    />
+    <batch-search-actions :uuid="batchSearch.uuid" />
     <batch-search-card-details
       :uuid="batchSearch.uuid"
       :name="batchSearch.name"
