@@ -31,8 +31,8 @@ export function useTaskPolling(taskNames = []) {
     await taskStore.getTasks(toValue(taskNames))
   }
 
-  async function deleteDoneTasks() {
-    await taskStore.deleteDoneTasks()
+  async function removeDoneTasks() {
+    await taskStore.removeDoneTasks()
     await taskStore.getTasks(toValue(taskNames))
   }
 
@@ -53,5 +53,5 @@ export function useTaskPolling(taskNames = []) {
   watch(toRef(taskNames), onShotTask, { immediate: true })
   onBeforeUnmount(taskStore.reset)
 
-  return { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading }
+  return { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
 }

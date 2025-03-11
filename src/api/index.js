@@ -43,10 +43,10 @@ export class Api {
   stopTask(name) {
     return this.sendActionAsText(`/api/task/stop/${encodeURIComponent(name)}`, { method: Method.PUT })
   }
-  deleteTask(name) {
+  removeTask(name) {
     return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: Method.DELETE })
   }
-  deleteDoneTasks() {
+  removeDoneTasks() {
     return this.sendAction('/api/task/clean', { method: Method.POST })
   }
   getTasks(name) {
@@ -82,7 +82,7 @@ export class Api {
     const responseType = 'text'
     return this.sendAction('/api/settings', { method: 'PATCH', data: { data: settings }, headers, responseType })
   }
-  deleteNamedEntitiesByMentionNorm(project, mentionNorm) {
+  removeNamedEntitiesByMentionNorm(project, mentionNorm) {
     return this.sendActionAsText(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: Method.PUT })
   }
   getSource(document, config = {}) {
@@ -199,7 +199,7 @@ export class Api {
     const data = { name, description }
     return this.sendActionAsText(`/api/task/batchSearch/copy/${batchId}`, { method: Method.POST, data })
   }
-  deleteBatchSearch(batchId) {
+  removeBatchSearch(batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: Method.DELETE })
   }
   removeBatchSearches() {
@@ -239,10 +239,10 @@ export class Api {
       data: { eventId, name, type }
     })
   }
-  deleteHistoryEvents(type) {
+  removeHistoryEvents(type) {
     return this.sendAction('/api/users/me/history', { method: Method.DELETE, params: { type } })
   }
-  deleteHistoryEvent(id) {
+  removeHistoryEvent(id) {
     return this.sendAction('/api/users/me/history/event', { method: Method.DELETE, params: { id } })
   }
   setMarkAsRecommended(project, data) {
@@ -274,7 +274,7 @@ export class Api {
   createApiKey(userId) {
     return this.sendAction(`/api/key/${userId}`, { method: Method.PUT })
   }
-  deleteApiKey(userId) {
+  removeApiKey(userId) {
     return this.sendActionAsText(`/api/key/${userId}`, { method: Method.DELETE })
   }
   getPlugins(query = '') {

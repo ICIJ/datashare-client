@@ -37,9 +37,9 @@ async function createApiKey() {
   await getHashedApiKey()
 }
 
-async function deleteApiKey() {
+async function removeApiKey() {
   const username = await core.auth.getUsername()
-  await core.api.deleteApiKey(username)
+  await core.api.removeApiKey(username)
   hashedKey.value = null
 }
 
@@ -47,7 +47,7 @@ async function confirmDeleteApiKey() {
   const description = t('settings.api.key.delete.description')
 
   if (await confirm({ description })) {
-    deleteApiKey()
+    removeApiKey()
   }
 }
 

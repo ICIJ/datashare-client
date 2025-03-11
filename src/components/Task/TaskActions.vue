@@ -27,7 +27,7 @@ async function stopPendingTasks() {
   }
 }
 
-async function deleteDoneTasks() {
+async function removeDoneTasks() {
   if (props.hasDoneTasks) {
     emit('delete-done')
   }
@@ -52,9 +52,9 @@ async function deleteDoneTasks() {
       class="task-actions__delete-done-tasks"
       variant="outline-primary"
       :disabled="!hasDoneTasks"
-      @click="deleteDoneTasks"
+      @click="removeDoneTasks"
     >
-      {{ $t('indexing.deleteDoneTasks') }}
+      {{ $t('indexing.removeDoneTasks') }}
     </button-icon>
   </b-button-group>
 </template>

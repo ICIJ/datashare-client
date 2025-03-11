@@ -11,7 +11,7 @@ vi.mock('@/api/apiInstance', () => {
       findNames: vi.fn(),
       stopPendingTasks: vi.fn(),
       stopTask: vi.fn(),
-      deleteDoneTasks: vi.fn(),
+      removeDoneTasks: vi.fn(),
       getNerPipelines: vi.fn(),
       getTasks: vi.fn().mockResolvedValue([
         {
@@ -60,8 +60,8 @@ describe('TaskStore', () => {
 
   it('should delete done tasks', async () => {
     expect(store.hasDoneTasks).toBe(true)
-    await store.deleteDoneTasks()
-    expect(api.deleteDoneTasks).toBeCalled()
+    await store.removeDoneTasks()
+    expect(api.removeDoneTasks).toBeCalled()
     expect(store.hasDoneTasks).toBe(false)
   })
 
