@@ -16,6 +16,9 @@ const props = defineProps({
   noCaret: {
     type: Boolean
   },
+  noIcon: {
+    type: Boolean
+  },
   active: {
     type: Boolean,
     default: null
@@ -81,7 +84,7 @@ const classList = computed(() => {
 <template>
   <a v-if="route" :href="resolved.href" class="navigation-breadcrumb-link" :class="classList">
     <span class="navigation-breadcrumb-link__label">
-      <phosphor-icon v-if="icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
+      <phosphor-icon v-if="!noIcon && icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
         <slot><display-route :value="routeName" :title="title" /></slot>
       </span>
