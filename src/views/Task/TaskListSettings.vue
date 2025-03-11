@@ -7,6 +7,7 @@ import { computed, watch, ref } from 'vue'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useTaskSettings } from '@/composables/task-settings'
+
 defineProps({
   hide: {
     type: Function,
@@ -21,28 +22,11 @@ defineProps({
 })
 
 const route = useRoute()
-
+const pageName = ref(route.name.split('.').slice(1).shift())
 const pageTitleKey = computed(() => route.meta.title)
-const pageName = ref(route.name.split('.'))
-
-const { perPage, sortBy, properties } = useTaskSettings(pageName.value[1])
-watch(
-  () => route,
-  (newRoute) => {
-    pageName.value = newRoute.name.split('.')
-    const taskSettings = useTaskSettings(pageName.value[1])
-    perPage.value = taskSettings.perPage.value
-    sortBy.value = taskSettings.sortBy.value
-
-    properties.value = taskSettings.properties.value
-  },
-  { immediate: true }
-)
 const { t } = useI18n()
-const title = computed(() => {
-  const page = t(pageTitleKey.value)
-  return t(`task.settingTitle`, { page })
-})
+const { perPage, sortBy, properties } = useTaskSettings(pageName.value)
+const title = computed(() => t(`task.settingTitle`, { page: t(pageTitleKey.value) }))
 </script>
 
 <template>
