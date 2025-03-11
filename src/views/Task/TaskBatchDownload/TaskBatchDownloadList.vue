@@ -6,12 +6,12 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
-import { TASK_NAME } from '@/enums/taskNames'
-import TaskPage from '@/views/Task/TaskPage'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
+import { TASK_NAME } from '@/enums/taskNames'
+import TaskPage from '@/views/Task/TaskPage'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 
@@ -19,17 +19,14 @@ function hasZipSize(item) {
   return item.state !== 'ERROR' && item.result?.size !== undefined
 }
 
-function getRecord(item, key, defaultValue = undefined) {
-  if (key) {
-    return get(item, `args.batchDownload.${key}`, defaultValue)
-  }
-  return get(item, `args.batchDownload`, defaultValue)
+function getBatchDownloadRecord(item, key, defaultValue) {
+  return get(item, key ? `args.batchDownload.${key}` : 'args.batchDownload', defaultValue)
 }
 </script>
 
 <template>
   <task-page
-    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
+    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty, refresh }"
     :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
     page-name="batch-download"
     hide-clear-done
@@ -47,11 +44,11 @@ function getRecord(item, key, defaultValue = undefined) {
       <template #cell(state)="{ item }">
         <display-status :value="item.state" />
       </template>
-
-      <template #cell(name)="{ item }"> <router-link-batch-download :item="item" /> </template>
-
+      <template #cell(name)="{ item }">
+        <router-link-batch-download :item="item" /> 
+      </template>
       <template #cell(projects)="{ item }">
-        <display-project-list :values="getRecord(item, 'projects')" />
+        <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />
       </template>
       <template #cell(createdAt)="{ item }">
         <display-datetime-from-now :value="item.createdAt" />
@@ -59,20 +56,19 @@ function getRecord(item, key, defaultValue = undefined) {
       <template #cell(size)="{ item }">
         <display-content-length v-if="hasZipSize(item)" :value="item.result.size" class="text-nowrap" />
       </template>
-
       <template #row-actions="{ item, detailsShowing, toggleDetails }">
         <batch-download-actions
           :id="item.id"
           :name="item.name"
           :state="item.state"
-          :value="getRecord(item)"
-          :toggle="detailsShowing"
-          @update:toggle="toggleDetails"
+          :value="getBatchDownloadRecord(item)"
+          :toggle-details="detailsShowing"
+          @update:toggle-details="toggleDetails"
+          @refresh="refresh"
         />
-      </template>
-
+      </template>      
       <template #row-details="{ item }">
-        <search-breadcrumb-uri :uri="getRecord(item).uri" no-label />
+        <search-breadcrumb-uri :uri="getBatchDownloadRecord(item).uri" no-label />
       </template>
     </page-table-generic>
   </task-page>
