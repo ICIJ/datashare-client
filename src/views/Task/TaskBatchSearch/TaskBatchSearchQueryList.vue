@@ -1,40 +1,49 @@
 <script setup>
 import { computed, ref, onBeforeMount } from 'vue'
 
-import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
-import PageHeader from '@/components/PageHeader/PageHeader'
+import ButtonRowActionSearch from '@/components/Button/ButtonRowAction/ButtonRowActionSearch'
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
+import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
+import PageHeader from '@/components/PageHeader/PageHeader'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import { useCore } from '@/composables/core'
+import { useTaskSettings } from '@/composables/task-settings'
 import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useAppStore } from '@/store/modules'
-import { useCore } from '@/composables/core'
-import RouterLinkSearch from '@/components/RouterLink/RouterLinkSearch'
-import { useTaskSettings } from '@/composables/task-settings'
-import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
+
 const props = defineProps({
   uuid: { type: String, required: true },
   indices: { type: [String, Object], required: true }
 })
 
+const { core } = useCore()
 const appStore = useAppStore()
 const settingView = 'batch-search-queries'
 const settings = useTaskSettings(settingView)
+const queries = ref([])
+const batchSearch = ref(null)
+const nbQueriesWithoutResults = ref(0)
 
 const searchQuery = useUrlParam('q', '')
+
 const page = useUrlParam('page', {
   transform: (value) => parseInt(value),
   initialValue: 1
 })
+
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings(settingView, 'perPage'),
   set: (value) => appStore.setSettings({ view: settingView, perPage: parseInt(value) })
 })
+
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
   get: () => appStore.getSettings(settingView, 'orderBy'),
   set: (sort, order) => appStore.setSettings({ view: settingView, orderBy: [sort, order] })
 })
+
 const sort = computed({
   get: () => orderBy.value?.[0],
   set: (value) => (orderBy.value = [value, order.value])
@@ -44,25 +53,21 @@ const order = computed({
   get: () => orderBy.value?.[1],
   set: (value) => (orderBy.value = [sort.value, value])
 })
-const { core } = useCore()
-const queries = ref([])
-const batchSearch = ref(null)
-const nbQueriesWithoutResults = ref(0)
-onBeforeMount(() => {
-  getBatchSearchQueries(props.uuid)
-  getBatchSearch(props.uuid)
-})
 
-async function getBatchSearch(batchId) {
+const title = computed(() => batchSearch.value?.name ?? props.uuid.split('-')[0])
+const empty = computed(() => queries.value.length === 0)
+
+async function getBatchSearch() {
   try {
-    batchSearch.value = { ...(await core.api.getBatchSearch(batchId)), nbQueriesWithoutResults }
+    batchSearch.value = { ...(await core.api.getBatchSearch(props.uuid)), nbQueriesWithoutResults }
   } catch (error) {
     batchSearch.value = null
   }
 }
-async function getBatchSearchQueries(batchId) {
+
+async function getBatchSearchQueries() {
   try {
-    const queriesObjects = await core.api.getBatchSearchQueries(batchId)
+    const queriesObjects = await core.api.getBatchSearchQueries(props.uuid)
     queries.value = Object.keys(queriesObjects).map((k) => ({ query: k, nbHits: queriesObjects[k] }))
     nbQueriesWithoutResults.value = getNbQueriesWithoutResults()
   } catch (error) {
@@ -70,14 +75,15 @@ async function getBatchSearchQueries(batchId) {
     nbQueriesWithoutResults.value = 0
   }
 }
+
 function getNbQueriesWithoutResults() {
   return queries.value.filter((q) => q.nbHits === 0).length
 }
-const title = computed(() => {
-  return batchSearch.value?.name ?? props.uuid.split('-')[0]
-})
-const empty = computed(() => queries.value.length === 0)
+
+onBeforeMount(getBatchSearchQueries)
+onBeforeMount(getBatchSearch)
 </script>
+
 <template>
   <page-container fluid deck class="task-batch-search-query-list">
     <page-header>
@@ -105,11 +111,14 @@ const empty = computed(() => queries.value.length === 0)
           :order="order"
         >
           <template #cell(query)="{ item }">
-            <router-link-search :indices="indices" :query="item.query">{{ item.query }}</router-link-search>
+            <router-link :to="{ name: 'task.batch-search-queries.show', params: { query: item.query } }">
+              {{ item.query }}
+            </router-link>
           </template>
           <template #cell(documents)="{ item }"> {{ item.nbHits }} </template>
-
-          <template #row-actions> Actions ! </template>
+          <template #row-actions="{ item }">
+            <button-row-action-search :to="{ name: 'search', query: { indices, q: item.query } }" />
+          </template>
         </page-table-generic>
       </b-col>
       <b-col lg="4" cols="12">
