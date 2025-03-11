@@ -113,7 +113,6 @@ const empty = computed(() => hits.value.length === 0)
         <navigation-breadcrumb-link route-name="task.batch-search-results.list" title="All documents" />
       </template>
     </page-header>
-
     <page-toolbar
       v-model:searchQuery="searchQuery"
       v-model:page="page"
@@ -130,16 +129,25 @@ const empty = computed(() => hits.value.length === 0)
       :order="order"
     >
       <template #cell(query)="{ item }">
-        <router-link-search :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">{{
-          item.query
-        }}</router-link-search></template
-      >
-      <template #cell(rank)="{ item }"> {{ item.documentNumber }}</template>
-      <template #cell(documentName)="{ item }"> <router-link-document :value="item" /></template>
-      <template #cell(contentLength)="{ item }"><display-content-length :value="item.contentLength" /> </template>
-      <template #cell(contentType)="{ item }"> <display-content-type :value="item.contentType" /></template>
-      <template #cell(project)="{ item }"><display-project-list :values="item.project" /></template>
-      <template #row-actions> Actions !</template>
+        <router-link-search :key="uuid" :indices="indices" :uuid="uuid" :query="item.query">
+          {{ item.query }}
+        </router-link-search>
+      </template>
+      <template #cell(rank)="{ item }">
+        {{ item.documentNumber }}
+      </template>
+      <template #cell(documentName)="{ item }">
+        <router-link-document :value="item" />
+      </template>
+      <template #cell(contentLength)="{ item }">
+        <display-content-length :value="item.contentLength" />
+      </template>
+      <template #cell(contentType)="{ item }">
+        <display-content-type :value="item.contentType" />
+      </template>
+      <template #cell(project)="{ item }">
+        <display-project-list :values="item.project" />
+      </template>
     </page-table-generic>
   </page-container>
 </template>
