@@ -75,7 +75,8 @@ export function useTaskProperties(propertyList) {
     key: 'projects',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
-    required: false
+    required: false,
+    colStyle: { minWidth: 'min(400px, 100vw)' }
   })
 
   const entitiesToFind = propertyItem({
