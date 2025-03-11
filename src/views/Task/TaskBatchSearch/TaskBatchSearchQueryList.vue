@@ -87,7 +87,7 @@ const empty = computed(() => queries.value.length === 0)
         <navigation-breadcrumb-link route-name="task.batch-search-queries.list" :title="title" />
       </template>
     </page-header>
-    <b-row fluid class="gap-3">
+    <b-row>
       <b-col lg="8" cols="12">
         <page-toolbar
           v-model:searchQuery="searchQuery"
@@ -112,7 +112,7 @@ const empty = computed(() => queries.value.length === 0)
           <template #row-actions> Actions ! </template>
         </page-table-generic>
       </b-col>
-      <b-col>
+      <b-col lg="4" cols="12">
         <batch-search-card v-if="batchSearch" :batch-search="batchSearch" />
       </b-col>
     </b-row>
