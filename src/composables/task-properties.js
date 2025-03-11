@@ -8,7 +8,9 @@ export function useTaskProperties(propertyList) {
     emphasis = false,
     sortingKey = null,
     type = SORT_TYPE_KEY.ALPHA,
-    required = false
+    required = false,
+    thStyle = {},
+    colStyle = {}
   }) => {
     return {
       key,
@@ -17,14 +19,18 @@ export function useTaskProperties(propertyList) {
       type,
       emphasis,
       sortable,
-      required
+      required,
+      thStyle,
+      colStyle
     }
   }
+
   const id = propertyItem({
     key: 'id',
     icon: null,
     sortable: true
   })
+
   const name = propertyItem({
     icon: 'list-checks',
     key: 'name',
@@ -32,6 +38,7 @@ export function useTaskProperties(propertyList) {
     emphasis: true,
     required: true
   })
+
   const createdAt = propertyItem({
     icon: 'calendar-blank',
     key: 'createdAt',
@@ -46,6 +53,7 @@ export function useTaskProperties(propertyList) {
     type: SORT_TYPE_KEY.NUMBER,
     sortable: true
   })
+
   const state = propertyItem({
     icon: null,
     key: 'state',
@@ -61,6 +69,7 @@ export function useTaskProperties(propertyList) {
     sortable: false,
     required: false
   })
+
   const projects = propertyItem({
     icon: 'circles-three-plus',
     key: 'projects',
@@ -76,6 +85,7 @@ export function useTaskProperties(propertyList) {
     sortable: false,
     required: false
   })
+
   const pipeline = propertyItem({
     icon: 'shooting-star',
     key: 'pipeline',
@@ -83,6 +93,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     required: false
   })
+
   const documents = propertyItem({
     icon: 'files',
     key: 'documents',
@@ -106,6 +117,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     required: false
   })
+
   const queries = propertyItem({
     icon: 'magnifying-glass',
     key: 'queries',
@@ -113,6 +125,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     required: false
   })
+
   const size = propertyItem({
     icon: 'hard-drives',
     key: 'size',
@@ -120,6 +133,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     required: false
   })
+
   const taskType = propertyItem({
     icon: 'rocket-launch',
     key: 'taskType',
@@ -127,6 +141,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     required: false
   })
+
   const propertyItems = {
     id,
     name,
@@ -144,6 +159,7 @@ export function useTaskProperties(propertyList) {
     author,
     taskType
   }
+
   const items = propertyList.reduce((acc, p) => {
     if (propertyItems[p] === undefined) {
       acc.push(propertyItem({ key: p }))
@@ -153,5 +169,6 @@ export function useTaskProperties(propertyList) {
     acc.push(propertyItems[p])
     return acc
   }, [])
+
   return { items }
 }
