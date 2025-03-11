@@ -84,12 +84,18 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
 
 <template>
   <page-table v-model:sort="sort" v-model:order="order">
+
+    <template #colgroup>
+      <col v-for="field in fields" :key="field.name" :style="field.colStyle" />
+    </template>
+
     <template #thead>
       <page-table-th
         v-for="field in fields"
         :key="field.name"
         :label="field.text"
         :icon="field.icon"
+        :style="field.thStyle"
         :sortable="!!field.sortable"
         :emphasis="!!field.emphasis"
         :name="field.value"
