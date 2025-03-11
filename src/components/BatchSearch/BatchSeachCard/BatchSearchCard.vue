@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <card-panel class="batch-search-card" content-class="gap-2" :title="batchSearch.name" no-x-icon>
+  <card-panel class="batch-search-card" border content-class="gap-2" :title="batchSearch.name" no-x-icon>
     <text-truncate
       v-if="batchSearch.description"
       class="text-secondary-emphasis"
