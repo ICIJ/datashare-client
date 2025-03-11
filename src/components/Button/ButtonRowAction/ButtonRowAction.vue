@@ -1,39 +1,32 @@
 <script setup>
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { SIZE, buttonSizeValidator } from '@/enums/sizes'
+import { ICON_WEIGHT, iconWeightValidator } from '@/enums/iconWeights'
 
 defineProps({
   icon: {
-    type: [String, Object],
+    type: [String, Object, Array],
     required: true
+  },
+  iconWeight: {
+    type: String,
+    default: ICON_WEIGHT.BOLD,
+    validator: iconWeightValidator
   },
   size: {
     type: String,
     validator: buttonSizeValidator,
     default: SIZE.SM
-  },
-  label: {
-    type: String
-  },
-  disabled: {
-    type: Boolean,
-    default: false
-  },
-  to: {
-    type: Object
   }
 })
 </script>
 
 <template>
   <button-icon
-    :disabled="disabled"
     :icon-left="icon"
-    :label="label"
+    :icon-left-hover-weight="iconWeight"
     :size="size"
-    :to="to"
     hide-label
-    icon-left-hover-weight="bold"
     square
     variant="outline-secondary"
     class="border-0"
