@@ -2,12 +2,14 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
-import { useCore } from '@/composables/core'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
+import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
+import { useCore } from '@/composables/core'
+import { useConfirmModal } from '@/composables/confirm'
 import { TASK_STATUS } from '@/enums/taskStatus'
-const showSearch = defineModel('toggle', { type: Boolean })
+
+const toggleDetails = defineModel('toggleDetails', { type: Boolean })
 
 const props = defineProps({
   /**
@@ -38,22 +40,22 @@ const props = defineProps({
     default: () => ({})
   }
 })
-const { core, toast } = useCore()
-const { t } = useI18n()
-const emit = defineEmits(['relaunch', 'relaunchFailed', 'delete', 'deleteFailed'])
-const isTaskRunning = computed(() => {
-  return props.state.toLowerCase() === TASK_STATUS.RUNNING
-})
 
-const projects = computed(() => {
-  return props.value?.projects?.map((p) => p.name) || []
-})
+const { core, toast } = useCore()
+const { afterConfirmation } = useConfirmModal()
+const { t } = useI18n()
+const emit = defineEmits(['refresh', 'relaunch', 'relaunchFailed', 'delete', 'deleteFailed'])
+
+const isTaskRunning = computed(() => props.state.toLowerCase() === TASK_STATUS.RUNNING)
+const projects = computed(() => props.value?.projects?.map((p) => p.name) || [])
+const parsedQuery = computed(() => JSON.parse(props.value?.query?.query || null) ?? {})
+
 const uri = computed(() => {
-  let uri = props.value?.uri
-  if (uri && uri.startsWith('/')) {
-    uri = uri.startsWith('/') ? uri.substring(1) : uri
+  if (props.value?.uri?.startsWith('/')) {
+    return props.value.uri.substring(1)
   }
-  return uri
+
+  return props.value.uri
 })
 
 async function deleteTask() {
@@ -64,17 +66,16 @@ async function deleteTask() {
     notifyDeleteFailed(error)
   }
 }
-const parseQuery = computed(() => {
-  return JSON.parse(props.value.query?.query || null) ?? {}
-})
+
 async function relaunchTask() {
   try {
-    await core.api.runBatchDownload({ projectIds: projects.value, query: parseQuery.value, uri: uri.value })
+    await core.api.runBatchDownload({ projectIds: projects.value, query: parsedQuery.value, uri: uri.value })
     notifyRelaunchSucceed()
   } catch (error) {
     notifyRelaunchFailed(error)
   }
 }
+
 function notifyRelaunchSucceed() {
   const title = t('batchDownload.relaunch.succeed')
   const body = t('batchDownload.relaunch.succeedBody')
@@ -85,7 +86,14 @@ function notifyRelaunchSucceed() {
    * @event relaunched
    */
   emit('relaunch', props.value)
+  /**
+   * Notifiy the parent a refresh is needed
+   *
+   * @event refresh
+   */
+  emit('refresh')
 }
+
 function notifyRelaunchFailed(error) {
   const title = t('batchDownload.relaunch.failed')
   const body = t('batchDownload.relaunch.failedBody')
@@ -97,6 +105,7 @@ function notifyRelaunchFailed(error) {
    */
   emit('relaunchFailed', error)
 }
+
 function notifyDeleteSucceed() {
   /**
    * The batch download was deleted successfully
@@ -104,7 +113,14 @@ function notifyDeleteSucceed() {
    * @event delete
    */
   emit('delete', props.value)
+  /**
+   * Notifiy the parent a refresh is needed
+   *
+   * @event refresh
+   */
+  emit('refresh')
 }
+
 function notifyDeleteFailed(error) {
   const title = t('batchDownload.delete.failed')
   const body = t('batchDownload.delete.failedBody')
@@ -120,7 +136,11 @@ function notifyDeleteFailed(error) {
 
 <template>
   <div class="batch-download-actions d-flex gap-2">
-    <button-row-action icon="arrow-clockwise" :label="t('batchDownloadActions.relaunch')" @click="relaunchTask" />
+    <button-row-action 
+      icon="arrow-clockwise" 
+      :label="t('batchDownloadActions.relaunch')" 
+      @click="relaunchTask" 
+    />
     <button-row-action
       icon="magnifying-glass"
       tag="router-link"
@@ -128,8 +148,10 @@ function notifyDeleteFailed(error) {
       :to="{ hash: uri, name: 'search' }"
       :label="t('batchDownloadActions.search')"
     />
-
-    <button-row-action-delete :disabled="isTaskRunning" @delete="deleteTask" />
-    <page-table-toggle-details-button v-model="showSearch" />
+    <button-row-action-delete 
+      :disabled="isTaskRunning" 
+      @click="afterConfirmation(deleteTask)" 
+    />
+    <page-table-toggle-details-button v-model="toggleDetails" />
   </div>
 </template>
