@@ -19,11 +19,11 @@ const to = computed(() => ({
   }
 }))
 
-const documentName = computed(() => basename(props.value.documentPath))
+const display = computed(() => basename(props.value.documentPath))
 </script>
 
 <template>
   <router-link :to="to" class="text-nowrap">
-    {{ documentName }}
+    {{ display }}
   </router-link>
 </template>
