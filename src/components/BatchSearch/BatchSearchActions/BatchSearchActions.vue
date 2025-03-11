@@ -25,7 +25,7 @@ const { uuid } = defineProps({
 const emit = defineEmits(['refresh'])
 
 const { t } = useI18n()
-const { confirm: showConfirmModal } = useConfirmModal()
+const { afterConfirmation } = useConfirmModal()
 const { prompt: showEditModal } = usePromptModal(BatchSearchActionsEditModal)
 const { prompt: showRelaunchModal } = usePromptModal(BatchSearchActionsRelaunchModal)
 
@@ -64,12 +64,6 @@ async function edit() {
   console.log('Not implemented yet')
 }
 
-async function removeConfirmModal() {
-  if (await showConfirmModal()) {
-    await remove()
-  }
-}
-
 async function relaunchPromptModal() {
   const { name, description } = batchSearch.value
   const values = await showRelaunchModal({ name, description })
@@ -94,6 +88,6 @@ async function editPromptModal() {
     <batch-search-actions-edit v-show="false" @click="editPromptModal()" />
     <batch-search-actions-relaunch :disabled="!isOver" @click="relaunchPromptModal()" />
     <batch-search-actions-stop :disabled="!isRunning" @click="stop()" />
-    <batch-search-actions-delete @click="removeConfirmModal()" />
+    <batch-search-actions-delete @click="afterConfirmation(remove)" />
   </div>
 </template>
