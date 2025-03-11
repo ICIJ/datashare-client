@@ -1556,9 +1556,19 @@
     "limitations": "Batch downloads are limited to {maxNbFiles} files and {maxSize}B."
   },
   "batchDownloadActions": {
-    "relaunch": "Relaunch",
-    "search": "See search results",
-    "delete": "Delete"
+    "remove": {
+      "label": "Delete",
+      "success": "The batch search was removed",
+      "error": "Unable to remove the batch search"
+    },
+    "relaunch": {
+      "label": "Relaunch",
+      "success": "The batch search was relaunched",
+      "error": "Unable to relaunch the batch search"
+    },
+    "search": {
+      "label": "See search results"
+    }
   },
   "tasksList": {
     "empty": "You have not yet started any tasks.",
