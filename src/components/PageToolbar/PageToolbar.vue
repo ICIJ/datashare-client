@@ -52,7 +52,7 @@ defineProps({
     </slot>
     <slot name="pagination">
       <div v-if="paginable" class="page-toolbar__pagination">
-        <tiny-pagination v-model="page" :row="pageRow" :total-rows="totalRows" :per-page="Number(perPage)" />
+        <tiny-pagination v-model="page" :row="pageRow" :total-rows="totalRows" :per-page="Number(perPage)" :key="totalRows" />
       </div>
     </slot>
     <slot name="search">
