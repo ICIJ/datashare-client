@@ -113,6 +113,7 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
           v-for="(field, i) in fields"
           :key="i"
           class="page-table-generic__row__field"
+          :style="field.tdStyle"
           :class="[`page-table-generic__row__field--${field.value}`]"
         >
           <slot :name="`cell(${field.value})`" v-bind="callItemBinding(item, field.value)" :field="field">
