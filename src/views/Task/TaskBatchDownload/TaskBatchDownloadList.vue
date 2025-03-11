@@ -45,7 +45,7 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         <display-status :value="item.state" />
       </template>
       <template #cell(name)="{ item }">
-        <router-link-batch-download :item="item" /> 
+        <router-link-batch-download :item="item" />
       </template>
       <template #cell(projects)="{ item }">
         <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />
@@ -66,7 +66,7 @@ function getBatchDownloadRecord(item, key, defaultValue) {
           @update:toggle-details="toggleDetails"
           @refresh="refresh"
         />
-      </template>      
+      </template>
       <template #row-details="{ item }">
         <search-breadcrumb-uri :uri="getBatchDownloadRecord(item).uri" no-label />
       </template>

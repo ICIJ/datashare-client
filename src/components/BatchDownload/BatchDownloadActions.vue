@@ -76,11 +76,7 @@ async function relaunch() {
 
 <template>
   <div class="batch-download-actions d-flex gap-2">
-    <button-row-action 
-      icon="arrow-clockwise" 
-      :label="t('batchDownloadActions.relaunch.label')" 
-      @click="relaunch" 
-    />
+    <button-row-action icon="arrow-clockwise" :label="t('batchDownloadActions.relaunch.label')" @click="relaunch" />
     <button-row-action
       icon="magnifying-glass"
       tag="router-link"
@@ -88,10 +84,10 @@ async function relaunch() {
       :to="{ hash: uri, name: 'search' }"
       :label="t('batchDownloadActions.delete.label')"
     />
-    <button-row-action-delete 
-      :disabled="isTaskRunning" 
+    <button-row-action-delete
+      :disabled="isTaskRunning"
       :label="t('batchDownloadActions.search.label')"
-      @click="afterConfirmation(remove)" 
+      @click="afterConfirmation(remove)"
     />
     <page-table-toggle-details-button v-model="toggleDetails" />
   </div>

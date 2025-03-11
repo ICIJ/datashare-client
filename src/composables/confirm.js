@@ -29,7 +29,7 @@ export const useConfirmModal = (Component = AppModalConfirm) => {
   }
 
   async function afterConfirmation(callback, props) {
-    return await confirm(props) && callback()
+    return (await confirm(props)) && callback()
   }
 
   return { show, hide, confirm, afterConfirmation }
