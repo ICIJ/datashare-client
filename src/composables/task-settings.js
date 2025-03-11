@@ -70,6 +70,8 @@ export function useTaskSettings(pageName) {
     options: items.map((p) => ({
       value: p.key,
       icon: p.icon,
+      thStyle: p.thStyle,
+      colStyle: p.colStyle,
       disabled: !!p.required,
       sortable: !!p.sortable,
       emphasis: !!p.emphasis,
