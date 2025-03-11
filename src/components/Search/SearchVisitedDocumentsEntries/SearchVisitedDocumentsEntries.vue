@@ -89,7 +89,7 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
 <template>
   <b-collapse v-for="(entry, key) of groupedEntries" :key="key" visible>
     <template #header="{ visible, toggle }">
-      <div class="text-center mb-3">
+      <div class="text-center mb-3 sticky-top">
         <button-toggle-day :date="key" :active="visible" @click="toggle" />
       </div>
     </template>

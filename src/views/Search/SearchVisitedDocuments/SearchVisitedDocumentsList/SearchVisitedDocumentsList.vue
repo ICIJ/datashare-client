@@ -79,8 +79,8 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 </script>
 
 <template>
-  <div class="search-visited-documents-list">
-    <page-container fluid deck sticky>
+  <div class="search-visited-documents-list d-flex flex-column">
+    <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
           <navigation-breadcrumb-link route-name="search" />
@@ -98,9 +98,15 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         :total-rows="pagination.total"
       />
     </page-container>
-    <page-container fluid>
+    <page-container fluid class="flex-grow-1 overflow-auto">
       <search-visited-documents-entries v-if="events.length" :events="events" />
       <div v-else class="text-center text-secondary">{{ t('searchVisitedDocumentsList.empty') }}</div>
     </page-container>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.search-visited-documents-list {
+  max-height: 100vh;
+}
+</style>

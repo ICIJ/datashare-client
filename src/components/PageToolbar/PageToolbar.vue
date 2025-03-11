@@ -64,7 +64,7 @@ defineProps({
         class="page-toolbar__search ms-auto"
       />
     </slot>
-    <slot name="end"></slot>
+    <slot name="end" />
   </div>
 </template>
 
