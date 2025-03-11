@@ -84,7 +84,7 @@ async function editPromptModal() {
 </script>
 
 <template>
-  <div class="batch-search-actions flex-wrap d-flex gap-2">
+  <div class="batch-search-actions flex-nowrap d-flex gap-2">
     <batch-search-actions-edit v-show="false" @click="editPromptModal()" />
     <batch-search-actions-relaunch :disabled="!isOver" @click="relaunchPromptModal()" />
     <batch-search-actions-stop :disabled="!isRunning" @click="stop()" />
