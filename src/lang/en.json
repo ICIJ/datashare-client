@@ -1239,7 +1239,8 @@
     "relaunch":"Relaunch",
     "stop":"Stop",
     "delete":"Delete",
-    "edit":"Edit"
+    "edit":"Edit",
+    "search": "Search"
   },
   "textTruncate": {
     "seeLess": "See less",
