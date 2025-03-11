@@ -14,9 +14,7 @@
     </div>
     <page-offcanvas v-if="hasSettings" v-model="showPageSettings" no-header>
       <template #default="{ visible, placement, hide }">
-        <router-view v-slot="{ Component }" name="settings">
-          <component :is="Component" :hide="hide" :visible="visible" :placement="placement" />
-        </router-view>
+        <component :is="settingComponent" :hide="hide" :visible="visible" :placement="placement" />
       </template>
     </page-offcanvas>
     <b-modal-orchestrator />
@@ -26,7 +24,7 @@
 
 <script setup>
 import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
-import { get, property } from 'lodash'
+import { compact, get, property } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -59,7 +57,11 @@ const handleHttpError = (err) => {
 }
 
 const hasSettings = computed(() => {
-  return route?.meta?.settings !== false && route.matched.some((route) => 'settings' in route.components)
+  return route?.meta?.settings !== false && !!settingComponent.value
+})
+
+const settingComponent = computed(() => {
+  return compact(route.matched.map(property('components.settings'))).pop()
 })
 
 const showPageSettings = computed({
