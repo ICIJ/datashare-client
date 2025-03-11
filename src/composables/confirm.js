@@ -3,12 +3,12 @@ import { useModalController } from 'bootstrap-vue-next'
 
 import AppModalConfirm from '@/components/AppModal/AppModalConfirm'
 
-export const useConfirmModal = () => {
+export const useConfirmModal = (Component = AppModalConfirm) => {
   const modalController = useModalController()
 
   function show(props = {}) {
     return new Promise((resolve) => {
-      const component = h(AppModalConfirm, {
+      const component = h(Component, {
         onOk: resolve,
         onClose: resolve,
         onHide: resolve,
@@ -28,5 +28,9 @@ export const useConfirmModal = () => {
     return trigger === 'ok'
   }
 
-  return { show, hide, confirm }
+  async function afterConfirmation(callback, props) {
+    return await confirm(props) && callback()
+  }
+
+  return { show, hide, confirm, afterConfirmation }
 }
