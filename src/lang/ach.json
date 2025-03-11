@@ -561,13 +561,13 @@
     "syncModels": "crwdns2626:0crwdne2626:0",
     "stopTask": "crwdns1900:0crwdne1900:0",
     "stopPendingTasks": "crwdns1902:0crwdne1902:0",
-    "deleteDoneTasks": "crwdns1904:0crwdne1904:0",
+    "removeDoneTasks": "crwdns1904:0crwdne1904:0",
     "deleteIndexLabel": "crwdns1906:0crwdne1906:0",
     "deleteIndexDescription": "crwdns1908:0crwdne1908:0",
     "deleteSuccess": "crwdns1910:0crwdne1910:0",
     "deleteFailure": "crwdns2649:0crwdne2649:0",
-    "deleteBatchSearchSuccess": "crwdns2647:0crwdne2647:0",
-    "deleteBatchSearchFailure": "crwdns2651:0crwdne2651:0"
+    "removeBatchSearchSuccess": "crwdns2647:0crwdne2647:0",
+    "removeBatchSearchFailure": "crwdns2651:0crwdne2651:0"
   },
   "menu": {
     "help": "crwdns964:0crwdne964:0",

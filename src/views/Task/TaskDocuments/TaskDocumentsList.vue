@@ -58,7 +58,7 @@ function isRunning(item) {
       <template #cell(createdAt)="{ item }"><display-datetime-from-now :value="item.createdAt" /></template>
       <template #row-actions="{ item }">
         <button-row-action-stop :disabled="!isRunning(item)" @stop="stopTask(item.id)" />
-        <button-row-action-delete @delete="taskStore.deleteTask(item.id)" />
+        <button-row-action-delete @delete="taskStore.removeTask(item.id)" />
       </template>
     </page-table-generic>
   </task-page>

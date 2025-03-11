@@ -13,7 +13,7 @@ vi.mock('@/api/apiInstance', {
     stopPendingTasks: vi.fn(),
     stopTask: vi.fn(),
     getTasks: vi.fn().mockResolvedValue([]),
-    deleteDoneTasks: vi.fn(),
+    removeDoneTasks: vi.fn(),
     getNerPipelines: vi.fn()
   }
 })
@@ -50,7 +50,7 @@ describe('Task.vue', () => {
     const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const wrapper = mount(TaskPage, { global: { plugins, renderStubDefaultSlot: true } })
     const actions = wrapper.findComponent(TaskActions)
-    const spy = vi.spyOn(wrapper.vm, 'deleteDoneTasks')
+    const spy = vi.spyOn(wrapper.vm, 'removeDoneTasks')
 
     await actions.vm.$emit('delete-done')
 

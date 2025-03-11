@@ -58,9 +58,9 @@ const uri = computed(() => {
   return props.value.uri
 })
 
-async function deleteTask() {
+async function removeTask() {
   try {
-    await core.api.deleteTask(props.id)
+    await core.api.removeTask(props.id)
     notifyDeleteSucceed()
   } catch (error) {
     notifyDeleteFailed(error)
@@ -150,7 +150,7 @@ function notifyDeleteFailed(error) {
     />
     <button-row-action-delete 
       :disabled="isTaskRunning" 
-      @click="afterConfirmation(deleteTask)" 
+      @click="afterConfirmation(removeTask)" 
     />
     <page-table-toggle-details-button v-model="toggleDetails" />
   </div>

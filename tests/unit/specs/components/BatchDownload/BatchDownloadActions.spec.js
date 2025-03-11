@@ -8,7 +8,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 vi.mock('@/api/apiInstance', {
   apiInstance: {
     runBatchDownload: vi.fn(),
-    deleteTask: vi.fn()
+    removeTask: vi.fn()
   }
 })
 
@@ -29,12 +29,12 @@ describe('BatchDownloadActions.vue', () => {
   }
 
   function mockDeleteBatchDownload(id = 'id', name = 'BatchDownloadTask', batchDownload = {}, state = 'DONE') {
-    api.deleteTask.mockResolvedValue(true)
+    api.removeTask.mockResolvedValue(true)
     return { value: batchDownload, id, name, state }
   }
 
   function mockFailToDeleteBatchDownload(id = 'id', name = 'BatchDownloadTask', batchDownload = {}, state = 'RUNNING') {
-    api.deleteTask.mockRejectedValue(new Error(''))
+    api.removeTask.mockRejectedValue(new Error(''))
     return { value: batchDownload, id, name, state }
   }
 
@@ -84,12 +84,12 @@ describe('BatchDownloadActions.vue', () => {
     })
   })
 
-  describe('deleteTask method', () => {
+  describe('removeTask method', () => {
     it('should emit an error when the delete fails', async () => {
       const props = mockFailToDeleteBatchDownload('id', 'failing')
       const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.emitted().deleteFailed).toBeUndefined()
-      await wrapper.vm.deleteTask()
+      await wrapper.vm.removeTask()
       expect(wrapper.emitted().deleteFailed).toBeDefined()
     })
 
@@ -97,7 +97,7 @@ describe('BatchDownloadActions.vue', () => {
       const props = mockDeleteBatchDownload('id', 'successful')
       const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.emitted().delete).toBeUndefined()
-      await wrapper.vm.deleteTask()
+      await wrapper.vm.removeTask()
       expect(wrapper.emitted().delete).toBeDefined()
     })
   })

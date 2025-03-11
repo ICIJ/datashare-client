@@ -20,11 +20,11 @@ export const useHistoryEvents = (type) => {
   }
 
   function remove({ id }) {
-    return core.api.deleteHistoryEvent(id)
+    return core.api.removeHistoryEvent(id)
   }
 
   function removeAll() {
-    return core.api.deleteHistoryEvents(type)
+    return core.api.removeHistoryEvents(type)
   }
 
   return { save, remove, removeAll }

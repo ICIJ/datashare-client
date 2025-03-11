@@ -119,8 +119,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to deleteDoneTasks', async () => {
-    json = await api.deleteDoneTasks()
+  it('should return backend response to removeDoneTasks', async () => {
+    json = await api.removeDoneTasks()
     expect(json).toEqual({})
   })
 
@@ -170,8 +170,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
-    json = await api.deleteNamedEntitiesByMentionNorm('mentionNorm')
+  it('should return backend response to removeNamedEntitiesByMentionNorm', async () => {
+    json = await api.removeNamedEntitiesByMentionNorm('mentionNorm')
     expect(json).toEqual({})
   })
 
@@ -319,8 +319,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to deleteApiKey', async () => {
-    json = await api.deleteApiKey()
+  it('should return backend response to removeApiKey', async () => {
+    json = await api.removeApiKey()
     expect(json).toEqual({})
   })
 
@@ -395,13 +395,13 @@ describe('Datashare backend client', () => {
     })
   })
 
-  it('should return a backend response to deleteHistoryEvents', async () => {
-    json = await api.deleteHistoryEvents()
+  it('should return a backend response to removeHistoryEvents', async () => {
+    json = await api.removeHistoryEvents()
     expect(json).toEqual({})
   })
 
-  it('should return a backend response to deleteHistoryEvent', async () => {
-    json = await api.deleteHistoryEvent('event-id')
+  it('should return a backend response to removeHistoryEvent', async () => {
+    json = await api.removeHistoryEvent('event-id')
     expect(json).toEqual({})
   })
 

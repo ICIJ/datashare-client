@@ -561,13 +561,13 @@
     "syncModels": "Cochez cette case si vous travaillez sans connexion Internet.",
     "stopTask": "Arrêter cette tâche",
     "stopPendingTasks": "Arrêter toutes les tâches en cours",
-    "deleteDoneTasks": "Supprimer les tâches terminées",
+    "removeDoneTasks": "Supprimer les tâches terminées",
     "deleteIndexLabel": "Effacer tous les documents de Datashare",
     "deleteIndexDescription": "Pour être 100% sûr·e, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr.",
     "deleteSuccess": "Vos documents sont maintenant supprimés de Datashare.",
     "deleteFailure": "Une erreur est survenue, impossible de supprimer vos documents.",
-    "deleteBatchSearchSuccess": "Les recherches en lots sont désormais supprimées de Datashare.",
-    "deleteBatchSearchFailure": "Une erreur est survenue, vos recherches en lot n'ont pas été supprimées."
+    "removeBatchSearchSuccess": "Les recherches en lots sont désormais supprimées de Datashare.",
+    "removeBatchSearchFailure": "Une erreur est survenue, vos recherches en lot n'ont pas été supprimées."
   },
   "menu": {
     "help": "Demander de l'aide",

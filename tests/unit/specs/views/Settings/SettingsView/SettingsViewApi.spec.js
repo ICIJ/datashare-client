@@ -11,7 +11,7 @@ vi.mock('@/api/apiInstance', () => {
     apiInstance: {
       createApiKey: vi.fn(),
       getApiKey: vi.fn(),
-      deleteApiKey: vi.fn()
+      removeApiKey: vi.fn()
     }
   }
 })
@@ -60,17 +60,17 @@ describe('SettingsViewApi', () => {
   it('should delete the apiKey', async () => {
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
-    api.deleteApiKey.mockResolvedValue({})
+    api.removeApiKey.mockResolvedValue({})
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
     expect(wrapper.findAll('.settings-view-api__show')).toHaveLength(0)
 
     await wrapper.vm.createApiKey()
     expect(wrapper.findAll('.settings-view-api__show')).toHaveLength(1)
 
-    await wrapper.vm.deleteApiKey()
+    await wrapper.vm.removeApiKey()
     expect(wrapper.findAll('.settings-view-api__show')).toHaveLength(0)
 
-    expect(api.deleteApiKey).toBeCalledTimes(1)
-    expect(api.deleteApiKey).toBeCalledWith('doe')
+    expect(api.removeApiKey).toBeCalledTimes(1)
+    expect(api.removeApiKey).toBeCalledWith('doe')
   })
 })

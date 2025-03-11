@@ -40,7 +40,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, deleteDoneTasks, isLoading } =
+const { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
   useTaskPolling(props.taskFilter)
 
 const { toAddRoute, searchQuery, page, perPage, sortBy, searchPlaceholder, displayedTasks, totalRows } = useTaskHeader(
@@ -89,7 +89,7 @@ function refresh() {
             :hide-clear-done="hideClearDone"
             :hide-stop-pending="hideStopPending"
             @stop-pending="stopPendingTasks()"
-            @delete-done="deleteDoneTasks()"
+            @delete-done="removeDoneTasks()"
           />
         </mode-local-only>
       </template>

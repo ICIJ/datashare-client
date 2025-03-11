@@ -28,18 +28,18 @@ export const useTaskStore = defineStore('task', () => {
     await api.relaunchBatchSearch(id, title, description)
   }
 
-  const deleteTask = async (id) => {
-    await api.deleteTask(id)
+  const removeTask = async (id) => {
+    await api.removeTask(id)
     setTasks(tasks.value.filter((task) => task.id !== id))
   }
 
-  const deleteBatchSearch = async (id) => {
-    await api.deleteBatchSearch(id)
-    await api.deleteTask(id)
+  const removeBatchSearch = async (id) => {
+    await api.removeBatchSearch(id)
+    await api.removeTask(id)
   }
 
-  const deleteDoneTasks = async () => {
-    await api.deleteDoneTasks()
+  const removeDoneTasks = async () => {
+    await api.removeDoneTasks()
     setTasks(tasks.value.filter(({ id }) => isDone(id)))
   }
 
@@ -111,8 +111,8 @@ export const useTaskStore = defineStore('task', () => {
     setTasks,
     stopPendingTasks,
     stopTask,
-    deleteTask,
-    deleteBatchSearch,
-    deleteDoneTasks
+    removeTask,
+    removeBatchSearch,
+    removeDoneTasks
   }
 })

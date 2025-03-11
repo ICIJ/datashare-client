@@ -38,7 +38,7 @@ const isRunning = computed(() => taskStore.isRunning(uuid))
 async function remove() {
   const successMessage = t('batchSearchActions.remove.success')
   const errorMessage = t('batchSearchActions.remove.error')
-  await toastedPromise(taskStore.deleteBatchSearch(uuid), { successMessage, errorMessage })
+  await toastedPromise(taskStore.removeBatchSearch(uuid), { successMessage, errorMessage })
   emit('refresh')
 }
 
@@ -55,7 +55,7 @@ async function relaunch({ name, description, deleteAfterRelaunch }) {
   await toastedPromise(taskStore.relaunchBatchSearch(uuid, name, description), { successMessage, errorMessage })
   // Remove the current batch search if the user has selected the option.
   if (deleteAfterRelaunch) {
-    await taskStore.deleteBatchSearch(uuid)
+    await taskStore.removeBatchSearch(uuid)
   }
   emit('refresh')
 }

@@ -12,7 +12,7 @@ vi.mock('@/api/apiInstance', () => {
       elasticsearch: {
         search: vi.fn()
       },
-      deleteHistoryEvent: vi.fn().mockResolvedValue({}),
+      removeHistoryEvent: vi.fn().mockResolvedValue({}),
       getStarredDocuments: vi.fn().mockResolvedValue([]),
       getHistoryEvents: vi.fn().mockResolvedValue({
         pagination: {
