@@ -16,12 +16,8 @@ defineProps({
 
 <template>
   <div class="batch-search-card-details-entry d-flex align-items-center justify-content-between gap-2" :title="label">
-    <div class="d-flex  flex-wrap align-items-center gap-2">
-      <phosphor-icon
-        v-if="icon"
-        :name="icon"
-        class="batch-search-card-details-entry__icon text-secondary-emphasis"
-      />
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <phosphor-icon v-if="icon" :name="icon" class="batch-search-card-details-entry__icon text-secondary-emphasis" />
       <slot>{{ value }}</slot>
     </div>
     <div>

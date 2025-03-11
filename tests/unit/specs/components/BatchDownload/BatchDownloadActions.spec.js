@@ -32,7 +32,7 @@ describe('BatchDownloadActions.vue', () => {
     api.removeTask.mockResolvedValue(true)
     return { value: batchDownload, id, name, state }
   }
-  
+
   beforeAll(() => {
     const core = CoreSetup.init().useAll()
     plugins = [core.plugin, core.i18n]
