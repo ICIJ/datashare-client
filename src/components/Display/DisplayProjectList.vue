@@ -15,7 +15,7 @@ const projectList = computed(() => {
 </script>
 
 <template>
-  <div class="d-flex gap-2">
+  <div class="d-flex gap-2 flex-wrap">
     <project-link
       v-for="(project, index) in projectList"
       :key="index"
