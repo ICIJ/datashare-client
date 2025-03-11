@@ -77,7 +77,7 @@ const compact = computed(() => {
 <style scoped lang="scss">
 .task-board-list-entry {
   &__icon {
-    max-width: 6rem;
+    max-width: 8rem;
     width: 100%;
   }
 
