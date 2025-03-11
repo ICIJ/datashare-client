@@ -1,6 +1,5 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
-import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -32,14 +31,17 @@ const props = defineProps({
   contentClass: {
     type: String,
     default: 'gap-4'
+  },
+  border: {
+    type: Boolean,
+    default: false
   }
 })
 
-const { t } = useI18n()
-const closeLabel = t('documentUserActionsCard.close')
-const panelWidth = computed(() => `--card-panel-width : ${props.width}`)
-
 const emit = defineEmits(['close'])
+
+const panelWidth = computed(() => `--card-panel-width : ${props.width}`)
+const classList = computed(() => ({ 'card-panel--borderless': !props.border }))
 
 const close = () => {
   modelValue.value = false
@@ -48,7 +50,7 @@ const close = () => {
 </script>
 
 <template>
-  <b-card v-if="modelValue" class="card-panel shadow-sm border-0 py-4" :style="panelWidth">
+  <b-card v-if="modelValue" class="card-panel shadow-sm py-4" :class="classList" :style="panelWidth">
     <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold">
       <span>
         <phosphor-icon v-if="icon" :name="icon" :weight="iconWeight" class="me-2" />
@@ -61,7 +63,7 @@ const close = () => {
         icon-left="x"
         hide-label
         square
-        :label="closeLabel"
+        :label="$t('documentUserActionsCard.close')"
         @click="close()"
       />
     </b-card-title>
@@ -73,7 +75,12 @@ const close = () => {
 
 <style lang="scss" scoped>
 .card-panel {
-  width: var(--card-panel-width);
+  width: var(--card-panel-width, auto);
+
+  &--borderless {
+    border: 0;
+  }
+
   &__title {
     font-size: $font-size-lg;
     margin: 0;
