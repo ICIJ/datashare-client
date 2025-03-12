@@ -12,7 +12,7 @@ export function useBatchSearchResultProperties() {
   const query = propertyItem({
     icon: 'magnifying-glass',
     key: 'query',
-    text: computed(() => t('task.batch-search-queries.show.fields.query')),
+    text: computed(() => t('task.batch-search-results.show.fields.query')),
     sortable: false,
     emphasis: true
   })
@@ -21,7 +21,7 @@ export function useBatchSearchResultProperties() {
     icon: 'ranking',
     key: 'documentNumber',
     sortingKey: 'doc_nb',
-    text: computed(() => t('task.batch-search-queries.show.fields.documentNumber')),
+    text: computed(() => t('task.batch-search-results.show.fields.documentNumber')),
     type: SORT_TYPE_KEY.NUMBER,
     sortable: true,
     emphasis: true
@@ -30,7 +30,7 @@ export function useBatchSearchResultProperties() {
   const documentName = propertyItem({
     icon: 'file',
     key: 'documentName',
-    text: computed(() => t('task.batch-search-queries.show.fields.documentName')),
+    text: computed(() => t('task.batch-search-results.show.fields.documentName')),
     emphasis: true
   })
 
@@ -38,7 +38,7 @@ export function useBatchSearchResultProperties() {
     icon: 'circles-three-plus',
     key: 'project',
     sortingKey: 'prj_id',
-    text: computed(() => t('task.batch-search-queries.show.fields.project')),
+    text: computed(() => t('task.batch-search-results.show.fields.project')),
     type: SORT_TYPE_KEY.ALPHA,
     sortable: true
   })
@@ -46,14 +46,14 @@ export function useBatchSearchResultProperties() {
   const contentType = propertyItem({
     icon: 'file-text',
     key: 'contentType',
-    text: computed(() => t('task.batch-search-queries.show.fields.contentType'))
+    text: computed(() => t('task.batch-search-results.show.fields.contentType'))
   })
 
   const contentLength = propertyItem({
     icon: 'floppy-disk-back',
     key: 'contentLength',
     sortingKey: 'content_length',
-    text: computed(() => t('task.batch-search-queries.show.fields.contentLength')),
+    text: computed(() => t('task.batch-search-results.show.fields.contentLength')),
     type: SORT_TYPE_KEY.QUANTITY,
     sortable: true
   })
@@ -62,7 +62,7 @@ export function useBatchSearchResultProperties() {
     icon: 'tree-structure',
     key: 'documentPath',
     sortingKey: 'doc_path',
-    text: computed(() => t('task.batch-search-queries.show.fields.documentPath')),
+    text: computed(() => t('task.batch-search-results.show.fields.documentPath')),
     type: SORT_TYPE_KEY.ALPHA,
     sortable: true,
     colStyle: { minWidth: 'min(400px, 100vw)' }
@@ -72,7 +72,7 @@ export function useBatchSearchResultProperties() {
     icon: 'calendar-blank',
     key: 'creationDate',
     sortingKey: 'creation_date',
-    text: computed(() => t('task.batch-search-queries.show.fields.creationDate')),
+    text: computed(() => t('task.batch-search-results.show.fields.creationDate')),
     type: SORT_TYPE_KEY.DATE,
     sortable: true
   })
