@@ -7,7 +7,7 @@ import { SORT_TYPE_KEY, useViewSettings } from '@/composables/view-settings'
 export function useBatchSearchResultProperties() {
   const { t } = useI18n()
   const { propertyItem } = useViewProperties()
-  const { fieldsToSortByOptions } = useViewSettings()
+  const { fieldsToSortByOptions, fieldsToPropertiesOptions } = useViewSettings()
 
   const query = propertyItem({
     icon: 'magnifying-glass',
@@ -90,6 +90,7 @@ export function useBatchSearchResultProperties() {
 
   const fields = Object.values(items)
   const sortByOptions = fieldsToSortByOptions(fields)
+  const propertiesOptions = fieldsToPropertiesOptions(fields)
 
-  return { items, fields, sortByOptions }
+  return { items, fields, propertiesOptions, sortByOptions }
 }
