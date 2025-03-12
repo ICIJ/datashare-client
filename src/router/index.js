@@ -237,7 +237,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchList'),
                 meta: {
                   breadcrumb: false,
-                  icon: 'dots-nine'
+                  icon: 'list-magnifying-glass'
                 }
               },
               {
