@@ -46,7 +46,7 @@ const valueIcon = computed(() => {
 </script>
 
 <template>
-  <span class="display-status" :class="classList" ref="element">
+  <span ref="element" class="display-status" :class="classList">
     <phosphor-icon :name="icon ?? valueIcon" />
     <span class="visually-hidden">
       <display-status-label :value="value" :title="title" />
