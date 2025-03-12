@@ -127,7 +127,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     required: false
   })
-
+  
   const size = propertyItem({
     icon: 'hard-drives',
     key: 'size',
