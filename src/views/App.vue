@@ -14,7 +14,7 @@
     </div>
     <page-offcanvas v-if="hasSettings" v-model="showPageSettings" no-header>
       <template #default="{ visible, placement, hide }">
-        <component :is="settingComponent" :hide="hide" :visible="visible" :placement="placement" :key="route.name" />
+        <component :is="settingComponent" :key="route.name" :hide="hide" :visible="visible" :placement="placement" />
       </template>
     </page-offcanvas>
     <b-modal-orchestrator />
