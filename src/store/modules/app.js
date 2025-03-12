@@ -30,17 +30,17 @@ export const useAppStore = defineStore(
           perPage: '25'
         },
         task: {
-          orderBy: ['name', 'desc'],
+          orderBy: ['createdAt', 'desc'],
           perPage: '10',
           properties: ['id', 'name', 'createdAt', 'progress', 'state']
         },
         entities: {
-          orderBy: ['name', 'desc'],
+          orderBy: ['createdAt', 'desc'],
           perPage: '10',
           properties: ['state', 'entitiesToFind', 'pipeline', 'project', 'progress', 'createdAt']
         },
         documents: {
-          orderBy: ['name', 'desc'],
+          orderBy: ['createdAt', 'desc'],
           perPage: '10',
           properties: ['state', 'name', 'documents', 'project', 'progress', 'createdAt']
         },
@@ -50,7 +50,7 @@ export const useAppStore = defineStore(
           properties: ['state', 'name', 'size', 'projects', 'createdAt']
         },
         'batch-search': {
-          orderBy: ['name', 'desc'],
+          orderBy: ['createdAt', 'desc'],
           perPage: '10',
           properties: [
             'state',
