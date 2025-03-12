@@ -1157,9 +1157,9 @@
     "batch-search-queries": {
       "list": {
         "title": "Queries",
-        "properties": {
+        "fields": {
           "query": "Query",
-          "nbHits":"Documents"
+          "count":"Documents"
         }
       }
     },
@@ -1191,9 +1191,9 @@
     "nbQueries": "Batch search queries",
     "nbQueriesLabel": "{n} queries | {n} query | {n} queries",
     "downloadQueriesLabel": "Download queries",
-    "nbQueriesWithoutResults": "Zero-result queries",
-    "nbQueriesWithoutResultsLabel": "{n} zero-result queries | {n} zero-result query | {n} zero-result queries",
-    "downloadQueriesWithoutResultsLabel": "Download zero-result queries"
+    "noResultsQueriesLabel": "No-match queries",
+    "noResultsQueriesDownload": "Download no-match queries",
+    "noResultsQueries": "{n} no-match queries | {n} no-match query | {n} no-match queries"
   },
   "batchSearchCardDetails": {
     "status": "Status",

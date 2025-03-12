@@ -51,6 +51,15 @@ const noDocuments = computed(() => props.nbResults === 0)
 const noQueries = computed(() => props.nbQueries === 0)
 const noQueriesWithoutResults = computed(() => props.nbQueriesWithoutResults === 0)
 
+const noResultsQueries = computed(() => {
+  const n = humanNumber(props.nbQueriesWithoutResults)
+  return t('batchSearchCard.noResultsQueries', { n }, props.nbQueriesWithoutResults)
+})
+const noResultsQueriesDownload = computed(() => t('batchSearchCard.noResultsQueriesDownload'))
+const noResultsQueriesLabel = computed(() => {
+  return isNaN(props.nbQueriesWithoutResults) ? noResultsQueriesDownload.value : noResultsQueries.value
+})
+
 const visibilityIcon = computed(() => (props.visibility ? PhEye : PhEyeSlash))
 const visibilityPrivate = computed(() => t('batchSearchCardDetails.visibilityPrivate'))
 const visibilityShared = computed(() => t('batchSearchCardDetails.visibilityShared'))
@@ -103,8 +112,8 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
       <li class="my-0">
         <batch-search-card-details-entry
           :icon="PhEmpty"
-          :label="t('batchSearchCard.nbQueriesWithoutResults')"
-          :value="t('batchSearchCard.nbQueriesWithoutResultsLabel', humanNumber(nbQueriesWithoutResults))"
+          :label="t('batchSearchCard.noResultsQueriesLabel')"
+          :value="noResultsQueriesLabel"
         >
           <template #end>
             <button-icon
@@ -114,7 +123,7 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
               square
               hide-label
               :href="downloadQueriesWithoutResultsHref"
-              :label="t('batchSearchCard.downloadQueriesWithoutResultsLabel')"
+              :label="t('batchSearchCard.noResultsQueriesDownload')"
             />
           </template>
         </batch-search-card-details-entry>
@@ -126,7 +135,7 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
         <batch-search-card-details-entry
           :icon="PhListMagnifyingGlass"
           :label="t('batchSearchCard.nbQueries')"
-          :value="t('batchSearchCard.nbQueriesLabel', humanNumber(nbQueries))"
+          :value="t('batchSearchCard.nbQueriesLabel', { n: humanNumber(nbQueries) }, nbQueries)"
         >
           <template #end>
             <button-icon
@@ -135,7 +144,7 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
               variant="link"
               square
               hide-label
-              :label="t('batchSearchCard.downloadQueriesLabel', { n: nbQueries })"
+              :label="t('batchSearchCard.downloadQueriesLabel')"
               :href="downloadQueriesHref"
             />
           </template>
