@@ -1161,6 +1161,11 @@
           "query": "Query",
           "nbHits":"Documents"
         }
+      }
+    },
+    "batch-search-results": {
+      "list": {
+        "title": "All documents"
       },
       "show": {
         "title": "Results",
@@ -1174,11 +1179,6 @@
           "documentPath": "Path",
           "creationDate": "Creation date"
         }
-      }
-    },
-    "batch-search-results": {
-      "list": {
-        "title": "All documents"
       }
     }
   },
