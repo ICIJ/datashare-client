@@ -116,7 +116,11 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
           :style="field.tdStyle"
           :class="[`page-table-generic__row__field--${field.key ?? field.value}`]"
         >
-          <slot :name="`cell(${field.key ?? field.value})`" v-bind="callItemBinding(item, field.key ?? field.value)" :field="field">
+          <slot
+            :name="`cell(${field.key ?? field.value})`"
+            v-bind="callItemBinding(item, field.key ?? field.value)"
+            :field="field"
+          >
             {{ item[field.key ?? field.value] }}
           </slot>
         </td>
