@@ -20,7 +20,7 @@ import { useTaskProperties } from '@/composables/task-properties'
 const nbTasks = ref(3)
 
 const { t } = useI18n()
-const { tasks: pollingTasks, isLoading } = useTaskPolling()
+const { tasks, isLoading } = useTaskPolling()
 const { isServer } = useMode()
 const { items } = useTaskProperties('taskBoardLatest')
 
@@ -41,10 +41,10 @@ function showMore() {
   nbTasks.value += more
 }
 
-const displayedTasks = computed(() => pollingTasks.value?.slice(0, nbTasks.value))
+const displayedTasks = computed(() => tasks.value?.slice(0, nbTasks.value))
 
 const hideShowMore = computed(() => {
-  return !pollingTasks.value?.length || pollingTasks.value.length <= nbTasks.value
+  return !tasks.value?.length || tasks.value.length <= nbTasks.value
 })
 
 function getAuthor(item) {
