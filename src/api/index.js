@@ -52,6 +52,9 @@ export class Api {
   getTasks(name) {
     return this.sendAction('/api/task/all', { params: { name } })
   }
+  getTask(id) {
+    return this.sendAction(`/api/task/${id}`)
+  }
   createIndex(index) {
     return this.sendActionAsText(`/api/index/${index}`, { method: Method.PUT })
   }
