@@ -60,7 +60,7 @@ describe('TaskEntitiesList.vue', () => {
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     const columns = firstRow.findAll('.page-table-generic__row__field')
-    expect(columns.at(0).text()).toBe('RUNNING')
+    expect(columns.at(0).text()).toBe('Running')
     expect(columns.at(2).text()).toBe('EMAIL')
     expect(columns.at(3).text()).toContain('Local Datashare')
     expect(columns.at(4).text()).toBe('0%')
