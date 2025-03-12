@@ -1,29 +1,8 @@
 import { SORT_TYPE_KEY } from '@/composables/view-settings'
+import { useViewProperties } from '@/composables/view-properties'
 
 export function useTaskProperties(propertyList) {
-  const propertyItem = ({
-    key,
-    icon = null,
-    sortable = false,
-    emphasis = false,
-    sortingKey = null,
-    type = SORT_TYPE_KEY.ALPHA,
-    required = false,
-    thStyle = {},
-    colStyle = {}
-  }) => {
-    return {
-      key,
-      icon,
-      sortingKey,
-      type,
-      emphasis,
-      sortable,
-      required,
-      thStyle,
-      colStyle
-    }
-  }
+  const { propertyItem } = useViewProperties()
 
   const id = propertyItem({
     key: 'id',
@@ -127,7 +106,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     required: false
   })
-  
+
   const size = propertyItem({
     icon: 'hard-drives',
     key: 'size',
