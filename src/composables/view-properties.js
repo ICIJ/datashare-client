@@ -1,7 +1,6 @@
 import { SORT_TYPE_KEY } from '@/composables/view-settings'
 
 export function useViewProperties() {
-
   const propertyItem = ({
     key,
     icon = null,
