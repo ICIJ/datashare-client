@@ -94,7 +94,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         v-model:page="page"
         paginable
         :per-page="perPage"
-        :total-rows="pagination.total"
+        :total-rows="pagination?.total ?? 0"
       />
     </page-container>
     <page-container fluid>
