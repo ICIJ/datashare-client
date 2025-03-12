@@ -87,7 +87,7 @@ onBeforeMount(fetchMe)
         <display-progress :value="item.progress" />
       </template>
       <template #row-actions="{ item }">
-        <batch-search-actions v-if="canManageBatchSearch(item)" :uuid="item.id" @refresh="refresh" />
+        <batch-search-actions v-if="canManageBatchSearch(item)" :uuid="item.id" @refresh="refresh" hide-labels />
       </template>
     </page-table-generic>
   </task-page>
