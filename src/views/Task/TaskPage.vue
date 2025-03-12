@@ -45,7 +45,7 @@ const { toAddRoute, searchQuery, page, perPage, sortBy, searchPlaceholder, tasks
 )
 
 const { noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
-  useTaskPolling({ names: props.taskFilter, searchQuery, page, perPage, sortBy })
+  useTaskPolling({ names: props.taskFilter, searchQuery, sortBy })
 
 const setSort = (value) => (sort.value = value)
 
