@@ -149,8 +149,9 @@ export class Api {
   getBatchSearch(batchId) {
     return this.sendAction(`/api/batch/search/${batchId}`)
   }
-  getBatchSearchQueries(batchId) {
-    return this.sendAction(`/api/batch/search/${batchId}/queries`)
+  getBatchSearchQueries(batchId, from = 0, size = 100, search = null, orderBy = 'query_number') {
+    const params = { from, size, search, orderBy }
+    return this.sendAction(`/api/batch/search/${batchId}/queries`, { method: Method.GET, params })
   }
   getBatchSearches(
     from = 0,
@@ -178,11 +179,13 @@ export class Api {
       batchDate,
       publishState
     }
+
     for (const q in queryData) {
       if (queryData[q]) {
         searchParams.append(q, queryData[q])
       }
     }
+
     return this.sendAction('/api/batch/search?' + searchParams, { method: Method.GET })
   }
   getBatchSearchResults(
