@@ -7,11 +7,7 @@ import { LAYOUTS } from '@/enums/layouts'
 export const useAppStore = defineStore(
   'app',
   () => {
-    const redirectAfterLogin = ref(null)
-    const filters = reactive({ close: true })
-    const pins = reactive({ projects: [] })
-    const sidebar = reactive({ compact: false, closed: false })
-    const settingsInit = {
+    const SETTINGS = Object.freeze({
       closed: true,
       views: {
         projectList: {
@@ -73,13 +69,16 @@ export const useAppStore = defineStore(
           perPage: '10',
           properties: ['query', 'nbHits']
         },
+        'batch-search-queries-show': {
+          orderBy: ['doc_nb', 'asc'],
+          perPage: '25'
+        },
         'batch-search-results': {
           orderBy: ['name', 'desc'],
           perPage: '10',
           contentType: [],
           properties: ['query', 'rank', 'documentName', 'contentLength', 'contentType', 'project']
         },
-        'task-board': {},
         documentView: {
           tab: 'text'
         },
@@ -87,13 +86,20 @@ export const useAppStore = defineStore(
           pinned: {}
         }
       }
-    }
-    const settings = reactive(cloneDeep(settingsInit))
+    })
+
+    const redirectAfterLogin = ref(null)
+    const filters = reactive({ close: true })
+    const pins = reactive({ projects: [] })
+    const sidebar = reactive({ compact: false, closed: false })    
+    const settings = reactive(cloneDeep(SETTINGS))
+
     const getSettingsInit = computed(() => {
       return (view, name) => {
-        return get(settingsInit.views, [view, name].join('.'))
+        return get(SETTINGS.views, [view, name].join('.'))
       }
     })
+
     const getSettings = computed(() => {
       return (view, name) => {
         return get(settings.views, [view, name].join('.'))
@@ -137,7 +143,6 @@ export const useAppStore = defineStore(
       filters,
       pins,
       sidebar,
-      settingsInit,
       getSettingsInit,
       settings,
       setSettings,
