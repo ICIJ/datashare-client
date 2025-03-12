@@ -85,7 +85,7 @@ export const useTaskStore = defineStore('task', () => {
       return setTasks(all.flat())
     }
 
-    return setTasks(await api.getTasks())
+    return setTasks(await api.getTasks(params))
   }
 
   const setTasks = (value = []) => {
