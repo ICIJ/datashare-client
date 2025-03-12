@@ -75,7 +75,7 @@ export const useAppStore = defineStore(
         },
         'batch-search-results': {
           orderBy: ['name', 'desc'],
-          perPage: '10',
+          perPage: '100',
           contentType: [],
           properties: ['query', 'rank', 'documentName', 'contentLength', 'contentType', 'project']
         },
