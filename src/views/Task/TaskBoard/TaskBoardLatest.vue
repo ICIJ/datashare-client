@@ -17,10 +17,9 @@ import { useMode } from '@/composables/mode'
 import { useTaskPolling } from '@/composables/task-polling'
 import { useTaskProperties } from '@/composables/task-properties'
 
-const nbTasks = ref(3)
-
 const { t } = useI18n()
-const { tasks, isLoading } = useTaskPolling({ sortBy: ['createdAt', 'desc'] })
+const perPage = ref(3)
+const { tasks, isLoading } = useTaskPolling({ sortBy: ['createdAt', 'desc'], perPage })
 const { isServer } = useMode()
 const { items } = useTaskProperties('taskBoardLatest')
 
@@ -38,14 +37,10 @@ const fields = computed(() => allFields.filter((p) => isServer.value || p.name !
 const more = 3
 
 function showMore() {
-  nbTasks.value += more
+  perPage.value += more
 }
 
-const displayedTasks = computed(() => tasks.value?.slice(0, nbTasks.value))
-
-const hideShowMore = computed(() => {
-  return !tasks.value?.length || tasks.value.length <= nbTasks.value
-})
+const hideShowMore = computed(() => tasks.value?.length < perPage.value)
 
 function getAuthor(item) {
   if (item.args?.batchDownload) {
@@ -133,7 +128,7 @@ function getTaskIcon(item) {
       {{ t('task.task-board.latest.title') }}
     </b-card-title>
     <app-overlay rounded :show="isLoading" class="d-flex flex-column justify-content-center">
-      <page-table-generic :items="displayedTasks" :fields="fields">
+      <page-table-generic :items="tasks" :fields="fields">
         <template #cell(taskType)="{ item }">
           <button-icon
             :icon-left="getTaskIcon(item)"
@@ -170,5 +165,3 @@ function getTaskIcon(item) {
     </app-overlay>
   </b-card-body>
 </template>
-
-<style scoped lang="scss"></style>
