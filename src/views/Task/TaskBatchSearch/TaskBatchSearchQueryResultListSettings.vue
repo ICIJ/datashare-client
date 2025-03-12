@@ -12,7 +12,7 @@ import { useAppStore } from '@/store/modules'
 const { t } = useI18n()
 const appStore = useAppStore()
 const settingView = 'batch-search-results'
-const { sortByOptions } = useBatchSearchResultProperties()
+const { propertiesOptions, sortByOptions } = useBatchSearchResultProperties()
 
 const sortBy = ref({
   label: computed(() => t('viewSettings.sortBy.label')),
@@ -50,6 +50,18 @@ const perPage = ref({
   ]
 })
 
+const properties = ref({
+  label: computed(() => t('viewSettings.properties')),
+  type: 'checkbox',
+  open: true,
+  modelValue: computed({
+    get: () => appStore.getSettings(settingView, 'properties'),
+    set: (properties) => appStore.setSettings({ view: settingView, properties })
+  }),
+  options: propertiesOptions
+})
+
+
 defineProps({
   hide: {
     type: Function,
@@ -79,6 +91,13 @@ defineProps({
       :type="perPage.type"
       :options="perPage.options"
       :label="perPage.label"
+    />
+    <page-settings-section
+      v-model="properties.modelValue"
+      v-model:open="properties.open"
+      :type="properties.type"
+      :options="properties.options"
+      :label="properties.label"
     />
   </page-settings>
 </template>
