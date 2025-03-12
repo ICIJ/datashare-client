@@ -39,8 +39,11 @@ export function useTaskSettings(pageName) {
       }
     ]
   })
+
   const props = useTaskProperties(pageName)
+
   const items = props.items.filter((p) => isServer.value || p.key !== 'author')
+
   const sortBy = ref({
     label: sortByLabel,
     type: 'radio',
