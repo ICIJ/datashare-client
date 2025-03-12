@@ -97,7 +97,7 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
         :style="field.thStyle"
         :sortable="!!field.sortable"
         :emphasis="!!field.emphasis"
-        :name="field.value"
+        :name="field.sortingKey ?? field.key ?? field.value"
       />
     </template>
 
@@ -114,10 +114,10 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
           :key="i"
           class="page-table-generic__row__field"
           :style="field.tdStyle"
-          :class="[`page-table-generic__row__field--${field.value}`]"
+          :class="[`page-table-generic__row__field--${field.key ?? field.value}`]"
         >
-          <slot :name="`cell(${field.value})`" v-bind="callItemBinding(item, field.value)" :field="field">
-            {{ item[field.value] }}
+          <slot :name="`cell(${field.key ?? field.value})`" v-bind="callItemBinding(item, field.key ?? field.value)" :field="field">
+            {{ item[field.key ?? field.value] }}
           </slot>
         </td>
         <page-table-td-actions>
