@@ -122,8 +122,8 @@ describe('TaskBatchDownloadList.vue', () => {
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalledTimes(1)
     expect(api.getTasks).toBeCalledWith(
-      expect.objectContaining({ 
-        name: 'org.icij.datashare.tasks.BatchDownloadRunner' 
+      expect.objectContaining({
+        name: 'org.icij.datashare.tasks.BatchDownloadRunner'
       })
     )
   })
