@@ -42,21 +42,23 @@ const toAllDocuments = computed(() => {
 })
 
 const downloadDocumentsHref = computed(() => `/api/batch/search/result/csv/${props.uuid}`)
-const downloadQueriesWithoutResultsHref = computed(() => `/api/batch/search/${props.uuid}/queries?format=csv&maxResults=0`)
+const downloadQueriesWithoutResultsHref = computed(
+  () => `/api/batch/search/${props.uuid}/queries?format=csv&maxResults=0`
+)
 const downloadQueriesHref = computed(() => `/api/batch/search/${props.uuid}/queries?format=csv`)
 
 const noDocuments = computed(() => props.nbResults === 0)
 const noQueries = computed(() => props.nbQueries === 0)
 const noQueriesWithoutResults = computed(() => props.nbQueriesWithoutResults === 0)
 
-const visibilityIcon = computed(() => props.visibility ? PhEye : PhEyeSlash)
+const visibilityIcon = computed(() => (props.visibility ? PhEye : PhEyeSlash))
 const visibilityPrivate = computed(() => t('batchSearchCardDetails.visibilityPrivate'))
 const visibilityShared = computed(() => t('batchSearchCardDetails.visibilityShared'))
-const visibilityValue = computed(() => props.visibility ? visibilityShared.value : visibilityPrivate.value)
+const visibilityValue = computed(() => (props.visibility ? visibilityShared.value : visibilityPrivate.value))
 
 const phraseMatchOn = computed(() => t('batchSearchCardDetails.phraseMatchOn'))
 const phraseMatchOff = computed(() => t('batchSearchCardDetails.phraseMatchOff'))
-const phraseMatchValue = computed(() => props.phraseMatch ? phraseMatchOn.value : phraseMatchOff.value)
+const phraseMatchValue = computed(() => (props.phraseMatch ? phraseMatchOn.value : phraseMatchOff.value))
 
 const fuzzinessValue = computed(() => t('batchSearchCardDetails.fuzzinessValue', { n: props.fuzziness }))
 const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: props.proximity }))
@@ -67,7 +69,7 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.status')">
-          <display-status class="display-status" size="sm" :value="state" /> 
+          <display-status class="display-status" size="sm" :value="state" />
           {{ capitalize(state) }}
         </batch-search-card-details-entry>
       </li>
@@ -99,10 +101,11 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
         />
       </li>
       <li class="my-0">
-        <batch-search-card-details-entry 
-          :icon="PhEmpty" 
-          :label="t('batchSearchCard.nbQueriesWithoutResults')" 
-          :value="t('batchSearchCard.nbQueriesWithoutResultsLabel', humanNumber(nbQueriesWithoutResults))">
+        <batch-search-card-details-entry
+          :icon="PhEmpty"
+          :label="t('batchSearchCard.nbQueriesWithoutResults')"
+          :value="t('batchSearchCard.nbQueriesWithoutResultsLabel', humanNumber(nbQueriesWithoutResults))"
+        >
           <template #end>
             <button-icon
               :disabled="noQueriesWithoutResults"
@@ -120,10 +123,11 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
     <hr class="my-1" />
     <ul class="batch-search-card-details__list list-unstyled">
       <li class="my-0">
-        <batch-search-card-details-entry 
-          :icon="PhListMagnifyingGlass" 
-          :label="t('batchSearchCard.nbQueries')" 
-          :value="t('batchSearchCard.nbQueriesLabel', humanNumber(nbQueries))">
+        <batch-search-card-details-entry
+          :icon="PhListMagnifyingGlass"
+          :label="t('batchSearchCard.nbQueries')"
+          :value="t('batchSearchCard.nbQueriesLabel', humanNumber(nbQueries))"
+        >
           <template #end>
             <button-icon
               :disabled="noQueries"
@@ -148,16 +152,32 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
         </batch-search-card-details-entry>
       </li>
       <li>
-        <batch-search-card-details-entry :label="t('batchSearchCardDetails.visibility')" :icon="visibilityIcon" :value="visibilityValue" />
+        <batch-search-card-details-entry
+          :label="t('batchSearchCardDetails.visibility')"
+          :icon="visibilityIcon"
+          :value="visibilityValue"
+        />
       </li>
       <li>
-        <batch-search-card-details-entry :label="t('batchSearchCardDetails.phraseMatch')" :icon="PhQuotes" :value="phraseMatchValue" />
+        <batch-search-card-details-entry
+          :label="t('batchSearchCardDetails.phraseMatch')"
+          :icon="PhQuotes"
+          :value="phraseMatchValue"
+        />
       </li>
       <li v-if="phraseMatch">
-        <batch-search-card-details-entry :label="t('batchSearchCardDetails.proximity')" :icon="PhArrowsOutLineHorizontal" :value="proximityValue" />
+        <batch-search-card-details-entry
+          :label="t('batchSearchCardDetails.proximity')"
+          :icon="PhArrowsOutLineHorizontal"
+          :value="proximityValue"
+        />
       </li>
       <li v-else>
-        <batch-search-card-details-entry :label="t('batchSearchCardDetails.fuzziness')" :icon="PhArrowsOutLineHorizontal" :value="fuzzinessValue" />
+        <batch-search-card-details-entry
+          :label="t('batchSearchCardDetails.fuzziness')"
+          :icon="PhArrowsOutLineHorizontal"
+          :value="fuzzinessValue"
+        />
       </li>
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.projects')" :icon="PhCirclesThreePlus">
@@ -175,7 +195,6 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
   }
 
   &__list {
-
     & li {
       margin: $spacer-md 0;
     }
