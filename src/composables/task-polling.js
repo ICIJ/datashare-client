@@ -5,7 +5,7 @@ import { usePolling } from '@/composables/polling'
 import { useCore } from '@/composables/core'
 import { useTaskStore } from '@/store/modules'
 
-export function useTaskPolling({ names = [], sortBy = [], searchQuery = null } = {}) {
+export function useTaskPolling({ names = [], sortBy = [], perPage = null, page = 1, searchQuery = null } = {}) {
   const taskStore = useTaskStore()
   const loaderId = useId()
   const { wait } = useCore()
@@ -44,8 +44,8 @@ export function useTaskPolling({ names = [], sortBy = [], searchQuery = null } =
       // Filters can be build with arbitrary values
       'args.batchRecord.name': toValue(searchQuery),
       // The tasks API endpoint has limited support for pagination so we get all tasks at once
-      size: null,
-      from: 0
+      size: toValue(perPage),
+      from: (toValue(page) - 1) * toValue(perPage)
     })
     // Continue to poll task if they are pending ones
     return hasPendingTasks.value
@@ -61,7 +61,7 @@ export function useTaskPolling({ names = [], sortBy = [], searchQuery = null } =
     return (await fn()) && registerPollOnce({ fn, timeout })
   }
 
-  watch(() => [names, sortBy, searchQuery], startPollingTasksWithLoader, { immediate: true, deep: true })
+  watch(() => [names, sortBy, searchQuery, page, perPage], startPollingTasksWithLoader, { immediate: true, deep: true })
   onBeforeUnmount(taskStore.reset)
 
   return { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
