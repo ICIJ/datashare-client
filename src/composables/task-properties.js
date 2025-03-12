@@ -16,7 +16,7 @@ export function useTaskProperties(propertyList) {
     sortable: true,
     emphasis: true,
     required: true,
-    colStyle: { minWidth: 'min(30px, 100vw)' }
+    colStyle: { minWidth: 'min(350px, 100vw)' }
   })
 
   const createdAt = propertyItem({
