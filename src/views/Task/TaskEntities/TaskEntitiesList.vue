@@ -12,9 +12,11 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
+
 function isPipelineEmail(item) {
   return item.args.nlpPipeline === 'EMAIL'
 }
+
 function getProject(item) {
   return item.args.defaultProject
 }
@@ -36,7 +38,9 @@ function getProject(item) {
       @update:sort="updateSort"
       @update:order="updateOrder"
     >
-      <template #cell(state)="{ item }"><display-status :value="item.state" /></template>
+      <template #cell(state)="{ item }">
+        <display-status :value="item.state" />
+      </template>
       <template #cell(entitiesToFind)="{ item }">
         <div v-if="isPipelineEmail(item)" class="d-flex gap-2">
           <entity-button :entity="{ mention: 'Email', category: ENTITY_CATEGORY.EMAIL }" />
@@ -44,12 +48,21 @@ function getProject(item) {
         <div v-else class="d-flex gap-2">
           <entity-button :entity="{ mention: 'People', category: ENTITY_CATEGORY.PERSON }" />
           <entity-button :entity="{ mention: 'Organization', category: ENTITY_CATEGORY.ORGANIZATION }" />
-          <entity-button :entity="{ mention: 'Location', category: ENTITY_CATEGORY.LOCATION }" /></div
-      ></template>
-      <template #cell(pipeline)="{ item }">{{ item.args.nlpPipeline }}</template>
-      <template #cell(project)="{ item }"> <display-project-list :values="getProject(item)" /> </template>
-      <template #cell(progress)="{ item }"><display-progress :value="item.progress" /></template>
-      <template #cell(createdAt)="{ item }"> <display-datetime-from-now :value="item.createdAt" /> </template>
+          <entity-button :entity="{ mention: 'Location', category: ENTITY_CATEGORY.LOCATION }" />
+        </div>
+      </template>
+      <template #cell(pipeline)="{ item }">
+        {{ item.args.nlpPipeline }}
+      </template>
+      <template #cell(project)="{ item }">
+        <display-project-list :values="getProject(item)" />
+      </template>
+      <template #cell(progress)="{ item }">
+        <display-progress :value="item.progress" />
+      </template>
+      <template #cell(createdAt)="{ item }">
+        <display-datetime-from-now :value="item.createdAt" />
+      </template>
     </page-table-generic>
   </task-page>
 </template>
