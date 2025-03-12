@@ -10,8 +10,7 @@ import useMode from '@/composables/mode'
 export function useTaskHeader(pageName, hasAddButton, tasks) {
   const { t } = useI18n()
   const { isServer } = useMode()
-  const settingKey = 'task'
-  const { perPage, sortBy } = useTaskSettings(settingKey)
+  const { perPage, sortBy } = useTaskSettings(pageName)
 
   const toAddRoute = computed(() => {
     return !isServer.value && hasAddButton ? { name: `task.${pageName}.new` } : null
