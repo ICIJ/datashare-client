@@ -61,7 +61,7 @@ export function useTaskPolling({ names = [], sortBy = [], searchQuery = null } =
     return (await fn()) && registerPollOnce({ fn, timeout })
   }
 
-  watch(() => [names, sortBy], onShotTask, { immediate: true, deep: true })
+  watch(() => [names, sortBy, searchQuery], onShotTask, { immediate: true, deep: true })
   onBeforeUnmount(taskStore.reset)
 
   return { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
