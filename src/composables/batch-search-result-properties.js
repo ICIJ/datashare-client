@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { useI18n } from "vue-i18n"
+import { useI18n } from 'vue-i18n'
 
 import { useViewProperties } from '@/composables/view-properties'
 import { SORT_TYPE_KEY, useViewSettings } from '@/composables/view-settings'
