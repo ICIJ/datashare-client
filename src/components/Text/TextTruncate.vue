@@ -36,7 +36,7 @@ const seeMoreDisplay = computed(() => (isExpanded.value ? seeLess : seeMore))
   <div class="text-truncate-wrapper">
     <span class="text-truncate-wrapper__display">{{ displayText }}</span>
     <span v-if="isTruncated">{{ ellipsis }}</span>
-    <b-button v-if="shouldShowSeeMoreButton" variant="link" class="p-0 align-baseline" @click="toggleSeeMore">
+    <b-button v-if="shouldShowSeeMoreButton" variant="link" class="text-reset text-decoration-underline p-0 align-baseline" @click="toggleSeeMore">
       {{ seeMoreDisplay }}
     </b-button>
   </div>
