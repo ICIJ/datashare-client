@@ -79,9 +79,9 @@ export const useTaskStore = defineStore('task', () => {
     return getTask(id)?.args?.batchDownload
   }
 
-  const getTasks = async (names = []) => {
+  const getTasks = async ({ names = [], ...params } = {}) => {
     if (names.length) {
-      const all = await Promise.all(names.map((name) => api.getTasks(name)))
+      const all = await Promise.all(names.map((name) => api.getTasks({ name, ...params })))
       return setTasks(all.flat())
     }
 

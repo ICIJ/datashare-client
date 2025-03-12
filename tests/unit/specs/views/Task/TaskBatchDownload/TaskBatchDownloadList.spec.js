@@ -121,7 +121,11 @@ describe('TaskBatchDownloadList.vue', () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalledTimes(1)
-    expect(api.getTasks).toBeCalledWith('org.icij.datashare.tasks.BatchDownloadRunner')
+    expect(api.getTasks).toBeCalledWith(
+      expect.objectContaining({ 
+        name: 'org.icij.datashare.tasks.BatchDownloadRunner' 
+      })
+    )
   })
 
   it('should display 2 batch download tasks', async () => {
