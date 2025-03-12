@@ -1,7 +1,10 @@
 import { SORT_TYPE_KEY } from '@/composables/view-settings'
 import { useViewProperties } from '@/composables/view-properties'
+import { useAppStore } from '@/store/modules'
 
-export function useTaskProperties(propertyList) {
+export function useTaskProperties(pageName) {
+  const appStore = useAppStore()
+  const propertyList = appStore.getSettingsInit(pageName, 'properties') ?? []
   const { propertyItem } = useViewProperties()
 
   const id = propertyItem({
