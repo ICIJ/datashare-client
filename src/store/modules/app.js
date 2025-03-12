@@ -34,7 +34,7 @@ export const useAppStore = defineStore(
           perPage: '10',
           properties: ['id', 'name', 'createdAt', 'progress', 'state']
         },
-        'task-board-latest': {
+        taskBoardLatest: {
           properties: ['taskType', 'state', 'name', 'projects', 'author', 'createdAt', 'progress']
         },
         entities: {
@@ -47,12 +47,12 @@ export const useAppStore = defineStore(
           perPage: '10',
           properties: ['state', 'name', 'documents', 'project', 'progress', 'createdAt']
         },
-        'batch-download': {
+        batchDownload: {
           orderBy: ['name', 'desc'],
           perPage: '10',
           properties: ['state', 'name', 'size', 'projects', 'createdAt']
         },
-        'batch-search': {
+        batchSearch: {
           orderBy: ['createdAt', 'desc'],
           perPage: '10',
           properties: [
@@ -67,12 +67,12 @@ export const useAppStore = defineStore(
             'progress'
           ]
         },
-        'batch-search-queries': {
+        batchSearchQueries: {
           orderBy: ['query', 'asc'],
           perPage: '100',
           properties: ['query', 'count']
         },
-        'batch-search-results': {
+        batchSearchResults: {
           orderBy: ['doc_nb', 'asc'],
           perPage: '100',
           properties: ['query', 'documentNumber', 'documentName', 'contentType', 'project']

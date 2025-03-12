@@ -11,7 +11,7 @@ import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const appStore = useAppStore()
-const settingsView = 'batch-search-results'
+const settingsView = 'batchSearchResults'
 const { propertiesOptions, sortByOptions } = useBatchSearchResultProperties()
 
 const sortBy = ref({

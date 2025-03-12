@@ -22,7 +22,7 @@ const nbTasks = ref(3)
 const { t } = useI18n()
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
 const { isServer } = useMode()
-const { items } = useTaskProperties('task-board-latest')
+const { items } = useTaskProperties('taskBoardLatest')
 
 const allFields = items.map((item) => {
   return {

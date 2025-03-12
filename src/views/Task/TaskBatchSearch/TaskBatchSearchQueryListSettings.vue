@@ -11,7 +11,7 @@ import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const appStore = useAppStore()
-const settingsView = 'batch-search-queries'
+const settingsView = 'batchSearchQueries'
 const { propertiesOptions } = useBatchSearchQueryProperties()
 
 const perPage = ref({
