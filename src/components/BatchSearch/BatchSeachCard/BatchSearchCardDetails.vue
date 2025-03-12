@@ -49,25 +49,21 @@ const nbDocumentsItem = computed(() => {
 const seeAllDocumentsLabel = computed(() => t('batchSearchCard.seeAllDocuments'))
 
 const indices = props.projects.join(',')
+
 const to = {
   name: 'task.batch-search-results.list',
   params: { indices, uuid: props.uuid }
 }
 
 const downloadDocumentsLabel = computed(() => t('batchSearchCard.downloadResultsLabel'))
+const downloadDocumentsHref = computed(() => `/api/batch/search/result/csv/${props.uuid}`)
+
 const noDocuments = computed(() => {
   return props.nbResults === 0
 })
 
-const downloadDocuments = () => {
-  emit('downloadDocuments')
-}
-
 const downloadQueriesWithoutResultsLabel = computed(() => t('batchSearchCard.downloadQueriesWithoutResultsLabel'))
-
-const downloadQueriesWithoutResults = () => {
-  emit('downloadQueriesWithoutResults')
-}
+const downloadQueriesWithoutResultsHref = computed(() => `/api/batch/search/${props.uuid}/queries?format=csv&maxResults=0`)
 
 const nbQueriesWithoutResultsItem = computed(() => {
   return {
@@ -90,10 +86,7 @@ const nbQueriesItem = computed(() => {
 })
 
 const downloadQueriesLabel = t('batchSearchCard.downloadQueriesLabel', { n: props.nbQueries })
-
-const downloadQueries = () => {
-  emit('downloadQueries')
-}
+const downloadQueriesHref = computed(() => `/api/batch/search/${props.uuid}/queries?format=csv`)
 
 const noQueries = computed(() => props.nbQueries === 0)
 
@@ -122,6 +115,7 @@ const visibilityValue = computed(() => {
     ? t('batchSearchCardDetails.visibilityPrivate')
     : t('batchSearchCardDetails.visibilityShared')
 })
+
 const visibilityItem = computed(() => {
   return {
     icon: visibilityIcon.value,
@@ -145,6 +139,7 @@ const phraseMatchItem = computed(() => {
 const fuzzinessValue = computed(() => {
   return t('batchSearchCardDetails.fuzzinessValue', { n: props.fuzziness })
 })
+
 const fuzzinnessItem = computed(() => {
   return {
     icon: PhArrowsOutLineHorizontal,
@@ -152,9 +147,11 @@ const fuzzinnessItem = computed(() => {
     value: fuzzinessValue.value
   }
 })
+
 const proximityValue = computed(() => {
   return t('batchSearchCardDetails.proximityValue', { n: props.proximity })
 })
+
 const proximityItem = computed(() => {
   return {
     icon: PhArrowsOutLineHorizontal,
@@ -162,6 +159,7 @@ const proximityItem = computed(() => {
     value: proximityValue.value
   }
 })
+
 const variationItem = computed(() => {
   return props.phraseMatch ? proximityItem.value : fuzzinnessItem.value
 })
@@ -197,8 +195,8 @@ const projectsItem = computed(() => {
           variant="action"
           class="batch-search-card-actions__see-all flex-shrink-1"
           :to="to"
-          >{{ seeAllDocumentsLabel }}</button-icon
-        >
+          :label="seeAllDocumentsLabel"
+        />
       </li>
       <li>
         <button-icon
@@ -206,9 +204,9 @@ const projectsItem = computed(() => {
           icon-left="download-simple"
           variant="outline-primary"
           class="batch-search-card-actions__download text-nowrap"
-          @click="downloadDocuments"
-          >{{ downloadDocumentsLabel }}</button-icon
-        >
+          :label="downloadDocumentsLabel"
+          :href="downloadDocumentsHref"
+        />
       </li>
       <li class="my-0">
         <batch-search-card-details-entry v-bind="nbQueriesWithoutResultsItem">
@@ -219,8 +217,8 @@ const projectsItem = computed(() => {
               variant="link"
               square
               hide-label
+              :href="downloadQueriesWithoutResultsHref"
               :label="downloadQueriesWithoutResultsLabel"
-              @click="downloadQueriesWithoutResults"
             />
           </template>
         </batch-search-card-details-entry>
@@ -238,7 +236,7 @@ const projectsItem = computed(() => {
               square
               hide-label
               :label="downloadQueriesLabel"
-              @click="downloadQueries"
+              :href="downloadQueriesHref"
             />
           </template>
         </batch-search-card-details-entry>
@@ -276,7 +274,9 @@ const projectsItem = computed(() => {
   ul {
     margin: 0;
   }
+
   &__list {
+    
     & li {
       margin: $spacer-md 0;
     }
