@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, isRef, toValue } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export const SORT_ORDER_KEY = Object.freeze({
@@ -19,20 +19,47 @@ export function useViewSettings() {
   const sortByLabel = computed(() => t('viewSettings.sortBy.label'))
   const visiblePropertiesLabel = computed(() => t('viewSettings.properties'))
 
-  function tSortByOption(name, order = SORT_ORDER_KEY.ASC, type = SORT_TYPE_KEY.DEFAULT) {
-    return computed(() =>
-      t(`viewSettings.sortBy.format`, {
-        name: t(`viewSettings.options.${name}`),
-        order: t(`viewSettings.order.${type}.${order}`)
+  function perPageLabel(titleKey) {
+    return computed(() => t('viewSettings.perPage', { title: t(titleKey) }))
+  }
+
+  function fieldsToSortByOptions(fields) {
+    return fields
+      .filter(field => field.sortable)
+      .map((field) => {
+        const sortingKey = field.sortingKey ?? field.key
+        const type = field.type ?? SORT_TYPE_KEY.DEFAULT
+        const options = [
+          { 
+            text: tSortByOption(field.text, SORT_ORDER_KEY.ASC, type), 
+            value: [sortingKey, SORT_ORDER_KEY.ASC] 
+          },
+          {
+            text: tSortByOption(field.text, SORT_ORDER_KEY.DESC, type),
+            value: [sortingKey, SORT_ORDER_KEY.DESC] 
+          }
+        ]
+        // If the field is sortable by date, we display the option in reverse so
+        // "recent" is the first option (DESC) and "old" is the second option (ASC)
+        return type === SORT_TYPE_KEY.DATE ? options.reverse() : options
       })
-    )
+      .flat()
   }
+
+  function tSortByOption(key, order = SORT_ORDER_KEY.ASC, type = SORT_TYPE_KEY.DEFAULT) {
+    return computed(() => {
+      const tName = isRef(key) ? toValue(key) : t(`viewSettings.options.${key}`)
+      const tOrder = t(`viewSettings.order.${type}.${order}`)
+      return t(`viewSettings.sortBy.format`, { name: tName, order: tOrder })
+    })
+  }
+  
   const tLayout = {
-    label: computed((_) => t('viewSettings.layout.label')),
-    grid: computed((_) => t('viewSettings.layout.grid')),
-    table: computed((_) => t('viewSettings.layout.table')),
-    list: computed((_) => t('viewSettings.layout.list'))
+    label: computed(() => t('viewSettings.layout.label')),
+    grid: computed(() => t('viewSettings.layout.grid')),
+    table: computed(() => t('viewSettings.layout.table')),
+    list: computed(() => t('viewSettings.layout.list'))
   }
-  const perPageLabel = (titleKey) => computed((_) => t('viewSettings.perPage', { title: t(titleKey) }))
-  return { tSortByOption, sortByLabel, visiblePropertiesLabel, tLayout, perPageLabel }
+
+  return { fieldsToSortByOptions, tSortByOption, sortByLabel, visiblePropertiesLabel, tLayout, perPageLabel }
 }
