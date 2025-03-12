@@ -40,27 +40,26 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
-  useTaskPolling(props.taskFilter)
-
-const { toAddRoute, searchQuery, page, perPage, sortBy, searchPlaceholder, displayedTasks, totalRows } = useTaskHeader(
+const { toAddRoute, searchQuery, page, perPage, sortBy, searchPlaceholder, tasks, totalRows } = useTaskHeader(
   props.pageName,
-  props.showAdd,
-  tasks
+  props.showAdd
 )
+
+const { noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
+  useTaskPolling({ names: props.taskFilter, searchQuery, page, perPage, sortBy })
 
 const setSort = (value) => (sort.value = value)
 
 const sort = computed({
-  get: () => sortBy.value.modelValue?.[0],
-  set: (value) => (sortBy.value.modelValue = [value, order.value])
+  get: () => sortBy?.value?.[0],
+  set: (value) => (sortBy.value = [value, order.value])
 })
 
 const setOrder = (value) => (order.value = value)
 
 const order = computed({
-  get: () => sortBy.value.modelValue?.[1],
-  set: (value) => (sortBy.value.modelValue = [sort.value, value])
+  get: () => sortBy?.value?.[1],
+  set: (value) => (sortBy.value = [sort.value, value])
 })
 
 function refresh() {
@@ -109,7 +108,7 @@ function refresh() {
           </slot>
         </template>
         <slot
-          :tasks="displayedTasks"
+          :tasks="tasks"
           :sort="sort"
           :order="order"
           :update-order="setOrder"
