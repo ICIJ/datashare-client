@@ -2,7 +2,7 @@
 import { noop } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { computed, watch, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
