@@ -20,7 +20,7 @@ import { useTaskProperties } from '@/composables/task-properties'
 const nbTasks = ref(3)
 
 const { t } = useI18n()
-const { tasks, isLoading } = useTaskPolling()
+const { tasks, isLoading } = useTaskPolling({ sortBy: ['createdAt', 'desc'] })
 const { isServer } = useMode()
 const { items } = useTaskProperties('taskBoardLatest')
 
