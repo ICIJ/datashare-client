@@ -61,7 +61,6 @@ const properties = ref({
   options: propertiesOptions
 })
 
-
 defineProps({
   hide: {
     type: Function,

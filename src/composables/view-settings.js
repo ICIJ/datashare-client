@@ -24,11 +24,10 @@ export function useViewSettings() {
   }
 
   function fieldsToPropertiesOptions(fields) {
-    return fields
-      .map(({ text, key: value, icon }) => {
-        const tText = text ?? t(`viewSettings.options.${value}`)
-        return { text: tText, value, icon }
-      })
+    return fields.map(({ text, key: value, icon }) => {
+      const tText = text ?? t(`viewSettings.options.${value}`)
+      return { text: tText, value, icon }
+    })
   }
 
   function fieldsToSortByOptions(fields) {
@@ -69,13 +68,13 @@ export function useViewSettings() {
     list: computed(() => t('viewSettings.layout.list'))
   }
 
-  return { 
-    fieldsToPropertiesOptions, 
-    fieldsToSortByOptions, 
-    tSortByOption, 
-    sortByLabel, 
-    visiblePropertiesLabel, 
-    tLayout, 
-    perPageLabel 
+  return {
+    fieldsToPropertiesOptions,
+    fieldsToSortByOptions,
+    tSortByOption,
+    sortByLabel,
+    visiblePropertiesLabel,
+    tLayout,
+    perPageLabel
   }
 }
