@@ -31,7 +31,7 @@ const taskStore = useTaskStore()
 const { core } = useCore()
 const { fields } = useBatchSearchQueryProperties()
 
-const settingsView = 'batch-search-queries'
+const settingsView = 'batchSearchQueries'
 const queries = ref([])
 const batchSearch = ref(null)
 

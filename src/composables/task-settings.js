@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { camelCase } from 'lodash'
 
 import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useViewSettings, SORT_ORDER_KEY } from '@/composables/view-settings'
@@ -9,6 +10,7 @@ import useMode from '@/composables/mode'
 
 export function useTaskSettings(pageName) {
   const appStore = useAppStore()
+  const settingsView = camelCase(pageName)
   const { isServer } = useMode()
   const { t } = useI18n()
   const { sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } = useViewSettings()
@@ -19,8 +21,8 @@ export function useTaskSettings(pageName) {
     open: true,
     modelValue: useUrlParamWithStore('perPage', {
       transform: (value) => Math.max(10, parseInt(value)),
-      get: () => appStore.getSettings(pageName, 'perPage'),
-      set: (perPage) => appStore.setSettings({ view: pageName, perPage })
+      get: () => appStore.getSettings(settingsView, 'perPage'),
+      set: (perPage) => appStore.setSettings({ view: settingsView, perPage })
     }),
     options: [
       {
@@ -44,8 +46,8 @@ export function useTaskSettings(pageName) {
     type: 'radio',
     open: true,
     modelValue: useUrlParamsWithStore(['sort', 'order'], {
-      get: () => appStore.getSettings(pageName, 'orderBy'),
-      set: (sort, order) => appStore.setSettings({ view: pageName, orderBy: [sort, order] })
+      get: () => appStore.getSettings(settingsView, 'orderBy'),
+      set: (sort, order) => appStore.setSettings({ view: settingsView, orderBy: [sort, order] })
     }),
     options: items.reduce((acc, p) => {
       if (p.sortable) {
@@ -64,8 +66,8 @@ export function useTaskSettings(pageName) {
     type: 'checkbox',
     open: true,
     modelValue: computed({
-      get: () => appStore.getSettings(pageName, 'properties'),
-      set: (properties) => appStore.setSettings({ view: pageName, properties })
+      get: () => appStore.getSettings(settingsView, 'properties'),
+      set: (properties) => appStore.setSettings({ view: settingsView, properties })
     }),
     options: items.map((p) => ({
       value: p.key,

@@ -1,10 +1,13 @@
+import { camelCase } from 'lodash'
+
 import { SORT_TYPE_KEY } from '@/composables/view-settings'
 import { useViewProperties } from '@/composables/view-properties'
 import { useAppStore } from '@/store/modules'
 
 export function useTaskProperties(pageName) {
   const appStore = useAppStore()
-  const propertyList = appStore.getSettingsInit(pageName, 'properties') ?? []
+  const settingsView = camelCase(pageName)
+  const propertyList = appStore.getSettingsInit(settingsView, 'properties') ?? []
   const { propertyItem } = useViewProperties()
 
   const id = propertyItem({

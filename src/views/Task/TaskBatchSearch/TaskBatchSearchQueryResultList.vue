@@ -38,7 +38,7 @@ const appStore = useAppStore()
 const route = useRoute()
 const { core } = useCore()
 const { fields } = useBatchSearchResultProperties()
-const settingsView = 'batch-search-results'
+const settingsView = 'batchSearchResults'
 const hits = ref(null)
 const batchSearch = ref(null)
 
