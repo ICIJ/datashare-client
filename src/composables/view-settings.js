@@ -25,18 +25,18 @@ export function useViewSettings() {
 
   function fieldsToSortByOptions(fields) {
     return fields
-      .filter(field => field.sortable)
+      .filter((field) => field.sortable)
       .map((field) => {
         const sortingKey = field.sortingKey ?? field.key
         const type = field.type ?? SORT_TYPE_KEY.DEFAULT
         const options = [
-          { 
-            text: tSortByOption(field.text, SORT_ORDER_KEY.ASC, type), 
-            value: [sortingKey, SORT_ORDER_KEY.ASC] 
+          {
+            text: tSortByOption(field.text, SORT_ORDER_KEY.ASC, type),
+            value: [sortingKey, SORT_ORDER_KEY.ASC]
           },
           {
             text: tSortByOption(field.text, SORT_ORDER_KEY.DESC, type),
-            value: [sortingKey, SORT_ORDER_KEY.DESC] 
+            value: [sortingKey, SORT_ORDER_KEY.DESC]
           }
         ]
         // If the field is sortable by date, we display the option in reverse so
@@ -53,7 +53,7 @@ export function useViewSettings() {
       return t(`viewSettings.sortBy.format`, { name: tName, order: tOrder })
     })
   }
-  
+
   const tLayout = {
     label: computed(() => t('viewSettings.layout.label')),
     grid: computed(() => t('viewSettings.layout.grid')),
