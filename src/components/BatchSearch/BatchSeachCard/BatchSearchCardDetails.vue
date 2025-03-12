@@ -86,7 +86,7 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
         <batch-search-card-details-entry
           :icon="PhFiles"
           :label="t('batchSearchCard.nbDocuments')"
-          :value="t('batchSearchCard.nbDocumentsLabel', humanNumber(nbResults))"
+          :value="t('batchSearchCard.nbDocumentsLabel', { n: humanNumber(nbResults) }, nbResults)"
         />
       </li>
       <li>
