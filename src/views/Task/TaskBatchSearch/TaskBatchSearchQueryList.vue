@@ -11,7 +11,7 @@ import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import { useCore } from '@/composables/core'
 import { useTaskSettings } from '@/composables/task-settings'
 import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
-import { useAppStore } from '@/store/modules'
+import { useAppStore, useTaskStore } from '@/store/modules'
 
 const props = defineProps({
   uuid: { type: String, required: true },
@@ -20,11 +20,11 @@ const props = defineProps({
 
 const { core } = useCore()
 const appStore = useAppStore()
+const taskStore = useTaskStore()
 const settingView = 'batch-search-queries'
 const settings = useTaskSettings(settingView)
 const queries = ref([])
 const batchSearch = ref(null)
-const nbQueriesWithoutResults = ref(0)
 
 const searchQuery = useUrlParam('q', '')
 
@@ -59,7 +59,10 @@ const empty = computed(() => queries.value.length === 0)
 
 async function getBatchSearch() {
   try {
-    batchSearch.value = { ...(await core.api.getBatchSearch(props.uuid)), nbQueriesWithoutResults }
+    // Fetch the task for this batch search
+    taskStore.tasks.push(await core.api.getTask(props.uuid))
+    // Then fetch the batch search record
+    batchSearch.value = await core.api.getBatchSearch(props.uuid)
   } catch (error) {
     batchSearch.value = null
   }
@@ -69,15 +72,9 @@ async function getBatchSearchQueries() {
   try {
     const queriesObjects = await core.api.getBatchSearchQueries(props.uuid)
     queries.value = Object.keys(queriesObjects).map((k) => ({ query: k, nbHits: queriesObjects[k] }))
-    nbQueriesWithoutResults.value = getNbQueriesWithoutResults()
   } catch (error) {
     queries.value = []
-    nbQueriesWithoutResults.value = 0
   }
-}
-
-function getNbQueriesWithoutResults() {
-  return queries.value.filter((q) => q.nbHits === 0).length
 }
 
 onBeforeMount(getBatchSearchQueries)
@@ -95,14 +92,7 @@ onBeforeMount(getBatchSearch)
     </page-header>
     <b-row>
       <b-col lg="8" cols="12">
-        <page-toolbar
-          v-model:searchQuery="searchQuery"
-          v-model:page="page"
-          :per-page="perPage"
-          filterable
-          searchable
-          paginable
-        />
+        <page-toolbar v-model:searchQuery="searchQuery" v-model:page="page" :per-page="perPage" paginable />
         <page-table-generic
           v-if="!empty"
           :items="queries"
