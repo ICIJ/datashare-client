@@ -1161,19 +1161,24 @@
           "query": "Query",
           "nbHits":"Documents"
         }
+      },
+      "show": {
+        "title": "Results",
+        "fields": {
+          "query": "Query",
+          "documentNumber": "Rank",
+          "documentName": "Document name",
+          "project": "Project",
+          "contentType": "Type",
+          "contentLength": "Size",
+          "documentPath": "Path",
+          "creationDate": "Creation date"
+        }
       }
     },
     "batch-search-results": {
       "list": {
-        "title": "All documents",
-        "properties": {
-          "query": "Query",
-          "rank": "Result rank",
-          "documentName":"Document",
-          "contentLength": "Content length",
-          "contentType":"Content type",
-          "project": "Project"
-        }
+        "title": "All documents"
       }
     }
   },
