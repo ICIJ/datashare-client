@@ -38,7 +38,7 @@ const appStore = useAppStore()
 const route = useRoute()
 const { core } = useCore()
 const { fields } = useBatchSearchResultProperties()
-const settingView = 'batch-search-results'
+const settingsView = 'batch-search-results'
 const hits = ref(null)
 const batchSearch = ref(null)
 
@@ -51,13 +51,13 @@ const page = useUrlParam('page', {
 
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
-  get: () => appStore.getSettings(settingView, 'perPage'),
-  set: (value) => appStore.setSettings({ view: settingView, perPage: parseInt(value) })
+  get: () => appStore.getSettings(settingsView, 'perPage'),
+  set: (value) => appStore.setSettings({ view: settingsView, perPage: parseInt(value) })
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
-  get: () => appStore.getSettings(settingView, 'orderBy'),
-  set: (sort, order) => appStore.setSettings({ view: settingView, orderBy: [sort, order] })
+  get: () => appStore.getSettings(settingsView, 'orderBy'),
+  set: (sort, order) => appStore.setSettings({ view: settingsView, orderBy: [sort, order] })
 })
 
 const sort = computed({
@@ -71,6 +71,12 @@ const order = computed({
 })
 
 const from = computed(() => (page.value - 1) * perPage.value)
+
+const visibleFields = computed(() => {
+  return fields.filter((field) => {
+    return appStore.getSettings(settingsView, 'properties').includes(field.key)
+  })
+})
 
 const batchSearchName = computed(() => batchSearch.value?.name)
 
@@ -123,7 +129,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
       v-model:sort="sort"
       v-model:order="order"
       :items="hits.items"
-      :fields="fields"
+      :fields="visibleFields"
     >
       <template #cell(query)="{ item }">
         <cite class="text-secondary fst-normal text-nowrap">
