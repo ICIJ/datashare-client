@@ -11,7 +11,7 @@ export function useTaskPolling({ names = [], sortBy = [], searchQuery = null } =
   const { wait } = useCore()
   const { unregisteredPoll, registerPollOnce } = usePolling()
 
-  async function onShotTask() {
+  async function startPollingTasksWithLoader() {
     try {
       wait.start(loaderId)
       await startPollingTasks()
@@ -61,7 +61,7 @@ export function useTaskPolling({ names = [], sortBy = [], searchQuery = null } =
     return (await fn()) && registerPollOnce({ fn, timeout })
   }
 
-  watch(() => [names, sortBy, searchQuery], onShotTask, { immediate: true, deep: true })
+  watch(() => [names, sortBy, searchQuery], startPollingTasksWithLoader, { immediate: true, deep: true })
   onBeforeUnmount(taskStore.reset)
 
   return { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
