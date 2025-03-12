@@ -19,6 +19,10 @@ const { uuid } = defineProps({
   uuid: {
     type: String,
     required: true
+  },
+  hideLabels: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -85,9 +89,9 @@ async function editPromptModal() {
 
 <template>
   <div class="batch-search-actions flex-nowrap d-flex gap-2">
-    <batch-search-actions-edit v-show="false" @click="editPromptModal()" />
-    <batch-search-actions-relaunch :disabled="!isOver" @click="relaunchPromptModal()" />
-    <batch-search-actions-stop :disabled="!isRunning" @click="stop()" />
-    <batch-search-actions-delete @click="afterConfirmation(remove)" />
+    <batch-search-actions-edit v-if="false" @click="editPromptModal()" :hide-label="hideLabels" :square="hideLabels" />
+    <batch-search-actions-relaunch :disabled="!isOver" @click="relaunchPromptModal()" :hide-label="hideLabels" :square="hideLabels" />
+    <batch-search-actions-stop v-if="isRunning" @click="stop()" :hide-label="hideLabels" :square="hideLabels" />
+    <batch-search-actions-delete @click="afterConfirmation(remove)" :hide-label="hideLabels" :square="hideLabels" />
   </div>
 </template>
