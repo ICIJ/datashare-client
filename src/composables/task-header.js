@@ -1,16 +1,16 @@
 import { computed, toValue } from 'vue'
-import Fuse from 'fuse.js'
-import { orderBy as orderArrayBy, property } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import { useUrlParam } from '@/composables/url-params'
 import { useTaskSettings } from '@/composables/task-settings'
-import useMode from '@/composables/mode'
+import { useMode } from '@/composables/mode'
+import { useTaskStore } from '@/store/modules'
 
-export function useTaskHeader(pageName, hasAddButton, tasks) {
+export function useTaskHeader(pageName, hasAddButton) {
   const { t } = useI18n()
   const { isServer } = useMode()
   const { perPage, sortBy } = useTaskSettings(pageName)
+  const taskStore = useTaskStore()
 
   const toAddRoute = computed(() => {
     return !isServer.value && hasAddButton ? { name: `task.${pageName}.new` } : null
@@ -25,41 +25,30 @@ export function useTaskHeader(pageName, hasAddButton, tasks) {
 
   const searchPlaceholder = computed(() => t(`task.${pageName}.list.searchPlaceholder`))
 
-  const fuse = computed(() => {
-    const keys = ['name', 'id']
-    const options = { shouldSort: false, keys }
-    return new Fuse(toValue(tasks), options)
-  })
-
-  const filteredTasks = computed(() => {
-    if (searchQuery.value) {
-      return fuse.value.search(searchQuery.value).map(property('item'))
-    }
-    return toValue(tasks)
-  })
-
   const totalRows = computed(() => {
-    return toValue(filteredTasks).length
+    return toValue(taskStore.tasks ?? []).length
   })
 
-  const sortedTasks = computed(() => {
-    const [sort, order] = toValue(sortBy).modelValue
-    return orderArrayBy(toValue(filteredTasks), sort, order)
-  })
-
-  const displayedTasks = computed(() => {
-    const start = (page.value - 1) * toValue(perPage).modelValue
-    return sortedTasks.value?.slice(start, start + toValue(perPage).modelValue)
+  const tasks = computed(() => {
+    const from = (page.value - 1) * toValue(perPage).modelValue
+    const to = +toValue(perPage).modelValue + from
+    return toValue(taskStore.tasks).slice(from, to)
   })
 
   return {
     toAddRoute,
     searchQuery,
-    page,
-    perPage: perPage.value.modelValue,
     searchPlaceholder,
-    displayedTasks,
+    tasks,
     totalRows,
-    sortBy
+    page,
+    perPage: computed({
+      get: () => perPage.value.modelValue,
+      set: (value) => (perPage.value.modelValue = value)
+    }),
+    sortBy: computed({
+      get: () => sortBy.value.modelValue,
+      set: (value) => (sortBy.value.modelValue = value)
+    })
   }
 }
