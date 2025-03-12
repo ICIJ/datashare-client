@@ -7,7 +7,6 @@ import { useTaskPolling } from '@/composables/task-polling'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import EmptyState from '@/components/EmptyState/EmptyState'
-import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
@@ -81,16 +80,14 @@ function refresh() {
       searchable
     >
       <template #end>
-        <mode-local-only>
-          <task-actions
-            :has-done-tasks="hasDoneTasks"
-            :has-pending-tasks="hasPendingTasks"
-            :hide-clear-done="hideClearDone"
-            :hide-stop-pending="hideStopPending"
-            @stop-pending="stopPendingTasks()"
-            @delete-done="removeDoneTasks()"
-          />
-        </mode-local-only>
+        <task-actions
+          :has-done-tasks="hasDoneTasks"
+          :has-pending-tasks="hasPendingTasks"
+          :hide-clear-done="hideClearDone"
+          :hide-stop-pending="hideStopPending"
+          @stop-pending="stopPendingTasks()"
+          @delete-done="removeDoneTasks()"
+        />
       </template>
     </page-toolbar>
     <div>
