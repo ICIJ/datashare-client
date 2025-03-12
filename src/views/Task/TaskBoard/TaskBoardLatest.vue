@@ -27,11 +27,12 @@ const { items } = useTaskProperties('taskBoardLatest')
 const allFields = items.map((item) => {
   return {
     ...item,
-    value: item.key,
+    sortable: false,
     text: computed(() => t(`task.task-board.latest.properties.${item.key}`))
   }
 })
 
+// Get all fields except the author field if we are on the server
 const fields = computed(() => allFields.filter((p) => isServer.value || p.name !== 'author'))
 
 const more = 3
