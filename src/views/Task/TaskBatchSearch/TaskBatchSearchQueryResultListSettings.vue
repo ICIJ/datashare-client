@@ -11,7 +11,7 @@ import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const appStore = useAppStore()
-const settingView = 'batch-search-results'
+const settingsView = 'batch-search-results'
 const { propertiesOptions, sortByOptions } = useBatchSearchResultProperties()
 
 const sortBy = ref({
@@ -20,8 +20,8 @@ const sortBy = ref({
   open: true,
   options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => appStore.getSettings(settingView, 'orderBy'),
-    set: (sort, order) => appStore.setSettings({ view: settingView, orderBy: [sort, order] })
+    get: () => appStore.getSettings(settingsView, 'orderBy'),
+    set: (sort, order) => appStore.setSettings({ view: settingsView, orderBy: [sort, order] })
   })
 })
 
@@ -31,8 +31,8 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => appStore.getSettings(settingView, 'perPage'),
-    set: (perPage) => appStore.setSettings({ view: settingView, perPage })
+    get: () => appStore.getSettings(settingsView, 'perPage'),
+    set: (perPage) => appStore.setSettings({ view: settingsView, perPage })
   }),
   options: [
     {
@@ -55,8 +55,8 @@ const properties = ref({
   type: 'checkbox',
   open: true,
   modelValue: computed({
-    get: () => appStore.getSettings(settingView, 'properties'),
-    set: (properties) => appStore.setSettings({ view: settingView, properties })
+    get: () => appStore.getSettings(settingsView, 'properties'),
+    set: (properties) => appStore.setSettings({ view: settingsView, properties })
   }),
   options: propertiesOptions
 })
