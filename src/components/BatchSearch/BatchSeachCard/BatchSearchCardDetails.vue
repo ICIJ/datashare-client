@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { capitalize } from 'lodash'
 
 import DisplayStatus from '@/components/Display/DisplayStatus'
+import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
 import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
@@ -78,8 +78,8 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.status')">
-          <display-status class="display-status" size="sm" :value="state" />
-          {{ capitalize(state) }}
+          <display-status class="display-status" size="sm" :value="state" no-tooltip />
+          <display-status-label :value="state" />
         </batch-search-card-details-entry>
       </li>
       <li>
