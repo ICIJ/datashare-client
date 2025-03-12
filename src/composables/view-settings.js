@@ -23,6 +23,14 @@ export function useViewSettings() {
     return computed(() => t('viewSettings.perPage', { title: t(titleKey) }))
   }
 
+  function fieldsToPropertiesOptions(fields) {
+    return fields
+      .map(({ text, key: value, icon }) => {
+        const tText = text ?? t(`viewSettings.options.${value}`)
+        return { text: tText, value, icon }
+      })
+  }
+
   function fieldsToSortByOptions(fields) {
     return fields
       .filter((field) => field.sortable)
@@ -61,5 +69,13 @@ export function useViewSettings() {
     list: computed(() => t('viewSettings.layout.list'))
   }
 
-  return { fieldsToSortByOptions, tSortByOption, sortByLabel, visiblePropertiesLabel, tLayout, perPageLabel }
+  return { 
+    fieldsToPropertiesOptions, 
+    fieldsToSortByOptions, 
+    tSortByOption, 
+    sortByLabel, 
+    visiblePropertiesLabel, 
+    tLayout, 
+    perPageLabel 
+  }
 }
