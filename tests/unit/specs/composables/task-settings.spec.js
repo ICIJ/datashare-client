@@ -32,10 +32,10 @@ describe('useTaskSettings', () => {
     return result
   }
 
-  it('should initialize "app/task" settings with sort by to name / desc', () => {
+  it('should initialize "app/task" settings with sort by to createdAt / desc', () => {
     const { store, router, i18n } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const { sortBy } = withSetup({ store, router, i18n, composable: () => useTaskSettings('task') })
-    expect(sortBy.value.modelValue).toEqual(['name', 'desc'])
+    expect(sortBy.value.modelValue).toEqual(['createdAt', 'desc'])
   })
 
   it('should initialize "app/entities" task settings per page is 10', () => {
