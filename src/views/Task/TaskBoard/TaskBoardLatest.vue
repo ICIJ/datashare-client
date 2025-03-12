@@ -22,8 +22,7 @@ const nbTasks = ref(3)
 const { t } = useI18n()
 const { tasks: pollingTasks, isLoading } = useTaskPolling()
 const { isServer } = useMode()
-const propertyList = ['taskType', 'state', 'name', 'projects', 'author', 'createdAt', 'progress']
-const { items } = useTaskProperties(propertyList)
+const { items } = useTaskProperties('task-board-latest')
 
 const allFields = items.map((item) => {
   return {
