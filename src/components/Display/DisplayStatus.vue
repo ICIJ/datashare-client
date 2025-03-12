@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
@@ -23,8 +23,14 @@ const props = defineProps({
     type: String,
     default: SIZE.MD,
     validator: buttonSizeValidator
+  },
+  noTooltip: {
+    type: Boolean,
+    default: false
   }
 })
+
+const element = useTemplateRef('element')
 
 const classList = computed(() => {
   return [`display-status--${props.variant ?? valueVariant.value}`, `display-status--${props.size}`]
@@ -40,17 +46,15 @@ const valueIcon = computed(() => {
 </script>
 
 <template>
-  <b-tooltip teleport-to="body">
-    <template #target>
-      <span class="display-status" :class="classList">
-        <phosphor-icon :name="icon ?? valueIcon" />
-        <span class="visually-hidden">
-          <display-status-label :value="value" :title="title" />
-        </span>
-      </span>
-    </template>
-    <display-status-label :value="value" :title="title" />
-  </b-tooltip>
+  <span class="display-status" :class="classList" ref="element">
+    <phosphor-icon :name="icon ?? valueIcon" />
+    <span class="visually-hidden">
+      <display-status-label :value="value" :title="title" />
+    </span>
+    <b-tooltip teleport-to="body" :manual="noTooltip" :target="element">
+      <display-status-label :value="value" :title="title" />
+    </b-tooltip>
+  </span>
 </template>
 
 <style lang="scss" scoped>
