@@ -34,6 +34,9 @@ export const useAppStore = defineStore(
           perPage: '10',
           properties: ['id', 'name', 'createdAt', 'progress', 'state']
         },
+        'task-board-latest': {
+          properties: ['taskType', 'state', 'name', 'projects', 'author', 'createdAt', 'progress']
+        },
         entities: {
           orderBy: ['createdAt', 'desc'],
           perPage: '10',
