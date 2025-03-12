@@ -1,0 +1,156 @@
+<script setup>
+import { castArray, compact } from 'lodash'
+import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+import { useBatchSearchResultProperties } from '../../../composables/batch-search-result-properties'
+
+import DisplayNumber from '@/components/Display/DisplayNumber'
+import DisplayContentLength from '@/components/Display/DisplayContentLength'
+import DisplayContentType from '@/components/Display/DisplayContentType'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
+import PageContainer from '@/components/PageContainer/PageContainer'
+import PageHeader from '@/components/PageHeader/PageHeader'
+import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
+import ProjectLabel from '@/components/Project/ProjectLabel'
+import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
+import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
+import { useCore } from '@/composables/core'
+import { useAppStore } from '@/store/modules'
+
+const props = defineProps({
+  uuid: {
+    type: String,
+    required: true
+  },
+  indices: {
+    type: String,
+    required: true
+  },
+  query: {
+    type: String
+  }
+})
+
+const appStore = useAppStore()
+const route = useRoute()
+const { core } = useCore()
+const { fields } = useBatchSearchResultProperties()
+const settingView = 'batch-search-queries-show'
+const hits = ref(null)
+const batchSearch = ref(null)
+
+const searchQuery = useUrlParam('q', '')
+
+const page = useUrlParam('page', {
+  transform: (value) => parseInt(value),
+  initialValue: 1
+})
+
+const perPage = useUrlParamWithStore('perPage', {
+  transform: (value) => Math.max(10, parseInt(value)),
+  get: () => appStore.getSettings(settingView, 'perPage'),
+  set: (value) => appStore.setSettings({ view: settingView, perPage: parseInt(value) })
+})
+
+const orderBy = useUrlParamsWithStore(['sort', 'order'], {
+  get: () => appStore.getSettings(settingView, 'orderBy'),
+  set: (sort, order) => appStore.setSettings({ view: settingView, orderBy: [sort, order] })
+})
+
+const sort = computed({
+  get: () => orderBy.value?.[0],
+  set: (value) => (orderBy.value = [value, order.value])
+})
+
+const order = computed({
+  get: () => orderBy.value?.[1],
+  set: (value) => (orderBy.value = [sort.value, value])
+})
+
+const from = computed(() => (page.value - 1) * perPage.value)
+
+const batchSearchName = computed(() => batchSearch.value?.name)
+
+async function fetchBatchSearchResults() {
+  hits.value = await core.api.getBatchSearchResults(
+    props.uuid,
+    from.value,
+    perPage.value,
+    compact(castArray(props.query)),
+    sort.value,
+    order.value
+  )
+}
+
+async function fetchBatchSearch() {
+  batchSearch.value = await core.api.getBatchSearch(props.uuid)
+}
+
+onBeforeMount(fetchBatchSearch)
+watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: true })
+</script>
+
+<template>
+  <page-container fluid deck>
+    <page-header>
+      <template #breadcrumb>
+        <navigation-breadcrumb-link route-name="task" />
+        <navigation-breadcrumb-link route-name="task.batch-search.list" />
+        <navigation-breadcrumb-link route-name="task.batch-search-queries.list" :title="batchSearchName" />
+        <navigation-breadcrumb-link v-if="query" route-name="task.batch-search-queries.show" :title="query" no-icon />
+        <navigation-breadcrumb-link
+          v-else
+          route-name="task.batch-search-results.list"
+          :title="$t('task.batch-search-results.list.title')"
+          no-icon
+        />
+      </template>
+    </page-header>
+    <page-toolbar
+      v-model:searchQuery="searchQuery"
+      v-model:page="page"
+      :per-page="perPage"
+      :total-rows="hits?.pagination?.total ?? 0"
+      paginable
+    />
+  </page-container>
+  <page-container fluid>
+    <page-table-generic
+      v-if="hits?.items"
+      v-model:sort="sort"
+      v-model:order="order"
+      :items="hits.items"
+      :fields="fields"
+    >
+      <template #cell(query)="{ item }">
+        <cite class="text-secondary fst-normal text-nowrap">
+          {{ item.query }}
+        </cite>
+      </template>
+      <template #cell(documentNumber)="{ item }">
+        <display-number :value="item.documentNumber" />
+      </template>
+      <template #cell(documentName)="{ item }">
+        <router-link-document :value="item" />
+      </template>
+      <template #cell(project)="{ item }">
+        <project-label :project="item.project" hide-thumbnail />
+      </template>
+      <template #cell(contentType)="{ item }">
+        <display-content-type :value="item.contentType" class="text-nowrap" />
+      </template>
+      <template #cell(contentLength)="{ item }">
+        <display-content-length :value="item.contentLength" class="text-nowrap" />
+      </template>
+      <template #cell(documentPath)="{ item }">
+        {{ item.documentPath }}
+      </template>
+      <template #cell(creation_date)="{ item }">
+        <display-datetime :value="item.creationDate" />
+      </template>
+    </page-table-generic>
+  </page-container>
+</template>
