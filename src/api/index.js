@@ -49,8 +49,9 @@ export class Api {
   removeDoneTasks() {
     return this.sendAction('/api/task/clean', { method: Method.POST })
   }
-  getTasks(name) {
-    return this.sendAction('/api/task/all', { params: { name } })
+  getTasks({ name = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
+    const params = { ...filters, name, from, size, order, sort }
+    return this.sendAction('/api/task/all', { params })
   }
   getTask(id) {
     return this.sendAction(`/api/task/${id}`)

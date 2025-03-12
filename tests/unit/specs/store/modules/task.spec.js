@@ -38,10 +38,10 @@ describe('TaskStore', () => {
     setActivePinia(createPinia())
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
     store = useTaskStore()
-    store.getTasks()
+    await store.getTasks()
   })
 
   it('should define a store module', () => {

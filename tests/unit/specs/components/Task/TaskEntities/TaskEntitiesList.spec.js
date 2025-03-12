@@ -38,8 +38,16 @@ describe('TaskEntitiesList.vue', () => {
     const wrapper = mount(TaskEntitiesList, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalledTimes(2) // 1 for each task type filter
-    expect(api.getTasks).toBeCalledWith('org.icij.datashare.tasks.ExtractNlpTask')
-    expect(api.getTasks).toBeCalledWith('org.icij.datashare.tasks.EnqueueFromIndexTask')
+    expect(api.getTasks).toBeCalledWith(
+      expect.objectContaining({
+        name: 'org.icij.datashare.tasks.ExtractNlpTask'
+      })
+    )
+    expect(api.getTasks).toBeCalledWith(
+      expect.objectContaining({
+        name: 'org.icij.datashare.tasks.EnqueueFromIndexTask'
+      })
+    )
   })
 
   it('should display 1 ExtractNlpTask and 1 EnqueueFromIndexTask task', () => {
