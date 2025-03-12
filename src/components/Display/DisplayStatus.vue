@@ -1,12 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { useI18n } from 'vue-i18n'
 
+import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
 import { toVariant, toVariantIcon } from '@/utils/utils'
-
-const { t } = useI18n()
 
 const props = defineProps({
   value: {
@@ -39,17 +37,20 @@ const valueVariant = computed(() => {
 const valueIcon = computed(() => {
   return toVariantIcon(props.value)
 })
-
-const valueTitle = computed(() => {
-  return t(`displayStatus.${valueVariant.value}`)
-})
 </script>
 
 <template>
-  <span v-b-tooltip.body.right class="display-status" :class="classList" :title="title ?? valueTitle">
-    <phosphor-icon :name="icon ?? valueIcon" />
-    <span class="visually-hidden">{{ value }}</span>
-  </span>
+  <b-tooltip teleport-to="body">
+    <template #target>
+      <span class="display-status" :class="classList">
+        <phosphor-icon :name="icon ?? valueIcon" />
+        <span class="visually-hidden">
+          <display-status-label :value="value" :title="title" />
+        </span>
+      </span>
+    </template>
+    <display-status-label :value="value" :title="title" />
+  </b-tooltip>
 </template>
 
 <style lang="scss" scoped>
