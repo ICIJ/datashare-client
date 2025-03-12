@@ -19,7 +19,7 @@ export function useTaskProperties(pageName) {
   const name = propertyItem({
     icon: 'list-checks',
     key: 'name',
-    sortable: true,
+    sortable: false,
     emphasis: true,
     required: true,
     colStyle: { minWidth: 'min(350px, 100vw)' }
@@ -37,7 +37,7 @@ export function useTaskProperties(pageName) {
     icon: 'clock-countdown',
     key: 'progress',
     type: SORT_TYPE_KEY.NUMBER,
-    sortable: true
+    sortable: false
   })
 
   const state = propertyItem({
@@ -77,7 +77,7 @@ export function useTaskProperties(pageName) {
     icon: 'shooting-star',
     key: 'pipeline',
     type: SORT_TYPE_KEY.ALPHA,
-    sortable: true,
+    sortable: false,
     required: false
   })
 
@@ -85,7 +85,7 @@ export function useTaskProperties(pageName) {
     icon: 'files',
     key: 'documents',
     type: SORT_TYPE_KEY.NUMBER,
-    sortable: true,
+    sortable: false,
     required: false
   })
 
@@ -93,7 +93,7 @@ export function useTaskProperties(pageName) {
     icon: null,
     key: 'privacy',
     type: SORT_TYPE_KEY.ALPHA,
-    sortable: true,
+    sortable: false,
     required: false
   })
 
@@ -101,7 +101,7 @@ export function useTaskProperties(pageName) {
     icon: 'user-circle',
     key: 'author',
     type: SORT_TYPE_KEY.ALPHA,
-    sortable: true,
+    sortable: false,
     required: false
   })
 
@@ -109,7 +109,7 @@ export function useTaskProperties(pageName) {
     icon: 'magnifying-glass',
     key: 'queries',
     type: SORT_TYPE_KEY.ALPHA,
-    sortable: true,
+    sortable: false,
     required: false
   })
 
@@ -117,7 +117,7 @@ export function useTaskProperties(pageName) {
     icon: 'hard-drives',
     key: 'size',
     type: SORT_TYPE_KEY.NUMBER,
-    sortable: true,
+    sortable: false,
     required: false
   })
 
@@ -125,7 +125,7 @@ export function useTaskProperties(pageName) {
     icon: 'rocket-launch',
     key: 'taskType',
     type: SORT_TYPE_KEY.ALPHA,
-    sortable: true,
+    sortable: false,
     required: false
   })
 
