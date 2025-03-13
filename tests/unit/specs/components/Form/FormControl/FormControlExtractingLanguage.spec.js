@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import ExtractingLanguageFormControl from '@/components/Task/TaskDocuments/ExtractingLanguageFormControl'
+import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
@@ -19,13 +19,13 @@ vi.mock('@/api/apiInstance', () => {
   }
 })
 
-describe('ExtractingLanguageFormControl.vue', () => {
+describe('FormControlExtractingLanguage.vue', () => {
   describe('Has languages available', () => {
     let wrapper
 
     beforeEach(async () => {
       const { plugins } = CoreSetup.init().useAll()
-      wrapper = mount(ExtractingLanguageFormControl, { global: { plugins } })
+      wrapper = mount(FormControlExtractingLanguage, { global: { plugins } })
       await flushPromises()
     })
 
@@ -56,13 +56,13 @@ describe('ExtractingLanguageFormControl.vue', () => {
     beforeEach(async () => {
       api.textLanguages.mockRejectedValue({})
       const { plugins } = CoreSetup.init().useAll()
-      wrapper = mount(ExtractingLanguageFormControl, { global: { plugins } })
+      wrapper = mount(FormControlExtractingLanguage, { global: { plugins } })
       await flushPromises()
     })
 
     it('should emit an ocr-error event on text languages reject', () => {
-      expect(wrapper.find('.extracting-language-form-control--no-language').exists()).toBeTruthy()
-      expect(wrapper.find('.extracting-language-form-control--no-language').text()).toBe('Failed to retrieve languages')
+      expect(wrapper.find('.form-control-extracting-language--no-language').exists()).toBeTruthy()
+      expect(wrapper.find('.form-control-extracting-language--no-language').text()).toBe('Failed to retrieve languages')
     })
   })
 })

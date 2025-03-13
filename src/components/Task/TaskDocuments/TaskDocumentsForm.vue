@@ -5,9 +5,9 @@ import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
 
 import { useCore } from '@/composables/core'
-import ExtractingLanguageFormControl from '@/components/Task/TaskDocuments/ExtractingLanguageFormControl'
 import ExtractingFormOcrControl from '@/components/Task/TaskDocuments/ExtractingFormOcrControl'
 import FormCreation from '@/components/Form/FormCreation'
+import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
@@ -123,7 +123,7 @@ async function retrieveLanguages() {
 async function loadLanguages() {
   wait.start(waitOcrIdentifier)
   await toastedPromise(retrieveLanguages(), {
-    errorMessage: t('extractingLanguageFormControl.failedToRetrieveLanguages')
+    errorMessage: t('formControlExtractingLanguage.failedToRetrieveLanguages')
   })
   wait.end(waitOcrIdentifier)
 }
@@ -147,7 +147,7 @@ watch(
       <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="extracting-language" translation-key="task.documents.form.extractingLanguage">
-      <extracting-language-form-control v-model="language" />
+      <form-control-extracting-language v-model="language" />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.documents.form.extractOcr">
       <b-form-radio-group

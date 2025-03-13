@@ -517,7 +517,7 @@
     "receivedLink": "Emails reçus",
     "sentLink": "Emails envoyés"
   },
-  "extractingLanguageFormControl": {
+  "formControlExtractingLanguage": {
     "failedToRetrieveLanguages": "Impossible de récupérer les langues",
     "nullOption": "Détecter automatiquement (par défaut)"
   },

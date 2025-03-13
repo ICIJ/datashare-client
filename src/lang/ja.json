@@ -517,7 +517,7 @@
     "receivedLink": "受信メール",
     "sentLink": "送信メール"
   },
-  "extractingLanguageFormControl": {
+  "formControlExtractingLanguage": {
     "failedToRetrieveLanguages": "Failed to retrieve languages",
     "nullOption": "Detect automatically (default)"
   },

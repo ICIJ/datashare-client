@@ -2,7 +2,7 @@ import { shallowMount, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskDocumentsForm from '@/components/Task/TaskDocuments/TaskDocumentsForm'
-import ExtractingLanguageFormControl from '@/components/Task/TaskDocuments/ExtractingLanguageFormControl'
+import FormControlExtractingLanguage from '@/components/Task/TaskDocuments/FormControlExtractingLanguage'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
@@ -52,7 +52,7 @@ describe('TaskDocumentsForm.vue', () => {
     const wrapper = shallowMount(TaskDocumentsForm, {
       global: { plugins, renderStubDefaultSlot: true }
     })
-    await wrapper.findComponent(ExtractingLanguageFormControl).setValue('fra')
+    await wrapper.findComponent(FormControlExtractingLanguage).setValue('fra')
     await wrapper.trigger('submit')
     expect(api.indexPath).toBeCalledTimes(1)
     expect(api.indexPath).toBeCalledWith(
