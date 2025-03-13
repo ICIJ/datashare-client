@@ -33,33 +33,35 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 </script>
 
 <template>
-  <b-collapse v-model="visible" class="search-breadcrumb-form p-3">
-    <template v-if="isEmpty">
-      <div class="d-flex align-items-center">
-        <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
-        <search-breadcrumb-form-empty class="flex-grow-1 me-3" />
-      </div>
-    </template>
-    <template v-else>
-      <div class="d-flex mb-3">
-        <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
-        <search-breadcrumb-form-list class="flex-grow-1">
-          <slot />
-        </search-breadcrumb-form-list>
-      </div>
-      <search-breadcrumb-form-footer
-        :hide-clear-filters="hideClearFilters"
-        :hide-clear-query="hideClearQuery"
-        :hide-clear-filters-and-query="hideClearFiltersAndQuery"
-        :hide-save-search="hideSaveSearch"
-        :hide-create-alert="hideCreateAlert"
-        @clear:filters="emit('clear:filters')"
-        @clear:query="emit('clear:query')"
-        @clear:all="emit('clear:all')"
-        @save:search="emit('save:search')"
-        @create:alert="emit('create:alert')"
-      />
-    </template>
+  <b-collapse v-model="visible" class="search-breadcrumb-form">
+    <div class="p-3">
+      <template v-if="isEmpty">
+        <div class="d-flex align-items-center">
+          <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
+          <search-breadcrumb-form-empty class="flex-grow-1 me-3" />
+        </div>
+      </template>
+      <template v-else>
+        <div class="d-flex mb-3">
+          <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
+          <search-breadcrumb-form-list class="flex-grow-1">
+            <slot />
+          </search-breadcrumb-form-list>
+        </div>
+        <search-breadcrumb-form-footer
+          :hide-clear-filters="hideClearFilters"
+          :hide-clear-query="hideClearQuery"
+          :hide-clear-filters-and-query="hideClearFiltersAndQuery"
+          :hide-save-search="hideSaveSearch"
+          :hide-create-alert="hideCreateAlert"
+          @clear:filters="emit('clear:filters')"
+          @clear:query="emit('clear:query')"
+          @clear:all="emit('clear:all')"
+          @save:search="emit('save:search')"
+          @create:alert="emit('create:alert')"
+        />
+      </template>
+    </div>
   </b-collapse>
 </template>
 
