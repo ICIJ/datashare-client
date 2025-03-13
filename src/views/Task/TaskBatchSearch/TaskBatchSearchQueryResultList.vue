@@ -16,6 +16,7 @@ import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
+import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
 import { useCore } from '@/composables/core'
 import { useAppStore } from '@/store/modules'
@@ -121,7 +122,11 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
       :per-page="perPage"
       :total-rows="hits?.pagination?.total ?? 0"
       paginable
-    />
+    >
+      <template #pagination="{ totalRows }">
+        <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="+perPage" />
+      </template>
+    </page-toolbar>
   </page-container>
   <page-container fluid>
     <page-table-generic
