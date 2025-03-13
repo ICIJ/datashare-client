@@ -46,9 +46,11 @@ const isOcrLanguage = computed(() => {
 const shouldDisplayLanguageMessage = computed(() => {
   return props.hasTesseract && !isOcrLanguage.value
 })
+
 function toTesseractCode(name) {
   return get(settings, ['iso6392', 'tesseract', name], name)
 }
+
 function sameLanguage(nameOrIso6392) {
   return toTesseractCode(nameOrIso6392) === toTesseractCode(props.isoLang)
 }
