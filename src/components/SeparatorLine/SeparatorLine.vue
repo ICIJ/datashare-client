@@ -37,7 +37,7 @@ const dragging = ref(false)
 const classList = computed(() => {
   return {
     'separator-line--active': props.active,
-    'separator-line--dragging': dragging.value,
+    'separator-line--dragging': dragging.value
   }
 })
 
@@ -68,8 +68,8 @@ const dragEnd = ({ detail }) => {
 <template>
   <div ref="target" class="separator-line" :class="classList">
     <separator-line-drag
-      class="separator-line__drag"
       v-draggable.relative="{ target, min, reduceThreshold, expandThreshold }"
+      class="separator-line__drag"
       :dragging="dragging"
       @reduce="reduce"
       @expand="expand"
@@ -128,15 +128,15 @@ const dragEnd = ({ detail }) => {
     z-index: 20;
     transition: $transition-fade;
     position: sticky;
-    transform: translateY(-50%);
-    top: 50vh;
-    height: 150px;
-    width: 2rem;
-    max-height: 240px;
+    top: 0;
+    height: 100%;
+    max-height: 100vh;
+    left: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 75px;
     pointer-events: none;
 
     &:deep(.button-icon) {
