@@ -94,6 +94,10 @@
     "yes": "Yes",
     "no": "No"
   },
+  "displayStarred": {
+    "yes": "Starred",
+    "no": "Not starred"
+  },
   "displayDatetimeRange": {
     "title": "From {start} to {end}"
   },
