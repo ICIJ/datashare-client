@@ -1817,11 +1817,6 @@
     }
   },
   "documentEntriesHeader": {
-    "tinyPagination": {
-      "rowRange": "to {to} of 0 documents | to {to} of 1 document | to {to} of {total} documents",
-      "rowRangeFewer": "of 0 documents | of 1 document | to {total} documents",
-      "rowRangeCompact": "of 0 documents | of 1 document | of {total} documents"
-    },
     "batchDownloadDocuments": "Downloading multiple files is limited to {maxSize}.",
     "batchDownloadDocumentsWarning": "Downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
     "batchDownloadError": "Something went wrong when attempt to download the files.",

@@ -1,6 +1,5 @@
 <script setup>
 import { computed, inject, toRef, useTemplateRef, watch } from 'vue'
-import { TinyPagination } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -8,7 +7,7 @@ import { useCompact } from '@/composables/compact'
 import { useCore } from '@/composables/core'
 import ButtonToggleBatchMode from '@/components/Button/ButtonToggleBatchMode'
 import ButtonDownloadDocuments from '@/components/Button/ButtonDownloadDocuments'
-import DisplayNumber from '@/components/Display/DisplayNumber'
+import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 import byteSize from '@/utils/byteSize'
 import humanSize from '@/utils/humanSize'
 import { useSearchStore } from '@/store/modules'
@@ -89,32 +88,12 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
     <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" :disabled="total === 0" />
     <slot v-bind="{ compact }">
       <div>
-        <tiny-pagination :key="total" v-model="page" row :total-rows="total" :per-page="perPage" :compact="compact">
-          <template #number-of-rows="{ lastRangeRow: to }">
-            <i18n-t v-if="compact" keypath="documentEntriesHeader.tinyPagination.rowRangeCompact" :plural="total">
-              <template #total>
-                <display-number :value="total" />
-              </template>
-            </i18n-t>
-            <i18n-t
-              v-else-if="total <= page * perPage"
-              keypath="documentEntriesHeader.tinyPagination.rowRangeFewer"
-              :plural="total"
-            >
-              <template #total>
-                <display-number :value="total" />
-              </template>
-            </i18n-t>
-            <i18n-t v-else keypath="documentEntriesHeader.tinyPagination.rowRange" :plural="total">
-              <template #total>
-                <display-number :value="total" />
-              </template>
-              <template #to>
-                <display-number :value="to" />
-              </template>
-            </i18n-t>
-          </template>
-        </tiny-pagination>
+        <row-pagination-documents
+          v-model="page"
+          :total-rows="total" 
+          :per-page="+perPage" 
+          :compact="compact" 
+        />
         <button-download-documents :label="batchDownloadDocumentsLabel" @click="runBatchDownload" />
       </div>
     </slot>
