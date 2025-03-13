@@ -130,30 +130,6 @@ describe('PathTree.vue', () => {
       expect(wrapper.vm.selectedPaths).toEqual(['path_01', 'path_02'])
     })
 
-    it.skip('should load the tree one time when sortBy and order are changed', async () => {
-      const spyLoadData = vi.spyOn(wrapper.vm, 'loadData')
-      await wrapper.setProps({ sortBy: '_key', orderBy: 'asc' })
-      await flushPromises()
-
-      expect(spyLoadData).toBeCalledTimes(1)
-    })
-
-    it.skip('should load the tree one time when path changed', async () => {
-      const spyLoadData = vi.spyOn(wrapper.vm, 'loadData')
-      await wrapper.setProps({ path: '/home/foo/bar' })
-      await flushPromises()
-
-      expect(spyLoadData).toBeCalledTimes(1)
-    })
-
-    it.skip('should load the tree one time when query changed', async () => {
-      const spyLoadData = vi.spyOn(wrapper.vm, 'loadDataWithSpinner')
-      await wrapper.setProps({ query: 'foo' })
-      await flushPromises()
-
-      expect(spyLoadData).toBeCalledTimes(1)
-    })
-
     it('should show a search bar', async () => {
       await wrapper.setProps({ noSearch: false })
       await flushPromises()
