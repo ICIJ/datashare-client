@@ -4,10 +4,11 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import ButtonClearHistory from '@/components/Button/ButtonClearHistory'
+import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
-import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
+import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 import SearchVisitedDocumentsEntries from '@/components/Search/SearchVisitedDocumentsEntries/SearchVisitedDocumentsEntries'
 import { useConfirmModal } from '@/composables/confirm'
 import { useCore } from '@/composables/core'
@@ -96,7 +97,11 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         paginable
         :per-page="perPage"
         :total-rows="pagination.total"
-      />
+      >
+        <template #pagination="{ totalRows }">
+          <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="+perPage" />
+        </template>
+      </page-toolbar>
     </page-container>
     <page-container fluid class="flex-grow-1 overflow-auto">
       <search-visited-documents-entries v-if="events.length" :events="events" />
