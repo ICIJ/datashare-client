@@ -1,8 +1,7 @@
 <script setup>
-import { TinyPagination } from '@icij/murmur-next'
-
-import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+import RowPagination from '@/components/RowPagination/RowPagination'
 
 const searchQuery = defineModel('searchQuery', { type: String })
 const page = defineModel('page', { type: Number, default: 1 })
@@ -33,11 +32,12 @@ defineProps({
   },
   activeFilters: {
     type: Boolean
-  },
-  pageRow: {
-    type: Boolean
   }
 })
+
+// We need to expose the setPage function to v-slot variables
+// and we cannot pass the model directly to the slot
+const setPage = (value) => page.value = value
 </script>
 
 <template>
@@ -50,14 +50,13 @@ defineProps({
         @toggle="emit('toggleFilters', $event)"
       />
     </slot>
-    <slot name="pagination">
+    <slot name="pagination" v-bind="{ page, setPage, paginable, perPage, totalRows }">
       <div v-if="paginable" class="page-toolbar__pagination">
-        <tiny-pagination
+        <row-pagination
           :key="totalRows"
-          v-model="page"
-          :row="pageRow"
+          v-model="page"          
           :total-rows="totalRows"
-          :per-page="Number(perPage)"
+          :per-page="+perPage"
         />
       </div>
     </slot>
