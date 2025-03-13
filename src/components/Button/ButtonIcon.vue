@@ -13,6 +13,7 @@
     <slot name="start" />
     <phosphor-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
+      v-b-tooltip.top.body="{ title: iconLeftLabel, offset: iconLeftLabelOffset }"
       :name="iconLeftOrSpinner"
       :size="iconLeftSize"
       :weight="iconLeftWeight"
@@ -29,6 +30,7 @@
     </span>
     <phosphor-icon
       v-if="iconRight"
+      v-b-tooltip.top.body="{ title: iconRightLabel, offset: iconRightLabelOffset }"
       :name="iconRightOrSpinner"
       :size="iconRightSize"
       :weight="iconRightWeight"
@@ -106,6 +108,14 @@ const props = defineProps({
   iconLeftSize: {
     type: String
   },
+  iconLeftLabel: {
+    type: String,
+    default: null
+  },
+  iconLeftLabelOffset: {
+    type: Number,
+    default: 19
+  },
   iconRight: {
     type: [String, Object, Array],
     default: null
@@ -132,6 +142,14 @@ const props = defineProps({
   },
   iconRightSize: {
     type: String
+  },
+  iconRightLabel: {
+    type: String,
+    default: null
+  },
+  iconRightLabelOffset: {
+    type: Number,
+    default: 19
   },
   iconSpinner: {
     type: [String, Object],
