@@ -37,9 +37,7 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
       })
       await flushPromises()
       expect(wrapper.find('.task-documents-form-ocr-alert__install_ocr_language').exists()).toBe(true)
-      expect(wrapper.find('.task-documents-form-ocr-alert').text()).not.toContain(
-        'Tesseract OCR is not installed.'
-      )
+      expect(wrapper.find('.task-documents-form-ocr-alert').text()).not.toContain('Tesseract OCR is not installed.')
     })
 
     it('should display an alert indicating that tesseract is not installed', async () => {
