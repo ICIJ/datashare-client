@@ -12,6 +12,7 @@ import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
+import RowPaginationBatchSearches from '@/components/RowPagination/RowPaginationBatchSearches'
 import { useTaskSettings } from '@/composables/task-settings'
 import { useCore } from '@/composables/core'
 import { TASK_NAME } from '@/enums/taskNames'
@@ -43,52 +44,61 @@ onBeforeMount(fetchMe)
 
 <template>
   <task-page
-    v-slot="{ tasks, sort, order, updateSort, updateOrder, refresh, empty }"
     :task-filter="[TASK_NAME.BATCH_SEARCH]"
     page-name="batch-search"
     show-add
     hide-clear-done
     hide-stop-pending
   >
-    <page-table-generic
-      v-if="!empty"
-      :items="tasks"
-      :fields="propertiesModelValueOptions"
-      :sort="sort"
-      :order="order"
-      @update:sort="updateSort"
-      @update:order="updateOrder"
-    >
-      <template #cell(state)="{ item }">
-        <display-status :value="item.state" />
-      </template>
-      <template #cell(privacy)="{ item }">
-        <display-visibility :value="getBatchSearchRecord(item, 'published')" />
-      </template>
-      <template #cell(name)="{ item }">
-        <router-link-batch-search :item="item" />
-      </template>
-      <template #cell(queries)="{ item }">
-        <display-number :value="getBatchSearchRecord(item, 'nbQueries')" />
-      </template>
-      <template #cell(documents)="{ item }">
-        <display-number :value="getBatchSearchRecord(item, 'nbResults')" />
-      </template>
-      <template #cell(projects)="{ item }">
-        <display-project-list :values="getBatchSearchProjects(item)" />
-      </template>
-      <template #cell(author)="{ item }">
-        <display-user :value="getBatchSearchRecord(item, 'user.id')" />
-      </template>
-      <template #cell(createdAt)="{ item }">
-        <display-datetime-from-now :value="item.createdAt" />
-      </template>
-      <template #cell(progress)="{ item }">
-        <display-progress :value="item.progress" />
-      </template>
-      <template #row-actions="{ item }">
-        <batch-search-actions v-if="canManageBatchSearch(item)" :uuid="item.id" hide-labels @refresh="refresh" />
-      </template>
-    </page-table-generic>
+    <template #pagination="{ page, setPage, perPage, totalRows }">
+      <row-pagination-batch-searches
+        :per-page="perPage"
+        :total-rows="totalRows"
+        :model-value="page"
+        @update:modelValue="setPage"
+      />
+    </template>
+    <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, empty }">
+      <page-table-generic
+        v-if="!empty"
+        :items="tasks"
+        :fields="propertiesModelValueOptions"
+        :sort="sort"
+        :order="order"
+        @update:sort="updateSort"
+        @update:order="updateOrder"
+      >
+        <template #cell(state)="{ item }">
+          <display-status :value="item.state" />
+        </template>
+        <template #cell(privacy)="{ item }">
+          <display-visibility :value="getBatchSearchRecord(item, 'published')" />
+        </template>
+        <template #cell(name)="{ item }">
+          <router-link-batch-search :item="item" />
+        </template>
+        <template #cell(queries)="{ item }">
+          <display-number :value="getBatchSearchRecord(item, 'nbQueries')" />
+        </template>
+        <template #cell(documents)="{ item }">
+          <display-number :value="getBatchSearchRecord(item, 'nbResults')" />
+        </template>
+        <template #cell(projects)="{ item }">
+          <display-project-list :values="getBatchSearchProjects(item)" />
+        </template>
+        <template #cell(author)="{ item }">
+          <display-user :value="getBatchSearchRecord(item, 'user.id')" />
+        </template>
+        <template #cell(createdAt)="{ item }">
+          <display-datetime-from-now :value="item.createdAt" />
+        </template>
+        <template #cell(progress)="{ item }">
+          <display-progress :value="item.progress" />
+        </template>
+        <template #row-actions="{ item }">
+          <batch-search-actions v-if="canManageBatchSearch(item)" :uuid="item.id" hide-labels @refresh="refresh" />
+        </template>
+      </page-table-generic>
+    </template>
   </task-page>
 </template>
