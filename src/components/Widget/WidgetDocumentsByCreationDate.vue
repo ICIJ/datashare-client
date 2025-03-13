@@ -30,6 +30,7 @@
         <div v-if="data.length > 0" class="widget__content__chart align-items-center">
           <column-chart
             hover
+            :hover-icon="['magnifying-glass', 'bold']"
             :chart-height-ratio="0.4"
             :data="aggregatedDataSlice"
             :x-axis-tick-format="xAxisTickFormat"
@@ -391,6 +392,10 @@ export default {
     &:hover {
       fill: var(--bs-action);
     }
+  }
+
+  &:deep(.column-chart__columns__item__hover-icon) {
+    color: #fff;
   }
 
   &:deep(.column-chart__axis .tick line) {
