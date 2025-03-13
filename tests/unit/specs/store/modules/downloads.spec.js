@@ -23,6 +23,10 @@ describe('DownloadsStore', () => {
     searchStore.setIndex(index)
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should set the download status for the given index', async () => {
     expect(downloadsStore.isAllowed(index)).toBe(false)
     downloadsStore.allow({ index, allowed: true })

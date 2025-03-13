@@ -70,6 +70,10 @@ describe('DocumentView.vue', () => {
     core.config.merge({ dataDir: null, mountedDataDir: null })
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display an error message if document is not found', async () => {
     const props = { id: 'notfound', index: project }
     const global = { plugins: core.plugins, renderStubDefaultSlot: true }

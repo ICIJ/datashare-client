@@ -44,6 +44,10 @@ describe('TaskStore', () => {
     await store.getTasks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should define a store module', () => {
     expect(store).toBeDefined()
   })

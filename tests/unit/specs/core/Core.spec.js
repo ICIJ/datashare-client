@@ -27,6 +27,10 @@ describe('Core', () => {
     document.body.appendChild(app)
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should instantiate the Core class using a static method', () => {
     expect(Core.isInstanceOfCore(core)).toBe(true)
   })

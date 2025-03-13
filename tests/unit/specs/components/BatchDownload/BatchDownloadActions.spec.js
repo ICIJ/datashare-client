@@ -43,6 +43,10 @@ describe('BatchDownloadActions.vue', () => {
     vi.clearAllMocks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   describe('relaunchTask method', () => {
     it('should emit a refresh when the relaunch is done', async () => {
       const query = { query: '{ }' }

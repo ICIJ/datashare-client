@@ -32,6 +32,10 @@ describe('ProjectDeletionModal.vue', () => {
     project = { name }
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('deletes the project when the model emits a ok event', async () => {
     const props = { project }
     const wrapper = shallowMount(ProjectDeletionModal, { global: { plugins }, props })

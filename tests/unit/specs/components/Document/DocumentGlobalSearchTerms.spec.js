@@ -77,6 +77,10 @@ describe('DocumentGlobalSearchTerms.vue', () => {
     searchStore.reset()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   describe('lists the query terms but the ones about specific field other than "content"', () => {
     it('should display query terms with occurrences in decreasing order', async () => {
       mockedDocumentSearchFactory()

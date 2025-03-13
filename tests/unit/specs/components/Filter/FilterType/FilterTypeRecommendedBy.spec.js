@@ -65,7 +65,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
   })
 
   afterAll(() => {
-    vi.clearAllMocks()
+    vi.resetAllMocks()
   })
 
   it('should build a recommendedBy filter', () => {

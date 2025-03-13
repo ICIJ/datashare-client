@@ -50,6 +50,10 @@ describe('DocumentContent.vue', () => {
     documentStore = useDocumentStore()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   async function mockDocumentContentSlice(content = '', { language = 'ENGLISH' } = {}) {
     const contentSlice = letTextContent().withContent(content).getResponse()
     // Index the document

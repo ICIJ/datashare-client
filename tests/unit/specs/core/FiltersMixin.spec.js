@@ -21,6 +21,10 @@ describe('FiltersMixin', () => {
     searchStore = useSearchStore()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('register an email mixin', () => {
     core.registerFilter({
       type: 'FilterNamedEntity',

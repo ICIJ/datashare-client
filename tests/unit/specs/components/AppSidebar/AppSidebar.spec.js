@@ -30,6 +30,10 @@ describe('AppSidebar.vue', () => {
     wrapper = setLocalMode()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   describe('the logout link', () => {
     it('should NOT be displayed if NOT in SERVER mode', () => {
       expect(wrapper.vm.noSignOut).toBeTruthy()

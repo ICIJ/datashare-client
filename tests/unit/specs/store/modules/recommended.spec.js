@@ -23,6 +23,10 @@ describe('RecommendedStore', () => {
     recommendedStore = useRecommendedStore()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should init documents to an empty array', () => {
     expect(recommendedStore).toHaveProperty('documents')
     expect(recommendedStore.documents).toEqual([])

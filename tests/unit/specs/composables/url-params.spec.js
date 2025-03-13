@@ -65,6 +65,10 @@ export function withSetup({ composable, routes = [], initialRoute = null }) {
 }
 
 describe('useUrlParam', () => {
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should sync a single query parameter with the initial value', async () => {
     const [result, router] = withSetup({ composable: () => useUrlParam('q', 'default') })
 

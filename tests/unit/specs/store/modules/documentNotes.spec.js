@@ -21,6 +21,10 @@ describe('DocumentNotesStore', () => {
     store = useDocumentNotesStore()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should call the retrieveNotes url', async () => {
     await store.fetchNotesOnce({ project })
 

@@ -65,6 +65,10 @@ describe('Search/SearchSaved/SearchSavedList.vue', () => {
     vi.clearAllMocks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display a list of 2 saved search', () => {
     const entries = wrapper.findComponent(SearchSavedEntries)
     expect(entries.exists()).toBeTruthy()

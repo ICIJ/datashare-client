@@ -24,6 +24,10 @@ describe('Search.vue', () => {
     })
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('is a Vue instance', () => {
     expect(wrapper.vm).toBeTruthy()
   })

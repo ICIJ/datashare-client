@@ -33,6 +33,10 @@ describe('DisplayUser.vue', () => {
     core.unregisterPipeline('username-icij-link')
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display "foo"', async () => {
     expect(wrapper.find('.display-user__username').text()).toBe('foo')
   })

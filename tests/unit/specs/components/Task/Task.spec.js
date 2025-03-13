@@ -25,6 +25,10 @@ describe('Task.vue', () => {
     vi.clearAllMocks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('renders correctly', () => {
     const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
 

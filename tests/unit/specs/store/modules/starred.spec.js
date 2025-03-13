@@ -27,6 +27,10 @@ describe('StarredStore', () => {
     filter = searchStore.getFilter({ name: 'starred' })
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should not reset the starredDocuments from the filter', async () => {
     starredStore.setDocuments([
       { index, id: 'document_01' },

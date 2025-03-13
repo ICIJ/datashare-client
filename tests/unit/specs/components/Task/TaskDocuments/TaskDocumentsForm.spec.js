@@ -32,6 +32,10 @@ describe('TaskDocumentsForm.vue', () => {
     await core.config.set('projects', [{ name: 'local-datashare' }])
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should call extract action without OCR option on default project, by default', async () => {
     const wrapper = shallowMount(TaskDocumentsForm, { global: { plugins } })
     await wrapper.trigger('submit')

@@ -41,6 +41,10 @@ describe('DocumentViewTabsEntities.vue', () => {
     wrapper.unmount()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display filtered named entities', async () => {
     await letData(elasticsearch)
       .have(

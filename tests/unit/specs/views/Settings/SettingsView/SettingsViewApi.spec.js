@@ -34,6 +34,10 @@ describe('SettingsViewApi', () => {
     vi.clearAllMocks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display a panel to generate the API key by default', () => {
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
     expect(wrapper.find('.settings-view-api__create').exists()).toBeTruthy()

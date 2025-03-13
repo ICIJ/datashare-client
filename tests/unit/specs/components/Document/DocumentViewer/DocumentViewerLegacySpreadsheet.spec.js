@@ -20,6 +20,10 @@ describe('DocumentViewerLegacySpreadsheet.vue', () => {
     wrapper = mount(DocumentViewerLegacySpreadsheet, { global: { plugins, renderStubDefaultSlot: true } })
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should load a csv content file', async () => {
     await wrapper.setProps({ document: { url: 'spreadsheet.csv' } })
     await wrapper.vm.generateWorkbook()

@@ -15,6 +15,10 @@ vi.mock('@/api/apiInstance', () => ({
 describe('guards', () => {
   const { auth, router, plugins, config } = CoreSetup.init().useAll().useRouter()
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   describe('checkUserAuthentication', () => {
     beforeEach(async () => {
       vi.clearAllMocks()

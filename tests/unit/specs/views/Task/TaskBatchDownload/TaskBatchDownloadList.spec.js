@@ -117,6 +117,10 @@ describe('TaskBatchDownloadList.vue', () => {
     plugins = core.plugins
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('renders correctly', async () => {
     const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)
