@@ -30,27 +30,35 @@ const props = defineProps({
   }
 })
 
+const date = computed(() => {
+  if (!isNaN(props.value)) {
+    return new Date(+props.value)
+  }
+
+  return new Date(props.value)
+})
+
 const title = computed(() => {
   if (!props.noTooltip && props.format !== FORMAT_LONG) {
-    return humanLongDate(props.value, locale.value)
+    return humanLongDate(date.value, locale.value)
   }
   return null
 })
 
 const display = computed(() => {
-  if (!props.value) {
+  if (!date.value) {
     return ''
   }
 
   switch (props.format) {
     case FORMAT_MONTH:
-      return humanMonthDate(props.value, locale.value)
+      return humanMonthDate(date.value, locale.value)
     case FORMAT_LONG:
-      return humanLongDate(props.value, locale.value)
+      return humanLongDate(date.value, locale.value)
     case FORMAT_FROM_NOW:
-      return fromNow(props.value, locale.value)
+      return fromNow(date.value, locale.value)
     default:
-      return humanShortDate(props.value, locale.value)
+      return humanShortDate(date.value, locale.value)
   }
 })
 </script>
