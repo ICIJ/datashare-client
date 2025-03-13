@@ -149,7 +149,6 @@ defineExpose({
 
   &__end {
     width: 100%;
-    padding-left: $spacer-xl;
   }
 }
 </style>
