@@ -10,7 +10,15 @@ const indeterminate = defineModel('indeterminate', { type: Boolean })
 
 const props = defineProps({
   name: {
+    type: String,
+    required: true
+  },
+  path: {
     type: String
+  },
+  projects: {
+    type: Array,
+    default: () => []
   },
   selectMode: {
     type: Boolean,
@@ -39,6 +47,9 @@ const props = defineProps({
     type: Boolean
   },
   noStats: {
+    type: Boolean
+  },
+  noLink: {
     type: Boolean
   }
 })
@@ -79,6 +90,9 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
       <path-tree-view-entry-stats
         v-if="!noStats"
         class="ms-auto"
+        :path="path"
+        :projects="projects"
+        :no-link="noLink"
         :compact="compactOrInjected"
         :documents="documents"
         :directories="directories"

@@ -47,6 +47,10 @@ const props = defineProps({
    */
   noSearch: { type: Boolean },
   /**
+   * Deactivate the link to the search
+   */
+  noLink: { type: Boolean },
+  /**
    * Deactivate the stats display
    */
   noStats: { type: Boolean },
@@ -411,6 +415,8 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
       <path-tree-view-entry
         :loading="isLoading"
         :name="getBasename(path)"
+        :path="path"
+        :projects="projects"
         :selected="isSelectedDirectory(path)"
         :documents="totalDocuments"
         :directories="totalDirectories"
@@ -419,6 +425,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
         :indeterminate="isIndeterminateDirectory(path)"
         :no-header="level > 0"
         :no-stats="noStats"
+        :no-link="noLink"
         @update:selected="selectDirectory(path)"
       >
         <path-tree-view-entry
@@ -426,6 +433,8 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
           :key="directory"
           :loading="!!directoriesRefs[directory.key]?.isLoading"
           :name="getBasename(directory.key)"
+          :path="directory.key"
+          :projects="projects"
           :documents="directory.doc_count"
           :directories="directory.directories.value"
           :size="directory.size.value"
@@ -433,6 +442,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
           :collapse="isCollapsedDirectory(directory.key)"
           :compact="compact"
           :no-stats="noStats"
+          :no-link="noLink"
           :indeterminate="isIndeterminateDirectory(directory.key)"
           @update:selected="selectDirectory(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
