@@ -24,9 +24,9 @@ export function useViewSettings() {
   }
 
   function fieldsToPropertiesOptions(fields) {
-    return fields.map(({ text, key: value, icon }) => {
+    return fields.map(({ text, key: value, icon, required: disabled = false }) => {
       const tText = text ?? t(`viewSettings.options.${value}`)
-      return { text: tText, value, icon }
+      return { text: tText, value, icon, disabled }
     })
   }
 
