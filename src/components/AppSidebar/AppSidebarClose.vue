@@ -28,9 +28,10 @@ const variant = computed(() => {
     icon-left="x"
     square
     hide-label
+    hide-tooltip
     :variant="variant"
     class="app-sidebar-close"
-    :title="title"
+    :label="title"
     @click="toggle"
   >
     {{ title }}
