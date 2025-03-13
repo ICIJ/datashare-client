@@ -69,6 +69,7 @@ watchIndices(reset)
       select-mode
       multiple
       no-label
+      no-link
     />
   </filter-type>
 </template>
