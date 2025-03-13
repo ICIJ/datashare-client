@@ -53,13 +53,13 @@ const classList = computed(() => {
 
 <template>
   <div class="path-tree-view-entry-stats d-flex gap-2 text-nowrap" :class="classList">
-    <path-tree-view-entry-stats-documents 
-      :active="active" 
-      :compact="compactOrInjected" 
-      :no-link="noLink" 
-      :path="path" 
-      :projects="projects" 
-      :value="documents" 
+    <path-tree-view-entry-stats-documents
+      :active="active"
+      :compact="compactOrInjected"
+      :no-link="noLink"
+      :path="path"
+      :projects="projects"
+      :value="documents"
     />
     <template v-if="!compactOrInjected">
       <path-tree-view-entry-stats-directories :value="directories" :active="active" :compact="compactOrInjected" />
