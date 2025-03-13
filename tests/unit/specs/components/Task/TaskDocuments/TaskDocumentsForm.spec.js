@@ -1,8 +1,8 @@
 import { shallowMount, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import TaskDocumentsForm from '@/components/Task/TaskDocuments/TaskDocumentsForm'
-import FormControlExtractingLanguage from '@/components/Task/TaskDocuments/FormControlExtractingLanguage'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
