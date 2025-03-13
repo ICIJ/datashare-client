@@ -26,12 +26,12 @@ describe('PageToolbar.vue', () => {
   })
 
   it('should NOT display a tiny-pagination by default', () => {
-    expect(wrapper.find('tiny-pagination-stub').exists()).toBeFalsy()
+    expect(wrapper.find('row-pagination-stub').exists()).toBeFalsy()
   })
 
   it('should display a tiny-pagination when `paginable` is true', async () => {
     await wrapper.setProps({ paginable: true })
-    expect(wrapper.find('tiny-pagination-stub').exists()).toBeTruthy()
+    expect(wrapper.find('row-pagination-stub').exists()).toBeTruthy()
   })
 
   it('should NOT display a button-toggle-filters by default', () => {
