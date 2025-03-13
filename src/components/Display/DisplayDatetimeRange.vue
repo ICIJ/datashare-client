@@ -1,7 +1,6 @@
 <script setup>
 import { isArray } from 'lodash'
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 import DisplayDatetime from './DisplayDatetime'
 
@@ -25,18 +24,10 @@ const start = computed(() => {
 const end = computed(() => {
   return isArray(value) ? value[1] : new Date(value.split(':').map(Number).pop())
 })
-
-const { t, locale } = useI18n()
-
-const title = computed(() => {
-  const humanStart = humanLongDate(start.value, locale.value)
-  const humanEnd = humanLongDate(end.value, locale.value)
-  return t('displayDatetimeRange.title', { start: humanStart, end: humanEnd })
-})
 </script>
 
 <template>
-  <span v-b-tooltip.body class="display-datetime-range" :title="title">
+  <span class="display-datetime-range">
     <display-datetime :value="start" :format="format" no-tooltip />
     <display-datetime :value="end" :format="format" no-tooltip />
   </span>
