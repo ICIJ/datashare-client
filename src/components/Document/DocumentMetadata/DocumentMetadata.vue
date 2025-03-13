@@ -31,7 +31,7 @@ defineProps({
 <template>
   <div class="document-metadata">
     <phosphor-icon class="document-metadata__icon" :name="icon" />
-    <div v-b-tooltip class="document-metadata__label" :title="description">
+    <div v-b-tooltip.body class="document-metadata__label" :title="description">
       {{ label }}
     </div>
     <div class="document-metadata__value">
