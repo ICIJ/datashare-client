@@ -13,6 +13,7 @@ export function useBatchSearchQueryProperties() {
     icon: 'magnifying-glass',
     key: 'query',
     text: computed(() => t('task.batch-search-queries.list.fields.query')),
+    required: true,
     sortable: false, // Disabled until the API supports `sort` and `order` params
     emphasis: true
   })
