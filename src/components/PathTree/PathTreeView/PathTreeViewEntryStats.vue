@@ -6,6 +6,13 @@ import PathTreeViewEntryStatsDirectories from './PathTreeViewEntryStatsDirectori
 import PathTreeViewEntryStatsSize from './PathTreeViewEntryStatsSize'
 
 const props = defineProps({
+  path: {
+    type: String
+  },
+  projects: {
+    type: Array,
+    default: () => []
+  },
   documents: {
     type: Number,
     default: 0
@@ -27,6 +34,9 @@ const props = defineProps({
   compact: {
     type: Boolean,
     default: null
+  },
+  noLink: {
+    type: Boolean
   }
 })
 
@@ -43,7 +53,14 @@ const classList = computed(() => {
 
 <template>
   <div class="path-tree-view-entry-stats d-flex gap-2 text-nowrap" :class="classList">
-    <path-tree-view-entry-stats-documents :value="documents" :active="active" :compact="compactOrInjected" />
+    <path-tree-view-entry-stats-documents 
+      :active="active" 
+      :compact="compactOrInjected" 
+      :no-link="noLink" 
+      :path="path" 
+      :projects="projects" 
+      :value="documents" 
+    />
     <template v-if="!compactOrInjected">
       <path-tree-view-entry-stats-directories :value="directories" :active="active" :compact="compactOrInjected" />
       <path-tree-view-entry-stats-size :value="size" class="ms-auto" :active="active" :compact="compactOrInjected" />

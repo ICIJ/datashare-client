@@ -9,20 +9,43 @@ const props = defineProps({
     type: Number,
     required: true
   },
+  projects: {
+    type: Array,
+    default: () => []
+  },
+  path: {
+    type: String
+  },
   active: {
     type: Boolean
   },
   compact: {
     type: Boolean,
     default: null
+  },
+  noLink: {
+    type: Boolean
   }
 })
 
 const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
 
+const is = computed(() => (props.noLink || props.compact ? 'span' : 'router-link'))
+
+const to = computed(() => {
+  if (is.value === 'span') {
+    return undefined
+  }
+
+  const indices = props.projects.join(',')
+  const query = { 'f[path]': props.path, indices }
+  return { name: 'search', query }
+})
+
 const classList = computed(() => {
   return {
     'path-tree-view-entry-stats-documents--active': props.active,
+    'path-tree-view-entry-stats-documents--no-link': props.noLink,
     'path-tree-view-entry-stats-documents--compact': compactOrInjected.value
   }
 })
@@ -30,7 +53,7 @@ const classList = computed(() => {
 
 <template>
   <div class="path-tree-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
-    <a class="path-tree-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate">
+    <component :is="is" :to="to" class="path-tree-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate">
       <phosphor-icon
         name="files"
         aria-hidden="true"
@@ -45,7 +68,7 @@ const classList = computed(() => {
       <span class="text-truncate">
         <display-number :value="value" />
       </span>
-    </a>
+    </component>
   </div>
 </template>
 
@@ -80,13 +103,13 @@ const classList = computed(() => {
     }
   }
 
-  &--active &__link {
+  &--active:not(&--no-link) &__link {
     background: var(--bs-action);
     color: var(--bs-white);
   }
 
-  &--active:not(&--compact) &__link,
-  &:not(&--compact) &__link:hover {
+  &--active:not(&--compact):not(&--no-link) &__link,
+  &:not(&--compact):not(&--no-link) &__link:hover {
     background: var(--bs-body-bg);
     color: var(--bs-body-color);
 
@@ -95,7 +118,7 @@ const classList = computed(() => {
     }
   }
 
-  &:not(&--compact) &__link:hover {
+  &:not(&--compact):not(&--no-link) &__link:hover {
     .path-tree-view-entry-stats-documents__link__icon--default {
       display: none;
     }
@@ -110,7 +133,6 @@ const classList = computed(() => {
     line-height: 1;
     color: inherit;
     justify-content: space-between;
-    cursor: pointer;
     padding: $spacer-xxs $spacer-xs;
 
     &__icon {
