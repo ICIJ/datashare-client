@@ -3,6 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskEntitiesList from '@/views/Task/TaskEntities/TaskEntitiesList'
 import { apiInstance as api } from '@/api/apiInstance'
+import { afterEach } from 'vitest'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
@@ -32,6 +33,10 @@ describe('TaskEntitiesList.vue', () => {
 
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
+  })
+
+  afterEach(async () => {
+    await flushPromises()
   })
 
   afterAll(() => {
