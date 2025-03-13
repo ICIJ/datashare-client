@@ -19,6 +19,10 @@ const props = defineProps({
     type: [String, Object, Array],
     default: PhMagnifyingGlass
   },
+  iconLabel: {
+    type: String,
+    default: null
+  },
   color: {
     type: String,
     default: null
@@ -64,6 +68,7 @@ const showOperator = computed(() => {
     :size="size"
     :style="style"
     :icon-left="noIcon ? null : icon"
+    :icon-left-label="iconLabel"
     :icon-right="noXIcon ? null : PhX"
     icon-right-hover-weight="bold"
     @click:icon-right="emit('click:x')"

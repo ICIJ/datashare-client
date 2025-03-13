@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { trimStart } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
@@ -26,6 +27,10 @@ const props = defineProps({
     type: [String, Object, Array],
     default: null
   },
+  iconLabel: {
+    type: String,
+    default: null
+  },
   size: {
     type: String
   },
@@ -39,6 +44,8 @@ const props = defineProps({
     type: Boolean
   }
 })
+
+const { t } = useI18n()
 
 const filter = computed(() => {
   return filtersDefs.find((filter) => filter.options.name === field.value)
@@ -63,6 +70,10 @@ const icon = computed(() => {
   return props.icon ?? filter.value?.options?.icon ?? PhMagnifyingGlass
 })
 
+const iconLabel = computed(() => {
+  return props.iconLabel ?? t(`filter.${filter.value?.options?.name}`)
+})
+
 const color = computed(() => {
   return props.color ?? filter.value?.options?.color
 })
@@ -79,6 +90,7 @@ const display = computed(() => {
     :prefix="prefix"
     :size="size"
     :icon="icon"
+    :icon-label="iconLabel"
     :color="color"
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
