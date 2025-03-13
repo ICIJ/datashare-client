@@ -54,7 +54,7 @@ export default [
     options: {
       name: 'tags',
       key: 'tags',
-      icon: 'tag',
+      icon: 'hash',
       order: 20,
       section: 'userData',
       preference: 'filter-tags'
