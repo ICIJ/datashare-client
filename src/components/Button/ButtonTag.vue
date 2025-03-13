@@ -19,7 +19,6 @@ const emit = defineEmits(['delete'])
   <search-parameter
     :icon="PhHash"
     filter="tag"
-    class="text-action-emphasis"
     :term="label"
     :no-x-icon="noXIcon"
     @click:x="emit('delete', label)"
