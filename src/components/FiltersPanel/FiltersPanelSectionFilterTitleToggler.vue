@@ -27,7 +27,7 @@ const icon = computed(() => (props.collapse ? PhCaretDown : PhCaretUp))
     icon-left-weight="bold"
     label="Toggle filter"
     hide-label
-    tooltip-placement="right"
+    hide-tooltip
     @click="emit('toggle', !collapse)"
   >
     <slot />
