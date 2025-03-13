@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -14,9 +15,16 @@ const props = defineProps({
     type: [String, Object, Array]
   },
   to: {
-    type: Object
+    type: Object,
+    required: true
   }
 })
+
+const router = useRouter()
+// We resolve the route to get the href because of
+// of a bug in bootstrap-vue that doesn't allow to use
+// router-link (with prop "to") and a tooltip.
+const href = computed(() => router.resolve(props.to)?.href)
 
 const classList = computed(() => {
   return {
@@ -33,8 +41,8 @@ const classList = computed(() => {
     variant="outline-primary"
     class="app-sidebar-section-toggler"
     tooltip-placement="right"
-    :to="to"
     :label="title"
+    :href="href"
     :class="classList"
   >
     {{ title }}
