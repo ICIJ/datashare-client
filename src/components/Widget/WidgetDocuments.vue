@@ -1,25 +1,11 @@
 <template>
-  <v-wait for="barometer counters" class="flex-grow-1" transition="fade">
-    <template #waiting>
-      <div class="m-5 text-center h-100">
-        <app-spinner size="2em" />
-      </div>
-    </template>
-    <widget-barometer-documents
-      class="widget widget--documents"
-      :to="searchOnDiskRoute"
-      :nb-documents="total"
-      :nb-documents-on-disks="onDisk"
-    />
-  </v-wait>
+  <div class="widget widget--documents">
+    <widget-barometer-documents :to="to" :nb-documents="total" :nb-documents-on-disks="onDisk" />
+  </div>
 </template>
 
 <script>
-import { waitFor } from 'vue-wait'
-
 import WidgetBarometerDocuments from './WidgetBarometerDocuments'
-
-import AppSpinner from '@/components/AppSpinner/AppSpinner'
 
 /**
  * Widget to display the number of indexed files on the insights page.
@@ -27,7 +13,6 @@ import AppSpinner from '@/components/AppSpinner/AppSpinner'
 export default {
   name: 'WidgetFileBarometer',
   components: {
-    AppSpinner,
     WidgetBarometerDocuments
   },
   props: {
@@ -52,7 +37,7 @@ export default {
     }
   },
   computed: {
-    searchOnDiskRoute() {
+    toSearch() {
       const indices = [this.project]
       const query = { 'f[extractionLevel]': 0, indices }
       return { name: 'search', query }
@@ -77,10 +62,10 @@ export default {
       const q = 'type:Document AND extractionLevel:0'
       return this.count(q)
     },
-    loadData: waitFor('barometer counters', async function () {
+    async loadData() {
       this.total = await this.countTotal()
       this.onDisk = await this.countOnDisk()
-    })
+    }
   }
 }
 </script>

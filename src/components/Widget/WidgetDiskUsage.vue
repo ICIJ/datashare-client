@@ -1,29 +1,17 @@
 <template>
-  <v-wait for="disk usage" class="flex-grow-1" transition="fade">
-    <template #waiting>
-      <div class="m-5 text-center h-100">
-        <app-spinner size="2em" />
-      </div>
-    </template>
-    <widget-barometer-disk-usage
-      v-b-modal.modal-disk-usage-details
-      clickable
-      class="widget widget--disk-usage"
-      :size="size"
-    />
-    <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer size="lg">
+  <div class="widget widget--disk-usage">
+    <widget-barometer-disk-usage v-b-modal.modal-disk-usage clickable :size="size" />
+    <b-modal id="modal-disk-usage" lazy scrollable hide-header hide-footer size="lg">
       <path-tree v-model:path="path" :projects="[project]" elasticsearch-only />
     </b-modal>
-  </v-wait>
+  </div>
 </template>
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { waitFor } from 'vue-wait'
 
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
-import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import PathTree from '@/components/PathTree/PathTree'
 
 /**
@@ -32,7 +20,6 @@ import PathTree from '@/components/PathTree/PathTree'
 export default {
   name: 'WidgetDiskUsage',
   components: {
-    AppSpinner,
     PathTree,
     WidgetBarometerDiskUsage
   },
@@ -86,9 +73,9 @@ export default {
       // eslint-disable-next-line camelcase
       return res?.aggregations?.agg_sum_contentLength?.value || 0
     },
-    loadData: waitFor('disk usage', async function () {
+    async loadData() {
       this.size = await this.sumSize()
-    })
+    }
   }
 }
 </script>
