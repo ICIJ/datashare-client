@@ -53,7 +53,11 @@ const classList = computed(() => {
 
 <template>
   <div class="path-tree-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
-    <component :is="is" :to="to" class="path-tree-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate">
+    <component
+      :is="is"
+      :to="to"
+      class="path-tree-view-entry-stats-documents__link d-inline-flex align-items-center flex-truncate"
+    >
       <phosphor-icon
         name="files"
         aria-hidden="true"
