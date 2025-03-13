@@ -2,7 +2,7 @@ import { get, map } from 'lodash'
 
 import FilterText from './FilterText'
 
-import DisplayBoolean from '@/components/Display/DisplayBoolean'
+import DisplayStarred from '@/components/Display/DisplayStarred'
 import { useStarredStore } from '@/store/modules'
 
 export default class FilterStarred extends FilterText {
@@ -38,6 +38,6 @@ export default class FilterStarred extends FilterText {
     }
   }
   static get display() {
-    return DisplayBoolean
+    return DisplayStarred
   }
 }
