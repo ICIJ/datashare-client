@@ -16,11 +16,19 @@ const tags = computed(() => {
 </script>
 
 <template>
-  <span class="display-tags d-inline-flex flex-wrap gap-2">
-    <template v-for="(content, index) in tags" :key="content">
-      <slot name="content" v-bind="{ content, index }">
-        <span>{{ toHashtag(content) }}</span>
+  <span class="display-tags d-inline-flex flex-wrap gap-1">
+    <template v-for="(tag, index) in tags" :key="tag">
+      <slot name="tag" v-bind="{ tag, index }">
+        <span class="display-tags__item">{{ tag }}</span>
       </slot>
     </template>
   </span>
 </template>
+
+<style lang="scss" scoped>
+.display-tags {
+  &__item:not(:last-of-type):after {
+    content: ",";
+  }
+}
+</style>
