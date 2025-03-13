@@ -37,7 +37,8 @@ export function useTaskProperties(pageName) {
     icon: 'clock-countdown',
     key: 'progress',
     type: SORT_TYPE_KEY.NUMBER,
-    sortable: false
+    sortable: false,
+    colStyle: { minWidth: 'min(150px, 100vw)' }
   })
 
   const state = propertyItem({
