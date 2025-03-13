@@ -7,7 +7,7 @@ import AppOverlay from '@/components/AppOverlay/AppOverlay'
  * A form-control to select the extracting language.
  */
 export default {
-  name: 'ExtractingLanguageFormControl',
+  name: 'FormControlExtractingLanguage',
   components: {
     AppOverlay
   },
@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     nullOption() {
-      return { value: null, text: this.$t('extractingLanguageFormControl.nullOption') }
+      return { value: null, text: this.$t('formControlExtractingLanguage.nullOption') }
     },
     options() {
       return this.textLanguages.map((language) => {
@@ -36,7 +36,7 @@ export default {
       })
     },
     waitIdentifier() {
-      return uniqueId('extracting-language-form-control-')
+      return uniqueId('form-control-extracting-language-')
     },
     isReady() {
       return !this.$wait.is(this.waitIdentifier)
@@ -54,7 +54,7 @@ export default {
       try {
         this.textLanguages = await this.$core.api.textLanguages()
       } catch (e) {
-        this.$toast.error(this.$t('extractingLanguageFormControl.failedToRetrieveLanguages'))
+        this.$toast.error(this.$t('formControlExtractingLanguage.failedToRetrieveLanguages'))
       }
       this.$wait.end(this.waitIdentifier)
     }
@@ -63,20 +63,20 @@ export default {
 </script>
 
 <template>
-  <app-overlay :show="!isReady" class="extracting-language-form-control" rounded spinner-small>
+  <app-overlay :show="!isReady" class="form-control-extracting-language" rounded spinner-small>
     <b-alert
       v-if="isReady && hasTextLanguages"
       model-value
       variant="danger"
-      class="extracting-language-form-control--no-language m-0"
+      class="form-control-extracting-language--no-language m-0"
     >
-      {{ $t('extractingLanguageFormControl.failedToRetrieveLanguages') }}
+      {{ $t('formControlExtractingLanguage.failedToRetrieveLanguages') }}
     </b-alert>
     <b-form-group v-else>
       <b-form-select
         :model-value="modelValue"
         :options="[nullOption, ...options]"
-        class="extracting-language-form-control__ocr-options"
+        class="form-control-extracting-language__ocr-options"
         @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
       />
     </b-form-group>
