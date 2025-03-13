@@ -14,5 +14,5 @@ const props = defineProps({
 </script>
 
 <template>
-  <display-datetime :value="props.value" :format="FORMAT_LONG" :no-tooltip="props.noTooltip" />
+  <display-datetime :value="value" :format="FORMAT_LONG" :no-tooltip="noTooltip" />
 </template>
