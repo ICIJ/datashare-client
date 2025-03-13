@@ -3,14 +3,15 @@ import Fuse from 'fuse.js'
 import { orderBy as orderArrayBy, property } from 'lodash'
 import { computed, ref, onBeforeMount } from 'vue'
 
+import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
+import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
+import RowPaginationProjects from '@/components/RowPagination/RowPaginationProjects'
 import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import { useCore } from '@/composables/core'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/mode'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
-import PageContainer from '@/components/PageContainer/PageContainer'
 
 const { core } = useCore()
 const { isServer } = useMode()
@@ -119,8 +120,16 @@ const toAddRoute = computed(() => {
       :total-rows="filteredProjects.length"
       searchable
       paginable
-      :search-placeholder="$t('projectList.searchPlaceholder')"
-    />
+      :search-placeholder="$t('projectList.searchPlaceholder')">
+      <template #pagination="{ page, setPage, perPage, totalRows }">
+        <row-pagination-projects
+          :total-rows="totalRows"
+          :per-page="+perPage"
+          :model-value="page"
+          @update:model-value="setPage"
+        />
+      </template>
+    </page-toolbar>
     <project-entries v-model:sort="sort" v-model:order="order" :projects="projects" :layout="layout" />
   </page-container>
 </template>
