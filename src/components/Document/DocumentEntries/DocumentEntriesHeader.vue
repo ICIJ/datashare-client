@@ -88,12 +88,7 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
     <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" :disabled="total === 0" />
     <slot v-bind="{ compact }">
       <div>
-        <row-pagination-documents
-          v-model="page"
-          :total-rows="total" 
-          :per-page="+perPage" 
-          :compact="compact" 
-        />
+        <row-pagination-documents v-model="page" :total-rows="total" :per-page="+perPage" :compact="compact" />
         <button-download-documents :label="batchDownloadDocumentsLabel" @click="runBatchDownload" />
       </div>
     </slot>

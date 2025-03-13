@@ -33,7 +33,7 @@ const props = defineProps({
   }
 })
 
-const hasFewerRows = computed(() => props.totalRows <= (page.value * props.perPage))
+const hasFewerRows = computed(() => props.totalRows <= page.value * props.perPage)
 </script>
 
 <template>
