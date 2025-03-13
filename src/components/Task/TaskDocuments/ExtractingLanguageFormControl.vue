@@ -76,7 +76,7 @@ export default {
       <b-form-select
         :model-value="modelValue"
         :options="[nullOption, ...options]"
-        class="extracting-language-form-control__ocr-options p-3"
+        class="extracting-language-form-control__ocr-options"
         @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
       />
     </b-form-group>
