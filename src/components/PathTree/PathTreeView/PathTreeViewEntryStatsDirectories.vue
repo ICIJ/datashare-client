@@ -6,14 +6,14 @@ import DisplayNumber from '@/components/Display/DisplayNumber'
 defineProps({
   value: {
     type: Number,
-    required: true
+    default: 0
   }
 })
 </script>
 
 <template>
   <div class="path-tree-view-entry-stats-directories px-2 py-1">
-    <phosphor-icon name="folders" class="me-2" />
+    <phosphor-icon :name="PhFolders" class="me-2" />
     <display-number :value="value" />
   </div>
 </template>
