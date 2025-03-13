@@ -120,7 +120,8 @@ const toAddRoute = computed(() => {
       :total-rows="filteredProjects.length"
       searchable
       paginable
-      :search-placeholder="$t('projectList.searchPlaceholder')">
+      :search-placeholder="$t('projectList.searchPlaceholder')"
+    >
       <template #pagination="{ page, setPage, perPage, totalRows }">
         <row-pagination-projects
           :total-rows="totalRows"
