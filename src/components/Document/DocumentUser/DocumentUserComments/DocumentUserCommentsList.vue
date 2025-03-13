@@ -71,7 +71,7 @@ if (props.scrollToRecent) {
       <span
         class="document-user-comments-list__display-comments btn btn-outline-link d-inline-flex justify-content-between text-nowrap"
         @click="open = !open"
-        ><span v-b-tooltip.hover="{ customClass: 'd-sm-none' }" :title="displayComments"
+        ><span v-b-tooltip.body.hover="{ customClass: 'd-sm-none' }" :title="displayComments"
           ><phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2"
         /></span>
         <span class="d-none d-sm-inline">{{ displayComments }}</span></span

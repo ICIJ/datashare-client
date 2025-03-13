@@ -1,5 +1,5 @@
 <template>
-  <div v-b-tooltip.right class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle" :title="title">
+  <div v-b-tooltip.body.right class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle" :title="title">
     <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
     <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
       <phosphor-icon :name="document.contentTypeIcon" :size="String(size)" />
