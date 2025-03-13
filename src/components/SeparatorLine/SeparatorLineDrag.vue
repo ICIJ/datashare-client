@@ -1,23 +1,30 @@
 <script setup>
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import { computed } from 'vue'
+
+const props = defineProps({
+  dragging: {
+    type: Boolean
+  }
+})
+
+const classList = computed(() => {
+  return {
+    'separator-line-drag--dragging': props.dragging
+  }
+})
 </script>
 
 <template>
-  <button-icon
-    square
-    pill
-    hide-label
-    icon-left="hand-grabbing"
-    icon-left-hover-weight="bold"
-    label="Drag"
-    size="sm"
-    variant="outline-dark"
-    class="separator-line-drag"
-  />
+  <a class="separator-line-drag" :class="classList" />
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .separator-line-drag {
-  cursor: ew-resize;
+  cursor: grab;
+  width: 0.5em;
+
+  &--dragging {
+    cursor: grabbing;
+  }
 }
 </style>
