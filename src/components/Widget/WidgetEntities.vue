@@ -8,7 +8,7 @@
     <div class="widget widget--entities d-flex h-100 w-100">
       <template v-if="total || isServer">
         <div class="row flex-grow-1">
-          <div v-for="category in categories" :key="category" class="col-6 col-lg">
+          <div v-for="category in categories" :key="category" class="col-6 col-xl">
             <widget-barometer
               :icon="getCategoryIcon(category)"
               :variant="getCategoryVariant(category)"
