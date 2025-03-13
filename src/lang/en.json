@@ -1831,5 +1831,50 @@
   "shortcutsView": {
     "title": "Keyboard shortcuts",
     "searchPlaceholder": "Search keyboard shortcuts"
+  },
+  "rowPagination": {
+    "rowRange": "to {to} of 0 | to {to} of 1 | to {to} of {total}",
+    "rowRangeFewer": "of 0 | of 1 | to {total}",
+    "rowRangeCompact": "of 0 | of 1 | of {total}"
+  },
+  "rowPaginationBatchSearchs": {
+    "rowRange": "to {to} of 0 batch searches | to {to} of 1 batch search | to {to} of {total} batch searches",
+    "rowRangeFewer": "of 0 batch searches | of 1 batch search | to {total} batch searches",
+    "rowRangeCompact": "of 0 batch searches | of 1 batch search | of {total} batch searches"
+  },
+  "rowPaginationBatchDownloads": {
+    "rowRange": "to {to} of 0 batch downloads | to {to} of 1 batch download | to {to} of {total} batch downloads",
+    "rowRangeFewer": "of 0 batch downloads | of 1 batch download | to {total} batch downloads",
+    "rowRangeCompact": "of 0 batch downloads | of 1 batch download | of {total} batch downloads"
+  },
+  "rowPaginationDocuments": {
+    "rowRange": "to {to} of 0 documents | to {to} of 1 document | to {to} of {total} documents",
+    "rowRangeFewer": "of 0 documents | of 1 document | to {total} documents",
+    "rowRangeCompact": "of 0 documents | of 1 document | of {total} documents"
+  },
+  "rowPaginationProjects": {
+    "rowRange": "to {to} of 0 projects | to {to} of 1 project | to {to} of {total} projects",
+    "rowRangeFewer": "of 0 projects | of 1 project | to {total} projects",
+    "rowRangeCompact": "of 0 projects | of 1 project | of {total} projects"
+  },
+  "rowPaginationQueries": {
+    "rowRange": "to {to} of 0 queries | to {to} of 1 query | to {to} of {total} queries",
+    "rowRangeFewer": "of 0 queries | of 1 query | to {total} queries",
+    "rowRangeCompact": "of 0 queries | of 1 query | of {total} queries"
+  },
+  "rowPaginationResults": {
+    "rowRange": "to {to} of 0 results | to {to} of 1 result | to {to} of {total} results",
+    "rowRangeFewer": "of 0 results | of 1 result | to {total} results",
+    "rowRangeCompact": "of 0 results | of 1 result | of {total} results"
+  },
+  "rowPaginationSearches": {
+    "rowRange": "to {to} of 0 searches | to {to} of 1 search | to {to} of {total} searches",
+    "rowRangeFewer": "of 0 searches | of 1 search | to {total} searches",
+    "rowRangeCompact": "of 0 searches | of 1 search | of {total} searches"
+  },
+  "rowPaginationTasks": {
+    "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
+    "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
+    "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
   }
 }
