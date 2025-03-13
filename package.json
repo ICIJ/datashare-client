@@ -32,7 +32,7 @@
     "axios": "^1.7.9",
     "bodybuilder": "^2.5.0",
     "bootstrap": "^5.3.3",
-    "bootstrap-vue-next": "^0.25.8",
+    "bootstrap-vue-next": "^0.28.0",
     "d3": "^7.6.1",
     "elasticsearch-browser": "16.7.1",
     "fuse.js": "^7.0.0",
