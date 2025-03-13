@@ -10,6 +10,7 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
+import RowPaginationBatchDownloads from '@/components/RowPagination/RowPaginationBatchDownloads'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 
@@ -25,51 +26,55 @@ function getBatchDownloadRecord(item, key, defaultValue) {
 </script>
 
 <template>
-  <task-page
-    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty, refresh }"
-    :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
-    page-name="batch-download"
-    hide-clear-done
-    hide-stop-pending
-  >
-    <page-table-generic
-      v-if="!empty"
-      :items="tasks"
-      :fields="propertiesModelValueOptions"
-      :sort="sort"
-      :order="order"
-      @update:sort="updateSort"
-      @update:order="updateOrder"
-    >
-      <template #cell(state)="{ item }">
-        <display-status :value="item.state" />
-      </template>
-      <template #cell(name)="{ item }">
-        <router-link-batch-download :item="item" />
-      </template>
-      <template #cell(projects)="{ item }">
-        <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />
-      </template>
-      <template #cell(createdAt)="{ item }">
-        <display-datetime-from-now :value="item.createdAt" />
-      </template>
-      <template #cell(size)="{ item }">
-        <display-content-length v-if="hasZipSize(item)" :value="item.result.size" class="text-nowrap" />
-      </template>
-      <template #row-actions="{ item, detailsShowing, toggleDetails }">
-        <batch-download-actions
-          :id="item.id"
-          :name="item.name"
-          :state="item.state"
-          :value="getBatchDownloadRecord(item)"
-          :toggle-details="detailsShowing"
-          @update:toggle-details="toggleDetails"
-          @refresh="refresh"
-        />
-      </template>
-      <template #row-details="{ item }">
-        <search-breadcrumb-uri :uri="getBatchDownloadRecord(item).uri" no-label />
-      </template>
-    </page-table-generic>
+  <task-page :task-filter="[TASK_NAME.BATCH_DOWNLOAD]" page-name="batch-download" hide-clear-done hide-stop-pending>
+    <template #pagination="{ page, setPage, perPage, totalRows }">
+      <row-pagination-batch-downloads
+        :per-page="perPage"
+        :total-rows="totalRows"
+        :model-value="page"
+        @update:modelValue="setPage"
+      />
+    </template>
+    <template #default="{ tasks, sort, order, updateSort, updateOrder, empty, refresh }">
+      <page-table-generic
+        v-if="!empty"
+        :items="tasks"
+        :fields="propertiesModelValueOptions"
+        :sort="sort"
+        :order="order"
+        @update:sort="updateSort"
+        @update:order="updateOrder"
+      >
+        <template #cell(state)="{ item }">
+          <display-status :value="item.state" />
+        </template>
+        <template #cell(name)="{ item }">
+          <router-link-batch-download :item="item" />
+        </template>
+        <template #cell(projects)="{ item }">
+          <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />
+        </template>
+        <template #cell(createdAt)="{ item }">
+          <display-datetime-from-now :value="item.createdAt" />
+        </template>
+        <template #cell(size)="{ item }">
+          <display-content-length v-if="hasZipSize(item)" :value="item.result.size" class="text-nowrap" />
+        </template>
+        <template #row-actions="{ item, detailsShowing, toggleDetails }">
+          <batch-download-actions
+            :id="item.id"
+            :name="item.name"
+            :state="item.state"
+            :value="getBatchDownloadRecord(item)"
+            :toggle-details="detailsShowing"
+            @update:toggle-details="toggleDetails"
+            @refresh="refresh"
+          />
+        </template>
+        <template #row-details="{ item }">
+          <search-breadcrumb-uri :uri="getBatchDownloadRecord(item).uri" no-label />
+        </template>
+      </page-table-generic>
+    </template>
   </task-page>
 </template>
