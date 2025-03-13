@@ -91,17 +91,21 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
       <div>
         <tiny-pagination :key="total" v-model="page" row :total-rows="total" :per-page="perPage" :compact="compact">
           <template #number-of-rows="{ lastRangeRow: to }">
-            <i18n-t keypath="documentEntriesHeader.tinyPagination.rowRangeCompact" :plural="total" v-if="compact">
+            <i18n-t v-if="compact" keypath="documentEntriesHeader.tinyPagination.rowRangeCompact" :plural="total">
               <template #total>
                 <display-number :value="total" />
               </template>
             </i18n-t>
-            <i18n-t keypath="documentEntriesHeader.tinyPagination.rowRangeFewer" :plural="total" v-else-if="total <= (page * perPage)">
+            <i18n-t
+              v-else-if="total <= page * perPage"
+              keypath="documentEntriesHeader.tinyPagination.rowRangeFewer"
+              :plural="total"
+            >
               <template #total>
                 <display-number :value="total" />
               </template>
             </i18n-t>
-            <i18n-t keypath="documentEntriesHeader.tinyPagination.rowRange" :plural="total" v-else>
+            <i18n-t v-else keypath="documentEntriesHeader.tinyPagination.rowRange" :plural="total">
               <template #total>
                 <display-number :value="total" />
               </template>
