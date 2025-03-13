@@ -65,24 +65,27 @@ if (props.scrollToRecent) {
 <template>
   <section class="document-user-comments-list">
     <header class="d-flex justify-content-between align-items-center">
-      <span class="d-inline-flex align-items-center text-nowrap"
-        ><phosphor-icon name="sortAscending" class="me-1" />{{ sortingText }}</span
-      >
+      <span class="d-inline-flex align-items-center text-nowrap">
+        <phosphor-icon name="sortAscending" class="me-1" />
+        {{ sortingText }}
+      </span>
       <span
         class="document-user-comments-list__display-comments btn btn-outline-link d-inline-flex justify-content-between text-nowrap"
         @click="open = !open"
-        ><span v-b-tooltip.body.hover="{ customClass: 'd-sm-none' }" :title="displayComments"
-          ><phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2"
-        /></span>
-        <span class="d-none d-sm-inline">{{ displayComments }}</span></span
       >
+        <span v-b-tooltip.body.hover="{ customClass: 'd-sm-none' }" :title="displayComments">
+          <phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2" />
+        </span>
+        <span class="d-none d-sm-inline">{{ displayComments }}</span>
+      </span>
     </header>
     <section v-if="open" class="document-user-comments-list__comments py-2">
       <template v-if="comments.length">
         <header class="text-center py-2">
-          <a :href="firstComment" class="d-inline-flex align-items-center"
-            ><phosphor-icon :name="goToOldestIcon" class="me-1" />{{ goToOldest }}</a
-          >
+          <a :href="firstComment" class="d-inline-flex align-items-center">
+            <phosphor-icon :name="goToOldestIcon" class="me-1" />
+            {{ goToOldest }}
+          </a>
         </header>
         <article
           ref="container"
@@ -100,9 +103,10 @@ if (props.scrollToRecent) {
           />
         </article>
         <footer class="text-center py-2">
-          <a :href="lastComment" class="d-inline-flex align-items-center"
-            ><phosphor-icon :name="goToRecentIcon" class="me-1" />{{ goToRecent }}</a
-          >
+          <a :href="lastComment" class="d-inline-flex align-items-center">
+            <phosphor-icon :name="goToRecentIcon" class="me-1" />
+            {{ goToRecent }}
+          </a>
         </footer>
       </template>
       <template v-else>

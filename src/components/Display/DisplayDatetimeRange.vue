@@ -4,7 +4,7 @@ import { computed } from 'vue'
 
 import DisplayDatetime from './DisplayDatetime'
 
-import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW, humanLongDate } from '@/utils/humanDate'
+import { FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW } from '@/utils/humanDate'
 
 const { value } = defineProps({
   value: {
