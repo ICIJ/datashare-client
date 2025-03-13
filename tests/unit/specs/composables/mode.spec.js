@@ -11,6 +11,10 @@ vi.mock('@/composables/core', () => ({
 }))
 
 describe('useMode', () => {
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should return correct computed values', () => {
     const { mode, isServer, isMode } = useMode()
 

@@ -23,6 +23,10 @@ describe('ProjectViewEdit.vue', () => {
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('contains a ProjectForm', () => {
     const props = { name: 'local-datashare' }
     const wrapper = shallowMount(ProjectViewEdit, {

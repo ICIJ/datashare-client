@@ -98,6 +98,10 @@ describe('TaskBatchSearchList', () => {
     plugins = core.plugins
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display 2 batch searches', async () => {
     const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
     await flushPromises()

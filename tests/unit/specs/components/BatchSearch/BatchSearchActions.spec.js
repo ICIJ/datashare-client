@@ -34,6 +34,10 @@ describe('BatchSearchActions.vue', () => {
     await taskStore.getTasks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   describe('with a successful task', () => {
     let wrapper
 

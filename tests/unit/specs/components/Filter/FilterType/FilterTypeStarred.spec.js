@@ -38,7 +38,10 @@ describe('FilterTypeStarred.vue', () => {
     wrapper = mount(FilterTypeStarred, { props, global })
   })
 
-  afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
+  afterAll(() => {
+    removeCookie(process.env.VITE_DS_COOKIE_NAME)
+    vi.resetAllMocks()
+  })
 
   it('should display 2 items for the starred filter', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()

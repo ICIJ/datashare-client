@@ -24,6 +24,10 @@ describe('auth backend client', () => {
 
   afterEach(() => auth.reset())
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   describe('getUsername', () => {
     it('should return user name if user is authenticated with basic auth', async () => {
       api.getUser.mockResolvedValue({ uid: 'john' })

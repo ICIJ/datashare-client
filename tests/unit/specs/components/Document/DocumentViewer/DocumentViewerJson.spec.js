@@ -24,6 +24,10 @@ describe('DocumentViewerJson.vue', () => {
     await flushPromises()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should render the JSON in a JsonFormatter component', async () => {
     expect(wrapper.findComponent(JsonFormatter).exists()).toBeTruthy()
   })

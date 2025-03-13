@@ -70,6 +70,10 @@ describe('DocumentTranslation.vue', () => {
     documentStore.reset()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should show no translations', async () => {
     const mocked = mockedDocumentContentFactory('document-without-translation', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withNoContentTranslated()

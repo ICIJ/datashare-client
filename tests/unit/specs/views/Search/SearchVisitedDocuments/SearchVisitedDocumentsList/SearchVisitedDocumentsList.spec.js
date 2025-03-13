@@ -98,6 +98,10 @@ describe('SearchVisitedDocumentsList.vue', () => {
     vi.clearAllMocks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display a list of two documents', async () => {
     const wrapper = mount(SearchVisitedDocumentsList, { global: { plugins: core.plugins } })
     await flushPromises()

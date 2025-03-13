@@ -20,6 +20,10 @@ describe('DocumentViewerTiff.vue', () => {
     core = CoreSetup.init().useAll()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   // This entire test unit is deactivated unly we can support
   // canvas on JSDom + Node 18. Currently the `canvas` pakckage is
   // not compatible with Node 18.

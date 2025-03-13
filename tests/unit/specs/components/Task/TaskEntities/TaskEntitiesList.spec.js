@@ -34,6 +34,10 @@ describe('TaskEntitiesList.vue', () => {
     plugins = core.plugins
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('renders correctly', () => {
     const wrapper = mount(TaskEntitiesList, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)

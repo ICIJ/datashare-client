@@ -55,6 +55,10 @@ describe('WidgetRecommendedBy.vue', () => {
     await flushPromises()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('renders the component', () => {
     expect(wrapper.exists()).toBeTruthy()
   })

@@ -35,6 +35,10 @@ describe('DocumentNotes.vue', () => {
     documentStore.setDocument({ _id: 'foo', _index: 'bar' })
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should NOT display note on document', () => {
     wrapper = shallowMount(DocumentNotes, { global: { plugins } })
     expect(wrapper.find('b-alert-stub').exists()).toBeFalsy()

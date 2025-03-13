@@ -33,6 +33,10 @@ describe('main', () => {
     vm = vm.useRouter().mount()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should instantiate Vue', () => {
     api.getUser.mockResolvedValue({})
     expect(core.vue).toBeInstanceOf(Object)

@@ -25,6 +25,10 @@ describe('TaskEntitiesForm.vue', () => {
     config.set('projects', [{ name: 'local-datashare' }, { name: 'banana-papers' }])
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display selected project "local-datashare" by default', async () => {
     const wrapper = mount(TaskEntitiesForm, { global: { plugins } })
     expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')

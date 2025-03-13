@@ -32,6 +32,10 @@ describe('useTaskSettings', () => {
     return result
   }
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should initialize "app/task" settings with sort by to createdAt / desc', () => {
     const { store, router, i18n } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const { sortBy } = withSetup({ store, router, i18n, composable: () => useTaskSettings('task') })

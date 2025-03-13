@@ -23,6 +23,10 @@ describe('ProjectsMixin', () => {
     searchStore.setIndex(anotherProject)
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should call a function when a project is selected', async () => {
     const withFn = vi.fn()
     // Bind the function to the project

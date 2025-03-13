@@ -29,6 +29,10 @@ describe('FormControlExtractingLanguage.vue', () => {
       await flushPromises()
     })
 
+    afterAll(() => {
+      vi.resetAllMocks()
+    })
+
     it('should list text languages and default', () => {
       expect(wrapper.findAll('option')).toHaveLength(6)
     })

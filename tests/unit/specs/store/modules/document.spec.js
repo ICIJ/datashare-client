@@ -33,6 +33,10 @@ describe('DocumentStore', () => {
     vi.clearAllMocks()
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should define a store module', () => {
     expect(documentStore).toBeDefined()
     expect(documentStore.document).toBeDefined()

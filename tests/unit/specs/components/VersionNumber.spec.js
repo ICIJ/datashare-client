@@ -30,6 +30,10 @@ describe('VersionNumber.vue', () => {
     })
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should display client git sha1', () => {
     const sha1 = wrapper.vm.shortClientHash
 

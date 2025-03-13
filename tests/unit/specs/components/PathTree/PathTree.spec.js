@@ -75,6 +75,10 @@ describe('PathTree.vue', () => {
       })
     })
 
+    afterAll(() => {
+      vi.resetAllMocks()
+    })
+
     it('should be a Vue instance', () => {
       expect(wrapper).toBeTruthy()
     })

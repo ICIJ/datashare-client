@@ -44,6 +44,10 @@ describe('FilterTypePath.vue', () => {
     })
   })
 
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   it('should be created with dataDir as path', () => {
     expect(wrapper.vm.path).toBe('/data')
   })
