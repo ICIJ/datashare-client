@@ -9,6 +9,7 @@ import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import RowPaginationQueries from '@/components/RowPagination/RowPaginationQueries'
 import { useCore } from '@/composables/core'
 import { useBatchSearchQueryProperties } from '@/composables/batch-search-query-properties'
 import { useUrlParam, useUrlParamWithStore } from '@/composables/url-params'
@@ -94,7 +95,11 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
           :total-rows="batchSearch?.nbQueries ?? 0"
           paginable
           searchable
-        />
+        >
+          <template #pagination="{ totalRows }">
+            <row-pagination-queries v-model="page" :total-rows="totalRows" :per-page="+perPage" />
+          </template>
+        </page-toolbar>
         <page-table-generic v-if="!empty" :items="queries" :fields="visibleFields">
           <template #cell(query)="{ item }">
             <router-link :to="{ name: 'task.batch-search-queries.show', params: { query: item.query } }">
