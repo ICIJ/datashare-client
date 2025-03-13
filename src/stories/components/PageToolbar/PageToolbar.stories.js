@@ -45,7 +45,6 @@ export default {
     filterable: true,
     paginable: true,
     totalRows: 100,
-    pageRow: false,
     page: 1
   }
 }
