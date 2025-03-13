@@ -14,6 +14,7 @@ export function useBatchSearchResultProperties() {
     key: 'query',
     text: computed(() => t('task.batch-search-results.show.fields.query')),
     sortable: false,
+    required: true,
     emphasis: true
   })
 
