@@ -1832,7 +1832,7 @@
     "rowRangeFewer": "of 0 | of 1 | to {total}",
     "rowRangeCompact": "of 0 | of 1 | of {total}"
   },
-  "rowPaginationBatchSearchs": {
+  "rowPaginationBatchSearches": {
     "rowRange": "to {to} of 0 batch searches | to {to} of 1 batch search | to {to} of {total} batch searches",
     "rowRangeFewer": "of 0 batch searches | of 1 batch search | to {total} batch searches",
     "rowRangeCompact": "of 0 batch searches | of 1 batch search | of {total} batch searches"
