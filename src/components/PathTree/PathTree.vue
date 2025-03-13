@@ -92,6 +92,9 @@ const props = defineProps({
    * indexed in Elasticsearch.
    */
   elasticsearchOnly: { type: Boolean },
+  /**
+   * The level of the tree (for recursive rendering of this component)
+   */
   level: { type: Number, default: 0 }
 })
 
@@ -290,7 +293,7 @@ const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
       return b
         .agg('sum', 'contentLength', 'size')
         .agg('bucket_sort', { size, from }, 'bucket_truncate')
-        .agg('cardinality', 'dirname.tree', 'directories')
+        .agg('cardinality', 'dirname', 'directories')
     })
     .agg('sum', 'contentLength', 'total_size')
     .agg('cardinality', 'dirname.tree', 'total_directories')
@@ -388,7 +391,7 @@ const totalDocuments = computed(() => {
 })
 
 const totalDirectories = computed(() => {
-  return get(lastPage.value, 'aggregations.total_directories.value', 0)
+  return Math.max(0, get(lastPage.value, 'aggregations.total_directories.value', 0) - 1)
 })
 
 const totalSize = computed(() => {
@@ -436,7 +439,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
           :path="directory.key"
           :projects="projects"
           :documents="directory.doc_count"
-          :directories="directory.directories.value"
+          :directories="Math.max(0, directory.directories.value - 1)"
           :size="directory.size.value"
           :selected="isSelectedDirectory(directory.key)"
           :collapse="isCollapsedDirectory(directory.key)"
