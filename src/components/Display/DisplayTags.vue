@@ -8,18 +8,21 @@ const props = defineProps({
   }
 })
 
-const toHashtag = (tag) => `#${tag}`
-
 const tags = computed(() => {
   return castArray(props.value)
 })
+
+const tagWithSeparator = (tag, index) => {
+  const separator = index < tags.value.length - 1 ? ', ' : ' '
+  return `${tag}${separator}`
+}
 </script>
 
 <template>
   <span class="display-tags d-inline-flex flex-wrap gap-1">
     <template v-for="(tag, index) in tags" :key="tag">
       <slot name="tag" v-bind="{ tag, index }">
-        <span class="display-tags__item"> {{ tag }}<span v-if="index < tags.length - 1">, </span> </span>
+        {{ tagWithSeparator(tag, index) }}
       </slot>
     </template>
   </span>
