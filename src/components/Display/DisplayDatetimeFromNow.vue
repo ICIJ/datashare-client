@@ -3,7 +3,7 @@ import DisplayDatetime from './DisplayDatetime'
 
 import { FORMAT_FROM_NOW } from '@/utils/humanDate'
 
-const props = defineProps({
+defineProps({
   value: {
     type: [String, Number, Date],
     required: true

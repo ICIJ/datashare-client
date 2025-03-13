@@ -2,7 +2,7 @@
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import { FORMAT_SHORT } from '@/utils/humanDate'
 
-const props = defineProps({
+defineProps({
   value: {
     type: [String, Number, Date],
     required: true
