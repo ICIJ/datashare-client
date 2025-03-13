@@ -1,8 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { TinyPagination } from '@icij/murmur-next'
 
 import DocumentCarouselNav from './DocumentCarouselNav'
+
+import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 
 const position = defineModel('position', {
   type: Number,
@@ -39,13 +40,11 @@ const adjustedPosition = computed({
 
 <template>
   <div class="document-carousel">
-    <tiny-pagination
-      :key="total"
+    <row-pagination-documents
       v-model="adjustedPosition"
       :per-page="1"
       :total-rows="total"
       class="document-carousel__pagination mx-auto py-1"
-      row
     />
     <div class="document-carousel__content p-3">
       <document-carousel-nav
