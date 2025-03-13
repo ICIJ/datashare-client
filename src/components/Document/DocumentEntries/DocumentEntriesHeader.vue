@@ -93,6 +93,9 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
             <template v-if="compact">
               {{ $tc('documentEntriesHeader.tinyPagination.rowRangeCompact', total, { total: $n(total) }) }}
             </template>
+            <template v-else-if="total <= (page * perPage)">
+              {{ $tc('documentEntriesHeader.tinyPagination.rowRangeFewer', total, { to: $n(to), total: $n(total) }) }}
+            </template>
             <template v-else>
               {{ $tc('documentEntriesHeader.tinyPagination.rowRange', total, { to: $n(to), total: $n(total) }) }}
             </template>
