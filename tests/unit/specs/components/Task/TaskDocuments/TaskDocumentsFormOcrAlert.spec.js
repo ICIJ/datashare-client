@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
-import ExtractingFormOcrControl from '@/components/Task/TaskDocuments/ExtractingFormOcrControl'
+import TaskDocumentsFormOcrAlert from '@/components/Task/TaskDocuments/TaskDocumentsFormOcrAlert'
 
 const OCR_LANGUAGES = [
   { name: 'CHINESE', iso6392: 'zho' },
@@ -18,13 +18,13 @@ const TEXT_LANGUAGES = [
   { name: 'ITALIAN', iso6392: 'ita' }
 ]
 
-describe('ExtractingFormOcrControl.vue', () => {
+describe('TaskDocumentsFormOcrAlert.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
   let wrapper
 
   describe('OCR for italian language is installed', () => {
     it('should display an alert indicating that no OCR are installed', async () => {
-      wrapper = mount(ExtractingFormOcrControl, {
+      wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {
           plugins
         },
@@ -36,14 +36,14 @@ describe('ExtractingFormOcrControl.vue', () => {
         }
       })
       await flushPromises()
-      expect(wrapper.find('.extracting-language-form-ocr-control__install_ocr_language').exists()).toBe(true)
-      expect(wrapper.find('.extracting-language-form-ocr-control').text()).not.toContain(
+      expect(wrapper.find('.task-documents-form-ocr-alert__install_ocr_language').exists()).toBe(true)
+      expect(wrapper.find('.task-documents-form-ocr-alert').text()).not.toContain(
         'Tesseract OCR is not installed.'
       )
     })
 
     it('should display an alert indicating that tesseract is not installed', async () => {
-      wrapper = mount(ExtractingFormOcrControl, {
+      wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {
           plugins
         },
@@ -55,7 +55,7 @@ describe('ExtractingFormOcrControl.vue', () => {
         }
       })
       await flushPromises()
-      expect(wrapper.find('.extracting-language-form-ocr-control').text()).toContain('Tesseract OCR is not installed.')
+      expect(wrapper.find('.task-documents-form-ocr-alert').text()).toContain('Tesseract OCR is not installed.')
     })
   })
 })

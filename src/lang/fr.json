@@ -521,7 +521,7 @@
     "failedToRetrieveLanguages": "Impossible de récupérer les langues",
     "nullOption": "Détecter automatiquement (par défaut)"
   },
-  "extractingFormOcrControl": {
+  "taskDocumentsFormOcrAlert": {
     "useDefault": "La langue OCR par défaut est utilisée.",
     "isMissing": " L'OCR pour '{language}' n'est pas installé.",
     "installOcrLanguage": "Choisissez parmi les {availableLanguages} langues à installer.",

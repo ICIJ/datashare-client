@@ -5,12 +5,12 @@ import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
 
 import { useCore } from '@/composables/core'
-import ExtractingFormOcrControl from '@/components/Task/TaskDocuments/ExtractingFormOcrControl'
 import FormCreation from '@/components/Form/FormCreation'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
+import TaskDocumentsFormOcrAlert from '@/components/Task/TaskDocuments/TaskDocumentsFormOcrAlert'
 
 const props = defineProps({
   project: {
@@ -158,7 +158,7 @@ watch(
         stacked
       />
     </form-fieldset-i18n>
-    <extracting-form-ocr-control
+    <task-documents-form-ocr-alert
       v-show="showOcrMessage"
       :iso-lang="language"
       :text-languages="textLanguages"

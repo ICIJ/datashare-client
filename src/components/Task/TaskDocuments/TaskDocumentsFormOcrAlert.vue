@@ -57,23 +57,23 @@ function sameLanguage(nameOrIso6392) {
 </script>
 
 <template>
-  <app-overlay :show="!isReady" class="extracting-language-form-ocr-control" spinner-small>
+  <app-overlay :show="!isReady" class="task-documents-form-ocr-alert" spinner-small>
     <b-alert
       :model-value="!hasTesseract"
       variant="warning"
-      class="extracting-language-form-ocr-control__tesseract_not_installed mt-3"
+      class="task-documents-form-ocr-alert__tesseract_not_installed mt-3"
     >
-      {{ t('extractingFormOcrControl.tesseractNotInstalled') }}
+      {{ t('taskDocumentsFormOcrAlert.tesseractNotInstalled') }}
     </b-alert>
     <b-alert
       :model-value="shouldDisplayLanguageMessage"
       variant="warning"
-      class="extracting-language-form-ocr-control__install_ocr_language mt-3"
+      class="task-documents-form-ocr-alert__install_ocr_language mt-3"
     >
-      {{ t('extractingFormOcrControl.isMissing', { language: languageName }) }}
-      {{ t('extractingFormOcrControl.useDefault') }}
+      {{ t('taskDocumentsFormOcrAlert.isMissing', { language: languageName }) }}
+      {{ t('taskDocumentsFormOcrAlert.useDefault') }}
       <a href="https://icij.gitbook.io/datashare/local-mode/add-more-languages" target="_blank">
-        {{ t('extractingFormOcrControl.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
+        {{ t('taskDocumentsFormOcrAlert.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
       </a>
     </b-alert>
   </app-overlay>
