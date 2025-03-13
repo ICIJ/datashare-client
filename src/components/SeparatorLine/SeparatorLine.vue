@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 
 import SeparatorLineDrag from './SeparatorLineDrag'
 import SeparatorLineReduce from './SeparatorLineReduce'
@@ -32,9 +32,12 @@ const props = defineProps({
   }
 })
 
+const dragging = ref(false)
+
 const classList = computed(() => {
   return {
-    'separator-line--active': props.active
+    'separator-line--active': props.active,
+    'separator-line--dragging': dragging.value,
   }
 })
 
@@ -45,23 +48,38 @@ const emit = defineEmits(['reduce', 'expand', 'drag', 'dragstart', 'dragend'])
 const getMax = () => target.value.parentNode.getBoundingClientRect().width - targetState.offsetWidth
 const reduce = () => emit('reduce', 0)
 const expand = () => emit('expand', getMax())
+
+const drag = ({ detail }) => {
+  dragging.value = true
+  emit('drag', detail)
+}
+
+const dragStart = ({ detail }) => {
+  dragging.value = true
+  emit('dragstart', detail)
+}
+
+const dragEnd = ({ detail }) => {
+  dragging.value = false
+  emit('dragend', detail)
+}
 </script>
 
 <template>
   <div ref="target" class="separator-line" :class="classList">
+    <separator-line-drag
+      class="separator-line__drag"
+      v-draggable.relative="{ target, min, reduceThreshold, expandThreshold }"
+      :dragging="dragging"
+      @reduce="reduce"
+      @expand="expand"
+      @drag="drag"
+      @dragstart="dragStart"
+      @dragend="dragEnd"
+    />
     <div class="separator-line__buttons">
-      <slot>
-        <separator-line-reduce :disabled="reduceDisabled" @click="reduce" />
-        <separator-line-drag
-          v-draggable.relative="{ target, min, reduceThreshold, expandThreshold }"
-          @reduce="reduce"
-          @expand="expand"
-          @drag="emit('drag', $event.detail)"
-          @dragstart="emit('dragstart', $event.detail)"
-          @dragend="emit('dragend', $event.detail)"
-        />
-        <separator-line-expand :disabled="expandDisabled" @click="expand" />
-      </slot>
+      <separator-line-reduce :disabled="reduceDisabled" @click="reduce" />
+      <separator-line-expand :disabled="expandDisabled" @click="expand" />
     </div>
   </div>
 </template>
@@ -94,25 +112,35 @@ const expand = () => emit('expand', getMax())
   &:hover &__buttons,
   &--active &__buttons {
     opacity: 1;
-    pointer-events: all;
+  }
+
+  &__drag {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   &__buttons {
     opacity: 0;
-    pointer-events: none;
+    z-index: 20;
     transition: $transition-fade;
     position: sticky;
     transform: translateY(-50%);
     top: 50vh;
-    height: 240px;
+    height: 150px;
     width: 2rem;
     max-height: 240px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    pointer-events: none;
 
     &:deep(.button-icon) {
+      pointer-events: all;
       border-color: var(--bs-action-text-emphasis);
 
       .phosphor-icon {
