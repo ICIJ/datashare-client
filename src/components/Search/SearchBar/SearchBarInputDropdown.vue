@@ -35,7 +35,6 @@
       :active="hasValue(option)"
       :link-class="linkClass"
       class="search-bar-input-dropdown__option"
-      @click="toggleUniqueValue($event, option)"
     >
       <slot name="dropdown-item" v-bind="{ option, index, modelValues, hasValue, toggleValue, toggleUniqueValue }">
         <span class="px-3 d-block" @click="toggleValue($event, option)">
@@ -182,7 +181,7 @@ export default {
         this.selectedValue = without(this.modelValues, value)
       }
     },
-    setValue(event, value) {
+    setValue(value) {
       if (this.multiple) {
         this.selectedValue = [value]
       } else {
@@ -193,7 +192,7 @@ export default {
       if (this.hasValue(value)) {
         return this.unselectValue(value)
       }
-      return this.setValue(event, value)
+      return this.setValue(value)
     },
     toggleValue(event, value) {
       if (this.multiple) {
