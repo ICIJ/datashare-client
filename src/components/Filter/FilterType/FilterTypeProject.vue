@@ -1,9 +1,12 @@
 <script setup>
+import { computed } from 'vue'
+
 import { useSearchFilter } from '@/composables/search-filter'
 import { useCore } from '@/composables/core'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
+import FilterTypeProjectAll from '@/components/Filter/FilterType/FilterTypeProjectAll'
 
 defineProps({
   filter: {
@@ -12,11 +15,20 @@ defineProps({
   }
 })
 
-const { computedProjects } = useSearchFilter()
+const { computedProjects, allProjectsSelected } = useSearchFilter()
 const { core } = useCore()
 const query = defineModel('query', { type: String, default: '' })
 
-const selected = computedProjects()
+const selectedProjects = computedProjects()
+
+const selected = computed({
+  get() {
+    return allProjectsSelected.value ? [] : selectedProjects.value
+  },
+  set(value) {
+    selectedProjects.value = value.length === 0 ? core.projectIds : value
+  }
+})
 
 const projectsWithEntries = (entries) => {
   return core.projectIds.map((id) => {
@@ -26,10 +38,6 @@ const projectsWithEntries = (entries) => {
   })
 }
 
-const isProjectDisabled = (id) => {
-  return selected.value.length === 1 && selected.value[0] === id
-}
-
 const isProjectSelected = (id) => {
   return selected.value.includes(id)
 }
@@ -37,6 +45,9 @@ const isProjectSelected = (id) => {
 
 <template>
   <filter-type v-model:query="query" :filter="filter" :count="selected.length">
+    <template #all>
+      <filter-type-project-all />
+    </template>
     <template #default="{ entries }">
       <b-form-checkbox-group v-model="selected">
         <filters-panel-section-filter-entry
@@ -44,7 +55,6 @@ const isProjectSelected = (id) => {
           :key="id"
           :value="id"
           :count="count"
-          :disabled="isProjectDisabled(id)"
           :hide-count="!isProjectSelected(id)"
         >
           <project-label :project="id" hide-thumbnail />
