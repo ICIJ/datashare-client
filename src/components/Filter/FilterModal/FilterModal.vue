@@ -4,7 +4,6 @@ import { computed } from 'vue'
 import FilterModalTitle from './FilterModalTitle'
 
 import AppModal from '@/components/AppModal/AppModal'
-
 import { useSearchFilter } from '@/composables/search-filter'
 
 const { getFilterComponent } = useSearchFilter()
@@ -26,7 +25,15 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
 </script>
 
 <template>
-  <app-modal v-if="hasExpandModal" v-model="modelValue" lazy size="lg" no-footer title-class="flex-grow-1" body-class="py-0">
+  <app-modal
+    v-if="hasExpandModal"
+    v-model="modelValue"
+    lazy
+    size="lg"
+    no-footer
+    title-class="flex-grow-1"
+    body-class="py-0"
+  >
     <template #title>
       <filter-modal-title v-model:sort="sort" :filter="filter" />
     </template>
