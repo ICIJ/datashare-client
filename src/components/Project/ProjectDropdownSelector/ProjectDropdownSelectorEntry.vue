@@ -20,6 +20,13 @@ const props = defineProps({
   }
 })
 
+const select = ($event) => {
+  if (props.noCheckbox) {
+    return emit('toggleUniqueValue', $event)
+  }
+  return emit('toggleValue', $event)
+}
+
 const classList = computed(() => {
   return {
     'project-dropdown-selector-entry--focus': props.focus
@@ -30,13 +37,9 @@ const emit = defineEmits(['toggleValue', 'toggleUniqueValue'])
 </script>
 
 <template>
-  <div class="project-dropdown-selector-entry rounded" :class="classList">
-    <project-dropdown-selector-checkbox
-      v-if="!noCheckbox"
-      :model-value="selected"
-      @click="emit('toggleValue', $event)"
-    />
-    <project-label class="pe-1 py-2" no-caption :project="project" @click="emit('toggleUniqueValue', $event)" />
+  <div class="project-dropdown-selector-entry rounded" :class="classList" @click="select($event)">
+    <project-dropdown-selector-checkbox v-if="!noCheckbox" :model-value="selected" />
+    <project-label class="pe-1 py-2" no-caption :project="project" />
   </div>
 </template>
 
