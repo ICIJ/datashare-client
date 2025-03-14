@@ -1,6 +1,6 @@
 <template>
   <div class="widget widget--documents">
-    <widget-barometer-documents :to="to" :nb-documents="total" :nb-documents-on-disks="onDisk" />
+    <widget-barometer-documents :to="toSearch" :nb-documents="total" :nb-documents-on-disks="onDisk" />
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import WidgetBarometerDocuments from './WidgetBarometerDocuments'
  * Widget to display the number of indexed files on the insights page.
  */
 export default {
-  name: 'WidgetFileBarometer',
+  name: 'WidgetDocuments',
   components: {
     WidgetBarometerDocuments
   },
