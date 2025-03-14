@@ -10,7 +10,6 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     :icon-right="PhCaretRight"
     :to="{ name: 'shortcuts' }"
     icon-right-variant="secondary"
-    icon-right-hover-variant="inherit"
   >
     {{ $t('keyboardShortcutsPopoverLink.label') }}
   </button-icon>
