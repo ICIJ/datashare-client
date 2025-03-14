@@ -1,5 +1,5 @@
 <script setup>
-import { property } from 'lodash'
+import { matchesProperty, property } from 'lodash'
 import { computed } from 'vue'
 
 const { options } = defineProps({
@@ -22,7 +22,8 @@ const all = computed({
   },
   set(checked) {
     const values = options.map(property('value'))
-    modelValue.value = checked ? values : []
+    const disabledValues = options.filter(matchesProperty('disabled', true)).map(property('value'))
+    modelValue.value = checked ? values : disabledValues
   }
 })
 </script>
