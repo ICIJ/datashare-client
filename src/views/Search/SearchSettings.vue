@@ -10,7 +10,7 @@ import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import settings from '@/utils/settings'
 import { useAppStore } from '@/store/modules'
-import { useViewSettings } from '@/composables/view-settings'
+import { useViewSettings, INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -18,7 +18,7 @@ const { tLayout } = useViewSettings(t)
 
 const layout = ref({
   label: tLayout.label,
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   modelValue: computed({
     get: () => appStore.getSettings('search', 'layout'),
@@ -45,7 +45,7 @@ const layout = ref({
 
 const perPage = ref({
   label: computed(() => t('search.settings.resultsPerPage')),
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     to: 'search',
@@ -71,7 +71,7 @@ const perPage = ref({
 
 const sortBy = ref({
   label: computed(() => t('viewSettings.sortBy.label')),
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     to: 'search',
@@ -89,7 +89,7 @@ const { propertiesOrder, propertiesLabel, propertiesIcon } = useSearchSettings()
 
 const properties = ref({
   label: computed(() => t('viewSettings.properties')),
-  type: 'checkbox',
+  type: INPUT_CHECKBOX,
   open: true,
   modelValue: computed({
     get: () => appStore.getSettings('search', 'properties'),

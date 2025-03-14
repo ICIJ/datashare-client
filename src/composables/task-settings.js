@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { camelCase } from 'lodash'
 
 import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
-import { useViewSettings, SORT_ORDER_KEY } from '@/composables/view-settings'
+import { useViewSettings, SORT_ORDER_KEY, INPUT_RADIO, INPUT_CHECKBOX } from '@/composables/view-settings'
 import { useTaskProperties } from '@/composables/task-properties'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/mode'
@@ -17,7 +17,7 @@ export function useTaskSettings(pageName) {
 
   const perPage = ref({
     label: perPageLabel('task.title'),
-    type: 'radio',
+    type: INPUT_RADIO,
     open: true,
     modelValue: useUrlParamWithStore('perPage', {
       transform: (value) => Math.max(10, parseInt(value)),
@@ -46,7 +46,7 @@ export function useTaskSettings(pageName) {
 
   const sortBy = ref({
     label: sortByLabel,
-    type: 'radio',
+    type: INPUT_RADIO,
     open: true,
     modelValue: useUrlParamsWithStore(['sort', 'order'], {
       get: () => appStore.getSettings(settingsView, 'orderBy'),
@@ -66,7 +66,7 @@ export function useTaskSettings(pageName) {
 
   const properties = ref({
     label: visiblePropertiesLabel,
-    type: 'checkbox',
+    type: INPUT_CHECKBOX,
     open: true,
     modelValue: computed({
       get: () => appStore.getSettings(settingsView, 'properties'),

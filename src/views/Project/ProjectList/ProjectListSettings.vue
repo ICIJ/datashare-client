@@ -7,7 +7,7 @@ import { LAYOUTS } from '@/enums/layouts'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY } from '@/composables/view-settings'
+import { useViewSettings, SORT_ORDER_KEY, INPUT_RADIO } from '@/composables/view-settings'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
@@ -16,7 +16,7 @@ const appStore = useAppStore()
 
 const layout = ref({
   label: tLayout.label,
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('layout', {
     get: () => appStore.getSettings('projectList', 'layout'),
@@ -38,7 +38,7 @@ const layout = ref({
 
 const perPage = ref({
   label: perPageLabel('projectList.title'),
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
@@ -63,7 +63,7 @@ const perPage = ref({
 
 const sortBy = ref({
   label: sortByLabel,
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     get: () => appStore.getSettings('projectList', 'orderBy'),

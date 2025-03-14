@@ -1,5 +1,6 @@
 import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
+import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
 
 export default {
   title: 'Components/PageSettings/Section',
@@ -7,7 +8,7 @@ export default {
   argTypes: {
     type: {
       control: { type: 'radio' },
-      options: ['radio', 'checkbox']
+      options: [INPUT_CHECKBOX, INPUT_CHECKBOX]
     }
   },
   render: (args) => ({
@@ -29,7 +30,7 @@ export default {
 const props = {
   label: 'Show in document details',
   name: 'document-details',
-  type: 'checkbox',
+  type: INPUT_CHECKBOX,
   open: true,
   options: [
     {
@@ -63,7 +64,7 @@ export const Default = {
 export const Radio = {
   args: {
     ...props,
-    type: 'radio',
+    type: INPUT_CHECKBOX,
     modelValue: ''
   }
 }

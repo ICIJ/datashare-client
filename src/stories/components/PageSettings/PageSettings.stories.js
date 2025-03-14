@@ -3,6 +3,7 @@ import { fn } from '@storybook/test'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
+import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
 
 export default {
   title: 'Components/PageSettings',
@@ -53,7 +54,7 @@ export default {
 const example = {
   label: 'Show in document details',
   name: 'document-details',
-  type: 'radio',
+  type: INPUT_RADIO,
   modelValue: 'less-relevant',
   open: false,
   options: [
@@ -72,7 +73,7 @@ const example = {
 const props2 = {
   label: 'Documents per page',
   name: 'test',
-  type: 'radio',
+  type: INPUT_RADIO,
   modelValue: '30',
   open: true,
   options: [
@@ -93,7 +94,7 @@ const props2 = {
 const props3 = {
   label: 'View',
   name: 'view',
-  type: 'radio',
+  type: INPUT_RADIO,
   modelValue: 'grid',
   open: true,
   options: [
@@ -117,7 +118,7 @@ const props3 = {
 const props4 = {
   label: 'Document details',
   name: 'document-details',
-  type: 'checkbox',
+  type: INPUT_CHECKBOX,
   modelValue: ['thumbnail', 'creation-date'],
   open: true,
   options: [
