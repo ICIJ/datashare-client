@@ -14,14 +14,13 @@ const props = defineProps({
 const { computedAll, computedTotal, searchStore } = useSearchFilter()
 
 const all = computedAll(toRef(props, 'filter'))
-const total = computedTotal(toRef(props, 'filter'))
-
 // We track if the total was already visible before to avoid flickering
 // when hidding it (e.g. when the search is not ready).
 const hadTotal = ref(false)
-watch(total, (value, oldValue) => (hadTotal.value = oldValue !== null))
-
-const hideTotal = computed(() => total.value === null || (!searchStore.isReady && !hadTotal.value))
+const total = computedTotal(toRef(props, 'filter'))
+const hideTotal = computed(() => total.value === null || !hadTotal.value)
+// We need to update hadTotal after the search is ready and a total is given
+watch(toRef(searchStore, 'isReady'), (value) => (hadTotal.value = value && total.value !== null))
 </script>
 
 <template>
