@@ -33,6 +33,7 @@ export function useSearchFilter() {
   }
 
   const indices = computed(() => searchStore.indices)
+  const allProjectsSelected = computed(() => indices.value.length === core.projectIds.length)
 
   function getFilterComponent({ component }) {
     return filterTypes[component]
@@ -320,6 +321,7 @@ export function useSearchFilter() {
 
   return {
     indices,
+    allProjectsSelected,
     computedAll,
     computedContextualizeFilter,
     computedExcludeFilter,
