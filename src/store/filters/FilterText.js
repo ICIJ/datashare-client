@@ -11,6 +11,7 @@ export default class FilterText {
     name,
     key,
     icon = null,
+    hideAll = false,
     hideContextualize = false,
     hideExclude = false,
     hideExpand = false,
@@ -27,6 +28,7 @@ export default class FilterText {
     this.name = name
     this.key = key
     this.icon = icon
+    this.hideAll = hideAll
     this.hideContextualize = hideContextualize
     this.hideExclude = hideExclude
     this.hideExpand = hideExpand
