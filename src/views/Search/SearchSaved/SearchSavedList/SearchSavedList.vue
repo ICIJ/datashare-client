@@ -98,7 +98,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         :total-rows="pagination?.total ?? 0"
       >
         <template #pagination="{ totalRows }">
-          <row-pagination-searches v-model="page" :total-rows="totalRows" :per-page="+perPage" />
+          <row-pagination-searches v-model="page" :total-rows="totalRows" :per-page="perPage" />
         </template>
       </page-toolbar>
     </page-container>

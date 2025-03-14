@@ -124,7 +124,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
       paginable
     >
       <template #pagination="{ totalRows }">
-        <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="+perPage" />
+        <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </template>
     </page-toolbar>
   </page-container>

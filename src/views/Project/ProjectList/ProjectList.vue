@@ -123,7 +123,7 @@ const toAddRoute = computed(() => {
       :search-placeholder="$t('projectList.searchPlaceholder')"
     >
       <template #pagination="{ totalRows }">
-        <row-pagination-projects v-model="page" :total-rows="totalRows" :per-page="+perPage" />
+        <row-pagination-projects v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </template>
     </page-toolbar>
     <project-entries v-model:sort="sort" v-model:order="order" :projects="projects" :layout="layout" />
