@@ -1,5 +1,5 @@
 <template>
-  <widget-barometer class="widget-barometer-documents" icon="files" :label="label">
+  <widget-barometer class="widget-barometer-documents" icon="files">
     <i18n-t keypath="widget.barometer.document" :plural="nbDocuments">
       <template #n>
         <display-number-human
