@@ -43,25 +43,26 @@ describe('FilterTypeStarred.vue', () => {
     vi.resetAllMocks()
   })
 
-  it('should display 2 items for the starred filter', async () => {
+  it('should display 3 items for the starred filter (including "All")', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.findComponent(FilterType).vm.aggregate()
 
     const labels = wrapper.findAll('.filters-panel-section-filter-entry__label')
-    expect(labels).toHaveLength(2)
-    expect(labels.at(0).text()).toBe('Starred')
-    expect(labels.at(1).text()).toBe('Not starred')
+    expect(labels).toHaveLength(3)
+    expect(labels.at(0).text()).toBe('All')
+    expect(labels.at(1).text()).toBe('Starred')
+    expect(labels.at(2).text()).toBe('Not starred')
   })
 
   it('should change the selected value', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
     wrapper.findComponent(FilterType).vm.aggregate()
 
-    await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(0).setChecked(true)
+    await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(1).setChecked(true)
     expect(wrapper.vm.selected).toEqual([true])
 
-    await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(0).setChecked(false)
+    await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(1).setChecked(false)
     expect(wrapper.vm.selected).toEqual([])
   })
 
@@ -83,7 +84,7 @@ describe('FilterTypeStarred.vue', () => {
 
     await wrapper.findComponent(FilterType).vm.aggregate()
 
-    expect(wrapper.findAll('.filters-panel-section-filter-entry__count')).toHaveLength(2)
-    expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(0).text()).toBe('2')
+    expect(wrapper.findAll('.filters-panel-section-filter-entry__count')).toHaveLength(3)
+    expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(1).text()).toBe('2')
   })
 })
