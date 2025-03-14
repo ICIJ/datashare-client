@@ -5,7 +5,7 @@ import { FORMAT_MONTH } from '@/utils/humanDate'
 defineProps({
   value: {
     type: [String, Number, Date],
-    required: true
+    default: null
   }
 })
 </script>

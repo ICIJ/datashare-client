@@ -5,7 +5,7 @@ import { FORMAT_LONG } from '@/utils/humanDate'
 defineProps({
   value: {
     type: [String, Number, Date],
-    required: true
+    default: null
   },
   noTooltip: {
     type: Boolean
