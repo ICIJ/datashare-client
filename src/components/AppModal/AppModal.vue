@@ -9,6 +9,8 @@ import { breakpointSizeValidator, buttonSizeValidator, SIZE } from '@/enums/size
 // This tells every nested component they are in a modal
 provide('modal', true)
 
+const modelValue = defineModel({ type: Boolean })
+
 defineProps({
   title: {
     type: String
@@ -23,15 +25,6 @@ defineProps({
     type: [Number, String],
     default: '60px'
   },
-  autofocus: {
-    type: Boolean
-  },
-  bodyClass: {
-    type: String
-  },
-  busy: {
-    type: Boolean
-  },
   buttonSize: {
     type: String,
     validator: buttonSizeValidator
@@ -45,78 +38,6 @@ defineProps({
   cancelVariant: {
     type: String
   },
-  centered: {
-    type: Boolean
-  },
-  contentClass: {
-    type: String
-  },
-  dialogClass: {
-    type: String
-  },
-  footerBgVariant: {
-    type: String
-  },
-  footerClass: {
-    type: String
-  },
-  footerTextVariant: {
-    type: String
-  },
-  footerBorderVariant: {
-    type: String
-  },
-  footerVariant: {
-    type: String
-  },
-  fullscreen: {
-    type: Boolean
-  },
-  headerBgVariant: {
-    type: String
-  },
-  headerBorderVariant: {
-    type: String
-  },
-  headerClass: {
-    type: String
-  },
-  hideBackdrop: {
-    type: Boolean
-  },
-  hideFooter: {
-    type: Boolean
-  },
-  hideHeader: {
-    type: Boolean
-  },
-  id: {
-    type: String
-  },
-  lazy: {
-    type: Boolean
-  },
-  modalClass: {
-    type: String
-  },
-  modelValue: {
-    type: Boolean
-  },
-  noCloseOnBackdrop: {
-    type: Boolean
-  },
-  noCloseOnEsc: {
-    type: Boolean
-  },
-  noFade: {
-    type: Boolean
-  },
-  noStacking: {
-    type: Boolean
-  },
-  noTrap: {
-    type: Boolean
-  },
   okDisabled: {
     type: Boolean
   },
@@ -129,9 +50,6 @@ defineProps({
   okVariant: {
     type: String
   },
-  scrollable: {
-    type: Boolean
-  },
   size: {
     type: String,
     default: SIZE.MD,
@@ -142,45 +60,11 @@ defineProps({
 
 <template>
   <b-modal
-    :id="id"
-    :autofocus="autofocus"
-    :body-class="bodyClass"
-    :busy="busy"
     :button-size="buttonSize"
-    :cancel-disabled="cancelDisabled"
-    :cancel-title="cancelTitle"
-    :cancel-variant="cancelVariant"
-    :centered="centered"
-    :content-class="contentClass"
-    :dialog-class="dialogClass"
-    :footer-bg-variant="footerBgVariant"
-    :footer-border-variant="footerBorderVariant"
-    :footer-class="footerClass"
-    :footer-text-variant="footerTextVariant"
-    :footer-variant="footerVariant"
-    :fullscreen="fullscreen"
-    :header-bg-variant="headerBgVariant"
-    :header-border-variant="headerBorderVariant"
-    :header-class="headerClass"
-    :hide-backdrop="hideBackdrop"
-    :hide-footer="hideFooter"
-    :hide-header="hideHeader"
-    :lazy="lazy"
-    :modal-class="modalClass"
     :model-value="modelValue"
-    :no-close-on-backdrop="noCloseOnBackdrop"
-    :no-close-on-esc="noCloseOnEsc"
-    :no-fade="noFade"
-    :no-stacking="noStacking"
-    :no-trap="noTrap"
-    :ok-disabled="okDisabled"
-    :ok-only="okOnly"
-    :ok-title="okTitle"
-    :ok-variant="okVariant"
-    :scrollable="scrollable"
     :size="size"
-    class="app-modal"
     :title="title"
+    class="app-modal"
   >
     <template #header="{ cancel, close, hide, ok, visible }">
       <slot name="header" v-bind="{ cancel, close, hide, ok, visible }">
