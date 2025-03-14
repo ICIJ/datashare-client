@@ -50,7 +50,7 @@ const classList = computed(() => {
     </router-link>
     <router-link
       v-if="actionTo"
-      v-b-tooltip.right
+      v-b-tooltip.body.right
       :to="actionTo"
       class="app-sidebar-section-entry__action ms-2 d-flex"
       :title="actionTitle"
