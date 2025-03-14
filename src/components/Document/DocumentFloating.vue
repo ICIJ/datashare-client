@@ -33,7 +33,7 @@ const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth
 const reachedFullWidth = computed(() => separatorLineLeft.value > fullWidth.value - props.expandThreshold)
 const separatorLineLeft = ref(450)
 
-const emit = defineEmits(['update:full-width', 'update:zero-width'])
+const emit = defineEmits(['update:fullWidth', 'update:zeroWidth'])
 watch(reachedFullWidth, (value) => emit('update:fullWidth', value), { immediate: true })
 watch(reachedZeroWidth, (value) => emit('update:zeroWidth', value), { immediate: true })
 
