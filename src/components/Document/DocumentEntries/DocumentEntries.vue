@@ -75,12 +75,7 @@ defineExpose({
 </script>
 
 <template>
-  <component
-    :is="component"
-    v-bind="componentProps"
-    ref="element"
-    v-model:selection="selection"
-  >
+  <component :is="component" v-bind="componentProps" ref="element" v-model:selection="selection">
     <slot />
     <template v-if="!hideHeader" #header>
       <document-entries-header
