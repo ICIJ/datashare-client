@@ -14,7 +14,7 @@ const modelValue = defineModel({
   default: () => []
 })
 
-const indeterminate = computed(() => modelValue.value.length && modelValue.value.length < options.length)
+const indeterminate = computed(() => !!modelValue.value.length && modelValue.value.length < options.length)
 
 const all = computed({
   get() {
