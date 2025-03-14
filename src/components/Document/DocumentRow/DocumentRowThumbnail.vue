@@ -19,7 +19,6 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
       lazy
       clickable
       :size="32"
-      :active="hover"
       @click="showDocumentViewerModal"
     />
   </td>
