@@ -7,6 +7,7 @@ import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useBatchSearchResultProperties } from '@/composables/batch-search-result-properties'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
+import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
@@ -16,7 +17,7 @@ const { propertiesOptions, sortByOptions } = useBatchSearchResultProperties()
 
 const sortBy = ref({
   label: computed(() => t('viewSettings.sortBy.label')),
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
@@ -27,7 +28,7 @@ const sortBy = ref({
 
 const perPage = ref({
   label: computed(() => t('search.settings.resultsPerPage')),
-  type: 'radio',
+  type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
@@ -52,7 +53,7 @@ const perPage = ref({
 
 const properties = ref({
   label: computed(() => t('viewSettings.properties')),
-  type: 'checkbox',
+  type: INPUT_CHECKBOX,
   open: true,
   modelValue: computed({
     get: () => appStore.getSettings(settingsView, 'properties'),
