@@ -20,11 +20,11 @@
           {{ $t('widget.creationDate.filterPath') }}
         </span>
       </button-icon>
-      <b-modal
+      <app-modal
         id="modal-widget-select-path"
         cancel-variant="outline-action"
         :cancel-title="$t('global.cancel')"
-        hide-header
+        no-header
         lazy
         ok-variant="action"
         :ok-title="$t('widget.creationDate.selectPath')"
@@ -40,7 +40,7 @@
           select-mode
           elasticsearch-only
         />
-      </b-modal>
+      </app-modal>
     </template>
   </widget-documents-by-creation-date>
 </template>
@@ -48,6 +48,7 @@
 <script>
 import { castArray, trimEnd } from 'lodash'
 
+import AppModal from '@/components/AppModal/AppModal'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import PathTree from '@/components/PathTree/PathTree'
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -59,6 +60,7 @@ import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsBy
 export default {
   name: 'WidgetDocumentsByCreationDateByPath',
   components: {
+    AppModal,
     ButtonIcon,
     PathTreeBreadcrumb,
     PathTree,

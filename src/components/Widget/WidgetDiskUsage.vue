@@ -1,15 +1,16 @@
 <template>
   <div class="widget widget--disk-usage">
     <widget-barometer-disk-usage v-b-modal.modal-disk-usage clickable :size="size" />
-    <b-modal id="modal-disk-usage" lazy scrollable hide-header hide-footer size="lg">
+    <app-modal id="modal-disk-usage" lazy scrollable no-header no-footer size="lg">
       <path-tree v-model:path="path" :projects="[project]" elasticsearch-only />
-    </b-modal>
+    </app-modal>
   </div>
 </template>
 
 <script>
 import bodybuilder from 'bodybuilder'
 
+import AppModal from '@/components/AppModal/AppModal'
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
 import PathTree from '@/components/PathTree/PathTree'
@@ -20,6 +21,7 @@ import PathTree from '@/components/PathTree/PathTree'
 export default {
   name: 'WidgetDiskUsage',
   components: {
+    AppModal,
     PathTree,
     WidgetBarometerDiskUsage
   },
