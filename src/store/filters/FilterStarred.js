@@ -1,4 +1,4 @@
-import { get, has, map } from 'lodash'
+import { get, map } from 'lodash'
 
 import FilterText from './FilterText'
 
@@ -13,14 +13,14 @@ export default class FilterStarred extends FilterText {
   addChildIncludeFilter(body, { values }) {
     const hasBool = (bool) => values.includes(bool) || values.includes(bool.toString())
 
-    if (hasBool(true) && hasBool(false))  {
+    if (hasBool(true) && hasBool(false)) {
       return body
     }
 
     if (hasBool(true)) {
       return body.addFilter('terms', this.key, this.starredDocumentIds)
     }
-    
+
     if (hasBool(false)) {
       return body.notFilter('terms', this.key, this.starredDocumentIds)
     }
@@ -38,7 +38,6 @@ export default class FilterStarred extends FilterText {
   }
   static get starredLabels() {
     return {
-      all: 'global.all',
       true: 'filter.starred',
       false: 'filter.notStarred'
     }
