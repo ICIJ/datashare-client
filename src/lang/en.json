@@ -976,7 +976,7 @@
           "title": "Document addition",
           "description":
           "Index documents that are on your computer or on a drive so you can search them in Datashare. Datashare can index all type of documents.",
-          "info": "%{n} document additions",
+          "info": "{n} document additions",
           "actionText": "Add documents"
         }
       }
@@ -1431,7 +1431,7 @@
     "layout": {
       "infoDismiss": "Got it, don't show again",
       "searchPlaceholder": "Filter the list",
-      "noResults": "No matching result for the query '%{query}'"
+      "noResults": "No matching result for the query '{query}'"
     },
     "title": "Settings",
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
@@ -1445,7 +1445,7 @@
     },
     "languages": {
       "title": "Languages",
-      "info": "Translations are <a href='%{href}' class='alert-link'>maintained on Crowdin</a>."
+      "info": "Translations are <a href='{href}' class='alert-link'>maintained on Crowdin</a>."
     },
     "addons": {
       "installFromUrl": "Install from a URL",
