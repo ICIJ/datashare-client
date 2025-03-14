@@ -24,6 +24,7 @@ export default [
       order: 0,
       section: 'documentsInfo',
       preference: 'filter-project',
+      hideAll: true,
       hideSearch: true,
       hideSort: true,
       hideContextualize: false,
@@ -85,6 +86,7 @@ export default [
       icon: 'tree-structure',
       order: 35,
       section: 'documentsInfo',
+      hideAll: true,
       hideSearch: true,
       fromElasticSearch: false,
       preference: 'filter-path'
@@ -108,6 +110,7 @@ export default [
       key: 'metadata.tika_metadata_dcterms_created',
       icon: 'calendar-blank',
       order: 50,
+      hideAll: true,
       hideSearch: true,
       hideSort: true,
       hideContextualize: true,

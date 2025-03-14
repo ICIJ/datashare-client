@@ -8,6 +8,7 @@ import { useSearchFilter } from '@/composables/search-filter'
 import FilterModal from '@/components/Filter/FilterModal/FilterModal'
 import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
+import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import settings from '@/utils/settings'
 import { useSearchStore } from '@/store/modules'
 
@@ -249,6 +250,9 @@ onBeforeMount(async () => {
     :loading="wait.is(loaderId)"
     :modal="modal"
   >
+    <slot name="all" v-bind="{ entries, filter }">
+      <filter-type-all :filter="filter" v-if="!filter.hideAll" />
+    </slot>
     <slot v-bind="{ entries, filter }">
       <filters-panel-section-filter-entry
         v-for="{ item, label } in entries"
