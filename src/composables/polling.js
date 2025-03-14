@@ -1,4 +1,4 @@
-import { find, findIndex, isFunction } from 'lodash'
+import { find, findIndex, noop, isFunction } from 'lodash'
 import { onBeforeUnmount, reactive } from 'vue'
 
 export function usePolling() {
@@ -11,7 +11,7 @@ export function usePolling() {
     registeredPolls.forEach(unregisteredPoll)
   }
 
-  function unregisteredPoll({ id, fn }) {
+  function unregisteredPoll({ id = null, fn = noop } = {}) {
     // Allow to find the registered poll etheir by id or by function
     const index = findIndex(registeredPolls, { id }) ?? findIndex(registeredPolls, { fn })
     // Clear the timeout
