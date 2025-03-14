@@ -1,27 +1,3 @@
-<template>
-  <page-settings-section-group v-model="open" :label="label" class="page-settings-section">
-    <component
-      :is="formGroup"
-      id="checkbox-group-1"
-      v-model="modelValue"
-      class="page-settings-section__input-group ps-4 pb-4"
-      stacked
-    >
-      <component
-        :is="formInput"
-        v-for="(option, index) in options"
-        :key="index"
-        :value="option.value"
-        :disabled="option.disabled"
-        :name="name ?? defaultName"
-        class="page-settings-section__input-group__input"
-      >
-        <page-settings-entry :text="option.text ?? String(option.value)" :icon="option.icon" />
-      </component>
-    </component>
-  </page-settings-section-group>
-</template>
-
 <script setup>
 import { uniqueId } from 'lodash'
 import { computed } from 'vue'
@@ -29,14 +5,12 @@ import { BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup } from '
 
 import PageSettingsEntry from '@/components/PageSettings/PageSettingsEntry'
 import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup'
+import PageSettingsSectionGroupAll from '@/components/PageSettings/PageSettingsSectionGroupAll'
+import { INPUT_RADIO, INPUT_CHECKBOX } from '@/composables/view-settings'
 
-defineOptions({
-  name: 'PageSettingsSection'
-})
+defineOptions({ name: 'PageSettingsSection' })
 
 const defaultName = uniqueId('page-settings-section-')
-
-const RADIO = 'radio'
 
 const props = defineProps({
   label: {
@@ -46,7 +20,7 @@ const props = defineProps({
   type: {
     type: String,
     required: true,
-    validator: (inputType) => ['radio', 'checkbox'].includes(inputType)
+    validator: (value) => [INPUT_RADIO, INPUT_CHECKBOX].includes(value)
   },
   name: {
     type: String
@@ -56,6 +30,7 @@ const props = defineProps({
     required: true
   }
 })
+
 const modelValue = defineModel({
   type: [String, Number, Boolean, Array],
   default: () => []
@@ -66,11 +41,45 @@ const open = defineModel('open', {
   default: true
 })
 
-const formGroup = computed(() => {
-  return props.type === RADIO ? BFormRadioGroup : BFormCheckboxGroup
-})
+const isRadio = computed(() => props.type === INPUT_RADIO)
+const isCheckbox = computed(() => props.type === INPUT_CHECKBOX)
 
-const formInput = computed(() => {
-  return props.type === RADIO ? BFormRadio : BFormCheckbox
-})
+const formGroup = computed(() => (isRadio.value ? BFormRadioGroup : BFormCheckboxGroup))
+const formInput = computed(() => (isRadio.value ? BFormRadio : BFormCheckbox))
 </script>
+
+<template>
+  <page-settings-section-group v-model="open" :label="label" class="page-settings-section">
+    <div v-if="isCheckbox" class="page-settings-section__input-group">
+      <page-settings-section-group-all v-model="modelValue" :options="options" />
+    </div>
+    <component
+      :is="formGroup"
+      id="checkbox-group-1"
+      v-model="modelValue"
+      class="page-settings-section__input-group"
+      stacked
+    >
+      <component
+        :is="formInput"
+        v-for="(option, index) in options"
+        :key="index"
+        :value="option.value"
+        :disabled="option.disabled"
+        :name="name ?? defaultName"
+      >
+        <page-settings-entry :text="option.text ?? String(option.value)" :icon="option.icon" />
+      </component>
+    </component>
+  </page-settings-section-group>
+</template>
+
+<style lang="scss" scoped>
+.page-settings-section {
+  padding-bottom: $spacer-lg;
+
+  &__input-group {
+    padding-left: $spacer-lg;
+  }
+}
+</style>
