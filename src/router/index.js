@@ -136,6 +136,7 @@ export const routes = [
         children: [
           {
             path: '',
+            name: 'task.task-board-redirect',
             redirect: '/tasks/task-board'
           },
           {
