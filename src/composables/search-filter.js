@@ -1,4 +1,4 @@
-import { computed, inject, nextTick, watch } from 'vue'
+import { computed, inject, toValue, nextTick, watch } from 'vue'
 import { get, identity, isObject, last, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -50,15 +50,38 @@ export function useSearchFilter() {
     return last(String(label).split('.'))
   }
 
-  function castFilter(filter) {
+  function castFilter(filterRef) {
+    const filter = toValue(filterRef)
+
     if (filter instanceof FilterText) {
       return filter
     }
-    return searchStore.getFilter({ name: filter })
+
+    return searchStore.getFilter({ name: filter?.name ?? filter })
   }
 
-  function castFilterItem(value) {
+  function castFilterItem(valueRef) {
+    const value = toValue(valueRef)
     return isObject(value) ? value : { key: value }
+  }
+
+  function computedAll(filter) {
+    return computed({
+      get() {
+        return !hasAnyFilterValue(filter)
+      },
+      set(value) {
+        if (value) {
+          removeFilterValues(filter)
+        }
+      }
+    })
+  }
+
+  function computedTotal(filter) {
+    return computed(() => {
+      return hasAnyFilterValue(filter) ? null : searchStore.total
+    })
   }
 
   function computedFilterValues(filter, { get = null, set = null } = {}) {
@@ -81,7 +104,8 @@ export function useSearchFilter() {
     return get(searchStore, `values.${name}`, [])
   }
 
-  function getFilterValues({ name }) {
+  function getFilterValues(filter) {
+    const { name } = castFilter(filter)
     return getFilterValuesByName(name)
   }
 
@@ -149,6 +173,10 @@ export function useSearchFilter() {
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
     return searchStore.removeFilterValue({ ...instance, value })
+  }
+
+  const removeFilterValues = (filter) => {
+    return searchStore.setFilterValue(castFilter(filter), [])
   }
 
   const sortFilter = ({ name }, { sortBy, orderBy }) => {
@@ -292,11 +320,13 @@ export function useSearchFilter() {
 
   return {
     indices,
-    computedSortFilter,
-    computedFilterValues,
-    computedExcludeFilter,
+    computedAll,
     computedContextualizeFilter,
+    computedExcludeFilter,
+    computedFilterValues,
     computedProjects,
+    computedSortFilter,
+    computedTotal,
     getFilterByName,
     getFilterComponent,
     getFilterValues,
@@ -319,9 +349,11 @@ export function useSearchFilter() {
     toggleFilterValue,
     addFilterValue,
     removeFilterValue,
+    removeFilterValues,
     removeFilter,
     refreshSearch,
     removeIndex,
+    searchStore,
     watchFilterContextualized,
     watchFilterSort,
     watchFilterValues,
