@@ -176,7 +176,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const sort = computed(() => {
     const [sort, order] = appStore.getSettings('search', 'orderBy') ?? ['_score', 'desc']
     // Find optional extra params
-    const { extraParams = {} } = find(settings.searchSortFields, { name: sort }) ?? {}
+    const extraParams = settings.searchSortFieldParams[sort] ?? null
     // We add a secondary path filter is the current sort is not the path itself
     const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
     return [{ [sort]: { order, ...extraParams } }, ...secondarySort]

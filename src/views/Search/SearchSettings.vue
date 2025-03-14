@@ -5,16 +5,16 @@ import { useI18n } from 'vue-i18n'
 
 import { LAYOUTS } from '@/enums/layouts'
 import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
-import { useSearchSettings } from '@/composables/search-settings'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import settings from '@/utils/settings'
 import { useAppStore } from '@/store/modules'
+import { useSearchProperties } from '@/composables/search-properties'
 import { useViewSettings, INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
 
 const { t } = useI18n()
 const appStore = useAppStore()
 const { tLayout } = useViewSettings(t)
+const { propertiesOptions, sortByOptions } = useSearchProperties()
 
 const layout = ref({
   label: tLayout.label,
@@ -73,34 +73,22 @@ const sortBy = ref({
   label: computed(() => t('viewSettings.sortBy.label')),
   type: INPUT_RADIO,
   open: true,
+  options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     to: 'search',
     get: () => appStore.getSettings('search', 'orderBy'),
     set: (sort, order) => appStore.setSettings({ view: 'search', orderBy: [sort, order] })
-  }),
-  options: settings.searchSortFields.map(({ name, field, desc }) => {
-    const value = [field, desc ? 'desc' : 'asc']
-    const text = computed(() => t('search.results.sort.' + name))
-    return { value, text }
   })
 })
-
-const { propertiesOrder, propertiesLabel, propertiesIcon } = useSearchSettings()
 
 const properties = ref({
   label: computed(() => t('viewSettings.properties')),
   type: INPUT_CHECKBOX,
   open: true,
+  options: propertiesOptions,
   modelValue: computed({
     get: () => appStore.getSettings('search', 'properties'),
     set: (properties) => appStore.setSettings({ view: 'search', properties })
-  }),
-  options: computed(() => {
-    return propertiesOrder.map((value) => {
-      const text = propertiesLabel.value[value]
-      const icon = propertiesIcon[value]
-      return { value, icon, text }
-    })
   })
 })
 
