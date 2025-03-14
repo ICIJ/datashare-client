@@ -62,12 +62,13 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
 .filters-panel-section-filter-entry {
   display: flex;
   align-items: center;
+  margin-bottom: $spacer-xxs;
 
   &:deep(.form-check) {
     display: flex;
     min-width: 0;
     margin-right: $spacer-xs;
-    margin-bottom: $spacer-xxs;
+    margin-bottom: 0;
 
     .form-check-input {
       margin-right: $spacer-xs;
