@@ -80,7 +80,6 @@ defineExpose({
     v-bind="componentProps"
     ref="element"
     v-model:selection="selection"
-    class="document-entries"
   >
     <slot />
     <template v-if="!hideHeader" #header>
