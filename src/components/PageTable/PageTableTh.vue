@@ -6,7 +6,7 @@ import PageTableThSort from './PageTableThSort'
 
 const props = defineProps({
   name: {
-    type: String,
+    type: String
   },
   label: {
     type: String
