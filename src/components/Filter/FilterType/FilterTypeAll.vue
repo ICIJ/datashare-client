@@ -31,6 +31,5 @@ const hideTotal = computed(() => total.value === null || (!searchStore.isReady &
     :count="total"
     :hide-count="hideTotal"
     :disabled="all"
-  >
-  </filters-panel-section-filter-entry>
+  />
 </template>
