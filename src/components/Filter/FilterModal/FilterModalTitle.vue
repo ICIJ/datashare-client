@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center text-start">
     <span class="flex-grow-1 text-truncate">
       <phosphor-icon :name="filter.icon" class="me-2" />
       {{ $t(`filter.${filter.name}`) }}
