@@ -43,12 +43,14 @@ function toggleSection() {
   modelValue.value = !modelValue.value
 }
 </script>
-<style lang="scss">
+
+<style lang="scss" scoped>
 .page-settings-group {
   &__label {
     cursor: pointer;
   }
-  .form-check {
+
+  &:deep(.form-check) {
     line-height: 1.5em;
     height: 1.5em;
     vertical-align: baseline;
