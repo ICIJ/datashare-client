@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toRef, useSlots, watch } from 'vue'
+import { computed, ref, toRef, toValue, useSlots, watch } from 'vue'
 
 import PageTable from '@/components/PageTable/PageTable'
 import PageTableTr from '@/components/PageTable/PageTableTr'
@@ -92,13 +92,14 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
       <page-table-th
         v-for="field in fields"
         :key="field.name"
-        :label="field.text"
+        :label="toValue(field.text)"
         :icon="field.icon"
         :style="field.thStyle"
         :sortable="!!field.sortable"
         :emphasis="!!field.emphasis"
         :name="field.sortingKey ?? field.key ?? field.value"
-      />
+      >
+      </page-table-th>
     </template>
 
     <page-table-tr v-if="!items?.length">
