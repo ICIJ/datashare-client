@@ -59,7 +59,7 @@ function onOk() {
     <button-icon v-b-modal.modal-form-control-path :icon-left="PhFolderOpen" variant="outline-tertiary">
       <path-tree-breadcrumb :model-value="display" datadir-label no-link />
     </button-icon>
-    <app-modal id="modal-form-control-path" lazy scrollable hide-header size="lg" @ok="onOk">
+    <app-modal id="modal-form-control-path" lazy scrollable no-header size="lg" @ok="onOk">
       <path-tree
         v-model:selected-paths="selectedPaths"
         :path="sourcePath"
