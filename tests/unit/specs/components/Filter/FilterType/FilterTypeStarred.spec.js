@@ -66,7 +66,7 @@ describe('FilterTypeStarred.vue', () => {
     expect(wrapper.vm.selected).toEqual([])
   })
 
-  it('should display the results count', async () => {
+  it('should display the results count (without the "All")', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
     await letData(es).have(new IndexedDocument('document_03', index)).commit()
@@ -84,7 +84,8 @@ describe('FilterTypeStarred.vue', () => {
 
     await wrapper.findComponent(FilterType).vm.aggregate()
 
-    expect(wrapper.findAll('.filters-panel-section-filter-entry__count')).toHaveLength(3)
-    expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(1).text()).toBe('2')
+    expect(wrapper.findAll('.filters-panel-section-filter-entry__count')).toHaveLength(2)
+    expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(0).text()).toBe('2')
+    expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(1).text()).toBe('0')
   })
 })

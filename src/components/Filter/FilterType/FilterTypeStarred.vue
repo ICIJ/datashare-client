@@ -20,7 +20,7 @@ const { getTotal, getFilterValues, setFilterValue, watchIndices } = useSearchFil
 
 const total = ref(0)
 const starredDocumentsCount = computed(() => props.filter.starredDocuments.length)
-const notStarredDocumentsCount = computed(() => total.value - starredDocumentsCount.value)
+const notStarredDocumentsCount = computed(() => Math.max(0, total.value - starredDocumentsCount.value))
 
 async function fetch() {
   await starredStore.fetchIndicesStarredDocuments(searchStore.indices)
