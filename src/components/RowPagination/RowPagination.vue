@@ -8,7 +8,7 @@ const page = defineModel('page', { type: Number, default: 1 })
 
 const props = defineProps({
   perPage: {
-    type: Number,
+    type: [Number, String],
     default: 25
   },
   totalRows: {
@@ -33,11 +33,11 @@ const props = defineProps({
   }
 })
 
-const hasFewerRows = computed(() => props.totalRows <= page.value * props.perPage)
+const hasFewerRows = computed(() => props.totalRows <= page.value * +props.perPage)
 </script>
 
 <template>
-  <tiny-pagination :key="totalRows" v-model="page" row :total-rows="totalRows" :per-page="perPage" :compact="compact">
+  <tiny-pagination :key="totalRows" v-model="page" row :total-rows="totalRows" :per-page="+perPage" :compact="compact">
     <template #number-of-rows="{ lastRangeRow: to }">
       <i18n-t v-if="compact" :keypath="keypathRowRangeCompact" :plural="totalRows">
         <template #total>

@@ -97,7 +97,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
           searchable
         >
           <template #pagination="{ totalRows }">
-            <row-pagination-queries v-model="page" :total-rows="totalRows" :per-page="+perPage" />
+            <row-pagination-queries v-model="page" :total-rows="totalRows" :per-page="perPage" />
           </template>
         </page-toolbar>
         <page-table-generic v-if="!empty" :items="queries" :fields="visibleFields">
