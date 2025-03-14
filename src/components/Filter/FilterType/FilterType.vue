@@ -251,7 +251,7 @@ onBeforeMount(async () => {
     :modal="modal"
   >
     <slot name="all" v-bind="{ entries, filter }">
-      <filter-type-all :filter="filter" v-if="!filter.hideAll" />
+      <filter-type-all v-if="!filter.hideAll" :filter="filter" />
     </slot>
     <slot v-bind="{ entries, filter }">
       <filters-panel-section-filter-entry
