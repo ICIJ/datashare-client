@@ -10,13 +10,14 @@
 
 <script setup>
 import { noop, ary } from 'lodash'
+import { toRef } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 import { onRouteUpdateNotMatch } from '@/composables/url-params'
 import PageSettingsHide from '@/components/PageSettings/PageSettingsHide'
 import PageSettingsTitle from '@/components/PageSettings/PageSettingsTitle'
 
-const { hide, route } = defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true
@@ -37,6 +38,6 @@ const { hide, route } = defineProps({
   }
 })
 
-onRouteUpdateNotMatch(route, ary(hide, 0))
-onBeforeRouteLeave(ary(hide, 0))
+onRouteUpdateNotMatch(toRef(props, 'route'), ary(props.hide, 0))
+onBeforeRouteLeave(ary(props.hide, 0))
 </script>
