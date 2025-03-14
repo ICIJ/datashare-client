@@ -43,7 +43,7 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
     <b-form-checkbox v-model="modelValue" :value="value" :disabled="disabled">
       <slot v-bind="{ label }">
         <span
-          v-ellipsis-tooltip="{ title: label, placement: 'right', offset: '0px' }"
+          v-ellipsis-tooltip="{ title: label, placement: 'right', offset: 8, teleportTo: 'body' }"
           class="filters-panel-section-filter-entry__label text-truncate"
         >
           {{ label }}
