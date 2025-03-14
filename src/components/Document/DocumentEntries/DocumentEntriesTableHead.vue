@@ -1,10 +1,10 @@
 <script setup>
+import { computed, toValue } from 'vue'
+
 import PageTableTh from '@/components/PageTable/PageTableTh'
-import { useSearchSettings } from '@/composables/search-settings'
+import { useSearchProperties } from '@/composables/search-properties'
 
-const { propertiesLabel, propertiesIcon } = useSearchSettings()
-
-defineProps({
+const props = defineProps({
   compactBreakpoint: {
     type: String,
     default: 'md'
@@ -18,14 +18,17 @@ defineProps({
     default: () => ['title', 'thumbnail']
   }
 })
+
+const { fields } = useSearchProperties()
+
+const visibleFields = computed(() => {
+  return fields.filter((field) => {
+    return field.required || props.properties.includes(field.key)
+  })
+})
 </script>
 
 <template>
-  <page-table-th
-    v-for="property in properties"
-    :key="property"
-    :label="propertiesLabel[property]"
-    :icon="propertiesIcon[property]"
-  />
+  <page-table-th v-for="field in visibleFields" :key="field" :label="toValue(field.text)" :icon="field.icon" />
   <page-table-th label="Action" hide-label />
 </template>

@@ -1,5 +1,4 @@
 <script setup>
-import { filter } from 'lodash'
 import { computed } from 'vue'
 
 import DocumentRowActions from './DocumentRowActions'
@@ -18,6 +17,7 @@ import DocumentRowTitle from './DocumentRowTitle'
 import DocumentRowThumbnail from './DocumentRowThumbnail'
 
 import PageTableTr from '@/components/PageTable/PageTableTr'
+import { useSearchProperties } from '@/composables/search-properties'
 
 const entryComponents = {
   author: DocumentRowAuthor,
@@ -50,21 +50,18 @@ const props = defineProps({
   }
 })
 
-const availableProperties = computed(() => {
-  return filter(props.properties, (property) => {
-    return property in entryComponents
+const { fields } = useSearchProperties()
+
+const visibleFields = computed(() => {
+  return fields.filter((field) => {
+    return field.required || props.properties.includes(field.key)
   })
 })
 </script>
 
 <template>
   <page-table-tr v-model:selected="selected" class="document-row" :select-mode="selectMode">
-    <component
-      :is="entryComponents[property]"
-      v-for="property in availableProperties"
-      :key="property"
-      :document="document"
-    />
+    <component :is="entryComponents[key]" v-for="{ key } in visibleFields" :key="key" :document="document" />
     <document-row-actions :document="document" />
   </page-table-tr>
 </template>

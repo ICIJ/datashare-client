@@ -1,9 +1,9 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { useSearchSettings } from '@/composables/search-settings'
+import { useSearchProperties } from '@/composables/search-properties'
 
-const { propertiesLabel, propertiesIcon } = useSearchSettings()
+const { items } = useSearchProperties()
 
 defineProps({
   document: {
@@ -27,9 +27,9 @@ defineProps({
 <template>
   <div class="document-card-properties-entry d-flex px-1 mb-2 text-secondary-emphasis">
     <div v-if="!hideIcon" class="document-card-properties-entry__icon pe-2 flex-shrink-0">
-      <phosphor-icon :name="icon ?? propertiesIcon[property] ?? property" />
+      <phosphor-icon :name="icon ?? items[property].icon ?? property" />
     </div>
-    <span class="visually-hidden">{{ title ?? propertiesLabel[property] ?? property }}:</span>
+    <span class="visually-hidden">{{ title ?? items[property].text ?? property }}:</span>
     <div class="document-card-properties-entry__value">
       <slot>{{ document[property] }}</slot>
     </div>

@@ -13,7 +13,7 @@ import DocumentCardPropertiesEntryPath from './DocumentCardPropertiesEntryPath'
 import DocumentCardPropertiesEntryProject from './DocumentCardPropertiesEntryProject'
 import DocumentCardPropertiesEntryTags from './DocumentCardPropertiesEntryTags'
 
-import { useSearchSettings } from '@/composables/search-settings'
+import { useSearchProperties } from '@/composables/search-properties'
 
 const entryComponents = {
   author: DocumentCardPropertiesEntryAuthor,
@@ -38,11 +38,11 @@ const props = defineProps({
   }
 })
 
-const { propertiesOrder } = useSearchSettings()
+const { fields } = useSearchProperties()
 
-const availableProperties = computed(() => {
-  return propertiesOrder.filter((property) => {
-    return props.properties.includes(property) && property in entryComponents
+const visibleFields = computed(() => {
+  return fields.filter((field) => {
+    return field.required || props.properties.includes(field.key)
   })
 })
 </script>
@@ -50,11 +50,11 @@ const availableProperties = computed(() => {
 <template>
   <div class="document-card-properties text-break">
     <component
-      :is="entryComponents[property]"
-      v-for="property in availableProperties"
-      :key="property"
+      :is="entryComponents[key]"
+      v-for="{ key } in visibleFields"
+      :key="key"
       :document="document"
-      :property="property"
+      :property="key"
     />
   </div>
 </template>

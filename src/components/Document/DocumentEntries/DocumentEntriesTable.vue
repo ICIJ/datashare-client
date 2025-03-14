@@ -1,4 +1,5 @@
 <script setup>
+import { property } from 'lodash'
 import { computed } from 'vue'
 
 import DocumentEntriesTableBody from './DocumentEntriesTableBody'
@@ -7,7 +8,7 @@ import DocumentEntriesTableHead from './DocumentEntriesTableHead'
 import AppModal from '@/components/AppModal/AppModal'
 import DocumentFloating from '@/components/Document/DocumentFloating'
 import PageTable from '@/components/PageTable/PageTable'
-import { useSearchSettings } from '@/composables/search-settings'
+import { useSearchProperties } from '@/composables/search-properties'
 import { useDocument } from '@/composables/document'
 import { useSearchFilter } from '@/composables/search-filter'
 
@@ -33,17 +34,20 @@ const props = defineProps({
   }
 })
 
-const { documentRoute } = useDocument()
 const { refreshRoute: refreshSearchRoute } = useSearchFilter()
-const { propertiesOrder } = useSearchSettings()
 
-const sortedProperties = computed(() => {
-  return propertiesOrder.filter((property) => {
-    return props.properties.includes(property)
+const { documentRoute } = useDocument()
+const showDocument = computed(() => !!documentRoute.value)
+
+const { fields } = useSearchProperties()
+
+const visibleFields = computed(() => {
+  return fields.filter((field) => {
+    return field.required || props.properties.includes(field.key)
   })
 })
 
-const showDocument = computed(() => !!documentRoute.value)
+const visibleFieldsKeys = computed(() => visibleFields.value.map(property('key')))
 </script>
 
 <template>
@@ -59,14 +63,14 @@ const showDocument = computed(() => !!documentRoute.value)
         <document-entries-table-head
           :compact-breakpoint="compactBreakpoint"
           :select-mode="selectMode"
-          :properties="sortedProperties"
+          :properties="visibleFieldsKeys"
         />
       </template>
       <document-entries-table-body
         v-model:selection="selection"
         :compact-breakpoint="compactBreakpoint"
         :entries="entries"
-        :properties="sortedProperties"
+        :properties="visibleFieldsKeys"
         :select-mode="selectMode"
       />
     </page-table>
