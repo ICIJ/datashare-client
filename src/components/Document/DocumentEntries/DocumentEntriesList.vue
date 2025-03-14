@@ -95,9 +95,10 @@ defineExpose({
   <app-modal
     v-if="fullWidth"
     :model-value="showDocument"
-    hide-footer
     body-class="py-0 px-5"
-    hide-header
+    no-footer
+    no-header
+    no-header-close
     fullscreen
     lazy
     @hide="refreshSearchRoute"

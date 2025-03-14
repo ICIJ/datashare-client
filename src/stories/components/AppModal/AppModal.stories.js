@@ -21,9 +21,9 @@ export default {
     bodyClass: 'text-secondary-emphasis',
     modelValue: true,
     fullscreen: false,
-    hideBackdrop: false,
-    hideFooter: false,
-    hideHeader: false,
+    noBackdrop: false,
+    noFooter: false,
+    noHeader: false,
     size: SIZE.MD
   },
   parameters: {

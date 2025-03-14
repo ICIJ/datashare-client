@@ -31,7 +31,7 @@ const key = computed(() => [document.value.index, document.value.id])
     body-class="rounded-bottom"
     :header-variant="variant"
     header-class="document-viewer-modal__header"
-    hide-footer
+    no-footer
     size="lg"
   >
     <template #title>

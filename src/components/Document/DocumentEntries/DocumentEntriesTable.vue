@@ -76,9 +76,9 @@ const visibleFieldsKeys = computed(() => visibleFields.value.map(property('key')
     </page-table>
     <app-modal
       :model-value="showDocument"
-      hide-footer
       body-class="py-0 px-5"
-      hide-header
+      no-footer
+      no-header
       fullscreen
       lazy
       @hide="refreshSearchRoute"
