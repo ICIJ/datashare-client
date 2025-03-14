@@ -18,7 +18,7 @@ const { locale } = useI18n()
 const props = defineProps({
   value: {
     type: [String, Number, Date],
-    required: true
+    default: null
   },
   format: {
     type: String,
@@ -31,6 +31,10 @@ const props = defineProps({
 })
 
 const date = computed(() => {
+  if (props.value === null) {
+    return null
+  }
+
   if (!isNaN(props.value)) {
     return new Date(+props.value)
   }
