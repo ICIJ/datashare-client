@@ -27,9 +27,9 @@ const hideTotal = computed(() => total.value === null || (!searchStore.isReady &
 <template>
   <filters-panel-section-filter-entry
     v-model="all"
-    :label="$t('filterTypeAll.label')"
     :count="total"
-    :hide-count="hideTotal"
     :disabled="all"
+    :hide-count="hideTotal"
+    :label="$t('filterTypeAll.label')"
   />
 </template>
