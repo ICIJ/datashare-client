@@ -383,6 +383,9 @@
     "metadata": "Metadata",
     "entities": "Entities"
   },
+  "filterTypeAll": {
+    "label": "All"
+  },
   "filter": {
     "none": "No values",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
