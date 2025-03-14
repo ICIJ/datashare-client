@@ -206,7 +206,7 @@ onBeforeRouteLeave(autoClose)
 
 <style lang="scss" scoped>
 .app-sidebar {
-  z-index: $zindex-offcanvas + 1;
+  z-index: $zindex-fixed;
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
   flex: 0 0 $app-sidebar-width;
