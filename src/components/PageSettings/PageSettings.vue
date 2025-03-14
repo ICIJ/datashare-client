@@ -9,7 +9,6 @@
 </template>
 
 <script setup>
-import { noop, ary } from 'lodash'
 import { toRef } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
@@ -21,10 +20,6 @@ const props = defineProps({
   title: {
     type: String,
     required: true
-  },
-  hide: {
-    type: Function,
-    default: noop
   },
   visible: {
     type: Boolean
@@ -38,6 +33,9 @@ const props = defineProps({
   }
 })
 
-onRouteUpdateNotMatch(toRef(props, 'route'), ary(props.hide, 0))
-onBeforeRouteLeave(ary(props.hide, 0))
+const emit = defineEmits(['hide'])
+const hide = () => emit('hide')
+
+onRouteUpdateNotMatch(toRef(props, 'route'), hide)
+onBeforeRouteLeave(hide)
 </script>
