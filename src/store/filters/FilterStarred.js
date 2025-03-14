@@ -1,4 +1,4 @@
-import { get, map } from 'lodash'
+import { get, has, map } from 'lodash'
 
 import FilterText from './FilterText'
 
@@ -11,11 +11,17 @@ export default class FilterStarred extends FilterText {
     this.component = 'FilterTypeStarred'
   }
   addChildIncludeFilter(body, { values }) {
-    if (values[0] === 'true' || values[0] === true) {
-      return body.addFilter('terms', this.key, this.starredDocumentIds)
+    const hasBool = (bool) => values.includes(bool) || values.includes(bool.toString())
+
+    if (hasBool(true) && hasBool(false))  {
+      return body
     }
 
-    if (values[0] === 'false' || values[0] === false) {
+    if (hasBool(true)) {
+      return body.addFilter('terms', this.key, this.starredDocumentIds)
+    }
+    
+    if (hasBool(false)) {
       return body.notFilter('terms', this.key, this.starredDocumentIds)
     }
 
