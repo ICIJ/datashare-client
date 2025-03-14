@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue'
+import { computed, toValue, watch } from 'vue'
 import { useRoute, useRouter, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router'
 import { compact, debounce, identity, noop, isEqual, isObject, isUndefined, toNumber } from 'lodash'
 
@@ -127,8 +127,8 @@ export function onRouteUpdateCondition(condition, callback) {
  * @param {string} name - The name of the target route to match.
  * @param {Function} callback - The callback function to execute.
  */
-export function onRouteUpdateMatch(name, callback) {
-  onRouteUpdateCondition((to) => name && to.name === name, callback)
+export function onRouteUpdateMatch(name = null, callback) {
+  onRouteUpdateCondition((to) => name === null || to.name === name, callback)
 }
 
 /**
@@ -137,8 +137,8 @@ export function onRouteUpdateMatch(name, callback) {
  * @param {string} name - The name of the route to not match.
  * @param {Function} callback - The callback function to execute.
  */
-export function onRouteUpdateNotMatch(name, callback) {
-  onRouteUpdateCondition((to) => name && to.name !== name, callback)
+export function onRouteUpdateNotMatch(name = null, callback) {
+  onRouteUpdateCondition((to) => name === null || to.name !== name, callback)
 }
 
 /**
@@ -162,7 +162,7 @@ export function onRouteLeaveCondition(condition, callback) {
  * @param {Function} callback - The callback function to execute.
  */
 export function onRouteLeaveMatch(name, callback) {
-  onRouteLeaveCondition((to, from) => name && from.name === name, callback)
+  onRouteLeaveCondition((to, from) => toValue(name) === null || from.name === toValue(name), callback)
 }
 
 /**
@@ -172,7 +172,7 @@ export function onRouteLeaveMatch(name, callback) {
  * @param {Function} callback - The callback function to execute.
  */
 export function onRouteLeaveNotMatch(name, callback) {
-  onRouteLeaveCondition((to, from) => name && from.name !== name, callback)
+  onRouteLeaveCondition((to, from) => toValue(name) === null || from.name !== toValue(name), callback)
 }
 
 /**
