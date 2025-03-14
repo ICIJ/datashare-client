@@ -10,9 +10,9 @@
 <script>
 import bodybuilder from 'bodybuilder'
 
-import AppModal from '@/components/AppModal/AppModal'
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
+import AppModal from '@/components/AppModal/AppModal'
 import PathTree from '@/components/PathTree/PathTree'
 
 /**
