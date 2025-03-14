@@ -1,6 +1,6 @@
 import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
+import { INPUT_CHECKBOX } from '@/composables/view-settings'
 
 export default {
   title: 'Components/PageSettings/Section',
