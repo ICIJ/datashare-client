@@ -1,5 +1,5 @@
 <script>
-import { toRef } from 'vue'
+import { toRef, markRaw } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import VueScrollTo from 'vue-scrollto'
 
@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      icon: PhArrowFatUp,
+      icon: markRaw(PhArrowFatUp),
       offset: 0,
       timeoutHolder: null,
       target: null,
@@ -52,7 +52,7 @@ export default {
       return toggler ? this.show() : this.hide()
     },
     show() {
-      this.icon = this.isTargetAbove() ? PhArrowFatDown : PhArrowFatUp
+      this.icon = markRaw(this.isTargetAbove() ? PhArrowFatDown : PhArrowFatUp)
       this.visible = true
       this.setTimeout()
       // Hide the tracker on scroll
