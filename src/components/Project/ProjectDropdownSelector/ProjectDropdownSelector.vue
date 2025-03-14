@@ -36,14 +36,14 @@
         :projects="projects"
       />
     </template>
-    <template #dropdown-item="{ option, index, hasValue, toggleUniqueValue, toggleValue }">
+    <template #dropdown-item="{ option: project, index, hasValue, toggleUniqueValue, toggleValue }">
       <project-dropdown-selector-entry
-        :project="option"
+        :project="project"
         :focus="focusIndex === index"
-        :selected="hasValue(option)"
+        :selected="hasValue(project)"
         :no-checkbox="!multiple"
-        @toggleValue="toggleValue($event, option)"
-        @toggleUniqueValue="toggleUniqueValue($event, option)"
+        @toggleValue="toggleValue($event, project)"
+        @toggleUniqueValue="toggleUniqueValue($event, project)"
       />
     </template>
   </search-bar-input-dropdown>
