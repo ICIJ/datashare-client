@@ -1811,6 +1811,7 @@
   },
   "documentRow": {
     "properties": {
+      "relevance": "Relevance",
       "thumbnail": "Thumbnail ",
       "title": "Document name",
       "highlights": "Highlights",
@@ -1822,6 +1823,7 @@
       "contentType": "File type",
       "creationDate": "Created at",
       "extractionLevel": "Extraction level",
+      "extractionDate": "Indexing date",
       "language": "Language",
       "project": "Project"
     }
