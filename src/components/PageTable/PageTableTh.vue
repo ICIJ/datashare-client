@@ -7,11 +7,9 @@ import PageTableThSort from './PageTableThSort'
 const props = defineProps({
   name: {
     type: String,
-    required: true
   },
   label: {
-    type: String,
-    required: true
+    type: String
   },
   icon: {
     type: [String, Object, Array]
@@ -71,7 +69,7 @@ const labelClassList = computed(() => {
         <phosphor-icon v-if="icon" :name="icon" class="me-1 my-2" />
         <span :class="labelClassList">{{ label }}</span>
         <page-table-th-sort
-          v-if="sortable"
+          v-if="sortable && name"
           class="ms-1"
           :sorted="isSorted"
           :order="order ?? orderBy()"
