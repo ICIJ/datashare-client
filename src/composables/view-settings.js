@@ -14,6 +14,9 @@ export const SORT_TYPE_KEY = Object.freeze({
   DATE: 'date'
 })
 
+export const INPUT_RADIO = 'radio'
+export const INPUT_CHECKBOX = 'checkbox'
+
 export function useViewSettings() {
   const { t } = useI18n()
   const sortByLabel = computed(() => t('viewSettings.sortBy.label'))
