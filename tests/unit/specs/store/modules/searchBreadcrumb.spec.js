@@ -57,7 +57,6 @@ describe('SearchBreadcrumbStore', () => {
     expect(store.steps).toHaveLength(3)
   })
 
-
   it('computes the journey diffs correctly', () => {
     // Push two queries with different properties
     store.push('indices=a,b&filter=active')
