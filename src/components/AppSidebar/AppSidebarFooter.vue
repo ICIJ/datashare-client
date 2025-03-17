@@ -33,6 +33,10 @@ const props = defineProps({
   },
   noKeyboardShortcuts: {
     type: Boolean
+  },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
   }
 })
 
@@ -75,7 +79,11 @@ const classList = computed(() => {
       </div>
       <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && !compact" :offset="36">
         <template #target>
-          <a v-b-tooltip.body title="Keyboard Shortcuts" class="app-sidebar-footer__links__item ms-auto">
+          <a
+            v-b-tooltip.body="{ delay: tooltipDelay }"
+            title="Keyboard Shortcuts"
+            class="app-sidebar-footer__links__item ms-auto"
+          >
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
             <span class="visually-hidden">Keyboard Shortcut</span>
           </a>
@@ -85,7 +93,11 @@ const classList = computed(() => {
     <div class="app-sidebar-footer__links">
       <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && compact" :offset="48">
         <template #target>
-          <a v-b-tooltip.body title="Keyboard Shortcuts" class="app-sidebar-footer__links__item">
+          <a
+            v-b-tooltip.body="{ delay: tooltipDelay }"
+            title="Keyboard Shortcuts"
+            class="app-sidebar-footer__links__item"
+          >
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
             <span class="visually-hidden">Keyboard Shortcut</span>
           </a>
@@ -93,7 +105,7 @@ const classList = computed(() => {
       </app-sidebar-keyboard-shortcuts-popover>
       <router-link
         v-if="!noSettings"
-        v-b-tooltip.body
+        v-b-tooltip.body="{ delay: tooltipDelay }"
         :to="{ name: 'settings.appearance' }"
         title="Settings"
         class="app-sidebar-footer__links__item"
@@ -103,7 +115,7 @@ const classList = computed(() => {
       </router-link>
       <a
         v-if="!noHelp"
-        v-b-tooltip.body
+        v-b-tooltip.body="{ delay: tooltipDelay }"
         :href="helpLink"
         target="_blank"
         title="Help"
@@ -114,7 +126,7 @@ const classList = computed(() => {
       </a>
       <a
         v-if="!noRemoveAll"
-        v-b-tooltip.body
+        v-b-tooltip.body="{ delay: tooltipDelay }"
         title="Remove all"
         class="app-sidebar-footer__links__item"
         @click="confirmRemoveAll"
@@ -124,7 +136,7 @@ const classList = computed(() => {
       </a>
       <a
         v-if="!noSignOut"
-        v-b-tooltip.body
+        v-b-tooltip.body="{ delay: tooltipDelay }"
         :href="signOutLink"
         title="Sign out"
         class="app-sidebar-footer__links__item"
