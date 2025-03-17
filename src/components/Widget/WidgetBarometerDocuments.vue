@@ -4,7 +4,7 @@
       <template #n>
         <display-number-human
           v-if="nbDocuments !== null"
-          v-b-tooltip.body
+          v-b-tooltip.body="{ delay: tooltipDelay }"
           :value="nbDocuments"
           :title="$n(nbDocuments)"
         />
@@ -33,6 +33,10 @@ defineProps({
   nbDocumentsOnDisks: {
     type: Number,
     default: 0
+  },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
   }
 })
 </script>
