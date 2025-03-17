@@ -3,17 +3,15 @@ import { useI18n } from 'vue-i18n'
 
 import { useUrlParam } from '@/composables/url-params'
 import { useTaskSettings } from '@/composables/task-settings'
-import { useMode } from '@/composables/mode'
 import { useTaskStore } from '@/store/modules'
 
-export function useTaskHeader(pageName, hasAddButton) {
+export function useTaskHeader(pageName) {
   const { t } = useI18n()
-  const { isServer } = useMode()
   const { perPage, sortBy } = useTaskSettings(pageName)
   const taskStore = useTaskStore()
 
   const toAddRoute = computed(() => {
-    return !isServer.value && hasAddButton ? { name: `task.${pageName}.new` } : null
+    return { name: `task.${pageName}.new` }
   })
 
   const searchQuery = useUrlParam('q', '')
