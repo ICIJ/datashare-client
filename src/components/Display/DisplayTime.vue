@@ -12,6 +12,10 @@ const props = defineProps({
     type: [String, Number, Date],
     required: true
   },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
+  },
   noTooltip: {
     type: Boolean
   }
@@ -35,7 +39,7 @@ const display = computed(() => {
 
 <template>
   <span
-    v-b-tooltip.body
+    v-b-tooltip.body="{ delay: tooltipDelay }"
     class="display-time d-inline-flex align-items-center flex-wrap"
     :title="title"
     aria-label="time"
