@@ -24,6 +24,10 @@ const props = defineProps({
     default: SIZE.MD,
     validator: buttonSizeValidator
   },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
+  },
   noTooltip: {
     type: Boolean,
     default: false
@@ -51,7 +55,7 @@ const valueIcon = computed(() => {
     <span class="visually-hidden">
       <display-status-label :value="value" :title="title" />
     </span>
-    <b-tooltip teleport-to="body" :manual="noTooltip" :target="element">
+    <b-tooltip teleport-to="body" :manual="noTooltip" :delay="tooltipDelay" :target="element">
       <display-status-label :value="value" :title="title" />
     </b-tooltip>
   </span>
