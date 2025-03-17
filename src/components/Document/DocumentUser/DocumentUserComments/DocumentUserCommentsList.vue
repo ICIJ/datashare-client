@@ -11,12 +11,30 @@ const open = defineModel('open', {
   type: Boolean,
   default: true
 })
+
 const props = defineProps({
-  comments: { type: Array, default: () => [] },
-  to: { type: String, default: '' },
-  height: { type: String, default: '250px' },
-  scrollToRecent: { type: Boolean, default: true }
+  comments: {
+    type: Array,
+    default: () => []
+  },
+  to: {
+    type: String,
+    default: ''
+  },
+  height: {
+    type: String,
+    default: '250px'
+  },
+  scrollToRecent: {
+    type: Boolean,
+    default: true
+  },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
+  }
 })
+
 const { t } = useI18n()
 
 const style = {
@@ -73,7 +91,7 @@ if (props.scrollToRecent) {
         class="document-user-comments-list__display-comments btn btn-outline-link d-inline-flex justify-content-between text-nowrap"
         @click="open = !open"
       >
-        <span v-b-tooltip.body.hover="{ customClass: 'd-sm-none' }" :title="displayComments">
+        <span v-b-tooltip.body.hover="{ customClass: 'd-sm-none', delay: tooltipDelay }" :title="displayComments">
           <phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2" />
         </span>
         <span class="d-none d-sm-inline">{{ displayComments }}</span>
