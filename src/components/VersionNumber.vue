@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :id="versionNumberId" class="version-number d-inline-block">v{{ serverVersion }}</div>
-    <b-tooltip :target="versionNumberId" :placement="tooltipPlacement" teleport-to="body">
+    <b-tooltip :target="versionNumberId" :delay="tooltipDelay" :placement="tooltipPlacement" teleport-to="body">
       <div class="version-number__tooltip text-nowrap text-start">
         <div class="d-flex align-items-baseline version-number__tooltip__client py-2">
           <div class="flex-grow-1 pe-5">
@@ -41,15 +41,16 @@ defineOptions({
 })
 
 defineProps({
-  /**
-   * Placement of the tooltip with version info.
-   * @values auto, top, bottom, left, right, topleft, topright, bottomleft, bottomright, lefttop, leftbottom, righttop, rightbottom
-   */
   tooltipPlacement: {
     type: String,
     default: 'top-end'
+  },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
   }
 })
+
 const serverHash = ref(null)
 const serverVersion = ref(null)
 
@@ -69,10 +70,9 @@ const setVersion = async () => {
   serverVersion.value = version['git.tag'] || version['git.build.version']
 }
 
-onMounted(() => {
-  return setVersion()
-})
+onMounted(setVersion)
 </script>
+
 <style lang="scss" scoped>
 .version-number {
   cursor: pointer;
