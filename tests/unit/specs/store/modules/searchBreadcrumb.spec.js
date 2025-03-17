@@ -44,12 +44,19 @@ describe('SearchBreadcrumbStore', () => {
     expect(store.steps[0][1][1]).toEqual('b')
   })
 
-  it('does not push duplicate queries', () => {
-    const params = 'indices=a,b'
-    store.push(params)
-    store.push(params)
+  it('does not push duplicate queries if the last step is the same', () => {
+    store.push('indices=a,b')
+    store.push('indices=a,b')
     expect(store.steps).toHaveLength(1)
   })
+
+  it('pushs duplicate queries if the last step is different', () => {
+    store.push('indices=a,b')
+    store.push('indices=a,b,filter=active')
+    store.push('indices=a,b')
+    expect(store.steps).toHaveLength(3)
+  })
+
 
   it('computes the journey diffs correctly', () => {
     // Push two queries with different properties
