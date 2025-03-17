@@ -41,8 +41,7 @@ const props = defineProps({
 const { t } = useI18n()
 
 const { toAddRoute, searchQuery, page, perPage, sortBy, searchPlaceholder, tasks, totalRows } = useTaskHeader(
-  props.pageName,
-  props.showAdd
+  props.pageName
 )
 
 const { noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
@@ -69,7 +68,7 @@ function refresh() {
 
 <template>
   <page-container fluid deck class="task-page">
-    <page-header :to-add="toAddRoute" />
+    <page-header :to-add="showAdd ? toAddRoute : null" />
     <page-toolbar
       :key="totalRows"
       v-model:searchQuery="searchQuery"
