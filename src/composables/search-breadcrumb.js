@@ -1,5 +1,5 @@
 import { computed, inject } from 'vue'
-import { castArray, compact, flatten, map, omit, orderBy, unset } from 'lodash'
+import { castArray, compact, map, omit, orderBy, unset } from 'lodash'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/search-filter'
@@ -21,7 +21,7 @@ export function useSearchBreadcrumb() {
   }
 
   const indicesEntries = computed(() => {
-    return parseIndicesEntries(searchStore.toBaseRouteQuery)
+    return parseIndicesEntries(searchBreadcrumbStore.endSearchQuery)
   })
 
   function parseQueryEntries({ q: query = null }) {
@@ -29,35 +29,33 @@ export function useSearchBreadcrumb() {
   }
 
   const queryEntries = computed(() => {
-    return parseQueryEntries(searchStore.toBaseRouteQuery)
+    return parseQueryEntries(searchBreadcrumbStore.endSearchQuery)
   })
 
   function parseFiltersEntries(routeQuery) {
     const filters = omit(routeQuery, ['q', 'field', 'indices'])
-    return flatten(
-      // Each filter can have several values
-      map(filters, (values, param) => {
-        const filter = param.split('[').pop().split(']').shift()
-        return castArray(values).map((value) => {
-          const lastIndex = searchBreadcrumbStore.paramLastIndex(param, value)
-          return { filter, value, lastIndex }
-        })
+    // Each filter can have several values
+    return map(filters, (values, param) => {
+      const filter = param.split('[').pop().split(']').shift()
+      return castArray(values).map((value) => {
+        const lastIndex = searchBreadcrumbStore.paramLastIndex(param, value)
+        return { filter, value, lastIndex }
       })
-    )
+    }).flat()
   }
 
   const filtersEntries = computed(() => {
-    return parseFiltersEntries(searchStore.toBaseRouteQuery)
+    return parseFiltersEntries(searchBreadcrumbStore.endSearchQuery)
   })
 
   function parseEntries(routeQuery) {
     return compact(
-      flatten([parseIndicesEntries(routeQuery), parseQueryEntries(routeQuery), parseFiltersEntries(routeQuery)])
+      [parseIndicesEntries(routeQuery), parseQueryEntries(routeQuery), parseFiltersEntries(routeQuery)].flat()
     )
   }
 
   const entries = computed(() => {
-    return compact(flatten([indicesEntries.value, queryEntries.value, orderBy(filtersEntries.value, ['lastIndex'])]))
+    return compact([indicesEntries.value, queryEntries.value, orderBy(filtersEntries.value, ['lastIndex'])].flat())
   })
 
   const hasQueryEntries = computed(() => !!queryEntries.value.length)
