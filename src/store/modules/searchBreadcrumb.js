@@ -58,7 +58,7 @@ export const useSearchBreadcrumbStore = defineStore('searchBreadcrumb', () => {
    * @public
    * @param {Object} query - The query object to push.
    */
-  function pushRouteQuery(query) {
+  function pushSearchQuery(query) {
     return push(stringifyQuery(query))
   }
 
@@ -154,7 +154,7 @@ export const useSearchBreadcrumbStore = defineStore('searchBreadcrumb', () => {
   return {
     steps,
     push,
-    pushRouteQuery,
+    pushSearchQuery,
     journey,
     endSearchParams,
     endSearchQuery,
