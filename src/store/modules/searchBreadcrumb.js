@@ -46,7 +46,7 @@ export const useSearchBreadcrumbStore = defineStore('searchBreadcrumb', () => {
    * @param {string} params - The search parameters string.
    */
   function push(params = '') {
-    if (exists(params)) return
+    if (endsWith(params)) return
     const searchParams = new URLSearchParams(withIndices(params))
     steps.push([...searchParams.entries()])
   }
@@ -63,20 +63,18 @@ export const useSearchBreadcrumbStore = defineStore('searchBreadcrumb', () => {
   }
 
   /**
-   * Checks if a given set of parameters already exists in the steps.
+   * Checks if a given set of parameters already endsWith in the steps.
    *
    * @private
    * @param {string} params - The parameters to check.
-   * @returns {boolean} True if the parameters exist in the steps; false otherwise.
+   * @returns {boolean} True if the parameters is the same as the last steps; false otherwise.
    */
-  function exists(params) {
+  function endsWith(params) {
     const searchParams = new URLSearchParams(withIndices(params))
     const entries = [...searchParams.entries()]
-
-    return steps.some((step) => {
-      const { $additions, $deletions } = diff(toRaw(step), entries)
-      return isEmpty($additions) && isEmpty($deletions)
-    })
+    const lastStep = steps.slice(-1).pop()
+    const { $additions, $deletions } = diff(toRaw(lastStep), entries)
+    return isEmpty($additions) && isEmpty($deletions)
   }
 
   /**
