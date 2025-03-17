@@ -30,6 +30,10 @@ const props = defineProps({
   },
   exactMatch: {
     type: Boolean
+  },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
   }
 })
 
@@ -50,7 +54,7 @@ const classList = computed(() => {
     </router-link>
     <router-link
       v-if="actionTo"
-      v-b-tooltip.body.right
+      v-b-tooltip.body.right="{ delay: tooltipDelay }"
       :to="actionTo"
       class="app-sidebar-section-entry__action ms-2 d-flex"
       :title="actionTitle"
