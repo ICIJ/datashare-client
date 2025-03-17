@@ -1,6 +1,6 @@
 <script setup>
-import { castArray } from 'lodash'
 import { computed } from 'vue'
+import { parseQuery } from 'vue-router'
 
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 import SearchBreadcrumbFormList from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormList'
@@ -20,24 +20,17 @@ const props = defineProps({
 
 const { parseEntries } = useSearchBreadcrumb()
 
-const searchBreadcrumbURIStore = useSearchStore.disposable()
+const searchStore = useSearchStore.disposable()
 
 const breadcrumbRouteQuery = computed(() => {
-  const query = props.uri.split('?').pop()
+  const query = props.uri.split('?', 2).pop()
   const searchParams = new URLSearchParams(query)
-  const searchParamsEntries = Array.from(searchParams.entries())
-  // Convert the search params entries into an object. We cannot use Object.fromEntries directly
-  // because we need to handle the case where a key is repeated. For instance, multiple values
-  // for a given filter (e.g. "f[contentType]=application/pdf&f[contentType]=image/png").
-  return searchParamsEntries.reduce((params, [key, value]) => {
-    // If the key already exists, make sure its value is an array and append the new value.
-    return Object.assign(params, { [key]: key in params ? castArray(params[key]).concat([value]) : value })
-  }, {})
+  return parseQuery(searchParams.toString())
 })
 
-const entries = computed(() => parseEntries(searchBreadcrumbURIStore.toBaseRouteQuery))
+const entries = computed(() => parseEntries(searchStore.toBaseRouteQuery))
 
-searchBreadcrumbURIStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
+searchStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
 </script>
 
 <template>
