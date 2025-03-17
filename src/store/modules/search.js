@@ -411,7 +411,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     try {
       const raw = await searchDocuments()
       const roots = await searchRootDocuments(raw)
-      searchBreadcrumbStore.push(toBaseRouteQuery.value)
+      searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
       setResponse({ raw, roots })
     } catch (error) {
       setError(error)
