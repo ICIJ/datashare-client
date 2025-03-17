@@ -19,6 +19,10 @@ const props = defineProps({
   q: {
     type: String,
     default: ''
+  },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
   }
 })
 
@@ -150,7 +154,7 @@ onBeforeRouteUpdate(init)
               </div>
               <abbr
                 v-if="email.creationDate"
-                v-b-tooltip
+                v-b-tooltip.body="{ delay: tooltipDelay }"
                 class="document-thread__list__email__date"
                 :title="email.creationDateHuman"
               >
