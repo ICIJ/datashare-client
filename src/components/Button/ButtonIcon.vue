@@ -13,7 +13,7 @@
     <slot name="start" />
     <phosphor-icon
       v-if="iconLeft || (!iconLeft && !iconRight && loading)"
-      v-b-tooltip.top.body="{ title: iconLeftLabel, offset: iconLeftLabelOffset }"
+      v-b-tooltip.top.body="{ title: iconLeftLabel, offset: iconLeftLabelOffset, delay: tooltipDelay }"
       :name="iconLeftOrSpinner"
       :size="iconLeftSize"
       :weight="iconLeftWeight"
@@ -30,7 +30,7 @@
     </span>
     <phosphor-icon
       v-if="iconRight"
-      v-b-tooltip.top.body="{ title: iconRightLabel, offset: iconRightLabelOffset }"
+      v-b-tooltip.top.body="{ title: iconRightLabel, offset: iconRightLabelOffset, delay: tooltipDelay }"
       :name="iconRightOrSpinner"
       :size="iconRightSize"
       :weight="iconRightWeight"
@@ -48,6 +48,7 @@
     <b-tooltip
       v-if="hasTooltip"
       teleport-to="body"
+      :delay="tooltipDelay"
       :boundary-padding="20"
       :placement="tooltipPlacement"
       :target="elementRef"
@@ -216,6 +217,10 @@ const props = defineProps({
     type: String,
     default: PLACEMENT.TOP,
     validator: placementValidator
+  },
+  tooltipDelay: {
+    type: Object,
+    default: () => ({ show: 700, hide: 0 })
   },
   showTooltipForce: {
     type: Boolean
