@@ -1,4 +1,5 @@
 <script setup>
+import ProjectCardActions from './ProjectCardActions'
 import ProjectCardDescription from './ProjectCardDescription'
 import ProjectCardFooter from './ProjectCardFooter'
 import ProjectCardLabel from './ProjectCardLabel'
@@ -19,9 +20,12 @@ defineProps({
     </project-card-thumbnail>
     <div class="d-flex flex-column gap-4 h-100 w-100 flex-truncate">
       <div>
-        <project-card-label :project="project" class="mb-2">
-          <slot name="label" />
-        </project-card-label>
+        <div class="d-flex flex-column flex-sm-row justify-content-between mb-2 gap-2">
+          <project-card-label :project="project">
+            <slot name="label" />
+          </project-card-label>
+          <project-card-actions :project="project" />
+        </div>
         <project-card-description :project="project">
           <slot name="description" />
         </project-card-description>
