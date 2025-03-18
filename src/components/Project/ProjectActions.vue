@@ -25,16 +25,33 @@ const toProjectEdit = computed(() => ({
 </script>
 
 <template>
-<div class="project-actions d-flex gap-2">
-  <slot>
-    <mode-local-only>
-      <button-icon :to="toProjectEdit" icon-left="pencil" icon-left-hover-weight="bold" hide-label square size="sm"
-        variant="outline-secondary" class="border-0" :label="$t('projectRowActions.edit')" />
-      <button-icon icon-left="trash" icon-left-hover-weight="bold" hide-label square size="sm"
-        variant="outline-secondary" class="border-0" :label="$t('projectRowActions.delete')"
-        @click="showProjectDeletionModal" />
-    </mode-local-only>
-    <button-toggle-pin v-model:active="pinned" hide-label square size="sm" />
-  </slot>
-</div>
+  <div class="project-actions d-flex gap-2">
+    <slot>
+      <mode-local-only>
+        <button-icon
+          :to="toProjectEdit"
+          icon-left="pencil"
+          icon-left-hover-weight="bold"
+          hide-label
+          square
+          size="sm"
+          variant="outline-secondary"
+          class="border-0"
+          :label="$t('projectRowActions.edit')"
+        />
+        <button-icon
+          icon-left="trash"
+          icon-left-hover-weight="bold"
+          hide-label
+          square
+          size="sm"
+          variant="outline-secondary"
+          class="border-0"
+          :label="$t('projectRowActions.delete')"
+          @click="showProjectDeletionModal"
+        />
+      </mode-local-only>
+      <button-toggle-pin v-model:active="pinned" hide-label square size="sm" />
+    </slot>
+  </div>
 </template>
