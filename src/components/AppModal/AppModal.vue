@@ -115,5 +115,16 @@ defineProps({
   .modal-body + .modal-footer {
     padding-top: 0;
   }
+
+  .modal-fullscreen {
+    max-width: calc(100vw - var(--bs-modal-margin) * 2);
+    margin: var(--bs-modal-margin) auto;
+
+    .modal-content {
+      height: auto;
+      border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+      border-radius: var(--bs-modal-border-radius);
+    }
+  }
 }
 </style>
