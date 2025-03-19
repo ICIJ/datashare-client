@@ -10,7 +10,7 @@
     :label="label"
     :size="size"
     :tooltip-placement="tooltipPlacement"
-    class="document-actions-entry border-0"
+    class="document-actions-entry border-0 flex-shrink-0"
     hide-label
     square
     variant="outline-secondary"

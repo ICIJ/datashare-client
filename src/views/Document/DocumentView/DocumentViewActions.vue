@@ -10,7 +10,5 @@ defineProps({
 </script>
 
 <template>
-  <div class="docuemnt-view-actions">
-    <document-actions-group :document="document" />
-  </div>
+  <document-actions-group class="document-view-actions" :document="document" />
 </template>
