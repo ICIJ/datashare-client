@@ -330,6 +330,7 @@ const buttonProps = computed(() => ({
     width: var(--button-icon-square-size);
     height: var(--button-icon-square-size);
     position: relative;
+    flex-shrink: 0;
 
     .button-icon-counter {
       margin-left: 0;
