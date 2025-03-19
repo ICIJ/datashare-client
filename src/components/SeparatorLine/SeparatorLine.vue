@@ -103,6 +103,18 @@ const dragEnd = ({ detail }) => {
     background-color: var(--bs-tertiary-border-subtle);
   }
 
+  // An invisible overlay only display when dragging to avoid
+  // triggering hover effect on other components.
+  &--dragging:after {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -100vw;
+    right: -100vw;
+    opacity: 0;
+  }
+
   &:hover:before,
   &--active:before {
     width: 2px;
