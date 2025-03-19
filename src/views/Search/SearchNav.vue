@@ -1,13 +1,16 @@
 <script setup>
+import { inject } from 'vue'
+
 import DocumentSearchNav from '@/components/Document/DocumentSearchNav/DocumentSearchNav'
 import { useSearchNav } from '@/composables/search-nav'
 
+const modal = inject('modal', false)
 const { hasEntries, disabledPrevious, disabledNext, previous, next } = useSearchNav()
 </script>
 
 <template>
   <document-search-nav
-    v-if="hasEntries"
+    v-if="hasEntries && !modal"
     :disabled-previous="disabledPrevious"
     :disabled-next="disabledNext"
     @previous="previous"
