@@ -111,7 +111,7 @@ const dragEnd = ({ detail }) => {
     top: 0;
     bottom: 0;
     left: -100vw;
-    right: -100vw;
+    right: 0;
     opacity: 0;
   }
 
