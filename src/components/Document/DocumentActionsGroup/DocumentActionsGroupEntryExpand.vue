@@ -49,8 +49,8 @@ const to = computed(() => {
 
 const active = computed(() => modal && isRouteActive(document))
 const target = computed(() => (!active.value ? '_blank' : '_self'))
-const icon = computed(() => (active.value ? 'arrows-in-simple' : 'arrows-out-simple'))
-const label = computed(() => (active.value ? t('documentActionsGroup.reduce') : t('documentActionsGroup.expand')))
+const icon = computed(() => (active.value ? 'x' : 'arrows-out-simple'))
+const label = computed(() => (active.value ? t('documentActionsGroup.close') : t('documentActionsGroup.expand')))
 </script>
 
 <template>

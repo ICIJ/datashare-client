@@ -292,7 +292,7 @@
     "download": "Download",
     "share": "Share",
     "expand": "Expand",
-    "reduce": "Reduce"
+    "close": "Close"
   },
   "documentLocalSearchOccurrences": {
     "label": "{activeIndex} on {occurrences}"
