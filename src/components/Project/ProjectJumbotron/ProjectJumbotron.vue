@@ -89,9 +89,9 @@ const promptProjectDeletion = async () => {
     </div>
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
       <project-thumbnail v-if="!compact" :project="project" width="100px" rounded class="flex-shrink-0" />
-      <div class="d-flex flex-column gap-3">
+      <div class="d-flex flex-column gap-3 align-self-stretch">
         <p v-if="project.description" class="project-jumbotron__content__description m-0">{{ project.description }}</p>
-        <footer class="project-jumbotron__content__footer d-md-flex gap-3">
+        <footer class="project-jumbotron__content__footer d-md-flex gap-3 mt-auto">
           <div class="d-flex flex-wrap gap-3 text-secondary">
             <span v-if="creationDate" class="text-nowrap">
               <phosphor-icon name="calendar-blank" />
