@@ -66,7 +66,7 @@ const hasAction = computed(() => {
       :href="actionHref"
       :target="actionTarget"
       :to="actionTo"
-      :variant="variant"
+      :variant="actionVariant"
     >
       <slot name="action" />
     </empty-state-action>
