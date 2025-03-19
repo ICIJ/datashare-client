@@ -86,6 +86,7 @@ const classList = computed(() => {
 .document-actions-group {
   display: flex;
   align-items: center;
+  min-width: auto;
 
   &--vertical {
     flex-direction: column;
