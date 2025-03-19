@@ -22,7 +22,7 @@ const props = defineProps({
   },
   tooltipDelay: {
     type: Object,
-    default: () => ({ show: 700, hide: 0 })
+    default: () => ({ show: 0, hide: 0 })
   }
 })
 
