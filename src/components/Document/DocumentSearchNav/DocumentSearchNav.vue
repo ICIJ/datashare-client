@@ -43,5 +43,6 @@ defineProps({
   border-radius: var(--bs-border-radius);
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
+  min-width: auto;
 }
 </style>
