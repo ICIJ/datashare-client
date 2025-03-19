@@ -98,7 +98,7 @@ class Core extends Behaviors {
         BTooltip: {
           offset: '6px',
           delay: {
-            show: 500,
+            show: 0,
             hide: 0
           }
         }
