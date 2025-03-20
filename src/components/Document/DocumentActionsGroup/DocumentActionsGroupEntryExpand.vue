@@ -1,6 +1,8 @@
 <script setup>
 import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import { matchesProperty } from 'lodash'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
@@ -28,14 +30,18 @@ const { document } = defineProps({
   }
 })
 
+const route = useRoute()
 const { t } = useI18n()
 const { isRouteActive, documentParentRoute } = useDocument()
 const modal = inject('modal', false)
 
+const isSearchRoute = computed(() => route?.matched.some(matchesProperty('name', 'search')))
+
 const documentRoute = computed(() => {
   const params = document.routerParams
-  const name = modal ? 'document' : 'document-standalone'
-  return { name, params }
+  const query = { modal: true }
+  const name = isSearchRoute.value ? 'document' : 'document-standalone'
+  return { name, params, query }
 })
 
 const activeDocumentParentRoute = computed(() => {
@@ -44,18 +50,20 @@ const activeDocumentParentRoute = computed(() => {
 })
 
 const to = computed(() => {
-  return active.value ? activeDocumentParentRoute.value : documentRoute.value
+  if (active.value) {
+    return activeDocumentParentRoute.value
+  }
+
+  return documentRoute.value
 })
 
 const active = computed(() => modal && isRouteActive(document))
-const target = computed(() => (!active.value ? '_blank' : '_self'))
 const icon = computed(() => (active.value ? 'x' : 'arrows-out-simple'))
 const label = computed(() => (active.value ? t('documentActionsGroup.close') : t('documentActionsGroup.expand')))
 </script>
 
 <template>
   <document-actions-group-entry
-    :target="target"
     :icon="icon"
     :to="to"
     :label="label"
