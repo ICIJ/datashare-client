@@ -14,6 +14,7 @@ export function useSearchNav(currentDocument = null) {
   const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
   const currentDocumentRef = toRef(currentDocument)
   const document = computed(() => currentDocumentRef.value || viewDocument.value)
+  const modal = inject('modal', false)
 
   const total = computed(() => searchStore.total)
   const page = computed(() => searchStore.page)
@@ -49,7 +50,10 @@ export function useSearchNav(currentDocument = null) {
     const document = await searchAndGetFromPosition(position)
     // Push the document to the route
     if (document) {
-      return router.push({ name: 'document', params: document.routerParams })
+      const name = 'document'
+      const params = document.routerParams
+      const query = { modal }
+      return router.push({ name, params, query })
     }
   }
 
