@@ -24,7 +24,7 @@ const { toggleSidebar } = useViews()
 </script>
 
 <template>
-  <document-floating class="mx-5 my-3">
+  <document-floating class="my-3 me-3">
     <document-view :id="id" :routing="routing" :index="index" :q="q">
       <template v-if="!toggleSidebar" #header-start>
         <button-toggle-sidebar v-model:active="toggleSidebar" class="flex-shrink-0" />
