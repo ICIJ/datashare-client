@@ -2,6 +2,8 @@
 import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
+import AppModal from '@/components/AppModal/AppModal'
+import DocumentFloating from '@/components/Document/DocumentFloating'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
 import SearchBreadcrumb from '@/views/Search/SearchBreadcrumb'
@@ -20,7 +22,7 @@ import { LAYOUTS } from '@/enums/layouts'
 import { useAppStore, useSearchStore } from '@/store/modules'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { provideDocumentViewFloatingId } = useDocument()
+const { provideDocumentViewFloatingId, documentRoute } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices, watchFilters } = useSearchFilter()
 const { count: searchBreadcrumbCounter } = useSearchBreadcrumb()
 
@@ -48,11 +50,28 @@ const entries = computed(() => searchStore.response.hits)
 const properties = computed(() => appStore.getSettings('search', 'properties'))
 const layout = computed(() => appStore.getSettings('search', 'layout'))
 const loading = computed(() => !searchStore.isReady)
-const hasNav = computed(() => toValue(layout) === LAYOUTS.LIST)
+const isListLayout = computed(() => toValue(layout) === LAYOUTS.LIST)
 
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
+
+// The modal is displayed only if there is enough space to display the document view.
+// In this function, it's important we refresh the route before assigning the value to the
+// enoughtFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
+const toggleDocumentModal = async (value) => {
+  if (documentRoute.value && (!value || !isListLayout.value || route.query.modal)) {
+    await refreshRoute()
+  }
+
+  enoughtFloatingSpace.value = value
+}
+
+// The "floating space" is the right side of the list layout, which display the document view.
+const enoughtFloatingSpace = ref(false)
+// In list view, if the floating space is not enough, the document view is displayed in a modal.
+// User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
+const renderDocumentInModal = computed(() => !enoughtFloatingSpace.value || !isListLayout.value || route.query.modal)
 
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
@@ -116,6 +135,7 @@ watchIndices(refreshRoute)
             :total="total"
             :per-page="perPage"
             :loading="loading"
+            @update:enoughtSpace="toggleDocumentModal"
           >
             <template #header="{ compact }">
               <search-selection
@@ -129,12 +149,29 @@ watchIndices(refreshRoute)
             <template #floating>
               <div :id="documentViewFloatingId"></div>
             </template>
-            <template #carousel>
-              <search-carousel />
-            </template>
             <router-view v-slot="{ Component }">
-              <component :is="Component">
-                <template v-if="hasNav" #nav>
+              <app-modal
+                v-if="renderDocumentInModal"
+                :model-value="Component !== undefined"
+                body-class="py-0 px-5"
+                no-footer
+                no-header
+                no-header-close
+                fullscreen
+                lazy
+                @hide="refreshRoute"
+              >
+                <document-floating class="my-3">
+                  <search-carousel />
+                  <component :is="Component">
+                    <template v-if="isListLayout" #nav>
+                      <search-nav />
+                    </template>
+                  </component>
+                </document-floating>
+              </app-modal>
+              <component :is="Component" v-else>
+                <template v-if="isListLayout" #nav>
                   <search-nav />
                 </template>
               </component>
