@@ -7,19 +7,25 @@ import { useResizeObserver } from '@/composables/resize-observer'
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
 
 const props = defineProps({
-  minWidth: {
+  minStartWidth: {
     type: Number,
     default: 400
+  },
+  minEndWidth: {
+    type: Number,
+    default: 500
   },
   reduceThreshold: {
     type: Number,
     default: 100
   },
-  expandThreshold: {
+  expendThreshold: {
     type: Number,
-    default: 600
+    default: 100
   }
 })
+
+const emit = defineEmits(['update:enoughtSpace'])
 
 const elementRef = useTemplateRef('element')
 const { querySelectorAll } = useQueryObserver(elementRef)
@@ -28,34 +34,44 @@ const { provideDocumentViewFloatingId } = useDocument()
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
 const fullWidth = computed(() => elementState.offsetWidth)
+
+const separatorLineRight = computed({
+  get() {
+    return fullWidth.value - separatorLineLeft.value
+  },
+  set(right) {
+    separatorLineLeft.value = fullWidth.value - right
+  }
+})
+
+const separatorLineLeft = ref(props.minStartWidth)
+
+const enoughtStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
+const enoughtEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
+const enoughtSpace = computed(() => enoughtStartSpace.value && enoughtEndSpace.value)
+watch(enoughtSpace, (value) => emit('update:enoughtSpace', value), { immediate: true })
+
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
-const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minWidth)
-const reachedFullWidth = computed(() => separatorLineLeft.value > fullWidth.value - props.expandThreshold)
-const separatorLineLeft = ref(450)
+const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
+const reachedFullWidth = computed(() => separatorLineLeft.value > fullWidth.value - props.minEndWidth)
 
-const emit = defineEmits(['update:fullWidth', 'update:zeroWidth'])
-watch(reachedFullWidth, (value) => emit('update:fullWidth', value), { immediate: true })
-watch(reachedZeroWidth, (value) => emit('update:zeroWidth', value), { immediate: true })
-
-const floatingChildren = querySelectorAll('.document-floating__start__floating > *')
+const floatingChildren = querySelectorAll('.document-floating__start__floating > *', { immediate: false })
 const hasFloatingChildren = computed(() => !!floatingChildren.value.length)
 watch(hasFloatingChildren, (value) => value && resetStartSize())
 
-const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *')
+const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *', { immediate: false })
 const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
 watch(hasFloatingSiblings, (value) => value && resetStartSize())
 
 const separatorLineStyle = computed(() => {
-  return {
-    left: reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
-  }
+  const left = reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
+  return { left }
 })
 
 const startStyle = computed(() => {
-  return {
-    maxWidth: `${separatorLineLeft.value}px`,
-    flex: `${separatorLineLeft.value}px 0 0`
-  }
+  const maxWidth = separatorLineStyle.value.left
+  const flex = `${maxWidth} 0 0`
+  return { maxWidth, flex }
 })
 
 const classList = computed(() => {
@@ -76,13 +92,13 @@ function reduce() {
   if (reachedMinWidth.value) {
     separatorLineLeft.value = 0
   } else {
-    separatorLineLeft.value = props.minWidth
+    separatorLineLeft.value = props.minStartWidth
   }
 }
 
 function expand(left) {
   if (reachedZeroWidth.value) {
-    separatorLineLeft.value = props.minWidth
+    separatorLineLeft.value = props.minStartWidth
   } else {
     separatorLineLeft.value = left
   }
@@ -95,13 +111,13 @@ function resetSize() {
 
 function resetStartSize() {
   if (reachedZeroWidth.value) {
-    separatorLineLeft.value = props.minWidth
+    separatorLineLeft.value = props.minStartWidth
   }
 }
 
 function resetEndSize() {
   if (reachedFullWidth.value) {
-    separatorLineLeft.value = props.minWidth
+    separatorLineLeft.value = props.minStartWidth
   }
 }
 
@@ -111,25 +127,26 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
 <template>
   <div ref="element" class="document-floating" :class="classList">
     <div class="document-floating__start" :style="startStyle">
-      <slot name="floating" v-bind="{ documentViewFloatingId }">
+      <slot name="floating" v-bind="{ documentViewFloatingId, enoughtSpace }">
         <div :id="documentViewFloatingId" class="document-floating__start__floating"></div>
       </slot>
-      <slot name="start" />
+      <slot name="start" v-bind="{ enoughtSpace }" />
     </div>
     <separator-line
       class="document-floating__separator-line"
       :style="separatorLineStyle"
       :reduce-threshold="reduceThreshold"
       :reduce-disabled="reachedZeroWidth"
-      :expand-threshold="expandThreshold"
+      :expand-threshold="expendThreshold"
       :expand-disabled="reachedFullWidth"
-      :min="minWidth"
+      :min-start="minStartWidth"
+      :min-end="minEndWidth"
       @drag="drag"
       @reduce="reduce"
       @expand="expand"
     />
     <div class="document-floating__end">
-      <slot />
+      <slot v-bind="{ enoughtSpace }" />
     </div>
   </div>
 </template>
