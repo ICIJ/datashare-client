@@ -1,11 +1,5 @@
 <script setup>
-import { computed } from 'vue'
-
-import AppModal from '@/components/AppModal/AppModal'
-import DocumentFloating from '@/components/Document/DocumentFloating'
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
-import { useDocument } from '@/composables/document'
-import { useSearchFilter } from '@/composables/search-filter'
 import { useSelection } from '@/composables/selection'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
@@ -24,10 +18,6 @@ defineProps({
     default: () => ['title', 'thumbnail']
   }
 })
-
-const { documentRoute } = useDocument()
-const { refreshRoute: refreshSearchRoute } = useSearchFilter()
-const showDocument = computed(() => !!documentRoute.value)
 </script>
 
 <template>
@@ -46,20 +36,7 @@ const showDocument = computed(() => !!documentRoute.value)
         />
       </div>
     </div>
-    <app-modal
-      :model-value="showDocument"
-      body-class="py-0 px-5"
-      no-footer
-      no-header
-      fullscreen
-      lazy
-      @hide="refreshSearchRoute"
-    >
-      <document-floating class="my-3">
-        <slot name="carousel" />
-        <slot />
-      </document-floating>
-    </app-modal>
+    <slot />
   </div>
 </template>
 

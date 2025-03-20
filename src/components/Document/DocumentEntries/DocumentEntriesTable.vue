@@ -5,12 +5,8 @@ import { computed } from 'vue'
 import DocumentEntriesTableBody from './DocumentEntriesTableBody'
 import DocumentEntriesTableHead from './DocumentEntriesTableHead'
 
-import AppModal from '@/components/AppModal/AppModal'
-import DocumentFloating from '@/components/Document/DocumentFloating'
 import PageTable from '@/components/PageTable/PageTable'
 import { useSearchProperties } from '@/composables/search-properties'
-import { useDocument } from '@/composables/document'
-import { useSearchFilter } from '@/composables/search-filter'
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
@@ -33,11 +29,6 @@ const props = defineProps({
     default: () => ['title']
   }
 })
-
-const { refreshRoute: refreshSearchRoute } = useSearchFilter()
-
-const { documentRoute } = useDocument()
-const showDocument = computed(() => !!documentRoute.value)
 
 const { fields } = useSearchProperties()
 
@@ -74,20 +65,7 @@ const visibleFieldsKeys = computed(() => visibleFields.value.map(property('key')
         :select-mode="selectMode"
       />
     </page-table>
-    <app-modal
-      :model-value="showDocument"
-      body-class="py-0 px-5"
-      no-footer
-      no-header
-      fullscreen
-      lazy
-      @hide="refreshSearchRoute"
-    >
-      <document-floating class="my-3">
-        <slot name="carousel" />
-        <slot />
-      </document-floating>
-    </app-modal>
+    <slot />
   </div>
 </template>
 

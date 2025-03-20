@@ -93,8 +93,5 @@ defineExpose({
     <template #floating>
       <slot name="floating" />
     </template>
-    <template #carousel>
-      <slot name="carousel" />
-    </template>
   </component>
 </template>
