@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeMount, computed, ref, reactive, watch } from 'vue'
-import { flatten, filter, get, identity, includes, trim, trimEnd, uniq, uniqueId, uniqBy } from 'lodash'
+import { flatten, filter, get, identity, includes, trim, trimEnd, uniqueId, uniqBy } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
@@ -165,45 +165,21 @@ watch(
   () => loadDataWithSpinner({ clearPages: true })
 )
 
-/**
- * Since 9.4.2, the dirname field is tokenized using the
- * "lowercase" filter. To ensure retro-compatibility, we apply lookup for
- * the path in both lowercase and original value for this field (if they
- * are different).
- */
-const getPathTokens = (path) => {
-  return uniq([path, path.toLowerCase()])
-}
-
-const pathTokens = computed(() => {
-  return getPathTokens(props.path)
-})
-
-const queryPathTokens = computed(() => {
-  return getPathTokens(wildcardPath.value)
-})
-
-const subPathTokens = computed(() => {
-  return pathTokens.value.map((token) => {
-    return [token, '.*', '.*'].join(pathSeparator.value)
-  })
+const subPath = computed(() => {
+  return [props.path, '.*', '.*'].join(pathSeparator.value)
 })
 
 const normalizePath = (path) => {
   return usesWindowsSeparator.value ? path.split('\\').join('\\\\') : path
 }
 
-const createRegexOption = (tokens) => {
-  return tokens.map((pattern) => `(${pattern})`).join('|')
-}
-
 const includeOption = computed(() => {
   // Convert the path with a wildcard to regex
-  return createRegexOption(queryPathTokens.value.map(wildcardRegExpPattern))
+  return wildcardRegExpPattern(wildcardPath.value)
 })
 
 const excludeOption = computed(() => {
-  return createRegexOption(subPathTokens.value.map(normalizePath))
+  return normalizePath(subPath.value)
 })
 
 const aggregationOptions = computed(() => {
@@ -240,7 +216,7 @@ const treeAsPagesBuckets = computed(() => {
       })
       // Transform it to match with the ES aggregation format
       .map(({ name: key }) => {
-        return { key, size: 0, doc_count: 0, directories: 0 }
+        return { key, size: 0, doc_count: 0, directories: { value: 0 } }
       })
   )
 })
@@ -287,7 +263,7 @@ const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
     body.andQuery('match', 'extractionLevel', 0)
   }
   return body
-    .andQuery('terms', 'dirname.tree', pathTokens.value)
+    .andQuery('term', 'dirname.tree', props.path)
     .andQuery('match', 'type', 'Document')
     .agg('terms', 'dirname.tree', aggregationOptions.value, 'dirname', (b) => {
       return b
@@ -296,7 +272,7 @@ const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
         .agg('cardinality', 'dirname', 'directories')
     })
     .agg('sum', 'contentLength', 'total_size')
-    .agg('cardinality', 'dirname.tree', 'total_directories')
+    .agg('cardinality', 'dirname', 'total_directories')
 }
 
 const loadData = async ({ clearPages = false } = {}) => {
@@ -446,6 +422,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
           :compact="compact"
           :no-stats="noStats"
           :no-link="noLink"
+          :data="JSON.stringify(directory)"
           :indeterminate="isIndeterminateDirectory(directory.key)"
           @update:selected="selectDirectory(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
