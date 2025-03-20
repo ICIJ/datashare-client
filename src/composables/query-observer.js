@@ -44,13 +44,13 @@ export function useQueryObserver(root = window.document, once = false) {
     return observers[selector]
   }
 
-  const querySelector = (selector) => {
-    const elements = querySelectorAll(selector)
+  const querySelector = (selector, options = { immediate: true }) => {
+    const elements = querySelectorAll(selector, options)
     return computed(() => first(elements.value))
   }
 
-  const querySelectorAll = (selector) => {
-    watch(rootRef, () => observe(selector), { immediate: true })
+  const querySelectorAll = (selector, options = { immediate: true }) => {
+    watch(rootRef, () => observe(selector), options)
     return computed(() => get(elements, selector, []))
   }
 
