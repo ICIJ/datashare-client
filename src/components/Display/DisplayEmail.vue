@@ -55,7 +55,7 @@ const qSent = computed(() => {
     </template>
     <div class="display-email__popover__content">
       <div class="h6 m-0">{{ nameWithoutEmail }}</div>
-      <div class="mb-3">{{ emailWithoutName || email }}</div>
+      <div class="mb-3">{{ emailWithoutName || value }}</div>
       <div class="d-flex flex-wrap gap-3">
         <router-link :to="{ name: 'search', query: { q: qReceived, indices } }" class="btn btn-action">
           <phosphor-icon name="tray-arrow-down" class="display-email__popover__content__icon" />
