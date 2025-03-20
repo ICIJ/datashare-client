@@ -18,17 +18,21 @@ const props = defineProps({
   expandDisabled: {
     type: Boolean
   },
-  min: {
+  minStart: {
+    type: Number,
+    default: 400
+  },
+  minEnd: {
     type: Number,
     default: 400
   },
   reduceThreshold: {
     type: Number,
-    default: 100
+    default: 150
   },
   expandThreshold: {
     type: Number,
-    default: 100
+    default: 150
   }
 })
 
@@ -68,9 +72,11 @@ const dragEnd = ({ detail }) => {
 <template>
   <div ref="target" class="separator-line" :class="classList">
     <separator-line-drag
-      v-draggable.relative="{ target, min, reduceThreshold, expandThreshold }"
+      v-draggable.relative="{ target, minStart, minEnd, reduceThreshold, expandThreshold }"
       class="separator-line__drag"
       :dragging="dragging"
+      @reduce="reduce"
+      @expand="expand"
       @drag="drag"
       @dragstart="dragStart"
       @dragend="dragEnd"
