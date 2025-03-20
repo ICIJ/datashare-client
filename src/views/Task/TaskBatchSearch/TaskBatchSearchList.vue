@@ -87,7 +87,7 @@ onBeforeMount(fetchMe)
           <display-project-list :values="getBatchSearchProjects(item)" />
         </template>
         <template #cell(author)="{ item }">
-          <display-user :value="getBatchSearchRecord(item, 'user.id')" />
+          <display-user :value="getBatchSearchRecord(item, 'user.id')" class="text-nowrap" />
         </template>
         <template #cell(createdAt)="{ item }">
           <display-datetime-from-now :value="item.createdAt" />

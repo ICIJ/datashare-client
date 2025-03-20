@@ -152,7 +152,7 @@ function getTaskIcon(item) {
           <display-datetime-from-now :value="item.createdAt" />
         </template>
         <template #cell(author)="{ item }">
-          <display-user :value="getAuthor(item)" />
+          <display-user :value="getAuthor(item)" class="text-nowrap" />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getProjects(item)" />
