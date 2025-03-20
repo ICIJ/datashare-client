@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue'
-import { uniqueId } from 'lodash'
+import { useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import { useLocale } from '@/composables/locale'
@@ -14,12 +13,12 @@ defineProps({
   }
 })
 
-const id = uniqueId('i18n-locale-dropdown')
-const popover = ref(null)
+const popover = useTemplateRef('popover')
 const { currentLocale, setLocale, locales } = useLocale()
+
 const chooseLocale = async (localeKey) => {
   if (popover.value?.hide) {
-    popover.value.hide(new Event('forceHide'))
+    popover.value.hide()
   }
   await setLocale(localeKey)
 }
@@ -33,34 +32,34 @@ const dropdownItemClass = (key) => {
 </script>
 
 <template>
-  <b-button :id="id" class="i18n-locale-dropdown" href="#" :variant="null" @click.prevent>
-    <span class="i18n-locale-dropdown__button">
-      <slot v-bind="{ currentLocale, locales }">
-        <phosphor-icon name="globe-hemisphere-west" class="me-1" />
-        {{ currentLocale.label }}
-      </slot>
-    </span>
-    <teleport to="body">
-      <b-popover
-        ref="popover"
-        click
-        :placement="popoverPlacement"
-        :target="id"
-        custom-class="i18n-locale-dropdown__list popover-body-p-0"
+  <b-popover
+    ref="popover"
+    click
+    :placement="popoverPlacement"
+    teleport-to="body"
+    custom-class="i18n-locale-dropdown__list popover-body-p-0"
+  >
+    <template #target>
+      <b-button class="i18n-locale-dropdown" href="#" :variant="null" @click.prevent>
+        <span class="i18n-locale-dropdown__button">
+          <slot v-bind="{ currentLocale, locales }">
+            <phosphor-icon name="globe-hemisphere-west" class="me-1" />
+            {{ currentLocale.label }}
+          </slot>
+        </span>
+      </b-button>
+    </template>
+    <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
+      <a
+        v-for="{ key, label } in locales"
+        :key="key"
+        href="#"
+        class="dropdown-item"
+        :class="dropdownItemClass(key)"
+        @click.prevent="chooseLocale(key)"
       >
-        <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
-          <a
-            v-for="{ key, label } in locales"
-            :key="key"
-            href="#"
-            class="dropdown-item"
-            :class="dropdownItemClass(key)"
-            @click.prevent="chooseLocale(key)"
-          >
-            {{ label }}
-          </a>
-        </div>
-      </b-popover>
-    </teleport>
-  </b-button>
+        {{ label }}
+      </a>
+    </div>
+  </b-popover>
 </template>
