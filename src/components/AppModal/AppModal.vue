@@ -118,10 +118,21 @@ defineProps({
 
   .modal-fullscreen {
     max-width: calc(100vw - var(--bs-modal-margin) * 2);
-    margin: var(--bs-modal-margin) auto;
+    padding-block: var(--bs-modal-margin);
+    margin: auto;
+    width: 100%;
+
+    // This is a clearfix to ensure the modal has a a
+    &:after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: var(--bs-modal-margin);
+    }
 
     .modal-content {
       height: auto;
+      min-height: calc(100vh - var(--bs-modal-margin) * 2);
       border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
       border-radius: var(--bs-modal-border-radius);
     }
