@@ -46,9 +46,10 @@ function calculateDragPosition({ startX, initialClientX, clientX, bindingValue, 
   // The offset is either the user-provided offset or
   // the element's own width if `relative` mode is active
   const offset = bindingValue.offset ?? elementWidth
-  const min = bindingValue.min ?? 0
+  const minStart = bindingValue.minStart ?? 0
+  const minEnd = bindingValue.minEnd ?? 0
   const position = startX + (clientX - initialClientX)
-  const x = clamp(position, min, parentWidth - offset)
+  const x = clamp(position, minStart, parentWidth - offset - minEnd)
   const detail = percent ? (x / parentWidth) * 100 : x
   const reduceThreshold = bindingValue.reduceThreshold ?? 100
   const expandThreshold = bindingValue.expandThreshold ?? 100
@@ -85,17 +86,13 @@ function handleDragThresholds({ position, x, detail, reduceThreshold, expandThre
  *
  * @param {Object} params
  * @param {number} params.position - The raw position before clamping.
- * @param {number} params.x - The clamped position.
  * @param {number|float} params.detail - The final detail (px or percent).
- * @param {number} params.reduceThreshold - Distance threshold to trigger "reduce".
  * @param {number} params.expandThreshold - Distance threshold to trigger "expand".
  * @param {number} params.parentWidth - The total width of the draggable’s container.
  * @param {Function} params.emitCallback - Function to emit events.
  */
-function handleResizeThresholds({ position, x, detail, reduceThreshold, expandThreshold, parentWidth, emitCallback }) {
-  if (x - position >= reduceThreshold) {
-    emitCallback('reduce', detail)
-  } else if (position >= parentWidth - expandThreshold) {
+function handleResizeThresholds({ position, detail, expandThreshold, parentWidth, emitCallback }) {
+  if (position >= parentWidth - expandThreshold) {
     emitCallback('expand', detail)
   }
 }
