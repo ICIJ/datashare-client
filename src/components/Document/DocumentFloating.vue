@@ -76,11 +76,13 @@ const startStyle = computed(() => {
 
 const classList = computed(() => {
   return {
+    'document-floating--enought-space': enoughtSpace.value,
     'document-floating--reached-zero-width': reachedZeroWidth.value,
     'document-floating--reached-min-width': reachedMinWidth.value,
     'document-floating--reached-full-width': reachedFullWidth.value,
     'document-floating--has-floating-children': hasFloatingChildren.value,
-    'document-floating--has-floating-siblings': hasFloatingSiblings.value
+    'document-floating--has-floating-siblings': hasFloatingSiblings.value,
+    'document-floating--has-floating': hasFloatingSiblings.value || hasFloatingChildren.value
   }
 })
 
@@ -160,8 +162,13 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     visibility: hidden;
   }
 
-  &--reached-full-width &__end {
+  &--reached-full-width.document-floating--has-floating &__end {
     visibility: hidden;
+  }
+
+  &:not(.document-floating--enought-space) &__start,
+  &:not(.document-floating--enought-space) &__end {
+    overflow: hidden;
   }
 
   &__start {
