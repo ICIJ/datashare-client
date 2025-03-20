@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 
@@ -14,11 +14,19 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['select'])
+const modal = inject('modal', false)
 
 const classList = computed(() => {
   return {
     'document-carousel-entry--active': props.active
   }
+})
+
+const to = computed(() => {
+  const name = 'document'
+  const params = props.document.routerParams
+  const query = { modal }
+  return { name, params, query }
 })
 
 const thumbnailSize = computed(() => {
@@ -33,7 +41,7 @@ const title = computed(() => {
 <template>
   <router-link
     class="document-carousel-entry"
-    :to="{ params: document.routerParams }"
+    :to="to"
     :class="classList"
     @click="emit('select', document)"
   >
