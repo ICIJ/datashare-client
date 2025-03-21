@@ -1,6 +1,6 @@
 import { vueRouter } from 'storybook-vue3-router'
-import { withPinia } from '~storybook/decorators/pinia'
 
+import { withPinia } from '~storybook/decorators/pinia'
 import ProjectCard from '@/components/Project/ProjectCard/ProjectCard'
 
 const routes = [
