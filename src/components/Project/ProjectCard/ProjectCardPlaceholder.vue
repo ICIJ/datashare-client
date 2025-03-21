@@ -1,0 +1,36 @@
+<script setup>
+import { random } from 'lodash'
+
+import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
+</script>
+
+<template>
+  <div class="project-card-placeholder border rounded p-4 d-flex gap-3">
+    <div class="flex-grow-1 project-card-placeholder__thumbnail">
+      <app-placeholder squared class="rounded" />
+    </div>
+    <div class="d-flex flex-column gap-4 h-100 w-100 flex-truncate">
+      <div>
+        <h3>
+          <app-placeholder :width="random(30, 60)" />
+        </h3>
+        <p>
+          <app-placeholder v-for="i in 4" :key="i" :cols="random(6, 6)" whitespace />
+        </p>
+      </div>
+      <div class="d-flex flex-column gap-2">
+        <app-placeholder :width="15" />
+        <app-placeholder :width="10" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.project-card-placeholder {
+  &__thumbnail {
+    max-width: 90px;
+    width: 100%;
+  }
+}
+</style>
