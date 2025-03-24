@@ -6,7 +6,7 @@ import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import { useSearchStore } from '@/store/modules/search'
 
-const formSearchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
+const formSearchStore = useSearchStore.create(inject('searchStoreSuffix'))
 const filterPath = formSearchStore.getFilter({ name: 'path' })
 const filterTags = formSearchStore.getFilter({ name: 'tags' })
 const filterContentType = formSearchStore.getFilter({ name: 'contentType' })

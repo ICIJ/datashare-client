@@ -34,18 +34,18 @@ describe('SearchStore', () => {
     })
 
     it('should create store with a defined id', () => {
-      const anotherSearchStore = useSearchStore.instantiate('foo')
+      const anotherSearchStore = useSearchStore.create('foo')
       expect(anotherSearchStore.$id).toBeDefined()
     })
 
     it('should create store with a different id than the default search store', () => {
-      const anotherSearchStore = useSearchStore.instantiate('foo')
+      const anotherSearchStore = useSearchStore.create('foo')
       expect(anotherSearchStore.$id).not.toBe('search')
     })
 
     it('should create twice the same store with an id different than the default search store', () => {
-      const fooStore = useSearchStore.instantiate('foo')
-      const fooStoreAgain = useSearchStore.instantiate('foo')
+      const fooStore = useSearchStore.create('foo')
+      const fooStoreAgain = useSearchStore.create('foo')
       expect(fooStore).not.toBe(searchStore)
       expect(fooStore.$id).not.toBe(searchStore.$id)
       expect(fooStore).toBe(fooStoreAgain)

@@ -149,7 +149,7 @@ export default {
   },
   emits: ['submit'],
   data() {
-    const searchStore = useSearchStore.instantiate(this.searchStoreSuffix)
+    const searchStore = useSearchStore.create(this.searchStoreSuffix)
 
     return {
       field: searchStore.field,
