@@ -875,7 +875,7 @@
     "savedSearches": "Saved searches",
     "tasks": "Tasks",
     "analyseAction": "Add documents",
-    "task-board": "Task Board",
+    "task-board": "Task board",
     "batchSearches": "Batch searches",
     "batchSearchesAction": "Add batch searches",
     "batchDownloads": "Batch downloads",
@@ -932,7 +932,7 @@
       "state": "State"
     },
     "task-board": {
-      "title": "Task Board",
+      "title": "Task board",
       "latest": {
         "title": "Latest tasks",
         "linkTitle": {
