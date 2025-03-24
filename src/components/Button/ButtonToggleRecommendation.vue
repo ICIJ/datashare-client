@@ -25,7 +25,7 @@ const label = computed(() => {
     variant="action"
     :icon-left="PhEyes"
     icon-left-weight="fill"
-    class="button-toggler-recommendation text-white"
+    class="button-toggler-recommendation"
     :label="label"
     @click="toggle"
   />
