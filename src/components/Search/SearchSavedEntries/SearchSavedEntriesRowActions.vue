@@ -1,7 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import { useSearchSavingModal, useRemoveSavedSearchModal } from '@/composables/useSearchSaving'
+import { useRemoveSavedSearchModal } from '@/composables/useRemoveSavedSearchModal'
+import { useSearchSavingModal } from '@/composables/useSearchSavingModal'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 const detailsShowing = defineModel('toggle', { type: Boolean })
