@@ -20,7 +20,7 @@ export const routes = [
         path: '',
         meta: {
           title: 'search.title',
-          icon: 'list-magnifying-glass',
+          icon: 'magnifying-glass',
           docs: [
             {
               title: 'Search documents',
