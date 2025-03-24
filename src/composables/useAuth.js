@@ -1,6 +1,6 @@
 import { ref, onBeforeMount } from 'vue'
 
-import { useCore } from './core'
+import { useCore } from './useCore'
 
 export function useAuth() {
   const { core } = useCore()
