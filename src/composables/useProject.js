@@ -1,9 +1,7 @@
-import { computed, h, toValue } from 'vue'
+import { h } from 'vue'
 import { useModalController } from 'bootstrap-vue-next'
 
-import { useCore } from '@/composables/useCore'
 import ProjectDeletionModal from '@/components/Project/ProjectDeletionModal'
-import { useAppStore } from '@/store/modules'
 
 export function useProjectDeletionModal(project) {
   const modalController = useModalController()
@@ -26,44 +24,4 @@ export function useProjectDeletionModal(project) {
   }
 
   return { show, hide }
-}
-
-export function useProjectMetrics(project) {
-  const { core } = useCore()
-  const { name: index } = toValue(project)
-
-  async function fetchDocumentsCount() {
-    return core.api.elasticsearch.countDocuments(index)
-  }
-
-  async function fetchTagsCount() {
-    return core.api.elasticsearch.countTags(index)
-  }
-
-  async function fetchRecommendationsCount() {
-    const recommendations = await core.api.getRecommendationsByProject(index)
-    return recommendations?.totalCount || 0
-  }
-
-  return { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount }
-}
-
-export function useProjectPinned(project) {
-  const appStore = useAppStore()
-  const { name } = toValue(project)
-
-  const pinned = computed({
-    get() {
-      return appStore.isProjectPinned(name)
-    },
-    set(pinned) {
-      if (pinned) {
-        return appStore.pinProject(name)
-      }
-
-      return appStore.unpinProject(name)
-    }
-  })
-
-  return { pinned }
 }
