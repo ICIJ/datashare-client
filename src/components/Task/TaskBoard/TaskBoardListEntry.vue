@@ -9,7 +9,6 @@ defineProps({
   title: { type: String, default: '' },
   icon: { type: String },
   description: { type: String, default: '' },
-  info: { type: [String, Object] },
   listLink: { type: [String, Object] },
   actionLink: { type: [String, Object] },
   actionText: { type: String }
@@ -43,20 +42,9 @@ const compact = computed(() => {
             <slot name="description" v-bind="{ description }">
               <p>{{ description }}</p>
             </slot>
-            <span class="d-flex justify-content-end text-secondary-emphasis">
-              <slot name="info" v-bind="{ info }">
-                <span class="task-board-list-entry__info">
-                  <phosphor-icon :name="icon" />
-                  {{ info }}
-                </span>
-              </slot>
-            </span>
           </b-card-text>
-          <b-card-text class="d-flex justify-content-between gap-2 flex-row row-wrap">
+          <b-card-text class="d-flex justify-content-end gap-2 flex-row row-wrap">
             <slot name="actions" v-bind="{ listLink, actionLink }">
-              <button-icon icon-left="list" variant="outline-tertiary" :to="listLink" class="text-nowrap">
-                {{ $t(`task.task-board.entries.seeAll`) }}
-              </button-icon>
               <button-icon
                 v-if="actionLink"
                 :hide-label="compact"
@@ -79,10 +67,6 @@ const compact = computed(() => {
   &__icon {
     max-width: 8rem;
     width: 100%;
-  }
-
-  &__info {
-    text-wrap: pretty;
   }
 }
 </style>
