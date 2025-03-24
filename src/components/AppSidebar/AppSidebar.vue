@@ -139,7 +139,7 @@ onBeforeRouteLeave(autoClose)
             <project-label :project="project" hide-thumbnail />
           </app-sidebar-section-entry>
         </app-sidebar-section>
-        <app-sidebar-section title="Explore" :icon="PhMagnifyingGlass" :to="searchRoute" :compact="compact">
+        <app-sidebar-section title="Search" :icon="PhMagnifyingGlass" :to="searchRoute" :compact="compact">
           <app-sidebar-section-entry :icon="PhMagnifyingGlass" :to="searchRoute" exact-match>
             {{ t('appSidebar.search') }}
           </app-sidebar-section-entry>
