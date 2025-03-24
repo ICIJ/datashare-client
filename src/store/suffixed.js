@@ -1,5 +1,5 @@
 import { camelCase, uniqueId } from 'lodash'
-import { provide, onUnmounted } from 'vue'
+import { provide, inject, onUnmounted } from 'vue'
 import { defineStore } from 'pinia'
 
 /**
@@ -65,7 +65,18 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * @returns {Store} - The unique store instance.
    */
   useSuffixedStore.instantiate = (suffix) => {
-    return useSuffixedStore.withSuffix(suffix).call()
+    return useSuffixedStore.withSuffix(suffix).call(null)
+  }
+
+  /**
+   * Create a new store using the given provide key to inject the suffix.
+   * 
+   * @param provideKey - The key to provide the suffix in the component.
+   * @returns {Store} - The unique store instance.
+   */
+  useSuffixedStore.inject = (provideKey) => {
+    const suffix = inject(provideKey, null)
+    return suffix ? useSuffixedStore.instantiate(suffix) : useSuffixedStore()
   }
 
   /**
