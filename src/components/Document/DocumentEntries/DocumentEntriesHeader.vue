@@ -84,7 +84,7 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
 </script>
 
 <template>
-  <div ref="element" class="document-entries-header" :class="classList">
+  <div ref="element" class="document-entries-header mb-3" :class="classList">
     <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" :disabled="total === 0" />
     <slot v-bind="{ compact }">
       <div>
@@ -103,6 +103,7 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
   justify-content: flex-start;
   gap: $spacer-xs;
   padding: $spacer 0;
+  margin-bottom: $spacer;
   height: 2.875rem;
 
   &--compact {
