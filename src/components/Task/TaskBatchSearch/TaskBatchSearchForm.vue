@@ -1,7 +1,7 @@
 <script setup>
 import { property } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRouter, stringifyQuery } from 'vue-router'
 import { computed, ref, toValue } from 'vue'
 
 import FormCreation from '@/components/Form/FormCreation'
@@ -9,6 +9,7 @@ import TaskBatchSearchFormDetails from '@/components/Task/TaskBatchSearch/TaskBa
 import TaskBatchSearchFormQueries from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormQueries'
 import TaskBatchSearchFormOperators from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormOperators'
 import TaskBatchSearchFormFilters from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormFilters'
+import TaskBatchSearchFormOverview from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormOverview'
 import { useCore } from '@/composables/core'
 import { useSearchStore } from '@/store/modules/search'
 
@@ -65,7 +66,9 @@ const queryTemplate = computed(() => {
   return JSON.stringify(query)
 })
 
-const valid = computed(() => name.value.trim(' ').length > 0 && csvFile.value !== null)
+const uri = computed(() => `/?${stringifyQuery(formSearchStore.toBaseRouteQuery)}`)
+
+const isValid = computed(() => name.value.trim(' ').length > 0 && csvFile.value !== null)
 
 function createBatchSearch() {
   return core.api.batchSearch(
@@ -81,7 +84,7 @@ function createBatchSearch() {
 }
 
 async function submit() {
-  if (!valid.value) {
+  if (!isValid.value) {
     return
   }
 
@@ -99,7 +102,7 @@ async function submit() {
   <form-creation
     class="task-batch-search-form d-flex flex-column gap-4"
     content-class-list="d-flex flex-column gap-3"
-    :valid="valid"
+    :valid="isValid"
     :submit-label="$t('task.batch-search.form.submit')"
     :submit-icon="PhRocketLaunch"
     @reset="reset"
@@ -119,5 +122,6 @@ async function submit() {
       v-model:spellingChanges="spellingChanges"
     />
     <task-batch-search-form-filters />
+    <task-batch-search-form-overview :uri="uri" />
   </form-creation>
 </template>
