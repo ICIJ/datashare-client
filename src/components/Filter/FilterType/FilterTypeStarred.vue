@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, ref, onBeforeMount } from 'vue'
+import { computed, ref, onBeforeMount } from 'vue'
 import { castArray } from 'lodash'
 
 import { useSearchFilter } from '@/composables/search-filter'
@@ -15,7 +15,7 @@ const props = defineProps({
 })
 
 const starredStore = useStarredStore()
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
+const searchStore = useSearchStore.inject('searchStoreSuffix')
 const { getTotal, getFilterValues, setFilterValue, watchIndices } = useSearchFilter()
 
 const total = ref(0)
