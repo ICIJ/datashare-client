@@ -32,7 +32,7 @@ describe('store/suffixed', () => {
   })
 
   it('should return the same store when `instantiate` has no params', () => {
-    const sameStore = useFooStore.instantiate()
+    const sameStore = useFooStore.create()
     expect(sameStore).toBe(store)
   })
 
@@ -43,17 +43,17 @@ describe('store/suffixed', () => {
   })
 
   it('should create a store with a defined id', () => {
-    const anotherStore = useFooStore.instantiate('bar')
+    const anotherStore = useFooStore.create('bar')
     expect(anotherStore.$id).toBeDefined()
   })
 
   it('should create a store with a different id than the default search store', () => {
-    const anotherStore = useFooStore.instantiate('bar')
+    const anotherStore = useFooStore.create('bar')
     expect(anotherStore.$id).not.toBe('foo')
   })
 
   it('should create a store with a different state', () => {
-    const anotherStore = useFooStore.instantiate('bar')
+    const anotherStore = useFooStore.create('bar')
     expect(anotherStore.count).toBe(0)
     expect(store.count).toBe(0)
     anotherStore.increment()
@@ -65,8 +65,8 @@ describe('store/suffixed', () => {
   })
 
   it('should create twice the same store with an id different than the default search store', () => {
-    const barStore = useFooStore.instantiate('bar')
-    const barStoreAgain = useFooStore.instantiate('bar')
+    const barStore = useFooStore.create('bar')
+    const barStoreAgain = useFooStore.create('bar')
     expect(barStore).not.toBe(store)
     expect(barStore.$id).not.toBe(store.$id)
     expect(barStore).toBe(barStoreAgain)
@@ -74,8 +74,8 @@ describe('store/suffixed', () => {
   })
 
   it('should create twice the same store with an id different than the default search store and share the state', () => {
-    const barStore = useFooStore.instantiate('bar')
-    const barStoreAgain = useFooStore.instantiate('bar')
+    const barStore = useFooStore.create('bar')
+    const barStoreAgain = useFooStore.create('bar')
 
     expect(barStore.count).toBe(0)
     expect(barStoreAgain.count).toBe(0)
@@ -97,12 +97,12 @@ describe('store/suffixed', () => {
   })
 
   it('should create a store that is persisted in pinia registry', () => {
-    useFooStore.instantiate('bar')
+    useFooStore.create('bar')
     expect(getActivePinia()._s.has('fooBar')).toBe(true)
   })
 
   it('should create a store that is persisted in pinia registry even after component is unmounted', () => {
-    const setup = () => ({ storeId: useFooStore.instantiate('bar').$id })
+    const setup = () => ({ storeId: useFooStore.create('bar').$id })
     const wrapper = shallowMount({ setup })
     expect(getActivePinia()._s.has(wrapper.vm.storeId)).toBe(true)
     wrapper.unmount()
@@ -142,7 +142,7 @@ describe('store/suffixed', () => {
     const component = { computed, template: '{{ fooBarStore.count }}' }
     const wrapper = shallowMount(component)
     expect(wrapper.text()).toEqual('0')
-    useFooStore.instantiate('bar').increment()
+    useFooStore.create('bar').increment()
     await flushPromises()
     expect(wrapper.text()).toEqual('1')
   })
@@ -172,7 +172,7 @@ describe('store/suffixed', () => {
     const component = { computed, template: '{{ count }}' }
     const wrapper = shallowMount(component)
     expect(wrapper.text()).toEqual('0')
-    useFooStore.instantiate('bar').increment()
+    useFooStore.create('bar').increment()
     await flushPromises()
     expect(wrapper.text()).toEqual('1')
   })

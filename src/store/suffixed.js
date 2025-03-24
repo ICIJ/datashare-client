@@ -64,7 +64,7 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * @param {string} suffix - The suffix to append to the store id.
    * @returns {Store} - The unique store instance.
    */
-  useSuffixedStore.instantiate = (suffix) => {
+  useSuffixedStore.create = (suffix) => {
     return useSuffixedStore.withSuffix(suffix).call()
   }
 
@@ -76,7 +76,7 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    */
   useSuffixedStore.inject = (provideKey) => {
     const suffix = inject(provideKey, null)
-    return suffix ? useSuffixedStore.instantiate(suffix) : useSuffixedStore()
+    return suffix ? useSuffixedStore.create(suffix) : useSuffixedStore()
   }
 
   /**
@@ -89,7 +89,7 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    */
   useSuffixedStore.disposable = (provideKey = null) => {
     const suffix = uniqueId('disposable')
-    const store = useSuffixedStore.instantiate(suffix)
+    const store = useSuffixedStore.create(suffix)
     // Dispose the store when the component is unmounted.
     onUnmounted(store.$dispose)
     // Provide the suffix in the component to allow other components
