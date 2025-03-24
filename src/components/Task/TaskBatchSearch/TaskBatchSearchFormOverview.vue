@@ -10,5 +10,5 @@ defineProps({
 </script>
 
 <template>
-  <search-breadcrumb-uri :uri="uri" :key="uri" class="pt-3" />
+  <search-breadcrumb-uri :key="uri" :uri="uri" class="pt-3" />
 </template>
