@@ -12,7 +12,7 @@
 import { toRef } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
-import { onRouteUpdateNotMatch } from '@/composables/useUrlParam'
+import { onRouteUpdateNotMatch } from '@/composables/onRouteUpdateNotMatch'
 import PageSettingsHide from '@/components/PageSettings/PageSettingsHide'
 import PageSettingsTitle from '@/components/PageSettings/PageSettingsTitle'
 

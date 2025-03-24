@@ -13,7 +13,9 @@ import SearchVisitedDocumentsEntries from '@/components/Search/SearchVisitedDocu
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useCore } from '@/composables/useCore'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
-import { useUrlPageParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/useUrlParam'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
+import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
+import { useUrlPageParam } from '@/composables/useUrlPageParam'
 import { useAppStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 

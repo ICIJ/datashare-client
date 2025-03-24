@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
-import { useUrlParamWithStore } from '@/composables/useUrlParam'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 

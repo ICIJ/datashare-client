@@ -12,7 +12,8 @@ import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import RowPaginationQueries from '@/components/RowPagination/RowPaginationQueries'
 import { useCore } from '@/composables/useCore'
 import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
-import { useUrlParam, useUrlParamWithStore } from '@/composables/useUrlParam'
+import { useUrlParam } from '@/composables/useUrlParam'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore, useTaskStore } from '@/store/modules'
 
 const props = defineProps({

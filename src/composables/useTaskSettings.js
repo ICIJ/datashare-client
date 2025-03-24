@@ -2,7 +2,9 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { camelCase } from 'lodash'
 
-import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/useUrlParam'
+import { useUrlParamWithStore } from './useUrlParamWithStore'
+import { useUrlParamsWithStore } from './useUrlParamsWithStore'
+
 import { useViewSettings, SORT_ORDER_KEY, INPUT_RADIO, INPUT_CHECKBOX } from '@/composables/useViewSettings'
 import { useTaskProperties } from '@/composables/useTaskProperties'
 import { useAppStore } from '@/store/modules'

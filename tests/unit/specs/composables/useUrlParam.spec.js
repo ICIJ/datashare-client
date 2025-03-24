@@ -4,16 +4,14 @@ import { flushPromises } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 
 import { useAppStore } from '@/store/modules'
-import {
-  whenIsRoute,
-  whenDifferentRoute,
-  useUrlParam,
-  useUrlParams,
-  useUrlPageFrom,
-  useUrlParamWithStore,
-  useUrlParamsWithStore,
-  replaceUrlParam
-} from '@/composables/useUrlParam'
+import { useUrlParam } from '@/composables/useUrlParam'
+import { whenIsRoute } from '@/composables/whenIsRoute'
+import { whenDifferentRoute } from '@/composables/whenDifferentRoute'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
+import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
+import { useUrlParams } from '@/composables/useUrlParams'
+import { useUrlPageFrom } from '@/composables/useUrlPageFrom'
+import { replaceUrlParam } from '@/composables/replaceUrlParam'
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
