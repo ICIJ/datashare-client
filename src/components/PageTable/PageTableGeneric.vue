@@ -35,6 +35,12 @@ const props = defineProps({
    */
   primaryKey: {
     type: String
+  },
+  /**
+   * Style of the actions column
+   */
+  actionsColStyle: {
+    type: [Object, Array, String],
   }
 })
 
@@ -86,6 +92,7 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
   <page-table v-model:sort="sort" v-model:order="order">
     <template #colgroup>
       <col v-for="field in fields" :key="field.name" :style="field.colStyle" />
+      <col :style="actionsColStyle" />
     </template>
 
     <template #thead>
