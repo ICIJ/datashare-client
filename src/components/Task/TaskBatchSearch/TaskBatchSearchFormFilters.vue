@@ -22,7 +22,13 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
   >
     <filter-type-path :filter="filterPath" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
     <filter-type :filter="filterTags" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
-    <filter-type :filter="filterContentType" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type
+      :filter="filterContentType"
+      actions-position-title
+      hide-contextualize
+      class="p-3"
+      content-class="pb-0"
+    />
     <filter-type :filter="filterLanguage" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
   </form-step>
 </template>

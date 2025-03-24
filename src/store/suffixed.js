@@ -65,12 +65,12 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * @returns {Store} - The unique store instance.
    */
   useSuffixedStore.instantiate = (suffix) => {
-    return useSuffixedStore.withSuffix(suffix).call(null)
+    return useSuffixedStore.withSuffix(suffix).call()
   }
 
   /**
    * Create a new store using the given provide key to inject the suffix.
-   * 
+   *
    * @param provideKey - The key to provide the suffix in the component.
    * @returns {Store} - The unique store instance.
    */
