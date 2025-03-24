@@ -1,10 +1,10 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createApp } from 'vue'
 
-import { useTaskSettings } from '@/composables/task-settings'
+import { useTaskSettings } from '@/composables/useTaskSettings'
 import CoreSetup from '~tests/unit/CoreSetup'
 
-vi.mock('@/composables/core', () => ({
+vi.mock('@/composables/useCore', () => ({
   useCore: vi.fn(() => ({
     core: {
       mode: { modeName: 'SERVER' }

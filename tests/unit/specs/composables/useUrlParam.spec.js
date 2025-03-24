@@ -13,7 +13,7 @@ import {
   useUrlParamWithStore,
   useUrlParamsWithStore,
   replaceUrlParam
-} from '@/composables/url-params'
+} from '@/composables/useUrlParam'
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()

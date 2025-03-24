@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 
-import { useSelection } from '@/composables/selection'
+import { useSelection } from '@/composables/useSelection'
 
-describe('useSelection composable', () => {
+describe('useSelection', () => {
   it('should initialize with an empty selection', () => {
     const { selection } = useSelection()
     expect(selection.value).toEqual([])

@@ -2,9 +2,9 @@ import { createApp } from 'vue'
 import { afterEach, beforeEach } from 'vitest'
 import { flushPromises } from '@vue/test-utils'
 
-import { useNProgress } from '@/composables/nprogress'
+import { useNProgress } from '@/composables/useNProgress'
 
-describe('nprogress', () => {
+describe('useNProgress', () => {
   let result
 
   function createContainer() {
