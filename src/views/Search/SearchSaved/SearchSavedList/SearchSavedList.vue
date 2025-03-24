@@ -3,7 +3,7 @@ import { computed, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import ButtonClearHistory from '@/components/Button/ButtonClearHistory'
+import ButtonClearSavedSearches from '@/components/Button/ButtonClearSavedSearches'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
@@ -83,11 +83,11 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
-          <navigation-breadcrumb-link route-name="search" />
+          <navigation-breadcrumb-link route-name="search" title="Search" />
           <navigation-breadcrumb-link route-name="search.saved.list" no-caret />
         </template>
         <template #actions>
-          <button-clear-history @click="showRemoveAllModal" />
+          <button-clear-saved-searches @click="showRemoveAllModal" />
         </template>
       </page-header>
       <page-toolbar

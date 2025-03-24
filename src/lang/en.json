@@ -52,6 +52,9 @@
   "buttonClearHistory": {
     "label": "Clear history"
   },
+  "buttonClearSavedSearches": {
+    "label": "Clear saved searches"
+  },
   "buttonDownloadDocuments": {
     "label": "Download documents"
   },
@@ -167,7 +170,7 @@
     "download": "Download"
   },
   "search": {
-    "title": "Search",
+    "title": "Search documents",
     "errors": {
       "badRequest": "Your search query is wrong",
       "internalError": "The server encountered a problem",
@@ -867,7 +870,7 @@
     "projects": "Projects",
     "allProjects": "All projects",
     "explore": "Explore",
-    "search": "Search",
+    "search": "Documents",
     "visitedDocuments": "Visited documents",
     "savedSearches": "Saved searches",
     "tasks": "Tasks",
