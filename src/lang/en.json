@@ -298,8 +298,8 @@
     "label": "{activeIndex} on {occurrences}"
   },
   "documentSearchNavItem": {
-    "previous": "Previous",
-    "next": "Next"
+    "previous": "Previous document",
+    "next": "Next document"
   },
   "documentUserActions": {
     "tags":"0 tags | 1 tag | {n} tags",
