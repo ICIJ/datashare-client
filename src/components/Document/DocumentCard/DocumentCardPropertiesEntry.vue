@@ -31,7 +31,12 @@ const display = computed(() => {
 
 <template>
   <div class="document-card-properties-entry d-flex px-1 mb-2 text-secondary-emphasis">
-    <div v-if="!hideIcon" class="document-card-properties-entry__icon pe-2 flex-shrink-0" :title="display" v-b-tooltip.body>
+    <div
+      v-if="!hideIcon"
+      v-b-tooltip.body
+      class="document-card-properties-entry__icon pe-2 flex-shrink-0"
+      :title="display"
+    >
       <phosphor-icon :name="icon ?? items[property].icon ?? property" />
     </div>
     <span class="visually-hidden">{{ display }}:</span>

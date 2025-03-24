@@ -40,7 +40,7 @@ const props = defineProps({
    * Style of the actions column
    */
   actionsColStyle: {
-    type: [Object, Array, String],
+    type: [Object, Array, String]
   }
 })
 
