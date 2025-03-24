@@ -26,7 +26,7 @@ const filters = computed(() => {
 })
 
 const filtersTitles = computed(() => filters.value.map((filter) => ({ filter, title: t(`filter.${filter.name}`) })))
-const fuse = computed(() => new Fuse(filtersTitles.value, { distance: 100, shouldSort: true, keys: ['title'] }))
+const fuse = computed(() => new Fuse(filtersTitles.value, { threshold: 0.1, shouldSort: true, keys: ['title'] }))
 const fuseFilters = computed(() => fuse.value.search(q.value).map(property('item.filter')))
 const displayedFilters = computed(() => (q.value ? fuseFilters.value : filters.value))
 const filtersBySection = computed(() => groupBy(displayedFilters.value, 'section'))
