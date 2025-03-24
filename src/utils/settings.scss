@@ -17,7 +17,7 @@ $dark: #212529;
 $darker: #0F0F10;
 
 $link-color: $action;
-$link-color-dark: mix($white, $action, 40%);
+$link-color-dark: $white;
 $link-hover-color: mix($black, $primary, 20%);
 $link-decoration: none;
 
