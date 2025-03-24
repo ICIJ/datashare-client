@@ -1,10 +1,10 @@
 <script setup>
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskBoardList from '@/components/Task/TaskBoard/TaskBoardList'
 import TaskBoardListEntry from '@/components/Task/TaskBoard/TaskBoardListEntry'
 import TaskBoardLatest from '@/views/Task/TaskBoard/TaskBoardLatest'
-import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 </script>
 
