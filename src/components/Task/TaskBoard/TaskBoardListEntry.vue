@@ -33,7 +33,7 @@ const compact = computed(() => {
       <b-col md="10" class="d-flex">
         <b-card-body class="d-flex flex-column overflow-auto p-0">
           <template #title>
-            <h3>
+            <h3 class="h4">
               <router-link :to="listLink">
                 {{ title }}
               </router-link>
