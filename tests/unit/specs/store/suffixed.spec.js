@@ -1,9 +1,9 @@
 import { setActivePinia, getActivePinia, createPinia, mapStores, mapState } from 'pinia'
 import { flushPromises, shallowMount } from '@vue/test-utils'
 
-import { defineSuffixedStore } from '@/store/suffixed'
+import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 
-describe('store/suffixed', () => {
+describe('store/defineSuffixedStore', () => {
   let store, useFooStore
 
   beforeEach(() => {
