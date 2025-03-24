@@ -161,10 +161,10 @@ describe('Document', () => {
     })
   })
 
-  it('should return "unknown" if no document size', () => {
+  it('should return "—" if no document size', () => {
     const doc = new Document({ _id: '42' })
 
-    expect(doc.humanSize).toBe('unknown')
+    expect(doc.humanSize).toBe('—')
   })
 
   it('should generate the document url', () => {
