@@ -30,15 +30,13 @@ const fields = [
     emphasis: true
   },
   {
-    value: 'user',
-    icon: 'user-circle',
-    text: computed(() => t('searchSavedEntries.fields.author'))
-  },
-  {
     value: 'creation_date',
     icon: 'calendar-blank',
     text: computed(() => t('searchSavedEntries.fields.creationDate')),
-    sortable: true
+    sortable: true,
+    colStyle: {
+      width: '200px'
+    }
   }
 ]
 
@@ -58,15 +56,13 @@ function searchParamsQuery(uri) {
     primary-key="id"
     :items="events"
     :fields="fields"
+    :actions-col-style="{ width: '200px' }"
     show-row-details
   >
     <template #cell(name)="{ item }">
       <router-link :to="{ name: 'search', query: searchParamsQuery(item.uri) }" class="fw-medium">
         {{ item.name }}
       </router-link>
-    </template>
-    <template #cell(user)="{ item }">
-      <display-user :value="item.user.id" />
     </template>
     <template #cell(creation_date)="{ item }">
       <display-datetime :value="item.creationDate" />
