@@ -69,5 +69,6 @@ const label = computed(() => (active.value ? t('documentActionsGroup.close') : t
     :label="label"
     :tooltip-placement="tooltipPlacement"
     :vertical="vertical"
+    hide-tooltip
   />
 </template>

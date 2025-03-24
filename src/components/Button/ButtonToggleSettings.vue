@@ -20,6 +20,7 @@ const toggle = () => {
     :label="$t('buttonToggleSettings.label')"
     class="button-toggle-settings border-0 flex-shrink-0"
     hide-label
+    hide-tooltip
     square
     variant="outline-secondary"
     @click="toggle"

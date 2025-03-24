@@ -45,6 +45,7 @@ const toggleStar = () => {
     :tooltip-placement="tooltipPlacement"
     :vertical="vertical"
     :fill="isStarred"
+    hide-tooltip
     @click="toggleStar()"
   />
 </template>
