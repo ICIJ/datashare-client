@@ -10,6 +10,7 @@ const formSearchStore = useSearchStore.instantiate(inject('searchStoreSuffix'))
 const filterPath = formSearchStore.getFilter({ name: 'path' })
 const filterTags = formSearchStore.getFilter({ name: 'tags' })
 const filterContentType = formSearchStore.getFilter({ name: 'contentType' })
+const filterLanguage = formSearchStore.getFilter({ name: 'language' })
 </script>
 
 <template>
@@ -19,9 +20,10 @@ const filterContentType = formSearchStore.getFilter({ name: 'contentType' })
     class="task-batch-search-form-filters"
     collapse
   >
-    <filter-type-path :filter="filterPath" :collapse="false" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
-    <filter-type :filter="filterTags" :collapse="false" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
-    <filter-type :filter="filterContentType" :collapse="false" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type-path :filter="filterPath" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type :filter="filterTags" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type :filter="filterContentType" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type :filter="filterLanguage" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
   </form-step>
 </template>
 
