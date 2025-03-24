@@ -3,7 +3,7 @@ export default function humanSize(
   showBytes = false,
   { B = '% B', KB = '% KB', MB = '% MB', GB = '% GB', TB = '% TB' } = {}
 ) {
-  if (size === -1 || size === '' || size === undefined || size === null) return 'unknown'
+  if (size === -1 || size === '' || size === undefined || size === null) return '—'
   const unitIndex = Math.floor(size === 0 ? 0 : Math.log(size) / Math.log(1024))
   const value = (size / Math.pow(1024, unitIndex)).toFixed(2)
   const addUnit = (v, i) => String([B, KB, MB, GB, TB][i]).replace('%', v)
