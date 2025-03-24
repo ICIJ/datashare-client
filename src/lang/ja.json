@@ -415,7 +415,7 @@
     "contentTextLength": "Content text length",
     "tabDetails": "タグと詳細",
     "namedEntities": "固有表現",
-    "namedEntityFilter": "Filter named entities",
+    "namedEntityFilter": "Search in entities",
     "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
     "extractedText": "Text",
     "translations": "翻訳",
