@@ -57,6 +57,15 @@ const props = defineProps({
   actionsPositionTitle: {
     type: Boolean,
     default: false
+  },
+  titleClass: {
+    type: [String, Object, Array]
+  },
+  contentClass: {
+    type: [String, Object, Array]
+  },
+  footerClass: {
+    type: [String, Object, Array]
   }
 })
 
@@ -76,6 +85,7 @@ const classList = computed(() => {
       v-model:collapse="collapse"
       v-model:sort="sort"
       :title="title"
+      :class="titleClass"
       :icon="icon"
       :count="count"
       :hide-sort="hideSort"
@@ -96,7 +106,7 @@ const classList = computed(() => {
       </template>
     </filters-panel-section-filter-title>
     <b-collapse :model-value="modal || !collapse">
-      <div class="filters-panel-section-filter__content">
+      <div class="filters-panel-section-filter__content" :class="contentClass">
         <form-control-search
           v-if="!hideSearch"
           v-model="search"
@@ -118,6 +128,7 @@ const classList = computed(() => {
           :hide-exclude="hideExclude"
           :hide-expand="modal || hideExpand"
           class="filters-panel-section-filter__footer px-2 pt-2"
+          :class="footerClass"
         />
       </slot>
     </b-collapse>
