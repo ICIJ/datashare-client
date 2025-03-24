@@ -62,7 +62,7 @@ export function useSearchProperties() {
   })
 
   const contentLength = propertyItem({
-    icon: 'file',
+    icon: 'floppy-disk-back',
     key: 'contentLength',
     sortable: true,
     type: SORT_TYPE_KEY.NUMBER,
@@ -77,7 +77,7 @@ export function useSearchProperties() {
   })
 
   const contentType = propertyItem({
-    icon: 'file-text',
+    icon: 'file',
     key: 'contentType',
     text: computed(() => t('documentRow.properties.contentType'))
   })
@@ -100,7 +100,7 @@ export function useSearchProperties() {
   })
 
   const extractionLevel = propertyItem({
-    icon: 'note-blank',
+    icon: 'paperclip',
     key: 'extractionLevel',
     text: computed(() => t('documentRow.properties.extractionLevel'))
   })
