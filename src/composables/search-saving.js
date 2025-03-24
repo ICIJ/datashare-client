@@ -1,4 +1,4 @@
-import { computed, inject, h } from 'vue'
+import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { useModalController } from 'bootstrap-vue-next'
 
@@ -49,7 +49,7 @@ export function useRemoveSavedSearchModal() {
 }
 
 export function useSearchSaving() {
-  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
+  const searchStore = useSearchStore.inject('searchStoreSuffix')
   const { save: saveSearchEvent, removeAll: removeAllSearchEvents } = useHistoryEvents('SEARCH')
   const { resolve } = useRouter()
 

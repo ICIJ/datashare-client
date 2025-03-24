@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import trim from 'lodash/trim'
 
@@ -31,7 +31,7 @@ const nameOrRawEmail = computed(() => {
   return nameWithoutEmail.value || props.value
 })
 
-const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
+const searchStore = useSearchStore.inject('searchStoreSuffix')
 
 const indices = computed(() => searchStore.indices)
 
