@@ -15,7 +15,7 @@ defineProps({
 
 <template>
   <document-card-properties-entry :document="document" :property="property" icon="hash">
-    <display-tags :value="document.tags" v-if="document.tags.length" />
+    <display-tags v-if="document.tags.length" :value="document.tags" />
     <template v-else>&#8212;</template>
   </document-card-properties-entry>
 </template>

@@ -367,7 +367,7 @@ async function loadContentSliceAround(desiredOffset) {
   }
 
   :deep(p) {
-    margin-bottom:  0.75rem;
+    margin-bottom: 0.75rem;
   }
 
   :deep(.local-search-term) {
