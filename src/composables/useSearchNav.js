@@ -3,8 +3,8 @@ import { useRouter } from 'vue-router'
 import { matches } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
-import { useCore } from '@/composables/core'
-import { useDocument } from '@/composables/document'
+import { useCore } from '@/composables/useCore'
+import { useDocument } from '@/composables/useDocument'
 import { useSearchStore } from '@/store/modules'
 
 export function useSearchNav(currentDocument = null) {

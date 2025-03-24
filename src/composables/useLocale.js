@@ -3,7 +3,7 @@ import { find } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 export function useLocale() {
   const { locale } = useI18n()

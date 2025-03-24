@@ -1,5 +1,6 @@
 import { computed, toRef, watchEffect, getCurrentScope, onScopeDispose } from 'vue'
-import nprogress from 'nprogress'
+
+import nprogress from '@/composables/useNProgress'
 
 export function useNProgress(currentProgress = null, options = {}) {
   const progress = toRef(currentProgress)

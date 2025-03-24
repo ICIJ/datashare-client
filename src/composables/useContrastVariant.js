@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 
-import { useColorMode } from './color-mode'
+import { useColorMode } from './useColorMode'
 
 export function useContrastVariant({ dark = 'dark', light = 'light' } = {}) {
   const { colorMode } = useColorMode()

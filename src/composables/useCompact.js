@@ -1,7 +1,7 @@
 import { computed, toRef } from 'vue'
 
-import { useResizeObserver } from '@/composables/resize-observer'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useResizeObserver } from '@/composables/useResizeObserver'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
 
 export const useCompact = function (element, options = { threshold: 0, breakpoint: SIZE.MD }) {

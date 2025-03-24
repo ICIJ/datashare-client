@@ -1,7 +1,7 @@
 import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { useDownloadsStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'

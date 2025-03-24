@@ -1,8 +1,8 @@
 import { computed, toValue } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { useUrlParam } from '@/composables/url-params'
-import { useTaskSettings } from '@/composables/task-settings'
+import { useUrlParam } from '@/composables/useUrlParam'
+import { useTaskSettings } from '@/composables/useTaskSettings'
 import { useTaskStore } from '@/store/modules'
 
 export function useTaskHeader(pageName) {

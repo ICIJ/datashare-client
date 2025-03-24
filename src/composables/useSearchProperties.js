@@ -1,8 +1,8 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { useViewProperties } from '@/composables/view-properties'
-import { useViewSettings, SORT_TYPE_KEY } from '@/composables/view-settings'
+import { useViewProperties } from '@/composables/useViewProperties'
+import { useViewSettings, SORT_TYPE_KEY } from '@/composables/useViewSettings'
 
 export function useSearchProperties() {
   const { t } = useI18n()

@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { castArray, compact, map, omit, orderBy, unset } from 'lodash'
 import lucene from 'lucene'
 
-import { useSearchFilter } from '@/composables/search-filter'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import findPath from '@/utils/find-path'
 

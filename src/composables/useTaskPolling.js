@@ -1,8 +1,8 @@
 import { computed, toValue, watch, useId, onBeforeUnmount } from 'vue'
 import { random } from 'lodash'
 
-import { usePolling } from '@/composables/polling'
-import { useCore } from '@/composables/core'
+import { usePolling } from '@/composables/usePolling'
+import { useCore } from '@/composables/useCore'
 import { useTaskStore } from '@/store/modules'
 
 export function useTaskPolling({ names = [], sortBy = [], perPage = null, page = 1, searchQuery = null } = {}) {

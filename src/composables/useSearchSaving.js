@@ -2,10 +2,10 @@ import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { useModalController } from 'bootstrap-vue-next'
 
-import { useConfirmModal } from '@/composables/confirm'
+import { useConfirmModal } from '@/composables/useConfirmModal'
 import SearchSavingModal from '@/components/Search/SearchSavingModal'
 import { useSearchStore } from '@/store/modules'
-import { useHistoryEvents } from '@/composables/history-events'
+import { useHistoryEvents } from '@/composables/useHistoryEvents'
 
 export function useSearchSavingModal() {
   const modalController = useModalController()
