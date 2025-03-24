@@ -1806,8 +1806,8 @@
     "tag": "Tag"
   },
   "documentCarousel": {
-    "next": "Next document",
-    "previous": "Previous document"
+    "next": "Next",
+    "previous": "Previous"
   },
   "documentRow": {
     "properties": {

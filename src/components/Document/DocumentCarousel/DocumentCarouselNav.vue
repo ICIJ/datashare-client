@@ -20,6 +20,7 @@ defineProps({
     variant="outline-tertiary"
     :icon-left="icon"
     hide-label
+    hide-tooltip
     :label="label"
   />
 </template>
