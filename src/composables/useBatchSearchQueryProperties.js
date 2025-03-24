@@ -1,8 +1,8 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { useViewProperties } from '@/composables/view-properties'
-import { SORT_TYPE_KEY, useViewSettings } from '@/composables/view-settings'
+import { useViewProperties } from '@/composables/useViewProperties'
+import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 
 export function useBatchSearchQueryProperties() {
   const { t } = useI18n()

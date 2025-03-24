@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'

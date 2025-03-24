@@ -1,4 +1,4 @@
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { useSearchStore } from '@/store/modules/search'
 import { apiInstance as api } from '@/api/apiInstance'
 

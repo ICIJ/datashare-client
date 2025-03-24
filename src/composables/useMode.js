@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { MODE_NAME } from '@/mode'
 
 export function useMode() {

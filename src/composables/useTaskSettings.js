@@ -2,11 +2,11 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { camelCase } from 'lodash'
 
-import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
-import { useViewSettings, SORT_ORDER_KEY, INPUT_RADIO, INPUT_CHECKBOX } from '@/composables/view-settings'
-import { useTaskProperties } from '@/composables/task-properties'
+import { useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/useUrlParam'
+import { useViewSettings, SORT_ORDER_KEY, INPUT_RADIO, INPUT_CHECKBOX } from '@/composables/useViewSettings'
+import { useTaskProperties } from '@/composables/useTaskProperties'
 import { useAppStore } from '@/store/modules'
-import useMode from '@/composables/mode'
+import useMode from '@/composables/useMode'
 
 export function useTaskSettings(pageName) {
   const appStore = useAppStore()

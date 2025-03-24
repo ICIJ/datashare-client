@@ -3,8 +3,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
 import { useModalController } from 'bootstrap-vue-next'
 
-import { useCore } from '@/composables/core'
-import { useWait } from '@/composables/wait'
+import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import DocumentViewerModal from '@/components/Document/DocumentViewerModal/DocumentViewerModal'
 import { useDocumentStore } from '@/store/modules'
 

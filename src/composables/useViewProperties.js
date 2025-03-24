@@ -1,4 +1,4 @@
-import { SORT_TYPE_KEY } from '@/composables/view-settings'
+import { SORT_TYPE_KEY } from '@/composables/useViewSettings'
 
 export function useViewProperties() {
   const propertyItem = ({

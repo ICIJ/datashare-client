@@ -1,4 +1,4 @@
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 export const useHistoryEvents = (type) => {
   const { core } = useCore()

@@ -1,7 +1,7 @@
 import { computed, h, toValue } from 'vue'
 import { useModalController } from 'bootstrap-vue-next'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import ProjectDeletionModal from '@/components/Project/ProjectDeletionModal'
 import { useAppStore } from '@/store/modules'
 

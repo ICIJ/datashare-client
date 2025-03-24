@@ -1,7 +1,7 @@
 import { camelCase } from 'lodash'
 
-import { SORT_TYPE_KEY } from '@/composables/view-settings'
-import { useViewProperties } from '@/composables/view-properties'
+import { SORT_TYPE_KEY } from '@/composables/useViewSettings'
+import { useViewProperties } from '@/composables/useViewProperties'
 import { useAppStore } from '@/store/modules'
 
 export function useTaskProperties(pageName) {
