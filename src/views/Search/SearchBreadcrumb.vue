@@ -1,8 +1,8 @@
 <script setup>
 import SearchBreadcrumbForm from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbForm'
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
-import { useSearchBreadcrumb } from '@/composables/search-breadcrumb'
-import { useSearchSavingModal } from '@/composables/search-saving'
+import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
+import { useSearchSavingModal } from '@/composables/useSearchSaving'
 
 const visible = defineModel('visible', { type: Boolean })
 

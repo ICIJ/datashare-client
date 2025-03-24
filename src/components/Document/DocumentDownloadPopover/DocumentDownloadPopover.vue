@@ -4,7 +4,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
-import { useDocumentDownload } from '@/composables/document-download'
+import { useDocumentDownload } from '@/composables/useDocumentDownload'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import ButtonIcon from '@/components/Button/ButtonIcon'

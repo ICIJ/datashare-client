@@ -5,7 +5,7 @@ import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import FormStep from '@/components/Form/FormStep/FormStep'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 const name = defineModel('name', { type: String, required: true })
 const description = defineModel('description', { type: String, required: false })

@@ -1,8 +1,8 @@
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
 
-import { useFeatures } from '@/composables/features'
-import { useDocument } from '@/composables/document'
+import { useFeatures } from '@/composables/useFeatures'
+import { useDocument } from '@/composables/useDocument'
 
 const { document } = useDocument()
 const { hasFeature } = useFeatures()

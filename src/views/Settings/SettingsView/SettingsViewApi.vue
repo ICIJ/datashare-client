@@ -7,8 +7,8 @@ import AppModal from '@/components/AppModal/AppModal'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayHash from '@/components/Display/DisplayHash'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
-import { useCore } from '@/composables/core'
-import { useConfirmModal } from '@/composables/confirm'
+import { useCore } from '@/composables/useCore'
+import { useConfirmModal } from '@/composables/useConfirmModal'
 
 /**
  * A page to manage user's API keys.

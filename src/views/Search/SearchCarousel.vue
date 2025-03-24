@@ -3,8 +3,8 @@ import { computed, ref } from 'vue'
 
 import DocumentCarousel from '@/components/Document/DocumentCarousel/DocumentCarousel'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
-import { useDocument } from '@/composables/document'
-import { useSearchNav } from '@/composables/search-nav'
+import { useDocument } from '@/composables/useDocument'
+import { useSearchNav } from '@/composables/useSearchNav'
 import { useSearchStore } from '@/store/modules'
 
 const { size } = defineProps({

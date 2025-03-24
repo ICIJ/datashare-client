@@ -2,7 +2,7 @@
 import { computed, ref, toRef, watch } from 'vue'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
-import { useSearchFilter } from '@/composables/search-filter'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 
 const props = defineProps({
   filter: {

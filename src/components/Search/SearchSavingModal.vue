@@ -7,8 +7,8 @@ import image from '@/assets/images/illustrations/app-modal-saved-search-naming-l
 import imageDark from '@/assets/images/illustrations/app-modal-saved-search-naming-dark.svg'
 import AppModal from '@/components/AppModal/AppModal'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
-import { useCore } from '@/composables/core'
-import { useSearchSaving } from '@/composables/search-saving'
+import { useCore } from '@/composables/useCore'
+import { useSearchSaving } from '@/composables/useSearchSaving'
 
 const { event } = defineProps({
   event: {

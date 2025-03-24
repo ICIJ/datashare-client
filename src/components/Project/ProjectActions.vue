@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useProjectDeletionModal, useProjectPinned } from '@/composables/project'
+import { useProjectDeletionModal, useProjectPinned } from '@/composables/useProject'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import ButtonTogglePin from '@/components/Button/ButtonTogglePin'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'

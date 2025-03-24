@@ -1,8 +1,8 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
 
-import { useSearchFilter } from '@/composables/search-filter'
-import { useCore } from '@/composables/core'
+import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useCore } from '@/composables/useCore'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'
 import { useSearchStore } from '@/store/modules'

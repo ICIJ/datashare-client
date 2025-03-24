@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const props = defineProps({

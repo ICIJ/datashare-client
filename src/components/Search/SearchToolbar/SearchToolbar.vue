@@ -6,7 +6,7 @@ import ButtonToggleSearchBreadcrumb from '@/components/Button/ButtonToggleSearch
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
-import { useCompact } from '@/composables/compact'
+import { useCompact } from '@/composables/useCompact'
 
 const toggleSidebar = defineModel('toggleSidebar', { type: Boolean })
 const toggleFilters = defineModel('toggleFilters', { type: Boolean })

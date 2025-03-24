@@ -6,7 +6,7 @@ import DocumentEntriesTableBody from './DocumentEntriesTableBody'
 import DocumentEntriesTableHead from './DocumentEntriesTableHead'
 
 import PageTable from '@/components/PageTable/PageTable'
-import { useSearchProperties } from '@/composables/search-properties'
+import { useSearchProperties } from '@/composables/useSearchProperties'
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })

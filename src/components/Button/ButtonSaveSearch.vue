@@ -4,7 +4,7 @@ import { PhFloppyDisk, PhCheck } from '@phosphor-icons/vue'
 import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const props = defineProps({

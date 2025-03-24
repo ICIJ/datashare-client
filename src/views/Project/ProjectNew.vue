@@ -6,7 +6,7 @@ import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectForm from '@/components/Project/ProjectForm'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 const { core, toast, wait } = useCore()
 const { t } = useI18n()

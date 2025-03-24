@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { isObject, startCase } from 'lodash'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 const props = defineProps({

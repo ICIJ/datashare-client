@@ -5,8 +5,8 @@ import ButtonAdd from '@/components/Button/ButtonAdd'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
-import { useViews } from '@/composables/views'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useViews } from '@/composables/useViews'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const { breakpointDown } = useBreakpoints()

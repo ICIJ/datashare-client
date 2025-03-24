@@ -3,8 +3,8 @@ import { toValue, useTemplateRef } from 'vue'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentFloating from '@/components/Document/DocumentFloating'
-import { useSelection } from '@/composables/selection'
-import { useDocument } from '@/composables/document'
+import { useSelection } from '@/composables/useSelection'
+import { useDocument } from '@/composables/useDocument'
 
 defineProps({
   entries: {

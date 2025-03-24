@@ -3,9 +3,9 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { flatten, get, mapValues, pickBy, sumBy, throttle } from 'lodash'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import { useCore } from '@/composables/core'
-import { useDocument } from '@/composables/document'
-import { useWait } from '@/composables/wait'
+import { useCore } from '@/composables/useCore'
+import { useDocument } from '@/composables/useDocument'
+import { useWait } from '@/composables/useWait'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import { useDocumentStore } from '@/store/modules'
 

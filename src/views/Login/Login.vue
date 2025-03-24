@@ -4,7 +4,7 @@ import { useTemplateRef } from 'vue'
 import LoginImage from '@/components/Login/LoginImage'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import I18nLocaleDropdown from '@/components/I18n/I18nLocaleDropdown'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import settings from '@/utils/settings'
 
 const { core } = useCore()

@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useSearchFilter } from '@/composables/search-filter'
-import { useCore } from '@/composables/core'
+import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useCore } from '@/composables/useCore'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'

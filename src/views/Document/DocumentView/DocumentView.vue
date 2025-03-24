@@ -7,8 +7,8 @@ import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
 import DocumentViewTitle from './DocumentViewTitle'
 import DocumentViewUserActions from './DocumentViewUserActions'
 
-import { useSearchNav } from '@/composables/search-nav'
-import { useDocument } from '@/composables/document'
+import { useSearchNav } from '@/composables/useSearchNav'
+import { useDocument } from '@/composables/useDocument'
 import { useAppStore } from '@/store/modules'
 
 const elementRef = useTemplateRef('element')

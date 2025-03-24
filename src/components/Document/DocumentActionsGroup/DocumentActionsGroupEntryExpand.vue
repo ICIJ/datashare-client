@@ -6,7 +6,7 @@ import { matchesProperty } from 'lodash'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
-import { useDocument } from '@/composables/document'
+import { useDocument } from '@/composables/useDocument'
 
 const { document } = defineProps({
   /**

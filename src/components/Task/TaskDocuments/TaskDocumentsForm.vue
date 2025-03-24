@@ -4,7 +4,7 @@ import { castArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import FormCreation from '@/components/Form/FormCreation'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'

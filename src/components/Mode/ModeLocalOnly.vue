@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useMode } from '@/composables/mode'
+import { useMode } from '@/composables/useMode'
 
 const { strict } = defineProps({
   /**

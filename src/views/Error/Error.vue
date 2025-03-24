@@ -6,7 +6,7 @@ import { Api } from '@/api'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import VersionNumber from '@/components/VersionNumber'
 import settings from '@/utils/settings'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 const { core } = useCore()
 

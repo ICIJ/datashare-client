@@ -2,8 +2,8 @@
 import { computed, ref, toRef, watch } from 'vue'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
-import { useCore } from '@/composables/core'
-import { useSearchFilter } from '@/composables/search-filter'
+import { useCore } from '@/composables/useCore'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 
 const { core } = useCore()
 const { allProjectsSelected, searchStore } = useSearchFilter()

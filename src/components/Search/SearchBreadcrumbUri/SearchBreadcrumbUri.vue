@@ -4,7 +4,7 @@ import { parseQuery } from 'vue-router'
 
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 import SearchBreadcrumbFormList from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormList'
-import { useSearchBreadcrumb } from '@/composables/search-breadcrumb'
+import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchStore } from '@/store/modules'
 
 const props = defineProps({

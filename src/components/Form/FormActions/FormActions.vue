@@ -3,7 +3,7 @@ import { computed, watch, provide } from 'vue'
 
 import FormActionsCompact from './FormActionsCompact'
 
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { VARIANT, variantValidator } from '@/enums/variants'
 import { breakpointSizeValidator, buttonSizeValidator, SIZE } from '@/enums/sizes'
 

@@ -2,15 +2,15 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import BatchSearchActionsDelete from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsDelete'
 import BatchSearchActionsEdit from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsEdit'
 import BatchSearchActionsEditModal from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsEditModal'
 import BatchSearchActionsStop from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsStop'
 import BatchSearchActionsRelaunch from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsRelaunch'
 import BatchSearchActionsRelaunchModal from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsRelaunchModal'
-import { useConfirmModal } from '@/composables/confirm'
-import { usePromptModal } from '@/composables/prompt'
+import { useConfirmModal } from '@/composables/useConfirmModal'
+import { usePromptModal } from '@/composables/usePromptModal'
 import { useTaskStore } from '@/store/modules'
 
 defineOptions({ name: 'BatchSearchActions' })

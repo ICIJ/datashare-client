@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { PhCirclesThreePlus, PhFiles, PhCalendarBlank } from '@phosphor-icons/vue'
 
 import PageTableTh from '@/components/PageTable/PageTableTh'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 
 const { breakpointDown } = useBreakpoints()
 

@@ -3,7 +3,7 @@ import { fn } from '@storybook/test'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
+import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
 
 export default {
   title: 'Components/PageSettings',

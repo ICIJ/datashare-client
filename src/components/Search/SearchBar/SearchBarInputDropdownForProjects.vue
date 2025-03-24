@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import { isArray } from 'lodash'
 
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 const modelValue = defineModel({
   type: [Array, Object],

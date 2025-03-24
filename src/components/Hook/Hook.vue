@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { useHooksStore } from '@/store/modules'
 
 const { name } = defineProps({

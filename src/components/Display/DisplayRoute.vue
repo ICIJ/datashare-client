@@ -4,7 +4,7 @@ import { capitalize, isFunction, isString } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 const props = defineProps({
   value: {

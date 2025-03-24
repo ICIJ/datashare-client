@@ -4,12 +4,12 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { LAYOUTS } from '@/enums/layouts'
-import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
+import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/useUrlParam'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useAppStore } from '@/store/modules'
-import { useSearchProperties } from '@/composables/search-properties'
-import { useViewSettings, INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
+import { useSearchProperties } from '@/composables/useSearchProperties'
+import { useViewSettings, INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
 
 const { t } = useI18n()
 const appStore = useAppStore()

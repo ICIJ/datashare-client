@@ -4,7 +4,7 @@ import { get, keys, orderBy } from 'lodash'
 
 import DocumentGlobalSearchTermsEntry from './DocumentGlobalSearchTermsEntry'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { useSearchStore } from '@/store/modules'
 
 const props = defineProps({

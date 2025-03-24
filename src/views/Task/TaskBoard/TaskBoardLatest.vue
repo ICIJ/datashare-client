@@ -13,9 +13,9 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
 import { getHumanTaskName, TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
-import { useMode } from '@/composables/mode'
-import { useTaskPolling } from '@/composables/task-polling'
-import { useTaskProperties } from '@/composables/task-properties'
+import { useMode } from '@/composables/useMode'
+import { useTaskPolling } from '@/composables/useTaskPolling'
+import { useTaskProperties } from '@/composables/useTaskProperties'
 
 const { t } = useI18n()
 const perPage = ref(3)

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, watch, onBeforeMount, toRef } from 'vue'
 
-import { useMode } from '@/composables/mode'
+import { useMode } from '@/composables/useMode'
 import { useInsightsStore } from '@/store/modules'
 
 const props = defineProps({ name: String })

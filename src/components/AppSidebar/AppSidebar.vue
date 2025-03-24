@@ -10,14 +10,14 @@ import AppSidebarToggler from './AppSidebarToggler'
 import AppSidebarClose from './AppSidebarClose'
 
 import { Api } from '@/api'
-import { useBreakpoints } from '@/composables/breakpoints'
-import { useCore } from '@/composables/core'
+import { useBreakpoints } from '@/composables/useBreakpoints'
+import { useCore } from '@/composables/useCore'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
 import { SIZE } from '@/enums/sizes'
 import { useAppStore, useSearchStore } from '@/store/modules'
 import settings from '@/utils/settings'
-import useMode from '@/composables/mode'
+import useMode from '@/composables/useMode'
 
 const { core } = useCore()
 const appStore = useAppStore()

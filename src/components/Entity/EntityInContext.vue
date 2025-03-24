@@ -2,7 +2,7 @@
 import { trim } from 'lodash'
 import { computed, onBeforeMount } from 'vue'
 
-import { useWait } from '@/composables/wait'
+import { useWait } from '@/composables/useWait'
 import EntityPopover from '@/components/Entity/EntityPopover/EntityPopover'
 import { useDocumentStore } from '@/store/modules'
 import { Highlight } from '@/utils/highlight'

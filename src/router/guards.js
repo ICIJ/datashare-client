@@ -2,7 +2,7 @@ import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
 import { useAppStore } from '@/store/modules'
-import { useNProgress } from '@/composables/nprogress'
+import { useNProgress } from '@/composables/useNProgress'
 
 export default ({ router, auth, config, i18n, setPageTitle }) => {
   async function checkUserAuthentication(to, from, next) {

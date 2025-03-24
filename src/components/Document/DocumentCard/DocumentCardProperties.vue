@@ -13,7 +13,7 @@ import DocumentCardPropertiesEntryPath from './DocumentCardPropertiesEntryPath'
 import DocumentCardPropertiesEntryProject from './DocumentCardPropertiesEntryProject'
 import DocumentCardPropertiesEntryTags from './DocumentCardPropertiesEntryTags'
 
-import { useSearchProperties } from '@/composables/search-properties'
+import { useSearchProperties } from '@/composables/useSearchProperties'
 
 const entryComponents = {
   author: DocumentCardPropertiesEntryAuthor,

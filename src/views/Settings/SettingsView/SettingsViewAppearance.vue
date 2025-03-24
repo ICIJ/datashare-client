@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
-import { useTheme } from '@/composables/theme'
+import { useTheme } from '@/composables/useTheme'
 
 defineOptions({ name: 'SettingsViewAppearance' })
 

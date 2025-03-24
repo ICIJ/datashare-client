@@ -32,8 +32,8 @@ import AppSidebar from '@/components/AppSidebar/AppSidebar'
 import Hook from '@/components/Hook/Hook'
 import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
-import { useCore } from '@/composables/core'
-import { useResizeObserver } from '@/composables/resize-observer'
+import { useCore } from '@/composables/useCore'
+import { useResizeObserver } from '@/composables/useResizeObserver'
 import { useAppStore, useDownloadsStore, useSearchStore } from '@/store/modules'
 
 const { core } = useCore()

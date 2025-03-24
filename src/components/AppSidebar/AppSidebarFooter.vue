@@ -4,9 +4,9 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { useConfirmModal } from '@/composables/confirm'
-import { useRemoveAll } from '@/composables/remove-all'
-import { useCore } from '@/composables/core'
+import { useConfirmModal } from '@/composables/useConfirmModal'
+import { useRemoveAll } from '@/composables/useRemoveAll'
+import { useCore } from '@/composables/useCore'
 import AppSidebarKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarKeyboardShortcutsPopover'
 
 const props = defineProps({

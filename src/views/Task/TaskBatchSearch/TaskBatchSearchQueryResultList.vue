@@ -3,7 +3,7 @@ import { castArray, compact } from 'lodash'
 import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useBatchSearchResultProperties } from '../../../composables/batch-search-result-properties'
+import { useBatchSearchResultProperties } from '../../../composables/useBatchSearchResultProperties'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
@@ -17,8 +17,8 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
-import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/url-params'
-import { useCore } from '@/composables/core'
+import { useUrlParam, useUrlParamsWithStore, useUrlParamWithStore } from '@/composables/useUrlParam'
+import { useCore } from '@/composables/useCore'
 import { useAppStore } from '@/store/modules'
 
 const props = defineProps({

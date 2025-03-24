@@ -1,6 +1,6 @@
 <script setup>
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
-import { useSelection } from '@/composables/selection'
+import { useSelection } from '@/composables/useSelection'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
 const { selectionValues } = useSelection(selection)

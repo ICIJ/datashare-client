@@ -3,7 +3,7 @@ import { toRef, ref, reactive, computed, watch, onMounted, nextTick, useTemplate
 import { clamp, findLastIndex, entries, isEmpty, get, range, throttle } from 'lodash'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
-import { useWait } from '@/composables/wait'
+import { useWait } from '@/composables/useWait'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'

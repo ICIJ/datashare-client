@@ -5,7 +5,7 @@ import ProjectEntriesTableHead from './ProjectEntriesTableHead'
 import ProjectEntriesTableBody from './ProjectEntriesTableBody'
 
 import PageTable from '@/components/PageTable/PageTable'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 
 const { breakpointDown } = useBreakpoints()
 const sort = defineModel('sort', { type: String, default: null })

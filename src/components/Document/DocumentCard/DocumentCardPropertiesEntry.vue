@@ -2,7 +2,7 @@
 import { computed, toValue } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { useSearchProperties } from '@/composables/search-properties'
+import { useSearchProperties } from '@/composables/useSearchProperties'
 
 const { items } = useSearchProperties()
 

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useContrastVariant } from '@/composables/contrast-variant'
+import { useContrastVariant } from '@/composables/useContrastVariant'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 
 const { contrastVariant: contrastOverlayVariant, variant: overlayVariant } = useContrastVariant()

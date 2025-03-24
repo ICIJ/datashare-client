@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import FilterModalTitle from './FilterModalTitle'
 
 import AppModal from '@/components/AppModal/AppModal'
-import { useSearchFilter } from '@/composables/search-filter'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 
 const { getFilterComponent } = useSearchFilter()
 

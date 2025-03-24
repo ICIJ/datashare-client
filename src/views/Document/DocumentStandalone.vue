@@ -2,7 +2,7 @@
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import DocumentFloating from '@/components/Document/DocumentFloating.vue'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
-import { useViews } from '@/composables/views'
+import { useViews } from '@/composables/useViews'
 
 defineProps({
   id: {

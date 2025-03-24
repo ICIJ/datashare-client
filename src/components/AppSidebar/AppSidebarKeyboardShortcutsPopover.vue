@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import KeyboardShortcutsPopover from '@/components/KeyboardShortcuts/KeyboardShortcutsPopover/KeyboardShortcutsPopover'
 import KeyboardShortcutsSectionEntry from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry'
-import { useKeyboardShortcuts } from '@/composables/keyboard-shortcuts'
+import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
 
 const { routeShortcuts } = useKeyboardShortcuts()
 const isVisible = computed(() => !!routeShortcuts.value.length)

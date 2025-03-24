@@ -4,7 +4,7 @@ import { camelCase, startCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import AddonCardView from '@/components/Addon/AddonCardView/AddonCardView'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { ADDON_TYPE, addonTypeValidator } from '@/enums/addons'
 
 const props = defineProps({
