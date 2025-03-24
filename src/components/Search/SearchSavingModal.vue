@@ -51,7 +51,7 @@ async function confirmSaving() {
   >
     <template #default="{ close }">
       <form @submit.prevent="confirmSaving().then(close)">
-        <form-fieldset :label="$t('searchSavingModal.form.name')" :icon="PhTextAa">
+        <form-fieldset :label="$t('searchSavingModal.form.name')" :icon="PhTextAa" label-visually-hidden>
           <div class="col">
             <b-form-input v-model="form.name" name="name" type="text" autofocus required class="mb-3" />
             <i18n-t keypath="searchSavingModal.form.description" tag="p">
