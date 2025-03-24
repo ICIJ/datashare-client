@@ -14,7 +14,7 @@ export function useSearchBreadcrumb() {
   const count = computed(() => entries.value.length)
 
   function parseIndicesEntries(routeQuery) {
-    const indices = routeQuery.indices.split(',')
+    const indices = compact(routeQuery.indices.split(','))
     const noXIcon = indices.length === 1
     const filter = 'project'
     return indices.map((value) => ({ filter, value, noXIcon }))
