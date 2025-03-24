@@ -14,12 +14,12 @@ defineProps({
 
 <template>
   <document-card-properties-entry
-    v-if="document.highlights.length"
     class="document-card-properties-entry-highlights"
     :document="document"
     :property="property"
   >
-    <display-highlights :value="document.highlights" />
+    <display-highlights :value="document.highlights" v-if="document.highlights.length" />
+    <template v-else>&#8212;</template>
   </document-card-properties-entry>
 </template>
 
