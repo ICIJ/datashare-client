@@ -102,9 +102,8 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
   align-items: center;
   justify-content: flex-start;
   gap: $spacer-xs;
-  padding: $spacer 0;
-  margin-bottom: $spacer;
-  height: 2.875rem;
+  padding: 0;
+  height: calc(2.875rem + #{$spacer * 2});
 
   &--compact {
     flex-direction: row-reverse;
