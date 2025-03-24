@@ -1,4 +1,4 @@
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { castArray, compact, map, omit, orderBy, unset } from 'lodash'
 import lucene from 'lucene'
 
@@ -7,7 +7,7 @@ import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import findPath from '@/utils/find-path'
 
 export function useSearchBreadcrumb() {
-  const searchStore = useSearchStore.instantiate(inject('searchStoreSuffix', null))
+  const searchStore = useSearchStore.inject('searchStoreSuffix')
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
   const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
 
