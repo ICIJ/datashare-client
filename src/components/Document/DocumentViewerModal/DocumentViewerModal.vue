@@ -37,7 +37,7 @@ const key = computed(() => [document.value.index, document.value.id])
     <template #title>
       <document-viewer-modal-title :document="document" />
     </template>
-    <document-thumbnail :key="key" :document="document" fit class="d-inline-flex mx-auto mb-3" />
-    <document-viewer-modal-nav v-model:document="document" />
+    <document-viewer-modal-nav v-model:document="document" class="mb-3" />
+    <document-thumbnail :key="key" :document="document" fit class="d-inline-flex mx-auto" />
   </app-modal>
 </template>
