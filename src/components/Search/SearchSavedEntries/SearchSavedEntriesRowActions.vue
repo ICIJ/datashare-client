@@ -32,8 +32,8 @@ const confirmRemovalModal = async () => {
 
 <template>
   <div class="d-flex gap-2">
-    <button-row-action label="Edit" icon="pencil" @click="confirmEditModal" />
-    <button-row-action label="Delete" icon="trash" @click="confirmRemovalModal" />
-    <page-table-toggle-details-button v-model="detailsShowing" />
+    <button-row-action hide-tooltip label="Edit" icon="pencil" @click="confirmEditModal" />
+    <button-row-action hide-tooltip label="Delete" icon="trash" @click="confirmRemovalModal" />
+    <page-table-toggle-details-button hide-tooltip v-model="detailsShowing" />
   </div>
 </template>
