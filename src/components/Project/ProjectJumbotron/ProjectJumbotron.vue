@@ -6,7 +6,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import ProjectJumbotronPin from './ProjectJumbotronPin'
 
 import { useBreakpoints } from '@/composables/useBreakpoints'
-import { useProjectDeletionModal } from '@/composables/useProject'
+import { useProjectDeletionModal } from '@/composables/useProjectDeletionModal'
 import { SIZE } from '@/enums/sizes'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
