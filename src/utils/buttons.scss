@@ -117,6 +117,7 @@
     --bs-btn-hover-bg: #{shade-color($tertiary, 95%)};
     --bs-btn-hover-border-color: #{$tertiary-bg-subtle-dark};
     --bs-btn-active-bg: #{shade-color($tertiary, 95%)};
+    --bs-btn-active-color: var(--bs-btn-color);
     --bs-btn-border-color: #{$tertiary-border-subtle-dark};
     --bs-btn-disabled-border-color: #{shade-color($tertiary-bg-subtle-dark, 10%)};
   }
