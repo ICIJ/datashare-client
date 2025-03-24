@@ -56,11 +56,6 @@ const starSelection = async () => {
   const successMessage = t('document.starred')
   return toastedPromise(starredStore.starDocuments(selectionEntries.value), { successMessage })
 }
-
-const unstarSelection = async () => {
-  const successMessage = t('document.unstarred')
-  return toastedPromise(starredStore.unstarDocuments(selectionEntries.value), { successMessage })
-}
 </script>
 
 <template>
@@ -78,13 +73,11 @@ const unstarSelection = async () => {
       <button-icon
         :label="$t('searchSelection.star')"
         icon-left="star"
-        icon-left-weight="fill"
         :hide-label="isCompact"
         :square="isCompact"
         @click="starSelection"
       />
     </template>
-    <button-icon :label="$t('searchSelection.unstar')" icon-left="star" @click="unstarSelection" />
     <button-icon :label="$t('searchSelection.tag')" icon-left="hash" />
   </form-actions>
 </template>
