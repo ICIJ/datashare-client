@@ -1,6 +1,4 @@
 <script setup>
-import { ref } from 'vue'
-
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskBoardList from '@/components/Task/TaskBoard/TaskBoardList'
