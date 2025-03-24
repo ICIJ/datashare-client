@@ -19,9 +19,9 @@ const filterContentType = formSearchStore.getFilter({ name: 'contentType' })
     class="task-batch-search-form-filters"
     collapse
   >
-    <filter-type-path :filter="filterPath" :collapse="false" actions-position-title hide-contextualize class="p-3 pb-0" />
-    <filter-type :filter="filterTags" :collapse="false" actions-position-title hide-contextualize class="p-3 pb-0" />
-    <filter-type :filter="filterContentType" :collapse="false" actions-position-title hide-contextualize class="p-3 pb-0" />
+    <filter-type-path :filter="filterPath" :collapse="false" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type :filter="filterTags" :collapse="false" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type :filter="filterContentType" :collapse="false" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
   </form-step>
 </template>
 
