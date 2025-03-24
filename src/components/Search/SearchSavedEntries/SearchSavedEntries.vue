@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
-import DisplayUser from '@/components/Display/DisplayUser'
 import SearchSavedEntriesRowActions from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowActions'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
