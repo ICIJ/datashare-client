@@ -84,7 +84,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
-          <navigation-breadcrumb-link route-name="search" />
+          <navigation-breadcrumb-link route-name="search" title="Search" />
           <navigation-breadcrumb-link route-name="search.visited-documents.list" no-caret />
         </template>
         <template #actions>
