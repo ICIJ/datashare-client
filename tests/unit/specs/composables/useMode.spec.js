@@ -1,8 +1,8 @@
-import useMode from '@/composables/mode'
+import useMode from '@/composables/useMode'
 import { MODE_NAME } from '@/mode'
 
 // Mock `useCore`
-vi.mock('@/composables/core', () => ({
+vi.mock('@/composables/useCore', () => ({
   useCore: vi.fn(() => ({
     core: {
       mode: { modeName: 'SERVER' }
