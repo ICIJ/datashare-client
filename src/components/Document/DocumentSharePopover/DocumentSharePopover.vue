@@ -38,6 +38,7 @@ defineExpose({
 
 <style lang="scss">
 .document-share-popover {
-  --bs-popover-max-width: 500px;
+  --bs-popover-max-width: min(90vw, 500px);
+  width: 100%;
 }
 </style>
