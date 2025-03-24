@@ -297,7 +297,7 @@ export const routes = [
         ]
       },
       {
-        path: 'project',
+        path: 'projects',
         name: 'project',
         meta: {
           icon: 'circles-three-plus',
