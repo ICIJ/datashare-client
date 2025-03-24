@@ -79,7 +79,8 @@ function createBatchSearch() {
     phraseMatch.value,
     phraseMatch.value ? +phraseChanges.value : +spellingChanges.value,
     visibility.value,
-    queryTemplate.value
+    queryTemplate.value,
+    uri.value
   )
 }
 

@@ -136,7 +136,7 @@ export class Api {
     const params = { query, routing, targetLanguage }
     return this.sendAction(`/api/${project}/documents/searchContent/${documentId}`, { method: Method.GET, params })
   }
-  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, published, queryTemplate) {
+  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, published, queryTemplate, uri) {
     const data = new FormData()
     data.append('name', name)
     data.append('csvFile', csvFile)
@@ -145,6 +145,7 @@ export class Api {
     data.append('fuzziness', fuzziness)
     data.append('published', published)
     data.append('query_template', queryTemplate)
+    data.append('uri', uri)
     return this.sendActionAsText(`/api/task/batchSearch/${project}`, { method: Method.POST, data })
   }
   getBatchSearch(batchId) {
