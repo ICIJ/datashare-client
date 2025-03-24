@@ -36,6 +36,7 @@ defineProps({
       :fuzziness="batchSearch.fuzziness"
       :projects="batchSearch.projects"
       :description="batchSearch.description"
+      :uri="batchSearch.uri"
     />
   </card-panel>
 </template>

@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { stringifyQuery, parseQuery } from 'vue-router'
 
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
@@ -9,6 +10,7 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
 import ProjectButton from '@/components/Project/ProjectButton'
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import humanNumber from '@/utils/humanNumber'
 
 defineOptions({ name: 'BatchSearchCardDetails' })
@@ -27,7 +29,8 @@ const props = defineProps({
   proximity: { type: Number },
   fuzziness: { type: Number },
   projects: { type: Array },
-  description: { type: String }
+  description: { type: String },
+  uri: { type: String }
 })
 
 const { t } = useI18n()
@@ -71,6 +74,12 @@ const phraseMatchValue = computed(() => (props.phraseMatch ? phraseMatchOn.value
 
 const fuzzinessValue = computed(() => t('batchSearchCardDetails.fuzzinessValue', { n: props.fuzziness }))
 const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: props.proximity }))
+
+const uriWithoutIndices = computed(() => {
+  const uri = parseQuery(props.uri)
+  delete uri.indices
+  return stringifyQuery(uri)
+})
 </script>
 
 <template>
@@ -191,6 +200,11 @@ const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue',
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.projects')" :icon="PhCirclesThreePlus">
           <project-button v-for="(project, index) in projects" :key="index" :project="project" />
+        </batch-search-card-details-entry>
+      </li>
+      <li v-if="uri">
+        <batch-search-card-details-entry :label="t('batchSearchCardDetails.filters')" :icon="PhFunnel">
+          <search-breadcrumb-uri :uri="uriWithoutIndices" no-label />
         </batch-search-card-details-entry>
       </li>
     </ul>
