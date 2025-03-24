@@ -4,7 +4,7 @@ import { get } from 'lodash'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
-import { useProjectPinned } from '@/composables/useProject'
+import { useProjectPinned } from '@/composables/useProjectPinned'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbotron'
