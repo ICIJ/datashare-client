@@ -264,7 +264,7 @@ function clearActiveLocalSearchTerm() {
 
 function scrollUp() {
   if (elementRef.value && elementRef.value.getBoundingClientRect().top < 0) {
-    elementRef.value.scrollIntoView({ block: 'start', inline: 'nearest' })
+    elementRef.value.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'instant' })
   }
 }
 
@@ -275,7 +275,7 @@ async function jumpToActiveLocalSearchTerm() {
   const activeTerm = elementRef.value.querySelector(activeTermSelector)
   if (activeTerm) {
     activeTerm.classList.add('local-search-term--active')
-    activeTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
+    activeTerm.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
   } else {
     elementRef.value.scrollTop = 0
   }
@@ -364,6 +364,10 @@ async function loadContentSliceAround(desiredOffset) {
 
   :deep(mark) {
     padding: 0;
+  }
+
+  :deep(p) {
+    margin-bottom:  0.75rem;
   }
 
   :deep(.local-search-term) {
