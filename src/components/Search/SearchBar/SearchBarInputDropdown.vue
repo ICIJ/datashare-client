@@ -11,7 +11,7 @@
     no-caret
     class="search-bar-input-dropdown"
     menu-class="search-bar-input-dropdown__menu"
-    toggle-class="d-inline-flex align-items-center p-2"
+    toggle-class="d-inline-flex align-items-center p-2 text-body"
     boundary="viewport"
     :teleport-to="teleportTo"
     :teleport-disabled="teleportDisabled"
