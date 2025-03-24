@@ -23,10 +23,11 @@ const { filter, modal } = defineProps({
 })
 
 const query = defineModel('query', { type: String, default: '' })
+const collapse = defineModel('collapse', { type: Boolean, default: null })
+
 const emit = defineEmits(['aggregate', 'update', 'update:filter-value'])
 
 const pages = reactive([])
-const collapse = ref(true)
 const expand = ref(false)
 
 const { wait } = useWait()
@@ -210,7 +211,7 @@ const update = () => {
 
 onBeforeMount(async () => {
   // Show the filter by default if it has a value
-  collapse.value = !hasAnyValue.value
+  collapse.value = collapse.value ?? !hasAnyValue.value
   // Only load data on mount if the filter is visible (not collapsed)
   await aggregateIfVisible()
   // Collapsing/Expanding the filter will trigger an update of the data
