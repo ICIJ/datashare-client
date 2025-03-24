@@ -21,7 +21,7 @@ import EsDocList from '@/api/resources/EsDocList'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
-import { defineSuffixedStore } from '@/store/suffixed'
+import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import settings from '@/utils/settings'
 
 export const useSearchStore = defineSuffixedStore('search', () => {
