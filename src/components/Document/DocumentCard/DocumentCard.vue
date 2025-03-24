@@ -97,7 +97,7 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
     <div class="document-card__actions">
       <slot name="actions">
         <document-actions-group
-          tooltip-placement="right"
+          tooltip-placement="right-start"
           :document="document"
           vertical
           :is-download-allowed="isDownloadAllowed"
