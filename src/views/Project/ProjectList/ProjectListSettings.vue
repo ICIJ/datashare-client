@@ -4,10 +4,10 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { LAYOUTS } from '@/enums/layouts'
-import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
+import { useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/useUrlParam'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY, INPUT_RADIO } from '@/composables/view-settings'
+import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY, INPUT_RADIO } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()

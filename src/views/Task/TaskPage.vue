@@ -12,8 +12,8 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import TaskActions from '@/components/Task/TaskActions'
 import RowPaginationTasks from '@/components/RowPagination/RowPaginationTasks'
-import { useTaskHeader } from '@/composables/task-header'
-import { useTaskPolling } from '@/composables/task-polling'
+import { useTaskHeader } from '@/composables/useTaskHeader'
+import { useTaskPolling } from '@/composables/useTaskPolling'
 
 const props = defineProps({
   taskFilter: {

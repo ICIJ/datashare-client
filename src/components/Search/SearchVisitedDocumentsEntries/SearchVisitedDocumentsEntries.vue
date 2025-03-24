@@ -4,7 +4,7 @@ import bodybuilder from 'bodybuilder'
 import { groupBy, property, trimStart, uniq } from 'lodash'
 import { match } from 'path-to-regexp'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import ButtonToggleDay from '@/components/Button/ButtonToggleDay'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'

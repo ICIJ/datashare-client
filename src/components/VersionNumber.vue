@@ -30,7 +30,7 @@
 import { ref, onMounted } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 /**
  * Display Datashare's version number.

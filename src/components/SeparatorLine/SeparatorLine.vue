@@ -6,7 +6,7 @@ import SeparatorLineReduce from './SeparatorLineReduce'
 import SeparatorLineExpand from './SeparatorLineExpand'
 
 import { draggable as vDraggable } from '@/directives/draggable'
-import { useResizeObserver } from '@/composables/resize-observer'
+import { useResizeObserver } from '@/composables/useResizeObserver'
 
 const props = defineProps({
   active: {

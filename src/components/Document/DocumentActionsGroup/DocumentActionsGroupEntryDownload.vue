@@ -3,7 +3,7 @@ import { computed, useTemplateRef, nextTick } from 'vue'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
-import { useDocumentDownload } from '@/composables/document-download'
+import { useDocumentDownload } from '@/composables/useDocumentDownload'
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
 
 const { document } = defineProps({

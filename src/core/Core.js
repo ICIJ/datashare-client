@@ -32,7 +32,7 @@ import ToastBody from '@/components/Dismissable/DismissableToastBody'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
-import { useTheme } from '@/composables/theme'
+import { useTheme } from '@/composables/useTheme'
 import { useSearchStore } from '@/store/modules'
 
 class Base {}

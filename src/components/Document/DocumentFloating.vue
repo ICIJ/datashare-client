@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref, useTemplateRef, watch } from 'vue'
 
-import { useDocument } from '@/composables/document'
-import { useQueryObserver } from '@/composables/query-observer'
-import { useResizeObserver } from '@/composables/resize-observer'
+import { useDocument } from '@/composables/useDocument'
+import { useQueryObserver } from '@/composables/useQueryObserver'
+import { useResizeObserver } from '@/composables/useResizeObserver'
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
 
 const props = defineProps({

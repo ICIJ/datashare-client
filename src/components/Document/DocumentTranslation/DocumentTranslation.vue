@@ -4,7 +4,7 @@ import { find, join } from 'lodash'
 
 import DocumentTranslationAlert from './DocumentTranslationAlert/DocumentTranslationAlert'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { useDocumentStore } from '@/store/modules'
 import DocumentContent from '@/components/Document/DocumentContent'
 

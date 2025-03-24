@@ -2,9 +2,9 @@
 import { computed, ref, watch, toRef } from 'vue'
 import { get } from 'lodash'
 
-import { useCore } from '@/composables/core'
-import { useWait } from '@/composables/wait'
-import { useProjectPinned } from '@/composables/project'
+import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
+import { useProjectPinned } from '@/composables/useProject'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbotron'

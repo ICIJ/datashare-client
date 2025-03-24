@@ -7,8 +7,8 @@ import includes from 'lodash/includes'
 import FormCreation from '@/components/Form/FormCreation'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
-import { useCore } from '@/composables/core'
-import { useWait } from '@/composables/wait'
+import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 
 const props = defineProps({
   /**

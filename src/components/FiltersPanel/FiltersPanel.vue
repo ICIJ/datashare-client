@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler'
 import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
 import { useAppStore } from '@/store/modules'
 

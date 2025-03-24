@@ -1,6 +1,6 @@
 <script setup>
 import DocumentSearchNav from '@/components/Document/DocumentSearchNav/DocumentSearchNav'
-import { useSearchNav } from '@/composables/search-nav'
+import { useSearchNav } from '@/composables/useSearchNav'
 
 const document = defineModel('document', { type: Object, required: true })
 const { fetchNextDocument, fetchPreviousDocument, hasEntries, disabledPrevious, disabledNext } = useSearchNav(document)

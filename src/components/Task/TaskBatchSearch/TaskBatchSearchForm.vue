@@ -10,7 +10,7 @@ import TaskBatchSearchFormQueries from '@/components/Task/TaskBatchSearch/TaskBa
 import TaskBatchSearchFormOperators from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormOperators'
 import TaskBatchSearchFormFilters from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormFilters'
 import TaskBatchSearchFormOverview from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormOverview'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { useSearchStore } from '@/store/modules/search'
 
 const { core, toast } = useCore()

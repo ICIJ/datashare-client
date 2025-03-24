@@ -2,7 +2,7 @@
 import { useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { useLocale } from '@/composables/locale'
+import { useLocale } from '@/composables/useLocale'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 defineProps({

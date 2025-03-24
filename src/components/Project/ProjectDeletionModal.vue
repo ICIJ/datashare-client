@@ -7,9 +7,9 @@ import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import ProjectLabel from '@/components/Project/ProjectLabel'
-import { useProjectMetrics } from '@/composables/project'
-import { useWait } from '@/composables/wait'
-import { useCore } from '@/composables/core'
+import { useProjectMetrics } from '@/composables/useProject'
+import { useWait } from '@/composables/useWait'
+import { useCore } from '@/composables/useCore'
 
 const props = defineProps({
   project: {

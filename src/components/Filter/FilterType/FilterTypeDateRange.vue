@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { property } from 'lodash'
 
-import { useSearchFilter } from '@/composables/search-filter'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FormControlDateRange from '@/components/Form/FormControl/FormControlDateRange/FormControlDateRange'

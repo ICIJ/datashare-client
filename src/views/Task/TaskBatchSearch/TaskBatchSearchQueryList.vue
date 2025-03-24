@@ -10,9 +10,9 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import RowPaginationQueries from '@/components/RowPagination/RowPaginationQueries'
-import { useCore } from '@/composables/core'
-import { useBatchSearchQueryProperties } from '@/composables/batch-search-query-properties'
-import { useUrlParam, useUrlParamWithStore } from '@/composables/url-params'
+import { useCore } from '@/composables/useCore'
+import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
+import { useUrlParam, useUrlParamWithStore } from '@/composables/useUrlParam'
 import { useAppStore, useTaskStore } from '@/store/modules'
 
 const props = defineProps({

@@ -6,8 +6,8 @@ import { useI18n } from 'vue-i18n'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
-import { useCore } from '@/composables/core'
-import { useConfirmModal } from '@/composables/confirm'
+import { useCore } from '@/composables/useCore'
+import { useConfirmModal } from '@/composables/useConfirmModal'
 import { TASK_STATUS } from '@/enums/taskStatus'
 
 const toggleDetails = defineModel('toggleDetails', { type: Boolean })

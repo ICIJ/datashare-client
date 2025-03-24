@@ -6,7 +6,7 @@ import { computed, ref } from 'vue'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useTaskSettings } from '@/composables/task-settings'
+import { useTaskSettings } from '@/composables/useTaskSettings'
 
 defineProps({
   hide: {

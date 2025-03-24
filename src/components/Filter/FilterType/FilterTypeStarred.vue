@@ -2,7 +2,7 @@
 import { computed, ref, onBeforeMount } from 'vue'
 import { castArray } from 'lodash'
 
-import { useSearchFilter } from '@/composables/search-filter'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useStarredStore, useSearchStore } from '@/store/modules'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'

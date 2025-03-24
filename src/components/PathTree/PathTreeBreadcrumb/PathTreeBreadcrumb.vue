@@ -6,7 +6,7 @@ import { isArray } from 'lodash'
 
 import PathTreeBreadcrumbEntry from './PathTreeBreadcrumbEntry.vue'
 
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 
 const { core } = useCore()
 

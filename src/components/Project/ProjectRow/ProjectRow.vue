@@ -9,7 +9,7 @@ import ProjectRowDocumentsCount from './ProjectRowDocumentsCount'
 import ProjectRowUpdateDate from './ProjectRowUpdateDate'
 
 import PageTableTr from '@/components/PageTable/PageTableTr'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 
 const { breakpointDown } = useBreakpoints()
 

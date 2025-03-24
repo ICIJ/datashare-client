@@ -2,7 +2,7 @@
 import { inject } from 'vue'
 
 import DocumentSearchNav from '@/components/Document/DocumentSearchNav/DocumentSearchNav'
-import { useSearchNav } from '@/composables/search-nav'
+import { useSearchNav } from '@/composables/useSearchNav'
 
 const modal = inject('modal', false)
 const { hasEntries, disabledPrevious, disabledNext, previous, next } = useSearchNav()

@@ -5,9 +5,9 @@ import { useI18n } from 'vue-i18n'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useBatchSearchQueryProperties } from '@/composables/batch-search-query-properties'
-import { useUrlParamWithStore } from '@/composables/url-params'
-import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/view-settings'
+import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
+import { useUrlParamWithStore } from '@/composables/useUrlParam'
+import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()

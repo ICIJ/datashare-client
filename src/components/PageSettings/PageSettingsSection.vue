@@ -6,7 +6,7 @@ import { BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup } from '
 import PageSettingsEntry from '@/components/PageSettings/PageSettingsEntry'
 import PageSettingsSectionGroup from '@/components/PageSettings/PageSettingsSectionGroup'
 import PageSettingsSectionGroupAll from '@/components/PageSettings/PageSettingsSectionGroupAll'
-import { INPUT_RADIO, INPUT_CHECKBOX } from '@/composables/view-settings'
+import { INPUT_RADIO, INPUT_CHECKBOX } from '@/composables/useViewSettings'
 
 defineOptions({ name: 'PageSettingsSection' })
 

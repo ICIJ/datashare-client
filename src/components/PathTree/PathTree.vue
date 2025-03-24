@@ -6,9 +6,9 @@ import bodybuilder from 'bodybuilder'
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
-import useMode from '@/composables/mode'
+import useMode from '@/composables/useMode'
 
 const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })

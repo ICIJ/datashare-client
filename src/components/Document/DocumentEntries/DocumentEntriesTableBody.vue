@@ -1,5 +1,5 @@
 <script setup>
-import { useSelection } from '@/composables/selection'
+import { useSelection } from '@/composables/useSelection'
 import DocumentRow from '@/components/Document/DocumentRow/DocumentRow'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })

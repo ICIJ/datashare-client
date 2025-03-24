@@ -6,7 +6,7 @@ import Fuse from 'fuse.js'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
 /**

@@ -13,8 +13,8 @@ import DisplayNumber from '@/components/Display/DisplayNumber'
 import ProjectLink from '@/components/Project/ProjectLink'
 import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMetadata'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import { useDocument } from '@/composables/document'
-import { useDebouncedRef } from '@/composables/debounce'
+import { useDocument } from '@/composables/useDocument'
+import { useDebouncedRef } from '@/composables/useDebouncedRef'
 import { useAppStore } from '@/store/modules'
 
 const { document, documentPath, documentDirname, parentDocument } = useDocument()

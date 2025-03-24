@@ -3,7 +3,7 @@ import { computed, useTemplateRef, toRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import { VARIANT_PLAIN, variantValidator } from '@/enums/variants'
-import { useCompact } from '@/composables/compact'
+import { useCompact } from '@/composables/useCompact'
 
 const props = defineProps({
   label: {

@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
 
 defineProps({

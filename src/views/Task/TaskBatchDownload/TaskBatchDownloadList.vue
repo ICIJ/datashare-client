@@ -1,7 +1,7 @@
 <script setup>
 import get from 'lodash/get'
 
-import { useTaskSettings } from '@/composables/task-settings'
+import { useTaskSettings } from '@/composables/useTaskSettings'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'

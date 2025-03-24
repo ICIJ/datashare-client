@@ -2,7 +2,7 @@
 import { computed, toValue } from 'vue'
 
 import PageTableTh from '@/components/PageTable/PageTableTh'
-import { useSearchProperties } from '@/composables/search-properties'
+import { useSearchProperties } from '@/composables/useSearchProperties'
 
 const props = defineProps({
   compactBreakpoint: {

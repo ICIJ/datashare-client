@@ -2,8 +2,8 @@
 import { computed, onBeforeMount } from 'vue'
 import { sortBy } from 'lodash'
 
-import { useCore } from '@/composables/core'
-import { useSearchFilter } from '@/composables/search-filter'
+import { useCore } from '@/composables/useCore'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useRecommendedStore } from '@/store/modules'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FilterType from '@/components/Filter/FilterType/FilterType'

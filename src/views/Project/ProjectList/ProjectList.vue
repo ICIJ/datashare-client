@@ -8,10 +8,10 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import RowPaginationProjects from '@/components/RowPagination/RowPaginationProjects'
-import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/url-params'
-import { useCore } from '@/composables/core'
+import { useUrlParam, useUrlParamWithStore, useUrlParamsWithStore } from '@/composables/useUrlParam'
+import { useCore } from '@/composables/useCore'
 import { useAppStore } from '@/store/modules'
-import useMode from '@/composables/mode'
+import useMode from '@/composables/useMode'
 
 const { core } = useCore()
 const { isServer } = useMode()

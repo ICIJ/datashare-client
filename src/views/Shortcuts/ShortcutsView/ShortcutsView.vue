@@ -11,8 +11,8 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import KeyboardShortcutsSection from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSection'
 import KeyboardShortcutsSectionEntry from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
-import { useKeyboardShortcuts } from '@/composables/keyboard-shortcuts'
-import { useUrlParam } from '@/composables/url-params'
+import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
+import { useUrlParam } from '@/composables/useUrlParam'
 
 const searchQuery = useUrlParam('q', '')
 const { t, te } = useI18n()

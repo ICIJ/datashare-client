@@ -5,7 +5,7 @@ import DocumentCardProperties from './DocumentCardProperties'
 
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
-import { useDocumentViewerModal } from '@/composables/document'
+import { useDocumentViewerModal } from '@/composables/useDocument'
 
 const selected = defineModel('selected', { type: Boolean })
 

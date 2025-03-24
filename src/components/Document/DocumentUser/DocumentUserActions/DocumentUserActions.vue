@@ -26,7 +26,7 @@ import { capitalize, property } from 'lodash'
 
 import FormActions from '@/components/Form/FormActions/FormActions'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
-import { useCompact } from '@/composables/compact'
+import { useCompact } from '@/composables/useCompact'
 import { SIZE } from '@/enums/sizes'
 
 defineOptions({ name: 'DocumentUserActions' })

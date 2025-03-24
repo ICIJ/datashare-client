@@ -8,7 +8,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
 import AddonCard from '@/components/Addon/AddonCard'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import { useCore } from '@/composables/core'
+import { useCore } from '@/composables/useCore'
 import { ADDONS_TYPE, addonsTypeValidator } from '@/enums/addons'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 

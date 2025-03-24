@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import { OFFCANVAS_PLACEMENT, offcanvasPlacementValidator } from '@/enums/placements'
-import { useBreakpoints } from '@/composables/breakpoints'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 

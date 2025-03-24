@@ -17,7 +17,7 @@ import DocumentRowTitle from './DocumentRowTitle'
 import DocumentRowThumbnail from './DocumentRowThumbnail'
 
 import PageTableTr from '@/components/PageTable/PageTableTr'
-import { useSearchProperties } from '@/composables/search-properties'
+import { useSearchProperties } from '@/composables/useSearchProperties'
 
 const entryComponents = {
   author: DocumentRowAuthor,

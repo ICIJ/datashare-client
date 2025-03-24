@@ -7,7 +7,7 @@ import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGrou
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import { MODE_NAME } from '@/mode'
-import { useMode } from '@/composables/mode'
+import { useMode } from '@/composables/useMode'
 
 const { t } = useI18n()
 const { isMode } = useMode()

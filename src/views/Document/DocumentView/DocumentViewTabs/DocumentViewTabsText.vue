@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useDocument } from '@/composables/document'
+import { useDocument } from '@/composables/useDocument'
 import DocumentNotes from '@/components/Document/DocumentNotes'
 import DocumentThread from '@/components/Document/DocumentThread'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
