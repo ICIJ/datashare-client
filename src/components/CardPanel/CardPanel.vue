@@ -62,6 +62,7 @@ const close = () => {
         class="card-panel__close"
         icon-left="x"
         hide-label
+        hide-tooltip
         square
         :label="$t('documentUserActionsCard.close')"
         @click="close()"
