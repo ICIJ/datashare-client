@@ -2,10 +2,17 @@
 import { random } from 'lodash'
 
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
+
+defineProps({
+  repeat: {
+    type: Number,
+    default: 1
+  }
+})
 </script>
 
 <template>
-  <div class="project-card-placeholder border rounded p-4 d-flex gap-3">
+  <div class="project-card-placeholder border rounded p-4 d-flex gap-3" v-for="i in repeat" :key="i">
     <div class="flex-grow-1 project-card-placeholder__thumbnail">
       <app-placeholder squared />
     </div>
