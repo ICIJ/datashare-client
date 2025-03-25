@@ -1,8 +1,10 @@
 <script setup>
 import { computed, ref, toRef, toValue, useSlots, watch } from 'vue'
 
+import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import PageTable from '@/components/PageTable/PageTable'
 import PageTableTr from '@/components/PageTable/PageTableTr'
+import PageTableTrPlaceholder from '@/components/PageTable/PageTableTrPlaceholder'
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
@@ -41,6 +43,13 @@ const props = defineProps({
    */
   actionsColStyle: {
     type: [Object, Array, String]
+  },
+  /**
+   * Loading state of the table
+   */
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -89,7 +98,7 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
 </script>
 
 <template>
-  <page-table v-model:sort="sort" v-model:order="order">
+  <page-table v-model:sort="sort" v-model:order="order" :loading="loading">
     <template #colgroup>
       <col v-for="field in fields" :key="field.name" :style="field.colStyle" />
       <col :style="actionsColStyle" />
@@ -107,6 +116,16 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
         :name="field.sortingKey ?? field.key ?? field.value"
       >
       </page-table-th>
+    </template>
+
+    <template #waiting>
+      <page-table-tr-placeholder :repeat="Math.max(3, items.length)" :properties="fields">
+        <td class="text-end">
+          <div class="d-inline-flex gap-3 py-2">
+            <app-placeholder width="16px" height="16px" :repeat="2" />
+          </div>
+        </td>
+      </page-table-tr-placeholder>
     </template>
 
     <page-table-tr v-if="!items?.length">
