@@ -26,7 +26,7 @@ const { events, loadingEvents } = defineProps({
 })
 
 const { core } = useCore()
-const { waitFor, loaderId, isLoading: loadingDocuments } = useWait()
+const { wait, isLoading: loadingDocuments } = useWait()
 const starredStore = useStarredStore()
 
 const hits = ref([])
@@ -84,7 +84,7 @@ function buildEventsBody() {
     .build()
 }
 
-const fetch = waitFor(loaderId, async () => {
+const fetch = wait(async () => {
   const preference = 'search-visited-documents'
   const body = buildEventsBody()
   const indices = uniq(events.map(eventParams).map(property('index')))
