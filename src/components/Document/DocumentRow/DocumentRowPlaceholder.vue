@@ -1,0 +1,34 @@
+<script setup>
+import { random } from 'lodash'
+import { computed } from 'vue'
+
+import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
+import PageTableTr from '@/components/PageTable/PageTableTr'
+
+const props = defineProps({
+  properties: {
+    type: Array,
+    default: () => ['title', 'thumbnail', 'contentType']
+  },
+  repeat: {
+    type: Number,
+    default: 1
+  }
+})
+
+const hasThumbnail = computed(() => props.properties.includes('thumbnail'))
+</script>
+
+<template>
+  <page-table-tr v-for="i in repeat" :key="i">
+    <td v-if="hasThumbnail" :style="{ width: '40px' }">
+      <app-placeholder width="32px" height="32px" variant="tertiary" />
+    </td>
+    <td v-for="j in properties.length - 1" :key="j">
+      <app-placeholder :width="random(60, 100)" variant="tertiary" />
+    </td>
+    <td class="text-end">
+      <app-placeholder width="2rem" height="1.75rem" :repeat="4" whitespace variant="tertiary" />
+    </td>
+  </page-table-tr>
+</template>
