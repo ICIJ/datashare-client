@@ -3,12 +3,17 @@ import { PhFilePdf } from '@phosphor-icons/vue'
 import { vueRouter } from 'storybook-vue3-router'
 
 import { withMurmur } from '~storybook/decorators/murmur'
+import { withPinia } from '~storybook/decorators/pinia'
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
 
 const routes = [
   {
     path: '/',
     name: 'document'
+  },
+  {
+    path: '/ds',
+    name: 'document-standalone'
   },
   {
     path: '/project/:name',
@@ -20,6 +25,7 @@ export default {
   title: 'Components/Document/DocumentCard/DocumentCardGrid',
   decorators: [
     withMurmur({ previewHost: null }),
+    withPinia(),
     vueRouter(routes),
     () => ({
       template: '<div style="max-width: 230px"><story /></div>'
