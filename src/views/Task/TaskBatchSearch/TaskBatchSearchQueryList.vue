@@ -61,7 +61,6 @@ const visibleFields = computed(() => {
 })
 
 const batchSearchName = computed(() => batchSearch.value?.name)
-const empty = computed(() => queries.value.length === 0)
 
 async function fetchBatchSearch() {
   // Fetch the task for this batch search
