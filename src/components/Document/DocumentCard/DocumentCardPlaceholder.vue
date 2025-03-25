@@ -2,6 +2,13 @@
 import { random } from 'lodash'
 
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
+
+defineProps({
+  properties: {
+    type: Number,
+    default: 4
+  }
+})
 </script>
 
 <template>
@@ -11,7 +18,7 @@ import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
     </div>
     <div class="document-card-placeholder__properties d-flex flex-column gap-2 h-100 w-100">
       <app-placeholder :width="random(40, 70)" />
-      <div class="d-flex flex-grow-1 gap-1" v-for="i in 4" :key="i">
+      <div class="d-flex flex-grow-1 gap-1" v-for="i in properties" :key="i">
         <app-placeholder width="1em" />
         <app-placeholder :width="random(5, 20)" />
       </div>
