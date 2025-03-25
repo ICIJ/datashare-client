@@ -16,6 +16,7 @@ import { useHistoryEvents } from '@/composables/useHistoryEvents'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useUrlPageParam } from '@/composables/useUrlPageParam'
+import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -29,6 +30,7 @@ const { t } = useI18n()
 const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('DOCUMENT')
+const { isLoading, loaderId, waitFor } = useWait()
 const view = 'searchVisitedDocumentsList'
 
 const perPage = useUrlParamWithStore('perPage', {
@@ -64,11 +66,12 @@ const order = computed({
 
 const orderDesc = computed(() => order.value === 'desc')
 
-async function fetch() {
+const fetch = waitFor(loaderId, async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
   const result = await api.getHistoryEvents('DOCUMENT', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result?.items.map((item) => ({ ...item })) ?? []
   pagination.value = result.pagination
-}
+})
 
 async function showRemoveAllModal() {
   if (await showConfirmModal()) {
@@ -106,8 +109,10 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       </page-toolbar>
     </page-container>
     <page-container fluid class="flex-grow-1 overflow-auto">
-      <search-visited-documents-entries v-if="events.length" :events="events" />
-      <div v-else class="text-center text-secondary">{{ t('searchVisitedDocumentsList.empty') }}</div>
+      <search-visited-documents-entries :events="events" :loading-events="isLoading" />
+      <div v-if="!events.length && !isLoading" class="text-center text-secondary">
+        {{ t('searchVisitedDocumentsList.empty') }}
+      </div>
     </page-container>
   </div>
 </template>
