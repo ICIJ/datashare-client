@@ -33,8 +33,8 @@ const widthString = computed(() => {
   return props.width === undefined
     ? undefined
     : typeof props.width === 'number'
-    ? props.width.toString()
-    : props.width.replace('%', '')
+      ? props.width.toString() + '%'
+      : props.width
 })
 
 const colsString = computed(() => {
@@ -53,7 +53,7 @@ const classList = computed(() => {
 
 const style = computed(() => {
   return {
-    width: widthString.value === undefined ? undefined : `${widthString.value}%`
+    width: widthString.value === undefined ? undefined : widthString.value
   }
 })
 </script>
