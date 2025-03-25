@@ -140,7 +140,7 @@ onBeforeRouteLeave(autoClose)
           </app-sidebar-section-entry>
         </app-sidebar-section>
         <app-sidebar-section title="Search" :icon="PhMagnifyingGlass" :to="searchRoute" :compact="compact">
-          <app-sidebar-section-entry :icon="PhMagnifyingGlass" :to="searchRoute" exact-match>
+          <app-sidebar-section-entry :icon="PhFileMagnifyingGlass" :to="searchRoute" exact-match>
             {{ t('appSidebar.search') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.visited-documents.list' }">
