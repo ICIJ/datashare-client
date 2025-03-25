@@ -58,8 +58,9 @@ describe('TaskEntitiesList.vue', () => {
     )
   })
 
-  it('should display 1 ExtractNlpTask and 1 EnqueueFromIndexTask task', () => {
+  it('should display 1 ExtractNlpTask and 1 EnqueueFromIndexTask task', async () => {
     const wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    await flushPromises()
     expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
