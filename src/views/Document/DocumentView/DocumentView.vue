@@ -2,6 +2,8 @@
 import { computed, onBeforeMount, useTemplateRef } from 'vue'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 
+import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
+
 import DocumentViewActions from './DocumentViewActions'
 import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
 import DocumentViewTitle from './DocumentViewTitle'
@@ -82,7 +84,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
 <template>
   <v-wait ref="element" class="document-view d-flex flex-column gap-3" :for="loaderId">
     <template #waiting>
-      <content-placeholder />
+      <document-placeholder />
     </template>
 
     <div class="document-view__header d-flex justify-content-between align-items-center gap-2">
